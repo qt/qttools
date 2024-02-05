@@ -292,6 +292,7 @@ namespace qdesigner_internal
     public:
         PropertySheetIconValue::ModeStateToPixmapMap m_paths;
         QString m_theme;
+        int m_themeEnum = -1;
     };
 
     PropertySheetIconValue::PropertySheetIconValue(const PropertySheetPixmapValue &pixmap) :
@@ -323,6 +324,7 @@ namespace qdesigner_internal {
         const auto *d = p.m_data.constData();
         return qHashMulti(qHashRange(d->m_paths.constKeyValueBegin(),
                                      d->m_paths.constKeyValueEnd(), seed),
+                          d->m_themeEnum,
                           d->m_theme);
     }
 
@@ -332,12 +334,14 @@ namespace qdesigner_internal {
         const auto *lhsd = lhs.m_data.constData();
         const auto *rhsd = rhs.m_data.constData();
         return lhsd == rhsd
-            || (lhsd->m_theme == rhsd->m_theme && lhsd->m_paths == rhsd->m_paths);
+            || (lhsd->m_themeEnum == rhsd->m_themeEnum
+                && lhsd->m_theme == rhsd->m_theme && lhsd->m_paths == rhsd->m_paths);
     }
 
     bool PropertySheetIconValue::isEmpty() const
     {
-        return m_data->m_theme.isEmpty() && m_data->m_paths.isEmpty();
+        return m_data->m_themeEnum == -1 && m_data->m_theme.isEmpty()
+               && m_data->m_paths.isEmpty();
     }
 
     QString PropertySheetIconValue::theme() const
@@ -348,6 +352,16 @@ namespace qdesigner_internal {
     void PropertySheetIconValue::setTheme(const QString &t)
     {
         m_data->m_theme = t;
+    }
+
+    int PropertySheetIconValue::themeEnum() const
+    {
+        return m_data->m_themeEnum;
+    }
+
+    void PropertySheetIconValue::setThemeEnum(int e)
+    {
+        m_data->m_themeEnum = e;
     }
 
     PropertySheetPixmapValue PropertySheetIconValue::pixmap(QIcon::Mode mode, QIcon::State state) const
@@ -393,6 +407,11 @@ namespace qdesigner_internal {
             return it.value();
 
         // Match on the theme first if it is available.
+        if (value.themeEnum() != -1) {
+            const QIcon themeIcon = QIcon::fromTheme(static_cast<QIcon::ThemeIcon>(value.themeEnum()));
+            m_cache.insert(value, themeIcon);
+            return themeIcon;
+        }
         if (!value.theme().isEmpty()) {
             const QString theme = value.theme();
             if (QIcon::hasThemeIcon(theme)) {
@@ -515,7 +534,8 @@ namespace qdesigner_internal {
         ActiveOnIconMask    = 0x20,
         SelectedOffIconMask = 0x40,
         SelectedOnIconMask  = 0x80,
-        ThemeIconMask       = 0x10000
+        ThemeIconMask       = 0x10000,
+        ThemeEnumIconMask   = 0x20000
     };
 
     static inline uint iconStateToSubPropertyFlag(QIcon::Mode mode, QIcon::State state)
@@ -564,6 +584,8 @@ namespace qdesigner_internal {
             flags |= iconStateToSubPropertyFlag(it.key().first, it.key().second);
         if (!m_data->m_theme.isEmpty())
             flags |= ThemeIconMask;
+        if (m_data->m_themeEnum != -1)
+            flags |= ThemeEnumIconMask;
         return flags;
     }
 
@@ -580,6 +602,9 @@ namespace qdesigner_internal {
         }
         if ((diffMask & ThemeIconMask) && theme() == other.theme())
             diffMask &= ~ThemeIconMask;
+        if ((diffMask & ThemeEnumIconMask) && themeEnum() == other.themeEnum())
+            diffMask &= ~ThemeEnumIconMask;
+
         return diffMask;
     }
 
@@ -594,6 +619,7 @@ namespace qdesigner_internal {
     {
         PropertySheetIconValue rc(*this);
         rc.m_data->m_theme.clear();
+        rc.m_data->m_themeEnum = -1;
         return rc;
     }
 
@@ -608,6 +634,8 @@ namespace qdesigner_internal {
         }
         if (mask & ThemeIconMask)
             setTheme(other.theme());
+        if (mask & ThemeEnumIconMask)
+            setThemeEnum(other.themeEnum());
     }
 
     const PropertySheetIconValue::ModeStateToPixmapMap &PropertySheetIconValue::paths() const
@@ -621,6 +649,8 @@ namespace qdesigner_internal {
         debug.nospace();
         debug.noquote();
         debug << "PropertySheetIconValue(mask=0x" << Qt::hex << p.mask() << Qt::dec << ", ";
+        if (p.themeEnum() != -1)
+            debug << "theme=" << p.themeEnum() << ", ";
         if (!p.theme().isEmpty())
             debug << "XDG theme=\"" << p.theme() << "\", ";
 

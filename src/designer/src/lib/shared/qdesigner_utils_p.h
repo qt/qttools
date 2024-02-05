@@ -255,6 +255,9 @@ class QDESIGNER_SHARED_EXPORT PropertySheetIconValue
     QString theme() const;
     void setTheme(const QString &);
 
+    int themeEnum() const;
+    void setThemeEnum(int e);
+
     PropertySheetPixmapValue pixmap(QIcon::Mode mode, QIcon::State state) const;
     void setPixmap(QIcon::Mode mode, QIcon::State state, const PropertySheetPixmapValue &path); // passing the empty path resets the pixmap
 

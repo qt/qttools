@@ -43,6 +43,11 @@ public:
     QResourceBuilder();
     virtual ~QResourceBuilder();
 
+    // Icon names matching QIcon::ThemeIcon
+    static const QStringList &themeIconNames();
+    static int themeIconIndex(QStringView name);
+    static QString fullyQualifiedThemeIconName(int i);
+
     virtual QVariant loadResource(const QDir &workingDirectory, const DomProperty *property) const;
 
     virtual QVariant toNativeValue(const QVariant &value) const;
