@@ -3,7 +3,6 @@
 
 #include "qhelpindexwidget.h"
 #include "qhelpcollectionhandler_p.h"
-#include "qhelpengine_p.h"
 #include "qhelpenginecore.h"
 #include "qhelplink.h"
 
@@ -14,11 +13,19 @@
 
 QT_BEGIN_NAMESPACE
 
-class QHelpIndexProvider : public QThread
+class QHelpIndexProvider final : public QThread
 {
 public:
-    QHelpIndexProvider(QHelpEnginePrivate *helpEngine);
-    ~QHelpIndexProvider() override;
+    QHelpIndexProvider(QHelpEngineCore *helpEngine)
+        : QThread(helpEngine)
+        , m_helpEngine(helpEngine)
+    {}
+
+    ~QHelpIndexProvider() final
+    {
+        stopCollecting();
+    }
+
     void collectIndices(const QString &customFilterName);
     void stopCollecting();
     QStringList indices() const;
@@ -26,7 +33,7 @@ public:
 private:
     void run() override;
 
-    QHelpEnginePrivate *m_helpEngine;
+    QHelpEngineCore *m_helpEngine;
     QString m_currentFilter;
     QStringList m_filterAttributes;
     QStringList m_indices;
@@ -36,33 +43,21 @@ private:
 class QHelpIndexModelPrivate
 {
 public:
-    QHelpIndexModelPrivate(QHelpEnginePrivate *hE)
-        : helpEngine(hE),
-          indexProvider(new QHelpIndexProvider(helpEngine))
-    {
-    }
+    QHelpIndexModelPrivate(QHelpEngineCore *helpEngine)
+        : m_helpEngine(helpEngine)
+        , indexProvider(new QHelpIndexProvider(helpEngine))
+    {}
 
-    QHelpEnginePrivate *helpEngine;
+    QHelpEngineCore *m_helpEngine;
     QHelpIndexProvider *indexProvider;
     QStringList indices;
 };
-
-QHelpIndexProvider::QHelpIndexProvider(QHelpEnginePrivate *helpEngine)
-    : QThread(helpEngine),
-      m_helpEngine(helpEngine)
-{
-}
-
-QHelpIndexProvider::~QHelpIndexProvider()
-{
-    stopCollecting();
-}
 
 void QHelpIndexProvider::collectIndices(const QString &customFilterName)
 {
     m_mutex.lock();
     m_currentFilter = customFilterName;
-    m_filterAttributes = m_helpEngine->q->filterAttributes(customFilterName);
+    m_filterAttributes = m_helpEngine->filterAttributes(customFilterName);
     m_mutex.unlock();
 
     if (isRunning())
@@ -88,7 +83,7 @@ void QHelpIndexProvider::run()
     m_mutex.lock();
     const QString currentFilter = m_currentFilter;
     const QStringList attributes = m_filterAttributes;
-    const QString collectionFile = m_helpEngine->collectionHandler->collectionFile();
+    const QString collectionFile = m_helpEngine->collectionFile();
     m_indices = QStringList();
     m_mutex.unlock();
 
@@ -99,7 +94,7 @@ void QHelpIndexProvider::run()
     if (!collectionHandler.openCollectionFile())
         return;
 
-    const QStringList result = m_helpEngine->usesFilterEngine
+    const QStringList result = m_helpEngine->usesFilterEngine()
             ? collectionHandler.indicesForFilter(currentFilter)
             : collectionHandler.indicesForFilter(attributes);
 
@@ -134,13 +129,11 @@ void QHelpIndexProvider::run()
     This signal is emitted when the index has been created.
 */
 
-QHelpIndexModel::QHelpIndexModel(QHelpEnginePrivate *helpEngine)
+QHelpIndexModel::QHelpIndexModel(QHelpEngineCore *helpEngine)
     : QStringListModel(helpEngine)
+    , d(new QHelpIndexModelPrivate(helpEngine))
 {
-    d = new QHelpIndexModelPrivate(helpEngine);
-
-    connect(d->indexProvider, &QThread::finished,
-            this, &QHelpIndexModel::insertIndices);
+    connect(d->indexProvider, &QThread::finished, this, &QHelpIndexModel::insertIndices);
 }
 
 QHelpIndexModel::~QHelpIndexModel()
@@ -190,7 +183,7 @@ bool QHelpIndexModel::isCreatingIndex() const
 */
 QHelpEngineCore *QHelpIndexModel::helpEngine() const
 {
-    return d->helpEngine->q;
+    return d->m_helpEngine;
 }
 
 /*!
@@ -303,7 +296,6 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
 */
 
 QHelpIndexWidget::QHelpIndexWidget()
-    : QListView(nullptr)
 {
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setUniformItemSizes(true);

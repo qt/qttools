@@ -20,7 +20,7 @@ void QHelpEnginePrivate::init(const QString &collectionFile,
     if (!contentModel)
         contentModel = new QHelpContentModel(this);
     if (!indexModel)
-        indexModel = new QHelpIndexModel(this);
+        indexModel = new QHelpIndexModel(helpEngineCore);
 
     connect(helpEngineCore, &QHelpEngineCore::setupFinished,
             this, &QHelpEnginePrivate::scheduleApplyCurrentFilter);

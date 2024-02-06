@@ -38,7 +38,7 @@ private Q_SLOTS:
     void insertIndices();
 
 private:
-    QHelpIndexModel(QHelpEnginePrivate *helpEngine);
+    QHelpIndexModel(QHelpEngineCore *helpEngine);
     ~QHelpIndexModel();
 
     QHelpIndexModelPrivate *d;
