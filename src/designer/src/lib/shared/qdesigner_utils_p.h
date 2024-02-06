@@ -242,11 +242,13 @@ class PropertySheetIconValueData;
 class QDESIGNER_SHARED_EXPORT PropertySheetIconValue
 {
  public:
-    PropertySheetIconValue(const PropertySheetPixmapValue &pixmap);
+    explicit PropertySheetIconValue(const PropertySheetPixmapValue &pixmap);
     PropertySheetIconValue();
     ~PropertySheetIconValue();
-    PropertySheetIconValue(const PropertySheetIconValue &);
+    PropertySheetIconValue(const PropertySheetIconValue &) noexcept;
     PropertySheetIconValue &operator=(const PropertySheetIconValue &);
+    PropertySheetIconValue(PropertySheetIconValue &&) noexcept;
+    PropertySheetIconValue &operator=(PropertySheetIconValue &&) noexcept;
 
     bool isEmpty() const;
 

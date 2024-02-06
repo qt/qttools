@@ -307,17 +307,11 @@ namespace qdesigner_internal
 
     PropertySheetIconValue::~PropertySheetIconValue() = default;
 
-    PropertySheetIconValue::PropertySheetIconValue(const PropertySheetIconValue &rhs) :
-        m_data(rhs.m_data)
-    {
-    }
+    PropertySheetIconValue::PropertySheetIconValue(const PropertySheetIconValue &rhs) noexcept = default;
+    PropertySheetIconValue &PropertySheetIconValue::operator=(const PropertySheetIconValue &rhs) = default;
 
-    PropertySheetIconValue &PropertySheetIconValue::operator=(const PropertySheetIconValue &rhs)
-    {
-        if (this != &rhs)
-            m_data.operator=(rhs.m_data);
-        return *this;
-    }
+    PropertySheetIconValue::PropertySheetIconValue(PropertySheetIconValue &&) noexcept = default;
+    PropertySheetIconValue &PropertySheetIconValue::operator=(PropertySheetIconValue &&) noexcept = default;
 
 } // namespace qdesigner_internal
 
@@ -621,17 +615,22 @@ namespace qdesigner_internal {
         return m_data->m_paths;
     }
 
-    QDESIGNER_SHARED_EXPORT QDebug operator<<(QDebug d, const PropertySheetIconValue &p)
+    QDESIGNER_SHARED_EXPORT QDebug operator<<(QDebug debug, const PropertySheetIconValue &p)
     {
-        QDebug nospace = d.nospace();
-        nospace << "PropertySheetIconValue theme='" << p.theme() << "' ";
+        QDebugStateSaver saver(debug);
+        debug.nospace();
+        debug.noquote();
+        debug << "PropertySheetIconValue(mask=0x" << Qt::hex << p.mask() << Qt::dec << ", ";
+        if (!p.theme().isEmpty())
+            debug << "XDG theme=\"" << p.theme() << "\", ";
 
         const PropertySheetIconValue::ModeStateToPixmapMap &paths = p.paths();
-        for (auto it = paths.constBegin(), cend = paths.constEnd(); it != cend; ++it)
-            nospace << " mode=" << it.key().first << ",state=" << it.key().second
-                       << ",'" << it.value().path() << '\'';
-        nospace << " mask=0x" << QString::number(p.mask(), 16);
-        return d;
+        for (auto it = paths.constBegin(), cend = paths.constEnd(); it != cend; ++it) {
+            debug << " mode=" << it.key().first << ",state=" << it.key().second
+                << ", \"" << it.value().path() << '"';
+        }
+        debug << ')';
+        return debug;
     }
 
     QDESIGNER_SHARED_EXPORT QDesignerFormWindowCommand *createTextPropertyCommand(const QString &propertyName, const QString &text, QObject *object, QDesignerFormWindowInterface *fw)
