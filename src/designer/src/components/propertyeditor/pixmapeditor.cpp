@@ -51,16 +51,13 @@ IconThemeDialog::IconThemeDialog(QWidget *parent)
     connect(buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
-QString IconThemeDialog::getTheme(QWidget *parent, const QString &theme, bool *ok)
+std::optional<QString> IconThemeDialog::getTheme(QWidget *parent, const QString &theme)
 {
     IconThemeDialog dlg(parent);
     dlg.m_editor->setTheme(theme);
-    if (dlg.exec() == QDialog::Accepted) {
-        *ok = true;
+    if (dlg.exec() == QDialog::Accepted)
         return dlg.m_editor->theme();
-    }
-    *ok = false;
-    return QString();
+    return std::nullopt;
 }
 
 PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) :
@@ -148,11 +145,16 @@ void PixmapEditor::setTheme(const QString &theme)
     updateLabels();
 }
 
+QString PixmapEditor::msgThemeIcon(const QString &t)
+{
+    return tr("[Theme] %1").arg(t);
+}
+
 void PixmapEditor::updateLabels()
 {
     if (m_iconThemeModeEnabled && QIcon::hasThemeIcon(m_theme)) {
         m_pixmapLabel->setPixmap(QIcon::fromTheme(m_theme).pixmap(ICON_SIZE));
-        m_pathLabel->setText(tr("[Theme] %1").arg(m_theme));
+        m_pathLabel->setText(msgThemeIcon(m_theme));
         m_copyAction->setEnabled(true);
     } else {
         if (m_path.isEmpty()) {
@@ -194,7 +196,7 @@ void PixmapEditor::contextMenuEvent(QContextMenuEvent *event)
 
 void PixmapEditor::defaultActionActivated()
 {
-    if (m_iconThemeModeEnabled && QIcon::hasThemeIcon(m_theme)) {
+    if (m_iconThemeModeEnabled) {
         themeActionActivated();
         return;
     }
@@ -219,7 +221,7 @@ void PixmapEditor::resourceActionActivated()
     const  QString newPath = IconSelector::choosePixmapResource(m_core, m_core->resourceModel(),
                                                                 oldPath, this);
     if (!newPath.isEmpty() && newPath != oldPath) {
-        setTheme(QString());
+        setTheme({});
         setPath(newPath);
         emit pathChanged(newPath);
     }
@@ -229,7 +231,7 @@ void PixmapEditor::fileActionActivated()
 {
     const QString newPath = IconSelector::choosePixmapFile(m_path, m_core->dialogGui(), this);
     if (!newPath.isEmpty() && newPath != m_path) {
-        setTheme(QString());
+        setTheme({});
         setPath(newPath);
         emit pathChanged(newPath);
     }
@@ -237,12 +239,14 @@ void PixmapEditor::fileActionActivated()
 
 void PixmapEditor::themeActionActivated()
 {
-    bool ok;
-    const QString newTheme = IconThemeDialog::getTheme(this, m_theme, &ok);
-    if (ok && newTheme != m_theme) {
-        setTheme(newTheme);
-        setPath(QString());
-        emit themeChanged(newTheme);
+    const auto newThemeO = IconThemeDialog::getTheme(this, m_theme);
+    if (newThemeO.has_value()) {
+        const QString newTheme = newThemeO.value();
+        if (newTheme != m_theme) {
+            setTheme(newTheme);
+            setPath({});
+            emit themeChanged(newTheme);
+        }
     }
 }
 

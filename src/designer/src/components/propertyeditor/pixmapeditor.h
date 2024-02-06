@@ -8,6 +8,8 @@
 
 #include <QtGui/qpixmap.h>
 
+#include <optional>
+
 QT_BEGIN_NAMESPACE
 
 class QLabel;
@@ -25,7 +27,7 @@ class IconThemeDialog : public QDialog
 {
     Q_OBJECT
 public:
-    static QString getTheme(QWidget *parent, const QString &theme, bool *ok);
+    static std::optional<QString> getTheme(QWidget *parent, const QString &theme);
 private:
     explicit IconThemeDialog(QWidget *parent);
     IconThemeEditor *m_editor;
@@ -40,6 +42,9 @@ public:
     void setSpacing(int spacing);
     void setPixmapCache(DesignerPixmapCache *cache);
     void setIconThemeModeEnabled(bool enabled);
+
+    static QString msgThemeIcon(const QString &t);
+
 public slots:
     void setPath(const QString &path);
     void setTheme(const QString &theme);

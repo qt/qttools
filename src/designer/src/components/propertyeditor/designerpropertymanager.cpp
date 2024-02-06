@@ -1231,7 +1231,7 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
         const PropertySheetIconValue icon = m_iconValues.value(const_cast<QtProperty *>(property));
         const QString theme = icon.theme();
         if (!theme.isEmpty() && QIcon::hasThemeIcon(theme))
-            return tr("[Theme] %1").arg(theme);
+            return PixmapEditor::msgThemeIcon(theme);
         const auto &paths = icon.paths();
         const auto it = paths.constFind({QIcon::Normal, QIcon::Off});
         if (it == paths.constEnd())
