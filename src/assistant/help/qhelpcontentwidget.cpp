@@ -4,7 +4,6 @@
 #include "qhelpcontentwidget.h"
 #include "qhelpcollectionhandler_p.h"
 #include "qhelpenginecore.h"
-#include "qhelpengine_p.h"
 
 #include <QtCore/qdir.h>
 #include <QtCore/qmutex.h>
@@ -21,8 +20,7 @@ public:
         : parent(p),
           title(t),
           link(l)
-    {
-    }
+    {}
 
     void appendChild(QHelpContentItem *item) { childItems.append(item); }
 
@@ -36,7 +34,7 @@ class QHelpContentProvider : public QThread
 {
     Q_OBJECT
 public:
-    QHelpContentProvider(QHelpEnginePrivate *helpEngine);
+    QHelpContentProvider(QHelpEngineCore *helpEngine);
     ~QHelpContentProvider() override;
     void collectContents(const QString &customFilterName);
     void stopCollecting();
@@ -45,7 +43,7 @@ public:
 private:
     void run() override;
 
-    QHelpEnginePrivate *m_helpEngine;
+    QHelpEngineCore *m_helpEngine;
     QString m_currentFilter;
     QStringList m_filterAttributes;
     QString m_collectionFile;
@@ -143,13 +141,10 @@ int QHelpContentItem::childPosition(QHelpContentItem *child) const
     return d->childItems.indexOf(child);
 }
 
-
-
-QHelpContentProvider::QHelpContentProvider(QHelpEnginePrivate *helpEngine)
+QHelpContentProvider::QHelpContentProvider(QHelpEngineCore *helpEngine)
     : QThread(helpEngine)
-{
-    m_helpEngine = helpEngine;
-}
+    , m_helpEngine(helpEngine)
+{}
 
 QHelpContentProvider::~QHelpContentProvider()
 {
@@ -160,9 +155,9 @@ void QHelpContentProvider::collectContents(const QString &customFilterName)
 {
     m_mutex.lock();
     m_currentFilter = customFilterName;
-    m_filterAttributes = m_helpEngine->q->filterAttributes(customFilterName);
-    m_collectionFile = m_helpEngine->collectionHandler->collectionFile();
-    m_usesFilterEngine = m_helpEngine->usesFilterEngine;
+    m_filterAttributes = m_helpEngine->filterAttributes(customFilterName);
+    m_collectionFile = m_helpEngine->collectionFile();
+    m_usesFilterEngine = m_helpEngine->usesFilterEngine();
     m_mutex.unlock();
 
     if (isRunning())
@@ -318,7 +313,7 @@ CHECK_DEPTH:
     This signal is emitted when the contents have been created.
 */
 
-QHelpContentModel::QHelpContentModel(QHelpEnginePrivate *helpEngine)
+QHelpContentModel::QHelpContentModel(QHelpEngineCore *helpEngine)
     : QAbstractItemModel(helpEngine)
 {
     d = new QHelpContentModelPrivate();

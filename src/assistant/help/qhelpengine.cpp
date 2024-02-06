@@ -18,7 +18,7 @@ void QHelpEnginePrivate::init(const QString &collectionFile,
     QHelpEngineCorePrivate::init(collectionFile, helpEngineCore);
 
     if (!contentModel)
-        contentModel = new QHelpContentModel(this);
+        contentModel = new QHelpContentModel(helpEngineCore);
     if (!indexModel)
         indexModel = new QHelpIndexModel(helpEngineCore);
 

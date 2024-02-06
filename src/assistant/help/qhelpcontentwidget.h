@@ -13,7 +13,7 @@ QT_BEGIN_NAMESPACE
 class QHelpContentItemPrivate;
 class QHelpContentModelPrivate;
 class QHelpEngine;
-class QHelpEnginePrivate;
+class QHelpEngineCore;
 class QUrl;
 
 class QHELP_EXPORT QHelpContentItem
@@ -63,7 +63,7 @@ private Q_SLOTS:
     void insertContents();
 
 private:
-    QHelpContentModel(QHelpEnginePrivate *helpEngine);
+    QHelpContentModel(QHelpEngineCore *helpEngine);
     QHelpContentModelPrivate *d;
     friend class QHelpEnginePrivate;
 };
