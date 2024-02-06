@@ -62,14 +62,12 @@ public:
     void setCurrentFilter(const QString &filterName);
 
     QList<QStringList> filterAttributeSets(const QString &namespaceName) const;
-    QList<QUrl> files(const QString namespaceName,
-        const QStringList &filterAttributes,
-        const QString &extensionFilter = QString());
+    QList<QUrl> files(const QString namespaceName, const QStringList &filterAttributes,
+                      const QString &extensionFilter = {});
 // #endif
 
-    QList<QUrl> files(const QString namespaceName,
-                      const QString &filterName,
-                      const QString &extensionFilter = QString());
+    QList<QUrl> files(const QString namespaceName, const QString &filterName,
+                      const QString &extensionFilter = {});
     QUrl findFile(const QUrl &url) const;
 
     QList<QHelpLink> documentsForIdentifier(const QString &id) const;
@@ -78,12 +76,10 @@ public:
     QList<QHelpLink> documentsForKeyword(const QString &keyword, const QString &filterName) const;
 
     bool removeCustomValue(const QString &key);
-    QVariant customValue(const QString &key,
-        const QVariant &defaultValue = QVariant()) const;
+    QVariant customValue(const QString &key, const QVariant &defaultValue = {}) const;
     bool setCustomValue(const QString &key, const QVariant &value);
 
-    static QVariant metaData(const QString &documentationFileName,
-        const QString &name);
+    static QVariant metaData(const QString &documentationFileName, const QString &name);
 
     QString error() const;
 

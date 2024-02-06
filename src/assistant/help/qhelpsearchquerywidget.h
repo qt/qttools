@@ -34,7 +34,9 @@ public:
     void setSearchInput(const QString &searchInput);
 
     bool isCompactMode() const;
-    Q_SLOT void setCompactMode(bool on);
+
+public Q_SLOTS:
+    void setCompactMode(bool on);
 
 Q_SIGNALS:
     void search();

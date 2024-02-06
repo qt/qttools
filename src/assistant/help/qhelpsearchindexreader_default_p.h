@@ -21,8 +21,7 @@ QT_BEGIN_NAMESPACE
 
 class QSqlDatabase;
 
-namespace fulltextsearch {
-namespace qt {
+namespace fulltextsearch::qt {
 
 class Reader
 {
@@ -35,9 +34,8 @@ public:
     QList<QHelpSearchResult> searchResults() const;
 
 private:
-    QList<QHelpSearchResult> queryTable(const QSqlDatabase &db,
-                                          const QString &tableName,
-                                          const QString &searchInput) const;
+    QList<QHelpSearchResult> queryTable(const QSqlDatabase &db, const QString &tableName,
+                                        const QString &searchInput) const;
 
     QMultiMap<QString, QStringList> m_namespaceAttributes;
     QStringList m_filterEngineNamespaceList;
@@ -45,7 +43,6 @@ private:
     QString m_indexPath;
     bool m_useFilterEngine = false;
 };
-
 
 class QHelpSearchIndexReaderDefault : public QHelpSearchIndexReader
 {
@@ -58,8 +55,7 @@ private:
     Reader m_reader;
 };
 
-}   // namespace std
-}   // namespace fulltextsearch
+}   // namespace fulltextsearch::qt
 
 QT_END_NAMESPACE
 

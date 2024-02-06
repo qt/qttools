@@ -25,8 +25,7 @@ class QHELP_EXPORT QHelpIndexModel : public QStringListModel
 public:
     void createIndexForCurrentFilter();
     void createIndex(const QString &customFilterName);
-    QModelIndex filter(const QString &filter,
-        const QString &wildcard = QString());
+    QModelIndex filter(const QString &filter, const QString &wildcard = {});
 
     bool isCreatingIndex() const;
     QHelpEngineCore *helpEngine() const;
@@ -58,14 +57,11 @@ Q_SIGNALS:
     QT_DEPRECATED_X("Use documentsActivated() instead")
     void linksActivated(const QMultiMap<QString, QUrl> &links, const QString &keyword);
 #endif
-    void documentActivated(const QHelpLink &document,
-                           const QString &keyword);
-    void documentsActivated(const QList<QHelpLink> &documents,
-                            const QString &keyword);
+    void documentActivated(const QHelpLink &document, const QString &keyword);
+    void documentsActivated(const QList<QHelpLink> &documents, const QString &keyword);
 
 public Q_SLOTS:
-    void filterIndices(const QString &filter,
-        const QString &wildcard = QString());
+    void filterIndices(const QString &filter, const QString &wildcard = {});
     void activateCurrentItem();
 
 private Q_SLOTS:

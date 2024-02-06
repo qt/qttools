@@ -33,10 +33,8 @@ public:
     ~QHelpSearchIndexReader() override;
 
     void cancelSearching();
-    void search(const QString &collectionFile,
-                const QString &indexFilesFolder,
-                const QString &searchInput,
-                bool usesFilterEngine = false);
+    void search(const QString &collectionFile, const QString &indexFilesFolder,
+                const QString &searchInput, bool usesFilterEngine = false);
     int searchResultCount() const;
     QList<QHelpSearchResult> searchResults(int start, int end) const;
 

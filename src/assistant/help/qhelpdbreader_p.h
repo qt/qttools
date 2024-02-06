@@ -31,7 +31,6 @@ public:
     class IndexItem
     {
     public:
-        IndexItem() = default;
         QString name;
         QString identifier;
         int fileId = 0;
@@ -42,7 +41,6 @@ public:
     class FileItem
     {
     public:
-        FileItem() = default;
         QString name;
         QString title;
         QStringList filterAttributes;
@@ -51,7 +49,6 @@ public:
     class ContentsItem
     {
     public:
-        ContentsItem() = default;
         QByteArray data;
         QStringList filterAttributes;
     };
@@ -66,8 +63,7 @@ public:
     };
 
     QHelpDBReader(const QString &dbName);
-    QHelpDBReader(const QString &dbName, const QString &uniqueId,
-        QObject *parent);
+    QHelpDBReader(const QString &dbName, const QString &uniqueId, QObject *parent);
     ~QHelpDBReader();
 
     bool init();
@@ -78,12 +74,11 @@ public:
     IndexTable indexTable() const;
     QList<QStringList> filterAttributeSets() const;
     QMultiMap<QString, QByteArray> filesData(const QStringList &filterAttributes,
-                                             const QString &extensionFilter = QString()) const;
-    QByteArray fileData(const QString &virtualFolder,
-        const QString &filePath) const;
+                                             const QString &extensionFilter = {}) const;
+    QByteArray fileData(const QString &virtualFolder, const QString &filePath) const;
 
     QStringList customFilters() const;
-    QStringList filterAttributes(const QString &filterName = QString()) const;
+    QStringList filterAttributes(const QString &filterName = {}) const;
 
     QVariant metaData(const QString &name) const;
 

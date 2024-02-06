@@ -11,8 +11,7 @@
 
 QT_BEGIN_NAMESPACE
 
-namespace fulltextsearch {
-namespace qt {
+namespace fulltextsearch::qt {
 
 void Reader::setIndexPath(const QString &path)
 {
@@ -245,7 +244,6 @@ void QHelpSearchIndexReaderDefault::run()
     emit searchingFinished(m_searchResults.size());
 }
 
-}   // namespace std
-}   // namespace fulltextsearch
+}   // namespace fulltextsearch::qt
 
 QT_END_NAMESPACE

@@ -22,8 +22,7 @@ QT_BEGIN_NAMESPACE
 
 class QSqlDatabase;
 
-namespace fulltextsearch {
-namespace qt {
+namespace fulltextsearch::qt {
 
 class Writer
 {
@@ -71,8 +70,7 @@ public:
     ~QHelpSearchIndexWriter() override;
 
     void cancelIndexing();
-    void updateIndex(const QString &collectionFile,
-        const QString &indexFilesFolder, bool reindex);
+    void updateIndex(const QString &collectionFile, const QString &indexFilesFolder, bool reindex);
 
 signals:
     void indexingStarted();
@@ -90,8 +88,7 @@ private:
     QString m_indexFilesFolder;
 };
 
-}   // namespace qt
-}   // namespace fulltextsearch
+}   // namespace fulltextsearch::qt
 
 QT_END_NAMESPACE
 

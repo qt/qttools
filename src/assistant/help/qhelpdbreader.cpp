@@ -14,20 +14,16 @@
 QT_BEGIN_NAMESPACE
 
 QHelpDBReader::QHelpDBReader(const QString &dbName)
-    : QObject(nullptr),
-      m_dbName(dbName),
-      m_uniqueId(QHelpGlobal::uniquifyConnectionName(QLatin1String("QHelpDBReader"),
-                                                     this))
-{
-}
+    : QObject(nullptr)
+    , m_dbName(dbName)
+    , m_uniqueId(QHelpGlobal::uniquifyConnectionName(QLatin1String("QHelpDBReader"), this))
+{}
 
-QHelpDBReader::QHelpDBReader(const QString &dbName, const QString &uniqueId,
-                           QObject *parent)
-    : QObject(parent),
-      m_dbName(dbName),
-      m_uniqueId(uniqueId)
-{
-}
+QHelpDBReader::QHelpDBReader(const QString &dbName, const QString &uniqueId, QObject *parent)
+    : QObject(parent)
+    , m_dbName(dbName)
+    , m_uniqueId(uniqueId)
+{}
 
 QHelpDBReader::~QHelpDBReader()
 {

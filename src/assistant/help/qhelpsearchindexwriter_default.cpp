@@ -21,8 +21,7 @@
 
 QT_BEGIN_NAMESPACE
 
-namespace fulltextsearch {
-namespace qt {
+namespace fulltextsearch::qt {
 
 const char FTS_DB_NAME[] = "fts";
 
@@ -499,7 +498,6 @@ void QHelpSearchIndexWriter::run()
     emit indexingFinished();
 }
 
-}   // namespace std
-}   // namespace fulltextsearch
+}   // namespace fulltextsearch::qt
 
 QT_END_NAMESPACE

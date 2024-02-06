@@ -30,8 +30,7 @@ public:
     QOptionsWidget(QWidget *parent = nullptr);
 
     void clear();
-    void setOptions(const QStringList &validOptions,
-                    const QStringList &selectedOptions);
+    void setOptions(const QStringList &validOptions, const QStringList &selectedOptions);
     QStringList validOptions() const;
     QStringList selectedOptions() const;
 
