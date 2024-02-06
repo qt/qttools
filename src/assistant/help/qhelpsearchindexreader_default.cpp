@@ -5,9 +5,9 @@
 #include "qhelpfilterengine.h"
 #include "qhelpsearchindexreader_default_p.h"
 
-#include <QtCore/QSet>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlQuery>
+#include <QtCore/qset.h>
+#include <QtSql/qsqldatabase.h>
+#include <QtSql/qsqlquery.h>
 
 QT_BEGIN_NAMESPACE
 

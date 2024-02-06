@@ -4,12 +4,12 @@
 #include "qhelpdbreader_p.h"
 #include "qhelp_global.h"
 
-#include <QtCore/QFile>
-#include <QtCore/QMultiMap>
-#include <QtCore/QVariant>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlQuery>
+#include <QtCore/qfile.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qvariant.h>
+#include <QtSql/qsqldatabase.h>
+#include <QtSql/qsqlerror.h>
+#include <QtSql/qsqlquery.h>
 
 QT_BEGIN_NAMESPACE
 

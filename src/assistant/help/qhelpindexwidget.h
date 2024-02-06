@@ -6,10 +6,10 @@
 
 #include <QtHelp/qhelp_global.h>
 
-#include <QtCore/QStringListModel>
-#include <QtCore/QUrl>
+#include <QtCore/qstringlistmodel.h>
+#include <QtCore/qurl.h>
 
-#include <QtWidgets/QListView>
+#include <QtWidgets/qlistview.h>
 
 QT_BEGIN_NAMESPACE
 

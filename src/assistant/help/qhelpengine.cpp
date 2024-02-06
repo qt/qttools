@@ -8,7 +8,7 @@
 #include "qhelpindexwidget.h"
 #include "qhelpsearchengine.h"
 
-#include <QtCore/QTimer>
+#include <QtCore/qtimer.h>
 
 QT_BEGIN_NAMESPACE
 

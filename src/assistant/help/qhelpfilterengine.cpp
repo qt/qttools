@@ -6,8 +6,8 @@
 #include "qhelpenginecore.h"
 #include "qhelpfilterdata.h"
 
-#include <QtCore/QThread>
-#include <QtCore/QVersionNumber>
+#include <QtCore/qthread.h>
+#include <QtCore/qversionnumber.h>
 
 QT_BEGIN_NAMESPACE
 

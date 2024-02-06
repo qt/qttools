@@ -17,9 +17,9 @@
 
 #include "qhelpsearchengine.h"
 
-#include <QtCore/QList>
-#include <QtCore/QMutex>
-#include <QtCore/QThread>
+#include <QtCore/qlist.h>
+#include <QtCore/qmutex.h>
+#include <QtCore/qthread.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -3,9 +3,9 @@
 
 #include "qoptionswidget_p.h"
 
-#include <QtWidgets/QItemDelegate>
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QListWidget>
+#include <QtWidgets/qitemdelegate.h>
+#include <QtWidgets/qlayout.h>
+#include <QtWidgets/qlistwidget.h>
 
 QT_BEGIN_NAMESPACE
 

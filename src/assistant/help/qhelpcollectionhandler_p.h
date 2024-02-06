@@ -18,8 +18,8 @@
 #include "qhelpdbreader_p.h"
 #include "qhelplink.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QStringList>
+#include <QtCore/qobject.h>
+#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 

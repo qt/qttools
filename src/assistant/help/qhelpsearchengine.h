@@ -6,9 +6,9 @@
 
 #include <QtHelp/qhelp_global.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QSharedDataPointer>
-#include <QtCore/QStringList>
+#include <QtCore/qobject.h>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 

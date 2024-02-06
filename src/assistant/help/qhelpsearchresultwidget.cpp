@@ -3,15 +3,15 @@
 
 #include "qhelpsearchresultwidget.h"
 
-#include <QtCore/QEvent>
-#include <QtCore/QList>
-#include <QtCore/QPointer>
-#include <QtCore/QTextStream>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QToolButton>
-#include <QtWidgets/QTextBrowser>
+#include <QtCore/qcoreevent.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qpointer.h>
+#include <QtCore/qtextstream.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qlayout.h>
+#include <QtWidgets/qlayoutitem.h>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtWidgets/qtextbrowser.h>
 
 QT_BEGIN_NAMESPACE
 

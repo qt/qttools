@@ -7,17 +7,16 @@
 #include "qhelpfilterdata.h"
 #include "qhelplink.h"
 
-#include <QtCore/QDataStream>
-#include <QtCore/QDateTime>
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtCore/QMultiMap>
-#include <QtCore/QTimer>
-#include <QtCore/QVersionNumber>
-
-#include <QtSql/QSqlDriver>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlQuery>
+#include <QtCore/qdatastream.h>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qtimer.h>
+#include <QtCore/qversionnumber.h>
+#include <QtSql/qsqldriver.h>
+#include <QtSql/qsqlerror.h>
+#include <QtSql/qsqlquery.h>
 
 QT_BEGIN_NAMESPACE
 

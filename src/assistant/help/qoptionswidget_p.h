@@ -15,9 +15,8 @@
 // We mean it.
 //
 
-#include <QtCore/QMap>
-
-#include <QtWidgets/QWidget>
+#include <QtCore/qmap.h>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 

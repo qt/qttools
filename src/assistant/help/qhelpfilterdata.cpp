@@ -3,7 +3,7 @@
 
 #include "qhelpfilterdata.h"
 
-#include <QtCore/QVersionNumber>
+#include <QtCore/qversionnumber.h>
 
 QT_BEGIN_NAMESPACE
 

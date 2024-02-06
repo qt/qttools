@@ -3,7 +3,7 @@
 
 #include "qfilternamedialog_p.h"
 
-#include <QtWidgets/QPushButton>
+#include <QtWidgets/qpushbutton.h>
 
 QT_BEGIN_NAMESPACE
 

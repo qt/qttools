@@ -6,7 +6,7 @@
 
 #include <QtHelp/qhelp_global.h>
 
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 
 QT_BEGIN_NAMESPACE
 

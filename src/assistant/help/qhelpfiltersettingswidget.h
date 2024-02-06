@@ -6,7 +6,7 @@
 
 #include <QtHelp/qhelp_global.h>
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 

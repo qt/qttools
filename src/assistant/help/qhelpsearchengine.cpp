@@ -10,11 +10,11 @@
 #include "qhelpsearchindexreader_default_p.h"
 #include "qhelpsearchindexwriter_default_p.h"
 
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
-#include <QtCore/QPointer>
-#include <QtCore/QTimer>
+#include <QtCore/qdir.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qpointer.h>
+#include <QtCore/qtimer.h>
 
 QT_BEGIN_NAMESPACE
 

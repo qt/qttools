@@ -6,9 +6,9 @@
 
 #include <QtHelp/qhelp_global.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QUrl>
-#include <QtCore/QVariant>
+#include <QtCore/qobject.h>
+#include <QtCore/qurl.h>
+#include <QtCore/qvariant.h>
 
 QT_BEGIN_NAMESPACE
 

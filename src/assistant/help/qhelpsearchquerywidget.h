@@ -7,7 +7,7 @@
 #include <QtHelp/qhelp_global.h>
 #include <QtHelp/qhelpsearchengine.h>
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 

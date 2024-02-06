@@ -7,8 +7,8 @@
 #include "qhelpfiltersettingswidget.h"
 #include "ui_qhelpfiltersettingswidget.h"
 
-#include <QtCore/QVersionNumber>
-#include <QtWidgets/QMessageBox>
+#include <QtCore/qversionnumber.h>
+#include <QtWidgets/qmessagebox.h>
 
 QT_BEGIN_NAMESPACE
 

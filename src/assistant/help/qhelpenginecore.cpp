@@ -8,9 +8,9 @@
 #include "qhelpfilterengine.h"
 #include "qhelplink.h"
 
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtCore/QThread>
+#include <QtCore/qdir.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qthread.h>
 
 QT_BEGIN_NAMESPACE
 

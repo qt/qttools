@@ -7,8 +7,8 @@
 #include "qhelpenginecore.h"
 #include "qhelplink.h"
 
-#include <QtCore/QThread>
-#include <QtCore/QMutex>
+#include <QtCore/qthread.h>
+#include <QtCore/qmutex.h>
 
 #include <algorithm>
 

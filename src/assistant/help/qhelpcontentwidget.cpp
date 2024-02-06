@@ -6,11 +6,11 @@
 #include "qhelpenginecore.h"
 #include "qhelpengine_p.h"
 
-#include <QtCore/QDir>
-#include <QtCore/QMutex>
-#include <QtCore/QThread>
-#include <QtCore/QStack>
-#include <QtWidgets/QHeaderView>
+#include <QtCore/qdir.h>
+#include <QtCore/qmutex.h>
+#include <QtCore/qthread.h>
+#include <QtCore/qstack.h>
+#include <QtWidgets/qheaderview.h>
 
 QT_BEGIN_NAMESPACE
 

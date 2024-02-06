@@ -6,19 +6,18 @@
 #include "qhelpdbreader_p.h"
 #include "qhelpenginecore.h"
 
-#include <QtCore/QDataStream>
-#include <QtCore/QDateTime>
-#include <QtCore/QDir>
-#include <QtCore/QStringDecoder>
-#include <QtCore/QTextStream>
-#include <QtCore/QUrl>
-#include <QtCore/QVariant>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlDriver>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlQuery>
-
-#include <QTextDocument>
+#include <QtCore/qdatastream.h>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qstringconverter.h>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qurl.h>
+#include <QtCore/qvariant.h>
+#include <QtGui/qtextdocument.h>
+#include <QtSql/qsqldatabase.h>
+#include <QtSql/qsqldriver.h>
+#include <QtSql/qsqlerror.h>
+#include <QtSql/qsqlquery.h>
 
 QT_BEGIN_NAMESPACE
 

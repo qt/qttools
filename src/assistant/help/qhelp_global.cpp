@@ -3,11 +3,11 @@
 
 #include "qhelp_global.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QHash>
-#include <QtCore/QMutexLocker>
-#include <QtCore/QRegularExpression>
-#include <QtGui/QTextDocument>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qmutex.h>
+#include <QtCore/qregularexpression.h>
+#include <QtGui/qtextdocument.h>
 
 QString QHelpGlobal::uniquifyConnectionName(const QString &name, void *pointer)
 {

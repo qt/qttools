@@ -6,7 +6,7 @@
 
 #include <QtHelp/qhelp_global.h>
 
-#include <QtWidgets/QTreeView>
+#include <QtWidgets/qtreeview.h>
 
 QT_BEGIN_NAMESPACE
 

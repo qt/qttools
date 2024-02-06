@@ -15,7 +15,7 @@
 // We mean it.
 //
 
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 
 QT_BEGIN_NAMESPACE
 
