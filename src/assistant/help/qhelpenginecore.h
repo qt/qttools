@@ -100,8 +100,8 @@ Q_SIGNALS:
 // #endif
 
 protected:
-    QHelpEngineCore(QHelpEngineCorePrivate *helpEngineCorePrivate,
-        QObject *parent);
+    // TODO: Deprecate me
+    QHelpEngineCore(QHelpEngineCorePrivate *helpEngineCorePrivate, QObject *parent);
 
 private:
     // TODO: Temporary, it's going to be removed in subsequent patches.
@@ -110,7 +110,6 @@ private:
     QHelpEngineCorePrivate *d;
     friend class QHelpContentProvider;
     friend class QHelpIndexProvider;
-    friend class QHelpEngineCorePrivate;
 };
 
 QT_END_NAMESPACE

@@ -14,20 +14,28 @@
 
 QT_BEGIN_NAMESPACE
 
-void QHelpEngineCorePrivate::init(const QString &collectionFile,
-                                  QHelpEngineCore *helpEngineCore)
+QHelpEngineCorePrivate::QHelpEngineCorePrivate(const QString &collectionFile,
+                                               QHelpEngineCore *helpEngineCore)
 {
     q = helpEngineCore;
-    collectionHandler = new QHelpCollectionHandler(collectionFile, helpEngineCore);
-    connect(collectionHandler, &QHelpCollectionHandler::error,
-            this, &QHelpEngineCorePrivate::errorReceived);
-    filterEngine->setCollectionHandler(collectionHandler);
-    needsSetup = true;
+    filterEngine = new QHelpFilterEngine(q);
+    init(collectionFile);
 }
 
 QHelpEngineCorePrivate::~QHelpEngineCorePrivate()
 {
     delete collectionHandler;
+}
+
+void QHelpEngineCorePrivate::init(const QString &collectionFile)
+{
+    if (collectionHandler)
+        delete collectionHandler;
+    collectionHandler = new QHelpCollectionHandler(collectionFile, q);
+    connect(collectionHandler, &QHelpCollectionHandler::error,
+            this, &QHelpEngineCorePrivate::errorReceived);
+    filterEngine->setCollectionHandler(collectionHandler);
+    needsSetup = true;
 }
 
 bool QHelpEngineCorePrivate::setup()
@@ -147,22 +155,16 @@ void QHelpEngineCorePrivate::errorReceived(const QString &msg)
 */
 QHelpEngineCore::QHelpEngineCore(const QString &collectionFile, QObject *parent)
     : QObject(parent)
-{
-    d = new QHelpEngineCorePrivate();
-    d->filterEngine = new QHelpFilterEngine(this);
-    d->init(collectionFile, this);
-}
+    , d(new QHelpEngineCorePrivate(collectionFile, this))
+{}
 
 /*!
     \internal
 */
-QHelpEngineCore::QHelpEngineCore(QHelpEngineCorePrivate *helpEngineCorePrivate,
-                                 QObject *parent)
+QHelpEngineCore::QHelpEngineCore(QHelpEngineCorePrivate *helpEngineCorePrivate, QObject *parent)
     : QObject(parent)
-{
-    d = helpEngineCorePrivate;
-    d->filterEngine = new QHelpFilterEngine(this);
-}
+    , d(helpEngineCorePrivate)
+{}
 
 /*!
     Destructs the help engine.
@@ -195,8 +197,7 @@ void QHelpEngineCore::setCollectionFile(const QString &fileName)
         delete d->collectionHandler;
         d->collectionHandler = nullptr;
     }
-    d->init(fileName, this);
-    d->needsSetup = true;
+    d->init(fileName);
 }
 
 /*!

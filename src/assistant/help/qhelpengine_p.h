@@ -15,22 +15,23 @@
 // We mean it.
 //
 
-#include "qhelpenginecore_p.h"
+#include <QtCore/qobject.h>
 
 QT_BEGIN_NAMESPACE
 
 class QHelpContentModel;
 class QHelpContentWidget;
+class QHelpEngineCore;
 class QHelpIndexModel;
 class QHelpIndexWidget;
 class QHelpSearchEngine;
 
-class QHelpEnginePrivate : public QHelpEngineCorePrivate
+class QHelpEnginePrivate : public QObject
 {
     Q_OBJECT
 
 public:
-    void init(const QString &collectionFile, QHelpEngineCore *helpEngineCore) override;
+    QHelpEnginePrivate(QHelpEngineCore *helpEngineCore);
 
     QHelpContentModel *contentModel = nullptr;
     QHelpContentWidget *contentWidget = nullptr;
@@ -57,6 +58,7 @@ private slots:
 
 private:
     bool m_isApplyCurrentFilterScheduled = false;
+    QHelpEngineCore *m_helpEngineCore;
 };
 
 QT_END_NAMESPACE

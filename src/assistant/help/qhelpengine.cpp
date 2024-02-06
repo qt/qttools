@@ -12,27 +12,25 @@
 
 QT_BEGIN_NAMESPACE
 
-void QHelpEnginePrivate::init(const QString &collectionFile,
-                              QHelpEngineCore *helpEngineCore)
+QHelpEnginePrivate::QHelpEnginePrivate(QHelpEngineCore *helpEngineCore)
+    : m_helpEngineCore(helpEngineCore)
 {
-    QHelpEngineCorePrivate::init(collectionFile, helpEngineCore);
-
     if (!contentModel)
         contentModel = new QHelpContentModel(helpEngineCore);
     if (!indexModel)
-        indexModel = new QHelpIndexModel(helpEngineCore);
+        indexModel = new QHelpIndexModel(m_helpEngineCore);
 
-    connect(helpEngineCore, &QHelpEngineCore::setupFinished,
+    connect(m_helpEngineCore, &QHelpEngineCore::setupFinished,
             this, &QHelpEnginePrivate::scheduleApplyCurrentFilter);
-    connect(helpEngineCore, &QHelpEngineCore::currentFilterChanged,
+    connect(m_helpEngineCore, &QHelpEngineCore::currentFilterChanged,
             this, &QHelpEnginePrivate::scheduleApplyCurrentFilter);
-    connect(helpEngineCore->filterEngine(), &QHelpFilterEngine::filterActivated,
+    connect(m_helpEngineCore->filterEngine(), &QHelpFilterEngine::filterActivated,
             this, &QHelpEnginePrivate::scheduleApplyCurrentFilter);
 }
 
 void QHelpEnginePrivate::scheduleApplyCurrentFilter()
 {
-    if (!error.isEmpty())
+    if (!m_helpEngineCore->error().isEmpty())
         return;
 
     if (m_isApplyCurrentFilterScheduled)
@@ -92,10 +90,9 @@ void QHelpEnginePrivate::unsetIndexWidgetBusy()
     it will be created.
 */
 QHelpEngine::QHelpEngine(const QString &collectionFile, QObject *parent)
-    : QHelpEngineCore(d = new QHelpEnginePrivate(), parent)
-{
-    d->init(collectionFile, this);
-}
+    : QHelpEngineCore(collectionFile, parent)
+    , d(new QHelpEnginePrivate(this))
+{}
 
 /*!
     Destroys the help engine object.

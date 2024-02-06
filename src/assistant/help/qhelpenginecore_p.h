@@ -28,10 +28,10 @@ class QHelpEngineCorePrivate : public QObject
     Q_OBJECT
 
 public:
-    virtual ~QHelpEngineCorePrivate();
+    QHelpEngineCorePrivate(const QString &collectionFile, QHelpEngineCore *helpEngineCore);
+    ~QHelpEngineCorePrivate();
 
-    virtual void init(const QString &collectionFile, QHelpEngineCore *helpEngineCore);
-
+    void init(const QString &collectionFile);
     bool setup();
 
     QHelpCollectionHandler *collectionHandler = nullptr;
@@ -43,10 +43,8 @@ public:
     bool usesFilterEngine = false;
     bool readOnly = true;
 
-protected:
     QHelpEngineCore *q;
 
-private slots:
     void errorReceived(const QString &msg);
 };
 

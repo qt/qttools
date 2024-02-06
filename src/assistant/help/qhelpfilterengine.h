@@ -54,7 +54,6 @@ private:
     void setCollectionHandler(QHelpCollectionHandler *collectionHandler);
 
     QHelpFilterEnginePrivate *d;
-    friend class QHelpEngineCore;
     friend class QHelpEngineCorePrivate;
 };
 
