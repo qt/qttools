@@ -779,4 +779,9 @@ bool QHelpEngineCore::usesFilterEngine() const
     return d->usesFilterEngine;
 }
 
+QString QHelpEngineCore::legacyCurrentFilterName() const
+{
+    return d->currentFilter;
+}
+
 QT_END_NAMESPACE

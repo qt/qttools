@@ -23,6 +23,7 @@ class QHELP_EXPORT QHelpIndexModel : public QStringListModel
     Q_OBJECT
 
 public:
+    void createIndexForCurrentFilter();
     void createIndex(const QString &customFilterName);
     QModelIndex filter(const QString &filter,
         const QString &wildcard = QString());

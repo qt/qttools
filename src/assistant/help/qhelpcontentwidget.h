@@ -44,6 +44,7 @@ class QHELP_EXPORT QHelpContentModel : public QAbstractItemModel
 public:
     ~QHelpContentModel() override;
 
+    void createContentsForCurrentFilter();
     void createContents(const QString &customFilterName);
     QHelpContentItem *contentItemAt(const QModelIndex &index) const;
 

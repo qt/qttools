@@ -45,11 +45,8 @@ void QHelpEnginePrivate::scheduleApplyCurrentFilter()
 void QHelpEnginePrivate::applyCurrentFilter()
 {
     m_isApplyCurrentFilterScheduled = false;
-    const QString filter = usesFilterEngine
-            ? q->filterEngine()->activeFilter()
-            : currentFilter;
-    contentModel->createContents(filter);
-    indexModel->createIndex(filter);
+    contentModel->createContentsForCurrentFilter();
+    indexModel->createIndexForCurrentFilter();
 }
 
 void QHelpEnginePrivate::setContentsWidgetBusy()

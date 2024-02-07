@@ -4,6 +4,7 @@
 #include "qhelpindexwidget.h"
 #include "qhelpcollectionhandler_p.h"
 #include "qhelpenginecore.h"
+#include "qhelpfilterengine.h"
 #include "qhelplink.h"
 
 #include <QtCore/qthread.h>
@@ -26,6 +27,7 @@ public:
         stopCollecting();
     }
 
+    void collectIndicesForCurrentFilter();
     void collectIndices(const QString &customFilterName);
     void stopCollecting();
     QStringList indices() const;
@@ -52,6 +54,18 @@ public:
     QHelpIndexProvider *indexProvider;
     QStringList indices;
 };
+
+void QHelpIndexProvider::collectIndicesForCurrentFilter()
+{
+    m_mutex.lock();
+    m_currentFilter = m_helpEngine->filterEngine()->activeFilter();
+    m_filterAttributes = m_helpEngine->filterAttributes(m_helpEngine->legacyCurrentFilterName());
+    m_mutex.unlock();
+
+    if (isRunning())
+        stopCollecting();
+    start(LowPriority);
+}
 
 void QHelpIndexProvider::collectIndices(const QString &customFilterName)
 {
@@ -142,6 +156,23 @@ QHelpIndexModel::~QHelpIndexModel()
 }
 
 /*!
+    \since 6.8
+
+    Creates a new index by querying the help system for keywords for the current filter.
+*/
+void QHelpIndexModel::createIndexForCurrentFilter()
+{
+    const bool running = d->indexProvider->isRunning();
+    d->indexProvider->collectIndicesForCurrentFilter();
+    if (running)
+        return;
+
+    d->indices.clear();
+    filter({});
+    emit indexCreationStarted();
+}
+
+/*!
     Creates a new index by querying the help system for
     keywords for the specified \a customFilterName.
 */
@@ -152,8 +183,8 @@ void QHelpIndexModel::createIndex(const QString &customFilterName)
     if (running)
         return;
 
-    d->indices = QStringList();
-    filter(QString());
+    d->indices.clear();
+    filter({});
     emit indexCreationStarted();
 }
 
@@ -163,7 +194,7 @@ void QHelpIndexModel::insertIndices()
         return;
 
     d->indices = d->indexProvider->indices();
-    filter(QString());
+    filter({});
     emit indexCreated();
 }
 

@@ -4,6 +4,7 @@
 #include "qhelpcontentwidget.h"
 #include "qhelpcollectionhandler_p.h"
 #include "qhelpenginecore.h"
+#include "qhelpfilterengine.h"
 
 #include <QtCore/qdir.h>
 #include <QtCore/qmutex.h>
@@ -36,6 +37,7 @@ class QHelpContentProvider : public QThread
 public:
     QHelpContentProvider(QHelpEngineCore *helpEngine);
     ~QHelpContentProvider() override;
+    void collectContentsForCurrentFilter();
     void collectContents(const QString &customFilterName);
     void stopCollecting();
     QHelpContentItem *takeContentItem();
@@ -149,6 +151,20 @@ QHelpContentProvider::QHelpContentProvider(QHelpEngineCore *helpEngine)
 QHelpContentProvider::~QHelpContentProvider()
 {
     stopCollecting();
+}
+
+void QHelpContentProvider::collectContentsForCurrentFilter()
+{
+    m_mutex.lock();
+    m_currentFilter = m_helpEngine->filterEngine()->activeFilter();
+    m_filterAttributes = m_helpEngine->filterAttributes(m_helpEngine->legacyCurrentFilterName());
+    m_collectionFile = m_helpEngine->collectionFile();
+    m_usesFilterEngine = m_helpEngine->usesFilterEngine();
+    m_mutex.unlock();
+
+    if (isRunning())
+        stopCollecting();
+    start(LowPriority);
 }
 
 void QHelpContentProvider::collectContents(const QString &customFilterName)
@@ -330,6 +346,27 @@ QHelpContentModel::~QHelpContentModel()
 {
     delete d->rootItem;
     delete d;
+}
+
+/*!
+    \since 6.8
+
+    Creates new contents by querying the help system for contents specified for the current filter.
+*/
+void QHelpContentModel::createContentsForCurrentFilter()
+{
+    const bool running = d->qhelpContentProvider->isRunning();
+    d->qhelpContentProvider->collectContentsForCurrentFilter();
+    if (running)
+        return;
+
+    if (d->rootItem) {
+        beginResetModel();
+        delete d->rootItem;
+        d->rootItem = nullptr;
+        endResetModel();
+    }
+    emit contentsCreationStarted();
 }
 
 /*!

@@ -108,7 +108,12 @@ protected:
         QObject *parent);
 
 private:
+    // TODO: Temporary, it's going to be removed in subsequent patches.
+    QString legacyCurrentFilterName() const;
+
     QHelpEngineCorePrivate *d;
+    friend class QHelpContentProvider;
+    friend class QHelpIndexProvider;
     friend class QHelpEngineCorePrivate;
 };
 
