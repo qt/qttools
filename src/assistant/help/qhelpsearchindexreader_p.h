@@ -25,6 +25,7 @@ QT_BEGIN_NAMESPACE
 
 namespace fulltextsearch {
 
+// TODO: Employ QFuture / QtConcurrent::run() ?
 class QHelpSearchIndexReader : public QThread
 {
     Q_OBJECT

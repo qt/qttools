@@ -21,7 +21,6 @@ public:
         , m_version(other.m_version)
         , m_isNull(other.m_isNull)
     { }
-    ~QCompressedHelpInfoPrivate() = default;
 
     QString m_namespaceName;
     QString m_component;
@@ -54,8 +53,7 @@ public:
 */
 QCompressedHelpInfo::QCompressedHelpInfo()
     : d(new QCompressedHelpInfoPrivate)
-{
-}
+{}
 
 /*!
     Constructs a copy of \a other.
@@ -133,7 +131,7 @@ QCompressedHelpInfo QCompressedHelpInfo::fromCompressedHelpFile(const QString &d
 {
     QHelpDBReader reader(documentationFileName,
         QHelpGlobal::uniquifyConnectionName(QLatin1String("GetCompressedHelpInfo"),
-        QThread::currentThread()), nullptr);
+            QThread::currentThread()), nullptr); // TODO: Replace QThread with *this
     if (reader.init()) {
         QCompressedHelpInfo info;
         info.d->m_namespaceName = reader.namespaceName();
@@ -142,7 +140,7 @@ QCompressedHelpInfo QCompressedHelpInfo::fromCompressedHelpFile(const QString &d
         info.d->m_isNull = false;
         return info;
     }
-    return QCompressedHelpInfo();
+    return {};
 }
 
 QT_END_NAMESPACE

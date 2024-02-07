@@ -29,7 +29,7 @@ public:
     QFilterNameDialog(QWidget *parent = nullptr);
 
     void setFilterName(const QString &filter);
-    QString filterName() const;
+    QString filterName() const { return m_ui.lineEdit->text(); }
 
 private slots:
     void updateOkButton();

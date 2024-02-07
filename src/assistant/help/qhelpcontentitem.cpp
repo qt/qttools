@@ -63,6 +63,7 @@ int QHelpContentItem::childCount() const
 */
 int QHelpContentItem::row() const
 {
+    // TODO: Optimize by keeping the index internally.
     return d->parent ? d->parent->d->childItems.indexOf(const_cast<QHelpContentItem*>(this)) : 0;
 }
 

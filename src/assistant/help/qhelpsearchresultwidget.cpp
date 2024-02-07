@@ -24,8 +24,7 @@ public:
     QResultWidget(QWidget *parent = nullptr)
         : QTextBrowser(parent)
     {
-        connect(this, &QTextBrowser::anchorClicked,
-                this, &QResultWidget::requestShowLink);
+        connect(this, &QTextBrowser::anchorClicked, this, &QResultWidget::requestShowLink);
         setContextMenuPolicy(Qt::NoContextMenu);
         setLinkColor(palette().color(QPalette::Link));
     }
@@ -34,7 +33,8 @@ public:
     void setLinkColor(const QColor &color)
     {
         m_linkColor = color;
-        const QString sheet = QString::fromLatin1("a { text-decoration: underline; color: %1 }").arg(m_linkColor.name());
+        const QString sheet = QString::fromLatin1("a { text-decoration: underline; color: %1 }")
+                                      .arg(m_linkColor.name());
         document()->setDefaultStyleSheet(sheet);
     }
 
@@ -73,7 +73,6 @@ public:
         }
 
         str << "</body></html>";
-
         setHtml(htmlFile);
     }
 
@@ -86,7 +85,6 @@ private slots:
 private:
     QColor m_linkColor;
 };
-
 
 class QHelpSearchResultWidgetPrivate : public QObject
 {
@@ -126,20 +124,12 @@ private slots:
         updateHitRange();
     }
 
-    void indexingStarted()
-    {
-        isIndexing = true;
-    }
-
-    void indexingFinished()
-    {
-        isIndexing = false;
-    }
+    void indexingStarted() { isIndexing = true; }
+    void indexingFinished() { isIndexing = false; }
 
 private:
     QHelpSearchResultWidgetPrivate(QHelpSearchEngine *engine)
-        : QObject()
-        , searchEngine(engine)
+        : searchEngine(engine)
     {
         connect(searchEngine.data(), &QHelpSearchEngine::indexingStarted,
                 this, &QHelpSearchResultWidgetPrivate::indexingStarted);
@@ -154,13 +144,12 @@ private:
 
     QToolButton* setupToolButton(const QString &iconPath)
     {
-        QToolButton *button = new QToolButton();
+        QToolButton *button = new QToolButton;
         button->setEnabled(false);
         button->setAutoRaise(true);
         button->setIcon(QIcon(iconPath));
         button->setIconSize(QSize(12, 12));
         button->setMaximumSize(QSize(16, 16));
-
         return button;
     }
 
@@ -176,11 +165,12 @@ private:
                 last = qMin(resultFirstToShow + ResultsRange, count);
                 first = resultFirstToShow + 1;
             }
-            resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
-                               last), isIndexing);
+            resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow, last),
+                                              isIndexing);
         }
 
-        hitsLabel->setText(QHelpSearchResultWidget::tr("%1 - %2 of %n Hits", nullptr, count).arg(first).arg(last));
+        hitsLabel->setText(QHelpSearchResultWidget::tr("%1 - %2 of %n Hits", nullptr, count)
+                                   .arg(first).arg(last));
         firstResultPage->setEnabled(resultFirstToShow);
         previousResultPage->setEnabled(resultFirstToShow);
         lastResultPage->setEnabled(count - last);
@@ -225,12 +215,12 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
     , d(new QHelpSearchResultWidgetPrivate(engine))
 {
     QVBoxLayout *vLayout = new QVBoxLayout(this);
-    vLayout->setContentsMargins(QMargins());
+    vLayout->setContentsMargins({});
     vLayout->setSpacing(0);
 
     QHBoxLayout *hBoxLayout = new QHBoxLayout();
 #ifndef Q_OS_MAC
-    hBoxLayout->setContentsMargins(QMargins());
+    hBoxLayout->setContentsMargins({});
     hBoxLayout->setSpacing(0);
 #endif
     hBoxLayout->addWidget(d->firstResultPage = d->setupToolButton(
@@ -298,7 +288,7 @@ QUrl QHelpSearchResultWidget::linkAt(const QPoint &point)
 {
     if (d->resultTextBrowser)
         return d->resultTextBrowser->anchorAt(point);
-    return QUrl();
+    return {};
 }
 
 QT_END_NAMESPACE

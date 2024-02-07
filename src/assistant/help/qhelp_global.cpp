@@ -6,18 +6,14 @@
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qmutex.h>
-#include <QtCore/qregularexpression.h>
 #include <QtGui/qtextdocument.h>
 
 QString QHelpGlobal::uniquifyConnectionName(const QString &name, void *pointer)
 {
     static QMutex mutex;
     QMutexLocker locker(&mutex);
-
-    static QHash<QString,quint16> idHash;
-
-    return QString::fromLatin1("%1-%2-%3").
-        arg(name).arg(quintptr(pointer)).arg(++idHash[name]);
+    static QHash<QString, quint16> idHash;
+    return QString::asprintf("%ls-%p-%d", qUtf16Printable(name), pointer, ++idHash[name]);
 }
 
 QString QHelpGlobal::documentTitle(const QString &content)

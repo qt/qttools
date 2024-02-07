@@ -14,8 +14,7 @@
 QT_BEGIN_NAMESPACE
 
 QHelpDBReader::QHelpDBReader(const QString &dbName)
-    : QObject(nullptr)
-    , m_dbName(dbName)
+    : m_dbName(dbName)
     , m_uniqueId(QHelpGlobal::uniquifyConnectionName(QLatin1String("QHelpDBReader"), this))
 {}
 
@@ -48,7 +47,6 @@ bool QHelpDBReader::init()
 
     m_initDone = true;
     m_query = new QSqlQuery(QSqlDatabase::database(m_uniqueId));
-
     return true;
 }
 
@@ -86,7 +84,7 @@ QString QHelpDBReader::virtualFolder() const
         if (m_query->next())
             return m_query->value(0).toString();
     }
-    return QString();
+    return {};
 }
 
 QString QHelpDBReader::version() const
@@ -101,7 +99,7 @@ QString QHelpDBReader::qtVersionHeuristic() const
 {
     const QString nameSpace = namespaceName();
     if (!nameSpace.startsWith(QLatin1String("org.qt-project.")))
-        return QString();
+        return {};
 
     // We take the namespace tail, starting from the last letter in namespace name.
     // We drop any non digit characters.
@@ -147,16 +145,15 @@ QString QHelpDBReader::qtVersionHeuristic() const
 
         return QString::fromUtf8("%1.%2.%3").arg(major).arg(minor).arg(patch);
     }
-
     return tail;
 }
 
 static bool isAttributeUsed(QSqlQuery *query, const QString &tableName, int attributeId)
 {
     query->prepare(QString::fromLatin1("SELECT FilterAttributeId "
-                     "FROM %1 "
-                     "WHERE FilterAttributeId = ? "
-                     "LIMIT 1").arg(tableName));
+                                       "FROM %1 "
+                                       "WHERE FilterAttributeId = ? "
+                                       "LIMIT 1").arg(tableName));
     query->bindValue(0, attributeId);
     query->exec();
     return query->next(); // if we got a result it means it was used
@@ -165,7 +162,7 @@ static bool isAttributeUsed(QSqlQuery *query, const QString &tableName, int attr
 static int filterDataCount(QSqlQuery *query, const QString &tableName)
 {
     query->exec(QString::fromLatin1("SELECT COUNT(*) FROM"
-              "(SELECT DISTINCT * FROM %1)").arg(tableName));
+                                    "(SELECT DISTINCT * FROM %1)").arg(tableName));
     query->next();
     return query->value(0).toInt();
 }
@@ -343,7 +340,6 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
         for (int attributeId : usedAttributeIds)
             table.usedFilterAttributes.append(attributeIds.value(attributeId));
     }
-
     return table;
 }
 
@@ -445,9 +441,8 @@ QStringList QHelpDBReader::filterAttributes(const QString &filterName) const
 QMultiMap<QString, QByteArray> QHelpDBReader::filesData(const QStringList &filterAttributes,
                                                         const QString &extensionFilter) const
 {
-    QMultiMap<QString, QByteArray> result;
     if (!m_query)
-        return result;
+        return {};
 
     QString query;
     QString extension;
@@ -489,25 +484,22 @@ QMultiMap<QString, QByteArray> QHelpDBReader::filesData(const QStringList &filte
         }
     }
     m_query->exec(query);
+    QMultiMap<QString, QByteArray> result;
     while (m_query->next())
         result.insert(m_query->value(0).toString(), qUncompress(m_query->value(1).toByteArray()));
-
     return result;
 }
 
 QVariant QHelpDBReader::metaData(const QString &name) const
 {
-    QVariant v;
     if (!m_query)
-        return v;
+        return {};
 
-    m_query->prepare(QLatin1String("SELECT COUNT(Value), Value FROM MetaDataTable "
-        "WHERE Name=?"));
+    m_query->prepare(QLatin1String("SELECT COUNT(Value), Value FROM MetaDataTable WHERE Name=?"));
     m_query->bindValue(0, name);
-    if (m_query->exec() && m_query->next()
-        && m_query->value(0).toInt() == 1)
-        v = m_query->value(1);
-    return v;
+    if (m_query->exec() && m_query->next() && m_query->value(0).toInt() == 1)
+        return m_query->value(1);
+    return {};
 }
 
 QString QHelpDBReader::quote(const QString &string) const

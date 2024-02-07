@@ -48,9 +48,7 @@ public:
 
     QList<QHelpSearchResult> searchResults(int start, int end) const
     {
-        return indexReader ?
-               indexReader->searchResults(start, end) :
-               QList<QHelpSearchResult>();
+        return indexReader ? indexReader->searchResults(start, end) : QList<QHelpSearchResult>();
     }
 
     void updateIndex(bool reindex = false)
@@ -71,8 +69,7 @@ public:
         }
 
         indexWriter->cancelIndexing();
-        indexWriter->updateIndex(helpEngine->collectionFile(),
-                                 indexFilesFolder(), reindex);
+        indexWriter->updateIndex(helpEngine->collectionFile(), indexFilesFolder(), reindex);
     }
 
     void cancelIndexing()
@@ -114,8 +111,7 @@ public:
         QString indexFilesFolder = QLatin1String(".fulltextsearch");
         if (helpEngine && !helpEngine->collectionFile().isEmpty()) {
             QFileInfo fi(helpEngine->collectionFile());
-            indexFilesFolder = fi.absolutePath() + QDir::separator()
-                + QLatin1Char('.')
+            indexFilesFolder = fi.absolutePath() + QDir::separator() + QLatin1Char('.')
                 + fi.fileName().left(fi.fileName().lastIndexOf(QLatin1String(".qhc")));
         }
         return indexFilesFolder;
@@ -281,7 +277,6 @@ QHelpSearchQueryWidget* QHelpSearchEngine::queryWidget()
 {
     if (!d->queryWidget)
         d->queryWidget = new QHelpSearchQueryWidget();
-
     return d->queryWidget;
 }
 
@@ -292,7 +287,6 @@ QHelpSearchResultWidget* QHelpSearchEngine::resultWidget()
 {
     if (!d->resultWidget)
         d->resultWidget = new QHelpSearchResultWidget(this);
-
     return d->resultWidget;
 }
 
@@ -381,8 +375,7 @@ QT_WARNING_DISABLE_DEPRECATED
 */
 QList<QHelpSearchQuery> QHelpSearchEngine::query() const
 {
-    return QList<QHelpSearchQuery>() << QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
-           d->m_searchInput.split(QChar::Space));
+    return {{QHelpSearchQuery::DEFAULT, d->m_searchInput.split(QChar::Space)}};
 }
 QT_WARNING_POP
 #endif // QT_DEPRECATED_SINCE(5, 9)

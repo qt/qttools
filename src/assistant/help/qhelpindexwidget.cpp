@@ -231,7 +231,7 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
 {
     if (filter.isEmpty()) {
         setStringList(d->indices);
-        return index(-1, 0, QModelIndex());
+        return index(-1, 0, {});
     }
 
     QStringList lst;
@@ -240,17 +240,17 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
 
     if (!wildcard.isEmpty()) {
         auto re = QRegularExpression::wildcardToRegularExpression(wildcard,
-                                                                  QRegularExpression::UnanchoredWildcardConversion);
+                  QRegularExpression::UnanchoredWildcardConversion);
         const QRegularExpression regExp(re, QRegularExpression::CaseInsensitiveOption);
+        // TODO: Limit code repetition, see next loop in this body
         for (const QString &index : std::as_const(d->indices)) {
             if (index.contains(regExp)) {
                 lst.append(index);
                 if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {
                     if (goodMatch == -1)
                         goodMatch = lst.size() - 1;
-                    if (filter.size() == index.size()){
+                    if (filter.size() == index.size())
                         perfectMatch = lst.size() - 1;
-                    }
                 } else if (perfectMatch > -1 && index == filter) {
                     perfectMatch = lst.size() - 1;
                 }
@@ -263,25 +263,21 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
                 if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {
                     if (goodMatch == -1)
                         goodMatch = lst.size() - 1;
-                    if (filter.size() == index.size()){
+                    if (filter.size() == index.size())
                         perfectMatch = lst.size() - 1;
-                    }
                 } else if (perfectMatch > -1 && index == filter) {
                     perfectMatch = lst.size() - 1;
                 }
             }
         }
-
     }
 
     if (perfectMatch == -1)
         perfectMatch = qMax(0, goodMatch);
 
     setStringList(lst);
-    return index(perfectMatch, 0, QModelIndex());
+    return index(perfectMatch, 0, {});
 }
-
-
 
 /*!
     \class QHelpIndexWidget
@@ -330,8 +326,7 @@ QHelpIndexWidget::QHelpIndexWidget()
 {
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setUniformItemSizes(true);
-    connect(this, &QAbstractItemView::activated,
-            this, &QHelpIndexWidget::showLink);
+    connect(this, &QAbstractItemView::activated, this, &QHelpIndexWidget::showLink);
 }
 
 void QHelpIndexWidget::showLink(const QModelIndex &index)
@@ -387,7 +382,7 @@ void QHelpIndexWidget::activateCurrentItem()
 */
 void QHelpIndexWidget::filterIndices(const QString &filter, const QString &wildcard)
 {
-    QHelpIndexModel *indexModel = qobject_cast<QHelpIndexModel*>(model());
+    QHelpIndexModel *indexModel = qobject_cast<QHelpIndexModel *>(model());
     if (!indexModel)
         return;
     const QModelIndex &idx = indexModel->filter(filter, wildcard);

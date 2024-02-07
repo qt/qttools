@@ -34,9 +34,7 @@ public:
 /*!
     Constructs a new empty QHelpSearchResult.
 */
-QHelpSearchResult::QHelpSearchResult()
-    : d(new QHelpSearchResultData)
-{}
+QHelpSearchResult::QHelpSearchResult() : d(new QHelpSearchResultData) { }
 
 /*!
     Constructs a copy of \a other.

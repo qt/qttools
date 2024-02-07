@@ -72,13 +72,14 @@ Writer::Writer(const QString &path)
     const QString dbPath = m_dbDir + QLatin1Char('/') + QLatin1String(FTS_DB_NAME);
     m_db->setDatabaseName(dbPath);
     if (!m_db->open()) {
-        const QString &error = QHelpSearchIndexWriter::tr("Cannot open database \"%1\" using connection \"%2\": %3")
-                .arg(dbPath, m_uniqueId, m_db->lastError().text());
+        const QString &error = QHelpSearchIndexWriter::tr(
+                                       "Cannot open database \"%1\" using connection \"%2\": %3")
+                                       .arg(dbPath, m_uniqueId, m_db->lastError().text());
         qWarning("%s", qUtf8Printable(error));
         delete m_db;
         m_db = nullptr;
         QSqlDatabase::removeDatabase(m_uniqueId);
-        m_uniqueId = QString();
+        m_uniqueId.clear();
     } else {
         startTransaction();
     }
@@ -112,7 +113,6 @@ bool Writer::hasDB()
 
     query.prepare(QLatin1String("SELECT id FROM info LIMIT 1"));
     query.exec();
-
     return query.next();
 }
 
@@ -248,7 +248,6 @@ bool Writer::hasNamespace(const QString &namespaceName)
     query.prepare(QLatin1String("SELECT id FROM info WHERE namespace = ? LIMIT 1"));
     query.addBindValue(namespaceName);
     query.exec();
-
     return query.next();
 }
 
@@ -294,18 +293,11 @@ void Writer::endTransaction()
         query.exec(QLatin1String("VACUUM"));
 }
 
-QHelpSearchIndexWriter::QHelpSearchIndexWriter()
-    : QThread()
-    , m_cancel(false)
-{
-}
-
 QHelpSearchIndexWriter::~QHelpSearchIndexWriter()
 {
     m_mutex.lock();
     this->m_cancel = true;
     m_mutex.unlock();
-
     wait();
 }
 
@@ -316,8 +308,7 @@ void QHelpSearchIndexWriter::cancelIndexing()
 }
 
 void QHelpSearchIndexWriter::updateIndex(const QString &collectionFile,
-                                         const QString &indexFilesFolder,
-                                         bool reindex)
+                                         const QString &indexFilesFolder, bool reindex)
 {
     wait();
     QMutexLocker lock(&m_mutex);
@@ -337,22 +328,19 @@ static const char IndexedNamespacesKey[] = "FTS5IndexedNamespaces";
 static QMap<QString, QDateTime> readIndexMap(const QHelpEngineCore &engine)
 {
     QMap<QString, QDateTime> indexMap;
-    QDataStream dataStream(engine.customValue(
-                QLatin1String(IndexedNamespacesKey)).toByteArray());
+    QDataStream dataStream(engine.customValue(QLatin1String(IndexedNamespacesKey)).toByteArray());
     dataStream >> indexMap;
     return indexMap;
 }
 
-static bool writeIndexMap(QHelpEngineCore *engine,
-    const QMap<QString, QDateTime> &indexMap)
+static bool writeIndexMap(QHelpEngineCore *engine, const QMap<QString, QDateTime> &indexMap)
 {
     QByteArray data;
 
     QDataStream dataStream(&data, QIODevice::ReadWrite);
     dataStream << indexMap;
 
-    return engine->setCustomValue(
-                QLatin1String(IndexedNamespacesKey), data);
+    return engine->setCustomValue(QLatin1String(IndexedNamespacesKey), data);
 }
 
 static bool clearIndexMap(QHelpEngineCore *engine)
@@ -489,7 +477,7 @@ void QHelpSearchIndexWriter::run()
                 url.setPath(QLatin1Char('/') + virtualFolder + QLatin1Char('/') + file);
 
                 if (url.hasFragment())
-                    url.setFragment(QString());
+                    url.setFragment({});
 
                 const QString &fullFileName = url.toString();
                 if (!fullFileName.endsWith(QLatin1String(".html"))

@@ -123,7 +123,7 @@ QHelpFilterEngine::~QHelpFilterEngine()
 void QHelpFilterEngine::setCollectionHandler(QHelpCollectionHandler *collectionHandler)
 {
     d->m_collectionHandler = collectionHandler;
-    d->m_currentFilter = QString();
+    d->m_currentFilter.clear();
     d->m_needsSetup = true;
 }
 
@@ -134,7 +134,7 @@ void QHelpFilterEngine::setCollectionHandler(QHelpCollectionHandler *collectionH
 QMap<QString, QString> QHelpFilterEngine::namespaceToComponent() const
 {
     if (!d->setup())
-        return QMap<QString, QString>();
+        return {};
     return d->m_collectionHandler->namespaceToComponent();
 }
 
@@ -145,8 +145,7 @@ QMap<QString, QString> QHelpFilterEngine::namespaceToComponent() const
 QMap<QString, QVersionNumber> QHelpFilterEngine::namespaceToVersion() const
 {
     if (!d->setup())
-        return QMap<QString, QVersionNumber>();
-
+        return {};
     return d->m_collectionHandler->namespaceToVersion();
 }
 
@@ -156,7 +155,7 @@ QMap<QString, QVersionNumber> QHelpFilterEngine::namespaceToVersion() const
 QStringList QHelpFilterEngine::filters() const
 {
     if (!d->setup())
-        return QStringList();
+        return {};
     return d->m_collectionHandler->filters();
 }
 
@@ -167,7 +166,7 @@ QStringList QHelpFilterEngine::filters() const
 QStringList QHelpFilterEngine::availableComponents() const
 {
     if (!d->setup())
-        return QStringList();
+        return {};
     return d->m_collectionHandler->availableComponents();
 }
 
@@ -180,7 +179,7 @@ QStringList QHelpFilterEngine::availableComponents() const
 QList<QVersionNumber> QHelpFilterEngine::availableVersions() const
 {
     if (!d->setup())
-        return QList<QVersionNumber>();
+        return {};
     return d->m_collectionHandler->availableVersions();
 }
 
@@ -190,7 +189,7 @@ QList<QVersionNumber> QHelpFilterEngine::availableVersions() const
 QHelpFilterData QHelpFilterEngine::filterData(const QString &filterName) const
 {
     if (!d->setup())
-        return QHelpFilterData();
+        return {};
     return d->m_collectionHandler->filterData(filterName);
 }
 
@@ -227,7 +226,7 @@ bool QHelpFilterEngine::removeFilter(const QString &filterName)
 QString QHelpFilterEngine::activeFilter() const
 {
     if (!d->setup())
-        return QString();
+        return {};
     return d->m_currentFilter;
 }
 
@@ -253,7 +252,6 @@ bool QHelpFilterEngine::setActiveFilter(const QString &filterName)
             d->m_currentFilter);
 
     emit filterActivated(d->m_currentFilter);
-
     return true;
 }
 
@@ -264,7 +262,7 @@ bool QHelpFilterEngine::setActiveFilter(const QString &filterName)
 QStringList QHelpFilterEngine::namespacesForFilter(const QString &filterName) const
 {
     if (!d->setup())
-        return QStringList();
+        return {};
     return  d->m_collectionHandler->namespacesForFilter(filterName);
 }
 
@@ -292,7 +290,7 @@ QStringList QHelpFilterEngine::indices() const
 QStringList QHelpFilterEngine::indices(const QString &filterName) const
 {
     if (!d->setup())
-        return QStringList();
+        return {};
     return d->m_collectionHandler->indicesForFilter(filterName);
 }
 

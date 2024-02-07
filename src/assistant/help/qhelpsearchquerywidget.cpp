@@ -23,7 +23,7 @@ private:
     struct QueryHistory {
         explicit QueryHistory() : curQuery(-1) {}
         QStringList queries;
-        int curQuery;
+        int curQuery = 0;
     };
 
     class CompleterModel : public QAbstractListModel
@@ -41,7 +41,7 @@ private:
         {
             if (!index.isValid() || index.row() >= termList.size()||
                 (role != Qt::EditRole && role != Qt::DisplayRole))
-                return QVariant();
+                return {};
             return termList.at(index.row());
         }
 
@@ -58,16 +58,7 @@ private:
         QStringList termList;
     };
 
-    QHelpSearchQueryWidgetPrivate()
-        : QObject()
-        , m_searchCompleter(new CompleterModel(this), this)
-    {
-    }
-
-    ~QHelpSearchQueryWidgetPrivate() override
-    {
-        // nothing todo
-    }
+    QHelpSearchQueryWidgetPrivate() : m_searchCompleter(new CompleterModel(this), this) {}
 
     void retranslate()
     {
@@ -128,7 +119,6 @@ private slots:
                     prevQuery();
                 return true;
             }
-
         }
         return QObject::eventFilter(ob, event);
     }
@@ -144,14 +134,10 @@ private slots:
 
     void nextQuery()
     {
-        nextOrPrevQuery(m_queries.queries.size() - 1, 1, m_nextQueryButton,
-                m_prevQueryButton);
+        nextOrPrevQuery(m_queries.queries.size() - 1, 1, m_nextQueryButton, m_prevQueryButton);
     }
 
-    void prevQuery()
-    {
-        nextOrPrevQuery(0, -1, m_prevQueryButton, m_nextQueryButton);
-    }
+    void prevQuery() { nextOrPrevQuery(0, -1, m_prevQueryButton, m_nextQueryButton); }
 
 private:
     friend class QHelpSearchQueryWidget;
@@ -188,13 +174,12 @@ private:
 */
 QHelpSearchQueryWidget::QHelpSearchQueryWidget(QWidget *parent)
     : QWidget(parent)
+    , d(new QHelpSearchQueryWidgetPrivate)
 {
-    d = new QHelpSearchQueryWidgetPrivate();
-
     QVBoxLayout *vLayout = new QVBoxLayout(this);
-    vLayout->setContentsMargins(QMargins());
+    vLayout->setContentsMargins({});
 
-    QHBoxLayout* hBoxLayout = new QHBoxLayout();
+    QHBoxLayout* hBoxLayout = new QHBoxLayout;
     d->m_searchLabel = new QLabel(this);
     d->m_lineEdit = new QLineEdit(this);
     d->m_lineEdit->setClearButtonEnabled(true);
@@ -265,8 +250,7 @@ QT_WARNING_DISABLE_DEPRECATED
 */
 QList<QHelpSearchQuery> QHelpSearchQueryWidget::query() const
 {
-    return QList<QHelpSearchQuery>() << QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
-           searchInput().split(QChar::Space, Qt::SkipEmptyParts));
+    return {{QHelpSearchQuery::DEFAULT, searchInput().split(QChar::Space, Qt::SkipEmptyParts)}};
 }
 
 /*!
@@ -293,7 +277,7 @@ QT_WARNING_POP
 QString QHelpSearchQueryWidget::searchInput() const
 {
     if (d->m_queries.queries.isEmpty())
-        return QString();
+        return {};
     return d->m_queries.queries.last();
 }
 
@@ -309,9 +293,7 @@ QString QHelpSearchQueryWidget::searchInput() const
 void QHelpSearchQueryWidget::setSearchInput(const QString &searchInput)
 {
     d->m_lineEdit->clear();
-
     d->m_lineEdit->setText(searchInput);
-
     d->searchRequested();
 }
 

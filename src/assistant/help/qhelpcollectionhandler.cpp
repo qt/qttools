@@ -74,8 +74,7 @@ bool QHelpCollectionHandler::isDBOpened() const
     if (m_query)
         return true;
     auto *that = const_cast<QHelpCollectionHandler *>(this);
-    emit that->error(tr("The collection file \"%1\" is not set up yet.").
-                     arg(m_collectionFile));
+    emit that->error(tr("The collection file \"%1\" is not set up yet.").arg(m_collectionFile));
     return false;
 }
 
@@ -87,12 +86,7 @@ void QHelpCollectionHandler::closeDB()
     delete m_query;
     m_query = nullptr;
     QSqlDatabase::removeDatabase(m_connectionName);
-    m_connectionName = QString();
-}
-
-QString QHelpCollectionHandler::collectionFile() const
-{
-    return m_collectionFile;
+    m_connectionName.clear();
 }
 
 bool QHelpCollectionHandler::openCollectionFile()
@@ -229,7 +223,6 @@ bool QHelpCollectionHandler::openCollectionFile()
             unregisterDocumentation(info.namespaceName);
         }
     }
-
     return true;
 }
 
@@ -238,8 +231,7 @@ QString QHelpCollectionHandler::absoluteDocPath(const QString &fileName) const
     const QFileInfo fi(collectionFile());
     return QDir::isAbsolutePath(fileName)
             ? fileName
-            : QFileInfo(fi.absolutePath() + QLatin1Char('/') + fileName)
-              .absoluteFilePath();
+            : QFileInfo(fi.absolutePath() + QLatin1Char('/') + fileName).absoluteFilePath();
 }
 
 bool QHelpCollectionHandler::isTimeStampCorrect(const TimeStamp &timeStamp) const
@@ -256,8 +248,8 @@ bool QHelpCollectionHandler::isTimeStampCorrect(const TimeStamp &timeStamp) cons
         return false;
 
     m_query->prepare(QLatin1String("SELECT FilePath "
-                                  "FROM NamespaceTable "
-                                  "WHERE Id = ?"));
+                                   "FROM NamespaceTable "
+                                   "WHERE Id = ?"));
     m_query->bindValue(0, timeStamp.namespaceId);
     if (!m_query->exec() || !m_query->next())
         return false;
@@ -273,12 +265,12 @@ bool QHelpCollectionHandler::isTimeStampCorrect(const TimeStamp &timeStamp) cons
 bool QHelpCollectionHandler::hasTimeStampInfo(const QString &nameSpace) const
 {
     m_query->prepare(QLatin1String("SELECT "
-                                      "TimeStampTable.NamespaceId "
-                                  "FROM "
-                                      "NamespaceTable, "
-                                      "TimeStampTable "
-                                  "WHERE NamespaceTable.Id = TimeStampTable.NamespaceId "
-                                  "AND NamespaceTable.Name = ? LIMIT 1"));
+                                       "TimeStampTable.NamespaceId "
+                                   "FROM "
+                                       "NamespaceTable, "
+                                       "TimeStampTable "
+                                   "WHERE NamespaceTable.Id = TimeStampTable.NamespaceId "
+                                   "AND NamespaceTable.Name = ? LIMIT 1"));
     m_query->bindValue(0, nameSpace);
     if (!m_query->exec())
         return false;
@@ -315,8 +307,7 @@ bool QHelpCollectionHandler::copyCollectionFile(const QString &fileName)
 
     const QFileInfo fi(fileName);
     if (fi.exists()) {
-        emit error(tr("The collection file \"%1\" already exists.").
-                   arg(fileName));
+        emit error(tr("The collection file \"%1\" already exists.").arg(fileName));
         return false;
     }
 
@@ -536,7 +527,6 @@ QStringList QHelpCollectionHandler::customFilters() const
     }
     return list;
 }
-
 
 QStringList QHelpCollectionHandler::filters() const
 {
@@ -999,7 +989,7 @@ bool QHelpCollectionHandler::fileExists(const QUrl &url) const
 static QString prepareFilterQuery(const QString &filterName)
 {
     if (filterName.isEmpty())
-        return QString();
+        return {};
 
     return QString::fromLatin1(" AND EXISTS(SELECT * FROM Filter WHERE Filter.Name = ?) "
                                "AND ("
@@ -1066,7 +1056,7 @@ static QString prepareFilterQuery(int attributesCount,
                                   const QString &filterColumnName)
 {
     if (!attributesCount)
-        return QString();
+        return {};
 
     QString filterQuery = QString::fromLatin1(" AND (%1.%2 IN (").arg(idTableName, idColumnName);
 
@@ -1116,11 +1106,11 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
                                                  const QStringList &filterAttributes) const
 {
     if (!isDBOpened())
-        return QString();
+        return {};
 
     const FileInfo fileInfo = extractFileInfo(url);
     if (fileInfo.namespaceName.isEmpty())
-        return QString();
+        return {};
 
     const QString filterlessQuery = QLatin1String(
                 "SELECT DISTINCT "
@@ -1147,14 +1137,14 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
     bindFilterQuery(m_query, 2, filterAttributes);
 
     if (!m_query->exec())
-        return QString();
+        return {};
 
-    QList<QString> namespaceList;
+    QStringList namespaceList;
     while (m_query->next())
         namespaceList.append(m_query->value(0).toString());
 
     if (namespaceList.isEmpty())
-        return QString();
+        return {};
 
     if (namespaceList.contains(fileInfo.namespaceName))
         return fileInfo.namespaceName;
@@ -1175,11 +1165,11 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
                                                  const QString &filterName) const
 {
     if (!isDBOpened())
-        return QString();
+        return {};
 
     const FileInfo fileInfo = extractFileInfo(url);
     if (fileInfo.namespaceName.isEmpty())
-        return QString();
+        return {};
 
     const QString filterlessQuery = QLatin1String(
                 "SELECT DISTINCT "
@@ -1202,14 +1192,14 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
     bindFilterQuery(m_query, 2, filterName);
 
     if (!m_query->exec())
-        return QString();
+        return {};
 
-    QList<QString> namespaceList;
+    QStringList namespaceList;
     while (m_query->next())
         namespaceList.append(m_query->value(0).toString());
 
     if (namespaceList.isEmpty())
-        return QString();
+        return {};
 
     if (namespaceList.contains(fileInfo.namespaceName))
         return fileInfo.namespaceName;
@@ -1231,7 +1221,7 @@ QStringList QHelpCollectionHandler::files(const QString &namespaceName,
                                           const QString &extensionFilter) const
 {
     if (!isDBOpened())
-        return QStringList();
+        return {};
 
     const QString extensionQuery = extensionFilter.isEmpty()
             ? QString() : QLatin1String(" AND FileNameTable.Name LIKE ?");
@@ -1264,7 +1254,7 @@ QStringList QHelpCollectionHandler::files(const QString &namespaceName,
     bindFilterQuery(m_query, bindCount, filterAttributes);
 
     if (!m_query->exec())
-        return QStringList();
+        return {};
 
     QStringList fileNames;
     while (m_query->next()) {
@@ -1281,7 +1271,7 @@ QStringList QHelpCollectionHandler::files(const QString &namespaceName,
                                           const QString &extensionFilter) const
 {
     if (!isDBOpened())
-        return QStringList();
+        return {};
 
     const QString extensionQuery = extensionFilter.isEmpty()
             ? QString() : QLatin1String(" AND FileNameTable.Name LIKE ?");
@@ -1311,7 +1301,7 @@ QStringList QHelpCollectionHandler::files(const QString &namespaceName,
     bindFilterQuery(m_query, bindCount, filterName);
 
     if (!m_query->exec())
-        return QStringList();
+        return{};
 
     QStringList fileNames;
     while (m_query->next()) {
@@ -1319,18 +1309,17 @@ QStringList QHelpCollectionHandler::files(const QString &namespaceName,
                          + QLatin1Char('/')
                          + m_query->value(1).toString());
     }
-
     return fileNames;
 }
 
 QUrl QHelpCollectionHandler::findFile(const QUrl &url, const QStringList &filterAttributes) const
 {
     if (!isDBOpened())
-        return QUrl();
+        return {};
 
     const QString namespaceName = namespaceForFile(url, filterAttributes);
     if (namespaceName.isEmpty())
-        return QUrl();
+        return {};
 
     QUrl result = url;
     result.setAuthority(namespaceName);
@@ -1340,11 +1329,11 @@ QUrl QHelpCollectionHandler::findFile(const QUrl &url, const QStringList &filter
 QUrl QHelpCollectionHandler::findFile(const QUrl &url, const QString &filterName) const
 {
     if (!isDBOpened())
-        return QUrl();
+        return {};
 
     const QString namespaceName = namespaceForFile(url, filterName);
     if (namespaceName.isEmpty())
-        return QUrl();
+        return {};
 
     QUrl result = url;
     result.setAuthority(namespaceName);
@@ -1354,11 +1343,11 @@ QUrl QHelpCollectionHandler::findFile(const QUrl &url, const QString &filterName
 QByteArray QHelpCollectionHandler::fileData(const QUrl &url) const
 {
     if (!isDBOpened())
-        return QByteArray();
+        return {};
 
     const QString namespaceName = namespaceForFile(url, QString());
     if (namespaceName.isEmpty())
-        return QByteArray();
+        return {};
 
     const FileInfo fileInfo = extractFileInfo(url);
 
@@ -1366,9 +1355,9 @@ QByteArray QHelpCollectionHandler::fileData(const QUrl &url) const
     const QString absFileName = absoluteDocPath(docInfo.fileName);
 
     QHelpDBReader reader(absFileName, QHelpGlobal::uniquifyConnectionName(
-                             docInfo.fileName, const_cast<QHelpCollectionHandler *>(this)), nullptr);
+                         docInfo.fileName, const_cast<QHelpCollectionHandler *>(this)), nullptr);
     if (!reader.init())
-        return QByteArray();
+        return {};
 
     return reader.fileData(fileInfo.folderName, fileInfo.fileName);
 }
@@ -1412,7 +1401,6 @@ QStringList QHelpCollectionHandler::indicesForFilter(const QStringList &filterAt
     return indices;
 }
 
-
 QStringList QHelpCollectionHandler::indicesForFilter(const QString &filterName) const
 {
     QStringList indices;
@@ -1450,7 +1438,7 @@ QStringList QHelpCollectionHandler::indicesForFilter(const QString &filterName) 
 static QString getTitle(const QByteArray &contents)
 {
     if (!contents.size())
-        return QString();
+        return {};
 
     int depth = 0;
     QString link;
@@ -1468,7 +1456,7 @@ QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForF
         const QStringList &filterAttributes) const
 {
     if (!isDBOpened())
-        return QList<ContentsData>();
+        return {};
 
     const QString filterlessQuery = QString::fromLatin1(
                 "SELECT DISTINCT "
@@ -1524,14 +1512,13 @@ QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForF
             result.append(it.value());
         }
     }
-
     return result;
 }
 
 QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForFilter(const QString &filterName) const
 {
     if (!isDBOpened())
-        return QList<ContentsData>();
+        return {};
 
     const QString filterlessQuery = QString::fromLatin1(
                 "SELECT DISTINCT "
@@ -1549,8 +1536,7 @@ QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForF
                 "AND ContentsTable.NamespaceId = NamespaceTable.Id "
                 "AND VersionTable.NamespaceId = NamespaceTable.Id");
 
-    const QString filterQuery = filterlessQuery
-            + prepareFilterQuery(filterName);
+    const QString filterQuery = filterlessQuery + prepareFilterQuery(filterName);
 
     m_query->prepare(filterQuery);
     bindFilterQuery(m_query, 0, filterName);
@@ -1583,7 +1569,6 @@ QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForF
             result.append(it.value());
         }
     }
-
     return result;
 }
 
@@ -1618,7 +1603,6 @@ QVariant QHelpCollectionHandler::customValue(const QString &key,
         m_query->clear();
         return value;
     }
-
     return defaultValue;
 }
 
@@ -1690,7 +1674,6 @@ bool QHelpCollectionHandler::registerFileAttributeSets(const QList<QStringList> 
         ++attributeSetId;
 
         for (const QString &attribute : attributeSet) {
-
             m_query->prepare(QLatin1String("SELECT Id FROM FilterAttributeTable WHERE Name=?"));
             m_query->bindValue(0, attribute);
 
@@ -1747,9 +1730,8 @@ QStringList QHelpCollectionHandler::filterAttributes(const QString &filterName) 
 
 QList<QStringList> QHelpCollectionHandler::filterAttributeSets(const QString &namespaceName) const
 {
-    QList<QStringList> result;
     if (!isDBOpened())
-        return result;
+        return {};
 
     m_query->prepare(QLatin1String(
                          "SELECT "
@@ -1766,6 +1748,7 @@ QList<QStringList> QHelpCollectionHandler::filterAttributeSets(const QString &na
     m_query->bindValue(0, namespaceName);
     m_query->exec();
     int oldId = -1;
+    QList<QStringList> result;
     while (m_query->next()) {
         const int id = m_query->value(0).toInt();
         if (id != oldId) {
@@ -1777,14 +1760,13 @@ QList<QStringList> QHelpCollectionHandler::filterAttributeSets(const QString &na
 
     if (result.isEmpty())
         result.append(QStringList());
-
     return result;
 }
 
 QString QHelpCollectionHandler::namespaceVersion(const QString &namespaceName) const
 {
     if (!m_query)
-        return QString();
+        return {};
 
     m_query->prepare(QLatin1String("SELECT "
                                        "VersionTable.Version "
@@ -1795,11 +1777,10 @@ QString QHelpCollectionHandler::namespaceVersion(const QString &namespaceName) c
                                    "AND NamespaceTable.Id = VersionTable.NamespaceId"));
     m_query->bindValue(0, namespaceName);
     if (!m_query->exec() || !m_query->next())
-        return QString();
+        return {};
 
     const QString ret = m_query->value(0).toString();
     m_query->clear();
-
     return ret;
 }
 
@@ -1853,10 +1834,8 @@ int QHelpCollectionHandler::registerVirtualFolder(const QString &folderName, int
         emit error(tr("Cannot register virtual folder '%1'.").arg(folderName));
         return -1;
     }
-
     if (registerComponent(folderName, namespaceId) < 0)
         return -1;
-
     return virtualId;
 }
 
@@ -1943,7 +1922,6 @@ bool QHelpCollectionHandler::registerIndexAndNamespaceFilterTables(
 
     if (createDefaultVersionFilter)
         createVersionFilter(reader.version());
-
     return true;
 }
 
@@ -1961,7 +1939,7 @@ void QHelpCollectionHandler::createVersionFilter(const QString &version)
         return;
 
     QHelpFilterData filterData;
-    filterData.setVersions(QList<QVersionNumber>() << versionNumber);
+    filterData.setVersions({versionNumber});
     setFilterData(filterName, filterData);
 }
 
@@ -2279,55 +2257,44 @@ QUrl QHelpCollectionHandler::buildQUrl(const QString &ns, const QString &folder,
 }
 
 QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForIdentifier(
-        const QString &id,
-        const QStringList &filterAttributes) const
+        const QString &id, const QStringList &filterAttributes) const
 {
     return linksForField(QLatin1String("Identifier"), id, filterAttributes);
 }
 
 QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForKeyword(
-        const QString &keyword,
-        const QStringList &filterAttributes) const
+        const QString &keyword, const QStringList &filterAttributes) const
 {
     return linksForField(QLatin1String("Name"), keyword, filterAttributes);
 }
 
 QList<QHelpLink> QHelpCollectionHandler::documentsForIdentifier(
-        const QString &id,
-        const QStringList &filterAttributes) const
+        const QString &id, const QStringList &filterAttributes) const
 {
     return documentsForField(QLatin1String("Identifier"), id, filterAttributes);
 }
 
 QList<QHelpLink> QHelpCollectionHandler::documentsForKeyword(
-        const QString &keyword,
-        const QStringList &filterAttributes) const
+        const QString &keyword, const QStringList &filterAttributes) const
 {
     return documentsForField(QLatin1String("Name"), keyword, filterAttributes);
 }
 
-QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForField(
-        const QString &fieldName,
-        const QString &fieldValue,
-        const QStringList &filterAttributes) const
+QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldName,
+        const QString &fieldValue, const QStringList &filterAttributes) const
 {
     QMultiMap<QString, QUrl> linkMap;
     const auto documents = documentsForField(fieldName, fieldValue, filterAttributes);
     for (const auto &document : documents)
         linkMap.insert(document.title, document.url);
-
     return linkMap;
 }
 
-QList<QHelpLink> QHelpCollectionHandler::documentsForField(
-        const QString &fieldName,
-        const QString &fieldValue,
-        const QStringList &filterAttributes) const
+QList<QHelpLink> QHelpCollectionHandler::documentsForField(const QString &fieldName,
+        const QString &fieldValue, const QStringList &filterAttributes) const
 {
-    QList<QHelpLink> docList;
-
     if (!isDBOpened())
-        return docList;
+        return {};
 
     const QString filterlessQuery = QString::fromLatin1(
                 "SELECT "
@@ -2359,6 +2326,7 @@ QList<QHelpLink> QHelpCollectionHandler::documentsForField(
 
     m_query->exec();
 
+    QList<QHelpLink> docList;
     while (m_query->next()) {
         QString title = m_query->value(0).toString();
         if (title.isEmpty()) // generate a title + corresponding path
@@ -2374,55 +2342,44 @@ QList<QHelpLink> QHelpCollectionHandler::documentsForField(
 }
 
 QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForIdentifier(
-        const QString &id,
-        const QString &filterName) const
+        const QString &id, const QString &filterName) const
 {
     return linksForField(QLatin1String("Identifier"), id, filterName);
 }
 
 QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForKeyword(
-        const QString &keyword,
-        const QString &filterName) const
+        const QString &keyword, const QString &filterName) const
 {
     return linksForField(QLatin1String("Name"), keyword, filterName);
 }
 
 QList<QHelpLink> QHelpCollectionHandler::documentsForIdentifier(
-        const QString &id,
-        const QString &filterName) const
+        const QString &id, const QString &filterName) const
 {
     return documentsForField(QLatin1String("Identifier"), id, filterName);
 }
 
 QList<QHelpLink> QHelpCollectionHandler::documentsForKeyword(
-        const QString &keyword,
-        const QString &filterName) const
+        const QString &keyword, const QString &filterName) const
 {
     return documentsForField(QLatin1String("Name"), keyword, filterName);
 }
 
-QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForField(
-        const QString &fieldName,
-        const QString &fieldValue,
-        const QString &filterName) const
+QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldName,
+        const QString &fieldValue, const QString &filterName) const
 {
     QMultiMap<QString, QUrl> linkMap;
     const auto documents = documentsForField(fieldName, fieldValue, filterName);
     for (const auto &document : documents)
         linkMap.insert(document.title, document.url);
-
     return linkMap;
 }
 
-QList<QHelpLink> QHelpCollectionHandler::documentsForField(
-        const QString &fieldName,
-        const QString &fieldValue,
-        const QString &filterName) const
+QList<QHelpLink> QHelpCollectionHandler::documentsForField(const QString &fieldName,
+        const QString &fieldValue, const QString &filterName) const
 {
-    QList<QHelpLink> docList;
-
     if (!isDBOpened())
-        return docList;
+        return {};
 
     const QString filterlessQuery = QString::fromLatin1(
                 "SELECT "
@@ -2451,6 +2408,7 @@ QList<QHelpLink> QHelpCollectionHandler::documentsForField(
 
     m_query->exec();
 
+    QList<QHelpLink> docList;
     while (m_query->next()) {
         QString title = m_query->value(0).toString();
         if (title.isEmpty()) // generate a title + corresponding path
@@ -2489,13 +2447,7 @@ QStringList QHelpCollectionHandler::namespacesForFilter(const QString &filterNam
 
     while (m_query->next())
         namespaceList.append(m_query->value(0).toString());
-
     return namespaceList;
-}
-
-void QHelpCollectionHandler::setReadOnly(bool readOnly)
-{
-    m_readOnly = readOnly;
 }
 
 QT_END_NAMESPACE

@@ -15,8 +15,7 @@ QFilterNameDialog::QFilterNameDialog(QWidget *parent)
             this, &QDialog::accept);
     connect(m_ui.buttonBox->button(QDialogButtonBox::Cancel), &QAbstractButton::clicked,
             this, &QDialog::reject);
-    connect(m_ui.lineEdit, &QLineEdit::textChanged,
-            this, &QFilterNameDialog::updateOkButton);
+    connect(m_ui.lineEdit, &QLineEdit::textChanged, this, &QFilterNameDialog::updateOkButton);
     m_ui.buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
 }
 
@@ -26,15 +25,9 @@ void QFilterNameDialog::setFilterName(const QString &filter)
     m_ui.lineEdit->selectAll();
 }
 
-QString QFilterNameDialog::filterName() const
-{
-    return m_ui.lineEdit->text();
-}
-
 void QFilterNameDialog::updateOkButton()
 {
-    m_ui.buttonBox->button(QDialogButtonBox::Ok)
-        ->setDisabled(m_ui.lineEdit->text().isEmpty());
+    m_ui.buttonBox->button(QDialogButtonBox::Ok)->setDisabled(m_ui.lineEdit->text().isEmpty());
 }
 
 QT_END_NAMESPACE

@@ -24,12 +24,12 @@ class QSqlDatabase;
 
 namespace fulltextsearch {
 
+// TODO: Employ QFuture / QtConcurrent::run() ?
 class QHelpSearchIndexWriter : public QThread
 {
     Q_OBJECT
 
 public:
-    QHelpSearchIndexWriter();
     ~QHelpSearchIndexWriter() override;
 
     void cancelIndexing();
@@ -45,7 +45,7 @@ private:
 private:
     QMutex m_mutex;
 
-    bool m_cancel;
+    bool m_cancel = false;
     bool m_reindex;
     QString m_collectionFile;
     QString m_indexFilesFolder;

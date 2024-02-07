@@ -23,29 +23,31 @@ public:
     }
 
 protected:
-    void paint(QPainter *painter,
-               const QStyleOptionViewItem &option,
-               const QModelIndex &index) const override {
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const override
+    {
         if (isSeparator(index)) {
             QRect rect = option.rect;
             if (const QAbstractItemView *view = qobject_cast<const QAbstractItemView*>(option.widget))
                 rect.setWidth(view->viewport()->width());
             QStyleOption opt;
             opt.rect = rect;
-            m_widget->style()->drawPrimitive(QStyle::PE_IndicatorToolBarSeparator, &opt, painter, m_widget);
+            m_widget->style()->drawPrimitive(QStyle::PE_IndicatorToolBarSeparator, &opt, painter,
+                                             m_widget);
         } else {
             QItemDelegate::paint(painter, option, index);
         }
     }
 
-    QSize sizeHint(const QStyleOptionViewItem &option,
-                   const QModelIndex &index) const override {
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override
+    {
         if (isSeparator(index)) {
             int pm = m_widget->style()->pixelMetric(QStyle::PM_DefaultFrameWidth, nullptr, m_widget);
-            return QSize(pm, pm);
+            return {pm, pm};
         }
         return QItemDelegate::sizeHint(option, index);
     }
+
 private:
     QWidget *m_widget;
 };
@@ -67,18 +69,11 @@ QOptionsWidget::QOptionsWidget(QWidget *parent)
     m_listWidget->setItemDelegate(new ListWidgetDelegate(m_listWidget));
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_listWidget);
-    layout->setContentsMargins(QMargins());
-
+    layout->setContentsMargins({});
     connect(m_listWidget, &QListWidget::itemChanged, this, &QOptionsWidget::itemChanged);
 }
 
-void QOptionsWidget::clear()
-{
-    setOptions(QStringList(), QStringList());
-}
-
-void QOptionsWidget::setOptions(const QStringList &validOptions,
-                                const QStringList &selectedOptions)
+void QOptionsWidget::setOptions(const QStringList &validOptions, const QStringList &selectedOptions)
 {
     m_listWidget->clear();
     m_optionToItem.clear();
@@ -102,26 +97,14 @@ void QOptionsWidget::setOptions(const QStringList &validOptions,
     for (const QString &option : m_invalidOptions)
         appendItem(option, false, true);
 
-    if ((validSelectedOptions.size() + m_invalidOptions.size())
-            && validUnselectedOptions.size()) {
+    if ((validSelectedOptions.size() + m_invalidOptions.size()) && validUnselectedOptions.size())
         appendSeparator();
-    }
 
     for (const QString &option : validUnselectedOptions) {
         appendItem(option, true, false);
         if (option.isEmpty() && validUnselectedOptions.size() > 1) // special No Option item
             appendSeparator();
     }
-}
-
-QStringList QOptionsWidget::validOptions() const
-{
-    return m_validOptions;
-}
-
-QStringList QOptionsWidget::selectedOptions() const
-{
-    return m_selectedOptions;
 }
 
 void QOptionsWidget::setNoOptionText(const QString &text)
@@ -195,9 +178,7 @@ void QOptionsWidget::itemChanged(QListWidgetItem *item)
     } else {
         return;
     }
-
     emit optionSelectionChanged(m_selectedOptions);
 }
-
 
 QT_END_NAMESPACE

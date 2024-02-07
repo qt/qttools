@@ -17,7 +17,7 @@ class QHelpEngineCorePrivate
 {
 public:
     QHelpEngineCorePrivate(const QString &collectionFile, QHelpEngineCore *helpEngineCore);
-    ~QHelpEngineCorePrivate();
+    ~QHelpEngineCorePrivate() { delete collectionHandler; }
 
     void init(const QString &collectionFile);
     bool setup();
@@ -42,11 +42,6 @@ QHelpEngineCorePrivate::QHelpEngineCorePrivate(const QString &collectionFile,
     init(collectionFile);
 }
 
-QHelpEngineCorePrivate::~QHelpEngineCorePrivate()
-{
-    delete collectionHandler;
-}
-
 void QHelpEngineCorePrivate::init(const QString &collectionFile)
 {
     if (collectionHandler)
@@ -68,15 +63,13 @@ bool QHelpEngineCorePrivate::setup()
     emit q->setupStarted();
 
     const QVariant readOnlyVariant = q->property("_q_readonly");
-    const bool readOnly = readOnlyVariant.isValid()
-            ? readOnlyVariant.toBool() : q->isReadOnly();
+    const bool readOnly = readOnlyVariant.isValid() ? readOnlyVariant.toBool() : q->isReadOnly();
     collectionHandler->setReadOnly(readOnly);
     const bool opened = collectionHandler->openCollectionFile();
     if (opened)
         q->currentFilter();
 
     emit q->setupFinished();
-
     return opened;
 }
 
@@ -301,10 +294,10 @@ QString QHelpEngineCore::namespaceName(const QString &documentationFileName)
 {
     QHelpDBReader reader(documentationFileName,
         QHelpGlobal::uniquifyConnectionName(QLatin1String("GetNamespaceName"),
-        QThread::currentThread()), nullptr);
+            QThread::currentThread()), nullptr); // TODO: Replace QThread with *this
     if (reader.init())
         return reader.namespaceName();
-    return QString();
+    return {};
 }
 
 /*!
@@ -347,13 +340,13 @@ bool QHelpEngineCore::unregisterDocumentation(const QString &namespaceName)
 QString QHelpEngineCore::documentationFileName(const QString &namespaceName)
 {
     if (!d->setup())
-        return QString();
+        return {};
 
     const QHelpCollectionHandler::FileInfo fileInfo =
             d->collectionHandler->registeredDocumentation(namespaceName);
 
     if (fileInfo.namespaceName.isEmpty())
-        return QString();
+        return {};
 
     if (QDir::isAbsolutePath(fileInfo.fileName))
         return fileInfo.fileName;
@@ -368,11 +361,10 @@ QString QHelpEngineCore::documentationFileName(const QString &namespaceName)
 */
 QStringList QHelpEngineCore::registeredDocumentations() const
 {
-    QStringList list;
     if (!d->setup())
-        return list;
-    const QHelpCollectionHandler::FileInfoList &docList
-            = d->collectionHandler->registeredDocumentations();
+        return {};
+    const auto &docList = d->collectionHandler->registeredDocumentations();
+    QStringList list;
     for (const QHelpCollectionHandler::FileInfo &info : docList)
         list.append(info.namespaceName);
     return list;
@@ -390,7 +382,7 @@ QStringList QHelpEngineCore::registeredDocumentations() const
 QStringList QHelpEngineCore::customFilters() const
 {
     if (!d->setup())
-        return QStringList();
+        return {};
     return d->collectionHandler->customFilters();
 }
 
@@ -441,7 +433,7 @@ bool QHelpEngineCore::removeCustomFilter(const QString &filterName)
 QStringList QHelpEngineCore::filterAttributes() const
 {
     if (!d->setup())
-        return QStringList();
+        return {};
     return d->collectionHandler->filterAttributes();
 }
 
@@ -456,7 +448,7 @@ QStringList QHelpEngineCore::filterAttributes() const
 QStringList QHelpEngineCore::filterAttributes(const QString &filterName) const
 {
     if (!d->setup())
-        return QStringList();
+        return {};
     return d->collectionHandler->filterAttributes(filterName);
 }
 
@@ -477,14 +469,12 @@ QStringList QHelpEngineCore::filterAttributes(const QString &filterName) const
 QString QHelpEngineCore::currentFilter() const
 {
     if (!d->setup())
-        return QString();
+        return {};
 
     if (d->currentFilter.isEmpty()) {
-        const QString &filter =
-            d->collectionHandler->customValue(QLatin1String("CurrentFilter"),
-                QString()).toString();
-        if (!filter.isEmpty()
-            && d->collectionHandler->customFilters().contains(filter))
+        const QString &filter = d->collectionHandler->customValue(
+                    QLatin1String("CurrentFilter"), QString()).toString();
+        if (!filter.isEmpty() && d->collectionHandler->customFilters().contains(filter))
             d->currentFilter = filter;
     }
     return d->currentFilter;
@@ -495,10 +485,8 @@ void QHelpEngineCore::setCurrentFilter(const QString &filterName)
     if (!d->setup() || filterName == d->currentFilter)
         return;
     d->currentFilter = filterName;
-    if (d->autoSaveFilter) {
-        d->collectionHandler->setCustomValue(QLatin1String("CurrentFilter"),
-            d->currentFilter);
-    }
+    if (d->autoSaveFilter)
+        d->collectionHandler->setCustomValue(QLatin1String("CurrentFilter"), d->currentFilter);
     emit currentFilterChanged(d->currentFilter);
 }
 
@@ -514,8 +502,7 @@ void QHelpEngineCore::setCurrentFilter(const QString &filterName)
 QList<QStringList> QHelpEngineCore::filterAttributeSets(const QString &namespaceName) const
 {
     if (!d->setup())
-        return QList<QStringList>();
-
+        return {};
     return d->collectionHandler->filterAttributeSets(namespaceName);
 }
 
@@ -614,8 +601,7 @@ QUrl QHelpEngineCore::findFile(const QUrl &url) const
 QByteArray QHelpEngineCore::fileData(const QUrl &url) const
 {
     if (!d->setup())
-        return QByteArray();
-
+        return {};
     return d->collectionHandler->fileData(url);
 }
 
@@ -628,9 +614,8 @@ QByteArray QHelpEngineCore::fileData(const QUrl &url) const
 */
 QList<QHelpLink> QHelpEngineCore::documentsForIdentifier(const QString &id) const
 {
-    return documentsForIdentifier(id, d->usesFilterEngine
-                                  ? d->filterEngine->activeFilter()
-                                  : d->currentFilter);
+    return documentsForIdentifier(
+            id, d->usesFilterEngine ? d->filterEngine->activeFilter() : d->currentFilter);
 }
 
 /*!
@@ -644,11 +629,10 @@ QList<QHelpLink> QHelpEngineCore::documentsForIdentifier(const QString &id) cons
 QList<QHelpLink> QHelpEngineCore::documentsForIdentifier(const QString &id, const QString &filterName) const
 {
     if (!d->setup())
-        return QList<QHelpLink>();
+        return {};
 
     if (d->usesFilterEngine)
         return d->collectionHandler->documentsForIdentifier(id, filterName);
-
     return d->collectionHandler->documentsForIdentifier(id, filterAttributes(filterName));
 }
 
@@ -661,9 +645,8 @@ QList<QHelpLink> QHelpEngineCore::documentsForIdentifier(const QString &id, cons
 */
 QList<QHelpLink> QHelpEngineCore::documentsForKeyword(const QString &keyword) const
 {
-    return documentsForKeyword(keyword, d->usesFilterEngine
-                               ? d->filterEngine->activeFilter()
-                               : d->currentFilter);
+    return documentsForKeyword(
+            keyword, d->usesFilterEngine ? d->filterEngine->activeFilter() : d->currentFilter);
 }
 
 /*!
@@ -677,11 +660,10 @@ QList<QHelpLink> QHelpEngineCore::documentsForKeyword(const QString &keyword) co
 QList<QHelpLink> QHelpEngineCore::documentsForKeyword(const QString &keyword, const QString &filterName) const
 {
     if (!d->setup())
-        return QList<QHelpLink>();
+        return {};
 
     if (d->usesFilterEngine)
         return d->collectionHandler->documentsForKeyword(keyword, filterName);
-
     return d->collectionHandler->documentsForKeyword(keyword, filterAttributes(filterName));
 }
 
@@ -708,7 +690,7 @@ bool QHelpEngineCore::removeCustomValue(const QString &key)
 QVariant QHelpEngineCore::customValue(const QString &key, const QVariant &defaultValue) const
 {
     if (!d->setup())
-        return QVariant();
+        return {};
     return d->collectionHandler->customValue(key, defaultValue);
 }
 
@@ -740,7 +722,7 @@ QVariant QHelpEngineCore::metaData(const QString &documentationFileName,
 
     if (reader.init())
         return reader.metaData(name);
-    return QVariant();
+    return {};
 }
 
 /*!

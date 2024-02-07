@@ -29,10 +29,10 @@ class QOptionsWidget : public QWidget
 public:
     QOptionsWidget(QWidget *parent = nullptr);
 
-    void clear();
+    void clear() { setOptions({}, {}); }
     void setOptions(const QStringList &validOptions, const QStringList &selectedOptions);
-    QStringList validOptions() const;
-    QStringList selectedOptions() const;
+    QStringList validOptions() const { return m_validOptions; }
+    QStringList selectedOptions() const { return m_selectedOptions; }
 
     void setNoOptionText(const QString &text);
     void setInvalidOptionText(const QString &text);
@@ -53,7 +53,7 @@ private:
     QStringList m_invalidOptions;
     QStringList m_selectedOptions;
     QMap<QString, QListWidgetItem *> m_optionToItem;
-    QMap<QListWidgetItem *, QString> m_itemToOption;
+    QMap<QListWidgetItem *, QString> m_itemToOption; // TODO: Replace with QHash
 };
 
 QT_END_NAMESPACE

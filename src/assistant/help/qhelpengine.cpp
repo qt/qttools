@@ -25,7 +25,7 @@ public:
     QHelpSearchEngine *searchEngine = nullptr;
 
     bool m_isApplyCurrentFilterScheduled = false;
-    QHelpEngineCore *m_helpEngineCore;
+    QHelpEngineCore *m_helpEngineCore = nullptr;
 };
 
 QHelpEnginePrivate::QHelpEnginePrivate(QHelpEngineCore *helpEngineCore)
@@ -110,7 +110,7 @@ QHelpIndexModel *QHelpEngine::indexModel() const
 QHelpContentWidget *QHelpEngine::contentWidget()
 {
     if (!d->contentWidget) {
-        d->contentWidget = new QHelpContentWidget();
+        d->contentWidget = new QHelpContentWidget;
         d->contentWidget->setModel(d->contentModel);
 #if QT_CONFIG(cursor)
         connect(d->contentModel, &QHelpContentModel::contentsCreationStarted, this, [this] {
@@ -130,7 +130,7 @@ QHelpContentWidget *QHelpEngine::contentWidget()
 QHelpIndexWidget *QHelpEngine::indexWidget()
 {
     if (!d->indexWidget) {
-        d->indexWidget = new QHelpIndexWidget();
+        d->indexWidget = new QHelpIndexWidget;
         d->indexWidget->setModel(d->indexModel);
 #if QT_CONFIG(cursor)
         connect(d->indexModel, &QHelpIndexModel::indexCreationStarted, this, [this] {

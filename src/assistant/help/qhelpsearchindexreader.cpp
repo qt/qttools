@@ -17,12 +17,25 @@ namespace fulltextsearch {
 class Reader
 {
 public:
-    void setIndexPath(const QString &path);
-    void addNamespaceAttributes(const QString &namespaceName, const QStringList &attributes);
-    void setFilterEngineNamespaceList(const QStringList &namespaceList);
+    void setIndexPath(const QString &path)
+    {
+        m_indexPath = path;
+        m_namespaceAttributes.clear();
+        m_filterEngineNamespaceList.clear();
+        m_useFilterEngine = false;
+    }
+    void addNamespaceAttributes(const QString &namespaceName, const QStringList &attributes)
+    {
+        m_namespaceAttributes.insert(namespaceName, attributes);
+    }
+    void setFilterEngineNamespaceList(const QStringList &namespaceList)
+    {
+        m_useFilterEngine = true;
+        m_filterEngineNamespaceList = namespaceList;
+    }
 
     void searchInDB(const QString &term);
-    QList<QHelpSearchResult> searchResults() const;
+    QList<QHelpSearchResult> searchResults() const { return m_searchResults; }
 
 private:
     QList<QHelpSearchResult> queryTable(const QSqlDatabase &db, const QString &tableName,
@@ -34,25 +47,6 @@ private:
     QString m_indexPath;
     bool m_useFilterEngine = false;
 };
-
-void Reader::setIndexPath(const QString &path)
-{
-    m_indexPath = path;
-    m_namespaceAttributes.clear();
-    m_filterEngineNamespaceList.clear();
-    m_useFilterEngine = false;
-}
-
-void Reader::addNamespaceAttributes(const QString &namespaceName, const QStringList &attributes)
-{
-    m_namespaceAttributes.insert(namespaceName, attributes);
-}
-
-void Reader::setFilterEngineNamespaceList(const QStringList &namespaceList)
-{
-    m_useFilterEngine = true;
-    m_filterEngineNamespaceList = namespaceList;
-}
 
 static QString namespacePlaceholders(const QMultiMap<QString, QStringList> &namespaces)
 {
@@ -147,7 +141,6 @@ QList<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db, const QStrin
         const QString &snippet = query.value(2).toString();
         results.append(QHelpSearchResult(url, title, snippet));
     }
-
     return results;
 }
 
@@ -167,7 +160,7 @@ void Reader::searchInDB(const QString &searchInput)
                     queryTable(db, QLatin1String("contents"), searchInput);
 
             // merge results form title and contents searches
-            m_searchResults = QList<QHelpSearchResult>();
+            m_searchResults.clear();
 
             QSet<QUrl> urls;
 
@@ -189,11 +182,6 @@ void Reader::searchInDB(const QString &searchInput)
         }
     }
     QSqlDatabase::removeDatabase(uniqueId);
-}
-
-QList<QHelpSearchResult> Reader::searchResults() const
-{
-    return m_searchResults;
 }
 
 static bool attributesMatchFilter(const QStringList &attributes, const QStringList &filter)

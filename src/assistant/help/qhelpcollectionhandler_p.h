@@ -60,7 +60,7 @@ public:
     explicit QHelpCollectionHandler(const QString &collectionFile, QObject *parent = nullptr);
     ~QHelpCollectionHandler();
 
-    QString collectionFile() const;
+    QString collectionFile() const { return m_collectionFile; }
 
     bool openCollectionFile();
     bool copyCollectionFile(const QString &fileName);
@@ -163,7 +163,7 @@ public:
 
     QStringList namespacesForFilter(const QString &filterName) const;
 
-    void setReadOnly(bool readOnly);
+    void setReadOnly(bool readOnly) { m_readOnly = readOnly; }
 
     static QUrl buildQUrl(const QString &ns, const QString &folder,
                           const QString &relFileName, const QString &anchor);
