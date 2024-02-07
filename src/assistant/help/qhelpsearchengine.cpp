@@ -7,7 +7,6 @@
 #include "qhelpsearchresultwidget.h"
 
 #include "qhelpsearchindexreader_p.h"
-#include "qhelpsearchindexreader_default_p.h"
 #include "qhelpsearchindexwriter_default_p.h"
 
 #include <QtCore/qdir.h>
@@ -18,6 +17,7 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace fulltextsearch;
 using namespace fulltextsearch::qt;
 
 class QHelpSearchResultData : public QSharedData
@@ -184,10 +184,10 @@ private:
             return;
 
         if (!indexReader) {
-            indexReader = new QHelpSearchIndexReaderDefault();
-            connect(indexReader, &fulltextsearch::QHelpSearchIndexReader::searchingStarted,
+            indexReader = new QHelpSearchIndexReader;
+            connect(indexReader, &QHelpSearchIndexReader::searchingStarted,
                     this, &QHelpSearchEnginePrivate::searchingStarted);
-            connect(indexReader, &fulltextsearch::QHelpSearchIndexReader::searchingFinished,
+            connect(indexReader, &QHelpSearchIndexReader::searchingFinished,
                     this, &QHelpSearchEnginePrivate::searchingFinished);
         }
 
@@ -223,7 +223,7 @@ private:
     QHelpSearchQueryWidget *queryWidget = nullptr;
     QHelpSearchResultWidget *resultWidget = nullptr;
 
-    fulltextsearch::QHelpSearchIndexReader *indexReader = nullptr;
+    QHelpSearchIndexReader *indexReader = nullptr;
     QHelpSearchIndexWriter *indexWriter = nullptr;
 
     QPointer<QHelpEngineCore> helpEngine;

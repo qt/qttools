@@ -42,7 +42,9 @@ signals:
     void searchingStarted();
     void searchingFinished(int searchResultCount);
 
-protected:
+private:
+    void run() override;
+
     mutable QMutex m_mutex;
     QList<QHelpSearchResult> m_searchResults;
     bool m_cancel = false;
@@ -50,9 +52,6 @@ protected:
     QString m_searchInput;
     QString m_indexFilesFolder;
     bool m_usesFilterEngine = false;
-
-private:
-    void run() override = 0;
 };
 
 }   // namespace fulltextsearch
