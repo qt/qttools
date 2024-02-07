@@ -11,6 +11,7 @@ qt_internal_add_module(Help
         qfilternamedialog.cpp qfilternamedialog.ui qfilternamedialog_p.h
         qhelp_global.cpp qhelp_global.h
         qhelpcollectionhandler.cpp qhelpcollectionhandler_p.h
+        qhelpcontentitem.cpp qhelpcontentitem.h
         qhelpcontentwidget.cpp qhelpcontentwidget.h
         qhelpdbreader.cpp qhelpdbreader_p.h
         qhelpengine.cpp qhelpengine.h qhelpengine_p.h

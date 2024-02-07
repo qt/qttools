@@ -14,23 +14,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class QHelpContentItemPrivate
-{
-public:
-    QHelpContentItemPrivate(const QString &t, const QUrl &l, QHelpContentItem *p)
-        : parent(p),
-          title(t),
-          link(l)
-    {}
-
-    void appendChild(QHelpContentItem *item) { childItems.append(item); }
-
-    QList<QHelpContentItem*> childItems;
-    QHelpContentItem *parent;
-    QString title;
-    QUrl link;
-};
-
 class QHelpContentProvider : public QThread
 {
     Q_OBJECT
@@ -61,87 +44,6 @@ public:
     QHelpContentItem *rootItem = nullptr;
     QHelpContentProvider *qhelpContentProvider;
 };
-
-/*!
-    \class QHelpContentItem
-    \inmodule QtHelp
-    \brief The QHelpContentItem class provides an item for use with QHelpContentModel.
-    \since 4.4
-*/
-
-QHelpContentItem::QHelpContentItem(const QString &name, const QUrl &link, QHelpContentItem *parent)
-{
-    d = new QHelpContentItemPrivate(name, link, parent);
-}
-
-/*!
-    Destroys the help content item.
-*/
-QHelpContentItem::~QHelpContentItem()
-{
-    qDeleteAll(d->childItems);
-    delete d;
-}
-
-/*!
-    Returns the child of the content item in the give \a row.
-
-    \sa parent()
-*/
-QHelpContentItem *QHelpContentItem::child(int row) const
-{
-    return d->childItems.value(row);
-}
-
-/*!
-    Returns the number of child items.
-*/
-int QHelpContentItem::childCount() const
-{
-    return d->childItems.size();
-}
-
-/*!
-    Returns the row of this item from its parents view.
-*/
-int QHelpContentItem::row() const
-{
-    if (d->parent)
-        return d->parent->d->childItems.indexOf(const_cast<QHelpContentItem*>(this));
-    return 0;
-}
-
-/*!
-    Returns the title of the content item.
-*/
-QString QHelpContentItem::title() const
-{
-    return d->title;
-}
-
-/*!
-    Returns the URL of this content item.
-*/
-QUrl QHelpContentItem::url() const
-{
-    return d->link;
-}
-
-/*!
-    Returns the parent content item.
-*/
-QHelpContentItem *QHelpContentItem::parent() const
-{
-    return d->parent;
-}
-
-/*!
-    Returns the position of a given \a child.
-*/
-int QHelpContentItem::childPosition(QHelpContentItem *child) const
-{
-    return d->childItems.indexOf(child);
-}
 
 QHelpContentProvider::QHelpContentProvider(QHelpEngineCore *helpEngine)
     : QThread(helpEngine)
@@ -277,7 +179,6 @@ CHECK_DEPTH:
                 if (depth == 0) {
                     m_mutex.lock();
                     item = new QHelpContentItem(title, url, rootItem);
-                    rootItem->d->appendChild(item);
                     m_mutex.unlock();
                     stack.push(item);
                     _depth = 1;
@@ -289,7 +190,6 @@ CHECK_DEPTH:
                     }
                     if (depth == _depth) {
                         item = new QHelpContentItem(title, url, stack.top());
-                        stack.top()->d->appendChild(item);
                     } else if (depth < _depth) {
                         stack.pop();
                         --_depth;
@@ -331,12 +231,10 @@ CHECK_DEPTH:
 
 QHelpContentModel::QHelpContentModel(QHelpEngineCore *helpEngine)
     : QAbstractItemModel(helpEngine)
+    , d(new QHelpContentModelPrivate)
 {
-    d = new QHelpContentModelPrivate();
     d->qhelpContentProvider = new QHelpContentProvider(helpEngine);
-
-    connect(d->qhelpContentProvider, &QThread::finished,
-            this, &QHelpContentModel::insertContents);
+    connect(d->qhelpContentProvider, &QThread::finished, this, &QHelpContentModel::insertContents);
 }
 
 /*!
@@ -419,10 +317,7 @@ bool QHelpContentModel::isCreatingContents() const
 */
 QHelpContentItem *QHelpContentModel::contentItemAt(const QModelIndex &index) const
 {
-    if (index.isValid())
-        return static_cast<QHelpContentItem*>(index.internalPointer());
-    else
-        return d->rootItem;
+    return index.isValid() ? static_cast<QHelpContentItem*>(index.internalPointer()) : d->rootItem;
 }
 
 /*!
@@ -432,12 +327,12 @@ QHelpContentItem *QHelpContentModel::contentItemAt(const QModelIndex &index) con
 QModelIndex QHelpContentModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!d->rootItem)
-        return QModelIndex();
+        return {};
 
     QHelpContentItem *parentItem = contentItemAt(parent);
     QHelpContentItem *item = parentItem->child(row);
     if (!item)
-        return QModelIndex();
+        return {};
     return createIndex(row, column, item);
 }
 
@@ -449,15 +344,15 @@ QModelIndex QHelpContentModel::parent(const QModelIndex &index) const
 {
     QHelpContentItem *item = contentItemAt(index);
     if (!item)
-        return QModelIndex();
+        return {};
 
     QHelpContentItem *parentItem = static_cast<QHelpContentItem*>(item->parent());
     if (!parentItem)
-        return QModelIndex();
+        return {};
 
     QHelpContentItem *grandparentItem = static_cast<QHelpContentItem*>(parentItem->parent());
     if (!grandparentItem)
-        return QModelIndex();
+        return {};
 
     int row = grandparentItem->childPosition(parentItem);
     return createIndex(row, index.column(), parentItem);
@@ -480,7 +375,6 @@ int QHelpContentModel::rowCount(const QModelIndex &parent) const
 int QHelpContentModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-
     return 1;
 }
 
@@ -490,16 +384,13 @@ int QHelpContentModel::columnCount(const QModelIndex &parent) const
 */
 QVariant QHelpContentModel::data(const QModelIndex &index, int role) const
 {
-    if (role != Qt::DisplayRole)
-        return QVariant();
-
-    QHelpContentItem *item = contentItemAt(index);
-    if (!item)
-        return QVariant();
-    return item->title();
+    if (role == Qt::DisplayRole) {
+        QHelpContentItem *item = contentItemAt(index);
+        if (item)
+            return item->title();
+    }
+    return {};
 }
-
-
 
 /*!
     \class QHelpContentWidget
@@ -516,12 +407,10 @@ QVariant QHelpContentModel::data(const QModelIndex &index, int role) const
 */
 
 QHelpContentWidget::QHelpContentWidget()
-    : QTreeView(nullptr)
 {
     header()->hide();
     setUniformRowHeights(true);
-    connect(this, &QAbstractItemView::activated,
-            this, &QHelpContentWidget::showLink);
+    connect(this, &QAbstractItemView::activated, this, &QHelpContentWidget::showLink);
 }
 
 /*!
@@ -532,9 +421,9 @@ QModelIndex QHelpContentWidget::indexOf(const QUrl &link)
 {
     QHelpContentModel *contentModel = qobject_cast<QHelpContentModel*>(model());
     if (!contentModel || link.scheme() != QLatin1String("qthelp"))
-        return QModelIndex();
+        return {};
 
-    m_syncIndex = QModelIndex();
+    m_syncIndex = {};
     for (int i = 0; i < contentModel->rowCount(); ++i) {
         QHelpContentItem *itm = contentModel->contentItemAt(contentModel->index(i, 0));
         if (itm && itm->url().host() == link.host()) {
@@ -542,11 +431,11 @@ QModelIndex QHelpContentWidget::indexOf(const QUrl &link)
                 return m_syncIndex;
         }
     }
-    return QModelIndex();
+    return {};
 }
 
 bool QHelpContentWidget::searchContentItem(QHelpContentModel *model, const QModelIndex &parent,
-    const QString &cleanPath)
+                                           const QString &cleanPath)
 {
     QHelpContentItem *parentItem = model->contentItemAt(parent);
     if (!parentItem)

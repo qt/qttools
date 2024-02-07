@@ -5,36 +5,15 @@
 #define QHELPCONTENTWIDGET_H
 
 #include <QtHelp/qhelp_global.h>
-
+#include <QtHelp/qhelpcontentitem.h>
 #include <QtWidgets/qtreeview.h>
 
 QT_BEGIN_NAMESPACE
 
-class QHelpContentItemPrivate;
 class QHelpContentModelPrivate;
 class QHelpEngine;
 class QHelpEngineCore;
 class QUrl;
-
-class QHELP_EXPORT QHelpContentItem
-{
-public:
-    ~QHelpContentItem();
-
-    QHelpContentItem *child(int row) const;
-    int childCount() const;
-    QString title() const;
-    QUrl url() const;
-    int row() const;
-    QHelpContentItem *parent() const;
-    int childPosition(QHelpContentItem *child) const;
-
-private:
-    QHelpContentItem(const QString &name, const QUrl &link, QHelpContentItem *parent = nullptr);
-
-    QHelpContentItemPrivate *d;
-    friend class QHelpContentProvider;
-};
 
 class QHELP_EXPORT QHelpContentModel : public QAbstractItemModel
 {
