@@ -4,7 +4,6 @@
 #include "qhelpenginecore.h"
 #include "qhelpcollectionhandler_p.h"
 #include "qhelpdbreader_p.h"
-#include "qhelpenginecore_p.h"
 #include "qhelpfilterengine.h"
 #include "qhelplink.h"
 
@@ -13,6 +12,27 @@
 #include <QtCore/qthread.h>
 
 QT_BEGIN_NAMESPACE
+
+class QHelpEngineCorePrivate
+{
+public:
+    QHelpEngineCorePrivate(const QString &collectionFile, QHelpEngineCore *helpEngineCore);
+    ~QHelpEngineCorePrivate();
+
+    void init(const QString &collectionFile);
+    bool setup();
+
+    QHelpCollectionHandler *collectionHandler = nullptr;
+    QHelpFilterEngine *filterEngine = nullptr;
+    QString currentFilter;
+    QString error;
+    bool needsSetup = true;
+    bool autoSaveFilter = true;
+    bool usesFilterEngine = false;
+    bool readOnly = true;
+
+    QHelpEngineCore *q;
+};
 
 QHelpEngineCorePrivate::QHelpEngineCorePrivate(const QString &collectionFile,
                                                QHelpEngineCore *helpEngineCore)
@@ -32,8 +52,8 @@ void QHelpEngineCorePrivate::init(const QString &collectionFile)
     if (collectionHandler)
         delete collectionHandler;
     collectionHandler = new QHelpCollectionHandler(collectionFile, q);
-    connect(collectionHandler, &QHelpCollectionHandler::error,
-            this, &QHelpEngineCorePrivate::errorReceived);
+    QObject::connect(collectionHandler, &QHelpCollectionHandler::error, q,
+                     [this](const QString &msg) { error = msg; });
     filterEngine->setCollectionHandler(collectionHandler);
     needsSetup = true;
 }
@@ -58,11 +78,6 @@ bool QHelpEngineCorePrivate::setup()
     emit q->setupFinished();
 
     return opened;
-}
-
-void QHelpEngineCorePrivate::errorReceived(const QString &msg)
-{
-    error = msg;
 }
 
 /*!

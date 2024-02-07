@@ -15,7 +15,7 @@ qt_internal_add_module(Help
         qhelpcontentwidget.cpp qhelpcontentwidget.h
         qhelpdbreader.cpp qhelpdbreader_p.h
         qhelpengine.cpp qhelpengine.h qhelpengine_p.h
-        qhelpenginecore.cpp qhelpenginecore.h qhelpenginecore_p.h
+        qhelpenginecore.cpp qhelpenginecore.h
         qhelpfilterdata.cpp qhelpfilterdata.h
         qhelpfilterengine.cpp qhelpfilterengine.h
         qhelpfiltersettingswidget.cpp qhelpfiltersettingswidget.h qhelpfiltersettingswidget.ui
