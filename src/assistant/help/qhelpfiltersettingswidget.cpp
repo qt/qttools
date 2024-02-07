@@ -3,14 +3,97 @@
 
 #include "qhelpfilterdata.h"
 #include "qfilternamedialog_p.h"
-#include "qhelpfiltersettings_p.h"
 #include "qhelpfiltersettingswidget.h"
 #include "ui_qhelpfiltersettingswidget.h"
 
 #include <QtCore/qversionnumber.h>
+#include <QtHelp/qhelpfilterdata.h>
+#include <QtHelp/qhelpfilterengine.h>
 #include <QtWidgets/qmessagebox.h>
 
 QT_BEGIN_NAMESPACE
+
+class QHelpFilterSettings final
+{
+public:
+    void setFilter(const QString &filterName, const QHelpFilterData &filterData)
+    {
+        m_filterToData.insert(filterName, filterData);
+    }
+    void removeFilter(const QString &filterName) { m_filterToData.remove(filterName); }
+    QStringList filterNames() const { return m_filterToData.keys(); }
+    QHelpFilterData filterData(const QString &filterName) const
+    {
+        return m_filterToData.value(filterName);
+    }
+    QMap<QString, QHelpFilterData> filters() const { return m_filterToData; }
+
+    void setCurrentFilter(const QString &filterName) { m_currentFilter = filterName; }
+    QString currentFilter() const { return m_currentFilter; }
+
+private:
+    QMap<QString, QHelpFilterData> m_filterToData;
+    QString m_currentFilter;
+};
+
+static QHelpFilterSettings readSettingsHelper(const QHelpFilterEngine *filterEngine)
+{
+    QHelpFilterSettings filterSettings;
+
+    const QStringList allFilters = filterEngine->filters();
+    for (const QString &filter : allFilters)
+        filterSettings.setFilter(filter, filterEngine->filterData(filter));
+
+    filterSettings.setCurrentFilter(filterEngine->activeFilter());
+
+    return filterSettings;
+}
+
+static QMap<QString, QHelpFilterData> subtract(const QMap<QString, QHelpFilterData> &minuend,
+                                               const QMap<QString, QHelpFilterData> &subtrahend)
+{
+    QMap<QString, QHelpFilterData> result = minuend;
+
+    for (auto itSubtrahend = subtrahend.cbegin(); itSubtrahend != subtrahend.cend(); ++itSubtrahend) {
+        auto itResult = result.find(itSubtrahend.key());
+        if (itResult != result.end() && itSubtrahend.value() == itResult.value())
+            result.erase(itResult);
+    }
+
+    return result;
+}
+
+static bool applySettingsHelper(QHelpFilterEngine *filterEngine, const QHelpFilterSettings &settings)
+{
+    bool changed = false;
+    const QHelpFilterSettings oldSettings = readSettingsHelper(filterEngine);
+
+    const QMap<QString, QHelpFilterData> filtersToRemove = subtract(
+            oldSettings.filters(),
+            settings.filters());
+    const QMap<QString, QHelpFilterData> filtersToAdd = subtract(
+            settings.filters(),
+            oldSettings.filters());
+
+    const QString &currentFilter = filterEngine->activeFilter();
+
+    for (const QString &filter : filtersToRemove.keys()) {
+        filterEngine->removeFilter(filter);
+        if (currentFilter == filter && !filtersToAdd.contains(filter))
+            filterEngine->setActiveFilter(QString());
+        changed = true;
+    }
+
+    for (auto it = filtersToAdd.cbegin(); it != filtersToAdd.cend(); ++it) {
+        filterEngine->setFilterData(it.key(), it.value());
+        changed = true;
+    }
+
+    if (changed)
+        filterEngine->setActiveFilter(settings.currentFilter());
+
+    return changed;
+}
 
 static QStringList versionsToStringList(const QList<QVersionNumber> &versions)
 {
@@ -370,7 +453,7 @@ void QHelpFilterSettingsWidget::setAvailableVersions(const QList<QVersionNumber>
 void QHelpFilterSettingsWidget::readSettings(const QHelpFilterEngine *filterEngine)
 {
     Q_D(QHelpFilterSettingsWidget);
-    const QHelpFilterSettings settings = QHelpFilterSettings::readSettings(filterEngine);
+    const QHelpFilterSettings settings = readSettingsHelper(filterEngine);
     d->setFilterSettings(settings);
 }
 
@@ -382,7 +465,7 @@ void QHelpFilterSettingsWidget::readSettings(const QHelpFilterEngine *filterEngi
 bool QHelpFilterSettingsWidget::applySettings(QHelpFilterEngine *filterEngine) const
 {
     Q_D(const QHelpFilterSettingsWidget);
-    return QHelpFilterSettings::applySettings(filterEngine, d->filterSettings());
+    return applySettingsHelper(filterEngine, d->filterSettings());
 }
 
 QT_END_NAMESPACE
