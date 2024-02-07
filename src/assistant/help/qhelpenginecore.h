@@ -118,9 +118,6 @@ protected:
 #endif
 
 private:
-    // TODO: Temporary, it's going to be removed in subsequent patches.
-    QString legacyCurrentFilterName() const;
-
     QHelpEngineCorePrivate *d;
 };
 

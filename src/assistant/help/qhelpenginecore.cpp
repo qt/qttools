@@ -776,11 +776,6 @@ bool QHelpEngineCore::usesFilterEngine() const
     return d->usesFilterEngine;
 }
 
-QString QHelpEngineCore::legacyCurrentFilterName() const
-{
-    return d->currentFilter;
-}
-
 #if QT_CONFIG(future)
 static QUrl constructUrl(const QString &namespaceName, const QString &folderName,
                          const QString &relativePath)
