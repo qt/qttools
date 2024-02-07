@@ -270,13 +270,11 @@ bool CppCodeParser::splitQmlPropertyArg(const QString &arg, QString &type, QStri
     return false;
 }
 
-/*!
- */
-void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocList &docs)
+std::pair<NodeList, DocList> CppCodeParser::processQmlProperties(const Doc &doc)
 {
     const TopicList &topics = doc.topicsUsed();
     if (topics.isEmpty())
-        return;
+        return {};
 
     QString arg;
     QString type;
@@ -284,6 +282,9 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
     QString qmlModule;
     QString property;
     QString qmlTypeName;
+
+    NodeList nodes{};
+    DocList docs{};
 
     Topic topic = topics.at(0);
     arg = topic.m_args;
@@ -358,6 +359,8 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
             scn->append(n);
         scn->sort();
     }
+
+    return std::make_pair(nodes, docs);
 }
 
 /*!
@@ -899,7 +902,9 @@ std::pair<NodeList, DocList> CppCodeParser::processTopicArgs(const Doc &doc)
     DocList docs;
 
     if (isQMLPropertyTopic(topic)) {
-        processQmlProperties(doc, nodes, docs);
+        auto [qml_nodes, qml_docs] = processQmlProperties(doc);
+        nodes.append(qml_nodes);
+        docs.append(qml_docs);
     } else {
         ArgList args = doc.metaCommandArgs(topic);
         Node *node = nullptr;

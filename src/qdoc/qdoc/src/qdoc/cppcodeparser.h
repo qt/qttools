@@ -53,7 +53,7 @@ public:
 protected:
     virtual Node *processTopicCommand(const Doc &doc, const QString &command,
                                       const ArgPair &arg);
-    void processQmlProperties(const Doc &doc, NodeList &nodes, DocList &docs);
+    std::pair<NodeList, DocList> processQmlProperties(const Doc &doc);
     bool splitQmlPropertyArg(const QString &arg, QString &type, QString &module, QString &element,
                              QString &name, const Location &location);
 
