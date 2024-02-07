@@ -15,7 +15,7 @@
 // We mean it.
 //
 
-#include "qhelpsearchengine.h"
+#include "qhelpsearchresult.h"
 
 #include <QtCore/qlist.h>
 #include <QtCore/qmutex.h>

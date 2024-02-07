@@ -5,6 +5,7 @@
 #define QHELPSEARCHENGINE_H
 
 #include <QtHelp/qhelp_global.h>
+#include <QtHelp/qhelpsearchresult.h>
 
 #include <QtCore/qobject.h>
 #include <QtCore/qshareddata.h>
@@ -15,9 +16,7 @@ QT_BEGIN_NAMESPACE
 class QHelpEngineCore;
 class QHelpSearchEnginePrivate;
 class QHelpSearchQueryWidget;
-class QHelpSearchResultData;
 class QHelpSearchResultWidget;
-class QUrl;
 
 class QHELP_EXPORT QHelpSearchQuery
 {
@@ -33,24 +32,6 @@ public:
     QStringList wordList;
 };
 
-class QHELP_EXPORT QHelpSearchResult
-{
-public:
-    QHelpSearchResult();
-    QHelpSearchResult(const QHelpSearchResult &other);
-    QHelpSearchResult(const QUrl &url, const QString &title, const QString &snippet);
-    ~QHelpSearchResult();
-
-    QHelpSearchResult &operator=(const QHelpSearchResult &other);
-
-    QString title() const;
-    QUrl url() const;
-    QString snippet() const;
-
-private:
-    QSharedDataPointer<QHelpSearchResultData> d;
-};
-
 class QHELP_EXPORT QHelpSearchEngine : public QObject
 {
     Q_OBJECT
@@ -59,8 +40,8 @@ public:
     explicit QHelpSearchEngine(QHelpEngineCore *helpEngine, QObject *parent = nullptr);
     ~QHelpSearchEngine();
 
-    QHelpSearchQueryWidget* queryWidget();
-    QHelpSearchResultWidget* resultWidget();
+    QHelpSearchQueryWidget *queryWidget();
+    QHelpSearchResultWidget *resultWidget();
 
 #if QT_DEPRECATED_SINCE(5, 9)
     typedef QPair<QString, QString> SearchHit;

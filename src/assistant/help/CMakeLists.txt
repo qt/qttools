@@ -24,6 +24,7 @@ qt_internal_add_module(Help
         qhelpsearchindexreader.cpp qhelpsearchindexreader_p.h
         qhelpsearchindexwriter.cpp qhelpsearchindexwriter_p.h
         qhelpsearchquerywidget.cpp qhelpsearchquerywidget.h
+        qhelpsearchresult.cpp qhelpsearchresult.h
         qhelpsearchresultwidget.cpp qhelpsearchresultwidget.h
         qoptionswidget.cpp qoptionswidget_p.h
     DEFINES
