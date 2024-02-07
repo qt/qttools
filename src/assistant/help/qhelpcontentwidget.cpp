@@ -6,6 +6,10 @@
 #include "qhelpenginecore.h"
 #include "qhelpfilterengine.h"
 
+#if QT_CONFIG(future)
+#include <QtCore/qfuturewatcher.h>
+#endif
+
 #include <QtCore/qdir.h>
 #include <QtCore/qmutex.h>
 #include <QtCore/qthread.h>
@@ -37,12 +41,65 @@ private:
     bool m_abort = false;
 };
 
+#if QT_CONFIG(future)
+using FutureProvider = std::function<QFuture<std::shared_ptr<QHelpContentItem>>()>;
+
+struct WatcherDeleter
+{
+    void operator()(QFutureWatcherBase *watcher) {
+        watcher->disconnect();
+        watcher->cancel();
+        watcher->waitForFinished();
+        delete watcher;
+    }
+};
+#endif
+
 class QHelpContentModelPrivate
 {
 public:
-    QHelpContentItem *rootItem = nullptr;
-    QHelpContentProvider *qhelpContentProvider;
+#if QT_CONFIG(future)
+    void createContents(const FutureProvider &futureProvider);
+#endif
+
+    QHelpContentModel *q = nullptr;
+    QHelpEngineCore *helpEngine = nullptr;
+    std::shared_ptr<QHelpContentItem> rootItem = {};
+#if QT_CONFIG(future)
+    std::unique_ptr<QFutureWatcher<std::shared_ptr<QHelpContentItem>>, WatcherDeleter> watcher = {};
+#endif
 };
+
+#if QT_CONFIG(future)
+void QHelpContentModelPrivate::createContents(const FutureProvider &futureProvider)
+{
+    const bool wasRunning = bool(watcher);
+    watcher.reset(new QFutureWatcher<std::shared_ptr<QHelpContentItem>>);
+    QObject::connect(watcher.get(), &QFutureWatcherBase::finished, q, [this] {
+        if (!watcher->isCanceled()) {
+            const std::shared_ptr<QHelpContentItem> result = watcher->result();
+            if (result && result.get()) {
+                q->beginResetModel();
+                rootItem = result;
+                q->endResetModel();
+            }
+        }
+        watcher.release()->deleteLater();
+        emit q->contentsCreated();
+    });
+    watcher->setFuture(futureProvider());
+
+    if (wasRunning)
+        return;
+
+    if (rootItem) {
+        q->beginResetModel();
+        rootItem.reset();
+        q->endResetModel();
+    }
+    emit q->contentsCreationStarted();
+}
+#endif
 
 QHelpContentProvider::QHelpContentProvider(QHelpEngineCore *helpEngine)
     : QThread(helpEngine)
@@ -235,18 +292,14 @@ void QHelpContentProvider::run()
 
 QHelpContentModel::QHelpContentModel(QHelpEngineCore *helpEngine)
     : QAbstractItemModel(helpEngine)
-    , d(new QHelpContentModelPrivate)
-{
-    d->qhelpContentProvider = new QHelpContentProvider(helpEngine);
-    connect(d->qhelpContentProvider, &QThread::finished, this, &QHelpContentModel::insertContents);
-}
+    , d(new QHelpContentModelPrivate{this, helpEngine})
+{}
 
 /*!
     Destroys the help content model.
 */
 QHelpContentModel::~QHelpContentModel()
 {
-    delete d->rootItem;
     delete d;
 }
 
@@ -257,54 +310,25 @@ QHelpContentModel::~QHelpContentModel()
 */
 void QHelpContentModel::createContentsForCurrentFilter()
 {
-    const bool running = d->qhelpContentProvider->isRunning();
-    d->qhelpContentProvider->collectContentsForCurrentFilter();
-    if (running)
-        return;
-
-    if (d->rootItem) {
-        beginResetModel();
-        delete d->rootItem;
-        d->rootItem = nullptr;
-        endResetModel();
-    }
-    emit contentsCreationStarted();
+#if QT_CONFIG(future)
+    d->createContents([this] { return d->helpEngine->provideContentForCurrentFilter(); });
+#endif
 }
 
 /*!
     Creates new contents by querying the help system
     for contents specified for the \a customFilterName.
 */
-void QHelpContentModel::createContents(const QString &customFilterName)
+void QHelpContentModel::createContents(const QString &filter)
 {
-    const bool running = d->qhelpContentProvider->isRunning();
-    d->qhelpContentProvider->collectContents(customFilterName);
-    if (running)
-        return;
-
-    if (d->rootItem) {
-        beginResetModel();
-        delete d->rootItem;
-        d->rootItem = nullptr;
-        endResetModel();
-    }
-    emit contentsCreationStarted();
+#if QT_CONFIG(future)
+    d->createContents([this, filter] { return d->helpEngine->provideContent(filter); });
+#endif
 }
 
+// TODO: Remove me
 void QHelpContentModel::insertContents()
-{
-    if (d->qhelpContentProvider->isRunning())
-        return;
-
-    QHelpContentItem * const newRootItem = d->qhelpContentProvider->takeContentItem();
-    if (!newRootItem)
-        return;
-    beginResetModel();
-    delete d->rootItem;
-    d->rootItem = newRootItem;
-    endResetModel();
-    emit contentsCreated();
-}
+{}
 
 /*!
     Returns true if the contents are currently rebuilt, otherwise
@@ -312,7 +336,11 @@ void QHelpContentModel::insertContents()
 */
 bool QHelpContentModel::isCreatingContents() const
 {
-    return d->qhelpContentProvider->isRunning();
+#if QT_CONFIG(future)
+    return bool(d->watcher);
+#else
+    return false;
+#endif
 }
 
 /*!
@@ -321,7 +349,8 @@ bool QHelpContentModel::isCreatingContents() const
 */
 QHelpContentItem *QHelpContentModel::contentItemAt(const QModelIndex &index) const
 {
-    return index.isValid() ? static_cast<QHelpContentItem*>(index.internalPointer()) : d->rootItem;
+    return index.isValid() ? static_cast<QHelpContentItem *>(index.internalPointer())
+                           : d->rootItem.get();
 }
 
 /*!
@@ -358,7 +387,7 @@ QModelIndex QHelpContentModel::parent(const QModelIndex &index) const
     if (!grandparentItem)
         return {};
 
-    int row = grandparentItem->childPosition(parentItem);
+    const int row = grandparentItem->childPosition(parentItem);
     return createIndex(row, index.column(), parentItem);
 }
 
@@ -368,9 +397,9 @@ QModelIndex QHelpContentModel::parent(const QModelIndex &index) const
 int QHelpContentModel::rowCount(const QModelIndex &parent) const
 {
     QHelpContentItem *parentItem = contentItemAt(parent);
-    if (!parentItem)
-        return 0;
-    return parentItem->childCount();
+    if (parentItem)
+        return parentItem->childCount();
+    return 0;
 }
 
 /*!

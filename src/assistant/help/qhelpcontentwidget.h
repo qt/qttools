@@ -44,6 +44,7 @@ private:
     QHelpContentModel(QHelpEngineCore *helpEngine);
     QHelpContentModelPrivate *d;
     friend class QHelpEnginePrivate;
+    friend class QHelpContentModelPrivate;
 };
 
 class QHELP_EXPORT QHelpContentWidget : public QTreeView
