@@ -97,6 +97,9 @@ public:
 #if QT_CONFIG(future)
     QFuture<std::shared_ptr<QHelpContentItem>> provideContentForCurrentFilter() const;
     QFuture<std::shared_ptr<QHelpContentItem>> provideContent(const QString &filter) const;
+
+    QFuture<QStringList> provideIndexForCurrentFilter() const;
+    QFuture<QStringList> provideIndex(const QString &filter) const;
 #endif
 
 Q_SIGNALS:

@@ -901,6 +901,45 @@ QFuture<ContentResult> QHelpEngineCore::provideContent(const QString &filter) co
             : contentProviderFromAttributes(filterAttributes(filter));
     return QtConcurrent::run(provideContentHelper, provider, collectionFile());
 }
+
+using IndexProvider = std::function<QStringList(const QString &)>;
+using IndexResult = QStringList;
+
+static IndexProvider indexProviderFromFilterEngine(const QString &filter)
+{
+    return [filter](const QString &collectionFile) -> IndexResult {
+        QHelpCollectionHandler collectionHandler(collectionFile);
+        if (!collectionHandler.openCollectionFile())
+            return {};
+        return collectionHandler.indicesForFilter(filter);
+    };
+}
+
+static IndexProvider indexProviderFromAttributes(const QStringList &attributes)
+{
+    return [attributes](const QString &collectionFile) -> IndexResult {
+        QHelpCollectionHandler collectionHandler(collectionFile);
+        if (!collectionHandler.openCollectionFile())
+            return {};
+        return collectionHandler.indicesForFilter(attributes);
+    };
+}
+
+QFuture<IndexResult> QHelpEngineCore::provideIndexForCurrentFilter() const
+{
+    const IndexProvider provider = usesFilterEngine()
+            ? indexProviderFromFilterEngine(filterEngine()->activeFilter())
+            : indexProviderFromAttributes(filterAttributes(d->currentFilter));
+    return QtConcurrent::run(std::move(provider), collectionFile());
+}
+
+QFuture<IndexResult> QHelpEngineCore::provideIndex(const QString &filter) const
+{
+    const IndexProvider provider = usesFilterEngine()
+            ? indexProviderFromFilterEngine(filter)
+            : indexProviderFromAttributes(filterAttributes(filter));
+    return QtConcurrent::run(std::move(provider), collectionFile());
+}
 #endif
 
 QT_END_NAMESPACE
