@@ -7,6 +7,10 @@
 #include "qhelpfilterengine.h"
 #include "qhelplink.h"
 
+#if QT_CONFIG(future)
+#include <QtCore/qfuturewatcher.h>
+#endif
+
 #include <QtCore/qthread.h>
 #include <QtCore/qmutex.h>
 
@@ -42,18 +46,58 @@ private:
     mutable QMutex m_mutex;
 };
 
+#if QT_CONFIG(future)
+using FutureProvider = std::function<QFuture<QStringList>()>;
+
+struct WatcherDeleter
+{
+    void operator()(QFutureWatcherBase *watcher) {
+        watcher->disconnect();
+        watcher->cancel();
+        watcher->waitForFinished();
+        delete watcher;
+    }
+};
+#endif
+
 class QHelpIndexModelPrivate
 {
 public:
-    QHelpIndexModelPrivate(QHelpEngineCore *helpEngine)
-        : m_helpEngine(helpEngine)
-        , indexProvider(new QHelpIndexProvider(helpEngine))
-    {}
+#if QT_CONFIG(future)
+    void createIndex(const FutureProvider &futureProvider);
+#endif
 
-    QHelpEngineCore *m_helpEngine;
-    QHelpIndexProvider *indexProvider;
-    QStringList indices;
+    QHelpIndexModel *q = nullptr;
+    QHelpEngineCore *helpEngine = nullptr;
+    QStringList indices = {};
+#if QT_CONFIG(future)
+    std::unique_ptr<QFutureWatcher<QStringList>, WatcherDeleter> watcher = {};
+#endif
 };
+
+#if QT_CONFIG(future)
+void QHelpIndexModelPrivate::createIndex(const FutureProvider &futureProvider)
+{
+    const bool wasRunning = bool(watcher);
+    watcher.reset(new QFutureWatcher<QStringList>);
+    QObject::connect(watcher.get(), &QFutureWatcherBase::finished, q, [this] {
+        if (!watcher->isCanceled()) {
+            indices = watcher->result();
+            q->filter({});
+        }
+        watcher.release()->deleteLater();
+        emit q->indexCreated();
+    });
+    watcher->setFuture(futureProvider());
+
+    if (wasRunning)
+        return;
+
+    indices.clear();
+    q->filter({});
+    emit q->indexCreationStarted();
+}
+#endif
 
 void QHelpIndexProvider::collectIndicesForCurrentFilter()
 {
@@ -123,8 +167,6 @@ void QHelpIndexProvider::run()
     \inmodule QtHelp
     \brief The QHelpIndexModel class provides a model that
     supplies index keywords to views.
-
-
 */
 
 /*!
@@ -145,10 +187,8 @@ void QHelpIndexProvider::run()
 
 QHelpIndexModel::QHelpIndexModel(QHelpEngineCore *helpEngine)
     : QStringListModel(helpEngine)
-    , d(new QHelpIndexModelPrivate(helpEngine))
-{
-    connect(d->indexProvider, &QThread::finished, this, &QHelpIndexModel::insertIndices);
-}
+    , d(new QHelpIndexModelPrivate{this, helpEngine})
+{}
 
 QHelpIndexModel::~QHelpIndexModel()
 {
@@ -162,41 +202,25 @@ QHelpIndexModel::~QHelpIndexModel()
 */
 void QHelpIndexModel::createIndexForCurrentFilter()
 {
-    const bool running = d->indexProvider->isRunning();
-    d->indexProvider->collectIndicesForCurrentFilter();
-    if (running)
-        return;
-
-    d->indices.clear();
-    filter({});
-    emit indexCreationStarted();
+#if QT_CONFIG(future)
+    d->createIndex([this] { return d->helpEngine->provideIndexForCurrentFilter(); });
+#endif
 }
 
 /*!
     Creates a new index by querying the help system for
     keywords for the specified \a customFilterName.
 */
-void QHelpIndexModel::createIndex(const QString &customFilterName)
+void QHelpIndexModel::createIndex(const QString &filter)
 {
-    const bool running = d->indexProvider->isRunning();
-    d->indexProvider->collectIndices(customFilterName);
-    if (running)
-        return;
-
-    d->indices.clear();
-    filter({});
-    emit indexCreationStarted();
+#if QT_CONFIG(future)
+    d->createIndex([this, filter] { return d->helpEngine->provideIndex(filter); });
+#endif
 }
 
+// TODO: Remove me
 void QHelpIndexModel::insertIndices()
-{
-    if (d->indexProvider->isRunning())
-        return;
-
-    d->indices = d->indexProvider->indices();
-    filter({});
-    emit indexCreated();
-}
+{}
 
 /*!
     Returns true if the index is currently built up, otherwise
@@ -204,7 +228,11 @@ void QHelpIndexModel::insertIndices()
 */
 bool QHelpIndexModel::isCreatingIndex() const
 {
-    return d->indexProvider->isRunning();
+#if QT_CONFIG(future)
+    return bool(d->watcher);
+#else
+    return false;
+#endif
 }
 
 /*!
@@ -214,7 +242,7 @@ bool QHelpIndexModel::isCreatingIndex() const
 */
 QHelpEngineCore *QHelpIndexModel::helpEngine() const
 {
-    return d->m_helpEngine;
+    return d->helpEngine;
 }
 
 /*!
