@@ -2,49 +2,14 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qhelpindexwidget.h"
-#include "qhelpcollectionhandler_p.h"
 #include "qhelpenginecore.h"
-#include "qhelpfilterengine.h"
 #include "qhelplink.h"
 
 #if QT_CONFIG(future)
 #include <QtCore/qfuturewatcher.h>
 #endif
 
-#include <QtCore/qthread.h>
-#include <QtCore/qmutex.h>
-
-#include <algorithm>
-
 QT_BEGIN_NAMESPACE
-
-class QHelpIndexProvider final : public QThread
-{
-public:
-    QHelpIndexProvider(QHelpEngineCore *helpEngine)
-        : QThread(helpEngine)
-        , m_helpEngine(helpEngine)
-    {}
-
-    ~QHelpIndexProvider() final
-    {
-        stopCollecting();
-    }
-
-    void collectIndicesForCurrentFilter();
-    void collectIndices(const QString &customFilterName);
-    void stopCollecting();
-    QStringList indices() const;
-
-private:
-    void run() override;
-
-    QHelpEngineCore *m_helpEngine;
-    QString m_currentFilter;
-    QStringList m_filterAttributes;
-    QStringList m_indices;
-    mutable QMutex m_mutex;
-};
 
 #if QT_CONFIG(future)
 using FutureProvider = std::function<QFuture<QStringList>()>;
@@ -98,68 +63,6 @@ void QHelpIndexModelPrivate::createIndex(const FutureProvider &futureProvider)
     emit q->indexCreationStarted();
 }
 #endif
-
-void QHelpIndexProvider::collectIndicesForCurrentFilter()
-{
-    m_mutex.lock();
-    m_currentFilter = m_helpEngine->filterEngine()->activeFilter();
-    m_filterAttributes = m_helpEngine->filterAttributes(m_helpEngine->legacyCurrentFilterName());
-    m_mutex.unlock();
-
-    if (isRunning())
-        stopCollecting();
-    start(LowPriority);
-}
-
-void QHelpIndexProvider::collectIndices(const QString &customFilterName)
-{
-    m_mutex.lock();
-    m_currentFilter = customFilterName;
-    m_filterAttributes = m_helpEngine->filterAttributes(customFilterName);
-    m_mutex.unlock();
-
-    if (isRunning())
-        stopCollecting();
-    start(LowPriority);
-}
-
-void QHelpIndexProvider::stopCollecting()
-{
-    if (!isRunning())
-        return;
-    wait();
-}
-
-QStringList QHelpIndexProvider::indices() const
-{
-    QMutexLocker lck(&m_mutex);
-    return m_indices;
-}
-
-void QHelpIndexProvider::run()
-{
-    m_mutex.lock();
-    const QString currentFilter = m_currentFilter;
-    const QStringList attributes = m_filterAttributes;
-    const QString collectionFile = m_helpEngine->collectionFile();
-    m_indices = QStringList();
-    m_mutex.unlock();
-
-    if (collectionFile.isEmpty())
-        return;
-
-    QHelpCollectionHandler collectionHandler(collectionFile);
-    if (!collectionHandler.openCollectionFile())
-        return;
-
-    const QStringList result = m_helpEngine->usesFilterEngine()
-            ? collectionHandler.indicesForFilter(currentFilter)
-            : collectionHandler.indicesForFilter(attributes);
-
-    m_mutex.lock();
-    m_indices = result;
-    m_mutex.unlock();
-}
 
 /*!
     \class QHelpIndexModel

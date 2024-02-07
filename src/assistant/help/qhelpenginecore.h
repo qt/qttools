@@ -122,7 +122,6 @@ private:
     QString legacyCurrentFilterName() const;
 
     QHelpEngineCorePrivate *d;
-    friend class QHelpIndexProvider;
 };
 
 QT_END_NAMESPACE
