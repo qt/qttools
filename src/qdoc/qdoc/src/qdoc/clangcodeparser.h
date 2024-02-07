@@ -31,7 +31,7 @@ public:
     void parseHeaderFile(const Location &location, const QString &filePath);
     void parseSourceFile(const Location &location, const QString &filePath, CppCodeParser&) override;
     void buildPCH(QString module_header);
-    Node *parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag) override;
+    Node *parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag);
 
 private:
     void getDefaultArgs();

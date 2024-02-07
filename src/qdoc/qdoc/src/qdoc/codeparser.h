@@ -109,10 +109,6 @@ public:
     virtual QString language() = 0;
     virtual QStringList sourceFileNameFilter() = 0;
     virtual void parseSourceFile(const Location &location, const QString &filePath, CppCodeParser& cpp_code_parser) = 0;
-    virtual Node *parseFnArg(const Location &, const QString &, const QString & = QString())
-    {
-        return nullptr;
-    }
 
     static void initialize();
     static void terminate();

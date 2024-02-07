@@ -5,6 +5,7 @@
 
 #include "access.h"
 #include "classnode.h"
+#include "clangcodeparser.h"
 #include "collectionnode.h"
 #include "comparisoncategory.h"
 #include "config.h"
@@ -905,7 +906,7 @@ std::pair<NodeList, DocList> CppCodeParser::processTopicArgs(const Doc &doc)
         if (args.size() == 1) {
             if (topic == COMMAND_FN) {
                 if (Config::instance().showInternal() || !doc.isInternal())
-                    node = CodeParser::parserForLanguage("Clang")->parseFnArg(doc.location(), args[0].first, args[0].second);
+                    node = static_cast<ClangCodeParser*>(CodeParser::parserForLanguage("Clang"))->parseFnArg(doc.location(), args[0].first, args[0].second);
             } else if (topic == COMMAND_MACRO) {
                 node = parseMacroArg(doc.location(), args[0].first);
             } else if (isQMLMethodTopic(topic)) {
@@ -925,7 +926,7 @@ std::pair<NodeList, DocList> CppCodeParser::processTopicArgs(const Doc &doc)
                 node = nullptr;
                 if (topic == COMMAND_FN) {
                     if (Config::instance().showInternal() || !doc.isInternal())
-                        node = CodeParser::parserForLanguage("Clang")->parseFnArg(doc.location(), arg.first, arg.second);
+                        node = static_cast<ClangCodeParser*>(CodeParser::parserForLanguage("Clang"))->parseFnArg(doc.location(), arg.first, arg.second);
                 } else if (topic == COMMAND_MACRO) {
                     node = parseMacroArg(doc.location(), arg.first);
                 } else if (isQMLMethodTopic(topic)) {
