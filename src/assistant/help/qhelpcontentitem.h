@@ -30,7 +30,6 @@ private:
 
     QHelpContentItemPrivate *d;
     friend QHelpContentItem *createContentItem(const QString &, const QUrl &, QHelpContentItem *);
-    friend class QHelpContentProvider;
 };
 
 QT_END_NAMESPACE

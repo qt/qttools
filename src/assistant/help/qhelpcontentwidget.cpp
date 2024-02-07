@@ -2,44 +2,16 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qhelpcontentwidget.h"
-#include "qhelpcollectionhandler_p.h"
 #include "qhelpenginecore.h"
-#include "qhelpfilterengine.h"
 
 #if QT_CONFIG(future)
 #include <QtCore/qfuturewatcher.h>
 #endif
 
 #include <QtCore/qdir.h>
-#include <QtCore/qmutex.h>
-#include <QtCore/qthread.h>
 #include <QtWidgets/qheaderview.h>
 
 QT_BEGIN_NAMESPACE
-
-class QHelpContentProvider : public QThread
-{
-    Q_OBJECT
-public:
-    QHelpContentProvider(QHelpEngineCore *helpEngine);
-    ~QHelpContentProvider() override;
-    void collectContentsForCurrentFilter();
-    void collectContents(const QString &customFilterName);
-    void stopCollecting();
-    QHelpContentItem *takeContentItem();
-
-private:
-    void run() override;
-
-    QHelpEngineCore *m_helpEngine;
-    QString m_currentFilter;
-    QStringList m_filterAttributes;
-    QString m_collectionFile;
-    QHelpContentItem *m_rootItem = nullptr;
-    QMutex m_mutex;
-    bool m_usesFilterEngine = false;
-    bool m_abort = false;
-};
 
 #if QT_CONFIG(future)
 using FutureProvider = std::function<QFuture<std::shared_ptr<QHelpContentItem>>()>;
@@ -100,172 +72,6 @@ void QHelpContentModelPrivate::createContents(const FutureProvider &futureProvid
     emit q->contentsCreationStarted();
 }
 #endif
-
-QHelpContentProvider::QHelpContentProvider(QHelpEngineCore *helpEngine)
-    : QThread(helpEngine)
-    , m_helpEngine(helpEngine)
-{}
-
-QHelpContentProvider::~QHelpContentProvider()
-{
-    stopCollecting();
-}
-
-void QHelpContentProvider::collectContentsForCurrentFilter()
-{
-    m_mutex.lock();
-    m_currentFilter = m_helpEngine->filterEngine()->activeFilter();
-    m_filterAttributes = m_helpEngine->filterAttributes(m_helpEngine->legacyCurrentFilterName());
-    m_collectionFile = m_helpEngine->collectionFile();
-    m_usesFilterEngine = m_helpEngine->usesFilterEngine();
-    m_mutex.unlock();
-
-    if (isRunning())
-        stopCollecting();
-    start(LowPriority);
-}
-
-void QHelpContentProvider::collectContents(const QString &customFilterName)
-{
-    m_mutex.lock();
-    m_currentFilter = customFilterName;
-    m_filterAttributes = m_helpEngine->filterAttributes(customFilterName);
-    m_collectionFile = m_helpEngine->collectionFile();
-    m_usesFilterEngine = m_helpEngine->usesFilterEngine();
-    m_mutex.unlock();
-
-    if (isRunning())
-        stopCollecting();
-    start(LowPriority);
-}
-
-void QHelpContentProvider::stopCollecting()
-{
-    if (isRunning()) {
-        m_mutex.lock();
-        m_abort = true;
-        m_mutex.unlock();
-        wait();
-        // we need to force-set m_abort to false, because the thread might either have
-        // finished between the isRunning() check and the "m_abort = true" above, or the
-        // isRunning() check might already happen after the "m_abort = false" in the run() method,
-        // either way never resetting m_abort to false from within the run() method
-        m_abort = false;
-    }
-    delete m_rootItem;
-    m_rootItem = nullptr;
-}
-
-QHelpContentItem *QHelpContentProvider::takeContentItem()
-{
-    QMutexLocker locker(&m_mutex);
-    QHelpContentItem *content = m_rootItem;
-    m_rootItem = nullptr;
-    return content;
-}
-
-
-static QUrl constructUrl(const QString &namespaceName,
-                         const QString &folderName,
-                         const QString &relativePath)
-{
-    const int idx = relativePath.indexOf(QLatin1Char('#'));
-    const QString &rp = idx < 0 ? relativePath : relativePath.left(idx);
-    const QString anchor = idx < 0 ? QString() : relativePath.mid(idx + 1);
-    return QHelpCollectionHandler::buildQUrl(namespaceName, folderName, rp, anchor);
-}
-
-void QHelpContentProvider::run()
-{
-    m_mutex.lock();
-    const QString currentFilter = m_currentFilter;
-    const QStringList attributes = m_filterAttributes;
-    const QString collectionFile = m_collectionFile;
-    const bool usesFilterEngine = m_usesFilterEngine;
-    delete m_rootItem;
-    m_rootItem = nullptr;
-    m_mutex.unlock();
-
-    if (collectionFile.isEmpty())
-        return;
-
-    QHelpCollectionHandler collectionHandler(collectionFile);
-    if (!collectionHandler.openCollectionFile())
-        return;
-
-    QHelpContentItem * const rootItem = new QHelpContentItem(QString(), QString(), nullptr);
-
-    const QList<QHelpCollectionHandler::ContentsData> result = usesFilterEngine
-            ? collectionHandler.contentsForFilter(currentFilter)
-            : collectionHandler.contentsForFilter(attributes);
-
-    for (const auto &contentsData : result) {
-        m_mutex.lock();
-        if (m_abort) {
-            delete rootItem;
-            m_abort = false;
-            m_mutex.unlock();
-            return;
-        }
-        m_mutex.unlock();
-
-        const QString namespaceName = contentsData.namespaceName;
-        const QString folderName = contentsData.folderName;
-        for (const QByteArray &contents : contentsData.contentsList)  {
-            if (contents.isEmpty())
-                continue;
-
-            QList<QHelpContentItem *> stack;
-            QDataStream s(contents);
-            while (true) {
-                int depth = 0;
-                QString link, title;
-                s >> depth;
-                s >> link;
-                s >> title;
-                if (title.isEmpty())
-                    break;
-
-// The example input (depth, link, title):
-//
-// 0 "graphicaleffects5.html" "Qt 5 Compatibility APIs: Qt Graphical Effects"
-// 1 "qtgraphicaleffects5-index.html" "QML Types"
-// 2 "qml-qt5compat-graphicaleffects-blend.html" "Blend Type Reference"
-// 3 "qml-qt5compat-graphicaleffects-blend-members.html" "List of all members"
-// 2 "qml-qt5compat-graphicaleffects-brightnesscontrast.html" "BrightnessContrast Type Reference"
-//
-// Thus, the valid order of depths is:
-// 1. Whenever the item's depth is < 0, we insert the item as its depth is 0.
-// 2. The first item's depth must be 0, otherwise we insert the item as its depth is 0.
-// 3. When the previous depth was N, the next depth must be in range [0, N+1] inclusively.
-//    If next item's depth is M > N+1, we insert the item as its depth is N+1.
-
-                if (depth <= 0) {
-                    stack.clear();
-                } else if (depth < stack.size()) {
-                    stack = stack.sliced(0, depth);
-                } else if (depth > stack.size()) {
-                    // Fill the gaps with the last item from the stack (or with the root).
-                    // This branch handles the case when depths are broken, e.g. 0, 2, 2, 1.
-                    // In this case, the 1st item is a root, and 2nd - 4th are all direct
-                    // children of the 1st.
-                    QHelpContentItem *substituteItem = stack.isEmpty() ? rootItem : stack.constLast();
-                    while (depth > stack.size())
-                        stack.append(substituteItem);
-                }
-
-                const QUrl url = constructUrl(namespaceName, folderName, link);
-                QHelpContentItem *parent = stack.isEmpty() ? rootItem : stack.constLast();
-                stack.push_back(new QHelpContentItem(title, url, parent));
-            }
-        }
-    }
-
-    m_mutex.lock();
-    m_rootItem = rootItem;
-    m_abort = false;
-    m_mutex.unlock();
-}
 
 /*!
     \class QHelpContentModel
@@ -501,5 +307,3 @@ void QHelpContentWidget::showLink(const QModelIndex &index)
 }
 
 QT_END_NAMESPACE
-
-#include "qhelpcontentwidget.moc"
