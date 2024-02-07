@@ -7,6 +7,11 @@
 #include "qhelpfilterengine.h"
 #include "qhelplink.h"
 
+#if QT_CONFIG(future)
+#include <QtConcurrent/qtconcurrentrun.h>
+#include <QtCore/qpromise.h>
+#endif
+
 #include <QtCore/qdir.h>
 #include <QtCore/qfileinfo.h>
 
@@ -775,5 +780,127 @@ QString QHelpEngineCore::legacyCurrentFilterName() const
 {
     return d->currentFilter;
 }
+
+#if QT_CONFIG(future)
+static QUrl constructUrl(const QString &namespaceName, const QString &folderName,
+                         const QString &relativePath)
+{
+    const int idx = relativePath.indexOf(QLatin1Char('#'));
+    const QString &rp = idx < 0 ? relativePath : relativePath.left(idx);
+    const QString anchor = idx < 0 ? QString() : relativePath.mid(idx + 1);
+    return QHelpCollectionHandler::buildQUrl(namespaceName, folderName, rp, anchor);
+}
+
+using ContentProviderResult = QList<QHelpCollectionHandler::ContentsData>;
+using ContentProvider = std::function<ContentProviderResult(const QString &)>;
+using ContentResult = std::shared_ptr<QHelpContentItem>;
+
+// This trick is needed because the c'tor of QHelpContentItem is private.
+QHelpContentItem *createContentItem(const QString &name = {}, const QUrl &link = {},
+                                    QHelpContentItem *parent = {})
+{
+    return new QHelpContentItem(name, link, parent);
+}
+
+static void provideContentHelper(QPromise<ContentResult> &promise, const ContentProvider &provider,
+                                 const QString &collectionFile)
+{
+    ContentResult rootItem(createContentItem());
+    const ContentProviderResult result = provider(collectionFile);
+    for (const auto &contentsData : result) {
+        const QString namespaceName = contentsData.namespaceName;
+        const QString folderName = contentsData.folderName;
+        for (const QByteArray &contents : contentsData.contentsList) {
+            if (promise.isCanceled())
+                return;
+
+            if (contents.isEmpty())
+                continue;
+
+            QList<QHelpContentItem *> stack;
+            QDataStream s(contents);
+            while (true) {
+                int depth = 0;
+                QString link, title;
+                s >> depth;
+                s >> link;
+                s >> title;
+                if (title.isEmpty())
+                    break;
+
+// The example input (depth, link, title):
+//
+// 0 "graphicaleffects5.html" "Qt 5 Compatibility APIs: Qt Graphical Effects"
+// 1 "qtgraphicaleffects5-index.html" "QML Types"
+// 2 "qml-qt5compat-graphicaleffects-blend.html" "Blend Type Reference"
+// 3 "qml-qt5compat-graphicaleffects-blend-members.html" "List of all members"
+// 2 "qml-qt5compat-graphicaleffects-brightnesscontrast.html" "BrightnessContrast Type Reference"
+//
+// Thus, the valid order of depths is:
+// 1. Whenever the item's depth is < 0, we insert the item as its depth is 0.
+// 2. The first item's depth must be 0, otherwise we insert the item as its depth is 0.
+// 3. When the previous depth was N, the next depth must be in range [0, N+1] inclusively.
+//    If next item's depth is M > N+1, we insert the item as its depth is N+1.
+
+                if (depth <= 0) {
+                    stack.clear();
+                } else if (depth < stack.size()) {
+                    stack = stack.sliced(0, depth);
+                } else if (depth > stack.size()) {
+                    // Fill the gaps with the last item from the stack (or with the root).
+                    // This branch handles the case when depths are broken, e.g. 0, 2, 2, 1.
+                    // In this case, the 1st item is a root, and 2nd - 4th are all direct
+                    // children of the 1st.
+                    QHelpContentItem *substituteItem =
+                            stack.isEmpty() ? rootItem.get() : stack.constLast();
+                    while (depth > stack.size())
+                        stack.append(substituteItem);
+                }
+
+                const QUrl url = constructUrl(namespaceName, folderName, link);
+                QHelpContentItem *parent = stack.isEmpty() ? rootItem.get() : stack.constLast();
+                stack.push_back(createContentItem(title, url, parent));
+            }
+        }
+    }
+    promise.addResult(rootItem);
+}
+
+static ContentProvider contentProviderFromFilterEngine(const QString &filter)
+{
+    return [filter](const QString &collectionFile) -> ContentProviderResult {
+        QHelpCollectionHandler collectionHandler(collectionFile);
+        if (!collectionHandler.openCollectionFile())
+            return {};
+        return collectionHandler.contentsForFilter(filter);
+    };
+}
+
+static ContentProvider contentProviderFromAttributes(const QStringList &attributes)
+{
+    return [attributes](const QString &collectionFile) -> ContentProviderResult {
+        QHelpCollectionHandler collectionHandler(collectionFile);
+        if (!collectionHandler.openCollectionFile())
+            return {};
+        return collectionHandler.contentsForFilter(attributes);
+    };
+}
+
+QFuture<ContentResult> QHelpEngineCore::provideContentForCurrentFilter() const
+{
+    const ContentProvider provider = usesFilterEngine()
+            ? contentProviderFromFilterEngine(filterEngine()->activeFilter())
+            : contentProviderFromAttributes(filterAttributes(d->currentFilter));
+    return QtConcurrent::run(provideContentHelper, provider, collectionFile());
+}
+
+QFuture<ContentResult> QHelpEngineCore::provideContent(const QString &filter) const
+{
+    const ContentProvider provider = usesFilterEngine()
+            ? contentProviderFromFilterEngine(filter)
+            : contentProviderFromAttributes(filterAttributes(filter));
+    return QtConcurrent::run(provideContentHelper, provider, collectionFile());
+}
+#endif
 
 QT_END_NAMESPACE

@@ -5,6 +5,11 @@
 #define QHELPENGINECORE_H
 
 #include <QtHelp/qhelp_global.h>
+#include <QtHelp/qhelpcontentitem.h>
+
+#if QT_CONFIG(future)
+#include <QtCore/qfuture.h>
+#endif
 
 #include <QtCore/qobject.h>
 #include <QtCore/qurl.h>
@@ -88,6 +93,11 @@ public:
 
     void setUsesFilterEngine(bool uses);
     bool usesFilterEngine() const;
+
+#if QT_CONFIG(future)
+    QFuture<std::shared_ptr<QHelpContentItem>> provideContentForCurrentFilter() const;
+    QFuture<std::shared_ptr<QHelpContentItem>> provideContent(const QString &filter) const;
+#endif
 
 Q_SIGNALS:
     void setupStarted();

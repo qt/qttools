@@ -29,6 +29,7 @@ private:
     QHelpContentItem(const QString &name, const QUrl &link, QHelpContentItem *parent = nullptr);
 
     QHelpContentItemPrivate *d;
+    friend QHelpContentItem *createContentItem(const QString &, const QUrl &, QHelpContentItem *);
     friend class QHelpContentProvider;
 };
 
