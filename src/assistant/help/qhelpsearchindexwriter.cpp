@@ -1,7 +1,7 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qhelpsearchindexwriter_default_p.h"
+#include "qhelpsearchindexwriter_p.h"
 #include "qhelp_global.h"
 #include "qhelpdbreader_p.h"
 #include "qhelpenginecore.h"
@@ -21,9 +21,45 @@
 
 QT_BEGIN_NAMESPACE
 
-namespace fulltextsearch::qt {
+namespace fulltextsearch {
 
 const char FTS_DB_NAME[] = "fts";
+
+class Writer
+{
+public:
+    Writer(const QString &path);
+    ~Writer();
+
+    bool tryInit(bool reindex);
+    void flush();
+
+    void removeNamespace(const QString &namespaceName);
+    bool hasNamespace(const QString &namespaceName);
+    void insertDoc(const QString &namespaceName,
+                   const QString &attributes,
+                   const QString &url,
+                   const QString &title,
+                   const QString &contents);
+    void startTransaction();
+    void endTransaction();
+
+private:
+    void init(bool reindex);
+    bool hasDB();
+    void clearLegacyIndex();
+
+    const QString m_dbDir;
+    QString m_uniqueId;
+
+    bool m_needOptimize = false;
+    QSqlDatabase *m_db = nullptr;
+    QVariantList m_namespaces;
+    QVariantList m_attributes;
+    QVariantList m_urls;
+    QVariantList m_titles;
+    QVariantList m_contents;
+};
 
 Writer::Writer(const QString &path)
     : m_dbDir(path)
@@ -498,6 +534,6 @@ void QHelpSearchIndexWriter::run()
     emit indexingFinished();
 }
 
-}   // namespace fulltextsearch::qt
+}   // namespace fulltextsearch
 
 QT_END_NAMESPACE

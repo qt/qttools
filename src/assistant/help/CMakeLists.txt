@@ -23,7 +23,7 @@ qt_internal_add_module(Help
         qhelplink.cpp qhelplink.h
         qhelpsearchengine.cpp qhelpsearchengine.h
         qhelpsearchindexreader.cpp qhelpsearchindexreader_p.h
-        qhelpsearchindexwriter_default.cpp qhelpsearchindexwriter_default_p.h
+        qhelpsearchindexwriter.cpp qhelpsearchindexwriter_p.h
         qhelpsearchquerywidget.cpp qhelpsearchquerywidget.h
         qhelpsearchresultwidget.cpp qhelpsearchresultwidget.h
         qoptionswidget.cpp qoptionswidget_p.h

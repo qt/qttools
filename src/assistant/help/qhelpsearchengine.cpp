@@ -7,7 +7,7 @@
 #include "qhelpsearchresultwidget.h"
 
 #include "qhelpsearchindexreader_p.h"
-#include "qhelpsearchindexwriter_default_p.h"
+#include "qhelpsearchindexwriter_p.h"
 
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
@@ -18,7 +18,6 @@
 QT_BEGIN_NAMESPACE
 
 using namespace fulltextsearch;
-using namespace fulltextsearch::qt;
 
 class QHelpSearchResultData : public QSharedData
 {
