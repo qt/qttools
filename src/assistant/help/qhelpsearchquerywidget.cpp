@@ -256,6 +256,8 @@ void QHelpSearchQueryWidget::collapseExtendedSearch()
 }
 
 #if QT_DEPRECATED_SINCE(5, 9)
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 /*!
     \deprecated
 
@@ -279,6 +281,7 @@ void QHelpSearchQueryWidget::setQuery(const QList<QHelpSearchQuery> &queryList)
 
     setSearchInput(queryList.first().wordList.join(QChar::Space));
 }
+QT_WARNING_POP
 #endif // QT_DEPRECATED_SINCE(5, 9)
 
 /*!
