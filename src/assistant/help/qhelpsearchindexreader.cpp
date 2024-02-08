@@ -161,23 +161,18 @@ void Reader::searchInDB(const QString &searchInput)
 
             // merge results form title and contents searches
             m_searchResults.clear();
-
             QSet<QUrl> urls;
-
             for (const QHelpSearchResult &result : titleResults) {
-                const QUrl &url = result.url();
-                if (!urls.contains(url)) {
-                    urls.insert(url);
+                const auto size = urls.size();
+                urls.insert(result.url());
+                if (size != urls.size()) // insertion took place
                     m_searchResults.append(result);
-                }
             }
-
             for (const QHelpSearchResult &result : contentResults) {
-                const QUrl &url = result.url();
-                if (!urls.contains(url)) {
-                    urls.insert(url);
+                const auto size = urls.size();
+                urls.insert(result.url());
+                if (size != urls.size()) // insertion took place
                     m_searchResults.append(result);
-                }
             }
         }
     }

@@ -380,18 +380,19 @@ void QHelpSearchIndexWriter::run()
 
     if (!reindex) {
         for (const QString &namespaceName : registeredDocs) {
-            if (indexMap.contains(namespaceName)) {
+            const auto it = indexMap.constFind(namespaceName);
+            if (it != indexMap.constEnd()) {
                 const QString path = engine.documentationFileName(namespaceName);
-                if (indexMap.value(namespaceName) < QFileInfo(path).lastModified()) {
+                if (*it < QFileInfo(path).lastModified()) {
                     // Remove some outdated indexed stuff
-                    indexMap.remove(namespaceName);
+                    indexMap.erase(it);
                     writer.removeNamespace(namespaceName);
                 } else if (!writer.hasNamespace(namespaceName)) {
                     // No data in fts db for namespace.
                     // The namespace could have been removed from fts db
                     // or the whole fts db have been removed
                     // without removing it from indexMap.
-                    indexMap.remove(namespaceName);
+                    indexMap.erase(it);
                 }
             } else {
                 // Needed in case namespaceName was removed from indexMap
@@ -407,10 +408,13 @@ void QHelpSearchIndexWriter::run()
         indexMap.clear();
     }
 
-    for (const QString &namespaceName : indexMap.keys()) {
-        if (!registeredDocs.contains(namespaceName)) {
-            indexMap.remove(namespaceName);
-            writer.removeNamespace(namespaceName);
+    auto it = indexMap.begin();
+    while (it != indexMap.end()) {
+        if (!registeredDocs.contains(it.key())) {
+            writer.removeNamespace(it.key());
+            it = indexMap.erase(it);
+        } else {
+            ++it;
         }
     }
 

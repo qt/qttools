@@ -758,8 +758,7 @@ bool QHelpCollectionHandler::addCustomFilter(const QString &filterName,
         // all old attributes
         const QString attributeName = m_query->value(1).toString();
         attributeMap.insert(attributeName, m_query->value(0).toInt());
-        if (idsToInsert.contains(attributeName))
-            idsToInsert.removeAll(attributeName);
+        idsToInsert.removeAll(attributeName);
     }
 
     for (const QString &id : std::as_const(idsToInsert)) {
