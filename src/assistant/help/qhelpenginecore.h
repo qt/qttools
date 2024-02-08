@@ -100,8 +100,9 @@ Q_SIGNALS:
 // #endif
 
 protected:
-    // TODO: Deprecate me
+#if QT_DEPRECATED_SINCE(6, 8)
     QHelpEngineCore(QHelpEngineCorePrivate *helpEngineCorePrivate, QObject *parent);
+#endif
 
 private:
     // TODO: Temporary, it's going to be removed in subsequent patches.

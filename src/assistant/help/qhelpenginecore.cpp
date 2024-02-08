@@ -176,10 +176,12 @@ QHelpEngineCore::QHelpEngineCore(const QString &collectionFile, QObject *parent)
 /*!
     \internal
 */
+#if QT_DEPRECATED_SINCE(6, 8)
 QHelpEngineCore::QHelpEngineCore(QHelpEngineCorePrivate *helpEngineCorePrivate, QObject *parent)
     : QObject(parent)
     , d(helpEngineCorePrivate)
 {}
+#endif
 
 /*!
     Destructs the help engine.
