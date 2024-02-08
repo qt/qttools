@@ -20,6 +20,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class Transaction
 {
 public:
@@ -411,27 +413,28 @@ bool QHelpCollectionHandler::copyCollectionFile(const QString &fileName)
 
 bool QHelpCollectionHandler::createTables(QSqlQuery *query)
 {
-    const QStringList tables = QStringList()
-            << QLatin1String("CREATE TABLE NamespaceTable ("
-                             "Id INTEGER PRIMARY KEY, "
-                             "Name TEXT, "
-                             "FilePath TEXT )")
-            << QLatin1String("CREATE TABLE FolderTable ("
-                             "Id INTEGER PRIMARY KEY, "
-                             "NamespaceId INTEGER, "
-                             "Name TEXT )")
-            << QLatin1String("CREATE TABLE FilterAttributeTable ("
-                             "Id INTEGER PRIMARY KEY, "
-                             "Name TEXT )")
-            << QLatin1String("CREATE TABLE FilterNameTable ("
-                             "Id INTEGER PRIMARY KEY, "
-                             "Name TEXT )")
-            << QLatin1String("CREATE TABLE FilterTable ("
-                             "NameId INTEGER, "
-                             "FilterAttributeId INTEGER )")
-            << QLatin1String("CREATE TABLE SettingsTable ("
-                             "Key TEXT PRIMARY KEY, "
-                             "Value BLOB )");
+    const QStringList tables = {
+        "CREATE TABLE NamespaceTable ("
+            "Id INTEGER PRIMARY KEY, "
+            "Name TEXT, "
+            "FilePath TEXT )"_L1,
+        "CREATE TABLE FolderTable ("
+            "Id INTEGER PRIMARY KEY, "
+            "NamespaceId INTEGER, "
+            "Name TEXT )"_L1,
+        "CREATE TABLE FilterAttributeTable ("
+            "Id INTEGER PRIMARY KEY, "
+            "Name TEXT )"_L1,
+        "CREATE TABLE FilterNameTable ("
+            "Id INTEGER PRIMARY KEY, "
+            "Name TEXT )"_L1,
+        "CREATE TABLE FilterTable ("
+            "NameId INTEGER, "
+            "FilterAttributeId INTEGER )"_L1,
+        "CREATE TABLE SettingsTable ("
+            "Key TEXT PRIMARY KEY, "
+            "Value BLOB )"_L1
+    };
 
     for (const QString &q : tables) {
         if (!query->exec(q))
@@ -442,78 +445,79 @@ bool QHelpCollectionHandler::createTables(QSqlQuery *query)
 
 bool QHelpCollectionHandler::recreateIndexAndNamespaceFilterTables(QSqlQuery *query)
 {
-    const QStringList tables = QStringList()
-            << QLatin1String("DROP TABLE IF EXISTS FileNameTable")
-            << QLatin1String("DROP TABLE IF EXISTS IndexTable")
-            << QLatin1String("DROP TABLE IF EXISTS ContentsTable")
-            << QLatin1String("DROP TABLE IF EXISTS FileFilterTable") // legacy
-            << QLatin1String("DROP TABLE IF EXISTS IndexFilterTable") // legacy
-            << QLatin1String("DROP TABLE IF EXISTS ContentsFilterTable") // legacy
-            << QLatin1String("DROP TABLE IF EXISTS FileAttributeSetTable") // legacy
-            << QLatin1String("DROP TABLE IF EXISTS OptimizedFilterTable") // legacy
-            << QLatin1String("DROP TABLE IF EXISTS TimeStampTable")
-            << QLatin1String("DROP TABLE IF EXISTS VersionTable")
-            << QLatin1String("DROP TABLE IF EXISTS Filter")
-            << QLatin1String("DROP TABLE IF EXISTS ComponentTable")
-            << QLatin1String("DROP TABLE IF EXISTS ComponentMapping")
-            << QLatin1String("DROP TABLE IF EXISTS ComponentFilter")
-            << QLatin1String("DROP TABLE IF EXISTS VersionFilter")
-            << QLatin1String("CREATE TABLE FileNameTable ("
-                             "FolderId INTEGER, "
-                             "Name TEXT, "
-                             "FileId INTEGER PRIMARY KEY, "
-                             "Title TEXT)")
-            << QLatin1String("CREATE TABLE IndexTable ("
-                             "Id INTEGER PRIMARY KEY, "
-                             "Name TEXT, "
-                             "Identifier TEXT, "
-                             "NamespaceId INTEGER, "
-                             "FileId INTEGER, "
-                             "Anchor TEXT)")
-            << QLatin1String("CREATE TABLE ContentsTable ("
-                             "Id INTEGER PRIMARY KEY, "
-                             "NamespaceId INTEGER, "
-                             "Data BLOB)")
-            << QLatin1String("CREATE TABLE FileFilterTable ("
-                             "FilterAttributeId INTEGER, "
-                             "FileId INTEGER)")
-            << QLatin1String("CREATE TABLE IndexFilterTable ("
-                             "FilterAttributeId INTEGER, "
-                             "IndexId INTEGER)")
-            << QLatin1String("CREATE TABLE ContentsFilterTable ("
-                             "FilterAttributeId INTEGER, "
-                             "ContentsId INTEGER )")
-            << QLatin1String("CREATE TABLE FileAttributeSetTable ("
-                             "NamespaceId INTEGER, "
-                             "FilterAttributeSetId INTEGER, "
-                             "FilterAttributeId INTEGER)")
-            << QLatin1String("CREATE TABLE OptimizedFilterTable ("
-                             "NamespaceId INTEGER, "
-                             "FilterAttributeId INTEGER)")
-            << QLatin1String("CREATE TABLE TimeStampTable ("
-                             "NamespaceId INTEGER, "
-                             "FolderId INTEGER, "
-                             "FilePath TEXT, "
-                             "Size INTEGER, "
-                             "TimeStamp TEXT)")
-            << QLatin1String("CREATE TABLE VersionTable ("
-                             "NamespaceId INTEGER, "
-                             "Version TEXT)")
-            << QLatin1String("CREATE TABLE Filter ("
-                             "FilterId INTEGER PRIMARY KEY, "
-                             "Name TEXT)")
-            << QLatin1String("CREATE TABLE ComponentTable ("
-                             "ComponentId INTEGER PRIMARY KEY, "
-                             "Name TEXT)")
-            << QLatin1String("CREATE TABLE ComponentMapping ("
-                             "ComponentId INTEGER, "
-                             "NamespaceId INTEGER)")
-            << QLatin1String("CREATE TABLE ComponentFilter ("
-                             "ComponentName TEXT, "
-                             "FilterId INTEGER)")
-            << QLatin1String("CREATE TABLE VersionFilter ("
-                             "Version TEXT, "
-                             "FilterId INTEGER)");
+    const QStringList tables = {
+        "DROP TABLE IF EXISTS FileNameTable"_L1,
+        "DROP TABLE IF EXISTS IndexTable"_L1,
+        "DROP TABLE IF EXISTS ContentsTable"_L1,
+        "DROP TABLE IF EXISTS FileFilterTable"_L1, // legacy
+        "DROP TABLE IF EXISTS IndexFilterTable"_L1, // legacy
+        "DROP TABLE IF EXISTS ContentsFilterTable"_L1, // legacy
+        "DROP TABLE IF EXISTS FileAttributeSetTable"_L1, // legacy
+        "DROP TABLE IF EXISTS OptimizedFilterTable"_L1, // legacy
+        "DROP TABLE IF EXISTS TimeStampTable"_L1,
+        "DROP TABLE IF EXISTS VersionTable"_L1,
+        "DROP TABLE IF EXISTS Filter"_L1,
+        "DROP TABLE IF EXISTS ComponentTable"_L1,
+        "DROP TABLE IF EXISTS ComponentMapping"_L1,
+        "DROP TABLE IF EXISTS ComponentFilter"_L1,
+        "DROP TABLE IF EXISTS VersionFilter"_L1,
+        "CREATE TABLE FileNameTable ("
+            "FolderId INTEGER, "
+            "Name TEXT, "
+            "FileId INTEGER PRIMARY KEY, "
+            "Title TEXT)"_L1,
+        "CREATE TABLE IndexTable ("
+            "Id INTEGER PRIMARY KEY, "
+            "Name TEXT, "
+            "Identifier TEXT, "
+            "NamespaceId INTEGER, "
+            "FileId INTEGER, "
+            "Anchor TEXT)"_L1,
+        "CREATE TABLE ContentsTable ("
+            "Id INTEGER PRIMARY KEY, "
+            "NamespaceId INTEGER, "
+            "Data BLOB)"_L1,
+        "CREATE TABLE FileFilterTable ("
+            "FilterAttributeId INTEGER, "
+            "FileId INTEGER)"_L1,
+        "CREATE TABLE IndexFilterTable ("
+            "FilterAttributeId INTEGER, "
+            "IndexId INTEGER)"_L1,
+        "CREATE TABLE ContentsFilterTable ("
+            "FilterAttributeId INTEGER, "
+            "ContentsId INTEGER )"_L1,
+        "CREATE TABLE FileAttributeSetTable ("
+            "NamespaceId INTEGER, "
+            "FilterAttributeSetId INTEGER, "
+            "FilterAttributeId INTEGER)"_L1,
+        "CREATE TABLE OptimizedFilterTable ("
+            "NamespaceId INTEGER, "
+            "FilterAttributeId INTEGER)"_L1,
+        "CREATE TABLE TimeStampTable ("
+            "NamespaceId INTEGER, "
+            "FolderId INTEGER, "
+            "FilePath TEXT, "
+            "Size INTEGER, "
+            "TimeStamp TEXT)"_L1,
+        "CREATE TABLE VersionTable ("
+            "NamespaceId INTEGER, "
+            "Version TEXT)"_L1,
+        "CREATE TABLE Filter ("
+            "FilterId INTEGER PRIMARY KEY, "
+            "Name TEXT)"_L1,
+        "CREATE TABLE ComponentTable ("
+            "ComponentId INTEGER PRIMARY KEY, "
+            "Name TEXT)"_L1,
+        "CREATE TABLE ComponentMapping ("
+            "ComponentId INTEGER, "
+            "NamespaceId INTEGER)"_L1,
+        "CREATE TABLE ComponentFilter ("
+            "ComponentName TEXT, "
+            "FilterId INTEGER)"_L1,
+        "CREATE TABLE VersionFilter ("
+            "Version TEXT, "
+            "FilterId INTEGER)"_L1
+    };
 
     for (const QString &q : tables) {
         if (!query->exec(q))
