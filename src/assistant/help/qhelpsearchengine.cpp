@@ -471,6 +471,8 @@ QString QHelpSearchEngine::searchInput() const
 }
 
 #if QT_DEPRECATED_SINCE(5, 9)
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 /*!
     \deprecated
     \since 4.5
@@ -481,6 +483,7 @@ QList<QHelpSearchQuery> QHelpSearchEngine::query() const
     return QList<QHelpSearchQuery>() << QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
            d->m_searchInput.split(QChar::Space));
 }
+QT_WARNING_POP
 #endif // QT_DEPRECATED_SINCE(5, 9)
 
 /*!

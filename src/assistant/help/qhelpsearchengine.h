@@ -21,19 +21,23 @@ class QHelpSearchEnginePrivate;
 class QHelpSearchResultData;
 class QHelpSearchResultWidget;
 
+#if QT_DEPRECATED_SINCE(6, 7)
 class QHELP_EXPORT QHelpSearchQuery
 {
 public:
     enum FieldName { DEFAULT = 0, FUZZY, WITHOUT, PHRASE, ALL, ATLEAST };
 
+    QT_DEPRECATED_VERSION_X_6_7("Use QString instead")
     QHelpSearchQuery()
         : fieldName(DEFAULT) { wordList.clear(); }
+    QT_DEPRECATED_VERSION_X_6_7("Use QString instead")
     QHelpSearchQuery(FieldName field, const QStringList &wordList_)
         : fieldName(field), wordList(wordList_) {}
 
     FieldName fieldName;
     QStringList wordList;
 };
+#endif // QT_DEPRECATED_SINCE(6, 7)
 
 class QHELP_EXPORT QHelpSearchResult
 {
