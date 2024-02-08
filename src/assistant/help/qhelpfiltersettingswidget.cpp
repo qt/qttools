@@ -21,7 +21,6 @@ public:
         m_filterToData.insert(filterName, filterData);
     }
     void removeFilter(const QString &filterName) { m_filterToData.remove(filterName); }
-    QStringList filterNames() const { return m_filterToData.keys(); }
     QHelpFilterData filterData(const QString &filterName) const
     {
         return m_filterToData.value(filterName);
@@ -71,9 +70,9 @@ static bool applySettingsHelper(QHelpFilterEngine *filterEngine, const QHelpFilt
 
     const QString &currentFilter = filterEngine->activeFilter();
 
-    for (const QString &filter : filtersToRemove.keys()) {
-        filterEngine->removeFilter(filter);
-        if (currentFilter == filter && !filtersToAdd.contains(filter))
+    for (auto it = filtersToRemove.cbegin(); it != filtersToRemove.cend(); ++it) {
+        filterEngine->removeFilter(it.key());
+        if (currentFilter == it.key() && !filtersToAdd.contains(it.key()))
             filterEngine->setActiveFilter({});
         changed = true;
     }
@@ -152,7 +151,9 @@ void QHelpFilterSettingsWidgetPrivate::setFilterSettings(const QHelpFilterSettin
     m_itemToFilter.clear();
     m_filterToItem.clear();
 
-    for (const QString &filterName : m_filterSettings.filterNames()) {
+    const auto filters = m_filterSettings.filters();
+    for (auto it = filters.cbegin(); it != filters.cend(); ++it) {
+        const QString &filterName = it.key();
         QListWidgetItem *item = new QListWidgetItem(filterName);
         m_ui.filterWidget->addItem(item);
         m_itemToFilter.insert(item, filterName);
