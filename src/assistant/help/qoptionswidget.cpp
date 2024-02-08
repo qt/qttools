@@ -149,7 +149,7 @@ QListWidgetItem *QOptionsWidget::appendItem(const QString &optionName, bool vali
 {
     QListWidgetItem *optionItem = new QListWidgetItem(optionText(optionName, valid), m_listWidget);
     optionItem->setCheckState(selected ? Qt::Checked : Qt::Unchecked);
-    m_listWidget->insertItem(m_listWidget->count(), optionItem);
+    m_listWidget->addItem(optionItem);
     m_optionToItem[optionName] = optionItem;
     m_itemToOption[optionItem] = optionName;
     return optionItem;
@@ -159,7 +159,7 @@ void QOptionsWidget::appendSeparator()
 {
     QListWidgetItem *separatorItem = new QListWidgetItem(m_listWidget);
     ListWidgetDelegate::setSeparator(separatorItem);
-    m_listWidget->insertItem(m_listWidget->count(), separatorItem);
+    m_listWidget->addItem(separatorItem);
 }
 
 void QOptionsWidget::itemChanged(QListWidgetItem *item)

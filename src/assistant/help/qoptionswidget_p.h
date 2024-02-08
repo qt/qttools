@@ -15,7 +15,7 @@
 // We mean it.
 //
 
-#include <QtCore/qmap.h>
+#include <QtCore/qhash.h>
 #include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
@@ -52,8 +52,8 @@ private:
     QStringList m_validOptions;
     QStringList m_invalidOptions;
     QStringList m_selectedOptions;
-    QMap<QString, QListWidgetItem *> m_optionToItem;
-    QMap<QListWidgetItem *, QString> m_itemToOption; // TODO: Replace with QHash
+    QHash<QString, QListWidgetItem *> m_optionToItem;
+    QHash<QListWidgetItem *, QString> m_itemToOption;
 };
 
 QT_END_NAMESPACE
