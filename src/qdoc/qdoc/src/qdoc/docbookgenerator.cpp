@@ -2198,8 +2198,10 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
             const QString qtComponent = "Qt" + QString::number(QT_VERSION_MAJOR);
             const QString findpackageText = "find_package(" + qtComponent
                     + " REQUIRED COMPONENTS " + cn->qtCMakeComponent() + ")";
+            const QString targetItem =
+                    cn->qtCMakeTargetItem().isEmpty() ? cn->qtCMakeComponent() : cn->qtCMakeTargetItem();
             const QString targetLinkLibrariesText = "target_link_libraries(mytarget PRIVATE "
-                    + qtComponent + "::" + cn->qtCMakeComponent() + ")";
+                    + qtComponent + "::" + targetItem + ")";
             const QStringList cmakeInfo { findpackageText, targetLinkLibrariesText };
             generateCMakeRequisite(cmakeInfo);
         }

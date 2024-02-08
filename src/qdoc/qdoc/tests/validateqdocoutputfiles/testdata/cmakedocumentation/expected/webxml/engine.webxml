@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Engine" href="engine.html" status="active" access="public" location="car.h" since="6.6.6" documented="true" module="TestCarPrivate" brief="Represents a model of an engine">
+            <description>
+                <brief>Represents a model of an engine.</brief>
+            </description>
+            <function name="start" fullname="Engine::start" href="engine.html#start" status="active" access="private" location="car.h" documented="true" meta="plain" type="void" brief="Starts the engine" signature="void start()">
+                <description>
+                    <brief>Starts the engine.</brief>
+                </description>
+            </function>
+            <function name="stop" fullname="Engine::stop" href="engine.html#stop" status="active" access="private" location="car.h" documented="true" meta="plain" type="void" brief="Stops the engine" signature="void stop()">
+                <description>
+                    <brief>Stops the engine.</brief>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

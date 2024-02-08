@@ -23,7 +23,9 @@ public:
     [[nodiscard]] QString qtVariable() const override { return m_qtVariable; }
     void setQtVariable(const QString &v) override { m_qtVariable = v; }
     [[nodiscard]] QString qtCMakeComponent() const override { return m_qtCMakeComponent; }
+    [[nodiscard]] QString qtCMakeTargetItem() const override { return m_qtCMakeTargetItem; }
     void setQtCMakeComponent(const QString &target) override { m_qtCMakeComponent = target; }
+    void setQtCMakeTargetItem(const QString &target) override { m_qtCMakeTargetItem = target; }
     void addMember(Node *node) override;
     [[nodiscard]] bool hasNamespaces() const override;
     [[nodiscard]] bool hasClasses() const override;
@@ -115,6 +117,7 @@ private:
     QString m_logicalModuleVersionMinor {};
     QString m_qtVariable {};
     QString m_qtCMakeComponent {};
+    QString m_qtCMakeTargetItem {};
     QString m_state {};
 };
 

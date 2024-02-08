@@ -572,6 +572,13 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             doc.location().warning(
                     QStringLiteral("Command '\\%1' is only meaningful in '\\module'.")
                             .arg(COMMAND_QTCMAKEPACKAGE));
+    } else if (command == COMMAND_QTCMAKETARGETITEM) {
+        if (node->isModule())
+            node->setQtCMakeTargetItem(arg);
+        else
+            doc.location().warning(
+                    QStringLiteral("Command '\\%1' is only meaningful in '\\module'.")
+                            .arg(COMMAND_QTCMAKETARGETITEM));
     } else if (command == COMMAND_MODULESTATE ) {
         if (!node->isModule() && !node->isQmlModule()) {
             doc.location().warning(

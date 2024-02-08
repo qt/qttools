@@ -2511,6 +2511,19 @@
     \endquotation
 
 
+    \target qtcmaketargetitem-command
+    \section1 \\qtcmaketargetitem
+
+    Use the \\qtcmaketargetitem command to override the \e {item} part of the
+    CMake \c{target_link_libraries} information that's added to classes and
+    namespaces. The command must be used in conjunction with the
+    \l{module-command}{\\module} and \l{qtcmakepackage}{\\qtcmakepackage}}
+    commands.
+
+    \e{See also} \l{module-command}{\\module} and
+    \l{qtcmakepackage}{\\qtcmakepackage}}
+
+
     \target generatelist-command
     \section1 \\generatelist
 

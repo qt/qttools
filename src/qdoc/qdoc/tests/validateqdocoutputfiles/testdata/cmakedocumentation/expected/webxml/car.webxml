@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Car" href="car.html" status="active" access="public" location="car.h" since="6.6.6" documented="true" module="TestCar" brief="Represents a model of a car">
+            <description>
+                <brief>Represents a model of a car.</brief>
+            </description>
+            <function name="drive" fullname="Car::drive" href="car.html#drive" status="active" access="private" location="car.h" documented="true" meta="plain" type="void" brief="Drives the car" signature="void drive()">
+                <description>
+                    <brief>Drives the car.</brief>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

@@ -94,6 +94,7 @@
     \li \l {qmlsignal-command} {\\qmlsignal}
     \li \l {qmlmodule-command} {\\qmlmodule}
     \li \l {qtcmakepackage-command} {\\qtcmakepackage}
+    \li \l {qtcmaketargetitem-command} {\\qtcmaketargetitem}
     \li \l {quotation-command} {\\quotation}
     \li \l {quotefile-command} {\\quotefile}
     \li \l {quotefromfile-command} {\\quotefromfile}

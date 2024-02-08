@@ -41,6 +41,7 @@
       \li \l {qmlabstract-command} {\\qmlabstract}
       \li \l {qmldefault-command} {\\qmldefault}
       \li \l {qtcmakepackage-command} {\\qtcmakepackage}
+      \li \l {qtcmaketargetitem-command} {\\qtcmaketargetitem}
       \li \l {readonly-command} {\\readonly}
       \li \l {reentrant-command}{\\reentrant}
       \li \l {reimp-command}{\\reimp}

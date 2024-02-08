@@ -2064,17 +2064,19 @@ void HtmlGenerator::addCMakeInfoToMap(const Aggregate *aggregate, QMap<QString, 
     if (!aggregate->physicalModuleName().isEmpty() && text != nullptr) {
         const CollectionNode *cn =
                 m_qdb->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
-        if (cn && !cn->qtCMakeComponent().isEmpty()) {
-            text->clear();
-            const QString qtComponent = "Qt" + QString::number(QT_VERSION_MAJOR);
-            const QString findPackageText = "find_package(" + qtComponent + " REQUIRED COMPONENTS "
-                    + cn->qtCMakeComponent() + ")";
-            const QString targetLinkLibrariesText = "target_link_libraries(mytarget PRIVATE "
-                    + qtComponent + "::" + cn->qtCMakeComponent() + ")";
-            const Atom lineBreak = Atom(Atom::RawString, " <br/>\n");
-            *text << findPackageText << lineBreak << targetLinkLibrariesText;
-            requisites.insert(CMakeInfo, *text);
-        }
+        if (!cn || cn->qtCMakeComponent().isEmpty())
+            return;
+
+        text->clear();
+        const QString qtComponent = "Qt" + QString::number(QT_VERSION_MAJOR);
+        const QString findPackageText = "find_package(" + qtComponent + " REQUIRED COMPONENTS "
+                + cn->qtCMakeComponent() + ")";
+        const QString targetText = cn->qtCMakeTargetItem().isEmpty() ? cn->qtCMakeComponent() : cn->qtCMakeTargetItem();
+        const QString targetLinkLibrariesText = "target_link_libraries(mytarget PRIVATE "
+                + qtComponent + "::" + targetText + ")";
+        const Atom lineBreak = Atom(Atom::RawString, " <br/>\n");
+        *text << findPackageText << lineBreak << targetLinkLibrariesText;
+        requisites.insert(CMakeInfo, *text);
     }
 }
 

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Engine Class</db:title>
+<db:productname>cmakedocumentation</db:productname>
+<db:titleabbrev>cmakedocumentation Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Represents a model of an engine.</db:para>
+<db:para>This class was introduced in Qt 6.6.6.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>Engine</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Since</db:term>
+<db:listitem>
+<db:para>Qt 6.6.6</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>CMake</db:term>
+<db:listitem>
+<db:para>find_package(Qt6 REQUIRED COMPONENTS TestCar)</db:para>
+<db:para>target_link_libraries(mytarget PRIVATE Qt6::TestCarPrivate)</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>qmake</db:term>
+<db:listitem>
+<db:para>QT += testcar-private</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+</db:article>

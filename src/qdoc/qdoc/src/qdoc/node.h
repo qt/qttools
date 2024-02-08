@@ -250,7 +250,9 @@ public:
     virtual void setQtVariable(const QString &) {}
     [[nodiscard]] virtual QString qtVariable() const { return QString(); }
     virtual void setQtCMakeComponent(const QString &) {}
+    virtual void setQtCMakeTargetItem(const QString &) {}
     [[nodiscard]] virtual QString qtCMakeComponent() const { return QString(); }
+    [[nodiscard]] virtual QString qtCMakeTargetItem() const { return QString(); }
     [[nodiscard]] virtual bool hasTag(const QString &) const { return false; }
 
     void setDeprecatedSince(const QString &sinceVersion);
