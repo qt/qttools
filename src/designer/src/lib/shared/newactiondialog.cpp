@@ -61,6 +61,20 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
     connect(m_ui->keysequenceResetToolButton, &QAbstractButton::clicked,
             this, &NewActionDialog::slotResetKeySequence);
 
+    // Clear XDG icon once a theme enum is chosen and vv.
+    auto *iconThemeEnumEditor = m_ui->iconThemeEnumEditor;
+    auto *iconThemeEditor = m_ui->iconThemeEditor;
+    connect(iconThemeEnumEditor, &IconThemeEnumEditor::edited,
+            this, [iconThemeEditor](int i) {
+                if (i >= 0)
+                    iconThemeEditor->reset();
+            });
+    connect(iconThemeEditor, &IconThemeEditor::edited,
+            this, [iconThemeEnumEditor](const QString &t) {
+                if (!t.isEmpty())
+                    iconThemeEnumEditor->reset();
+            });
+
     const auto menuRoles = QMetaEnum::fromType<QAction::MenuRole>();
     for (int i = 0; i < menuRoles.keyCount(); i++) {
         const auto key = menuRoles.key(i);
@@ -133,7 +147,9 @@ ActionData NewActionDialog::actionData() const
     rc.name = actionName();
     rc.toolTip = m_ui->tooltipEditor->text();
     rc.icon = m_ui->iconSelector->icon();
-    rc.icon.setTheme(m_ui->iconThemeEditor->theme());
+    const int themeEnum = m_ui->iconThemeEnumEditor->themeEnum();
+    rc.icon.setThemeEnum(themeEnum);
+    rc.icon.setTheme(themeEnum == -1 ? m_ui->iconThemeEditor->theme() : QString{});
     rc.checkable = m_ui->checkableCheckBox->checkState() == Qt::Checked;
     rc.keysequence = PropertySheetKeySequenceValue(m_ui->keySequenceEdit->keySequence());
     rc.menuRole.value = m_ui->menuRole->currentData().toInt();
@@ -145,6 +161,7 @@ void NewActionDialog::setActionData(const ActionData &d)
     m_ui->editActionText->setText(d.text);
     m_ui->editObjectName->setText(d.name);
     m_ui->iconSelector->setIcon(d.icon.unthemed());
+    m_ui->iconThemeEnumEditor->setThemeEnum(d.icon.themeEnum());
     m_ui->iconThemeEditor->setTheme(d.icon.theme());
     m_ui->tooltipEditor->setText(d.toolTip);
     m_ui->keySequenceEdit->setKeySequence(d.keysequence.value());
