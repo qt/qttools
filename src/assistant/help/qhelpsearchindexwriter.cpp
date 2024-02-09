@@ -53,7 +53,7 @@ private:
     QString m_uniqueId;
 
     bool m_needOptimize = false;
-    QSqlDatabase *m_db = nullptr;
+    QSqlDatabase m_db;
     QVariantList m_namespaces;
     QVariantList m_attributes;
     QVariantList m_urls;
@@ -67,17 +67,15 @@ Writer::Writer(const QString &path)
     clearLegacyIndex();
     QDir().mkpath(m_dbDir);
     m_uniqueId = QHelpGlobal::uniquifyConnectionName(QLatin1String("QHelpWriter"), this);
-    m_db = new QSqlDatabase();
-    *m_db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), m_uniqueId);
+    m_db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), m_uniqueId);
     const QString dbPath = m_dbDir + QLatin1Char('/') + QLatin1String(FTS_DB_NAME);
-    m_db->setDatabaseName(dbPath);
-    if (!m_db->open()) {
+    m_db.setDatabaseName(dbPath);
+    if (!m_db.open()) {
         const QString &error = QHelpSearchIndexWriter::tr(
                                        "Cannot open database \"%1\" using connection \"%2\": %3")
-                                       .arg(dbPath, m_uniqueId, m_db->lastError().text());
+                                       .arg(dbPath, m_uniqueId, m_db.lastError().text());
         qWarning("%s", qUtf8Printable(error));
-        delete m_db;
-        m_db = nullptr;
+        m_db = {};
         QSqlDatabase::removeDatabase(m_uniqueId);
         m_uniqueId.clear();
     } else {
@@ -87,10 +85,10 @@ Writer::Writer(const QString &path)
 
 bool Writer::tryInit(bool reindex)
 {
-    if (!m_db)
+    if (!m_db.isValid())
         return true;
 
-    QSqlQuery query(*m_db);
+    QSqlQuery query(m_db);
     // HACK: we try to perform any modifying command just to check if
     // we don't get SQLITE_BUSY code (SQLITE_BUSY is defined to 5 in sqlite driver)
     if (!query.exec(QLatin1String("CREATE TABLE foo ();"))) {
@@ -106,11 +104,10 @@ bool Writer::tryInit(bool reindex)
 
 bool Writer::hasDB()
 {
-    if (!m_db)
+    if (!m_db.isValid())
         return false;
 
-    QSqlQuery query(*m_db);
-
+    QSqlQuery query(m_db);
     query.prepare(QLatin1String("SELECT id FROM info LIMIT 1"));
     query.exec();
     return query.next();
@@ -134,10 +131,10 @@ void Writer::clearLegacyIndex()
 
 void Writer::init(bool reindex)
 {
-    if (!m_db)
+    if (!m_db.isValid())
         return;
 
-    QSqlQuery query(*m_db);
+    QSqlQuery query(m_db);
 
     if (reindex && hasDB()) {
         m_needOptimize = true;
@@ -190,22 +187,19 @@ void Writer::init(bool reindex)
 
 Writer::~Writer()
 {
-    if (m_db) {
-        m_db->close();
-        delete m_db;
-    }
-
+    if (m_db.isValid())
+        m_db.close();
+    m_db = {};
     if (!m_uniqueId.isEmpty())
         QSqlDatabase::removeDatabase(m_uniqueId);
 }
 
 void Writer::flush()
 {
-    if (!m_db)
+    if (!m_db.isValid())
         return;
 
-    QSqlQuery query(*m_db);
-
+    QSqlQuery query(m_db);
     query.prepare(QLatin1String("INSERT INTO info (namespace, attributes, url, title, data) VALUES (?, ?, ?, ?, ?)"));
     query.addBindValue(m_namespaces);
     query.addBindValue(m_attributes);
@@ -214,25 +208,20 @@ void Writer::flush()
     query.addBindValue(m_contents);
     query.execBatch();
 
-    m_namespaces = QVariantList();
-    m_attributes = QVariantList();
-    m_urls = QVariantList();
-    m_titles = QVariantList();
-    m_contents = QVariantList();
+    m_namespaces.clear();
+    m_attributes.clear();
+    m_urls.clear();
+    m_titles.clear();
+    m_contents.clear();
 }
 
 void Writer::removeNamespace(const QString &namespaceName)
 {
-    if (!m_db)
+    if (!m_db.isValid() || !hasNamespace(namespaceName)) // no data to delete
         return;
 
-    if (!hasNamespace(namespaceName))
-        return; // no data to delete
-
     m_needOptimize = true;
-
-    QSqlQuery query(*m_db);
-
+    QSqlQuery query(m_db);
     query.prepare(QLatin1String("DELETE FROM info WHERE namespace = ?"));
     query.addBindValue(namespaceName);
     query.exec();
@@ -240,11 +229,10 @@ void Writer::removeNamespace(const QString &namespaceName)
 
 bool Writer::hasNamespace(const QString &namespaceName)
 {
-    if (!m_db)
+    if (!m_db.isValid())
         return false;
 
-    QSqlQuery query(*m_db);
-
+    QSqlQuery query(m_db);
     query.prepare(QLatin1String("SELECT id FROM info WHERE namespace = ? LIMIT 1"));
     query.addBindValue(namespaceName);
     query.exec();
@@ -266,28 +254,28 @@ void Writer::insertDoc(const QString &namespaceName,
 
 void Writer::startTransaction()
 {
-    if (!m_db)
+    if (!m_db.isValid())
         return;
 
     m_needOptimize = false;
-    if (m_db && m_db->driver()->hasFeature(QSqlDriver::Transactions))
-        m_db->transaction();
+    if (m_db.driver()->hasFeature(QSqlDriver::Transactions))
+        m_db.transaction();
 }
 
 void Writer::endTransaction()
 {
-    if (!m_db)
+    if (!m_db.isValid())
         return;
 
-    QSqlQuery query(*m_db);
+    QSqlQuery query(m_db);
 
     if (m_needOptimize) {
         query.exec(QLatin1String("INSERT INTO titles(titles) VALUES('rebuild')"));
         query.exec(QLatin1String("INSERT INTO contents(contents) VALUES('rebuild')"));
     }
 
-    if (m_db && m_db->driver()->hasFeature(QSqlDriver::Transactions))
-        m_db->commit();
+    if (m_db.driver()->hasFeature(QSqlDriver::Transactions))
+        m_db.commit();
 
     if (m_needOptimize)
         query.exec(QLatin1String("VACUUM"));
