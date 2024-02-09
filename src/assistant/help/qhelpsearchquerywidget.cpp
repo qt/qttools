@@ -17,9 +17,7 @@ QT_BEGIN_NAMESPACE
 
 class QHelpSearchQueryWidgetPrivate : public QObject
 {
-    Q_OBJECT
-
-private:
+public:
     struct QueryHistory {
         explicit QueryHistory() : curQuery(-1) {}
         QStringList queries;
@@ -29,8 +27,7 @@ private:
     class CompleterModel : public QAbstractListModel
     {
     public:
-        explicit CompleterModel(QObject *parent)
-          : QAbstractListModel(parent) {}
+        explicit CompleterModel(QObject *parent) : QAbstractListModel(parent) { }
 
         int rowCount(const QModelIndex &parent = QModelIndex()) const override
         {
@@ -100,11 +97,9 @@ private:
     void enableOrDisableToolButtons()
     {
         m_prevQueryButton->setEnabled(m_queries.curQuery > 0);
-        m_nextQueryButton->setEnabled(m_queries.curQuery
-            < m_queries.queries.size() - 1);
+        m_nextQueryButton->setEnabled(m_queries.curQuery < m_queries.queries.size() - 1);
     }
 
-private slots:
     bool eventFilter(QObject *ob, QEvent *event) override
     {
         if (event->type() == QEvent::KeyPress) {
@@ -138,9 +133,6 @@ private slots:
     }
 
     void prevQuery() { nextOrPrevQuery(0, -1, m_prevQueryButton, m_nextQueryButton); }
-
-private:
-    friend class QHelpSearchQueryWidget;
 
     QLabel *m_searchLabel = nullptr;
     QPushButton *m_searchButton = nullptr;
@@ -200,18 +192,13 @@ QHelpSearchQueryWidget::QHelpSearchQueryWidget(QWidget *parent)
 
     vLayout->addLayout(hBoxLayout);
 
-    connect(d->m_prevQueryButton, &QAbstractButton::clicked,
-            d, &QHelpSearchQueryWidgetPrivate::prevQuery);
-    connect(d->m_nextQueryButton, &QAbstractButton::clicked,
-            d, &QHelpSearchQueryWidgetPrivate::nextQuery);
-    connect(d->m_searchButton, &QAbstractButton::clicked,
-            this, &QHelpSearchQueryWidget::search);
-    connect(d->m_lineEdit, &QLineEdit::returnPressed,
-            this, &QHelpSearchQueryWidget::search);
+    connect(d->m_prevQueryButton, &QAbstractButton::clicked, this, [this] { d->prevQuery(); });
+    connect(d->m_nextQueryButton, &QAbstractButton::clicked, this, [this] { d->nextQuery(); });
+    connect(d->m_searchButton, &QAbstractButton::clicked, this, &QHelpSearchQueryWidget::search);
+    connect(d->m_lineEdit, &QLineEdit::returnPressed, this, &QHelpSearchQueryWidget::search);
 
     d->retranslate();
-    connect(this, &QHelpSearchQueryWidget::search,
-            d, &QHelpSearchQueryWidgetPrivate::searchRequested);
+    connect(this, &QHelpSearchQueryWidget::search, this, [this] { d->searchRequested(); });
     setCompactMode(true);
 }
 
@@ -335,5 +322,3 @@ void QHelpSearchQueryWidget::changeEvent(QEvent *event)
 }
 
 QT_END_NAMESPACE
-
-#include "qhelpsearchquerywidget.moc"
