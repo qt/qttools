@@ -3,121 +3,18 @@
 
 #include "qhelpsearchengine.h"
 #include "qhelpenginecore.h"
+#include "qhelpsearchenginecore.h"
 #include "qhelpsearchquerywidget.h"
 #include "qhelpsearchresultwidget.h"
 
-#include "qhelpsearchindexreader_p.h"
-#include "qhelpsearchindexwriter_p.h"
-
-#include <QtCore/qdir.h>
-#include <QtCore/qfile.h>
-#include <QtCore/qfileinfo.h>
-#include <QtCore/qpointer.h>
-#include <QtCore/qtimer.h>
-
 QT_BEGIN_NAMESPACE
 
-using namespace fulltextsearch;
-
-class QHelpSearchEnginePrivate : public QObject
+class QHelpSearchEnginePrivate
 {
-    Q_OBJECT
-
-signals:
-    void indexingStarted();
-    void indexingFinished();
-
-    void searchingStarted();
-    void searchingFinished(int searchResultCount);
-
 public:
-    int searchResultCount() const
-    {
-        return indexReader ? indexReader->searchResultCount() : 0;
-    }
-
-    QList<QHelpSearchResult> searchResults(int start, int end) const
-    {
-        return indexReader ? indexReader->searchResults(start, end) : QList<QHelpSearchResult>();
-    }
-
-    void updateIndex(bool reindex = false)
-    {
-        if (helpEngine.isNull())
-            return;
-
-        if (!QFile::exists(QFileInfo(helpEngine->collectionFile()).path()))
-            return;
-
-        if (!indexWriter) {
-            indexWriter.reset(new QHelpSearchIndexWriter);
-
-            connect(indexWriter.get(), &QHelpSearchIndexWriter::indexingStarted,
-                    this, &QHelpSearchEnginePrivate::indexingStarted);
-            connect(indexWriter.get(), &QHelpSearchIndexWriter::indexingFinished,
-                    this, &QHelpSearchEnginePrivate::indexingFinished);
-        }
-
-        indexWriter->cancelIndexing();
-        indexWriter->updateIndex(helpEngine->collectionFile(), indexFilesFolder(), reindex);
-    }
-
-    void cancelIndexing()
-    {
-        if (indexWriter)
-            indexWriter->cancelIndexing();
-    }
-
-    void search(const QString &searchInput)
-    {
-        if (helpEngine.isNull())
-            return;
-
-        if (!QFile::exists(QFileInfo(helpEngine->collectionFile()).path()))
-            return;
-
-        if (!indexReader) {
-            indexReader.reset(new QHelpSearchIndexReader);
-            connect(indexReader.get(), &QHelpSearchIndexReader::searchingStarted,
-                    this, &QHelpSearchEnginePrivate::searchingStarted);
-            connect(indexReader.get(), &QHelpSearchIndexReader::searchingFinished,
-                    this, &QHelpSearchEnginePrivate::searchingFinished);
-        }
-
-        m_searchInput = searchInput;
-        indexReader->cancelSearching();
-        indexReader->search(helpEngine->collectionFile(), indexFilesFolder(),
-                            searchInput, helpEngine->usesFilterEngine());
-    }
-
-    void cancelSearching()
-    {
-        if (indexReader)
-            indexReader->cancelSearching();
-    }
-
-    QString indexFilesFolder() const
-    {
-        QString indexFilesFolder = QLatin1String(".fulltextsearch");
-        if (helpEngine && !helpEngine->collectionFile().isEmpty()) {
-            QFileInfo fi(helpEngine->collectionFile());
-            indexFilesFolder = fi.absolutePath() + QDir::separator() + QLatin1Char('.')
-                + fi.fileName().left(fi.fileName().lastIndexOf(QLatin1String(".qhc")));
-        }
-        return indexFilesFolder;
-    }
-
-    bool m_isIndexingScheduled = false;
-
+    QHelpSearchEngineCore m_searchEngine;
     QHelpSearchQueryWidget *queryWidget = nullptr;
     QHelpSearchResultWidget *resultWidget = nullptr;
-
-    std::unique_ptr<QHelpSearchIndexReader> indexReader;
-    std::unique_ptr<QHelpSearchIndexWriter> indexWriter;
-
-    QPointer<QHelpEngineCore> helpEngine;
-
-    QString m_searchInput;
 };
 
 /*!
@@ -235,20 +132,15 @@ public:
 */
 QHelpSearchEngine::QHelpSearchEngine(QHelpEngineCore *helpEngine, QObject *parent)
     : QObject(parent)
-      , d(new QHelpSearchEnginePrivate)
+      , d(new QHelpSearchEnginePrivate{QHelpSearchEngineCore(helpEngine)})
 {
-    d->helpEngine = helpEngine;
-
-    connect(helpEngine, &QHelpEngineCore::setupFinished,
-            this, &QHelpSearchEngine::scheduleIndexDocumentation);
-
-    connect(d, &QHelpSearchEnginePrivate::indexingStarted,
+    connect(&d->m_searchEngine, &QHelpSearchEngineCore::indexingStarted,
             this, &QHelpSearchEngine::indexingStarted);
-    connect(d, &QHelpSearchEnginePrivate::indexingFinished,
+    connect(&d->m_searchEngine, &QHelpSearchEngineCore::indexingFinished,
             this, &QHelpSearchEngine::indexingFinished);
-    connect(d, &QHelpSearchEnginePrivate::searchingStarted,
+    connect(&d->m_searchEngine, &QHelpSearchEngineCore::searchingStarted,
             this, &QHelpSearchEngine::searchingStarted);
-    connect(d, &QHelpSearchEnginePrivate::searchingFinished,
+    connect(&d->m_searchEngine, &QHelpSearchEngineCore::searchingFinished,
             this, &QHelpSearchEngine::searchingFinished);
 }
 
@@ -288,7 +180,7 @@ QHelpSearchResultWidget* QHelpSearchEngine::resultWidget()
 */
 int QHelpSearchEngine::hitsCount() const
 {
-    return d->searchResultCount();
+    return searchResultCount();
 }
 
 /*!
@@ -298,7 +190,7 @@ int QHelpSearchEngine::hitsCount() const
 */
 int QHelpSearchEngine::hitCount() const
 {
-    return d->searchResultCount();
+    return searchResultCount();
 }
 #endif // QT_DEPRECATED_SINCE(5, 9)
 
@@ -308,7 +200,7 @@ int QHelpSearchEngine::hitCount() const
 */
 int QHelpSearchEngine::searchResultCount() const
 {
-    return d->searchResultCount();
+    return d->m_searchEngine.searchResultCount();
 }
 
 #if QT_DEPRECATED_SINCE(5, 9)
@@ -344,7 +236,7 @@ QList<QHelpSearchEngine::SearchHit> QHelpSearchEngine::hits(int start, int end) 
 */
 QList<QHelpSearchResult> QHelpSearchEngine::searchResults(int start, int end) const
 {
-    return d->searchResults(start, end);
+    return d->m_searchEngine.searchResults(start, end);
 }
 
 /*!
@@ -353,7 +245,7 @@ QList<QHelpSearchResult> QHelpSearchEngine::searchResults(int start, int end) co
 */
 QString QHelpSearchEngine::searchInput() const
 {
-    return d->m_searchInput;
+    return d->m_searchEngine.searchInput();
 }
 
 #if QT_DEPRECATED_SINCE(5, 9)
@@ -366,7 +258,7 @@ QT_WARNING_DISABLE_DEPRECATED
 */
 QList<QHelpSearchQuery> QHelpSearchEngine::query() const
 {
-    return {{QHelpSearchQuery::DEFAULT, d->m_searchInput.split(QChar::Space)}};
+    return {{QHelpSearchQuery::DEFAULT, searchInput().split(QChar::Space)}};
 }
 QT_WARNING_POP
 #endif // QT_DEPRECATED_SINCE(5, 9)
@@ -376,7 +268,7 @@ QT_WARNING_POP
 */
 void QHelpSearchEngine::reindexDocumentation()
 {
-    d->updateIndex(true);
+    d->m_searchEngine.reindexDocumentation();
 }
 
 /*!
@@ -384,7 +276,7 @@ void QHelpSearchEngine::reindexDocumentation()
 */
 void QHelpSearchEngine::cancelIndexing()
 {
-    d->cancelIndexing();
+    d->m_searchEngine.cancelIndexing();
 }
 
 /*!
@@ -392,7 +284,7 @@ void QHelpSearchEngine::cancelIndexing()
 */
 void QHelpSearchEngine::cancelSearching()
 {
-    d->cancelSearching();
+    d->m_searchEngine.cancelSearching();
 }
 
 /*!
@@ -414,7 +306,7 @@ void QHelpSearchEngine::cancelSearching()
 */
 void QHelpSearchEngine::search(const QString &searchInput)
 {
-    d->search(searchInput);
+    d->m_searchEngine.search(searchInput);
 }
 
 #if QT_DEPRECATED_SINCE(5, 9)
@@ -427,7 +319,7 @@ void QHelpSearchEngine::search(const QList<QHelpSearchQuery> &queryList)
     if (queryList.isEmpty())
         return;
 
-    d->search(queryList.first().wordList.join(QChar::Space));
+    d->m_searchEngine.search(queryList.first().wordList.join(QChar::Space));
 }
 #endif // QT_DEPRECATED_SINCE(5, 9)
 
@@ -436,19 +328,11 @@ void QHelpSearchEngine::search(const QList<QHelpSearchQuery> &queryList)
 */
 void QHelpSearchEngine::scheduleIndexDocumentation()
 {
-    if (d->m_isIndexingScheduled)
-        return;
-
-    d->m_isIndexingScheduled = true;
-    QTimer::singleShot(0, this, &QHelpSearchEngine::indexDocumentation);
+    d->m_searchEngine.scheduleIndexDocumentation();
 }
 
+// TODO: Deprecate me (but it's private???)
 void QHelpSearchEngine::indexDocumentation()
-{
-    d->m_isIndexingScheduled = false;
-    d->updateIndex();
-}
+{}
 
 QT_END_NAMESPACE
-
-#include "qhelpsearchengine.moc"
