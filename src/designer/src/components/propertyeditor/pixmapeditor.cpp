@@ -90,7 +90,8 @@ PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) 
     m_button(new QToolButton(this)),
     m_resourceAction(new QAction(tr("Choose Resource..."), this)),
     m_fileAction(new QAction(tr("Choose File..."), this)),
-    m_themeAction(new QAction(tr("Set Icon From Theme..."), this)),
+    m_themeEnumAction(new QAction(tr("Set Icon From Theme..."), this)),
+    m_themeAction(new QAction(tr("Set Icon From XDG Theme..."), this)),
     m_copyAction(new QAction(createIconSet(QIcon::ThemeIcon::EditCopy, "editcopy.png"_L1),
                              tr("Copy Path"), this)),
     m_pasteAction(new QAction(createIconSet(QIcon::ThemeIcon::EditPaste, "editpaste.png"_L1),
@@ -111,10 +112,12 @@ PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) 
     m_pixmapLabel->setAlignment(Qt::AlignCenter);
     m_pathLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed));
     m_themeAction->setVisible(false);
+    m_themeEnumAction->setVisible(false);
 
     QMenu *menu = new QMenu(this);
     menu->addAction(m_resourceAction);
     menu->addAction(m_fileAction);
+    menu->addAction(m_themeEnumAction);
     menu->addAction(m_themeAction);
 
     m_button->setMenu(menu);
@@ -123,6 +126,7 @@ PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) 
     connect(m_button, &QAbstractButton::clicked, this, &PixmapEditor::defaultActionActivated);
     connect(m_resourceAction, &QAction::triggered, this, &PixmapEditor::resourceActionActivated);
     connect(m_fileAction, &QAction::triggered, this, &PixmapEditor::fileActionActivated);
+    connect(m_themeEnumAction, &QAction::triggered, this, &PixmapEditor::themeEnumActionActivated);
     connect(m_themeAction, &QAction::triggered, this, &PixmapEditor::themeActionActivated);
 #if QT_CONFIG(clipboard)
     connect(m_copyAction, &QAction::triggered, this, &PixmapEditor::copyActionActivated);
@@ -149,6 +153,7 @@ void PixmapEditor::setIconThemeModeEnabled(bool enabled)
         return;
     m_iconThemeModeEnabled = enabled;
     m_themeAction->setVisible(enabled);
+    m_themeEnumAction->setVisible(enabled);
 }
 
 void PixmapEditor::setSpacing(int spacing)
@@ -178,14 +183,25 @@ QString PixmapEditor::msgMissingThemeIcon(const QString &t)
     return tr("[Theme] %1 (missing)").arg(t);
 }
 
+void PixmapEditor::setThemeEnum(int e)
+{
+    m_themeEnum = e;
+    updateLabels();
+}
+
 void PixmapEditor::updateLabels()
 {
-    m_pathLabel->setText(displayText(m_theme, m_path));
+    m_pathLabel->setText(displayText(m_themeEnum, m_theme, m_path));
     switch (state()) {
     case State::Empty:
     case State::MissingXdgTheme:
+    case State::MissingThemeEnum:
         m_pixmapLabel->setPixmap(m_defaultPixmap);
         m_copyAction->setEnabled(false);
+        break;
+    case State::ThemeEnum:
+        m_pixmapLabel->setPixmap(QIcon::fromTheme(static_cast<QIcon::ThemeIcon>(m_themeEnum)).pixmap(ICON_SIZE));
+        m_copyAction->setEnabled(true);
         break;
     case State::XdgTheme:
         m_pixmapLabel->setPixmap(QIcon::fromTheme(m_theme).pixmap(ICON_SIZE));
@@ -226,7 +242,7 @@ void PixmapEditor::contextMenuEvent(QContextMenuEvent *event)
 void PixmapEditor::defaultActionActivated()
 {
     if (m_iconThemeModeEnabled) {
-        themeActionActivated();
+        themeEnumActionActivated();
         return;
     }
     // Default to resource
@@ -251,6 +267,7 @@ void PixmapEditor::resourceActionActivated()
                                                                 oldPath, this);
     if (!newPath.isEmpty() && newPath != oldPath) {
         setTheme({});
+        setThemeEnum(-1);
         setPath(newPath);
         emit pathChanged(newPath);
     }
@@ -261,8 +278,23 @@ void PixmapEditor::fileActionActivated()
     const QString newPath = IconSelector::choosePixmapFile(m_path, m_core->dialogGui(), this);
     if (!newPath.isEmpty() && newPath != m_path) {
         setTheme({});
+        setThemeEnum(-1);
         setPath(newPath);
         emit pathChanged(newPath);
+    }
+}
+
+void PixmapEditor::themeEnumActionActivated()
+{
+    const auto newThemeO = IconThemeEnumDialog::getTheme(this, {});
+    if (newThemeO.has_value()) {
+        const int newTheme = newThemeO.value();
+        if (newTheme != m_themeEnum) {
+            setThemeEnum(newTheme);
+            setTheme({});
+            setPath({});
+            emit themeEnumChanged(newTheme);
+        }
     }
 }
 
@@ -273,14 +305,21 @@ void PixmapEditor::themeActionActivated()
         const QString newTheme = newThemeO.value();
         if (newTheme != m_theme) {
             setTheme(newTheme);
+            setThemeEnum(-1);
             setPath({});
             emit themeChanged(newTheme);
         }
     }
 }
 
-PixmapEditor::State PixmapEditor::stateFromData(const QString &xdgTheme, const QString &path)
+PixmapEditor::State PixmapEditor::stateFromData(int themeEnum, const QString &xdgTheme,
+                                                const QString &path)
 {
+    if (themeEnum != -1) {
+        if (QIcon::hasThemeIcon(static_cast<QIcon::ThemeIcon>(themeEnum)))
+            return State::ThemeEnum;
+        return path.isEmpty() ? State::MissingThemeEnum : State::PathFallback;
+    }
     if (!xdgTheme.isEmpty()) {
         if (QIcon::hasThemeIcon(xdgTheme))
             return State::XdgTheme;
@@ -291,12 +330,16 @@ PixmapEditor::State PixmapEditor::stateFromData(const QString &xdgTheme, const Q
 
 PixmapEditor::State PixmapEditor::state() const
 {
-    return stateFromData(m_theme, m_path);
+    return stateFromData(m_themeEnum, m_theme, m_path);
 }
 
-QString PixmapEditor::displayText(const QString &xdgTheme, const QString &path)
+QString PixmapEditor::displayText(int themeEnum, const QString &xdgTheme, const QString &path)
 {
-    switch (stateFromData(xdgTheme, path)) {
+    switch (stateFromData(themeEnum, xdgTheme, path)) {
+    case State::ThemeEnum:
+        return msgThemeIcon(IconThemeEnumEditor::iconName(themeEnum));
+    case State::MissingThemeEnum:
+        return msgMissingThemeIcon(IconThemeEnumEditor::iconName(themeEnum));
     case State::XdgTheme:
         return msgThemeIcon(xdgTheme);
     case State::MissingXdgTheme:
@@ -316,7 +359,7 @@ QString PixmapEditor::displayText(const PropertySheetIconValue &icon)
     const auto &paths = icon.paths();
     const auto &it = paths.constFind({QIcon::Normal, QIcon::Off});
     const QString path = it != paths.constEnd() ? it.value().path() : QString{};
-    return displayText(icon.theme(), path);
+    return displayText(icon.themeEnum(), icon.theme(), path);
 }
 
 #if QT_CONFIG(clipboard)
@@ -324,6 +367,10 @@ void PixmapEditor::copyActionActivated()
 {
     QClipboard *clipboard = QApplication::clipboard();
     switch (state()) {
+    case State::ThemeEnum:
+    case State::MissingThemeEnum:
+        clipboard->setText(IconThemeEnumEditor::iconName(m_themeEnum));
+        break;
     case State::XdgTheme:
     case State::MissingXdgTheme:
         clipboard->setText(m_theme);
