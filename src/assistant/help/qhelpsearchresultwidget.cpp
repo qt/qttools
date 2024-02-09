@@ -15,6 +15,8 @@
 
 QT_BEGIN_NAMESPACE
 
+static constexpr int ResultsRange = 20;
+
 class QResultWidget : public QTextBrowser
 {
     Q_OBJECT
@@ -86,60 +88,12 @@ private:
     QColor m_linkColor;
 };
 
-class QHelpSearchResultWidgetPrivate : public QObject
+class QHelpSearchResultWidgetPrivate
 {
-    Q_OBJECT
-
-private slots:
-    void showFirstResultPage()
-    {
-        if (!searchEngine.isNull())
-            resultFirstToShow = 0;
-        updateHitRange();
-    }
-
-    void showLastResultPage()
-    {
-        if (!searchEngine.isNull())
-            resultFirstToShow = (searchEngine->searchResultCount() - 1) / ResultsRange * ResultsRange;
-        updateHitRange();
-    }
-
-    void showPreviousResultPage()
-    {
-        if (!searchEngine.isNull()) {
-            resultFirstToShow -= ResultsRange;
-            if (resultFirstToShow < 0)
-                resultFirstToShow = 0;
-        }
-        updateHitRange();
-    }
-
-    void showNextResultPage()
-    {
-        if (!searchEngine.isNull()
-            && resultFirstToShow + ResultsRange < searchEngine->searchResultCount()) {
-            resultFirstToShow += ResultsRange;
-        }
-        updateHitRange();
-    }
-
-    void indexingStarted() { isIndexing = true; }
-    void indexingFinished() { isIndexing = false; }
-
-private:
-    QHelpSearchResultWidgetPrivate(QHelpSearchEngine *engine)
-        : searchEngine(engine)
-    {
-        connect(searchEngine.data(), &QHelpSearchEngine::indexingStarted,
-                this, &QHelpSearchResultWidgetPrivate::indexingStarted);
-        connect(searchEngine.data(), &QHelpSearchEngine::indexingFinished,
-                this, &QHelpSearchResultWidgetPrivate::indexingFinished);
-    }
-
+public:
     ~QHelpSearchResultWidgetPrivate()
     {
-        delete searchEngine;
+        delete searchEngine; // TODO: This it probably wrong, why the widget owns the engine?
     }
 
     QToolButton* setupToolButton(const QString &iconPath)
@@ -148,8 +102,8 @@ private:
         button->setEnabled(false);
         button->setAutoRaise(true);
         button->setIcon(QIcon(iconPath));
-        button->setIconSize(QSize(12, 12));
-        button->setMaximumSize(QSize(16, 16));
+        button->setIconSize({12, 12});
+        button->setMaximumSize({16, 16});
         return button;
     }
 
@@ -177,14 +131,10 @@ private:
         nextResultPage->setEnabled(count - last);
     }
 
-private:
-    friend class QHelpSearchResultWidget;
-
+    QHelpSearchResultWidget *q = nullptr;
     QPointer<QHelpSearchEngine> searchEngine;
 
     QResultWidget *resultTextBrowser = nullptr;
-
-    static const int ResultsRange = 20;
 
     QToolButton *firstResultPage = nullptr;
     QToolButton *previousResultPage = nullptr;
@@ -212,8 +162,14 @@ private:
 
 QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
     : QWidget(0)
-    , d(new QHelpSearchResultWidgetPrivate(engine))
+    , d(new QHelpSearchResultWidgetPrivate)
 {
+    d->q = this;
+    d->searchEngine = engine;
+
+    connect(engine, &QHelpSearchEngine::indexingStarted, this, [this] { d->isIndexing = true; });
+    connect(engine, &QHelpSearchEngine::indexingFinished, this, [this] { d->isIndexing = false; });
+
     QVBoxLayout *vLayout = new QVBoxLayout(this);
     vLayout->setContentsMargins({});
     vLayout->setSpacing(0);
@@ -251,17 +207,33 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
     connect(d->resultTextBrowser, &QResultWidget::requestShowLink,
             this, &QHelpSearchResultWidget::requestShowLink);
 
-    connect(d->nextResultPage, &QAbstractButton::clicked,
-            d, &QHelpSearchResultWidgetPrivate::showNextResultPage);
-    connect(d->lastResultPage, &QAbstractButton::clicked,
-            d, &QHelpSearchResultWidgetPrivate::showLastResultPage);
-    connect(d->firstResultPage, &QAbstractButton::clicked,
-            d, &QHelpSearchResultWidgetPrivate::showFirstResultPage);
-    connect(d->previousResultPage, &QAbstractButton::clicked,
-            d, &QHelpSearchResultWidgetPrivate::showPreviousResultPage);
-
-    connect(engine, &QHelpSearchEngine::searchingFinished,
-            d, &QHelpSearchResultWidgetPrivate::showFirstResultPage);
+    connect(d->nextResultPage, &QAbstractButton::clicked, this, [this] {
+        if (!d->searchEngine.isNull()
+            && d->resultFirstToShow + ResultsRange < d->searchEngine->searchResultCount()) {
+            d->resultFirstToShow += ResultsRange;
+        }
+        d->updateHitRange();
+    });
+    connect(d->previousResultPage, &QAbstractButton::clicked, this, [this] {
+        if (!d->searchEngine.isNull()) {
+            d->resultFirstToShow -= ResultsRange;
+            if (d->resultFirstToShow < 0)
+                d->resultFirstToShow = 0;
+        }
+        d->updateHitRange();
+    });
+    connect(d->lastResultPage, &QAbstractButton::clicked, this, [this] {
+        if (!d->searchEngine.isNull())
+            d->resultFirstToShow = (d->searchEngine->searchResultCount() - 1) / ResultsRange * ResultsRange;
+        d->updateHitRange();
+    });
+    const auto showFirstPage = [this] {
+        if (!d->searchEngine.isNull())
+            d->resultFirstToShow = 0;
+        d->updateHitRange();
+    };
+    connect(d->firstResultPage, &QAbstractButton::clicked, this, showFirstPage);
+    connect(engine, &QHelpSearchEngine::searchingFinished, this, showFirstPage);
 }
 
 /*! \reimp
