@@ -31,16 +31,6 @@ signals:
     void searchingFinished(int searchResultCount);
 
 public:
-    QHelpSearchEnginePrivate(QHelpEngineCore *helpEngine)
-        : helpEngine(helpEngine)
-    {}
-
-    ~QHelpSearchEnginePrivate()
-    {
-        delete indexReader;
-        delete indexWriter;
-    }
-
     int searchResultCount() const
     {
         return indexReader ? indexReader->searchResultCount() : 0;
@@ -60,11 +50,11 @@ public:
             return;
 
         if (!indexWriter) {
-            indexWriter = new QHelpSearchIndexWriter();
+            indexWriter.reset(new QHelpSearchIndexWriter);
 
-            connect(indexWriter, &QHelpSearchIndexWriter::indexingStarted,
+            connect(indexWriter.get(), &QHelpSearchIndexWriter::indexingStarted,
                     this, &QHelpSearchEnginePrivate::indexingStarted);
-            connect(indexWriter, &QHelpSearchIndexWriter::indexingFinished,
+            connect(indexWriter.get(), &QHelpSearchIndexWriter::indexingFinished,
                     this, &QHelpSearchEnginePrivate::indexingFinished);
         }
 
@@ -87,10 +77,10 @@ public:
             return;
 
         if (!indexReader) {
-            indexReader = new QHelpSearchIndexReader;
-            connect(indexReader, &QHelpSearchIndexReader::searchingStarted,
+            indexReader.reset(new QHelpSearchIndexReader);
+            connect(indexReader.get(), &QHelpSearchIndexReader::searchingStarted,
                     this, &QHelpSearchEnginePrivate::searchingStarted);
-            connect(indexReader, &QHelpSearchIndexReader::searchingFinished,
+            connect(indexReader.get(), &QHelpSearchIndexReader::searchingFinished,
                     this, &QHelpSearchEnginePrivate::searchingFinished);
         }
 
@@ -122,8 +112,8 @@ public:
     QHelpSearchQueryWidget *queryWidget = nullptr;
     QHelpSearchResultWidget *resultWidget = nullptr;
 
-    QHelpSearchIndexReader *indexReader = nullptr;
-    QHelpSearchIndexWriter *indexWriter = nullptr;
+    std::unique_ptr<QHelpSearchIndexReader> indexReader;
+    std::unique_ptr<QHelpSearchIndexWriter> indexWriter;
 
     QPointer<QHelpEngineCore> helpEngine;
 
@@ -245,8 +235,9 @@ public:
 */
 QHelpSearchEngine::QHelpSearchEngine(QHelpEngineCore *helpEngine, QObject *parent)
     : QObject(parent)
+      , d(new QHelpSearchEnginePrivate)
 {
-    d = new QHelpSearchEnginePrivate(helpEngine);
+    d->helpEngine = helpEngine;
 
     connect(helpEngine, &QHelpEngineCore::setupFinished,
             this, &QHelpSearchEngine::scheduleIndexDocumentation);

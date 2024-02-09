@@ -207,7 +207,7 @@ private:
 
     QString m_collectionFile;
     QString m_connectionName;
-    QSqlQuery *m_query = nullptr;
+    std::unique_ptr<QSqlQuery> m_query;
     bool m_vacuumScheduled = false;
     bool m_readOnly = true;
 };

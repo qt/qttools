@@ -91,7 +91,7 @@ private:
     QString m_dbName;
     QString m_uniqueId;
     QString m_error;
-    QSqlQuery *m_query = nullptr;
+    std::unique_ptr<QSqlQuery> m_query;
     mutable QString m_namespace;
 };
 

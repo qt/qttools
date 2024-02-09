@@ -26,10 +26,8 @@ QHelpDBReader::QHelpDBReader(const QString &dbName, const QString &uniqueId, QOb
 
 QHelpDBReader::~QHelpDBReader()
 {
-    if (m_initDone) {
-        delete m_query;
+    if (m_initDone)
         QSqlDatabase::removeDatabase(m_uniqueId);
-    }
 }
 
 bool QHelpDBReader::init()
@@ -46,7 +44,7 @@ bool QHelpDBReader::init()
     }
 
     m_initDone = true;
-    m_query = new QSqlQuery(QSqlDatabase::database(m_uniqueId));
+    m_query.reset(new QSqlQuery(QSqlDatabase::database(m_uniqueId)));
     return true;
 }
 
@@ -183,9 +181,9 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
     QList<int> usedAttributeIds;
     for (auto it = attributeIds.cbegin(), end = attributeIds.cend(); it != end; ++it) {
         const int attributeId = it.key();
-        if (isAttributeUsed(m_query, QLatin1String("IndexFilterTable"), attributeId)
-                || isAttributeUsed(m_query, QLatin1String("ContentsFilterTable"), attributeId)
-                || isAttributeUsed(m_query, QLatin1String("FileFilterTable"), attributeId)) {
+        if (isAttributeUsed(m_query.get(), QLatin1String("IndexFilterTable"), attributeId)
+            || isAttributeUsed(m_query.get(), QLatin1String("ContentsFilterTable"), attributeId)
+            || isAttributeUsed(m_query.get(), QLatin1String("FileFilterTable"), attributeId)) {
             usedAttributeIds.append(attributeId);
         }
     }
@@ -265,13 +263,13 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
         // FileFilterTable.
 
         const bool mayOptimizeIndexTable
-                = filterDataCount(m_query, QLatin1String("IndexFilterTable"))
+                = filterDataCount(m_query.get(), QLatin1String("IndexFilterTable"))
                 == idToIndexItem.size() * usedAttributeCount;
         const bool mayOptimizeFileTable
-                = filterDataCount(m_query, QLatin1String("FileFilterTable"))
+                = filterDataCount(m_query.get(), QLatin1String("FileFilterTable"))
                 == idToFileItem.size() * usedAttributeCount;
         const bool mayOptimizeContentsTable
-                = filterDataCount(m_query, QLatin1String("ContentsFilterTable"))
+                = filterDataCount(m_query.get(), QLatin1String("ContentsFilterTable"))
                 == idToContentsItem.size() * usedAttributeCount;
         optimized = mayOptimizeIndexTable && mayOptimizeFileTable && mayOptimizeContentsTable;
 

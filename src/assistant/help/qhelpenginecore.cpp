@@ -17,12 +17,11 @@ class QHelpEngineCorePrivate
 {
 public:
     QHelpEngineCorePrivate(const QString &collectionFile, QHelpEngineCore *helpEngineCore);
-    ~QHelpEngineCorePrivate() { delete collectionHandler; }
 
     void init(const QString &collectionFile);
     bool setup();
 
-    QHelpCollectionHandler *collectionHandler = nullptr;
+    std::unique_ptr<QHelpCollectionHandler> collectionHandler;
     QHelpFilterEngine *filterEngine = nullptr;
     QString currentFilter;
     QString error;
@@ -44,12 +43,10 @@ QHelpEngineCorePrivate::QHelpEngineCorePrivate(const QString &collectionFile,
 
 void QHelpEngineCorePrivate::init(const QString &collectionFile)
 {
-    if (collectionHandler)
-        delete collectionHandler;
-    collectionHandler = new QHelpCollectionHandler(collectionFile, q);
-    QObject::connect(collectionHandler, &QHelpCollectionHandler::error, q,
+    collectionHandler.reset(new QHelpCollectionHandler(collectionFile, q));
+    QObject::connect(collectionHandler.get(), &QHelpCollectionHandler::error, q,
                      [this](const QString &msg) { error = msg; });
-    filterEngine->setCollectionHandler(collectionHandler);
+    filterEngine->setCollectionHandler(collectionHandler.get());
     needsSetup = true;
 }
 
@@ -200,14 +197,8 @@ QString QHelpEngineCore::collectionFile() const
 
 void QHelpEngineCore::setCollectionFile(const QString &fileName)
 {
-    if (fileName == collectionFile())
-        return;
-
-    if (d->collectionHandler) {
-        delete d->collectionHandler;
-        d->collectionHandler = nullptr;
-    }
-    d->init(fileName);
+    if (fileName != collectionFile())
+        d->init(fileName);
 }
 
 /*!

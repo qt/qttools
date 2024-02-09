@@ -83,8 +83,7 @@ void QHelpCollectionHandler::closeDB()
     if (!m_query)
         return;
 
-    delete m_query;
-    m_query = nullptr;
+    m_query.reset();
     QSqlDatabase::removeDatabase(m_connectionName);
     m_connectionName.clear();
 }
@@ -107,7 +106,7 @@ bool QHelpCollectionHandler::openCollectionFile()
 
         db.setDatabaseName(collectionFile());
         if (db.open())
-            m_query = new QSqlQuery(db);
+            m_query.reset(new QSqlQuery(db));
 
         if (!m_query) {
             QSqlDatabase::removeDatabase(m_connectionName);
@@ -128,7 +127,7 @@ bool QHelpCollectionHandler::openCollectionFile()
 
     const bool tablesExist = m_query->value(0).toInt() > 0;
     if (!tablesExist) {
-        if (!createTables(m_query)) {
+        if (!createTables(m_query.get())) {
             closeDB();
             emit error(tr("Cannot create tables in file %1.").arg(collectionFile()));
             return false;
@@ -165,7 +164,7 @@ bool QHelpCollectionHandler::openCollectionFile()
     m_query->exec(queryString);
     m_query->next();
     if (m_query->value(0).toInt() != newTables.size()) {
-        if (!recreateIndexAndNamespaceFilterTables(m_query)) {
+        if (!recreateIndexAndNamespaceFilterTables(m_query.get())) {
             emit error(tr("Cannot create index tables in file %1.").arg(collectionFile()));
             return false;
         }
@@ -319,27 +318,19 @@ bool QHelpCollectionHandler::copyCollectionFile(const QString &fileName)
     const QString &colFile = fi.absoluteFilePath();
     const QString &connectionName = QHelpGlobal::uniquifyConnectionName(
                 QLatin1String("QHelpCollectionHandlerCopy"), this);
-    QSqlQuery *copyQuery = nullptr;
-    bool openingOk = true;
-    {
-        QSqlDatabase db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), connectionName);
-        db.setDatabaseName(colFile);
-        openingOk = db.open();
-        if (openingOk)
-            copyQuery = new QSqlQuery(db);
-    }
-
-    if (!openingOk) {
+    QSqlDatabase db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), connectionName);
+    db.setDatabaseName(colFile);
+    if (!db.open()) {
         emit error(tr("Cannot open collection file: %1").arg(colFile));
         return false;
     }
 
-    copyQuery->exec(QLatin1String("PRAGMA synchronous=OFF"));
-    copyQuery->exec(QLatin1String("PRAGMA cache_size=3000"));
+    QSqlQuery copyQuery(db);
+    copyQuery.exec(QLatin1String("PRAGMA synchronous=OFF"));
+    copyQuery.exec(QLatin1String("PRAGMA cache_size=3000"));
 
-    if (!createTables(copyQuery) || !recreateIndexAndNamespaceFilterTables(copyQuery)) {
+    if (!createTables(&copyQuery) || !recreateIndexAndNamespaceFilterTables(&copyQuery)) {
         emit error(tr("Cannot copy collection file: %1").arg(colFile));
-        delete copyQuery;
         return false;
     }
 
@@ -347,57 +338,56 @@ bool QHelpCollectionHandler::copyCollectionFile(const QString &fileName)
     const QFileInfo newColFi(colFile);
     m_query->exec(QLatin1String("SELECT Name, FilePath FROM NamespaceTable"));
     while (m_query->next()) {
-        copyQuery->prepare(QLatin1String("INSERT INTO NamespaceTable VALUES(NULL, ?, ?)"));
-        copyQuery->bindValue(0, m_query->value(0).toString());
+        copyQuery.prepare(QLatin1String("INSERT INTO NamespaceTable VALUES(NULL, ?, ?)"));
+        copyQuery.bindValue(0, m_query->value(0).toString());
         QString oldFilePath = m_query->value(1).toString();
         if (!QDir::isAbsolutePath(oldFilePath))
             oldFilePath = oldBaseDir + QLatin1Char('/') + oldFilePath;
-        copyQuery->bindValue(1, newColFi.absoluteDir().relativeFilePath(oldFilePath));
-        copyQuery->exec();
+        copyQuery.bindValue(1, newColFi.absoluteDir().relativeFilePath(oldFilePath));
+        copyQuery.exec();
     }
 
     m_query->exec(QLatin1String("SELECT NamespaceId, Name FROM FolderTable"));
     while (m_query->next()) {
-        copyQuery->prepare(QLatin1String("INSERT INTO FolderTable VALUES(NULL, ?, ?)"));
-        copyQuery->bindValue(0, m_query->value(0).toString());
-        copyQuery->bindValue(1, m_query->value(1).toString());
-        copyQuery->exec();
+        copyQuery.prepare(QLatin1String("INSERT INTO FolderTable VALUES(NULL, ?, ?)"));
+        copyQuery.bindValue(0, m_query->value(0).toString());
+        copyQuery.bindValue(1, m_query->value(1).toString());
+        copyQuery.exec();
     }
 
     m_query->exec(QLatin1String("SELECT Name FROM FilterAttributeTable"));
     while (m_query->next()) {
-        copyQuery->prepare(QLatin1String("INSERT INTO FilterAttributeTable VALUES(NULL, ?)"));
-        copyQuery->bindValue(0, m_query->value(0).toString());
-        copyQuery->exec();
+        copyQuery.prepare(QLatin1String("INSERT INTO FilterAttributeTable VALUES(NULL, ?)"));
+        copyQuery.bindValue(0, m_query->value(0).toString());
+        copyQuery.exec();
     }
 
     m_query->exec(QLatin1String("SELECT Name FROM FilterNameTable"));
     while (m_query->next()) {
-        copyQuery->prepare(QLatin1String("INSERT INTO FilterNameTable VALUES(NULL, ?)"));
-        copyQuery->bindValue(0, m_query->value(0).toString());
-        copyQuery->exec();
+        copyQuery.prepare(QLatin1String("INSERT INTO FilterNameTable VALUES(NULL, ?)"));
+        copyQuery.bindValue(0, m_query->value(0).toString());
+        copyQuery.exec();
     }
 
     m_query->exec(QLatin1String("SELECT NameId, FilterAttributeId FROM FilterTable"));
     while (m_query->next()) {
-        copyQuery->prepare(QLatin1String("INSERT INTO FilterTable VALUES(?, ?)"));
-        copyQuery->bindValue(0, m_query->value(0).toInt());
-        copyQuery->bindValue(1, m_query->value(1).toInt());
-        copyQuery->exec();
+        copyQuery.prepare(QLatin1String("INSERT INTO FilterTable VALUES(?, ?)"));
+        copyQuery.bindValue(0, m_query->value(0).toInt());
+        copyQuery.bindValue(1, m_query->value(1).toInt());
+        copyQuery.exec();
     }
 
     m_query->exec(QLatin1String("SELECT Key, Value FROM SettingsTable"));
     while (m_query->next()) {
         if (m_query->value(0).toString() == QLatin1String("FTS5IndexedNamespaces"))
             continue;
-        copyQuery->prepare(QLatin1String("INSERT INTO SettingsTable VALUES(?, ?)"));
-        copyQuery->bindValue(0, m_query->value(0).toString());
-        copyQuery->bindValue(1, m_query->value(1));
-        copyQuery->exec();
+        copyQuery.prepare(QLatin1String("INSERT INTO SettingsTable VALUES(?, ?)"));
+        copyQuery.bindValue(0, m_query->value(0).toString());
+        copyQuery.bindValue(1, m_query->value(1));
+        copyQuery.exec();
     }
 
-    copyQuery->clear();
-    delete copyQuery;
+    copyQuery.clear();
     QSqlDatabase::removeDatabase(connectionName);
     return true;
 }
@@ -1091,7 +1081,7 @@ static QString prepareFilterQuery(int attributesCount,
     return filterQuery;
 }
 
-void bindFilterQuery(QSqlQuery *query, int startingBindPos, const QStringList &filterAttributes)
+static void bindFilterQuery(QSqlQuery *query, int startingBindPos, const QStringList &filterAttributes)
 {
     for (int i = 0; i < 2; ++i) {
         for (int j = 0; j < filterAttributes.size(); j++) {
@@ -1133,7 +1123,7 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
     m_query->prepare(filterQuery);
     m_query->bindValue(0, fileInfo.folderName);
     m_query->bindValue(1, fileInfo.fileName);
-    bindFilterQuery(m_query, 2, filterAttributes);
+    bindFilterQuery(m_query.get(), 2, filterAttributes);
 
     if (!m_query->exec())
         return {};
@@ -1188,7 +1178,7 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
     m_query->prepare(filterQuery);
     m_query->bindValue(0, fileInfo.folderName);
     m_query->bindValue(1, fileInfo.fileName);
-    bindFilterQuery(m_query, 2, filterName);
+    bindFilterQuery(m_query.get(), 2, filterName);
 
     if (!m_query->exec())
         return {};
@@ -1250,7 +1240,7 @@ QStringList QHelpCollectionHandler::files(const QString &namespaceName,
         m_query->bindValue(bindCount, QString::fromLatin1("%.%1").arg(extensionFilter));
         ++bindCount;
     }
-    bindFilterQuery(m_query, bindCount, filterAttributes);
+    bindFilterQuery(m_query.get(), bindCount, filterAttributes);
 
     if (!m_query->exec())
         return {};
@@ -1297,7 +1287,7 @@ QStringList QHelpCollectionHandler::files(const QString &namespaceName,
         ++bindCount;
     }
 
-    bindFilterQuery(m_query, bindCount, filterName);
+    bindFilterQuery(m_query.get(), bindCount, filterName);
 
     if (!m_query->exec())
         return{};
@@ -1390,7 +1380,7 @@ QStringList QHelpCollectionHandler::indicesForFilter(const QStringList &filterAt
     //  this doesn't work: ASC COLLATE NOCASE
 
     m_query->prepare(filterQuery);
-    bindFilterQuery(m_query, 0, filterAttributes);
+    bindFilterQuery(m_query.get(), 0, filterAttributes);
 
     m_query->exec();
 
@@ -1424,7 +1414,7 @@ QStringList QHelpCollectionHandler::indicesForFilter(const QString &filterName) 
             + QLatin1String(" ORDER BY LOWER(IndexTable.Name), IndexTable.Name");
 
     m_query->prepare(filterQuery);
-    bindFilterQuery(m_query, 0, filterName);
+    bindFilterQuery(m_query.get(), 0, filterName);
 
     m_query->exec();
 
@@ -1481,7 +1471,7 @@ QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForF
                                  QLatin1String("ContentsId"));
 
     m_query->prepare(filterQuery);
-    bindFilterQuery(m_query, 0, filterAttributes);
+    bindFilterQuery(m_query.get(), 0, filterAttributes);
 
     m_query->exec();
 
@@ -1538,7 +1528,7 @@ QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForF
     const QString filterQuery = filterlessQuery + prepareFilterQuery(filterName);
 
     m_query->prepare(filterQuery);
-    bindFilterQuery(m_query, 0, filterName);
+    bindFilterQuery(m_query.get(), 0, filterName);
 
     m_query->exec();
 
@@ -2321,7 +2311,7 @@ QList<QHelpLink> QHelpCollectionHandler::documentsForField(const QString &fieldN
 
     m_query->prepare(filterQuery);
     m_query->bindValue(0, fieldValue);
-    bindFilterQuery(m_query, 1, filterAttributes);
+    bindFilterQuery(m_query.get(), 1, filterAttributes);
 
     m_query->exec();
 
@@ -2403,7 +2393,7 @@ QList<QHelpLink> QHelpCollectionHandler::documentsForField(const QString &fieldN
 
     m_query->prepare(filterQuery);
     m_query->bindValue(0, fieldValue);
-    bindFilterQuery(m_query, 1, filterName);
+    bindFilterQuery(m_query.get(), 1, filterName);
 
     m_query->exec();
 
@@ -2440,7 +2430,7 @@ QStringList QHelpCollectionHandler::namespacesForFilter(const QString &filterNam
             + prepareFilterQuery(filterName);
 
     m_query->prepare(filterQuery);
-    bindFilterQuery(m_query, 0, filterName);
+    bindFilterQuery(m_query.get(), 0, filterName);
 
     m_query->exec();
 
