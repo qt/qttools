@@ -234,48 +234,41 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
         return index(-1, 0, {});
     }
 
-    QStringList lst;
-    int goodMatch = -1;
+    using Checker = std::function<bool(const QString &)>;
+    const auto checkIndices = [this, filter](const Checker &checker) {
+        QStringList filteredList;
+        int goodMatch = -1;
+        int perfectMatch = -1;
+        for (const QString &index : std::as_const(d->indices)) {
+            if (checker(index)) {
+                filteredList.append(index);
+                if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {
+                    if (goodMatch == -1)
+                        goodMatch = filteredList.size() - 1;
+                    if (filter.size() == index.size())
+                        perfectMatch = filteredList.size() - 1;
+                } else if (perfectMatch > -1 && index == filter) {
+                    perfectMatch = filteredList.size() - 1;
+                }
+            }
+        }
+        setStringList(filteredList);
+        return perfectMatch >= 0 ? perfectMatch : qMax(0, goodMatch);
+    };
+
     int perfectMatch = -1;
-
     if (!wildcard.isEmpty()) {
-        auto re = QRegularExpression::wildcardToRegularExpression(wildcard,
-                  QRegularExpression::UnanchoredWildcardConversion);
+        const auto re = QRegularExpression::wildcardToRegularExpression(wildcard,
+                        QRegularExpression::UnanchoredWildcardConversion);
         const QRegularExpression regExp(re, QRegularExpression::CaseInsensitiveOption);
-        // TODO: Limit code repetition, see next loop in this body
-        for (const QString &index : std::as_const(d->indices)) {
-            if (index.contains(regExp)) {
-                lst.append(index);
-                if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {
-                    if (goodMatch == -1)
-                        goodMatch = lst.size() - 1;
-                    if (filter.size() == index.size())
-                        perfectMatch = lst.size() - 1;
-                } else if (perfectMatch > -1 && index == filter) {
-                    perfectMatch = lst.size() - 1;
-                }
-            }
-        }
+        perfectMatch = checkIndices([regExp](const QString &index) {
+            return index.contains(regExp);
+        });
     } else {
-        for (const QString &index : std::as_const(d->indices)) {
-            if (index.contains(filter, Qt::CaseInsensitive)) {
-                lst.append(index);
-                if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {
-                    if (goodMatch == -1)
-                        goodMatch = lst.size() - 1;
-                    if (filter.size() == index.size())
-                        perfectMatch = lst.size() - 1;
-                } else if (perfectMatch > -1 && index == filter) {
-                    perfectMatch = lst.size() - 1;
-                }
-            }
-        }
+        perfectMatch = checkIndices([filter](const QString &index) {
+            return index.contains(filter, Qt::CaseInsensitive);
+        });
     }
-
-    if (perfectMatch == -1)
-        perfectMatch = qMax(0, goodMatch);
-
-    setStringList(lst);
     return index(perfectMatch, 0, {});
 }
 
