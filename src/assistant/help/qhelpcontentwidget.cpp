@@ -9,7 +9,6 @@
 #include <QtCore/qdir.h>
 #include <QtCore/qmutex.h>
 #include <QtCore/qthread.h>
-#include <QtCore/qstack.h>
 #include <QtWidgets/qheaderview.h>
 
 QT_BEGIN_NAMESPACE
@@ -137,10 +136,6 @@ void QHelpContentProvider::run()
     if (!collectionHandler.openCollectionFile())
         return;
 
-    QString title;
-    QString link;
-    int depth = 0;
-    QHelpContentItem *item = nullptr;
     QHelpContentItem * const rootItem = new QHelpContentItem(QString(), QString(), nullptr);
 
     const QList<QHelpCollectionHandler::ContentsData> result = usesFilterEngine
@@ -160,42 +155,51 @@ void QHelpContentProvider::run()
         const QString namespaceName = contentsData.namespaceName;
         const QString folderName = contentsData.folderName;
         for (const QByteArray &contents : contentsData.contentsList)  {
-            if (contents.size() < 1)
+            if (contents.isEmpty())
                 continue;
 
-            int _depth = 0;
-            bool _root = false;
-            QStack<QHelpContentItem*> stack;
-
+            QList<QHelpContentItem *> stack;
             QDataStream s(contents);
-            for (;;) {
+            while (true) {
+                int depth = 0;
+                QString link, title;
                 s >> depth;
                 s >> link;
                 s >> title;
                 if (title.isEmpty())
                     break;
-                const QUrl url = constructUrl(namespaceName, folderName, link);
-CHECK_DEPTH:
-                if (depth == 0) {
-                    m_mutex.lock();
-                    item = new QHelpContentItem(title, url, rootItem);
-                    m_mutex.unlock();
-                    stack.push(item);
-                    _depth = 1;
-                    _root = true;
-                } else {
-                    if (depth > _depth && _root) {
-                        _depth = depth;
-                        stack.push(item);
-                    }
-                    if (depth == _depth) {
-                        item = new QHelpContentItem(title, url, stack.top());
-                    } else if (depth < _depth) {
-                        stack.pop();
-                        --_depth;
-                        goto CHECK_DEPTH;
-                    }
+
+// The example input (depth, link, title):
+//
+// 0 "graphicaleffects5.html" "Qt 5 Compatibility APIs: Qt Graphical Effects"
+// 1 "qtgraphicaleffects5-index.html" "QML Types"
+// 2 "qml-qt5compat-graphicaleffects-blend.html" "Blend Type Reference"
+// 3 "qml-qt5compat-graphicaleffects-blend-members.html" "List of all members"
+// 2 "qml-qt5compat-graphicaleffects-brightnesscontrast.html" "BrightnessContrast Type Reference"
+//
+// Thus, the valid order of depths is:
+// 1. Whenever the item's depth is < 0, we insert the item as its depth is 0.
+// 2. The first item's depth must be 0, otherwise we insert the item as its depth is 0.
+// 3. When the previous depth was N, the next depth must be in range [0, N+1] inclusively.
+//    If next item's depth is M > N+1, we insert the item as its depth is N+1.
+
+                if (depth <= 0) {
+                    stack.clear();
+                } else if (depth < stack.size()) {
+                    stack = stack.sliced(0, depth);
+                } else if (depth > stack.size()) {
+                    // Fill the gaps with the last item from the stack (or with the root).
+                    // This branch handles the case when depths are broken, e.g. 0, 2, 2, 1.
+                    // In this case, the 1st item is a root, and 2nd - 4th are all direct
+                    // children of the 1st.
+                    QHelpContentItem *substituteItem = stack.isEmpty() ? rootItem : stack.constLast();
+                    while (depth > stack.size())
+                        stack.append(substituteItem);
                 }
+
+                const QUrl url = constructUrl(namespaceName, folderName, link);
+                QHelpContentItem *parent = stack.isEmpty() ? rootItem : stack.constLast();
+                stack.push_back(new QHelpContentItem(title, url, parent));
             }
         }
     }
