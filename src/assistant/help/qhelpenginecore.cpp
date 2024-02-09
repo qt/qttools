@@ -9,9 +9,10 @@
 
 #include <QtCore/qdir.h>
 #include <QtCore/qfileinfo.h>
-#include <QtCore/qthread.h>
 
 QT_BEGIN_NAMESPACE
+
+using namespace Qt::StringLiterals;
 
 class QHelpEngineCorePrivate
 {
@@ -283,9 +284,9 @@ bool QHelpEngineCore::copyCollectionFile(const QString &fileName)
 */
 QString QHelpEngineCore::namespaceName(const QString &documentationFileName)
 {
-    QHelpDBReader reader(documentationFileName,
-        QHelpGlobal::uniquifyConnectionName(QLatin1String("GetNamespaceName"),
-            QThread::currentThread()), nullptr); // TODO: Replace QThread with *this
+    void *pointer = const_cast<QString *>(&documentationFileName);
+    QHelpDBReader reader(documentationFileName, QHelpGlobal::uniquifyConnectionName(
+                         "GetNamespaceName"_L1, pointer), nullptr);
     if (reader.init())
         return reader.namespaceName();
     return {};

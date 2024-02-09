@@ -5,10 +5,11 @@
 
 #include "qhelpdbreader_p.h"
 
-#include <QtCore/qthread.h>
 #include <QtCore/qversionnumber.h>
 
 QT_BEGIN_NAMESPACE
+
+using namespace Qt::StringLiterals;
 
 class QCompressedHelpInfoPrivate : public QSharedData
 {
@@ -129,9 +130,9 @@ bool QCompressedHelpInfo::isNull() const
 */
 QCompressedHelpInfo QCompressedHelpInfo::fromCompressedHelpFile(const QString &documentationFileName)
 {
-    QHelpDBReader reader(documentationFileName,
-        QHelpGlobal::uniquifyConnectionName(QLatin1String("GetCompressedHelpInfo"),
-            QThread::currentThread()), nullptr); // TODO: Replace QThread with *this
+    void *pointer = const_cast<QString *>(&documentationFileName);
+    QHelpDBReader reader(documentationFileName, QHelpGlobal::uniquifyConnectionName(
+                         "GetCompressedHelpInfo"_L1, pointer), nullptr);
     if (reader.init()) {
         QCompressedHelpInfo info;
         info.d->m_namespaceName = reader.namespaceName();
