@@ -2043,6 +2043,7 @@ void DesignerEditorFactory::slotValueChanged(QtProperty *property, const QVarian
         if (type == DesignerPropertyManager::designerIconTypeId()) {
             PropertySheetIconValue iconValue = qvariant_cast<PropertySheetIconValue>(value);
             applyToEditors(m_iconPropertyToEditors.value(property), &PixmapEditor::setTheme, iconValue.theme());
+            applyToEditors(m_iconPropertyToEditors.value(property), &PixmapEditor::setThemeEnum, iconValue.themeEnum());
             applyToEditors(m_iconPropertyToEditors.value(property), &PixmapEditor::setPath, iconValue.pixmap(QIcon::Normal, QIcon::Off).path());
         } else if (type == DesignerPropertyManager::designerPixmapTypeId()) {
             applyToEditors(m_pixmapPropertyToEditors.value(property), &PixmapEditor::setPath, qvariant_cast<PropertySheetPixmapValue>(value).path());
@@ -2176,6 +2177,7 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
             ed->setIconThemeModeEnabled(true);
             PropertySheetIconValue value = qvariant_cast<PropertySheetIconValue>(manager->value(property));
             ed->setTheme(value.theme());
+            ed->setThemeEnum(value.themeEnum());
             ed->setPath(value.pixmap(QIcon::Normal, QIcon::Off).path());
             QIcon defaultPixmap;
             if (!property->isModified())
@@ -2189,6 +2191,7 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
             connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
             connect(ed, &PixmapEditor::pathChanged, this, &DesignerEditorFactory::slotIconChanged);
             connect(ed, &PixmapEditor::themeChanged, this, &DesignerEditorFactory::slotIconThemeChanged);
+            connect(ed, &PixmapEditor::themeEnumChanged, this, &DesignerEditorFactory::slotIconThemeEnumChanged);
             editor = ed;
         } else if (type == DesignerPropertyManager::designerStringTypeId()) {
             const TextPropertyValidationMode tvm = static_cast<TextPropertyValidationMode>(manager->attributeValue(property, validationModesAttributeC).toInt());
@@ -2398,6 +2401,14 @@ void DesignerEditorFactory::slotIconThemeChanged(const QString &value)
     icon.setTheme(value);
     updateManager(this, &m_changingPropertyValue, m_editorToIconProperty, qobject_cast<QWidget *>(sender()),
                     QVariant::fromValue(icon));
+}
+
+void DesignerEditorFactory::slotIconThemeEnumChanged(int value)
+{
+    PropertySheetIconValue icon;
+    icon.setThemeEnum(value);
+    updateManager(this, &m_changingPropertyValue, m_editorToIconProperty,
+                  qobject_cast<QWidget *>(sender()), QVariant::fromValue(icon));
 }
 
 void DesignerEditorFactory::slotStringListChanged(const QStringList &value)

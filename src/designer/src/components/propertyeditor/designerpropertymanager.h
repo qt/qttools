@@ -249,6 +249,7 @@ private slots:
     void slotPixmapChanged(const QString &value);
     void slotIconChanged(const QString &value);
     void slotIconThemeChanged(const QString &value);
+    void slotIconThemeEnumChanged(int value);
     void slotUintChanged(const QString &value);
     void slotLongLongChanged(const QString &value);
     void slotULongLongChanged(const QString &value);
