@@ -32,23 +32,27 @@ static constexpr QSize ICON_SIZE{16, 16};
 
 namespace qdesigner_internal {
 
+static void createIconThemeDialog(QDialog *topLevel, const QString &labelText,
+                                  QWidget *themeEditor)
+{
+    QVBoxLayout *layout = new QVBoxLayout(topLevel);
+    QLabel *label = new QLabel(labelText, topLevel);
+    QDialogButtonBox *buttons = new QDialogButtonBox(topLevel);
+    buttons->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QObject::connect(buttons, &QDialogButtonBox::accepted, topLevel, &QDialog::accept);
+    QObject::connect(buttons, &QDialogButtonBox::rejected, topLevel, &QDialog::reject);
+
+    layout->addWidget(label);
+    layout->addWidget(themeEditor);
+    layout->addWidget(buttons);
+}
+
 IconThemeDialog::IconThemeDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle(tr("Set Icon From Theme"));
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    QLabel *label = new QLabel(tr("Select icon name from theme:"), this);
+    setWindowTitle(tr("Set Icon From XDG Theme"));
     m_editor = new IconThemeEditor(this);
-    QDialogButtonBox *buttons = new QDialogButtonBox(this);
-    buttons->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-
-    layout->addWidget(label);
-    layout->addWidget(m_editor);
-    layout->addWidget(buttons);
-
-    connect(buttons, &QDialogButtonBox::accepted, this, &QDialog::accept);
-    connect(buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    createIconThemeDialog(this, tr("Select icon name from XDG theme:"), m_editor);
 }
 
 std::optional<QString> IconThemeDialog::getTheme(QWidget *parent, const QString &theme)
@@ -57,6 +61,23 @@ std::optional<QString> IconThemeDialog::getTheme(QWidget *parent, const QString 
     dlg.m_editor->setTheme(theme);
     if (dlg.exec() == QDialog::Accepted)
         return dlg.m_editor->theme();
+    return std::nullopt;
+}
+
+IconThemeEnumDialog::IconThemeEnumDialog(QWidget *parent)
+    : QDialog(parent)
+{
+    setWindowTitle(tr("Set Icon From Theme"));
+    m_editor = new IconThemeEnumEditor(this);
+    createIconThemeDialog(this, tr("Select icon name from theme:"), m_editor);
+}
+
+std::optional<int> IconThemeEnumDialog::getTheme(QWidget *parent, int theme)
+{
+    IconThemeEnumDialog dlg(parent);
+    dlg.m_editor->setThemeEnum(theme);
+    if (dlg.exec() == QDialog::Accepted)
+        return dlg.m_editor->themeEnum();
     return std::nullopt;
 }
 

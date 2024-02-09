@@ -14,7 +14,9 @@
 #include <QtDesigner/abstractlanguage.h>
 #include <QtDesigner/abstractintegration.h>
 #include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/private/resourcebuilder_p.h>
 
+#include <QtWidgets/qabstractitemview.h>
 #include <QtWidgets/qtoolbutton.h>
 #include <QtWidgets/qcombobox.h>
 #include <QtWidgets/qdialogbuttonbox.h>
@@ -34,11 +36,37 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qlist.h>
 
+#include <utility>
+
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
 namespace qdesigner_internal {
+
+using ThemeIconEnumEntry = std::pair<QString, QIcon>;
+
+static const QList<ThemeIconEnumEntry> &themeEnumIcons()
+{
+    static QList<ThemeIconEnumEntry> result;
+    if (result.isEmpty()) {
+        const QStringList &names = QResourceBuilder::themeIconNames();
+        result.reserve(names.size());
+        for (qsizetype i = 0, size = names.size(); i < size; ++i)
+            result.append({names.at(i), QIcon::fromTheme(QIcon::ThemeIcon(i))});
+    }
+    return result;
+}
+
+static void initThemeCombo(QComboBox *cb)
+{
+    cb->view()->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+    for (const auto &te : themeEnumIcons())
+        cb->addItem(te.second, te.first);
+
+    cb->setCurrentIndex(-1);
+}
 
 // Validator for theme line edit, accepts empty or non-blank strings.
 class BlankSuppressingValidator : public QValidator {
@@ -520,40 +548,40 @@ static const QMap<QString, QIcon> &themeIcons()
 }
 
 struct IconThemeEditorPrivate {
-    IconThemeEditorPrivate();
+    void create(QWidget *topLevel, bool wantResetButton);
 
-    QComboBox *m_themeComboBox;
+    QComboBox *m_themeComboBox{};
+    QToolButton *m_themeResetButton{};
 };
 
-IconThemeEditorPrivate::IconThemeEditorPrivate() :
-    m_themeComboBox(new QComboBox)
+void IconThemeEditorPrivate::create(QWidget *topLevel, bool wantResetButton)
 {
+    m_themeComboBox = new QComboBox();
+    QHBoxLayout *mainHLayout = new QHBoxLayout(topLevel);
+    mainHLayout->setContentsMargins({});
+    mainHLayout->addWidget(m_themeComboBox);
+    if (wantResetButton) {
+        m_themeResetButton = new QToolButton;
+        m_themeResetButton->setIcon(createIconSet("resetproperty.png"_L1));
+        mainHLayout->addWidget(m_themeResetButton);
+    }
+    topLevel->setFocusProxy(m_themeComboBox);
 }
 
 IconThemeEditor::IconThemeEditor(QWidget *parent, bool wantResetButton) :
     QWidget (parent), d(new IconThemeEditorPrivate)
 {
-    QHBoxLayout *mainHLayout = new QHBoxLayout;
-    mainHLayout->setContentsMargins(QMargins());
+    d->create(this, wantResetButton);
+    d->m_themeComboBox->setEditable(true);
 
     const auto icons = themeIcons();
     for (auto i = icons.constBegin(); i != icons.constEnd(); ++i)
         d->m_themeComboBox->addItem(i.value(), i.key());
     d->m_themeComboBox->setCurrentIndex(-1);
-    d->m_themeComboBox->setEditable(true);
     d->m_themeComboBox->lineEdit()->setValidator(new BlankSuppressingValidator(this));
     connect(d->m_themeComboBox, &QComboBox::currentTextChanged, this, &IconThemeEditor::edited);
-    mainHLayout->addWidget(d->m_themeComboBox);
-
-    if (wantResetButton) {
-        QToolButton *themeResetButton = new QToolButton;
-        themeResetButton->setIcon(createIconSet("resetproperty.png"_L1));
-        connect(themeResetButton, &QAbstractButton::clicked, this, &IconThemeEditor::reset);
-        mainHLayout->addWidget(themeResetButton);
-    }
-
-    setLayout(mainHLayout);
-    setFocusProxy(d->m_themeComboBox);
+    if (wantResetButton)
+        connect(d->m_themeResetButton, &QAbstractButton::clicked, this, &IconThemeEditor::reset);
 }
 
 IconThemeEditor::~IconThemeEditor() = default;
@@ -572,6 +600,49 @@ QString IconThemeEditor::theme() const
 void IconThemeEditor::setTheme(const QString &t)
 {
     d->m_themeComboBox->setCurrentText(t);
+}
+
+IconThemeEnumEditor::IconThemeEnumEditor(QWidget *parent, bool wantResetButton) :
+      QWidget (parent), d(new IconThemeEditorPrivate)
+{
+    d->create(this, wantResetButton);
+    initThemeCombo(d->m_themeComboBox);
+
+    connect(d->m_themeComboBox, &QComboBox::currentIndexChanged,
+            this, &IconThemeEnumEditor::edited);
+    if (wantResetButton)
+        connect(d->m_themeResetButton, &QAbstractButton::clicked, this, &IconThemeEnumEditor::reset);
+}
+
+IconThemeEnumEditor::~IconThemeEnumEditor() = default;
+
+void IconThemeEnumEditor::reset()
+{
+    d->m_themeComboBox->setCurrentIndex(-1);
+    emit edited(-1);
+}
+
+int IconThemeEnumEditor::themeEnum() const
+{
+    return d->m_themeComboBox->currentIndex();
+}
+
+void IconThemeEnumEditor::setThemeEnum(int t)
+{
+    Q_ASSERT(t >= -1 && t < int(QIcon::ThemeIcon::NThemeIcons));
+    d->m_themeComboBox->setCurrentIndex(t);
+}
+
+QString IconThemeEnumEditor::iconName(int e)
+{
+    return QResourceBuilder::themeIconNames().value(e);
+}
+
+QComboBox *IconThemeEnumEditor::createComboBox(QWidget *parent)
+{
+    auto *result = new QComboBox(parent);
+    initThemeCombo(result);
+    return result;
 }
 
 } // qdesigner_internal

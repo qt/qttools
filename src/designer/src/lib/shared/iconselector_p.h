@@ -25,6 +25,8 @@
 
 QT_BEGIN_NAMESPACE
 
+class QComboBox;
+
 class QtResourceModel;
 class QDesignerFormEditorInterface;
 class QDesignerDialogGuiInterface;
@@ -103,6 +105,31 @@ public:
 
 signals:
     void edited(const QString &);
+
+public slots:
+    void reset();
+
+private:
+    QScopedPointer<IconThemeEditorPrivate> d;
+};
+
+// IconThemeEnumEditor: Let's the user input theme icon enum values
+// (QIcon::ThemeIcon) and shows a preview label. -1 means nothing selected.
+class QDESIGNER_SHARED_EXPORT IconThemeEnumEditor : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit IconThemeEnumEditor(QWidget *parent = nullptr, bool wantResetButton = true);
+    ~IconThemeEnumEditor() override;
+
+    int themeEnum() const;
+    void setThemeEnum(int);
+
+    static QString iconName(int e);
+    static QComboBox *createComboBox(QWidget *parent = nullptr);
+
+signals:
+    void edited(int);
 
 public slots:
     void reset();

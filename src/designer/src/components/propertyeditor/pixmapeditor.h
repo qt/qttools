@@ -22,6 +22,7 @@ namespace qdesigner_internal {
 
 class DesignerPixmapCache;
 class IconThemeEditor;
+class IconThemeEnumEditor;
 class PropertySheetIconValue;
 
 class IconThemeDialog : public QDialog
@@ -32,6 +33,17 @@ public:
 private:
     explicit IconThemeDialog(QWidget *parent);
     IconThemeEditor *m_editor;
+};
+
+class IconThemeEnumDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    static std::optional<int> getTheme(QWidget *parent, int theme);
+
+private:
+    IconThemeEnumDialog(QWidget *parent);
+    IconThemeEnumEditor *m_editor;
 };
 
 class PixmapEditor : public QWidget
