@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-<comment>
+ <comment>
 * Copyright (C) 2016 The Qt Company Ltd.
 * SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 </comment>
@@ -9,8 +10,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>395</width>
-    <height>372</height>
+    <width>381</width>
+    <height>291</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -86,20 +87,20 @@
        </item>
       </layout>
      </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <widget class="QLabel" name="iconThemeLabel">
        <property name="text">
-        <string>Icon th&amp;eme:</string>
+        <string>Icon &amp;XDG theme:</string>
        </property>
        <property name="buddy">
         <cstring>iconThemeEditor</cstring>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="4" column="1">
       <widget class="qdesigner_internal::IconThemeEditor" name="iconThemeEditor" native="true"/>
      </item>
-     <item row="4" column="0">
+     <item row="5" column="0">
       <widget class="QLabel" name="iconLabel">
        <property name="text">
         <string>&amp;Icon:</string>
@@ -109,7 +110,7 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="5" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="qdesigner_internal::IconSelector" name="iconSelector" native="true"/>
@@ -129,14 +130,14 @@
        </item>
       </layout>
      </item>
-     <item row="5" column="1">
+     <item row="6" column="1">
       <widget class="QCheckBox" name="checkableCheckBox">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
+     <item row="6" column="0">
       <widget class="QLabel" name="checkableLabel">
        <property name="text">
         <string>&amp;Checkable:</string>
@@ -146,7 +147,7 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
+     <item row="7" column="0">
       <widget class="QLabel" name="shortcutLabel">
        <property name="text">
         <string>&amp;Shortcut:</string>
@@ -156,10 +157,10 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="7" column="1">
       <layout class="QHBoxLayout" name="keysequenceLayout">
        <item>
-        <widget class="QKeySequenceEdit" name="keySequenceEdit" native="true">
+        <widget class="QKeySequenceEdit" name="keySequenceEdit">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -177,7 +178,7 @@
        </item>
       </layout>
      </item>
-     <item row="7" column="0">
+     <item row="8" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
         <string>&amp;Menu role:</string>
@@ -187,8 +188,21 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
+     <item row="8" column="1">
       <widget class="QComboBox" name="menuRole"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="iconThemeEnumLabel">
+       <property name="text">
+        <string>Icon &amp;theme:</string>
+       </property>
+       <property name="buddy">
+        <cstring>iconThemeEnumEditor</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="qdesigner_internal::IconThemeEnumEditor" name="iconThemeEnumEditor" native="true"/>
      </item>
     </layout>
    </item>
@@ -239,6 +253,12 @@
   </customwidget>
   <customwidget>
    <class>qdesigner_internal::IconThemeEditor</class>
+   <extends>QWidget</extends>
+   <header>iconselector_p.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>qdesigner_internal::IconThemeEnumEditor</class>
    <extends>QWidget</extends>
    <header>iconselector_p.h</header>
    <container>1</container>
