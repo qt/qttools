@@ -7,25 +7,28 @@
 
 qt_internal_add_module(Help
     SOURCES
+    # QtHelpCore
         qcompressedhelpinfo.cpp qcompressedhelpinfo.h
-        qfilternamedialog.cpp qfilternamedialog.ui qfilternamedialog_p.h
         qhelp_global.cpp qhelp_global.h
         qhelpcollectionhandler.cpp qhelpcollectionhandler_p.h
         qhelpcontentitem.cpp qhelpcontentitem.h
-        qhelpcontentwidget.cpp qhelpcontentwidget.h
         qhelpdbreader.cpp qhelpdbreader_p.h
-        qhelpengine.cpp qhelpengine.h
         qhelpenginecore.cpp qhelpenginecore.h
         qhelpfilterdata.cpp qhelpfilterdata.h
         qhelpfilterengine.cpp qhelpfilterengine.h
-        qhelpfiltersettingswidget.cpp qhelpfiltersettingswidget.h qhelpfiltersettingswidget.ui
-        qhelpindexwidget.cpp qhelpindexwidget.h
         qhelplink.cpp qhelplink.h
-        qhelpsearchengine.cpp qhelpsearchengine.h
+        qhelpsearchenginecore.cpp qhelpsearchenginecore.h
         qhelpsearchindexreader.cpp qhelpsearchindexreader_p.h
         qhelpsearchindexwriter.cpp qhelpsearchindexwriter_p.h
-        qhelpsearchquerywidget.cpp qhelpsearchquerywidget.h
         qhelpsearchresult.cpp qhelpsearchresult.h
+    # QtHelp
+        qfilternamedialog.cpp qfilternamedialog.ui qfilternamedialog_p.h
+        qhelpcontentwidget.cpp qhelpcontentwidget.h
+        qhelpengine.cpp qhelpengine.h
+        qhelpfiltersettingswidget.cpp qhelpfiltersettingswidget.h qhelpfiltersettingswidget.ui
+        qhelpindexwidget.cpp qhelpindexwidget.h
+        qhelpsearchengine.cpp qhelpsearchengine.h
+        qhelpsearchquerywidget.cpp qhelpsearchquerywidget.h
         qhelpsearchresultwidget.cpp qhelpsearchresultwidget.h
         qoptionswidget.cpp qoptionswidget_p.h
     DEFINES
