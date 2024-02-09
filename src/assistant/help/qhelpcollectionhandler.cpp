@@ -2223,18 +2223,6 @@ QUrl QHelpCollectionHandler::buildQUrl(const QString &ns, const QString &folder,
     return url;
 }
 
-QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForIdentifier(
-        const QString &id, const QStringList &filterAttributes) const
-{
-    return linksForField(QLatin1String("Identifier"), id, filterAttributes);
-}
-
-QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForKeyword(
-        const QString &keyword, const QStringList &filterAttributes) const
-{
-    return linksForField(QLatin1String("Name"), keyword, filterAttributes);
-}
-
 QList<QHelpLink> QHelpCollectionHandler::documentsForIdentifier(
         const QString &id, const QStringList &filterAttributes) const
 {
@@ -2245,16 +2233,6 @@ QList<QHelpLink> QHelpCollectionHandler::documentsForKeyword(
         const QString &keyword, const QStringList &filterAttributes) const
 {
     return documentsForField("Name"_L1, keyword, filterAttributes);
-}
-
-QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldName,
-        const QString &fieldValue, const QStringList &filterAttributes) const
-{
-    QMultiMap<QString, QUrl> linkMap;
-    const auto documents = documentsForField(fieldName, fieldValue, filterAttributes);
-    for (const auto &document : documents)
-        linkMap.insert(document.title, document.url);
-    return linkMap;
 }
 
 QList<QHelpLink> QHelpCollectionHandler::documentsForField(const QString &fieldName,
@@ -2303,18 +2281,6 @@ QList<QHelpLink> QHelpCollectionHandler::documentsForField(const QString &fieldN
         docList.append(QHelpLink {url, title});
     }
     return docList;
-}
-
-QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForIdentifier(
-        const QString &id, const QString &filterName) const
-{
-    return linksForField(QLatin1String("Identifier"), id, filterName);
-}
-
-QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForKeyword(
-        const QString &keyword, const QString &filterName) const
-{
-    return linksForField(QLatin1String("Name"), keyword, filterName);
 }
 
 QList<QHelpLink> QHelpCollectionHandler::documentsForIdentifier(

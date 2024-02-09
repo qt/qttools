@@ -103,20 +103,6 @@ public:
     // use filterData(const QString &) instead
     QList<QStringList> filterAttributeSets(const QString &namespaceName) const;
 
-    // use linksForIdentifier(const QString &, const QString &) instead
-    QMultiMap<QString, QUrl> linksForIdentifier(const QString &id,
-                                                const QStringList &filterAttributes) const;
-
-    // use linksForKeyword(const QString &, const QString &) instead
-    QMultiMap<QString, QUrl> linksForKeyword(const QString &keyword,
-                                             const QStringList &filterAttributes) const;
-
-    // use documentsForIdentifier instead
-    QMultiMap<QString, QUrl> linksForIdentifier(const QString &id, const QString &filterName) const;
-
-    // use documentsForKeyword instead
-    QMultiMap<QString, QUrl> linksForKeyword(const QString &keyword,
-                                             const QString &filterName) const;
     // *** Legacy block end ***
 
     QStringList filters() const;
@@ -173,9 +159,6 @@ signals:
 
 private:
     // legacy stuff
-    QMultiMap<QString, QUrl> linksForField(const QString &fieldName,
-                                           const QString &fieldValue,
-                                           const QStringList &filterAttributes) const;
     QList<QHelpLink> documentsForField(const QString &fieldName,
                                        const QString &fieldValue,
                                        const QStringList &filterAttributes) const;
