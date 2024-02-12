@@ -150,33 +150,39 @@ QString PixmapEditor::msgThemeIcon(const QString &t)
     return tr("[Theme] %1").arg(t);
 }
 
+QString PixmapEditor::msgMissingThemeIcon(const QString &t)
+{
+    return tr("[Theme] %1 (missing)").arg(t);
+}
+
 void PixmapEditor::updateLabels()
 {
-    if (m_iconThemeModeEnabled && QIcon::hasThemeIcon(m_theme)) {
+    m_pathLabel->setText(displayText(m_theme, m_path));
+    switch (state()) {
+    case State::Empty:
+    case State::MissingXdgTheme:
+        m_pixmapLabel->setPixmap(m_defaultPixmap);
+        m_copyAction->setEnabled(false);
+        break;
+    case State::XdgTheme:
         m_pixmapLabel->setPixmap(QIcon::fromTheme(m_theme).pixmap(ICON_SIZE));
-        m_pathLabel->setText(msgThemeIcon(m_theme));
         m_copyAction->setEnabled(true);
-    } else {
-        if (m_path.isEmpty()) {
-            m_pathLabel->setText(m_path);
-            m_pixmapLabel->setPixmap(m_defaultPixmap);
-            m_copyAction->setEnabled(false);
-        } else {
-            m_pathLabel->setText(QFileInfo(m_path).fileName());
-            if (m_pixmapCache) {
-                auto pixmap = m_pixmapCache->pixmap(PropertySheetPixmapValue(m_path));
-                m_pixmapLabel->setPixmap(QIcon(pixmap).pixmap(ICON_SIZE));
-            }
-            m_copyAction->setEnabled(true);
+        break;
+    case State::Path:
+    case State::PathFallback:
+        if (m_pixmapCache) {
+            auto pixmap = m_pixmapCache->pixmap(PropertySheetPixmapValue(m_path));
+            m_pixmapLabel->setPixmap(QIcon(pixmap).pixmap(ICON_SIZE));
         }
+        m_copyAction->setEnabled(true);
+        break;
     }
 }
 
 void PixmapEditor::setDefaultPixmapIcon(const QIcon &icon)
 {
     m_defaultPixmap = icon.pixmap(ICON_SIZE);
-    const bool hasThemeIcon = m_iconThemeModeEnabled && QIcon::hasThemeIcon(m_theme);
-    if (!hasThemeIcon && m_path.isEmpty())
+    if (state() == State::Empty)
         m_pixmapLabel->setPixmap(m_defaultPixmap);
 }
 
@@ -250,14 +256,62 @@ void PixmapEditor::themeActionActivated()
     }
 }
 
+PixmapEditor::State PixmapEditor::stateFromData(const QString &xdgTheme, const QString &path)
+{
+    if (!xdgTheme.isEmpty()) {
+        if (QIcon::hasThemeIcon(xdgTheme))
+            return State::XdgTheme;
+        return path.isEmpty() ? State::MissingXdgTheme : State::PathFallback;
+    }
+    return path.isEmpty() ? State::Empty : State::Path;
+}
+
+PixmapEditor::State PixmapEditor::state() const
+{
+    return stateFromData(m_theme, m_path);
+}
+
+QString PixmapEditor::displayText(const QString &xdgTheme, const QString &path)
+{
+    switch (stateFromData(xdgTheme, path)) {
+    case State::XdgTheme:
+        return msgThemeIcon(xdgTheme);
+    case State::MissingXdgTheme:
+        return msgMissingThemeIcon(xdgTheme);
+    case State::Path:
+        return QFileInfo(path).fileName();
+    case State::PathFallback:
+        return tr("%1 (fallback)").arg(QFileInfo(path).fileName());
+    case State::Empty:
+        break;
+    }
+    return {};
+}
+
+QString PixmapEditor::displayText(const PropertySheetIconValue &icon)
+{
+    const auto &paths = icon.paths();
+    const auto &it = paths.constFind({QIcon::Normal, QIcon::Off});
+    const QString path = it != paths.constEnd() ? it.value().path() : QString{};
+    return displayText(icon.theme(), path);
+}
+
 #if QT_CONFIG(clipboard)
 void PixmapEditor::copyActionActivated()
 {
     QClipboard *clipboard = QApplication::clipboard();
-    if (m_iconThemeModeEnabled && QIcon::hasThemeIcon(m_theme))
+    switch (state()) {
+    case State::XdgTheme:
+    case State::MissingXdgTheme:
         clipboard->setText(m_theme);
-    else
+        break;
+    case State::Path:
+    case State::PathFallback:
         clipboard->setText(m_path);
+        break;
+    case State::Empty:
+        break;
+    }
 }
 
 void PixmapEditor::pasteActionActivated()

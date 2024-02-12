@@ -22,6 +22,7 @@ namespace qdesigner_internal {
 
 class DesignerPixmapCache;
 class IconThemeEditor;
+class PropertySheetIconValue;
 
 class IconThemeDialog : public QDialog
 {
@@ -44,6 +45,8 @@ public:
     void setIconThemeModeEnabled(bool enabled);
 
     static QString msgThemeIcon(const QString &t);
+    static QString msgMissingThemeIcon(const QString &t);
+    static QString displayText(const PropertySheetIconValue &icon);
 
 public slots:
     void setPath(const QString &path);
@@ -69,6 +72,18 @@ private slots:
     void clipboardDataChanged();
 #endif
 private:
+    enum class State {
+        Empty,
+        XdgTheme,
+        MissingXdgTheme,
+        Path,
+        PathFallback // Non-existent theme icon, falling back to path
+    };
+
+    static State stateFromData(const QString &xdgTheme, const QString &path);
+    State state() const;
+    static QString displayText(const QString &xdgTheme, const QString &path);
+
     void updateLabels();
     bool m_iconThemeModeEnabled;
     QDesignerFormEditorInterface *m_core;
