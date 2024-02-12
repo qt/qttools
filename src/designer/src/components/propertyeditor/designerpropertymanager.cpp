@@ -1225,17 +1225,8 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
         static const QString inherited = tr("Inherited");
         return inherited;
     }
-    if (m_iconValues.contains(property)) {
-        const PropertySheetIconValue icon = m_iconValues.value(property);
-        const QString theme = icon.theme();
-        if (!theme.isEmpty() && QIcon::hasThemeIcon(theme))
-            return PixmapEditor::msgThemeIcon(theme);
-        const auto &paths = icon.paths();
-        const auto it = paths.constFind({QIcon::Normal, QIcon::Off});
-        if (it == paths.constEnd())
-            return QString();
-        return QFileInfo(it.value().path()).fileName();
-    }
+    if (m_iconValues.contains(property))
+        return PixmapEditor::displayText(m_iconValues.value(property));
     if (m_pixmapValues.contains(property)) {
         const QString path =  m_pixmapValues.value(property).path();
         if (path.isEmpty())
