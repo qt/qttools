@@ -325,10 +325,7 @@ namespace qdesigner_internal {
     {
         // qHash for paths making use of the existing QPair hash functions.
         const auto *d = p.m_data.constData();
-        return qHashMulti(qHashRange(d->m_paths.constKeyValueBegin(),
-                                     d->m_paths.constKeyValueEnd(), seed),
-                          d->m_themeEnum,
-                          d->m_theme);
+        return qHashMulti(seed, d->m_paths, d->m_themeEnum, d->m_theme);
     }
 
     bool comparesEqual(const PropertySheetIconValue &lhs,
