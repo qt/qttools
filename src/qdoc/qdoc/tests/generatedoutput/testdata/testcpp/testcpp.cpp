@@ -111,7 +111,7 @@ namespace TestQDoc {
 
 /*!
 \if defined(test_properties)
-    \property Test::id
+    \property TestQDoc::Test::id
 \else
     \nothing
 \endif
@@ -263,7 +263,7 @@ void Test::virtualFun()
 */
 
 /*!
-    \typedef Test::SomeType
+    \typedef TestQDoc::Test::SomeType
     \brief A typedef.
 */
 
@@ -290,12 +290,12 @@ void TestDerived::virtualFun()
 */
 
 /*!
-    \typealias TestDerived::DerivedType
+    \typealias TestQDoc::TestDerived::DerivedType
     An aliased typedef.
 */
 
 /*!
-    \typedef TestDerived::NotTypedef
+    \typedef TestQDoc::TestDerived::NotTypedef
     I'm an alias, not a typedef.
 */
 

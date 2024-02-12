@@ -37,12 +37,6 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
         return;
     }
 
-    /*
-      The set of open namespaces is cleared before parsing
-      each source file. The word "source" here means cpp file.
-     */
-    m_qdb->clearOpenNamespaces();
-
     processQdocComments(in, cpp_code_parser);
     in.close();
 }

@@ -263,7 +263,6 @@ public:
     {
         return primaryTree()->findRelatesNode(path);
     }
-    Node *findNodeInOpenNamespace(QStringList &path, bool (Node::*)() const);
     /*******************************************************************/
 
     /*****************************************************************************
@@ -331,8 +330,6 @@ public:
     void generateIndex(const QString &fileName, const QString &url, const QString &title,
                        Generator *g);
 
-    void clearOpenNamespaces() { m_openNamespaces.clear(); }
-    void insertOpenNamespace(const QString &path) { m_openNamespaces.insert(path); }
     void processForest();
 
     NamespaceNode *primaryTreeRoot() { return m_forest.primaryTreeRoot(); }
@@ -390,7 +387,6 @@ private:
     NodeMultiMap m_attributions {};
     NodeMapMap m_functionIndex {};
     TextToNodeMap m_legaleseTexts {};
-    QSet<QString> m_openNamespaces {};
     QMultiHash<Tree*, FindFunctionPtr> m_completedFindFunctions {};
 };
 

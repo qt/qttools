@@ -123,9 +123,7 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
             idx = words.size() - 1;
         path = words[idx].split("::");
 
-        node = database->findNodeInOpenNamespace(path, s_nodeTypeTestFuncMap[command]);
-        if (node == nullptr)
-            node = database->findNodeByNameAndType(path, s_nodeTypeTestFuncMap[command]);
+        node = database->findNodeByNameAndType(path, s_nodeTypeTestFuncMap[command]);
         // Allow representing a type alias as a class
         if (node == nullptr && command == COMMAND_CLASS) {
             node = database->findNodeByNameAndType(path, &Node::isTypeAlias);
@@ -150,17 +148,6 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
                 auto *ns = static_cast<NamespaceNode *>(node);
                 ns->markSeen();
                 ns->setWhereDocumented(ns->tree()->camelCaseModuleName());
-            }
-            /*
-              This treats a class as a namespace.
-             */
-            if ((type == Node::Class) || (type == Node::Namespace) || (type == Node::Struct)
-                || (type == Node::Union)) {
-                if (path.size() > 1) {
-                    path.pop_back();
-                    QString ns = path.join(QLatin1String("::"));
-                    database->insertOpenNamespace(ns);
-                }
             }
         }
         return node;

@@ -1719,11 +1719,6 @@ static float getUnpatchedVersion(QString t)
  */
 void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QString &filePath, CppCodeParser& cpp_code_parser)
 {
-    /*
-      The set of open namespaces is cleared before parsing
-      each source file. The word "source" here means cpp file.
-     */
-    m_qdb->clearOpenNamespaces();
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
                                                   | CXTranslationUnit_SkipFunctionBodies
                                                   | CXTranslationUnit_KeepGoing);

@@ -1193,39 +1193,6 @@ void QDocDatabase::generateIndex(const QString &fileName, const QString &url, co
 }
 
 /*!
-  Find a node of the specified \a type that is reached with
-  the specified \a path qualified with the name of one of the
-  open namespaces (might not be any open ones). If the node
-  is found in an open namespace, prefix \a path with the name
-  of the open namespace and "::" and return a pointer to the
-  node. Otherwise return \c nullptr.
-
-  This function only searches in the current primary tree.
- */
-Node *QDocDatabase::findNodeInOpenNamespace(QStringList &path, bool (Node::*isMatch)() const)
-{
-    if (path.isEmpty())
-        return nullptr;
-    Node *n = nullptr;
-    if (!m_openNamespaces.isEmpty()) {
-        const auto &openNamespaces = m_openNamespaces;
-        for (const QString &t : openNamespaces) {
-            QStringList p;
-            if (t != path[0])
-                p = t.split("::") + path;
-            else
-                p = path;
-            n = primaryTree()->findNodeByNameAndType(p, isMatch);
-            if (n) {
-                path = p;
-                break;
-            }
-        }
-    }
-    return n;
-}
-
-/*!
     Returns the collection node representing the module that \a relative
     node belongs to, or \c nullptr if there is no such module in the
     primary tree.
