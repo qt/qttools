@@ -1796,39 +1796,36 @@ QString MainWindow::friendlyString(const QString& str)
 void MainWindow::setupMenuBar()
 {
 
-    const bool hasThemeIcons = !QApplication::platformName().compare(QStringLiteral("xcb"), Qt::CaseInsensitive);
-    if (hasThemeIcons) {  // There are no fallback icons for these
-        m_ui.menuRecentlyOpenedFiles->setIcon(QIcon::fromTheme(QStringLiteral("document-open-recent")));
-        m_ui.actionCloseAll->setIcon(QIcon::fromTheme(QStringLiteral("window-close")));
-        m_ui.actionExit->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
-        m_ui.actionSelectAll->setIcon(QIcon::fromTheme(QStringLiteral("edit-select-all")));
-    }
+    m_ui.menuRecentlyOpenedFiles->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpenRecent));
+    m_ui.actionCloseAll->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::WindowClose));
+    m_ui.actionExit->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ApplicationExit));
+    m_ui.actionSelectAll->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditSelectAll));
 
     // Prefer theme icons when available for these actions
     const QString prefix = QApplication::platformName().compare(QStringLiteral("cocoa"), Qt::CaseInsensitive) ?
                            QStringLiteral(":/images/win") : QStringLiteral(":/images/mac");
 
-    m_ui.actionOpen->setIcon(QIcon::fromTheme(QStringLiteral("document-open"),
+    m_ui.actionOpen->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen,
                                               QIcon(prefix + QStringLiteral("/fileopen.png"))));
-    m_ui.actionOpenAux->setIcon(QIcon::fromTheme(QStringLiteral("document-open"),
+    m_ui.actionOpenAux->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen,
                                                  QIcon(prefix + QStringLiteral("/fileopen.png"))));
-    m_ui.actionSave->setIcon(QIcon::fromTheme(QStringLiteral("document-save"),
+    m_ui.actionSave->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSave,
                                               QIcon(prefix + QStringLiteral("/filesave.png"))));
-    m_ui.actionSaveAll->setIcon(QIcon::fromTheme(QStringLiteral("document-save"),
+    m_ui.actionSaveAll->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSave,
                                                  QIcon(prefix + QStringLiteral("/filesave.png"))));
-    m_ui.actionPrint->setIcon(QIcon::fromTheme(QStringLiteral("document-print"),
+    m_ui.actionPrint->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentPrint,
                                                QIcon(prefix + QStringLiteral("/print.png"))));
-    m_ui.actionRedo->setIcon(QIcon::fromTheme(QStringLiteral("edit-redo"),
+    m_ui.actionRedo->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditRedo,
                                               QIcon(prefix + QStringLiteral("/redo.png"))));
-    m_ui.actionUndo->setIcon(QIcon::fromTheme(QStringLiteral("edit-undo"),
+    m_ui.actionUndo->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditUndo,
                                               QIcon(prefix + QStringLiteral("/undo.png"))));
-    m_ui.actionCut->setIcon(QIcon::fromTheme(QStringLiteral("edit-cut"),
+    m_ui.actionCut->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditCut,
                                              QIcon(prefix + QStringLiteral("/editcut.png"))));
-    m_ui.actionCopy->setIcon(QIcon::fromTheme(QStringLiteral("edit-copy"),
+    m_ui.actionCopy->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditCopy,
                                               QIcon(prefix + QStringLiteral("/editcopy.png"))));
-    m_ui.actionPaste->setIcon(QIcon::fromTheme(QStringLiteral("edit-paste"),
+    m_ui.actionPaste->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditPaste,
                                                QIcon(prefix + QStringLiteral("/editpaste.png"))));
-    m_ui.actionFind->setIcon(QIcon::fromTheme(QStringLiteral("edit-find"),
+    m_ui.actionFind->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditFind,
                                               QIcon(prefix + QStringLiteral("/searchfind.png"))));
 
     // No well defined theme icons for these actions
