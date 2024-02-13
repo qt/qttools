@@ -162,18 +162,20 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_appFontAction(new QAction(tr("Additional Fonts..."), this))
 {
 #if defined (Q_OS_UNIX) && !defined(Q_OS_MACOS)
-    m_newFormAction->setIcon(QIcon::fromTheme(u"document-new"_s,
+    m_newFormAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentNew,
                                               m_newFormAction->icon()));
-    m_openFormAction->setIcon(QIcon::fromTheme(u"document-open"_s,
+    m_openFormAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen,
                                                m_openFormAction->icon()));
-    m_saveFormAction->setIcon(QIcon::fromTheme(u"document-save"_s,
+    m_saveFormAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSave,
                                                m_saveFormAction->icon()));
-    m_saveFormAsAction->setIcon(QIcon::fromTheme(u"document-save-as"_s,
+    m_saveFormAsAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSaveAs,
                                                  m_saveFormAsAction->icon()));
-    m_printPreviewAction->setIcon(QIcon::fromTheme(u"document-print"_s,
+    m_printPreviewAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentPrint,
                                                    m_printPreviewAction->icon()));
-    m_closeFormAction->setIcon(QIcon::fromTheme(u"window-close"_s, m_closeFormAction->icon()));
-    m_quitAction->setIcon(QIcon::fromTheme(u"application-exit"_s, m_quitAction->icon()));
+    m_closeFormAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::WindowClose,
+                                                m_closeFormAction->icon()));
+    m_quitAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ApplicationExit,
+                                           m_quitAction->icon()));
 #endif
 
     Q_ASSERT(m_core != nullptr);
@@ -495,14 +497,14 @@ QAction *QDesignerActions::createRecentFilesMenu()
     }
     updateRecentFileActions();
     m_recentMenu->addSeparator();
-    act = new QAction(QIcon::fromTheme(u"edit-clear"_s),
+    act = new QAction(QIcon::fromTheme(QIcon::ThemeIcon::EditClear),
                       tr("Clear &Menu"), this);
     act->setObjectName(u"__qt_action_clear_menu_"_s);
     connect(act, &QAction::triggered, this, &QDesignerActions::clearRecentFiles);
     m_recentFilesActions->addAction(act);
     m_recentMenu->addAction(act);
 
-    act = new QAction(QIcon::fromTheme(u"document-open-recent"_s),
+    act = new QAction(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpenRecent),
                       tr("&Recent Forms"), this);
     act->setMenu(m_recentMenu.get());
     return act;

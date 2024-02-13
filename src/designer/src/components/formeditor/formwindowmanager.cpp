@@ -342,7 +342,8 @@ QWidget *FormWindowManager::findManagedWidget(FormWindow *fw, QWidget *w)
 void FormWindowManager::setupActions()
 {
 #if QT_CONFIG(clipboard)
-    const QIcon cutIcon = QIcon::fromTheme(u"edit-cut"_s, createIconSet(u"editcut.png"_s));
+    const QIcon cutIcon = QIcon::fromTheme(QIcon::ThemeIcon::EditCut,
+                                           createIconSet(u"editcut.png"_s));
     m_actionCut = new QAction(cutIcon, tr("Cu&t"), this);
     m_actionCut->setObjectName(u"__qt_cut_action"_s);
     m_actionCut->setShortcut(QKeySequence::Cut);
@@ -351,7 +352,7 @@ void FormWindowManager::setupActions()
     connect(m_actionCut, &QAction::triggered, this, &FormWindowManager::slotActionCutActivated);
     m_actionCut->setEnabled(false);
 
-    const QIcon copyIcon = QIcon::fromTheme(u"edit-copy"_s,
+    const QIcon copyIcon = QIcon::fromTheme(QIcon::ThemeIcon::EditCopy,
                                             createIconSet(u"editcopy.png"_s));
     m_actionCopy = new QAction(copyIcon, tr("&Copy"), this);
     m_actionCopy->setObjectName(u"__qt_copy_action"_s);
@@ -361,7 +362,7 @@ void FormWindowManager::setupActions()
     connect(m_actionCopy, &QAction::triggered, this, &FormWindowManager::slotActionCopyActivated);
     m_actionCopy->setEnabled(false);
 
-    const QIcon pasteIcon = QIcon::fromTheme(u"edit-paste"_s,
+    const QIcon pasteIcon = QIcon::fromTheme(QIcon::ThemeIcon::EditPaste,
                                              createIconSet(u"editpaste.png"_s));
     m_actionPaste = new QAction(pasteIcon, tr("&Paste"), this);
     m_actionPaste->setObjectName(u"__qt_paste_action"_s);
@@ -372,7 +373,7 @@ void FormWindowManager::setupActions()
     m_actionPaste->setEnabled(false);
 #endif
 
-    m_actionDelete = new QAction(QIcon::fromTheme(u"edit-delete"_s),
+    m_actionDelete = new QAction(QIcon::fromTheme(QIcon::ThemeIcon::EditDelete),
                                  tr("&Delete"), this);
     m_actionDelete->setObjectName(u"__qt_delete_action"_s);
     m_actionDelete->setStatusTip(tr("Deletes the selected widgets"));
@@ -506,10 +507,12 @@ void FormWindowManager::setupActions()
     m_actionUndo = m_undoGroup->createUndoAction(this);
     m_actionUndo->setEnabled(false);
 
-    m_actionUndo->setIcon(QIcon::fromTheme(u"edit-undo"_s, createIconSet(u"undo.png"_s)));
+    m_actionUndo->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditUndo,
+                                           createIconSet(u"undo.png"_s)));
     m_actionRedo = m_undoGroup->createRedoAction(this);
     m_actionRedo->setEnabled(false);
-    m_actionRedo->setIcon(QIcon::fromTheme(u"edit-redo"_s, createIconSet(u"redo.png"_s)));
+    m_actionRedo->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditRedo,
+                                           createIconSet(u"redo.png"_s)));
 
     m_actionShowFormWindowSettingsDialog = new QAction(tr("Form &Settings..."), this);
     m_actionShowFormWindowSettingsDialog->setObjectName(u"__qt_form_settings_action"_s);

@@ -107,16 +107,24 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     m_actionList << m_findAction;
 
 #if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
-    m_backAction->setIcon(QIcon::fromTheme(QStringLiteral("go-previous") , m_backAction->icon()));
-    m_nextAction->setIcon(QIcon::fromTheme(QStringLiteral("go-next") , m_nextAction->icon()));
-    m_zoomInAction->setIcon(QIcon::fromTheme(QStringLiteral("zoom-in") , m_zoomInAction->icon()));
-    m_zoomOutAction->setIcon(QIcon::fromTheme(QStringLiteral("zoom-out") , m_zoomOutAction->icon()));
+    m_backAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoPrevious,
+                                           m_backAction->icon()));
+    m_nextAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoNext,
+                                           m_nextAction->icon()));
+    m_zoomInAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ZoomIn,
+                                             m_zoomInAction->icon()));
+    m_zoomOutAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ZoomOut,
+                                              m_zoomOutAction->icon()));
 #if QT_CONFIG(clipboard)
-    m_copyAction->setIcon(QIcon::fromTheme(QStringLiteral("edit-copy") , m_copyAction->icon()));
+    m_copyAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditCopy,
+                                           m_copyAction->icon()));
 #endif
-    m_findAction->setIcon(QIcon::fromTheme(QStringLiteral("edit-find") , m_findAction->icon()));
-    m_homeAction->setIcon(QIcon::fromTheme(QStringLiteral("go-home") , m_homeAction->icon()));
-    m_printAction->setIcon(QIcon::fromTheme(QStringLiteral("document-print") , m_printAction->icon()));
+    m_findAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditFind,
+                                           m_findAction->icon()));
+    m_homeAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoHome,
+                                           m_homeAction->icon()));
+    m_printAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentPrint,
+                                            m_printAction->icon()));
 #endif
 }
 
