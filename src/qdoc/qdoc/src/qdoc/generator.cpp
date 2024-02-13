@@ -747,7 +747,10 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 for (const auto &name : declaredNames) {
                     if (!documentedNames.contains(name)) {
                         if (fn->isActive() || fn->isPreliminary()) {
-                            if (!fn->isMarkedReimp() && !fn->isOverload()) {
+                            // Require no parameter documentation for overrides and overloads,
+                            // and only require it for non-overloaded constructors.
+                            if (!fn->isMarkedReimp() && !fn->isOverload() &&
+                                !(fn->isSomeCtor() && fn->hasOverloads())) {
                                 fn->doc().location().warning(
                                         QStringLiteral("Undocumented parameter '%1' in %2")
                                                 .arg(name, node->plainFullName()));
