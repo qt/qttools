@@ -56,3 +56,6 @@ ignorewords += QDoc
 
 navigation.landingpage = "QDoc Manual"
 
+# Convenience macros for creating links to QDoc commands & configuration variables
+macro.lc = \\l{\1-command}{\\c{\\\\\1}}
+macro.lv = \\l{\1-variable}{\\c{\1}}
