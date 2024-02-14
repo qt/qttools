@@ -8,7 +8,7 @@
     \ingroup examples-designer
     \title Calculator Form/Multiple Inheritance
 
-    \brief Using a form created with Qt Designer in an application.
+    \brief Using a form created with \QD in an application.
 
     The Multiple Inheritance Example shows how to use a form created with
     \l{Qt Designer} in an application by subclassing both QWidget and the user

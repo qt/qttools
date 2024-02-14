@@ -9,7 +9,7 @@
     \qtcmakepackage UiTools
     \qtvariable uitools
 
-    \brief Provides classes to handle forms created with Qt Designer.
+    \brief Provides classes to handle forms created with \QD.
 
     These forms are processed at run-time to produce dynamically-generated
     user interfaces. In order to generate a form at run-time, a resource

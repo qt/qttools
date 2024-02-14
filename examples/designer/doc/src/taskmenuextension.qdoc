@@ -35,11 +35,11 @@
            in \QD.
         \li QDesignerMemberSheetExtension provides an extension that allows
            you to manipulate a widget's member functions which is displayed
-           when configuring connections using Qt Designer's mode for editing
+           when configuring connections using \QD's mode for editing
            signals and slots.
         \li QDesignerPropertySheetExtension provides an extension that
            allows you to manipulate a widget's properties which is displayed
-           in Qt Designer's property editor.
+           in \QD's property editor.
         \li QDesignerTaskMenuExtension provides an extension that allows
            you to add custom menu entries to \QD's task menu.
     \endlist
@@ -173,7 +173,7 @@
 
     The \c initialize() function takes a QDesignerFormEditorInterface
     object as argument.  The QDesignerFormEditorInterface class
-    provides access to Qt Designer's components.
+    provides access to \QD's components.
 
     In \QD you can create two kinds of plugins: custom widget plugins
     and tool plugins. QDesignerFormEditorInterface provides access to
@@ -225,7 +225,7 @@
     We omit to reimplement the
     QDesignerCustomWidgetInterface::domXml() function (which include
     default settings for the widget in the standard XML format used by
-    Qt Designer), since no default values are necessary.
+    \QD), since no default values are necessary.
 
     \snippet taskmenuextension/tictactoeplugin.h 1
 
@@ -374,8 +374,8 @@
     QDesignerFormWindowInterface provides you with information about
     the associated form window as well as allowing you to alter its
     properties. The interface is not intended to be instantiated
-    directly, but to provide access to Qt Designer's current form
-    windows controlled by Qt Designer's form window manager.
+    directly, but to provide access to \QD's current form
+    windows controlled by \QD's form window manager.
 
     If you are looking for the form window containing a specific
     widget, you can use the static

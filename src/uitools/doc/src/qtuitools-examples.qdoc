@@ -10,7 +10,7 @@
     \image uitools-examples.png UiTools
 
     The \l{Qt UI Tools} module provides classes to handle UI forms created with
-    Qt Designer. The forms are processed at run-time to dynamically generate
+    \QD. The forms are processed at run-time to dynamically generate
     user interfaces.
 
     The following examples illustrate how to use Qt UI Tools to process UI

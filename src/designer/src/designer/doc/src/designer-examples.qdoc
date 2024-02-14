@@ -5,14 +5,14 @@
     \group examples-designer
     \ingroup all-examples
     \title Qt Designer Examples
-    \brief Using Qt Designer to build your UI.
+    \brief Using \QD to build your UI.
 
-    Qt Designer is a capable graphical user interface designer that lets you
+    \QD is a capable graphical user interface designer that lets you
     create and configure forms without writing code. GUIs created with
-    Qt Designer can be compiled into an application or created at run-time.
+    \QD can be compiled into an application or created at run-time.
 
-    The following examples illustrate how to create and use Qt Designer forms
-    and how to create Qt Designer custom widget plugins.
+    The following examples illustrate how to create and use \QD forms
+    and how to create \QD custom widget plugins.
 */
 
 /*

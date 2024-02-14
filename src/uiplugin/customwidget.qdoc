@@ -4,7 +4,7 @@
 /*!
     \class QDesignerCustomWidgetInterface
 
-    \brief The QDesignerCustomWidgetInterface class enables Qt Designer
+    \brief The QDesignerCustomWidgetInterface class enables \QD
     to access and construct custom widgets.
 
     \inmodule QtDesigner

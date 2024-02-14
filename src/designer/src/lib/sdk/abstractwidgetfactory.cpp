@@ -10,7 +10,7 @@ QT_BEGIN_NAMESPACE
 /*!
     \class QDesignerWidgetFactoryInterface
     \brief The QDesignerWidgetFactoryInterface class provides an interface that is used to control
-    the widget factory used by Qt Designer.
+    the widget factory used by \QD.
     \inmodule QtDesigner
     \internal
 */

@@ -9,7 +9,7 @@ QT_BEGIN_NAMESPACE
     \class QAbstractExtensionFactory
 
     \brief The QAbstractExtensionFactory class provides an interface
-    for extension factories in Qt Designer.
+    for extension factories in \QD.
 
     \inmodule QtDesigner
 
@@ -50,7 +50,7 @@ QAbstractExtensionFactory::~QAbstractExtensionFactory()
     \class QAbstractExtensionManager
 
     \brief The QAbstractExtensionManager class provides an interface
-    for extension managers in Qt Designer.
+    for extension managers in \QD.
 
     \inmodule QtDesigner
 

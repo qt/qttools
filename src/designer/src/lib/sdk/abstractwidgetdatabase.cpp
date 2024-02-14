@@ -12,7 +12,7 @@ enum { debugAbstractWidgetDataBase =  0 };
 /*!
     \class QDesignerWidgetDataBaseInterface
     \brief The QDesignerWidgetDataBaseInterface class provides an interface that is used to
-    access and modify Qt Designer's widget database.
+    access and modify \QD's widget database.
     \inmodule QtDesigner
     \internal
 */
@@ -136,7 +136,7 @@ bool QDesignerWidgetDataBaseInterface::isCustom(QObject *object, bool resolveNam
 /*!
     \class QDesignerWidgetDataBaseItemInterface
     \brief The QDesignerWidgetDataBaseItemInterface class provides an interface that is used to
-    access individual items in Qt Designer's widget database.
+    access individual items in \QD's widget database.
     \inmodule QtDesigner
     \internal
 

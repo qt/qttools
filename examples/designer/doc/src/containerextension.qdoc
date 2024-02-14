@@ -31,11 +31,11 @@
     \list
         \li QDesignerMemberSheetExtension  provides an extension that allows
            you to manipulate a widget's member functions which is displayed
-           when configuring connections using Qt Designer's mode for editing
+           when configuring connections using \QD's mode for editing
            signals and slots.
         \li QDesignerPropertySheetExtension provides an extension that
            allows you to manipulate a widget's properties which is displayed
-           in Qt Designer's property editor.
+           in \QD's property editor.
         \li QDesignerTaskMenuExtension provides an extension that allows
            you to add custom menu entries to \QD's task menu.
         \li QDesignerContainerExtension provides an extension that allows
@@ -216,7 +216,7 @@
     Once we have the widget we can update the property editor. \QD
     uses the QDesignerPropertySheetExtension class to feed its
     property editor, and whenever a widget is selected in its
-    workspace, Qt Designer will query for the widget's property sheet
+    workspace, \QD will query for the widget's property sheet
     extension and update the property editor.
 
     So what we want to achieve is to notify \QD that our widget's \e
@@ -224,7 +224,7 @@
     QDesignerFormWindowInterface::findFormWindow() function to
     retrieve the QDesignerFormWindowInterface object containing the
     widget. The QDesignerFormWindowInterface class allows you to query
-    and manipulate form windows appearing in Qt Designer's
+    and manipulate form windows appearing in \QD's
     workspace. Then, all we have to do is to emit its \l
     {QDesignerFormWindowInterface::emitSelectionChanged()}{emitSelectionChanged()}
     signal, forcing an update of the property editor.

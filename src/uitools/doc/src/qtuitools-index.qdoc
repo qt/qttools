@@ -5,9 +5,9 @@
     \page qtuitools-index.html
     \title Qt UI Tools
 
-    \brief Provides classes to handle forms created with Qt Designer.
+    \brief Provides classes to handle forms created with \QD.
 
-    Qt Designer forms are processed at run-time to produce dynamically generated
+    \QD forms are processed at run-time to produce dynamically generated
     user interfaces. In order to generate a form at run-time, a resource
     file containing a UI file is needed.
 
