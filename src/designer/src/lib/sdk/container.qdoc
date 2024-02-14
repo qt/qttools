@@ -4,7 +4,7 @@
 /*!
     \class QDesignerContainerExtension
     \brief The QDesignerContainerExtension class allows you to add pages to
-    a custom multi-page container in Qt Designer's workspace.
+    a custom multi-page container in \QD's workspace.
     \inmodule QtDesigner
 
     \image containerextension-example.webp

@@ -5,7 +5,7 @@
     \class QDesignerDynamicPropertySheetExtension
 
     \brief The QDesignerDynamicPropertySheetExtension class allows you to
-    manipulate a widget's dynamic properties in Qt Designer's property editor.
+    manipulate a widget's dynamic properties in \QD's property editor.
 
     \sa QDesignerPropertySheetExtension, {QObject#Dynamic Properties}{Dynamic Properties}
 

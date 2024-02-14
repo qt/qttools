@@ -6,7 +6,7 @@
 
     \brief The QDesignerMemberSheetExtension class allows you to
     manipulate a widget's member functions which is displayed when
-    configuring connections using Qt Designer's mode for editing
+    configuring connections using \QD's mode for editing
     signals and slots.
 
     \inmodule QtDesigner

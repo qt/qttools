@@ -9,7 +9,7 @@ QT_BEGIN_NAMESPACE
     \class QDesignerObjectInspectorInterface
 
     \brief The QDesignerObjectInspectorInterface class allows you to
-    change the focus of Qt Designer's object inspector.
+    change the focus of \QD's object inspector.
 
     \inmodule QtDesigner
 

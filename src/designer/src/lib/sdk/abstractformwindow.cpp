@@ -23,7 +23,7 @@ QT_BEGIN_NAMESPACE
     \class QDesignerFormWindowInterface
 
     \brief The QDesignerFormWindowInterface class allows you to query
-    and manipulate form windows appearing in Qt Designer's workspace.
+    and manipulate form windows appearing in \QD's workspace.
 
     \inmodule QtDesigner
 

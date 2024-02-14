@@ -63,7 +63,7 @@ QDesignerMetaDataBaseInterface::~QDesignerMetaDataBaseInterface() = default;
 /*!
     \class QDesignerMetaDataBaseItemInterface
     \brief The QDesignerMetaDataBaseItemInterface class provides an interface to individual
-    items in Qt Designer's meta database.
+    items in \QD's meta database.
     \inmodule QtDesigner
     \internal
 

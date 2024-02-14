@@ -9,7 +9,7 @@ QT_BEGIN_NAMESPACE
     \class QExtensionManager
 
     \brief The QExtensionManager class provides extension management
-    facilities for Qt Designer.
+    facilities for \QD.
 
     \inmodule QtDesigner
 

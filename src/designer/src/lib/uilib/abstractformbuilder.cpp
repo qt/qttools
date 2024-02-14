@@ -961,7 +961,7 @@ QActionGroup *QAbstractFormBuilder::createActionGroup(QObject *parent, const QSt
     Saves an XML representation of the given \a widget to the
     specified \a device in the standard UI file format.
 
-    \note Unlike when saving a form in Qt Designer, all property values are
+    \note Unlike when saving a form in \QD, all property values are
     written. This is because, the state of whether a property value was
     modified or not isn't stored in the Qt property system. The widget that
     is being saved, could have been created dynamically, not loaded via

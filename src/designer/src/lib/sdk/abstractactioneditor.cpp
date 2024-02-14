@@ -9,7 +9,7 @@ QT_BEGIN_NAMESPACE
     \class QDesignerActionEditorInterface
 
     \brief The QDesignerActionEditorInterface class allows you to
-    change the focus of Qt Designer's action editor.
+    change the focus of \QD's action editor.
 
     \inmodule QtDesigner
 

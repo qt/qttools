@@ -860,7 +860,7 @@
 
     For the basic classes in Qt, a class's module is determined by its
     location, namely its directory. However, for extensions like
-    ActiveQt and Qt Designer, a class must be related to a module
+    ActiveQt and \QD, a class must be related to a module
     explicitly.
 
     The command's argument is a module name, but note that the command
@@ -875,7 +875,7 @@
     \endcode
 
     This ensures that the QDesignerTaskMenuExtension class is included
-    in the Qt Designer module, which means, for example, that the
+    in the \QD module, which means, for example, that the
     class will appear on the list created by calling the \l
     {generatelist-command} {\\generatelist} command with the \c
     {{classesbymodule QtDesigner}} argument.

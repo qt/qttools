@@ -4,7 +4,7 @@
 /*!
     \class QDesignerTaskMenuExtension
     \brief The QDesignerTaskMenuExtension class allows you to add custom
-    menu entries to Qt Designer's task menu.
+    menu entries to \QD's task menu.
     \inmodule QtDesigner
 
     QDesignerTaskMenuExtension provides an interface for creating

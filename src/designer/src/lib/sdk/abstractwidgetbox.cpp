@@ -9,7 +9,7 @@ QT_BEGIN_NAMESPACE
     \class QDesignerWidgetBoxInterface
 
     \brief The QDesignerWidgetBoxInterface class allows you to control
-    the contents of Qt Designer's widget box.
+    the contents of \QD's widget box.
 
     \inmodule QtDesigner
 
@@ -182,7 +182,7 @@ int QDesignerWidgetBoxInterface::findOrInsertCategory(const QString &categoryNam
 
     \class QDesignerWidgetBoxInterface::Widget
 
-    \brief The Widget class specified a widget in Qt Designer's widget
+    \brief The Widget class specified a widget in \QD's widget
     box component.
 */
 
@@ -236,7 +236,7 @@ int QDesignerWidgetBoxInterface::findOrInsertCategory(const QString &categoryNam
 
 /*!
     \class QDesignerWidgetBoxInterface::Category
-    \brief The Category class specifies a category in Qt Designer's widget box component.
+    \brief The Category class specifies a category in \QD's widget box component.
     \internal
 */
 

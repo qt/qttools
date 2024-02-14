@@ -8,7 +8,7 @@
     \ingroup examples-designer
     \title Custom Widget Plugin
 
-    \brief Creating a custom widget plugin for Qt Designer.
+    \brief Creating a custom widget plugin for \QD.
 
     \image customwidgetplugin-example.webp
 

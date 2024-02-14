@@ -11,8 +11,8 @@ QT_BEGIN_NAMESPACE
     \class QDesignerFormWindowManagerInterface
 
     \brief The QDesignerFormWindowManagerInterface class allows you to
-    manipulate the collection of form windows in Qt Designer, and
-    control Qt Designer's form editing actions.
+    manipulate the collection of form windows in \QD, and
+    control \QD's form editing actions.
 
     \inmodule QtDesigner
 
@@ -30,7 +30,7 @@ QT_BEGIN_NAMESPACE
     example above) is provided by the
     QDesignerCustomWidgetInterface::initialize() function's parameter.
     You must subclass the QDesignerCustomWidgetInterface to expose
-    your plugin to Qt Designer.
+    your plugin to \QD.
 
     The form window manager interface provides the createFormWindow()
     function that enables you to create a new form window which you
