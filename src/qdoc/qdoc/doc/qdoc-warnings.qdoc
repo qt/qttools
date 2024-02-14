@@ -121,9 +121,16 @@
 
     \section1 Clang couldn't find function when parsing \\fn <signature>
 
-    When Clang parses a function statement after \l {fn-command}{\\fn}, it checks
-    this against the declaration in the header file.  If Clang
+    When Clang parses a function signature following an \lc fn command,
+    it checks this against the declaration in the header file.  If Clang
     discovers discrepancies, it issues this warning message.
+
+    Typical issues include missing or incorrect template arguments, return
+    type, and qualifiers such as \e const.
+
+    \note The \c{\\fn} signature for a \e {hidden friend} should be
+          fully qualified with the scope of the class that declares
+          the function.
 
     \section1 C++ class <ClassName> not found: \\instantiates <ClassName>
 
