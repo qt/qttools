@@ -104,6 +104,10 @@
     specified where the function or method is declared in a header file)
     appearing after a \l {a-command}{\\a} command.
 
+    This requirement is not imposed for function overload documentation,
+    provided that the overload is marked with the \lc overload command
+    and a fully-documented function with the same name exists.
+
     \section1 No such parameter
 
     QDoc issues this warning when the parameter name given after an
