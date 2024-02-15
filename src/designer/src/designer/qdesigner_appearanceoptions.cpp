@@ -29,7 +29,7 @@ void AppearanceOptions::fromSettings(const QDesignerSettings &settings)
 // ---------------- QDesignerAppearanceOptionsWidget
 QDesignerAppearanceOptionsWidget::QDesignerAppearanceOptionsWidget(QWidget *parent) :
     QWidget(parent),
-    m_ui(new Ui::AppearanceOptionsWidget)
+    m_ui(new QT_PREPEND_NAMESPACE(Ui)::AppearanceOptionsWidget)
 {
     m_ui->setupUi(this);
 
