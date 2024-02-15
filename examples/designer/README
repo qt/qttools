@@ -1,6 +1,6 @@
-Qt Designer is a capable graphical user interface designer that lets you
+Qt Widgets Designer is a capable graphical user interface designer that lets you
 create and configure forms without writing code. GUIs created with
-Qt Designer can be compiled into an application or created at run-time.
+Qt Widgets Designer can be compiled into an application or created at run-time.
 
 Some of the examples in this directory can only be used from within Qt
 Designer.

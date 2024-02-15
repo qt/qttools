@@ -81,7 +81,7 @@ qt_internal_add_resource(designer "qttoolbardialog"
 )
 
 set_target_properties(designer PROPERTIES
-    QT_TARGET_DESCRIPTION "Qt Designer"
+    QT_TARGET_DESCRIPTION "Qt Widgets Designer"
 )
 
 ## Scopes:

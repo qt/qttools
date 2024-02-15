@@ -412,7 +412,7 @@ void QDesignerFormWindowInterface::activateResourceFilePaths(const QStringList &
     displayed in the window.  The export macro is used when the form
     is compiled to create a widget plugin.
 
-    \sa {Creating Custom Widgets for Qt Designer}
+    \sa {Creating Custom Widgets for Qt Widgets Designer}
 */
 
 /*!
@@ -722,7 +722,7 @@ void QDesignerFormWindowInterface::activateResourceFilePaths(const QStringList &
 
     Switches the form window into editing mode.
 
-    \sa {Qt Designer's Form Editing Mode}
+    \sa {Qt Widgets Designer's Form Editing Mode}
 
     \internal
 */

@@ -430,7 +430,7 @@ QActionGroup *QDesignerActions::createHelpActions()
     QActionGroup *helpActions = createActionGroup(this);
 
 #ifndef QT_JAMBI_BUILD
-    QAction *mainHelpAction = new QAction(tr("Qt Designer &Help"), this);
+    QAction *mainHelpAction = new QAction(tr("Qt Widgets Designer &Help"), this);
     mainHelpAction->setObjectName(u"__qt_designer_help_action"_s);
     connect(mainHelpAction, &QAction::triggered, this, &QDesignerActions::showDesignerHelp);
     mainHelpAction->setShortcut(Qt::CTRL | Qt::Key_Question);
@@ -453,7 +453,7 @@ QActionGroup *QDesignerActions::createHelpActions()
             m_core->formWindowManager(), &QDesignerFormWindowManagerInterface::showPluginDialog);
     helpActions->addAction(aboutPluginsAction);
 
-    QAction *aboutDesignerAction = new QAction(tr("About Qt Designer"), this);
+    QAction *aboutDesignerAction = new QAction(tr("About Qt Widgets Designer"), this);
     aboutDesignerAction->setMenuRole(QAction::AboutRole);
     aboutDesignerAction->setObjectName(u"__qt_about_designer_action"_s);
     connect(aboutDesignerAction, &QAction::triggered, this, &QDesignerActions::aboutDesigner);
@@ -798,7 +798,7 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
     if (check) {
         const QStringList problems = fw->checkContents();
         if (!problems.isEmpty())
-            QMessageBox::information(fw->window(), tr("Qt Designer"), problems.join("<br>"_L1));
+            QMessageBox::information(fw->window(), tr("Qt Widgets Designer"), problems.join("<br>"_L1));
     }
 
     QString contents = fw->contents();
@@ -989,7 +989,7 @@ void QDesignerActions::showHelp(const QString &url)
 void QDesignerActions::aboutDesigner()
 {
     VersionDialog mb(core()->topLevel());
-    mb.setWindowTitle(tr("About Qt Designer"));
+    mb.setWindowTitle(tr("About Qt Widgets Designer"));
     if (mb.exec()) {
         QMessageBox messageBox(QMessageBox::Information, u"Easter Egg"_s,
                                u"Easter Egg"_s, QMessageBox::Ok, core()->topLevel());

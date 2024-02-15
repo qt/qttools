@@ -137,8 +137,8 @@ VersionDialog::VersionDialog(QWidget *parent)
     VersionLabel *label = new VersionLabel(this);
     QLabel *lbl = new QLabel(this);
     QString version = tr("<h3>%1</h3><br/><br/>Version %2");
-    version = version.arg(tr("Qt Designer")).arg(QLatin1StringView(QT_VERSION_STR));
-    version.append(tr("<br/>Qt Designer is a graphical user interface designer for Qt applications.<br/>"));
+    version = version.arg(tr("Qt Widgets Designer")).arg(QLatin1StringView(QT_VERSION_STR));
+    version.append(tr("<br/>Qt Widgets Designer is a graphical user interface designer for Qt applications.<br/>"));
 
     lbl->setText(tr("%1"
                     "<br/>Copyright (C) %2 The Qt Company Ltd."

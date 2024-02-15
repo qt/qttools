@@ -8,7 +8,7 @@ QT_BEGIN_NAMESPACE
 /*!
     \class QDesignerExtraInfoExtension
     \brief The QDesignerExtraInfoExtension class provides extra information about a widget in
-    Qt Designer.
+    Qt Widgets Designer.
     \inmodule QtDesigner
     \internal
 */

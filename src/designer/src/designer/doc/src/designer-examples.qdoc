@@ -4,7 +4,7 @@
 /*!
     \group examples-designer
     \ingroup all-examples
-    \title Qt Designer Examples
+    \title Qt Widgets Designer Examples
     \brief Using \QD to build your UI.
 
     \QD is a capable graphical user interface designer that lets you

@@ -119,10 +119,10 @@ void PluginDialog::populateTreeWidget()
     }
 
     if (ui.treeWidget->topLevelItemCount() == 0) {
-        ui.label->setText(tr("Qt Designer couldn't find any plugins"));
+        ui.label->setText(tr("Qt Widgets Designer couldn't find any plugins"));
         ui.treeWidget->hide();
     } else {
-        ui.label->setText(tr("Qt Designer found the following plugins"));
+        ui.label->setText(tr("Qt Widgets Designer found the following plugins"));
     }
 }
 

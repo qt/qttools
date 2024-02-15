@@ -3,7 +3,7 @@
 
 /*!
     \page qtdesigner-index.html
-    \title Qt Designer
+    \title Qt Widgets Designer
 
     \brief Provides classes to create your own custom widget plugins for
     \QD and classes to access \QD components.
@@ -37,9 +37,9 @@
     These articles contain information about \QD.
 
     \list
-    \li \l{Creating and Using Components for Qt Designer} - Creating and using
+    \li \l{Creating and Using Components for Qt Widgets Designer} - Creating and using
         custom widget plugins
-    \li \l{Qt Designer Manual} - Using Qt Designer
+    \li \l{Qt Widgets Designer Manual} - Using Qt Widgets Designer
     \endlist
 
     \section1 API Reference
@@ -47,7 +47,7 @@
     These are links to the API reference material.
 
     \list
-    \li \l{Qt Designer C++ Classes}{C++ Classes}
+    \li \l{Qt Widgets Designer C++ Classes}{C++ Classes}
     \endlist
 
 */

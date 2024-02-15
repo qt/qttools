@@ -35,7 +35,7 @@ QT_BEGIN_NAMESPACE
 using namespace Qt::StringLiterals;
 
 static constexpr auto designerApplicationName = "Designer"_L1;
-static constexpr auto designerDisplayName = "Qt Designer"_L1;
+static constexpr auto designerDisplayName = "Qt Widgets Designer"_L1;
 static constexpr auto designerWarningPrefix = "Designer: "_L1;
 static QtMessageHandler previousMessageHandler = nullptr;
 
@@ -146,7 +146,7 @@ static inline QDesigner::ParseArgumentsResult
     parseDesignerCommandLineArguments(QCommandLineParser &parser, Options *options,
                                       QString *errorMessage)
 {
-    parser.setApplicationDescription(u"Qt Designer " QT_VERSION_STR "\n\nUI designer for QWidget-based applications."_s);
+    parser.setApplicationDescription(u"Qt Widgets Designer " QT_VERSION_STR "\n\nUI designer for QWidget-based applications."_s);
     const QCommandLineOption helpOption = parser.addHelpOption();
     parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     const QCommandLineOption serverOption(u"server"_s,

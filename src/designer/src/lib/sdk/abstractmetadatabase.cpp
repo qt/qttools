@@ -8,7 +8,7 @@ QT_BEGIN_NAMESPACE
 
 /*!
     \class QDesignerMetaDataBaseInterface
-    \brief The QDesignerMetaDataBaseInterface class provides an interface to Qt Designer's
+    \brief The QDesignerMetaDataBaseInterface class provides an interface to Qt Widgets Designer's
     object meta database.
     \inmodule QtDesigner
     \internal

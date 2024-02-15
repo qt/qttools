@@ -45,7 +45,7 @@
 
     You can use all the extensions following the same pattern as in
     this example, only replacing the respective extension base
-    class. For more information, see \l{Qt Designer C++ Classes}.
+    class. For more information, see \l{Qt Widgets Designer C++ Classes}.
 
     The Container Extension example consists of four classes:
 

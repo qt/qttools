@@ -93,7 +93,7 @@ QDesignerFormEditorInterfacePrivate::~QDesignerFormEditorInterfacePrivate()
     \class QDesignerFormEditorInterface
 
     \brief The QDesignerFormEditorInterface class allows you to access
-    Qt Designer's various components.
+    Qt Widgets Designer's various components.
 
     \inmodule QtDesigner
 

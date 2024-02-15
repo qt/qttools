@@ -241,7 +241,7 @@ QWidget *QDesignerComponents::createSignalSlotEditor(QDesignerFormEditorInterfac
 }
 
 /*!
-    Returns the default plugin paths of Qt Designer's plugin manager.
+    Returns the default plugin paths of Qt Widgets Designer's plugin manager.
 
     \return Plugin paths
     \since 6.7

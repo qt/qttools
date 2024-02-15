@@ -3,7 +3,7 @@
 
 /*!
     \module QtDesigner
-    \title Qt Designer C++ Classes
+    \title Qt Widgets Designer C++ Classes
     \ingroup modules
     \qtcmakepackage Designer
     \qtvariable designer

@@ -3,7 +3,7 @@
 
 /*!
     \page qtdesigner-components.html
-    \title Creating and Using Components for Qt Designer
+    \title Creating and Using Components for Qt Widgets Designer
     \brief How to create and use custom widget plugins.
     \ingroup best-practices
 
@@ -103,5 +103,5 @@
     For a complete example using QUiLoader, see
     the \l {calculatorbuilder}{Calculator Builder example}.
 
-    \sa {Qt Designer Manual}, {Qt UI Tools}
+    \sa {Qt Widgets Designer Manual}, {Qt UI Tools}
 */

@@ -447,7 +447,7 @@ DomUI *QDesignerResource::readUi(QIODevice *dev)
 
 static inline QString messageBoxTitle()
 {
-    return QApplication::translate("Designer", "Qt Designer");
+    return QApplication::translate("Designer", "Qt Widgets Designer");
 }
 
 void QDesignerResource::save(QIODevice *dev, QWidget *widget)

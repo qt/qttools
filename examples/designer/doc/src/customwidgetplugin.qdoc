@@ -107,7 +107,7 @@
     \snippet customwidgetplugin/customwidgetplugin.h 0
 
     The functions provide information about the widget that \QD can use in
-    the \l{Getting to Know Qt Designer#WidgetBox}{widget box}.
+    the \l{Getting to Know Qt Widgets Designer#WidgetBox}{widget box}.
     The \c initialized private member variable is used to record whether
     the plugin has been initialized by \QD.
 

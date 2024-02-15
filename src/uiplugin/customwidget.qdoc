@@ -85,7 +85,7 @@
     Example}. The example shows how to create a custom widget plugin
     for \QD.
 
-    \sa QDesignerCustomWidgetCollectionInterface, {Creating Custom Widgets for Qt Designer}
+    \sa QDesignerCustomWidgetCollectionInterface, {Creating Custom Widgets for Qt Widgets Designer}
 */
 
 /*!
@@ -212,7 +212,7 @@
     \dots
     \snippet customwidgetplugin/analogclock.h 1
 
-    \sa {Creating Custom Widgets for Qt Designer}
+    \sa {Creating Custom Widgets for Qt Widgets Designer}
 */
 
 
@@ -253,7 +253,7 @@
     use them.
 
     \sa QDesignerCustomWidgetInterface, {Creating Custom Widgets for
-    Qt Designer}
+    Qt Widgets Designer}
 */
 
 /*!

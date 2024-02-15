@@ -1447,7 +1447,7 @@ bool QDesignerPropertySheet::isFakeLayoutProperty(int index) const
 }
 
 // Visible vs. Enabled: In Qt 5, it was possible to define a boolean function
-// for the DESIGNABLE attribute of Q_PROPERTY. Qt Designer would use that to
+// for the DESIGNABLE attribute of Q_PROPERTY. Qt Widgets Designer would use that to
 // determine isEnabled() for the property and return isVisible() = false
 // for properties that specified 'false' for DESIGNABLE.
 // This was used for example for the "checked" property of QAbstractButton,

@@ -28,7 +28,7 @@
     The resources required for the example are:
     \list
         \li \c{textfinder.ui} - the user interface file created in
-            \l{Qt Designer}
+            \l{Qt Widgets Designer}
         \li \c{input.txt} - a text file containing some text to be displayed in
             a QTextEdit
     \endlist
@@ -40,7 +40,7 @@
     that all the widgets have sensible \c{objectName}'s assigned. These are
     used in code to identify them.
 
-    The screenshot below shows the preview obtained in \l{Qt Designer}.
+    The screenshot below shows the preview obtained in \l{Qt Widgets Designer}.
 
     \image doc/images/textfinder-example-userinterface.webp
 
@@ -81,7 +81,7 @@
     \c{loadUiFile} and \c{loadTextFile}.
 
     The \c{loadUiFile} function loads the user interface file previously
-    created in \l{Qt Designer}. First, the content of the \c{textfinder.ui}
+    created in \l{Qt Widgets Designer}. First, the content of the \c{textfinder.ui}
     file is loaded from the resource system. Then a QUiLoader instance is
     created, and the QUiLoader::load() function is called, with the first
     argument being the open file, and the second argument being the pointer of

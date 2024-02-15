@@ -105,7 +105,7 @@ QList<QToolBar *> MainWindowBase::createToolBars(const QDesignerActions *actions
 
 QString MainWindowBase::mainWindowTitle()
 {
-    return tr("Qt Designer");
+    return tr("Qt Widgets Designer");
 }
 
 // Use the minor Qt version as settings versions to avoid conflicts
