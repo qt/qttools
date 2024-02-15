@@ -44,7 +44,7 @@ namespace qdesigner_internal {
 
 DeviceProfileDialog::DeviceProfileDialog(QDesignerDialogGuiInterface *dlgGui, QWidget *parent) :
     QDialog(parent),
-    m_ui(new Ui::DeviceProfileDialog),
+    m_ui(new QT_PREPEND_NAMESPACE(Ui)::DeviceProfileDialog),
     m_dlgGui(dlgGui)
 {
     setModal(true);

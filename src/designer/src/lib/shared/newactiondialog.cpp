@@ -44,7 +44,7 @@ unsigned ActionData::compare(const ActionData &rhs) const
 // -------------------- NewActionDialog
 NewActionDialog::NewActionDialog(ActionEditor *parent) :
     QDialog(parent, Qt::Sheet),
-    m_ui(new Ui::NewActionDialog),
+    m_ui(new QT_PREPEND_NAMESPACE(qdesigner_internal)::Ui::NewActionDialog),
     m_actionEditor(parent),
     m_autoUpdateObjectName(true)
 {

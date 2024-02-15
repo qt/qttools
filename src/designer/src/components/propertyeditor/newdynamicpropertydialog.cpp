@@ -18,7 +18,7 @@ NewDynamicPropertyDialog::NewDynamicPropertyDialog(QDesignerDialogGuiInterface *
                                                        QWidget *parent)   :
     QDialog(parent),
     m_dialogGui(dialogGui),
-    m_ui(new Ui::NewDynamicPropertyDialog)
+    m_ui(new QT_PREPEND_NAMESPACE(qdesigner_internal)::Ui::NewDynamicPropertyDialog)
 {
     m_ui->setupUi(this);
     connect(m_ui->m_lineEdit, &QLineEdit::textChanged, this, &NewDynamicPropertyDialog::nameChanged);

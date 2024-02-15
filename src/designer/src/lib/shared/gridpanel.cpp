@@ -12,7 +12,7 @@ namespace qdesigner_internal {
 GridPanel::GridPanel(QWidget *parentWidget) :
     QWidget(parentWidget)
 {
-    m_ui = new Ui::GridPanel;
+    m_ui = new QT_PREPEND_NAMESPACE(qdesigner_internal)::Ui::GridPanel;
     m_ui->setupUi(this);
 
     connect(m_ui->m_resetButton, &QAbstractButton::clicked, this, &GridPanel::reset);
