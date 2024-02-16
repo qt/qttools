@@ -21,6 +21,7 @@ QT_BEGIN_NAMESPACE
 using DesignerIntPair = std::pair<QString, uint>;
 using DesignerFlagList = QList<DesignerIntPair>;
 
+class QComboBox;
 class QDesignerFormEditorInterface;
 class QLineEdit;
 class QUrl;
@@ -183,6 +184,7 @@ private:
     QHash<const QtProperty *, std::pair<QIcon::Mode, QIcon::State>> m_iconSubPropertyToState;
     PropertyToPropertyMap m_iconSubPropertyToProperty;
     PropertyToPropertyMap m_propertyToTheme;
+    PropertyToPropertyMap m_propertyToThemeEnum;
 
     TranslatablePropertyManager<PropertySheetStringValue> m_stringManager;
     TranslatablePropertyManager<PropertySheetKeySequenceValue> m_keySequenceManager;
@@ -198,6 +200,7 @@ private:
     QHash<const QtProperty *, qdesigner_internal::PropertySheetPixmapValue> m_pixmapValues;
     QHash<const QtProperty *, qdesigner_internal::PropertySheetIconValue> m_iconValues;
 
+    QHash<const QtProperty *, int> m_intValues;
     QHash<const QtProperty *, uint> m_uintValues;
     QHash<const QtProperty *, qlonglong> m_longLongValues;
     QHash<const QtProperty *, qulonglong> m_uLongLongValues;
@@ -207,6 +210,7 @@ private:
     QHash<const QtProperty *, int> m_stringAttributes;
     QHash<const QtProperty *, QFont> m_stringFontAttributes;
     QHash<const QtProperty *, bool> m_stringThemeAttributes;
+    QHash<const QtProperty *, bool> m_intThemeEnumAttributes;
 
     BrushPropertyManager m_brushManager;
     FontPropertyManager m_fontManager;
@@ -251,6 +255,7 @@ private slots:
     void slotIconThemeChanged(const QString &value);
     void slotIconThemeEnumChanged(int value);
     void slotUintChanged(const QString &value);
+    void slotIntChanged(int);
     void slotLongLongChanged(const QString &value);
     void slotULongLongChanged(const QString &value);
     void slotUrlChanged(const QString &value);
@@ -276,6 +281,8 @@ private:
     QHash<PixmapEditor *, QtProperty *>                        m_editorToPixmapProperty;
     QHash<const QtProperty *, QList<PixmapEditor *>>           m_iconPropertyToEditors;
     QHash<PixmapEditor *, QtProperty *>                        m_editorToIconProperty;
+    QHash<const QtProperty *, QList<QComboBox *>>              m_intPropertyToComboEditors;
+    QHash<QComboBox *, QtProperty *>                           m_comboEditorToIntProperty;
     QHash<const QtProperty *, QList<QLineEdit *>>              m_uintPropertyToEditors;
     QHash<QLineEdit *, QtProperty *>                           m_editorToUintProperty;
     QHash<const QtProperty *, QList<QLineEdit *>>              m_longLongPropertyToEditors;
