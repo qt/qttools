@@ -25,6 +25,7 @@
 #include <abstractdialoggui_p.h>
 
 #include <QtWidgets/qapplication.h>
+#include <QtWidgets/qcombobox.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qtoolbutton.h>
 #include <QtWidgets/qboxlayout.h>
@@ -53,6 +54,7 @@ static constexpr auto superPaletteAttributeC = "superPalette"_L1;
 static constexpr auto defaultResourceAttributeC = "defaultResource"_L1;
 static constexpr auto fontAttributeC = "font"_L1;
 static constexpr auto themeAttributeC = "theme"_L1;
+static constexpr auto themeEnumAttributeC = "themeEnum"_L1;
 
 class DesignerFlagPropertyType
 {
@@ -774,6 +776,8 @@ void DesignerPropertyManager::slotValueChanged(QtProperty *property, const QVari
         if (itState != m_iconSubPropertyToState.constEnd()) {
             const auto pair = m_iconSubPropertyToState.value(property);
             icon.setPixmap(pair.first, pair.second, qvariant_cast<PropertySheetPixmapValue>(value));
+        } else if (attributeValue(property, themeEnumAttributeC).toBool()) {
+            icon.setThemeEnum(value.toInt());
         } else { // must be theme property
             icon.setTheme(value.toString());
         }
@@ -808,6 +812,8 @@ void DesignerPropertyManager::slotPropertyDestroyed(QtProperty *property)
     } else if (QtProperty *iconProperty = m_iconSubPropertyToProperty.value(property, 0)) {
         if (m_propertyToTheme.value(iconProperty) == property) {
             m_propertyToTheme.remove(iconProperty);
+        } else if (m_propertyToThemeEnum.value(iconProperty) == property) {
+            m_propertyToThemeEnum.remove(iconProperty);
         } else {
             const auto it = m_propertyToIconSubProperties.find(iconProperty);
             const auto state = m_iconSubPropertyToState.value(property);
@@ -841,6 +847,8 @@ QStringList DesignerPropertyManager::attributes(int propertyType) const
         list.append(themeAttributeC);
     } else if (propertyType == QMetaType::QPalette) {
         list.append(superPaletteAttributeC);
+    } else if (propertyType == QMetaType::Int) {
+        list.append(themeEnumAttributeC);
     }
     list.append(resettableAttributeC);
     return list;
@@ -904,6 +912,12 @@ QVariant DesignerPropertyManager::attributeValue(const QtProperty *property, con
     if (attribute == themeAttributeC) {
         const auto it = m_stringThemeAttributes.constFind(property);
         if (it !=  m_stringThemeAttributes.constEnd())
+            return it.value();
+    }
+
+    if (attribute == themeEnumAttributeC) {
+        const auto it = m_intThemeEnumAttributes.constFind(property);
+        if (it != m_intThemeEnumAttributes.constEnd())
             return it.value();
     }
 
@@ -1024,6 +1038,21 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
             return;
 
         const auto it = m_stringThemeAttributes.find(property);
+        const bool oldValue = it.value();
+
+        const bool newValue = value.toBool();
+
+        if (oldValue == newValue)
+            return;
+
+        it.value() = newValue;
+
+        emit attributeChanged(property, attribute, newValue);
+    } else if (attribute == themeEnumAttributeC && m_intThemeEnumAttributes.contains(property)) {
+        if (value.userType() != QMetaType::Bool)
+            return;
+
+        const auto it = m_intThemeEnumAttributes.find(property);
         const bool oldValue = it.value();
 
         const bool newValue = value.toBool();
@@ -1233,6 +1262,12 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
             return QString();
         return QFileInfo(path).fileName();
     }
+    if (m_intValues.contains(property)) {
+        const auto value = m_intValues.value(property);
+        if (m_intThemeEnumAttributes.value(property))
+            return IconThemeEnumEditor::iconName(value);
+        return QString::number(value);
+    }
     if (m_uintValues.contains(property))
         return QString::number(m_uintValues.value(property));
     if (m_longLongValues.contains(property))
@@ -1351,6 +1386,8 @@ QVariant DesignerPropertyManager::value(const QtProperty *property) const
         || m_stringListManager.value(property, &rc)
         || m_brushManager.value(property, &rc))
         return rc;
+    if (m_intValues.contains(property))
+        return m_intValues.value(property);
     if (m_uintValues.contains(property))
         return m_uintValues.value(property);
     if (m_longLongValues.contains(property))
@@ -1553,6 +1590,12 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
             themeSubProperty->setModified(!theme.isEmpty());
             themeSubProperty->setValue(theme);
         }
+        QtVariantProperty *themeEnumSubProperty = variantProperty(m_propertyToThemeEnum.value(property));
+        if (themeEnumSubProperty) {
+            const int themeEnum = icon.themeEnum();
+            themeEnumSubProperty->setModified(themeEnum != -1);
+            themeEnumSubProperty->setValue(QVariant(themeEnum));
+        }
 
         emit QtVariantPropertyManager::valueChanged(property, QVariant::fromValue(icon));
         emit propertyChanged(property);
@@ -1583,6 +1626,23 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
 
         // valueText() only show the file name; show full path as ToolTip.
         property->setToolTip(QDir::toNativeSeparators(pixmap.path()));
+
+        return;
+    }
+    if (m_intValues.contains(property)) {
+        if (value.metaType().id() != QMetaType::Int && !value.canConvert<int>())
+            return;
+
+        const int v = value.toInt(nullptr);
+
+        const int oldValue = m_intValues.value(property);
+        if (v == oldValue)
+            return;
+
+        m_intValues[property] = v;
+
+        emit QtVariantPropertyManager::valueChanged(property, v);
+        emit propertyChanged(property);
 
         return;
     }
@@ -1692,6 +1752,10 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
         m_stringFontAttributes[property] = QApplication::font();
         m_stringThemeAttributes[property] = false;
         break;
+    case QMetaType::Int:
+        m_intValues[property] = 0;
+        m_intThemeEnumAttributes[property] = false;
+        break;
     case QMetaType::UInt:
         m_uintValues[property] = 0;
         break;
@@ -1742,7 +1806,15 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
             m_iconValues[property] = PropertySheetIconValue();
             m_defaultIcons[property] = QIcon();
 
-            QtVariantProperty *themeProp = addProperty(QMetaType::QString, tr("Theme"));
+            QtVariantProperty *themeEnumProp = addProperty(QMetaType::Int, tr("Theme"));
+            m_intValues[themeEnumProp] = -1;
+            themeEnumProp->setAttribute(themeEnumAttributeC, true);
+            m_iconSubPropertyToProperty[themeEnumProp] = property;
+            m_propertyToThemeEnum[property] = themeEnumProp;
+            m_resetMap[themeEnumProp] = true;
+            property->addSubProperty(themeEnumProp);
+
+            QtVariantProperty *themeProp = addProperty(QMetaType::QString, tr("XDG Theme"));
             themeProp->setAttribute(themeAttributeC, true);
             m_iconSubPropertyToProperty[themeProp] = property;
             m_propertyToTheme[property] = themeProp;
@@ -1820,6 +1892,11 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
         m_iconSubPropertyToProperty.remove(iconTheme);
     }
 
+    if (QtProperty *iconThemeEnum = m_propertyToThemeEnum.value(property)) {
+        m_iconSubPropertyToProperty.remove(iconThemeEnum);
+        delete iconThemeEnum;
+    }
+
     m_propertyToAlignH.remove(property);
     m_propertyToAlignV.remove(property);
 
@@ -1845,6 +1922,7 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
     m_iconSubPropertyToState.remove(property);
     m_iconSubPropertyToProperty.remove(property);
 
+    m_intValues.remove(property);
     m_uintValues.remove(property);
     m_longLongValues.remove(property);
     m_uLongLongValues.remove(property);
@@ -1884,11 +1962,17 @@ bool DesignerPropertyManager::resetIconSubProperty(QtProperty *property)
         pixmapProperty->setValue(QVariant::fromValue(PropertySheetPixmapValue()));
         return true;
     }
-    if (m_propertyToTheme.contains(iconProperty)) {
+    if (attributeValue(property, themeAttributeC).toBool()) {
         QtVariantProperty *themeProperty = variantProperty(property);
         themeProperty->setValue(QString());
         return true;
     }
+    if (attributeValue(property, themeEnumAttributeC).toBool()) {
+        QtVariantProperty *themeEnumProperty = variantProperty(property);
+        themeEnumProperty->setValue(-1);
+        return true;
+    }
+
     return false;
 }
 
@@ -2021,6 +2105,9 @@ void DesignerEditorFactory::slotValueChanged(QtProperty *property, const QVarian
     case QMetaType::QPalette:
         applyToEditors(m_palettePropertyToEditors.value(property), &PaletteEditorButton::setPalette, qvariant_cast<QPalette>(value));
         break;
+    case QMetaType::Int:
+        applyToEditors(m_intPropertyToComboEditors.value(property), &QComboBox::setCurrentIndex, value.toInt());
+        break;
     case QMetaType::UInt:
         applyToEditors(m_uintPropertyToEditors.value(property), &QLineEdit::setText, QString::number(value.toUInt()));
         break;
@@ -2107,6 +2194,18 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
         editor = ed;
     }
         break;
+    case QMetaType::Int:
+        if (manager->attributeValue(property, themeEnumAttributeC).toBool()) {
+            auto *ed = IconThemeEnumEditor::createComboBox(parent);
+            ed->setCurrentIndex(manager->value(property).toInt());
+            connect(ed, &QComboBox::currentIndexChanged, this,
+                    &DesignerEditorFactory::slotIntChanged);
+            connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+            m_intPropertyToComboEditors[property].append(ed);
+            m_comboEditorToIntProperty.insert(ed, property);
+            editor = ed;
+        }
+    break;
     case QMetaType::UInt: {
         QLineEdit *ed = new QLineEdit(parent);
         ed->setValidator(new QULongLongValidator(0, UINT_MAX, ed));
@@ -2273,6 +2372,8 @@ void DesignerEditorFactory::slotEditorDestroyed(QObject *object)
         return;
     if (removeEditor(object, &m_longLongPropertyToEditors, &m_editorToLongLongProperty))
         return;
+    if (removeEditor(object, &m_intPropertyToComboEditors, &m_comboEditorToIntProperty))
+        return;
     if (removeEditor(object, &m_uLongLongPropertyToEditors, &m_editorToULongLongProperty))
         return;
     if (removeEditor(object, &m_urlPropertyToEditors, &m_editorToUrlProperty))
@@ -2310,6 +2411,12 @@ void DesignerEditorFactory::slotUintChanged(const QString &value)
 void DesignerEditorFactory::slotLongLongChanged(const QString &value)
 {
     updateManager(this, &m_changingPropertyValue, m_editorToLongLongProperty, qobject_cast<QWidget *>(sender()), value.toLongLong());
+}
+
+void DesignerEditorFactory::slotIntChanged(int v)
+{
+    updateManager(this, &m_changingPropertyValue, m_comboEditorToIntProperty,
+                  qobject_cast<QWidget *>(sender()), v);
 }
 
 void DesignerEditorFactory::slotULongLongChanged(const QString &value)
