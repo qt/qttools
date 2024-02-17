@@ -89,4 +89,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif  // QHELPSEARCHENGINE_H
+#endif // QHELPSEARCHENGINE_H

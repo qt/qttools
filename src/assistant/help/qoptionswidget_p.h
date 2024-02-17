@@ -58,4 +58,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif  // OPTIONSWIDGET_H
+#endif // QOPTIONSWIDGET_H

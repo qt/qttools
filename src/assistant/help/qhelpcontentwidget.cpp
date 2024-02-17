@@ -13,6 +13,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class QHelpContentModelPrivate
 {
 #if QT_CONFIG(future)
@@ -259,7 +261,7 @@ QHelpContentWidget::QHelpContentWidget()
 QModelIndex QHelpContentWidget::indexOf(const QUrl &link)
 {
     QHelpContentModel *contentModel = qobject_cast<QHelpContentModel*>(model());
-    if (!contentModel || link.scheme() != QLatin1String("qthelp"))
+    if (!contentModel || link.scheme() != "qthelp"_L1)
         return {};
 
     m_syncIndex = {};

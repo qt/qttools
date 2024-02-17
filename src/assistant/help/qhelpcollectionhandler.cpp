@@ -225,7 +225,7 @@ QString QHelpCollectionHandler::absoluteDocPath(const QString &fileName) const
     const QFileInfo fi(collectionFile());
     return QDir::isAbsolutePath(fileName)
             ? fileName
-            : QFileInfo(fi.absolutePath() + QLatin1Char('/') + fileName).absoluteFilePath();
+            : QFileInfo(fi.absolutePath() + u'/' + fileName).absoluteFilePath();
 }
 
 bool QHelpCollectionHandler::isTimeStampCorrect(const TimeStamp &timeStamp) const
@@ -336,7 +336,7 @@ bool QHelpCollectionHandler::copyCollectionFile(const QString &fileName)
         copyQuery.bindValue(0, m_query->value(0).toString());
         QString oldFilePath = m_query->value(1).toString();
         if (!QDir::isAbsolutePath(oldFilePath))
-            oldFilePath = oldBaseDir + QLatin1Char('/') + oldFilePath;
+            oldFilePath = oldBaseDir + u'/' + oldFilePath;
         copyQuery.bindValue(1, newColFi.absoluteDir().relativeFilePath(oldFilePath));
         copyQuery.exec();
     }
@@ -923,16 +923,16 @@ static QHelpCollectionHandler::FileInfo extractFileInfo(const QUrl &url)
 {
     QHelpCollectionHandler::FileInfo fileInfo;
 
-    if (!url.isValid() || url.toString().count(QLatin1Char('/')) < 4
+    if (!url.isValid() || url.toString().count(u'/') < 4
         || url.scheme() != "qthelp"_L1) {
         return fileInfo;
     }
 
     fileInfo.namespaceName = url.authority();
     fileInfo.fileName = url.path();
-    if (fileInfo.fileName.startsWith(QLatin1Char('/')))
+    if (fileInfo.fileName.startsWith(u'/'))
         fileInfo.fileName = fileInfo.fileName.mid(1);
-    fileInfo.folderName = fileInfo.fileName.mid(0, fileInfo.fileName.indexOf(QLatin1Char('/'), 1));
+    fileInfo.folderName = fileInfo.fileName.mid(0, fileInfo.fileName.indexOf(u'/', 1));
     fileInfo.fileName.remove(0, fileInfo.folderName.size() + 1);
 
     return fileInfo;
@@ -1232,11 +1232,8 @@ QStringList QHelpCollectionHandler::files(const QString &namespaceName,
         return {};
 
     QStringList fileNames;
-    while (m_query->next()) {
-        fileNames.append(m_query->value(0).toString()
-                         + QLatin1Char('/')
-                         + m_query->value(1).toString());
-    }
+    while (m_query->next())
+        fileNames.append(m_query->value(0).toString() + u'/' + m_query->value(1).toString());
     return fileNames;
 }
 
@@ -1278,11 +1275,8 @@ QStringList QHelpCollectionHandler::files(const QString &namespaceName,
         return{};
 
     QStringList fileNames;
-    while (m_query->next()) {
-        fileNames.append(m_query->value(0).toString()
-                         + QLatin1Char('/')
-                         + m_query->value(1).toString());
-    }
+    while (m_query->next())
+        fileNames.append(m_query->value(0).toString() + u'/' + m_query->value(1).toString());
     return fileNames;
 }
 
@@ -2218,7 +2212,7 @@ QUrl QHelpCollectionHandler::buildQUrl(const QString &ns, const QString &folder,
     QUrl url;
     url.setScheme("qthelp"_L1);
     url.setAuthority(ns);
-    url.setPath(QLatin1Char('/') + folder + QLatin1Char('/') + relFileName);
+    url.setPath(u'/' + folder + u'/' + relFileName);
     url.setFragment(anchor);
     return url;
 }

@@ -349,7 +349,7 @@ QString QHelpEngineCore::documentationFileName(const QString &namespaceName)
         return fileInfo.fileName;
 
     return QFileInfo(QFileInfo(d->collectionHandler->collectionFile()).absolutePath()
-                     + QLatin1Char('/') + fileInfo.fileName).absoluteFilePath();
+                     + u'/' + fileInfo.fileName).absoluteFilePath();
 }
 
 /*!
@@ -469,8 +469,8 @@ QString QHelpEngineCore::currentFilter() const
         return {};
 
     if (d->currentFilter.isEmpty()) {
-        const QString &filter = d->collectionHandler->customValue(
-                    QLatin1String("CurrentFilter"), QString()).toString();
+        const QString &filter =
+                d->collectionHandler->customValue("CurrentFilter"_L1, QString()).toString();
         if (!filter.isEmpty() && d->collectionHandler->customFilters().contains(filter))
             d->currentFilter = filter;
     }
@@ -483,7 +483,7 @@ void QHelpEngineCore::setCurrentFilter(const QString &filterName)
         return;
     d->currentFilter = filterName;
     if (d->autoSaveFilter)
-        d->collectionHandler->setCustomValue(QLatin1String("CurrentFilter"), d->currentFilter);
+        d->collectionHandler->setCustomValue("CurrentFilter"_L1, d->currentFilter);
     emit currentFilterChanged(d->currentFilter);
 }
 
@@ -521,13 +521,13 @@ QList<QUrl> QHelpEngineCore::files(const QString namespaceName,
         return res;
 
     QUrl url;
-    url.setScheme(QLatin1String("qthelp"));
+    url.setScheme("qthelp"_L1);
     url.setAuthority(namespaceName);
 
     const QStringList &files = d->collectionHandler->files(
                 namespaceName, filterAttributes, extensionFilter);
     for (const QString &file : files) {
-        url.setPath(QLatin1String("/") + file);
+        url.setPath("/"_L1 + file);
         res.append(url);
     }
     return res;
@@ -547,13 +547,13 @@ QList<QUrl> QHelpEngineCore::files(const QString namespaceName,
         return res;
 
     QUrl url;
-    url.setScheme(QLatin1String("qthelp"));
+    url.setScheme("qthelp"_L1);
     url.setAuthority(namespaceName);
 
     const QStringList &files = d->collectionHandler->files(
                 namespaceName, filterName, extensionFilter);
     for (const QString &file : files) {
-        url.setPath(QLatin1String("/") + file);
+        url.setPath("/"_L1 + file);
         res.append(url);
     }
     return res;
@@ -715,7 +715,7 @@ bool QHelpEngineCore::setCustomValue(const QString &key, const QVariant &value)
 QVariant QHelpEngineCore::metaData(const QString &documentationFileName,
                                    const QString &name)
 {
-    QHelpDBReader reader(documentationFileName, QLatin1String("GetMetaData"), nullptr);
+    QHelpDBReader reader(documentationFileName, "GetMetaData"_L1, nullptr);
 
     if (reader.init())
         return reader.metaData(name);
@@ -780,7 +780,7 @@ bool QHelpEngineCore::usesFilterEngine() const
 static QUrl constructUrl(const QString &namespaceName, const QString &folderName,
                          const QString &relativePath)
 {
-    const int idx = relativePath.indexOf(QLatin1Char('#'));
+    const int idx = relativePath.indexOf(u'#');
     const QString &rp = idx < 0 ? relativePath : relativePath.left(idx);
     const QString anchor = idx < 0 ? QString() : relativePath.mid(idx + 1);
     return QHelpCollectionHandler::buildQUrl(namespaceName, folderName, rp, anchor);

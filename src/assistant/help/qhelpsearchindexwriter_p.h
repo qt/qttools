@@ -51,8 +51,8 @@ private:
     QString m_indexFilesFolder;
 };
 
-}   // namespace fulltextsearch
+} // namespace fulltextsearch
 
 QT_END_NAMESPACE
 
-#endif  // QHELPSEARCHINDEXWRITER_H
+#endif // QHELPSEARCHINDEXWRITER_H

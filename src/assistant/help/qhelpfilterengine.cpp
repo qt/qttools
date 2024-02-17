@@ -44,7 +44,7 @@ bool QHelpFilterEnginePrivate::setup()
     }
 
     const QString filter = m_collectionHandler->customValue(
-                QLatin1String(ActiveFilter), QString()).toString();
+                QLatin1StringView(ActiveFilter), QString()).toString();
     if (!filter.isEmpty() && m_collectionHandler->filters().contains(filter))
         m_currentFilter = filter;
 
@@ -248,9 +248,7 @@ bool QHelpFilterEngine::setActiveFilter(const QString &filterName)
         return false;
 
     d->m_currentFilter = filterName;
-    d->m_collectionHandler->setCustomValue(QLatin1String(ActiveFilter),
-            d->m_currentFilter);
-
+    d->m_collectionHandler->setCustomValue(QLatin1StringView(ActiveFilter), d->m_currentFilter);
     emit filterActivated(d->m_currentFilter);
     return true;
 }

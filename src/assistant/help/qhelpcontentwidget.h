@@ -72,5 +72,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif
-
+#endif // QHELPCONTENTWIDGET_H

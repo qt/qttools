@@ -9,13 +9,15 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class ListWidgetDelegate : public QItemDelegate
 {
 public:
     ListWidgetDelegate(QWidget *w) : QItemDelegate(w), m_widget(w) {}
 
     static bool isSeparator(const QModelIndex &index) {
-        return index.data(Qt::AccessibleDescriptionRole).toString() == QLatin1String("separator");
+        return index.data(Qt::AccessibleDescriptionRole).toString() == "separator"_L1;
     }
     static void setSeparator(QListWidgetItem *item) {
         item->setData(Qt::AccessibleDescriptionRole, QString::fromLatin1("separator"));
@@ -139,9 +141,9 @@ QString QOptionsWidget::optionText(const QString &optionName, bool valid) const
 {
     QString text = optionName;
     if (optionName.isEmpty())
-        text = QLatin1Char('[') + m_noOptionText + QLatin1Char(']');
+        text = u'[' + m_noOptionText + u']';
     if (!valid)
-        text += QLatin1String("\t[") + m_invalidOptionText + QLatin1Char(']');
+        text += "\t["_L1 + m_invalidOptionText + u']';
     return text;
 }
 

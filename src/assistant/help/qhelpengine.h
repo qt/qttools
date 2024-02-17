@@ -39,4 +39,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif
+#endif // QHELPENGINE_H

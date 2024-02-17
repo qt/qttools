@@ -12,6 +12,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace fulltextsearch {
 
 class Reader
@@ -57,8 +59,8 @@ static QString namespacePlaceholders(const QMultiMap<QString, QStringList> &name
         if (firstNS)
             firstNS = false;
         else
-            placeholders += QLatin1String(" OR ");
-        placeholders += QLatin1String("(namespace = ?");
+            placeholders += " OR "_L1;
+        placeholders += "(namespace = ?"_L1;
 
         const QList<QStringList> &attributeSets = namespaces.values(ns);
         bool firstAS = true;
@@ -66,16 +68,16 @@ static QString namespacePlaceholders(const QMultiMap<QString, QStringList> &name
             if (!attributeSet.isEmpty()) {
                 if (firstAS) {
                     firstAS = false;
-                    placeholders += QLatin1String(" AND (");
+                    placeholders += " AND ("_L1;
                 } else {
-                    placeholders += QLatin1String(" OR ");
+                    placeholders += " OR "_L1;
                 }
-                placeholders += QLatin1String("attributes = ?");
+                placeholders += "attributes = ?"_L1;
             }
         }
         if (!firstAS)
-            placeholders += QLatin1Char(')'); // close "AND ("
-        placeholders += QLatin1Char(')');
+            placeholders += u')'; // close "AND ("
+        placeholders += u')';
     }
     return placeholders;
 }
@@ -90,7 +92,7 @@ static void bindNamespacesAndAttributes(QSqlQuery *query,
         const QList<QStringList> &attributeSets = namespaces.values(ns);
         for (const QStringList &attributeSet : attributeSets) {
             if (!attributeSet.isEmpty())
-                query->addBindValue(attributeSet.join(QLatin1Char('|')));
+                query->addBindValue(attributeSet.join(u'|'));
         }
     }
 }
@@ -103,8 +105,8 @@ static QString namespacePlaceholders(const QStringList &namespaceList)
         if (firstNS)
             firstNS = false;
         else
-            placeholders += QLatin1String(" OR ");
-        placeholders += QLatin1String("namespace = ?");
+            placeholders += " OR "_L1;
+        placeholders += "namespace = ?"_L1;
     }
     return placeholders;
 }
@@ -122,11 +124,11 @@ QList<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db, const QStrin
             ? namespacePlaceholders(m_filterEngineNamespaceList)
             : namespacePlaceholders(m_namespaceAttributes);
     QSqlQuery query(db);
-    query.prepare(QLatin1String("SELECT url, title, snippet(") + tableName +
-                  QLatin1String(", -1, '<b>', '</b>', '...', '10') FROM ") + tableName +
-                  QLatin1String(" WHERE (") + nsPlaceholders +
-                  QLatin1String(") AND ") + tableName +
-                  QLatin1String(" MATCH ? ORDER BY rank"));
+    query.prepare("SELECT url, title, snippet("_L1 + tableName +
+                  ", -1, '<b>', '</b>', '...', '10') FROM "_L1 + tableName +
+                  " WHERE ("_L1 + nsPlaceholders +
+                  ") AND "_L1 + tableName +
+                  " MATCH ? ORDER BY rank"_L1);
     m_useFilterEngine
             ? bindNamespacesAndAttributes(&query, m_filterEngineNamespaceList)
             : bindNamespacesAndAttributes(&query, m_namespaceAttributes);
@@ -136,8 +138,8 @@ QList<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db, const QStrin
     QList<QHelpSearchResult> results;
 
     while (query.next()) {
-        const QString &url = query.value(QLatin1String("url")).toString();
-        const QString &title = query.value(QLatin1String("title")).toString();
+        const QString &url = query.value("url"_L1).toString();
+        const QString &title = query.value("title"_L1).toString();
         const QString &snippet = query.value(2).toString();
         results.append(QHelpSearchResult(url, title, snippet));
     }
@@ -146,18 +148,16 @@ QList<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db, const QStrin
 
 void Reader::searchInDB(const QString &searchInput)
 {
-    const QString &uniqueId =
-            QHelpGlobal::uniquifyConnectionName(QLatin1String("QHelpReader"), this);
+    const QString &uniqueId = QHelpGlobal::uniquifyConnectionName("QHelpReader"_L1, this);
     {
-        QSqlDatabase db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), uniqueId);
-        db.setConnectOptions(QLatin1String("QSQLITE_OPEN_READONLY"));
-        db.setDatabaseName(m_indexPath + QLatin1String("/fts"));
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE"_L1, uniqueId);
+        db.setConnectOptions("QSQLITE_OPEN_READONLY"_L1);
+        db.setDatabaseName(m_indexPath + "/fts"_L1);
 
         if (db.open()) {
-            const QList<QHelpSearchResult> titleResults =
-                    queryTable(db, QLatin1String("titles"), searchInput);
+            const QList<QHelpSearchResult> titleResults = queryTable(db, "titles"_L1, searchInput);
             const QList<QHelpSearchResult> contentResults =
-                    queryTable(db, QLatin1String("contents"), searchInput);
+                    queryTable(db, "contents"_L1, searchInput);
 
             // merge results form title and contents searches
             m_searchResults.clear();
@@ -286,6 +286,6 @@ void QHelpSearchIndexReader::run()
     emit searchingFinished(m_searchResults.size());
 }
 
-}   // namespace fulltextsearch
+} // namespace fulltextsearch
 
 QT_END_NAMESPACE

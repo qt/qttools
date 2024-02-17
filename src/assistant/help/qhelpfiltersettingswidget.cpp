@@ -13,6 +13,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class QHelpFilterSettings final
 {
 public:
@@ -307,7 +309,7 @@ QString QHelpFilterSettingsWidgetPrivate::suggestedNewFilterName(const QString &
     QString newFilterName = initialFilterName;
     int counter = 1;
     while (m_filterToItem.contains(newFilterName))
-        newFilterName = initialFilterName + QLatin1Char(' ') + QString::number(++counter);
+        newFilterName = initialFilterName + u' ' + QString::number(++counter);
     return newFilterName;
 }
 
@@ -343,14 +345,14 @@ QHelpFilterSettingsWidget::QHelpFilterSettingsWidget(QWidget *parent)
     d->m_ui.setupUi(this);
 
     // TODO: make resources configurable
-    QString resourcePath = QLatin1String(":/qt-project.org/assistant/images/");
+    QString resourcePath = ":/qt-project.org/assistant/images/"_L1;
 #ifdef Q_OS_MACOS
-    resourcePath.append(QLatin1String("mac"));
+    resourcePath.append("mac"_L1);
 #else
-    resourcePath.append(QLatin1String("win"));
+    resourcePath.append("win"_L1);
 #endif
-    d->m_ui.addButton->setIcon(QIcon(resourcePath + QLatin1String("/plus.png")));
-    d->m_ui.removeButton->setIcon(QIcon(resourcePath + QLatin1String("/minus.png")));
+    d->m_ui.addButton->setIcon(QIcon(resourcePath + "/plus.png"_L1));
+    d->m_ui.removeButton->setIcon(QIcon(resourcePath + "/minus.png"_L1));
 
     connect(d->m_ui.componentWidget, &QOptionsWidget::optionSelectionChanged,
             this, [this](const QStringList &options) {

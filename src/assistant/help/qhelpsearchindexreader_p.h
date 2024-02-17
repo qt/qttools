@@ -55,8 +55,8 @@ private:
     bool m_usesFilterEngine = false;
 };
 
-}   // namespace fulltextsearch
+} // namespace fulltextsearch
 
 QT_END_NAMESPACE
 
-#endif  // QHELPSEARCHINDEXREADER_H
+#endif // QHELPSEARCHINDEXREADER_H

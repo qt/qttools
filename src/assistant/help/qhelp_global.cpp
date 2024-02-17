@@ -8,6 +8,10 @@
 #include <QtCore/qmutex.h>
 #include <QtGui/qtextdocument.h>
 
+QT_BEGIN_NAMESPACE
+
+using namespace Qt::StringLiterals;
+
 QString QHelpGlobal::uniquifyConnectionName(const QString &name, void *pointer)
 {
     static QMutex mutex;
@@ -20,11 +24,11 @@ QString QHelpGlobal::documentTitle(const QString &content)
 {
     QString title = QCoreApplication::translate("QHelp", "Untitled");
     if (!content.isEmpty()) {
-        const int start = content.indexOf(QLatin1String("<title>"), 0, Qt::CaseInsensitive) + 7;
-        const int end = content.indexOf(QLatin1String("</title>"), 0, Qt::CaseInsensitive);
+        const int start = content.indexOf("<title>"_L1, 0, Qt::CaseInsensitive) + 7;
+        const int end = content.indexOf("</title>"_L1, 0, Qt::CaseInsensitive);
         if ((end - start) > 0) {
             title = content.mid(start, end - start);
-            if (Qt::mightBeRichText(title) || title.contains(QLatin1Char('&'))) {
+            if (Qt::mightBeRichText(title) || title.contains(u'&')) {
                 QTextDocument doc;
                 doc.setHtml(title);
                 title = doc.toPlainText();
@@ -33,3 +37,5 @@ QString QHelpGlobal::documentTitle(const QString &content)
     }
     return title;
 }
+
+QT_END_NAMESPACE

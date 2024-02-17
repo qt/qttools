@@ -16,17 +16,18 @@
 QT_BEGIN_NAMESPACE
 
 using namespace fulltextsearch;
+using namespace Qt::StringLiterals;
 
 class QHelpSearchEngineCorePrivate
 {
 public:
     QString indexFilesFolder() const
     {
-        QString indexFilesFolder = QLatin1String(".fulltextsearch");
+        QString indexFilesFolder = ".fulltextsearch"_L1;
         if (m_helpEngine && !m_helpEngine->collectionFile().isEmpty()) {
             const QFileInfo fi(m_helpEngine->collectionFile());
-            indexFilesFolder = fi.absolutePath() + QDir::separator() + QLatin1Char('.')
-                    + fi.fileName().left(fi.fileName().lastIndexOf(QLatin1String(".qhc")));
+            indexFilesFolder = fi.absolutePath() + QDir::separator() + u'.'
+                    + fi.fileName().left(fi.fileName().lastIndexOf(".qhc"_L1));
         }
         return indexFilesFolder;
     }
