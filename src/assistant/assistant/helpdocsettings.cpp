@@ -176,20 +176,17 @@ bool HelpDocSettings::applySettings(QHelpEngineCore *helpEngine,
                 settings.namespaceToFileName(),
                 oldSettings.namespaceToFileName());
 
-    bool changed = false;
-    for (const QString &namespaceName : docsToRemove.keys()) {
-        if (!helpEngine->unregisterDocumentation(namespaceName))
-            qWarning() << "Cannot unregister documentation:" << namespaceName;
-        changed = true;
+    for (auto it = docsToRemove.cbegin(); it != docsToRemove.cend(); ++it) {
+        if (!helpEngine->unregisterDocumentation(it.key()))
+            qWarning() << "Cannot unregister documentation:" << it.key();
     }
 
-    for (const QString &fileName : docsToAdd.values()) {
+    for (const QString &fileName : docsToAdd) {
         if (!helpEngine->registerDocumentation(fileName))
             qWarning() << "Cannot register documentation file:" << fileName;
-        changed = true;
     }
 
-    return changed;
+    return !docsToRemove.isEmpty() || !docsToAdd.isEmpty();
 }
 
 QT_END_NAMESPACE
