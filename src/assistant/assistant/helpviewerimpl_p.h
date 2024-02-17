@@ -18,6 +18,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class HelpViewerImpl::HelpViewerImplPrivate : public QObject
 {
     Q_OBJECT
@@ -49,9 +51,9 @@ public:
             return false;
 
         lastAnchor = browser->source().resolved(lastAnchor).toString();
-        if (lastAnchor.at(0) == QLatin1Char('#')) {
+        if (lastAnchor.at(0) == u'#') {
             QString src = browser->source().toString();
-            int hsh = src.indexOf(QLatin1Char('#'));
+            int hsh = src.indexOf(u'#');
             lastAnchor = (hsh >= 0 ? src.left(hsh) : src) + lastAnchor;
         }
         return true;

@@ -14,6 +14,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 FindWidget::FindWidget(QWidget *parent)
     : QWidget(parent)
     , appPalette(qApp->palette())
@@ -21,18 +23,17 @@ FindWidget::FindWidget(QWidget *parent)
     TRACE_OBJ
     installEventFilter(this);
     QHBoxLayout *hboxLayout = new QHBoxLayout(this);
-    QString resourcePath = QLatin1String(":/qt-project.org/assistant/images/");
+    QString resourcePath = ":/qt-project.org/assistant/images/"_L1;
 
 #ifndef Q_OS_MAC
-    hboxLayout->setContentsMargins(QMargins());
+    hboxLayout->setContentsMargins({});
     hboxLayout->setSpacing(6);
-    resourcePath.append(QLatin1String("win"));
+    resourcePath.append("win"_L1);
 #else
-    resourcePath.append(QLatin1String("mac"));
+    resourcePath.append("mac"_L1);
 #endif
 
-    toolClose = setupToolButton(QString(),
-        resourcePath + QLatin1String("/closetab.png"));
+    toolClose = setupToolButton({}, resourcePath + "/closetab.png"_L1);
     hboxLayout->addWidget(toolClose);
     connect(toolClose, &QAbstractButton::clicked, this, &QWidget::hide);
 
@@ -43,14 +44,12 @@ FindWidget::FindWidget(QWidget *parent)
     connect(editFind, &QLineEdit::returnPressed, this, &FindWidget::findNext);
     connect(editFind, &QLineEdit::textChanged, this, &FindWidget::updateButtons);
 
-    toolPrevious = setupToolButton(tr("Previous"),
-        resourcePath + QLatin1String("/previous.png"));
+    toolPrevious = setupToolButton(tr("Previous"), resourcePath + "/previous.png"_L1);
     connect(toolPrevious, &QAbstractButton::clicked, this, &FindWidget::findPrevious);
 
     hboxLayout->addWidget(toolPrevious);
 
-    toolNext = setupToolButton(tr("Next"),
-        resourcePath + QLatin1String("/next.png"));
+    toolNext = setupToolButton(tr("Next"), resourcePath + "/next.png"_L1);
     hboxLayout->addWidget(toolNext);
     connect(toolNext, &QAbstractButton::clicked, this, &FindWidget::findNext);
 

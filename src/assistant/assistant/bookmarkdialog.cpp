@@ -12,6 +12,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 BookmarkDialog::BookmarkDialog(BookmarkModel *sourceModel, const QString &title,
         const QString &url, QWidget *parent)
     : QDialog(parent)
@@ -164,10 +166,10 @@ void BookmarkDialog::toolButtonClicked()
 
     if (visible) {
         resize(QSize(width(), 400));
-        ui.toolButton->setText(QLatin1String("-"));
+        ui.toolButton->setText("-"_L1);
     } else {
         resize(width(), minimumHeight());
-        ui.toolButton->setText(QLatin1String("+"));
+        ui.toolButton->setText("+"_L1);
     }
 }
 

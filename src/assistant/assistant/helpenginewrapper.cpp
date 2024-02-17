@@ -21,23 +21,24 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace {
-    const QString AppFontKey(QLatin1String("appFont"));
-    const QString AppWritingSystemKey(QLatin1String("appWritingSystem"));
-    const QString BookmarksKey(QLatin1String("Bookmarks"));
-    const QString BrowserFontKey(QLatin1String("browserFont"));
-    const QString BrowserWritingSystemKey(QLatin1String("browserWritingSystem"));
-    const QString HomePageKey(QLatin1String("homepage"));
-    const QString MainWindowKey(QLatin1String("MainWindow"));
-    const QString MainWindowGeometryKey(QLatin1String("MainWindowGeometry"));
-    const QString SearchWasAttachedKey(QLatin1String("SearchWasAttached"));
-    const QString StartOptionKey(QLatin1String("StartOption"));
-    const QString UseAppFontKey(QLatin1String("useAppFont"));
-    const QString UseBrowserFontKey(QLatin1String("useBrowserFont"));
-    const QString VersionKey(QString(QLatin1String("qtVersion%1$$$%2")).
-                             arg(QLatin1String(QT_VERSION_STR)));
-    const QString ShowTabsKey(QLatin1String("showTabs"));
-    const QString TopicChooserGeometryKey(QLatin1String("TopicChooserGeometry"));
+    const QString AppFontKey("appFont"_L1);
+    const QString AppWritingSystemKey("appWritingSystem"_L1);
+    const QString BookmarksKey("Bookmarks"_L1);
+    const QString BrowserFontKey("browserFont"_L1);
+    const QString BrowserWritingSystemKey("browserWritingSystem"_L1);
+    const QString HomePageKey("homepage"_L1);
+    const QString MainWindowKey("MainWindow"_L1);
+    const QString MainWindowGeometryKey("MainWindowGeometry"_L1);
+    const QString SearchWasAttachedKey("SearchWasAttached"_L1);
+    const QString StartOptionKey("StartOption"_L1);
+    const QString UseAppFontKey("useAppFont"_L1);
+    const QString UseBrowserFontKey("useBrowserFont"_L1);
+    const QString VersionKey("qtVersion%1$$$%2"_L1.arg(QLatin1StringView(QT_VERSION_STR)));
+    const QString ShowTabsKey("showTabs"_L1);
+    const QString TopicChooserGeometryKey("TopicChooserGeometry"_L1);
 } // anonymous namespace
 
 class TimeoutForwarder : public QObject

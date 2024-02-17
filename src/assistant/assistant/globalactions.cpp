@@ -15,6 +15,8 @@
 #  include <QWebHistory>
 #endif
 
+using namespace Qt::StringLiterals;
+
 GlobalActions *GlobalActions::instance(QObject *parent)
 {
     Q_ASSERT(!m_instance != !parent);
@@ -28,18 +30,18 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     TRACE_OBJ
 
     // TODO: Put resource path in misc class
-    QString resourcePath = QLatin1String(":/qt-project.org/assistant/images/");
+    QString resourcePath = ":/qt-project.org/assistant/images/"_L1;
 #ifdef Q_OS_MAC
-    resourcePath.append(QLatin1String("mac"));
+    resourcePath.append("mac"_L1);
 #else
-    resourcePath.append(QLatin1String("win"));
+    resourcePath.append("win"_L1);
 #endif
     CentralWidget *centralWidget = CentralWidget::instance();
 
     m_backAction = new QAction(tr("&Back"), parent);
     m_backAction->setEnabled(false);
     m_backAction->setShortcuts(QKeySequence::Back);
-    m_backAction->setIcon(QIcon(resourcePath + QLatin1String("/previous.png")));
+    m_backAction->setIcon(QIcon(resourcePath + "/previous.png"_L1));
     connect(m_backAction, &QAction::triggered, centralWidget, &CentralWidget::backward);
     m_actionList << m_backAction;
 
@@ -47,7 +49,7 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     m_nextAction->setPriority(QAction::LowPriority);
     m_nextAction->setEnabled(false);
     m_nextAction->setShortcuts(QKeySequence::Forward);
-    m_nextAction->setIcon(QIcon(resourcePath + QLatin1String("/next.png")));
+    m_nextAction->setIcon(QIcon(resourcePath + "/next.png"_L1));
     connect(m_nextAction, &QAction::triggered, centralWidget, &CentralWidget::forward);
     m_actionList << m_nextAction;
 
@@ -55,7 +57,7 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
 
     m_homeAction = new QAction(tr("&Home"), parent);
     m_homeAction->setShortcut(tr("ALT+Home"));
-    m_homeAction->setIcon(QIcon(resourcePath + QLatin1String("/home.png")));
+    m_homeAction->setIcon(QIcon(resourcePath + "/home.png"_L1));
     connect(m_homeAction, &QAction::triggered, centralWidget, &CentralWidget::home);
     m_actionList << m_homeAction;
 
@@ -65,14 +67,14 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
 
     m_zoomInAction = new QAction(tr("Zoom &in"), parent);
     m_zoomInAction->setPriority(QAction::LowPriority);
-    m_zoomInAction->setIcon(QIcon(resourcePath + QLatin1String("/zoomin.png")));
+    m_zoomInAction->setIcon(QIcon(resourcePath + "/zoomin.png"_L1));
     m_zoomInAction->setShortcut(QKeySequence::ZoomIn);
     connect(m_zoomInAction, &QAction::triggered, centralWidget, &CentralWidget::zoomIn);
     m_actionList << m_zoomInAction;
 
     m_zoomOutAction = new QAction(tr("Zoom &out"), parent);
     m_zoomOutAction->setPriority(QAction::LowPriority);
-    m_zoomOutAction->setIcon(QIcon(resourcePath + QLatin1String("/zoomout.png")));
+    m_zoomOutAction->setIcon(QIcon(resourcePath + "/zoomout.png"_L1));
     m_zoomOutAction->setShortcut(QKeySequence::ZoomOut);
     connect(m_zoomOutAction, &QAction::triggered, centralWidget, &CentralWidget::zoomOut);
     m_actionList << m_zoomOutAction;
@@ -85,7 +87,7 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     m_copyAction = new QAction(tr("&Copy selected Text"), parent);
     m_copyAction->setPriority(QAction::LowPriority);
     m_copyAction->setIconText("&Copy");
-    m_copyAction->setIcon(QIcon(resourcePath + QLatin1String("/editcopy.png")));
+    m_copyAction->setIcon(QIcon(resourcePath + "/editcopy.png"_L1));
     m_copyAction->setShortcuts(QKeySequence::Copy);
     m_copyAction->setEnabled(false);
     connect(m_copyAction, &QAction::triggered, centralWidget, &CentralWidget::copy);
@@ -94,14 +96,14 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
 
     m_printAction = new QAction(tr("&Print..."), parent);
     m_printAction->setPriority(QAction::LowPriority);
-    m_printAction->setIcon(QIcon(resourcePath + QLatin1String("/print.png")));
+    m_printAction->setIcon(QIcon(resourcePath + "/print.png"_L1));
     m_printAction->setShortcut(QKeySequence::Print);
     connect(m_printAction, &QAction::triggered, centralWidget, &CentralWidget::print);
     m_actionList << m_printAction;
 
     m_findAction = new QAction(tr("&Find in Text..."), parent);
     m_findAction->setIconText(tr("&Find"));
-    m_findAction->setIcon(QIcon(resourcePath + QLatin1String("/find.png")));
+    m_findAction->setIcon(QIcon(resourcePath + "/find.png"_L1));
     m_findAction->setShortcuts(QKeySequence::Find);
     connect(m_findAction, &QAction::triggered, centralWidget, &CentralWidget::showTextSearch);
     m_actionList << m_findAction;

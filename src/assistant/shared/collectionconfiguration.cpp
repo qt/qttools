@@ -7,37 +7,39 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace {
-    const QString AboutIconKey(QLatin1String("AboutIcon"));
-    const QString AboutImagesKey(QLatin1String("AboutImages"));
-    const QString AboutMenuTextsKey(QLatin1String("AboutMenuTexts"));
-    const QString AboutTextsKey(QLatin1String("AboutTexts"));
-    const QString ApplicationIconKey(QLatin1String("ApplicationIcon"));
-    const QString CacheDirKey(QLatin1String("CacheDirectory"));
-    const QString CacheDirRelativeToCollectionKey(QLatin1String("CacheDirRelativeToCollection"));
-    const QString CreationTimeKey(QLatin1String("CreationTime"));
-    const QString DefaultHomePageKey(QLatin1String("defaultHomepage"));
-    const QString EnableAddressBarKey(QLatin1String("EnableAddressBar"));
-    const QString EnableDocManagerKey(QLatin1String("EnableDocumentationManager"));
-    const QString EnableFilterKey(QLatin1String("EnableFilterFunctionality"));
-    const QString HideAddressBarKey(QLatin1String("HideAddressBar"));
-    const QString FilterToolbarHiddenKey(QLatin1String("HideFilterFunctionality"));
-    const QString LastPageKey(QLatin1String("LastTabPage"));
-    const QString LastRegisterTime(QLatin1String("LastRegisterTime"));
-    const QString LastShownPagesKey(QLatin1String("LastShownPages"));
-    const QString LastZoomFactorsKey(QLatin1String(
+    const QString AboutIconKey("AboutIcon"_L1);
+    const QString AboutImagesKey("AboutImages"_L1);
+    const QString AboutMenuTextsKey("AboutMenuTexts"_L1);
+    const QString AboutTextsKey("AboutTexts"_L1);
+    const QString ApplicationIconKey("ApplicationIcon"_L1);
+    const QString CacheDirKey("CacheDirectory"_L1);
+    const QString CacheDirRelativeToCollectionKey("CacheDirRelativeToCollection"_L1);
+    const QString CreationTimeKey("CreationTime"_L1);
+    const QString DefaultHomePageKey("defaultHomepage"_L1);
+    const QString EnableAddressBarKey("EnableAddressBar"_L1);
+    const QString EnableDocManagerKey("EnableDocumentationManager"_L1);
+    const QString EnableFilterKey("EnableFilterFunctionality"_L1);
+    const QString HideAddressBarKey("HideAddressBar"_L1);
+    const QString FilterToolbarHiddenKey("HideFilterFunctionality"_L1);
+    const QString LastPageKey("LastTabPage"_L1);
+    const QString LastRegisterTime("LastRegisterTime"_L1);
+    const QString LastShownPagesKey("LastShownPages"_L1);
+    const QString LastZoomFactorsKey(
 #if defined(BROWSER_QTWEBKIT)
-            "LastPagesZoomWebView"
+            "LastPagesZoomWebView"_L1
 #else
-            "LastPagesZoomTextBrowser"
+            "LastPagesZoomTextBrowser"_L1
 #endif
-            ));
-    const QString WindowTitleKey(QLatin1String("WindowTitle"));
-    const QString FullTextSearchFallbackKey(QLatin1String("FullTextSearchFallback"));
+            );
+    const QString WindowTitleKey("WindowTitle"_L1);
+    const QString FullTextSearchFallbackKey("FullTextSearchFallback"_L1);
 } // anonymous namespace
 
-const QString CollectionConfiguration::DefaultZoomFactor(QLatin1String("0.0"));
-const QString CollectionConfiguration::ListSeparator(QLatin1String("|"));
+const QString CollectionConfiguration::DefaultZoomFactor("0.0"_L1);
+const QString CollectionConfiguration::ListSeparator("|"_L1);
 
 uint CollectionConfiguration::creationTime(const QHelpEngineCore &helpEngine)
 {
@@ -190,8 +192,7 @@ void CollectionConfiguration::setAboutImages(QHelpEngineCore &helpEngine,
 
 const QString CollectionConfiguration::defaultHomePage(const QHelpEngineCore &helpEngine)
 {
-    return helpEngine.customValue(DefaultHomePageKey, QLatin1String("help")).
-        toString();
+    return helpEngine.customValue(DefaultHomePageKey, "help"_L1).toString();
 }
 
 void CollectionConfiguration::setDefaultHomePage(QHelpEngineCore &helpEngine,

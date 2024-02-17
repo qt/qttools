@@ -8,6 +8,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 BookmarkItem::BookmarkItem(const DataVector &data, BookmarkItem *parent)
     : m_data(data)
     , m_parent(parent)
@@ -68,7 +70,7 @@ BookmarkItem::data(int column) const
         return m_data[1];
 
     if (column == UserRoleFolder)
-        return m_data[1].toString() == QLatin1String("Folder");
+        return m_data[1].toString() == "Folder"_L1;
 
     if (column == UserRoleExpanded)
         return m_data[2];

@@ -120,13 +120,13 @@ void HelpViewerImpl::doSetSource(const QUrl &url, QTextDocument::ResourceType ty
     if (HelpViewer::launchWithExternalApp(url))
         return;
 
-    bool helpOrAbout = (url.toString() == QLatin1String("help"));
+    bool helpOrAbout = (url.toString() == "help"_L1);
     const QUrl resolvedUrl = (helpOrAbout ? LocalHelpFile : HelpEngineWrapper::instance().findFile(url));
 
     QTextBrowser::doSetSource(resolvedUrl, type);
 
     if (!resolvedUrl.isValid()) {
-        helpOrAbout = (url.toString() == QLatin1String("about:blank"));
+        helpOrAbout = (url.toString() == "about:blank"_L1);
         setHtml(helpOrAbout ? AboutBlank : PageNotFoundMessage.arg(url.toString()));
     }
     emit loadFinished(true);
@@ -348,7 +348,7 @@ QVariant HelpViewerImpl::loadResource(int type, const QUrl &name)
     if (type < 4) {
         const QUrl url = HelpEngineWrapper::instance().findFile(name);
         ba = HelpEngineWrapper::instance().fileData(url);
-        if (url.toString().endsWith(QLatin1String(".svg"), Qt::CaseInsensitive)) {
+        if (url.toString().endsWith(".svg"_L1, Qt::CaseInsensitive)) {
             QImage image;
             image.loadFromData(ba, "svg");
             if (!image.isNull())

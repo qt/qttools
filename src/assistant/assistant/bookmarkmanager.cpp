@@ -19,6 +19,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 // -- BookmarkManager::BookmarkWidget
 
 void BookmarkManager::BookmarkWidget::focusInEvent(QFocusEvent *event)
@@ -122,7 +124,7 @@ void BookmarkManager::addBookmark(const QString &title, const QString &url)
 {
     TRACE_OBJ
     showBookmarkDialog(title.isEmpty() ? tr("Untitled") : title,
-        url.isEmpty() ? QLatin1String("about:blank") : url);
+                       url.isEmpty() ? "about:blank"_L1 : url);
 
     storeBookmarks();
 }

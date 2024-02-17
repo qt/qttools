@@ -30,6 +30,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 RemoteControl::RemoteControl(MainWindow *mainWindow)
     : QObject(mainWindow)
     , m_mainWindow(mainWindow)
@@ -48,7 +50,7 @@ RemoteControl::RemoteControl(MainWindow *mainWindow)
 void RemoteControl::handleCommandString(const QString &cmdString)
 {
     TRACE_OBJ
-    const QStringList &commands = cmdString.split(QLatin1Char(';'));
+    const QStringList &commands = cmdString.split(u';');
     for (const QString &command : commands) {
         QString cmd, arg;
         splitInputString(command, cmd, arg);
@@ -57,27 +59,27 @@ void RemoteControl::handleCommandString(const QString &cmdString)
             QMessageBox::information(nullptr, tr("Debugging Remote Control"),
                 tr("Received Command: %1 %2").arg(cmd).arg(arg));
 
-        if (cmd == QLatin1String("debug"))
+        if (cmd == "debug"_L1)
             handleDebugCommand(arg);
-         else if (cmd == QLatin1String("show"))
+         else if (cmd == "show"_L1)
             handleShowOrHideCommand(arg, true);
-         else if (cmd == QLatin1String("hide"))
+         else if (cmd == "hide"_L1)
             handleShowOrHideCommand(arg, false);
-         else if (cmd == QLatin1String("setsource"))
+         else if (cmd == "setsource"_L1)
             handleSetSourceCommand(arg);
-         else if (cmd == QLatin1String("synccontents"))
+         else if (cmd == "synccontents"_L1)
             handleSyncContentsCommand();
-         else if (cmd == QLatin1String("activatekeyword"))
+         else if (cmd == "activatekeyword"_L1)
             handleActivateKeywordCommand(arg);
-         else if (cmd == QLatin1String("activateidentifier"))
+         else if (cmd == "activateidentifier"_L1)
             handleActivateIdentifierCommand(arg);
-         else if (cmd == QLatin1String("expandtoc"))
+         else if (cmd == "expandtoc"_L1)
             handleExpandTocCommand(arg);
-         else if (cmd == QLatin1String("setcurrentfilter"))
+         else if (cmd == "setcurrentfilter"_L1)
             handleSetCurrentFilterCommand(arg);
-         else if (cmd == QLatin1String("register"))
+         else if (cmd == "register"_L1)
             handleRegisterCommand(arg);
-         else if (cmd == QLatin1String("unregister"))
+         else if (cmd == "unregister"_L1)
             handleUnregisterCommand(arg);
          else
             break;
@@ -91,7 +93,7 @@ void RemoteControl::splitInputString(const QString &input, QString &cmd,
 {
     TRACE_OBJ
     QString cmdLine = input.trimmed();
-    int i = cmdLine.indexOf(QLatin1Char(' '));
+    int i = cmdLine.indexOf(u' ');
     cmd = cmdLine.left(i);
     arg = cmdLine.mid(i + 1);
     cmd = cmd.toLower();
@@ -100,19 +102,19 @@ void RemoteControl::splitInputString(const QString &input, QString &cmd,
 void RemoteControl::handleDebugCommand(const QString &arg)
 {
     TRACE_OBJ
-    m_debug = arg == QLatin1String("on");
+    m_debug = arg == "on"_L1;
 }
 
 void RemoteControl::handleShowOrHideCommand(const QString &arg, bool show)
 {
     TRACE_OBJ
-    if (arg.toLower() == QLatin1String("contents"))
+    if (arg.toLower() == "contents"_L1)
         m_mainWindow->setContentsVisible(show);
-    else if (arg.toLower() == QLatin1String("index"))
+    else if (arg.toLower() == "index"_L1)
         m_mainWindow->setIndexVisible(show);
-    else if (arg.toLower() == QLatin1String("bookmarks"))
+    else if (arg.toLower() == "bookmarks"_L1)
         m_mainWindow->setBookmarksVisible(show);
-    else if (arg.toLower() == QLatin1String("search"))
+    else if (arg.toLower() == "search"_L1)
         m_mainWindow->setSearchVisible(show);
 }
 

@@ -11,6 +11,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 OpenPagesModel::OpenPagesModel(QObject *parent) : QAbstractTableModel(parent)
 {
     TRACE_OBJ
@@ -35,8 +37,8 @@ QVariant OpenPagesModel::data(const QModelIndex &index, int role) const
         || role != Qt::DisplayRole)
         return QVariant();
     QString title = m_pages.at(index.row())->title();
-    title.replace(QLatin1Char('&'), QLatin1String("&&"));
-    return title.isEmpty() ? QLatin1String("(Untitled)") : title;
+    title.replace(u'&', "&&"_L1);
+    return title.isEmpty() ? "(Untitled)"_L1 : title;
 }
 
 HelpViewer *OpenPagesModel::addPage(const QUrl &url, qreal zoom)
@@ -44,8 +46,7 @@ HelpViewer *OpenPagesModel::addPage(const QUrl &url, qreal zoom)
     TRACE_OBJ
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     HelpViewer *page = new HelpViewer(zoom);
-    connect(page, &HelpViewer::titleChanged,
-            this, &OpenPagesModel::handleTitleChanged);
+    connect(page, &HelpViewer::titleChanged, this, &OpenPagesModel::handleTitleChanged);
     m_pages << page;
     endInsertRows();
     page->setSource(url);

@@ -16,11 +16,10 @@ QT_BEGIN_NAMESPACE
 const QString HelpViewerImpl::AboutBlank =
     QCoreApplication::translate("HelpViewer", "<title>about:blank</title>");
 
-const QString HelpViewerImpl::LocalHelpFile = QLatin1String("qthelp://"
-    "org.qt-project.qtassistant.%1%2%3/qtassistant/assistant-quick-guide.html")
-        .arg(QString::number(QT_VERSION_MAJOR),
-             QString::number(QT_VERSION_MINOR),
-             QString::number(QT_VERSION_PATCH));
+const QString HelpViewerImpl::LocalHelpFile =
+        "qthelp://org.qt-project.qtassistant.%1%2%3/qtassistant/assistant-quick-guide.html"_L1.arg(
+                QString::number(QT_VERSION_MAJOR), QString::number(QT_VERSION_MINOR),
+                QString::number(QT_VERSION_PATCH));
 
 const QString HelpViewerImpl::PageNotFoundMessage =
     QCoreApplication::translate("HelpViewer", "<title>Error 404...</title><div "

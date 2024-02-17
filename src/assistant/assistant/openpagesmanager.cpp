@@ -17,6 +17,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 OpenPagesManager *OpenPagesManager::m_instance = nullptr;
 
 OpenPagesManager *OpenPagesManager::createInstance(QObject *parent,
@@ -88,16 +90,16 @@ void OpenPagesManager::setupInitialPages(bool defaultCollection,
         m_model->addPage(helpEngine.homePage());
         break;
     case ShowBlankPage:
-        m_model->addPage(QUrl(QLatin1String("about:blank")));
+        m_model->addPage(QUrl("about:blank"_L1));
         break;
     case ShowLastPages: {
         const QStringList &lastShownPageList = helpEngine.lastShownPages();
         const int pageCount = lastShownPageList.size();
         if (pageCount == 0) {
             if (defaultCollection)
-                m_helpPageViewer = m_model->addPage(QUrl(QLatin1String("help")));
+                m_helpPageViewer = m_model->addPage(QUrl("help"_L1));
             else
-                m_model->addPage(QUrl(QLatin1String("about:blank")));
+                m_model->addPage(QUrl("about:blank"_L1));
         } else {
             QStringList zoomFactors = helpEngine.lastZoomFactors();
             while (zoomFactors.size() < pageCount)
@@ -111,7 +113,7 @@ void OpenPagesManager::setupInitialPages(bool defaultCollection,
             for (int curPage = 0; curPage < pageCount; ++curPage) {
                 const QString &curFile = lastShownPageList.at(curPage);
                 if (helpEngine.findFile(curFile).isValid()
-                    || curFile == QLatin1String("about:blank")) {
+                    || curFile == "about:blank"_L1) {
                     m_model->addPage(curFile, zoomFactors.at(curPage).toFloat());
                 } else if (curPage <= initialPage && initialPage > 0)
                     --initialPage;
@@ -135,7 +137,7 @@ void OpenPagesManager::setupInitialPages(bool defaultCollection,
 HelpViewer *OpenPagesManager::createBlankPage()
 {
     TRACE_OBJ
-    return createPage(QUrl(QLatin1String("about:blank")));
+    return createPage(QUrl("about:blank"_L1));
 }
 
 void OpenPagesManager::closeCurrentPage()
@@ -215,7 +217,7 @@ void OpenPagesManager::closeOrReloadPages(const QString &nameSpace, bool tryRelo
         if (tryReload && HelpEngineWrapper::instance().findFile(page->source()).isValid())
             page->reload();
         else if (m_model->rowCount() == 1)
-            page->setSource(QUrl(QLatin1String("about:blank")));
+            page->setSource(QUrl("about:blank"_L1));
         else
             removePage(i);
     }

@@ -28,6 +28,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace {
     CentralWidget *staticCentralWidget = nullptr;
 }
@@ -98,7 +100,7 @@ void TabBar::titleChanged()
     for (int i = 0; i < count(); ++i) {
         HelpViewer *data = tabData(i).value<HelpViewer*>();
         QString title = data->title();
-        title.replace(QLatin1Char('&'), QLatin1String("&&"));
+        title.replace(u'&', "&&"_L1);
         setTabText(i, title.isEmpty() ? tr("(Untitled)") : title);
     }
 }
@@ -138,7 +140,7 @@ void TabBar::slotCustomContextMenuRequested(const QPoint &pos)
     HelpViewer *viewer = tabData(tab).value<HelpViewer*>();
     QAction *newBookmark = menu.addAction(tr("Add Bookmark for this Page..."));
     const QString &url = viewer->source().toString();
-    if (url.isEmpty() || url == QLatin1String("about:blank"))
+    if (url.isEmpty() || url == "about:blank"_L1)
         newBookmark->setEnabled(false);
 
     QAction *pickedAction = menu.exec(mapToGlobal(pos));
@@ -484,7 +486,7 @@ void CentralWidget::keyPressEvent(QKeyEvent *e)
 {
     TRACE_OBJ
     const QString &text = e->text();
-    if (text.startsWith(QLatin1Char('/'))) {
+    if (text.startsWith(u'/')) {
         if (!m_findWidget->isVisible()) {
             m_findWidget->showAndClear();
         } else {
@@ -517,8 +519,8 @@ void CentralWidget::highlightSearchTerms()
     QHelpSearchEngine *searchEngine =
         HelpEngineWrapper::instance().searchEngine();
     const QString searchInput = searchEngine->searchInput();
-    const bool wholePhrase = searchInput.startsWith(QLatin1Char('"')) &&
-                             searchInput.endsWith(QLatin1Char('"'));
+    const bool wholePhrase = searchInput.startsWith(u'"') &&
+                             searchInput.endsWith(u'"');
     const QStringList &words = wholePhrase ? QStringList(searchInput.mid(1, searchInput.size() - 2)) :
                                 searchInput.split(QRegularExpression("\\W+"), Qt::SkipEmptyParts);
     HelpViewer *viewer = currentHelpViewer();

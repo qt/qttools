@@ -27,9 +27,11 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 const int kMaxHistoryItems = 20;
 
-struct ExtensionMap {
+const struct ExtensionMap {
     const char *extension;
     const char *mimeType;
 } extensionMap[] = {
@@ -82,7 +84,7 @@ static QByteArray getData(const QUrl &url)
     if (actualUrl.isValid())
         return HelpEngineWrapper::instance().fileData(actualUrl);
 
-    const bool isAbout = (actualUrl.toString() == QLatin1String("about:blank"));
+    const bool isAbout = (actualUrl.toString() == "about:blank"_L1);
     return isAbout ? HelpViewerImpl::AboutBlank.toUtf8()
                    : HelpViewerImpl::PageNotFoundMessage.arg(url.toString()).toUtf8();
 }
@@ -117,7 +119,7 @@ void HelpViewerPrivate::setSourceInternal(const QUrl &url, int *vscroll, bool re
 {
     QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    const bool isHelp = (url.toString() == QLatin1String("help"));
+    const bool isHelp = (url.toString() == "help"_L1);
     const QUrl resolvedUrl = (isHelp ? HelpViewerImpl::LocalHelpFile
                                      : HelpEngineWrapper::instance().findFile(url));
 
@@ -357,11 +359,11 @@ bool HelpViewer::isLocalUrl(const QUrl &url)
     TRACE_OBJ
     const QString &scheme = url.scheme();
     return scheme.isEmpty()
-        || scheme == QLatin1String("file")
-        || scheme == QLatin1String("qrc")
-        || scheme == QLatin1String("data")
-        || scheme == QLatin1String("qthelp")
-        || scheme == QLatin1String("about");
+        || scheme == "file"_L1
+        || scheme == "qrc"_L1
+        || scheme == "data"_L1
+        || scheme == "qthelp"_L1
+        || scheme == "about"_L1;
 }
 
 bool HelpViewer::canOpenPage(const QString &path)
@@ -374,16 +376,16 @@ QString HelpViewer::mimeFromUrl(const QUrl &url)
 {
     TRACE_OBJ
     const QString &path = url.path();
-    const int index = path.lastIndexOf(QLatin1Char('.'));
+    const int index = path.lastIndexOf(u'.');
     const QByteArray &ext = path.mid(index).toUtf8().toLower();
 
     const ExtensionMap *e = extensionMap;
     while (e->extension) {
         if (ext == e->extension)
-            return QLatin1String(e->mimeType);
+            return QLatin1StringView(e->mimeType);
         ++e;
     }
-    return QLatin1String("application/octet-stream");
+    return "application/octet-stream"_L1;
 }
 
 bool HelpViewer::launchWithExternalApp(const QUrl &url)
@@ -402,8 +404,7 @@ bool HelpViewer::launchWithExternalApp(const QUrl &url)
                 return false;
 
             const QString &extension = QFileInfo(path).completeSuffix();
-            QFile actualTmpFile(tmpTmpFile.fileName() % QLatin1String(".")
-                % extension);
+            QFile actualTmpFile(tmpTmpFile.fileName() % "."_L1 % extension);
             if (!actualTmpFile.open(QIODevice::ReadWrite | QIODevice::Truncate))
                 return false;
 

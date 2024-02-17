@@ -12,6 +12,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 QtDocInstaller::QtDocInstaller(const QList<DocInfo> &docInfos)
     : m_abort(false), m_docInfos(docInfos)
 {
@@ -39,7 +41,7 @@ void QtDocInstaller::run()
 {
     TRACE_OBJ
     m_qchDir.setPath(QLibraryInfo::path(QLibraryInfo::DocumentationPath));
-    m_qchFiles = m_qchDir.entryList(QStringList() << QLatin1String("*.qch"));
+    m_qchFiles = m_qchDir.entryList(QStringList() << "*.qch"_L1);
 
     bool changes = false;
     for (const DocInfo &docInfo : std::as_const(m_docInfos)) {

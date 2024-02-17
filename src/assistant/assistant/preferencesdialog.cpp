@@ -21,6 +21,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 PreferencesDialog::PreferencesDialog(QWidget *parent)
     : QDialog(parent)
     , m_appFontChanged(false)
@@ -128,7 +130,7 @@ void PreferencesDialog::applyChanges()
 
     QString homePage = m_ui.homePageLineEdit->text();
     if (homePage.isEmpty())
-        homePage = QLatin1String("help");
+        homePage = "help"_L1;
     helpEngine.setHomePage(homePage);
 
     const int option = m_ui.helpStartComboBox->currentIndex();
@@ -230,14 +232,14 @@ void PreferencesDialog::updateOptionsPage()
 
 void PreferencesDialog::setBlankPage()
 {
-    m_ui.homePageLineEdit->setText(QLatin1String("about:blank"));
+    m_ui.homePageLineEdit->setText("about:blank"_L1);
 }
 
 void PreferencesDialog::setCurrentPage()
 {
     QString homepage = CentralWidget::instance()->currentSource().toString();
     if (homepage.isEmpty())
-        homepage = QLatin1String("help");
+        homepage = "help"_L1;
 
     m_ui.homePageLineEdit->setText(homepage);
 }

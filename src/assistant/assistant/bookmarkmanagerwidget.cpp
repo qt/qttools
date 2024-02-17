@@ -19,6 +19,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 BookmarkManagerWidget::BookmarkManagerWidget(BookmarkModel *sourceModel,
         QWidget *parent)
     : QWidget(parent)
@@ -180,10 +182,10 @@ void BookmarkManagerWidget::importBookmarks()
 void BookmarkManagerWidget::exportBookmarks()
 {
     TRACE_OBJ
-    QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save File"),
-        QLatin1String("untitled.xbel"), tr("Files (*.xbel)"));
+    QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save File"), "untitled.xbel"_L1,
+                                                    tr("Files (*.xbel)"));
 
-    const QLatin1String suffix(".xbel");
+    const QLatin1StringView suffix(".xbel");
     if (!fileName.endsWith(suffix))
         fileName.append(suffix);
 

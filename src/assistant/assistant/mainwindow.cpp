@@ -62,6 +62,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 enum { warnAboutMissingModules = 0 };
 
 MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
@@ -96,13 +98,13 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
 
     m_indexWindow = new IndexWindow(this);
     QDockWidget *indexDock = new QDockWidget(tr("Index"), this);
-    indexDock->setObjectName(QLatin1String("IndexWindow"));
+    indexDock->setObjectName("IndexWindow"_L1);
     indexDock->setWidget(m_indexWindow);
     addDockWidget(Qt::LeftDockWidgetArea, indexDock);
 
     m_contentWindow = new ContentWindow;
     QDockWidget *contentDock = new QDockWidget(tr("Contents"), this);
-    contentDock->setObjectName(QLatin1String("ContentWindow"));
+    contentDock->setObjectName("ContentWindow"_L1);
     contentDock->setWidget(m_contentWindow);
     addDockWidget(Qt::LeftDockWidgetArea, contentDock);
 
@@ -110,18 +112,18 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
     m_searchWindow->setFont(!helpEngineWrapper.usesBrowserFont() ? qApp->font()
         : helpEngineWrapper.browserFont());
     QDockWidget *searchDock = new QDockWidget(tr("Search"), this);
-    searchDock->setObjectName(QLatin1String("SearchWindow"));
+    searchDock->setObjectName("SearchWindow"_L1);
     searchDock->setWidget(m_searchWindow);
     addDockWidget(Qt::LeftDockWidgetArea, searchDock);
 
     QDockWidget *bookmarkDock = new QDockWidget(tr("Bookmarks"), this);
-    bookmarkDock->setObjectName(QLatin1String("BookmarkWindow"));
+    bookmarkDock->setObjectName("BookmarkWindow"_L1);
     bookmarkDock->setWidget(m_bookmarkWidget
         = bookMarkManager->bookmarkDockWidget());
     addDockWidget(Qt::LeftDockWidgetArea, bookmarkDock);
 
     QDockWidget *openPagesDock = new QDockWidget(tr("Open Pages"), this);
-    openPagesDock->setObjectName(QLatin1String("Open Pages"));
+    openPagesDock->setObjectName("Open Pages"_L1);
     OpenPagesManager *openPagesManager
         = OpenPagesManager::createInstance(this, usesDefaultCollection(), m_cmdLine->url());
     openPagesDock->setWidget(openPagesManager->openPagesWidget());
@@ -168,13 +170,13 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
     }
 #if !defined(Q_OS_MACOS) && !defined(Q_OS_WIN)
     else {
-        QIcon appIcon(QLatin1String(":/qt-project.org/assistant/images/assistant-128.png"));
+        QIcon appIcon(":/qt-project.org/assistant/images/assistant-128.png"_L1);
         qApp->setWindowIcon(appIcon);
     }
 #endif
 
     QToolBar *toolBar = addToolBar(tr("Bookmark Toolbar"));
-    toolBar->setObjectName(QLatin1String("Bookmark Toolbar"));
+    toolBar->setObjectName("Bookmark Toolbar"_L1);
     bookMarkManager->setBookmarksToolbar(toolBar);
 
     toolBar->hide();
@@ -293,8 +295,8 @@ bool MainWindow::initHelpDB(bool registerInternalDoc)
     if (!helpEngineWrapper.setupData())
         return false;
 
-    if (!registerInternalDoc && helpEngineWrapper.defaultHomePage() == QLatin1String("help"))
-        helpEngineWrapper.setDefaultHomePage(QLatin1String("about:blank"));
+    if (!registerInternalDoc && helpEngineWrapper.defaultHomePage() == "help"_L1)
+        helpEngineWrapper.setDefaultHomePage("about:blank"_L1);
 
     return true;
 }
@@ -371,7 +373,7 @@ static QStringList newQtDocumentation()
     const int docCount = int(sizeof(docs) / sizeof(docs[0]));
     result.reserve(docCount);
     for (int d = 0; d < docCount; ++d)
-        result.append(QLatin1String(docs[d]));
+        result.append(QLatin1StringView(docs[d]));
     return result;
 }
 
@@ -398,7 +400,7 @@ void MainWindow::lookForNewQtDocumentation()
             this, &MainWindow::resetQtDocInfo);
     connect(m_qtDocInstaller, &QtDocInstaller::registerDocumentation,
             this, &MainWindow::registerDocumentation);
-    if (helpEngine.qtDocInfo(QLatin1String("qt")).size() != 2)
+    if (helpEngine.qtDocInfo("qt"_L1).size() != 2)
         statusBar()->showMessage(tr("Looking for Qt Documentation..."));
     m_qtDocInstaller->installDocs();
 }
@@ -449,12 +451,12 @@ void MainWindow::insertLastPages()
 void MainWindow::setupActions()
 {
     TRACE_OBJ
-    QString resourcePath = QLatin1String(":/qt-project.org/assistant/images/");
+    QString resourcePath = ":/qt-project.org/assistant/images/"_L1;
 #ifdef Q_OS_MAC
     setUnifiedTitleAndToolBarOnMac(true);
-    resourcePath.append(QLatin1String("mac"));
+    resourcePath.append("mac"_L1);
 #else
-    resourcePath.append(QLatin1String("win"));
+    resourcePath.append("win"_L1);
 #endif
 
     QMenu *menu = menuBar()->addMenu(tr("&File"));
@@ -521,7 +523,7 @@ void MainWindow::setupActions()
     m_resetZoomAction = m_viewMenu->addAction(tr("Normal &Size"),
             m_centralWidget, &CentralWidget::resetZoom);
     m_resetZoomAction->setPriority(QAction::LowPriority);
-    m_resetZoomAction->setIcon(QIcon(resourcePath + QLatin1String("/resetzoom.png")));
+    m_resetZoomAction->setIcon(QIcon(resourcePath + "/resetzoom.png"_L1));
     m_resetZoomAction->setShortcut(tr("Ctrl+0"));
 
     m_viewMenu->addSeparator();
@@ -545,7 +547,7 @@ void MainWindow::setupActions()
     m_syncAction = menu->addAction(tr("Sync with Table of Contents"),
             this, &MainWindow::syncContents);
     m_syncAction->setIconText(tr("Sync"));
-    m_syncAction->setIcon(QIcon(resourcePath + QLatin1String("/synctoc.png")));
+    m_syncAction->setIcon(QIcon(resourcePath + "/synctoc.png"_L1));
 
     menu->addSeparator();
 
@@ -588,7 +590,7 @@ void MainWindow::setupActions()
 #endif
 
     QToolBar *navigationBar = addToolBar(tr("Navigation Toolbar"));
-    navigationBar->setObjectName(QLatin1String("NavigationToolBar"));
+    navigationBar->setObjectName("NavigationToolBar"_L1);
     navigationBar->addAction(globalActions->backAction());
     navigationBar->addAction(globalActions->nextAction());
     navigationBar->addAction(globalActions->homeAction());
@@ -672,12 +674,12 @@ void MainWindow::setupFilterToolbar()
         return;
 
     m_filterCombo = new QComboBox(this);
-    m_filterCombo->setMinimumWidth(QFontMetrics(QFont()).
-        horizontalAdvance(QLatin1String("MakeTheComboBoxWidthEnough")));
+    m_filterCombo->setMinimumWidth(QFontMetrics({}).
+        horizontalAdvance("MakeTheComboBoxWidthEnough"_L1));
 
     QToolBar *filterToolBar = addToolBar(tr("Filter Toolbar"));
-    filterToolBar->setObjectName(QLatin1String("FilterToolBar"));
-    filterToolBar->addWidget(new QLabel(tr("Filtered by:").append(QLatin1Char(' ')),
+    filterToolBar->setObjectName("FilterToolBar"_L1);
+    filterToolBar->addWidget(new QLabel(tr("Filtered by:").append(u' '),
         this));
     filterToolBar->addWidget(m_filterCombo);
 
@@ -704,7 +706,7 @@ void MainWindow::setupAddressToolbar()
 
     m_addressLineEdit = new QLineEdit(this);
     QToolBar *addressToolBar = addToolBar(tr("Address Toolbar"));
-    addressToolBar->setObjectName(QLatin1String("AddressToolBar"));
+    addressToolBar->setObjectName("AddressToolBar"_L1);
     insertToolBarBreak(addressToolBar);
 
     addressToolBar->addWidget(new QLabel(tr("Address:").append(QChar::Space),
@@ -716,8 +718,7 @@ void MainWindow::setupAddressToolbar()
     toolBarMenu()->addAction(addressToolBar->toggleViewAction());
 
     // address lineedit
-    connect(m_addressLineEdit, &QLineEdit::returnPressed,
-            this, &MainWindow::gotoAddress);
+    connect(m_addressLineEdit, &QLineEdit::returnPressed, this, &MainWindow::gotoAddress);
     connect(m_centralWidget, &CentralWidget::currentViewerChanged,
             this, QOverload<>::of(&MainWindow::showNewAddress));
     connect(m_centralWidget, &CentralWidget::sourceChanged,
@@ -733,14 +734,14 @@ void MainWindow::updateAboutMenuText()
         QString str;
         QString trStr;
         QString currentLang = QLocale::system().name();
-        int i = currentLang.indexOf(QLatin1Char('_'));
+        int i = currentLang.indexOf(u'_');
         if (i > -1)
             currentLang = currentLang.left(i);
         QDataStream s(&ba, QIODevice::ReadOnly);
         while (!s.atEnd()) {
             s >> lang;
             s >> str;
-            if (lang == QLatin1String("default") && trStr.isEmpty()) {
+            if (lang == "default"_L1 && trStr.isEmpty()) {
                 trStr = str;
             } else if (lang == currentLang) {
                 trStr = str;
@@ -815,14 +816,14 @@ void MainWindow::showAboutDialog()
         QString lang;
         QByteArray cba;
         QString currentLang = QLocale::system().name();
-        int i = currentLang.indexOf(QLatin1Char('_'));
+        int i = currentLang.indexOf(u'_');
         if (i > -1)
             currentLang = currentLang.left(i);
         QDataStream s(&ba, QIODevice::ReadOnly);
         while (!s.atEnd()) {
             s >> lang;
             s >> cba;
-            if (lang == QLatin1String("default") && contents.isEmpty()) {
+            if (lang == "default"_L1 && contents.isEmpty()) {
                 contents = cba;
             } else if (lang == currentLang) {
                 contents = cba;
@@ -857,10 +858,9 @@ void MainWindow::showAboutDialog()
             "<p>Version %2</p>"
             "<p>Browser: %3</p></center>"
             "<p>Copyright (C) %4 The Qt Company Ltd.</p>")
-            .arg(tr("Qt Assistant"), QLatin1String(QT_VERSION_STR), browser, QString()),
+            .arg(tr("Qt Assistant"), QLatin1StringView(QT_VERSION_STR), browser, QString()),
             resources);
-        QLatin1String path(":/qt-project.org/assistant/images/assistant-128.png");
-        aboutDia.setPixmap(QString(path));
+        aboutDia.setPixmap(QString(":/qt-project.org/assistant/images/assistant-128.png"_L1));
     }
     if (aboutDia.windowTitle().isEmpty())
         aboutDia.setWindowTitle(tr("About %1").arg(windowTitle()));
@@ -1071,13 +1071,12 @@ QString MainWindow::collectionFileDirectory(bool createDir, const QString &cache
         QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
     if (collectionPath.isEmpty()) {
         if (cacheDir.isEmpty())
-            collectionPath = QDir::homePath() + QDir::separator()
-                + QLatin1String(".assistant");
+            collectionPath = QDir::homePath() + QDir::separator() + ".assistant"_L1;
         else
-            collectionPath = QDir::homePath() + QLatin1String("/.") + cacheDir;
+            collectionPath = QDir::homePath() + "/."_L1 + cacheDir;
     } else {
         if (cacheDir.isEmpty())
-            collectionPath = collectionPath + QLatin1String("/QtProject/Assistant");
+            collectionPath = collectionPath + "/QtProject/Assistant"_L1;
         else
             collectionPath = collectionPath + QDir::separator() + cacheDir;
     }
@@ -1093,9 +1092,8 @@ QString MainWindow::defaultHelpCollectionFileName()
 {
     TRACE_OBJ
     // forces creation of the default collection file path
-    return collectionFileDirectory(true) + QDir::separator() +
-        QString(QLatin1String("qthelpcollection_%1.qhc")).
-        arg(QLatin1String(QT_VERSION_STR));
+    return collectionFileDirectory(true) + QDir::separator()
+            + QString("qthelpcollection_%1.qhc"_L1).arg(QLatin1StringView(QT_VERSION_STR));
 }
 
 void MainWindow::currentFilterChanged(const QString &filter)

@@ -33,6 +33,8 @@
 
 QT_USE_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace {
 
 void
@@ -74,11 +76,10 @@ void stripNonexistingDocs(QHelpEngineCore& collection)
 QString indexFilesFolder(const QString &collectionFile)
 {
     TRACE_OBJ
-    QString indexFilesFolder = QLatin1String(".fulltextsearch");
+    QString indexFilesFolder = ".fulltextsearch"_L1;
     if (!collectionFile.isEmpty()) {
         QFileInfo fi(collectionFile);
-        indexFilesFolder = QLatin1Char('.') +
-            fi.fileName().left(fi.fileName().lastIndexOf(QLatin1String(".qhc")));
+        indexFilesFolder = u'.' + fi.fileName().left(fi.fileName().lastIndexOf(".qhc"_L1));
     }
     return indexFilesFolder;
 }
@@ -140,8 +141,8 @@ bool synchronizeDocs(QHelpEngineCore &collection,
 bool removeSearchIndex(const QString &collectionFile)
 {
     TRACE_OBJ
-    QString path = QFileInfo(collectionFile).path();
-    path += QLatin1Char('/') + indexFilesFolder(collectionFile);
+    const QString path =
+            QFileInfo(collectionFile).path() + u'/' + indexFilesFolder(collectionFile);
 
     QDir dir(path);
     if (!dir.exists())
@@ -215,7 +216,7 @@ bool unregisterDocumentation(QHelpEngineCore &collection,
 void setupTranslation(const QString &fileName, const QString &dir)
 {
     QTranslator *translator = new QTranslator(QCoreApplication::instance());
-    if (translator->load(QLocale(), fileName, QLatin1String("_"), dir))
+    if (translator->load(QLocale(), fileName, "_"_L1, dir))
         QCoreApplication::installTranslator(translator);
 }
 
@@ -224,9 +225,9 @@ void setupTranslations()
     TRACE_OBJ
     const QString &resourceDir
         = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
-    setupTranslation(QLatin1String("assistant"), resourceDir);
-    setupTranslation(QLatin1String("qt"), resourceDir);
-    setupTranslation(QLatin1String("qt_help"), resourceDir);
+    setupTranslation("assistant"_L1, resourceDir);
+    setupTranslation("qt"_L1, resourceDir);
+    setupTranslation("qt_help"_L1, resourceDir);
 }
 
 } // Anonymous namespace.
@@ -315,7 +316,7 @@ static ExitStatus preliminarySetup(CmdLineParser *cmd)
                 ? ExitSuccess : ExitFailure;
     }
 
-    if (!QSqlDatabase::isDriverAvailable(QLatin1String("QSQLITE"))) {
+    if (!QSqlDatabase::isDriverAvailable("QSQLITE"_L1)) {
         cmd->showMessage(QCoreApplication::translate("Assistant",
                          "Cannot load sqlite database driver!"),
                          true);
@@ -339,7 +340,7 @@ int main(int argc, char *argv[])
     TRACE_OBJ
     QScopedPointer<QCoreApplication> a(createApplication(argc, argv));
 #if QT_CONFIG(library)
-    a->addLibraryPath(a->applicationDirPath() + QLatin1String("/plugins"));
+    a->addLibraryPath(a->applicationDirPath() + "/plugins"_L1);
 #endif
     setupTranslations();
 

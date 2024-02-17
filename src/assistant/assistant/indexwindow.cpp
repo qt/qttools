@@ -24,6 +24,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 IndexWindow::IndexWindow(QWidget *parent)
     : QWidget(parent)
     , m_searchLineEdit(new QLineEdit)
@@ -69,7 +71,7 @@ IndexWindow::~IndexWindow()
 void IndexWindow::filterIndices(const QString &filter)
 {
     TRACE_OBJ
-    if (filter.contains(QLatin1Char('*')))
+    if (filter.contains(u'*'))
         m_indexWidget->filterIndices(filter, filter);
     else
         m_indexWidget->filterIndices(filter, QString());
