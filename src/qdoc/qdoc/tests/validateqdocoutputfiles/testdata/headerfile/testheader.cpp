@@ -3,6 +3,8 @@
 
 #include "testheader.h"
 
+const int globalVar = 0;
+
 /*!
     \headerfile <TestHeader>
     \title Test Header
