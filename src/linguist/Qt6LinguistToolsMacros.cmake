@@ -206,7 +206,7 @@ function(qt6_add_lupdate)
     set(options
         NO_GLOBAL_TARGET)
     set(oneValueArgs
-        NATIVE_TS_FILE
+        PLURALS_TS_FILE
         LUPDATE_TARGET)
     set(multiValueArgs
         TARGETS
@@ -256,14 +256,14 @@ function(qt6_add_lupdate)
 
     set(lupdate_work_dir "${CMAKE_CURRENT_BINARY_DIR}/.lupdate")
     qt_internal_make_paths_absolute(ts_files "${arg_TS_FILES}")
-    set(native_ts_file "")
-    set(raw_native_ts_file "")
-    if(NOT "${arg_NATIVE_TS_FILE}" STREQUAL "")
-        qt_internal_make_paths_absolute(native_ts_file "${arg_NATIVE_TS_FILE}")
-        _qt_internal_ensure_ts_file(TS_FILE "${native_ts_file}")
-        get_filename_component(raw_native_ts_file "${native_ts_file}" NAME)
-        string(PREPEND raw_native_ts_file "${lupdate_work_dir}/")
-        list(APPEND ts_files "${raw_native_ts_file}")
+    set(plurals_ts_file "")
+    set(raw_plurals_ts_file "")
+    if(NOT "${arg_PLURALS_TS_FILE}" STREQUAL "")
+        qt_internal_make_paths_absolute(plurals_ts_file "${arg_PLURALS_TS_FILE}")
+        _qt_internal_ensure_ts_file(TS_FILE "${plurals_ts_file}")
+        get_filename_component(raw_plurals_ts_file "${plurals_ts_file}" NAME)
+        string(PREPEND raw_plurals_ts_file "${lupdate_work_dir}/")
+        list(APPEND ts_files "${raw_plurals_ts_file}")
     endif()
 
     set(lupdate_project_base "${lupdate_work_dir}/${lupdate_target}_project")
@@ -303,11 +303,11 @@ set(lupdate_subproject${n}_excluded \"${excluded}\")
             $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lupdate>)
     set(prepare_native_ts_command "")
     set(finish_native_ts_command "")
-    if(NOT native_ts_file STREQUAL "")
+    if(NOT plurals_ts_file STREQUAL "")
         # Copy the existing .ts file to preserve already translated strings.
         set(prepare_native_ts_command
             COMMAND
-            "${CMAKE_COMMAND}" -E copy "${native_ts_file}" "${raw_native_ts_file}"
+            "${CMAKE_COMMAND}" -E copy "${plurals_ts_file}" "${raw_plurals_ts_file}"
         )
 
         # Filter out the non-numerus forms with lconvert.
@@ -316,8 +316,8 @@ set(lupdate_subproject${n}_excluded \"${excluded}\")
             "${tool_wrapper}"
             $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lconvert>
             -pluralonly
-            -i "${raw_native_ts_file}"
-            -o "${native_ts_file}"
+            -i "${raw_plurals_ts_file}"
+            -o "${plurals_ts_file}"
         )
     endif()
     add_custom_target(${lupdate_target}
@@ -548,7 +548,7 @@ function(qt6_add_translations)
         TS_FILES
         TS_FILE_BASE
         TS_FILE_DIR
-        NATIVE_TS_FILE
+        PLURALS_TS_FILE
         SOURCES
         INCLUDE_DIRECTORIES
         LUPDATE_OPTIONS
@@ -566,12 +566,12 @@ function(qt6_add_translations)
         message(FATAL_ERROR "No targets provided.")
     endif()
     if(NOT DEFINED arg_TS_FILES
-            AND NOT DEFINED arg_NATIVE_TS_FILE
+            AND NOT DEFINED arg_PLURALS_TS_FILE
             AND "${QT_I18N_TRANSLATED_LANGUAGES}" STREQUAL ""
             AND "${QT_I18N_SOURCE_LANGUAGE}" STREQUAL "")
         message(FATAL_ERROR
             "One of QT_I18N_TRANSLATED_LANGUAGES, QT_I18N_SOURCE_LANGUAGE, TS_FILES, "
-            "or NATIVE_TS_FILE must be provided.")
+            "or PLURALS_TS_FILE must be provided.")
     endif()
     if(DEFINED arg_RESOURCE_PREFIX AND DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
         message(FATAL_ERROR "QM_FILES_OUTPUT_VARIABLE cannot be specified "
@@ -600,8 +600,8 @@ function(qt6_add_translations)
         endforeach()
 
         # Determine the path to the native .ts file if necessary.
-        if(NOT DEFINED arg_NATIVE_TS_FILE AND NOT "${QT_I18N_SOURCE_LANGUAGE}" STREQUAL "")
-            set(arg_NATIVE_TS_FILE
+        if(NOT DEFINED arg_PLURALS_TS_FILE AND NOT "${QT_I18N_SOURCE_LANGUAGE}" STREQUAL "")
+            set(arg_PLURALS_TS_FILE
                 "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${QT_I18N_SOURCE_LANGUAGE}.ts")
         endif()
     endif()
@@ -628,7 +628,7 @@ function(qt6_add_translations)
             # Predict the names of generated .qm files.
             if(DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
                 set(qm_files "")
-                foreach(ts_file IN LISTS arg_TS_FILES arg_NATIVE_TS_FILE)
+                foreach(ts_file IN LISTS arg_TS_FILES arg_PLURALS_TS_FILE)
                     _qt_internal_generated_qm_file_path(qm_file "${ts_file}")
                     list(APPEND qm_files "${qm_file}")
                 endforeach()
@@ -648,7 +648,7 @@ function(qt6_add_translations)
             set(to_forward ${oneValueArgs} ${multiValueArgs})
             set(path_variables
                 TS_FILES
-                NATIVE_TS_FILE
+                PLURALS_TS_FILE
                 SOURCES
                 INCLUDE_DIRECTORIES
             )
@@ -688,14 +688,14 @@ function(qt6_add_translations)
         TARGETS "${source_targets}"
         LUPDATE_TARGET "${arg_LUPDATE_TARGET}"
         TS_FILES "${arg_TS_FILES}"
-        NATIVE_TS_FILE "${arg_NATIVE_TS_FILE}"
+        PLURALS_TS_FILE "${arg_PLURALS_TS_FILE}"
         SOURCES "${arg_SOURCES}"
         INCLUDE_DIRECTORIES "${arg_INCLUDE_DIRECTORIES}"
         OPTIONS "${arg_LUPDATE_OPTIONS}"
     )
     qt6_add_lrelease(
         LRELEASE_TARGET "${arg_LRELEASE_TARGET}"
-        TS_FILES "${arg_TS_FILES}" ${arg_NATIVE_TS_FILE}
+        TS_FILES "${arg_TS_FILES}" ${arg_PLURALS_TS_FILE}
         QM_FILES_OUTPUT_VARIABLE qm_files
         OPTIONS "${arg_LRELEASE_OPTIONS}")
 
