@@ -156,14 +156,13 @@ public:
     void setTag(const QString &tag) { m_tag = tag; }
     [[nodiscard]] const QString &tag() const { return m_tag; }
     [[nodiscard]] bool isIgnored() const;
-    [[nodiscard]] bool hasOverloads() const;
+    [[nodiscard]] bool hasOverloads() const
+    {
+        return (m_overloadFlag || (parent() && parent()->hasOverloads(this)));
+    }
     void setOverloadFlag() { m_overloadFlag = true; }
     void setOverloadNumber(signed short number);
-    void appendOverload(FunctionNode *functionNode);
-    void removeOverload(FunctionNode *functionNode);
     [[nodiscard]] signed short overloadNumber() const { return m_overloadNumber; }
-    FunctionNode *nextOverload() { return m_nextOverload; }
-    void setNextOverload(FunctionNode *functionNode) { m_nextOverload = functionNode; }
 
     friend int compare(const FunctionNode *f1, const FunctionNode *f2);
 
@@ -192,7 +191,6 @@ private:
     Metaness m_metaness {};
     Virtualness m_virtualness{ NonVirtual };
     signed short m_overloadNumber {};
-    FunctionNode *m_nextOverload { nullptr };
     QString m_returnType {};
     QString m_overridesThis {};
     QString m_tag {};

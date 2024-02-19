@@ -16,24 +16,15 @@ QT_BEGIN_NAMESPACE
   global function, a QML method, or a macro, with or without
   parameters.
 
-  A C++ function can be a signal a slot, a constructor of any
+  A C++ function can be a signal, a slot, a constructor of any
   kind, a destructor, a copy or move assignment operator, or
-  just a plain old member function or global function.
+  just a plain old member function or a global function.
 
   A QML method can be a plain old method, or a
   signal or signal handler.
 
-  If the function is not an overload, its overload flag is
-  false. If it is an overload, its overload flag is true.
-  If it is not an overload but it has overloads, its next
-  overload pointer will point to an overload function. If it
-  is an overload function, its overload flag is true, and it
-  may or may not have a non-null next overload pointer.
-
-  So all the overloads of a function are in a linked list
-  using the next overload pointer. If a function has no
-  overloads, its overload flag is false and its overload
-  pointer is null.
+  If the function is an overload, its overload flag is
+  true.
 
   The function node also has an overload number. If the
   node's overload flag is set, this overload number is
@@ -65,8 +56,7 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString &name)
       m_constexpr{false},
       m_metaness(Plain),
       m_virtualness(NonVirtual),
-      m_overloadNumber(0),
-      m_nextOverload(nullptr)
+      m_overloadNumber(0)
 {
     // nothing
 }
@@ -98,8 +88,7 @@ FunctionNode::FunctionNode(Metaness kind, Aggregate *parent, const QString &name
       m_constexpr{false},
       m_metaness(kind),
       m_virtualness(NonVirtual),
-      m_overloadNumber(0),
-      m_nextOverload(nullptr)
+      m_overloadNumber(0)
 {
     setGenus(getGenus(m_metaness));
     if (!isCppNode() && name.startsWith("__"))
@@ -114,7 +103,6 @@ Node *FunctionNode::clone(Aggregate *parent)
 {
     auto *fn = new FunctionNode(*this); // shallow copy
     fn->setParent(nullptr);
-    fn->setNextOverload(nullptr);
     parent->addChild(fn);
     return fn;
 }
@@ -249,43 +237,6 @@ void FunctionNode::setOverloadNumber(signed short number)
 {
     m_overloadNumber = number;
     m_overloadFlag = (number > 0);
-}
-
-/*!
-  Appends \a functionNode to the linked list of overloads for this function.
-
-  \note Although this function appends an overload function to the list of
-  overloads for this function's name, it does not set the function's
-  overload number or it's overload flag. If the function has the
-  \c{\\overload} in its QDoc comment, that will set the overload
-  flag. But qdoc treats the \c{\\overload} command as a hint that the
-  function should be documented as an overload. The hint is almost
-  always correct, but QDoc reserves the right to decide which function
-  should be the primary function and which functions are the overloads.
-  These decisions are made in Aggregate::normalizeOverloads().
- */
-void FunctionNode::appendOverload(FunctionNode *functionNode)
-{
-    auto current = this;
-    while (current->m_nextOverload)
-        current = current->m_nextOverload;
-    current->m_nextOverload = functionNode;
-    functionNode->m_nextOverload = nullptr;
-}
-
-/*!
-  Removes \a functionNode from the linked list of function overloads.
-*/
-void FunctionNode::removeOverload(FunctionNode *functionNode)
-{
-    auto head = this;
-    auto **indirect = &head;
-    while ((*indirect) != functionNode) {
-        if (!(*indirect)->m_nextOverload)
-            return;
-        indirect = &(*indirect)->m_nextOverload;
-    }
-    *indirect = functionNode->m_nextOverload;
 }
 
 /*!
@@ -515,24 +466,8 @@ bool FunctionNode::isIgnored() const
 }
 
 /*!
-  Returns true if this function has overloads. Otherwise false.
-  First, if this function node's overload pointer is not nullptr,
-  return true. Next, if this function node's overload flag is true
-  return true. Finally, if this function's parent Aggregate has a
-  function by the same name as this one in its function map and
-  that function has overloads, return true. Otherwise return false.
-
-  There is a failsafe way to test it under any circumstances.
+  \fn bool FunctionNode::hasOverloads() const
+  Returns \c true if this function has overloads.
  */
-bool FunctionNode::hasOverloads() const
-{
-    if (m_nextOverload != nullptr)
-        return true;
-    if (m_overloadFlag)
-        return true;
-    if (parent())
-        return parent()->hasOverloads(this);
-    return false;
-}
 
 QT_END_NAMESPACE

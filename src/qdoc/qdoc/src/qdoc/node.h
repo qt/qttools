@@ -38,7 +38,6 @@ class SharedCommentNode;
 class Tree;
 class TypedefNode;
 
-typedef QMap<QString, FunctionNode *> FunctionMap;
 typedef QList<Node *> NodeList;
 typedef QList<ClassNode *> ClassList;
 typedef QList<Node *> NodeVector;

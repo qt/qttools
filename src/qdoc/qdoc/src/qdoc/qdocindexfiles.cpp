@@ -1182,6 +1182,9 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
  */
 void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionNode *fn)
 {
+    if (fn->isInternal() && !Config::instance().showInternal())
+        return;
+
     const QString objName = fn->name();
     writer.writeStartElement("function");
     writer.writeAttribute("name", objName);
@@ -1324,35 +1327,24 @@ QString QDocIndexFiles::appendAttributesToSignature(const FunctionNode *fn) cons
 }
 
 /*!
-  This function outputs a <function> element to the index file
-  for each FunctionNode in \a aggregate using the \a writer.
+  Outputs a <function> element to the index for each FunctionNode in
+  an \a aggregate, using \a writer.
   The \a aggregate has a function map that contains all the
-  function nodes indexed by function name. But the map is not
-  used as a multimap, so if the \a aggregate contains multiple
-  functions with the same name, only one of those functions is
-  in the function map index. The others are linked to that
-  function using the next overload pointer.
+  function nodes (a vector of overloads) indexed by function
+  name.
 
-  So this function generates a <function> element for a function
-  followed by a function element for each of its overloads. If a
-  <function> element represents an overload, it has an \c overload
-  attribute set to \c true and an \c {overload-number} attribute
-  set to the function's overload number. If the <function>
-  element does not represent an overload, the <function> element
-  has neither of these attributes.
+  If a function element represents an overload, it has an
+  \c overload attribute set to \c true and an \c {overload-number}
+  attribute set to the function's overload number.
  */
 void QDocIndexFiles::generateFunctionSections(QXmlStreamWriter &writer, Aggregate *aggregate)
 {
-    FunctionMap &functionMap = aggregate->functionMap();
-    if (!functionMap.isEmpty()) {
-        for (auto it = functionMap.begin(); it != functionMap.end(); ++it) {
-            FunctionNode *fn = it.value();
-            while (fn) {
-                if (!fn->isInternal() || Config::instance().showInternal())
-                    generateFunctionSection(writer, fn);
-                fn = fn->nextOverload();
+    for (auto functions : std::as_const(aggregate->functionMap())) {
+        std::for_each(functions.begin(), functions.end(),
+            [this,&writer](FunctionNode *fn) {
+                generateFunctionSection(writer, fn);
             }
-        }
+        );
     }
 }
 
