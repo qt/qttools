@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 cmake_minimum_required(VERSION 3.16)
-project(test_i18n_native_language)
+project(test_i18n_source_language)
 
 # Set up the project structure.
 find_package(Qt6 REQUIRED COMPONENTS Core Gui LinguistTools)
@@ -18,7 +18,7 @@ endfunction()
 my_add_library(lib1 STATIC lib.cpp)
 qt_add_lupdate(
     TARGETS lib1
-    NATIVE_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib1_en.ts"
+    PLURALS_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib1_en.ts"
 )
 
 # qt_add_lupdate with just the native translation which has already been translated.
@@ -27,7 +27,7 @@ my_add_library(lib2 STATIC lib.cpp)
 configure_file(lib2_en.ts.in lib2_en.ts COPYONLY)
 qt_add_lupdate(
     TARGETS lib2
-    NATIVE_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib2_en.ts"
+    PLURALS_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib2_en.ts"
 )
 
 # qt_add_lupdate with regular translations and the native translation.
@@ -35,7 +35,7 @@ my_add_library(lib3 STATIC lib.cpp)
 qt_add_lupdate(
     TARGETS lib3
     TS_FILES "${CMAKE_CURRENT_BINARY_DIR}/lib3_hi.ts" "${CMAKE_CURRENT_BINARY_DIR}/lib3_ho.ts"
-    NATIVE_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib3_en.ts"
+    PLURALS_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib3_en.ts"
 )
 
 # qt_add_translations with just the native translation.
@@ -43,7 +43,7 @@ my_add_library(lib4 STATIC lib.cpp)
 qt_add_translations(
     TARGETS lib4
     SOURCE_TARGETS lib4
-    NATIVE_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib4_en.ts"
+    PLURALS_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib4_en.ts"
 )
 
 # qt_add_translations with regular translations and the native translation.
@@ -52,7 +52,7 @@ qt_add_translations(
     TARGETS lib5
     SOURCE_TARGETS lib5
     TS_FILES "${CMAKE_CURRENT_BINARY_DIR}/lib5_hi.ts" "${CMAKE_CURRENT_BINARY_DIR}/lib5_ho.ts"
-    NATIVE_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib5_en.ts"
+    PLURALS_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib5_en.ts"
 )
 
 # Find out how many targets we created above.
