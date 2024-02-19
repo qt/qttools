@@ -15,7 +15,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 #! [0]
 find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 
-qt_standard_project_setup(I18N_LANGUAGES la)
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES la)
 #! [0]
 
 qt_add_executable(hellotr

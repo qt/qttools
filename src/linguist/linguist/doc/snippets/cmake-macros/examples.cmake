@@ -18,7 +18,7 @@ qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} helloworld_en.ts helloworld_d
 #! [auto_determine_ts_file_paths]
 project(myproject)
 cmake_minimum_required(VERSION 3.19)
-qt_standard_project_setup(I18N_LANGUAGES de fr)
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES de fr)
 
 add_subdirectory(libs)
 add_subdirectory(apps)

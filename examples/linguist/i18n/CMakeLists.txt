@@ -15,7 +15,7 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/widgets/tools/i18n")
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets LinguistTools)
 
 qt_standard_project_setup(
-    I18N_LANGUAGES ar cs de el en eo fr it ja ko nb ru sv zh
+    I18N_TRANSLATED_LANGUAGES ar cs de el en eo fr it ja ko nb ru sv zh
 )
 
 qt_add_executable(i18n
