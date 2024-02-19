@@ -239,7 +239,7 @@ int BrushPropertyManager::setValue(QtVariantPropertyManager *vm, QtProperty *pro
 
 bool BrushPropertyManager::valueText(const QtProperty *property, QString *text) const
 {
-    const auto brit = m_brushValues.constFind(const_cast<QtProperty *>(property));
+    const auto brit = m_brushValues.constFind(property);
     if (brit == m_brushValues.constEnd())
         return false;
     const QBrush &brush = brit.value();
@@ -251,7 +251,7 @@ bool BrushPropertyManager::valueText(const QtProperty *property, QString *text) 
 
 bool BrushPropertyManager::valueIcon(const QtProperty *property, QIcon *icon) const
 {
-    const auto brit = m_brushValues.constFind(const_cast<QtProperty *>(property));
+    const auto brit = m_brushValues.constFind(property);
     if (brit == m_brushValues.constEnd())
         return false;
     *icon = QtPropertyBrowserUtils::brushValueIcon(brit.value());
@@ -260,7 +260,7 @@ bool BrushPropertyManager::valueIcon(const QtProperty *property, QIcon *icon) co
 
 bool BrushPropertyManager::value(const QtProperty *property, QVariant *v) const
 {
-    const auto brit = m_brushValues.constFind(const_cast<QtProperty *>(property));
+    const auto brit = m_brushValues.constFind(property);
     if (brit == m_brushValues.constEnd())
         return false;
     v->setValue(brit.value());

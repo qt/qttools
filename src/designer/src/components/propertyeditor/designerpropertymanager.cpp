@@ -246,7 +246,7 @@ int TranslatablePropertyManager<PropertySheetValue>::setValue(QtVariantPropertyM
 template <class PropertySheetValue>
 bool TranslatablePropertyManager<PropertySheetValue>::value(const QtProperty *property, QVariant *rc) const
 {
-    const auto it = m_values.constFind(const_cast<QtProperty *>(property));
+    const auto it = m_values.constFind(property);
     if (it == m_values.constEnd())
         return false;
     *rc = QVariant::fromValue(it.value());
@@ -875,16 +875,14 @@ int DesignerPropertyManager::attributeType(int propertyType, const QString &attr
 
 QVariant DesignerPropertyManager::attributeValue(const QtProperty *property, const QString &attribute) const
 {
-    QtProperty *prop = const_cast<QtProperty *>(property);
-
     if (attribute == resettableAttributeC) {
-        const auto it = m_resetMap.constFind(prop);
+        const auto it = m_resetMap.constFind(property);
         if (it != m_resetMap.constEnd())
             return it.value();
     }
 
     if (attribute == flagsAttributeC) {
-        const auto it = m_flagValues.constFind(prop);
+        const auto it = m_flagValues.constFind(property);
         if (it != m_flagValues.constEnd()) {
             QVariant v;
             v.setValue(it.value().flags);
@@ -892,35 +890,35 @@ QVariant DesignerPropertyManager::attributeValue(const QtProperty *property, con
         }
     }
     if (attribute == validationModesAttributeC) {
-        const auto it = m_stringAttributes.constFind(prop);
+        const auto it = m_stringAttributes.constFind(property);
         if (it !=  m_stringAttributes.constEnd())
             return it.value();
     }
 
     if (attribute == fontAttributeC) {
-        const auto it = m_stringFontAttributes.constFind(prop);
+        const auto it = m_stringFontAttributes.constFind(property);
         if (it !=  m_stringFontAttributes.constEnd())
             return it.value();
     }
 
     if (attribute == themeAttributeC) {
-        const auto it = m_stringThemeAttributes.constFind(prop);
+        const auto it = m_stringThemeAttributes.constFind(property);
         if (it !=  m_stringThemeAttributes.constEnd())
             return it.value();
     }
 
     if (attribute == superPaletteAttributeC) {
-        const auto it = m_paletteValues.constFind(prop);
+        const auto it = m_paletteValues.constFind(property);
         if (it != m_paletteValues.cend())
             return it.value().superPalette;
     }
 
     if (attribute == defaultResourceAttributeC) {
-        const auto itPix = m_defaultPixmaps.constFind(prop);
+        const auto itPix = m_defaultPixmaps.constFind(property);
         if (itPix != m_defaultPixmaps.constEnd())
             return itPix.value();
 
-        const auto itIcon = m_defaultIcons.constFind(prop);
+        const auto itIcon = m_defaultIcons.constFind(property);
         if (itIcon != m_defaultIcons.constEnd())
             return itIcon.value();
     }
@@ -1199,8 +1197,8 @@ bool DesignerPropertyManager::isPropertyTypeSupported(int propertyType) const
 
 QString DesignerPropertyManager::valueText(const QtProperty *property) const
 {
-    if (m_flagValues.contains(const_cast<QtProperty *>(property))) {
-        const FlagData data = m_flagValues.value(const_cast<QtProperty *>(property));
+    if (m_flagValues.contains(property)) {
+        const FlagData data = m_flagValues.value(property);
         const uint v = data.val;
         QString valueStr;
         for (const DesignerIntPair &p : data.flags) {
@@ -1214,21 +1212,21 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
         }
         return valueStr;
     }
-    if (m_alignValues.contains(const_cast<QtProperty *>(property))) {
-        const uint v = m_alignValues.value(const_cast<QtProperty *>(property));
+    if (m_alignValues.contains(property)) {
+        const uint v = m_alignValues.value(property);
         return tr("%1, %2").arg(indexHToString(alignToIndexH(v)),
                                 indexVToString(alignToIndexV(v)));
     }
-    if (m_paletteValues.contains(const_cast<QtProperty *>(property))) {
-        const PaletteData data = m_paletteValues.value(const_cast<QtProperty *>(property));
+    if (m_paletteValues.contains(property)) {
+        const PaletteData data = m_paletteValues.value(property);
         const auto mask = data.val.resolveMask();
         if (mask)
             return tr("Customized (%n roles)", nullptr, bitCount(mask));
         static const QString inherited = tr("Inherited");
         return inherited;
     }
-    if (m_iconValues.contains(const_cast<QtProperty *>(property))) {
-        const PropertySheetIconValue icon = m_iconValues.value(const_cast<QtProperty *>(property));
+    if (m_iconValues.contains(property)) {
+        const PropertySheetIconValue icon = m_iconValues.value(property);
         const QString theme = icon.theme();
         if (!theme.isEmpty() && QIcon::hasThemeIcon(theme))
             return PixmapEditor::msgThemeIcon(theme);
@@ -1238,27 +1236,22 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
             return QString();
         return QFileInfo(it.value().path()).fileName();
     }
-    if (m_pixmapValues.contains(const_cast<QtProperty *>(property))) {
-        const QString path =  m_pixmapValues.value(const_cast<QtProperty *>(property)).path();
+    if (m_pixmapValues.contains(property)) {
+        const QString path =  m_pixmapValues.value(property).path();
         if (path.isEmpty())
             return QString();
         return QFileInfo(path).fileName();
     }
-    if (m_uintValues.contains(const_cast<QtProperty *>(property))) {
-        return QString::number(m_uintValues.value(const_cast<QtProperty *>(property)));
-    }
-    if (m_longLongValues.contains(const_cast<QtProperty *>(property))) {
-        return QString::number(m_longLongValues.value(const_cast<QtProperty *>(property)));
-    }
-    if (m_uLongLongValues.contains(const_cast<QtProperty *>(property))) {
-        return QString::number(m_uLongLongValues.value(const_cast<QtProperty *>(property)));
-    }
-    if (m_urlValues.contains(const_cast<QtProperty *>(property))) {
-        return m_urlValues.value(const_cast<QtProperty *>(property)).toString();
-    }
-    if (m_byteArrayValues.contains(const_cast<QtProperty *>(property))) {
-        return QString::fromUtf8(m_byteArrayValues.value(const_cast<QtProperty *>(property)));
-    }
+    if (m_uintValues.contains(property))
+        return QString::number(m_uintValues.value(property));
+    if (m_longLongValues.contains(property))
+        return QString::number(m_longLongValues.value(property));
+    if (m_uLongLongValues.contains(property))
+        return QString::number(m_uLongLongValues.value(property));
+    if (m_urlValues.contains(property))
+        return m_urlValues.value(property).toString();
+    if (m_byteArrayValues.contains(property))
+        return QString::fromUtf8(m_byteArrayValues.value(property));
     const int vType = QtVariantPropertyManager::valueType(property);
     if (vType == QMetaType::QString || vType == designerStringTypeId()) {
         const QString str = (QtVariantPropertyManager::valueType(property) == QMetaType::QString)
@@ -1289,7 +1282,7 @@ void DesignerPropertyManager::reloadResourceProperties()
 {
     DesignerIconCache *iconCache = nullptr;
     for (auto itIcon = m_iconValues.cbegin(), end = m_iconValues.cend(); itIcon!= end; ++itIcon) {
-        QtProperty *property = itIcon.key();
+        auto *property = itIcon.key();
         const PropertySheetIconValue &icon = itIcon.value();
 
         QIcon defaultIcon = m_defaultIcons.value(property);
@@ -1311,11 +1304,12 @@ void DesignerPropertyManager::reloadResourceProperties()
                                       defaultIcon.pixmap(16, 16, pair.first, pair.second));
         }
 
-        emit propertyChanged(property);
-        emit QtVariantPropertyManager::valueChanged(property, QVariant::fromValue(itIcon.value()));
+        auto *ncProperty = const_cast<QtProperty *>(property);
+        emit propertyChanged(ncProperty);
+        emit QtVariantPropertyManager::valueChanged(ncProperty, QVariant::fromValue(itIcon.value()));
     }
     for (auto itPix = m_pixmapValues.cbegin(), end = m_pixmapValues.cend(); itPix != end; ++itPix) {
-        QtProperty *property = itPix.key();
+        auto *property = const_cast<QtProperty *>(itPix.key());
         emit propertyChanged(property);
         emit QtVariantPropertyManager::valueChanged(property, QVariant::fromValue(itPix.value()));
     }
@@ -1323,21 +1317,21 @@ void DesignerPropertyManager::reloadResourceProperties()
 
 QIcon DesignerPropertyManager::valueIcon(const QtProperty *property) const
 {
-    if (m_iconValues.contains(const_cast<QtProperty *>(property))) {
+    if (m_iconValues.contains(property)) {
         if (!property->isModified())
-            return m_defaultIcons.value(const_cast<QtProperty *>(property)).pixmap(16, 16);
+            return m_defaultIcons.value(property).pixmap(16, 16);
         QDesignerFormWindowInterface *formWindow = QDesignerFormWindowInterface::findFormWindow(m_object);
         qdesigner_internal::FormWindowBase *fwb = qobject_cast<qdesigner_internal::FormWindowBase *>(formWindow);
         if (fwb)
-            return fwb->iconCache()->icon(m_iconValues.value(const_cast<QtProperty *>(property))).pixmap(16, 16);
-    } else if (m_pixmapValues.contains(const_cast<QtProperty *>(property))) {
+            return fwb->iconCache()->icon(m_iconValues.value(property)).pixmap(16, 16);
+    } else if (m_pixmapValues.contains(property)) {
         if (!property->isModified())
-            return m_defaultPixmaps.value(const_cast<QtProperty *>(property));
+            return m_defaultPixmaps.value(property);
         QDesignerFormWindowInterface *formWindow = QDesignerFormWindowInterface::findFormWindow(m_object);
         qdesigner_internal::FormWindowBase *fwb = qobject_cast<qdesigner_internal::FormWindowBase *>(formWindow);
         if (fwb)
-            return fwb->pixmapCache()->pixmap(m_pixmapValues.value(const_cast<QtProperty *>(property)));
-    } else if (m_stringThemeAttributes.value(const_cast<QtProperty *>(property), false)) {
+            return fwb->pixmapCache()->pixmap(m_pixmapValues.value(property));
+    } else if (m_stringThemeAttributes.value(property, false)) {
         return QIcon::fromTheme(value(property).toString());
     } else {
         QIcon rc;
@@ -1350,32 +1344,32 @@ QIcon DesignerPropertyManager::valueIcon(const QtProperty *property) const
 
 QVariant DesignerPropertyManager::value(const QtProperty *property) const
 {
-    if (m_flagValues.contains(const_cast<QtProperty *>(property)))
-        return m_flagValues.value(const_cast<QtProperty *>(property)).val;
-    if (m_alignValues.contains(const_cast<QtProperty *>(property)))
-        return m_alignValues.value(const_cast<QtProperty *>(property));
-    if (m_paletteValues.contains(const_cast<QtProperty *>(property)))
-        return m_paletteValues.value(const_cast<QtProperty *>(property)).val;
-    if (m_iconValues.contains(const_cast<QtProperty *>(property)))
-        return QVariant::fromValue(m_iconValues.value(const_cast<QtProperty *>(property)));
-    if (m_pixmapValues.contains(const_cast<QtProperty *>(property)))
-        return QVariant::fromValue(m_pixmapValues.value(const_cast<QtProperty *>(property)));
+    if (m_flagValues.contains(property))
+        return m_flagValues.value(property).val;
+    if (m_alignValues.contains(property))
+        return m_alignValues.value(property);
+    if (m_paletteValues.contains(property))
+        return m_paletteValues.value(property).val;
+    if (m_iconValues.contains(property))
+        return QVariant::fromValue(m_iconValues.value(property));
+    if (m_pixmapValues.contains(property))
+        return QVariant::fromValue(m_pixmapValues.value(property));
     QVariant rc;
     if (m_stringManager.value(property, &rc)
         || m_keySequenceManager.value(property, &rc)
         || m_stringListManager.value(property, &rc)
         || m_brushManager.value(property, &rc))
         return rc;
-    if (m_uintValues.contains(const_cast<QtProperty *>(property)))
-        return m_uintValues.value(const_cast<QtProperty *>(property));
-    if (m_longLongValues.contains(const_cast<QtProperty *>(property)))
-        return m_longLongValues.value(const_cast<QtProperty *>(property));
-    if (m_uLongLongValues.contains(const_cast<QtProperty *>(property)))
-        return m_uLongLongValues.value(const_cast<QtProperty *>(property));
-    if (m_urlValues.contains(const_cast<QtProperty *>(property)))
-        return m_urlValues.value(const_cast<QtProperty *>(property));
-    if (m_byteArrayValues.contains(const_cast<QtProperty *>(property)))
-        return m_byteArrayValues.value(const_cast<QtProperty *>(property));
+    if (m_uintValues.contains(property))
+        return m_uintValues.value(property);
+    if (m_longLongValues.contains(property))
+        return m_longLongValues.value(property);
+    if (m_uLongLongValues.contains(property))
+        return m_uLongLongValues.value(property);
+    if (m_urlValues.contains(property))
+        return m_urlValues.value(property);
+    if (m_byteArrayValues.contains(property))
+        return m_byteArrayValues.value(property);
 
     return QtVariantPropertyManager::value(property);
 }
@@ -2246,7 +2240,7 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
 
 template <class Editor>
 bool removeEditor(QObject *object,
-                  QHash<QtProperty *, QList<Editor>> *propertyToEditors,
+                  QHash<const QtProperty *, QList<Editor>> *propertyToEditors,
                   QHash<Editor, QtProperty *> *editorToProperty)
 {
     if (!propertyToEditors)
