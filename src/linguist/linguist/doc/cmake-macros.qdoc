@@ -405,7 +405,7 @@ details.
 \section1 Automatic Determination of .ts File Paths
 
 The paths of the \c{.ts} files that are used as input for \c qt_add_translations
-can be automatically determined if \l{QT_I18N_LANGUAGES} has been set.
+can be automatically determined if \l{QT_I18N_TRANSLATED_LANGUAGES} has been set.
 
 The following project setup is usually enough:
 
@@ -423,7 +423,7 @@ can specify a different base name with the \c{TS_FILE_BASE} argument.
 
 \include cmake-macros.qdoc ts-native-language
 
-If \l{QT_I18N_NATIVE_LANGUAGE} is set then the path to the native \c{.ts} file
+If \l{QT_I18N_SOURCE_LANGUAGE} is set then the path to the native \c{.ts} file
 will also be automatically determined.
 
 \section1 Options

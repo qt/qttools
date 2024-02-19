@@ -14,7 +14,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 
-qt_standard_project_setup(I18N_LANGUAGES pt)
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES pt)
 
 qt_add_executable(trollprint
     main.cpp

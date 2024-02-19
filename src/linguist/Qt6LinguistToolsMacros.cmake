@@ -567,10 +567,10 @@ function(qt6_add_translations)
     endif()
     if(NOT DEFINED arg_TS_FILES
             AND NOT DEFINED arg_NATIVE_TS_FILE
-            AND "${QT_I18N_LANGUAGES}" STREQUAL ""
-            AND "${QT_I18N_NATIVE_LANGUAGE}" STREQUAL "")
+            AND "${QT_I18N_TRANSLATED_LANGUAGES}" STREQUAL ""
+            AND "${QT_I18N_SOURCE_LANGUAGE}" STREQUAL "")
         message(FATAL_ERROR
-            "One of QT_I18N_LANGUAGES, QT_I18N_NATIVE_LANGUAGE, TS_FILES, "
+            "One of QT_I18N_TRANSLATED_LANGUAGES, QT_I18N_SOURCE_LANGUAGE, TS_FILES, "
             "or NATIVE_TS_FILE must be provided.")
     endif()
     if(DEFINED arg_RESOURCE_PREFIX AND DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
@@ -595,14 +595,14 @@ function(qt6_add_translations)
             string(REPLACE " " "-" arg_TS_FILE_BASE "${arg_TS_FILE_BASE}")
         endif()
         set(arg_TS_FILES "")
-        foreach(lang IN LISTS QT_I18N_LANGUAGES)
+        foreach(lang IN LISTS QT_I18N_TRANSLATED_LANGUAGES)
             list(APPEND arg_TS_FILES "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${lang}.ts")
         endforeach()
 
         # Determine the path to the native .ts file if necessary.
-        if(NOT DEFINED arg_NATIVE_TS_FILE AND NOT "${QT_I18N_NATIVE_LANGUAGE}" STREQUAL "")
+        if(NOT DEFINED arg_NATIVE_TS_FILE AND NOT "${QT_I18N_SOURCE_LANGUAGE}" STREQUAL "")
             set(arg_NATIVE_TS_FILE
-                "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${QT_I18N_NATIVE_LANGUAGE}.ts")
+                "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${QT_I18N_SOURCE_LANGUAGE}.ts")
         endif()
     endif()
 
@@ -699,7 +699,7 @@ function(qt6_add_translations)
         QM_FILES_OUTPUT_VARIABLE qm_files
         OPTIONS "${arg_LRELEASE_OPTIONS}")
 
-    if("${QT_I18N_LANGUAGES}" STREQUAL "")
+    if("${QT_I18N_TRANSLATED_LANGUAGES}" STREQUAL "")
         _qt_internal_store_languages_from_ts_files_in_targets("${targets}" "${arg_TS_FILES}")
     endif()
 
