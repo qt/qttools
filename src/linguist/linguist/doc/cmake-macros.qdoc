@@ -139,6 +139,7 @@ files in the build directory:
 
 \section1 Synopsis
 
+Since 6.7:
 \badcode
 qt_add_lupdate(TS_FILES file1.ts [file2.ts ...]
                [NATIVE_TS_FILE file.ts]
@@ -146,6 +147,15 @@ qt_add_lupdate(TS_FILES file1.ts [file2.ts ...]
                [SOURCES source1.cpp [sources2.cpp ...]]
                [INCLUDE_DIRECTORIES directory1 [directory2 ...]]
                [LUPDATE_TARGET target-name]
+               [NO_GLOBAL_TARGET]
+               [OPTIONS ...])
+\endcode
+
+Since 6.2 (deprecated):
+\badcode
+qt_add_lupdate(target TS_FILES file1.ts [file2.ts ...]
+               [SOURCES source1.cpp [sources2.cpp ...]]
+               [INCLUDE_DIRECTORIES directory1 [directory2 ...]]
                [NO_GLOBAL_TARGET]
                [OPTIONS ...])
 \endcode
