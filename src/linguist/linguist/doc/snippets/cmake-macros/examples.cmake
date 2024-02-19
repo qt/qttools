@@ -32,7 +32,10 @@ set_source_files_properties(app_en.ts app_de.ts
 #! [set_output_location_on_ts_file]
 
 #! [qt_add_lupdate]
-qt_add_lupdate(myapp TS_FILES myapp_de.ts)
+qt_add_lupdate(
+    TS_FILES myapp_de.ts
+    PLURALS_TS_FILE myapp_en.ts
+)
 #! [qt_add_lupdate]
 
 #! [qt_add_lrelease_install]
