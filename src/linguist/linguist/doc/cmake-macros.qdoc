@@ -446,6 +446,9 @@ You can set additional options for \l{lupdate} and \l{lrelease} with
 \c{LUPDATE_OPTIONS} and \c{LRELEASE_OPTIONS}. You can find possible options in
 the \l{lupdate options} and \l{lrelease options}.
 
+For example, to use \l{Text ID based translations}{ID based translations}, you
+need to pass \c{LRELEASE_OPTIONS -idbased} to \c qt_add_translations.
+
 By default, the \c{.qm} files will be placed in the current build directory
 (\c{CMAKE_CURRENT_BINARY_DIR}). To change this, you can set \c{OUTPUT_LOCATION}
 as a property of the source \c{.ts} file.
