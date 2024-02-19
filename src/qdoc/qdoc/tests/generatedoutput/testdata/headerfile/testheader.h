@@ -5,4 +5,4 @@
 
 void globalFunc() {};
 enum Globals { Glo, Bal };
-const int globalVar;
+extern const int globalVar;
