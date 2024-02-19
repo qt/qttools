@@ -55,7 +55,7 @@ private slots:
     void slotPropertyChanged(QtProperty *property);
     void slotEditorDestroyed(QObject *object);
 private:
-    QHash<QtProperty *, QList<ResetWidget *>> m_createdResetWidgets;
+    QHash<const QtProperty *, QList<ResetWidget *>> m_createdResetWidgets;
     QHash<ResetWidget *, QtProperty *> m_resetWidgetToProperty;
     int m_spacing;
     const QDesignerFormEditorInterface *m_core;
@@ -79,16 +79,16 @@ public:
                  int expectedTypeId, const QVariant &value);
 
 private:
-    QHash<QtProperty *, PropertySheetValue> m_values;
-    QHash<QtProperty *, QtProperty *> m_valueToComment;
-    QHash<QtProperty *, QtProperty *> m_valueToTranslatable;
-    QHash<QtProperty *, QtProperty *> m_valueToDisambiguation;
-    QHash<QtProperty *, QtProperty *> m_valueToId;
+    QHash<const QtProperty *, PropertySheetValue> m_values;
+    QHash<const QtProperty *, QtProperty *> m_valueToComment;
+    QHash<const QtProperty *, QtProperty *> m_valueToTranslatable;
+    QHash<const QtProperty *, QtProperty *> m_valueToDisambiguation;
+    QHash<const QtProperty *, QtProperty *> m_valueToId;
 
-    QHash<QtProperty *, QtProperty *> m_commentToValue;
-    QHash<QtProperty *, QtProperty *> m_translatableToValue;
-    QHash<QtProperty *, QtProperty *> m_disambiguationToValue;
-    QHash<QtProperty *, QtProperty *> m_idToValue;
+    QHash<const QtProperty *, QtProperty *> m_commentToValue;
+    QHash<const QtProperty *, QtProperty *> m_translatableToValue;
+    QHash<const QtProperty *, QtProperty *> m_disambiguationToValue;
+    QHash<const QtProperty *, QtProperty *> m_idToValue;
 };
 
 class DesignerPropertyManager : public QtVariantPropertyManager
@@ -152,7 +152,7 @@ private Q_SLOTS:
 private:
     void createIconSubProperty(QtProperty *iconProperty, QIcon::Mode mode, QIcon::State state, const QString &subName);
 
-    QHash<QtProperty *, bool> m_resetMap;
+    QHash<const QtProperty *, bool> m_resetMap;
 
     struct FlagData
     {
@@ -161,9 +161,9 @@ private:
         QList<uint> values;
     };
 
-    QHash<QtProperty *, FlagData> m_flagValues;
-    QHash<QtProperty *, QList<QtProperty *>> m_propertyToFlags;
-    QHash<QtProperty *, QtProperty *> m_flagToProperty;
+    QHash<const QtProperty *, FlagData> m_flagValues;
+    QHash<const QtProperty *, QList<QtProperty *>> m_propertyToFlags;
+    QHash<const QtProperty *, QtProperty *> m_flagToProperty;
 
     int alignToIndexH(uint align) const;
     int alignToIndexV(uint align) const;
@@ -171,16 +171,16 @@ private:
     uint indexVToAlign(int idx) const;
     QString indexHToString(int idx) const;
     QString indexVToString(int idx) const;
-    QHash<QtProperty *, uint> m_alignValues;
-    using PropertyToPropertyMap = QHash<QtProperty *, QtProperty *>;
+    QHash<const QtProperty *, uint> m_alignValues;
+    using PropertyToPropertyMap = QHash<const QtProperty *, QtProperty *>;
     PropertyToPropertyMap m_propertyToAlignH;
     PropertyToPropertyMap m_propertyToAlignV;
     PropertyToPropertyMap m_alignHToProperty;
     PropertyToPropertyMap m_alignVToProperty;
     QHash<const QtProperty *, Qt::Alignment> m_alignDefault;
 
-    QHash<QtProperty *, QMap<std::pair<QIcon::Mode, QIcon::State>, QtProperty *>> m_propertyToIconSubProperties;
-    QHash<QtProperty *, std::pair<QIcon::Mode, QIcon::State>> m_iconSubPropertyToState;
+    QHash<const QtProperty *, QMap<std::pair<QIcon::Mode, QIcon::State>, QtProperty *>> m_propertyToIconSubProperties;
+    QHash<const QtProperty *, std::pair<QIcon::Mode, QIcon::State>> m_iconSubPropertyToState;
     PropertyToPropertyMap m_iconSubPropertyToProperty;
     PropertyToPropertyMap m_propertyToTheme;
 
@@ -193,26 +193,26 @@ private:
         QPalette val;
         QPalette superPalette;
     };
-    QHash<QtProperty *, PaletteData> m_paletteValues;
+    QHash<const QtProperty *, PaletteData> m_paletteValues;
 
-    QHash<QtProperty *, qdesigner_internal::PropertySheetPixmapValue> m_pixmapValues;
-    QHash<QtProperty *, qdesigner_internal::PropertySheetIconValue> m_iconValues;
+    QHash<const QtProperty *, qdesigner_internal::PropertySheetPixmapValue> m_pixmapValues;
+    QHash<const QtProperty *, qdesigner_internal::PropertySheetIconValue> m_iconValues;
 
-    QHash<QtProperty *, uint> m_uintValues;
-    QHash<QtProperty *, qlonglong> m_longLongValues;
-    QHash<QtProperty *, qulonglong> m_uLongLongValues;
-    QHash<QtProperty *, QUrl> m_urlValues;
-    QHash<QtProperty *, QByteArray> m_byteArrayValues;
+    QHash<const QtProperty *, uint> m_uintValues;
+    QHash<const QtProperty *, qlonglong> m_longLongValues;
+    QHash<const QtProperty *, qulonglong> m_uLongLongValues;
+    QHash<const QtProperty *, QUrl> m_urlValues;
+    QHash<const QtProperty *, QByteArray> m_byteArrayValues;
 
-    QHash<QtProperty *, int> m_stringAttributes;
-    QHash<QtProperty *, QFont> m_stringFontAttributes;
-    QHash<QtProperty *, bool> m_stringThemeAttributes;
+    QHash<const QtProperty *, int> m_stringAttributes;
+    QHash<const QtProperty *, QFont> m_stringFontAttributes;
+    QHash<const QtProperty *, bool> m_stringThemeAttributes;
 
     BrushPropertyManager m_brushManager;
     FontPropertyManager m_fontManager;
 
-    QHash<QtProperty *, QPixmap> m_defaultPixmaps;
-    QHash<QtProperty *, QIcon> m_defaultIcons;
+    QHash<const QtProperty *, QPixmap> m_defaultPixmaps;
+    QHash<const QtProperty *, QIcon> m_defaultIcons;
 
     bool m_changingSubValue;
     QDesignerFormEditorInterface *m_core;
@@ -265,28 +265,28 @@ private:
 
     int m_spacing;
 
-    QHash<QtProperty *, QList<TextEditor *>>             m_stringPropertyToEditors;
-    QHash<TextEditor *, QtProperty *>                    m_editorToStringProperty;
-    QHash<QtProperty *, QList<QKeySequenceEdit *>>       m_keySequencePropertyToEditors;
-    QHash<QKeySequenceEdit *, QtProperty *>              m_editorToKeySequenceProperty;
-    QHash<QtProperty *, QList<PaletteEditorButton *>>    m_palettePropertyToEditors;
-    QHash<PaletteEditorButton *, QtProperty *>           m_editorToPaletteProperty;
-    QHash<QtProperty *, QList<PixmapEditor *>>           m_pixmapPropertyToEditors;
-    QHash<PixmapEditor *, QtProperty *>                  m_editorToPixmapProperty;
-    QHash<QtProperty *, QList<PixmapEditor *>>           m_iconPropertyToEditors;
-    QHash<PixmapEditor *, QtProperty *>                  m_editorToIconProperty;
-    QHash<QtProperty *, QList<QLineEdit *>>              m_uintPropertyToEditors;
-    QHash<QLineEdit *, QtProperty *>                     m_editorToUintProperty;
-    QHash<QtProperty *, QList<QLineEdit *>>              m_longLongPropertyToEditors;
-    QHash<QLineEdit *, QtProperty *>                     m_editorToLongLongProperty;
-    QHash<QtProperty *, QList<QLineEdit *>>              m_uLongLongPropertyToEditors;
-    QHash<QLineEdit *, QtProperty *>                     m_editorToULongLongProperty;
-    QHash<QtProperty *, QList<TextEditor *>>             m_urlPropertyToEditors;
-    QHash<TextEditor *, QtProperty *>                    m_editorToUrlProperty;
-    QHash<QtProperty *, QList<TextEditor *>>             m_byteArrayPropertyToEditors;
-    QHash<TextEditor *, QtProperty *>                    m_editorToByteArrayProperty;
-    QHash<QtProperty *, QList<StringListEditorButton *>> m_stringListPropertyToEditors;
-    QHash<StringListEditorButton *, QtProperty *>        m_editorToStringListProperty;
+    QHash<const QtProperty *, QList<TextEditor *>>             m_stringPropertyToEditors;
+    QHash<TextEditor *, QtProperty *>                          m_editorToStringProperty;
+    QHash<const QtProperty *, QList<QKeySequenceEdit *>>       m_keySequencePropertyToEditors;
+    QHash<QKeySequenceEdit *, QtProperty *>                    m_editorToKeySequenceProperty;
+    QHash<const QtProperty *, QList<PaletteEditorButton *>>    m_palettePropertyToEditors;
+    QHash<PaletteEditorButton *, QtProperty *>                 m_editorToPaletteProperty;
+    QHash<const QtProperty *, QList<PixmapEditor *>>           m_pixmapPropertyToEditors;
+    QHash<PixmapEditor *, QtProperty *>                        m_editorToPixmapProperty;
+    QHash<const QtProperty *, QList<PixmapEditor *>>           m_iconPropertyToEditors;
+    QHash<PixmapEditor *, QtProperty *>                        m_editorToIconProperty;
+    QHash<const QtProperty *, QList<QLineEdit *>>              m_uintPropertyToEditors;
+    QHash<QLineEdit *, QtProperty *>                           m_editorToUintProperty;
+    QHash<const QtProperty *, QList<QLineEdit *>>              m_longLongPropertyToEditors;
+    QHash<QLineEdit *, QtProperty *>                           m_editorToLongLongProperty;
+    QHash<const QtProperty *, QList<QLineEdit *>>              m_uLongLongPropertyToEditors;
+    QHash<QLineEdit *, QtProperty *>                           m_editorToULongLongProperty;
+    QHash<const QtProperty *, QList<TextEditor *>>             m_urlPropertyToEditors;
+    QHash<TextEditor *, QtProperty *>                          m_editorToUrlProperty;
+    QHash<const QtProperty *, QList<TextEditor *>>             m_byteArrayPropertyToEditors;
+    QHash<TextEditor *, QtProperty *>                          m_editorToByteArrayProperty;
+    QHash<const QtProperty *, QList<StringListEditorButton *>> m_stringListPropertyToEditors;
+    QHash<StringListEditorButton *, QtProperty *>              m_editorToStringListProperty;
 };
 
 } // namespace qdesigner_internal

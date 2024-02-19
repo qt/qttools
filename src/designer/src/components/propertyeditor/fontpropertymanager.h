@@ -31,7 +31,7 @@ class FontPropertyManager {
 public:
     FontPropertyManager();
 
-    using ResetMap = QHash<QtProperty *, bool>;
+    using ResetMap = QHash<const QtProperty *, bool>;
     using NameMap = QMap<QString, QString>;
 
     // Call before QtVariantPropertyManager::initializeProperty.

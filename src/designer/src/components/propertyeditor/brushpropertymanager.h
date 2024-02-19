@@ -48,13 +48,13 @@ private:
 
     static const QMap<int, QIcon> &brushStyleIcons();
 
-    using PropertyToPropertyMap = QHash<QtProperty *, QtProperty *>;
+    using PropertyToPropertyMap = QHash<const QtProperty *, QtProperty *>;
     PropertyToPropertyMap m_brushPropertyToStyleSubProperty;
     PropertyToPropertyMap m_brushPropertyToColorSubProperty;
     PropertyToPropertyMap m_brushStyleSubPropertyToProperty;
     PropertyToPropertyMap m_brushColorSubPropertyToProperty;
 
-    QHash<QtProperty *, QBrush> m_brushValues;
+    QHash<const QtProperty *, QBrush> m_brushValues;
 };
 
 }
