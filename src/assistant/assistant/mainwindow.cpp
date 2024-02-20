@@ -581,8 +581,7 @@ void MainWindow::setupActions()
     m_aboutAction->setMenuRole(QAction::AboutRole);
 
 #if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
-    m_resetZoomAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ZoomOriginal,
-                                                m_resetZoomAction->icon()));
+    m_resetZoomAction->setIcon(QIcon::fromTheme("zoom-original", m_resetZoomAction->icon()));
     m_syncAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ViewRefresh,
                           m_syncAction->icon()));
 #endif
