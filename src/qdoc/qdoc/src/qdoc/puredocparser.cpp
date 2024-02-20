@@ -77,8 +77,8 @@ void PureDocParser::processQdocComments(QFile& input_file, CppCodeParser& cpp_co
         if (hasTooManyTopics(doc))
             continue;
 
-        auto [nodes, docs] = cpp_code_parser.processTopicArgs(doc);
-        cpp_code_parser.processMetaCommands(nodes, docs);
+        auto tied = cpp_code_parser.processTopicArgs(UntiedDocumentation{doc, {}});
+        cpp_code_parser.processMetaCommands(tied);
     }
 }
 

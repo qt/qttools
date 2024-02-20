@@ -201,6 +201,8 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
             qcn = database->findQmlTypeInPrimaryTree(QString(), arg.first);
         if (!qcn || qcn->nodeType() != nodeType)
             qcn = new QmlTypeNode(database->primaryTreeRoot(), arg.first, nodeType);
+        if (!qmid.isEmpty())
+            database->addToQmlModule(qmid, qcn);
         qcn->setLocation(doc.startLocation());
         return qcn;
     } else if ((command == COMMAND_QMLSIGNAL) || (command == COMMAND_QMLMETHOD)
@@ -257,8 +259,9 @@ bool CppCodeParser::splitQmlPropertyArg(const QString &arg, QString &type, QStri
     return false;
 }
 
-std::pair<NodeList, DocList> CppCodeParser::processQmlProperties(const Doc &doc)
+std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedDocumentation &untied)
 {
+    const Doc &doc = untied.documentation;
     const TopicList &topics = doc.topicsUsed();
     if (topics.isEmpty())
         return {};
@@ -270,8 +273,7 @@ std::pair<NodeList, DocList> CppCodeParser::processQmlProperties(const Doc &doc)
     QString property;
     QString qmlTypeName;
 
-    NodeList nodes{};
-    DocList docs{};
+    std::vector<TiedDocumentation> tied{};
 
     Topic topic = topics.at(0);
     arg = topic.m_args;
@@ -281,7 +283,7 @@ std::pair<NodeList, DocList> CppCodeParser::processQmlProperties(const Doc &doc)
             group = property.left(i);
     }
 
-    QDocDatabase* database = QDocDatabase::qdocDB();
+    QDocDatabase *database = QDocDatabase::qdocDB();
 
     NodeList sharedNodes;
     QmlTypeNode *qmlType = database->findQmlTypeInPrimaryTree(qmlModule, qmlTypeName);
@@ -322,8 +324,9 @@ std::pair<NodeList, DocList> CppCodeParser::processQmlProperties(const Doc &doc)
                 auto *qpn = new QmlPropertyNode(qmlType, property, type, attached);
                 qpn->setLocation(doc.startLocation());
                 qpn->setGenus(Node::QML);
-                nodes.append(qpn);
-                docs.append(doc);
+
+                tied.emplace_back(TiedDocumentation{doc, qpn});
+
                 sharedNodes << qpn;
             }
         } else {
@@ -340,14 +343,15 @@ std::pair<NodeList, DocList> CppCodeParser::processQmlProperties(const Doc &doc)
     if (sharedNodes.size() > 1) {
         auto *scn = new SharedCommentNode(qmlType, sharedNodes.size(), group);
         scn->setLocation(doc.startLocation());
-        nodes.append(scn);
-        docs.append(doc);
+
+        tied.emplace_back(TiedDocumentation{doc, scn});
+
         for (const auto n : sharedNodes)
             scn->append(n);
         scn->sort();
     }
 
-    return std::make_pair(nodes, docs);
+    return tied;
 }
 
 /*!
@@ -521,7 +525,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
     } else if (command == COMMAND_INMODULE) {
         database->addToModule(arg, node);
     } else if (command == COMMAND_INQMLMODULE) {
-        database->addToQmlModule(arg, node);
+        // Handled when parsing topic commands
     } else if (command == COMMAND_OBSOLETE) {
         node->setStatus(Node::Deprecated);
     } else if (command == COMMAND_NONREENTRANT) {
@@ -877,28 +881,31 @@ bool CppCodeParser::isQMLPropertyTopic(const QString &t)
     return (t == COMMAND_QMLPROPERTY || t == COMMAND_QMLATTACHEDPROPERTY);
 }
 
-std::pair<NodeList, DocList> CppCodeParser::processTopicArgs(const Doc &doc)
+std::vector<TiedDocumentation> CppCodeParser::processTopicArgs(const UntiedDocumentation &untied)
 {
-    if (doc.topicsUsed().isEmpty()) return {};
+    const Doc &doc = untied.documentation;
 
-    QDocDatabase* database = QDocDatabase::qdocDB();
+    if (doc.topicsUsed().isEmpty())
+        return {};
+
+    QDocDatabase *database = QDocDatabase::qdocDB();
 
     const QString topic = doc.topicsUsed().first().m_topic;
 
-    NodeList nodes;
-    DocList docs;
+    std::vector<TiedDocumentation> tied{};
 
     if (isQMLPropertyTopic(topic)) {
-        auto [qml_nodes, qml_docs] = processQmlProperties(doc);
-        nodes.append(qml_nodes);
-        docs.append(qml_docs);
+        auto tied_qml = processQmlProperties(untied);
+        tied.insert(tied.end(), tied_qml.begin(), tied_qml.end());
     } else {
         ArgList args = doc.metaCommandArgs(topic);
         Node *node = nullptr;
         if (args.size() == 1) {
             if (topic == COMMAND_FN) {
                 if (Config::instance().showInternal() || !doc.isInternal())
-                    node = static_cast<ClangCodeParser*>(CodeParser::parserForLanguage("Clang"))->parseFnArg(doc.location(), args[0].first, args[0].second);
+                    node = static_cast<ClangCodeParser *>(CodeParser::parserForLanguage("Clang"))
+                                   ->parseFnArg(doc.location(), args[0].first, args[0].second,
+                                                untied.context);
             } else if (topic == COMMAND_MACRO) {
                 node = parseMacroArg(doc.location(), args[0].first);
             } else if (isQMLMethodTopic(topic)) {
@@ -909,8 +916,7 @@ std::pair<NodeList, DocList> CppCodeParser::processTopicArgs(const Doc &doc)
                 node = processTopicCommand(doc, topic, args[0]);
             }
             if (node != nullptr) {
-                nodes.append(node);
-                docs.append(doc);
+                tied.emplace_back(TiedDocumentation{doc, node});
             }
         } else if (args.size() > 1) {
             QList<SharedCommentNode *> sharedCommentNodes;
@@ -918,7 +924,10 @@ std::pair<NodeList, DocList> CppCodeParser::processTopicArgs(const Doc &doc)
                 node = nullptr;
                 if (topic == COMMAND_FN) {
                     if (Config::instance().showInternal() || !doc.isInternal())
-                        node = static_cast<ClangCodeParser*>(CodeParser::parserForLanguage("Clang"))->parseFnArg(doc.location(), arg.first, arg.second);
+                        node = static_cast<ClangCodeParser *>(
+                                       CodeParser::parserForLanguage("Clang"))
+                                       ->parseFnArg(doc.location(), arg.first, arg.second,
+                                                    untied.context);
                 } else if (topic == COMMAND_MACRO) {
                     node = parseMacroArg(doc.location(), arg.first);
                 } else if (isQMLMethodTopic(topic)) {
@@ -938,8 +947,7 @@ std::pair<NodeList, DocList> CppCodeParser::processTopicArgs(const Doc &doc)
                     if (!found) {
                         auto *scn = new SharedCommentNode(node);
                         sharedCommentNodes.append(scn);
-                        nodes.append(scn);
-                        docs.append(doc);
+                        tied.emplace_back(TiedDocumentation{doc, scn});
                     }
                 }
             }
@@ -948,7 +956,7 @@ std::pair<NodeList, DocList> CppCodeParser::processTopicArgs(const Doc &doc)
         }
     }
 
-    return std::make_pair(nodes, docs);
+    return tied;
 }
 
 /*!
@@ -980,42 +988,38 @@ static void checkModuleInclusion(Node *n)
     }
 }
 
-void CppCodeParser::processMetaCommands(NodeList &nodes, DocList &docs)
+void CppCodeParser::processMetaCommands(const std::vector<TiedDocumentation> &tied)
 {
-    QList<Doc>::Iterator d = docs.begin();
-    for (const auto &node : nodes) {
-        if (node != nullptr) {
-            processMetaCommands(*d, node);
-            node->setDoc(*d);
-            checkModuleInclusion(node);
-            if (node->isAggregate()) {
-                auto *aggregate = static_cast<Aggregate *>(node);
+    for (auto [doc, node] : tied) {
+        processMetaCommands(doc, node);
+        node->setDoc(doc);
+        checkModuleInclusion(node);
+        if (node->isAggregate()) {
+            auto *aggregate = static_cast<Aggregate *>(node);
 
-                if (!aggregate->includeFile()) {
-                    Aggregate *parent = aggregate;
-                    while (parent->physicalModuleName().isEmpty() && (parent->parent() != nullptr))
-                        parent = parent->parent();
+            if (!aggregate->includeFile()) {
+                Aggregate *parent = aggregate;
+                while (parent->physicalModuleName().isEmpty() && (parent->parent() != nullptr))
+                    parent = parent->parent();
 
-                    if (parent == aggregate)
-                        // TODO: Understand if the name can be empty.
-                        // In theory it should not be possible as
-                        // there would be no aggregate to refer to
-                        // such that this code is never reached.
-                        //
-                        // If the name can be empty, this would
-                        // endanger users of the include file down the
-                        // line, forcing them to ensure that, further
-                        // to there being an actual include file, that
-                        // include file is not an empty string, such
-                        // that we would require a different way to
-                        // generate the include file here.
-                        aggregate->setIncludeFile(aggregate->name());
-                    else if (aggregate->includeFile())
-                        aggregate->setIncludeFile(*parent->includeFile());
-                }
+                if (parent == aggregate)
+                    // TODO: Understand if the name can be empty.
+                    // In theory it should not be possible as
+                    // there would be no aggregate to refer to
+                    // such that this code is never reached.
+                    //
+                    // If the name can be empty, this would
+                    // endanger users of the include file down the
+                    // line, forcing them to ensure that, further
+                    // to there being an actual include file, that
+                    // include file is not an empty string, such
+                    // that we would require a different way to
+                    // generate the include file here.
+                    aggregate->setIncludeFile(aggregate->name());
+                else if (aggregate->includeFile())
+                    aggregate->setIncludeFile(*parent->includeFile());
             }
         }
-        ++d;
     }
 }
 

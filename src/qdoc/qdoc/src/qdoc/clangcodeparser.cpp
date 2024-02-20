@@ -1717,7 +1717,7 @@ static float getUnpatchedVersion(QString t)
 
   Call matchDocsAndStuff() to do all the parsing and tree building.
  */
-void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QString &filePath, CppCodeParser& cpp_code_parser)
+ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
 {
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
                                                   | CXTranslationUnit_SkipFunctionBodies
@@ -1745,8 +1745,10 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
 
     if (err || !tu) {
         qWarning() << "(qdoc) Could not parse source file" << filePath << " error code:" << err;
-        return;
+        return {};
     }
+
+    ParsedCppFileIR parse_result{};
 
     CXCursor tuCur = clang_getTranslationUnitCursor(tu);
     ClangVisitor visitor(m_qdb, m_allHeaders);
@@ -1774,9 +1776,6 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
         if (hasTooManyTopics(doc))
             continue;
 
-        DocList docs;
-        NodeList nodes;
-
         if (doc.topicsUsed().isEmpty()) {
             Node *n = nullptr;
             if (i + 1 < numTokens) {
@@ -1789,8 +1788,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
             }
 
             if (n) {
-                nodes.append(n);
-                docs.append(doc);
+                parse_result.tied.emplace_back(TiedDocumentation{doc, n});
             } else if (CodeParser::isWorthWarningAbout(doc)) {
                 bool future = false;
                 if (doc.metaCommandsUsed().contains(COMMAND_SINCE)) {
@@ -1810,6 +1808,8 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
                 }
             }
         } else {
+            parse_result.untied.emplace_back(UntiedDocumentation{doc, QStringList()});
+
             // Store the namespace scope from lexical parents of the comment
             m_namespaceScope.clear();
             CXCursor cur = clang_getCursor(tu, commentLoc);
@@ -1817,20 +1817,19 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
                 CXCursorKind kind = clang_getCursorKind(cur);
                 if (clang_isTranslationUnit(kind) || clang_isInvalid(kind))
                     break;
-                if (kind == CXCursor_Namespace)
-                    m_namespaceScope << fromCXString(clang_getCursorSpelling(cur));
+                if (kind == CXCursor_Namespace) {
+                    parse_result.untied.back().context << fromCXString(clang_getCursorSpelling(cur));
+                }
                 cur = clang_getCursorLexicalParent(cur);
             }
-
-            std::tie(nodes, docs) = cpp_code_parser.processTopicArgs(doc);
         }
-
-        cpp_code_parser.processMetaCommands(nodes, docs);
     }
 
     clang_disposeTokens(tu, tokens, numTokens);
     m_namespaceScope.clear();
     s_fn.clear();
+
+    return parse_result;
 }
 
 /*!
@@ -1838,7 +1837,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
   command. \a location is used for reporting errors. \a fnSignature
   is the string to parse. It is always a function decl.
  */
-Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag)
+Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag, QStringList context)
 {
     Node *fnNode = nullptr;
     /*
@@ -1902,7 +1901,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
 
     TranslationUnit tu;
     s_fn.clear();
-    for (const auto &ns : std::as_const(m_namespaceScope))
+    for (const auto &ns : std::as_const(context))
         s_fn.prepend("namespace " + ns.toUtf8() + " {");
     s_fn += fnSignature.toUtf8();
     if (!s_fn.endsWith(";"))

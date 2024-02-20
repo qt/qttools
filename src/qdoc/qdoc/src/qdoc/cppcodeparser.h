@@ -43,17 +43,17 @@ public:
     static bool isQMLMethodTopic(const QString &t);
     static bool isQMLPropertyTopic(const QString &t);
 
-    std::pair<NodeList, DocList> processTopicArgs(const Doc &doc);
+    std::vector<TiedDocumentation> processTopicArgs(const UntiedDocumentation &untied);
 
     void processMetaCommand(const Doc &doc, const QString &command, const ArgPair &argLocPair,
                             Node *node);
     void processMetaCommands(const Doc &doc, Node *node);
-    void processMetaCommands(NodeList &nodes, DocList &docs);
+    void processMetaCommands(const std::vector<TiedDocumentation> &tied);
 
 protected:
     virtual Node *processTopicCommand(const Doc &doc, const QString &command,
                                       const ArgPair &arg);
-    std::pair<NodeList, DocList> processQmlProperties(const Doc &doc);
+    std::vector<TiedDocumentation> processQmlProperties(const UntiedDocumentation& untied);
     bool splitQmlPropertyArg(const QString &arg, QString &type, QString &module, QString &element,
                              QString &name, const Location &location);
 

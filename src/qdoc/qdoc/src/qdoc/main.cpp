@@ -80,7 +80,14 @@ static void parseSourceFiles(std::vector<QString>&& sources)
         auto codeParser = static_cast<ClangCodeParser*>(CodeParser::parserForLanguage("Clang"));
 
         qCDebug(lcQdoc, "Parsing %s", qPrintable(source));
-        codeParser->parseSourceFile(Config::instance().location(), source, cpp_code_parser);
+
+        auto [untied_documentation, tied_documentation] = codeParser->parse_cpp_file(source);
+        for (auto untied : untied_documentation) {
+            auto tied = cpp_code_parser.processTopicArgs(untied);
+            tied_documentation.insert(tied_documentation.end(), tied.begin(), tied.end());
+        };
+
+        cpp_code_parser.processMetaCommands(tied_documentation);
     });
 
     std::for_each(non_clang_handled_sources, sources.end(), [&cpp_code_parser](const QString& source){
@@ -90,6 +97,7 @@ static void parseSourceFiles(std::vector<QString>&& sources)
         qCDebug(lcQdoc, "Parsing %s", qPrintable(source));
         codeParser->parseSourceFile(Config::instance().location(), source, cpp_code_parser);
     });
+
 }
 
 /*!

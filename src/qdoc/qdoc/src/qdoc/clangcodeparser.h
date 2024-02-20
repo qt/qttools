@@ -15,6 +15,11 @@ typedef struct CXTranslationUnitImpl *CXTranslationUnit;
 
 QT_BEGIN_NAMESPACE
 
+struct ParsedCppFileIR {
+    std::vector<UntiedDocumentation> untied;
+    std::vector<TiedDocumentation> tied;
+};
+
 class ClangCodeParser : public CodeParser
 {
 public:
@@ -29,9 +34,10 @@ public:
     QString language() override;
     QStringList sourceFileNameFilter() override;
     void parseHeaderFile(const Location &location, const QString &filePath);
-    void parseSourceFile(const Location &location, const QString &filePath, CppCodeParser&) override;
+    void parseSourceFile(const Location &, const QString &, CppCodeParser&) override {}
+    ParsedCppFileIR parse_cpp_file(const QString &filePath);
     void buildPCH(QString module_header);
-    Node *parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag);
+    Node *parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag, QStringList context);
 
 private:
     void getDefaultArgs();

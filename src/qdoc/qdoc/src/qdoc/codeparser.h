@@ -87,6 +87,16 @@ class QString;
 class QDocDatabase;
 class CppCodeParser;
 
+struct UntiedDocumentation {
+    Doc documentation;
+    QStringList context;
+};
+
+struct TiedDocumentation {
+    Doc documentation;
+    Node* node;
+};
+
 class CodeParser
 {
 public:
