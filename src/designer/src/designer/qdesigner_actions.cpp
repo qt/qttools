@@ -1041,9 +1041,7 @@ void QDesignerActions::backupForms()
         QDesignerFormWindow *fw = m_workbench->formWindow(i);
         QDesignerFormWindowInterface *fwi = fw->editor();
 
-        QString formBackupName;
-        QTextStream(&formBackupName) << m_backupPath << QDir::separator()
-                                     << "backup" << i << ".bak";
+        QString formBackupName = m_backupPath + "/backup"_L1 + QString::number(i) + ".bak"_L1;
 
         QString fwn = QDir::toNativeSeparators(fwi->fileName());
         if (fwn.isEmpty())
@@ -1061,7 +1059,9 @@ void QDesignerActions::backupForms()
             const QByteArray utf8Array = contents.toUtf8();
             if (file.write(utf8Array, utf8Array.size()) != utf8Array.size()) {
                 backupMap.remove(fwn);
-                qdesigner_internal::designerWarning(tr("The backup file %1 could not be written.").arg(file.fileName()));
+                qdesigner_internal::designerWarning(tr("The backup file %1 could not be written: %2").
+                                                    arg(QDir::toNativeSeparators(file.fileName()),
+                                                                                 file.errorString()));
             } else
                 tmpFiles.append(formBackupName);
 
