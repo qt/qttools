@@ -13,25 +13,25 @@
 
 QT_BEGIN_NAMESPACE
 
-#if QT_CONFIG(future)
-using FutureProvider = std::function<QFuture<std::shared_ptr<QHelpContentItem>>()>;
-
-struct WatcherDeleter
-{
-    void operator()(QFutureWatcherBase *watcher) {
-        watcher->disconnect();
-        watcher->cancel();
-        watcher->waitForFinished();
-        delete watcher;
-    }
-};
-#endif
-
 class QHelpContentModelPrivate
 {
+#if QT_CONFIG(future)
+    using ItemFutureProvider = std::function<QFuture<std::shared_ptr<QHelpContentItem>>()>;
+
+    struct WatcherDeleter
+    {
+        void operator()(QFutureWatcherBase *watcher) {
+            watcher->disconnect();
+            watcher->cancel();
+            watcher->waitForFinished();
+            delete watcher;
+        }
+    };
+#endif
+
 public:
 #if QT_CONFIG(future)
-    void createContents(const FutureProvider &futureProvider);
+    void createContents(const ItemFutureProvider &futureProvider);
 #endif
 
     QHelpContentModel *q = nullptr;
@@ -43,7 +43,7 @@ public:
 };
 
 #if QT_CONFIG(future)
-void QHelpContentModelPrivate::createContents(const FutureProvider &futureProvider)
+void QHelpContentModelPrivate::createContents(const ItemFutureProvider &futureProvider)
 {
     const bool wasRunning = bool(watcher);
     watcher.reset(new QFutureWatcher<std::shared_ptr<QHelpContentItem>>);

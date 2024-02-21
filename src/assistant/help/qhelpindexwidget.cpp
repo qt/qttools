@@ -11,22 +11,22 @@
 
 QT_BEGIN_NAMESPACE
 
-#if QT_CONFIG(future)
-using FutureProvider = std::function<QFuture<QStringList>()>;
-
-struct WatcherDeleter
-{
-    void operator()(QFutureWatcherBase *watcher) {
-        watcher->disconnect();
-        watcher->cancel();
-        watcher->waitForFinished();
-        delete watcher;
-    }
-};
-#endif
-
 class QHelpIndexModelPrivate
 {
+#if QT_CONFIG(future)
+    using FutureProvider = std::function<QFuture<QStringList>()>;
+
+    struct WatcherDeleter
+    {
+        void operator()(QFutureWatcherBase *watcher) {
+            watcher->disconnect();
+            watcher->cancel();
+            watcher->waitForFinished();
+            delete watcher;
+        }
+    };
+#endif
+
 public:
 #if QT_CONFIG(future)
     void createIndex(const FutureProvider &futureProvider);
