@@ -491,7 +491,7 @@ static void processQdocconfFile(const QString &fileName)
         headerList =
                 config.getAllFiles(CONFIG_HEADERS, CONFIG_HEADERDIRS, excludedDirs, excludedFiles);
 
-        QMap<QString, QString> headers;
+        QSet<QString> headers;
         for (const auto &header : headerList) {
             if (header.contains(QLatin1String("doc/snippets")))
                 continue;
@@ -502,7 +502,7 @@ static void processQdocconfFile(const QString &fileName)
             if (!ClangCodeParser::accepted_header_file_extensions.contains(QFileInfo{header}.suffix()))
                 continue;
 
-            headers.insert(header, header);
+            headers.insert(header);
         }
 
         qCDebug(lcQdoc, "Reading sourcedirs");
@@ -530,9 +530,9 @@ static void processQdocconfFile(const QString &fileName)
         */
 
         qCDebug(lcQdoc, "Parsing header files");
-        for (auto it = headers.constBegin(); it != headers.constEnd(); ++it) {
-            qCDebug(lcQdoc, "Parsing %s", qPrintable(it.key()));
-            clangParser.parseHeaderFile(config.location(), it.key());
+        for (const QString& header : headers) {
+            qCDebug(lcQdoc, "Parsing %s", qPrintable(header));
+            clangParser.parseHeaderFile(config.location(), header);
         }
 
         const QString moduleHeader = config.get(CONFIG_MODULEHEADER).asString();
