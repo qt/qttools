@@ -490,8 +490,8 @@ static void processQdocconfFile(const QString &fileName)
         qCDebug(lcQdoc, "Reading headerdirs");
         headerList =
                 config.getAllFiles(CONFIG_HEADERS, CONFIG_HEADERDIRS, excludedDirs, excludedFiles);
+
         QMap<QString, QString> headers;
-        QMultiMap<QString, QString> headerFileNames;
         for (const auto &header : headerList) {
             if (header.contains(QLatin1String("doc/snippets")))
                 continue;
@@ -503,8 +503,6 @@ static void processQdocconfFile(const QString &fileName)
                 continue;
 
             headers.insert(header, header);
-            QString t = header.mid(header.lastIndexOf('/') + 1);
-            headerFileNames.insert(t, t);
         }
 
         qCDebug(lcQdoc, "Reading sourcedirs");
