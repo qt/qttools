@@ -33,7 +33,7 @@ public:
     void terminateParser() override {}
     QString language() override;
     QStringList sourceFileNameFilter() override;
-    void parseHeaderFile(const Location &location, const QString &filePath);
+    void parseHeaderFile(const QString &filePath);
     void parseSourceFile(const Location &, const QString &, CppCodeParser&) override {}
     ParsedCppFileIR parse_cpp_file(const QString &filePath);
     void buildPCH(QString module_header);

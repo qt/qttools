@@ -532,7 +532,7 @@ static void processQdocconfFile(const QString &fileName)
         qCDebug(lcQdoc, "Parsing header files");
         for (const QString& header : headers) {
             qCDebug(lcQdoc, "Parsing %s", qPrintable(header));
-            clangParser.parseHeaderFile(config.location(), header);
+            clangParser.parseHeaderFile(header);
         }
 
         const QString moduleHeader = config.get(CONFIG_MODULEHEADER).asString();

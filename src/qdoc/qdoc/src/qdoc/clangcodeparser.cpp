@@ -1478,10 +1478,9 @@ QStringList ClangCodeParser::sourceFileNameFilter()
 
 /*!
   Parse the C++ header file identified by \a filePath and add
-  the parsed contents to the database. The \a location is used
-  for reporting errors.
+  the parsed contents to the database.
  */
-void ClangCodeParser::parseHeaderFile(const Location & /*location*/, const QString &filePath)
+void ClangCodeParser::parseHeaderFile(const QString &filePath)
 {
     QFileInfo fi(filePath);
     const QString &fileName = fi.fileName();
