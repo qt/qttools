@@ -112,7 +112,7 @@ void QHelpIndexModel::createIndexForCurrentFilter()
 
 /*!
     Creates a new index by querying the help system for
-    keywords for the specified \a customFilterName.
+    keywords for the specified custom \a filter name.
 */
 void QHelpIndexModel::createIndex(const QString &filter)
 {

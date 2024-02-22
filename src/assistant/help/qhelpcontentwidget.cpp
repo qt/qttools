@@ -125,7 +125,7 @@ void QHelpContentModel::createContentsForCurrentFilter()
 
 /*!
     Creates new contents by querying the help system
-    for contents specified for the \a customFilterName.
+    for contents specified for the custom \a filter name.
 */
 void QHelpContentModel::createContents(const QString &filter)
 {

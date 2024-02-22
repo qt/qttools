@@ -142,11 +142,11 @@ public:
 */
 
 /*!
-    Constructs a new search engine with the given \a parent. The search engine
-    uses the given \a helpEngine to access the documentation that needs to be indexed.
+    Constructs a new search engine. The search engine uses the given
+    \a helpEngine to access the documentation that needs to be indexed.
     The QHelpEngine's setupFinished() signal is automatically connected to the
-    QHelpSearchEngineCore's indexing function, so that new documentation will be indexed
-    after the signal is emitted.
+    QHelpSearchEngineCore's indexing function, so that new documentation will
+    be indexed after the signal is emitted.
 */
 QHelpSearchEngineCore::QHelpSearchEngineCore(QHelpEngineCore *helpEngine)
     : d(new QHelpSearchEngineCorePrivate)

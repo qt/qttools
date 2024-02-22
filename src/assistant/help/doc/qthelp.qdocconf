@@ -37,3 +37,5 @@ imagedirs               = images
 navigation.landingpage = "Qt Help"
 navigation.cppclassespage = "Qt Help C++ Classes"
 
+# Enforce zero documentation warnings
+warninglimit = 0
