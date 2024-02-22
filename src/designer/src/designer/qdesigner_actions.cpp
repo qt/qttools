@@ -63,6 +63,7 @@
 #include <QtGui/qtransform.h>
 #include <QtGui/qcursor.h>
 
+#include <QtCore/qdir.h>
 #include <QtCore/qsize.h>
 #include <QtCore/qlibraryinfo.h>
 #include <QtCore/qbuffer.h>
@@ -77,6 +78,8 @@
 #include <QtXml/qdom.h>
 
 #include <algorithm>
+
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
@@ -114,6 +117,21 @@ static inline QString savedMessage(const QString &fileName)
 static QString fileDialogFilters(const QString &extension)
 {
     return QDesignerActions::tr("Designer UI files (*.%1);;All Files (*)").arg(extension);
+}
+
+static QString fixResourceFileBackupPath(const QDesignerFormWindowInterface *fwi,
+                                         const QDir& backupDir);
+
+static QByteArray formWindowContents(const QDesignerFormWindowInterface *fw,
+                                     std::optional<QDir> alternativeDir = {})
+{
+    QString contents = alternativeDir.has_value()
+        ? fixResourceFileBackupPath(fw, alternativeDir.value()) : fw->contents();
+    if (auto *fwb = qobject_cast<const qdesigner_internal::FormWindowBase *>(fw)) {
+        if (fwb->lineTerminatorMode() == qdesigner_internal::FormWindowBase::CRLFLineTerminator)
+            contents.replace(u'\n', "\r\n"_L1);
+    }
+    return contents.toUtf8();
 }
 
 QFileDialog *createSaveAsDialog(QWidget *parent, const QString &dir, const QString &extension)
@@ -801,11 +819,6 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
             QMessageBox::information(fw->window(), tr("Qt Widgets Designer"), problems.join("<br>"_L1));
     }
 
-    QString contents = fw->contents();
-    if (qdesigner_internal::FormWindowBase *fwb = qobject_cast<qdesigner_internal::FormWindowBase *>(fw)) {
-        if (fwb->lineTerminatorMode() == qdesigner_internal::FormWindowBase::CRLFLineTerminator)
-            contents.replace('\n'_L1, "\r\n"_L1);
-    }
     m_workbench->updateBackup(fw);
 
     QSaveFile f(saveFile);
@@ -839,7 +852,7 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
         }
         // loop back around...
     }
-    f.write(contents.toUtf8());
+    f.write(formWindowContents(fw));
     if (!f.commit()) {
         QMessageBox box(QMessageBox::Warning, tr("Save Form"),
                         tr("Could not write file"),
@@ -1051,12 +1064,7 @@ void QDesignerActions::backupForms()
 
         QFile file(formBackupName.replace(m_backupPath, m_backupTmpPath));
         if (file.open(QFile::WriteOnly)){
-            QString contents = fixResourceFileBackupPath(fwi, backupDir);
-            if (qdesigner_internal::FormWindowBase *fwb = qobject_cast<qdesigner_internal::FormWindowBase *>(fwi)) {
-                if (fwb->lineTerminatorMode() == qdesigner_internal::FormWindowBase::CRLFLineTerminator)
-                    contents.replace('\n'_L1, "\r\n"_L1);
-            }
-            const QByteArray utf8Array = contents.toUtf8();
+            const QByteArray utf8Array = formWindowContents(fw->editor(), backupDir);
             if (file.write(utf8Array, utf8Array.size()) != utf8Array.size()) {
                 backupMap.remove(fwn);
                 qdesigner_internal::designerWarning(tr("The backup file %1 could not be written: %2").
@@ -1086,7 +1094,8 @@ void QDesignerActions::backupForms()
     }
 }
 
-QString QDesignerActions::fixResourceFileBackupPath(QDesignerFormWindowInterface *fwi, const QDir& backupDir)
+static QString fixResourceFileBackupPath(const QDesignerFormWindowInterface *fwi,
+                                         const QDir& backupDir)
 {
     const QString content = fwi->contents();
     QDomDocument domDoc(u"backup"_s);

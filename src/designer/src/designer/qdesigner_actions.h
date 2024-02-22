@@ -14,7 +14,6 @@ QT_BEGIN_NAMESPACE
 
 class QDesignerWorkbench;
 
-class QDir;
 class QTimer;
 class QAction;
 class QActionGroup;
@@ -121,7 +120,6 @@ private:
     void showHelp(const QString &help);
     void closePreview();
     QRect fixDialogRect(const QRect &rect) const;
-    QString fixResourceFileBackupPath(QDesignerFormWindowInterface *fwi, const QDir& backupDir);
     void showStatusBarMessage(const QString &message) const;
     QActionGroup *createHelpActions();
     bool ensureBackupDirectories();
