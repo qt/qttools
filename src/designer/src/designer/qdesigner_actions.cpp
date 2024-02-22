@@ -1047,7 +1047,6 @@ void QDesignerActions::backupForms()
         return;
 
 
-    QStringList tmpFiles;
     QMap<QString, QString> backupMap;
     QDir backupDir(m_backupPath);
     for (int i = 0; i < count; ++i) {
@@ -1062,36 +1061,22 @@ void QDesignerActions::backupForms()
 
         backupMap.insert(fwn, formBackupName);
 
-        QFile file(formBackupName.replace(m_backupPath, m_backupTmpPath));
-        if (file.open(QFile::WriteOnly)){
-            const QByteArray utf8Array = formWindowContents(fw->editor(), backupDir);
-            if (file.write(utf8Array, utf8Array.size()) != utf8Array.size()) {
-                backupMap.remove(fwn);
-                qdesigner_internal::designerWarning(tr("The backup file %1 could not be written: %2").
-                                                    arg(QDir::toNativeSeparators(file.fileName()),
-                                                                                 file.errorString()));
-            } else
-                tmpFiles.append(formBackupName);
-
-            file.close();
+        bool ok = false;
+        QSaveFile file(formBackupName);
+        if (file.open(QFile::WriteOnly)) {
+            file.write(formWindowContents(fw->editor(), backupDir));
+            ok = file.commit();
+        }
+        if (!ok) {
+            backupMap.remove(fwn);
+            qdesigner_internal::designerWarning(tr("The backup file %1 could not be written: %2").
+                                                arg(QDir::toNativeSeparators(file.fileName()),
+                                                    file.errorString()));
         }
     }
-    if(!tmpFiles.isEmpty()) {
-        const QStringList backupFiles = backupDir.entryList(QDir::Files);
-        for (const QString &backupFile : backupFiles)
-            backupDir.remove(backupFile);
 
-        for (const QString &tmpName : std::as_const(tmpFiles)) {
-            QString name(tmpName);
-            name.replace(m_backupTmpPath, m_backupPath);
-            QFile tmpFile(tmpName);
-            if (!tmpFile.copy(name))
-                qdesigner_internal::designerWarning(tr("The backup file %1 could not be written.").arg(name));
-            tmpFile.remove();
-        }
-
+    if (!backupMap.isEmpty())
         m_settings.setBackup(backupMap);
-    }
 }
 
 static QString fixResourceFileBackupPath(const QDesignerFormWindowInterface *fwi,
@@ -1173,27 +1158,16 @@ void QDesignerActions::setWindowListSeparatorVisible(bool visible)
 
 bool QDesignerActions::ensureBackupDirectories() {
 
-    if (m_backupPath.isEmpty()) {
-        // create names
+    if (m_backupPath.isEmpty()) // create names
         m_backupPath = qdesigner_internal::dataDirectory() + u"/backup"_s;
-        m_backupTmpPath = m_backupPath + u"/tmp"_s;
-    }
 
     // ensure directories
     const QDir backupDir(m_backupPath);
-    const QDir backupTmpDir(m_backupTmpPath);
 
     if (!backupDir.exists()) {
         if (!backupDir.mkpath(m_backupPath)) {
             qdesigner_internal::designerWarning(tr("The backup directory %1 could not be created.")
                                                 .arg(QDir::toNativeSeparators(m_backupPath)));
-            return false;
-        }
-    }
-    if (!backupTmpDir.exists()) {
-        if (!backupTmpDir.mkpath(m_backupTmpPath)) {
-            qdesigner_internal::designerWarning(tr("The temporary backup directory %1 could not be created.")
-                                                .arg(QDir::toNativeSeparators(m_backupTmpPath)));
             return false;
         }
     }
