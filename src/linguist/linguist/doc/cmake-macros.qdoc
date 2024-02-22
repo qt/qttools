@@ -212,17 +212,17 @@ Pass \c{NO_GLOBAL_TARGET} to \c{qt_add_lupdate} to prevent this behavior.
 The name of this target can be overridden by setting the variable
 \c{QT_GLOBAL_LUPDATE_TARGET} before calling \c{qt_add_lupdate}.
 
-//! [ts-native-language]
-\section1 Native Language
+//! [plurals-ts-file]
+\section1 Plural Forms
 
-The native language of a project is the language in which the source code
+\l QT_I18N_SOURCE_LANGUAGE specifies the language in which the source code
 strings are written. For handling plural forms correctly, create an additional
 \c{.ts} file for that language that only contains translatable strings for
 plural forms. See \l{Handle Plural Forms} for details.
 
-With \c PLURALS_TS_FILE you can specify the \c{.ts} file for the native language.
-This file will only contain plural forms.
-//! [ts-native-language]
+With \c PLURALS_TS_FILE you can specify the \c{.ts} file for the source
+language. This file will only contain plural forms.
+//! [plurals-ts-file]
 
 \section1 Deprecated Command Signature
 
@@ -361,6 +361,7 @@ qt_add_translations([target]
                     [TS_FILE_DIR directory]
                     [TS_FILES file1.ts [file2.ts ...]]
                     [PLURALS_TS_FILE file.ts]
+                    [NO_GENERATE_PLURALS_TS_FILE]
                     [RESOURCE_PREFIX prefix]
                     [OUTPUT_TARGETS variable-name]
                     [QM_FILES_OUTPUT_VARIABLE variable-name]
@@ -431,10 +432,41 @@ argument.
 By default, the \c{.ts} file names are constructed from \c{PROJECT_NAME}. You
 can specify a different base name with the \c{TS_FILE_BASE} argument.
 
-\include cmake-macros.qdoc ts-native-language
+\include cmake-macros.qdoc plurals-ts-file
 
-If \l{QT_I18N_SOURCE_LANGUAGE} is set then the path to the native \c{.ts} file
-will also be automatically determined.
+A plurals-only \c{.ts} is automatically generated unless the option \c
+NO_GENERATE_PLURALS_TS_FILE is specified.
+
+For example,
+\badcode
+project(myapp)
+qt_standard_project_setup(
+    I18N_SOURCE_LANGUAGE en         # optional - this is the default
+    I18N_TRANSLATED_LANGUAGES de
+)
+qt_add_executable(myapp ...)
+...
+qt_add_translations(myapp)
+\endcode
+creates the full translation file \c{myapp_de.ts} and the plurals-only file
+\c{myapp_en.ts}.
+
+If you need a full translation of the source language, add it to
+\l{QT_I18N_TRANSLATED_LANGUAGES}
+
+For example,
+\badcode
+project(myapp)
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES en de)
+qt_add_executable(myapp ...)
+...
+qt_add_translations(myapp)
+\endcode
+creates the full translation files
+\list
+\li \c{myapp_en.ts}
+\li \c{myapp_de.ts}
+\endlist
 
 \section1 Options
 
