@@ -21,6 +21,7 @@ foreach(f IN LISTS old_ts_files)
 endforeach()
 
 set(expected_files "")
+set(unexpected_files "")
 
 # Check defaults for the deferred call.
 my_add_library(lib1 STATIC lib.cpp)
@@ -84,10 +85,25 @@ qt_add_translations(TARGETS lib8)
 list(APPEND expected_files
     "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_nl.ts")
 
+# Check whether we can turn off the generation of the plurals-only file.
+my_add_library(lib10 STATIC lib.cpp)
+set(QT_I18N_TRANSLATED_LANGUAGES cy)
+set(QT_I18N_SOURCE_LANGUAGE an)
+qt_add_translations(TARGETS lib10 NO_GENERATE_PLURALS_TS_FILE)
+list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_cy.ts")
+list(APPEND unexpected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_an.ts")
+
 function(check_ts_file_paths)
     foreach(filepath IN LISTS expected_files)
         if(NOT EXISTS "${filepath}")
             message(FATAL_ERROR "Expected file '${filepath}' does not exist.")
+        endif()
+    endforeach()
+    foreach(filepath IN LISTS unexpected_files)
+        if(EXISTS "${filepath}")
+            message(FATAL_ERROR "File '${filepath}' unexpectedly exists.")
         endif()
     endforeach()
 endfunction()

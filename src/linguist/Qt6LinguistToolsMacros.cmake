@@ -535,7 +535,8 @@ endfunction()
 
 function(qt6_add_translations)
     set(options
-        IMMEDIATE_CALL)
+        IMMEDIATE_CALL
+        NO_GENERATE_PLURALS_TS_FILE)
     set(oneValueArgs
         LUPDATE_TARGET
         LRELEASE_TARGET
@@ -565,14 +566,6 @@ function(qt6_add_translations)
     if(targets STREQUAL "")
         message(FATAL_ERROR "No targets provided.")
     endif()
-    if(NOT DEFINED arg_TS_FILES
-            AND NOT DEFINED arg_PLURALS_TS_FILE
-            AND "${QT_I18N_TRANSLATED_LANGUAGES}" STREQUAL ""
-            AND "${QT_I18N_SOURCE_LANGUAGE}" STREQUAL "")
-        message(FATAL_ERROR
-            "One of QT_I18N_TRANSLATED_LANGUAGES, QT_I18N_SOURCE_LANGUAGE, TS_FILES, "
-            "or PLURALS_TS_FILE must be provided.")
-    endif()
     if(DEFINED arg_RESOURCE_PREFIX AND DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
         message(FATAL_ERROR "QM_FILES_OUTPUT_VARIABLE cannot be specified "
             "together with RESOURCE_PREFIX.")
@@ -599,10 +592,19 @@ function(qt6_add_translations)
             list(APPEND arg_TS_FILES "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${lang}.ts")
         endforeach()
 
-        # Determine the path to the native .ts file if necessary.
-        if(NOT DEFINED arg_PLURALS_TS_FILE AND NOT "${QT_I18N_SOURCE_LANGUAGE}" STREQUAL "")
+        # Default the source language to "en" in case the user doesn't use
+        # qt_standard_project_setup.
+        set(source_lang en)
+        if(NOT "${QT_I18N_SOURCE_LANGUAGE}" STREQUAL "")
+            set(source_lang ${QT_I18N_SOURCE_LANGUAGE})
+        endif()
+
+        # Determine the path to the plurals-only .ts file if necessary.
+        if(NOT arg_NO_GENERATE_PLURALS_TS_FILE
+            AND NOT DEFINED arg_PLURALS_TS_FILE
+            AND NOT "${source_lang}" IN_LIST QT_I18N_TRANSLATED_LANGUAGES)
             set(arg_PLURALS_TS_FILE
-                "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${QT_I18N_SOURCE_LANGUAGE}.ts")
+                "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${source_lang}.ts")
         endif()
     endif()
 
