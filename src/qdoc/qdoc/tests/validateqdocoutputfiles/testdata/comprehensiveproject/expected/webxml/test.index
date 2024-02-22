@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QDOCINDEX>
-<INDEX url="" title="A test project for QDoc build artifacts" version="0.0.1" project="Test">
+<INDEX url="" title="A test project for QDoc build artifacts" version="6.2.11" project="Test">
     <namespace name="" status="active" access="public" module="test">
         <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
         <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
@@ -149,6 +149,7 @@
             <function name="deprecatedMethod" fullname="QDoc.Test.Type.deprecatedMethod" href="qml-qdoc-test-type-obsolete.html#deprecatedMethod-method" status="deprecated" access="public" documented="true" meta="qmlmethod"/>
             <function name="disable" fullname="QDoc.Test.Type.disable" href="qml-qdoc-test-type.html#disable-method" status="active" access="public" documented="true" meta="qmlmethod"/>
             <function name="enable" fullname="QDoc.Test.Type.enable" href="qml-qdoc-test-type.html#enable-method" status="active" access="public" documented="true" meta="qmlmethod"/>
+            <function name="futureDeprecated" fullname="QDoc.Test.Type.futureDeprecated" href="qml-qdoc-test-type.html#futureDeprecated-method" status="active" access="public" documented="true" meta="qmlmethod"/>
             <function name="group.created" fullname="QDoc.Test.Type.group.created" href="qml-qdoc-test-type.html#group.created-signal" status="active" access="public" documented="true" meta="qmlsignal"/>
             <qmlproperty name="fifth" fullname="QDoc.Test.Type.fifth" href="qml-qdoc-test-type.html#fifth-prop" status="active" access="public" documented="true" type="int" attached="false" writable="true" brief="A group of properties sharing a documentation comment"/>
             <qmlproperty name="fourth" fullname="QDoc.Test.Type.fourth" href="qml-qdoc-test-type.html#fourth-prop" status="active" access="public" documented="true" type="int" attached="false" writable="true" brief="A group of properties sharing a documentation comment"/>

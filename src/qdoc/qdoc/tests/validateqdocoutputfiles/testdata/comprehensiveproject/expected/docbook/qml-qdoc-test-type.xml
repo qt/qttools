@@ -214,6 +214,12 @@
 <db:title>Type copy(<db:emphasis>a</db:emphasis>)</db:title>
 <db:para>Returns another Type based on <db:code its:translate="no" role="parameter">a</db:code>.</db:para>
 </db:section>
+<db:section xml:id="futureDeprecated-method">
+<db:title>[until 6.3] futureDeprecated()</db:title>
+<db:para>This method is scheduled for deprecation in version 6.3.</db:para>
+<db:para>Use something else instead.</db:para>
+<db:para>This is a method that's marked for deprecation in a future version.</db:para>
+</db:section>
 </db:section>
 <db:section xml:id="obsolete">
 <db:title>Obsolete Members for Type</db:title>

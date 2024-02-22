@@ -58,7 +58,7 @@ manifestmeta.examplecategories = "Application Examples" \
                                  "Mobile" \
                                  "Embedded"
 tagfile = testtagfile.tags
-version = 0.0.1
+version = 6.2.11
 
 examplesinstallpath = test
 

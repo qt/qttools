@@ -1119,6 +1119,7 @@ QString Generator::formatSince(const Node *node)
       \li Custom status set explicitly in node's documentation using
           \c {\meta {status} {<description>}},
       \li 'Deprecated [since <version>]' (\\deprecated [<version>]),
+      \li 'Until <version>',
       \li 'Preliminary' (\\preliminary), or
       \li The description adopted from associated module's state:
           \c {\modulestate {<description>}}.
@@ -1135,10 +1136,13 @@ std::optional<QString> formatStatus(const Node *node, QDocDatabase *qdb)
         if (!status.isEmpty())
             return {status};
     }
+    const auto since = node->deprecatedSince();
     if (node->status() == Node::Deprecated) {
         status = u"Deprecated"_s;
-        if (const auto since = node->deprecatedSince(); !since.isEmpty())
+        if (!since.isEmpty())
             status += " since %1"_L1.arg(since);
+    } else if (!since.isEmpty()) {
+        status = "Until %1"_L1.arg(since);
     } else if (node->status() == Node::Preliminary) {
         status = u"Preliminary"_s;
     } else if (const auto collection = qdb->getModuleNode(node); collection) {
@@ -1197,7 +1201,13 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
                      << Atom(Atom::FormattingLeft, ATOM_FORMATTING_ITALIC) << state
                      << Atom(Atom::FormattingRight, ATOM_FORMATTING_ITALIC) << " state."
                      << Atom::ParaRight;
+                break;
             }
+        }
+        if (const auto version = node->deprecatedSince(); !version.isEmpty()) {
+            text << Atom::ParaLeft << "This " << typeString(node)
+                 << " is scheduled for deprecation in version "
+                 << version << "." << Atom::ParaRight;
         }
         break;
     case Node::Preliminary:

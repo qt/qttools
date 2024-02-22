@@ -2397,6 +2397,15 @@ bool DocBookGenerator::generateStatus(const Node *node)
                 return true;
             }
         }
+        if (const auto version = node->deprecatedSince(); !version.isEmpty()) {
+            m_writer->writeStartElement(dbNamespace, "para");
+            m_writer->writeCharacters("This " + typeString(node)
+                                      + " is scheduled for deprecation in version "
+                                      + version + ".");
+            m_writer->writeEndElement(); // para
+            newLine();
+            return true;
+        }
         return false;
     case Node::Preliminary:
         m_writer->writeStartElement(dbNamespace, "para");

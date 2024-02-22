@@ -2,7 +2,7 @@
 <QtHelpProject version="1.0">
     <namespace>org.qt-project.test.001</namespace>
     <virtualFolder>test</virtualFolder>
-    <metaData name="version" value="0.0.1"/>
+    <metaData name="version" value="6.2.11"/>
     <filterSection>
         <toc>
             <section ref="uicomponents-qmlmodule.html" title="UI Components">
@@ -127,6 +127,7 @@
             <keyword name="foo" id="DocTest::foo" ref="qml-qdoc-test-doctest.html#foo-signal"/>
             <keyword name="fourth" id="Type::fourth" ref="qml-qdoc-test-type.html#fourth-prop"/>
             <keyword name="funcPtr" id="Test::funcPtr" ref="testqdoc-test.html#funcPtr"/>
+            <keyword name="futureDeprecated" id="Type::futureDeprecated" ref="qml-qdoc-test-type.html#futureDeprecated-method"/>
             <keyword name="group.created" id="Type::group.created" ref="qml-qdoc-test-type.html#group.created-signal"/>
             <keyword name="group.first" id="Type::group.first" ref="qml-qdoc-test-type.html#group.first-prop"/>
             <keyword name="group.second" id="Type::group.second" ref="qml-qdoc-test-type.html#group.second-prop"/>

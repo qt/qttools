@@ -254,7 +254,7 @@ public:
     [[nodiscard]] virtual QString qtCMakeTargetItem() const { return QString(); }
     [[nodiscard]] virtual bool hasTag(const QString &) const { return false; }
 
-    void setDeprecatedSince(const QString &sinceVersion);
+    void setDeprecated(const QString &sinceVersion);
     [[nodiscard]] const QString &deprecatedSince() const { return m_deprecatedSince; }
 
     [[nodiscard]] const QMap<LinkType, std::pair<QString, QString>> &links() const { return m_linkMap; }

@@ -347,6 +347,13 @@
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type></type>
+            <name>futureDeprecated</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>futureDeprecated-method</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
             <name>group.created</name>
             <anchorfile>qml-qdoc-test-type.html</anchorfile>
             <anchor>group.created-signal</anchor>

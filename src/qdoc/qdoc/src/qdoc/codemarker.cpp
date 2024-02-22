@@ -138,9 +138,11 @@ QString CodeMarker::stringForNode(const Node *node)
     \list
         \li \c {"preliminary"}
         \li \c {"since <version_since>, deprecated in <version_deprecated>"}
+        \li \c {"since <version_since>, until <version_deprecated>"}
         \li \c {"since <version_since>"}
         \li \c {"since <version_since>, deprecated"}
         \li \c {"deprecated in <version_deprecated>"}
+        \li \c {"until <version_deprecated>"}
         \li \c {"deprecated"}
     \endlist
 
@@ -154,10 +156,14 @@ static std::optional<QString> nodeStatusAsString(const Node *node)
     QStringList result;
     if (const auto &since = node->since(); !since.isEmpty())
         result << "since %1"_L1.arg(since);
-    if (const auto &deprecated = node->deprecatedSince(); !deprecated.isEmpty())
-        result << "deprecated in %1"_L1.arg(deprecated);
-    else if (node->isDeprecated())
+    if (const auto &deprecated = node->deprecatedSince(); !deprecated.isEmpty()) {
+        if (node->isDeprecated())
+            result << "deprecated in %1"_L1.arg(deprecated);
+        else
+            result << "until %1"_L1.arg(deprecated);
+    } else if (node->isDeprecated()) {
         result << u"deprecated"_s;
+    }
 
     return result.isEmpty() ? std::nullopt : std::optional(result.join(u", "_s));
 }

@@ -516,9 +516,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         if (node->isQmlType())
             node->setAbstract(true);
     } else if (command == COMMAND_DEPRECATED) {
-        node->setStatus(Node::Deprecated);
-        if (!argPair.second.isEmpty())
-            node->setDeprecatedSince(argPair.second);
+        node->setDeprecated(argPair.second);
     } else if (command == COMMAND_INGROUP || command == COMMAND_INPUBLICGROUP) {
         // Note: \ingroup and \inpublicgroup are the same (and now recognized as such).
         database->addToGroup(arg, node);

@@ -968,14 +968,39 @@ QString Node::fullDocumentName() const
     return pieces.join(concatenator);
 }
 
-void Node::setDeprecatedSince(const QString &sinceVersion)
+/*!
+    Sets the Node status to Node::Deprecated, unless \a sinceVersion represents
+    a future version.
+
+    Stores \a sinceVersion representing the version in which the deprecation
+    took (or will take) place.
+
+    Fetches the current version from the config ('version' variable) as a
+    string, and compared to \a sinceVersion. If both string represent a valid
+    version and \a sinceVersion is greater than the currect version, do not
+    mark the node as deprecated; leave it active.
+*/
+void Node::setDeprecated(const QString &sinceVersion)
 {
+
     if (!m_deprecatedSince.isEmpty())
         qCWarning(lcQdoc) << QStringLiteral(
                                      "Setting deprecated since version for %1 to %2 even though it "
                                      "was already set to %3. This is very unexpected.")
                                      .arg(this->m_name, sinceVersion, this->m_deprecatedSince);
     m_deprecatedSince = sinceVersion;
+
+    if (!sinceVersion.isEmpty()) {
+        QVersionNumber since = QVersionNumber::fromString(sinceVersion).normalized();
+        QVersionNumber current = QVersionNumber::fromString(
+                                    Config::instance().get(CONFIG_VERSION).asString())
+                                    .normalized();
+        if (!current.isNull() && !since.isNull()) {
+            if (current < since)
+                return;
+        }
+    }
+    setStatus(Deprecated);
 }
 
 /*! \fn Node *Node::clone(Aggregate *parent)

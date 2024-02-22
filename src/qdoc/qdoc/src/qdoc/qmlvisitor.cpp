@@ -403,9 +403,7 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
                     node->setAbstract(true);
                 }
             } else if (command == COMMAND_DEPRECATED) {
-                node->setStatus(Node::Deprecated);
-                if (!args[0].second.isEmpty())
-                    node->setDeprecatedSince(args[0].second);
+                node->setDeprecated(args[0].second);
             } else if (command == COMMAND_INQMLMODULE) {
                 qdb->addToQmlModule(args[0].first, node);
             } else if (command == COMMAND_QMLINHERITS) {

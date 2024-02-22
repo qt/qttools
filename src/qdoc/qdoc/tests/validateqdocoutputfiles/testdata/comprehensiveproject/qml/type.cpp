@@ -125,3 +125,10 @@
     This is a method that should include information about being deprecated
     and that it has been so since 6.2 in its docs.
 */
+
+/*!
+    \qmlmethod Type::futureDeprecated()
+    \deprecated [6.3] Use something else instead.
+
+    This is a method that's marked for deprecation in a future version.
+*/
