@@ -176,8 +176,8 @@ With the \c{SOURCE_TARGETS} argument you can specify a list of targets that
 contain sources with translatable strings. If \c{SOURCE_TARGETS} is not
 specified, you can specify \c{SOURCES}, which is described below. If neither
 \c{SOURCE_TARGETS} nor \c{SOURCES} is given, the command
-\l{qt6_collect_i18n_targets}{qt_collect_i18n_targets} is called to retrieve the
-list of targets.
+\l{qt6_collect_translation_source_targets}{qt_collect_translation_source_targets}
+is called to retrieve the list of targets.
 
 The \c{.ts} files must be specified with the argument \c{TS_FILES}.
 
@@ -395,10 +395,10 @@ targets that contain sources with translatable strings. From the sources of
 these targets, \c{.ts} files will be created.
 
 If \c SOURCE_TARGETS is not given, targets are automatically gathered by calling
-\l{qt6_collect_i18n_targets}{qt_collect_i18n_targets} at the end of the
-directory scope of \c{PROJECT_SOURCE_DIR}. This functionality requires CMake
-3.19 or newer. This functionality can be turned off with the argument
-\c{IMMEDIATE_CALL}.
+\l{qt6_collect_translation_source_targets}{qt_collect_translation_source_targets}
+at the end of the directory scope of \c{PROJECT_SOURCE_DIR}. This functionality
+requires CMake 3.19 or newer. This functionality can be turned off with the
+argument \c{IMMEDIATE_CALL}.
 
 This function will create the target \c{update_translations} that scans all
 source files with \c lupdate and creates and updates the \c{.ts} files.
@@ -544,8 +544,8 @@ Add a Finnish translation to \c{business_logic}, and install the generated
 \page qtlinguist-cmake-qt-collect-targets-for-translation.html
 \ingroup cmake-commands-qtlinguisttools
 
-\title qt_collect_i18n_targets
-\target qt6_collect_i18n_targets
+\title qt_collect_translation_source_targets
+\target qt6_collect_translation_source_targets
 
 \summary {Collects targets that are eligible for translation.}
 
@@ -556,10 +556,10 @@ Add a Finnish translation to \c{business_logic}, and install the generated
 \section1 Synopsis
 
 \badcode
-qt_collect_i18n_targets(out_var [DIRECTORY path])
+qt_collect_translation_source_targets(out_var [DIRECTORY path])
 \endcode
 
-\versionlessCMakeCommandsNote qt6_collect_i18n_targets()
+\versionlessCMakeCommandsNote qt6_collect_translation_source_targets()
 
 \section1 Description
 
@@ -583,19 +583,20 @@ property QT_EXCLUDE_FROM_TRANSLATION}.
 
 \section1 When to call this command
 
-The \c qt_collect_i18n_targets command reads the \c BUILDSYSTEM_TARGETS
-directory properties. As a consequence, it only collects targets that already
-have been created. Targets that are created after \c qt_collect_i18n_targets has
-been called are not collected.
+The \c qt_collect_translation_source_targets command reads the \c
+BUILDSYSTEM_TARGETS directory properties. As a consequence, it only collects
+targets that already have been created. Targets that are created after \c
+qt_collect_translation_source_targets has been called are not collected.
 
-To collect all targets of the build system, call \c qt_collect_i18n_targets at
-the end of the top-level \c CMakeLists.txt or use \c{cmake_language(DEFER CALL)}
-to set up i18n at the end of the top-level directory scope.
+To collect all targets of the build system, call \c
+qt_collect_translation_source_targets at the end of the top-level \c
+CMakeLists.txt or use \c{cmake_language(DEFER CALL)} to set up i18n at the end
+of the top-level directory scope.
 
 \section1 Examples
 
-Use the result of \c qt_collect_i18n_targets as input for \c
+Use the result of \c qt_collect_translation_source_targets as input for \c
 qt_add_lupdate.
 
-\snippet cmake-macros/examples.cmake qt_collect_i18n_targets
+\snippet cmake-macros/examples.cmake qt_collect_translation_source_targets
 */
