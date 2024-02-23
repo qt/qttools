@@ -16,7 +16,7 @@ set(ts_file "${CMAKE_CURRENT_BINARY_DIR}/test_i18n_exclusion_de.ts")
 configure_file(test_i18n_exclusion_de.ts.in "${ts_file}")
 
 # Set up the 'update_translations' target.
-qt_collect_i18n_targets(i18n_targets)
+qt_collect_translation_source_targets(i18n_targets)
 qt_add_lupdate(
     SOURCE_TARGETS ${i18n_targets}
     TS_FILES "${ts_file}"

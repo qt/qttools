@@ -50,7 +50,7 @@ qt_add_translations(super_calc TS_FILES super_calc_de.ts)
 #! [qt_add_translations_default]
 
 #! [qt_lupdate_lrelease]
-qt_collect_i18n_targets(i18n_targets)
+qt_collect_translation_source_targets(i18n_targets)
 qt_add_lupdate(
     TARGETS ${i18n_targets}
     TS_FILES super_calc_de.ts)
@@ -77,14 +77,14 @@ qt_add_translations(business_logic
 install(FILES ${qm_files} DESTINATION "translations")
 #! [qt_add_translations_install]
 
-#! [qt_collect_i18n_targets]
+#! [qt_collect_translation_source_targets]
 add_subdirectory(src)          # the actual application is defined here
 
-qt_collect_i18n_targets(i18n_targets)
+qt_collect_translation_source_targets(i18n_targets)
 qt_add_lupdate(TARGETS ${i18n_targets})
 
 add_subdirectory(tests)        # unit tests - we don't want to translate those
-#! [qt_collect_i18n_targets]
+#! [qt_collect_translation_source_targets]
 
 #! [exclude sources from i18n]
 qt_add_executable(myapp
