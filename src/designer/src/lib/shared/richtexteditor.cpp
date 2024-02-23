@@ -407,19 +407,22 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
     // Bold, italic and underline buttons
 
     m_bold_action = createCheckableAction(
-            createIconSet(u"textbold.png"_s), tr("Bold"), this);
+            createIconSet(QIcon::ThemeIcon::FormatTextBold,
+                          "textbold.png"_L1), tr("Bold"), this);
     connect(m_bold_action, &QAction::triggered, editor, &RichTextEditor::setFontBold);
     m_bold_action->setShortcut(tr("CTRL+B"));
     addAction(m_bold_action);
 
     m_italic_action = createCheckableAction(
-            createIconSet(u"textitalic.png"_s), tr("Italic"), this);
+            createIconSet(QIcon::ThemeIcon::FormatTextItalic,
+                          "textitalic.png"_L1), tr("Italic"), this);
     connect(m_italic_action, &QAction::triggered, editor, &RichTextEditor::setFontItalic);
     m_italic_action->setShortcut(tr("CTRL+I"));
     addAction(m_italic_action);
 
     m_underline_action = createCheckableAction(
-            createIconSet(u"textunder.png"_s), tr("Underline"), this);
+            createIconSet(QIcon::ThemeIcon::FormatTextUnderline,
+                          "textunder.png"_L1), tr("Underline"), this);
     connect(m_underline_action, &QAction::triggered, editor, &RichTextEditor::setFontUnderline);
     m_underline_action->setShortcut(tr("CTRL+U"));
     addAction(m_underline_action);
@@ -433,23 +436,28 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
             this, &RichTextEditorToolBar::alignmentActionTriggered);
 
     m_align_left_action = createCheckableAction(
-            createIconSet(u"textleft.png"_s), tr("Left Align"), alignment_group);
+            createIconSet(QIcon::ThemeIcon::FormatJustifyLeft,
+                          "textleft.png"_L1), tr("Left Align"), alignment_group);
     addAction(m_align_left_action);
 
     m_align_center_action = createCheckableAction(
-            createIconSet(u"textcenter.png"_s), tr("Center"), alignment_group);
+            createIconSet(QIcon::ThemeIcon::FormatJustifyCenter,
+                          "textcenter.png"_L1), tr("Center"), alignment_group);
     addAction(m_align_center_action);
 
     m_align_right_action = createCheckableAction(
-            createIconSet(u"textright.png"_s), tr("Right Align"), alignment_group);
+            createIconSet(QIcon::ThemeIcon::FormatJustifyRight,
+                          "textright.png"_L1), tr("Right Align"), alignment_group);
     addAction(m_align_right_action);
 
     m_align_justify_action = createCheckableAction(
-            createIconSet(u"textjustify.png"_s), tr("Justify"), alignment_group);
+            createIconSet(QIcon::ThemeIcon::FormatJustifyFill,
+                          "textjustify.png"_L1), tr("Justify"), alignment_group);
     addAction(m_align_justify_action);
 
     m_layoutDirectionAction = createCheckableAction(
-            createIconSet(u"righttoleft.png"_s), tr("Right to Left"));
+            createIconSet(QIcon::ThemeIcon::FormatTextDirectionRtl,
+                          "righttoleft.png"_L1), tr("Right to Left"));
     connect(m_layoutDirectionAction, &QAction::triggered,
             this, &RichTextEditorToolBar::layoutDirectionChanged);
     addAction(m_layoutDirectionAction);

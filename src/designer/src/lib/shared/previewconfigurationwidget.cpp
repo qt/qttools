@@ -109,7 +109,8 @@ PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::PreviewConfigurat
     QObject::connect(m_ui.m_appStyleSheetClearButton, &QAbstractButton::clicked,
                      m_ui.m_appStyleSheetLineEdit, &qdesigner_internal::TextPropertyEditor::clear);
 
-    m_ui.m_skinRemoveButton->setIcon(qdesigner_internal::createIconSet(u"editdelete.png"_s));
+    m_ui.m_skinRemoveButton->setIcon(qdesigner_internal::createIconSet(QIcon::ThemeIcon::EditDelete,
+                                                                       "editdelete.png"_L1));
     // skins: find default skins (resources)
     m_ui.m_skinRemoveButton->setEnabled(false);
     Skins skins = defaultSkins();
