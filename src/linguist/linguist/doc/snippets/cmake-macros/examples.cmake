@@ -33,58 +33,85 @@ set_source_files_properties(app_en.ts app_de.ts
 
 #! [qt_add_lupdate]
 qt_add_lupdate(
+    SOURCE_TARGETS myapp
     TS_FILES myapp_de.ts
     PLURALS_TS_FILE myapp_en.ts
 )
 #! [qt_add_lupdate]
 
-#! [qt_add_lrelease_install]
-qt_add_lrelease(myapp
-    TS_FILES myapp_de.ts
-    QM_FILES_OUTPUT_VARIABLE qm_files)
-install(FILES ${qm_files} DESTINATION "translations")
-#! [qt_add_lrelease_install]
-
 #! [qt_add_translations_default]
-qt_add_translations(super_calc TS_FILES super_calc_de.ts)
+cmake_minimum_required(VERSION 3.28)
+project(frogger)
+find_package(Qt6 COMPONENTS OpenGLWidgets)
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES de fr)
+
+# The CMake files in the 'src' subdirectory create
+# the targets 'frogger_game' and 'frogger_level_editor'.
+add_subdirectory(src)
+
+# Add translations to the 'frogger_game' target.
+qt_add_translations(frogger_game)
 #! [qt_add_translations_default]
 
 #! [qt_lupdate_lrelease]
 qt_collect_translation_source_targets(i18n_targets)
 qt_add_lupdate(
-    TARGETS ${i18n_targets}
-    TS_FILES super_calc_de.ts)
+    SOURCE_TARGETS ${i18n_targets}
+    TS_FILES frogger_de.ts frogger_fr.ts)
 qt_add_lrelease(
-    TS_FILES super_calc_de.ts
+    TS_FILES frogger_de.ts frogger_fr.ts
     QM_FILES_OUTPUT_VARIABLE qm_files)
-qt_add_resources(super_calc "translations"
+qt_add_resources(frogger_game "translations"
     PREFIX "/i18n"
     BASE "${CMAKE_CURRENT_BINARY_DIR}"
-    FILES "${qm_files}")
+    FILES "${qm_files}"
+)
 #! [qt_lupdate_lrelease]
+
+#! [qt_add_translations_explicit_source_targets]
+qt_add_translations(frogger_game
+    SOURCE_TARGETS frogger_game
+)
+#! [qt_add_translations_explicit_source_targets]
 
 #! [qt_add_translations_resource_prefix]
 qt_add_translations(
     TARGETS frogger_game frogger_level_editor
-    TS_FILES frogger_game_no.ts
-    RESOURCE_PREFIX "/translations")
+    RESOURCE_PREFIX "/translations"
+)
 #! [qt_add_translations_resource_prefix]
 
 #! [qt_add_translations_install]
-qt_add_translations(business_logic
-    TS_FILES myapp_fi.ts
-    QM_FILES_OUTPUT_VARIABLE qm_files)
+qt_add_translations(
+    TARGETS frogger_game frogger_level_editor
+    QM_FILES_OUTPUT_VARIABLE qm_files
+)
 install(FILES ${qm_files} DESTINATION "translations")
 #! [qt_add_translations_install]
 
 #! [qt_collect_translation_source_targets]
-add_subdirectory(src)          # the actual application is defined here
+add_subdirectory(src)         # The actual application is defined here.
 
+# All targets that have been defined up to this point will be in i18n_targets.
 qt_collect_translation_source_targets(i18n_targets)
-qt_add_lupdate(TARGETS ${i18n_targets})
+qt_add_lupdate(SOURCE_TARGETS ${i18n_targets})
 
-add_subdirectory(tests)        # unit tests - we don't want to translate those
+# No targets from this directory are in i18n_targets.
+add_subdirectory(tests)       # Unit tests - we don't want to translate those.
 #! [qt_collect_translation_source_targets]
+
+#! [qt_collect_translation_source_targets_deferred]
+function(set_up_translations)
+    qt_collect_translation_source_targets(i18n_targets)
+    qt_add_lupdate(SOURCE_TARGETS ${i18n_targets})
+endfunction()
+
+cmake_language(DEFER CALL set_up_translations)
+
+add_subdirectory(src)         # The actual application is defined here.
+add_subdirectory(tests)       # Unit tests - we don't want to translate those.
+set_property(DIRECTORY tests PROPERTY QT_EXCLUDE_FROM_TRANSLATION ON)
+#! [qt_collect_translation_source_targets_deferred]
 
 #! [exclude sources from i18n]
 qt_add_executable(myapp
