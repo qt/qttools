@@ -78,7 +78,7 @@ expect_files_in_list(qm_files myobject_de.qm myobject_en.qm)
 # Typical usage of qt_add_lupdate/qt_add_lrelease. Pass some options for good measure.
 create_app(app3)
 qt6_add_lupdate(
-    TARGETS app1 app2 app3
+    SOURCE_TARGETS app1 app2 app3
     TS_FILES myobject_no.ts myobject_fi.ts
     OPTIONS -source-language en_US)
 qt6_add_lrelease(app3

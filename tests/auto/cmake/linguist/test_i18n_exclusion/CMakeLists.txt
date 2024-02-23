@@ -18,7 +18,7 @@ configure_file(test_i18n_exclusion_de.ts.in "${ts_file}")
 # Set up the 'update_translations' target.
 qt_collect_i18n_targets(i18n_targets)
 qt_add_lupdate(
-    TARGETS ${i18n_targets}
+    SOURCE_TARGETS ${i18n_targets}
     TS_FILES "${ts_file}"
 )
 

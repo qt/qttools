@@ -209,7 +209,7 @@ function(qt6_add_lupdate)
         PLURALS_TS_FILE
         LUPDATE_TARGET)
     set(multiValueArgs
-        TARGETS
+        SOURCE_TARGETS
         TS_FILES
         SOURCES
         INCLUDE_DIRECTORIES
@@ -218,7 +218,7 @@ function(qt6_add_lupdate)
 
     # Set up the list of targets. Support the old command signature that takes one target as first
     # argument.
-    set(targets "${arg_TARGETS}")
+    set(targets "${arg_SOURCE_TARGETS}")
     if("${targets}" STREQUAL "")
         list(POP_FRONT arg_UNPARSED_ARGUMENTS target)
         if(TARGET "${target}")
@@ -228,7 +228,7 @@ function(qt6_add_lupdate)
     endif()
 
     if("${targets}" STREQUAL "" AND "${arg_SOURCES}" STREQUAL "")
-        message(FATAL_ERROR "No TARGETS nor SOURCES were given.")
+        message(FATAL_ERROR "No SOURCE_TARGETS nor SOURCES were given.")
     endif()
 
     # Set up the name of the custom target.
@@ -687,7 +687,7 @@ function(qt6_add_translations)
         qt6_collect_i18n_targets(source_targets)
     endif()
     qt6_add_lupdate(
-        TARGETS "${source_targets}"
+        SOURCE_TARGETS "${source_targets}"
         LUPDATE_TARGET "${arg_LUPDATE_TARGET}"
         TS_FILES "${arg_TS_FILES}"
         PLURALS_TS_FILE "${arg_PLURALS_TS_FILE}"

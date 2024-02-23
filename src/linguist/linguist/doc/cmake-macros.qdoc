@@ -143,7 +143,7 @@ Since 6.7:
 \badcode
 qt_add_lupdate(TS_FILES file1.ts [file2.ts ...]
                [PLURALS_TS_FILE file.ts]
-               [TARGETS target1 [target2 ...]]
+               [SOURCE_TARGETS target1 [target2 ...]]
                [SOURCES source1.cpp [sources2.cpp ...]]
                [INCLUDE_DIRECTORIES directory1 [directory2 ...]]
                [LUPDATE_TARGET target-name]
@@ -172,10 +172,10 @@ calls of \c qt_add_lupdate will create target names with an increasing number
 appended. The custom target name can be specified with the \c LUPDATE_TARGET
 option.
 
-With the \c{TARGETS} argument you can specify a list of targets that contain
-sources with translatable strings. If \c{TARGETS} is not specified, you can
-specify \c{SOURCES}, which is described below. If neither \c{TARGETS} nor
-\c{SOURCES} is given, the command
+With the \c{SOURCE_TARGETS} argument you can specify a list of targets that
+contain sources with translatable strings. If \c{SOURCE_TARGETS} is not
+specified, you can specify \c{SOURCES}, which is described below. If neither
+\c{SOURCE_TARGETS} nor \c{SOURCES} is given, the command
 \l{qt6_collect_i18n_targets}{qt_collect_i18n_targets} is called to retrieve the
 list of targets.
 
@@ -227,7 +227,7 @@ language. This file will only contain plural forms.
 \section1 Deprecated Command Signature
 
 Older versions of \c qt_add_lupdate took a target as the first argument. This is
-deprecated. Use the \c TARGETS argument instead.
+deprecated. Use the \c SOURCE_TARGETS argument instead.
 
 \section1 Examples
 
