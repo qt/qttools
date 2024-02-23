@@ -59,12 +59,14 @@ CodeDialog::CodeDialog(QWidget *parent) :
     // Edit tool bar
     QToolBar *toolBar = new QToolBar;
 
-    const QIcon saveIcon = createIconSet(u"filesave.png"_s);
+    const QIcon saveIcon = createIconSet(QIcon::ThemeIcon::DocumentSave,
+                                         "filesave.png"_L1);
     QAction *saveAction = toolBar->addAction(saveIcon, tr("Save..."));
     connect(saveAction, &QAction::triggered, this, &CodeDialog::slotSaveAs);
 
 #if QT_CONFIG(clipboard)
-    const QIcon copyIcon = createIconSet(u"editcopy.png"_s);
+    const QIcon copyIcon = createIconSet(QIcon::ThemeIcon::EditCopy,
+                                         "editcopy.png"_L1);
     QAction *copyAction = toolBar->addAction(copyIcon, tr("Copy All"));
     connect(copyAction, &QAction::triggered, this, &CodeDialog::copyAll);
 #endif

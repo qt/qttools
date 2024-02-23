@@ -70,8 +70,10 @@ PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) 
     m_resourceAction(new QAction(tr("Choose Resource..."), this)),
     m_fileAction(new QAction(tr("Choose File..."), this)),
     m_themeAction(new QAction(tr("Set Icon From Theme..."), this)),
-    m_copyAction(new QAction(createIconSet(u"editcopy.png"_s), tr("Copy Path"), this)),
-    m_pasteAction(new QAction(createIconSet(u"editpaste.png"_s), tr("Paste Path"), this)),
+    m_copyAction(new QAction(createIconSet(QIcon::ThemeIcon::EditCopy, "editcopy.png"_L1),
+                             tr("Copy Path"), this)),
+    m_pasteAction(new QAction(createIconSet(QIcon::ThemeIcon::EditPaste, "editpaste.png"_L1),
+                              tr("Paste Path"), this)),
     m_layout(new QHBoxLayout(this)),
     m_pixmapCache(nullptr)
 {
