@@ -29,8 +29,30 @@ its subdirectories from translation. The command
 \l{qt6_collect_translation_source_targets}{qt_collect_translation_source_targets}
 will skip such targets.
 
-To exclude a single target, use the \l{target property
-QT_EXCLUDE_FROM_TRANSLATION}.
+To exclude a single target, use the target property \l{target property
+QT_EXCLUDE_FROM_TRANSLATION}{QT_EXCLUDE_FROM_TRANSLATION}.
+
+\section1 Examples
+
+In the following example, translatable strings will not be extracted from
+targets that are defined in the \c tests directory.
+
+\badcode
+add_subdirectory(app)
+add_subdirectory(tests)
+set_property(DIRECTORY tests PROPERTY QT_EXCLUDE_FROM_TRANSLATION ON)
+qt_add_translations(myapp)
+\endcode
+
+Alternatively, you can set the directory property in the \c{CMakeLists.txt} of
+the \c tests subdirectory.
+
+\badcode
+# tests/CMakeLists.txt
+qt_add_executable(...)
+add_test(...)
+set_directory_properties(PROPERTIES QT_EXCLUDE_FROM_TRANSLATION ON)
+\endcode
 
 \sa QT_EXCLUDE_SOURCES_FROM_TRANSLATION
 */
@@ -63,8 +85,20 @@ Set this target property to \c ON to exclude it from translation. The command
 \l{qt6_collect_translation_source_targets}{qt_collect_translation_source_targets}
 will skip such targets.
 
-To exclude all targets under a subdirectory, use the \l{directory property
-QT_EXCLUDE_FROM_TRANSLATION}.
+To exclude all targets under a subdirectory, use the directory property
+\l{directory property QT_EXCLUDE_FROM_TRANSLATION}{QT_EXCLUDE_FROM_TRANSLATION}.
+
+\section1 Examples
+
+In the following example, translatable strings will not be extracted from the \c
+mytest target.
+
+\badcode
+qt_add_executable(myapp main.cpp)
+qt_add_executable(mytest test.cpp)
+set_property(TARGET mytest PROPERTY QT_EXCLUDE_FROM_TRANSLATION ON)
+qt_add_translations(myapp)
+\endcode
 
 \sa QT_EXCLUDE_SOURCES_FROM_TRANSLATION
 */
@@ -82,11 +116,16 @@ QT_EXCLUDE_FROM_TRANSLATION}.
 \cmakepropertysince 6.7
 
 This target property specifies a list of source file paths that are excluded
-from translation. The paths may be absolute or relative to
-\c{CMAKE_CURRENT_SOURCE_DIR}. The paths may contain wildcards.
+from translation. Source files that match the patterns in this exclusion list
+are ignored by \c{lupdate}.
+
+The paths may be absolute or relative to \c{CMAKE_CURRENT_SOURCE_DIR}. The paths
+may contain wildcards in a format that is accepted by
+\l{QRegularExpression::wildcardToRegularExpression}.
 
 \snippet cmake-macros/examples.cmake exclude sources from i18n
 
+\sa qt_add_lupdate
 \sa {target property QT_EXCLUDE_FROM_TRANSLATION}
 \sa {directory property QT_EXCLUDE_FROM_TRANSLATION}
 */
