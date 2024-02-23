@@ -387,7 +387,7 @@ void FormWindowManager::setupActions()
     connect(m_actionSelectAll, &QAction::triggered, this, &FormWindowManager::slotActionSelectAllActivated);
     m_actionSelectAll->setEnabled(false);
 
-    m_actionRaise = new QAction(createIconSet(u"editraise.png"_s),
+    m_actionRaise = new QAction(createIconSet("editraise.png"_L1),
                                 tr("Bring to &Front"), this);
     m_actionRaise->setObjectName(u"__qt_raise_action"_s);
     m_actionRaise->setShortcut(Qt::CTRL | Qt::Key_L);
@@ -396,7 +396,7 @@ void FormWindowManager::setupActions()
     connect(m_actionRaise, &QAction::triggered, this, &FormWindowManager::slotActionRaiseActivated);
     m_actionRaise->setEnabled(false);
 
-    m_actionLower = new QAction(createIconSet(u"editlower.png"_s),
+    m_actionLower = new QAction(createIconSet("editlower.png"_L1),
                                 tr("Send to &Back"), this);
     m_actionLower->setObjectName(u"__qt_lower_action"_s);
     m_actionLower->setShortcut(Qt::CTRL | Qt::Key_K);
@@ -405,7 +405,7 @@ void FormWindowManager::setupActions()
     connect(m_actionLower, &QAction::triggered, this, &FormWindowManager::slotActionLowerActivated);
     m_actionLower->setEnabled(false);
 
-    m_actionAdjustSize = new QAction(createIconSet(u"adjustsize.png"_s),
+    m_actionAdjustSize = new QAction(createIconSet("adjustsize.png"_L1),
                                      tr("Adjust &Size"), this);
     m_actionAdjustSize->setObjectName(u"__qt_adjust_size_action"_s);
     m_actionAdjustSize->setShortcut(Qt::CTRL | Qt::Key_J);
@@ -415,7 +415,7 @@ void FormWindowManager::setupActions()
     m_actionAdjustSize->setEnabled(false);
 
 
-    m_actionHorizontalLayout = new QAction(createIconSet(u"edithlayout.png"_s),
+    m_actionHorizontalLayout = new QAction(createIconSet("edithlayout.png"_L1),
                                            tr("Lay Out &Horizontally"), this);
     m_actionHorizontalLayout->setObjectName(u"__qt_horizontal_layout_action"_s);
     m_actionHorizontalLayout->setShortcut(Qt::CTRL | Qt::Key_1);
@@ -425,7 +425,7 @@ void FormWindowManager::setupActions()
     m_actionHorizontalLayout->setEnabled(false);
     connect(m_actionHorizontalLayout, &QAction::triggered, this, &FormWindowManager::createLayout);
 
-    m_actionVerticalLayout = new QAction(createIconSet(u"editvlayout.png"_s),
+    m_actionVerticalLayout = new QAction(createIconSet("editvlayout.png"_L1),
                                          tr("Lay Out &Vertically"), this);
     m_actionVerticalLayout->setObjectName(u"__qt_vertical_layout_action"_s);
     m_actionVerticalLayout->setShortcut(Qt::CTRL | Qt::Key_2);
@@ -436,7 +436,7 @@ void FormWindowManager::setupActions()
     connect(m_actionVerticalLayout, &QAction::triggered, this, &FormWindowManager::createLayout);
 
     QIcon formIcon = QIcon::fromTheme(u"designer-form-layout"_s,
-                                      createIconSet(u"editform.png"_s));
+                                      createIconSet("editform.png"_L1));
     m_actionFormLayout = new QAction(formIcon, tr("Lay Out in a &Form Layout"), this);
     m_actionFormLayout->setObjectName(u"__qt_form_layout_action"_s);
     m_actionFormLayout->setShortcut(Qt::CTRL | Qt::Key_6);
@@ -446,7 +446,7 @@ void FormWindowManager::setupActions()
     m_actionFormLayout->setEnabled(false);
     connect(m_actionFormLayout, &QAction::triggered, this, &FormWindowManager::createLayout);
 
-    m_actionGridLayout = new QAction(createIconSet(u"editgrid.png"_s),
+    m_actionGridLayout = new QAction(createIconSet("editgrid.png"_L1),
                                      tr("Lay Out in a &Grid"), this);
     m_actionGridLayout->setObjectName(u"__qt_grid_layout_action"_s);
     m_actionGridLayout->setShortcut(Qt::CTRL | Qt::Key_5);
@@ -456,7 +456,7 @@ void FormWindowManager::setupActions()
     m_actionGridLayout->setEnabled(false);
     connect(m_actionGridLayout, &QAction::triggered, this, &FormWindowManager::createLayout);
 
-    m_actionSplitHorizontal = new QAction(createIconSet(u"edithlayoutsplit.png"_s),
+    m_actionSplitHorizontal = new QAction(createIconSet("edithlayoutsplit.png"_L1),
                                           tr("Lay Out Horizontally in S&plitter"), this);
     m_actionSplitHorizontal->setObjectName(u"__qt_split_horizontal_action"_s);
     m_actionSplitHorizontal->setShortcut(Qt::CTRL | Qt::Key_3);
@@ -466,7 +466,7 @@ void FormWindowManager::setupActions()
     m_actionSplitHorizontal->setEnabled(false);
     connect(m_actionSplitHorizontal, &QAction::triggered, this, &FormWindowManager::createLayout);
 
-    m_actionSplitVertical = new QAction(createIconSet(u"editvlayoutsplit.png"_s),
+    m_actionSplitVertical = new QAction(createIconSet("editvlayoutsplit.png"_L1),
                                         tr("Lay Out Vertically in Sp&litter"), this);
     m_actionSplitVertical->setObjectName(u"__qt_split_vertical_action"_s);
     m_actionSplitVertical->setShortcut(Qt::CTRL | Qt::Key_4);
@@ -477,7 +477,7 @@ void FormWindowManager::setupActions()
 
     m_actionSplitVertical->setEnabled(false);
 
-    m_actionBreakLayout = new QAction(createIconSet(u"editbreaklayout.png"_s),
+    m_actionBreakLayout = new QAction(createIconSet("editbreaklayout.png"_L1),
                                       tr("&Break Layout"), this);
     m_actionBreakLayout->setObjectName(u"__qt_break_layout_action"_s);
     m_actionBreakLayout->setShortcut(Qt::CTRL | Qt::Key_0);

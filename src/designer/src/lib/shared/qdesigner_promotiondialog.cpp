@@ -184,7 +184,7 @@ namespace qdesigner_internal {
         m_model(new PromotionModel(core)),
         m_treeView(new QTreeView),
         m_buttonBox(nullptr),
-        m_removeButton(new QPushButton(createIconSet(u"minus.png"_s), QString()))
+        m_removeButton(new QPushButton(createIconSet("minus.png"_L1), QString()))
     {
         m_buttonBox = createButtonBox();
         setModal(true);

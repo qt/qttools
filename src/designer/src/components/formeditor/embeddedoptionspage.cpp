@@ -125,7 +125,7 @@ void EmbeddedOptionsControlPrivate::init(EmbeddedOptionsControl *q)
     EmbeddedOptionsControl::connect(m_profileCombo, &QComboBox::currentIndexChanged,
                                     m_q, &EmbeddedOptionsControl::slotProfileIndexChanged);
 
-    m_addButton->setIcon(createIconSet(u"plus.png"_s));
+    m_addButton->setIcon(createIconSet("plus.png"_L1));
     m_addButton->setToolTip(EmbeddedOptionsControl::tr("Add a profile"));
     EmbeddedOptionsControl::connect(m_addButton, &QAbstractButton::clicked,
                                     m_q, &EmbeddedOptionsControl::slotAdd);
@@ -133,11 +133,11 @@ void EmbeddedOptionsControlPrivate::init(EmbeddedOptionsControl *q)
 
     EmbeddedOptionsControl::connect(m_editButton, &QAbstractButton::clicked,
                                     m_q, &EmbeddedOptionsControl::slotEdit);
-    m_editButton->setIcon(createIconSet(u"edit.png"_s));
+    m_editButton->setIcon(createIconSet("edit.png"_L1));
     m_editButton->setToolTip(EmbeddedOptionsControl::tr("Edit the selected profile"));
     hLayout->addWidget(m_editButton);
 
-    m_deleteButton->setIcon(createIconSet(u"minus.png"_s));
+    m_deleteButton->setIcon(createIconSet("minus.png"_L1));
     m_deleteButton->setToolTip(EmbeddedOptionsControl::tr("Delete the selected profile"));
     EmbeddedOptionsControl::connect(m_deleteButton, &QAbstractButton::clicked,
                                     m_q, &EmbeddedOptionsControl::slotDelete);

@@ -252,12 +252,12 @@ AppFontWidget::AppFontWidget(QWidget *parent) :
     connect(m_view->selectionModel(), &QItemSelectionModel::selectionChanged, this, &AppFontWidget::selectionChanged);
 
     m_addButton->setToolTip(tr("Add font files"));
-    m_addButton->setIcon(qdesigner_internal::createIconSet(u"plus.png"_s));
+    m_addButton->setIcon(qdesigner_internal::createIconSet("plus.png"_L1));
     connect(m_addButton, &QAbstractButton::clicked, this, &AppFontWidget::addFiles);
 
     m_removeButton->setEnabled(false);
     m_removeButton->setToolTip(tr("Remove current font file"));
-    m_removeButton->setIcon(qdesigner_internal::createIconSet(u"minus.png"_s));
+    m_removeButton->setIcon(qdesigner_internal::createIconSet("minus.png"_L1));
     connect(m_removeButton, &QAbstractButton::clicked, this, &AppFontWidget::slotRemoveFiles);
 
     m_removeAllButton->setToolTip(tr("Remove all font files"));

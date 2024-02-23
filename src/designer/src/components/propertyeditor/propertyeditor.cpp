@@ -183,10 +183,10 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     m_propertyManager(new DesignerPropertyManager(m_core, this)),
     m_stackedWidget(new QStackedWidget),
     m_filterWidget(new QLineEdit),
-    m_addDynamicAction(new QAction(createIconSet(u"plus.png"_s), tr("Add Dynamic Property..."), this)),
-    m_removeDynamicAction(new QAction(createIconSet(u"minus.png"_s), tr("Remove Dynamic Property"), this)),
-    m_sortingAction(new QAction(createIconSet(u"sort.png"_s), tr("Sorting"), this)),
-    m_coloringAction(new QAction(createIconSet(u"color.png"_s), tr("Color Groups"), this)),
+    m_addDynamicAction(new QAction(createIconSet("plus.png"_L1), tr("Add Dynamic Property..."), this)),
+    m_removeDynamicAction(new QAction(createIconSet("minus.png"_L1), tr("Remove Dynamic Property"), this)),
+    m_sortingAction(new QAction(createIconSet("sort.png"_L1), tr("Sorting"), this)),
+    m_coloringAction(new QAction(createIconSet("color.png"_L1), tr("Color Groups"), this)),
     m_treeAction(new QAction(tr("Tree View"), this)),
     m_buttonAction(new QAction(tr("Drop Down Button View"), this)),
     m_classLabel(new ElidingLabel)
@@ -207,9 +207,9 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     QActionGroup *actionGroup = new QActionGroup(this);
 
     m_treeAction->setCheckable(true);
-    m_treeAction->setIcon(createIconSet(u"widgets/listview.png"_s));
+    m_treeAction->setIcon(createIconSet("widgets/listview.png"_L1));
     m_buttonAction->setCheckable(true);
-    m_buttonAction->setIcon(createIconSet(u"dropdownbutton.png"_s));
+    m_buttonAction->setIcon(createIconSet("dropdownbutton.png"_L1));
 
     actionGroup->addAction(m_treeAction);
     actionGroup->addAction(m_buttonAction);
@@ -239,7 +239,7 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     connect(m_removeDynamicAction, &QAction::triggered, this, &PropertyEditor::slotRemoveDynamicProperty);
     // Configure
     QAction *configureAction = new QAction(tr("Configure Property Editor"), this);
-    configureAction->setIcon(createIconSet(u"configure.png"_s));
+    configureAction->setIcon(createIconSet("configure.png"_L1));
     QMenu *configureMenu = new QMenu(this);
     configureAction->setMenu(configureMenu);
 

@@ -493,7 +493,7 @@ ResetWidget::ResetWidget(QtProperty *property, QWidget *parent) :
     m_textLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed));
     m_iconLabel->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     m_button->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    m_button->setIcon(createIconSet(u"resetproperty.png"_s));
+    m_button->setIcon(createIconSet("resetproperty.png"_L1));
     m_button->setIconSize(QSize(8,8));
     m_button->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
     connect(m_button, &QAbstractButton::clicked, this, &ResetWidget::slotClicked);

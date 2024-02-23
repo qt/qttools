@@ -681,11 +681,11 @@ SignalSlotEditorWindow::SignalSlotEditorWindow(QDesignerFormEditorInterface *cor
 
     QToolBar *toolBar = new QToolBar;
     toolBar->setIconSize(QSize(22, 22));
-    m_add_button->setIcon(createIconSet(u"plus.png"_s));
+    m_add_button->setIcon(createIconSet("plus.png"_L1));
     connect(m_add_button, &QAbstractButton::clicked, this, &SignalSlotEditorWindow::addConnection);
     toolBar->addWidget(m_add_button);
 
-    m_remove_button->setIcon(createIconSet(u"minus.png"_s));
+    m_remove_button->setIcon(createIconSet("minus.png"_L1));
     connect(m_remove_button, &QAbstractButton::clicked, this, &SignalSlotEditorWindow::removeConnection);
     toolBar->addWidget(m_remove_button);
 

@@ -57,7 +57,7 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
     connect(m_ui->editObjectName, &QLineEdit::textEdited,
             this, &NewActionDialog::onEditObjectNameTextEdited);
 
-    m_ui->keysequenceResetToolButton->setIcon(createIconSet(u"resetproperty.png"_s));
+    m_ui->keysequenceResetToolButton->setIcon(createIconSet("resetproperty.png"_L1));
     connect(m_ui->keysequenceResetToolButton, &QAbstractButton::clicked,
             this, &NewActionDialog::slotResetKeySequence);
 

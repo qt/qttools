@@ -432,7 +432,7 @@ IconSelector::IconSelector(QWidget *parent) :
     d_ptr->m_resetAllAction = new QAction(tr("Reset All"), this);
     d_ptr->m_resetAction->setEnabled(false);
     d_ptr->m_resetAllAction->setEnabled(false);
-    //d_ptr->m_resetAction->setIcon(createIconSet(u"resetproperty.png"_s));
+    //d_ptr->m_resetAction->setIcon(createIconSet("resetproperty.png"_L1));
 
     setMenu->addAction(setResourceAction);
     setMenu->addAction(setFileAction);
@@ -546,7 +546,7 @@ IconThemeEditor::IconThemeEditor(QWidget *parent, bool wantResetButton) :
 
     if (wantResetButton) {
         QToolButton *themeResetButton = new QToolButton;
-        themeResetButton->setIcon(createIconSet(u"resetproperty.png"_s));
+        themeResetButton->setIcon(createIconSet("resetproperty.png"_L1));
         connect(themeResetButton, &QAbstractButton::clicked, this, &IconThemeEditor::reset);
         mainHLayout->addWidget(themeResetButton);
     }

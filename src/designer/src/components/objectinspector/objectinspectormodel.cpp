@@ -309,13 +309,13 @@ namespace qdesigner_internal {
         setColumnCount(NumColumns);
         setHorizontalHeaderLabels(headers);
         // Icons
-        m_icons.layoutIcons[LayoutInfo::NoLayout] = createIconSet(u"editbreaklayout.png"_s);
-        m_icons.layoutIcons[LayoutInfo::HSplitter] = createIconSet(u"edithlayoutsplit.png"_s);
-        m_icons.layoutIcons[LayoutInfo::VSplitter] = createIconSet(u"editvlayoutsplit.png"_s);
-        m_icons.layoutIcons[LayoutInfo::HBox] = createIconSet(u"edithlayout.png"_s);
-        m_icons.layoutIcons[LayoutInfo::VBox] = createIconSet(u"editvlayout.png"_s);
-        m_icons.layoutIcons[LayoutInfo::Grid] = createIconSet(u"editgrid.png"_s);
-        m_icons.layoutIcons[LayoutInfo::Form] = createIconSet(u"editform.png"_s);
+        m_icons.layoutIcons[LayoutInfo::NoLayout] = createIconSet("editbreaklayout.png"_L1);
+        m_icons.layoutIcons[LayoutInfo::HSplitter] = createIconSet("edithlayoutsplit.png"_L1);
+        m_icons.layoutIcons[LayoutInfo::VSplitter] = createIconSet("editvlayoutsplit.png"_L1);
+        m_icons.layoutIcons[LayoutInfo::HBox] = createIconSet("edithlayout.png"_L1);
+        m_icons.layoutIcons[LayoutInfo::VBox] = createIconSet("editvlayout.png"_L1);
+        m_icons.layoutIcons[LayoutInfo::Grid] = createIconSet("editgrid.png"_L1);
+        m_icons.layoutIcons[LayoutInfo::Form] = createIconSet("editform.png"_L1);
     }
 
     void ObjectInspectorModel::clearItems()

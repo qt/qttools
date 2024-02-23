@@ -230,7 +230,7 @@ QToolButton *ActionEditor::createConfigureMenuButton(const QString &t, QMenu **p
     QToolButton *configureButton = new QToolButton;
     QAction *configureAction = new QAction(t, configureButton);
     QIcon configureIcon = QIcon::fromTheme(QIcon::ThemeIcon::DocumentProperties,
-                                           createIconSet(u"configure.png"_s));
+                                           createIconSet("configure.png"_L1));
     configureAction->setIcon(configureIcon);
     QMenu *configureMenu = new QMenu(configureButton);
     configureAction->setMenu(configureMenu);

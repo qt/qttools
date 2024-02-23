@@ -1912,13 +1912,13 @@ QtResourceEditorDialog::QtResourceEditorDialog(QDesignerFormEditorInterface *cor
     connect(d_ptr->m_qrcManager, &QtQrcManager::resourceFileRemoved,
             this, [this](QtResourceFile *file) { d_ptr->slotResourceFileRemoved(file); });
 
-    QIcon upIcon = qdesigner_internal::createIconSet(u"up.png"_s);
-    QIcon downIcon = qdesigner_internal::createIconSet(u"down.png"_s);
-    QIcon minusIcon = qdesigner_internal::createIconSet(u"minus-16.png"_s);
-    QIcon newIcon = qdesigner_internal::createIconSet(u"filenew-16.png"_s);
-    QIcon openIcon = qdesigner_internal::createIconSet(u"fileopen-16.png"_s);
-    QIcon removeIcon = qdesigner_internal::createIconSet(u"editdelete-16.png"_s);
-    QIcon addPrefixIcon = qdesigner_internal::createIconSet(u"prefix-add.png"_s);
+    QIcon upIcon = qdesigner_internal::createIconSet("up.png"_L1);
+    QIcon downIcon = qdesigner_internal::createIconSet("down.png"_L1);
+    QIcon minusIcon = qdesigner_internal::createIconSet("minus-16.png"_L1);
+    QIcon newIcon = qdesigner_internal::createIconSet("filenew-16.png"_L1);
+    QIcon openIcon = qdesigner_internal::createIconSet("fileopen-16.png"_L1);
+    QIcon removeIcon = qdesigner_internal::createIconSet("editdelete-16.png"_L1);
+    QIcon addPrefixIcon = qdesigner_internal::createIconSet("prefix-add.png"_L1);
 
     d_ptr->m_newQrcFileAction = new QAction(newIcon, tr("New..."), this);
     d_ptr->m_newQrcFileAction->setToolTip(tr("New Resource File"));

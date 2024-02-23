@@ -292,8 +292,8 @@ SignalSlotDialog::SignalSlotDialog(QDesignerDialogGuiInterface *dialogGui, QWidg
     setModal(true);
     m_ui->setupUi(this);
 
-    const QIcon plusIcon = qdesigner_internal::createIconSet(u"plus.png"_s);
-    const QIcon minusIcon = qdesigner_internal::createIconSet(u"minus.png"_s);
+    const QIcon plusIcon = qdesigner_internal::createIconSet("plus.png"_L1);
+    const QIcon minusIcon = qdesigner_internal::createIconSet("minus.png"_L1);
     m_ui->addSlotButton->setIcon(plusIcon);
     m_ui->removeSlotButton->setIcon(minusIcon);
     m_ui->addSignalButton->setIcon(plusIcon);
