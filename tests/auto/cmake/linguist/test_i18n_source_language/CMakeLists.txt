@@ -17,7 +17,7 @@ endfunction()
 # qt_add_lupdate with just the native translation.
 my_add_library(lib1 STATIC lib.cpp)
 qt_add_lupdate(
-    TARGETS lib1
+    SOURCE_TARGETS lib1
     PLURALS_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib1_en.ts"
 )
 
@@ -26,14 +26,14 @@ qt_add_lupdate(
 my_add_library(lib2 STATIC lib.cpp)
 configure_file(lib2_en.ts.in lib2_en.ts COPYONLY)
 qt_add_lupdate(
-    TARGETS lib2
+    SOURCE_TARGETS lib2
     PLURALS_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib2_en.ts"
 )
 
 # qt_add_lupdate with regular translations and the native translation.
 my_add_library(lib3 STATIC lib.cpp)
 qt_add_lupdate(
-    TARGETS lib3
+    SOURCE_TARGETS lib3
     TS_FILES "${CMAKE_CURRENT_BINARY_DIR}/lib3_hi.ts" "${CMAKE_CURRENT_BINARY_DIR}/lib3_ho.ts"
     PLURALS_TS_FILE "${CMAKE_CURRENT_BINARY_DIR}/lib3_en.ts"
 )
