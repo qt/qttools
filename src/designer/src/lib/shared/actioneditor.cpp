@@ -114,8 +114,8 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     toolbar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
     l->addWidget(toolbar);
     // edit actions
-    QIcon documentNewIcon = QIcon::fromTheme(QIcon::ThemeIcon::DocumentNew,
-                                             createIconSet(u"filenew.png"_s));
+    QIcon documentNewIcon = createIconSet(QIcon::ThemeIcon::DocumentNew,
+                                          "filenew.png"_L1);
     m_actionNew->setIcon(documentNewIcon);
     m_actionNew->setEnabled(false);
     connect(m_actionNew, &QAction::triggered, this, &ActionEditor::slotNewAction);
@@ -126,20 +126,20 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
 #if QT_CONFIG(clipboard)
     m_actionCut->setEnabled(false);
     connect(m_actionCut, &QAction::triggered, this, &ActionEditor::slotCut);
-    QIcon editCutIcon = QIcon::fromTheme(QIcon::ThemeIcon::EditCut,
-                                         createIconSet(u"editcut.png"_s));
+    QIcon editCutIcon = createIconSet(QIcon::ThemeIcon::EditCut,
+                                      "editcut.png"_L1);
     m_actionCut->setIcon(editCutIcon);
 
     m_actionCopy->setEnabled(false);
     connect(m_actionCopy, &QAction::triggered, this, &ActionEditor::slotCopy);
-    QIcon editCopyIcon = QIcon::fromTheme(QIcon::ThemeIcon::EditCopy,
-                                          createIconSet(u"editcopy.png"_s));
+    QIcon editCopyIcon = createIconSet(QIcon::ThemeIcon::EditCopy,
+                                       "editcopy.png"_L1);
     m_actionCopy->setIcon(editCopyIcon);
     toolbar->addAction(m_actionCopy);
 
     connect(m_actionPaste, &QAction::triggered, this, &ActionEditor::slotPaste);
-    QIcon editPasteIcon = QIcon::fromTheme(QIcon::ThemeIcon::EditPaste,
-                                           createIconSet(u"editpaste.png"_s));
+    QIcon editPasteIcon = createIconSet(QIcon::ThemeIcon::EditPaste,
+                                        "editpaste.png"_L1);
     m_actionPaste->setIcon(editPasteIcon);
     toolbar->addAction(m_actionPaste);
 #endif
@@ -149,8 +149,8 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
 
     connect(m_actionNavigateToSlot, &QAction::triggered, this, &ActionEditor::navigateToSlotCurrentAction);
 
-    QIcon editDeleteIcon = QIcon::fromTheme(QIcon::ThemeIcon::EditDelete,
-                                            createIconSet(u"editdelete.png"_s));
+    QIcon editDeleteIcon = createIconSet(QIcon::ThemeIcon::EditDelete,
+                                         "editdelete.png"_L1);
     m_actionDelete->setIcon(editDeleteIcon);
     m_actionDelete->setEnabled(false);
     connect(m_actionDelete, &QAction::triggered, this, &ActionEditor::slotDelete);

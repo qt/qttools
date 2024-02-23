@@ -261,7 +261,8 @@ AppFontWidget::AppFontWidget(QWidget *parent) :
     connect(m_removeButton, &QAbstractButton::clicked, this, &AppFontWidget::slotRemoveFiles);
 
     m_removeAllButton->setToolTip(tr("Remove all font files"));
-    m_removeAllButton->setIcon(qdesigner_internal::createIconSet(u"editdelete.png"_s));
+    m_removeAllButton->setIcon(qdesigner_internal::createIconSet(QIcon::ThemeIcon::EditDelete,
+                                                                 "editdelete.png"_L1));
     connect(m_removeAllButton, &QAbstractButton::clicked, this, &AppFontWidget::slotRemoveAll);
 
     QHBoxLayout *hLayout = new QHBoxLayout;
