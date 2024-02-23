@@ -157,19 +157,26 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_windowActions(createActionGroup(this)),
       m_toolActions(createActionGroup(this, true)),
       m_editWidgetsAction(new QAction(tr("Edit Widgets"), this)),
-      m_newFormAction(new QAction(qdesigner_internal::createIconSet(u"filenew.png"_s),
+      m_newFormAction(new QAction(qdesigner_internal::createIconSet(QIcon::ThemeIcon::DocumentNew,
+                                                                    "filenew.png"_L1),
                                   tr("&New..."), this)),
-      m_openFormAction(new QAction(qdesigner_internal::createIconSet(u"fileopen.png"_s),
+      m_openFormAction(new QAction(qdesigner_internal::createIconSet(QIcon::ThemeIcon::DocumentOpen,
+                                                                     "fileopen.png"_L1),
                                    tr("&Open..."), this)),
-      m_saveFormAction(new QAction(qdesigner_internal::createIconSet(u"filesave.png"_s),
+      m_saveFormAction(new QAction(qdesigner_internal::createIconSet(QIcon::ThemeIcon::DocumentSave,
+                                                                     "filesave.png"_L1),
                                    tr("&Save"), this)),
-      m_saveFormAsAction(new QAction(tr("Save &As..."), this)),
+      m_saveFormAsAction(new QAction(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSaveAs),
+                                     tr("Save &As..."), this)),
       m_saveAllFormsAction(new QAction(tr("Save A&ll"), this)),
       m_saveFormAsTemplateAction(new QAction(tr("Save As &Template..."), this)),
-      m_closeFormAction(new QAction(tr("&Close"), this)),
+      m_closeFormAction(new QAction(QIcon::fromTheme(QIcon::ThemeIcon::WindowClose),
+                                    tr("&Close"), this)),
       m_savePreviewImageAction(new QAction(tr("Save &Image..."), this)),
-      m_printPreviewAction(new QAction(tr("&Print..."), this)),
-      m_quitAction(new QAction(tr("&Quit"), this)),
+      m_printPreviewAction(new QAction(QIcon::fromTheme(QIcon::ThemeIcon::DocumentPrint),
+                                       tr("&Print..."), this)),
+      m_quitAction(new QAction(QIcon::fromTheme(QIcon::ThemeIcon::ApplicationExit),
+                               tr("&Quit"), this)),
       m_viewCppCodeAction(new QAction(tr("View &C++ Code..."), this)),
       m_viewPythonCodeAction(new QAction(tr("View &Python Code..."), this)),
       m_minimizeAction(new QAction(tr("&Minimize"), this)),
@@ -179,23 +186,6 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_preferencesAction(new QAction(tr("Preferences..."), this)),
       m_appFontAction(new QAction(tr("Additional Fonts..."), this))
 {
-#if defined (Q_OS_UNIX) && !defined(Q_OS_MACOS)
-    m_newFormAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentNew,
-                                              m_newFormAction->icon()));
-    m_openFormAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen,
-                                               m_openFormAction->icon()));
-    m_saveFormAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSave,
-                                               m_saveFormAction->icon()));
-    m_saveFormAsAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSaveAs,
-                                                 m_saveFormAsAction->icon()));
-    m_printPreviewAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentPrint,
-                                                   m_printPreviewAction->icon()));
-    m_closeFormAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::WindowClose,
-                                                m_closeFormAction->icon()));
-    m_quitAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ApplicationExit,
-                                           m_quitAction->icon()));
-#endif
-
     Q_ASSERT(m_core != nullptr);
     qdesigner_internal::QDesignerFormWindowManager *ifwm = qobject_cast<qdesigner_internal::QDesignerFormWindowManager *>(m_core->formWindowManager());
     Q_ASSERT(ifwm);
