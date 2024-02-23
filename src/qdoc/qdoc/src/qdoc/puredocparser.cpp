@@ -28,17 +28,16 @@ QStringList PureDocParser::sourceFileNameFilter()
   parsed contents to the database. The \a location is used for
   reporting errors.
  */
-void PureDocParser::parseSourceFile(const Location &location, const QString &filePath, CppCodeParser& cpp_code_parser)
+std::vector<UntiedDocumentation> PureDocParser::parse_qdoc_file(const Location &location, const QString &filePath)
 {
     QFile in(filePath);
     if (!in.open(QIODevice::ReadOnly)) {
         location.error(
                 QStringLiteral("Can't open source file '%1' (%2)").arg(filePath, strerror(errno)));
-        return;
+        return {};
     }
 
-    processQdocComments(in, cpp_code_parser);
-    in.close();
+    return processQdocComments(in);
 }
 
 /*!
@@ -46,8 +45,10 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
   and tree building. It only processes qdoc comments. It skips
   everything else.
  */
-void PureDocParser::processQdocComments(QFile& input_file, CppCodeParser& cpp_code_parser)
+std::vector<UntiedDocumentation> PureDocParser::processQdocComments(QFile& input_file)
 {
+    std::vector<UntiedDocumentation> untied{};
+
     Tokenizer tokenizer(Location{input_file.fileName()}, input_file);
 
     const QSet<QString> &commands = CppCodeParser::topic_commands + CppCodeParser::meta_commands;
@@ -77,9 +78,10 @@ void PureDocParser::processQdocComments(QFile& input_file, CppCodeParser& cpp_co
         if (hasTooManyTopics(doc))
             continue;
 
-        auto tied = cpp_code_parser.processTopicArgs(UntiedDocumentation{doc, {}});
-        cpp_code_parser.processMetaCommands(tied);
+        untied.emplace_back(UntiedDocumentation{doc, QStringList()});
     }
+
+    return untied;
 }
 
 QT_END_NAMESPACE

@@ -90,6 +90,26 @@ static void parseSourceFiles(std::vector<QString>&& sources)
         cpp_code_parser.processMetaCommands(tied_documentation);
     });
 
+    auto non_qdoc_sources = std::stable_partition(non_clang_handled_sources, sources.end(), [](const QString& source){
+        return CodeParser::parserForSourceFile(source) == CodeParser::parserForLanguage("QDoc");
+    });
+
+    std::for_each(non_clang_handled_sources, non_qdoc_sources, [&cpp_code_parser](const QString& source){
+        auto codeParser = static_cast<PureDocParser*>(CodeParser::parserForLanguage("QDoc"));
+
+        qCDebug(lcQdoc, "Parsing %s", qPrintable(source));
+
+        std::vector<TiedDocumentation> tied_documentation{};
+
+        auto untied_documentation = codeParser->parse_qdoc_file(Config::instance().location(), source);
+        for (auto untied : untied_documentation) {
+            auto tied = cpp_code_parser.processTopicArgs(untied);
+            tied_documentation.insert(tied_documentation.end(), tied.begin(), tied.end());
+        };
+
+        cpp_code_parser.processMetaCommands(tied_documentation);
+    });
+
     std::for_each(non_clang_handled_sources, sources.end(), [&cpp_code_parser](const QString& source){
         auto *codeParser = CodeParser::parserForSourceFile(source);
         if (!codeParser) return;

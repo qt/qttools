@@ -19,13 +19,14 @@ public:
     ~PureDocParser() override = default;
 
     void initializeParser() override {}
-    QString language() override { return ""; }
+    QString language() override { return "QDoc"; }
 
     QStringList sourceFileNameFilter() override;
-    void parseSourceFile(const Location &location, const QString &filePath, CppCodeParser& cpp_code_parser) override;
+    void parseSourceFile(const Location &, const QString &, CppCodeParser&) override {}
+    std::vector<UntiedDocumentation> parse_qdoc_file(const Location& location, const QString& filePath);
 
 private:
-    void processQdocComments(QFile& input_file, CppCodeParser& cpp_code_parser);
+    std::vector<UntiedDocumentation> processQdocComments(QFile& input_file);
 };
 
 QT_END_NAMESPACE
