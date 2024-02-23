@@ -40,13 +40,13 @@ TreeWidgetEditor::TreeWidgetEditor(QDesignerFormWindowInterface *form, QDialog *
     ui.tabWidget->insertTab(0, m_columnEditor, tr("&Columns"));
     ui.tabWidget->setCurrentIndex(0);
 
-    ui.newItemButton->setIcon(createIconSet(u"plus.png"_s));
-    ui.newSubItemButton->setIcon(createIconSet(u"downplus.png"_s));
-    ui.deleteItemButton->setIcon(createIconSet(u"minus.png"_s));
-    ui.moveItemUpButton->setIcon(createIconSet(u"up.png"_s));
-    ui.moveItemDownButton->setIcon(createIconSet(u"down.png"_s));
-    ui.moveItemRightButton->setIcon(createIconSet(u"leveldown.png"_s));
-    ui.moveItemLeftButton->setIcon(createIconSet(u"levelup.png"_s));
+    ui.newItemButton->setIcon(createIconSet("plus.png"_L1));
+    ui.newSubItemButton->setIcon(createIconSet("downplus.png"_L1));
+    ui.deleteItemButton->setIcon(createIconSet("minus.png"_L1));
+    ui.moveItemUpButton->setIcon(createIconSet("up.png"_L1));
+    ui.moveItemDownButton->setIcon(createIconSet("down.png"_L1));
+    ui.moveItemRightButton->setIcon(createIconSet("leveldown.png"_L1));
+    ui.moveItemLeftButton->setIcon(createIconSet("levelup.png"_L1));
 
     ui.treeWidget->header()->setSectionsMovable(false);
 

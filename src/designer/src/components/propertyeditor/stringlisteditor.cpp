@@ -30,10 +30,10 @@ StringListEditor::StringListEditor(QWidget *parent)
     connect(deleteButton, &QAbstractButton::clicked, this, &StringListEditor::deleteButtonClicked);
     connect(valueEdit, &QLineEdit::textEdited, this, &StringListEditor::valueEdited);
 
-    QIcon upIcon = createIconSet(u"up.png"_s);
-    QIcon downIcon = createIconSet(u"down.png"_s);
-    QIcon minusIcon = createIconSet(u"minus.png"_s);
-    QIcon plusIcon = createIconSet(u"plus.png"_s);
+    QIcon upIcon = createIconSet("up.png"_L1);
+    QIcon downIcon = createIconSet("down.png"_L1);
+    QIcon minusIcon = createIconSet("minus.png"_L1);
+    QIcon plusIcon = createIconSet("plus.png"_L1);
     upButton->setIcon(upIcon);
     downButton->setIcon(downIcon);
     newButton->setIcon(plusIcon);

@@ -105,7 +105,7 @@ PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::PreviewConfigurat
 
     // sheet
     m_ui.m_appStyleSheetLineEdit->setTextPropertyValidationMode(qdesigner_internal::ValidationStyleSheet);
-    m_ui.m_appStyleSheetClearButton->setIcon(qdesigner_internal::createIconSet(u"resetproperty.png"_s));
+    m_ui.m_appStyleSheetClearButton->setIcon(qdesigner_internal::createIconSet("resetproperty.png"_L1));
     QObject::connect(m_ui.m_appStyleSheetClearButton, &QAbstractButton::clicked,
                      m_ui.m_appStyleSheetLineEdit, &qdesigner_internal::TextPropertyEditor::clear);
 

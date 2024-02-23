@@ -459,13 +459,13 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
     // Superscript and subscript buttons
 
     m_valign_sup_action = createCheckableAction(
-            createIconSet(u"textsuperscript.png"_s), tr("Superscript"), this);
+            createIconSet("textsuperscript.png"_L1), tr("Superscript"), this);
     connect(m_valign_sup_action, &QAction::triggered,
             this, &RichTextEditorToolBar::setVAlignSuper);
     addAction(m_valign_sup_action);
 
     m_valign_sub_action = createCheckableAction(
-            createIconSet(u"textsubscript.png"_s), tr("Subscript"), this);
+            createIconSet("textsubscript.png"_L1), tr("Subscript"), this);
     connect(m_valign_sub_action, &QAction::triggered,
             this, &RichTextEditorToolBar::setVAlignSub);
     addAction(m_valign_sub_action);
@@ -474,12 +474,12 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
 
     // Insert hyperlink and image buttons
 
-    m_link_action->setIcon(createIconSet(u"textanchor.png"_s));
+    m_link_action->setIcon(createIconSet("textanchor.png"_L1));
     m_link_action->setText(tr("Insert &Link"));
     connect(m_link_action, &QAction::triggered, this, &RichTextEditorToolBar::insertLink);
     addAction(m_link_action);
 
-    m_image_action->setIcon(createIconSet(u"insertimage.png"_s));
+    m_image_action->setIcon(createIconSet("insertimage.png"_L1));
     m_image_action->setText(tr("Insert &Image"));
     connect(m_image_action, &QAction::triggered, this, &RichTextEditorToolBar::insertImage);
     addAction(m_image_action);
@@ -495,7 +495,7 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
 
     // Simplify rich text
     m_simplify_richtext_action
-        = createCheckableAction(createIconSet(u"simplifyrichtext.png"_s), tr("Simplify Rich Text"));
+        = createCheckableAction(createIconSet("simplifyrichtext.png"_L1), tr("Simplify Rich Text"));
     connect(m_simplify_richtext_action, &QAction::triggered,
             m_editor, &RichTextEditor::setSimplifyRichText);
     m_simplify_richtext_action->setChecked(m_editor->simplifyRichText());

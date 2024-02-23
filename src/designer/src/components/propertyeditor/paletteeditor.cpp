@@ -628,7 +628,7 @@ RoleEditor::RoleEditor(QWidget *parent) :
 
     QToolButton *button = new QToolButton(this);
     button->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    button->setIcon(createIconSet(u"resetproperty.png"_s));
+    button->setIcon(createIconSet("resetproperty.png"_L1));
     button->setIconSize(QSize(8,8));
     button->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
     layout->addWidget(button);
