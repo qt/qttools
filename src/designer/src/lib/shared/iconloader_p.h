@@ -17,6 +17,8 @@
 
 #include "shared_global_p.h"
 
+#include <QtGui/qicon.h>
+
 QT_BEGIN_NAMESPACE
 
 class QString;
@@ -24,7 +26,10 @@ class QIcon;
 
 namespace qdesigner_internal {
 
-QDESIGNER_SHARED_EXPORT QIcon createIconSet(const QString &name);
+QDESIGNER_SHARED_EXPORT QIcon createIconSet(QStringView name);
+QDESIGNER_SHARED_EXPORT QIcon createIconSet(QLatin1StringView name);
+QDESIGNER_SHARED_EXPORT QIcon createIconSet(QIcon::ThemeIcon themeIcon,
+                                            QLatin1StringView name);
 QDESIGNER_SHARED_EXPORT QIcon emptyIcon();
 QDESIGNER_SHARED_EXPORT QIcon qtLogoIcon();
 

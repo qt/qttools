@@ -530,16 +530,16 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
 {
     d_ptr->q_ptr = this;
 
-    QIcon editIcon = QIcon::fromTheme(QIcon::ThemeIcon::DocumentProperties,
-                                      qdesigner_internal::createIconSet(u"edit.png"_s));
+    QIcon editIcon = qdesigner_internal::createIconSet(QIcon::ThemeIcon::DocumentProperties,
+                                                       "edit.png"_L1);
     d_ptr->m_editResourcesAction = new QAction(editIcon, tr("Edit Resources..."), this);
     d_ptr->m_toolBar->addAction(d_ptr->m_editResourcesAction);
     connect(d_ptr->m_editResourcesAction, &QAction::triggered,
             this, [this] { d_ptr->slotEditResources(); });
     d_ptr->m_editResourcesAction->setEnabled(false);
 
-    QIcon refreshIcon = QIcon::fromTheme(QIcon::ThemeIcon::ViewRefresh,
-                                         qdesigner_internal::createIconSet(u"reload.png"_s));
+    QIcon refreshIcon = qdesigner_internal::createIconSet(QIcon::ThemeIcon::ViewRefresh,
+                                                          "reload.png"_L1);
     d_ptr->m_reloadResourcesAction = new QAction(refreshIcon, tr("Reload"), this);
 
     d_ptr->m_toolBar->addAction(d_ptr->m_reloadResourcesAction);
@@ -548,8 +548,8 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
     d_ptr->m_reloadResourcesAction->setEnabled(false);
 
 #if QT_CONFIG(clipboard)
-    QIcon copyIcon = QIcon::fromTheme(QIcon::ThemeIcon::EditCopy,
-                                      qdesigner_internal::createIconSet(u"editcopy.png"_s));
+    QIcon copyIcon = qdesigner_internal::createIconSet(QIcon::ThemeIcon::EditCopy,
+                                                       "editcopy.png"_L1);
     d_ptr->m_copyResourcePathAction = new QAction(copyIcon, tr("Copy Path"), this);
     connect(d_ptr->m_copyResourcePathAction, &QAction::triggered,
             this, [this] { d_ptr->slotCopyResourcePath(); });
