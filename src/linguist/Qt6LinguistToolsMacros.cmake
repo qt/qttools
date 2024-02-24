@@ -695,7 +695,7 @@ function(qt6_add_translations)
     )
     qt6_add_lrelease(
         LRELEASE_TARGET "${arg_LRELEASE_TARGET}"
-        TS_FILES "${arg_TS_FILES}"
+        TS_FILES "${arg_TS_FILES}" ${arg_NATIVE_TS_FILE}
         QM_FILES_OUTPUT_VARIABLE qm_files
         OPTIONS "${arg_LRELEASE_OPTIONS}")
 
