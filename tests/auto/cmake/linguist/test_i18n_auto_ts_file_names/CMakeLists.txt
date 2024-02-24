@@ -27,33 +27,41 @@ my_add_library(lib1 STATIC lib.cpp)
 set(QT_I18N_LANGUAGES te st)
 qt_add_translations(TARGETS lib1)
 list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_en.ts"            # plurals-only file
     "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_te.ts"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_st.ts")
 
 # Check defaults for the immediate call.
 my_add_library(lib2 STATIC lib.cpp)
+set(QT_I18N_NATIVE_LANGUAGE hu)
 set(QT_I18N_LANGUAGES hi ho)
 qt_add_translations(TARGETS lib2 IMMEDIATE_CALL)
 list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_hu.ts"            # plurals-only file
     "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_hi.ts"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_ho.ts")
 
 # Check defaults for deferred/immediate call in a subdir.
 add_subdirectory(subdir)
 list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/subdir/test_i18n_auto_ts_file_names_eo.ts"    # plurals-only file
     "${CMAKE_CURRENT_SOURCE_DIR}/subdir/test_i18n_auto_ts_file_names_de.ts"
+    "${CMAKE_CURRENT_SOURCE_DIR}/subdir/test_i18n_auto_ts_file_names_ee.ts"    # plurals-only file
     "${CMAKE_CURRENT_SOURCE_DIR}/subdir/test_i18n_auto_ts_file_names_da.ts"
 )
 
 # Check whether TS_FILE_BASE works.
 my_add_library(lib5 STATIC lib.cpp)
+set(QT_I18N_NATIVE_LANGUAGE ne)
 set(QT_I18N_LANGUAGES no)
 qt_add_translations(TARGETS lib5 TS_FILE_BASE lib5)
 list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/lib5_ne.ts"                                    # plurals-only file
     "${CMAKE_CURRENT_SOURCE_DIR}/lib5_no.ts")
 
 # Check whether TS_FILE_DIR works.
 my_add_library(lib6 STATIC lib.cpp)
+set(QT_I18N_NATIVE_LANGUAGE so)                                                 # plurals-only file
 set(QT_I18N_LANGUAGES sv)
 qt_add_translations(TARGETS lib6 TS_FILE_DIR translations)
 list(APPEND expected_files
@@ -61,25 +69,18 @@ list(APPEND expected_files
 
 # Check whether TS_FILE_BASE and TS_FILE_DIR work together.
 my_add_library(lib7 STATIC lib.cpp)
+set(QT_I18N_NATIVE_LANGUAGE fy)
 set(QT_I18N_LANGUAGES fi)
 qt_add_translations(TARGETS lib7 TS_FILE_BASE lib7 TS_FILE_DIR translations)
 list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/translations/lib7_fy.ts"                       # plurals-only file
     "${CMAKE_CURRENT_SOURCE_DIR}/translations/lib7_fi.ts")
 
-# Check defaults for the deferred call with native language set.
-my_add_library(lib8 STATIC lib.cpp)
-set(QT_I18N_LANGUAGES qu)
-set(QT_I18N_NATIVE_LANGUAGE ak)
-qt_add_translations(TARGETS lib8)
-list(APPEND expected_files
-    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_qu.ts"
-    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_ak.ts")
-
 # Check defaults for the deferred call with just the native language set.
-my_add_library(lib9 STATIC lib.cpp)
+my_add_library(lib8 STATIC lib.cpp)
 set(QT_I18N_LANGUAGES "")
 set(QT_I18N_NATIVE_LANGUAGE nl)
-qt_add_translations(TARGETS lib9)
+qt_add_translations(TARGETS lib8)
 list(APPEND expected_files
     "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_nl.ts")
 
