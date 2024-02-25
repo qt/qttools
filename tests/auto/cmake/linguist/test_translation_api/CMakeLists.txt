@@ -150,7 +150,7 @@ qt6_add_translations(app7
 
 # Build 'update_translations' before any of the '*_lrelease' targets.
 get_directory_property(lrelease_targets BUILDSYSTEM_TARGETS)
-list(FILTER lrelease_targets INCLUDE REGEX "_lrelease$")
+list(FILTER lrelease_targets INCLUDE REGEX "_lrelease[0-9]*$")
 foreach(target IN LISTS lrelease_targets)
     add_dependencies(${target} update_translations)
 endforeach()
