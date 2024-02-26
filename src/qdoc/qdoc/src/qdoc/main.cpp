@@ -353,11 +353,7 @@ static void processQdocconfFile(const QString &fileName)
     QStringList search_directories{config.getCanonicalPathList(CONFIG_EXAMPLEDIRS)};
     QStringList image_search_directories{config.getCanonicalPathList(CONFIG_IMAGEDIRS)};
 
-    const auto &excludedDirList = config.getCanonicalPathList(CONFIG_EXCLUDEDIRS);
-    QSet<QString> excludedDirs = QSet<QString>(excludedDirList.cbegin(), excludedDirList.cend());
-    const auto &excludedFilesList = config.getCanonicalPathList(CONFIG_EXCLUDEFILES);
-    QSet<QString> excludedFiles =
-            QSet<QString>(excludedFilesList.cbegin(), excludedFilesList.cend());
+    const auto& [excludedDirs, excludedFiles] = config.getExcludedPaths();
 
     qCDebug(lcQdoc, "Adding doc/image dirs found in exampledirs to imagedirs");
     QSet<QString> exampleImageDirs;

@@ -180,6 +180,12 @@ public:
     [[nodiscard]] bool preparing() const { return (m_qdocPass == Prepare); }
     [[nodiscard]] bool generating() const { return (m_qdocPass == Generate); }
 
+    struct ExcludedPaths {
+        QSet<QString> excluded_directories;
+        QSet<QString> excluded_files;
+    };
+    const ExcludedPaths& getExcludedPaths();
+
 private:
     void processCommandLineOptions(const QStringList &args);
     void setIncludePaths();
@@ -194,6 +200,7 @@ private:
     QStringList m_exampleDirs {};
     QString m_currentDir {};
     QString m_previousCurrentDir {};
+    std::optional<ExcludedPaths> m_excludedPaths{};
 
     bool m_showInternal { false };
     static bool m_debug;

@@ -349,6 +349,7 @@ void Config::clear()
     m_location = Location();
     m_configVars.clear();
     m_includeFilesMap.clear();
+    m_excludedPaths.reset();
 }
 
 /*!
@@ -1393,6 +1394,21 @@ void Config::popWorkingDir()
     m_workingDirs.pop();
     if (!m_workingDirs.isEmpty())
         QDir::setCurrent(m_workingDirs.top());
+}
+
+const Config::ExcludedPaths& Config::getExcludedPaths() {
+    if (m_excludedPaths)
+        return *m_excludedPaths;
+
+    const auto &excludedDirList = getCanonicalPathList(CONFIG_EXCLUDEDIRS);
+    const auto &excludedFilesList = getCanonicalPathList(CONFIG_EXCLUDEFILES);
+
+    QSet<QString> excludedDirs = QSet<QString>(excludedDirList.cbegin(), excludedDirList.cend());
+    QSet<QString> excludedFiles = QSet<QString>(excludedFilesList.cbegin(), excludedFilesList.cend());
+
+    m_excludedPaths.emplace(ExcludedPaths{excludedDirs, excludedFiles});
+
+    return *m_excludedPaths;
 }
 
 QT_END_NAMESPACE

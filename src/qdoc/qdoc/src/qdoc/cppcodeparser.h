@@ -35,7 +35,6 @@ public:
 
 public:
     CppCodeParser();
-    ~CppCodeParser();
 
     FunctionNode *parseMacroArg(const Location &location, const QString &macroArg);
     FunctionNode *parseOtherFuncArg(const QString &topic, const Location &location,
@@ -62,8 +61,6 @@ private:
     static void processComparesCommand(Node *node, const QString &arg, const Location &loc);
 
 private:
-    static QSet<QString> m_excludeDirs;
-    static QSet<QString> m_excludeFiles;
     QString m_exampleNameFilter;
     QString m_exampleImageFilter;
     bool m_showLinkErrors { false };

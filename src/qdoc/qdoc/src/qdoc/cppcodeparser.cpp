@@ -29,11 +29,6 @@ using namespace Qt::Literals::StringLiterals;
 
 QT_BEGIN_NAMESPACE
 
-/* qmake ignore Q_OBJECT */
-
-QSet<QString> CppCodeParser::m_excludeDirs;
-QSet<QString> CppCodeParser::m_excludeFiles;
-
 /*
   All these can appear in a C++ namespace. Don't add
   anything that can't be in a C++ namespace.
@@ -62,12 +57,6 @@ CppCodeParser::CppCodeParser()
                                     + Config::dot
                                     + CONFIG_FILEEXTENSIONS).asStringList()};
 
-    // Used for excluding dirs and files from the list of example files
-    const auto &excludeDirsList = config.getCanonicalPathList(CONFIG_EXCLUDEDIRS);
-    m_excludeDirs = QSet<QString>(excludeDirsList.cbegin(), excludeDirsList.cend());
-    const auto &excludeFilesList = config.getCanonicalPathList(CONFIG_EXCLUDEDIRS);
-    m_excludeFiles = QSet<QString>(excludeFilesList.cbegin(), excludeFilesList.cend());
-
     if (!exampleFilePatterns.isEmpty())
         m_exampleNameFilter = exampleFilePatterns.join(' ');
     else
@@ -83,15 +72,6 @@ CppCodeParser::CppCodeParser()
         m_exampleImageFilter = "*.png";
 
     m_showLinkErrors = !config.get(CONFIG_NOLINKERRORS).asBool();
-}
-
-/*!
-  Clear the exclude directories and exclude files sets.
- */
-CppCodeParser::~CppCodeParser()
-{
-    m_excludeDirs.clear();
-    m_excludeFiles.clear();
 }
 
 /*!
@@ -816,13 +796,15 @@ void CppCodeParser::setExampleFileLists(ExampleNode *en)
 
     QDir exampleDir(QFileInfo(fullPath).dir());
 
+    const auto& [excludeDirs, excludeFiles] = config.getExcludedPaths();
+
     QStringList exampleFiles = Config::getFilesHere(exampleDir.path(), m_exampleNameFilter,
-                                                    Location(), m_excludeDirs, m_excludeFiles);
+                                                    Location(), excludeDirs, excludeFiles);
     // Search for all image files under the example project, excluding doc/images directory.
-    QSet<QString> excludeDocDirs(m_excludeDirs);
+    QSet<QString> excludeDocDirs(excludeDirs);
     excludeDocDirs.insert(exampleDir.path() + QLatin1String("/doc/images"));
     QStringList imageFiles = Config::getFilesHere(exampleDir.path(), m_exampleImageFilter,
-                                                  Location(), excludeDocDirs, m_excludeFiles);
+                                                  Location(), excludeDocDirs, excludeFiles);
     if (!exampleFiles.isEmpty()) {
         // move main.cpp to the end, if it exists
         QString mainCpp;
@@ -847,7 +829,7 @@ void CppCodeParser::setExampleFileLists(ExampleNode *en)
         // Add any resource and project files
         exampleFiles += Config::getFilesHere(exampleDir.path(),
                 QLatin1String("*.qrc *.pro *.qmlproject *.pyproject CMakeLists.txt qmldir"),
-                Location(), m_excludeDirs, m_excludeFiles);
+                Location(), excludeDirs, excludeFiles);
     }
 
     const qsizetype pathLen = exampleDir.path().size() - en->name().size();
