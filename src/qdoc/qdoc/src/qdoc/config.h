@@ -13,6 +13,7 @@
 #include <QtCore/qstack.h>
 #include <QtCore/qstringlist.h>
 
+#include <set>
 #include <utility>
 
 QT_BEGIN_NAMESPACE
@@ -185,6 +186,16 @@ public:
         QSet<QString> excluded_files;
     };
     const ExcludedPaths& getExcludedPaths();
+
+    struct HeaderFilePath {
+        QString path;
+        QString filename;
+
+        friend bool operator<(const HeaderFilePath& lhs, const HeaderFilePath& rhs) {
+            return std::tie(lhs.path, lhs.filename) < std::tie(rhs.path, rhs.filename);
+        }
+    };
+    std::set<HeaderFilePath> getHeaderFiles();
 
 private:
     void processCommandLineOptions(const QStringList &args);

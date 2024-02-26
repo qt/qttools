@@ -1411,4 +1411,28 @@ const Config::ExcludedPaths& Config::getExcludedPaths() {
     return *m_excludedPaths;
 }
 
+std::set<Config::HeaderFilePath> Config::getHeaderFiles() {
+    static QStringList accepted_header_file_extensions{
+        "ch", "h", "h++", "hh", "hpp", "hxx"
+    };
+
+    const auto& [excludedDirs, excludedFiles] = getExcludedPaths();
+
+    QStringList headerList =
+            getAllFiles(CONFIG_HEADERS, CONFIG_HEADERDIRS, excludedDirs, excludedFiles);
+
+    std::set<HeaderFilePath> headers{};
+
+    for (const auto& header : headerList) {
+        if (header.contains("doc/snippets")) continue;
+
+        if (!accepted_header_file_extensions.contains(QFileInfo{header}.suffix()))
+            continue;
+
+        headers.insert(HeaderFilePath{QFileInfo{header}.canonicalPath(), QFileInfo{header}.fileName()});
+    }
+
+    return headers;
+}
+
 QT_END_NAMESPACE

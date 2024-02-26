@@ -23,17 +23,13 @@ struct ParsedCppFileIR {
 class ClangCodeParser : public CodeParser
 {
 public:
-    static const QStringList accepted_header_file_extensions;
-
-public:
-    ClangCodeParser(const Config&);
+    ClangCodeParser(Config&);
     ~ClangCodeParser() override = default;
 
     void initializeParser() override {}
     void terminateParser() override {}
     QString language() override;
     QStringList sourceFileNameFilter() override;
-    void parseHeaderFile(const QString &filePath);
     void parseSourceFile(const Location &, const QString &, CppCodeParser&) override {}
     ParsedCppFileIR parse_cpp_file(const QString &filePath);
     void buildPCH(QString module_header);
@@ -43,7 +39,7 @@ private:
     void getDefaultArgs();
     void getMoreArgs();
 
-    QMultiHash<QString, QString> m_allHeaders {}; // file name->path
+    std::set<Config::HeaderFilePath> m_allHeaders {}; // file name->path
     QList<QByteArray> m_includePaths {};
     QScopedPointer<QTemporaryDir> m_pchFileDir {};
     QByteArray m_pchName {};

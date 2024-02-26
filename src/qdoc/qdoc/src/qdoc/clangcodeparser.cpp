@@ -72,10 +72,6 @@ struct TranslationUnit {
     }
 };
 
-const QStringList ClangCodeParser::accepted_header_file_extensions{
-    "ch", "h", "h++", "hh", "hpp", "hxx"
-};
-
 // We're printing diagnostics in ClangCodeParser::printDiagnostics,
 // so avoid clang itself printing them.
 static const auto kClangDontDisplayDiagnostics = 0;
@@ -704,9 +700,11 @@ static void setOverridesForFunction(FunctionNode *fn, CXCursor cursor)
 class ClangVisitor
 {
 public:
-    ClangVisitor(QDocDatabase *qdb, const QMultiHash<QString, QString> &allHeaders)
-        : qdb_(qdb), parent_(qdb->primaryTreeRoot()), allHeaders_(allHeaders)
+    ClangVisitor(QDocDatabase *qdb, const std::set<Config::HeaderFilePath> &allHeaders)
+        : qdb_(qdb), parent_(qdb->primaryTreeRoot())
     {
+        std::transform(allHeaders.cbegin(), allHeaders.cend(), std::inserter(allHeaders_, allHeaders_.begin()),
+                       [](const auto& header_file_path) { return header_file_path.filename; });
     }
 
     QDocDatabase *qdocDB() { return qdb_; }
@@ -726,7 +724,7 @@ public:
             } else {
                 QFileInfo fi(fromCXString(clang_getFileName(file)));
                 // Match by file name in case of PCH/installed headers
-                isInteresting = allHeaders_.contains(fi.fileName());
+                isInteresting = allHeaders_.find(fi.fileName()) != allHeaders_.end();
                 isInterestingCache_[file] = isInteresting;
             }
             if (isInteresting) {
@@ -777,7 +775,7 @@ private:
 
     QDocDatabase *qdb_;
     Aggregate *parent_;
-    const QMultiHash<QString, QString> allHeaders_;
+    std::set<QString> allHeaders_;
     QHash<CXFile, bool> isInterestingCache_; // doing a canonicalFilePath is slow, so keep a cache.
 
     /*!
@@ -1427,7 +1425,7 @@ Node *ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
     return node;
 }
 
-ClangCodeParser::ClangCodeParser(const Config& config)
+ClangCodeParser::ClangCodeParser(Config& config)
 {
     auto args = config.getCanonicalPathList(CONFIG_INCLUDEPATHS,
                                             Config::IncludePaths);
@@ -1454,6 +1452,8 @@ ClangCodeParser::ClangCodeParser(const Config& config)
             }
         }
     }
+
+    m_allHeaders = config.getHeaderFiles();
 }
 
 /*!
@@ -1474,22 +1474,6 @@ QStringList ClangCodeParser::sourceFileNameFilter()
                          << "*.cpp"
                          << "*.cxx"
                          << "*.mm";
-}
-
-/*!
-  Parse the C++ header file identified by \a filePath and add
-  the parsed contents to the database.
- */
-void ClangCodeParser::parseHeaderFile(const QString &filePath)
-{
-    QFileInfo fi(filePath);
-    const QString &fileName = fi.fileName();
-    const QString &canonicalPath = fi.canonicalPath();
-
-    if (m_allHeaders.contains(fileName, canonicalPath))
-        return;
-
-    m_allHeaders.insert(fileName, canonicalPath);
 }
 
 static const char *defaultArgs_[] = {
@@ -1537,18 +1521,15 @@ void ClangCodeParser::getDefaultArgs()
         m_args.push_back(p.constData());
 }
 
-static QList<QByteArray> includePathsFromHeaders(const QMultiHash<QString, QString> &allHeaders)
+static QList<QByteArray> includePathsFromHeaders(const std::set<Config::HeaderFilePath> &allHeaders)
 {
     QList<QByteArray> result;
-    for (auto it = allHeaders.cbegin(); it != allHeaders.cend(); ++it) {
-        const QByteArray path = "-I" + it.value().toLatin1();
+    for (const auto& [header_path, _] : allHeaders) {
+        const QByteArray path = "-I" + header_path.toLatin1();
         const QByteArray parent =
-                "-I" + QDir::cleanPath(it.value() + QLatin1String("/../")).toLatin1();
-        if (!result.contains(path))
-            result.append(path);
-        if (!result.contains(parent))
-            result.append(parent);
+                "-I" + QDir::cleanPath(header_path + QLatin1String("/../")).toLatin1();
     }
+
     return result;
 }
 
@@ -1651,13 +1632,13 @@ void ClangCodeParser::buildPCH(QString module_header)
         if (QFile tmpHeaderFile(tmpHeader); tmpHeaderFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
             QTextStream out(&tmpHeaderFile);
             if (header.isEmpty()) {
-                for (auto it = m_allHeaders.constKeyValueBegin();
-                        it != m_allHeaders.constKeyValueEnd(); ++it) {
-                    if (!(*it).first.endsWith(QLatin1String("_p.h"))
-                        && !(*it).first.startsWith(QLatin1String("moc_"))) {
-                        QString line = QLatin1String("#include \"") + (*it).second
-                                + QLatin1String("/") + (*it).first + QLatin1String("\"");
+                for (const auto& [header_path, header_name] : m_allHeaders) {
+                    if (!header_name.endsWith(QLatin1String("_p.h"))
+                        && !header_name.startsWith(QLatin1String("moc_"))) {
+                        QString line = QLatin1String("#include \"") + header_path
+                                + QLatin1String("/") + header_name + QLatin1String("\"");
                         out << line << "\n";
+
                     }
                 }
             } else {
