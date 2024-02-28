@@ -22,6 +22,7 @@
 #include "filesystem/fileresolver.h"
 #include "boundaries/filesystem/directorypath.h"
 
+#include <QtCore/qcompilerdetection.h>
 #include <QtCore/qdatetime.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qglobal.h>
@@ -439,7 +440,27 @@ static void processQdocconfFile(const QString &fileName)
     WebXMLGenerator webXMLGenerator{file_resolver};
     DocBookGenerator docBookGenerator{file_resolver};
 
-    ClangCodeParser clangParser(Config::instance());
+
+    std::vector<QByteArray> include_paths{};
+    {
+        auto args = config.getCanonicalPathList(CONFIG_INCLUDEPATHS,
+                                                Config::IncludePaths);
+#ifdef Q_OS_MACOS
+        args.append(Utilities::getInternalIncludePaths(QStringLiteral("clang++")));
+#elif defined(Q_OS_LINUX)
+        args.append(Utilities::getInternalIncludePaths(QStringLiteral("g++")));
+#endif
+
+        for (const auto &path : std::as_const(args)) {
+            if (!path.isEmpty())
+                include_paths.push_back(path.toUtf8());
+        }
+
+        include_paths.erase(std::unique(include_paths.begin(), include_paths.end()),
+                            include_paths.end());
+    }
+
+    ClangCodeParser clangParser(Config::instance(), include_paths);
 
     /*
       Initialize all the classes and data structures with the

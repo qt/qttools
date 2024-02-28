@@ -23,7 +23,7 @@ struct ParsedCppFileIR {
 class ClangCodeParser : public CodeParser
 {
 public:
-    ClangCodeParser(Config&);
+    ClangCodeParser(Config&, const std::vector<QByteArray>& include_paths);
     ~ClangCodeParser() override = default;
 
     void initializeParser() override {}
@@ -40,7 +40,7 @@ private:
     void getMoreArgs();
 
     std::set<Config::HeaderFilePath> m_allHeaders {}; // file name->path
-    QList<QByteArray> m_includePaths {};
+    const std::vector<QByteArray>& m_includePaths;
     QScopedPointer<QTemporaryDir> m_pchFileDir {};
     QByteArray m_pchName {};
     QList<QByteArray> m_defines {};

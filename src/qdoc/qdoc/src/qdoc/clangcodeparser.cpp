@@ -13,7 +13,6 @@
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "typedefnode.h"
-#include "utilities.h"
 #include "variablenode.h"
 
 #include <QtCore/qdebug.h>
@@ -1425,23 +1424,9 @@ Node *ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
     return node;
 }
 
-ClangCodeParser::ClangCodeParser(Config& config)
+ClangCodeParser::ClangCodeParser(Config& config, const std::vector<QByteArray>& include_paths)
+    : m_includePaths{include_paths}
 {
-    auto args = config.getCanonicalPathList(CONFIG_INCLUDEPATHS,
-                                            Config::IncludePaths);
-#ifdef Q_OS_MACOS
-    args.append(Utilities::getInternalIncludePaths(QStringLiteral("clang++")));
-#elif defined(Q_OS_LINUX)
-    args.append(Utilities::getInternalIncludePaths(QStringLiteral("g++")));
-#endif
-
-    for (const auto &path : std::as_const(args)) {
-        if (!path.isEmpty())
-            m_includePaths.append(path.toUtf8());
-    }
-    m_includePaths.erase(std::unique(m_includePaths.begin(), m_includePaths.end()),
-                         m_includePaths.end());
-
     {
         const QStringList tmpDefines{config.get(CONFIG_DEFINES).asStringList()};
         for (const QString &def : tmpDefines) {
@@ -1539,7 +1524,7 @@ static QList<QByteArray> includePathsFromHeaders(const std::set<Config::HeaderFi
  */
 void ClangCodeParser::getMoreArgs()
 {
-    if (m_includePaths.isEmpty()) {
+    if (m_includePaths.empty()) {
         /*
           The include paths provided are inadequate. Make a list
           of reasonable places to look for include files and use
@@ -1551,7 +1536,7 @@ void ClangCodeParser::getMoreArgs()
         m_moreArgs += "-I" + basicIncludeDir.toLatin1();
         m_moreArgs += includePathsFromHeaders(m_allHeaders);
     } else {
-        m_moreArgs = m_includePaths;
+        std::copy(m_includePaths.begin(), m_includePaths.end(), std::back_inserter(m_moreArgs));
     }
 }
 
