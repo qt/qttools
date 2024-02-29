@@ -815,6 +815,7 @@ bool QDesignerPropertySheet::isDynamic(int index) const
     case PropertyLayoutGridColumnMinimumWidth:
         if (d->m_object->isWidgetType() && d->m_canHaveLayoutAttributes)
             return false;
+        break;
     default:
         break;
     }

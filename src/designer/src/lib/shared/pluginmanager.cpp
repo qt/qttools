@@ -307,6 +307,7 @@ static bool parsePropertySpecs(QXmlStreamReader &sr,
         case QXmlStreamReader::EndElement: // Outer </stringproperties>
             if (sr.name() == propertySpecs)
                 return true;
+            break;
         default:
             break;
         }
