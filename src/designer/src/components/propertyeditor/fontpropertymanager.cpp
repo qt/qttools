@@ -441,6 +441,7 @@ static constexpr auto displayTagC = "display"_L1;
                 default:
                     break;
                 }
+                break;
             default:
                 break;
             }
