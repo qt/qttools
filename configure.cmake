@@ -58,8 +58,8 @@ qt_feature("clangcpp" PRIVATE
     CONDITION QT_FEATURE_clang
 )
 qt_feature("designer" PRIVATE
-    LABEL "Qt Designer"
-    PURPOSE "Qt Designer is the Qt tool for designing and building graphical user interfaces (GUIs) with Qt Widgets. You can compose and customize your windows or dialogs in a what-you-see-is-what-you-get (WYSIWYG) manner, and test them using different styles and resolutions."
+    LABEL "Qt Widgets Designer"
+    PURPOSE "Qt Widgets Designer is the Qt tool for designing and building graphical user interfaces (GUIs) with Qt Widgets. You can compose and customize your windows or dialogs in a what-you-see-is-what-you-get (WYSIWYG) manner, and test them using different styles and resolutions."
     CONDITION TARGET Qt::Widgets AND QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton
 )
 qt_feature("distancefieldgenerator" PRIVATE
