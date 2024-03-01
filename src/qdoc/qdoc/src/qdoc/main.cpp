@@ -460,7 +460,20 @@ static void processQdocconfFile(const QString &fileName)
                             include_paths.end());
     }
 
-    ClangCodeParser clangParser(Config::instance(), include_paths);
+    QList<QByteArray> clang_defines{};
+    {
+        const QStringList config_defines{config.get(CONFIG_DEFINES).asStringList()};
+        for (const QString &def : config_defines) {
+            if (!def.contains(QChar('*'))) {
+                QByteArray tmp("-D");
+                tmp.append(def.toUtf8());
+                clang_defines.append(tmp.constData());
+            }
+        }
+    }
+
+
+    ClangCodeParser clangParser(Config::instance(), include_paths, clang_defines);
 
     /*
       Initialize all the classes and data structures with the

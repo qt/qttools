@@ -1424,20 +1424,9 @@ Node *ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
     return node;
 }
 
-ClangCodeParser::ClangCodeParser(Config& config, const std::vector<QByteArray>& include_paths)
-    : m_includePaths{include_paths}
+ClangCodeParser::ClangCodeParser(Config& config, const std::vector<QByteArray>& include_paths, const QList<QByteArray>& defines)
+    : m_includePaths{include_paths}, m_defines{defines}
 {
-    {
-        const QStringList tmpDefines{config.get(CONFIG_DEFINES).asStringList()};
-        for (const QString &def : tmpDefines) {
-            if (!def.contains(QChar('*'))) {
-                QByteArray tmp("-D");
-                tmp.append(def.toUtf8());
-                m_defines.append(tmp.constData());
-            }
-        }
-    }
-
     m_allHeaders = config.getHeaderFiles();
 }
 
