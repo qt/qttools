@@ -1486,13 +1486,14 @@ static const char *defaultArgs_[] = {
   Load the default arguments and the defines into \a args.
   Clear \a args first.
  */
-void ClangCodeParser::getDefaultArgs()
+void getDefaultArgs(const QList<QByteArray>& defines, std::vector<const char*>& args)
 {
-    m_args.clear();
-    m_args.insert(m_args.begin(), std::begin(defaultArgs_), std::end(defaultArgs_));
+    args.clear();
+    args.insert(args.begin(), std::begin(defaultArgs_), std::end(defaultArgs_));
+
     // Add the defines from the qdocconf file.
-    for (const auto &p : std::as_const(m_defines))
-        m_args.push_back(p.constData());
+    for (const auto &p : std::as_const(defines))
+        args.push_back(p.constData());
 }
 
 static QList<QByteArray> includePathsFromHeaders(const std::set<Config::HeaderFilePath> &allHeaders)
@@ -1539,7 +1540,7 @@ void ClangCodeParser::buildPCH(QString module_header)
     if (m_pchFileDir) return;
     if (module_header.isEmpty()) return;
 
-    getDefaultArgs();
+    getDefaultArgs(m_defines, m_args);
     getMoreArgs();
     for (const auto &p : std::as_const(m_moreArgs))
         m_args.push_back(p.constData());
@@ -1679,7 +1680,7 @@ ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
 
     CompilationIndex index{ clang_createIndex(1, kClangDontDisplayDiagnostics) };
 
-    getDefaultArgs();
+    getDefaultArgs(m_defines, m_args);
     if (!m_pchName.isEmpty() && !filePath.endsWith(".mm")) {
         m_args.push_back("-w");
         m_args.push_back("-include-pch");
@@ -1845,7 +1846,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
 
     CompilationIndex index{ clang_createIndex(1, kClangDontDisplayDiagnostics) };
 
-    getDefaultArgs();
+    getDefaultArgs(m_defines, m_args);
 
     if (!m_pchName.isEmpty()) {
         m_args.push_back("-w");

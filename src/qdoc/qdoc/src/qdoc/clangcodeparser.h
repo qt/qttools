@@ -36,7 +36,6 @@ public:
     Node *parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag, QStringList context);
 
 private:
-    void getDefaultArgs();
     void getMoreArgs();
 
     std::set<Config::HeaderFilePath> m_allHeaders {}; // file name->path
