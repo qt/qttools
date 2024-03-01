@@ -36,15 +36,12 @@ public:
     Node *parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag, QStringList context);
 
 private:
-    void getMoreArgs();
-
     std::set<Config::HeaderFilePath> m_allHeaders {}; // file name->path
     const std::vector<QByteArray>& m_includePaths;
     QScopedPointer<QTemporaryDir> m_pchFileDir {};
     QByteArray m_pchName {};
     QList<QByteArray> m_defines {};
     std::vector<const char *> m_args {};
-    QList<QByteArray> m_moreArgs {};
     QStringList m_namespaceScope {};
     QByteArray s_fn;
 };

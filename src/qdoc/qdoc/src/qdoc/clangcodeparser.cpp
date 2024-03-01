@@ -1512,9 +1512,12 @@ static QList<QByteArray> includePathsFromHeaders(const std::set<Config::HeaderFi
   Load the include paths into \a moreArgs. If no include paths
   were provided, try to guess reasonable include paths.
  */
-void ClangCodeParser::getMoreArgs()
-{
-    if (m_includePaths.empty()) {
+void getMoreArgs(
+    const std::vector<QByteArray>& include_paths,
+    const std::set<Config::HeaderFilePath>& all_headers,
+    std::vector<const char*>& args
+) {
+    if (include_paths.empty()) {
         /*
           The include paths provided are inadequate. Make a list
           of reasonable places to look for include files and use
@@ -1523,10 +1526,12 @@ void ClangCodeParser::getMoreArgs()
         qCWarning(lcQdoc) << "No include paths passed to qdoc; guessing reasonable include paths";
 
         QString basicIncludeDir = QDir::cleanPath(QString(Config::installDir + "/../include"));
-        m_moreArgs += "-I" + basicIncludeDir.toLatin1();
-        m_moreArgs += includePathsFromHeaders(m_allHeaders);
+        args.emplace_back(QByteArray("-I" + basicIncludeDir.toLatin1()).constData());
+
+        auto include_paths_from_headers = includePathsFromHeaders(all_headers);
+        args.insert(args.end(), include_paths_from_headers.begin(), include_paths_from_headers.end());
     } else {
-        std::copy(m_includePaths.begin(), m_includePaths.end(), std::back_inserter(m_moreArgs));
+        std::copy(include_paths.begin(), include_paths.end(), std::back_inserter(args));
     }
 }
 
@@ -1541,9 +1546,7 @@ void ClangCodeParser::buildPCH(QString module_header)
     if (module_header.isEmpty()) return;
 
     getDefaultArgs(m_defines, m_args);
-    getMoreArgs();
-    for (const auto &p : std::as_const(m_moreArgs))
-        m_args.push_back(p.constData());
+    getMoreArgs(m_includePaths, m_allHeaders, m_args);
 
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
                                                   | CXTranslationUnit_SkipFunctionBodies
@@ -1686,9 +1689,7 @@ ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
         m_args.push_back("-include-pch");
         m_args.push_back(m_pchName.constData());
     }
-    getMoreArgs();
-    for (const auto &p : std::as_const(m_moreArgs))
-        m_args.push_back(p.constData());
+    getMoreArgs(m_includePaths, m_allHeaders, m_args);
 
     TranslationUnit tu;
     CXErrorCode err =
