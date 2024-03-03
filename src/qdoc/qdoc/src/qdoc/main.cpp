@@ -440,54 +440,7 @@ static void processQdocconfFile(const QString &fileName)
     WebXMLGenerator webXMLGenerator{file_resolver};
     DocBookGenerator docBookGenerator{file_resolver};
 
-
-    std::vector<QByteArray> include_paths{};
-    {
-        auto args = config.getCanonicalPathList(CONFIG_INCLUDEPATHS,
-                                                Config::IncludePaths);
-#ifdef Q_OS_MACOS
-        args.append(Utilities::getInternalIncludePaths(QStringLiteral("clang++")));
-#elif defined(Q_OS_LINUX)
-        args.append(Utilities::getInternalIncludePaths(QStringLiteral("g++")));
-#endif
-
-        for (const auto &path : std::as_const(args)) {
-            if (!path.isEmpty())
-                include_paths.push_back(path.toUtf8());
-        }
-
-        include_paths.erase(std::unique(include_paths.begin(), include_paths.end()),
-                            include_paths.end());
-    }
-
-    QList<QByteArray> clang_defines{};
-    {
-        const QStringList config_defines{config.get(CONFIG_DEFINES).asStringList()};
-        for (const QString &def : config_defines) {
-            if (!def.contains(QChar('*'))) {
-                QByteArray tmp("-D");
-                tmp.append(def.toUtf8());
-                clang_defines.append(tmp.constData());
-            }
-        }
-    }
-
-
-    ClangCodeParser clangParser(Config::instance(), include_paths, clang_defines);
-
-    /*
-      Initialize all the classes and data structures with the
-      qdoc configuration. This is safe to do for each qdocconf
-      file processed, because all the data structures created
-      are either cleared after they have been used, or they
-      are cleared in the terminate() functions below.
-     */
-    Location::initialize();
-    Tokenizer::initialize();
-    CodeMarker::initialize();
-    CodeParser::initialize();
     Generator::initialize();
-    Doc::initialize(file_resolver);
 
     /*
       Initialize the qdoc database, where all the parsed source files
@@ -533,6 +486,65 @@ static void processQdocconfFile(const QString &fileName)
                 config.get(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGTITLE).asString(title));
     }
 
+
+    std::vector<QByteArray> include_paths{};
+    {
+        auto args = config.getCanonicalPathList(CONFIG_INCLUDEPATHS,
+                                                Config::IncludePaths);
+#ifdef Q_OS_MACOS
+        args.append(Utilities::getInternalIncludePaths(QStringLiteral("clang++")));
+#elif defined(Q_OS_LINUX)
+        args.append(Utilities::getInternalIncludePaths(QStringLiteral("g++")));
+#endif
+
+        for (const auto &path : std::as_const(args)) {
+            if (!path.isEmpty())
+                include_paths.push_back(path.toUtf8());
+        }
+
+        include_paths.erase(std::unique(include_paths.begin(), include_paths.end()),
+                            include_paths.end());
+    }
+
+    QList<QByteArray> clang_defines{};
+    {
+        const QStringList config_defines{config.get(CONFIG_DEFINES).asStringList()};
+        for (const QString &def : config_defines) {
+            if (!def.contains(QChar('*'))) {
+                QByteArray tmp("-D");
+                tmp.append(def.toUtf8());
+                clang_defines.append(tmp.constData());
+            }
+        }
+    }
+
+    std::optional<PCHFile> pch = std::nullopt;
+    if (config.dualExec() || config.preparing()) {
+        const QString moduleHeader = config.get(CONFIG_MODULEHEADER).asString();
+        pch = buildPCH(
+            QDocDatabase::qdocDB(),
+            moduleHeader.isNull() ? project : moduleHeader,
+            Config::instance().getHeaderFiles(),
+            include_paths,
+            clang_defines
+        );
+    }
+
+    ClangCodeParser clangParser(Config::instance(), include_paths, clang_defines, pch);
+
+    /*
+      Initialize all the classes and data structures with the
+      qdoc configuration. This is safe to do for each qdocconf
+      file processed, because all the data structures created
+      are either cleared after they have been used, or they
+      are cleared in the terminate() functions below.
+     */
+    Location::initialize();
+    Tokenizer::initialize();
+    CodeMarker::initialize();
+    CodeParser::initialize();
+    Doc::initialize(file_resolver);
+
     if (config.dualExec() || config.preparing()) {
         QStringList sourceList;
 
@@ -555,9 +567,6 @@ static void processQdocconfFile(const QString &fileName)
         for (const auto &example : exampleQdocList) {
             sources.emplace_back(example);
         }
-
-        const QString moduleHeader = config.get(CONFIG_MODULEHEADER).asString();
-        clangParser.buildPCH(moduleHeader.isNull() ? project : moduleHeader);
 
         /*
           Parse each source text file in the set using the appropriate parser and

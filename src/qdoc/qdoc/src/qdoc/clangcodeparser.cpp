@@ -1424,8 +1424,14 @@ Node *ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
     return node;
 }
 
-ClangCodeParser::ClangCodeParser(Config& config, const std::vector<QByteArray>& include_paths, const QList<QByteArray>& defines)
-    : m_includePaths{include_paths}, m_defines{defines}
+ClangCodeParser::ClangCodeParser(
+    Config& config,
+    const std::vector<QByteArray>& include_paths,
+    const QList<QByteArray>& defines,
+    std::optional<std::reference_wrapper<const PCHFile>> pch
+) : m_includePaths{include_paths},
+    m_defines{defines},
+    m_pch{pch}
 {
     m_allHeaders = config.getHeaderFiles();
 }
@@ -1540,13 +1546,19 @@ void getMoreArgs(
   files, so it is moved here to its own member function, and
   it is called after the list of header files is complete.
  */
-void ClangCodeParser::buildPCH(QString module_header)
-{
-    if (m_pchFileDir) return;
-    if (module_header.isEmpty()) return;
+std::optional<PCHFile> buildPCH(
+    QDocDatabase* qdb,
+    QString module_header,
+    const std::set<Config::HeaderFilePath>& all_headers,
+    const std::vector<QByteArray>& include_paths,
+    const QList<QByteArray>& defines
+) {
+    static std::vector<const char*> arguments{};
 
-    getDefaultArgs(m_defines, m_args);
-    getMoreArgs(m_includePaths, m_allHeaders, m_args);
+    if (module_header.isEmpty()) return std::nullopt;
+
+    getDefaultArgs(defines, arguments);
+    getMoreArgs(include_paths, all_headers, arguments);
 
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
                                                   | CXTranslationUnit_SkipFunctionBodies
@@ -1554,111 +1566,112 @@ void ClangCodeParser::buildPCH(QString module_header)
 
     CompilationIndex index{ clang_createIndex(1, kClangDontDisplayDiagnostics) };
 
-    m_pchFileDir.reset(new QTemporaryDir(QDir::tempPath() + QLatin1String("/qdoc_pch")));
-    if (m_pchFileDir->isValid()) {
-        const QByteArray module = module_header.toUtf8();
-        QByteArray header;
+    QTemporaryDir pch_directory{QDir::tempPath() + QLatin1String("/qdoc_pch")};
+    if (!pch_directory.isValid()) return std::nullopt;
 
-        qCDebug(lcQdoc) << "Build and visit PCH for" << module_header;
-        // A predicate for std::find_if() to locate a path to the module's header
-        // (e.g. QtGui/QtGui) to be used as pre-compiled header
-        struct FindPredicate
+    const QByteArray module = module_header.toUtf8();
+    QByteArray header;
+
+    qCDebug(lcQdoc) << "Build and visit PCH for" << module_header;
+    // A predicate for std::find_if() to locate a path to the module's header
+    // (e.g. QtGui/QtGui) to be used as pre-compiled header
+    struct FindPredicate
+    {
+        enum SearchType { Any, Module };
+        QByteArray &candidate_;
+        const QByteArray &module_;
+        SearchType type_;
+        FindPredicate(QByteArray &candidate, const QByteArray &module,
+                        SearchType type = Any)
+            : candidate_(candidate), module_(module), type_(type)
         {
-            enum SearchType { Any, Module };
-            QByteArray &candidate_;
-            const QByteArray &module_;
-            SearchType type_;
-            FindPredicate(QByteArray &candidate, const QByteArray &module,
-                            SearchType type = Any)
-                : candidate_(candidate), module_(module), type_(type)
-            {
-            }
+        }
 
-            bool operator()(const QByteArray &p) const
-            {
-                if (type_ != Any && !p.endsWith(module_))
-                    return false;
-                candidate_ = p + "/";
-                candidate_.append(module_);
-                if (p.startsWith("-I"))
-                    candidate_ = candidate_.mid(2);
-                return QFile::exists(QString::fromUtf8(candidate_));
-            }
-        };
+        bool operator()(const QByteArray &p) const
+        {
+            if (type_ != Any && !p.endsWith(module_))
+                return false;
+            candidate_ = p + "/";
+            candidate_.append(module_);
+            if (p.startsWith("-I"))
+                candidate_ = candidate_.mid(2);
+            return QFile::exists(QString::fromUtf8(candidate_));
+        }
+    };
 
-        // First, search for an include path that contains the module name, then any path
-        QByteArray candidate;
-        auto it = std::find_if(m_includePaths.begin(), m_includePaths.end(),
-                                FindPredicate(candidate, module, FindPredicate::Module));
-        if (it == m_includePaths.end())
-            it = std::find_if(m_includePaths.begin(), m_includePaths.end(),
-                                FindPredicate(candidate, module, FindPredicate::Any));
-        if (it != m_includePaths.end())
-            header = candidate;
+    // First, search for an include path that contains the module name, then any path
+    QByteArray candidate;
+    auto it = std::find_if(include_paths.begin(), include_paths.end(),
+                            FindPredicate(candidate, module, FindPredicate::Module));
+    if (it == include_paths.end())
+        it = std::find_if(include_paths.begin(), include_paths.end(),
+                            FindPredicate(candidate, module, FindPredicate::Any));
+    if (it != include_paths.end())
+        header = candidate;
 
+    if (header.isEmpty()) {
+        qWarning() << "(qdoc) Could not find the module header in include paths for module"
+                    << module << "  (include paths: " << include_paths << ")";
+        qWarning() << "       Artificial module header built from header dirs in qdocconf "
+                        "file";
+    }
+    arguments.push_back("-xc++");
+
+    TranslationUnit tu;
+
+    QString tmpHeader = pch_directory.path() + "/" + module;
+    if (QFile tmpHeaderFile(tmpHeader); tmpHeaderFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
+        QTextStream out(&tmpHeaderFile);
         if (header.isEmpty()) {
-            qWarning() << "(qdoc) Could not find the module header in include paths for module"
-                        << module << "  (include paths: " << m_includePaths << ")";
-            qWarning() << "       Artificial module header built from header dirs in qdocconf "
-                            "file";
-        }
-        m_args.push_back("-xc++");
+            for (const auto& [header_path, header_name] : all_headers) {
+                if (!header_name.endsWith(QLatin1String("_p.h"))
+                    && !header_name.startsWith(QLatin1String("moc_"))) {
+                    QString line = QLatin1String("#include \"") + header_path
+                            + QLatin1String("/") + header_name + QLatin1String("\"");
+                    out << line << "\n";
 
-        TranslationUnit tu;
-
-        QString tmpHeader = m_pchFileDir->path() + "/" + module;
-        if (QFile tmpHeaderFile(tmpHeader); tmpHeaderFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
-            QTextStream out(&tmpHeaderFile);
-            if (header.isEmpty()) {
-                for (const auto& [header_path, header_name] : m_allHeaders) {
-                    if (!header_name.endsWith(QLatin1String("_p.h"))
-                        && !header_name.startsWith(QLatin1String("moc_"))) {
-                        QString line = QLatin1String("#include \"") + header_path
-                                + QLatin1String("/") + header_name + QLatin1String("\"");
-                        out << line << "\n";
-
-                    }
                 }
-            } else {
-                QFileInfo headerFile(header);
-                if (!headerFile.exists()) {
-                    qWarning() << "Could not find module header file" << header;
-                    return;
-                }
-                out << QLatin1String("#include \"") + header + QLatin1String("\"");
-            }
-        }
-
-        CXErrorCode err =
-                clang_parseTranslationUnit2(index, tmpHeader.toLatin1().data(), m_args.data(),
-                                            static_cast<int>(m_args.size()), nullptr, 0,
-                                            flags_ | CXTranslationUnit_ForSerialization, &tu.tu);
-        qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << tmpHeader << m_args
-                        << ") returns" << err;
-
-        printDiagnostics(tu);
-
-        if (!err && tu) {
-            m_pchName = m_pchFileDir->path().toUtf8() + "/" + module + ".pch";
-            auto error = clang_saveTranslationUnit(tu, m_pchName.constData(),
-                                                    clang_defaultSaveOptions(tu));
-            if (error) {
-                qCCritical(lcQdoc) << "Could not save PCH file for" << module_header;
-                m_pchName.clear();
-            } else {
-                // Visit the header now, as token from pre-compiled header won't be visited
-                // later
-                CXCursor cur = clang_getTranslationUnitCursor(tu);
-                ClangVisitor visitor(m_qdb, m_allHeaders);
-                visitor.visitChildren(cur);
-                qCDebug(lcQdoc) << "PCH built and visited for" << module_header;
             }
         } else {
-            m_pchFileDir->remove();
-            qCCritical(lcQdoc) << "Could not create PCH file for " << module_header;
+            QFileInfo headerFile(header);
+            if (!headerFile.exists()) {
+                qWarning() << "Could not find module header file" << header;
+                return std::nullopt;
+            }
+            out << QLatin1String("#include \"") + header + QLatin1String("\"");
         }
-        m_args.pop_back(); // remove the "-xc++";
     }
+
+    CXErrorCode err =
+            clang_parseTranslationUnit2(index, tmpHeader.toLatin1().data(), arguments.data(),
+                                        static_cast<int>(arguments.size()), nullptr, 0,
+                                        flags_ | CXTranslationUnit_ForSerialization, &tu.tu);
+    qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << tmpHeader << arguments
+                    << ") returns" << err;
+
+    printDiagnostics(tu);
+
+    if (err || !tu) {
+        qCCritical(lcQdoc) << "Could not create PCH file for " << module_header;
+        return std::nullopt;
+    }
+
+    QByteArray pch_name = pch_directory.path().toUtf8() + "/" + module + ".pch";
+    auto error = clang_saveTranslationUnit(tu, pch_name.constData(),
+                                            clang_defaultSaveOptions(tu));
+    if (error) {
+        qCCritical(lcQdoc) << "Could not save PCH file for" << module_header;
+        return std::nullopt;
+    }
+
+    // Visit the header now, as token from pre-compiled header won't be visited
+    // later
+    CXCursor cur = clang_getTranslationUnitCursor(tu);
+    ClangVisitor visitor(qdb, all_headers);
+    visitor.visitChildren(cur);
+    qCDebug(lcQdoc) << "PCH built and visited for" << module_header;
+
+    return std::make_optional(PCHFile{std::move(pch_directory), pch_name});
 }
 
 static float getUnpatchedVersion(QString t)
@@ -1684,10 +1697,10 @@ ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
     CompilationIndex index{ clang_createIndex(1, kClangDontDisplayDiagnostics) };
 
     getDefaultArgs(m_defines, m_args);
-    if (!m_pchName.isEmpty() && !filePath.endsWith(".mm")) {
+    if (m_pch && !filePath.endsWith(".mm")) {
         m_args.push_back("-w");
         m_args.push_back("-include-pch");
-        m_args.push_back(m_pchName.constData());
+        m_args.push_back((*m_pch).get().name.constData());
     }
     getMoreArgs(m_includePaths, m_allHeaders, m_args);
 
@@ -1849,10 +1862,10 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
 
     getDefaultArgs(m_defines, m_args);
 
-    if (!m_pchName.isEmpty()) {
+    if (m_pch) {
         m_args.push_back("-w");
         m_args.push_back("-include-pch");
-        m_args.push_back(m_pchName.constData());
+        m_args.push_back((*m_pch).get().name.constData());
     }
 
     TranslationUnit tu;
