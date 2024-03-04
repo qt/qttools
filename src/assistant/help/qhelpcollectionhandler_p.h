@@ -26,6 +26,10 @@
 #include "qhelpdbreader_p.h"
 #include "qhelplink.h"
 
+#include <QtCore/qdatetime.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qstringlist.h>
+
 QT_BEGIN_NAMESPACE
 
 class QVersionNumber;
@@ -50,7 +54,7 @@ public:
         int folderId = -1;
         QString fileName;
         int size = 0;
-        QString timeStamp;
+        QDateTime timeStamp;
     };
 
     struct ContentsData
