@@ -188,7 +188,7 @@ bool QHelpCollectionHandler::openCollectionFile()
         timeStamp.folderId    = m_query->value(1).toInt();
         timeStamp.fileName    = m_query->value(2).toString();
         timeStamp.size        = m_query->value(3).toInt();
-        timeStamp.timeStamp   = m_query->value(4).toString();
+        timeStamp.timeStamp   = m_query->value(4).toDateTime();
         timeStamps.append(timeStamp);
     }
 
@@ -238,7 +238,7 @@ bool QHelpCollectionHandler::isTimeStampCorrect(const TimeStamp &timeStamp) cons
     if (fi.size() != timeStamp.size)
         return false;
 
-    if (fi.lastModified().toString(Qt::ISODate) != timeStamp.timeStamp)
+    if (fi.lastModified(QTimeZone::UTC) != timeStamp.timeStamp)
         return false;
 
     m_query->prepare("SELECT FilePath FROM NamespaceTable WHERE Id = ?"_L1);
@@ -2113,7 +2113,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         if (ok && sourceDateEpoch < lastModified.toSecsSinceEpoch())
             lastModified.setSecsSinceEpoch(sourceDateEpoch);
     }
-    m_query->addBindValue(lastModified.toString(Qt::ISODate));
+    m_query->addBindValue(lastModified);
     if (!m_query->exec())
         return false;
 
