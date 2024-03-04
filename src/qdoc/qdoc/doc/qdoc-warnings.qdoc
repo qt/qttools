@@ -105,7 +105,7 @@
     appearing after a \l {a-command}{\\a} command.
 
     This requirement is not imposed for function overload documentation,
-    provided that the overload is marked with the \lc overload command
+    provided that the overload is marked with the \qdoccmd overload command
     and a fully-documented function with the same name exists.
 
     \section1 No such parameter
@@ -125,7 +125,7 @@
 
     \section1 Clang couldn't find function when parsing \\fn <signature>
 
-    When Clang parses a function signature following an \lc fn command,
+    When Clang parses a function signature following an \qdoccmd fn command,
     it checks this against the declaration in the header file.  If Clang
     discovers discrepancies, it issues this warning message.
 

@@ -159,7 +159,7 @@
     \target attribution-command
     \section1 \\attribution
 
-    The \\attribution command marks a documented \lc page as license
+    The \\attribution command marks a documented \qdoccmd page as license
     attribution documentation.
 
     The \l {annotatedattributions} {\\generatelist annotatedattributions}
