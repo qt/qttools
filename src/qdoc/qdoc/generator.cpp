@@ -193,6 +193,9 @@ int Generator::appendSortedQmlNames(Text &text, const Node *base, const NodeList
  */
 QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
 {
+    if (s_outFileNames.contains(fileName))
+        node->location().warning("Already generated %1 for this project"_L1.arg(fileName));
+
     QString path = outputDir() + QLatin1Char('/');
     if (Generator::useOutputSubdirs() && !node->outputSubdirectory().isEmpty()
         && !outputDir().endsWith(node->outputSubdirectory())) {
@@ -203,8 +206,13 @@ QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
     auto outPath = s_redirectDocumentationToDevNull ? QStringLiteral("/dev/null") : path;
     auto outFile = new QFile(outPath);
 
-    if (!s_redirectDocumentationToDevNull && outFile->exists())
-        qCDebug(lcQdoc) << "Output file already exists; overwriting" << qPrintable(outFile->fileName());
+    if (!s_redirectDocumentationToDevNull && outFile->exists()) {
+        const QString warningText {"Output file already exists, overwriting %1"_L1.arg(outFile->fileName())};
+        if (qEnvironmentVariableIsSet("QDOC_ALL_OVERWRITES_ARE_WARNINGS"))
+            node->location().warning(warningText);
+        else
+            qCDebug(lcQdoc) << qUtf8Printable(warningText);
+    }
 
     if (!outFile->open(QFile::WriteOnly | QFile::Text)) {
         node->location().fatal(
