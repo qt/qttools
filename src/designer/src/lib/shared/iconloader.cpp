@@ -4,6 +4,7 @@
 #include "iconloader_p.h"
 
 #include <QtCore/qfile.h>
+#include <QtCore/qoperatingsystemversion.h>
 #include <QtGui/qicon.h>
 #include <QtGui/qpixmap.h>
 
@@ -16,7 +17,8 @@ namespace qdesigner_internal {
 QDESIGNER_SHARED_EXPORT QIcon createIconSet(QIcon::ThemeIcon themeIcon,
                                             QLatin1StringView name)
 {
-    return QIcon::hasThemeIcon(themeIcon)
+    return QOperatingSystemVersion::currentType() != QOperatingSystemVersion::MacOS
+           && QIcon::hasThemeIcon(themeIcon)
         ? QIcon::fromTheme(themeIcon) : createIconSet(name);
 }
 
