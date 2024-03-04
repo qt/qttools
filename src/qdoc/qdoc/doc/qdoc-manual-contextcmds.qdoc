@@ -23,6 +23,7 @@
 
     \list
       \li \l {abstract-command} {\\abstract}
+      \li \l {attribution-command} {\\attribution}
       \li \l {compares-command}{\\compares} (Since QDoc 6.7)
       \li \l {compareswith-command}{\\compareswith} (Since QDoc 6.7)
       \li \l {default-command} {\\default}
@@ -154,6 +155,16 @@
     also marked with \e{\\internal} so that its reference page is not
     generated. It the abstract QML type is not marked internal, it
     will have a reference page in the documentation.
+
+    \target attribution-command
+    \section1 \\attribution
+
+    The \\attribution command marks a documented \lc page as license
+    attribution documentation.
+
+    The \l {annotatedattributions} {\\generatelist annotatedattributions}
+    command generates an annotated list of all license attribution pages
+    in the documentation project.
 
     \target default-command
     \section1 \\default

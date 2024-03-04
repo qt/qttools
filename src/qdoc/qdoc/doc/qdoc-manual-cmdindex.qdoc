@@ -15,6 +15,7 @@
     \li \l {a-command} {\\a}
     \li \l {abstract-command} {\\abstract}
     \li \l {annotatedlist-command} {\\annotatedlist}
+    \li \l {attribution-command} {\\attribution}
     \li \l {b-command} {\\b}
     \li \l {badcode-command} {\\badcode}
     \li \l {b-command} {\\bold} (deprecated, use \\b)
