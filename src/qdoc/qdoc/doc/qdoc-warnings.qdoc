@@ -839,4 +839,17 @@
     .qdocconf file.
 
     See also \l{Creating Help Project Files} and \l {qhp-variable}{qhp}.
+
+    \section1 Already generated FILE for this project
+
+    While generating the documentation for a project, QDoc keeps track of the
+    file names of the files it has generated. QDoc will issue a warning when it
+    opens a file for writing if that file is known to have been generated
+    previously, in the current execution. This can happen if a \qdoccmd page
+    command uses the same name as \qdoccmd group, for example.
+
+    You can set the environment variable \c QDOC_ALL_OVERWRITES_ARE_WARNINGS to
+    unconditionally warn about all such events. This may be useful when tracking
+    down the offending definitions.
+
 */
