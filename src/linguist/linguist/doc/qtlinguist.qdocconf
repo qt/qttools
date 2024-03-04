@@ -24,7 +24,7 @@ qhp.QtLinguist.subprojects.examples.sortPages = true
 
 language                = Cpp
 
-sourcedirs              = ..
+sourcedirs              = .
 
 exampledirs             = ../../../../examples/linguist \
                           snippets
