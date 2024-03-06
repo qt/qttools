@@ -98,7 +98,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
         if (style == Section::Details) {
             auto templateDecl = node->templateDecl();
             if (templateDecl)
-                synopsis = (*templateDecl).to_qstring() + QLatin1Char(' ');
+                synopsis = protect((*templateDecl).to_qstring()) + QLatin1Char(' ');
         }
         if (style != Section::AllMembers && !func->returnType().isEmpty())
             synopsis += typified(func->returnType(), true);
@@ -186,7 +186,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
         if (style == Section::Details) {
             auto templateDecl = node->templateDecl();
             if (templateDecl)
-                synopsis += (*templateDecl).to_qstring() + QLatin1Char(' ');
+                synopsis += protect((*templateDecl).to_qstring()) + QLatin1Char(' ');
         }
         synopsis += name;
         break;
