@@ -2944,12 +2944,6 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
                                     bool summary)
 {
     QString marked = marker->markedUpQmlItem(node, summary);
-    static const QRegularExpression templateTag("(<[^@>]*>)");
-    auto match = templateTag.match(marked);
-    if (match.hasMatch()) {
-        QString contents = protectEnc(match.captured(1));
-        marked.replace(match.capturedStart(1), match.capturedLength(1), contents);
-    }
 
     // Look for the _ character in the member name followed by a number (or n):
     // this is intended to be rendered as a subscript.
@@ -3185,21 +3179,13 @@ void HtmlGenerator::generateSynopsis(const Node *node, const Node *relative, Cod
 {
     QString marked = marker->markedUpSynopsis(node, relative, style);
 
-    static const QRegularExpression templateTag("(<[^@>]*>)");
-    auto match = templateTag.match(marked);
-    if (match.hasMatch()) {
-        QString contents = protectEnc(match.captured(1));
-        marked.replace(match.capturedStart(1), match.capturedLength(1), contents);
-    }
-
     static const QRegularExpression re("<@param>([a-z]+)_([1-9n])</@param>");
     marked.replace(re, "<i>\\1<sub>\\2</sub></i>");
-    marked.replace("<@param>", "<i>");
-    marked.replace("</@param>", "</i>");
+    marked.replace("@param>", "i>");
 
     if (style == Section::Summary) {
-        marked.remove("<@name>"); // was "<b>"
-        marked.remove("</@name>"); // was "</b>"
+        marked.remove("<@name>");
+        marked.remove("</@name>");
     }
 
     if (style == Section::AllMembers) {
