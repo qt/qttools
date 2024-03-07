@@ -126,7 +126,8 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
         sourceCode(out, copyright);
     }
 
-    if (isSpdxLicenseId(package.licenseId) && package.licenseId != "NONE"_L1) {
+    if (isSpdxLicenseId(package.licenseId) && !package.licenseId.startsWith("LicenseRef-"_L1)
+        && package.licenseId != "NONE"_L1) {
         out << "\\l{https://spdx.org/licenses/" << package.licenseId << ".html}"
             << "{" << package.license << "}.\n\n";
     } else if (package.licenseId.startsWith("urn:dje:license:"_L1)) {
