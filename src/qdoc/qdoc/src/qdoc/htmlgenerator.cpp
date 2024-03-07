@@ -408,21 +408,10 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
     case Atom::FormatIf:
         break;
     case Atom::FormattingLeft:
-        if (atom->string().startsWith("span ")) {
+        if (atom->string().startsWith("span "))
             out() << '<' + atom->string() << '>';
-        } else
+        else
             out() << formattingLeftMap()[atom->string()];
-        if (atom->string() == ATOM_FORMATTING_PARAMETER) {
-            if (atom->next() != nullptr && atom->next()->type() == Atom::String) {
-                static const QRegularExpression subscriptRegExp("^([a-z]+)_([0-9n])$");
-                auto match = subscriptRegExp.match(atom->next()->string());
-                if (match.hasMatch()) {
-                    out() << match.captured(1) << "<sub>" << match.captured(2)
-                          << "</sub>";
-                    skipAhead = 1;
-                }
-            }
-        }
         break;
     case Atom::FormattingRight:
         if (atom->string() == ATOM_FORMATTING_LINK) {
@@ -2936,13 +2925,6 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
                                     bool summary)
 {
     QString marked = marker->markedUpQmlItem(node, summary);
-
-    // Look for the _ character in the member name followed by a number (or n):
-    // this is intended to be rendered as a subscript.
-    static const QRegularExpression re("<@param>([a-z]+)_([0-9]+|n)</@param>");
-    marked.replace(re, "<i>\\1<sub>\\2</sub></i>");
-    // Replace some markup by HTML tags. Do both the opening and the closing tag
-    // in one go (instead of <@param> and </@param> separately, for instance).
     marked.replace("@param>", "i>");
 
     marked.replace("<@extra>", "<code class=\"%1 extra\" translate=\"no\">"_L1
@@ -3170,9 +3152,6 @@ void HtmlGenerator::generateSynopsis(const Node *node, const Node *relative, Cod
                                      Section::Style style, bool alignNames)
 {
     QString marked = marker->markedUpSynopsis(node, relative, style);
-
-    static const QRegularExpression re("<@param>([a-z]+)_([1-9n])</@param>");
-    marked.replace(re, "<i>\\1<sub>\\2</sub></i>");
     marked.replace("@param>", "i>");
 
     if (style == Section::Summary) {

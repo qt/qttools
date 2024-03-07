@@ -338,21 +338,6 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
                 m_writer->writeAttribute("role", "parameter");
             else // atom->string() == ATOM_FORMATTING_TELETYPE
                 m_inTeletype = true;
-
-            // For parameters, understand subscripts.
-            if (atom->string() == ATOM_FORMATTING_PARAMETER) {
-                if (atom->next() != nullptr && atom->next()->type() == Atom::String) {
-                    static const QRegularExpression subscriptRegExp("^([a-z]+)_([0-9n])$");
-                    auto match = subscriptRegExp.match(atom->next()->string());
-                    if (match.hasMatch()) {
-                        m_writer->writeCharacters(match.captured(1));
-                        m_writer->writeStartElement(dbNamespace, "subscript");
-                        m_writer->writeCharacters(match.captured(2));
-                        m_writer->writeEndElement(); // subscript
-                        skipAhead = 1;
-                    }
-                }
-            }
         } else if (atom->string() == ATOM_FORMATTING_UICONTROL) {
             m_writer->writeStartElement(dbNamespace, "guilabel");
             if (m_useITS)
@@ -3709,21 +3694,10 @@ void DocBookGenerator::generateParameter(const Parameter &parameter, const Node 
     } else {
         paramName = ptype;
     }
-    if (generateExtra || pname.isEmpty()) {
-        // Look for the _ character in the member name followed by a number (or n):
-        // this is intended to be rendered as a subscript.
-        static const QRegularExpression sub("([a-z]+)_([0-9]+|n)");
 
+    if (generateExtra || pname.isEmpty()) {
         m_writer->writeStartElement(dbNamespace, "emphasis");
-        auto match = sub.match(paramName);
-        if (match.hasMatch()) {
-            m_writer->writeCharacters(match.captured(0));
-            m_writer->writeStartElement(dbNamespace, "subscript");
-            m_writer->writeCharacters(match.captured(1));
-            m_writer->writeEndElement(); // subscript
-        } else {
-            m_writer->writeCharacters(paramName);
-        }
+        m_writer->writeCharacters(paramName);
         m_writer->writeEndElement(); // emphasis
     }
 
