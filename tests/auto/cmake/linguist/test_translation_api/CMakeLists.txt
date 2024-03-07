@@ -140,6 +140,12 @@ qt6_add_translations(app6
     TS_FILES myobject_cs.ts
     SOURCES myi18nobject.cpp)
 
+# Explicitly specify SOURCES with target-less qt_add_lupdate.
+qt6_add_lupdate(
+    TS_FILES myobject_sk.ts
+    SOURCES myi18nobject.cpp
+)
+
 # Explicitly specify INCLUDE_DIRECTORIES.
 create_app(app7)
 qt6_add_translations(app7

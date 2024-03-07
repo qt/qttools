@@ -80,13 +80,15 @@ get_filename_component(project_root "${lupdate_project_file}" DIRECTORY)
 
 # Make relative paths absolute to the project root
 set(path_variables sources include_paths translations)
-foreach(i RANGE 1 ${lupdate_subproject_count})
-    list(APPEND path_variables
-        subproject${i}_include_paths
-        subproject${i}_sources
-        subproject${i}_excluded
-    )
-endforeach()
+if(lupdate_subproject_count GREATER 0)
+    foreach(i RANGE 1 ${lupdate_subproject_count})
+        list(APPEND path_variables
+            subproject${i}_include_paths
+            subproject${i}_sources
+            subproject${i}_excluded
+        )
+    endforeach()
+endif()
 foreach(path_var IN LISTS path_variables)
     set(absolute_${path_var} "")
     foreach(path IN LISTS lupdate_${path_var})
@@ -113,21 +115,23 @@ set(content "{
   \"translations\": ${json_translations},
   \"subProjects\": [
 ")
-foreach(i RANGE 1 ${lupdate_subproject_count})
-    prepare_json_sources(json_sources ${absolute_subproject${i}_sources})
-    list_to_json_array("${absolute_subproject${i}_include_paths}" json_include_paths)
-    list_to_json_array("${absolute_subproject${i}_excluded}" json_sources_exclusions)
-    string(APPEND content "    {
+if(lupdate_subproject_count GREATER 0)
+    foreach(i RANGE 1 ${lupdate_subproject_count})
+        prepare_json_sources(json_sources ${absolute_subproject${i}_sources})
+        list_to_json_array("${absolute_subproject${i}_include_paths}" json_include_paths)
+        list_to_json_array("${absolute_subproject${i}_excluded}" json_sources_exclusions)
+        string(APPEND content "    {
       \"projectFile\": \"${lupdate_subproject${i}_source_dir}/CMakeLists.txt\",
       \"includePaths\": ${json_include_paths},
       \"sources\": ${json_sources},
       \"excluded\": ${json_sources_exclusions}
     }")
-    if(i LESS lupdate_subproject_count)
-        string(APPEND content ",")
-    endif()
-    string(APPEND content "\n")
-endforeach()
+        if(i LESS lupdate_subproject_count)
+            string(APPEND content ",")
+        endif()
+        string(APPEND content "\n")
+    endforeach()
+endif()
 string(APPEND content "  ]
 }
 ")
