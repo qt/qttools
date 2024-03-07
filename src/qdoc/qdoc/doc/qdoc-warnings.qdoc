@@ -123,7 +123,7 @@
     that contains character escape sequences, you should enclose the
     code in \\c{...} to prevent this warning against the escape sequences.
 
-    \section1 Clang couldn't find function when parsing \\fn <signature>
+    \section1 Failed to find function when parsing \\fn <signature>
 
     When Clang parses a function signature following an \qdoccmd fn command,
     it checks this against the declaration in the header file.  If Clang

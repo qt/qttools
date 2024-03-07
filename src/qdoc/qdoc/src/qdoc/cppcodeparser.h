@@ -6,6 +6,7 @@
 
 #include "clangcodeparser.h"
 #include "codeparser.h"
+#include "parsererror.h"
 #include "utilities.h"
 
 QT_BEGIN_NAMESPACE
@@ -43,7 +44,8 @@ public:
     static bool isQMLMethodTopic(const QString &t);
     static bool isQMLPropertyTopic(const QString &t);
 
-    std::vector<TiedDocumentation> processTopicArgs(const UntiedDocumentation &untied);
+    std::pair<std::vector<TiedDocumentation>, std::vector<FnMatchError>>
+    processTopicArgs(const UntiedDocumentation &untied);
 
     void processMetaCommand(const Doc &doc, const QString &command, const ArgPair &argLocPair,
                             Node *node);

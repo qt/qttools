@@ -5,6 +5,7 @@
 #define CLANGCODEPARSER_H
 
 #include "codeparser.h"
+#include "parsererror.h"
 #include "config.h"
 
 #include <QtCore/qtemporarydir.h>
@@ -49,7 +50,7 @@ struct FnCommandParser {
         m_pch{pch}
     {}
 
-    Node *operator()(
+    std::variant<Node*, FnMatchError> operator()(
         const Location &location,
         const QString &fnSignature,
         const QString &idTag,

@@ -57,6 +57,7 @@ qt_internal_add_tool(${target_name}
         src/qdoc/openedlist.cpp
         src/qdoc/pagenode.cpp
         src/qdoc/parameters.cpp
+        src/qdoc/parsererror.cpp
         src/qdoc/propertynode.cpp
         src/qdoc/proxynode.cpp
         src/qdoc/puredocparser.cpp

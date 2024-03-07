@@ -870,7 +870,8 @@ bool CppCodeParser::isQMLPropertyTopic(const QString &t)
     return (t == COMMAND_QMLPROPERTY || t == COMMAND_QMLATTACHEDPROPERTY);
 }
 
-std::vector<TiedDocumentation> CppCodeParser::processTopicArgs(const UntiedDocumentation &untied)
+std::pair<std::vector<TiedDocumentation>, std::vector<FnMatchError>>
+CppCodeParser::processTopicArgs(const UntiedDocumentation &untied)
 {
     const Doc &doc = untied.documentation;
 
@@ -882,6 +883,7 @@ std::vector<TiedDocumentation> CppCodeParser::processTopicArgs(const UntiedDocum
     const QString topic = doc.topicsUsed().first().m_topic;
 
     std::vector<TiedDocumentation> tied{};
+    std::vector<FnMatchError> errors{};
 
     if (isQMLPropertyTopic(topic)) {
         auto tied_qml = processQmlProperties(untied);
@@ -891,8 +893,13 @@ std::vector<TiedDocumentation> CppCodeParser::processTopicArgs(const UntiedDocum
         Node *node = nullptr;
         if (args.size() == 1) {
             if (topic == COMMAND_FN) {
-                if (Config::instance().showInternal() || !doc.isInternal())
-                    node = fn_parser(doc.location(), args[0].first, args[0].second, untied.context);
+                if (Config::instance().showInternal() || !doc.isInternal()) {
+                    auto result = fn_parser(doc.location(), args[0].first, args[0].second, untied.context);
+                    if (auto *error = std::get_if<FnMatchError>(&result))
+                        errors.emplace_back(*error);
+                    else
+                        node = std::get<Node*>(result);
+                }
             } else if (topic == COMMAND_MACRO) {
                 node = parseMacroArg(doc.location(), args[0].first);
             } else if (isQMLMethodTopic(topic)) {
@@ -910,8 +917,13 @@ std::vector<TiedDocumentation> CppCodeParser::processTopicArgs(const UntiedDocum
             for (const auto &arg : std::as_const(args)) {
                 node = nullptr;
                 if (topic == COMMAND_FN) {
-                    if (Config::instance().showInternal() || !doc.isInternal())
-                        node = fn_parser(doc.location(), arg.first, arg.second, untied.context);
+                    if (Config::instance().showInternal() || !doc.isInternal()) {
+                        auto result = fn_parser(doc.location(), arg.first, arg.second, untied.context);
+                        if (auto *error = std::get_if<FnMatchError>(&result))
+                            errors.emplace_back(*error);
+                        else
+                            node = std::get<Node*>(result);
+                    }
                 } else if (topic == COMMAND_MACRO) {
                     node = parseMacroArg(doc.location(), arg.first);
                 } else if (isQMLMethodTopic(topic)) {
@@ -939,8 +951,7 @@ std::vector<TiedDocumentation> CppCodeParser::processTopicArgs(const UntiedDocum
                 scn->sort();
         }
     }
-
-    return tied;
+    return std::make_pair(tied, errors);
 }
 
 /*!

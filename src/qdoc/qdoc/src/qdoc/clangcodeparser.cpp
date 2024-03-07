@@ -1787,8 +1787,16 @@ ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
   Use clang to parse the function signature from a function
   command. \a location is used for reporting errors. \a fnSignature
   is the string to parse. It is always a function decl.
+  \a idTag is the optional bracketed argument passed to \\fn, or
+  an empty string.
+  \a context is a string list representing the scope (namespaces)
+  under which the function is declared.
+
+  Returns a variant that's either a Node instance tied to the
+  function declaration, or a parsing failure for later processing.
  */
-Node *FnCommandParser::operator()(const Location &location, const QString &fnSignature, const QString &idTag, QStringList context)
+std::variant<Node*, FnMatchError> FnCommandParser::operator()(const Location &location, const QString &fnSignature,
+                                  const QString &idTag, QStringList context)
 {
     Node *fnNode = nullptr;
     /*
@@ -1881,36 +1889,12 @@ Node *FnCommandParser::operator()(const Location &location, const QString &fnSig
         ClangVisitor visitor(m_qdb, m_allHeaders);
         bool ignoreSignature = false;
         visitor.visitFnArg(cur, &fnNode, ignoreSignature);
-        /*
-          If the visitor couldn't find a FunctionNode for the
-          signature, then print the clang diagnostics if there
-          were any.
-         */
-        if (fnNode == nullptr) {
+
+        if (!fnNode) {
             unsigned diagnosticCount = clang_getNumDiagnostics(tu);
             const auto &config = Config::instance();
             if (diagnosticCount > 0 && (!config.preparing() || config.singleExec())) {
-                bool report = true;
-                QStringList signature = fnSignature.split(QChar('('));
-                if (signature.size() > 1) {
-                    QStringList qualifiedName = signature.at(0).split(QChar(' '));
-                    qualifiedName = qualifiedName.last().split(QLatin1String("::"));
-                    if (qualifiedName.size() > 1) {
-                        QString qualifier = qualifiedName.at(0);
-                        int i = 0;
-                        while (qualifier.size() > i && !qualifier.at(i).isLetter())
-                            qualifier[i++] = QChar(' ');
-                        if (i > 0)
-                            qualifier = qualifier.simplified();
-                        ClassNode *cn = m_qdb->findClassNode(QStringList(qualifier));
-                        if (cn && cn->isInternal())
-                            report = false;
-                    }
-                }
-                if (report) {
-                    location.warning(
-                            QStringLiteral("clang couldn't find function when parsing \\fn %1").arg(fnSignature));
-                }
+               return FnMatchError{ fnSignature, location };
             }
         }
     }

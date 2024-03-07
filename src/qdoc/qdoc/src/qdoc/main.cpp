@@ -66,6 +66,7 @@ static void parseSourceFiles(
     SourceFileParser& source_file_parser,
     CppCodeParser& cpp_code_parser
 ) {
+    ParserErrorHandler error_handler{};
     std::stable_sort(sources.begin(), sources.end());
 
     sources.erase (
@@ -79,17 +80,23 @@ static void parseSourceFiles(
         });
 
 
-    std::for_each(qml_sources, sources.end(), [&source_file_parser, &cpp_code_parser](const QString& source){
+    std::for_each(qml_sources, sources.end(),
+            [&source_file_parser, &cpp_code_parser, &error_handler](const QString& source){
         qCDebug(lcQdoc, "Parsing %s", qPrintable(source));
 
         auto [untied_documentation, tied_documentation] = source_file_parser(tag_source_file(source));
+        std::vector<FnMatchError> errors{};
 
         for (auto untied : untied_documentation) {
-            auto tied = cpp_code_parser.processTopicArgs(untied);
-            tied_documentation.insert(tied_documentation.end(), tied.begin(), tied.end());
+            auto result = cpp_code_parser.processTopicArgs(untied);
+            tied_documentation.insert(tied_documentation.end(), result.first.begin(), result.first.end());
         };
 
         cpp_code_parser.processMetaCommands(tied_documentation);
+
+        // Process errors that occurred during parsing
+        for (const auto &e : errors)
+            error_handler(e);
     });
 
     std::for_each(sources.begin(), qml_sources, [&cpp_code_parser](const QString& source){
