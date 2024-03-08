@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QmlEnumValuesFromCpp Reference Documentation" version="" project="QmlEnumValuesFromCpp">
+    <namespace name="" status="active" access="public" module="qmlenumvaluesfromcpp">
+        <class name="Class" href="class.html" status="active" access="public" location="class.h" documented="true" module="Module">
+            <enum name="MoreValues" fullname="Class::MoreValues" href="class.html#MoreValues-enum" status="active" access="public" location="class.h" documented="true" scoped="true">
+                <value name="Something" value="0"/>
+                <value name="Else" value="1"/>
+            </enum>
+            <enum name="Values" fullname="Class::Values" href="class.html#Values-enum" status="active" access="public" location="class.h" documented="true">
+                <value name="One" value="0"/>
+                <value name="Two" value="1"/>
+                <value name="Three" value="2"/>
+            </enum>
+        </class>
+        <qmlclass name="Type" qml-module-name="QmlModule" fullname="QmlModule.Type" href="qml-qmlmodule-type.html" status="active" access="public" location="qmltype.qdoc" documented="true" title="Type" fulltitle="Type" subtitle="">
+            <qmlproperty name="something" fullname="QmlModule.Type.something" href="qml-qmlmodule-type.html#something-prop" status="active" access="public" location="qmltype.qdoc" documented="true" type="enumeration" attached="false" writable="true"/>
+            <qmlproperty name="values" fullname="QmlModule.Type.values" href="qml-qmlmodule-type.html#values-prop" status="active" access="public" location="qmltype.qdoc" documented="true" type="enumeration" attached="false" writable="true"/>
+        </qmlclass>
+        <module name="Module" href="module-module.html" status="active" documented="true" seen="true" title=""/>
+        <qmlmodule name="QmlModule" qml-module-name="QmlModule" href="qmlmodule-qmlmodule.html" status="active" location="qmltype.qdoc" documented="true" seen="true" title=""/>
+    </namespace>
+</INDEX>

@@ -41,6 +41,7 @@
       \li \l {previouspage-command}{\\previouspage}
       \li \l {qmlabstract-command} {\\qmlabstract}
       \li \l {qmldefault-command} {\\qmldefault}
+      \li \qdoccmd qmlenumeratorsfrom (Since QDoc 6.8)
       \li \l {qtcmakepackage-command} {\\qtcmakepackage}
       \li \l {qtcmaketargetitem-command} {\\qtcmaketargetitem}
       \li \l {readonly-command} {\\readonly}
@@ -274,6 +275,50 @@
 
     See how QDoc renders this property on the reference page for the
     \l {QtQuick::State::changes}{State} type.
+
+    \target qmlenumeratorsfrom-command
+    \section1 \\qmlenenumeratorsfrom
+
+    Use the \\qmlenumeratorsfrom command in a \qdoccmd qmlproperty topic
+    with a property type \e enumeration, to automatically replicate the
+    documentation for enumerators from a C++ \qdoccmd enum topic.
+
+    The command takes a fully qualified C++ enum as an argument,
+    and generates a list of enumerators and their descriptions.
+
+    \note The C++ enum must be documented in the same project; QDoc
+          cannot access its documentation if it's part of an external
+          documentation set that the current project \qdocvar depends
+          on.
+
+    By default, each enumerator is prefixed with the type name the
+    property belongs to, with \c{.} as the separator.
+
+    For example:
+
+    \badcode *
+    /\1!
+        \qmlproperty enumeration QtMultimedia::Camera::error
+        \qmlenumeratorsfrom QCamera::Error
+
+        //! Outputs documentation for 'Camera.NoError', 'Camera.CameraError'
+    \1/
+    \endcode
+
+    If the enumerators are registered to QML under a different type
+    name, this name (prefix) can be specified using the optional
+    argument in square brackets:
+
+    \badcode
+        \qmlenumeratorsfrom [Errors] QCamera::Error
+
+        //! Outputs documentation for 'Errors.NoError', 'Errors.CameraError'
+    \1/
+    \endcode
+
+    This command was introduced in QDoc 6.8.
+
+    See also \qdoccmd {qmlproperty}, \qdoccmd {enum}, and \qdoccmd {value}.
 
     \target dontdocument-command
     \section1 \\dontdocument

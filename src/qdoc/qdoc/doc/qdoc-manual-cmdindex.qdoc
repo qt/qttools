@@ -89,6 +89,7 @@
     \li \l {qmlvaluetype-command} {\\qmlvaluetype}
     \li \l {qmlclass-command} {\\qmlclass} (deprecated, use \\qmltype)
     \li \l {qmldefault-command} {\\qmldefault}
+    \li \qdoccmd qmlenumeratorsfrom
     \li \l {qmltype-command} {\\qmltype}
     \li \l {qmlmethod-command} {\\qmlmethod}
     \li \l {qmlproperty-command} {\\qmlproperty}

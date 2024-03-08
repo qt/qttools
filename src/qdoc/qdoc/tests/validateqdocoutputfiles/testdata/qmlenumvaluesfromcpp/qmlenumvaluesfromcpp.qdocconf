@@ -1,0 +1,22 @@
+project = QmlEnumValuesFromCpp
+moduleheader = class.h
+includepaths = .
+
+{sourcedirs,headerdirs} = .
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
+
+outputformats = HTML WebXML DocBook
+{HTML.nosubdirs,WebXML.nosubdirs,DocBook.nosubdirs} = true
+
+HTML.outputsubdir = html
+WebXML.outputsubdir = webxml
+DocBook.outputsubdir = docbook
+
+DocBook.its = true
+DocBook.usedocbookextensions = true

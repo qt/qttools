@@ -2665,6 +2665,7 @@ void DocBookGenerator::generateBody(const Node *node)
         // Warning generation skipped with respect to Generator::generateBody.
     }
 
+    generateEnumValuesForQmlProperty(node, nullptr);
     generateRequiredLinks(node);
 }
 
@@ -3883,13 +3884,22 @@ void DocBookGenerator::generateEnumValue(const QString &enumValue, const Node *r
     // From CppCodeMarker::markedUpEnumValue, simplifications from Generator::plainCode (removing
     // <@op>). With respect to CppCodeMarker::markedUpEnumValue, the order of generation of parents
     // must be reversed so that they are processed in the order
+    const auto *node = relative->parent();
+
+    if (relative->isQmlProperty()) {
+        const auto *qpn = static_cast<const QmlPropertyNode*>(relative);
+        if (qpn->enumNode() && !enumValue.startsWith("%1."_L1.arg(qpn->enumPrefix()))) {
+            m_writer->writeCharacters("%1.%2"_L1.arg(qpn->enumPrefix(), enumValue));
+            return;
+        }
+    }
+
     if (!relative->isEnumType()) {
         m_writer->writeCharacters(enumValue);
         return;
     }
 
     QList<const Node *> parents;
-    const Node *node = relative->parent();
     while (!node->isHeader() && node->parent()) {
         parents.prepend(node);
         if (node->parent() == relative || node->parent()->name().isEmpty())

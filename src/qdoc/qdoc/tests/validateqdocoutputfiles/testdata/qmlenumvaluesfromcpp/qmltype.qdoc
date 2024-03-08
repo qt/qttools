@@ -1,0 +1,23 @@
+// Copyright (C) 2024 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule QmlModule
+*/
+
+/*!
+    \qmltype Type
+    \inqmlmodule QmlModule
+*/
+
+/*!
+    \qmlproperty enumeration Type::values
+    \qmlenumeratorsfrom Class::Values
+
+    You can even use these values in QML.
+*/
+
+/*!
+    \qmlproperty enumeration Type::something
+    \qmlenumeratorsfrom [SomeType] Class::MoreValues
+*/

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Class" href="class.html" status="active" access="public" location="class.h" documented="true" module="Module">
+            <description/>
+            <enum name="MoreValues" fullname="Class::MoreValues" href="class.html#MoreValues-enum" status="active" access="public" location="class.h" documented="true" scoped="true">
+                <value name="Something" value="0"/>
+                <value name="Else" value="1"/>
+                <description>
+                    <list type="enum">
+                        <definition>
+                            <term>Class::MoreValues::Something</term>Something</definition>
+                        <item>
+                            <para>something</para>
+                        </item>
+                        <definition>
+                            <term>Class::MoreValues::Else</term>Else</definition>
+                        <item>
+                            <para>entirely</para>
+                        </item>
+                    </list>
+                </description>
+            </enum>
+            <enum name="Values" fullname="Class::Values" href="class.html#Values-enum" status="active" access="public" location="class.h" documented="true">
+                <value name="One" value="0"/>
+                <value name="Two" value="1"/>
+                <value name="Three" value="2"/>
+                <description>
+                    <para>Try now these exciting values in your C++ code:</para>
+                    <list type="enum">
+                        <definition>
+                            <term>Class::One</term>One</definition>
+                        <item>
+                            <para>One value</para>
+                        </item>
+                    </list>
+                    <para>Wait, that's not all!</para>
+                    <list type="enum">
+                        <definition>
+                            <term>Class::Two</term>Two</definition>
+                        <item>
+                            <para>2nd value</para>
+                        </item>
+                        <definition>
+                            <term>Class::Three</term>Three</definition>
+                        <item>
+                            <para>3rd value</para>
+                        </item>
+                    </list>
+                </description>
+            </enum>
+        </class>
+    </document>
+</WebXML>

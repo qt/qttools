@@ -20,6 +20,7 @@
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
+#include "qmlpropertynode.h"
 #include "quoter.h"
 #include "sharedcommentnode.h"
 #include "tokenizer.h"
@@ -792,6 +793,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             }
         }
     }
+    generateEnumValuesForQmlProperty(node, marker);
     generateRequiredLinks(node, marker);
 }
 
@@ -2028,6 +2030,44 @@ void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
             }
         }
     }
+}
+
+void Generator::generateEnumValuesForQmlProperty(const Node *node, CodeMarker *marker)
+{
+    if (!node->isQmlProperty())
+        return;
+
+    const auto *qpn = static_cast<const QmlPropertyNode*>(node);
+
+    if (!qpn->enumNode())
+        return;
+
+    auto findNext =
+            [](const Atom *atom, Atom::AtomType type, const QString &str) {
+                while (atom && (atom->type() != type || atom->string() != str))
+                    atom = atom->next();
+                return atom;
+            };
+
+    // Retrieve atoms from C++ enum \value list
+    const auto body{qpn->enumNode()->doc().body()};
+    const auto *start{body.firstAtom()};
+    Text text;
+
+    while ((start = findNext(start, Atom::ListLeft, ATOM_LIST_VALUE))) {
+        const auto end = findNext(start, Atom::ListRight, ATOM_LIST_VALUE);
+        // Skip subsequent ListLeft atoms, collating multiple lists into one
+        text << body.subText(text.isEmpty() ? start : start->next(), end);
+        start = end;
+    }
+    if (text.isEmpty())
+        return;
+
+    text << Atom(Atom::ListRight, ATOM_LIST_VALUE);
+    if (marker)
+        generateText(text, qpn, marker);
+    else
+        generateText(text, qpn);
 }
 
 void Generator::terminate()

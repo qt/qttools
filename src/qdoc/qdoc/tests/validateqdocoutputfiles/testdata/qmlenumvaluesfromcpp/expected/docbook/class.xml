@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title its:translate="no">Class Class</db:title>
+<db:productname>QmlEnumValuesFromCpp</db:productname>
+<db:titleabbrev>QmlEnumValuesFromCpp Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>QmlEnumValuesFromCpp Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:variablelist its:translate="no">
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>Class</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-type-documentation">
+<db:title>Member Type Documentation</db:title>
+<db:section xml:id="MoreValues-enum">
+<db:title its:translate="no">enum Class::MoreValues</db:title>
+<db:enumsynopsis>
+<db:enumname>MoreValues</db:enumname>
+<db:enumitem>
+<db:enumidentifier>Something</db:enumidentifier>
+<db:enumvalue>0</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>Else</db:enumidentifier>
+<db:enumvalue>1</db:enumvalue>
+</db:enumitem>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:enumsynopsis>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Value</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="class.xml">Class</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="">MoreValues</db:link></db:emphasis>::Something</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">0</db:code></db:td>
+<db:td>
+<db:para>something</db:para>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="class.xml">Class</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="">MoreValues</db:link></db:emphasis>::Else</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">1</db:code></db:td>
+<db:td>
+<db:para>entirely</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+<db:section xml:id="Values-enum">
+<db:title its:translate="no">enum Class::Values</db:title>
+<db:enumsynopsis>
+<db:enumname>Values</db:enumname>
+<db:enumitem>
+<db:enumidentifier>One</db:enumidentifier>
+<db:enumvalue>0</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>Two</db:enumidentifier>
+<db:enumvalue>1</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>Three</db:enumidentifier>
+<db:enumvalue>2</db:enumvalue>
+</db:enumitem>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:enumsynopsis>
+<db:para>Try now these exciting values in your C++ code:</db:para>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Value</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="class.xml">Class</db:link></db:emphasis>::One</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">0</db:code></db:td>
+<db:td>
+<db:para>One value</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+<db:para>Wait, that's not all!</db:para>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Value</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="class.xml">Class</db:link></db:emphasis>::Two</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">1</db:code></db:td>
+<db:td>
+<db:para>2nd value</db:para>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="class.xml">Class</db:link></db:emphasis>::Three</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">2</db:code></db:td>
+<db:td>
+<db:para>3rd value</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+</db:section>
+</db:article>

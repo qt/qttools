@@ -5,6 +5,7 @@
 
 #include "classnode.h"
 #include "propertynode.h"
+#include "enumnode.h"
 
 #include <utility>
 #include "qdocdatabase.h"
@@ -33,6 +34,43 @@ QmlPropertyNode::QmlPropertyNode(Aggregate *parent, const QString &name, QString
   Returns \c true if this QML property node is marked as a
   read-only property.
 */
+
+/*!
+    \fn const EnumNode *QmlPropertyNode::enumNode() const
+
+    Returns the node representing the C++ enumeration associated
+    with this property, or \nullptr.
+*/
+
+/*!
+    Returns the prefix to use for documentated enumerators from
+    the associated C++ enum for this property.
+*/
+const QString &QmlPropertyNode::enumPrefix() const
+{
+    return !m_enumNode.second.isEmpty() ?
+            m_enumNode.second : parent()->name();
+}
+
+/*!
+    Locates the node specified by \a path and sets it as the C++ enumeration
+    associated with this property.
+
+    \a registeredQmlName is used as the prefix in the generated enum value
+    documentation.
+
+    \note The target EnumNode is searched under the primary tree only.
+
+    Returns \c true on success.
+*/
+bool QmlPropertyNode::setEnumNode(const QString &path, const QString &registeredQmlName)
+{
+    m_enumNode.first = static_cast<EnumNode*>(
+        QDocDatabase::qdocDB()->primaryTree()->findNodeByNameAndType(path.split("::"), &Node::isEnumType)
+    );
+    m_enumNode.second = registeredQmlName;
+    return m_enumNode.first != nullptr;
+}
 
 /*!
   Returns \c true if this QML property or attached property is

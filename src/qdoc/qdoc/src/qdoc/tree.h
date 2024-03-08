@@ -62,6 +62,9 @@ private: // Note the constructor and destructor are private.
     ~Tree();
 
 public: // Of necessity, a few public functions remain.
+    [[nodiscard]] Node *findNodeByNameAndType(const QStringList &path,
+                                              bool (Node::*isMatch)() const) const;
+
     [[nodiscard]] const QString &camelCaseModuleName() const { return m_camelCaseModuleName; }
     [[nodiscard]] const QString &physicalModuleName() const { return m_physicalModuleName; }
     [[nodiscard]] const QString &indexFileName() const { return m_indexFileName; }
@@ -91,8 +94,6 @@ private: // The rest of the class is private.
     const Node *findNode(const QStringList &path, const Node *relative, int flags,
                          Node::Genus genus) const;
 
-    [[nodiscard]] Node *findNodeByNameAndType(const QStringList &path,
-                                              bool (Node::*isMatch)() const) const;
     Aggregate *findRelatesNode(const QStringList &path);
     const Node *findEnumNode(const Node *node, const Node *aggregate, const QStringList &path, int offset) const;
     QString getRef(const QString &target, const Node *node) const;

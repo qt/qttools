@@ -292,10 +292,18 @@ QString CppCodeMarker::markedUpName(const Node *node)
 
 QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *relative)
 {
-    if (!relative->isEnumType())
-        return enumValue;
+    const auto *node = relative->parent();
 
-    const Node *node = relative->parent();
+    if (relative->isQmlProperty()) {
+        const auto *qpn = static_cast<const QmlPropertyNode*>(relative);
+        if (qpn->enumNode() && !enumValue.startsWith("%1."_L1.arg(qpn->enumPrefix())))
+            return "%1<@op>.</@op>%2"_L1.arg(qpn->enumPrefix(), enumValue);
+    }
+
+    if (!relative->isEnumType()) {
+        return enumValue;
+    }
+
     QStringList parts;
     while (!node->isHeader() && node->parent()) {
         parts.prepend(markedUpName(node));

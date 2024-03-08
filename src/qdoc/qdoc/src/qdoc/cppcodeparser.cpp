@@ -485,6 +485,14 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         }
     } else if (command == COMMAND_QMLDEFAULT) {
         node->markDefault();
+    } else if (command == COMMAND_QMLENUMERATORSFROM) {
+        if (!node->isQmlProperty()) {
+            doc.location().warning("Ignored '\\%1', applies only to '\\%2'"_L1
+                    .arg(command, COMMAND_QMLPROPERTY));
+        } else if (!static_cast<QmlPropertyNode*>(node)->setEnumNode(argPair.first, argPair.second)) {
+            doc.location().warning("Failed to find C++ enumeration '%2' passed to \\%1"_L1
+                    .arg(command, arg), "Use \\value commands instead"_L1);
+        }
     } else if (command == COMMAND_QMLREADONLY) {
         node->markReadOnly(true);
     }  else if (command == COMMAND_QMLREQUIRED) {

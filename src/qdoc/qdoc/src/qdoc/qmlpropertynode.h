@@ -21,6 +21,7 @@ public:
     void setStored(bool stored) { m_stored = toFlagValue(stored); }
     void setDefaultValue(const QString &value) { m_defaultValue = value; }
     void setRequired() { m_required = toFlagValue(true); }
+    bool setEnumNode(const QString &path, const QString &registeredQmlName);
 
     [[nodiscard]] const QString &dataType() const { return m_type; }
     [[nodiscard]] const QString &defaultValue() const { return m_defaultValue; }
@@ -46,6 +47,8 @@ public:
         return parent()->logicalModuleIdentifier();
     }
     [[nodiscard]] QString element() const override { return parent()->name(); }
+    [[nodiscard]] const EnumNode *enumNode() const { return m_enumNode.first; }
+    [[nodiscard]] const QString &enumPrefix() const;
 
     void markDefault() override { m_isDefault = true; }
     void markReadOnly(bool flag) override { m_readOnly = toFlagValue(flag); }
@@ -62,6 +65,7 @@ private:
     bool m_attached {};
     FlagValue m_readOnly { FlagValueDefault };
     FlagValue m_required { FlagValueDefault };
+    std::pair<EnumNode *, QString> m_enumNode { nullptr, {} };
 };
 
 QT_END_NAMESPACE
