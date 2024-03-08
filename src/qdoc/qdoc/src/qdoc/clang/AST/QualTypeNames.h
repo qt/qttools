@@ -438,6 +438,9 @@ inline QualType getFullyQualifiedType(QualType QT, const ASTContext &Ctx,
   // elaborated type.
   Qualifiers PrefixQualifiers = QT.getLocalQualifiers();
   QT = QualType(QT.getTypePtr(), 0);
+#if LIBCLANG_VERSION_MAJOR >= 18
+  constexpr ElaboratedTypeKeyword ETK_None = ElaboratedTypeKeyword::None;
+#endif
   ElaboratedTypeKeyword Keyword = ETK_None;
   if (const auto *ETypeInput = dyn_cast<ElaboratedType>(QT.getTypePtr())) {
     QT = ETypeInput->getNamedType();
