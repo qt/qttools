@@ -21,6 +21,8 @@
 
 #include <QtGui/qaction.h>
 #include <QtGui/qevent.h>
+#include <QtGui/qfontdatabase.h>
+#include <QtGui/qfontmetrics.h>
 #include <QtGui/qicon.h>
 
 #include <QtCore/qdebug.h>
@@ -75,8 +77,11 @@ CodeDialog::CodeDialog(QWidget *parent) :
 
     // Edit
     m_impl->m_textEdit->setReadOnly(true);
+    const auto font = QFontDatabase::systemFont(QFontDatabase::SystemFont::FixedFont);
+    const int editorWidth = QFontMetrics(font, this).averageCharWidth() * 100;
+    m_impl->m_textEdit->setFont(font);
     m_impl->m_textEdit->setMinimumSize(QSize(
-                m_impl->m_findWidget->minimumSize().width(),
+                qMax(editorWidth, m_impl->m_findWidget->minimumSize().width()),
                 500));
     vBoxLayout->addWidget(m_impl->m_textEdit);
 
