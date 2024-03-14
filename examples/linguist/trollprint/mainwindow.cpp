@@ -6,6 +6,7 @@
 #include "mainwindow.h"
 #include "printpanel.h"
 
+static constexpr QLatin1StringView version("1.0");
 MainWindow::MainWindow()
 {
     printPanel = new PrintPanel;
@@ -15,15 +16,15 @@ MainWindow::MainWindow()
     createMenus();
 
 //! [0]
-    setWindowTitle(tr("Troll Print %1").arg("1.0"));
+    setWindowTitle(tr("Troll Print %1").arg(version));
 //! [0]
 }
 
 void MainWindow::about()
 {
-    QMessageBox::information(this, tr("About Troll Print %1").arg("1.0"),
+    QMessageBox::information(this, tr("About Troll Print %1").arg(version),
                       tr("Troll Print %1.\n\n"
-                      "Copyright 1999 Software, Inc.").arg("1.0"));
+                      "Copyright 1999 Software, Inc.").arg(version));
 }
 
 //! [1]
