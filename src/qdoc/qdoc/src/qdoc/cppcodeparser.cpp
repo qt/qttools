@@ -50,7 +50,8 @@ static const QMap<QString, NodeTypeTestFunc> s_nodeTypeTestFuncMap{
     { COMMAND_VARIABLE, &Node::isVariable },
 };
 
-CppCodeParser::CppCodeParser()
+CppCodeParser::CppCodeParser(FnCommandParser&& parser)
+    : fn_parser{parser}
 {
     Config &config = Config::instance();
     QStringList exampleFilePatterns{config.get(CONFIG_EXAMPLES
@@ -891,9 +892,7 @@ std::vector<TiedDocumentation> CppCodeParser::processTopicArgs(const UntiedDocum
         if (args.size() == 1) {
             if (topic == COMMAND_FN) {
                 if (Config::instance().showInternal() || !doc.isInternal())
-                    node = static_cast<ClangCodeParser *>(CodeParser::parserForLanguage("Clang"))
-                                   ->parseFnArg(doc.location(), args[0].first, args[0].second,
-                                                untied.context);
+                    node = fn_parser(doc.location(), args[0].first, args[0].second, untied.context);
             } else if (topic == COMMAND_MACRO) {
                 node = parseMacroArg(doc.location(), args[0].first);
             } else if (isQMLMethodTopic(topic)) {
@@ -912,10 +911,7 @@ std::vector<TiedDocumentation> CppCodeParser::processTopicArgs(const UntiedDocum
                 node = nullptr;
                 if (topic == COMMAND_FN) {
                     if (Config::instance().showInternal() || !doc.isInternal())
-                        node = static_cast<ClangCodeParser *>(
-                                       CodeParser::parserForLanguage("Clang"))
-                                       ->parseFnArg(doc.location(), arg.first, arg.second,
-                                                    untied.context);
+                        node = fn_parser(doc.location(), arg.first, arg.second, untied.context);
                 } else if (topic == COMMAND_MACRO) {
                     node = parseMacroArg(doc.location(), arg.first);
                 } else if (isQMLMethodTopic(topic)) {

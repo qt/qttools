@@ -60,10 +60,8 @@ bool creationTimeBefore(const QFileInfo &fi1, const QFileInfo &fi2)
 
     \sa CodeParser::parserForSourceFile, CodeParser::sourceFileNameFilter
 */
-static void parseSourceFiles(std::vector<QString>&& sources)
+static void parseSourceFiles(std::vector<QString>&& sources, CppCodeParser& cpp_code_parser)
 {
-    CppCodeParser cpp_code_parser{};
-
     std::stable_sort(sources.begin(), sources.end());
 
     sources.erase (
@@ -576,7 +574,9 @@ static void processQdocconfFile(const QString &fileName)
             qCInfo(lcQdoc) << "Parse source files for" << project;
 
 
-        parseSourceFiles(std::move(sources));
+        auto headers = config.getHeaderFiles();
+        CppCodeParser cpp_code_parser(FnCommandParser(qdb, headers, clang_defines, pch));
+        parseSourceFiles(std::move(sources), cpp_code_parser);
 
         if (config.get(CONFIG_LOGPROGRESS).asBool())
             qCInfo(lcQdoc) << "Source files parsed for" << project;

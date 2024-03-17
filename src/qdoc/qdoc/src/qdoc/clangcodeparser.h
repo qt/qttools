@@ -4,8 +4,7 @@
 #ifndef CLANGCODEPARSER_H
 #define CLANGCODEPARSER_H
 
-#include "cppcodeparser.h"
-
+#include "codeparser.h"
 #include "config.h"
 
 #include <QtCore/qtemporarydir.h>
@@ -14,6 +13,8 @@
 #include <optional>
 
 typedef struct CXTranslationUnitImpl *CXTranslationUnit;
+
+class CppCodeParser;
 
 QT_BEGIN_NAMESPACE
 
@@ -35,6 +36,34 @@ std::optional<PCHFile> buildPCH(
     const QList<QByteArray>& defines
 );
 
+struct FnCommandParser {
+    FnCommandParser(
+        QDocDatabase* qdb,
+        const std::set<Config::HeaderFilePath>& all_headers,
+        const QList<QByteArray>& defines,
+        std::optional<std::reference_wrapper<const PCHFile>> pch
+    ) : m_qdb{qdb},
+        m_allHeaders{all_headers},
+        m_defines{defines},
+        m_args{},
+        m_pch{pch}
+    {}
+
+    Node *operator()(
+        const Location &location,
+        const QString &fnSignature,
+        const QString &idTag,
+        QStringList context
+   );
+
+private:
+    QDocDatabase* m_qdb;
+    const std::set<Config::HeaderFilePath>& m_allHeaders; // file name->path
+    QList<QByteArray> m_defines {};
+    std::vector<const char *> m_args {};
+    std::optional<std::reference_wrapper<const PCHFile>> m_pch;
+};
+
 class ClangCodeParser : public CodeParser
 {
 public:
@@ -52,7 +81,6 @@ public:
     QStringList sourceFileNameFilter() override;
     void parseSourceFile(const Location &, const QString &, CppCodeParser&) override {}
     ParsedCppFileIR parse_cpp_file(const QString &filePath);
-    Node *parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag, QStringList context);
 
 private:
     std::set<Config::HeaderFilePath> m_allHeaders {}; // file name->path

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "clangcodeparser.h"
+#include "cppcodeparser.h"
 
 #include "access.h"
 #include "classnode.h"
@@ -14,6 +15,7 @@
 #include "qdocdatabase.h"
 #include "typedefnode.h"
 #include "variablenode.h"
+#include "utilities.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qelapsedtimer.h>
@@ -1779,8 +1781,6 @@ ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
         } else {
             parse_result.untied.emplace_back(UntiedDocumentation{doc, QStringList()});
 
-            // Store the namespace scope from lexical parents of the comment
-            m_namespaceScope.clear();
             CXCursor cur = clang_getCursor(tu, commentLoc);
             while (true) {
                 CXCursorKind kind = clang_getCursorKind(cur);
@@ -1806,7 +1806,7 @@ ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
   command. \a location is used for reporting errors. \a fnSignature
   is the string to parse. It is always a function decl.
  */
-Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag, QStringList context)
+Node *FnCommandParser::operator()(const Location &location, const QString &fnSignature, const QString &idTag, QStringList context)
 {
     Node *fnNode = nullptr;
     /*
@@ -1869,13 +1869,13 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
     }
 
     TranslationUnit tu;
-    s_fn.clear();
+    QByteArray s_fn{};
     for (const auto &ns : std::as_const(context))
         s_fn.prepend("namespace " + ns.toUtf8() + " {");
     s_fn += fnSignature.toUtf8();
     if (!s_fn.endsWith(";"))
         s_fn += "{ }";
-    s_fn.append(m_namespaceScope.size(), '}');
+    s_fn.append(context.size(), '}');
 
     const char *dummyFileName = fnDummyFileName;
     CXUnsavedFile unsavedFile { dummyFileName, s_fn.constData(),

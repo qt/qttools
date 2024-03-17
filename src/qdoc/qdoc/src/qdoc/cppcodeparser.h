@@ -4,6 +4,7 @@
 #ifndef CPPCODEPARSER_H
 #define CPPCODEPARSER_H
 
+#include "clangcodeparser.h"
 #include "codeparser.h"
 #include "utilities.h"
 
@@ -34,7 +35,7 @@ public:
         << COMMAND_QMLINSTANTIATES << COMMAND_REIMP << COMMAND_RELATES;
 
 public:
-    CppCodeParser();
+    CppCodeParser(FnCommandParser&& parser);
 
     FunctionNode *parseMacroArg(const Location &location, const QString &macroArg);
     FunctionNode *parseOtherFuncArg(const QString &topic, const Location &location,
@@ -61,6 +62,7 @@ private:
     static void processComparesCommand(Node *node, const QString &arg, const Location &loc);
 
 private:
+    FnCommandParser fn_parser;
     QString m_exampleNameFilter;
     QString m_exampleImageFilter;
     bool m_showLinkErrors { false };
