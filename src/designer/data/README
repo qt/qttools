@@ -1,4 +1,4 @@
-You may generate ui4.h and ui4.cpp parser files by using the generate_ui script
+You may generate ui4.h and ui4.cpp parser files by using the generate_ui.py script
 or manually by invoking the xsltproc command:
 
 xsltproc generate_header.xsl ui4.xsd > ui4.h
