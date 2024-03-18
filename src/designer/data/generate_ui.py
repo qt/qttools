@@ -12,7 +12,7 @@ from tempfile import NamedTemporaryFile
 
 
 DESCRIPTION = """
-Usage: generate_ui
+Usage: generate_ui.py
 
 Generates the source files ui4.cpp, ui4.h used in the uic tool, the QtUiTools library and
 Qt Widgets Designer from the XML schema used for .ui files.
