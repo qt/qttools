@@ -42,7 +42,7 @@ public:
         , m_stores(stores)
 #endif
     {
-        m_inputFile = m_context->getSourceManager().getFileEntryForID(
+        m_inputFile = m_context->getSourceManager().getFileEntryRefForID(
             m_context->getSourceManager().getMainFileID())->getName();
     }
 
