@@ -186,8 +186,9 @@
 
     \title Using lupdate
 
-    The \c lupdate command line tool finds translatable strings in source,
-    header, and UI files and generates or updates TS files.
+    The \c lupdate command line tool finds translatable strings in C++ source,
+    C++ header, Java, Python, QML, and UI files and generates or updates TS
+    files.
 
     When building with qmake, specify the files to process at the command line
     or in a .pro file.
