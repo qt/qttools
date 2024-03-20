@@ -662,7 +662,7 @@ to \c frogger_i18n:
 qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES de fr)
 ...
 qt_add_translations(frogger
-    TS_BASE_NAME froggo
+    TS_FILE_BASE froggo
     TS_FILE_DIR translations
 )
 \endcode
