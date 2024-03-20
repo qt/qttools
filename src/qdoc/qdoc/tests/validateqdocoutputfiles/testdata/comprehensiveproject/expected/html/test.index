@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="A test project for QDoc build artifacts" version="6.2.11" project="Test">
     <namespace name="" status="active" access="public" module="test">
-        <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
+        <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" since="Test 0.9" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
         <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
             <parameter type="int &amp;" name="x" default=""/>
         </function>
@@ -102,8 +102,8 @@
         </qmlclass>
         <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="A namespace">
             <contents name="usage" title="Usage" level="1"/>
-            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
-            <class threadsafety="reentrant" name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
+            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" since="Test 0.9" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
+            <class threadsafety="reentrant" name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="1.1" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
                 <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
                     <parameter type="int &amp;" name="x" default=""/>
                 </function>
@@ -131,11 +131,11 @@
                 <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload-1" status="active" access="protected" location="testcpp.h" documented="true" since="Test 1.2" meta="plain" overload="true" overload-number="1" type="void" signature="void overload(bool b)">
                     <parameter type="bool" name="b" default=""/>
                 </function>
-                <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="int" signature="int someFunction(int, int v)">
+                <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" since="Test 1.0" meta="plain" type="int" signature="int someFunction(int, int v)">
                     <parameter type="int" name="" default=""/>
                     <parameter type="int" name="v" default="0"/>
                 </function>
-                <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" threadsafety="non-reentrant" status="active" access="public" location="testcpp.h" documented="true" meta="plain" const="true" type="void" signature="void someFunctionDefaultArg(int i, bool b) const" groups="testgroup">
+                <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" threadsafety="non-reentrant" status="active" access="public" location="testcpp.h" documented="true" since="2.0" meta="plain" const="true" type="void" signature="void someFunctionDefaultArg(int i, bool b) const" groups="testgroup">
                     <parameter type="int" name="i" default=""/>
                     <parameter type="bool" name="b" default="false"/>
                 </function>

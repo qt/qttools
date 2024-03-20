@@ -57,7 +57,7 @@
 <db:section xml:id="macro-documentation">
 <db:title>Macro Documentation</db:title>
 <db:section xml:id="QDOCTEST_MACRO">
-<db:title its:translate="no">QDOCTEST_MACRO</db:title>
+<db:title its:translate="no">[since Test 0.9] QDOCTEST_MACRO</db:title>
 <db:methodsynopsis>
 <db:methodname>QDOCTEST_MACRO</db:methodname>
 <db:void/>
@@ -67,6 +67,7 @@
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
+<db:para>This macro was introduced in Test 0.9.</db:para>
 </db:section>
 </db:section>
 </db:article>

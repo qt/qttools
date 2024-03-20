@@ -32,7 +32,7 @@
 <tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Qt6 REQUIRED COMPONENTS QDocTest) <br/>
 target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> qmake:</td><td class="memItemRight bottomAlign"> QT += testcpp</td></tr>
-<tr><td class="memItemLeft rightAlign topAlign"> Since:</td><td class="memItemRight bottomAlign"> Qt 2.0</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> Since:</td><td class="memItemRight bottomAlign"> Qt 1.1</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> Instantiated By:</td><td class="memItemRight bottomAlign"> <a href="qml-qdoc-test-type.html" translate="no">Type</a></td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> Inherited By:</td><td class="memItemRight bottomAlign"> <p><a href="testqdoc-testderived.html" translate="no">TestQDoc::TestDerived</a></p>
 </td></tr>
@@ -57,8 +57,8 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#inlineFunction" translate="no">inlineFunction</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#methodWithEmDashInItsDocs" translate="no">methodWithEmDashInItsDocs</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#methodWithEnDashInItsDocs" translate="no">methodWithEnDashInItsDocs</a></b>()</td></tr>
-<tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunction" translate="no">someFunction</a></b>(int, int <i>v</i> = 0)</td></tr>
-<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunctionDefaultArg" translate="no">someFunctionDefaultArg</a></b>(int <i>i</i>, bool <i>b</i> = false) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> <code class="summary extra" translate="no">(since Test 1.0)</code> int </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunction" translate="no">someFunction</a></b>(int, int <i>v</i> = 0)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> <code class="summary extra" translate="no">(since 2.0)</code> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunctionDefaultArg" translate="no">someFunctionDefaultArg</a></b>(int <i>i</i>, bool <i>b</i> = false) const</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#virtualFun" translate="no">virtualFun</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> TestQDoc::Test &amp;</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#operator-eq" translate="no">operator=</a></b>(TestQDoc::Test &amp;&amp;<i>other</i>)</td></tr>
 </table></div>
@@ -127,13 +127,15 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr>
 <p><b>See also </b>methodWithEnDashInItsDocs.</p>
 <!-- @@@methodWithEnDashInItsDocs -->
 <!-- $$$someFunction[overload1]$$$someFunctionintint -->
-<h3 class="fn" translate="no" id="someFunction"><span class="type">int</span> Test::<span class="name">someFunction</span>(<span class="type">int</span>, <span class="type">int</span> <i>v</i> = 0)</h3>
+<h3 class="fn" translate="no" id="someFunction"><code class="details extra" translate="no">[since Test 1.0]</code> <span class="type">int</span> Test::<span class="name">someFunction</span>(<span class="type">int</span>, <span class="type">int</span> <i>v</i> = 0)</h3>
 <p>Function that takes a parameter <i translate="no">v</i>. Also returns the value of <i translate="no">v</i>.</p>
+<p>This function was introduced in Test 1.0.</p>
 <!-- @@@someFunction -->
 <!-- $$$someFunctionDefaultArg[overload1]$$$someFunctionDefaultArgintbool -->
-<h3 class="fn" translate="no" id="someFunctionDefaultArg"><span class="type">void</span> Test::<span class="name">someFunctionDefaultArg</span>(<span class="type">int</span> <i>i</i>, <span class="type">bool</span> <i>b</i> = false) const</h3>
+<h3 class="fn" translate="no" id="someFunctionDefaultArg"><code class="details extra" translate="no">[since 2.0]</code> <span class="type">void</span> Test::<span class="name">someFunctionDefaultArg</span>(<span class="type">int</span> <i>i</i>, <span class="type">bool</span> <i>b</i> = false) const</h3>
 <p>Function that takes a parameter <i translate="no">i</i> and <i translate="no">b</i>.</p>
 <p><b>Warning:</b> This function is not <a href="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" translate="no">reentrant</a>.</p>
+<p>This function was introduced in Qt 2.0.</p>
 <!-- @@@someFunctionDefaultArg -->
 <!-- $$$virtualFun[overload1]$$$virtualFun -->
 <h3 class="fn" translate="no" id="virtualFun"><code class="details extra" translate="no">[virtual]</code> <span class="type">void</span> Test::<span class="name">virtualFun</span>()</h3>

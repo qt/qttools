@@ -10,10 +10,10 @@
                     <para>This namespace is for testing QDoc output.</para>
                 </section>
             </description>
-            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" signature="QDOCTEST_MACRO">
+            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" since="Test 0.9" meta="macrowithoutparams" signature="QDOCTEST_MACRO">
                 <description/>
             </function>
-            <class threadsafety="reentrant" name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
+            <class threadsafety="reentrant" name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="1.1" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
                 <description>
                     <brief>A class in a namespace.</brief>
                 </description>
@@ -104,14 +104,14 @@
                     <parameter type="bool" name="b" default=""/>
                     <description/>
                 </function>
-                <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="int" signature="int someFunction(int, int v)">
+                <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" since="Test 1.0" meta="plain" type="int" signature="int someFunction(int, int v)">
                     <parameter type="int" name="" default=""/>
                     <parameter type="int" name="v" default="0"/>
                     <description>
                         <para>Function that takes a parameter <argument>v</argument>. Also returns the value of <argument>v</argument>.</para>
                     </description>
                 </function>
-                <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" threadsafety="non-reentrant" status="active" access="public" location="testcpp.h" documented="true" meta="plain" const="true" type="void" signature="void someFunctionDefaultArg(int i, bool b) const" groups="testgroup">
+                <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" threadsafety="non-reentrant" status="active" access="public" location="testcpp.h" documented="true" since="2.0" meta="plain" const="true" type="void" signature="void someFunctionDefaultArg(int i, bool b) const" groups="testgroup">
                     <parameter type="int" name="i" default=""/>
                     <parameter type="bool" name="b" default="false"/>
                     <description>

@@ -20,7 +20,6 @@ private slots:
     void htmlFromCpp();
 
     // Output format independent tests
-    void ignoresinceVariable();
     void dontDocument();
     void inheritedQmlPropertyGroups();
     void crossModuleLinking();
@@ -183,13 +182,6 @@ void tst_generatedOutput::htmlFromCpp()
                    "autolinking.html "
                    "cpptypes.html "
                    "testqdoc.html");
-}
-
-void tst_generatedOutput::ignoresinceVariable()
-{
-    testAndCompare("testdata/configs/ignoresince.qdocconf",
-                   "ignoresince/testqdoc.html "
-                   "ignoresince/testqdoc-test.html");
 }
 
 void tst_generatedOutput::dontDocument()
