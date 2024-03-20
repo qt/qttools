@@ -367,18 +367,18 @@ function(_qt_internal_store_languages_from_ts_files_in_targets targets ts_files)
 endfunction()
 
 # Store in ${out_var} the file path to the .qm file that will be generated from the given .ts file.
-function(_qt_internal_generated_qm_file_path out_var ts_file)
+function(_qt_internal_generated_qm_file_path out_var ts_file default_out_dir)
     get_filename_component(qm ${ts_file} NAME_WLE)
     string(APPEND qm ".qm")
     get_source_file_property(output_location ${ts_file} OUTPUT_LOCATION)
     if(output_location)
         if(NOT IS_ABSOLUTE "${output_location}")
             get_filename_component(output_location "${output_location}" ABSOLUTE
-                BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+                BASE_DIR "${default_out_dir}")
         endif()
         string(PREPEND qm "${output_location}/")
     else()
-        string(PREPEND qm "${CMAKE_CURRENT_BINARY_DIR}/")
+        string(PREPEND qm "${default_out_dir}/")
     endif()
     set("${out_var}" "${qm}" PARENT_SCOPE)
 endfunction()
@@ -389,6 +389,7 @@ function(qt6_add_lrelease)
         EXCLUDE_FROM_ALL
         NO_GLOBAL_TARGET)
     set(oneValueArgs
+        __QT_INTERNAL_DEFAULT_QM_OUT_DIR
         LRELEASE_TARGET
         QM_FILES_OUTPUT_VARIABLE)
     set(multiValueArgs
@@ -428,6 +429,11 @@ function(qt6_add_lrelease)
             "${tool_wrapper}"
             $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lrelease>)
 
+    set(default_qm_out_dir "${CMAKE_CURRENT_BINARY_DIR}")
+    if(NOT "${arg___QT_INTERNAL_DEFAULT_QM_OUT_DIR}" STREQUAL "")
+        set(default_qm_out_dir "${arg___QT_INTERNAL_DEFAULT_QM_OUT_DIR}")
+    endif()
+
     set(qm_files "")
     foreach(ts_file ${ts_files})
         if(NOT EXISTS "${ts_file}")
@@ -437,7 +443,7 @@ function(qt6_add_lrelease)
             _qt_internal_ensure_ts_file(TS_FILE "${ts_file}")
         endif()
 
-        _qt_internal_generated_qm_file_path(qm "${ts_file}")
+        _qt_internal_generated_qm_file_path(qm "${ts_file}" "${default_qm_out_dir}")
         get_filename_component(qm_dir "${qm}" DIRECTORY)
         add_custom_command(OUTPUT ${qm}
             COMMAND "${CMAKE_COMMAND}" -E make_directory "${qm_dir}"
@@ -497,6 +503,7 @@ function(qt6_add_translations)
         IMMEDIATE_CALL
         NO_GENERATE_PLURALS_TS_FILE)
     set(oneValueArgs
+        __QT_INTERNAL_DEFAULT_QM_OUT_DIR
         LUPDATE_TARGET
         LRELEASE_TARGET
         QM_FILES_OUTPUT_VARIABLE
@@ -590,14 +597,18 @@ function(qt6_add_translations)
             if(DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
                 set(qm_files "")
                 foreach(ts_file IN LISTS arg_TS_FILES arg_PLURALS_TS_FILE)
-                    _qt_internal_generated_qm_file_path(qm_file "${ts_file}")
+                    _qt_internal_generated_qm_file_path(qm_file "${ts_file}"
+                        "${CMAKE_CURRENT_BINARY_DIR}")
                     list(APPEND qm_files "${qm_file}")
                 endforeach()
                 set("${arg_QM_FILES_OUTPUT_VARIABLE}" "${qm_files}" PARENT_SCOPE)
             endif()
 
             # Forward options.
-            set(forwarded_args IMMEDIATE_CALL)
+            set(forwarded_args
+                IMMEDIATE_CALL
+                __QT_INTERNAL_DEFAULT_QM_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}"
+            )
             foreach(keyword IN LISTS options)
                 if(arg_${keyword})
                     list(APPEND forwarded_args ${keyword})
@@ -658,7 +669,9 @@ function(qt6_add_translations)
         LRELEASE_TARGET "${arg_LRELEASE_TARGET}"
         TS_FILES "${arg_TS_FILES}" ${arg_PLURALS_TS_FILE}
         QM_FILES_OUTPUT_VARIABLE qm_files
-        OPTIONS "${arg_LRELEASE_OPTIONS}")
+        OPTIONS "${arg_LRELEASE_OPTIONS}"
+        __QT_INTERNAL_DEFAULT_QM_OUT_DIR "${arg___QT_INTERNAL_DEFAULT_QM_OUT_DIR}"
+    )
 
     if("${QT_I18N_TRANSLATED_LANGUAGES}" STREQUAL "")
         _qt_internal_store_languages_from_ts_files_in_targets("${targets}" "${arg_TS_FILES}")
