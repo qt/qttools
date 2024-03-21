@@ -28,7 +28,6 @@ private slots:
     void preparePhase();
     void generatePhase();
     void noAutoList();
-    void nestedMacro();
     void properties();
 
 private:
@@ -269,13 +268,6 @@ void tst_generatedOutput::noAutoList()
                    "noautolist-docbook/testcpp-module.xml "
                    "noautolist-docbook/test-componentset-example.xml "
                    "noautolist-docbook/qdoc-test-qmlmodule.xml");
-}
-
-void tst_generatedOutput::nestedMacro()
-{
-    testAndCompare("testdata/configs/nestedmacro.qdocconf",
-                   "nestedmacro/testcpp-module.html "
-                   "docbook-nestedmacro/testcpp-module.xml");
 }
 
 void tst_generatedOutput::properties()

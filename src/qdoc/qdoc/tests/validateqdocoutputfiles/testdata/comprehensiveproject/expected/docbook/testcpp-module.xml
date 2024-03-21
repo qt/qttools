@@ -56,6 +56,8 @@
 <db:note>
 <db:para>This is just a test. /* Look, Ma! {I'm made of arguments!} */</db:para>
 </db:note>
+<db:para>This module was introduced in version 5.15.</db:para>
+<db:para>1.0</db:para>
 <db:section xml:id="linking-to-function-like-things">
 <db:title>Linking to function-like things</db:title>
 <db:itemizedlist>
