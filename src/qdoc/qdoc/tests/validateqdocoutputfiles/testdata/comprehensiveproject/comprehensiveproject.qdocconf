@@ -23,9 +23,12 @@ DocBook.usedocbookextensions = true
 
 includepaths += -I.
 
-headers = testcpp.h
+headers = testcpp.h \
+          dont.h
 sources = testcpp.cpp \
-          classlists.qdoc
+          classlists.qdoc \
+          dont.cpp \
+          unseenclass.qdoc
 exampledirs = snippets
 
 macro.CMDFN = \\\\fn

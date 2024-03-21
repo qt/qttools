@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="classes.html" href="classes.html" status="active" location="unseenclass.qdoc" documented="true" subtype="page" title="Classes" fulltitle="Classes" subtitle="">
+            <description>
+                <generatedlist contents="annotatedclasses"/>
+            </description>
+        </page>
+    </document>
+</WebXML>

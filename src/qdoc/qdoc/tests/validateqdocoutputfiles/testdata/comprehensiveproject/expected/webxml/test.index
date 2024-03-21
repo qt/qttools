@@ -31,6 +31,7 @@
             </function>
             <qmlproperty name="name" fullname="QDoc.Test.Child.name" href="qml-qdoc-test-child.html#name-prop" status="active" access="public" location="parent.qdoc" documented="true" type="string" attached="false" writable="true" brief="Name of this child"/>
         </qmlclass>
+        <page name="classes.html" href="classes.html" status="active" location="unseenclass.qdoc" documented="true" subtype="page" title="Classes" fulltitle="Classes" subtitle=""/>
         <namespace name="CrossModuleRef" href="crossmoduleref.html" status="active" access="public" location="testcpp.h" since="3.0" documented="true" module="TestCPP" brief="Namespace that has documented functions in multiple modules">
             <function name="documentMe" fullname="CrossModuleRef::documentMe" href="crossmoduleref.html#documentMe" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void documentMe()"/>
         </namespace>
@@ -79,6 +80,7 @@
             <contents name="qml-types" title="QML types" level="1"/>
             <contents name="qml-value-types" title="QML value types" level="1"/>
         </page>
+        <class name="SeenClass" href="seenclass.html" status="active" access="public" location="dont.h" since="2.0" documented="true" module="TestCPP" brief="A public but undocumented class"/>
         <qmlclass name="Switch" qml-module-name="UIComponents" fullname="UIComponents.Switch" href="qml-uicomponents-switch.html" status="active" access="public" location="Switch.qml" documented="true" title="Switch" fulltitle="Switch" subtitle="" brief="A component that can be turned on or off">
             <function name="toggle" fullname="UIComponents.Switch.toggle" href="qml-uicomponents-switch.html#toggle-method" status="active" access="public" documented="true" meta="qmlmethod"/>
             <qmlproperty name="on" fullname="UIComponents.Switch.on" href="qml-uicomponents-switch.html#on-prop" status="active" access="public" documented="true" type="bool" attached="false" writable="true"/>
@@ -162,6 +164,7 @@
             <qmlproperty name="group" fullname="QDoc.Test.Type.group" href="qml-qdoc-test-type.html#group-prop" status="active" access="public" documented="true"/>
         </qmlclass>
         <qmlclass name="TypeNoVersion" qml-module-name="Test.NoVer" fullname="Test.NoVer.TypeNoVersion" href="qml-test-nover-typenoversion.html" status="active" access="public" since="1.1" documented="true" title="TypeNoVersion" fulltitle="TypeNoVersion" subtitle="" brief="Another QML type documented in a .cpp file"/>
+        <class name="UnseenClass" href="unseenclass.html" status="ignored" access="public" location="dont.h" since="2.0" documented="true" module="TestCPP" brief="A public but undocumented class"/>
         <qmlclass name="YetAnotherChild" qml-module-name="QDoc.Test" qml-base-type="QDoc.Test::InternParent" fullname="QDoc.Test.YetAnotherChild" href="qml-qdoc-test-yetanotherchild.html" status="active" access="public" location="parent.qdoc" since="1.1" documented="true" title="YetAnotherChild" fulltitle="YetAnotherChild" subtitle="" brief="A type inheriting from internal abstract parent"/>
         <qmlvaluetype name="int" qml-module-name="QDoc.Test" fullname="QDoc.Test.int" href="qml-int.html" status="active" access="public" location="parent.qdoc" since="1.1" documented="true" title="int" fulltitle="int" subtitle="" brief="An integer value type">
             <function name="abs" fullname="QDoc.Test.int.abs" href="qml-int.html#abs-method" status="active" access="public" location="parent.qdoc" documented="true" meta="qmlmethod" type="int"/>

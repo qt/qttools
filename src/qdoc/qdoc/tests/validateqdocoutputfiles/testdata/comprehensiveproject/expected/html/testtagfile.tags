@@ -99,6 +99,10 @@
         <filename>qml-uicomponents-progressbar.html</filename>
     </compound>
     <compound kind="class">
+        <name>SeenClass</name>
+        <filename>seenclass.html</filename>
+    </compound>
+    <compound kind="class">
         <name>UIComponents.Switch</name>
         <filename>qml-uicomponents-switch.html</filename>
         <member kind="function" protection="public" virtualness="non" static="no">

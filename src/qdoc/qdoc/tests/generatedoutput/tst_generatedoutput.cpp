@@ -20,7 +20,6 @@ private slots:
     void htmlFromCpp();
 
     // Output format independent tests
-    void dontDocument();
     void inheritedQmlPropertyGroups();
     void crossModuleLinking();
     void indexLinking();
@@ -182,14 +181,6 @@ void tst_generatedOutput::htmlFromCpp()
                    "autolinking.html "
                    "cpptypes.html "
                    "testqdoc.html");
-}
-
-void tst_generatedOutput::dontDocument()
-{
-    testAndCompare("testdata/dontdocument/dontdocument.qdocconf",
-                   "dontdocument/classes.html "
-                   "dontdocument/seenclass.html "
-                   "dontdocument/dontdocument.qhp");
 }
 
 void tst_generatedOutput::inheritedQmlPropertyGroups()

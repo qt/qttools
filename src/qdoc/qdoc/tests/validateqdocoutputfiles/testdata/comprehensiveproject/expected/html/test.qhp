@@ -9,6 +9,7 @@
                 <section ref="uicomponents-qmlmodule.html" title="Test">
                     <section ref="autolinking.html" title="Autolinking"/>
                     <section ref="test-cmaketest-example.html" title="CMake Example Project"/>
+                    <section ref="classes.html" title="Classes"/>
                     <section ref="test-demos-demo-example.html" title="Demo"/>
                     <section ref="test-demos-hidden-example.html" title="Hidden Demo"/>
                     <section ref="test-empty-qmlmodule.html" title="No QML Types Here"/>
@@ -22,6 +23,7 @@
                 </section>
                 <section ref="testcpp-module.html" title="Classes">
                     <section ref="crossmoduleref.html" title="CrossModuleRef"/>
+                    <section ref="seenclass.html" title="SeenClass Class Reference"/>
                     <section ref="testqdoc.html" title="TestQDoc"/>
                     <section ref="testqdoc-test.html" title="TestQDoc::Test Class Reference">
                         <section ref="testqdoc-test-members.html" title="List of all members"/>
@@ -71,6 +73,7 @@
             <keyword name="Autolinking" id="Autolinking" ref="autolinking.html"/>
             <keyword name="Child" id="QML.Child" ref="qml-qdoc-test-child.html"/>
             <keyword name="Child" id="QML.QDoc.Test1.Child" ref="qml-qdoc-test-child.html"/>
+            <keyword name="Classes" id="Classes" ref="classes.html"/>
             <keyword name="CrossModuleRef" id="CrossModuleRef" ref="crossmoduleref.html"/>
             <keyword name="DocTest" id="QML.DocTest" ref="qml-qdoc-test-doctest.html"/>
             <keyword name="DocTest" id="QML.QDoc.Test1.DocTest" ref="qml-qdoc-test-doctest.html"/>
@@ -86,6 +89,7 @@
             <keyword name="QDoc Test C++ Classes" id="QDoc Test C++ Classes" ref="testcpp-module.html"/>
             <keyword name="QDoc.Test" id="QML.Test.QDoc" ref="qdoc-test-qmlmodule.html"/>
             <keyword name="QML Modules" id="QML Modules" ref="qmlmodules.html"/>
+            <keyword name="SeenClass" id="SeenClass" ref="seenclass.html"/>
             <keyword name="Switch" id="QML.Switch" ref="qml-uicomponents-switch.html"/>
             <keyword name="Switch" id="QML.UIComponents1.Switch" ref="qml-uicomponents-switch.html"/>
             <keyword name="TabWidget" id="QML.TabWidget" ref="qml-uicomponents-tabwidget.html"/>
@@ -169,6 +173,7 @@
         </keywords>
         <files>
             <file>autolinking.html</file>
+            <file>classes.html</file>
             <file>cpptypes.html</file>
             <file>crossmoduleref.html</file>
             <file>images/leonardo-da-vinci.png</file>
@@ -199,6 +204,7 @@
             <file>qml-uicomponents-tabwidget-members.html</file>
             <file>qml-uicomponents-tabwidget.html</file>
             <file>qmlmodules.html</file>
+            <file>seenclass.html</file>
             <file>test-cmaketest-cmakelists-txt.html</file>
             <file>test-cmaketest-example.html</file>
             <file>test-cmaketest-main-cpp.html</file>
