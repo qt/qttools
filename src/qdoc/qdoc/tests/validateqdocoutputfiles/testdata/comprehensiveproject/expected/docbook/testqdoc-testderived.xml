@@ -45,7 +45,7 @@
 <db:varlistentry>
 <db:term>Instantiated By</db:term>
 <db:listitem>
-<db:para>qml-test-nover-typenoversion.xml</db:para>
+<db:para>qml-themodule-thetype.xml</db:para>
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
@@ -81,8 +81,182 @@
 <db:para>I'm an alias, not a typedef.</db:para>
 </db:section>
 </db:section>
+<db:section xml:id="property-documentation">
+<db:title>Property Documentation</db:title>
+<db:section xml:id="bindableProp-prop">
+<db:title its:translate="no">[bindable] bindableProp : QString</db:title>
+<db:fieldsynopsis>
+<db:modifier>(Qt property)</db:modifier>
+<db:type>QString</db:type>
+<db:varname>bindableProp</db:varname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="getter">bindableProp</db:synopsisinfo>
+<db:synopsisinfo role="setter">setBindableProp</db:synopsisinfo>
+<db:synopsisinfo role="notifier">bindablePropChanged</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>This property supports <db:link xlink:href="https://wiki.qt.io/QProperty">QProperty</db:link> bindings.</db:para>
+<db:para>Some property.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="testqdoc-testderived.xml#someProp-prop">someProp</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="boolProp-prop">
+<db:title its:translate="no">boolProp : bool</db:title>
+<db:fieldsynopsis>
+<db:modifier>(Qt property)</db:modifier>
+<db:type>bool</db:type>
+<db:varname>boolProp</db:varname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="getter">boolProp</db:synopsisinfo>
+<db:synopsisinfo role="setter">setBoolProp</db:synopsisinfo>
+<db:synopsisinfo role="resetter">resetBoolProp</db:synopsisinfo>
+<db:synopsisinfo role="notifier">boolPropChanged</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>A boolean property.</db:para>
+<db:para>
+<db:emphasis role="bold">Access functions:
+</db:emphasis>
+</db:para>
+<db:itemizedlist its:translate="no">
+<db:listitem>
+<db:para><db:type>bool</db:type> <db:emphasis role="bold"><db:link xlink:href="">boolProp</db:link></db:emphasis>()</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:type>void</db:type> <db:emphasis role="bold"><db:link xlink:href="">setBoolProp</db:link></db:emphasis>(<db:type>bool</db:type> <db:emphasis>b</db:emphasis>)</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:type>void</db:type> <db:emphasis role="bold"><db:link xlink:href="">resetBoolProp</db:link></db:emphasis>()</db:para>
+</db:listitem>
+</db:itemizedlist>
+<db:para>
+<db:emphasis role="bold">Notifier signal:
+</db:emphasis>
+</db:para>
+<db:itemizedlist its:translate="no">
+<db:listitem>
+<db:para><db:type>void</db:type> <db:emphasis role="bold"><db:link xlink:href="">boolPropChanged</db:link></db:emphasis>()</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="intProp-prop">
+<db:title its:translate="no">[read-only] intProp : int* const</db:title>
+<db:fieldsynopsis>
+<db:modifier>(Qt property)</db:modifier>
+<db:type>int*</db:type>
+<db:varname>intProp</db:varname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="getter">getInt</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>An integer property.</db:para>
+<db:para>
+<db:emphasis role="bold">Access functions:
+</db:emphasis>
+</db:para>
+<db:itemizedlist its:translate="no">
+<db:listitem>
+<db:para><db:type>int</db:type> *<db:emphasis role="bold"><db:link xlink:href="">getInt</db:link></db:emphasis>()</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="name-prop">
+<db:title its:translate="no">[read-only] name : const QString*</db:title>
+<db:fieldsynopsis>
+<db:modifier>(Qt property)</db:modifier>
+<db:type>const QString*</db:type>
+<db:varname>name</db:varname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="getter">name</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>This property holds a name.</db:para>
+<db:para>
+<db:emphasis role="bold">Access functions:
+</db:emphasis>
+</db:para>
+<db:itemizedlist its:translate="no">
+<db:listitem>
+<db:para>const <db:type>QString</db:type> *<db:emphasis role="bold"><db:link xlink:href="">name</db:link></db:emphasis>() const</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="someProp-prop">
+<db:title its:translate="no">[bindable read-only] someProp : QString</db:title>
+<db:fieldsynopsis>
+<db:modifier>(Qt property)</db:modifier>
+<db:type>QString</db:type>
+<db:varname>someProp</db:varname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="getter">someProp</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>This property supports <db:link xlink:href="https://wiki.qt.io/QProperty">QProperty</db:link> bindings.</db:para>
+<db:para>Another property.</db:para>
+</db:section>
+</db:section>
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
+<db:section xml:id="emitSomething">
+<db:title its:translate="no">[private signal] void TestDerived::emitSomething()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>emitSomething</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">signal</db:synopsisinfo>
+<db:synopsisinfo role="signature">void emitSomething()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Emitted when things happen.</db:para>
+<db:note>
+<db:para>This is a private signal. It can be used in signal connections but cannot be emitted by the user.</db:para></db:note>
+</db:section>
+<db:section xml:id="id">
+<db:title its:translate="no">[override virtual] int TestDerived::id()</db:title>
+<db:methodsynopsis>
+<db:modifier>virtual</db:modifier>
+<db:type>int</db:type>
+<db:methodname>id</db:methodname>
+<db:void/>
+<db:modifier>override</db:modifier>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">int id() override</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+</db:section>
+<db:section xml:id="invokeMe">
+<db:title its:translate="no">[invokable] void TestDerived::invokeMe() const</db:title>
+<db:methodsynopsis>
+<db:modifier>const</db:modifier>
+<db:void/>
+<db:methodname>invokeMe</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void invokeMe() const</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Something invokable.</db:para>
+<db:note>
+<db:para>This function can be invoked via the meta-object system and from QML. See <db:link xlink:href="">Q_INVOKABLE</db:link>.</db:para>
+</db:note>
+</db:section>
 <db:section xml:id="someValue">
 <db:title its:translate="no">TestQDoc::TestDerived::NotTypedef TestDerived::someValue()</db:title>
 <db:methodsynopsis>

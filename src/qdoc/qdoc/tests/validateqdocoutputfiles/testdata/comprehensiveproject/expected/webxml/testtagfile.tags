@@ -271,11 +271,88 @@
         <filename>testqdoc-testderived.html</filename>
         <base>Test</base>
         <member kind="function" protection="public" virtualness="non" static="no">
+            <type>QBindable&lt;QString&gt;</type>
+            <name>bindableProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>bindableProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
             <type>TestQDoc::TestDerived::NotTypedef</type>
             <name>someValue</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
             <anchor>someValue</anchor>
             <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>bool</type>
+            <name>boolProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>boolProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>const QString &amp;</type>
+            <name>someProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>someProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>int *</type>
+            <name>getInt</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>intProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="virtual" static="no">
+            <type>virtual int</type>
+            <name>id</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>id</anchor>
+            <arglist>() override</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>bindablePropChanged</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>bindableProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>boolPropChanged</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>boolProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>emitSomething</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>emitSomething</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>resetBoolProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>boolProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>setBindableProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>bindableProp-prop</anchor>
+            <arglist>(const QString &amp;s)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>setBoolProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>boolProp-prop</anchor>
+            <arglist>(bool b)</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="yes">
             <type>void</type>
@@ -291,6 +368,20 @@
             <anchor>virtualFun</anchor>
             <arglist>() override</arglist>
         </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>const QString *</type>
+            <name>name</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>name-prop</anchor>
+            <arglist>() const const</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>invokeMe</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>invokeMe</anchor>
+            <arglist>() const const</arglist>
+        </member>
         <member kind="typedef" type="">
             <name>DerivedType</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
@@ -303,6 +394,40 @@
             <anchor>NotTypedef-typedef</anchor>
             <arglist></arglist>
         </member>
+        <member kind="property" type="QString">
+            <name>bindableProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>bindableProp-prop</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="bool">
+            <name>boolProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>boolProp-prop</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="int*">
+            <name>intProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>intProp-prop</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="const QString*">
+            <name>name</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>name-prop</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="QString">
+            <name>someProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>someProp-prop</anchor>
+            <arglist></arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>TheModule.TheType</name>
+        <filename>qml-themodule-thetype.html</filename>
     </compound>
     <compound kind="class">
         <name>QDoc.Test.Type</name>

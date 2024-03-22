@@ -7,6 +7,7 @@
         <toc>
             <section ref="uicomponents-qmlmodule.html" title="UI Components">
                 <section ref="uicomponents-qmlmodule.html" title="Test">
+                    <section ref="themodule-qmlmodule.html" title=""/>
                     <section ref="autolinking.html" title="Autolinking"/>
                     <section ref="test-cmaketest-example.html" title="CMake Example Project"/>
                     <section ref="classes.html" title="Classes"/>
@@ -103,6 +104,8 @@
             <keyword name="TestDerived::DerivedType" id="TestDerived::DerivedType" ref="testqdoc-testderived.html#DerivedType-typedef"/>
             <keyword name="TestDerived::NotTypedef" id="TestDerived::NotTypedef" ref="testqdoc-testderived.html#NotTypedef-typedef"/>
             <keyword name="TestQDoc" id="TestQDoc" ref="testqdoc.html"/>
+            <keyword name="TheType" id="QML.TheType" ref="qml-themodule-thetype.html"/>
+            <keyword name="TheType" id="QML.TheModule.TheType" ref="qml-themodule-thetype.html"/>
             <keyword name="Type" id="QML.Type" ref="qml-qdoc-test-type.html"/>
             <keyword name="Type" id="QML.QDoc.Test1.Type" ref="qml-qdoc-test-type.html"/>
             <keyword name="TypeNoVersion" id="QML.TypeNoVersion" ref="qml-test-nover-typenoversion.html"/>
@@ -113,6 +116,12 @@
             <keyword name="abs" id="int::abs" ref="qml-int.html#abs-method"/>
             <keyword name="active" id="DocTest::active" ref="qml-qdoc-test-doctest.html#active-prop"/>
             <keyword name="anotherObsoleteMember" id="Test::anotherObsoleteMember" ref="testqdoc-test-obsolete.html#anotherObsoleteMember"/>
+            <keyword name="bindableProp" id="TestDerived::bindableProp" ref="testqdoc-testderived.html#bindableProp-prop"/>
+            <keyword name="bindableProp" id="TestDerived::bindableProp" ref="testqdoc-testderived.html#bindableProp-prop"/>
+            <keyword name="bindablePropChanged" id="TestDerived::bindablePropChanged" ref="testqdoc-testderived.html#bindableProp-prop"/>
+            <keyword name="boolProp" id="TestDerived::boolProp" ref="testqdoc-testderived.html#boolProp-prop"/>
+            <keyword name="boolProp" id="TestDerived::boolProp" ref="testqdoc-testderived.html#boolProp-prop"/>
+            <keyword name="boolPropChanged" id="TestDerived::boolPropChanged" ref="testqdoc-testderived.html#boolProp-prop"/>
             <keyword name="children" id="AbstractParent::children" ref="qml-qdoc-test-abstractparent.html#children-prop"/>
             <keyword name="color" id="ProgressBar::color" ref="qml-uicomponents-progressbar.html#color-prop"/>
             <keyword name="completed" id="DocTest::completed" ref="qml-qdoc-test-doctest.html#completed-signal"/>
@@ -124,6 +133,7 @@
             <keyword name="deprecatedMethod" id="Type::deprecatedMethod" ref="qml-qdoc-test-type-obsolete.html#deprecatedMethod-method"/>
             <keyword name="disable" id="Type::disable" ref="qml-qdoc-test-type.html#disable-method"/>
             <keyword name="documentMe" id="CrossModuleRef::documentMe" ref="crossmoduleref.html#documentMe"/>
+            <keyword name="emitSomething" id="TestDerived::emitSomething" ref="testqdoc-testderived.html#emitSomething"/>
             <keyword name="enable" id="Type::enable" ref="qml-qdoc-test-type.html#enable-method"/>
             <keyword name="fail" id="DocTest::fail" ref="qml-qdoc-test-doctest.html#fail-method"/>
             <keyword name="fail_hard" id="DocTest::fail_hard" ref="qml-qdoc-test-doctest.html#fail_hard-method"/>
@@ -132,14 +142,18 @@
             <keyword name="fourth" id="Type::fourth" ref="qml-qdoc-test-type.html#fourth-prop"/>
             <keyword name="funcPtr" id="Test::funcPtr" ref="testqdoc-test.html#funcPtr"/>
             <keyword name="futureDeprecated" id="Type::futureDeprecated" ref="qml-qdoc-test-type.html#futureDeprecated-method"/>
+            <keyword name="getInt" id="TestDerived::getInt" ref="testqdoc-testderived.html#intProp-prop"/>
             <keyword name="group.created" id="Type::group.created" ref="qml-qdoc-test-type.html#group.created-signal"/>
             <keyword name="group.first" id="Type::group.first" ref="qml-qdoc-test-type.html#group.first-prop"/>
             <keyword name="group.second" id="Type::group.second" ref="qml-qdoc-test-type.html#group.second-prop"/>
             <keyword name="group.third" id="Type::group.third" ref="qml-qdoc-test-type.html#group.third-prop"/>
             <keyword name="id" id="Type::id" ref="qml-qdoc-test-type.html#id-prop"/>
+            <keyword name="id" id="TestDerived::id" ref="testqdoc-testderived.html#id"/>
             <keyword name="inlineFunction" id="Test::inlineFunction" ref="testqdoc-test.html#inlineFunction"/>
             <keyword name="int" id="QML.int" ref="qml-int.html"/>
             <keyword name="int" id="QML.QDoc.Test1.int" ref="qml-int.html"/>
+            <keyword name="intProp" id="TestDerived::intProp" ref="testqdoc-testderived.html#intProp-prop"/>
+            <keyword name="invokeMe" id="TestDerived::invokeMe" ref="testqdoc-testderived.html#invokeMe"/>
             <keyword name="itsHappening" id="DocTest::itsHappening" ref="qml-qdoc-test-doctest.html#itsHappening-signal"/>
             <keyword name="maximum" id="ProgressBar::maximum" ref="qml-uicomponents-progressbar.html#maximum-prop"/>
             <keyword name="methodWithEmDashInItsDocs" id="Test::methodWithEmDashInItsDocs" ref="testqdoc-test.html#methodWithEmDashInItsDocs"/>
@@ -151,6 +165,9 @@
             <keyword name="name" id="Child::name" ref="qml-qdoc-test-child.html#name-prop"/>
             <keyword name="name" id="DocTest::name" ref="qml-qdoc-test-doctest.html#name-prop"/>
             <keyword name="name" id="Type::name" ref="qml-qdoc-test-type.html#name-prop"/>
+            <keyword name="name" id="TheType::name" ref="qml-themodule-thetype.html#name-prop"/>
+            <keyword name="name" id="TestDerived::name" ref="testqdoc-testderived.html#name-prop"/>
+            <keyword name="name" id="TestDerived::name" ref="testqdoc-testderived.html#name-prop"/>
             <keyword name="obsoleteMember" id="Test::obsoleteMember" ref="testqdoc-test-obsolete.html#obsoleteMember"/>
             <keyword name="on" id="Switch::on" ref="qml-uicomponents-switch.html#on-prop"/>
             <keyword name="operator++" id="Test::operator++" ref="testqdoc-test-obsolete.html#operator-2b-2b"/>
@@ -159,10 +176,15 @@
             <keyword name="operator==" id="operator==" ref="testqdoc-test.html#operator-eq-eq"/>
             <keyword name="overload" id="Test::overload" ref="testqdoc-test.html#overload"/>
             <keyword name="rear" id="AbstractParent::rear" ref="qml-qdoc-test-abstractparent.html#rear-method"/>
+            <keyword name="resetBoolProp" id="TestDerived::resetBoolProp" ref="testqdoc-testderived.html#boolProp-prop"/>
             <keyword name="sampleReadOnlyProperty" id="TabWidget::sampleReadOnlyProperty" ref="qml-uicomponents-tabwidget.html#sampleReadOnlyProperty-prop"/>
             <keyword name="secondColor" id="ProgressBar::secondColor" ref="qml-uicomponents-progressbar.html#secondColor-prop"/>
+            <keyword name="setBindableProp" id="TestDerived::setBindableProp" ref="testqdoc-testderived.html#bindableProp-prop"/>
+            <keyword name="setBoolProp" id="TestDerived::setBoolProp" ref="testqdoc-testderived.html#boolProp-prop"/>
             <keyword name="someFunction" id="Test::someFunction" ref="testqdoc-test.html#someFunction"/>
             <keyword name="someFunctionDefaultArg" id="Test::someFunctionDefaultArg" ref="testqdoc-test.html#someFunctionDefaultArg"/>
+            <keyword name="someProp" id="TestDerived::someProp" ref="testqdoc-testderived.html#someProp-prop"/>
+            <keyword name="someProp" id="TestDerived::someProp" ref="testqdoc-testderived.html#someProp-prop"/>
             <keyword name="someValue" id="TestDerived::someValue" ref="testqdoc-testderived.html#someValue"/>
             <keyword name="staticObsoleteMember" id="TestDerived::staticObsoleteMember" ref="testqdoc-testderived-obsolete.html#staticObsoleteMember"/>
             <keyword name="toggle" id="Switch::toggle" ref="qml-uicomponents-switch.html#toggle-method"/>
@@ -197,6 +219,8 @@
             <file>qml-test-nover-doctest.html</file>
             <file>qml-test-nover-typenoversion-members.html</file>
             <file>qml-test-nover-typenoversion.html</file>
+            <file>qml-themodule-thetype-members.html</file>
+            <file>qml-themodule-thetype.html</file>
             <file>qml-uicomponents-progressbar-members.html</file>
             <file>qml-uicomponents-progressbar.html</file>
             <file>qml-uicomponents-switch-members.html</file>
@@ -229,6 +253,7 @@
             <file>testqdoc-testderived-obsolete.html</file>
             <file>testqdoc-testderived.html</file>
             <file>testqdoc.html</file>
+            <file>themodule-qmlmodule.html</file>
             <file>uicomponents-qmlmodule.html</file>
         </files>
     </filterSection>

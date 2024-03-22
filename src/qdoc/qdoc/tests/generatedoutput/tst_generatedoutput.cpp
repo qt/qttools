@@ -28,7 +28,6 @@ private slots:
     void preparePhase();
     void generatePhase();
     void noAutoList();
-    void properties();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -268,21 +267,6 @@ void tst_generatedOutput::noAutoList()
                    "noautolist-docbook/testcpp-module.xml "
                    "noautolist-docbook/test-componentset-example.xml "
                    "noautolist-docbook/qdoc-test-qmlmodule.xml");
-}
-
-void tst_generatedOutput::properties()
-{
-    if (m_extraParams.isEmpty() && !m_regen) {
-        QSKIP("Required include paths not available");
-    }
-
-    testAndCompare("testdata/configs/properties.qdocconf",
-                   "properties/testqdoc-testderived.html "
-                   "properties/testqdoc-testderived-members.html "
-                   "properties/qml-themodule-thetype.html "
-                   "properties/testcpp.index "
-                   "properties-docbook/testqdoc-testderived.xml",
-                   m_extraParams.toLatin1().data());
 }
 
 int main(int argc, char *argv[])

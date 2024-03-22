@@ -21,6 +21,12 @@
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
+<db:term><db:link xlink:href="themodule-qmlmodule.xml" xlink:role="">TheModule</db:link></db:term>
+<db:listitem>
+<db:para></db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
 <db:term><db:link xlink:href="uicomponents-qmlmodule.xml" xlink:role="">UI Components</db:link></db:term>
 <db:listitem>
 <db:para>Basic set of UI components.</db:para>

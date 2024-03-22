@@ -28,6 +28,7 @@ headers = testcpp.h \
 sources = testcpp.cpp \
           classlists.qdoc \
           dont.cpp \
+          properties.qdoc \
           unseenclass.qdoc
 exampledirs = snippets
 
@@ -39,6 +40,7 @@ navigation.cppclassespage = "QDoc Test C++ Classes"
 
 defines += test_ignoresince
 defines += test_nestedmacro
+defines += test_properties
 
 macro.ver               = "\1"
 macro.ver.match         = "^(\\d+\\.\\d+)"

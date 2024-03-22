@@ -80,6 +80,7 @@
             <contents name="qml-types" title="QML types" level="1"/>
             <contents name="qml-value-types" title="QML value types" level="1"/>
         </page>
+        <page name="https://wiki.qt.io/QProperty" href="https://wiki.qt.io/QProperty" status="active" location="properties.qdoc" documented="true" subtype="externalpage" title="QProperty" fulltitle="QProperty" subtitle=""/>
         <class name="SeenClass" href="seenclass.html" status="active" access="public" location="dont.h" since="2.0" documented="true" module="TestCPP" brief="A public but undocumented class"/>
         <qmlclass name="Switch" qml-module-name="UIComponents" fullname="UIComponents.Switch" href="qml-uicomponents-switch.html" status="active" access="public" location="Switch.qml" documented="true" title="Switch" fulltitle="Switch" subtitle="" brief="A component that can be turned on or off">
             <function name="toggle" fullname="UIComponents.Switch.toggle" href="qml-uicomponents-switch.html#toggle-method" status="active" access="public" documented="true" meta="qmlmethod"/>
@@ -133,13 +134,53 @@
                 <typedef name="SomeType" fullname="TestQDoc::Test::SomeType" href="testqdoc-test.html#SomeType-typedef" status="active" access="public" location="testcpp.h" documented="true"/>
             </class>
             <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" bases="TestQDoc::Test" module="TestCPP" brief="A class in a namespace, derived from Test">
+                <function name="bindableProp" fullname="TestQDoc::TestDerived::bindableProp" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" meta="plain" associated-property="bindableProp" type="QBindable&lt;QString&gt;" signature="QBindable&lt;QString&gt; bindableProp()"/>
+                <function name="bindablePropChanged" fullname="TestQDoc::TestDerived::bindablePropChanged" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" meta="signal" associated-property="bindableProp" type="void" signature="void bindablePropChanged()"/>
+                <function name="boolProp" fullname="TestQDoc::TestDerived::boolProp" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="plain" associated-property="boolProp" type="bool" signature="bool boolProp()"/>
+                <function name="boolPropChanged" fullname="TestQDoc::TestDerived::boolPropChanged" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="signal" associated-property="boolProp" type="void" signature="void boolPropChanged()"/>
+                <function name="emitSomething" fullname="TestQDoc::TestDerived::emitSomething" href="testqdoc-testderived.html#emitSomething" status="active" access="public" location="testcpp.h" documented="true" meta="signal" type="void" signature="void emitSomething()"/>
+                <function name="getInt" fullname="TestQDoc::TestDerived::getInt" href="testqdoc-testderived.html#intProp-prop" status="active" access="public" location="testcpp.h" meta="plain" associated-property="intProp" type="int *" signature="int * getInt()"/>
+                <function name="id" fullname="TestQDoc::TestDerived::id" href="testqdoc-testderived.html#id" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" override="true" type="int" signature="int id() override"/>
+                <function name="invokeMe" fullname="TestQDoc::TestDerived::invokeMe" href="testqdoc-testderived.html#invokeMe" status="active" access="public" location="testcpp.h" documented="true" meta="plain" const="true" type="void" brief="Something invokable" signature="void invokeMe() const"/>
+                <function name="name" fullname="TestQDoc::TestDerived::name" href="testqdoc-testderived.html#name-prop" status="active" access="public" location="testcpp.h" meta="plain" const="true" associated-property="name" type="const QString *" signature="const QString * name() const"/>
+                <function name="resetBoolProp" fullname="TestQDoc::TestDerived::resetBoolProp" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="slot" associated-property="boolProp" type="void" signature="void resetBoolProp()"/>
+                <function name="setBindableProp" fullname="TestQDoc::TestDerived::setBindableProp" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" meta="slot" associated-property="bindableProp" type="void" signature="void setBindableProp(const QString &amp;s)">
+                    <parameter type="const QString &amp;" name="s" default=""/>
+                </function>
+                <function name="setBoolProp" fullname="TestQDoc::TestDerived::setBoolProp" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="slot" associated-property="boolProp" type="void" signature="void setBoolProp(bool b)">
+                    <parameter type="bool" name="b" default=""/>
+                </function>
+                <function name="someProp" fullname="TestQDoc::TestDerived::someProp" href="testqdoc-testderived.html#someProp-prop" status="active" access="public" location="testcpp.h" meta="plain" associated-property="someProp" type="const QString &amp;" signature="const QString &amp; someProp()"/>
                 <function name="someValue" fullname="TestQDoc::TestDerived::someValue" href="testqdoc-testderived.html#someValue" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::TestDerived::NotTypedef" signature="TestQDoc::TestDerived::NotTypedef someValue()"/>
                 <function name="staticObsoleteMember" fullname="TestQDoc::TestDerived::staticObsoleteMember" href="testqdoc-testderived-obsolete.html#staticObsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" static="true" type="void" signature="void staticObsoleteMember()"/>
                 <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" override="true" type="void" signature="void virtualFun() override"/>
                 <typedef name="DerivedType" fullname="TestQDoc::TestDerived::DerivedType" href="testqdoc-testderived.html#DerivedType-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="Test::SomeType"/>
                 <typedef name="NotTypedef" fullname="TestQDoc::TestDerived::NotTypedef" href="testqdoc-testderived.html#NotTypedef-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="int"/>
+                <property name="bindableProp" fullname="TestQDoc::TestDerived::bindableProp" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" documented="true" bindable="true">
+                    <getter name="bindableProp"/>
+                    <setter name="setBindableProp"/>
+                    <notifier name="bindablePropChanged"/>
+                </property>
+                <property name="boolProp" fullname="TestQDoc::TestDerived::boolProp" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" documented="true">
+                    <getter name="boolProp"/>
+                    <setter name="setBoolProp"/>
+                    <resetter name="resetBoolProp"/>
+                    <notifier name="boolPropChanged"/>
+                </property>
+                <property name="intProp" fullname="TestQDoc::TestDerived::intProp" href="testqdoc-testderived.html#intProp-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false">
+                    <getter name="getInt"/>
+                </property>
+                <property name="name" fullname="TestQDoc::TestDerived::name" href="testqdoc-testderived.html#name-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false" brief="Name">
+                    <getter name="name"/>
+                </property>
+                <property name="someProp" fullname="TestQDoc::TestDerived::someProp" href="testqdoc-testderived.html#someProp-prop" status="active" access="public" location="testcpp.h" documented="true" bindable="true" writable="false">
+                    <getter name="someProp"/>
+                </property>
             </class>
         </namespace>
+        <qmlclass name="TheType" qml-module-name="TheModule" fullname="TheModule.TheType" href="qml-themodule-thetype.html" status="active" access="public" location="properties.qdoc" documented="true" title="TheType" fulltitle="TheType" subtitle="">
+            <qmlproperty name="name" fullname="TheModule.TheType.name" href="qml-themodule-thetype.html#name-prop" status="active" access="public" location="properties.qdoc" documented="true" type="string" attached="false" writable="false" brief="Read-only status of this property is resolved from Q_PROPERTY"/>
+        </qmlclass>
         <qmlclass name="Type" qml-module-name="QDoc.Test" fullname="QDoc.Test.Type" href="qml-qdoc-test-type.html" status="active" access="public" since="1.1" documented="true" title="Type" fulltitle="Type" subtitle="" brief="A QML type documented in a .cpp file">
             <function name="completed" fullname="QDoc.Test.Type.completed" href="qml-qdoc-test-type.html#completed-signal" status="active" access="public" documented="true" meta="qmlsignal">
                 <parameter type="int" name="status" default=""/>
@@ -179,6 +220,7 @@
         <qmlmodule name="QDoc.Test" qml-module-name="QDoc.Test" qml-module-version="1.1" href="qdoc-test-qmlmodule.html" status="preliminary" since="1.1" documented="true" seen="true" title="QDoc.Test QML Module" brief="QML Types for the Test module"/>
         <qmlmodule name="Test.Empty" qml-module-name="Test.Empty" qml-module-version="1.0" href="test-empty-qmlmodule.html" status="active" documented="true" seen="true" title="No QML Types Here" brief="A QML module with no member types"/>
         <qmlmodule name="Test.NoVer" qml-module-name="Test.NoVer" href="test-nover-qmlmodule.html" status="active" since="1.1" documented="true" seen="true" title="Versionless QML Module" brief="QML Types for the Test module without version"/>
+        <qmlmodule name="TheModule" qml-module-name="TheModule" href="themodule-qmlmodule.html" status="active" location="properties.qdoc" documented="true" seen="true" title=""/>
         <qmlmodule name="UIComponents" qml-module-name="UIComponents" qml-module-version="1.0" href="uicomponents-qmlmodule.html" status="active" location="examples.qdoc" documented="true" seen="true" title="UI Components" brief="Basic set of UI components"/>
     </namespace>
 </INDEX>
