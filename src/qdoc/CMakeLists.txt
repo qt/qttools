@@ -5,6 +5,6 @@ add_subdirectory(catch)
 add_subdirectory(catch_conversions)
 add_subdirectory(catch_generators)
 
-if(QT_FEATURE_qdoc AND QT_FEATURE_clangcpp)
+if(QT_FEATURE_qdoc)
     add_subdirectory(qdoc)
 endif()
