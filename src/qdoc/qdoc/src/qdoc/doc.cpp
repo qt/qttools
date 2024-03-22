@@ -394,7 +394,7 @@ void Doc::trimCStyleComment(Location &location, QString &str)
     str = str.mid(3, str.size() - 5);
 }
 
-CodeMarker *Doc::quoteFromFile(const Location &location, Quoter &quoter, ResolvedFile resolved_file)
+void Doc::quoteFromFile(const Location &location, Quoter &quoter, ResolvedFile resolved_file)
 {
     // TODO: quoteFromFile should not care about modifying a stateful
     // quoter from the outside, instead, it should produce a quoter
@@ -408,13 +408,13 @@ CodeMarker *Doc::quoteFromFile(const Location &location, Quoter &quoter, Resolve
     QString code;
     {
         QFile input_file{resolved_file.get_path()};
-        input_file.open(QFile::ReadOnly);
+        if (!input_file.open(QFile::ReadOnly))
+            return;
         code = DocParser::untabifyEtc(QTextStream{&input_file}.readAll());
     }
 
     CodeMarker *marker = CodeMarker::markerForFileName(resolved_file.get_path());
     quoter.quoteFromFile(resolved_file.get_path(), code, marker->markedUpCode(code, nullptr, location));
-    return marker;
 }
 
 QT_END_NAMESPACE
