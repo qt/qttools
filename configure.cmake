@@ -55,7 +55,7 @@ qt_feature("qdoc" PRIVATE
 )
 qt_feature("clangcpp" PRIVATE
     LABEL "Clang-based lupdate parser"
-    CONDITION QT_FEATURE_clang
+    CONDITION QT_FEATURE_clang AND (NOT MSVC OR MSVC_VERSION LESS "1939" OR QT_LIB_CLANG_VERSION_MAJOR GREATER_EQUAL "16")
 )
 qt_feature("designer" PRIVATE
     LABEL "Qt Widgets Designer"
@@ -147,7 +147,7 @@ qt_configure_add_report_entry(
 )
 qt_configure_add_report_entry(
     TYPE WARNING
-    MESSAGE "Clang-based lupdate parser will not be available. LLVM and Clang C++ libraries have not been found.
+    MESSAGE "Clang-based lupdate parser will not be available. Suitable LLVM and Clang C++ libraries have not been found.
 You will need to set the FEATURE_clangcpp CMake variable to ON to re-evaluate this check."
     CONDITION NOT QT_FEATURE_clangcpp
 )
