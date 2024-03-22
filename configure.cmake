@@ -51,7 +51,7 @@ qt_feature("clang" PRIVATE
 qt_feature("qdoc" PRIVATE
     LABEL "QDoc"
     PURPOSE "QDoc is Qt's documentation generator for C++ and QML projects."
-    CONDITION TARGET Qt::QmlPrivate AND QT_FEATURE_clang AND QT_FEATURE_clangcpp AND QT_FEATURE_commandlineparser AND QT_FEATURE_thread AND QT_LIB_CLANG_VERSION VERSION_GREATER_EQUAL QDOC_MINIMUM_CLANG_VERSION
+    CONDITION TARGET Qt::QmlPrivate AND QT_FEATURE_clang AND QT_FEATURE_commandlineparser AND QT_FEATURE_thread AND QT_LIB_CLANG_VERSION VERSION_GREATER_EQUAL QDOC_MINIMUM_CLANG_VERSION
 )
 qt_feature("clangcpp" PRIVATE
     LABEL "Clang-based lupdate parser"
@@ -128,7 +128,7 @@ Other than clang's libraries, you may need to install another package, such as c
 file is in place, the configure script may be able to detect your system-installed libraries without further environment variables.
 On macOS, you can use Homebrew's llvm package.
 You will also need to set the FEATURE_clang CMake variable to ON to re-evaluate this check."
-    CONDITION NOT QT_FEATURE_clang OR NOT QT_FEATURE_clangcpp
+    CONDITION NOT QT_FEATURE_clang
 )
 qt_configure_add_report_entry(
     TYPE WARNING
