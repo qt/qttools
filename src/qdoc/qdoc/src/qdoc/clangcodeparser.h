@@ -64,25 +64,21 @@ private:
     std::optional<std::reference_wrapper<const PCHFile>> m_pch;
 };
 
-class ClangCodeParser : public CodeParser
+class ClangCodeParser
 {
 public:
     ClangCodeParser(
+        QDocDatabase* qdb,
         Config&,
         const std::vector<QByteArray>& include_paths,
         const QList<QByteArray>& defines,
         std::optional<std::reference_wrapper<const PCHFile>> pch
     );
-    ~ClangCodeParser() override = default;
 
-    void initializeParser() override {}
-    void terminateParser() override {}
-    QString language() override;
-    QStringList sourceFileNameFilter() override;
-    void parseSourceFile(const Location &, const QString &, CppCodeParser&) override {}
     ParsedCppFileIR parse_cpp_file(const QString &filePath);
 
 private:
+    QDocDatabase* m_qdb{};
     std::set<Config::HeaderFilePath> m_allHeaders {}; // file name->path
     const std::vector<QByteArray>& m_includePaths;
     QList<QByteArray> m_defines {};

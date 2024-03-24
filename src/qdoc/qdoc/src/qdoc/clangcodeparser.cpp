@@ -1427,35 +1427,17 @@ Node *ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
 }
 
 ClangCodeParser::ClangCodeParser(
+    QDocDatabase* qdb,
     Config& config,
     const std::vector<QByteArray>& include_paths,
     const QList<QByteArray>& defines,
     std::optional<std::reference_wrapper<const PCHFile>> pch
-) : m_includePaths{include_paths},
+) : m_qdb{qdb},
+    m_includePaths{include_paths},
     m_defines{defines},
     m_pch{pch}
 {
     m_allHeaders = config.getHeaderFiles();
-}
-
-/*!
- */
-QString ClangCodeParser::language()
-{
-    return "Clang";
-}
-
-/*!
-  Returns a list of extensions for source files, i.e. not
-  header files.
- */
-QStringList ClangCodeParser::sourceFileNameFilter()
-{
-    return QStringList() << "*.c++"
-                         << "*.cc"
-                         << "*.cpp"
-                         << "*.cxx"
-                         << "*.mm";
 }
 
 static const char *defaultArgs_[] = {

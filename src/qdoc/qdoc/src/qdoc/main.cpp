@@ -511,7 +511,7 @@ static void processQdocconfFile(const QString &fileName)
         );
     }
 
-    ClangCodeParser clangParser(Config::instance(), include_paths, clang_defines, pch);
+    ClangCodeParser clangParser(QDocDatabase::qdocDB(), Config::instance(), include_paths, clang_defines, pch);
     PureDocParser docParser{config.location()};
 
     /*
