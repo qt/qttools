@@ -28,7 +28,7 @@ QStringList PureDocParser::sourceFileNameFilter()
   parsed contents to the database. The \a location is used for
   reporting errors.
  */
-std::vector<UntiedDocumentation> PureDocParser::parse_qdoc_file(const Location &location, const QString &filePath)
+std::vector<UntiedDocumentation> PureDocParser::parse_qdoc_file(const QString &filePath)
 {
     QFile in(filePath);
     if (!in.open(QIODevice::ReadOnly)) {

@@ -14,6 +14,7 @@
 #include "qdocdatabase.h"
 #include "qmlcodemarker.h"
 #include "qmlcodeparser.h"
+#include "sourcefileparser.h"
 #include "utilities.h"
 #include "tokenizer.h"
 #include "tree.h"
@@ -60,8 +61,11 @@ bool creationTimeBefore(const QFileInfo &fi1, const QFileInfo &fi2)
 
     \sa CodeParser::parserForSourceFile, CodeParser::sourceFileNameFilter
 */
-static void parseSourceFiles(std::vector<QString>&& sources, CppCodeParser& cpp_code_parser)
-{
+static void parseSourceFiles(
+    std::vector<QString>&& sources,
+    SourceFileParser& source_file_parser,
+    CppCodeParser& cpp_code_parser
+) {
     std::stable_sort(sources.begin(), sources.end());
 
     sources.erase (
@@ -69,18 +73,17 @@ static void parseSourceFiles(std::vector<QString>&& sources, CppCodeParser& cpp_
         sources.end()
     );
 
-    auto non_clang_handled_sources =
+    auto qml_sources =
         std::stable_partition(sources.begin(), sources.end(), [](const QString& source){
-            return CodeParser::parserForSourceFile(source) == CodeParser::parserForLanguage("Clang");
+            return CodeParser::parserForSourceFile(source) == CodeParser::parserForLanguage("QML");
         });
 
 
-    std::for_each(sources.begin(), non_clang_handled_sources, [&cpp_code_parser](const QString& source){
-        auto codeParser = static_cast<ClangCodeParser*>(CodeParser::parserForLanguage("Clang"));
-
+    std::for_each(qml_sources, sources.end(), [&source_file_parser, &cpp_code_parser](const QString& source){
         qCDebug(lcQdoc, "Parsing %s", qPrintable(source));
 
-        auto [untied_documentation, tied_documentation] = codeParser->parse_cpp_file(source);
+        auto [untied_documentation, tied_documentation] = source_file_parser(tag_source_file(source));
+
         for (auto untied : untied_documentation) {
             auto tied = cpp_code_parser.processTopicArgs(untied);
             tied_documentation.insert(tied_documentation.end(), tied.begin(), tied.end());
@@ -89,27 +92,7 @@ static void parseSourceFiles(std::vector<QString>&& sources, CppCodeParser& cpp_
         cpp_code_parser.processMetaCommands(tied_documentation);
     });
 
-    auto non_qdoc_sources = std::stable_partition(non_clang_handled_sources, sources.end(), [](const QString& source){
-        return CodeParser::parserForSourceFile(source) == CodeParser::parserForLanguage("QDoc");
-    });
-
-    std::for_each(non_clang_handled_sources, non_qdoc_sources, [&cpp_code_parser](const QString& source){
-        auto codeParser = static_cast<PureDocParser*>(CodeParser::parserForLanguage("QDoc"));
-
-        qCDebug(lcQdoc, "Parsing %s", qPrintable(source));
-
-        std::vector<TiedDocumentation> tied_documentation{};
-
-        auto untied_documentation = codeParser->parse_qdoc_file(Config::instance().location(), source);
-        for (auto untied : untied_documentation) {
-            auto tied = cpp_code_parser.processTopicArgs(untied);
-            tied_documentation.insert(tied_documentation.end(), tied.begin(), tied.end());
-        };
-
-        cpp_code_parser.processMetaCommands(tied_documentation);
-    });
-
-    std::for_each(non_clang_handled_sources, sources.end(), [&cpp_code_parser](const QString& source){
+    std::for_each(sources.begin(), qml_sources, [&cpp_code_parser](const QString& source){
         auto *codeParser = CodeParser::parserForSourceFile(source);
         if (!codeParser) return;
 
@@ -529,6 +512,7 @@ static void processQdocconfFile(const QString &fileName)
     }
 
     ClangCodeParser clangParser(Config::instance(), include_paths, clang_defines, pch);
+    PureDocParser docParser{config.location()};
 
     /*
       Initialize all the classes and data structures with the
@@ -576,7 +560,9 @@ static void processQdocconfFile(const QString &fileName)
 
         auto headers = config.getHeaderFiles();
         CppCodeParser cpp_code_parser(FnCommandParser(qdb, headers, clang_defines, pch));
-        parseSourceFiles(std::move(sources), cpp_code_parser);
+
+        SourceFileParser source_file_parser{clangParser, docParser};
+        parseSourceFiles(std::move(sources), source_file_parser, cpp_code_parser);
 
         if (config.get(CONFIG_LOGPROGRESS).asBool())
             qCInfo(lcQdoc) << "Source files parsed for" << project;
@@ -694,7 +680,6 @@ int main(int argc, char **argv)
       and create a tree for C++.
      */
     QmlCodeParser qmlParser;
-    PureDocParser docParser;
 
     /*
       Create code markers for plain text, C++,

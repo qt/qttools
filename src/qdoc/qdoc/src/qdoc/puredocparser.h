@@ -15,7 +15,7 @@ class Location;
 class PureDocParser : public CodeParser
 {
 public:
-    PureDocParser() = default;
+    PureDocParser(const Location& location) : location{location} {}
     ~PureDocParser() override = default;
 
     void initializeParser() override {}
@@ -23,10 +23,13 @@ public:
 
     QStringList sourceFileNameFilter() override;
     void parseSourceFile(const Location &, const QString &, CppCodeParser&) override {}
-    std::vector<UntiedDocumentation> parse_qdoc_file(const Location& location, const QString& filePath);
+    std::vector<UntiedDocumentation> parse_qdoc_file(const QString& filePath);
 
 private:
     std::vector<UntiedDocumentation> processQdocComments(QFile& input_file);
+
+private:
+    const Location& location;
 };
 
 QT_END_NAMESPACE
