@@ -11,19 +11,6 @@
 QT_BEGIN_NAMESPACE
 
 /*!
-  Returns a list of the kinds of files that the pure doc
-  parser is meant to parse. The elements of the list are
-  file suffixes.
- */
-QStringList PureDocParser::sourceFileNameFilter()
-{
-    return QStringList() << "*.qdoc"
-                         << "*.qtx"
-                         << "*.qtt"
-                         << "*.js";
-}
-
-/*!
   Parses the source file identified by \a filePath and adds its
   parsed contents to the database. The \a location is used for
   reporting errors.

@@ -12,17 +12,11 @@ QT_BEGIN_NAMESPACE
 
 class Location;
 
-class PureDocParser : public CodeParser
+class PureDocParser
 {
 public:
     PureDocParser(const Location& location) : location{location} {}
-    ~PureDocParser() override = default;
 
-    void initializeParser() override {}
-    QString language() override { return "QDoc"; }
-
-    QStringList sourceFileNameFilter() override;
-    void parseSourceFile(const Location &, const QString &, CppCodeParser&) override {}
     std::vector<UntiedDocumentation> parse_qdoc_file(const QString& filePath);
 
 private:
