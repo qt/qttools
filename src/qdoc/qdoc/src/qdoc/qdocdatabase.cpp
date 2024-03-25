@@ -897,6 +897,7 @@ void QDocDatabase::resolveStuff()
         // order matters
         primaryTree()->resolveBaseClasses(primaryTreeRoot());
         primaryTree()->resolvePropertyOverriddenFromPtrs(primaryTreeRoot());
+        primaryTreeRoot()->resolveRelates();
         primaryTreeRoot()->normalizeOverloads();
         primaryTree()->markDontDocumentNodes();
         primaryTree()->removePrivateAndInternalBases(primaryTreeRoot());

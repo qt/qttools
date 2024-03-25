@@ -409,41 +409,17 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             }
         }
     } else if (command == COMMAND_RELATES) {
-        QStringList path = arg.split("::");
-        Aggregate *aggregate = database->findRelatesNode(path);
-        if (aggregate == nullptr)
-            aggregate = new ProxyNode(node->root(), arg);
-
-        if (node->parent() == aggregate) { // node is already a child of aggregate
-            doc.location().warning(QStringLiteral("Invalid '\\%1' (already a member of '%2')")
-                                           .arg(COMMAND_RELATES, arg));
-        } else {
-            if (node->isAggregate()) {
-                doc.location().warning(QStringLiteral("Invalid '\\%1' not allowed in '\\%2'")
-                                               .arg(COMMAND_RELATES, node->nodeTypeString()));
-            } else if (!node->isRelatedNonmember() &&
-                       !node->parent()->isNamespace() && !node->parent()->isHeader()) {
-                if (!doc.isInternal()) {
-                    doc.location().warning(QStringLiteral("Invalid '\\%1' ('%2' must be global)")
-                                                   .arg(COMMAND_RELATES, node->name()));
-                }
-            } else if (!node->isRelatedNonmember() && !node->parent()->isHeader()) {
-                aggregate->adoptChild(node);
-                node->setRelatedNonmember(true);
-            } else {
-                /*
-                  There are multiple \relates commands. This
-                  one is not the first, so clone the node as
-                  a child of aggregate.
-                 */
-                Node *clone = node->clone(aggregate);
-                if (clone == nullptr) {
-                    doc.location().warning(
-                            QStringLiteral("Invalid '\\%1' (multiple uses not allowed in '%2')")
-                                    .arg(COMMAND_RELATES, node->nodeTypeString()));
-                } else {
-                    clone->setRelatedNonmember(true);
-                }
+        // REMARK: Generates warnings only; Node instances are
+        // adopted from the root namespace to other Aggregates
+        // in a post-processing step, Aggregate::resolveRelates(),
+        // after all topic commands are processed.
+        if (node->isAggregate()) {
+            doc.location().warning("Invalid '\\%1' not allowed in '\\%2'"_L1
+                    .arg(COMMAND_RELATES, node->nodeTypeString()));
+        } else if (!node->isRelatedNonmember() && node->parent()->isClassNode()) {
+            if (!doc.isInternal()) {
+                doc.location().warning("Invalid '\\%1' ('%2' must be global)"_L1
+                        .arg(COMMAND_RELATES, node->name()));
             }
         }
     } else if (command == COMMAND_NEXTPAGE) {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="RelatesOrdering Reference Documentation" version="" project="RelatesOrdering">
+    <namespace name="" status="active" access="public" module="relatesordering">
+        <header name="&lt;Bar&gt;" href="bar.html" status="active" documented="true" module="Module" title="A header" fulltitle="&lt;Bar&gt; - A header" subtitle="">
+            <typedef name="foo" href="bar.html#foo-typedef" status="active" access="public" location="a.h" related="0" documented="true" aliasedtype="int"/>
+        </header>
+        <typedef name="foo" href="bar.html#foo-typedef" status="active" access="public" location="a.h" related="0" documented="true" aliasedtype="int"/>
+        <module name="Module" href="module-module.html" status="active" documented="true" seen="true" title=""/>
+    </namespace>
+</INDEX>

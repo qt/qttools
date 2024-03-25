@@ -30,6 +30,7 @@ public:
     FunctionNode *findFunctionChild(const QString &name, const Parameters &parameters);
     FunctionNode *findFunctionChild(const FunctionNode *clone);
 
+    void resolveRelates();
     void normalizeOverloads();
     void markUndocumentedChildrenInternal();
 
