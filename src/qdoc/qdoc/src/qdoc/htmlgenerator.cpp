@@ -714,8 +714,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
             location.warning(
                     QStringLiteral("Can't link to '%1'").arg(atom->string()));
         }
-        beginLink(link, nullptr, relative);
-        m_linkNode = node;
+        beginLink(link, node, relative);
         skipAhead = 1;
     } break;
     case Atom::ExampleFileLink: {
@@ -3535,12 +3534,15 @@ void HtmlGenerator::beginLink(const QString &link, const Node *node, const Node 
     if (m_link.isEmpty())
         return;
 
+    const QString &translate_attr =
+            (node && node->genus() & Node::API) ? " translate=\"no\""_L1 : ""_L1;
+
     if (node == nullptr || (relative != nullptr && node->status() == relative->status()))
-        out() << "<a href=\"" << m_link << "\" translate=\"no\">";
+        out() << "<a href=\"" << m_link << "\"%1>"_L1.arg(translate_attr);
     else if (node->isDeprecated())
-        out() << "<a href=\"" << m_link << "\" class=\"obsolete\" translate=\"no\">";
+        out() << "<a href=\"" << m_link << "\" class=\"obsolete\"%1>"_L1.arg(translate_attr);
     else
-        out() << "<a href=\"" << m_link << "\" translate=\"no\">";
+        out() << "<a href=\"" << m_link << "\"%1>"_L1.arg(translate_attr);
 }
 
 void HtmlGenerator::endLink()
