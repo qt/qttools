@@ -227,7 +227,11 @@ bool QHelpEngineCore::isReadOnly() const
 
 void QHelpEngineCore::setReadOnly(bool enable)
 {
+    if (d->readOnly == enable)
+        return;
+
     d->readOnly = enable;
+    d->init(collectionFile());
 }
 
 /*!
