@@ -168,20 +168,15 @@ int Generator::appendSortedQmlNames(Text &text, const Node *base, const NodeList
     QMap<QString, Text> classMap;
 
     for (const auto sub : subs) {
-        Text text;
-        if (!base->isQtQuickNode() || !sub->isQtQuickNode()
-            || (base->logicalModuleName() == sub->logicalModuleName())) {
-            appendFullName(text, sub, base);
-            classMap[text.toString().toLower()] = text;
-        }
+        Text full_name;
+        appendFullName(full_name, sub, base);
+        classMap[full_name.toString().toLower()] = full_name;
     }
 
     int index = 0;
-    const QStringList names = classMap.keys();
-    for (const auto &name : names) {
-        text << classMap[name];
-        text << Utilities::comma(index++, names.size());
-    }
+    const auto &names = classMap.keys();
+    for (const auto &name : names)
+        text << classMap[name] << Utilities::comma(index++, names.size());
     return index;
 }
 

@@ -180,7 +180,6 @@ public:
     [[nodiscard]] virtual bool isInternal() const;
     [[nodiscard]] virtual bool isMacro() const { return false; }
     [[nodiscard]] virtual bool isPageNode() const { return false; } // means "generates a doc page"
-    [[nodiscard]] virtual bool isQtQuickNode() const { return false; }
     [[nodiscard]] virtual bool isRelatableType() const { return false; }
     [[nodiscard]] virtual bool isMarkedReimp() const { return false; }
     [[nodiscard]] virtual bool isPropertyGroup() const { return false; }

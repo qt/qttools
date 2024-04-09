@@ -409,10 +409,6 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
   function will return \e true.
 */
 
-/*! \fn bool Node::isQtQuickNode() const
-  Returns true if this node represents a QML element in the QtQuick module.
-*/
-
 /*! \fn bool Node::isRelatableType() const
   Returns true if this node is something you can relate things to with
   the \e relates command. NamespaceNode, ClassNode, HeaderNode, and

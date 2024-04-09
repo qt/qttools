@@ -2137,16 +2137,14 @@ void DocBookGenerator::generateSortedQmlNames(const Node *base, const NodeList &
 {
     // From Generator::appendSortedQmlNames.
     QMap<QString, Node *> classMap;
-    int index = 0;
 
     for (auto sub : subs)
-        if (!base->isQtQuickNode() || !sub->isQtQuickNode()
-            || (base->logicalModuleName() == sub->logicalModuleName()))
-            classMap[sub->plainFullName(base).toLower()] = sub;
+        classMap[sub->plainFullName(base).toLower()] = sub;
 
     QStringList names = classMap.keys();
     names.sort();
 
+    int index = 0;
     for (const QString &name : names) {
         generateFullName(classMap.value(name), base);
         m_writer->writeCharacters(Utilities::comma(index++, names.size()));

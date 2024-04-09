@@ -32,7 +32,6 @@ public:
     [[nodiscard]] bool isReadOnly();
     [[nodiscard]] bool isAlias() const override { return m_isAlias; }
     [[nodiscard]] bool isAttached() const override { return m_attached; }
-    [[nodiscard]] bool isQtQuickNode() const override { return parent()->isQtQuickNode(); }
     [[nodiscard]] QString qmlTypeName() const override { return parent()->qmlTypeName(); }
     [[nodiscard]] QString logicalModuleName() const override
     {

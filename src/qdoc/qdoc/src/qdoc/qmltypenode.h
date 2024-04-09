@@ -23,10 +23,6 @@ class QmlTypeNode : public Aggregate
 public:
     QmlTypeNode(Aggregate *parent, const QString &name, Node::NodeType type);
     [[nodiscard]] bool isFirstClassAggregate() const override { return true; }
-    [[nodiscard]] bool isQtQuickNode() const override
-    {
-        return (logicalModuleName() == QLatin1String("QtQuick"));
-    }
     ClassNode *classNode() override { return m_classNode; }
     void setClassNode(ClassNode *cn) override { m_classNode = cn; }
     [[nodiscard]] bool isAbstract() const override { return m_abstract; }
