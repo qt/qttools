@@ -116,7 +116,7 @@ bool QHelpEngineCorePrivate::setup()
 
     The help engine also offers the possibility to set and read values
     in a persistent way comparable to ini files or Windows registry
-    entries. For more information see setValue() or value().
+    entries. For more information see \l setCustomValue() or \l customValue().
 
     This class does not offer any GUI components or functionality for
     indices or contents. If you need one of those use QHelpEngine
