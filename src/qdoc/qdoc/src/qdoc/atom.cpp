@@ -239,7 +239,7 @@ static const struct
   \also string()
 */
 
-/*! \fn void Atom::appendString(const QString &string)
+/*! \fn void Atom::concatenateString(const QString &string)
 
   Appends \a string to the string parameter of this atom.
 

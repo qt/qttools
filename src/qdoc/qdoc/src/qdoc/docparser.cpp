@@ -1172,7 +1172,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         QString suffix =
                                 Text::subText(currentLinkAtom, m_private->m_text.lastAtom())
                                         .toString();
-                        currentLinkAtom->appendString(suffix);
+                        currentLinkAtom->concatenateString(suffix);
                     }
                     currentLinkAtom = nullptr;
                 }
@@ -1808,7 +1808,7 @@ void DocParser::appendWord(const QString &word)
     if (m_private->m_text.lastAtom()->type() != Atom::String) {
         appendAtom(Atom(Atom::String, word));
     } else
-        m_private->m_text.lastAtom()->appendString(word);
+        m_private->m_text.lastAtom()->concatenateString(word);
 }
 
 void DocParser::appendToCode(const QString &markedCode)
@@ -1817,7 +1817,7 @@ void DocParser::appendToCode(const QString &markedCode)
         appendAtom(Atom(Atom::Code));
         m_lastAtom = m_private->m_text.lastAtom();
     }
-    m_lastAtom->appendString(markedCode);
+    m_lastAtom->concatenateString(markedCode);
 }
 
 void DocParser::appendToCode(const QString &markedCode, Atom::AtomType defaultType)
@@ -1826,7 +1826,7 @@ void DocParser::appendToCode(const QString &markedCode, Atom::AtomType defaultTy
         appendAtom(Atom(defaultType, markedCode));
         m_lastAtom = m_private->m_text.lastAtom();
     } else {
-        m_lastAtom->appendString(markedCode);
+        m_lastAtom->concatenateString(markedCode);
     }
 }
 
