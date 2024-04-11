@@ -135,6 +135,7 @@ public:
 
     void appendChar(QChar ch) { m_strs[0] += ch; }
     void concatenateString(const QString &string) { m_strs[0] += string; }
+    void append(const QString &string) { m_strs << string; }
     void chopString() { m_strs[0].chop(1); }
     void setString(const QString &string) { m_strs[0] = string; }
     Atom *next() { return m_next; }
