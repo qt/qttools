@@ -755,28 +755,7 @@ void Tree::insertTarget(const QString &name, const QString &title, TargetRec::Ta
 void Tree::resolveTargets(Aggregate *root)
 {
     for (auto *child : root->childNodes()) {
-        if (child->isTextPageNode()) {
-            auto *node = static_cast<PageNode *>(child);
-            QString key = node->title();
-            if (!key.isEmpty()) {
-                if (key.contains(QChar(' ')))
-                    key = Utilities::asAsciiPrintable(key);
-                QList<PageNode *> nodes = m_pageNodesByTitle.values(key);
-                bool alreadyThere = false;
-                if (!nodes.empty()) {
-                    for (const auto &node_ : nodes) {
-                        if (node_->isExternalPage()) {
-                            if (node->name() == node_->name()) {
-                                alreadyThere = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (!alreadyThere)
-                    m_pageNodesByTitle.insert(key, node);
-            }
-        }
+        addToPageNodeByTitleMap(child);
 
         if (child->doc().hasTableOfContents()) {
             const QList<Atom *> &toc = child->doc().tableOfContents();
@@ -819,6 +798,33 @@ void Tree::resolveTargets(Aggregate *root)
         if (child->isAggregate())
             resolveTargets(static_cast<Aggregate *>(child));
     }
+}
+
+/*!
+    \internal
+
+    Checks if the \a node's title is registered in the page nodes by title map.
+    If not, it stores the page node in the map.
+ */
+void Tree::addToPageNodeByTitleMap(Node *node) {
+    if (!node || !node->isTextPageNode())
+        return;
+
+    auto *pageNode = static_cast<PageNode *>(node);
+    QString key = pageNode->title();
+    if (key.isEmpty())
+        return;
+
+    if (key.contains(QChar(' ')))
+        key = Utilities::asAsciiPrintable(key);
+    const QList<PageNode *> nodes = m_pageNodesByTitle.values(key);
+
+    bool alreadyThere = std::any_of(nodes.cbegin(), nodes.cend(), [&](const auto &knownNode) {
+        return knownNode->isExternalPage() && knownNode->name() == pageNode->name();
+    });
+
+    if (!alreadyThere)
+        m_pageNodesByTitle.insert(key, pageNode);
 }
 
 /*!
