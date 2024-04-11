@@ -1679,10 +1679,11 @@ void DocParser::startSection(Doc::Sections unit, int cmd)
     leaveValueList();
 
     if (m_currentSection == Doc::NoSection) {
-        m_currentSection = (Doc::Sections)(unit);
+        m_currentSection = static_cast<Doc::Sections>(unit);
         m_private->constructExtra();
-    } else
+    } else {
         endSection(unit, cmd);
+    }
 
     appendAtom(Atom(Atom::SectionLeft, QString::number(unit)));
     m_private->constructExtra();
