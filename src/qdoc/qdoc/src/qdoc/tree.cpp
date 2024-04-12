@@ -756,20 +756,8 @@ void Tree::resolveTargets(Aggregate *root)
 {
     for (auto *child : root->childNodes()) {
         addToPageNodeByTitleMap(child);
+        populateTocSectionTargetMap(child);
 
-        if (child->doc().hasTableOfContents()) {
-            const QList<Atom *> &toc = child->doc().tableOfContents();
-            for (Atom *i : toc) {
-                QString ref = refForAtom(i);
-                QString title = Text::sectionHeading(i).toString();
-                if (!ref.isEmpty() && !title.isEmpty()) {
-                    QString key = Utilities::asAsciiPrintable(title);
-                    auto *target = new TargetRec(ref, TargetRec::Contents, child, 3);
-                    m_nodesByTargetRef.insert(key, target);
-                    m_nodesByTargetTitle.insert(title, target);
-                }
-            }
-        }
         if (child->doc().hasKeywords()) {
             const QList<Atom *> &keywords = child->doc().keywords();
             for (Atom *i : keywords) {
@@ -797,6 +785,29 @@ void Tree::resolveTargets(Aggregate *root)
         }
         if (child->isAggregate())
             resolveTargets(static_cast<Aggregate *>(child));
+    }
+}
+
+/*!
+    \internal
+
+    Populates the map of targets for each section in the table of contents for
+    the given \a node.
+ */
+void Tree::populateTocSectionTargetMap(Node *node) {
+    if (!node || !node->doc().hasTableOfContents())
+        return;
+
+    for (Atom *atom : std::as_const(node->doc().tableOfContents()) {
+        const QString &ref = refForAtom(atom);
+        const QString &title = Text::sectionHeading(atom).toString();
+        if (ref.isEmpty() || title.isEmpty())
+            continue;
+
+        const QString &key = Utilities::asAsciiPrintable(title);
+        auto *target = new TargetRec(ref, TargetRec::Contents, node, 3);
+        m_nodesByTargetRef.insert(key, target);
+        m_nodesByTargetTitle.insert(title, target);
     }
 }
 
