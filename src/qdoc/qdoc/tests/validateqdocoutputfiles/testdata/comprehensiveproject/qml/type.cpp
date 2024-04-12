@@ -37,7 +37,6 @@
 
 /*!
     \qmltype TypeNoVersion
-    \instantiates TestQDoc::TestDerived
     \inqmlmodule Test.NoVer
     \brief Another QML type documented in a .cpp file.
 */
