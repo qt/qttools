@@ -262,11 +262,12 @@ void HelpViewer::doSetSource(const QUrl &url, bool reload)
     d->setSourceInternal(url, nullptr, reload);
 }
 
-void HelpViewer::print(QPagedPaintDevice *printer)
+#if QT_CONFIG(printer)
+void HelpViewer::print(QPrinter *printer)
 {
-    Q_UNUSED(printer);
-    // TODO: implement me
+    d->m_viewer->print(printer);
 }
+#endif
 
 QString HelpViewer::selectedText() const
 {

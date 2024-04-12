@@ -10,6 +10,8 @@
 #include <QtGui/QFont>
 #include <QtGui/QTextDocument>
 
+#include <QtPrintSupport/QPrinter>
+
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -44,7 +46,9 @@ public:
     void reload();
     void setSource(const QUrl &url);
 
-    void print(QPagedPaintDevice *printer);
+#if QT_CONFIG(printer)
+    void print(QPrinter *printer);
+#endif
 
     QString selectedText() const;
     bool isForwardAvailable() const;

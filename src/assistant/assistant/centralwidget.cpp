@@ -398,6 +398,7 @@ void CentralWidget::printPreview()
 #if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
     initPrinter();
     QPrintPreviewDialog preview(m_printer, this);
+    preview.resize(m_printer->width(), m_printer->height());
     connect(&preview, &QPrintPreviewDialog::paintRequested,
             this, &CentralWidget::printPreviewToPrinter);
     preview.exec();
@@ -563,7 +564,7 @@ void CentralWidget::initPrinter()
     TRACE_OBJ
 #ifndef QT_NO_PRINTER
     if (!m_printer)
-        m_printer = new QPrinter(QPrinter::HighResolution);
+        m_printer = new QPrinter(QPrinter::ScreenResolution);
 #endif
 }
 
