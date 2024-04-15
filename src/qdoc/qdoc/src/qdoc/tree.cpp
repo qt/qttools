@@ -751,6 +751,12 @@ void Tree::insertTarget(const QString &name, const QString &title, TargetRec::Ta
 }
 
 /*!
+    \internal
+
+    \a root is the root node of the tree to resolve targets for. This function
+    traverses the tree starting from the root node and processes each child
+    node. If the child node is an aggregate node, this function is called
+    recursively on the child node.
  */
 void Tree::resolveTargets(Aggregate *root)
 {
@@ -758,22 +764,31 @@ void Tree::resolveTargets(Aggregate *root)
         addToPageNodeByTitleMap(child);
         populateTocSectionTargetMap(child);
         addKeywordsToTargetMaps(child);
+        addTargetsToTargetMap(child);
 
-        if (child->doc().hasTargets()) {
-            const QList<Atom *> &targets = child->doc().targets();
-            for (Atom *i : targets) {
-                QString ref = refForAtom(i);
-                QString title = i->string();
-                if (!ref.isEmpty() && !title.isEmpty()) {
-                    QString key = Utilities::asAsciiPrintable(title);
-                    auto *target = new TargetRec(ref, TargetRec::Target, child, 2);
-                    m_nodesByTargetRef.insert(key, target);
-                    m_nodesByTargetTitle.insert(title, target);
-                }
-            }
-        }
         if (child->isAggregate())
             resolveTargets(static_cast<Aggregate *>(child));
+    }
+}
+
+/*!
+    \internal
+
+    Updates the target maps for targets associated with the given \a node.
+ */
+void Tree::addTargetsToTargetMap(Node *node) {
+    if (!node || !node->doc().hasTargets())
+        return;
+
+    for (Atom *i : std::as_const(node->doc().targets())) {
+        const QString ref = refForAtom(i);
+        const QString title = i->string();
+        if (!ref.isEmpty() && !title.isEmpty()) {
+            QString key = Utilities::asAsciiPrintable(title);
+            auto *target = new TargetRec(ref, TargetRec::Target, node, 2);
+            m_nodesByTargetRef.insert(key, target);
+            m_nodesByTargetTitle.insert(title, target);
+        }
     }
 }
 
