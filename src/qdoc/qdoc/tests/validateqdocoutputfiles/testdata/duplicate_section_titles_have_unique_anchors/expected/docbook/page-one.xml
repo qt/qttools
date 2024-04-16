@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Page One</db:title>
+<db:productname>Duplicate section titles have unique anchors</db:productname>
+<db:titleabbrev>Duplicate section titles have unique anchors Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Duplicate section titles have unique anchors Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:para>This test is for a documentation project with multiple section titles whose names collide.</db:para>
+<db:section xml:id="section-one">
+<db:title>Section One</db:title>
+<db:para>This is the first section.</db:para>
+<db:section xml:id="section-two">
+<db:title>Section Two</db:title>
+<db:para>This is the first sub-section.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="section-one-2">
+<db:title>Section One</db:title>
+<db:para>This is the second section.</db:para>
+<db:section xml:id="section-one-2-section-two-3">
+<db:title>Section Two</db:title>
+<db:para>This is the second sub-section.</db:para>
+</db:section>
+</db:section>
+</db:article>

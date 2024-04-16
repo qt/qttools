@@ -1,0 +1,21 @@
+// Copyright (C) 2024 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page page_one.html
+    \title Page One
+
+    This test is for a documentation project with multiple section titles whose names collide.
+
+    \section1 Section One
+    This is the first section.
+
+    \section2 Section Two
+    This is the first sub-section.
+
+    \section1 Section One
+    This is the second section.
+
+    \section2 Section Two
+    This is the second sub-section.
+*/

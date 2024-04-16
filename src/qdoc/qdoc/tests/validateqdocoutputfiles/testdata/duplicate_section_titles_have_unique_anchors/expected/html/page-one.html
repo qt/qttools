@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- page_one.qdoc -->
+  <title>Page One | Duplicate section titles have unique anchors</title>
+</head>
+<body>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#section-one">Section One</a></li>
+<li class="level2"><a href="#section-two">Section Two</a></li>
+<li class="level1"><a href="#section-one-2">Section One</a></li>
+<li class="level2"><a href="#section-one-2-section-two-3">Section Two</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title">Page One</h1>
+<!-- $$$page_one.html-description -->
+<div class="descr" id="details">
+<p>This test is for a documentation project with multiple section titles whose names collide.</p>
+<h2 id="section-one">Section One</h2>
+<p>This is the first section.</p>
+<h3 id="section-two">Section Two</h3>
+<p>This is the first sub-section.</p>
+<h2 id="section-one-2">Section One</h2>
+<p>This is the second section.</p>
+<h3 id="section-one-2-section-two-3">Section Two</h3>
+<p>This is the second sub-section.</p>
+</div>
+<!-- @@@page_one.html -->
+</body>
+</html>

@@ -892,7 +892,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
             sectionLevels.push(currentSectionLevel);
 
             m_writer->writeStartElement(dbNamespace, "section");
-            writeXmlId(Utilities::asAsciiPrintable(Text::sectionHeading(atom).toString()));
+            writeXmlId(Tree::refForAtom(atom));
             newLine();
             // Unlike startSectionBegin, don't start a title here.
         }

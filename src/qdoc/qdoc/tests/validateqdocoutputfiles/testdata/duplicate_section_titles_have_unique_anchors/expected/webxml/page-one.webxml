@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="page_one.html" href="page-one.html" status="active" location="page_one.qdoc" documented="true" subtype="page" title="Page One" fulltitle="Page One" subtitle="">
+            <contents name="section-one" title="Section One" level="1"/>
+            <contents name="section-two" title="Section Two" level="2"/>
+            <contents name="section-one-2" title="Section One" level="1"/>
+            <contents name="section-one-2-section-two-3" title="Section Two" level="2"/>
+            <description>
+                <para>This test is for a documentation project with multiple section titles whose names collide.</para>
+                <section id="section-one">
+                    <heading level="1">Section One</heading>
+                    <para>This is the first section.</para>
+                </section>
+                <section id="section-two">
+                    <heading level="2">Section Two</heading>
+                    <para>This is the first sub-section.</para>
+                </section>
+                <section id="section-one">
+                    <heading level="1">Section One</heading>
+                    <para>This is the second section.</para>
+                </section>
+                <section id="section-two">
+                    <heading level="2">Section Two</heading>
+                    <para>This is the second sub-section.</para>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>

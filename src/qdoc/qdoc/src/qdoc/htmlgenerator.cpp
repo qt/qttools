@@ -861,7 +861,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
     case Atom::SectionHeadingLeft: {
         int unit = atom->string().toInt() + hOffset(relative);
         out() << "<h" + QString::number(unit) + QLatin1Char(' ') << "id=\""
-              << Utilities::asAsciiPrintable(Text::sectionHeading(atom).toString()) << "\">";
+              << Tree::refForAtom(atom) << "\">";
         m_inSectionHeading = true;
         break;
     }
@@ -2367,9 +2367,8 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
             openUnorderedList();
             int numAtoms;
             Text headingText = Text::sectionHeading(atom);
-            QString s = headingText.toString();
             out() << "<li class=\"level" << sectionNumber << "\">";
-            out() << "<a href=\"" << '#' << Utilities::asAsciiPrintable(s) << "\">";
+            out() << "<a href=\"" << '#' << Tree::refForAtom(atom) << "\">";
             generateAtomList(headingText.firstAtom(), node, marker, true, numAtoms);
             out() << "</a></li>\n";
         }

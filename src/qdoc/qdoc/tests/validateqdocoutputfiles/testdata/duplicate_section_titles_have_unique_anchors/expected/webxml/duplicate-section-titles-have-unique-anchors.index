@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Duplicate section titles have unique anchors Reference Documentation" version="" project="Duplicate section titles have unique anchors">
+    <namespace name="" status="active" access="public" module="duplicate section titles have unique anchors">
+        <page name="page_one.html" href="page-one.html" status="active" location="page_one.qdoc" documented="true" subtype="page" title="Page One" fulltitle="Page One" subtitle="">
+            <contents name="section-one" title="Section One" level="1"/>
+            <contents name="section-two" title="Section Two" level="2"/>
+            <contents name="section-one-2" title="Section One" level="1"/>
+            <contents name="section-one-2-section-two-3" title="Section Two" level="2"/>
+        </page>
+    </namespace>
+</INDEX>

@@ -1130,7 +1130,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
                 int level = node->doc().tableOfContentsLevels()[i];
                 QString title = Text::sectionHeading(item).toString();
                 writer.writeStartElement("contents");
-                writer.writeAttribute("name", Utilities::asAsciiPrintable(title));
+                writer.writeAttribute("name", Tree::refForAtom(item));
                 writer.writeAttribute("title", title);
                 writer.writeAttribute("level", QString::number(level));
                 writer.writeEndElement(); // contents

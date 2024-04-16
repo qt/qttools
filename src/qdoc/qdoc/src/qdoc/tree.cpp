@@ -816,17 +816,41 @@ void Tree::addKeywordsToTargetMaps(Node *node) {
     \internal
 
     Populates the map of targets for each section in the table of contents for
-    the given \a node.
+    the given \a node while ensuring that each target has a unique reference.
  */
 void Tree::populateTocSectionTargetMap(Node *node) {
     if (!node || !node->doc().hasTableOfContents())
         return;
 
-    for (Atom *atom : std::as_const(node->doc().tableOfContents()) {
-        const QString &ref = refForAtom(atom);
+    QStack<Atom *> tocLevels;
+    QSet<QString> anchors;
+
+    qsizetype index = 0;
+
+    for (Atom *atom: std::as_const(node->doc().tableOfContents())) {
+        while (!tocLevels.isEmpty() && tocLevels.top()->string().toInt() >= atom->string().toInt())
+            tocLevels.pop();
+
+        tocLevels.push(atom);
+
+        QString ref = refForAtom(atom);
         const QString &title = Text::sectionHeading(atom).toString();
         if (ref.isEmpty() || title.isEmpty())
             continue;
+
+        if (anchors.contains(ref)) {
+            QStringList refParts;
+            for (const auto tocLevel : tocLevels)
+                 refParts << refForAtom(tocLevel);
+
+            refParts << QString::number(index);
+            ref = refParts.join(QLatin1Char('-'));
+        }
+
+        anchors.insert(ref);
+        if (atom->next(Atom::SectionHeadingLeft))
+            atom->next()->append(ref);
+        ++index;
 
         const QString &key = Utilities::asAsciiPrintable(title);
         auto *target = new TargetRec(ref, TargetRec::Contents, node, 3);
@@ -927,7 +951,7 @@ const PageNode *Tree::findPageNodeByTitle(const QString &title) const
 
 /*!
   Returns a canonical title for the \a atom, if the \a atom
-  is a SectionLeft, Keyword, or Target.
+  is a SectionLeft, SectionHeadingLeft, Keyword, or Target.
  */
 QString Tree::refForAtom(const Atom *atom)
 {
@@ -935,6 +959,11 @@ QString Tree::refForAtom(const Atom *atom)
 
     switch (atom->type()) {
     case Atom::SectionLeft:
+        atom = atom->next();
+        [[fallthrough]];
+    case Atom::SectionHeadingLeft:
+        if (atom->count() == 2)
+            return atom->string(1);
         return Utilities::asAsciiPrintable(Text::sectionHeading(atom).toString());
     case Atom::Target:
         [[fallthrough]];

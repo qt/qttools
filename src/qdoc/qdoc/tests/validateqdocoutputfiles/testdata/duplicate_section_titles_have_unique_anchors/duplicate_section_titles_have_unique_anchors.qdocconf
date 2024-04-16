@@ -1,0 +1,25 @@
+project = Duplicate section titles have unique anchors
+
+locationinfo = false
+
+headers.fileextensions  = "*.h *.hpp"
+sources.fileextensions  = "*.cpp *.qml *.qdoc"
+
+headerdirs  = .
+sourcedirs  = ./src
+
+warninglimit = 0
+warninglimit.enabled = true
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+WebXML.nosubdirs = true
+WebXML.outputsubdir = webxml
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
