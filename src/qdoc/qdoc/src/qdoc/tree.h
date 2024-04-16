@@ -74,6 +74,7 @@ public: // Of necessity, a few public functions remain.
     void appendProxy(ProxyNode *t) { m_proxies.append(t); }
     void addToDontDocumentMap(QString &arg);
     void markDontDocumentNodes();
+    static QString refForAtom(const Atom *atom);
 
 private: // The rest of the class is private.
     Aggregate *findAggregate(const QString &name);
@@ -116,7 +117,6 @@ private: // The rest of the class is private.
     [[nodiscard]] const NamespaceNode *root() const { return &m_root; }
 
     ClassList allBaseClasses(const ClassNode *classe) const;
-    QString refForAtom(const Atom *atom);
 
     CNMap *getCollectionMap(Node::NodeType type);
     [[nodiscard]] const CNMap &groups() const { return m_groups; }
