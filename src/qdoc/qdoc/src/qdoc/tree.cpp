@@ -927,17 +927,22 @@ const PageNode *Tree::findPageNodeByTitle(const QString &title) const
 
 /*!
   Returns a canonical title for the \a atom, if the \a atom
-  is a SectionLeft or a Target.
+  is a SectionLeft, Keyword, or Target.
  */
 QString Tree::refForAtom(const Atom *atom)
 {
-    if (atom) {
-        if (atom->type() == Atom::SectionLeft)
-            return Utilities::asAsciiPrintable(Text::sectionHeading(atom).toString());
-        if ((atom->type() == Atom::Target) || (atom->type() == Atom::Keyword))
-            return Utilities::asAsciiPrintable(atom->string());
+    Q_ASSERT(atom);
+
+    switch (atom->type()) {
+    case Atom::SectionLeft:
+        return Utilities::asAsciiPrintable(Text::sectionHeading(atom).toString());
+    case Atom::Target:
+        [[fallthrough]];
+    case Atom::Keyword:
+        return Utilities::asAsciiPrintable(atom->string());
+    default:
+        return {};
     }
-    return QString();
 }
 
 /*!
