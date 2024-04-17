@@ -103,6 +103,7 @@ private: // The rest of the class is private.
     void resolveTargets(Aggregate *root);
     void addToPageNodeByTitleMap(Node *node);
     void populateTocSectionTargetMap(Node *node);
+    void addKeywordsToTargetMaps(Node *node);
 
     const TargetRec *findUnambiguousTarget(const QString &target, Node::Genus genus) const;
     [[nodiscard]] const PageNode *findPageNodeByTitle(const QString &title) const;

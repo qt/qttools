@@ -757,19 +757,8 @@ void Tree::resolveTargets(Aggregate *root)
     for (auto *child : root->childNodes()) {
         addToPageNodeByTitleMap(child);
         populateTocSectionTargetMap(child);
+        addKeywordsToTargetMaps(child);
 
-        if (child->doc().hasKeywords()) {
-            const QList<Atom *> &keywords = child->doc().keywords();
-            for (Atom *i : keywords) {
-                QString ref = refForAtom(i);
-                QString title = i->string();
-                if (!ref.isEmpty() && !title.isEmpty()) {
-                    auto *target = new TargetRec(ref, TargetRec::Keyword, child, 1);
-                    m_nodesByTargetRef.insert(Utilities::asAsciiPrintable(title), target);
-                    m_nodesByTargetTitle.insert(title, target);
-                }
-            }
-        }
         if (child->doc().hasTargets()) {
             const QList<Atom *> &targets = child->doc().targets();
             for (Atom *i : targets) {
@@ -785,6 +774,26 @@ void Tree::resolveTargets(Aggregate *root)
         }
         if (child->isAggregate())
             resolveTargets(static_cast<Aggregate *>(child));
+    }
+}
+
+/*!
+    \internal
+
+    Updates the target maps for keywords associated with the given \a node.
+ */
+void Tree::addKeywordsToTargetMaps(Node *node) {
+    if (!node->doc().hasKeywords())
+        return;
+
+    for (Atom *i : std::as_const(node->doc().keywords())) {
+        QString ref = refForAtom(i);
+        QString title = i->string();
+        if (!ref.isEmpty() && !title.isEmpty()) {
+            auto *target = new TargetRec(ref, TargetRec::Keyword, node, 1);
+            m_nodesByTargetRef.insert(Utilities::asAsciiPrintable(title), target);
+            m_nodesByTargetTitle.insert(title, target);
+        }
     }
 }
 
