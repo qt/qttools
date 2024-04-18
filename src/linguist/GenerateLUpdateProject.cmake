@@ -44,34 +44,42 @@ function(filter_unsuitable_lupdate_input out_var)
     set("${out_var}" "${result}" PARENT_SCOPE)
 endfunction()
 
-# Remove ui_foo.h for each foo.ui file found in the sources.
-#    filter_generated_ui_headers(existing_files .../src/foo.ui .../target_autogen/include/ui_foo.h)
+# Remove files from SOURCES that are in EXCLUDED_DIR.
+#    filter_files_in_directory(existing_files
+#        EXCLUDED_DIR .../target_autogen
+#        SOURCES .../src/foo.ui .../target_autogen/include/ui_foo.h)
 #    -> .../src/foo.ui
-function(filter_generated_ui_headers out_var)
-    set(ui_file_paths ${ARGN})
-    list(FILTER ui_file_paths INCLUDE REGEX "/[^/]+\\.ui$")
+function(filter_files_in_directory out_var)
+    set(no_value_options "")
+    set(single_value_options EXCLUDED_DIR)
+    set(multi_value_options SOURCES)
+    cmake_parse_arguments(PARSE_ARGV 1 arg
+        "${no_value_options}" "${single_value_options}" "${multi_value_options}"
+    )
 
-    set(filter_regex "")
-    foreach(file_path IN LISTS ui_file_paths)
-        get_filename_component(file_name "${file_path}" NAME_WLE)
-        if(NOT "${filter_regex}" STREQUAL "")
-            string(APPEND filter_regex "|")
+    set(result "")
+    foreach(source_file IN LISTS arg_SOURCES)
+        file(RELATIVE_PATH relative_path "${arg_EXCLUDED_DIR}" "${source_file}")
+        if(IS_ABSOLUTE "${relative_path}" OR (relative_path MATCHES "^\\.\\."))
+            list(APPEND result "${source_file}")
         endif()
-        string(APPEND filter_regex "(/ui_${file_name}\\.h$)")
     endforeach()
-
-    set(result ${ARGN})
-    if(NOT "${filter_regex}" STREQUAL "")
-        list(FILTER result EXCLUDE REGEX ${filter_regex})
-    endif()
-
     set("${out_var}" "${result}" PARENT_SCOPE)
 endfunction()
 
 function(prepare_json_sources out_var)
-    filter_nonexistent_files(sources ${ARGN})
+    set(no_value_options "")
+    set(single_value_options AUTOGEN_DIR)
+    set(multi_value_options SOURCES)
+    cmake_parse_arguments(PARSE_ARGV 1 arg
+        "${no_value_options}" "${single_value_options}" "${multi_value_options}"
+    )
+
+    filter_nonexistent_files(sources ${arg_SOURCES})
     filter_unsuitable_lupdate_input(sources ${sources})
-    filter_generated_ui_headers(sources ${sources})
+    if(DEFINED arg_AUTOGEN_DIR)
+        filter_files_in_directory(sources EXCLUDED_DIR ${arg_AUTOGEN_DIR} SOURCES ${sources})
+    endif()
     list_to_json_array("${sources}" result)
     set("${out_var}" "${result}" PARENT_SCOPE)
 endfunction()
@@ -107,7 +115,7 @@ foreach(path_var IN LISTS path_variables)
     endforeach()
 endforeach()
 
-prepare_json_sources(json_sources ${absolute_sources})
+prepare_json_sources(json_sources SOURCES ${absolute_sources})
 list_to_json_array("${absolute_include_paths}" json_include_paths)
 list_to_json_array("${absolute_translations}" json_translations)
 
@@ -120,7 +128,10 @@ set(content "{
 ")
 if(lupdate_subproject_count GREATER 0)
     foreach(i RANGE 1 ${lupdate_subproject_count})
-        prepare_json_sources(json_sources ${absolute_subproject${i}_sources})
+        prepare_json_sources(json_sources
+            AUTOGEN_DIR ${lupdate_subproject${i}_autogen_dir}
+            SOURCES ${absolute_subproject${i}_sources}
+        )
         list_to_json_array("${absolute_subproject${i}_include_paths}" json_include_paths)
         list_to_json_array("${absolute_subproject${i}_excluded}" json_sources_exclusions)
         string(APPEND content "    {
