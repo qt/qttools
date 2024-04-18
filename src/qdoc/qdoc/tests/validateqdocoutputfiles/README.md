@@ -50,6 +50,9 @@ project directory, otherwise the project won't be picked up by the test.
 ### The .qdocconf file
 The `.qdocconf` file contains the configuration necessary to build the
 QDoc project in the directory. Observe the following:
+- **Important!** Make sure to set `locationinfo = false` to avoid test failures
+  due to differences in the location information in the generated output.
+- Test projects should be warning free, so set `warninglimit.enabled = true`.
 - The name of the .qdocconf-file must be identical as that of the directory
   that contains it. This means that for a project **foo**, it should go into
   `testdata/foo` and the configuration file should be
@@ -61,6 +64,13 @@ QDoc project in the directory. Observe the following:
   `include(bar.qdocconf)`, and this will work as expected.
 - The `warninglimit` should be set to the number of warnings expected
   from QDoc for that specific project, if any are to be expected at all.
+- You probably want to configure all output formats, otherwise only the HTML
+  output will be generated. The test will compare all output formats that are
+  generated to the expected output, so remember to specify the output directory
+  for each format. By convention, the output directories are named after the
+     format, for example `html`, `docbook`, `webxml`, etc.
+- Place the sources for your new test in a subdirectory of the test project
+  directory. By convention, the sources are placed in a directory named `src`.
 
 ### The `expected` directory
 The `expected` directory contains the expected output from QDoc
