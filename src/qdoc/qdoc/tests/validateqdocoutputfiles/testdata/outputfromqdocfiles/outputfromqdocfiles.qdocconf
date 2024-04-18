@@ -7,7 +7,7 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = images
+imagedirs = ./src/images
 
 # zero warning policy -- here; allow one which is (qdoc) warning: Can't link to ''
 warninglimit = 1
@@ -26,10 +26,10 @@ DocBook.nosubdirs         = true
 DocBook.outputsubdir      = docbook
 DocBook.usedocbookextensions = true
 
-sources = qdoctests-outputfromqdocfiles.qdoc \
-          qdoctests-outputfromqdocmanuallikefiles.qdoc
+sources = ./src/qdoctests-outputfromqdocfiles.qdoc \
+          ./src/qdoctests-outputfromqdocmanuallikefiles.qdoc
 
-exampledirs = snippets
+exampledirs = ./src/snippets
 
 macro.beginqdoc = "\\c {/*!}"
 macro.endqdoc = "\\c */"

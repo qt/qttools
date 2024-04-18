@@ -2,7 +2,7 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = images
+imagedirs = ./src/images
 
 # zero warning policy
 warninglimit = 0
@@ -12,12 +12,12 @@ warninglimit.enabled = true
 locationinfo = false
 
 project = TestCPP
-includepaths += -I.
+includepaths += -I./src
 
-headers = testcpp.h
-sources = testcpp.cpp \
-          classlists.qdoc \
-          scopedenum.qdoc
+headerdirs = ./src
+sources = ./src/testcpp.cpp \
+          ./src/classlists.qdoc \
+          ./src/scopedenum.qdoc
 exampledirs = snippets
 
 macro.CMDFN = \\\\fn

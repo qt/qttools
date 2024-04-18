@@ -1,8 +1,8 @@
 project = TableAfterValue
 
-headerdirs  = .
-sourcedirs  = .
-exampledirs = .
+headerdirs  = ./src
+sourcedirs  = ./src
+exampledirs = ./src
 
 outputformats             = WebXML HTML DocBook
 WebXML.quotinginformation = true
@@ -19,7 +19,7 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = images
+imagedirs = ./src/images
 
 # zero warning policy
 warninglimit = 0

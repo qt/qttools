@@ -2,9 +2,9 @@ project = TestModule
 
 moduleheader = TestModule.h
 
-headerdirs = ./inc
+headerdirs = ./src/inc
 sourcedirs = ./src
-includepaths += ./inc/testmodule
+includepaths += ./src/inc/testmodule
 
 sources.fileextensions = "*.cpp *.qdoc"
 headers.fileextensions = "*.h"
@@ -13,7 +13,7 @@ outputdir = doc
 outputformats = HTML WebXML
 
 # images
-imagedirs = ../images
+imagedirs = ./src/images
 
 # zero warning policy
 warninglimit = 0

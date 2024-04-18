@@ -5,8 +5,8 @@ locationinfo = false
 headers.fileextensions  = "*.h *.hpp"
 sources.fileextensions  = "*.cpp *.qml *.qdoc"
 
-headerdirs  = .
-sourcedirs  = .
+headerdirs  = ./src
+sourcedirs  = ./src
 
 warninglimit = 0
 warninglimit.enabled = true

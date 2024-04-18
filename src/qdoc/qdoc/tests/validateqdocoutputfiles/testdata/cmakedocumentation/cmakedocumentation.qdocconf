@@ -1,8 +1,8 @@
 project = cmakedocumentation
 
-headerdirs  = .
-sourcedirs  = .
-exampledirs = .
+headerdirs  = ./src
+sourcedirs  = ./src
+exampledirs = ./src
 
 outputformats             = WebXML HTML DocBook
 WebXML.quotinginformation = true

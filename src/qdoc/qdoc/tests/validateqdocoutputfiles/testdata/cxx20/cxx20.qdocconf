@@ -1,8 +1,8 @@
 project = cxx20
 
-headerdirs  = .
-sourcedirs  = .
-exampledirs = .
+headerdirs  = ./src
+sourcedirs  = ./src
+exampledirs = ./src
 
 macro.equalitycomparesto  = "\\compareswith equality \1\n\\endcompareswith"
 
@@ -21,7 +21,7 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = images
+imagedirs = ./src/images
 
 # zero warning policy
 warninglimit = 0

@@ -1,6 +1,6 @@
 project = LineComment
 
-{headerdirs,sourcedirs,exampledirs} = .
+{headerdirs,sourcedirs,exampledirs} = ./src
 
 outputformats             = WebXML HTML DocBook
 WebXML.quotinginformation = true
@@ -24,4 +24,4 @@ warninglimit.enabled = true
 # don't write host system-specific paths to index files
 locationinfo = false
 
-imagedirs = images
+imagedirs = ./src/images

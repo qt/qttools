@@ -2,7 +2,7 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = images
+imagedirs = ./src/images
 
 # zero warning policy
 warninglimit = 0
@@ -17,7 +17,7 @@ HTML.nosubdirs = true
 HTML.outputsubdir = html
 
 project = TestGlobals
-includepaths += -Iglobalfunc
+includepaths += -I./src/globalfunc
 
-headers = global.h
-sources = global.qdoc
+headers = ./src/global.h
+sources = ./src/global.qdoc

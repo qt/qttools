@@ -2,7 +2,7 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = images
+imagedirs = ./src/images
 
 # zero warning policy
 warninglimit = 0
@@ -21,16 +21,14 @@ DocBook.outputsubdir = docbook
 DocBook.its = true
 DocBook.usedocbookextensions = true
 
-includepaths += -I.
+includepaths += -I./src
 
-headers = testcpp.h \
-          dont.h
-sources = testcpp.cpp \
-          classlists.qdoc \
-          dont.cpp \
-          properties.qdoc \
-          unseenclass.qdoc
-exampledirs = snippets
+headerdirs = ./src \
+             ./src/qml
+sourcedirs = ./src \
+             ./src/qml
+exampledirs = ./src/snippets \
+              ./src/qml
 
 macro.CMDFN = \\\\fn
 macro.nothing = \\dontdocument ()
@@ -52,11 +50,6 @@ moduleheader = TestCPP
 project = Test
 description = "A test project for QDoc build artifacts"
 
-exampledirs = qml
-
-headerdirs += .
-sourcedirs += qml
-
 examples.fileextensions = "*.qml *.cpp"
 
 macro.begincomment      = "\\c{/*}"
@@ -75,9 +68,9 @@ version = 6.2.11
 
 examplesinstallpath = test
 
-exampledirs += examples
+exampledirs += ./src/examples
 
-excludedirs += examples/demos/demo/excludes
+excludedirs += ./src/examples/demos/demo/excludes
 
 # Configure .qhp generation
 qhp.projects            = Test

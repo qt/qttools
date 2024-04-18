@@ -2,7 +2,7 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = images
+imagedirs = ./src/images
 
 # zero warning policy
 warninglimit = 0
@@ -12,9 +12,9 @@ warninglimit.enabled = true
 locationinfo = false
 
 project = HeaderFile
-moduleheader = testheader.h
+moduleheader = .src/testheader.h
 
-{includepaths,sourcedirs,headerdirs} += .
+{includepaths,sourcedirs,headerdirs} += ./src
 
 outputformats = HTML WebXML DocBook
 HTML.nosubdirs = true

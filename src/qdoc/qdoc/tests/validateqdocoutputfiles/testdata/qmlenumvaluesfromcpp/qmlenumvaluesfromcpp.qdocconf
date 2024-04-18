@@ -1,8 +1,8 @@
 project = QmlEnumValuesFromCpp
 moduleheader = class.h
-includepaths = .
+includepaths = ./src
 
-{sourcedirs,headerdirs} = .
+{sourcedirs,headerdirs} = ./src
 
 # zero warning policy
 warninglimit = 0

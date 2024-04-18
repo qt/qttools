@@ -24,13 +24,13 @@ DocBook.outputsubdir      = docbook
 DocBook.usedocbookextensions = true
 
 # images
-imagedirs = images
+imagedirs = ./src/images
 
-sources = qdoctests-outputfromqdocfiles.qdoc \
-          qdoctests-outputfromqdocmanuallikefiles.qdoc \
-          toc.qdoc
+sources = ./src/qdoctests-outputfromqdocfiles.qdoc \
+          ./src/qdoctests-outputfromqdocmanuallikefiles.qdoc \
+          ./src/toc.qdoc
 
-exampledirs = snippets
+exampledirs = ./src/snippets
 
 macro.beginqdoc = "\\c {/*!}"
 macro.endqdoc = "\\c */"

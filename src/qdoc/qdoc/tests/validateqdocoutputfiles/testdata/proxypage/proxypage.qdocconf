@@ -2,7 +2,7 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = images
+imagedirs = ./src/images
 
 # zero warning policy
 warninglimit = 0
@@ -12,10 +12,10 @@ warninglimit.enabled = true
 locationinfo = false
 
 project = ProxyPage
-includepaths += .
-moduleheader = proxy.h
+includepaths += ./src
+{sourcedirs,headerdirs} = ./src
 
-{sourcedirs,headerdirs} = .
+moduleheader = proxy.h
 
 outputformats                       = HTML DocBook
 {HTML.nosubdirs,DocBook.nosubdirs}  = true
