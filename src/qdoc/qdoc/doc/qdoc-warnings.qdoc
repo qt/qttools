@@ -126,13 +126,14 @@
     \section1 Failed to find function when parsing \\fn <signature>
 
     When Clang parses a function signature following an \qdoccmd fn command,
-    it checks this against the declaration in the header file.  If Clang
+    it checks this against the declaration in the header file. If Clang
     discovers discrepancies, it issues this warning message.
 
-    Typical issues include missing or incorrect template arguments, return
-    type, and qualifiers such as \e const.
+    The signature must be fully qualified. Typical issues include missing or
+    incorrect template arguments, return type, or qualifiers such as
+    \e const.
 
-    \note The \c{\\fn} signature for a \e {hidden friend} should be
+    \note The \c{\fn} signature for a \e {hidden friend} should be
           fully qualified with the scope of the class that declares
           the function.
 
@@ -190,23 +191,6 @@
     a dependency to it.
 
     See also \l {depends-variable}{depends} and {indexes-variable}{indexes}.
-
-    \section1 Clang couldn't find function when parsing \\fn <signature>
-
-    When parsing a \l {fn-command}{\\fn} statement, Clang compares this with the
-    function declaration in the header file. If the signature differs
-    Clang issues this warning.
-
-    \note
-    \list
-        \li A member of a class or namespace needs to include the class or namespace
-            prefix on the member name.
-        \li A \\fn with no return type matches, regardless of the actual return
-            type, but if it specifies an incorrect return type, it doesn't.
-        \li Differences in \\fn's parameter names don't preclude matching, although
-            the \l {a-command}{\\a} commands in the comment must use the names in the declaration.
-
-    \endlist
 
     \section1 Has no \\inmodule command
 
