@@ -739,9 +739,10 @@ function(qt6_add_translations)
     if(NOT "${arg_RESOURCE_PREFIX}" STREQUAL "")
         set(accumulated_out_targets "")
         foreach(target IN LISTS targets)
+            get_target_property(target_binary_dir ${target} BINARY_DIR)
             qt6_add_resources(${target} "${target}_translations"
                 PREFIX "${arg_RESOURCE_PREFIX}"
-                BASE "${CMAKE_CURRENT_BINARY_DIR}"
+                BASE "${target_binary_dir}"
                 OUTPUT_TARGETS out_targets
                 FILES ${qm_files})
             list(APPEND accumulated_out_targets ${out_targets})
