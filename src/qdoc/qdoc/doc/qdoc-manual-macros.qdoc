@@ -193,6 +193,18 @@
         \li Macro
         \li Expands To
     \row
+        \li \\B2Q
+        \li Boot to Qt
+    \row
+        \li \\B2QSS
+        \li Boot to Qt Software Stack
+    \row
+        \li \\B2QST
+        \li Boot to Qt Startup Screen
+    \row
+        \li \\IFW
+        \li Qt Installer Framework
+    \row
         \li \\macos
         \li macOS
     \row
@@ -214,6 +226,9 @@
         \li \\QBXD
         \li Qt Bridge for Adobe XD
     \row
+        \li \\QC
+        \li Qt Creator
+    \row
         \li \\QD
         \li Qt Widgets Designer
     \row
@@ -222,6 +237,9 @@
     \row
         \li \\QDV
         \li Qt Design Viewer
+    \row
+        \li \\QfP
+        \li Qt for Python
     \row
         \li \\QL
         \li Qt Linguist
@@ -232,17 +250,26 @@
         \li \\QMLLS
         \li QML Language Server
     \row
+        \li \\QMLP
+        \li QML Profiler
+    \row
         \li \\QMT
         \li Qt Maintenance Tool
     \row
         \li \\QOI
         \li Qt Online Installer
     \row
+        \li \\QQEM
+        \li Qt Quick Effect Maker
+    \row
         \li \\QQV
         \li Qt QML Viewer
     \row
         \li \\QtAA
         \li Qt for Android Automotive
+    \row
+        \li \\QtTAS
+        \li Qt Tools for Android Studio
     \row
         \li \\QUL
         \li Qt Quick Ultralite
