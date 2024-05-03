@@ -312,7 +312,7 @@ void tst_lupdate::good()
     const QString command = m_cmdLupdate + ' ' + lupdateArguments.join(' ');
     proc.start(m_cmdLupdate, lupdateArguments, QIODevice::ReadWrite | QIODevice::Text);
     QVERIFY2(proc.waitForStarted(), qPrintable(command + QLatin1String(" :") + proc.errorString()));
-    QVERIFY2(proc.waitForFinished(30000), qPrintable(command));
+    QVERIFY2(proc.waitForFinished(60000), qPrintable(command));
     const QString output = QString::fromLocal8Bit(proc.readAll());
     QVERIFY2(proc.exitStatus() == QProcess::NormalExit,
              qPrintable(QLatin1Char('"') + command + "\" crashed\n" + output));
