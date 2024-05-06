@@ -2,8 +2,10 @@
 # ----------------------------------------------------------------------------
 
 .qtc_clangd
+.cache
 CMakeLists.txt.user
 examples/*/*/*[.]app
+compile_commands.json
 config.tests/*/*/*
 !config.tests/*/*/*[.]*
 config.tests/*/*/*[.]app
