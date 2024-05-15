@@ -36,7 +36,7 @@ public:
         << COMMAND_QMLINSTANTIATES << COMMAND_REIMP << COMMAND_RELATES;
 
 public:
-    CppCodeParser(FnCommandParser&& parser);
+    explicit CppCodeParser(FnCommandParser&& parser);
 
     FunctionNode *parseMacroArg(const Location &location, const QString &macroArg);
     FunctionNode *parseOtherFuncArg(const QString &topic, const Location &location,
