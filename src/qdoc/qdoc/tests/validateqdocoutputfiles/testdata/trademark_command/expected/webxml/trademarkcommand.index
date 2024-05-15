@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="TrademarkCommand Reference Documentation" version="" project="TrademarkCommand">
+    <namespace name="" status="active" access="public" module="trademarkcommand">
+        <page name="trademark-test.html" href="trademark-test.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Testing the \tm command" fulltitle="Testing the \tm command" subtitle="">
+            <contents name="acme-corp" title=" Acme corp" level="1"/>
+        </page>
+        <page name="trademarks.html" href="trademarks.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Trademarks" fulltitle="Trademarks" subtitle="" brief="A page that documents trademarks">
+            <keyword name="trademark"/>
+        </page>
+    </namespace>
+</INDEX>

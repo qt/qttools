@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="trademarks.html" href="trademarks.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Trademarks" fulltitle="Trademarks" subtitle="" brief="A page that documents trademarks">
+            <keyword name="trademark"/>
+            <description>
+                <brief>A page that documents trademarks.</brief>
+                <list type="bullet">
+                    <item>
+                        <para>
+                            <link raw="Acme corp" href="trademark-test.html#acme-corp" type="page" page="Testing the \tm command">Acme corp</link>.</para>
+                    </item>
+                </list>
+                <para>Foo™ should have the trademark symbol but no link as we're already on the correct page.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>

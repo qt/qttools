@@ -342,7 +342,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
             m_writer->writeStartElement(dbNamespace, "guilabel");
             if (m_useITS)
                 m_writer->writeAttribute(itsNamespace, "translate", "no");
-        } else {
+        } else if (atom->string() != ATOM_FORMATTING_TRADEMARK) {
             relative->location().warning(QStringLiteral("Unsupported formatting: %1").arg(atom->string()));
         }
         break;
@@ -359,6 +359,9 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
             if (atom->string() == ATOM_FORMATTING_TELETYPE)
                 m_inTeletype = false;
             endLink();
+        } else if (atom->string() == ATOM_FORMATTING_TRADEMARK) {
+            if (appendTrademark(atom))
+                m_writer->writeCharacters(QChar(0x2122)); // 'TM' symbol
         } else {
             relative->location().warning(QStringLiteral("Unsupported formatting: %1").arg(atom->string()));
         }

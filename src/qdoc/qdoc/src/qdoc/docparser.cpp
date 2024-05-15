@@ -110,6 +110,7 @@ enum {
     CMD_TABLE,
     CMD_TABLEOFCONTENTS,
     CMD_TARGET,
+    CMD_TM,
     CMD_TT,
     CMD_UICONTROL,
     CMD_UNDERLINE,
@@ -214,6 +215,7 @@ static struct
              { "table", CMD_TABLE },
              { "tableofcontents", CMD_TABLEOFCONTENTS },
              { "target", CMD_TARGET },
+             { "tm", CMD_TM },
              { "tt", CMD_TT },
              { "uicontrol", CMD_UICONTROL },
              { "underline", CMD_UNDERLINE },
@@ -967,6 +969,11 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     }
                     insertTarget(getRestOfLine());
                     break;
+                case CMD_TM:
+                     // Ignore command while parsing \section<N> argument
+                    if (m_paragraphState != InSingleLineParagraph)
+                        startFormat(ATOM_FORMATTING_TRADEMARK, cmd);
+                    break;
                 case CMD_TT:
                     startFormat(ATOM_FORMATTING_TELETYPE, cmd);
                     break;
@@ -1161,6 +1168,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                 enterPara();
                 appendChar('}');
             } else {
+                const auto &last{m_private->m_text.lastAtom()->string()};
                 appendAtom(Atom(Atom::FormattingRight, *format));
                 if (*format == ATOM_FORMATTING_INDEX) {
                     if (m_indexStartedParagraph)
@@ -1175,6 +1183,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         currentLinkAtom->concatenateString(suffix);
                     }
                     currentLinkAtom = nullptr;
+                } else if (*format == ATOM_FORMATTING_TRADEMARK) {
+                    m_private->m_text.lastAtom()->append(last);
                 }
                 m_pendingFormats.erase(format);
             }
@@ -1456,11 +1466,14 @@ void DocParser::startFormat(const QString &format, int cmd)
         ++m_braceDepth;
         ++m_position;
     } else {
-        appendAtom(Atom(Atom::String, getArgument()));
+        const auto &arg{getArgument()};
+        appendAtom(Atom(Atom::String, arg));
         appendAtom(Atom(Atom::FormattingRight, format));
         if (format == ATOM_FORMATTING_INDEX && m_indexStartedParagraph) {
             skipAllSpaces();
             m_indexStartedParagraph = false;
+        } else if (format == ATOM_FORMATTING_TRADEMARK) {
+            m_private->m_text.lastAtom()->append(arg);
         }
     }
 }

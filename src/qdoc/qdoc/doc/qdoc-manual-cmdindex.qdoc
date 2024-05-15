@@ -128,6 +128,7 @@
     \li \l {target-command} {\\target}
     \li \l {threadsafe-command} {\\threadsafe}
     \li \l {title-command} {\\title}
+    \li \qdoccmd tm
     \li \l {tt-command} {\\tt}
     \li \l {typealias-command} {\\typealias}
     \li \l {typedef-command} {\\typedef}

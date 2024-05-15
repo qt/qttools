@@ -456,6 +456,8 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
             writer.writeEndElement();
         else if (atom->string() == ATOM_FORMATTING_INDEX)
             writer.writeEndElement();
+        else if (atom->string() == ATOM_FORMATTING_TRADEMARK && appendTrademark(atom))
+            writer.writeCharacters(QChar(0x2122)); // 'TM' symbol
     }
         if (m_inLink) {
             writer.writeEndElement(); // link

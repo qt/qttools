@@ -1,0 +1,28 @@
+// Copyright (C) 2024 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page trademark-test.html
+    \title Testing the \\tm command
+
+    \tm {Acme} is a trademark.
+
+    \section1 \tm Acme corp
+
+    \tm Acme, the \tm {Acme Anvil}, and \tm {`It Rings Like a Bell!`}
+    are trademarks of the \e {Acme corp}.
+*/
+
+/*!
+    \page trademarks.html
+    \title Trademarks
+    \keyword trademark
+    \brief A page that documents trademarks.
+
+    \list
+        \li \l {Acme corp}.
+    \endlist
+
+    \tm Foo should have the trademark symbol but no link as we're
+    already on the correct page.
+*/

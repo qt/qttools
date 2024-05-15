@@ -203,6 +203,7 @@ protected:
 #define ATOM_FORMATTING_SUBSCRIPT "subscript"
 #define ATOM_FORMATTING_SUPERSCRIPT "superscript"
 #define ATOM_FORMATTING_TELETYPE "teletype"
+#define ATOM_FORMATTING_TRADEMARK "trademark"
 #define ATOM_FORMATTING_UICONTROL "uicontrol"
 #define ATOM_FORMATTING_UNDERLINE "underline"
 

@@ -80,6 +80,7 @@ QString ConfigStrings::TABSIZE = QStringLiteral("tabsize");
 QString ConfigStrings::TAGFILE = QStringLiteral("tagfile");
 QString ConfigStrings::TIMESTAMPS = QStringLiteral("timestamps");
 QString ConfigStrings::TOCTITLES = QStringLiteral("toctitles");
+QString ConfigStrings::TRADEMARKSPAGE = QStringLiteral("trademarkspage");
 QString ConfigStrings::URL = QStringLiteral("url");
 QString ConfigStrings::VERSION = QStringLiteral("version");
 QString ConfigStrings::VERSIONSYM = QStringLiteral("versionsym");

@@ -1045,6 +1045,9 @@
       \row \li \c navigation.toctitles.inclusive (Since QDoc 6.3)
            \li If set to \c true, page(s) listed in \c navigation.toctitles
                will also appear in the navigation bar as a root item.
+      \row \li \c navigation.trademarkspage (Since QDoc 6.8)
+           \li Title of a page that documents trademarks mentioned in the
+               documentation. See also \qdoccmd tm command.
     \endtable
 
     For example:

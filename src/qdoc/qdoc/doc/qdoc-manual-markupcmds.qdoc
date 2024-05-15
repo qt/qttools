@@ -72,6 +72,7 @@
     \li \l {table-command} {\\table}
     \li \l {tableofcontents-command} {\\tableofcontents}
     \li \l {target-command} {\\target}
+    \li \qdoccmd tm
     \li \l {tt-command} {\\tt}
     \li \l {uicontrol-command} {\\uicontrol}
     \li \l {underline-command} {\\underline}
@@ -319,6 +320,29 @@
     started.
 
     See also \l {div-command} {\\div}.
+
+    \target tm-command
+    \section1 \\tm (trademark)
+
+    The \\tm command indicates that its argument is a trademark. QDoc appends
+    a trademark symbol `™` to the first occurrence of the argument when
+    generating a page.
+
+    In the project's configuration, the \c navigation.trademarkspage variable
+    is used for defining a title of a page that contains trademark-related
+    documentation.
+
+    \badcode
+    navigation.trademarkspage = Trademarks
+    \endcode
+
+    If set, each occurrence of the trademark symbol also links to the
+    trademarks page.
+
+    \note In section titles, the \\tm command is ignored and its argument
+          rendered as-is.
+
+    See also \l {sectionOne-command}{\\section1} and \qdocvar {navigation}.
 
     \target tt-command
     \section1 \\tt (teletype font)

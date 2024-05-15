@@ -307,6 +307,7 @@ struct ConfigStrings
     static QString TAGFILE;
     static QString TIMESTAMPS;
     static QString TOCTITLES;
+    static QString TRADEMARKSPAGE;
     static QString URL;
     static QString VERSION;
     static QString VERSIONSYM;
@@ -383,6 +384,7 @@ struct ConfigStrings
 #define CONFIG_TAGFILE ConfigStrings::TAGFILE
 #define CONFIG_TIMESTAMPS ConfigStrings::TIMESTAMPS
 #define CONFIG_TOCTITLES ConfigStrings::TOCTITLES
+#define CONFIG_TRADEMARKSPAGE ConfigStrings::TRADEMARKSPAGE
 #define CONFIG_URL ConfigStrings::URL
 #define CONFIG_VERSION ConfigStrings::VERSION
 #define CONFIG_VERSIONSYM ConfigStrings::VERSIONSYM

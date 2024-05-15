@@ -160,6 +160,7 @@ protected:
     // std::sort already defaults to operator< when no predicate is
     // provided.
     static bool comparePaths(const QString &a, const QString &b) { return (a < b); }
+    static bool appendTrademark(const Atom *atom);
 
 private:
     static Generator *s_currentGenerator;
@@ -171,6 +172,7 @@ private:
     static QString s_outSubdir;
     static QStringList s_outFileNames;
     static QSet<QString> s_outputFormats;
+    static QSet<QString> s_trademarks;
     static QHash<QString, QString> s_outputPrefixes;
     static QHash<QString, QString> s_outputSuffixes;
     static bool s_noLinkErrors;

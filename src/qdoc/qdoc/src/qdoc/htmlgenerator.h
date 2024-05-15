@@ -155,6 +155,7 @@ private:
     QString m_cppclassestitle {};
     QString m_qmltypespage {};
     QString m_qmltypestitle {};
+    QString m_trademarkspage {};
     QString m_buildversion {};
     QString m_qflagsHref {};
     int tocDepth {};

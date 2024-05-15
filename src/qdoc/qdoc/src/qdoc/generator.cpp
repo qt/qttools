@@ -50,6 +50,7 @@ QList<Generator *> Generator::s_generators;
 QString Generator::s_outDir;
 QString Generator::s_outSubdir;
 QStringList Generator::s_outFileNames;
+QSet<QString> Generator::s_trademarks;
 QSet<QString> Generator::s_outputFormats;
 QHash<QString, QString> Generator::s_outputPrefixes;
 QHash<QString, QString> Generator::s_outputSuffixes;
@@ -213,6 +214,7 @@ QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
 
     qCDebug(lcQdoc, "Writing: %s", qPrintable(path));
     s_outFileNames << fileName;
+    s_trademarks.clear();
     return outFile;
 }
 
@@ -1391,6 +1393,36 @@ bool Generator::hasExceptions(const Node *node, NodeList &reentrant, NodeList &t
         }
     }
     return result;
+}
+
+/*!
+    Returns \c true if a trademark symbol should be appended to the
+    output as determined by \a atom. Trademarks are tracked via the
+    use of the \\tm formatting command.
+
+    Returns true if:
+
+    \list
+        \li \a atom is of type Atom::FormattingRight containing
+            ATOM_FORMATTING_TRADEMARK, and
+        \li The trademarked string is the first appearance on the
+            current sub-page.
+    \endlist
+*/
+bool Generator::appendTrademark(const Atom *atom)
+{
+    if (atom->type() != Atom::FormattingRight)
+        return false;
+    if (atom->string() != ATOM_FORMATTING_TRADEMARK)
+        return false;
+
+    if (atom->count() > 1) {
+        if (s_trademarks.contains(atom->string(1)))
+            return false;
+        s_trademarks << atom->string(1);
+    }
+
+    return true;
 }
 
 static void startNote(Text &text)

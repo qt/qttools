@@ -115,6 +115,7 @@ void HtmlGenerator::initializeGenerator()
                      { ATOM_FORMATTING_SUPERSCRIPT, "<sup>", "</sup>" },
                      { ATOM_FORMATTING_TELETYPE, "<code translate=\"no\">",
                        "</code>" }, // <tt> tag is not supported in HTML5
+                     { ATOM_FORMATTING_TRADEMARK, "", "&#8482;" },
                      { ATOM_FORMATTING_UICONTROL, "<b translate=\"no\">", "</b>" },
                      { ATOM_FORMATTING_UNDERLINE, "<u>", "</u>" },
                      { nullptr, nullptr, nullptr } };
@@ -200,6 +201,9 @@ void HtmlGenerator::initializeGenerator()
     m_qmltypestitle = config->get(CONFIG_NAVIGATION
                                   + Config::dot + CONFIG_QMLTYPESTITLE)
                                   .asString(QLatin1String("QML Types"));
+
+    m_trademarkspage = config->get(CONFIG_NAVIGATION
+                                   + Config::dot + CONFIG_TRADEMARKSPAGE).asString();
 
     m_buildversion = config->get(CONFIG_BUILDVERSION).asString();
 }
@@ -416,6 +420,17 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
     case Atom::FormattingRight:
         if (atom->string() == ATOM_FORMATTING_LINK) {
             endLink();
+        } else if (atom->string() == ATOM_FORMATTING_TRADEMARK) {
+            if (appendTrademark(atom)) {
+                // Make the trademark symbol a link to navigation.trademarkspage (if set)
+                const Node *node{nullptr};
+                const Atom tm_link(Atom::NavLink, m_trademarkspage);
+                if (const auto &link = getLink(&tm_link, relative, &node);
+                        !link.isEmpty() && node != relative)
+                    out() << "<a href=\"%1\">%2</a>"_L1.arg(link, formattingRightMap()[atom->string()]);
+                else
+                    out() << formattingRightMap()[atom->string()];
+            }
         } else if (atom->string().startsWith("span ")) {
             out() << "</span>";
         } else {
