@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QML nativetype synopsis test Reference Documentation" version="" project="QML nativetype synopsis test">
+    <namespace name="" status="active" access="public" module="qml nativetype synopsis test">
+        <qmlclass name="Car" qml-module-name="QmlNativeTypeSynopsis" fullname="QmlNativeTypeSynopsis.Car" href="qml-qmlnativetypesynopsis-car.html" status="active" access="public" since="6.8" documented="true" groups="qml_nativetype_synopsis" title="Car" fulltitle="Car" subtitle="" brief="A car">
+            <contents name="properties" title="Properties" level="1"/>
+            <contents name="signals" title="Signals" level="1"/>
+            <contents name="methods" title="Methods" level="1"/>
+        </qmlclass>
+        <class name="CppCar" href="cppcar.html" status="active" access="public" location="cppcar.h" documented="true" module="QmlNativeTypeSynopsis" brief="A test class with an inventive name"/>
+        <qmlclass name="Truck" qml-module-name="QmlNativeTypeSynopsis" fullname="QmlNativeTypeSynopsis.Truck" href="qml-qmlnativetypesynopsis-truck.html" status="active" access="public" since="6.8" documented="true" groups="qml_nativetype_synopsis" title="Truck" fulltitle="Truck" subtitle="" brief="A big car">
+            <contents name="properties" title="Properties" level="1"/>
+            <contents name="signals" title="Signals" level="1"/>
+            <contents name="methods" title="Methods" level="1"/>
+        </qmlclass>
+        <group name="qml_nativetype_synopsis" href="qml-nativetype-synopsis.html" status="internal" seen="false" title=""/>
+        <module name="QmlNativeTypeSynopsis" href="qmlnativetypesynopsis-module.html" status="internal" seen="false" title=""/>
+        <qmlmodule name="QmlNativeTypeSynopsis" qml-module-name="QmlNativeTypeSynopsis" href="qmlnativetypesynopsis-qmlmodule.html" status="active" documented="true" seen="true" title=""/>
+    </namespace>
+</INDEX>

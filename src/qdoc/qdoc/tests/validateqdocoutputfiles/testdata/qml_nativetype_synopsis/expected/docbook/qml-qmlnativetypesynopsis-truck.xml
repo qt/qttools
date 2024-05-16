@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Truck QML Type</db:title>
+<db:productname>QML nativetype synopsis test</db:productname>
+<db:titleabbrev>QML nativetype synopsis test Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A big car.</db:para>
+<db:para>This type was introduced in Qt 6.8.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import QmlNativeTypeSynopsis</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Since:</db:term>
+<db:listitem>
+<db:para>Qt 6.8</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Instantiates:</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="cppcar.xml">CppCar</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>In C++:</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="cppcar.xml">CppCar</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Group</db:term>
+<db:listitem>
+<db:para>Truck is part of <db:simplelist><db:member>qml_nativetype_synopsis</db:member></db:simplelist>
+</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:section xml:id="properties">
+<db:title>Properties</db:title>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:code>color</db:code> The color of the big car.</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="signals">
+<db:title>Signals</db:title>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:code>engineStarted()</db:code> Emitted when the big engine is started, along with more emissions than from a <db:link xlink:href="qml-qmlnativetypesynopsis-car.xml">Car</db:link>.</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="methods">
+<db:title>Methods</db:title>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:code>startEngine()</db:code> Starts the big engine.</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+</db:section>
+</db:article>

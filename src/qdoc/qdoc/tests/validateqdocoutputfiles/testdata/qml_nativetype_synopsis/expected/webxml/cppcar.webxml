@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="CppCar" href="cppcar.html" status="active" access="public" location="cppcar.h" documented="true" module="QmlNativeTypeSynopsis" brief="A test class with an inventive name">
+            <description>
+                <brief>A test class with an inventive name.</brief>
+            </description>
+        </class>
+    </document>
+</WebXML>

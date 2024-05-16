@@ -457,6 +457,8 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
                     QStringLiteral("\\%1 is only allowed in \\%2")
                             .arg(command, COMMAND_QMLTYPE));
         }
+    } else if (command == COMMAND_QMLNATIVETYPE) {
+        processQmlNativeTypeCommand(node, arg, doc.location());
     } else if (command == COMMAND_DEFAULT) {
         if (!node->isQmlProperty()) {
             doc.location().warning(QStringLiteral("Ignored '\\%1', applies only to '\\%2'")
@@ -999,6 +1001,40 @@ void CppCodeParser::processMetaCommands(const std::vector<TiedDocumentation> &ti
             }
         }
     }
+}
+
+void CppCodeParser::processQmlNativeTypeCommand(Node *node, const QString &arg, const Location &location)
+{
+    Q_ASSERT(node);
+    if (!node->isQmlNode()) {
+        location.warning(
+                QStringLiteral("Command '\\%1' is only meaningful in '\\%2'")
+                        .arg(COMMAND_QMLNATIVETYPE, COMMAND_QMLTYPE));
+        return;
+    }
+
+    auto qmlNode = static_cast<QmlTypeNode *>(node);
+
+    QDocDatabase *database = QDocDatabase::qdocDB();
+    auto classNode = database->findClassNode(arg.split(u"::"_s));
+
+    if (!classNode) {
+        if (m_showLinkErrors) {
+            location.warning(
+                    QStringLiteral("C++ class %2 not found: \\%1 %2")
+                            .arg(COMMAND_QMLNATIVETYPE, arg));
+        }
+        return;
+    }
+
+    if (qmlNode->classNode()) {
+        location.warning(
+                QStringLiteral("QML type %1 documented with %2 as its native type. Replacing %2 with %3")
+                        .arg(qmlNode->name(), qmlNode->classNode()->name(), arg));
+    }
+
+    qmlNode->setClassNode(classNode);
+    classNode->insertQmlNativeType(qmlNode);
 }
 
 QT_END_NAMESPACE

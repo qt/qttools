@@ -51,6 +51,10 @@ public:
     PropertyNode *findOverriddenProperty(const FunctionNode *fn);
     [[nodiscard]] bool docMustBeGenerated() const override;
 
+    void insertQmlNativeType(QmlTypeNode *qmlTypeNode) { m_nativeTypeForQml << qmlTypeNode; }
+    bool isQmlNativeType() { return !m_nativeTypeForQml.empty(); }
+    const QSet<QmlTypeNode *> &qmlNativeTypes() { return m_nativeTypeForQml; }
+
 private:
     void promotePublicBases(const QList<RelatedClass> &bases);
 
@@ -61,6 +65,7 @@ private:
     bool m_abstract { false };
     bool m_wrapper { false };
     QmlTypeNode *m_qmlElement { nullptr };
+    QSet<QmlTypeNode *> m_nativeTypeForQml;
 };
 
 QT_END_NAMESPACE

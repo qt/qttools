@@ -67,6 +67,7 @@
     \li \l {module-command} {\\module}
     \li \l {modulestate-command} {\\modulestate}
     \li \l {namespace-command} {\\namespace}
+    \li \l {nativetype-command} {\\nativetype}
     \li \l {nextpage-command} {\\nextpage}
     \li \l {noautolist-command} {\\noautolist}
     \li \l {nonreentrant-command} {\\nonreentrant}

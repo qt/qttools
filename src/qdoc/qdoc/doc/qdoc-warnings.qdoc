@@ -137,6 +137,12 @@
           fully qualified with the scope of the class that declares
           the function.
 
+    \section1 QML type <TypeName> documented with <ClassName> as its native type. Replacing <ClassName> with <OtherClass>
+    If the \qdoccmd nativetype command is used with the same argument in
+    multiple QML type documentation comments that belong to the same
+    documentation project, QDoc issues this warning. To resolve this, ensure
+    that you use the \c {\nativetype} command only once for each C++ class.
+
     \section1 <C++ class> documented as instantiated by <QML type 1>. Replacing <QML type 1> with <QML type 2>
     If the \qdoccmd instantiates command is used with the same argument in
     multiple QML type documentation comments that belong to the same

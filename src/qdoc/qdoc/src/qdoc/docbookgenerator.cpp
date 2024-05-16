@@ -2205,6 +2205,21 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
             generateRequisite("Instantiated By", fullDocumentLocation(classe->qmlElement()));
         }
 
+        if (classe && classe->isQmlNativeType() && classe->status() != Node::Internal) {
+            generateStartRequisite("In QML");
+
+            qsizetype idx{0};
+            QList<QmlTypeNode *> nativeTypes { classe->qmlNativeTypes().cbegin(), classe->qmlNativeTypes().cend()};
+            std::sort(nativeTypes.begin(), nativeTypes.end(), Node::nodeNameLessThan);
+
+            for (const auto &item : std::as_const(nativeTypes)) {
+                generateFullName(item, classe);
+                m_writer->writeCharacters(
+                        Utilities::comma(idx++, nativeTypes.size()));
+            }
+            generateEndRequisite();
+        }
+
         // Inherits.
         QList<RelatedClass>::ConstIterator r;
         if (!classe->baseClasses().isEmpty()) {
@@ -2342,6 +2357,11 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
     ClassNode *cn = (const_cast<QmlTypeNode *>(qcn))->classNode();
     if (cn && (cn->status() != Node::Internal)) {
         generateStartRequisite("Instantiates:");
+        generateSimpleLink(fullDocumentLocation(cn), cn->name());
+        generateEndRequisite();
+    }
+    if (cn && cn->isQmlNativeType() && cn->status() != Node::Internal) {
+        generateStartRequisite("In C++:");
         generateSimpleLink(fullDocumentLocation(cn), cn->name());
         generateEndRequisite();
     }
@@ -3400,7 +3420,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         if (aggregate->nodeType() == Node::Class) {
             // Instantiated by.
             auto *classe = const_cast<ClassNode *>(static_cast<const ClassNode *>(aggregate));
-            if (classe->qmlElement() != nullptr && classe->status() != Node::Internal) {
+            if (classe->qmlElement() != nullptr && !classe->isQmlNativeType() && classe->status() != Node::Internal) {
                 const Node *otherNode = nullptr;
                 Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(classe->qmlElement()));
                 QString link = getAutoLink(&a, aggregate, &otherNode);
@@ -3410,6 +3430,24 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
                 generateSimpleLink(link, classe->qmlElement()->name());
                 m_writer->writeEndElement(); // synopsisinfo
                 newLine();
+            }
+
+            // Native type
+            if (classe && classe->isQmlNativeType() && classe->status() != Node::Internal) {
+                m_writer->writeStartElement(dbNamespace, "synopsisinfo");
+                m_writer->writeAttribute("role", "nativeTypeFor");
+
+                QList<QmlTypeNode *> nativeTypes { classe->qmlNativeTypes().cbegin(), classe->qmlNativeTypes().cend()};
+                std::sort(nativeTypes.begin(), nativeTypes.end(), Node::nodeNameLessThan);
+
+                for (auto item : std::as_const(nativeTypes)) {
+                    const Node *otherNode{nullptr};
+                    Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(item));
+                    const QString &link = getAutoLink(&a, aggregate, &otherNode);
+                    generateSimpleLink(link, item->name());
+                }
+
+                m_writer->writeEndElement(); // synopsisinfo
             }
 
             // Inherits.
@@ -3507,6 +3545,19 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
 
             m_writer->writeTextElement(dbNamespace, "synopsisinfo");
             m_writer->writeAttribute("role", "instantiates");
+            generateSimpleLink(link, cn->name());
+            m_writer->writeEndElement(); // synopsisinfo
+            newLine();
+        }
+
+        // Native type
+        if (cn && cn->isQmlNativeType() && (cn->status() != Node::Internal)) {
+            const Node *otherNode = nullptr;
+            Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(qcn));
+            QString link = getAutoLink(&a, cn, &otherNode);
+
+            m_writer->writeTextElement(dbNamespace, "synopsisinfo");
+            m_writer->writeAttribute("role", "nativeType");
             generateSimpleLink(link, cn->name());
             m_writer->writeEndElement(); // synopsisinfo
             newLine();

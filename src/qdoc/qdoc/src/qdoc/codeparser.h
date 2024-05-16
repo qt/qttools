@@ -54,6 +54,7 @@ QT_BEGIN_NAMESPACE
 #define COMMAND_QMLINSTANTIATES QLatin1String("instantiates")
 #define COMMAND_QMLMETHOD QLatin1String("qmlmethod")
 #define COMMAND_QMLMODULE QLatin1String("qmlmodule")
+#define COMMAND_QMLNATIVETYPE QLatin1String("nativetype")
 #define COMMAND_QMLPROPERTY QLatin1String("qmlproperty")
 #define COMMAND_QMLPROPERTYGROUP QLatin1String("qmlpropertygroup")
 #define COMMAND_QMLREADONLY QLatin1String("readonly")

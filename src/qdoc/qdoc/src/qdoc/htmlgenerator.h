@@ -114,6 +114,9 @@ private:
                             const QString &qtVariableText) const;
     void addInstantiatedByToMap(QMap<QString, Text> &requisites, Text *text,
                                 const QString &instantiatedByText, ClassNode *classe) const;
+    void addQmlNativeTypesToMap(QMap<QString, Text> &requisites, Text *text,
+                                const QString &nativeTypeText,
+                                ClassNode *classe) const;
     void addInheritsToMap(QMap<QString, Text> &requisites, Text *text, const QString &inheritsText,
                           ClassNode *classe);
     void addInheritedByToMap(QMap<QString, Text> &requisites, Text *text,

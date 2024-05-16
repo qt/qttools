@@ -918,6 +918,41 @@
     {\\instantiates} to specify that Transform is QGraphicsTransform
     in C++.
 
+    \target nativetype-command
+    \section1 \\nativetype
+
+    The \\nativetype-command must be used in conjunction with the
+    \qdoccmd qmltype topic command. The command takes a C++ class as its
+    argument. If QDoc cannot find the C++ class, it issues a warning. This
+    command was introduced with Qt 6.8.
+
+    Use the \\nativetype-command to specify what the type is called in C++.
+    This ensures that the requisites block generated in the documentation for
+    the QML type contains an "In C++" entry. The C++ class will have a
+    corresponding "In QML" entry.
+
+    Any one QML type can only have one native type. QDoc issues a warning if
+    redefinition occurs. However, multiple QML types can have the same C++
+    class as their native type. The C++ class documentation will contain a list
+    of all corresponding types in QML.
+
+    \badcode *
+    /\1!
+        \qmltype Transform
+        \nativetype QGraphicsTransform
+        \inqmlmodule QtQuick
+
+        \brief Provides a way to build advanced transformations on Items.
+
+        The Transform element is a base type which cannot be
+        instantiated directly.
+    \1/
+    \endcode
+
+    Here, the \e{\\qmltype} topic includes \e{\\nativetype} to specify that a
+    Transform is called QGraphicsTransform in C++.
+
+
     \target typealias-command
     \section1 \\typealias
 

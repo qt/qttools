@@ -1931,13 +1931,14 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
     const QString inheritedBytext = "Inherited By";
     const QString inheritsText = "Inherits";
     const QString instantiatedByText = "Instantiated By";
+    const QString nativeTypeText = "In QML";
     const QString qtVariableText = "qmake";
     const QString cmakeText = "CMake";
     const QString statusText = "Status";
 
     // The order of the requisites matter
     const QStringList requisiteorder { headerText,         cmakeText,    qtVariableText,  sinceText,
-                                       instantiatedByText, inheritsText, inheritedBytext, statusText };
+                                       instantiatedByText, nativeTypeText, inheritsText, inheritedBytext, statusText };
 
     addIncludeFileToMap(aggregate, marker, requisites, text, headerText);
     addSinceToMap(aggregate, requisites, &text, sinceText);
@@ -1949,7 +1950,10 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
 
     if (aggregate->isClassNode()) {
         auto *classe = dynamic_cast<ClassNode *>(aggregate);
-        if (classe->qmlElement() != nullptr && !classe->isInternal())
+        if (classe->isQmlNativeType() && !classe->isInternal())
+            addQmlNativeTypesToMap(requisites, &text, nativeTypeText, classe);
+
+        if (classe->qmlElement() != nullptr && !classe->isQmlNativeType() && !classe->isInternal())
             addInstantiatedByToMap(requisites, &text, instantiatedByText, classe);
 
         addInheritsToMap(requisites, &text, inheritsText, classe);
@@ -2055,6 +2059,32 @@ void HtmlGenerator::addInstantiatedByToMap(QMap<QString, Text> &requisites, Text
               << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
         requisites.insert(instantiatedByText, *text);
     }
+}
+
+/*!
+    \internal
+    Add the QML/C++ native type information to the map.
+ */
+ void HtmlGenerator::addQmlNativeTypesToMap(QMap<QString, Text> &requisites, Text *text,
+                                            const QString &nativeTypeText, ClassNode *classe) const
+{
+    if (!text)
+        return;
+
+    text->clear();
+
+    QList<QmlTypeNode *> nativeTypes { classe->qmlNativeTypes().cbegin(), classe->qmlNativeTypes().cend()};
+    std::sort(nativeTypes.begin(), nativeTypes.end(), Node::nodeNameLessThan);
+    qsizetype index { 0 };
+
+    for (const auto &item : std::as_const(nativeTypes)) {
+        *text << Atom(Atom::LinkNode, CodeMarker::stringForNode(item))
+              << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+              << Atom(Atom::String, item->name())
+              << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+        *text << Utilities::comma(index++, nativeTypes.size());
+    }
+    requisites.insert(nativeTypeText, *text);
 }
 
 /*!
@@ -2184,6 +2214,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     const QString inheritedBytext = "Inherited By:";
     const QString inheritsText = "Inherits:";
     const QString instantiatesText = "Instantiates:";
+    const QString nativeTypeText = "In C++:";
     const QString statusText = "Status:";
 
     // add the module name and version to the map
@@ -2210,13 +2241,23 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
 
     // add the instantiates to the map
     ClassNode *cn = qcn->classNode();
-    if (cn && !cn->isInternal()) {
+    if (cn && !cn->isQmlNativeType() && !cn->isInternal()) {
         text.clear();
         text << Atom(Atom::LinkNode, CodeMarker::stringForNode(cn));
         text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
         text << Atom(Atom::String, cn->name());
         text << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
         requisites.insert(instantiatesText, text);
+    }
+
+    // add the native type to the map
+    if (cn && cn->isQmlNativeType() && !cn->isInternal()) {
+        text.clear();
+        text << Atom(Atom::LinkNode, CodeMarker::stringForNode(cn));
+        text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
+        text << Atom(Atom::String, cn->name());
+        text << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+        requisites.insert(nativeTypeText, text);
     }
 
     // add the inherits to the map
@@ -2248,7 +2289,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     addStatusToMap(qcn, requisites, text, statusText);
 
     // The order of the requisites matter
-    const QStringList requisiteorder { importText, sinceText, instantiatesText, inheritsText,
+    const QStringList requisiteorder { importText, sinceText, instantiatesText, nativeTypeText, inheritsText,
                                        inheritedBytext, statusText };
 
     if (!requisites.isEmpty()) {
