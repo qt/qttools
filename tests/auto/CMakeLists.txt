@@ -16,4 +16,8 @@ if(TARGET Qt::Help AND NOT CMAKE_CROSSCOMPILING)
     add_subdirectory(qhelpgenerator)
     add_subdirectory(qhelpindexmodel)
     add_subdirectory(qhelpprojectdata)
+
+    if(TARGET Qt::QmlLSPrivate)
+        add_subdirectory(helpengineplugin)
+    endif()
 endif()
