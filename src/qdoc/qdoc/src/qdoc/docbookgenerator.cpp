@@ -2341,8 +2341,6 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
     // Instantiates.
     ClassNode *cn = (const_cast<QmlTypeNode *>(qcn))->classNode();
     if (cn && (cn->status() != Node::Internal)) {
-        Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(qcn));
-
         generateStartRequisite("Instantiates:");
         generateSimpleLink(fullDocumentLocation(cn), cn->name());
         generateEndRequisite();
