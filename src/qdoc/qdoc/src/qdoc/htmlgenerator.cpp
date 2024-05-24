@@ -1930,7 +1930,6 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
     const QString sinceText = "Since";
     const QString inheritedBytext = "Inherited By";
     const QString inheritsText = "Inherits";
-    const QString instantiatedByText = "Instantiated By";
     const QString nativeTypeText = "In QML";
     const QString qtVariableText = "qmake";
     const QString cmakeText = "CMake";
@@ -1938,7 +1937,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
 
     // The order of the requisites matter
     const QStringList requisiteorder { headerText,         cmakeText,    qtVariableText,  sinceText,
-                                       instantiatedByText, nativeTypeText, inheritsText, inheritedBytext, statusText };
+                                       nativeTypeText, inheritsText, inheritedBytext, statusText };
 
     addIncludeFileToMap(aggregate, marker, requisites, text, headerText);
     addSinceToMap(aggregate, requisites, &text, sinceText);
@@ -1952,9 +1951,6 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
         auto *classe = dynamic_cast<ClassNode *>(aggregate);
         if (classe->isQmlNativeType() && !classe->isInternal())
             addQmlNativeTypesToMap(requisites, &text, nativeTypeText, classe);
-
-        if (classe->qmlElement() != nullptr && !classe->isQmlNativeType() && !classe->isInternal())
-            addInstantiatedByToMap(requisites, &text, instantiatedByText, classe);
 
         addInheritsToMap(requisites, &text, inheritsText, classe);
         addInheritedByToMap(requisites, &text, inheritedBytext, classe);
@@ -2040,24 +2036,6 @@ void HtmlGenerator::addInheritsToMap(QMap<QString, Text> &requisites, Text *text
         *text << Atom::ParaRight;
         if (index > 0)
             requisites.insert(inheritsText, *text);
-    }
-}
-
-/*!
- * \internal
- * Add the instantiated by information to the map.
- */
-void HtmlGenerator::addInstantiatedByToMap(QMap<QString, Text> &requisites, Text *text,
-                                           const QString &instantiatedByText,
-                                           ClassNode *classe) const
-{
-    if (text != nullptr) {
-        text->clear();
-        *text << Atom(Atom::LinkNode, CodeMarker::stringForNode(classe->qmlElement()))
-              << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-              << Atom(Atom::String, classe->qmlElement()->name())
-              << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-        requisites.insert(instantiatedByText, *text);
     }
 }
 
@@ -2213,7 +2191,6 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     const QString sinceText = "Since:";
     const QString inheritedBytext = "Inherited By:";
     const QString inheritsText = "Inherits:";
-    const QString instantiatesText = "Instantiates:";
     const QString nativeTypeText = "In C++:";
     const QString statusText = "Status:";
 
@@ -2239,18 +2216,8 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
         requisites.insert(sinceText, text);
     }
 
-    // add the instantiates to the map
-    ClassNode *cn = qcn->classNode();
-    if (cn && !cn->isQmlNativeType() && !cn->isInternal()) {
-        text.clear();
-        text << Atom(Atom::LinkNode, CodeMarker::stringForNode(cn));
-        text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
-        text << Atom(Atom::String, cn->name());
-        text << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-        requisites.insert(instantiatesText, text);
-    }
-
     // add the native type to the map
+    ClassNode *cn = qcn->classNode();
     if (cn && cn->isQmlNativeType() && !cn->isInternal()) {
         text.clear();
         text << Atom(Atom::LinkNode, CodeMarker::stringForNode(cn));
@@ -2289,7 +2256,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     addStatusToMap(qcn, requisites, text, statusText);
 
     // The order of the requisites matter
-    const QStringList requisiteorder { importText, sinceText, instantiatesText, nativeTypeText, inheritsText,
+    const QStringList requisiteorder { importText, sinceText, nativeTypeText, inheritsText,
                                        inheritedBytext, statusText };
 
     if (!requisites.isEmpty()) {

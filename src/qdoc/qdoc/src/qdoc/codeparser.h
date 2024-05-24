@@ -51,7 +51,7 @@ QT_BEGIN_NAMESPACE
 #define COMMAND_QMLDEFAULT QLatin1String("qmldefault")
 #define COMMAND_QMLENUMERATORSFROM QLatin1String("qmlenumeratorsfrom")
 #define COMMAND_QMLINHERITS QLatin1String("inherits")
-#define COMMAND_QMLINSTANTIATES QLatin1String("instantiates")
+#define COMMAND_QMLINSTANTIATES QLatin1String("instantiates") // TODO Qt 7.0.0 - Remove: Deprecated since 6.8.
 #define COMMAND_QMLMETHOD QLatin1String("qmlmethod")
 #define COMMAND_QMLMODULE QLatin1String("qmlmodule")
 #define COMMAND_QMLNATIVETYPE QLatin1String("nativetype")

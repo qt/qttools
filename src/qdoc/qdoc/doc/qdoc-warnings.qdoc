@@ -143,25 +143,6 @@
     documentation project, QDoc issues this warning. To resolve this, ensure
     that you use the \c {\nativetype} command only once for each C++ class.
 
-    \section1 <C++ class> documented as instantiated by <QML type 1>. Replacing <QML type 1> with <QML type 2>
-    If the \qdoccmd instantiates command is used with the same argument in
-    multiple QML type documentation comments that belong to the same
-    documentation project, QDoc issues this warning. To resolve this, ensure
-    that you use the \c {\instantiates} command only once for each C++ class.
-
-    \section1 C++ class <ClassName> not found: \\instantiates <ClassName>
-
-    If you describe a QML type, you may specify the class it instantiates.
-    Refer to the \l{instantiates-command}{\\instantiates} command in the
-    \l {QDoc manual}.
-
-    QDoc issues this warning if it failed to locate the documentation for the
-     C++ class <ClassName>. Either the class is undocumented, it is marked
-    \l {internal-command}{\\internal}, or it originates from another
-    documentation module and QDoc did not locate an index file for the
-    corresponding dependency.
-
-    See also \l {depends-variable}{depends}.
 
     \section1 Cannot tie this documentation to anything
 
@@ -328,10 +309,10 @@
         \inherits Foo
     \endcode
 
-    \section1 \\instantiates is only allowed in \\qmltype
+    \section1 \\nativetype is only allowed in \\qmltype
 
-    The \l{instantiates-command}{\\instantiates} command can only be used in a QDoc comment
-    that documents a QML type.
+    The \l{nativetype-command}{\\nativetype} command can only be used in a QDoc
+    comment that documents a QML type.
 
     \section1 All properties in a group must belong to the same type: <name>
 
@@ -630,14 +611,14 @@
     Incorrect:
       \badcode
       \qmltype ItemSelectionModel
-      \instantiates QItemSelectionModel
+      \nativetype QItemSelectionModel
       \since 5.5
       \ingroup qtquick-models
       \endcode
     Correct:
       \badcode
       \qmltype ItemSelectionModel
-      \instantiates QItemSelectionModel
+      \nativetype QItemSelectionModel
       \inqmlmodule QtQml.Models
       \since 5.5
       \ingroup qtquick-models

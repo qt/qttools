@@ -703,7 +703,7 @@
     \badcode *
     /\1!
         \qmltype PauseAnimation
-        \instantiates QDeclarativePauseAnimation
+        \nativetype QDeclarativePauseAnimation
         \ingroup qml-animation-transition
         \since 4.7
         \inherits Animation

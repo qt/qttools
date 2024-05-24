@@ -736,7 +736,7 @@
     has one argument, which is the name of the QML type.
 
     If the QML type has an equivalent C++ class, you can specify that class
-    with the \l{instantiates-command}{\\instantiates} context command.
+    with the \qdoccmd nativetype context command.
 
     The \l {inqmlmodule-command}{\\inqmlmodule} command documents the
     QML module the type belongs to. The argument passed to this command
@@ -746,7 +746,7 @@
     \badcode *
     /\1!
         \qmltype Transform
-        \instantiates QGraphicsTransform
+        \nativetype QGraphicsTransform
         \inqmlmodule QtQuick
 
         \brief Provides a way to build advanced transformations on Items.
@@ -756,7 +756,7 @@
     \1/
     \endcode
 
-    Here, the \e{\\qmltype} comment includes \e{\\instantiates}
+    Here, the \e{\\qmltype} comment includes \qdoccmd nativetype
     to specify that a Transform is the QML counterpart to the
     C++ class QGraphicsTransform. A \\qmltype comment should
     always include a \l {since-command} {\\since} command, because all
@@ -894,29 +894,9 @@
     \target instantiates-command
     \section1 \\instantiates
 
-    The \\instantiates command must be used in conjunction with the
-    \qdoccmd qmltype topic command. The command takes a C++ class as its
-    argument. If QDoc cannot find the C++ class, it issues a warning.
+    The \\instantiates command is deprecated since Qt 6.8.
+    Use \qdoccmd nativetype instead.
 
-    Use the \\instantiates command to specify what the type is called in C++.
-    Any one QML type can only be the counterpart of one C++ class.
-
-    \badcode *
-    /\1!
-        \qmltype Transform
-        \instantiates QGraphicsTransform
-        \inqmlmodule QtQuick
-
-        \brief Provides a way to build advanced transformations on Items.
-
-        The Transform element is a base type which cannot be
-        instantiated directly.
-    \1/
-    \endcode
-
-    Here, the \e{\\qmltype} comment includes \l{instantiates-command}
-    {\\instantiates} to specify that Transform is QGraphicsTransform
-    in C++.
 
     \target nativetype-command
     \section1 \\nativetype

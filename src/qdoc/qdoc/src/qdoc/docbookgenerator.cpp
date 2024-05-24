@@ -2196,15 +2196,8 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
     }
 
     if (aggregate->nodeType() == Node::Class) {
-        // Instantiated by.
+        // Native type information.
         auto *classe = const_cast<ClassNode *>(static_cast<const ClassNode *>(aggregate));
-        if (classe->qmlElement() != nullptr && classe->status() != Node::Internal) {
-            generateStartRequisite("Inherited By");
-            generateSortedNames(classe, classe->derivedClasses());
-            generateEndRequisite();
-            generateRequisite("Instantiated By", fullDocumentLocation(classe->qmlElement()));
-        }
-
         if (classe && classe->isQmlNativeType() && classe->status() != Node::Internal) {
             generateStartRequisite("In QML");
 
@@ -2353,13 +2346,8 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
         generateEndRequisite();
     }
 
-    // Instantiates.
+    // Native type information.
     ClassNode *cn = (const_cast<QmlTypeNode *>(qcn))->classNode();
-    if (cn && (cn->status() != Node::Internal)) {
-        generateStartRequisite("Instantiates:");
-        generateSimpleLink(fullDocumentLocation(cn), cn->name());
-        generateEndRequisite();
-    }
     if (cn && cn->isQmlNativeType() && cn->status() != Node::Internal) {
         generateStartRequisite("In C++:");
         generateSimpleLink(fullDocumentLocation(cn), cn->name());
@@ -3418,21 +3406,8 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         }
 
         if (aggregate->nodeType() == Node::Class) {
-            // Instantiated by.
-            auto *classe = const_cast<ClassNode *>(static_cast<const ClassNode *>(aggregate));
-            if (classe->qmlElement() != nullptr && !classe->isQmlNativeType() && classe->status() != Node::Internal) {
-                const Node *otherNode = nullptr;
-                Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(classe->qmlElement()));
-                QString link = getAutoLink(&a, aggregate, &otherNode);
-
-                m_writer->writeStartElement(dbNamespace, "synopsisinfo");
-                m_writer->writeAttribute("role", "instantiatedBy");
-                generateSimpleLink(link, classe->qmlElement()->name());
-                m_writer->writeEndElement(); // synopsisinfo
-                newLine();
-            }
-
             // Native type
+            auto *classe = const_cast<ClassNode *>(static_cast<const ClassNode *>(aggregate));
             if (classe && classe->isQmlNativeType() && classe->status() != Node::Internal) {
                 m_writer->writeStartElement(dbNamespace, "synopsisinfo");
                 m_writer->writeAttribute("role", "nativeTypeFor");
@@ -3536,21 +3511,9 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             newLine();
         }
 
-        // Instantiates.
-        ClassNode *cn = (const_cast<QmlTypeNode *>(qcn))->classNode();
-        if (cn && (cn->status() != Node::Internal)) {
-            const Node *otherNode = nullptr;
-            Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(qcn));
-            QString link = getAutoLink(&a, cn, &otherNode);
-
-            m_writer->writeTextElement(dbNamespace, "synopsisinfo");
-            m_writer->writeAttribute("role", "instantiates");
-            generateSimpleLink(link, cn->name());
-            m_writer->writeEndElement(); // synopsisinfo
-            newLine();
-        }
-
         // Native type
+        ClassNode *cn = (const_cast<QmlTypeNode *>(qcn))->classNode();
+
         if (cn && cn->isQmlNativeType() && (cn->status() != Node::Internal)) {
             const Node *otherNode = nullptr;
             Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(qcn));

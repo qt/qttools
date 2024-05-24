@@ -480,7 +480,7 @@
     \li \l{inherits-command}{\\inherits}
     \li \l{qmlmodule-command}{\\qmlmodule}
     \li \l{inqmlmodule-command}{\\inqmlmodule}
-    \li \l{instantiates-command}{\\instantiates}
+    \li \l{nativetype-command}{\\nativetype}
 
     \endlist
 
@@ -495,7 +495,7 @@
     If your QML type is defined in a \e qml file, document it there.
     If your QML type is represented by a C++ class, document it in the
     \e cpp file for that C++ class and include an
-    \l{instantiates-command}{\\instantiates} command to specify the
+    \l{nativetype-command}{\\nativetype} command to specify the
     name of the C++ class. Don't document a QML type in a \e{cpp} file
     if the QML type is defined in a \e{qml} file.
 

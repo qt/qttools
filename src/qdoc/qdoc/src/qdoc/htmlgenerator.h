@@ -112,8 +112,6 @@ private:
                            const QString &CMakeInfo) const;
     void addQtVariableToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites, Text *text,
                             const QString &qtVariableText) const;
-    void addInstantiatedByToMap(QMap<QString, Text> &requisites, Text *text,
-                                const QString &instantiatedByText, ClassNode *classe) const;
     void addQmlNativeTypesToMap(QMap<QString, Text> &requisites, Text *text,
                                 const QString &nativeTypeText,
                                 ClassNode *classe) const;

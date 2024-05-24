@@ -22,7 +22,7 @@ documented with the QML \l{topic-commands}{topic commands}:
 \li \l{qmlsignal-command}{\\qmlsignal}
 \li \l{qmlmodule-command}{\\qmlmodule}
 \li \l{inqmlmodule-command}{\\inqmlmodule}
-\li \l{instantiates-command}{\\instantiates}
+\li \l{nativetype-command}{\\nativetype}
 \endlist
 
 For QML types defined in \c .qml files, QDoc will parse the QML and determine
@@ -38,7 +38,7 @@ The \l{qmltype-command}{\\qmltype} command is for QML type documentation.
 
 \snippet examples/qml.qdoc.sample qmltype
 
-The \l{instantiates-command}{\\instantiates} accepts the C++ class which
+The \l{nativetype-command}{\\nativetype} command accepts the C++ class which
 implements the QML type as the argument. For types implemented in QML, this
 is not needed.
 

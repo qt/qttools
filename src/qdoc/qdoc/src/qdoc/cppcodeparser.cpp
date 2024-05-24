@@ -435,29 +435,10 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             auto *qmlType = static_cast<QmlTypeNode *>(node);
             qmlType->setQmlBaseName(arg);
         }
-    } else if (command == COMMAND_QMLINSTANTIATES) {
-        if (node->isQmlType()) {
-            ClassNode *classNode = database->findClassNode(arg.split("::"));
-            if (classNode) {
-                if (classNode->qmlElement()) {
-                    doc.location().warning(
-                            QStringLiteral("%1 documented as instantiated by %2. Replacing %2 with %3")
-                                    .arg(arg, classNode->qmlElement()->name(), node->name()));
-                }
-                node->setClassNode(classNode);
-                classNode->setQmlElement(static_cast<QmlTypeNode *>(node));
-            }
-            else if (m_showLinkErrors) {
-                doc.location().warning(
-                        QStringLiteral("C++ class %2 not found: \\%1 %2")
-                                .arg(command, arg));
-            }
-        } else {
-            doc.location().warning(
-                    QStringLiteral("\\%1 is only allowed in \\%2")
-                            .arg(command, COMMAND_QMLTYPE));
-        }
-    } else if (command == COMMAND_QMLNATIVETYPE) {
+    } else if (command == COMMAND_QMLNATIVETYPE || command == COMMAND_QMLINSTANTIATES) {
+        if (command == COMMAND_QMLINSTANTIATES)
+            doc.location().report(u"\\instantiates is deprected and will be removed in a future version. Use \\nativetype instead."_s);
+        // TODO: COMMAND_QMLINSTANTIATES is deprecated since 6.8. Its remains should be removed no later than Qt 7.0.0.
         processQmlNativeTypeCommand(node, arg, doc.location());
     } else if (command == COMMAND_DEFAULT) {
         if (!node->isQmlProperty()) {
