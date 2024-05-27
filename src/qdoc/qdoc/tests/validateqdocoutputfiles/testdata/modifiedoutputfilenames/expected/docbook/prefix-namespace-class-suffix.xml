@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Class Class</db:title>
+<db:subtitle>Namespace::Class</db:subtitle>
+<db:productname>ModifiedOutputFilenames</db:productname>
+<db:titleabbrev>ModifiedOutputFilenames Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>ModifiedOutputFilenames Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>Class</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+</db:article>

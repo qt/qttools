@@ -1,0 +1,22 @@
+project = ModifiedOutputFilenames
+
+{sourcedirs,headerdirs}     = ./src
+exampledirs                 = ./src/example
+
+outputprefixes              = CPP
+outputprefixes.CPP          = prefix_
+
+outputsuffixes              = QML CPP
+{outputsuffixes.CPP,outputsuffixes.QML} = _suffix
+
+locationinfo                = false
+warninglimit                = 0
+warninglimit.enabled        = true
+
+outputformats               = WebXML HTML DocBook
+{WebXML.nosubdirs,HTML.nosubdirs,DocBook.nosubdirs} = true
+WebXML.quotinginformation   = true
+
+WebXML.outputsubdir         = webxml
+HTML.outputsubdir           =  html
+DocBook.outputsubdir        = docbook

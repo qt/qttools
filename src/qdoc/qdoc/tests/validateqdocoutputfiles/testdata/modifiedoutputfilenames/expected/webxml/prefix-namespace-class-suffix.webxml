@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Class" fullname="Namespace::Class" href="prefix-namespace-class-suffix.html" status="active" access="public" location="test.h" documented="true" module="CppModule">
+            <description/>
+        </class>
+    </document>
+</WebXML>

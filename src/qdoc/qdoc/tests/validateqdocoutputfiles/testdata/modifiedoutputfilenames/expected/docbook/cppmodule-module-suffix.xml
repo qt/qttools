@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title></db:title>
+<db:productname>ModifiedOutputFilenames</db:productname>
+<db:titleabbrev>ModifiedOutputFilenames Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>ModifiedOutputFilenames Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:section xml:id="namespaces">
+<db:title>Namespaces</db:title>
+<db:itemizedlist role="namespaces">
+<db:listitem>
+<db:para><db:link xlink:href="prefix-namespace-suffix.xml" xlink:role="namespace">Namespace</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:itemizedlist role="classes">
+<db:listitem>
+<db:para><db:link xlink:href="prefix-namespace-class-suffix.xml" xlink:role="class">Namespace::Class</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+</db:article>

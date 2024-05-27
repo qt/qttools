@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="ModifiedOutputFilenames Reference Documentation" version="" project="ModifiedOutputFilenames">
+    <namespace name="" href="prefix-suffix.html" status="active" access="public" module="modifiedoutputfilenames">
+        <header name="&lt;header&gt;" href="prefix-header-suffix.html" status="active" documented="true" module="CppModule" title="&lt;header&gt;" fulltitle="&lt;header&gt;" subtitle=""/>
+        <namespace name="Namespace" href="prefix-namespace-suffix.html" status="active" access="public" location="test.h" documented="true" module="CppModule">
+            <class name="Class" fullname="Namespace::Class" href="prefix-namespace-class-suffix.html" status="active" access="public" location="test.h" documented="true" module="CppModule"/>
+        </namespace>
+        <qmlclass name="Type" qml-module-name="QmlModule" fullname="QmlModule.Type" href="qml-qmlmodule-suffix-type.html" status="active" access="public" documented="true" title="Type" fulltitle="Type" subtitle=""/>
+        <page name="page.html" href="page.html" status="active" documented="true" subtype="page" title="" fulltitle="" subtitle=""/>
+        <page name="test" href="modifiedoutputfilenames-test-example.html" status="active" documented="true" subtype="example" title="" fulltitle="" subtitle=""/>
+        <group name="group" href="group.html" status="active" documented="true" seen="true" title=""/>
+        <module name="CppModule" href="cppmodule-module-suffix.html" status="active" documented="true" seen="true" title=""/>
+        <qmlmodule name="QmlModule" qml-module-name="QmlModule" href="qmlmodule-qmlmodule-suffix.html" status="active" documented="true" seen="true" title=""/>
+    </namespace>
+</INDEX>
