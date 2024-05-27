@@ -735,9 +735,8 @@
     The \\qmltype command is for documenting a QML type. The command
     has one argument, which is the name of the QML type.
 
-    If the QML type is instantiated by a C++ class, that class must be
-    specified using the \l{instantiates-command} {\\instantiates}
-    context command.
+    If the QML type has an equivalent C++ class, you can specify that class
+    with the \l{instantiates-command}{\\instantiates} context command.
 
     The \l {inqmlmodule-command}{\\inqmlmodule} command documents the
     QML module the type belongs to. The argument passed to this command
@@ -757,9 +756,9 @@
     \1/
     \endcode
 
-    Here, the \e{\\qmltype} comment includes \l{instantiates-command}
-    {\\instantiates} to specify that a Transform is instantiated by
-    the C++ class QGraphicsTransform. A \\qmltype comment should
+    Here, the \e{\\qmltype} comment includes \e{\\instantiates}
+    to specify that a Transform is the QML counterpart to the
+    C++ class QGraphicsTransform. A \\qmltype comment should
     always include a \l {since-command} {\\since} command, because all
     QML types are new. It should also include a \l{brief-command}
     {\\brief} description. If a QML type is a member of a QML type group,
@@ -895,12 +894,12 @@
     \target instantiates-command
     \section1 \\instantiates
 
-    The \\instantiates command is used in the \l{qmltype-command} {QML
-    type} comment of an elemental QML type to specify the name of the
-    C++ class that instantiates the QML type.
+    The \\instantiates command must be used in conjunction with the
+    \qdoccmd qmltype topic command. The command takes a C++ class as its
+    argument. If QDoc cannot find the C++ class, it issues a warning.
 
-    If the QML type is not instantiated by a C++ class, this command
-    is not used.
+    Use the \\instantiates command to specify what the type is called in C++.
+    Any one QML type can only be the counterpart of one C++ class.
 
     \badcode *
     /\1!
@@ -916,8 +915,8 @@
     \endcode
 
     Here, the \e{\\qmltype} comment includes \l{instantiates-command}
-    {\\instantiates} to specify that a Transform is instantiated by
-    the C++ class QGraphicsTransform.
+    {\\instantiates} to specify that Transform is QGraphicsTransform
+    in C++.
 
     \target typealias-command
     \section1 \\typealias
