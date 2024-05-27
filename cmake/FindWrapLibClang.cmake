@@ -17,8 +17,14 @@ endif()
 find_package(Clang CONFIG)
 # LLVM versions >= 16 come with Findzstd.cmake that creates a target for libzstd.
 # Disable its global promotion to prevent interference with FindWrapZSTD.cmake.
+if(TARGET zstd::libzstd)
+    qt_internal_disable_find_package_global_promotion(zstd::libzstd)
+endif()
 if(TARGET zstd::libzstd_shared)
     qt_internal_disable_find_package_global_promotion(zstd::libzstd_shared)
+endif()
+if(TARGET zstd::libzstd_static)
+    qt_internal_disable_find_package_global_promotion(zstd::libzstd_static)
 endif()
 
 if(__qt_wrap_clang_backup_prefix)
