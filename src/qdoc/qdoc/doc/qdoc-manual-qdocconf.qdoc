@@ -1139,40 +1139,53 @@
     \section1 outputprefixes
 
     The \c outputprefixes variable specifies a mapping between types of files
-    and the prefixes to prepend to the HTML file names in the generated
+    and the prefixes to prepend to the output file names in the generated
     documentation.
 
+    QDoc supports adding an output prefix to the file names of QML type, C++
+    class, namespace, and header file reference pages.
+
     \badcode
-        outputprefixes     = QML
+        outputprefixes     = QML CPP
         outputprefixes.QML = uicomponents-
+        outputprefixes.CPP = components-
     \endcode
 
     By default, files containing the API documentation for QML types
-    are prefixed with "qml-". In the above example, the prefix \c
-    "uicomponents" is used instead.
+    are prefixed with \c {qml-}. In the above example, the prefix \c
+    {uicomponents-} is used instead.
 
-    The output prefix is applied to file names for documentation on
-    QML.
+    Likewise, C++ type documentation pages are prefixed with \c {components-}
+    in the above example. By default, C++ type pages have no prefix.
 
     \target outputsuffixes-variable
     \section1 outputsuffixes
 
     The \c outputsuffixes variable specifies a mapping between types of
-    files and module name suffixes to append to the HTML file names.
+    files and suffixes to apply to the module or type name as they appear
+    in the output file names.
+
+    QDoc supports adding an output suffix to the file names of module pages,
+    QML type, C++ class, namespace, and header file reference pages.
+
+    By default, no suffix is used. The QML output suffix, if defined, is
+    applied as a suffix to the module name as it appears in the file names
+    of QML type and QML module pages.
+
+    File names for C++ types do not include the module name. The CPP
+    output suffix, if defined, is applied as a suffix for the type name.
 
     \badcode
-        outputsuffixes     = QML
-        outputsuffixes.QML = -tp
+        outputsuffixes = QML CPP
+        {outputsuffixes.QML,outputsuffixes.CPP} = -tp
     \endcode
 
-    Given a QML module name \e FooBar and the default
-    \l {outputprefixes-variable}{output prefix} ("qml-"), the file name of
-    the generated HTML page for a QML type \e FooWidget would be
+    With the definitions above, given a QML module name \e FooBar and the default
+    \l {outputprefixes-variable}{output prefix} (\c {qml-}), the name of
+    the generated file for a QML type \e FooWidget is
     \c qml-foobar-tp-foowidget.html.
 
-    By default, no suffix is used. The output suffix, if defined, is
-    applied to file names for documentation on QML and its module
-    page.
+    Likewise, for a C++ class \e QFoobar, QDoc generates \c qfoobar-tp.html.
 
     The \c outputsuffixes variable was introduced in QDoc 5.6.
 

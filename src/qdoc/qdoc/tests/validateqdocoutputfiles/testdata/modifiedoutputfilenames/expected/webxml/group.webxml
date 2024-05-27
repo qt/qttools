@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <group name="group" href="group.html" status="active" documented="true" seen="true" title="">
+            <description>
+                <table width="100%"/>
+            </description>
+        </group>
+    </document>
+</WebXML>
