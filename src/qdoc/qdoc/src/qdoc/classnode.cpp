@@ -90,37 +90,6 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
 }
 
 /*!
-  This function does a recursive search of this class node's
-  base classes looking for one that has a QML element. If it
-  finds one, it returns the pointer to that QML element. If
-  it doesn't find one, it returns null.
- */
-QmlTypeNode *ClassNode::findQmlBaseNode()
-{
-    QmlTypeNode *result = nullptr;
-    const QList<RelatedClass> &bases = baseClasses();
-
-    if (!bases.isEmpty()) {
-        for (const RelatedClass &base : bases) {
-            ClassNode *cn = base.m_node;
-            if (cn && cn->qmlElement()) {
-                return cn->qmlElement();
-            }
-        }
-        for (const RelatedClass &base : bases) {
-            ClassNode *cn = base.m_node;
-            if (cn) {
-                result = cn->findQmlBaseNode();
-                if (result != nullptr) {
-                    return result;
-                }
-            }
-        }
-    }
-    return result;
-}
-
-/*!
   \a fn is an overriding function in this class or in a class
   derived from this class. Find the node for the function that
   \a fn overrides in this class's children or in one of this

@@ -46,7 +46,6 @@ public:
     [[nodiscard]] bool isAbstract() const override { return m_abstract; }
     void setAbstract(bool b) override { m_abstract = b; }
     PropertyNode *findPropertyNode(const QString &name);
-    QmlTypeNode *findQmlBaseNode();
     FunctionNode *findOverriddenFunction(const FunctionNode *fn);
     PropertyNode *findOverriddenProperty(const FunctionNode *fn);
     [[nodiscard]] bool docMustBeGenerated() const override;
