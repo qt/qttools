@@ -2851,22 +2851,19 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
                 out() << "<a href=\"" << link << "\">";
             }
 
-            QStringList pieces;
-            if (it.value()->isQmlType()) {
-                QString name = it.value()->name();
-                next = it;
-                ++next;
-                if (name != previousName)
-                    multipleOccurrences = false;
-                if ((next != paragraph[curParNr].end()) && (name == next.value()->name())) {
-                    multipleOccurrences = true;
-                    previousName = name;
-                }
-                if (multipleOccurrences)
-                    name += ": " + it.value()->tree()->camelCaseModuleName();
-                pieces << name;
-            } else
-                pieces = it.value()->fullName(relative).split("::");
+            QStringList pieces{it.value()->fullName(relative).split("::"_L1)};
+            const auto &name{pieces.last()};
+            next = it;
+            ++next;
+            if (name != previousName)
+                multipleOccurrences = false;
+            if ((next != paragraph[curParNr].end()) && (name == next.value()->name())) {
+                multipleOccurrences = true;
+                previousName = name;
+            }
+            if (multipleOccurrences && pieces.size() == 1)
+                pieces.last().append(": %1"_L1.arg(it.value()->tree()->camelCaseModuleName()));
+
             out() << protectEnc(pieces.last());
             out() << "</a>";
             if (pieces.size() > 1) {
