@@ -283,7 +283,7 @@ void Tree::resolveCppToQmlLinks()
             auto *qcn = static_cast<QmlTypeNode *>(child);
             auto *cn = const_cast<ClassNode *>(qcn->classNode());
             if (cn)
-                cn->setQmlElement(qcn);
+                cn->insertQmlNativeType(qcn);
         }
     }
 }
