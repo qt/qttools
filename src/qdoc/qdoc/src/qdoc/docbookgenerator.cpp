@@ -1568,22 +1568,18 @@ void DocBookGenerator::generateCompactList(const Node *relative, const NodeMulti
 
             // Cut the name into pieces to determine whether it is simple (one piece) or complex
             // (more than one piece).
-            QStringList pieces;
-            if (it.value()->isQmlType()) {
-                QString name = it.value()->name();
-                next = it;
-                ++next;
-                if (name != previousName)
-                    multipleOccurrences = false;
-                if ((next != paragraph[curParNr].end()) && (name == next.value()->name())) {
-                    multipleOccurrences = true;
-                    previousName = name;
-                }
-                if (multipleOccurrences)
-                    name += ": " + it.value()->tree()->camelCaseModuleName();
-                pieces << name;
-            } else
-                pieces = it.value()->fullName(relative).split("::");
+            QStringList pieces{it.value()->fullName(relative).split("::"_L1)};
+            const auto &name{pieces.last()};
+            next = it;
+            ++next;
+            if (name != previousName)
+                multipleOccurrences = false;
+            if ((next != paragraph[curParNr].end()) && (name == next.value()->name())) {
+                multipleOccurrences = true;
+                previousName = name;
+            }
+            if (multipleOccurrences && pieces.size() == 1)
+                pieces.last().append(": "_L1.arg(it.value()->tree()->camelCaseModuleName()));
 
             // Write the link to the element, which is identical if the element is obsolete or not.
             m_writer->writeStartElement(dbNamespace, "link");
