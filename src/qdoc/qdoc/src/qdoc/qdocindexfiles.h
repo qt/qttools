@@ -46,6 +46,7 @@ private:
     void resolveIndex();
     int indexForNode(Node *node);
     bool adoptRelatedNode(Aggregate *adoptiveParent, int index);
+    void writeTargets(QXmlStreamWriter &writer, Node *node);
 
     void generateIndex(const QString &fileName, const QString &url, const QString &title,
                        Generator *g);

@@ -3,9 +3,15 @@
 <INDEX url="" title="TrailingBackslashes Reference Documentation" version="" project="TrailingBackslashes">
     <namespace name="" status="active" access="public" module="trailingbackslashes">
         <struct name="Struct" href="struct.html" status="active" access="public" location="trailing_backslashes.h" documented="true" module="TrailingBackslashes">
-            <function name="MultipleTrailingSlashes" fullname="Struct::MultipleTrailingSlashes" href="struct.html#MultipleTrailingSlashes" status="active" access="public" location="trailing_backslashes.h" documented="true" meta="plain" type="void" signature="void MultipleTrailingSlashes()"/>
-            <function name="multipleTrailingSlashesAndRandomWhitespace" fullname="Struct::multipleTrailingSlashesAndRandomWhitespace" href="struct.html#multipleTrailingSlashesAndRandomWhitespace" status="active" access="public" location="trailing_backslashes.h" documented="true" meta="plain" type="void" signature="void multipleTrailingSlashesAndRandomWhitespace()"/>
-            <function name="oneTrailingSlash" fullname="Struct::oneTrailingSlash" href="struct.html#oneTrailingSlash" status="active" access="public" location="trailing_backslashes.h" documented="true" meta="plain" type="void" signature="void oneTrailingSlash()"/>
+            <function name="MultipleTrailingSlashes" fullname="Struct::MultipleTrailingSlashes" href="struct.html#MultipleTrailingSlashes" status="active" access="public" location="trailing_backslashes.h" documented="true" meta="plain" type="void" signature="void MultipleTrailingSlashes()">
+                <keyword name="two-slashes-here" title="two slashes here"/>
+            </function>
+            <function name="multipleTrailingSlashesAndRandomWhitespace" fullname="Struct::multipleTrailingSlashesAndRandomWhitespace" href="struct.html#multipleTrailingSlashesAndRandomWhitespace" status="active" access="public" location="trailing_backslashes.h" documented="true" meta="plain" type="void" signature="void multipleTrailingSlashesAndRandomWhitespace()">
+                <keyword name="two-slashes-again" title="two slashes again"/>
+            </function>
+            <function name="oneTrailingSlash" fullname="Struct::oneTrailingSlash" href="struct.html#oneTrailingSlash" status="active" access="public" location="trailing_backslashes.h" documented="true" meta="plain" type="void" signature="void oneTrailingSlash()">
+                <keyword name="one-slash" title="one slash"/>
+            </function>
         </struct>
         <module name="TrailingBackslashes" href="trailingbackslashes-module.html" status="internal" seen="false" title=""/>
     </namespace>

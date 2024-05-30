@@ -753,6 +753,38 @@ bool QDocIndexFiles::adoptRelatedNode(Aggregate *adoptiveParent, int index)
 }
 
 /*!
+    Write canonicalized versions of \\target and \\keyword identifiers
+    that appear in the documentation of \a node into the index using
+    \a writer, so that they can be used as link targets in external
+    documentation sets.
+*/
+void QDocIndexFiles::writeTargets(QXmlStreamWriter &writer, Node *node)
+{
+    if (node->doc().hasTargets()) {
+        for (const Atom *target : std::as_const(node->doc().targets())) {
+            const QString &title = target->string();
+            const QString &name{Utilities::asAsciiPrintable(title)};
+            writer.writeStartElement("target");
+            writer.writeAttribute("name", node->isExternalPage() ? title : name);
+            if (name != title)
+                writer.writeAttribute("title", title);
+            writer.writeEndElement(); // target
+        }
+    }
+    if (node->doc().hasKeywords()) {
+        for (const Atom *keyword : std::as_const(node->doc().keywords())) {
+            const QString &title = keyword->string();
+            const QString &name{Utilities::asAsciiPrintable(title)};
+            writer.writeStartElement("keyword");
+            writer.writeAttribute("name", name);
+            if (name != title)
+                writer.writeAttribute("title", title);
+            writer.writeEndElement(); // keyword
+        }
+    }
+}
+
+/*!
   Generate the index section with the given \a writer for the \a node
   specified, returning true if an element was written, and returning
   false if an element is not written.
@@ -1073,48 +1105,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         break;
     }
 
-    /*
-      For our pages, we canonicalize the target, keyword and content
-      item names so that they can be used by qdoc for other sets of
-      documentation.
-
-      The reason we do this here is that we don't want to ruin
-      externally composed indexes, containing non-qdoc-style target names
-      when reading in indexes.
-
-      targets and keywords are now allowed in any node, not just inner nodes.
-    */
-
-    if (node->doc().hasTargets()) {
-        bool external = false;
-        if (node->isExternalPage())
-            external = true;
-        const auto &targets = node->doc().targets();
-        for (const Atom *target : targets) {
-            const QString &title = target->string();
-            QString name = Utilities::asAsciiPrintable(title);
-            writer.writeStartElement("target");
-            if (!external)
-                writer.writeAttribute("name", name);
-            else
-                writer.writeAttribute("name", title);
-            if (name != title)
-                writer.writeAttribute("title", title);
-            writer.writeEndElement(); // target
-        }
-    }
-    if (node->doc().hasKeywords()) {
-        const auto &keywords = node->doc().keywords();
-        for (const Atom *keyword : keywords) {
-            const QString &title = keyword->string();
-            QString name = Utilities::asAsciiPrintable(title);
-            writer.writeStartElement("keyword");
-            writer.writeAttribute("name", name);
-            if (name != title)
-                writer.writeAttribute("title", title);
-            writer.writeEndElement(); // keyword
-        }
-    }
+    writeTargets(writer, node);
 
     /*
       Some nodes have a table of contents. For these, we close
@@ -1293,6 +1284,8 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         writer.writeAttribute("default", parameter.defaultValue());
         writer.writeEndElement(); // parameter
     }
+
+    writeTargets(writer, fn);
 
     // Append to the section if the callback object was set
     if (post_)
