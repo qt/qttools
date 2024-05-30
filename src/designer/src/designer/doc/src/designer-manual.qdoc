@@ -1233,8 +1233,7 @@
         checkboxes and radio buttons with similar purposes.
 
         Among the significant properties of group boxes are \c title, \c flat,
-        \c checkable, and \c checked. These are demonstrated in the
-        \l{widgets/groupbox}{Group Box} example, and described in the QGroupBox
+        \c checkable, and \c checked, as described in the \l QGroupBox
         class documentation. Each group box can contain its own layout, and
         this is necessary if it contains other widgets. To add a layout to the
         group box, click inside it and apply the layout as usual.
