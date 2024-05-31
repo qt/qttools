@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="lists.html" href="lists.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Assorted lists" fulltitle="Assorted lists" subtitle="">
+            <contents name="generatelist" title="\generatelist" level="1"/>
+            <contents name="descending" title="descending" level="2"/>
+            <contents name="annotatedlist" title="\annotatedlist" level="1"/>
+            <contents name="annotatedlist-descending-3" title="descending" level="2"/>
+            <description>
+                <section id="generatelist">
+                    <heading level="1">\generatelist</heading>
+                    <generatedlist contents="list"/>
+                </section>
+                <section id="descending">
+                    <heading level="2">descending</heading>
+                    <generatedlist contents="list"/>
+                </section>
+                <section id="annotatedlist">
+                    <heading level="1">\annotatedlist</heading>
+                    <table width="100%">
+                        <row>
+                            <item>
+                                <para>
+                                    <link raw="A" href="a.html" type="page" page="A"/>
+                                </para>
+                            </item>
+                            <item>
+                                <para>A</para>
+                            </item>
+                        </row>
+                        <row>
+                            <item>
+                                <para>
+                                    <link raw="B" href="b.html" type="page" page="B"/>
+                                </para>
+                            </item>
+                            <item>
+                                <para>B</para>
+                            </item>
+                        </row>
+                        <row>
+                            <item>
+                                <para>
+                                    <link raw="Second!" href="c.html" type="page" page="Second!"/>
+                                </para>
+                            </item>
+                            <item>
+                                <para>sort key: B</para>
+                            </item>
+                        </row>
+                        <row>
+                            <item>
+                                <para>
+                                    <link raw="First!" href="d.html" type="page" page="First!"/>
+                                </para>
+                            </item>
+                            <item>
+                                <para>sort key: A</para>
+                            </item>
+                        </row>
+                    </table>
+                </section>
+                <section id="descending">
+                    <heading level="2">descending</heading>
+                    <table width="100%">
+                        <row>
+                            <item>
+                                <para>
+                                    <link raw="A" href="a.html" type="page" page="A"/>
+                                </para>
+                            </item>
+                            <item>
+                                <para>A</para>
+                            </item>
+                        </row>
+                        <row>
+                            <item>
+                                <para>
+                                    <link raw="B" href="b.html" type="page" page="B"/>
+                                </para>
+                            </item>
+                            <item>
+                                <para>B</para>
+                            </item>
+                        </row>
+                        <row>
+                            <item>
+                                <para>
+                                    <link raw="Second!" href="c.html" type="page" page="Second!"/>
+                                </para>
+                            </item>
+                            <item>
+                                <para>sort key: B</para>
+                            </item>
+                        </row>
+                        <row>
+                            <item>
+                                <para>
+                                    <link raw="First!" href="d.html" type="page" page="First!"/>
+                                </para>
+                            </item>
+                            <item>
+                                <para>sort key: A</para>
+                            </item>
+                        </row>
+                    </table>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>

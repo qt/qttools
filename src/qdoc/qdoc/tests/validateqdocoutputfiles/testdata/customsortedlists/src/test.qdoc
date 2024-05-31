@@ -1,0 +1,46 @@
+// Copyright (C) 2024 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*! \page a.html
+    \ingroup list
+    \title A
+    \brief A
+*/
+
+/*! \page b.html
+    \ingroup list
+    \title B
+    \brief B
+*/
+
+/*! \page c.html
+    \ingroup list
+    \sortkey B
+    \title Second!
+    \brief sort key: B
+*/
+
+/*! \page d.html
+    \ingroup list
+    \sortkey A
+    \title First!
+    \brief sort key: A
+
+*/
+
+/*!
+    \page lists.html
+    \title Assorted lists
+
+    \section1 \\generatelist
+    \generatelist list
+
+    \section2 descending
+    \generatelist [descending] list
+
+    \section1 \\annotatedlist
+    \annotatedlist list
+
+    \section2 descending
+    \annotatedlist [descending] list
+*/

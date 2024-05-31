@@ -2623,6 +2623,11 @@
     \e{draganddrop} group will have \e{\\ingroup draganddrop} in its
     \e{\\class} or \e{\\qmltype} comment.
 
+    The group members are sorted in ascending order, based on
+    user-visible name or title. Since QDoc 6.8, \\annotatedlist
+    and \qdoccmd generatelist support also custom sorting.
+
+    See also \qdoccmd generatelist and \l {Sorting group members}.
 
     \target qtcmakepackage-command
     \section1 \\qtcmakepackage
@@ -2696,6 +2701,37 @@
 
     With a group name as the only argument, QDoc lists all entities that
     use the \c {\ingroup <group-name>} command.
+
+    \section3 Sorting group members
+
+    When generating a list of group members, they are sorted in ascending
+    order, based on user-visible name or title. Since QDoc 6.9, the default
+    sort order can be modified:
+
+    \badcode
+        \generatelist [descending] changelogs
+    \endcode
+
+    Assuming the \e changelogs group consists of pages
+    detailing changes in different versions, this generates the
+    list in descending order (newest version first).
+
+    \section4 Sort key
+
+    Since QDoc 6.9, a custom sort key can be assigned to one or
+    more group members using the \qdoccmd meta command:
+
+    \badcode
+        \meta sortkey {sort key}
+    \endcode
+
+    Sorting (ascending or descending) is then done based on
+    these key(s), rather than user-visible titles.
+
+    \note Any group member with a sort key is listed \e before
+    members without a key (in the default ascending order). This
+    allows raising individual group member(s) to the top of the
+    list.
 
     \target table example
     \section2 \c annotatedclasses
@@ -2904,6 +2940,8 @@
     \code
         \ingroup qt-basic-concepts
     \endcode
+
+    See also \qdoccmd {annotatedlist}.
 
     \target if-command
     \section1 \\if
