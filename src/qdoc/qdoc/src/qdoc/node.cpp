@@ -24,6 +24,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 /*!
   \class Node
   \brief The Node class is the base class for all the nodes in QDoc's parse tree.
@@ -78,6 +80,33 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
     LT_RETURN_IF_NOT_EQUAL(n1->location().filePath(), n2->location().filePath());
 
     return false;
+}
+
+
+/*!
+    Returns \c true if node \a n1 is less than node \a n2 when comparing
+    the sort keys, defined with
+
+    \badcode
+    \meta sortkey {<value>}
+    \endcode
+
+    in the respective nodes' documentation. If the two sort keys are equal,
+    falls back to nodeNameLessThan(). If \a n1 defines a sort key and \a n2
+    does not, then n1 < n2.
+
+*/
+bool Node::nodeSortKeyOrNameLessThan(const Node *n1, const Node *n2)
+{
+    const QString default_sortkey{QChar{QChar::LastValidCodePoint}};
+    const auto *n1_metamap{n1->doc().metaTagMap()};
+    const auto *n2_metamap{n2->doc().metaTagMap()};
+    if (auto cmp = QString::compare(
+            n1_metamap ? n1_metamap->value(u"sortkey"_s, default_sortkey) : default_sortkey,
+            n2_metamap ? n2_metamap->value(u"sortkey"_s, default_sortkey) : default_sortkey); cmp != 0) {
+        return cmp < 0;
+    }
+    return nodeNameLessThan(n1, n2);
 }
 
 /*!

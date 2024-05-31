@@ -162,6 +162,11 @@ protected:
     static bool comparePaths(const QString &a, const QString &b) { return (a < b); }
     static bool appendTrademark(const Atom *atom);
 
+    static Qt::SortOrder sortOrder(const QString &str)
+    {
+        return (str == "descending") ? Qt::DescendingOrder : Qt::AscendingOrder;
+    }
+
 private:
     static Generator *s_currentGenerator;
     static QMap<QString, QMap<QString, QString>> s_fmtLeftMaps;

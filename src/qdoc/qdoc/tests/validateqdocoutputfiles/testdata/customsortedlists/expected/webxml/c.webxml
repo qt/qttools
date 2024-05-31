@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="c.html" href="c.html" status="active" location="test.qdoc" documented="true" groups="list" sortkey="B" subtype="page" title="Second!" fulltitle="Second!" subtitle="" brief="Sort key: B">
+            <description>
+                <brief>sort key: B</brief>
+            </description>
+        </page>
+    </document>
+</WebXML>

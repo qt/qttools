@@ -304,7 +304,8 @@ public:
     static FlagValue toFlagValue(bool b);
     static bool fromFlagValue(FlagValue fv, bool defaultValue);
     static QString nodeTypeString(NodeType t);
-    static bool nodeNameLessThan(const Node *first, const Node *second);
+    [[nodiscard]] static bool nodeNameLessThan(const Node *first, const Node *second);
+    [[nodiscard]] static bool nodeSortKeyOrNameLessThan(const Node *n1, const Node *n2);
 
 protected:
     Node(NodeType type, Aggregate *parent, QString name);

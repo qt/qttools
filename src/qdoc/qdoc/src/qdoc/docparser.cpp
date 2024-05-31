@@ -548,19 +548,29 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         appendAtom(Atom(Atom::FootnoteLeft));
                     }
                     break;
-                case CMD_ANNOTATEDLIST:
-                    appendAtom(Atom(Atom::AnnotatedList, getArgument()));
-                    break;
+                case CMD_ANNOTATEDLIST: {
+                    // Optional sorting directive [ascending|descending]
+                    if (isLeftBracketAhead())
+                        p2 = getBracketedArgument();
+                    else
+                        p2.clear();
+                    appendAtom(Atom(Atom::AnnotatedList, getArgument(), p2));
+                } break;
                 case CMD_SINCELIST:
                     leavePara();
                     appendAtom(Atom(Atom::SinceList, getRestOfLine().simplified()));
                     break;
                 case CMD_GENERATELIST: {
+                    // Optional sorting directive [ascending|descending]
+                    if (isLeftBracketAhead())
+                        p2 = getBracketedArgument();
+                    else
+                        p2.clear();
                     QString arg1 = getArgument();
                     QString arg2 = getOptionalArgument();
                     if (!arg2.isEmpty())
                         arg1 += " " + arg2;
-                    appendAtom(Atom(Atom::GeneratedList, arg1));
+                    appendAtom(Atom(Atom::GeneratedList, arg1, p2));
                 } break;
                 case CMD_HEADER:
                     if (m_openedCommands.top() == CMD_TABLE) {
