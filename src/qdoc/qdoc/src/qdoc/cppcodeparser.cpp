@@ -437,7 +437,8 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         }
     } else if (command == COMMAND_QMLNATIVETYPE || command == COMMAND_QMLINSTANTIATES) {
         if (command == COMMAND_QMLINSTANTIATES)
-            doc.location().report(u"\\instantiates is deprected and will be removed in a future version. Use \\nativetype instead."_s);
+            doc.location().report(
+                    u"\\instantiates is deprecated and will be removed in a future version. Use \\nativetype instead."_s);
         // TODO: COMMAND_QMLINSTANTIATES is deprecated since 6.8. Its remains should be removed no later than Qt 7.0.0.
         processQmlNativeTypeCommand(node, command, arg, doc.location());
     } else if (command == COMMAND_DEFAULT) {
