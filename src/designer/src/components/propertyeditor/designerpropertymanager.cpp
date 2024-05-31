@@ -1739,6 +1739,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
 
 void DesignerPropertyManager::initializeProperty(QtProperty *property)
 {
+    static bool creatingIconProperties = false;
+
     m_resetMap[property] = false;
 
     const int type = propertyType(property);
@@ -1753,8 +1755,10 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
         m_stringThemeAttributes[property] = false;
         break;
     case QMetaType::Int:
-        m_intValues[property] = 0;
-        m_intThemeEnumAttributes[property] = false;
+        if (creatingIconProperties) {
+            m_intValues[property] = 0;
+            m_intThemeEnumAttributes[property] = false;
+        }
         break;
     case QMetaType::UInt:
         m_uintValues[property] = 0;
@@ -1803,6 +1807,7 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
             m_pixmapValues[property] = PropertySheetPixmapValue();
             m_defaultPixmaps[property] = QPixmap();
         } else if (type == designerIconTypeId()) {
+            creatingIconProperties = true;
             m_iconValues[property] = PropertySheetIconValue();
             m_defaultIcons[property] = QIcon();
 
@@ -1829,6 +1834,7 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
             createIconSubProperty(property, QIcon::Active, QIcon::On, tr("Active On"));
             createIconSubProperty(property, QIcon::Selected, QIcon::Off, tr("Selected Off"));
             createIconSubProperty(property, QIcon::Selected, QIcon::On, tr("Selected On"));
+            creatingIconProperties = false;
         } else if (type == designerStringTypeId()) {
             m_stringManager.initialize(this, property, PropertySheetStringValue());
             m_stringAttributes.insert(property, ValidationMultiLine);
@@ -2105,8 +2111,11 @@ void DesignerEditorFactory::slotValueChanged(QtProperty *property, const QVarian
     case QMetaType::QPalette:
         applyToEditors(m_palettePropertyToEditors.value(property), &PaletteEditorButton::setPalette, qvariant_cast<QPalette>(value));
         break;
-    case QMetaType::Int:
-        applyToEditors(m_intPropertyToComboEditors.value(property), &QComboBox::setCurrentIndex, value.toInt());
+    case QMetaType::Int: {
+        auto it = m_intPropertyToComboEditors.constFind(property);
+        if (it != m_intPropertyToComboEditors.cend())
+            applyToEditors(it.value(), &QComboBox::setCurrentIndex, value.toInt());
+    }
         break;
     case QMetaType::UInt:
         applyToEditors(m_uintPropertyToEditors.value(property), &QLineEdit::setText, QString::number(value.toUInt()));
@@ -2204,6 +2213,8 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
             m_intPropertyToComboEditors[property].append(ed);
             m_comboEditorToIntProperty.insert(ed, property);
             editor = ed;
+        } else {
+            editor = QtVariantEditorFactory::createEditor(manager, property, parent);
         }
     break;
     case QMetaType::UInt: {
