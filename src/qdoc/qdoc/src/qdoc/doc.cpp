@@ -299,6 +299,12 @@ QMultiMap<ComparisonCategory, Text> *Doc::comparesWithMap() const
     return m_priv && m_priv->extra ? &m_priv->extra->m_comparesWithMap : nullptr;
 }
 
+void Doc::constructExtra() const
+{
+    if (m_priv)
+        m_priv->constructExtra();
+}
+
 void Doc::initialize(FileResolver& file_resolver)
 {
     Config &config = Config::instance();

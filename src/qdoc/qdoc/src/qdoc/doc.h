@@ -73,6 +73,7 @@ public:
     [[nodiscard]] const QList<Atom *> &targets() const;
     [[nodiscard]] QStringMultiMap *metaTagMap() const;
     [[nodiscard]] QMultiMap<ComparisonCategory, Text> *comparesWithMap() const;
+    void constructExtra() const;
 
     static void initialize(FileResolver& file_resolver);
     static void terminate();

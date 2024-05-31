@@ -599,6 +599,11 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             node->setReconstitutedBrief(briefAttr);
         }
 
+        if (const auto sortKey = attributes.value(QLatin1String("sortkey")).toString(); !sortKey.isEmpty()) {
+            node->doc().constructExtra();
+            if (auto *metaMap = node->doc().metaTagMap())
+                metaMap->insert("sortkey", sortKey);
+        }
         if (!hasReadChildren) {
             bool useParent = (elementName == QLatin1String("namespace") && name.isEmpty());
             while (reader.readNextStartElement()) {
@@ -953,6 +958,10 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     QStringList groups = m_qdb->groupNamesForNode(node);
     if (!groups.isEmpty())
         writer.writeAttribute("groups", groups.join(QLatin1Char(',')));
+
+   if (const auto *metamap = node->doc().metaTagMap(); metamap)
+        if (const auto sortKey = metamap->value("sortkey"); !sortKey.isEmpty())
+            writer.writeAttribute("sortkey", sortKey);
 
     QString brief = node->doc().trimmedBriefText(node->name()).toString();
     switch (node->nodeType()) {

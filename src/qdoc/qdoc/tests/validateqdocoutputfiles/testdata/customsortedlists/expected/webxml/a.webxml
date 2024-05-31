@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="a.html" href="a.html" status="active" location="test.qdoc" documented="true" groups="list" subtype="page" title="A" fulltitle="A" subtitle="" brief="A">
+            <description>
+                <brief>A</brief>
+            </description>
+        </page>
+    </document>
+</WebXML>

@@ -442,13 +442,13 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         }
         break;
     case Atom::AnnotatedList: {
-        const CollectionNode *cn = m_qdb->getCollectionNode(atom->string(), Node::Group);
-        if (cn)
-            generateList(cn, marker, atom->string());
+        if (const auto *cn = m_qdb->getCollectionNode(atom->string(), Node::Group); cn)
+            generateList(cn, marker, atom->string(), Generator::sortOrder(atom->strings().last()));
     } break;
-    case Atom::GeneratedList:
+    case Atom::GeneratedList: {
+        const auto sortOrder{Generator::sortOrder(atom->strings().last())};
         if (atom->string() == QLatin1String("annotatedclasses")) {
-            generateAnnotatedList(relative, marker, m_qdb->getCppClasses().values());
+            generateAnnotatedList(relative, marker, m_qdb->getCppClasses().values(), sortOrder);
         } else if (atom->string() == QLatin1String("annotatedexamples")) {
             generateAnnotatedLists(relative, marker, m_qdb->getExamples());
         } else if (atom->string() == QLatin1String("annotatedattributions")) {
@@ -475,17 +475,17 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                 case Node::Module:
                     // classesbymodule <module_name>
                     map = cn->getMembers([](const Node *n) { return n->isClassNode(); });
-                    generateAnnotatedList(relative, marker, map.values());
+                    generateAnnotatedList(relative, marker, map.values(), sortOrder);
                     break;
                 case Node::QmlModule:
                     if (atom->string().contains(QLatin1String("qmlvaluetypes")))
                         map = cn->getMembers(Node::QmlValueType); // qmlvaluetypesbymodule <module_name>
                     else
                         map = cn->getMembers(Node::QmlType);      // qmltypesbymodule <module_name>
-                    generateAnnotatedList(relative, marker, map.values());
+                    generateAnnotatedList(relative, marker, map.values(), sortOrder);
                     break;
                 default: // fall back to listing all members
-                    generateAnnotatedList(relative, marker, cn->members());
+                    generateAnnotatedList(relative, marker, cn->members(), sortOrder);
                     break;
                 }
             }
@@ -506,23 +506,23 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         } else if (atom->string() == QLatin1String("functionindex")) {
             generateFunctionIndex(relative);
         } else if (atom->string() == QLatin1String("attributions")) {
-            generateAnnotatedList(relative, marker, m_qdb->getAttributions().values());
+            generateAnnotatedList(relative, marker, m_qdb->getAttributions().values(), sortOrder);
         } else if (atom->string() == QLatin1String("legalese")) {
             generateLegaleseList(relative, marker);
         } else if (atom->string() == QLatin1String("overviews")) {
-            generateList(relative, marker, "overviews");
+            generateList(relative, marker, "overviews", sortOrder);
         } else if (atom->string() == QLatin1String("cpp-modules")) {
-            generateList(relative, marker, "cpp-modules");
+            generateList(relative, marker, "cpp-modules", sortOrder);
         } else if (atom->string() == QLatin1String("qml-modules")) {
-            generateList(relative, marker, "qml-modules");
+            generateList(relative, marker, "qml-modules", sortOrder);
         } else if (atom->string() == QLatin1String("namespaces")) {
-            generateAnnotatedList(relative, marker, m_qdb->getNamespaces().values());
+            generateAnnotatedList(relative, marker, m_qdb->getNamespaces().values(), sortOrder);
         } else if (atom->string() == QLatin1String("related")) {
-            generateList(relative, marker, "related");
+            generateList(relative, marker, "related", sortOrder);
         } else {
             const CollectionNode *cn = m_qdb->getCollectionNode(atom->string(), Node::Group);
             if (cn) {
-                if (!generateGroupList(const_cast<CollectionNode *>(cn)))
+                if (!generateGroupList(const_cast<CollectionNode *>(cn), sortOrder))
                     relative->location().warning(
                             QString("'\\generatelist %1' group is empty").arg(atom->string()));
             } else {
@@ -530,7 +530,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                         QString("'\\generatelist %1' no such group").arg(atom->string()));
             }
         }
-        break;
+    } break;
     case Atom::SinceList: {
         const NodeMultiMap &nsmap = m_qdb->getSinceMap(atom->string());
         if (nsmap.isEmpty())
@@ -2627,7 +2627,7 @@ void HtmlGenerator::generateClassHierarchy(const Node *relative, NodeMultiMap &c
   A two-column table is output.
  */
 void HtmlGenerator::generateAnnotatedList(const Node *relative, CodeMarker *marker,
-                                          const NodeList &unsortedNodes)
+                                          const NodeList &unsortedNodes, Qt::SortOrder sortOrder)
 {
     if (unsortedNodes.isEmpty() || relative == nullptr)
         return;
@@ -2645,7 +2645,11 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative, CodeMarker *mark
     out() << "<div class=\"table\"><table class=\"annotated\">\n";
     int row = 0;
     NodeList nodes = nmm.values();
-    std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
+
+    if (sortOrder == Qt::DescendingOrder)
+        std::sort(nodes.rbegin(), nodes.rend(), Node::nodeSortKeyOrNameLessThan);
+    else
+        std::sort(nodes.begin(), nodes.end(), Node::nodeSortKeyOrNameLessThan);
 
     for (const auto *node : std::as_const(nodes)) {
         if (++row % 2 == 1)
@@ -2943,18 +2947,24 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
 }
 
 /*!
-  This function generates a simple unordered list for the members
-  of collection node \a {cn}. Returns \c true if the list was
-  generated (collection has members), \c false otherwise.
+  This function generates a simple list (without annotations) for
+  the members of collection node \a {cn}. The list is sorted
+  according to \a sortOrder.
+
+  Returns \c true if the list was generated (collection has members),
+  \c false otherwise.
  */
-bool HtmlGenerator::generateGroupList(CollectionNode *cn)
+bool HtmlGenerator::generateGroupList(CollectionNode *cn, Qt::SortOrder sortOrder)
 {
     m_qdb->mergeCollections(cn);
     if (cn->members().isEmpty())
         return false;
 
     NodeList members{cn->members()};
-    std::sort(members.begin(), members.end(), Node::nodeNameLessThan);
+    if (sortOrder == Qt::DescendingOrder)
+        std::sort(members.rbegin(), members.rend(), Node::nodeSortKeyOrNameLessThan);
+    else
+        std::sort(members.begin(), members.end(), Node::nodeSortKeyOrNameLessThan);
     out() << "<ul>\n";
     for (const auto *node : std::as_const(members)) {
         out() << "<li translate=\"no\">";
@@ -2965,7 +2975,8 @@ bool HtmlGenerator::generateGroupList(CollectionNode *cn)
     return true;
 }
 
-void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker, const QString &selector)
+void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker,
+                                 const QString &selector, Qt::SortOrder sortOrder)
 {
     CNMap cnm;
     Node::NodeType type = Node::NoType;
@@ -2982,7 +2993,7 @@ void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker, const
         nodeList.reserve(collectionList.size());
         for (auto *collectionNode : collectionList)
             nodeList.append(collectionNode);
-        generateAnnotatedList(relative, marker, nodeList);
+        generateAnnotatedList(relative, marker, nodeList, sortOrder);
     } else {
         /*
           \generatelist {selector} is only allowed in a
@@ -2999,7 +3010,7 @@ void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker, const
         auto *node = const_cast<Node *>(relative);
         auto *collectionNode = static_cast<CollectionNode *>(node);
         m_qdb->mergeCollections(collectionNode);
-        generateAnnotatedList(collectionNode, marker, collectionNode->members());
+        generateAnnotatedList(collectionNode, marker, collectionNode->members(), sortOrder);
     }
 }
 

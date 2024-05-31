@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="CustomSortedLists Reference Documentation" version="" project="CustomSortedLists">
+    <namespace name="" status="active" access="public" module="customsortedlists">
+        <page name="a.html" href="a.html" status="active" location="test.qdoc" documented="true" groups="list" subtype="page" title="A" fulltitle="A" subtitle="" brief="A"/>
+        <page name="lists.html" href="lists.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Assorted lists" fulltitle="Assorted lists" subtitle="">
+            <contents name="generatelist" title="\generatelist" level="1"/>
+            <contents name="descending" title="descending" level="2"/>
+            <contents name="annotatedlist" title="\annotatedlist" level="1"/>
+            <contents name="annotatedlist-descending-3" title="descending" level="2"/>
+        </page>
+        <page name="b.html" href="b.html" status="active" location="test.qdoc" documented="true" groups="list" subtype="page" title="B" fulltitle="B" subtitle="" brief="B"/>
+        <page name="d.html" href="d.html" status="active" location="test.qdoc" documented="true" groups="list" sortkey="A" subtype="page" title="First!" fulltitle="First!" subtitle="" brief="Sort key: A"/>
+        <page name="c.html" href="c.html" status="active" location="test.qdoc" documented="true" groups="list" sortkey="B" subtype="page" title="Second!" fulltitle="Second!" subtitle="" brief="Sort key: B"/>
+        <group name="list" href="list.html" status="internal" seen="false" title=""/>
+    </namespace>
+</INDEX>
