@@ -26,20 +26,31 @@ private:
     QScopedPointer<QTemporaryDir> m_outputDir{};
 };
 
+static constexpr QLatin1StringView ASAN_OPTIONS_ENVVAR{"ASAN_OPTIONS"};
 static inline bool regenerate{false};
 
 //! Update `README.md` if you change the name of this environment variable!
 static constexpr QLatin1StringView REGENERATE_ENVVAR{"QDOC_REGENERATE_TESTDATA"};
+static QProcessEnvironment s_environment {QProcessEnvironment::systemEnvironment()};
 
 void tst_validateQdocOutputFiles::initTestCase()
 {
-    QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
-    if (environment.contains(REGENERATE_ENVVAR)) {
+    if (s_environment.contains(REGENERATE_ENVVAR)) {
         qInfo() << "Regenerating expected output for all tests.";
         regenerate = true;
         qInfo("Removing %s environment variable.", REGENERATE_ENVVAR.constData());
-        environment.remove(REGENERATE_ENVVAR);
+        s_environment.remove(REGENERATE_ENVVAR);
     }
+
+    // We must disable the use of sigaltstack for ASan to work properly with QDoc when
+    // linked against libclang, to avoid a crash in ASan. This is a known issue and workaround,
+    // see e.g. https://github.com/google/sanitizers/issues/849 and
+    // https://github.com/KDE/kdevelop/commit/e306f3e39aba37b606dadba195fa5b7b73816f8f.
+    // We do this for the process environment of the QDoc process only to avoid affecting
+    // other processes that might be started by the test runner in COIN.
+    const QString optionString = s_environment.contains(ASAN_OPTIONS_ENVVAR) ? ",use_sigaltstack=0" : "use_sigaltstack=0";
+    s_environment.insert(ASAN_OPTIONS_ENVVAR, s_environment.value(ASAN_OPTIONS_ENVVAR) + optionString);
+    qInfo() << "Disabling ASan's alternate signal stack by setting `ASAN_OPTIONS=use_sigaltstack=0`.";
 
     // Build the path to the QDoc binary the same way moc tests do for moc.
     const auto binpath = QLibraryInfo::path(QLibraryInfo::BinariesPath);
@@ -70,8 +81,8 @@ void tst_validateQdocOutputFiles::init()
 void tst_validateQdocOutputFiles::runQDocProcess(const QStringList &arguments)
 {
     QProcess qdocProcess;
+    qdocProcess.setProcessEnvironment(s_environment);
     qdocProcess.setProgram(m_qdocBinary);
-
     qdocProcess.setArguments(arguments);
 
     auto failQDoc = [&](QProcess::ProcessError) {
