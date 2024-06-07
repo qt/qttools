@@ -151,10 +151,6 @@
 <db:bridgehead renderas="sect2" xml:id="overload-1">[protected, since Test 1.2] void Test::overload(bool <db:emphasis>b</db:emphasis>)</db:bridgehead>
 <db:para>Overloads that share a documentation comment, optionally taking a parameter <db:code role="parameter">b</db:code>.</db:para>
 </db:section>
-<db:section xml:id="Test">
-<db:title>[noexcept default] Test::Test()</db:title>
-<db:para>Default constructor.</db:para>
-</db:section>
 <db:section xml:id="funcPtr">
 <db:title>void (*)(bool) Test::funcPtr(bool <db:emphasis>b</db:emphasis>, const char *<db:emphasis>s</db:emphasis>)</db:title>
 <db:para>Returns a pointer to a function that takes a boolean. Uses <db:code role="parameter">b</db:code> and <db:code role="parameter">s</db:code>.</db:para>
@@ -210,10 +206,6 @@
 <db:section xml:id="virtualFun">
 <db:title>[virtual] void Test::virtualFun()</db:title>
 <db:para>Function that must be reimplemented.</db:para>
-</db:section>
-<db:section xml:id="operator-eq">
-<db:title>[noexcept default] TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
-<db:para>Move-assigns <db:code role="parameter">other</db:code>.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="related-non-members">

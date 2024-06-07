@@ -89,18 +89,17 @@
 <db:para>Overloads that share a documentation comment, optionally taking a parameter <db:code its:translate="no" role="parameter">b</db:code>.</db:para>
 </db:section>
 <db:section xml:id="Test">
-<db:title its:translate="no">[noexcept default] Test::Test()</db:title>
+<db:title its:translate="no">Test::Test()</db:title>
 <db:constructorsynopsis>
 <db:methodname>Test</db:methodname>
 <db:void/>
-<db:modifier>default</db:modifier>
 <db:synopsisinfo role="meta">constructor</db:synopsisinfo>
-<db:synopsisinfo role="signature">Test() = default</db:synopsisinfo>
+<db:synopsisinfo role="signature">Test()</db:synopsisinfo>
 <db:synopsisinfo role="access">public</db:synopsisinfo>
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:constructorsynopsis>
-<db:para>Default constructor.</db:para>
+<db:para>The constructor is deleted.</db:para>
 </db:section>
 <db:section xml:id="funcPtr">
 <db:title its:translate="no">void (*)(bool) Test::funcPtr(bool <db:emphasis>b</db:emphasis>, const char *<db:emphasis>s</db:emphasis>)</db:title>
@@ -256,7 +255,7 @@
 <db:para>Function that must be reimplemented.</db:para>
 </db:section>
 <db:section xml:id="operator-eq">
-<db:title its:translate="no">[noexcept default] TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:title its:translate="no">TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
 <db:methodsynopsis>
 <db:type>TestQDoc::Test &amp;</db:type>
 <db:methodname>operator=</db:methodname>
@@ -264,14 +263,13 @@
 <db:type>TestQDoc::Test &amp;&amp;</db:type>
 <db:parameter>other</db:parameter>
 </db:methodparam>
-<db:modifier>default</db:modifier>
 <db:synopsisinfo role="meta">move-assign</db:synopsisinfo>
-<db:synopsisinfo role="signature">TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other) = default</db:synopsisinfo>
+<db:synopsisinfo role="signature">TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other)</db:synopsisinfo>
 <db:synopsisinfo role="access">public</db:synopsisinfo>
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
-<db:para>Move-assigns <db:code its:translate="no" role="parameter">other</db:code>.</db:para>
+<db:para>The move assignment operator is deleted. <db:code its:translate="no" role="parameter">other</db:code> cannot be moved from.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="related-non-members">

@@ -76,14 +76,14 @@ namespace TestQDoc {
 /*!
     \fn TestQDoc::Test::Test()
 
-    Default constructor.
+    The constructor is deleted.
 */
 
 /*!
     \fn Test &Test::operator=(Test &&other)
     \ingroup testgroup
 
-    Move-assigns \a other.
+    The move assignment operator is deleted. \a other cannot be moved from.
 */
 
 /*!

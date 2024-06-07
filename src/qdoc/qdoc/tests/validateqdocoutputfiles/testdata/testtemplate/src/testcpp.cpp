@@ -41,9 +41,6 @@ namespace TestQDoc {
         \li \l {TestQDoc::Test::}{QDOCTEST_MACRO2(int &x)}
         \li \l {section()}
         \li \l {section()} {section() is a section title}
-        \li \l {TestQDoc::Test::Test()} {open( parenthesis}
-        \li \l {https://en.cppreference.com/w/cpp/utility/move}
-               {C++11 added std::move(T&& t)}
     \endlist
 
     \section2 section()
@@ -71,19 +68,6 @@ namespace TestQDoc {
     \ingroup testgroup
     \ingroup cpptypes
     \reentrant
-*/
-
-/*!
-    \fn TestQDoc::Test::Test()
-
-    Default constructor.
-*/
-
-/*!
-    \fn Test &Test::operator=(Test &&other)
-    \ingroup testgroup
-
-    Move-assigns \a other.
 */
 
 /*!

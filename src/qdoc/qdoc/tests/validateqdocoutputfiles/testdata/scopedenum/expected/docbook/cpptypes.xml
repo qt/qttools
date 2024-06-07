@@ -16,9 +16,6 @@
 <db:para><db:link xlink:href="testqdoc-test.xml#QDOCTEST_MACRO2" xlink:role="function">TestQDoc::Test::QDOCTEST_MACRO2</db:link></db:para>
 </db:listitem>
 <db:listitem>
-<db:para><db:link xlink:href="testqdoc-test.xml#operator-eq" xlink:role="function">TestQDoc::Test::operator=()</db:link></db:para>
-</db:listitem>
-<db:listitem>
 <db:para><db:link xlink:href="testqdoc-test.xml#someFunctionDefaultArg" xlink:role="function">TestQDoc::Test::someFunctionDefaultArg()</db:link></db:para>
 </db:listitem>
 </db:itemizedlist>

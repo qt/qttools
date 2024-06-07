@@ -11,9 +11,9 @@
                     <brief>A macro with argument <argument>x</argument>.</brief>
                 </description>
             </function>
-            <function name="Test" fullname="TestQDoc::Test::Test" href="testqdoc-test.html#Test" status="active" access="public" documented="true" meta="constructor" noexcept="true" signature="Test()">
+            <function name="Test" fullname="TestQDoc::Test::Test" href="testqdoc-test.html#Test" status="active" access="public" location="testcpp.h" documented="true" meta="constructor" signature="Test()">
                 <description>
-                    <para>Default constructor.</para>
+                    <para>The constructor is deleted.</para>
                 </description>
             </function>
             <function name="anotherObsoleteMember" fullname="TestQDoc::Test::anotherObsoleteMember" href="testqdoc-test-obsolete.html#anotherObsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void anotherObsoleteMember()">
@@ -72,10 +72,10 @@
             <function name="operator--" fullname="TestQDoc::Test::operator--" href="testqdoc-test-obsolete.html#operator--" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator--()">
                 <description/>
             </function>
-            <function name="operator=" fullname="TestQDoc::Test::operator=" href="testqdoc-test.html#operator-eq" status="active" access="public" documented="true" meta="move-assign" noexcept="true" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other)" groups="testgroup">
+            <function name="operator=" fullname="TestQDoc::Test::operator=" href="testqdoc-test.html#operator-eq" status="active" access="public" location="testcpp.h" documented="true" meta="move-assign" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other)" groups="testgroup">
                 <parameter type="TestQDoc::Test &amp;&amp;" name="other" default=""/>
                 <description>
-                    <para>Move-assigns <argument>other</argument>.</para>
+                    <para>The move assignment operator is deleted. <argument>other</argument> cannot be moved from.</para>
                 </description>
             </function>
             <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="2" meta="plain" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">

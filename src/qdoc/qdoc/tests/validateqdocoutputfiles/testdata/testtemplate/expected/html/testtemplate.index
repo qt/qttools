@@ -30,7 +30,6 @@
                     <parameter type="int &amp;" name="x" default=""/>
                 </function>
                 <function name="Q_INVOKABLE" href="testqdoc-test.html#Q_INVOKABLE" status="active" access="public" documented="true" related="2" meta="macrowithoutparams" signature="Q_INVOKABLE"/>
-                <function name="Test" fullname="TestQDoc::Test::Test" href="testqdoc-test.html#Test" status="active" access="public" documented="true" meta="constructor" noexcept="true" signature="Test()"/>
                 <function name="anotherObsoleteMember" fullname="TestQDoc::Test::anotherObsoleteMember" href="testqdoc-test-obsolete.html#anotherObsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void anotherObsoleteMember()"/>
                 <function name="deprecatedMember" fullname="TestQDoc::Test::deprecatedMember" href="testqdoc-test-obsolete.html#deprecatedMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void deprecatedMember()"/>
                 <function name="funcPtr" fullname="TestQDoc::Test::funcPtr" href="testqdoc-test.html#funcPtr" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void (*)(bool)" signature="void (*)(bool) funcPtr(bool b, const char *s)">
@@ -47,9 +46,6 @@
                 <function name="obsoleteMember" fullname="TestQDoc::Test::obsoleteMember" href="testqdoc-test-obsolete.html#obsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void obsoleteMember()"/>
                 <function name="operator++" fullname="TestQDoc::Test::operator++" href="testqdoc-test-obsolete.html#operator-2b-2b" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator++()"/>
                 <function name="operator--" fullname="TestQDoc::Test::operator--" href="testqdoc-test-obsolete.html#operator--" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator--()"/>
-                <function name="operator=" fullname="TestQDoc::Test::operator=" href="testqdoc-test.html#operator-eq" status="active" access="public" documented="true" meta="move-assign" noexcept="true" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other)" groups="testgroup">
-                    <parameter type="TestQDoc::Test &amp;&amp;" name="other" default=""/>
-                </function>
                 <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="3" meta="plain" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
                     <parameter type="const TestQDoc::Test &amp;" name="lhs" default=""/>
                     <parameter type="const TestQDoc::Test &amp;" name="rhs" default=""/>
