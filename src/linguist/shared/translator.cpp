@@ -339,10 +339,14 @@ void Translator::languageAndTerritory(QStringView languageCode, QLocale::Languag
 {
     QLocale::Language language = QLocale::AnyLanguage;
     QLocale::Territory territory = QLocale::AnyTerritory;
-    const auto underScore = languageCode.indexOf(u'_'); // "de_DE"
-    if (underScore != -1) {
-        language = QLocale::codeToLanguage(languageCode.left(underScore));
-        territory = QLocale::codeToTerritory(languageCode.mid(underScore + 1));
+    auto separator = languageCode.indexOf(u'_'); // "de_DE"
+    if (separator == -1) {
+        // compatibility with older .ts files
+        separator = languageCode.indexOf(u'-'); // "de-DE"
+    }
+    if (separator != -1) {
+        language = QLocale::codeToLanguage(languageCode.left(separator));
+        territory = QLocale::codeToTerritory(languageCode.mid(separator + 1));
     } else {
         language = QLocale::codeToLanguage(languageCode);
         territory = QLocale(language).territory();
