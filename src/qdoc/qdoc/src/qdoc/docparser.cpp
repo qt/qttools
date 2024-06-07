@@ -130,14 +130,15 @@ static struct
 {
     const char *name;
     int no;
-} cmds[] = { { "a", CMD_A },
+    bool is_formatting_command { false };
+} cmds[] = { { "a", CMD_A, true },
              { "annotatedlist", CMD_ANNOTATEDLIST },
-             { "b", CMD_B },
+             { "b", CMD_B, true },
              { "badcode", CMD_BADCODE },
-             { "bold", CMD_BOLD },
+             { "bold", CMD_BOLD, true },
              { "br", CMD_BR },
              { "brief", CMD_BRIEF },
-             { "c", CMD_C },
+             { "c", CMD_C, true },
              { "caption", CMD_CAPTION },
              { "code", CMD_CODE },
              { "codeline", CMD_CODELINE },
@@ -145,7 +146,7 @@ static struct
              { "details", CMD_DETAILS },
              { "div", CMD_DIV },
              { "dots", CMD_DOTS },
-             { "e", CMD_E },
+             { "e", CMD_E, true },
              { "else", CMD_ELSE },
              { "endcode", CMD_ENDCODE },
              { "endcompareswith", CMD_ENDCOMPARESWITH },
@@ -170,7 +171,7 @@ static struct
              { "generatelist", CMD_GENERATELIST },
              { "header", CMD_HEADER },
              { "hr", CMD_HR },
-             { "i", CMD_I },
+             { "i", CMD_I, true },
              { "if", CMD_IF },
              { "image", CMD_IMAGE },
              { "important", CMD_IMPORTANT },
@@ -210,15 +211,15 @@ static struct
              { "skipuntil", CMD_SKIPUNTIL },
              { "snippet", CMD_SNIPPET },
              { "span", CMD_SPAN },
-             { "sub", CMD_SUB },
-             { "sup", CMD_SUP },
+             { "sub", CMD_SUB, true },
+             { "sup", CMD_SUP, true },
              { "table", CMD_TABLE },
              { "tableofcontents", CMD_TABLEOFCONTENTS },
              { "target", CMD_TARGET },
-             { "tm", CMD_TM },
-             { "tt", CMD_TT },
-             { "uicontrol", CMD_UICONTROL },
-             { "underline", CMD_UNDERLINE },
+             { "tm", CMD_TM, true },
+             { "tt", CMD_TT, true },
+             { "uicontrol", CMD_UICONTROL, true },
+             { "underline", CMD_UNDERLINE, true },
              { "unicode", CMD_UNICODE },
              { "value", CMD_VALUE },
              { "warning", CMD_WARNING },
@@ -375,7 +376,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 case CMD_C:
                     enterPara();
-                    p1 = untabifyEtc(getArgument(true));
+                    p1 = untabifyEtc(getArgument(ArgumentParsingOptions::Verbatim));
                     marker = CodeMarker::markerForCode(p1);
                     appendAtom(Atom(Atom::C, marker->markedUpCode(p1, nullptr, location())));
                     break;
@@ -405,7 +406,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 case CMD_DIV:
                     leavePara();
-                    p1 = getArgument(true);
+                    p1 = getArgument(ArgumentParsingOptions::Verbatim);
                     appendAtom(Atom(Atom::DivLeft, p1));
                     m_openedCommands.push(cmd);
                     break;
@@ -853,7 +854,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     if (m_openedCommands.top() == CMD_TABLE) {
                         p1.clear();
                         if (isLeftBraceAhead())
-                            p1 = getArgument(true);
+                            p1 = getArgument(ArgumentParsingOptions::Verbatim);
                         leaveTableRow();
                         appendAtom(Atom(Atom::TableRowLeft, p1));
                         m_inTableRow = true;
@@ -919,7 +920,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 }
                 case CMD_SPAN:
-                    p1 = ATOM_FORMATTING_SPAN + getArgument(true);
+                    p1 = ATOM_FORMATTING_SPAN + getArgument(ArgumentParsingOptions::Verbatim);
                     startFormat(p1, cmd);
                     break;
                 case CMD_SNIPPET: {
@@ -1990,7 +1991,20 @@ void DocParser::quoteFromFile(const QString &filename)
   Expands a macro in-place in input.
 
   Expects the current \e pos in the input to point to a backslash, and the macro to have a
-  default definition. Format-specific macros are currently not expanded.
+  default definition. Format-specific macros are not expanded.
+
+  Behavior depends on \a options:
+
+  \value ArgumentParsingOptions::Default
+         Default macro expansion; the string following the backslash
+         must be a macro with a default definition.
+  \value ArgumentParsingOptions::Verbatim
+         The string following the backslash is rendered verbatim;
+         No macro expansion is performed.
+  \value ArgumentParsingOptions::MacroArguments
+         Used for parsing argument(s) for a macro. Allows expanding
+         macros, and also preserves a subset of commands (formatting
+         commands) within the macro argument.
 
   \note In addition to macros, a valid use for a backslash in an argument include
   escaping non-alnum characters, and splitting a single argument across multiple
@@ -1998,9 +2012,12 @@ void DocParser::quoteFromFile(const QString &filename)
 
   Returns \c true on successful macro expansion.
  */
-bool DocParser::expandMacro()
+bool DocParser::expandMacro(ArgumentParsingOptions options)
 {
     Q_ASSERT(m_input[m_position].unicode() == '\\');
+
+    if (options == ArgumentParsingOptions::Verbatim)
+        return false;
 
     QString cmdStr;
     qsizetype backslashPos = m_position++;
@@ -2018,12 +2035,16 @@ bool DocParser::expandMacro()
                 m_position = backslashPos;
                 return true;
             } else {
-                location().warning(QStringLiteral("Macro '%1' does not have a default definition")
-                                           .arg(cmdStr));
+                location().warning("Macro '%1' does not have a default definition"_L1.arg(cmdStr));
             }
         } else {
-            location().warning(QStringLiteral("Unknown macro '%1'").arg(cmdStr));
-            m_position = ++backslashPos;
+            int cmd = s_utilities.cmdHash.value(cmdStr, NOT_A_CMD);
+            m_position = backslashPos;
+            if (options != ArgumentParsingOptions::MacroArguments
+                    || cmd == NOT_A_CMD || !cmds[cmd].is_formatting_command) {
+                location().warning("Unknown macro '%1'"_L1.arg(cmdStr));
+                ++m_position;
+            }
         }
     } else if (m_input[m_position].isSpace()) {
         skipAllSpaces();
@@ -2117,10 +2138,11 @@ Doc::Sections DocParser::getSectioningUnit()
   is the left brace. On exit, the current character is the one
   that comes after the right brace.
 
-  If \a verbatim is true, extra whitespace is retained in the
-  returned string. Otherwise, extra whitespace is removed.
+  If \a options is ArgumentParsingOptions::Verbatim, no macro
+  expansion is performed, nor is the returned string stripped
+  of extra whitespace.
  */
-QString DocParser::getBracedArgument(bool verbatim)
+QString DocParser::getBracedArgument(ArgumentParsingOptions options)
 {
     QString arg;
     int delimDepth = 0;
@@ -2140,11 +2162,11 @@ QString DocParser::getBracedArgument(bool verbatim)
                 ++m_position;
                 break;
             case '\\':
-                if (verbatim || !expandMacro())
+                if (!expandMacro(options))
                     arg += m_input[m_position++];
                 break;
             default:
-                if (m_input[m_position].isSpace() && !verbatim)
+                if (m_input[m_position].isSpace() && options != ArgumentParsingOptions::Verbatim)
                     arg += QChar(' ');
                 else
                     arg += m_input[m_position];
@@ -2159,6 +2181,9 @@ QString DocParser::getBracedArgument(bool verbatim)
 }
 
 /*!
+  Parses and returns an argument for a command, using
+  specific parsing \a options.
+
   Typically, an argument ends at the next white-space. However,
   braces can be used to group words:
 
@@ -2171,13 +2196,13 @@ QString DocParser::getBracedArgument(bool verbatim)
   is an argument too, although it contains spaces. Finally,
   trailing punctuation is not included in an argument, nor is 's.
 */
-QString DocParser::getArgument(bool verbatim)
+QString DocParser::getArgument(ArgumentParsingOptions options)
 {
     skipSpacesOrOneEndl();
 
     int delimDepth = 0;
     qsizetype startPos = m_position;
-    QString arg = getBracedArgument(verbatim);
+    QString arg = getBracedArgument(options);
     if (arg.isEmpty()) {
         while ((m_position < m_input.size())
                && ((delimDepth > 0) || ((delimDepth == 0) && !m_input[m_position].isSpace()))) {
@@ -2199,7 +2224,7 @@ QString DocParser::getArgument(bool verbatim)
                 }
                 break;
             case '\\':
-                if (verbatim || !expandMacro())
+                if (!expandMacro(options))
                     arg += m_input[m_position++];
                 break;
             default:
@@ -2274,7 +2299,7 @@ QStringList DocParser::getMacroArguments(const QString &name, const Macro &macro
     QStringList args;
     for (int i = 0; i < macro.numParams; ++i) {
         if (macro.numParams == 1 || isLeftBraceAhead()) {
-            args << getArgument();
+            args << getArgument(ArgumentParsingOptions::MacroArguments);
         } else {
             location().warning(QStringLiteral("Macro '\\%1' invoked with too few"
                     " arguments (expected %2, got %3)")
@@ -2377,7 +2402,7 @@ QString DocParser::getMetaCommandArgument(const QString &cmdStr)
             ++parenDepth;
         else if (m_input.at(m_position) == ')')
             --parenDepth;
-        else if (m_input.at(m_position) == '\\' && expandMacro())
+        else if (m_input.at(m_position) == '\\' && expandMacro(ArgumentParsingOptions::Default))
             continue;
         ++m_position;
     }

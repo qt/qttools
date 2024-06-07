@@ -14,4 +14,6 @@
 </db:listitem>
 </db:itemizedlist>
 <db:para><db:trademark>Foo</db:trademark> should have the trademark symbol but no link as we're already on the correct page.</db:para>
+<db:para>For repeated keywords, the symbol is added only to the first instance:</db:para>
+<db:para><db:trademark>Foobar</db:trademark> <db:phrase>Foobar</db:phrase> is a trademark.</db:para>
 </db:article>

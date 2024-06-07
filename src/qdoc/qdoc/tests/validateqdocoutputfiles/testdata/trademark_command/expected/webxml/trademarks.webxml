@@ -12,6 +12,8 @@
                     </item>
                 </list>
                 <para>Foo™ should have the trademark symbol but no link as we're already on the correct page.</para>
+                <para>For repeated keywords, the symbol is added only to the first instance:</para>
+                <para>Foobar™ Foobar is a trademark.</para>
             </description>
         </page>
     </document>

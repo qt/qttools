@@ -44,6 +44,13 @@ public:
     static bool s_quoting;
 
 private:
+
+    enum class ArgumentParsingOptions {
+        Default,
+        Verbatim,
+        MacroArguments
+    };
+
     Location &location();
     QString detailsUnknownCommand(const QSet<QString> &metaCommandSet, const QString &str);
     void insertTarget(const QString &target);
@@ -68,12 +75,12 @@ private:
     void leaveValueList();
     void leaveTableRow();
     void quoteFromFile(const QString& filename);
-    bool expandMacro();
+    bool expandMacro(ArgumentParsingOptions options);
     void expandMacro(const QString &def, const QStringList &args);
     QString expandMacroToString(const QString &name, const Macro &macro);
     Doc::Sections getSectioningUnit();
-    QString getArgument(bool verbatim = false);
-    QString getBracedArgument(bool verbatim);
+    QString getArgument(ArgumentParsingOptions options = ArgumentParsingOptions::Default);
+    QString getBracedArgument(ArgumentParsingOptions options);
     QString getBracketedArgument();
     QStringList getMacroArguments(const QString &name, const Macro &macro);
     QString getOptionalArgument();
