@@ -25,4 +25,8 @@
 
     \tm Foo should have the trademark symbol but no link as we're
     already on the correct page.
+
+    For repeated keywords, the symbol is added only to the first
+    instance:
+    \trademark {\Foobar \Foobar}
 */

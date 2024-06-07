@@ -4,6 +4,9 @@ project = TrademarkCommand
 
 navigation.trademarkspage = Trademarks
 
+macro.trademark         = "\n\n\1 is a trademark.\n\n"
+macro.Foobar            = "\\tm {Foobar}"
+
 locationinfo         = false
 warninglimit         = 0
 warninglimit.enabled = true
