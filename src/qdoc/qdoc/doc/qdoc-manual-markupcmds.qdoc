@@ -1351,17 +1351,161 @@
     but may be required when the \c {link target} is ambiguous. See
     \l {Fixing Ambiguous Links} below.
 
-    Here is an example using the \\l command to link to an external page:
+    You can use the \\l command to link to:
 
-    \badcode *
-    /\1!
-      Read the \l {http://doc.qt.io/qt-6/}
-      {Qt 6 Documentation} carefully.
-    \1/
-    \endcode
+    \list
 
-    If the link target is equivalent to the link text, the second
-    argument can be omitted.
+        \li an external page:
+
+            \badcode
+            An URL with a custom link text:
+            \l {http://doc.qt.io/qt-6/} {Qt 6 Documentation}.
+
+            An URL without a custom link text: \l {http://doc.qt.io/qt-6/}.
+            \endcode
+
+            Renders as:
+
+            An URL with a custom link text:
+            \l {http://doc.qt.io/qt-6/} {Qt 6 Documentation}.
+
+            An URL without a custom link text: \l {http://doc.qt.io/qt-6/}.
+
+            See also \l {externalpage-command}{\\externalpage}.
+
+        \li a documentation page. The link target can be:
+
+            \list
+            \li the page title specified with the \l {title-command} {\\title}
+                command:
+
+                \badcode
+                    Here is a link with a custom link text:
+                    \l {Getting Started with QDoc}{QDoc - Getting Started}.
+
+                    Here is a link with a link text that is the same as the link
+                    target: \l {Getting Started with QDoc}.
+                \endcode
+
+                Renders as:
+
+                Here is a link with a custom link text:
+                \l {Getting Started with QDoc}{QDoc - Getting Started}.
+
+                Here is a link with a link text that is the same as link target:
+                \l {Getting Started with QDoc}.
+
+            \li the page file name specified with the \l {page-command} {\\page}
+                command:
+
+                \badcode
+                \page 08-qdoc-commands-creatinglinks.html
+                \title Creating Links
+
+                These commands are for creating hyperlinks to classes, functions,
+                examples, and other targets.
+
+                ...
+
+                The \l {08-qdoc-commands-creatinglinks.html} {Creating Links page}
+                explains how to create links with QDoc.
+                \endcode
+
+                Renders as:
+
+                The \l {08-qdoc-commands-creatinglinks.html} {Creating Links page}
+                article explains how to create links with QDoc.
+
+            \li the page with a \l {keyword-command} {\\keyword} command.
+            \endlist
+
+        \li a particular anchor section within a document. The link target can be:
+
+            \list
+            \li a section title specified with one of the
+                \l{section-commands} {Section commands}:
+
+                \badcode
+                    Here is a link to a QDoc Commands section of the Writing
+                    Documentation topic:
+                    \l {Writing Documentation#QDoc Commands}{QDoc Commands}.
+
+                    If you have unique section titles across your documentation
+                    project, you can use the section title as a target without
+                    the need to add the topic title:
+                    \l {QDoc Commands}.
+                \endcode
+
+                Renders as:
+
+                Here is a link to a QDoc Commands section of the Writing
+                Documentation topic:
+                \l {Writing Documentation#QDoc Commands}{QDoc Commands}.
+
+                If you have unique section titles across your documentation
+                project, you can use the section title as a target without the
+                need to add the topic title:
+                \l {QDoc Commands}.
+
+            \li an anchor defined with a \l {target-command}{\\target} command:
+                \badcode
+                    \target assertions
+
+                    Assertions make some statement about the text at the
+                    point where they occur in the regexp, but they do not
+                    match any characters.
+
+                    ...
+
+                    Regexps are built up from expressions, quantifiers, and
+                    \l {assertions} {assertions}.
+
+                \endcode
+
+            \endlist
+
+        \li an API item. Target links can be:
+
+            \list
+                \li \c {\l QWidget} - The name of a class documented with the
+                    \l {class-command} {\\class} or
+                    \l {qmltype-command}{\qmltype} command.
+
+                \li \c {\l QWidget::sizeHint()} - The signature of a function
+                    without parameters. If a matching function without
+                    parameters can't be found, the link is satisfied with the
+                    first matching function found.
+
+                \li \c {\l QWidget::removeAction(QAction* action)} - The
+                signature of a function with parameters. If an exact match is
+                not found, the link is not satisfied and QDoc reports a
+                \e {Can't link to...} error.
+
+                \li \c {\l <QtGlobal>} - The subject of a \l {headerfile-command}
+                {\\headerfile} command.
+
+            \endlist
+        \li an example. The target link is the example title or a relative path
+            used in an \l {example-command} {\\example} command:
+
+                \badcode *
+                /\1!
+                    \example widgets/imageviewer
+                    \title ImageViewer Example
+                    \brief Shows how to combine QLabel and QScrollArea
+                    to display an image.
+
+                    ...
+                \1/
+
+                ...
+
+                See the example: \l widgets/imageviewer
+                \endcode
+    \endlist
+
+    If the link target is equivalent to the link text, you can omit the second
+    argument.
 
     For example, if you have documentation like:
 
@@ -1398,42 +1542,6 @@
     \endcode
 
     For the one-parameter version, the braces can often be omitted.
-    The \\l command supports several ways of linking:
-
-    \list
-
-    \li \c {\l QWidget} - The name of a class documented with the \l
-    {class-command} {\\class} command.
-
-    \li \c {\l QWidget::sizeHint()} - The signature of a function without
-    parameters. If a matching function without parameters can't be found,
-    the link is satisfied with the first matching function found.
-
-    \li \c {\l QWidget::removeAction(QAction* action)} - The signature
-    of a function with parameters. If an exact match is not found, the
-    link is not satisfied and QDoc reports a \e {Can't link to...} error.
-
-    \li \c {\l <QtGlobal>} - The subject of a \l {headerfile-command}
-    {\\headerfile} command.
-
-    \li \c {\l widgets/wiggly} - The relative path used in an \l
-    {example-command} {\\example} command.
-
-    \li \c {\l {QWidget Class Reference}} - The title used in a
-    \l {title-command} {\\title} command.
-
-    \li \c {\l {Introduction to QDoc}}- The text from one of the
-    \l{section-commands} {Section commands}.
-
-    \li \c {\l fontmatching} - The argument of a \l {target-command}
-    {\\target} command.
-
-    \li \c {\l {Shared Classes}} - A keyword named in a \l
-    {keyword-command} {\\keyword} command.
-
-    \li \c {\l http://qt-project.org/} - A URL.
-
-    \endlist
 
     QDoc also tries to make a link out of any word that doesn't
     resemble a normal English word, for example, Qt class names or
@@ -1452,7 +1560,7 @@
     Because of the modularization of Qt beginning with Qt 5.0, The
     possibility that QDoc will have to deal with ambiguous links has
     increased. An ambiguous link is one that has a matching target in
-    more than one Qt module, e.g. the same section title can appear in
+    more than one Qt module, for example, the same section title can appear in
     more than one Qt module, or the name of a C++ class in one module
     can also be the name of a QML type in another module. A real
     example in Qt5 is the name Qt itself. Qt is the name of both a C++
