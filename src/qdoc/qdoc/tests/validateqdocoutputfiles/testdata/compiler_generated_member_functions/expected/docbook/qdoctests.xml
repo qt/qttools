@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QDocTests Namespace</db:title>
+<db:productname>Compiler generated member functions</db:productname>
+<db:titleabbrev>Compiler generated member functions Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>The <db:link xlink:href="qdoctests-module.xml">QDocTests</db:link> namespace contains test classes for QDoc.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>QDocTests</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>The <db:link xlink:href="qdoctests-module.xml">QDocTests</db:link> namespace contains test classes for QDoc.</db:para>
+</db:section>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:section>
+<db:title>class <db:link xlink:href="qdoctests-compilergeneratedmemberfunctions.xml" xlink:role="class">CompilerGeneratedMemberFunctions</db:link></db:title>
+<db:para>A test class for compiler-generated member functions.</db:para>
+</db:section>
+</db:section>
+</db:article>

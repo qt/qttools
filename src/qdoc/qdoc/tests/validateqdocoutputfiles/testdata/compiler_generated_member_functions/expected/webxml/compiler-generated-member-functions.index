@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Compiler generated member functions Reference Documentation" version="" project="Compiler generated member functions">
+    <namespace name="" status="active" access="public" module="compiler generated member functions">
+        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="compilergeneratedmemberfunctions.h" documented="true" module="QDocTests" brief="Contains test classes for QDoc">
+            <class name="CompilerGeneratedMemberFunctions" fullname="QDocTests::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html" status="active" access="public" location="compilergeneratedmemberfunctions.h" documented="true" module="QDocTests" brief="A test class for compiler-generated member functions">
+                <function name="CompilerGeneratedMemberFunctions" fullname="QDocTests::CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html#CompilerGeneratedMemberFunctions" status="active" access="public" documented="true" meta="constructor" constexpr="true" noexcept="true" signature="CompilerGeneratedMemberFunctions()"/>
+                <function name="CompilerGeneratedMemberFunctions" fullname="QDocTests::CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html#CompilerGeneratedMemberFunctions-1" status="active" access="public" documented="true" meta="copy-constructor" constexpr="true" noexcept="true" overload="true" overload-number="1" signature="CompilerGeneratedMemberFunctions(const QDocTests::CompilerGeneratedMemberFunctions &amp;other)">
+                    <parameter type="const QDocTests::CompilerGeneratedMemberFunctions &amp;" name="other" default=""/>
+                </function>
+                <function name="CompilerGeneratedMemberFunctions" fullname="QDocTests::CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html#CompilerGeneratedMemberFunctions-2" status="active" access="public" documented="true" meta="move-constructor" constexpr="true" noexcept="true" overload="true" overload-number="2" signature="CompilerGeneratedMemberFunctions(const QDocTests::CompilerGeneratedMemberFunctions &amp;&amp;other)">
+                    <parameter type="const QDocTests::CompilerGeneratedMemberFunctions &amp;&amp;" name="other" default=""/>
+                </function>
+            </class>
+        </namespace>
+        <module name="QDocTests" href="qdoctests-module.html" status="active" documented="true" seen="true" title="" brief="Module contains test classes for QDoc"/>
+    </namespace>
+</INDEX>

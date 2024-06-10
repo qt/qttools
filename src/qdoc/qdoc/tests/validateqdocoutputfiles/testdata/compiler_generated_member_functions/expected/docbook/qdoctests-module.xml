@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title></db:title>
+<db:productname>Compiler generated member functions</db:productname>
+<db:titleabbrev>Compiler generated member functions Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>The <db:link xlink:href="qdoctests-module.xml">QDocTests</db:link> module contains test classes for QDoc.</db:para>
+</db:abstract>
+</db:info>
+<db:para>The <db:link xlink:href="qdoctests-module.xml">QDocTests</db:link> module contains test classes for QDoc.</db:para>
+<db:section xml:id="namespaces">
+<db:title>Namespaces</db:title>
+<db:variablelist role="namespaces">
+<db:varlistentry>
+<db:term><db:link xlink:href="qdoctests.xml" xlink:role="namespace">QDocTests</db:link></db:term>
+<db:listitem>
+<db:para>The QDocTests namespace contains test classes for QDoc.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:variablelist role="classes">
+<db:varlistentry>
+<db:term><db:link xlink:href="qdoctests-compilergeneratedmemberfunctions.xml" xlink:role="class">QDocTests::CompilerGeneratedMemberFunctions</db:link></db:term>
+<db:listitem>
+<db:para>A test class for compiler-generated member functions.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>The <db:link xlink:href="qdoctests-module.xml">QDocTests</db:link> module contains test classes for QDoc.</db:para>
+</db:section>
+</db:article>

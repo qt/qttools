@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="compilergeneratedmemberfunctions.h" documented="true" module="QDocTests" brief="Contains test classes for QDoc">
+            <description>
+                <brief>The <link raw="QDocTests" href="qdoctests-module.html" type="module">QDocTests</link> namespace contains test classes for QDoc.</brief>
+                <para>The <link raw="QDocTests" href="qdoctests-module.html" type="module">QDocTests</link> namespace contains test classes for QDoc.</para>
+            </description>
+            <class name="CompilerGeneratedMemberFunctions" fullname="QDocTests::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html" status="active" access="public" location="compilergeneratedmemberfunctions.h" documented="true" module="QDocTests" brief="A test class for compiler-generated member functions">
+                <description>
+                    <brief>A test class for compiler-generated member functions.</brief>
+                    <para>This class is used to test the documentation of compiler-generated member functions.</para>
+                </description>
+                <function name="CompilerGeneratedMemberFunctions" fullname="QDocTests::CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html#CompilerGeneratedMemberFunctions" status="active" access="public" documented="true" meta="constructor" constexpr="true" noexcept="true" signature="CompilerGeneratedMemberFunctions()">
+                    <description>
+                        <para>Constructs a <link raw="CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html" type="class">CompilerGeneratedMemberFunctions</link> object.</para>
+                    </description>
+                </function>
+                <function name="CompilerGeneratedMemberFunctions" fullname="QDocTests::CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html#CompilerGeneratedMemberFunctions-1" status="active" access="public" documented="true" meta="copy-constructor" constexpr="true" noexcept="true" overload="true" overload-number="1" signature="CompilerGeneratedMemberFunctions(const QDocTests::CompilerGeneratedMemberFunctions &amp;other)">
+                    <parameter type="const QDocTests::CompilerGeneratedMemberFunctions &amp;" name="other" default=""/>
+                    <description>
+                        <para>Copy-constructs a <link raw="CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html" type="class">CompilerGeneratedMemberFunctions</link> object from <argument>other</argument>.</para>
+                    </description>
+                </function>
+                <function name="CompilerGeneratedMemberFunctions" fullname="QDocTests::CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html#CompilerGeneratedMemberFunctions-2" status="active" access="public" documented="true" meta="move-constructor" constexpr="true" noexcept="true" overload="true" overload-number="2" signature="CompilerGeneratedMemberFunctions(const QDocTests::CompilerGeneratedMemberFunctions &amp;&amp;other)">
+                    <parameter type="const QDocTests::CompilerGeneratedMemberFunctions &amp;&amp;" name="other" default=""/>
+                    <description>
+                        <para>Move-constructs a <link raw="CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html" type="class">CompilerGeneratedMemberFunctions</link> object from <argument>other</argument>.</para>
+                    </description>
+                </function>
+            </class>
+        </namespace>
+    </document>
+</WebXML>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>CompilerGeneratedMemberFunctions Class</db:title>
+<db:subtitle>QDocTests::CompilerGeneratedMemberFunctions</db:subtitle>
+<db:productname>Compiler generated member functions</db:productname>
+<db:titleabbrev>Compiler generated member functions Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test class for compiler-generated member functions.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>CompilerGeneratedMemberFunctions</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class is used to test the documentation of compiler-generated member functions.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="CompilerGeneratedMemberFunctions">
+<db:title>[constexpr noexcept default] CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions()</db:title>
+<db:para>Constructs a <db:link xlink:href="qdoctests-compilergeneratedmemberfunctions.xml">CompilerGeneratedMemberFunctions</db:link> object.</db:para>
+</db:section>
+<db:section xml:id="CompilerGeneratedMemberFunctions-1">
+<db:title>[constexpr noexcept default] CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions(const QDocTests::CompilerGeneratedMemberFunctions &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:para>Copy-constructs a <db:link xlink:href="qdoctests-compilergeneratedmemberfunctions.xml">CompilerGeneratedMemberFunctions</db:link> object from <db:code role="parameter">other</db:code>.</db:para>
+</db:section>
+<db:section xml:id="CompilerGeneratedMemberFunctions-2">
+<db:title>[constexpr noexcept default] CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions(const QDocTests::CompilerGeneratedMemberFunctions &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:para>Move-constructs a <db:link xlink:href="qdoctests-compilergeneratedmemberfunctions.xml">CompilerGeneratedMemberFunctions</db:link> object from <db:code role="parameter">other</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>
