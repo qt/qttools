@@ -53,6 +53,8 @@ qt_internal_add_app(assistant
         qlitehtml
     ENABLE_AUTOGEN_TOOLS
         uic
+    ATTRIBUTION_FILE_DIR_PATHS
+        ../qlitehtml/src/3rdparty
 )
 
 # Resources:
