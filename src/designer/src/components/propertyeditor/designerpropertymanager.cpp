@@ -1894,13 +1894,13 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
     m_keySequenceManager.uninitialize(property);
 
     if (QtProperty *iconTheme = m_propertyToTheme.value(property)) {
-        delete iconTheme;
+        delete iconTheme; // Delete first (QTBUG-126182)
         m_iconSubPropertyToProperty.remove(iconTheme);
     }
 
     if (QtProperty *iconThemeEnum = m_propertyToThemeEnum.value(property)) {
+        delete iconThemeEnum; // Delete first (QTBUG-126182)
         m_iconSubPropertyToProperty.remove(iconThemeEnum);
-        delete iconThemeEnum;
     }
 
     m_propertyToAlignH.remove(property);
