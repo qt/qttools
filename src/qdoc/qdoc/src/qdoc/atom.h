@@ -141,6 +141,8 @@ public:
     Atom *next() { return m_next; }
     void setNext(Atom *newNext) { m_next = newNext; }
 
+    [[nodiscard]] const Atom *find(AtomType t) const;
+    [[nodiscard]] const Atom *find(AtomType t, const QString &s) const;
     [[nodiscard]] const Atom *next() const { return m_next; }
     [[nodiscard]] const Atom *next(AtomType t) const;
     [[nodiscard]] const Atom *next(AtomType t, const QString &s) const;

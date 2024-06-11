@@ -251,6 +251,32 @@ static const struct
   \also string()
 */
 
+/*!
+    Starting from this Atom, searches the linked list for the
+    atom of specified type \a t and returns it. Returns \nullptr
+    if no such atom is found.
+*/
+const Atom *Atom::find(AtomType t) const
+{
+    const auto *a{this};
+    while (a && a->type() != t)
+        a = a->next();
+    return a;
+}
+
+/*!
+    Starting from this Atom, searches the linked list for the
+    atom of specified type \a t and string \a s, and returns it.
+    Returns \nullptr if no such atom is found.
+*/
+const Atom *Atom::find(AtomType t, const QString &s) const
+{
+    const auto *a{this};
+    while (a && (a->type() != t || a->string() != s))
+        a = a->next();
+    return a;
+}
+
 /*! \fn Atom *Atom::next()
   Return the next atom in the atom list.
   \also type(), string()

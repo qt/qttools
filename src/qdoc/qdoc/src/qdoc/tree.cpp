@@ -327,15 +327,9 @@ void Tree::resolveSince(Aggregate &aggregate)
 */
 void Tree::resolveEnumValueSince(EnumNode &en)
 {
-    auto findNextAtom = [](const Atom *a, Atom::AtomType t) {
-        while (a && a->type() != t)
-            a = a->next();
-        return a;
-    };
-
     const QStringList enumItems{en.doc().enumItemNames()};
     const Atom *atom = en.doc().body().firstAtom();
-    while ((atom = findNextAtom(atom, Atom::ListTagLeft))) {
+    while ((atom = atom->find(Atom::ListTagLeft))) {
         if (atom = atom->next(); !atom)
             break;
         if (auto val = atom->string(); enumItems.contains(val)) {
