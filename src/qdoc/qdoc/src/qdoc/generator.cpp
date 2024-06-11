@@ -2078,20 +2078,13 @@ void Generator::generateEnumValuesForQmlProperty(const Node *node, CodeMarker *m
     if (!qpn->enumNode())
         return;
 
-    auto findNext =
-            [](const Atom *atom, Atom::AtomType type, const QString &str) {
-                while (atom && (atom->type() != type || atom->string() != str))
-                    atom = atom->next();
-                return atom;
-            };
-
     // Retrieve atoms from C++ enum \value list
     const auto body{qpn->enumNode()->doc().body()};
     const auto *start{body.firstAtom()};
     Text text;
 
-    while ((start = findNext(start, Atom::ListLeft, ATOM_LIST_VALUE))) {
-        const auto end = findNext(start, Atom::ListRight, ATOM_LIST_VALUE);
+    while ((start = start->find(Atom::ListLeft, ATOM_LIST_VALUE))) {
+        const auto end = start->find(Atom::ListRight, ATOM_LIST_VALUE);
         // Skip subsequent ListLeft atoms, collating multiple lists into one
         text << body.subText(text.isEmpty() ? start : start->next(), end);
         start = end;
