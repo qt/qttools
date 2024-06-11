@@ -115,7 +115,7 @@ void HtmlGenerator::initializeGenerator()
                      { ATOM_FORMATTING_SUPERSCRIPT, "<sup>", "</sup>" },
                      { ATOM_FORMATTING_TELETYPE, "<code translate=\"no\">",
                        "</code>" }, // <tt> tag is not supported in HTML5
-                     { ATOM_FORMATTING_TRADEMARK, "", "&#8482;" },
+                     { ATOM_FORMATTING_TRADEMARK, "<span translate=\"no\">", "&#8482;" },
                      { ATOM_FORMATTING_UICONTROL, "<b translate=\"no\">", "</b>" },
                      { ATOM_FORMATTING_UNDERLINE, "<u>", "</u>" },
                      { nullptr, nullptr, nullptr } };
@@ -431,6 +431,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                 else
                     out() << formattingRightMap()[atom->string()];
             }
+            out() << "</span>";
         } else if (atom->string().startsWith("span ")) {
             out() << "</span>";
         } else {

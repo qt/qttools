@@ -13,5 +13,5 @@
 <db:para><db:link xlink:href="trademark-test.xml#acme-corp">Acme corp</db:link>.</db:para>
 </db:listitem>
 </db:itemizedlist>
-<db:para>Foo™ should have the trademark symbol but no link as we're already on the correct page.</db:para>
+<db:para><db:trademark>Foo</db:trademark> should have the trademark symbol but no link as we're already on the correct page.</db:para>
 </db:article>
