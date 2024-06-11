@@ -342,7 +342,13 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
             m_writer->writeStartElement(dbNamespace, "guilabel");
             if (m_useITS)
                 m_writer->writeAttribute(itsNamespace, "translate", "no");
-        } else if (atom->string() != ATOM_FORMATTING_TRADEMARK) {
+        } else if (atom->string() == ATOM_FORMATTING_TRADEMARK) {
+            m_writer->writeStartElement(dbNamespace,
+                    appendTrademark(atom->find(Atom::FormattingRight)) ?
+                        "trademark" : "phrase");
+            if (m_useITS)
+                m_writer->writeAttribute(itsNamespace, "translate", "no");
+        } else {
             relative->location().warning(QStringLiteral("Unsupported formatting: %1").arg(atom->string()));
         }
         break;
@@ -353,15 +359,13 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
             || atom->string() == ATOM_FORMATTING_SUPERSCRIPT
             || atom->string() == ATOM_FORMATTING_TELETYPE
             || atom->string() == ATOM_FORMATTING_PARAMETER
-            || atom->string() == ATOM_FORMATTING_UICONTROL) {
+            || atom->string() == ATOM_FORMATTING_UICONTROL
+            || atom->string() == ATOM_FORMATTING_TRADEMARK) {
             m_writer->writeEndElement();
         } else if (atom->string() == ATOM_FORMATTING_LINK) {
             if (atom->string() == ATOM_FORMATTING_TELETYPE)
                 m_inTeletype = false;
             endLink();
-        } else if (atom->string() == ATOM_FORMATTING_TRADEMARK) {
-            if (appendTrademark(atom))
-                m_writer->writeCharacters(QChar(0x2122)); // 'TM' symbol
         } else {
             relative->location().warning(QStringLiteral("Unsupported formatting: %1").arg(atom->string()));
         }

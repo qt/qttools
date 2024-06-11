@@ -7,9 +7,9 @@
 <db:abstract>
 <db:para>TrademarkCommand Reference Documentation.</db:para></db:abstract>
 </db:info>
-<db:para>Acme™ is a trademark.</db:para>
+<db:para><db:trademark>Acme</db:trademark> is a trademark.</db:para>
 <db:section xml:id="acme-corp">
 <db:title> Acme corp</db:title>
-<db:para>Acme, the Acme Anvil™, and `It Rings Like a Bell!`™ are trademarks of the <db:emphasis>Acme corp</db:emphasis>.</db:para>
+<db:para><db:phrase>Acme</db:phrase>, the <db:trademark>Acme Anvil</db:trademark>, and <db:trademark>`It Rings Like a Bell!`</db:trademark> are trademarks of the <db:emphasis>Acme corp</db:emphasis>.</db:para>
 </db:section>
 </db:article>
