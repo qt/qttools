@@ -74,7 +74,6 @@ qt_feature("kmap2qmap" PRIVATE
 qt_feature("linguist" PRIVATE
     LABEL "Qt Linguist"
     PURPOSE "Qt Linguist can be used by translator to translate text in Qt applications."
-    CONDITION TARGET Qt::PrintSupport
 )
 qt_feature("pixeltool" PRIVATE
     LABEL "pixeltool"
