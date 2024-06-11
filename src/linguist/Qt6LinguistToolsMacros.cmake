@@ -689,6 +689,14 @@ function(qt6_add_translations)
                 endif()
             endforeach()
 
+            # The project-level CMakeLists.txt might miss a call to find_package(Qt6 COMPONENTS Core
+            # LinguistTools). Then, subsequent function calls like qt_add_resources will fail. To
+            # remedy this, pull the packages in.
+            cmake_language(EVAL CODE
+                "cmake_language(DEFER
+                    DIRECTORY \"${PROJECT_SOURCE_DIR}\"
+                    CALL find_package Qt6 COMPONENTS Core LinguistTools)")
+
             # Schedule this command to be called at the end of the project's source dir.
             cmake_language(EVAL CODE
                 "cmake_language(DEFER
