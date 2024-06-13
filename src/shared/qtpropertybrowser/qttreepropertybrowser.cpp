@@ -283,6 +283,8 @@ QWidget *QtPropertyEditorDelegate::createEditor(QWidget *parent,
             QWidget *editor = m_editorPrivate->createEditor(property, parent);
             if (editor) {
                 editor->setAutoFillBackground(true);
+                if (editor->palette().color(editor->backgroundRole()) == Qt::transparent)
+                    editor->setBackgroundRole(QPalette::Window);
                 editor->installEventFilter(const_cast<QtPropertyEditorDelegate *>(this));
                 connect(editor, &QObject::destroyed,
                         this, &QtPropertyEditorDelegate::slotEditorDestroyed);
