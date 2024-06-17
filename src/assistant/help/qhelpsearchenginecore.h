@@ -31,7 +31,7 @@ public:
     void cancelIndexing();
 
     void search(const QString &searchInput);
-    void cancelSearching(); // TODO: is it needed?
+    void cancelSearching();
 
     void scheduleIndexDocumentation();
 
