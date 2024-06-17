@@ -10,7 +10,6 @@
 
 QT_BEGIN_NAMESPACE
 
-// TODO: Qt 7.0 - pimpl or replace with std::pair? Replace struct with class.
 struct QHELP_EXPORT QHelpLink final
 {
     QUrl url;
