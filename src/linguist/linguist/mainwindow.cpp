@@ -43,8 +43,6 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QMimeData>
-#include <QPrintDialog>
-#include <QPrinter>
 #include <QProcess>
 #include <QRegularExpression>
 #include <QScreen>
@@ -57,6 +55,11 @@
 #include <QToolBar>
 #include <QUrl>
 #include <QWhatsThis>
+
+#if QT_CONFIG(printsupport)
+#include <QPrintDialog>
+#include <QPrinter>
+#endif
 
 #include <ctype.h>
 
@@ -249,7 +252,6 @@ bool FocusWatcher::eventFilter(QObject *, QEvent *event)
 MainWindow::MainWindow()
     : QMainWindow(0, Qt::Window),
       m_assistantProcess(0),
-      m_printer(0),
       m_findWhere(DataModel::NoLocation),
       m_translationSettingsDialog(0),
       m_settingCurrentMessage(false),
@@ -491,7 +493,9 @@ MainWindow::~MainWindow()
     qDeleteAll(m_phraseBooks);
     delete m_dataModel;
     delete m_statistics;
+#if QT_CONFIG(printsupport)
     delete m_printer;
+#endif
 }
 
 void MainWindow::initViewHeaders()
@@ -855,6 +859,7 @@ void MainWindow::releaseAll()
             releaseInternal(i);
 }
 
+#if QT_CONFIG(printsupport)
 QPrinter *MainWindow::printer()
 {
     if (!m_printer)
@@ -943,6 +948,8 @@ void MainWindow::print()
         statusBar()->showMessage(tr("Printing aborted"), MessageMS);
     }
 }
+
+#endif // QT_CONFIG(printsupport)
 
 bool MainWindow::searchItem(DataModel::FindLocation where, const QString &searchWhat)
 {
@@ -1220,6 +1227,8 @@ void MainWindow::editPhraseBook(QAction *action)
     updatePhraseDicts();
 }
 
+#if QT_CONFIG(printsupport)
+
 void MainWindow::printPhraseBook(QAction *action)
 {
     PhraseBook *phraseBook = m_phraseBookMenu[PhrasePrintMenu].value(action);
@@ -1255,6 +1264,8 @@ void MainWindow::printPhraseBook(QAction *action)
         statusBar()->showMessage(tr("Printing aborted"), MessageMS);
     }
 }
+
+#endif // QT_CONFIG(printsupport)
 
 void MainWindow::addToPhraseBook()
 {
@@ -1365,7 +1376,9 @@ void MainWindow::setupPhrase()
     bool enabled = !m_phraseBooks.isEmpty();
     m_ui.menuClosePhraseBook->setEnabled(enabled);
     m_ui.menuEditPhraseBook->setEnabled(enabled);
+#if QT_CONFIG(printsupport)
     m_ui.menuPrintPhraseBook->setEnabled(enabled);
+#endif
 }
 
 void MainWindow::closeEvent(QCloseEvent *e)
@@ -1431,7 +1444,9 @@ void MainWindow::updateCaption()
     m_ui.actionSaveAll->setEnabled(enableRw);
     m_ui.actionReleaseAll->setEnabled(enableRw);
     m_ui.actionCloseAll->setEnabled(enable);
+#if QT_CONFIG(printsupport)
     m_ui.actionPrint->setEnabled(enable);
+#endif
     m_ui.actionAccelerators->setEnabled(enable);
     m_ui.actionSurroundingWhitespace->setEnabled(enable);
     m_ui.actionEndingPunctuation->setEnabled(enable);
@@ -1851,7 +1866,11 @@ void MainWindow::setupMenuBar()
     connect(m_ui.actionReleaseAll, &QAction::triggered, this, &MainWindow::releaseAll);
     connect(m_ui.actionRelease, &QAction::triggered, this, &MainWindow::release);
     connect(m_ui.actionReleaseAs, &QAction::triggered, this, &MainWindow::releaseAs);
+#if QT_CONFIG(printsupport)
     connect(m_ui.actionPrint, &QAction::triggered, this, &MainWindow::print);
+#else
+    m_ui.actionPrint->setEnabled(false);
+#endif
     connect(m_ui.actionClose, &QAction::triggered, this, &MainWindow::closeFile);
     connect(m_ui.actionCloseAll, &QAction::triggered, this, &MainWindow::closeAll);
     connect(m_ui.actionExit, &QAction::triggered, this, &MainWindow::close);
@@ -1913,8 +1932,12 @@ void MainWindow::setupMenuBar()
             this, &MainWindow::closePhraseBook);
     connect(m_ui.menuEditPhraseBook, &QMenu::triggered,
             this, &MainWindow::editPhraseBook);
+#if QT_CONFIG(printsupport)
     connect(m_ui.menuPrintPhraseBook, &QMenu::triggered,
             this, &MainWindow::printPhraseBook);
+#else
+    m_ui.menuPrintPhraseBook->setEnabled(false);
+#endif
     connect(m_ui.actionAddToPhraseBook, &QAction::triggered,
             this, &MainWindow::addToPhraseBook);
 

@@ -10,6 +10,8 @@
 #include "messagemodel.h"
 #include "finddialog.h"
 
+#include <QtCore/private/qconfig_p.h>
+
 #include <QtCore/QHash>
 #include <QtCore/QMap>
 #include <QtCore/QLocale>
@@ -80,7 +82,6 @@ private slots:
     void releaseAll();
     void release();
     void releaseAs();
-    void print();
     void closeFile();
     bool closeAll();
     void showTranslateDialog();
@@ -92,7 +93,6 @@ private slots:
     void openPhraseBook();
     void closePhraseBook(QAction *action);
     void editPhraseBook(QAction *action);
-    void printPhraseBook(QAction *action);
     void addToPhraseBook();
     void manual();
     void resetSorting();
@@ -138,6 +138,11 @@ private slots:
     void updatePhraseDicts();
     void updatePhraseDict(int model);
 
+#if QT_CONFIG(printsupport)
+    void print();
+    void printPhraseBook(QAction *action);
+#endif
+
 private:
     QModelIndex nextContext(const QModelIndex &index) const;
     QModelIndex prevContext(const QModelIndex &index) const;
@@ -171,7 +176,9 @@ private:
     void releaseInternal(int model);
     void saveInternal(int model);
 
+#if QT_CONFIG(printsupport)
     QPrinter *printer();
+#endif
 
     // FIXME: move to DataModel
     void updateDanger(const MultiDataIndex &index, bool verbose);
@@ -199,7 +206,9 @@ private:
     QList<QHash<QString, QList<Phrase *> > > m_phraseDict;
     QList<PhraseBook *> m_phraseBooks;
     QMap<QAction *, PhraseBook *> m_phraseBookMenu[3];
-    QPrinter *m_printer;
+#if QT_CONFIG(printsupport)
+    QPrinter *m_printer = nullptr;
+#endif
 
     FindDialog *m_findDialog;
     QString m_findText;

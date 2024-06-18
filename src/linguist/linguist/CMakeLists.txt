@@ -33,7 +33,6 @@ qt_internal_add_app(linguist
         phrasebookbox.cpp phrasebookbox.h phrasebookbox.ui
         phrasemodel.cpp phrasemodel.h
         phraseview.cpp phraseview.h
-        printout.cpp printout.h
         recentfiles.cpp recentfiles.h
         sourcecodeview.cpp sourcecodeview.h
         statistics.cpp statistics.h statistics.ui
@@ -51,11 +50,17 @@ qt_internal_add_app(linguist
         Qt::CorePrivate
         Qt::Gui
         Qt::GuiPrivate
-        Qt::PrintSupport
         Qt::UiToolsPrivate
         Qt::Widgets
     ENABLE_AUTOGEN_TOOLS
         uic
+)
+
+qt_internal_extend_target(linguist CONDITION QT_FEATURE_printsupport
+    SOURCES
+        printout.cpp printout.h
+    LIBRARIES
+        Qt::PrintSupport
 )
 
 # Resources:
