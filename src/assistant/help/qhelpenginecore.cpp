@@ -799,7 +799,7 @@ QHelpContentItem *createContentItem(const QString &name = {}, const QUrl &link =
     return new QHelpContentItem(name, link, parent);
 }
 
-static void provideContentHelper(QPromise<ContentResult> &promise, const ContentProvider &provider,
+static void requestContentHelper(QPromise<ContentResult> &promise, const ContentProvider &provider,
                                  const QString &collectionFile)
 {
     ContentResult rootItem(createContentItem());
@@ -883,20 +883,20 @@ static ContentProvider contentProviderFromAttributes(const QStringList &attribut
     };
 }
 
-QFuture<ContentResult> QHelpEngineCore::provideContentForCurrentFilter() const
+QFuture<ContentResult> QHelpEngineCore::requestContentForCurrentFilter() const
 {
     const ContentProvider provider = usesFilterEngine()
             ? contentProviderFromFilterEngine(filterEngine()->activeFilter())
             : contentProviderFromAttributes(filterAttributes(d->currentFilter));
-    return QtConcurrent::run(provideContentHelper, provider, collectionFile());
+    return QtConcurrent::run(requestContentHelper, provider, collectionFile());
 }
 
-QFuture<ContentResult> QHelpEngineCore::provideContent(const QString &filter) const
+QFuture<ContentResult> QHelpEngineCore::requestContent(const QString &filter) const
 {
     const ContentProvider provider = usesFilterEngine()
             ? contentProviderFromFilterEngine(filter)
             : contentProviderFromAttributes(filterAttributes(filter));
-    return QtConcurrent::run(provideContentHelper, provider, collectionFile());
+    return QtConcurrent::run(requestContentHelper, provider, collectionFile());
 }
 
 using IndexProvider = std::function<QStringList(const QString &)>;
@@ -922,7 +922,7 @@ static IndexProvider indexProviderFromAttributes(const QStringList &attributes)
     };
 }
 
-QFuture<IndexResult> QHelpEngineCore::provideIndexForCurrentFilter() const
+QFuture<IndexResult> QHelpEngineCore::requestIndexForCurrentFilter() const
 {
     const IndexProvider provider = usesFilterEngine()
             ? indexProviderFromFilterEngine(filterEngine()->activeFilter())
@@ -930,7 +930,7 @@ QFuture<IndexResult> QHelpEngineCore::provideIndexForCurrentFilter() const
     return QtConcurrent::run(std::move(provider), collectionFile());
 }
 
-QFuture<IndexResult> QHelpEngineCore::provideIndex(const QString &filter) const
+QFuture<IndexResult> QHelpEngineCore::requestIndex(const QString &filter) const
 {
     const IndexProvider provider = usesFilterEngine()
             ? indexProviderFromFilterEngine(filter)

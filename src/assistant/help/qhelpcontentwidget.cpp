@@ -119,7 +119,7 @@ QHelpContentModel::~QHelpContentModel()
 void QHelpContentModel::createContentsForCurrentFilter()
 {
 #if QT_CONFIG(future)
-    d->createContents([this] { return d->helpEngine->provideContentForCurrentFilter(); });
+    d->createContents([this] { return d->helpEngine->requestContentForCurrentFilter(); });
 #endif
 }
 
@@ -130,7 +130,7 @@ void QHelpContentModel::createContentsForCurrentFilter()
 void QHelpContentModel::createContents(const QString &filter)
 {
 #if QT_CONFIG(future)
-    d->createContents([this, filter] { return d->helpEngine->provideContent(filter); });
+    d->createContents([this, filter] { return d->helpEngine->requestContent(filter); });
 #endif
 }
 

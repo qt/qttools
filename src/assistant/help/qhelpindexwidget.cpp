@@ -106,7 +106,7 @@ QHelpIndexModel::~QHelpIndexModel()
 void QHelpIndexModel::createIndexForCurrentFilter()
 {
 #if QT_CONFIG(future)
-    d->createIndex([this] { return d->helpEngine->provideIndexForCurrentFilter(); });
+    d->createIndex([this] { return d->helpEngine->requestIndexForCurrentFilter(); });
 #endif
 }
 
@@ -117,7 +117,7 @@ void QHelpIndexModel::createIndexForCurrentFilter()
 void QHelpIndexModel::createIndex(const QString &filter)
 {
 #if QT_CONFIG(future)
-    d->createIndex([this, filter] { return d->helpEngine->provideIndex(filter); });
+    d->createIndex([this, filter] { return d->helpEngine->requestIndex(filter); });
 #endif
 }
 
