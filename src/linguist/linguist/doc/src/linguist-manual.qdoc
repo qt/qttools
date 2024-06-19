@@ -582,6 +582,10 @@
     installed Qt, you can start \QL in the same way as any other application on
     the development host.
 
+    \note You can obtain an installer for \QL only (without the entire Qt SDK)
+          from \l {https://download.qt.io/linguist_releases/}. The installer is
+          available for Windows, and works with Qt 6.
+
     To address issues that arise from the subtleties and complexities of
     human language, translators and developers may need to:
 
