@@ -35,7 +35,6 @@ private:
     void closeOptionPages();
 
     Ui::PreferencesDialog *m_ui;
-    QDesignerFormEditorInterface *m_core;
     QList<QDesignerOptionsPageInterface*> m_optionsPages;
 };
 

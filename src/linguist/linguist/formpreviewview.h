@@ -71,7 +71,6 @@ public:
     void setSourceContext(int model, MessageItem *messageItem);
 
 private:
-    bool m_isActive;
     QString m_currentFileName;
     QMdiArea *m_mdiArea;
     QMdiSubWindow *m_mdiSubWindow;

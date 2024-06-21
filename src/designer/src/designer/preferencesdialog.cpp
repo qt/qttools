@@ -15,8 +15,7 @@ QT_BEGIN_NAMESPACE
 
 PreferencesDialog::PreferencesDialog(QDesignerFormEditorInterface *core, QWidget *parentWidget) :
     QDialog(parentWidget),
-    m_ui(new QT_PREPEND_NAMESPACE(Ui)::PreferencesDialog()),
-    m_core(core)
+    m_ui(new QT_PREPEND_NAMESPACE(Ui)::PreferencesDialog())
 {
     m_ui->setupUi(this);
 

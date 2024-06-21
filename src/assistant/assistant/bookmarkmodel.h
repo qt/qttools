@@ -65,12 +65,10 @@ private:
         QDataStream *stream) const;
 
 private:
-    int columns;
     bool m_folder;
     bool m_editable;
     QIcon folderIcon;
     QIcon bookmarkIcon;
-    QTreeView *treeView;
     BookmarkItem *rootItem;
     ItemModelIndexCache cache;
 };
