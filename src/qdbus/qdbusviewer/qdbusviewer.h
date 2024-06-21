@@ -68,7 +68,6 @@ private:
     QString currentService;
     QTreeView *tree;
     QAction *refreshAction;
-    QTreeWidget *services;
     QStringListModel *servicesModel;
     ServicesProxyModel *servicesProxyModel;
     QLineEdit *serviceFilterLine;

@@ -66,8 +66,10 @@ private:
 
     QList<QAction *> m_actionList;
 
+#if defined(BROWSER_QTWEBKIT)
     QMenu *m_backMenu;
     QMenu *m_nextMenu;
+#endif
 };
 
 QT_END_NAMESPACE
