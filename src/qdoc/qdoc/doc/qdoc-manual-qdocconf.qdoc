@@ -137,7 +137,7 @@
 
     \section1 Configuration Variables
 
-    \section1 Variable List
+    \section2 Variable List
 
     \list
     \li \l {defines-variable} {defines}
@@ -184,7 +184,7 @@
     \li \l {warninglimit-variable} {warninglimit}
     \endlist
 
-    \section1 Categories
+    \section2 Categories
 
     \list
     \li \l {Generic Configuration Variables}
