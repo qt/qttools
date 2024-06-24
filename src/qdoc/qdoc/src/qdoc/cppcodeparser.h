@@ -62,7 +62,8 @@ protected:
 private:
     void setExampleFileLists(ExampleNode *en);
     static void processComparesCommand(Node *node, const QString &arg, const Location &loc);
-    void processQmlNativeTypeCommand(Node *node, const QString &arg, const Location &loc);
+    void processQmlNativeTypeCommand(Node *node, const QString &cmd,
+                                     const QString &arg, const Location &loc);
 
 private:
     FnCommandParser fn_parser;
