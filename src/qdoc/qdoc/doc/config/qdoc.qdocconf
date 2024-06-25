@@ -59,3 +59,5 @@ navigation.landingpage = "QDoc Manual"
 # Convenience macros for creating links to QDoc commands & configuration variables
 macro.qdoccmd = \\l{\1-command}{\\c{\\\1}}
 macro.qdocvar = \\l{\1-variable}{\\c{\1}}
+
+warninglimit = 0
