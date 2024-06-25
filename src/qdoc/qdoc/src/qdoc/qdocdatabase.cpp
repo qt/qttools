@@ -1291,8 +1291,7 @@ void QDocDatabase::mergeCollections(Node::NodeType type, CNMap &cnm, const Node 
                         // Allow multiple (major) versions of QML modules
                         if ((n->isQmlModule())
                             && n->logicalModuleIdentifier() != value->logicalModuleIdentifier()) {
-                            if (value->wasSeen() && value != relative
-                                && !value->members().isEmpty())
+                            if (value->wasSeen() && value != relative)
                                 cnm.insert(value->fullTitle().toLower(), value);
                             continue;
                         }
