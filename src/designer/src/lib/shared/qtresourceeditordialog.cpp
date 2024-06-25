@@ -798,7 +798,7 @@ using QtQrcManager = qdesigner_internal::QtQrcManager;
 // ----------------- QtResourceEditorDialogPrivate
 class QtResourceEditorDialogPrivate
 {
-    QtResourceEditorDialog *q_ptr;
+    QtResourceEditorDialog *q_ptr{};
     Q_DECLARE_PUBLIC(QtResourceEditorDialog)
 public:
     QtResourceEditorDialogPrivate() = default;

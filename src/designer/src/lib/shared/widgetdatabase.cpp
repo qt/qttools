@@ -672,7 +672,7 @@ QString WidgetDataBase::scaleFormTemplate(const QString &xml, const QSize &size,
     DomProperty *maximumSizeProperty = nullptr;
 
     auto properties = domWidget->elementProperty();
-    for (DomProperty *p : properties) {
+    for (DomProperty *p : std::as_const(properties)) {
         const QString name = p->attributeName();
         if (name == geometryPropertyName) {
             geomProperty = p;
