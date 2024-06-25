@@ -1469,7 +1469,7 @@
             \list
                 \li \c {\l QWidget} - The name of a class documented with the
                     \l {class-command} {\\class} or
-                    \l {qmltype-command}{\qmltype} command.
+                    \l {qmltype-command}{\\qmltype} command.
 
                 \li \c {\l QWidget::sizeHint()} - The signature of a function
                     without parameters. If a matching function without
