@@ -50,9 +50,6 @@ private:
 QTabWidgetEventFilter::QTabWidgetEventFilter(QTabWidget *parent) :
     QObject(parent),
     m_tabWidget(parent),
-    m_dropIndicator(nullptr),
-    m_dragPage(nullptr),
-    m_mousePressed(false),
     m_actionDeletePage(new QAction(tr("Delete"),  this)),
     m_actionInsertPage(new QAction(tr("Before Current Page"), this)),
     m_actionInsertPageAfter(new QAction(tr("After Current Page"), this)),

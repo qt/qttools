@@ -67,12 +67,12 @@ private:
     QTabWidget *m_tabWidget;
     mutable QPointer<QTabBar> m_cachedTabBar;
     QPoint m_pressPoint;
-    QWidget *m_dropIndicator;
-    int m_dragIndex;
-    QWidget *m_dragPage;
+    QWidget *m_dropIndicator = nullptr;
+    int m_dragIndex = -1;
+    QWidget *m_dragPage = nullptr;
     QString m_dragLabel;
     QIcon m_dragIcon;
-    bool m_mousePressed;
+    bool m_mousePressed = false;
     QAction *m_actionDeletePage;
     QAction *m_actionInsertPage;
     QAction *m_actionInsertPageAfter;
