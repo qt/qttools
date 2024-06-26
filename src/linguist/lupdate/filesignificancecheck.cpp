@@ -3,8 +3,6 @@
 
 #include "filesignificancecheck.h"
 
-#include <mutex>
-
 QT_BEGIN_NAMESPACE
 
 FileSignificanceCheck *FileSignificanceCheck::m_instance = nullptr;
@@ -37,14 +35,15 @@ void FileSignificanceCheck::setExclusionPatterns(const QStringList &patterns)
 bool FileSignificanceCheck::isFileSignificant(const std::string &filePath) const
 {
     // cache lookup
-    std::shared_lock<std::shared_mutex> readLock(m_cacheMutex);
-    auto it = m_cache.find(filePath);
-    if (it != m_cache.end())
-        return it->second;
+    {
+        QReadLocker locker(&m_cacheLock);
+        auto it = m_cache.find(filePath);
+        if (it != m_cache.end())
+            return it->second;
+    }
 
     // cache miss
-    readLock.unlock();
-    std::unique_lock<std::shared_mutex> writeLock(m_cacheMutex);
+    QWriteLocker locker(&m_cacheLock);
     QString file = QString::fromUtf8(filePath);
     QString cleanFile = QDir::cleanPath(file);
     for (const QRegularExpression &rx : m_exclusionRegExes) {
