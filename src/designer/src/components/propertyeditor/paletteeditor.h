@@ -42,7 +42,7 @@ private slots:
     void detailsRadioClicked();
 
     void paletteChanged(const QPalette &palette);
-    void viewContextMenuRequested(const QPoint &pos);
+    void viewContextMenuRequested(QPoint pos);
     void save();
     void load();
 

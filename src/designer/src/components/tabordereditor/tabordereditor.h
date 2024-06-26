@@ -48,7 +48,7 @@ protected:
 
 private:
     QRect indicatorRect(int index) const;
-    int widgetIndexAt(const QPoint &pos) const;
+    int widgetIndexAt(QPoint pos) const;
     bool skipWidget(QWidget *w) const;
 
     QPointer<QDesignerFormWindowInterface> m_form_window;

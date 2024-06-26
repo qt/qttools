@@ -129,7 +129,7 @@ public:
 
     QWidgetList widgets(QWidget *widget) const;
 
-    QWidget *createWidget(DomUI *ui, const QRect &rect, QWidget *target);
+    QWidget *createWidget(DomUI *ui, QRect rect, QWidget *target);
 
     bool isManaged(QWidget *w) const override;
 
@@ -162,9 +162,9 @@ public:
     void addResourceFile(const QString &path) override;
     void removeResourceFile(const QString &path) override;
 
-    void resizeWidget(QWidget *widget, const QRect &geometry);
+    void resizeWidget(QWidget *widget, QRect geometry);
 
-    bool dropDockWidget(QDesignerDnDItemInterface *item, const QPoint &global_mouse_pos);
+    bool dropDockWidget(QDesignerDnDItemInterface *item, QPoint global_mouse_pos);
     bool dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, QWidget *target,
                      const QPoint &global_mouse_pos) override;
 
@@ -209,7 +209,7 @@ protected:
     virtual QMenu *createPopupMenu(QWidget *w);
     void resizeEvent(QResizeEvent *e) override;
 
-    void insertWidget(QWidget *w, const QRect &rect, QWidget *target, bool already_in_form = false);
+    void insertWidget(QWidget *w, QRect rect, QWidget *target, bool already_in_form = false);
 
 private slots:
     void selectionChangedTimerDone();
@@ -236,7 +236,7 @@ private:
     void init();
     void initializeCoreTools();
 
-    int getValue(const QRect &rect, int key, bool size) const;
+    int getValue(QRect rect, int key, bool size) const;
     int calcValue(int val, bool forward, bool snap, int snapOffset) const;
     void handleClickSelection(QWidget *managedWidget, unsigned mouseFlags);
 
@@ -244,11 +244,11 @@ private:
 
     enum RectType { Insert, Rubber };
 
-    void startRectDraw(const QPoint &global, QWidget *, RectType t);
-    void continueRectDraw(const QPoint &global, QWidget *, RectType t);
+    void startRectDraw(QPoint global, QWidget *, RectType t);
+    void continueRectDraw(QPoint global, QWidget *, RectType t);
     void endRectDraw();
 
-    QWidget *containerAt(const QPoint &pos, QWidget *notParentOf);
+    QWidget *containerAt(QPoint pos, QWidget *notParentOf);
 
     void checkPreviewGeometry(QRect &r);
 
@@ -265,11 +265,11 @@ private:
     bool setCurrentWidget(QWidget *currentWidget);
     bool trySelectWidget(QWidget *w, bool select);
 
-    void dragWidgetWithinForm(QWidget *widget, const QRect &targetGeometry, QWidget *targetContainer);
+    void dragWidgetWithinForm(QWidget *widget, QRect targetGeometry, QWidget *targetContainer);
 
     void setCursorToAll(const QCursor &c, QWidget *start);
 
-    QPoint mapToForm(const QWidget *w, const QPoint &pos) const;
+    QPoint mapToForm(const QWidget *w, QPoint pos) const;
     bool canBeBuddy(QWidget *w) const;
 
     QWidget *findTargetContainer(QWidget *widget) const;
