@@ -5,10 +5,10 @@
 #define FILESIGNIFICANCECHECK_H
 
 #include <QtCore/qdir.h>
+#include <QtCore/qreadwritelock.h>
 #include <QtCore/qregularexpression.h>
 #include <QtCore/qstringlist.h>
 
-#include <shared_mutex>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -46,7 +46,7 @@ private:
     std::vector<QDir> m_rootDirs;
     std::vector<QRegularExpression> m_exclusionRegExes;
     mutable std::unordered_map<std::string, bool> m_cache;
-    mutable std::shared_mutex m_cacheMutex;
+    mutable QReadWriteLock m_cacheLock;
 };
 
 namespace LupdatePrivate {
