@@ -791,7 +791,7 @@ void FormWindow::checkPreviewGeometry(QRect &r)
     }
 }
 
-void FormWindow::startRectDraw(const QPoint &pos, QWidget *, RectType t)
+void FormWindow::startRectDraw(QPoint pos, QWidget *, RectType t)
 {
     m_rectAnchor = (t == Insert) ? designerGrid().snapPoint(pos) : pos;
 
@@ -802,7 +802,7 @@ void FormWindow::startRectDraw(const QPoint &pos, QWidget *, RectType t)
     m_rubberBand->show();
 }
 
-void FormWindow::continueRectDraw(const QPoint &pos, QWidget *, RectType t)
+void FormWindow::continueRectDraw(QPoint pos, QWidget *, RectType t)
 {
     const QPoint p2 = (t == Insert) ? designerGrid().snapPoint(pos) : pos;
 
@@ -1150,7 +1150,7 @@ bool FormWindow::unify(QObject *w, QString &s, bool changeIt)
 /* already_in_form is true when we are moving a widget from one parent to another inside the same
  * form. All this means is that InsertWidgetCommand::undo() must not unmanage it. */
 
-void FormWindow::insertWidget(QWidget *w, const QRect &rect, QWidget *container, bool already_in_form)
+void FormWindow::insertWidget(QWidget *w, QRect rect, QWidget *container, bool already_in_form)
 {
     clearSelection(false);
 
@@ -1192,7 +1192,7 @@ void FormWindow::insertWidget(QWidget *w, const QRect &rect, QWidget *container,
     w->show();
 }
 
-QWidget *FormWindow::createWidget(DomUI *ui, const QRect &rc, QWidget *target)
+QWidget *FormWindow::createWidget(DomUI *ui, QRect rc, QWidget *target)
 {
     QWidget *container = findContainer(target, false);
     if (!container)
@@ -1221,7 +1221,7 @@ static bool isDescendant(const QWidget *parent, const QWidget *child)
     return false;
 }
 
-void FormWindow::resizeWidget(QWidget *widget, const QRect &geometry)
+void FormWindow::resizeWidget(QWidget *widget, QRect geometry)
 {
     Q_ASSERT(isDescendant(this, widget));
 
@@ -1240,7 +1240,7 @@ void FormWindow::raiseChildSelections(QWidget *w)
     m_selection->raiseList(l);
 }
 
-QWidget *FormWindow::containerAt(const QPoint &pos, QWidget *notParentOf)
+QWidget *FormWindow::containerAt(QPoint pos, QWidget *notParentOf)
 {
     QWidget *container = nullptr;
     int depth = -1;
@@ -1345,7 +1345,7 @@ bool FormWindow::handleKeyPressEvent(QWidget *widget, QWidget *, QKeyEvent *e)
     return true;
 }
 
-int FormWindow::getValue(const QRect &rect, int key, bool size) const
+int FormWindow::getValue(QRect rect, int key, bool size) const
 {
     if (size) {
         if (key == Qt::Key_Left || key == Qt::Key_Right)
@@ -1375,7 +1375,7 @@ int FormWindow::calcValue(int val, bool forward, bool snap, int snapOffset) cons
 // operation.
 struct ArrowKeyOperation
 {
-    QRect apply(const QRect &rect) const;
+    QRect apply(QRect rect) const;
 
     bool resize = false; // Resize: Shift-Key->drag bottom/right corner, else just move
     int distance = 0;
@@ -1390,7 +1390,7 @@ QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
 
-QRect ArrowKeyOperation::apply(const QRect &rect) const
+QRect ArrowKeyOperation::apply(QRect rect) const
 {
     QRect r = rect;
     if (resize) {
@@ -1407,7 +1407,7 @@ QRect ArrowKeyOperation::apply(const QRect &rect) const
     return r;
 }
 
-QDebug operator<<(QDebug in, const ArrowKeyOperation &op)
+QDebug operator<<(QDebug in, ArrowKeyOperation op)
 {
     in.nospace() << "Resize=" << op.resize << " dist=" << op.distance << " Key=" << op.arrowKey << ' ';
     return in;
@@ -1449,7 +1449,7 @@ public:
     explicit ArrowKeyPropertyCommand(QDesignerFormWindowInterface *fw,
                                      QUndoCommand *p = nullptr);
 
-    void init(QWidgetList &l, const ArrowKeyOperation &op);
+    void init(QWidgetList &l, ArrowKeyOperation op);
 
 protected:
     std::unique_ptr<PropertyHelper>
@@ -1467,7 +1467,7 @@ ArrowKeyPropertyCommand::ArrowKeyPropertyCommand(QDesignerFormWindowInterface *f
     Q_UNUSED(mid);
 }
 
-void ArrowKeyPropertyCommand::init(QWidgetList &l, const ArrowKeyOperation &op)
+void ArrowKeyPropertyCommand::init(QWidgetList &l, ArrowKeyOperation op)
 {
     QObjectList ol;
     for (QWidget *w : std::as_const(l))
@@ -1742,7 +1742,7 @@ static inline QString pasteCommandDescription(int widgetCount, int actionCount)
 }
 
 #if QT_CONFIG(clipboard)
-static void positionPastedWidgetsAtMousePosition(FormWindow *fw, const QPoint &contextMenuPosition, QWidget *parent, const QWidgetList &l)
+static void positionPastedWidgetsAtMousePosition(FormWindow *fw, QPoint contextMenuPosition, QWidget *parent, const QWidgetList &l)
 {
     // Try to position pasted widgets at mouse position (current mouse position for Ctrl-V or position of context menu)
     // if it fits. If it is completely outside, force it to 0,0
@@ -2301,7 +2301,7 @@ void FormWindow::resizeEvent(QResizeEvent *e)
   This is the equivalent to mapFromGlobal(w->mapToGlobal(pos)) but
   avoids the two roundtrips to the X-Server on Unix/X11.
  */
-QPoint FormWindow::mapToForm(const QWidget *w, const QPoint &pos) const
+QPoint FormWindow::mapToForm(const QWidget *w, QPoint pos) const
 {
     QPoint p = pos;
     const QWidget* i = w;
@@ -2651,7 +2651,7 @@ void FormWindow::editContents()
     }
 }
 
-void FormWindow::dragWidgetWithinForm(QWidget *widget, const QRect &targetGeometry, QWidget *targetContainer)
+void FormWindow::dragWidgetWithinForm(QWidget *widget, QRect targetGeometry, QWidget *targetContainer)
 {
     const bool fromLayout = canDragWidgetInLayout(core(), widget);
     const QDesignerLayoutDecorationExtension *targetDeco = qt_extension<QDesignerLayoutDecorationExtension*>(core()->extensionManager(), targetContainer);
@@ -2685,7 +2685,7 @@ void FormWindow::dragWidgetWithinForm(QWidget *widget, const QRect &targetGeomet
     }
 }
 
-static Qt::DockWidgetArea detectDropArea(QMainWindow *mainWindow, const QRect &area, const QPoint &drop)
+static Qt::DockWidgetArea detectDropArea(QMainWindow *mainWindow, QRect area, QPoint drop)
 {
     QPoint offset = area.topLeft();
     QRect rect = area;
@@ -2726,7 +2726,7 @@ static Qt::DockWidgetArea detectDropArea(QMainWindow *mainWindow, const QRect &a
     return y < 0 ? Qt::TopDockWidgetArea :Qt::LeftDockWidgetArea;
 }
 
-bool FormWindow::dropDockWidget(QDesignerDnDItemInterface *item, const QPoint &global_mouse_pos)
+bool FormWindow::dropDockWidget(QDesignerDnDItemInterface *item, QPoint global_mouse_pos)
 {
     DomUI *dom_ui = item->domUi();
 

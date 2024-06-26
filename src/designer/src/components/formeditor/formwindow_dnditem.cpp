@@ -36,7 +36,7 @@ static DomUI *widgetToDom(QWidget *widget, FormWindow *form)
 }
 
 FormWindowDnDItem::FormWindowDnDItem(QDesignerDnDItemInterface::DropType type, FormWindow *form,
-                                        QWidget *widget, const QPoint &global_mouse_pos)
+                                        QWidget *widget, QPoint global_mouse_pos)
     : QDesignerDnDItem(type, form)
 {
     QWidget *decoration = decorationFromWidget(widget);

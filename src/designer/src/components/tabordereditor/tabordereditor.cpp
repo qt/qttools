@@ -31,7 +31,7 @@ namespace {
     enum { VBOX_MARGIN = 1, HBOX_MARGIN = 4, BG_ALPHA = 32 };
 }
 
-static QRect fixRect(const QRect &r)
+static QRect fixRect(QRect r)
 {
     return QRect(r.x(), r.y(), r.width() - 1, r.height() - 1);
 }
@@ -246,7 +246,7 @@ void TabOrderEditor::mouseMoveEvent(QMouseEvent *e)
 #endif
 }
 
-int TabOrderEditor::widgetIndexAt(const QPoint &pos) const
+int TabOrderEditor::widgetIndexAt(QPoint pos) const
 {
     int target_index = -1;
     for (qsizetype i = 0; i < m_tab_order_list.size(); ++i) {

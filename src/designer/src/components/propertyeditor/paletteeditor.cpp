@@ -235,7 +235,7 @@ QPalette PaletteEditor::getPalette(QDesignerFormEditorInterface *core, QWidget* 
     return result == QDialog::Accepted ? dlg.palette() : init;
 }
 
-void PaletteEditor::viewContextMenuRequested(const QPoint &pos)
+void PaletteEditor::viewContextMenuRequested(QPoint pos)
 {
     const auto index = ui.paletteView->indexAt(pos);
     if (!index.isValid())
