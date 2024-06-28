@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="some-attribution-2.html" href="some-attribution-2.html" status="active" location="test.qdoc" documented="true" subtype="attribution" title="Attribution-2" fulltitle="Attribution-2" subtitle="" brief="Public Domain">
+            <description>
+                <brief>Public Domain</brief>
+            </description>
+        </page>
+    </document>
+</WebXML>

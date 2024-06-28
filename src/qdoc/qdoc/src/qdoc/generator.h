@@ -73,7 +73,7 @@ public:
     virtual QString fileBase(const Node *node) const;
 
 protected:
-    static QFile *openSubPageFile(const Node *node, const QString &fileName);
+    static QFile *openSubPageFile(const PageNode *node, const QString &fileName);
     void beginSubPage(const Node *node, const QString &fileName);
     void endSubPage();
     [[nodiscard]] virtual QString fileExtension() const = 0;
