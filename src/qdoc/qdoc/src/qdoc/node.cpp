@@ -76,6 +76,7 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 
     LT_RETURN_IF_NOT_EQUAL(n1->nodeType(), n2->nodeType());
     LT_RETURN_IF_NOT_EQUAL(n1->name(), n2->name());
+    LT_RETURN_IF_NOT_EQUAL(n1->logicalModuleName(), n2->logicalModuleName());
     LT_RETURN_IF_NOT_EQUAL(n1->access(), n2->access());
     LT_RETURN_IF_NOT_EQUAL(n1->location().filePath(), n2->location().filePath());
 

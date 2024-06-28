@@ -296,14 +296,18 @@ void Aggregate::normalizeOverloads()
 /*!
   Returns a const reference to the list of child nodes of this
   aggregate that are not function nodes. Duplicate nodes are
-  removed from the list.
+  removed from the list and the list is sorted.
  */
 const NodeList &Aggregate::nonfunctionList()
 {
     m_nonfunctionList = m_nonfunctionMap.values();
-    std::sort(m_nonfunctionList.begin(), m_nonfunctionList.end(), Node::nodeNameLessThan);
+    // Erase duplicates
+    std::sort(m_nonfunctionList.begin(), m_nonfunctionList.end());
     m_nonfunctionList.erase(std::unique(m_nonfunctionList.begin(), m_nonfunctionList.end()),
                             m_nonfunctionList.end());
+
+    // Sort based on node name
+    std::sort(m_nonfunctionList.begin(), m_nonfunctionList.end(), Node::nodeNameLessThan);
     return m_nonfunctionList;
 }
 
