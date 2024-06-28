@@ -1,0 +1,32 @@
+// Copyright (C) 2024 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page some-attribution-1.html
+    \attribution
+    \title Attribution-1
+    \brief WTFPL License version 2
+*/
+
+/*!
+    \page some-attribution-2.html
+    \attribution
+    \title Attribution-2
+    \brief Public Domain
+*/
+
+/*!
+    \page some-attribution-1.html
+    \attribution
+    \title Attribution-1
+    \brief WTFPL License version 2
+
+    Duplicated license attribution page.
+*/
+
+/*!
+    \page attributions-test.html
+    \title Attributions
+
+    \generatelist annotatedattributions
+*/

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="attributions-test.html" href="attributions-test.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Attributions" fulltitle="Attributions" subtitle="">
+            <description>
+                <generatedlist contents="annotatedattributions"/>
+            </description>
+        </page>
+    </document>
+</WebXML>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="some-attribution-1.html" href="some-attribution-1.html" status="active" location="test.qdoc" documented="true" subtype="attribution" title="Attribution-1" fulltitle="Attribution-1" subtitle="" brief="WTFPL License version 2">
+            <description>
+                <brief>WTFPL License version 2</brief>
+                <para>Duplicated license attribution page.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>

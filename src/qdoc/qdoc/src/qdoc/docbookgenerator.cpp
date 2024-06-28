@@ -2961,7 +2961,8 @@ void DocBookGenerator::generateAlsoList(const Node *node)
  */
 QXmlStreamWriter *DocBookGenerator::startGenericDocument(const Node *node, const QString &fileName)
 {
-    QFile *outFile = openSubPageFile(node, fileName);
+    Q_ASSERT(node->isPageNode());
+    QFile *outFile = openSubPageFile(static_cast<const PageNode*>(node), fileName);
     m_writer = new QXmlStreamWriter(outFile);
     m_writer->setAutoFormatting(false); // We need a precise handling of line feeds.
 

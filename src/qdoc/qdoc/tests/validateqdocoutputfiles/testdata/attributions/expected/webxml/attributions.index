@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Attributions Reference Documentation" version="" project="Attributions">
+    <namespace name="" status="active" access="public" module="attributions">
+        <page name="some-attribution-1.html" href="some-attribution-1.html" status="active" location="test.qdoc" documented="true" subtype="attribution" title="Attribution-1" fulltitle="Attribution-1" subtitle="" brief="WTFPL License version 2"/>
+        <page name="some-attribution-1.html" href="some-attribution-1.html" status="active" location="test.qdoc" documented="true" subtype="attribution" title="Attribution-1" fulltitle="Attribution-1" subtitle="" brief="WTFPL License version 2"/>
+        <page name="some-attribution-1.html" href="some-attribution-1.html" status="active" location="test.qdoc" documented="true" subtype="attribution" title="Attribution-1" fulltitle="Attribution-1" subtitle="" brief="WTFPL License version 2"/>
+        <page name="some-attribution-1.html" href="some-attribution-1.html" status="active" location="test.qdoc" documented="true" subtype="attribution" title="Attribution-1" fulltitle="Attribution-1" subtitle="" brief="WTFPL License version 2"/>
+        <page name="some-attribution-2.html" href="some-attribution-2.html" status="active" location="test.qdoc" documented="true" subtype="attribution" title="Attribution-2" fulltitle="Attribution-2" subtitle="" brief="Public Domain"/>
+        <page name="attributions-test.html" href="attributions-test.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Attributions" fulltitle="Attributions" subtitle=""/>
+    </namespace>
+</INDEX>
