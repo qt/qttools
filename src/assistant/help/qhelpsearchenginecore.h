@@ -27,6 +27,7 @@ public:
     QList<QHelpSearchResult> searchResults(int start, int end) const;
     QString searchInput() const;
 
+public Q_SLOTS:
     void reindexDocumentation();
     void cancelIndexing();
 
