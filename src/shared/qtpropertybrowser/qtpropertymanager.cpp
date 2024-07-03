@@ -564,7 +564,7 @@ void QtGroupPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtIntPropertyManagerPrivate
 {
-    QtIntPropertyManager *q_ptr;
+    QtIntPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtIntPropertyManager)
 public:
 
@@ -839,7 +839,7 @@ void QtIntPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtDoublePropertyManagerPrivate
 {
-    QtDoublePropertyManager *q_ptr;
+    QtDoublePropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtDoublePropertyManager)
 public:
 
@@ -1168,7 +1168,7 @@ void QtDoublePropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtStringPropertyManagerPrivate
 {
-    QtStringPropertyManager *q_ptr;
+    QtStringPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtStringPropertyManager)
 public:
 
@@ -1384,7 +1384,7 @@ static QIcon drawCheckBox(bool value)
 
 class QtBoolPropertyManagerPrivate
 {
-    QtBoolPropertyManager *q_ptr;
+    QtBoolPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtBoolPropertyManager)
 public:
     QtBoolPropertyManagerPrivate();
@@ -1517,7 +1517,7 @@ void QtBoolPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtDatePropertyManagerPrivate
 {
-    QtDatePropertyManager *q_ptr;
+    QtDatePropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtDatePropertyManager)
 public:
     explicit QtDatePropertyManagerPrivate(QtDatePropertyManager *q);
@@ -1749,7 +1749,7 @@ void QtDatePropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtTimePropertyManagerPrivate
 {
-    QtTimePropertyManager *q_ptr;
+    QtTimePropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtTimePropertyManager)
 public:
     explicit QtTimePropertyManagerPrivate(QtTimePropertyManager *q);
@@ -1868,7 +1868,7 @@ void QtTimePropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtDateTimePropertyManagerPrivate
 {
-    QtDateTimePropertyManager *q_ptr;
+    QtDateTimePropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtDateTimePropertyManager)
 public:
     explicit QtDateTimePropertyManagerPrivate(QtDateTimePropertyManager *q);
@@ -1983,7 +1983,7 @@ void QtDateTimePropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtKeySequencePropertyManagerPrivate
 {
-    QtKeySequencePropertyManager *q_ptr;
+    QtKeySequencePropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtKeySequencePropertyManager)
 public:
 
@@ -2093,7 +2093,7 @@ void QtKeySequencePropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtCharPropertyManagerPrivate
 {
-    QtCharPropertyManager *q_ptr;
+    QtCharPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtCharPropertyManager)
 public:
 
@@ -2202,7 +2202,7 @@ void QtCharPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtLocalePropertyManagerPrivate
 {
-    QtLocalePropertyManager *q_ptr;
+    QtLocalePropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtLocalePropertyManager)
 public:
 
@@ -2452,7 +2452,7 @@ void QtLocalePropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtPointPropertyManagerPrivate
 {
-    QtPointPropertyManager *q_ptr;
+    QtPointPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtPointPropertyManager)
 public:
 
@@ -2663,7 +2663,7 @@ void QtPointPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtPointFPropertyManagerPrivate
 {
-    QtPointFPropertyManager *q_ptr;
+    QtPointFPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtPointFPropertyManager)
 public:
 
@@ -2938,7 +2938,7 @@ void QtPointFPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtSizePropertyManagerPrivate
 {
-    QtSizePropertyManager *q_ptr;
+    QtSizePropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtSizePropertyManager)
 public:
 
@@ -3280,7 +3280,7 @@ void QtSizePropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtSizeFPropertyManagerPrivate
 {
-    QtSizeFPropertyManager *q_ptr;
+    QtSizeFPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtSizeFPropertyManager)
 public:
 
@@ -3679,7 +3679,7 @@ void QtSizeFPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtRectPropertyManagerPrivate
 {
-    QtRectPropertyManager *q_ptr;
+    QtRectPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtRectPropertyManager)
 public:
 
@@ -4084,7 +4084,7 @@ void QtRectPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtRectFPropertyManagerPrivate
 {
-    QtRectFPropertyManager *q_ptr;
+    QtRectFPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtRectFPropertyManager)
 public:
 
@@ -4553,7 +4553,7 @@ void QtRectFPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtEnumPropertyManagerPrivate
 {
-    QtEnumPropertyManager *q_ptr;
+    QtEnumPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtEnumPropertyManager)
 public:
 
@@ -4821,7 +4821,7 @@ void QtEnumPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtFlagPropertyManagerPrivate
 {
-    QtFlagPropertyManager *q_ptr;
+    QtFlagPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtFlagPropertyManager)
 public:
 
@@ -5148,7 +5148,7 @@ void QtFlagPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtSizePolicyPropertyManagerPrivate
 {
-    QtSizePolicyPropertyManager *q_ptr;
+    QtSizePolicyPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtSizePolicyPropertyManager)
 public:
 
@@ -5471,7 +5471,7 @@ void QtSizePolicyPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtFontPropertyManagerPrivate
 {
-    QtFontPropertyManager *q_ptr;
+    QtFontPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtFontPropertyManager)
 public:
 
@@ -5989,7 +5989,7 @@ void QtFontPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtColorPropertyManagerPrivate
 {
-    QtColorPropertyManager *q_ptr;
+    QtColorPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtColorPropertyManager)
 public:
 
@@ -6269,7 +6269,7 @@ void QtColorPropertyManager::uninitializeProperty(QtProperty *property)
 
 class QtCursorPropertyManagerPrivate
 {
-    QtCursorPropertyManager *q_ptr;
+    QtCursorPropertyManager *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtCursorPropertyManager)
 public:
     QHash<const QtProperty *, QCursor> m_values;

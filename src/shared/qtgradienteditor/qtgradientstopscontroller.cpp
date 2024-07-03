@@ -14,7 +14,7 @@ using namespace Qt::StringLiterals;
 class QtGradientStopsControllerPrivate : public QObject
 {
     Q_OBJECT
-    QtGradientStopsController *q_ptr;
+    QtGradientStopsController *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtGradientStopsController)
 public:
     using PositionColorMap = QMap<qreal, QColor>;
@@ -60,7 +60,7 @@ public:
     QtGradientStopsModel *m_model = nullptr;
     QColor::Spec m_spec = QColor::Hsv;
 
-    Ui::QtGradientEditor *m_ui;
+    Ui::QtGradientEditor *m_ui = nullptr;
 };
 
 void QtGradientStopsControllerPrivate::setUi(Ui::QtGradientEditor *ui)

@@ -10,7 +10,7 @@ QT_BEGIN_NAMESPACE
 class QtGradientDialogPrivate : public QObject
 {
     Q_OBJECT
-    QtGradientDialog *q_ptr;
+    QtGradientDialog *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtGradientDialog)
 public:
     void slotAboutToShowDetails(bool details, int extensionWidthHint);

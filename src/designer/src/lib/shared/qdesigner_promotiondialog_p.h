@@ -69,7 +69,7 @@ namespace qdesigner_internal {
         void enableButtons();
 
         QString m_promotedHeaderSuffix;
-        bool m_promotedHeaderLowerCase;
+        bool m_promotedHeaderLowerCase = false;
 
         QComboBox *m_baseClassCombo;
         QLineEdit *m_classNameEdit;
