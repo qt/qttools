@@ -271,7 +271,7 @@ void QHelpSearchIndexReader::run()
 
     lock.relock();
     if (m_cancel) {
-        emit searchingFinished(0);   // TODO: check this, speed issue while locking???
+        emit searchingFinished();   // TODO: check this, speed issue while locking???
         return;
     }
     lock.unlock();
@@ -283,7 +283,7 @@ void QHelpSearchIndexReader::run()
     m_searchResults = reader.searchResults();
     lock.unlock();
 
-    emit searchingFinished(m_searchResults.size());
+    emit searchingFinished();
 }
 
 } // namespace fulltextsearch

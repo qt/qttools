@@ -141,7 +141,7 @@ QHelpSearchEngine::QHelpSearchEngine(QHelpEngineCore *helpEngine, QObject *paren
     connect(&d->m_searchEngine, &QHelpSearchEngineCore::searchingStarted,
             this, &QHelpSearchEngine::searchingStarted);
     connect(&d->m_searchEngine, &QHelpSearchEngineCore::searchingFinished,
-            this, &QHelpSearchEngine::searchingFinished);
+            this, [this] { emit searchingFinished(d->m_searchEngine.searchResultCount()); });
 }
 
 /*!

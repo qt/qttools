@@ -42,7 +42,7 @@ Q_SIGNALS:
     void indexingFinished();
 
     void searchingStarted();
-    void searchingFinished(int searchResultCount);
+    void searchingFinished();
 };
 
 QT_END_NAMESPACE
