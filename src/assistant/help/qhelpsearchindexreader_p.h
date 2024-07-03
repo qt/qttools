@@ -41,7 +41,7 @@ public:
 
 signals:
     void searchingStarted();
-    void searchingFinished(int searchResultCount);
+    void searchingFinished();
 
 private:
     void run() override;

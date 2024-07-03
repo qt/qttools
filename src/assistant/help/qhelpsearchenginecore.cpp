@@ -138,10 +138,9 @@ public:
 */
 
 /*!
-    \fn void QHelpSearchEngineCore::searchingFinished(int searchResultCount)
+    \fn void QHelpSearchEngineCore::searchingFinished()
 
     This signal is emitted when the search process is complete.
-    The search result count is stored in \a searchResultCount.
 */
 
 /*!
