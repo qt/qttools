@@ -1,24 +1,9 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-#### Inputs
-
-
-
-#### Libraries
-
-
-
 #### Tests
 
-# libclang
-# special case begin
-# Even though Qt builds with qmake and libclang 6.0, it fails with CMake.
-# Presumably because 6.0 ClangConfig.cmake files are not good enough?
-# In any case explicitly request a minimum version of 8.x for now, otherwise
-# building with CMake will fail at compilation time.
 qt_find_package(WrapLibClang 8 PROVIDED_TARGETS WrapLibClang::WrapLibClang)
-# special case end
 
 if(TARGET WrapLibClang::WrapLibClang)
     set(TEST_libclang "ON" CACHE BOOL "Required libclang version found." FORCE)
