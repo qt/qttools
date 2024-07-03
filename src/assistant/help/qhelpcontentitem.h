@@ -14,6 +14,7 @@ class QUrl;
 
 class QHELP_EXPORT QHelpContentItem
 {
+    Q_DISABLE_COPY_MOVE(QHelpContentItem)
 public:
     ~QHelpContentItem();
 
