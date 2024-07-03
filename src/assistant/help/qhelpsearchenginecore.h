@@ -21,7 +21,7 @@ class QHELP_EXPORT QHelpSearchEngineCore : public QObject
 
 public:
     explicit QHelpSearchEngineCore(QHelpEngineCore *helpEngine);
-    ~QHelpSearchEngineCore();
+    ~QHelpSearchEngineCore() override;
 
     int searchResultCount() const;
     QList<QHelpSearchResult> searchResults(int start, int end) const;
