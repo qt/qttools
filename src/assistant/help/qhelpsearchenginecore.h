@@ -18,9 +18,10 @@ class QHelpSearchEngineCorePrivate;
 class QHELP_EXPORT QHelpSearchEngineCore : public QObject
 {
     Q_OBJECT
+    Q_DECLARE_PRIVATE(QHelpSearchEngineCore)
 
 public:
-    explicit QHelpSearchEngineCore(QHelpEngineCore *helpEngine);
+    explicit QHelpSearchEngineCore(QHelpEngineCore *helpEngine, QObject *parent = nullptr);
     ~QHelpSearchEngineCore() override;
 
     int searchResultCount() const;
@@ -42,9 +43,6 @@ Q_SIGNALS:
 
     void searchingStarted();
     void searchingFinished(int searchResultCount);
-
-private:
-    QHelpSearchEngineCorePrivate *d;
 };
 
 QT_END_NAMESPACE
