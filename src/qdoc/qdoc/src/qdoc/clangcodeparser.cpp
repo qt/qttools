@@ -14,6 +14,7 @@
 #include "qdocdatabase.h"
 #include "typedefnode.h"
 #include "variablenode.h"
+#include "sourcefileparser.h"
 #include "utilities.h"
 
 #include <QtCore/qdebug.h>
@@ -726,6 +727,7 @@ public:
             auto loc = clang_getCursorLocation(cur);
             if (clang_Location_isFromMainFile(loc))
                 return visitSource(cur, loc);
+
             CXFile file;
             clang_getFileLocation(loc, &file, nullptr, nullptr, nullptr);
             bool isInteresting = false;
@@ -1487,7 +1489,8 @@ static const char *defaultArgs_[] = {
     "-Wno-nullability-completeness",
     "-fvisibility=default",
     "-ferror-limit=0",
-    ("-I" CLANG_RESOURCE_DIR)
+    ("-I" CLANG_RESOURCE_DIR),
+    "-xc++"
 };
 
 /*!
@@ -1688,7 +1691,9 @@ static float getUnpatchedVersion(QString t)
   and add its parsed contents to the database. \a location is
   used for reporting errors.
 
-  Call matchDocsAndStuff() to do all the parsing and tree building.
+  If parsing C++ header file as source, do not use the precompiled
+  header as the source file itself is likely already included in the
+  PCH and therefore interferes visiting the TU's children.
  */
 ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
 {
@@ -1699,7 +1704,8 @@ ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
     CompilationIndex index{ clang_createIndex(1, kClangDontDisplayDiagnostics) };
 
     getDefaultArgs(m_defines, m_args);
-    if (m_pch && !filePath.endsWith(".mm")) {
+    if (m_pch && !filePath.endsWith(".mm")
+            && !std::holds_alternative<CppHeaderSourceFile>(tag_source_file(filePath).second)) {
         m_args.push_back("-w");
         m_args.push_back("-include-pch");
         m_args.push_back((*m_pch).get().name.constData());

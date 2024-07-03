@@ -538,7 +538,12 @@ static void processQdocconfFile(const QString &fileName)
         QStringList sourceList;
 
         qCDebug(lcQdoc, "Reading sourcedirs");
-        sourceList =
+
+        if (config.get(CONFIG_DOCUMENTATIONINHEADERS).asBool()) {
+            sourceList += config.getAllFiles(CONFIG_HEADERS, CONFIG_HEADERDIRS, excludedDirs,
+                                             excludedFiles);
+        }
+        sourceList +=
                 config.getAllFiles(CONFIG_SOURCES, CONFIG_SOURCEDIRS, excludedDirs, excludedFiles);
 
         std::vector<QString> sources{};

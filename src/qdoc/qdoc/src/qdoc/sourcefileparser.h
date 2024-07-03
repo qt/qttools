@@ -12,24 +12,32 @@
 #include <QFileInfo>
 
 struct CppSourceFile {};
+struct CppHeaderSourceFile {};
 struct QDocSourceFile {};
 struct JsSourceFile {};
 struct UnknownSourceFile {};
 
-using SourceFileTag = std::variant<CppSourceFile, QDocSourceFile, JsSourceFile, UnknownSourceFile>;
+using SourceFileTag = std::variant<CppSourceFile, CppHeaderSourceFile, QDocSourceFile, JsSourceFile, UnknownSourceFile>;
 using TaggedSourceFile = std::pair<QString, SourceFileTag>;
 
 inline TaggedSourceFile tag_source_file(const QString& path) {
     static QStringList cpp_file_extensions{
         "c++", "cc", "cpp", "cxx", "mm"
     };
+    static QStringList cpp_header_extensions{ "h", "h++", "hpp", "hxx" };
     static QStringList qdoc_file_extensions{ "qdoc" };
     static QStringList javascript_file_extensions{ "js" };
 
     QString extension{QFileInfo(path).suffix()};
 
-    if (cpp_file_extensions.contains(extension)) return TaggedSourceFile{path, CppSourceFile{}};
-    else if (qdoc_file_extensions.contains(extension)) return TaggedSourceFile{path, QDocSourceFile{}};
+    const bool inHeaders = Config::instance().get(CONFIG_DOCUMENTATIONINHEADERS).asBool();
+
+    if (inHeaders && cpp_header_extensions.contains(extension)) {
+        return TaggedSourceFile{ path, CppHeaderSourceFile{} };
+    } else if (cpp_file_extensions.contains(extension)) {
+        return TaggedSourceFile{ path, CppSourceFile{} };
+    } else if (qdoc_file_extensions.contains(extension))
+        return TaggedSourceFile{ path, QDocSourceFile{} };
     else if (javascript_file_extensions.contains(extension)) return TaggedSourceFile{path, JsSourceFile{}};
 
     return TaggedSourceFile{path, UnknownSourceFile{}};
@@ -51,6 +59,8 @@ public:
     ParseResult operator()(const TaggedSourceFile& source) {
         if (std::holds_alternative<CppSourceFile>(source.second))
             return (*this)(source.first, std::get<CppSourceFile>(source.second));
+        else if (std::holds_alternative<CppHeaderSourceFile>(source.second))
+            return (*this)(source.first, std::get<CppHeaderSourceFile>(source.second));
         else if (std::holds_alternative<QDocSourceFile>(source.second))
             return (*this)(source.first, std::get<QDocSourceFile>(source.second));
         else if (std::holds_alternative<JsSourceFile>(source.second))
@@ -66,6 +76,9 @@ private:
          auto [untied, tied] = cpp_file_parser.parse_cpp_file(path);
 
          return {untied, tied};
+    }
+    ParseResult operator()(const QString& path, CppHeaderSourceFile) {
+        return (*this)(path, CppSourceFile{});
     }
 
     ParseResult operator()(const QString& path, QDocSourceFile) {

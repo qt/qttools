@@ -24,6 +24,7 @@ QString ConfigStrings::DEFINES = QStringLiteral("defines");
 QString ConfigStrings::DEPENDS = QStringLiteral("depends");
 QString ConfigStrings::DESCRIPTION = QStringLiteral("description");
 QString ConfigStrings::DOCBOOKEXTENSIONS = QStringLiteral("usedocbookextensions");
+QString ConfigStrings::DOCUMENTATIONINHEADERS = QStringLiteral("documentationinheaders");
 QString ConfigStrings::ENDHEADER = QStringLiteral("endheader");
 QString ConfigStrings::EXAMPLEDIRS = QStringLiteral("exampledirs");
 QString ConfigStrings::EXAMPLES = QStringLiteral("examples");
