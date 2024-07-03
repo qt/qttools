@@ -13,7 +13,7 @@ QT_BEGIN_NAMESPACE
 
 class QtColorLinePrivate
 {
-    QtColorLine *q_ptr;
+    QtColorLine *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtColorLine)
 public:
     QtColorLinePrivate();
@@ -63,22 +63,22 @@ private:
     QColor colorFromPoint(const QPointF &point) const;
     QPointF pointFromColor(const QColor &color) const;
 
-    QColor m_color;
-    QtColorLine::ColorComponent m_component;
-    bool m_flipped;
-    bool m_backgroundCheckered;
-    Qt::Orientation m_orientation;
-    bool m_dragging;
-    bool m_combiningAlpha;
-    int m_indicatorSize;
-    int m_indicatorSpace;
+    QColor m_color = Qt::black;
+    QtColorLine::ColorComponent m_component = QtColorLine::Value;
+    bool m_flipped = false;
+    bool m_backgroundCheckered = true;
+    Qt::Orientation m_orientation = Qt::Horizontal;
+    bool m_dragging = false;
+    bool m_combiningAlpha = false;
+    int m_indicatorSize = 22;
+    int m_indicatorSpace = 0;
     QPointF m_point;
     QPoint m_clickOffset;
 
     QPixmap m_mainPixmap;
     QPixmap m_alphalessPixmap;
     QPixmap m_semiAlphaPixmap;
-    QSize m_pixmapSize;
+    QSize m_pixmapSize{0, 0};
 
     struct PixData {
         QSize size;
@@ -92,13 +92,8 @@ private:
 };
 
 QtColorLinePrivate::QtColorLinePrivate()
-    : m_color(Qt::black), m_component(QtColorLine::Value),
-        m_flipped(false), m_backgroundCheckered(true), m_orientation(Qt::Horizontal), m_dragging(false), m_combiningAlpha(false)
+    : m_point(pointFromColor(m_color))
 {
-    m_indicatorSize = 22;
-    m_indicatorSpace = 0;
-    m_pixmapSize = QSize(0, 0);
-    m_point = pointFromColor(m_color);
 }
 
 void QtColorLinePrivate::setColor(const QColor &color)

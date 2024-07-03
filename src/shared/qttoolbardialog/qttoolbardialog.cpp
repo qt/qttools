@@ -922,15 +922,9 @@ private:
 };
 
 class QtToolBarDialogPrivate {
-    QtToolBarDialog *q_ptr;
+    QtToolBarDialog *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtToolBarDialog)
 public:
-    QtToolBarDialogPrivate()
-        : toolBarManager(0),
-          currentAction(0),
-          currentToolBar(0)
-          { }
-
     ToolBarItem *createItem(QToolBar *toolBar);
     ToolBarItem *createItem(const QString &toolBarName);
     void deleteItem(ToolBarItem *item);
@@ -956,7 +950,7 @@ public:
     void setButtons();
     void clearOld();
     void fillNew();
-    QtFullToolBarManager *toolBarManager;
+    QtFullToolBarManager *toolBarManager = nullptr;
     QHash<ToolBarItem *, QList<QAction *>> currentState;
     QHash<QToolBar *, ToolBarItem *> toolBarItems;
     QSet<ToolBarItem *> createdItems;
@@ -965,12 +959,12 @@ public:
     QSet<ToolBarItem *> allToolBarItems;
 
     // static
-    QTreeWidgetItem *currentAction;
+    QTreeWidgetItem *currentAction = nullptr;
     QHash<QAction *, QTreeWidgetItem *> actionToItem;
     QHash<QTreeWidgetItem *, QAction *> itemToAction;
 
     // dynamic
-    ToolBarItem *currentToolBar;
+    ToolBarItem *currentToolBar = nullptr;
     QHash<ToolBarItem *, QListWidgetItem *> toolBarToItem;
     QHash<QListWidgetItem *, ToolBarItem *> itemToToolBar;
 

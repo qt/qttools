@@ -265,11 +265,11 @@ private:
     TextEditor *createTextEditor(QWidget *parent, TextPropertyValidationMode vm, const QString &value);
 
     ResetDecorator *m_resetDecorator;
-    bool m_changingPropertyValue;
+    bool m_changingPropertyValue = false;
     QDesignerFormEditorInterface *m_core;
-    FormWindowBase *m_fwb;
+    FormWindowBase *m_fwb = nullptr;
 
-    int m_spacing;
+    int m_spacing = -1;
 
     QHash<const QtProperty *, QList<TextEditor *>>             m_stringPropertyToEditors;
     QHash<TextEditor *, QtProperty *>                          m_editorToStringProperty;

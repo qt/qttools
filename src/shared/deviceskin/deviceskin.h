@@ -115,21 +115,21 @@ private:
     QPixmap skinImageClosed;
     QPixmap skinCursor;
     QWidget *parent;
-    QWidget  *m_view;
-    QWidget *m_secondaryView;
+    QWidget *m_view = nullptr;
+    QWidget *m_secondaryView = nullptr;
     QPoint parentpos;
     QPoint clickPos;
-    bool buttonPressed;
-    int buttonIndex;
+    bool buttonPressed = false;
+    int buttonIndex = 0;
     QTransform transform;
-    qvfb_internal::CursorWindow *cursorw;
+    qvfb_internal::CursorWindow *cursorw = nullptr;
 
-    bool joydown;
+    bool joydown = false;
     QTimer *t_skinkey;
     QTimer *t_parentmove;
-    int onjoyrelease;
+    int onjoyrelease = 0;
 
-    bool flipped_open;
+    bool flipped_open = true;
 };
 
 QT_END_NAMESPACE
