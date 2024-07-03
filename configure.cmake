@@ -48,6 +48,10 @@ qt_feature("clang" PRIVATE
     LABEL "libclang found"
     CONDITION TEST_libclang
 )
+qt_feature("clang-rtti" PRIVATE
+    LABEL "libclang has RTTI support"
+    CONDITION QT_FEATURE_clang AND LLVM_ENABLE_RTTI
+)
 qt_feature("qdoc" PRIVATE
     LABEL "QDoc"
     PURPOSE "QDoc is Qt's documentation generator for C++ and QML projects."
@@ -55,7 +59,7 @@ qt_feature("qdoc" PRIVATE
 )
 qt_feature("clangcpp" PRIVATE
     LABEL "Clang-based lupdate parser"
-    CONDITION QT_FEATURE_clang AND (NOT MSVC OR MSVC_VERSION LESS "1939" OR QT_LIB_CLANG_VERSION_MAJOR GREATER_EQUAL "16")
+    CONDITION QT_FEATURE_clang_rtti AND (NOT MSVC OR MSVC_VERSION LESS "1939" OR QT_LIB_CLANG_VERSION_MAJOR GREATER_EQUAL "16")
 )
 qt_feature("designer" PRIVATE
     LABEL "Qt Widgets Designer"
@@ -145,9 +149,20 @@ qt_configure_add_report_entry(
     MESSAGE "QDoc will not be compiled because it requires libclang ${QDOC_MINIMUM_CLANG_VERSION} or newer."
     CONDITION QT_LIB_CLANG_VERSION VERSION_LESS QDOC_MINIMUM_CLANG_VERSION
 )
+
+set(clangcpp_warn_msg "")
+if(QT_FEATURE_clang AND NOT QT_FEATURE_clang_rtti)
+    string(APPEND clangcpp_warn_msg
+        "LLVM was found, but it was not built with RTTI support. "
+    )
+endif()
+string(APPEND clangcpp_warn_msg
+    "The Clang-based lupdate parser will not be available. "
+    "Suitable LLVM and Clang C++ libraries have not been found. "
+    "You will need to set the FEATURE_clangcpp CMake variable to ON to re-evaluate this check."
+)
 qt_configure_add_report_entry(
     TYPE WARNING
-    MESSAGE "Clang-based lupdate parser will not be available. Suitable LLVM and Clang C++ libraries have not been found.
-You will need to set the FEATURE_clangcpp CMake variable to ON to re-evaluate this check."
+    MESSAGE "${clangcpp_warn_msg}"
     CONDITION NOT QT_FEATURE_clangcpp
 )
