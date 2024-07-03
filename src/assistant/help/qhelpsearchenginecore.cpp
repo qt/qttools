@@ -7,6 +7,7 @@
 #include "qhelpsearchindexreader_p.h"
 #include "qhelpsearchindexwriter_p.h"
 
+#include <QtCore/private/qobject_p.h>
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
 #include <QtCore/qfileinfo.h>
@@ -18,8 +19,10 @@ QT_BEGIN_NAMESPACE
 using namespace fulltextsearch;
 using namespace Qt::StringLiterals;
 
-class QHelpSearchEngineCorePrivate
+class QHelpSearchEngineCorePrivate : public QObjectPrivate
 {
+    Q_DECLARE_PUBLIC(QHelpSearchEngineCore)
+
 public:
     QString indexFilesFolder() const
     {
@@ -34,6 +37,7 @@ public:
 
     void updateIndex(bool reindex)
     {
+        Q_Q(QHelpSearchEngineCore);
         if (m_helpEngine.isNull())
             return;
 
@@ -55,6 +59,7 @@ public:
 
     void search(const QString &searchInput)
     {
+        Q_Q(QHelpSearchEngineCore);
         if (m_helpEngine.isNull())
             return;
 
@@ -74,8 +79,6 @@ public:
         m_indexReader->search(m_helpEngine->collectionFile(), indexFilesFolder(), searchInput,
                               m_helpEngine->usesFilterEngine());
     }
-
-    QHelpSearchEngineCore *q = nullptr;
 
     bool m_isIndexingScheduled = false;
 
@@ -142,16 +145,16 @@ public:
 */
 
 /*!
-    Constructs a new search engine. The search engine uses the given
-    \a helpEngine to access the documentation that needs to be indexed.
-    The QHelpEngine's setupFinished() signal is automatically connected to the
+    Constructs a new search engine with the given \a parent. The search engine
+    uses the given \a helpEngine to access the documentation that needs to be indexed.
+    The QHelpEngineCore's setupFinished() signal is automatically connected to the
     QHelpSearchEngineCore's indexing function, so that new documentation will
     be indexed after the signal is emitted.
 */
-QHelpSearchEngineCore::QHelpSearchEngineCore(QHelpEngineCore *helpEngine)
-    : d(new QHelpSearchEngineCorePrivate)
+QHelpSearchEngineCore::QHelpSearchEngineCore(QHelpEngineCore *helpEngine, QObject *parent)
+    : QObject(*new QHelpSearchEngineCorePrivate, parent)
 {
-    d->q = this;
+    Q_D(QHelpSearchEngineCore);
     d->m_helpEngine = helpEngine;
     connect(helpEngine, &QHelpEngineCore::setupFinished,
             this, &QHelpSearchEngineCore::scheduleIndexDocumentation);
@@ -160,16 +163,14 @@ QHelpSearchEngineCore::QHelpSearchEngineCore(QHelpEngineCore *helpEngine)
 /*!
     Destructs the search engine.
 */
-QHelpSearchEngineCore::~QHelpSearchEngineCore()
-{
-    delete d;
-}
+QHelpSearchEngineCore::~QHelpSearchEngineCore() = default;
 
 /*!
     Returns the number of results the search engine found.
 */
 int QHelpSearchEngineCore::searchResultCount() const
 {
+    Q_D(const QHelpSearchEngineCore);
     return d->m_indexReader ? d->m_indexReader->searchResultCount() : 0;;
 }
 
@@ -179,6 +180,7 @@ int QHelpSearchEngineCore::searchResultCount() const
 */
 QList<QHelpSearchResult> QHelpSearchEngineCore::searchResults(int start, int end) const
 {
+    Q_D(const QHelpSearchEngineCore);
     return d->m_indexReader ? d->m_indexReader->searchResults(start, end)
                             : QList<QHelpSearchResult>();
 }
@@ -188,6 +190,7 @@ QList<QHelpSearchResult> QHelpSearchEngineCore::searchResults(int start, int end
 */
 QString QHelpSearchEngineCore::searchInput() const
 {
+    Q_D(const QHelpSearchEngineCore);
     return d->m_searchInput;
 }
 
@@ -196,6 +199,7 @@ QString QHelpSearchEngineCore::searchInput() const
 */
 void QHelpSearchEngineCore::reindexDocumentation()
 {
+    Q_D(QHelpSearchEngineCore);
     d->updateIndex(true);
 }
 
@@ -204,6 +208,7 @@ void QHelpSearchEngineCore::reindexDocumentation()
 */
 void QHelpSearchEngineCore::cancelIndexing()
 {
+    Q_D(QHelpSearchEngineCore);
     if (d->m_indexWriter)
         d->m_indexWriter->cancelIndexing();
 }
@@ -213,6 +218,7 @@ void QHelpSearchEngineCore::cancelIndexing()
 */
 void QHelpSearchEngineCore::cancelSearching()
 {
+    Q_D(QHelpSearchEngineCore);
     if (d->m_indexReader)
         d->m_indexReader->cancelSearching();
 }
@@ -235,6 +241,7 @@ void QHelpSearchEngineCore::cancelSearching()
 */
 void QHelpSearchEngineCore::search(const QString &searchInput)
 {
+    Q_D(QHelpSearchEngineCore);
     d->search(searchInput);
 }
 
@@ -243,11 +250,13 @@ void QHelpSearchEngineCore::search(const QString &searchInput)
 */
 void QHelpSearchEngineCore::scheduleIndexDocumentation()
 {
+    Q_D(QHelpSearchEngineCore);
     if (d->m_isIndexingScheduled)
         return;
 
     d->m_isIndexingScheduled = true;
     QTimer::singleShot(0, this, [this] {
+        Q_D(QHelpSearchEngineCore);
         d->m_isIndexingScheduled = false;
         d->updateIndex(false);
     });
