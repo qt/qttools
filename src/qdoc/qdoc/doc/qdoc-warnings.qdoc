@@ -517,26 +517,16 @@
     did not include one for \l {enum-command}{<enum>}, which is named in the
     declaration of <enum list> in the header file.
 
-    \section1 Failed to find index: <filename>
+    \section1 Failed to find qhp.<project>.subprojects.<subproject>.indexTitle
 
-    Example:
+    QDoc failed to find a title for a page designated as the index page
+    for <subproject> in the Qt help project configuration.
 
-    \badcode
-    Failed to find index: path/to/QtCrator/appmanplugin/manual.index
-    \endcode
+    Subproject index titles must be local to the current documentation project.
+    Using a page title from another project, loaded as a dependency, also
+    results in this warning.
 
-    In this case, it clearly means the indexes variable contains a
-    typo in the path of the index file.
-
-    Incorrect:
-      \badcode
-      indexes += path/to/QtCrator/appmanplugin/manual.index
-      \endcode
-
-    Correct:
-      \badcode
-      indexes += path/to/QtCreator/appmanplugin/manual.index
-      \endcode
+    For more information, see \l {Creating Help Project Files}.
 
     \section1 \\generatelist <group> is empty
 
