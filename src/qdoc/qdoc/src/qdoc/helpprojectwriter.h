@@ -25,6 +25,7 @@ struct SubProject
     NodeTypeSet m_selectors {};
     bool m_sortPages {};
     QString m_type {};
+    QString m_prefix {};
     QHash<QString, const Node *> m_nodes {};
     QStringList m_groups {};
 };

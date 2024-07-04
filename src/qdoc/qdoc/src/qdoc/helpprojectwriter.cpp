@@ -86,6 +86,8 @@ void HelpProjectWriter::reset(const QString &defaultFileName, Generator *g)
             subproject.m_sortPages = config.get(subprefix + "sortPages").asBool();
             subproject.m_type = config.get(subprefix + "type").asString();
             readSelectors(subproject, config.get(subprefix + "selectors").asStringList());
+            subprefix.chop(1);
+            subproject.m_prefix = subprefix; // Stored for error reporting purposes
             project.m_subprojects.append(subproject);
         }
 
@@ -667,14 +669,17 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                     atom = atom->next();
                 }
             } else
-                rootNode->doc().location().warning(
-                        QStringLiteral("Failed to find index: %1").arg(subproject.m_indexTitle));
+                Config::instance().location().warning(
+                        "Failed to find %1.indexTitle '%2'"_L1.arg(subproject.m_prefix, subproject.m_indexTitle));
 
         } else {
 
             writer.writeStartElement("section");
             QString indexPath = m_gen->fullDocumentLocation(
                     m_qdb->findNodeForTarget(subproject.m_indexTitle, nullptr));
+            if (indexPath.isEmpty())
+                Config::instance().location().warning(
+                        "Failed to find %1.indexTitle '%2'"_L1.arg(subproject.m_prefix, subproject.m_indexTitle));
             writer.writeAttribute("ref", indexPath);
             writer.writeAttribute("title", subproject.m_title);
 
