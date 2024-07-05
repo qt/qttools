@@ -924,7 +924,7 @@ void QtTreePropertyBrowser::setItemVisible(QtBrowserItem *item, bool visible)
     \sa backgroundColor(), calculatedBackgroundColor()
 */
 
-void QtTreePropertyBrowser::setBackgroundColor(QtBrowserItem *item, const QColor &color)
+void QtTreePropertyBrowser::setBackgroundColor(QtBrowserItem *item, QColor color)
 {
     if (!d_ptr->m_indexToItem.contains(item))
         return;

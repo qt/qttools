@@ -276,21 +276,21 @@ public:
     void slotValueChanged(QtProperty *property, const QKeySequence &val);
     void slotValueChanged(QtProperty *property, const QChar &val);
     void slotValueChanged(QtProperty *property, const QLocale &val);
-    void slotValueChanged(QtProperty *property, const QPoint &val);
-    void slotValueChanged(QtProperty *property, const QPointF &val);
-    void slotValueChanged(QtProperty *property, const QSize &val);
-    void slotRangeChanged(QtProperty *property, const QSize &min, const QSize &max);
+    void slotValueChanged(QtProperty *property, QPoint val);
+    void slotValueChanged(QtProperty *property, QPointF val);
+    void slotValueChanged(QtProperty *property, QSize val);
+    void slotRangeChanged(QtProperty *property, QSize min, QSize max);
     void slotValueChanged(QtProperty *property, const QSizeF &val);
     void slotRangeChanged(QtProperty *property, const QSizeF &min, const QSizeF &max);
-    void slotValueChanged(QtProperty *property, const QRect &val);
-    void slotConstraintChanged(QtProperty *property, const QRect &val);
+    void slotValueChanged(QtProperty *property, QRect val);
+    void slotConstraintChanged(QtProperty *property, QRect val);
     void slotValueChanged(QtProperty *property, const QRectF &val);
     void slotConstraintChanged(QtProperty *property, const QRectF &val);
     void slotValueChanged(QtProperty *property, const QColor &val);
     void slotEnumChanged(QtProperty *property, int val);
     void slotEnumNamesChanged(QtProperty *property, const QStringList &enumNames);
     void slotEnumIconsChanged(QtProperty *property, const QMap<int, QIcon> &enumIcons);
-    void slotValueChanged(QtProperty *property, const QSizePolicy &val);
+    void slotValueChanged(QtProperty *property, QSizePolicy val);
     void slotValueChanged(QtProperty *property, const QFont &val);
     void slotValueChanged(QtProperty *property, const QCursor &val);
     void slotFlagChanged(QtProperty *property, int val);
@@ -531,22 +531,22 @@ void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, con
     valueChanged(property, QVariant(val));
 }
 
-void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, const QPoint &val)
+void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, QPoint val)
 {
     valueChanged(property, QVariant(val));
 }
 
-void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, const QPointF &val)
+void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, QPointF val)
 {
     valueChanged(property, QVariant(val));
 }
 
-void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, const QSize &val)
+void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, QSize val)
 {
     valueChanged(property, QVariant(val));
 }
 
-void QtVariantPropertyManagerPrivate::slotRangeChanged(QtProperty *property, const QSize &min, const QSize &max)
+void QtVariantPropertyManagerPrivate::slotRangeChanged(QtProperty *property, QSize min, QSize max)
 {
     if (QtVariantProperty *varProp = m_internalToProperty.value(property, nullptr)) {
         emit q_ptr->attributeChanged(varProp, m_minimumAttribute, QVariant(min));
@@ -567,12 +567,12 @@ void QtVariantPropertyManagerPrivate::slotRangeChanged(QtProperty *property, con
     }
 }
 
-void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, const QRect &val)
+void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, QRect val)
 {
     valueChanged(property, QVariant(val));
 }
 
-void QtVariantPropertyManagerPrivate::slotConstraintChanged(QtProperty *property, const QRect &constraint)
+void QtVariantPropertyManagerPrivate::slotConstraintChanged(QtProperty *property, QRect constraint)
 {
     if (QtVariantProperty *varProp = m_internalToProperty.value(property, nullptr))
         emit q_ptr->attributeChanged(varProp, m_constraintAttribute, QVariant(constraint));
@@ -609,7 +609,7 @@ void QtVariantPropertyManagerPrivate::slotEnumIconsChanged(QtProperty *property,
     }
 }
 
-void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, const QSizePolicy &val)
+void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, QSizePolicy val)
 {
     valueChanged(property, QVariant(val));
 }
@@ -1009,7 +1009,7 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
     d_ptr->m_typeToPropertyManager[QMetaType::QPoint] = pointPropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QPoint] = QMetaType::QPoint;
     connect(pointPropertyManager, &QtPointPropertyManager::valueChanged,
-            this, [this](QtProperty *property, const QPoint &value)
+            this, [this](QtProperty *property, QPoint value)
             { d_ptr->slotValueChanged(property, value); });
     connect(pointPropertyManager->subIntPropertyManager(), &QtIntPropertyManager::valueChanged,
             this, [this](QtProperty *property, int value)
@@ -1027,7 +1027,7 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::QPointF][d_ptr->m_decimalsAttribute] =
             QMetaType::Int;
     connect(pointFPropertyManager, &QtPointFPropertyManager::valueChanged,
-            this, [this](QtProperty *property, const QPointF &value)
+            this, [this](QtProperty *property, QPointF value)
             { d_ptr->slotValueChanged(property, value); });
     connect(pointFPropertyManager, &QtPointFPropertyManager::decimalsChanged,
             this, [this](QtProperty *property, int value)
@@ -1050,10 +1050,10 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::QSize][d_ptr->m_maximumAttribute] =
             QMetaType::QSize;
     connect(sizePropertyManager, &QtSizePropertyManager::valueChanged,
-            this, [this](QtProperty *property, const QSize &value)
+            this, [this](QtProperty *property, QSize value)
             { d_ptr->slotValueChanged(property, value); });
     connect(sizePropertyManager, &QtSizePropertyManager::rangeChanged,
-            this, [this](QtProperty *property, const QSize &min, const QSize &max)
+            this, [this](QtProperty *property, QSize min, QSize max)
             { d_ptr->slotRangeChanged(property, min, max); });
     connect(sizePropertyManager->subIntPropertyManager(), &QtIntPropertyManager::valueChanged,
             this, [this](QtProperty *property, int value)
@@ -1102,10 +1102,10 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::QRect][d_ptr->m_constraintAttribute] =
             QMetaType::QRect;
     connect(rectPropertyManager, &QtRectPropertyManager::valueChanged,
-            this, [this](QtProperty *property, const QRect &value)
+            this, [this](QtProperty *property, QRect value)
             { d_ptr->slotValueChanged(property, value); });
     connect(rectPropertyManager, &QtRectPropertyManager::constraintChanged,
-            this, [this](QtProperty *property, const QRect &value)
+            this, [this](QtProperty *property, QRect value)
             { d_ptr->slotConstraintChanged(property, value); });
     connect(rectPropertyManager->subIntPropertyManager(), &QtIntPropertyManager::valueChanged,
             this, [this](QtProperty *property, int value)
@@ -1184,7 +1184,7 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
     d_ptr->m_typeToPropertyManager[QMetaType::QSizePolicy] = sizePolicyPropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QSizePolicy] = QMetaType::QSizePolicy;
     connect(sizePolicyPropertyManager, &QtSizePolicyPropertyManager::valueChanged,
-            this, [this](QtProperty *property, const QSizePolicy &value)
+            this, [this](QtProperty *property, QSizePolicy value)
             { d_ptr->slotValueChanged(property, value); });
     connect(sizePolicyPropertyManager->subIntPropertyManager(), &QtIntPropertyManager::valueChanged,
             this, [this](QtProperty *property, int value)
