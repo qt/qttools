@@ -12,7 +12,7 @@ class QHelpContentItemPrivate;
 class QString;
 class QUrl;
 
-class QHELP_EXPORT QHelpContentItem
+class QHELP_EXPORT QHelpContentItem final
 {
     Q_DISABLE_COPY_MOVE(QHelpContentItem)
 public:
