@@ -58,7 +58,7 @@ public:
     bool isItemVisible(QtBrowserItem *item) const;
     void setItemVisible(QtBrowserItem *item, bool visible);
 
-    void setBackgroundColor(QtBrowserItem *item, const QColor &color);
+    void setBackgroundColor(QtBrowserItem *item, QColor color);
     QColor backgroundColor(QtBrowserItem *item) const;
     QColor calculatedBackgroundColor(QtBrowserItem *item) const;
 

@@ -160,7 +160,7 @@ QIcon QtPropertyBrowserUtils::brushValueIcon(const QBrush &b)
     return QIcon(brushValuePixmap(b));
 }
 
-QString QtPropertyBrowserUtils::colorValueText(const QColor &c)
+QString QtPropertyBrowserUtils::colorValueText(QColor c)
 {
     return QCoreApplication::translate("QtPropertyBrowserUtils", "[%1, %2, %3] (%4)")
            .arg(c.red()).arg(c.green()).arg(c.blue()).arg(c.alpha());

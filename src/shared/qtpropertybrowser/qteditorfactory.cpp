@@ -1086,10 +1086,10 @@ QtDateEditFactory::~QtDateEditFactory()
 void QtDateEditFactory::connectPropertyManager(QtDatePropertyManager *manager)
 {
     connect(manager, &QtDatePropertyManager::valueChanged,
-            this, [this](QtProperty *property, const QDate &value)
+            this, [this](QtProperty *property, QDate value)
             { d_ptr->slotPropertyChanged(property, value); });
     connect(manager, &QtDatePropertyManager::rangeChanged,
-            this, [this](QtProperty *property, const QDate &min, const QDate &max)
+            this, [this](QtProperty *property, QDate min, QDate max)
             { d_ptr->slotRangeChanged(property, min, max); });
 }
 
@@ -1108,7 +1108,7 @@ QWidget *QtDateEditFactory::createEditor(QtDatePropertyManager *manager, QtPrope
     editor->setDate(manager->value(property));
 
     connect(editor, &QDateEdit::dateChanged,
-            this, [this](const QDate &value) { d_ptr->slotSetValue(value); });
+            this, [this](QDate value) { d_ptr->slotSetValue(value); });
     connect(editor, &QObject::destroyed,
             this, [this](QObject *object) { d_ptr->slotEditorDestroyed(object); });
     return editor;
@@ -1201,7 +1201,7 @@ QtTimeEditFactory::~QtTimeEditFactory()
 void QtTimeEditFactory::connectPropertyManager(QtTimePropertyManager *manager)
 {
     connect(manager, &QtTimePropertyManager::valueChanged,
-            this, [this](QtProperty *property, const QTime &value)
+            this, [this](QtProperty *property, QTime value)
             { d_ptr->slotPropertyChanged(property, value); });
 }
 
@@ -1218,7 +1218,7 @@ QWidget *QtTimeEditFactory::createEditor(QtTimePropertyManager *manager, QtPrope
     editor->setTime(manager->value(property));
 
     connect(editor, &QTimeEdit::timeChanged,
-            this, [this](const QTime &value) { d_ptr->slotSetValue(value); });
+            this, [this](QTime value) { d_ptr->slotSetValue(value); });
     connect(editor, &QObject::destroyed,
             this, [this](QObject *object) { d_ptr->slotEditorDestroyed(object); });
     return editor;
@@ -2084,7 +2084,7 @@ public:
     bool eventFilter(QObject *obj, QEvent *ev) override;
 
 public Q_SLOTS:
-    void setValue(const QColor &value);
+    void setValue(QColor value);
 
 private Q_SLOTS:
     void buttonClicked();
@@ -2124,7 +2124,7 @@ QtColorEditWidget::QtColorEditWidget(QWidget *parent) :
     m_label->setText(QtPropertyBrowserUtils::colorValueText(m_color));
 }
 
-void QtColorEditWidget::setValue(const QColor &c)
+void QtColorEditWidget::setValue(QColor c)
 {
     if (m_color != c) {
         m_color = c;
@@ -2174,12 +2174,12 @@ class QtColorEditorFactoryPrivate : public EditorFactoryPrivate<QtColorEditWidge
     Q_DECLARE_PUBLIC(QtColorEditorFactory)
 public:
 
-    void slotPropertyChanged(QtProperty *property, const QColor &value);
-    void slotSetValue(const QColor &value);
+    void slotPropertyChanged(QtProperty *property, QColor value);
+    void slotSetValue(QColor value);
 };
 
 void QtColorEditorFactoryPrivate::slotPropertyChanged(QtProperty *property,
-                const QColor &value)
+                                                      QColor value)
 {
     const auto it = m_createdEditors.constFind(property);
     if (it == m_createdEditors.constEnd())
@@ -2189,7 +2189,7 @@ void QtColorEditorFactoryPrivate::slotPropertyChanged(QtProperty *property,
         e->setValue(value);
 }
 
-void QtColorEditorFactoryPrivate::slotSetValue(const QColor &value)
+void QtColorEditorFactoryPrivate::slotSetValue(QColor value)
 {
     QObject *object = q_ptr->sender();
     for (auto itEditor = m_editorToProperty.cbegin(), ecend = m_editorToProperty.cend(); itEditor != ecend; ++itEditor)
@@ -2241,7 +2241,7 @@ QtColorEditorFactory::~QtColorEditorFactory()
 void QtColorEditorFactory::connectPropertyManager(QtColorPropertyManager *manager)
 {
     connect(manager, &QtColorPropertyManager::valueChanged,
-            this, [this](QtProperty *property, const QColor &value)
+            this, [this](QtProperty *property, QColor value)
             { d_ptr->slotPropertyChanged(property, value); });
 }
 
@@ -2256,7 +2256,7 @@ QWidget *QtColorEditorFactory::createEditor(QtColorPropertyManager *manager,
     QtColorEditWidget *editor = d_ptr->createEditor(property, parent);
     editor->setValue(manager->value(property));
     connect(editor, &QtColorEditWidget::valueChanged,
-            this, [this](const QColor &value) { d_ptr->slotSetValue(value); });
+            this, [this](QColor value) { d_ptr->slotSetValue(value); });
     connect(editor, &QObject::destroyed,
             this, [this](QObject *object) { d_ptr->slotEditorDestroyed(object); });
     return editor;

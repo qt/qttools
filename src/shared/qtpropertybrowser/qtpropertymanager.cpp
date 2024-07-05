@@ -2598,7 +2598,7 @@ QString QtPointPropertyManager::valueText(const QtProperty *property) const
 
     \sa value(), valueChanged()
 */
-void QtPointPropertyManager::setValue(QtProperty *property, const QPoint &val)
+void QtPointPropertyManager::setValue(QtProperty *property, QPoint val)
 {
     const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
@@ -2837,7 +2837,7 @@ QString QtPointFPropertyManager::valueText(const QtProperty *property) const
 
     \sa value(), valueChanged()
 */
-void QtPointFPropertyManager::setValue(QtProperty *property, const QPointF &val)
+void QtPointFPropertyManager::setValue(QtProperty *property, QPointF val)
 {
     const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
@@ -2944,9 +2944,9 @@ public:
 
     void slotIntChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
-    void setValue(QtProperty *property, const QSize &val);
+    void setValue(QtProperty *property, QSize val);
     void setRange(QtProperty *property,
-                const QSize &minVal, const QSize &maxVal, const QSize &val);
+                  QSize minVal, QSize maxVal, QSize val);
 
     struct Data
     {
@@ -2955,8 +2955,8 @@ public:
         QSize maxVal{INT_MAX, INT_MAX};
         QSize minimumValue() const { return minVal; }
         QSize maximumValue() const { return maxVal; }
-        void setMinimumValue(const QSize &newMinVal) { setSizeMinimumData(this, newMinVal); }
-        void setMaximumValue(const QSize &newMaxVal) { setSizeMaximumData(this, newMaxVal); }
+        void setMinimumValue(QSize newMinVal) { setSizeMinimumData(this, newMinVal); }
+        void setMaximumValue(QSize newMaxVal) { setSizeMaximumData(this, newMaxVal); }
     };
 
     QHash<const QtProperty *, Data> m_values;
@@ -2994,14 +2994,14 @@ void QtSizePropertyManagerPrivate::slotPropertyDestroyed(QtProperty *property)
     }
 }
 
-void QtSizePropertyManagerPrivate::setValue(QtProperty *property, const QSize &val)
+void QtSizePropertyManagerPrivate::setValue(QtProperty *property, QSize val)
 {
     m_intPropertyManager->setValue(m_propertyToW.value(property), val.width());
     m_intPropertyManager->setValue(m_propertyToH.value(property), val.height());
 }
 
 void QtSizePropertyManagerPrivate::setRange(QtProperty *property,
-                const QSize &minVal, const QSize &maxVal, const QSize &val)
+                                            QSize minVal, QSize maxVal, QSize val)
 {
     QtProperty *wProperty = m_propertyToW.value(property);
     QtProperty *hProperty = m_propertyToH.value(property);
@@ -3157,9 +3157,9 @@ QString QtSizePropertyManager::valueText(const QtProperty *property) const
 
     \sa value(), setRange(), valueChanged()
 */
-void QtSizePropertyManager::setValue(QtProperty *property, const QSize &val)
+void QtSizePropertyManager::setValue(QtProperty *property, QSize val)
 {
-    setValueInRange<const QSize &, QtSizePropertyManagerPrivate, QtSizePropertyManager, const QSize>(this, d_ptr.data(),
+    setValueInRange<QSize, QtSizePropertyManagerPrivate, QtSizePropertyManager, const QSize>(this, d_ptr.data(),
                 &QtSizePropertyManager::propertyChanged,
                 &QtSizePropertyManager::valueChanged,
                 property, val, &QtSizePropertyManagerPrivate::setValue);
@@ -3174,9 +3174,9 @@ void QtSizePropertyManager::setValue(QtProperty *property, const QSize &val)
 
     \sa minimum(), setRange(), rangeChanged()
 */
-void QtSizePropertyManager::setMinimum(QtProperty *property, const QSize &minVal)
+void QtSizePropertyManager::setMinimum(QtProperty *property, QSize minVal)
 {
-    setBorderValue<const QSize &, QtSizePropertyManagerPrivate, QtSizePropertyManager, QSize, QtSizePropertyManagerPrivate::Data>(this, d_ptr.data(),
+    setBorderValue<QSize, QtSizePropertyManagerPrivate, QtSizePropertyManager, QSize, QtSizePropertyManagerPrivate::Data>(this, d_ptr.data(),
                 &QtSizePropertyManager::propertyChanged,
                 &QtSizePropertyManager::valueChanged,
                 &QtSizePropertyManager::rangeChanged,
@@ -3195,9 +3195,9 @@ void QtSizePropertyManager::setMinimum(QtProperty *property, const QSize &minVal
 
     \sa maximum(), setRange(), rangeChanged()
 */
-void QtSizePropertyManager::setMaximum(QtProperty *property, const QSize &maxVal)
+void QtSizePropertyManager::setMaximum(QtProperty *property, QSize maxVal)
 {
-    setBorderValue<const QSize &, QtSizePropertyManagerPrivate, QtSizePropertyManager, QSize, QtSizePropertyManagerPrivate::Data>(this, d_ptr.data(),
+    setBorderValue<QSize, QtSizePropertyManagerPrivate, QtSizePropertyManager, QSize, QtSizePropertyManagerPrivate::Data>(this, d_ptr.data(),
                 &QtSizePropertyManager::propertyChanged,
                 &QtSizePropertyManager::valueChanged,
                 &QtSizePropertyManager::rangeChanged,
@@ -3221,9 +3221,9 @@ void QtSizePropertyManager::setMaximum(QtProperty *property, const QSize &maxVal
 
     \sa setMinimum(), setMaximum(), rangeChanged()
 */
-void QtSizePropertyManager::setRange(QtProperty *property, const QSize &minVal, const QSize &maxVal)
+void QtSizePropertyManager::setRange(QtProperty *property, QSize minVal, QSize maxVal)
 {
-    setBorderValues<const QSize &, QtSizePropertyManagerPrivate, QtSizePropertyManager, QSize>(this, d_ptr.data(),
+    setBorderValues<QSize, QtSizePropertyManagerPrivate, QtSizePropertyManager, QSize>(this, d_ptr.data(),
                 &QtSizePropertyManager::propertyChanged,
                 &QtSizePropertyManager::valueChanged,
                 &QtSizePropertyManager::rangeChanged,
@@ -3286,9 +3286,9 @@ public:
 
     void slotDoubleChanged(QtProperty *property, double value);
     void slotPropertyDestroyed(QtProperty *property);
-    void setValue(QtProperty *property, const QSizeF &val);
+    void setValue(QtProperty *property, QSizeF val);
     void setRange(QtProperty *property,
-                const QSizeF &minVal, const QSizeF &maxVal, const QSizeF &val);
+                  QSizeF minVal, QSizeF maxVal, QSizeF val);
 
     struct Data
     {
@@ -3298,8 +3298,8 @@ public:
         int decimals{2};
         QSizeF minimumValue() const { return minVal; }
         QSizeF maximumValue() const { return maxVal; }
-        void setMinimumValue(const QSizeF &newMinVal) { setSizeMinimumData(this, newMinVal); }
-        void setMaximumValue(const QSizeF &newMaxVal) { setSizeMaximumData(this, newMaxVal); }
+        void setMinimumValue(QSizeF newMinVal) { setSizeMinimumData(this, newMinVal); }
+        void setMaximumValue(QSizeF newMaxVal) { setSizeMaximumData(this, newMaxVal); }
     };
 
     QHash<const QtProperty *, Data> m_values;
@@ -3337,14 +3337,14 @@ void QtSizeFPropertyManagerPrivate::slotPropertyDestroyed(QtProperty *property)
     }
 }
 
-void QtSizeFPropertyManagerPrivate::setValue(QtProperty *property, const QSizeF &val)
+void QtSizeFPropertyManagerPrivate::setValue(QtProperty *property, QSizeF val)
 {
     m_doublePropertyManager->setValue(m_propertyToW.value(property), val.width());
     m_doublePropertyManager->setValue(m_propertyToH.value(property), val.height());
 }
 
 void QtSizeFPropertyManagerPrivate::setRange(QtProperty *property,
-                const QSizeF &minVal, const QSizeF &maxVal, const QSizeF &val)
+                                             QSizeF minVal, QSizeF maxVal, QSizeF val)
 {
     m_doublePropertyManager->setRange(m_propertyToW[property], minVal.width(), maxVal.width());
     m_doublePropertyManager->setValue(m_propertyToW[property], val.width());
@@ -3520,9 +3520,9 @@ QString QtSizeFPropertyManager::valueText(const QtProperty *property) const
 
     \sa value(), setRange(), valueChanged()
 */
-void QtSizeFPropertyManager::setValue(QtProperty *property, const QSizeF &val)
+void QtSizeFPropertyManager::setValue(QtProperty *property, QSizeF val)
 {
-    setValueInRange<const QSizeF &, QtSizeFPropertyManagerPrivate, QtSizeFPropertyManager, QSizeF>(this, d_ptr.data(),
+    setValueInRange<QSizeF, QtSizeFPropertyManagerPrivate, QtSizeFPropertyManager, QSizeF>(this, d_ptr.data(),
                 &QtSizeFPropertyManager::propertyChanged,
                 &QtSizeFPropertyManager::valueChanged,
                 property, val, &QtSizeFPropertyManagerPrivate::setValue);
@@ -3571,9 +3571,9 @@ void QtSizeFPropertyManager::setDecimals(QtProperty *property, int prec)
 
     \sa minimum(), setRange(), rangeChanged()
 */
-void QtSizeFPropertyManager::setMinimum(QtProperty *property, const QSizeF &minVal)
+void QtSizeFPropertyManager::setMinimum(QtProperty *property, QSizeF minVal)
 {
-    setBorderValue<const QSizeF &, QtSizeFPropertyManagerPrivate, QtSizeFPropertyManager, QSizeF, QtSizeFPropertyManagerPrivate::Data>(this, d_ptr.data(),
+    setBorderValue<QSizeF, QtSizeFPropertyManagerPrivate, QtSizeFPropertyManager, QSizeF, QtSizeFPropertyManagerPrivate::Data>(this, d_ptr.data(),
                 &QtSizeFPropertyManager::propertyChanged,
                 &QtSizeFPropertyManager::valueChanged,
                 &QtSizeFPropertyManager::rangeChanged,
@@ -3592,9 +3592,9 @@ void QtSizeFPropertyManager::setMinimum(QtProperty *property, const QSizeF &minV
 
     \sa maximum(), setRange(), rangeChanged()
 */
-void QtSizeFPropertyManager::setMaximum(QtProperty *property, const QSizeF &maxVal)
+void QtSizeFPropertyManager::setMaximum(QtProperty *property, QSizeF maxVal)
 {
-    setBorderValue<const QSizeF &, QtSizeFPropertyManagerPrivate, QtSizeFPropertyManager, QSizeF, QtSizeFPropertyManagerPrivate::Data>(this, d_ptr.data(),
+    setBorderValue<QSizeF, QtSizeFPropertyManagerPrivate, QtSizeFPropertyManager, QSizeF, QtSizeFPropertyManagerPrivate::Data>(this, d_ptr.data(),
                 &QtSizeFPropertyManager::propertyChanged,
                 &QtSizeFPropertyManager::valueChanged,
                 &QtSizeFPropertyManager::rangeChanged,
@@ -3618,9 +3618,9 @@ void QtSizeFPropertyManager::setMaximum(QtProperty *property, const QSizeF &maxV
 
     \sa setMinimum(), setMaximum(), rangeChanged()
 */
-void QtSizeFPropertyManager::setRange(QtProperty *property, const QSizeF &minVal, const QSizeF &maxVal)
+void QtSizeFPropertyManager::setRange(QtProperty *property, QSizeF minVal, QSizeF maxVal)
 {
-    setBorderValues<const QSizeF &, QtSizeFPropertyManagerPrivate, QtSizeFPropertyManager, QSizeF>(this, d_ptr.data(),
+    setBorderValues<QSizeF, QtSizeFPropertyManagerPrivate, QtSizeFPropertyManager, QSizeF>(this, d_ptr.data(),
                 &QtSizeFPropertyManager::propertyChanged,
                 &QtSizeFPropertyManager::valueChanged,
                 &QtSizeFPropertyManager::rangeChanged,
@@ -3685,7 +3685,7 @@ public:
 
     void slotIntChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
-    void setConstraint(QtProperty *property, const QRect &constraint, const QRect &val);
+    void setConstraint(QtProperty *property, QRect constraint, QRect val);
 
     struct Data
     {
@@ -3755,7 +3755,7 @@ void QtRectPropertyManagerPrivate::slotPropertyDestroyed(QtProperty *property)
 }
 
 void QtRectPropertyManagerPrivate::setConstraint(QtProperty *property,
-            const QRect &constraint, const QRect &val)
+                                                 QRect constraint, QRect val)
 {
     const bool isNull = constraint.isNull();
     const int left   = isNull ? INT_MIN : constraint.left();
@@ -3912,7 +3912,7 @@ QString QtRectPropertyManager::valueText(const QtProperty *property) const
 
     \sa value(), setConstraint(), valueChanged()
 */
-void QtRectPropertyManager::setValue(QtProperty *property, const QRect &val)
+void QtRectPropertyManager::setValue(QtProperty *property, QRect val)
 {
     const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
@@ -3957,7 +3957,7 @@ void QtRectPropertyManager::setValue(QtProperty *property, const QRect &val)
 
     \sa setValue(), constraint(), constraintChanged()
 */
-void QtRectPropertyManager::setConstraint(QtProperty *property, const QRect &constraint)
+void QtRectPropertyManager::setConstraint(QtProperty *property, QRect constraint)
 {
     const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
@@ -5357,7 +5357,7 @@ QString QtSizePolicyPropertyManager::valueText(const QtProperty *property) const
 
     \sa value(), valueChanged()
 */
-void QtSizePolicyPropertyManager::setValue(QtProperty *property, const QSizePolicy &val)
+void QtSizePolicyPropertyManager::setValue(QtProperty *property, QSizePolicy val)
 {
     const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
@@ -6168,7 +6168,7 @@ QIcon QtColorPropertyManager::valueIcon(const QtProperty *property) const
 
     \sa value(), valueChanged()
 */
-void QtColorPropertyManager::setValue(QtProperty *property, const QColor &val)
+void QtColorPropertyManager::setValue(QtProperty *property, QColor val)
 {
     const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
