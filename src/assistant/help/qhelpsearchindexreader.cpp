@@ -271,12 +271,13 @@ void QHelpSearchIndexReader::run()
 
     lock.relock();
     if (m_cancel) {
-        emit searchingFinished();   // TODO: check this, speed issue while locking???
+        lock.unlock();
+        emit searchingFinished();
         return;
     }
+    m_searchResults.clear();
     lock.unlock();
 
-    m_searchResults.clear();
     reader.searchInDB(searchInput);    // TODO: should this be interruptible as well ???
 
     lock.relock();
