@@ -22,17 +22,17 @@ class QtGradientWidgetPrivate
     QtGradientWidget *q_ptr;
     Q_DECLARE_PUBLIC(QtGradientWidget)
 public:
-    QPointF fromViewport(const QPointF &point) const;
-    QPointF toViewport(const QPointF &point) const;
+    QPointF fromViewport(QPointF point) const;
+    QPointF toViewport(QPointF point) const;
 //    void setupDrag(QtGradientStop *stop, int x);
 
-    QPointF checkRange(const QPointF &point) const;
-    QRectF pointRect(const QPointF &point, double size) const;
+    QPointF checkRange(QPointF point) const;
+    QRectF pointRect(QPointF point, double size) const;
 
     double correctAngle(double angle) const;
     void setAngleConical(double angle);
 
-    void paintPoint(QPainter *painter, const QPointF &point, double size) const;
+    void paintPoint(QPainter *painter, QPointF point, double size) const;
 
     double m_handleSize;
     bool m_backgroundCheckered;
@@ -87,12 +87,12 @@ void QtGradientWidgetPrivate::setAngleConical(double angle)
     emit q_ptr->angleConicalChanged(m_angleConical);
 }
 
-QRectF QtGradientWidgetPrivate::pointRect(const QPointF &point, double size) const
+QRectF QtGradientWidgetPrivate::pointRect(QPointF point, double size) const
 {
     return QRectF(point.x() - size / 2, point.y() - size / 2, size, size);
 }
 
-QPointF QtGradientWidgetPrivate::checkRange(const QPointF &point) const
+QPointF QtGradientWidgetPrivate::checkRange(QPointF point) const
 {
     QPointF p = point;
     if (p.x() > 1)
@@ -106,19 +106,20 @@ QPointF QtGradientWidgetPrivate::checkRange(const QPointF &point) const
     return p;
 }
 
-QPointF QtGradientWidgetPrivate::fromViewport(const QPointF &point) const
+QPointF QtGradientWidgetPrivate::fromViewport(QPointF point) const
 {
     QSize size = q_ptr->size();
     return QPointF(point.x() / size.width(), point.y() / size.height());
 }
 
-QPointF QtGradientWidgetPrivate::toViewport(const QPointF &point) const
+QPointF QtGradientWidgetPrivate::toViewport(QPointF point) const
 {
     QSize size = q_ptr->size();
     return QPointF(point.x() * size.width(), point.y() * size.height());
 }
 
-void QtGradientWidgetPrivate::paintPoint(QPainter *painter, const QPointF &point, double size) const
+void QtGradientWidgetPrivate::paintPoint(QPainter *painter, QPointF point,
+                                         double size) const
 {
     QPointF pf = toViewport(point);
     QRectF rf = pointRect(pf, size);
@@ -655,7 +656,7 @@ QGradient::Spread QtGradientWidget::gradientSpread() const
     return d_ptr->m_gradientSpread;
 }
 
-void QtGradientWidget::setStartLinear(const QPointF &point)
+void QtGradientWidget::setStartLinear(QPointF point)
 {
     if (d_ptr->m_startLinear == point)
         return;
@@ -669,7 +670,7 @@ QPointF QtGradientWidget::startLinear() const
     return d_ptr->m_startLinear;
 }
 
-void QtGradientWidget::setEndLinear(const QPointF &point)
+void QtGradientWidget::setEndLinear(QPointF point)
 {
     if (d_ptr->m_endLinear == point)
         return;
@@ -683,7 +684,7 @@ QPointF QtGradientWidget::endLinear() const
     return d_ptr->m_endLinear;
 }
 
-void QtGradientWidget::setCentralRadial(const QPointF &point)
+void QtGradientWidget::setCentralRadial(QPointF point)
 {
     if (d_ptr->m_centralRadial == point)
         return;
@@ -697,7 +698,7 @@ QPointF QtGradientWidget::centralRadial() const
     return d_ptr->m_centralRadial;
 }
 
-void QtGradientWidget::setFocalRadial(const QPointF &point)
+void QtGradientWidget::setFocalRadial(QPointF point)
 {
     if (d_ptr->m_focalRadial == point)
         return;
@@ -725,7 +726,7 @@ qreal QtGradientWidget::radiusRadial() const
     return d_ptr->m_radiusRadial;
 }
 
-void QtGradientWidget::setCentralConical(const QPointF &point)
+void QtGradientWidget::setCentralConical(QPointF point)
 {
     if (d_ptr->m_centralConical == point)
         return;

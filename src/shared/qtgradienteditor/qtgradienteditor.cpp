@@ -39,20 +39,20 @@ public:
 
     void slotDetailsChanged(bool details);
 
-    void startLinearChanged(const QPointF &point);
-    void endLinearChanged(const QPointF &point);
-    void centralRadialChanged(const QPointF &point);
-    void focalRadialChanged(const QPointF &point);
+    void startLinearChanged(QPointF point);
+    void endLinearChanged(QPointF point);
+    void centralRadialChanged(QPointF point);
+    void focalRadialChanged(QPointF point);
     void radiusRadialChanged(qreal radius);
     void centralConicalChanged(const QPointF &point);
     void angleConicalChanged(qreal angle);
 
-    void setStartLinear(const QPointF &point);
-    void setEndLinear(const QPointF &point);
-    void setCentralRadial(const QPointF &point);
-    void setFocalRadial(const QPointF &point);
+    void setStartLinear(QPointF point);
+    void setEndLinear(QPointF point);
+    void setCentralRadial(QPointF point);
+    void setFocalRadial(QPointF point);
     void setRadiusRadial(qreal radius);
-    void setCentralConical(const QPointF &point);
+    void setCentralConical(QPointF point);
     void setAngleConical(qreal angle);
 
     void setType(QGradient::Type type);
@@ -705,25 +705,25 @@ void QtGradientEditorPrivate::slotAngleConicalChanged(double value)
     updateGradient(true);
 }
 
-void QtGradientEditorPrivate::startLinearChanged(const QPointF &point)
+void QtGradientEditorPrivate::startLinearChanged(QPointF point)
 {
     setStartLinear(point);
     updateGradient(true);
 }
 
-void QtGradientEditorPrivate::endLinearChanged(const QPointF &point)
+void QtGradientEditorPrivate::endLinearChanged(QPointF point)
 {
     setEndLinear(point);
     updateGradient(true);
 }
 
-void QtGradientEditorPrivate::centralRadialChanged(const QPointF &point)
+void QtGradientEditorPrivate::centralRadialChanged(QPointF point)
 {
     setCentralRadial(point);
     updateGradient(true);
 }
 
-void QtGradientEditorPrivate::focalRadialChanged(const QPointF &point)
+void QtGradientEditorPrivate::focalRadialChanged(QPointF point)
 {
     setFocalRadial(point);
     updateGradient(true);
@@ -747,7 +747,7 @@ void QtGradientEditorPrivate::angleConicalChanged(qreal angle)
     updateGradient(true);
 }
 
-void QtGradientEditorPrivate::setStartLinear(const QPointF &point)
+void QtGradientEditorPrivate::setStartLinear(QPointF point)
 {
     if (startLinearXSpinBox)
         startLinearXSpinBox->setValue(point.x());
@@ -755,7 +755,7 @@ void QtGradientEditorPrivate::setStartLinear(const QPointF &point)
         startLinearYSpinBox->setValue(point.y());
 }
 
-void QtGradientEditorPrivate::setEndLinear(const QPointF &point)
+void QtGradientEditorPrivate::setEndLinear(QPointF point)
 {
     if (endLinearXSpinBox)
         endLinearXSpinBox->setValue(point.x());
@@ -763,7 +763,7 @@ void QtGradientEditorPrivate::setEndLinear(const QPointF &point)
         endLinearYSpinBox->setValue(point.y());
 }
 
-void QtGradientEditorPrivate::setCentralRadial(const QPointF &point)
+void QtGradientEditorPrivate::setCentralRadial(QPointF point)
 {
     if (centralRadialXSpinBox)
         centralRadialXSpinBox->setValue(point.x());
@@ -771,7 +771,7 @@ void QtGradientEditorPrivate::setCentralRadial(const QPointF &point)
         centralRadialYSpinBox->setValue(point.y());
 }
 
-void QtGradientEditorPrivate::setFocalRadial(const QPointF &point)
+void QtGradientEditorPrivate::setFocalRadial(QPointF point)
 {
     if (focalRadialXSpinBox)
         focalRadialXSpinBox->setValue(point.x());
@@ -785,7 +785,7 @@ void QtGradientEditorPrivate::setRadiusRadial(qreal radius)
         radiusRadialSpinBox->setValue(radius);
 }
 
-void QtGradientEditorPrivate::setCentralConical(const QPointF &point)
+void QtGradientEditorPrivate::setCentralConical(QPointF point)
 {
     if (centralConicalXSpinBox)
         centralConicalXSpinBox->setValue(point.x());

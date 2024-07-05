@@ -58,10 +58,10 @@ public:
     ColorComponent colorComponent() const;
 
 public slots:
-    void setColor(const QColor &color);
+    void setColor(QColor color);
 
 signals:
-    void colorChanged(const QColor &color);
+    void colorChanged(QColor color);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;

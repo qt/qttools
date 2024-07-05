@@ -21,7 +21,7 @@ public:
     QtGradientStopsModel *gradientModel() const;
 
 private:
-    void setColor(const QColor &color);
+    void setColor(QColor color);
     void setPosition(qreal position);
     friend class QtGradientStopsModel;
     QtGradientStop(QtGradientStopsModel *model = 0);
@@ -48,11 +48,11 @@ public:
     QtGradientStop *lastSelected() const;
     QtGradientStopsModel *clone() const;
 
-    QtGradientStop *addStop(qreal pos, const QColor &color);
+    QtGradientStop *addStop(qreal pos, QColor color);
     void removeStop(QtGradientStop *stop);
     void moveStop(QtGradientStop *stop, qreal newPos);
     void swapStops(QtGradientStop *stop1, QtGradientStop *stop2);
-    void changeStop(QtGradientStop *stop, const QColor &newColor);
+    void changeStop(QtGradientStop *stop, QColor newColor);
     void selectStop(QtGradientStop *stop, bool select);
     void setCurrentStop(QtGradientStop *stop);
 

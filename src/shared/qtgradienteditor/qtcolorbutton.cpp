@@ -97,7 +97,7 @@ QtColorButton::~QtColorButton()
 {
 }
 
-void QtColorButton::setColor(const QColor &color)
+void QtColorButton::setColor(QColor color)
 {
     if (d_ptr->m_color == color)
         return;

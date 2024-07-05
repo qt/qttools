@@ -79,7 +79,7 @@ static QGradient::CoordinateMode stringToGradientCoordinateMode(const QString &n
     return QGradient::StretchToDeviceMode;
 }
 
-static QDomElement saveColor(QDomDocument &doc, const QColor &color)
+static QDomElement saveColor(QDomDocument &doc, QColor color)
 {
     QDomElement colorElem = doc.createElement("colorData"_L1);
 
@@ -243,7 +243,8 @@ void QtGradientUtils::restoreState(QtGradientManager *manager, const QString &st
     }
 }
 
-QPixmap QtGradientUtils::gradientPixmap(const QGradient &gradient, const QSize &size, bool checkeredBackground)
+QPixmap QtGradientUtils::gradientPixmap(const QGradient &gradient, QSize size,
+                                        bool checkeredBackground)
 {
     QImage image(size, QImage::Format_ARGB32);
     QPainter p(&image);

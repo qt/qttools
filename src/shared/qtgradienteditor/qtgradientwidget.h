@@ -31,22 +31,22 @@ public:
     void setGradientSpread(QGradient::Spread spread);
     QGradient::Spread gradientSpread() const;
 
-    void setStartLinear(const QPointF &point);
+    void setStartLinear(QPointF point);
     QPointF startLinear() const;
 
-    void setEndLinear(const QPointF &point);
+    void setEndLinear(QPointF point);
     QPointF endLinear() const;
 
-    void setCentralRadial(const QPointF &point);
+    void setCentralRadial(QPointF point);
     QPointF centralRadial() const;
 
-    void setFocalRadial(const QPointF &point);
+    void setFocalRadial(QPointF point);
     QPointF focalRadial() const;
 
     void setRadiusRadial(qreal radius);
     qreal radiusRadial() const;
 
-    void setCentralConical(const QPointF &point);
+    void setCentralConical(QPointF point);
     QPointF centralConical() const;
 
     void setAngleConical(qreal angle);

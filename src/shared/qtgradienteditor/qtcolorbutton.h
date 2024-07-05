@@ -22,10 +22,10 @@ public:
     QColor color() const;
 
 public slots:
-    void setColor(const QColor &color);
+    void setColor(QColor color);
 
 signals:
-    void colorChanged(const QColor &color);
+    void colorChanged(QColor color);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
