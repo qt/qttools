@@ -28,7 +28,7 @@ public:
     void slotStopRemoved(QtGradientStop *stop);
     void slotStopMoved(QtGradientStop *stop, qreal newPos);
     void slotStopsSwapped(QtGradientStop *stop1, QtGradientStop *stop2);
-    void slotStopChanged(QtGradientStop *stop, const QColor &newColor);
+    void slotStopChanged(QtGradientStop *stop, QColor newColor);
     void slotStopSelected(QtGradientStop *stop, bool selected);
     void slotCurrentStopChanged(QtGradientStop *stop);
     void slotNewStop();
@@ -41,12 +41,12 @@ public:
 
     double fromViewport(int x) const;
     double toViewport(double x) const;
-    QtGradientStop *stopAt(const QPoint &viewportPos) const;
-    QList<QtGradientStop *> stopsAt(const QPoint &viewportPos) const;
+    QtGradientStop *stopAt(QPoint viewportPos) const;
+    QList<QtGradientStop *> stopsAt(QPoint viewportPos) const;
     void setupMove(QtGradientStop *stop, int x);
     void ensureVisible(double x); // x = stop position
     void ensureVisible(QtGradientStop *stop);
-    QtGradientStop *newStop(const QPoint &viewportPos);
+    QtGradientStop *newStop(QPoint viewportPos);
 
     bool m_backgroundCheckered;
     QtGradientStopsModel *m_model;
@@ -151,7 +151,7 @@ double QtGradientStopsWidgetPrivate::toViewport(double x) const
     return w * (x * (m_scaleFactor + max) - val) / m_scaleFactor;
 }
 
-QtGradientStop *QtGradientStopsWidgetPrivate::stopAt(const QPoint &viewportPos) const
+QtGradientStop *QtGradientStopsWidgetPrivate::stopAt(QPoint viewportPos) const
 {
     double posY = m_handleSize / 2;
     for (QtGradientStop *stop : m_stops) {
@@ -166,7 +166,7 @@ QtGradientStop *QtGradientStopsWidgetPrivate::stopAt(const QPoint &viewportPos) 
     return 0;
 }
 
-QList<QtGradientStop *> QtGradientStopsWidgetPrivate::stopsAt(const QPoint &viewportPos) const
+QList<QtGradientStop *> QtGradientStopsWidgetPrivate::stopsAt(QPoint viewportPos) const
 {
     QList<QtGradientStop *> stops;
     double posY = m_handleSize / 2;
@@ -224,7 +224,7 @@ void QtGradientStopsWidgetPrivate::ensureVisible(QtGradientStop *stop)
     ensureVisible(stop->position());
 }
 
-QtGradientStop *QtGradientStopsWidgetPrivate::newStop(const QPoint &viewportPos)
+QtGradientStop *QtGradientStopsWidgetPrivate::newStop(QPoint viewportPos)
 {
     QtGradientStop *copyStop = stopAt(viewportPos);
     double posX = fromViewport(viewportPos.x());
@@ -268,7 +268,7 @@ void QtGradientStopsWidgetPrivate::slotStopsSwapped(QtGradientStop *stop1, QtGra
     q_ptr->viewport()->update();
 }
 
-void QtGradientStopsWidgetPrivate::slotStopChanged(QtGradientStop *stop, const QColor &newColor)
+void QtGradientStopsWidgetPrivate::slotStopChanged(QtGradientStop *stop, QColor newColor)
 {
     Q_UNUSED(stop);
     Q_UNUSED(newColor);

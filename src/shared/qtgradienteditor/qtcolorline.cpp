@@ -19,7 +19,7 @@ public:
     QtColorLinePrivate();
 
     QColor color() const;
-    void setColor(const QColor &color);
+    void setColor(QColor color);
 
     QtColorLine::ColorComponent colorComponent() const;
     void setColorComponent(QtColorLine::ColorComponent component);
@@ -50,18 +50,20 @@ private:
     bool isMainPixmapValid() const;
     void validate();
     void recreateMainPixmap();
-    QSize pixmapSizeFromGeometrySize(const QSize &geometrySize) const;
-    QPixmap gradientPixmap(int size, Qt::Orientation orientation, const QColor &begin, const QColor &end, bool flipped = false) const;
-    QPixmap gradientPixmap(Qt::Orientation orientation, const QColor &begin, const QColor &end, bool flipped = false) const;
+    QSize pixmapSizeFromGeometrySize(QSize geometrySize) const;
+    QPixmap gradientPixmap(int size, Qt::Orientation orientation,
+                           QColor begin, QColor end, bool flipped = false) const;
+    QPixmap gradientPixmap(Qt::Orientation orientation,
+                           QColor begin, QColor end, bool flipped = false) const;
     QPixmap hueGradientPixmap(int size, Qt::Orientation orientation, bool flipped = false,
                 int saturation = 0xFF, int value = 0xFF, int alpha = 0xFF) const;
     QPixmap hueGradientPixmap(Qt::Orientation orientation, bool flipped = false,
                 int saturation = 0xFF, int value = 0xFF, int alpha = 0xFF) const;
 
-    QList<QRect> rects(const QPointF &point) const;
+    QList<QRect> rects(QPointF point) const;
 
-    QColor colorFromPoint(const QPointF &point) const;
-    QPointF pointFromColor(const QColor &color) const;
+    QColor colorFromPoint(QPointF point) const;
+    QPointF pointFromColor(QColor color) const;
 
     QColor m_color = Qt::black;
     QtColorLine::ColorComponent m_component = QtColorLine::Value;
@@ -96,7 +98,7 @@ QtColorLinePrivate::QtColorLinePrivate()
 {
 }
 
-void QtColorLinePrivate::setColor(const QColor &color)
+void QtColorLinePrivate::setColor(QColor color)
 {
     if (m_color == color)
         return;
@@ -319,7 +321,8 @@ void QtColorLinePrivate::validate()
     recreateMainPixmap();
 }
 
-QPixmap QtColorLinePrivate::gradientPixmap(Qt::Orientation orientation, const QColor &begin, const QColor &end, bool flipped) const
+QPixmap QtColorLinePrivate::gradientPixmap(Qt::Orientation orientation,
+                                           QColor begin, QColor end, bool flipped) const
 {
     int size = m_pixmapSize.width();
     if (orientation == Qt::Vertical)
@@ -328,7 +331,7 @@ QPixmap QtColorLinePrivate::gradientPixmap(Qt::Orientation orientation, const QC
 }
 
 QPixmap QtColorLinePrivate::gradientPixmap(int size, Qt::Orientation orientation,
-            const QColor &begin, const QColor &end, bool flipped) const
+                                           QColor begin, QColor end, bool flipped) const
 {
     int gradW = size;
     int gradH = size;
@@ -478,8 +481,7 @@ void QtColorLinePrivate::recreateMainPixmap()
         m_mainPixmap = m_alphalessPixmap;
 }
 
-QSize QtColorLinePrivate::pixmapSizeFromGeometrySize(
-        const QSize &geometrySize) const
+QSize QtColorLinePrivate::pixmapSizeFromGeometrySize(QSize geometrySize) const
 {
     QSize size(m_indicatorSize + 2 * m_indicatorSpace - 1,
                 m_indicatorSize + 2 * m_indicatorSpace - 1);
@@ -490,7 +492,7 @@ QSize QtColorLinePrivate::pixmapSizeFromGeometrySize(
     return geometrySize - size;
 }
 
-QColor QtColorLinePrivate::colorFromPoint(const QPointF &point) const
+QColor QtColorLinePrivate::colorFromPoint(QPointF point) const
 {
     QPointF p = point;
     if (p.x() < 0)
@@ -537,7 +539,7 @@ QColor QtColorLinePrivate::colorFromPoint(const QPointF &point) const
     return c;
 }
 
-QPointF QtColorLinePrivate::pointFromColor(const QColor &color) const
+QPointF QtColorLinePrivate::pointFromColor(QColor color) const
 {
     qreal hue = color.hueF();
     if (color.hue() == 360)
@@ -579,7 +581,7 @@ QPointF QtColorLinePrivate::pointFromColor(const QColor &color) const
     return p;
 }
 
-QList<QRect> QtColorLinePrivate::rects(const QPointF &point) const
+QList<QRect> QtColorLinePrivate::rects(QPointF point) const
 {
     QRect r = q_ptr->geometry();
     r.moveTo(0, 0);
@@ -973,7 +975,7 @@ QSize QtColorLine::sizeHint() const
     return QSize(d_ptr->m_indicatorSize, d_ptr->m_indicatorSize);
 }
 
-void QtColorLine::setColor(const QColor &color)
+void QtColorLine::setColor(QColor color)
 {
     d_ptr->setColor(color);
 }

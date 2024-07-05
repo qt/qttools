@@ -31,7 +31,7 @@ QtGradientStopsModel *QtGradientStop::gradientModel() const
     return d_ptr->m_model;
 }
 
-void QtGradientStop::setColor(const QColor &color)
+void QtGradientStop::setColor(QColor color)
 {
     d_ptr->m_color = color;
 }
@@ -142,7 +142,7 @@ bool QtGradientStopsModel::isSelected(QtGradientStop *stop) const
     return false;
 }
 
-QtGradientStop *QtGradientStopsModel::addStop(qreal pos, const QColor &color)
+QtGradientStop *QtGradientStopsModel::addStop(qreal pos, QColor color)
 {
     qreal newPos = pos;
     if (pos < 0.0)
@@ -221,7 +221,7 @@ void QtGradientStopsModel::swapStops(QtGradientStop *stop1, QtGradientStop *stop
     d_ptr->m_posToStop[pos2] = stop1;
 }
 
-void QtGradientStopsModel::changeStop(QtGradientStop *stop, const QColor &newColor)
+void QtGradientStopsModel::changeStop(QtGradientStop *stop, QColor newColor)
 {
     if (!d_ptr->m_stopToPos.contains(stop))
         return;

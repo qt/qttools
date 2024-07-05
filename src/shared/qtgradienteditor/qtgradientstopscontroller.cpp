@@ -28,17 +28,17 @@ public:
     void slotCurrentStopChanged(QtGradientStop *stop);
     void slotStopMoved(QtGradientStop *stop, qreal newPos);
     void slotStopsSwapped(QtGradientStop *stop1, QtGradientStop *stop2);
-    void slotStopChanged(QtGradientStop *stop, const QColor &newColor);
+    void slotStopChanged(QtGradientStop *stop, QColor newColor);
     void slotStopSelected(QtGradientStop *stop, bool selected);
     void slotStopAdded(QtGradientStop *stop);
     void slotStopRemoved(QtGradientStop *stop);
     void slotUpdatePositionSpinBox();
 
-    void slotChangeColor(const QColor &color);
-    void slotChangeHueColor(const QColor &color);
-    void slotChangeSaturationColor(const QColor &color);
-    void slotChangeValueColor(const QColor &color);
-    void slotChangeAlphaColor(const QColor &color);
+    void slotChangeColor(QColor color);
+    void slotChangeHueColor(QColor color);
+    void slotChangeSaturationColor(QColor color);
+    void slotChangeValueColor(QColor color);
+    void slotChangeAlphaColor(QColor color);
     void slotChangeHue(int color);
     void slotChangeSaturation(int color);
     void slotChangeValue(int color);
@@ -52,7 +52,7 @@ public:
     void slotZoomChanged(double zoom);
 
     void enableCurrent(bool enable);
-    void setColorSpinBoxes(const QColor &color);
+    void setColorSpinBoxes(QColor color);
     PositionColorMap stopsData(const PositionStopMap &stops) const;
     QGradientStops makeGradientStops(const PositionColorMap &data) const;
     void updateZoom(double zoom);
@@ -265,7 +265,7 @@ void QtGradientStopsControllerPrivate::slotRgbClicked()
     setColorSpinBoxes(m_ui->colorButton->color());
 }
 
-void QtGradientStopsControllerPrivate::setColorSpinBoxes(const QColor &color)
+void QtGradientStopsControllerPrivate::setColorSpinBoxes(QColor color)
 {
     m_ui->hueSpinBox->blockSignals(true);
     m_ui->saturationSpinBox->blockSignals(true);
@@ -359,7 +359,8 @@ void QtGradientStopsControllerPrivate::slotStopRemoved(QtGradientStop *stop)
     emit q_ptr->gradientStopsChanged(gradStops);
 }
 
-void QtGradientStopsControllerPrivate::slotStopChanged(QtGradientStop *stop, const QColor &newColor)
+void QtGradientStopsControllerPrivate::slotStopChanged(QtGradientStop *stop,
+                                                       QColor newColor)
 {
     if (m_model->currentStop() == stop) {
         m_ui->colorButton->setColor(newColor);
@@ -427,7 +428,7 @@ void QtGradientStopsControllerPrivate::slotUpdatePositionSpinBox()
     m_ui->positionSpinBox->blockSignals(false);
 }
 
-void QtGradientStopsControllerPrivate::slotChangeColor(const QColor &color)
+void QtGradientStopsControllerPrivate::slotChangeColor(QColor color)
 {
     QtGradientStop *stop = m_model->currentStop();
     if (!stop)
@@ -440,7 +441,7 @@ void QtGradientStopsControllerPrivate::slotChangeColor(const QColor &color)
     }
 }
 
-void QtGradientStopsControllerPrivate::slotChangeHueColor(const QColor &color)
+void QtGradientStopsControllerPrivate::slotChangeHueColor(QColor color)
 {
     QtGradientStop *stop = m_model->currentStop();
     if (!stop)
@@ -469,7 +470,7 @@ void QtGradientStopsControllerPrivate::slotChangeHue(int color)
     slotChangeHueColor(c);
 }
 
-void QtGradientStopsControllerPrivate::slotChangeSaturationColor(const QColor &color)
+void QtGradientStopsControllerPrivate::slotChangeSaturationColor(QColor color)
 {
     QtGradientStop *stop = m_model->currentStop();
     if (!stop)
@@ -502,7 +503,7 @@ void QtGradientStopsControllerPrivate::slotChangeSaturation(int color)
     slotChangeSaturationColor(c);
 }
 
-void QtGradientStopsControllerPrivate::slotChangeValueColor(const QColor &color)
+void QtGradientStopsControllerPrivate::slotChangeValueColor(QColor color)
 {
     QtGradientStop *stop = m_model->currentStop();
     if (!stop)
@@ -535,7 +536,7 @@ void QtGradientStopsControllerPrivate::slotChangeValue(int color)
     slotChangeValueColor(c);
 }
 
-void QtGradientStopsControllerPrivate::slotChangeAlphaColor(const QColor &color)
+void QtGradientStopsControllerPrivate::slotChangeAlphaColor(QColor color)
 {
     QtGradientStop *stop = m_model->currentStop();
     if (!stop)
