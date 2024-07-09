@@ -685,6 +685,14 @@ function(qt6_add_translations)
         __QT_INTERNAL_DEFAULT_QM_OUT_DIR "${arg___QT_INTERNAL_DEFAULT_QM_OUT_DIR}"
     )
 
+    # Make the .ts files visible in IDEs.
+    set(all_ts_files ${arg_TS_FILES} ${arg_PLURALS_TS_FILE})
+    foreach(target IN LISTS targets)
+        foreach(ts_file IN LISTS all_ts_files)
+            _qt_internal_expose_source_file_to_ide(${target} ${ts_file})
+        endforeach()
+    endforeach()
+
     if("${QT_I18N_TRANSLATED_LANGUAGES}" STREQUAL "")
         _qt_internal_store_languages_from_ts_files_in_targets("${targets}" "${arg_TS_FILES}")
     endif()
