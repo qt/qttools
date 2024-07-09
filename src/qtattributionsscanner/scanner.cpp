@@ -492,6 +492,29 @@ static Package parseChromiumFile(QFile &file, const QString &filePath, LogLevel 
     return p;
 }
 
+struct CursorPosition
+{
+    int line = -1;
+    int column = -1;
+};
+
+static CursorPosition mapFromOffset(const QByteArray &content, int offset)
+{
+    CursorPosition pos{ 1, 1 };
+    for (int i = 0; i < content.size(); ++i) {
+        if (i == offset)
+            return pos;
+
+        if (content[i] == '\n') {
+            pos.line++;
+            pos.column = 1;
+        } else {
+            pos.column++;
+        }
+    }
+    return CursorPosition();
+}
+
 std::optional<QList<Package>> readFile(const QString &filePath, Checks checks, LogLevel logLevel)
 {
     QList<Package> packages;
@@ -511,13 +534,18 @@ std::optional<QList<Package>> readFile(const QString &filePath, Checks checks, L
 
     if (filePath.endsWith(".json"_L1)) {
         QJsonParseError jsonParseError;
-        const QJsonDocument document = QJsonDocument::fromJson(file.readAll(), &jsonParseError);
+        const QByteArray content = file.readAll();
+        const QJsonDocument document = QJsonDocument::fromJson(content, &jsonParseError);
         if (document.isNull()) {
-            if (logLevel != SilentLog)
-                std::cerr << qPrintable(tr("Could not parse file %1: %2").arg(
-                                            QDir::toNativeSeparators(file.fileName()),
-                                            jsonParseError.errorString()))
+            if (logLevel != SilentLog) {
+                const CursorPosition pos = mapFromOffset(content, jsonParseError.offset);
+                std::cerr << qPrintable(tr("Could not parse file %1: %2 at line %3, column %4")
+                                                .arg(QDir::toNativeSeparators(file.fileName()),
+                                                     jsonParseError.errorString(),
+                                                     QString::number(pos.line),
+                                                     QString::number(pos.column)))
                           << std::endl;
+            }
             return std::nullopt;
         }
 
