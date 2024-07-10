@@ -26,11 +26,20 @@ set(unexpected_files "")
 # Check defaults for the deferred call.
 my_add_library(lib1 STATIC lib.cpp)
 set(QT_I18N_TRANSLATED_LANGUAGES te st)
-qt_add_translations(TARGETS lib1)
-list(APPEND expected_files
+qt_add_translations(TARGETS lib1
+    TS_FILES_OUTPUT_VARIABLE lib1_ts_files
+)
+set(lib1_expected_ts_files
     "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_en.ts"            # plurals-only file
     "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_te.ts"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_st.ts")
+if(lib1_ts_files STREQUAL lib1_expected_ts_files)
+    list(APPEND expected_files ${lib1_ts_files})
+else()
+    message(FATAL_ERROR "expected .ts files:\n ${expected_files}"
+        "\nactual .ts files:\n" ${lib1_ts_files}
+    )
+endif()
 
 # Check defaults for the immediate call.
 my_add_library(lib2 STATIC lib.cpp)
