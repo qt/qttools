@@ -48,7 +48,7 @@ import QtQuick 1.0
         will turn it \c off. Toggling a switch in the \c off position will
         turn it \c on.
     */</span>
-    <span class="keyword">function </span><span class="name">toggle</span>() {
+    <span class="keyword">function</span> <span class="name">toggle</span>() {
         <span class="keyword">if</span> (<span class="name">toggleswitch</span>.<span class="name">state</span> <span class="operator">==</span> <span class="string">&quot;on&quot;</span>)
             <span class="name">toggleswitch</span>.<span class="name">state</span> <span class="operator">=</span> <span class="string">&quot;off&quot;</span>;
         <span class="keyword">else</span>
@@ -62,7 +62,7 @@ import QtQuick 1.0
         function is not for public access. The \internal command will
         prevent QDoc from publishing this comment in the public API.
     */</span>
-    <span class="keyword">function </span><span class="name">releaseSwitch</span>() {
+    <span class="keyword">function</span> <span class="name">releaseSwitch</span>() {
         <span class="keyword">if</span> (<span class="name">knob</span>.<span class="name">x</span> <span class="operator">==</span> <span class="number">1</span>) {
             <span class="keyword">if</span> (<span class="name">toggleswitch</span>.<span class="name">state</span> <span class="operator">==</span> <span class="string">&quot;off&quot;</span>) <span class="keyword">return</span>;
         }

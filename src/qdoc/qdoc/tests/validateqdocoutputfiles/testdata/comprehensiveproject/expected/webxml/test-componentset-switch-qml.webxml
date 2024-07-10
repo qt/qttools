@@ -43,7 +43,7 @@ import QtQuick 1.0
         will turn it \c off. Toggling a switch in the \c off position will
         turn it \c on.
     */&lt;/@comment&gt;
-    &lt;@keyword&gt;function &lt;/@keyword&gt;&lt;@name&gt;toggle&lt;/@name&gt;() {
+    &lt;@keyword&gt;function&lt;/@keyword&gt; &lt;@name&gt;toggle&lt;/@name&gt;() {
         &lt;@keyword&gt;if&lt;/@keyword&gt; (&lt;@name&gt;toggleswitch&lt;/@name&gt;.&lt;@name&gt;state&lt;/@name&gt; &lt;@op&gt;==&lt;/@op&gt; &lt;@string&gt;&amp;quot;on&amp;quot;&lt;/@string&gt;)
             &lt;@name&gt;toggleswitch&lt;/@name&gt;.&lt;@name&gt;state&lt;/@name&gt; &lt;@op&gt;=&lt;/@op&gt; &lt;@string&gt;&amp;quot;off&amp;quot;&lt;/@string&gt;;
         &lt;@keyword&gt;else&lt;/@keyword&gt;
@@ -57,7 +57,7 @@ import QtQuick 1.0
         function is not for public access. The \internal command will
         prevent QDoc from publishing this comment in the public API.
     */&lt;/@comment&gt;
-    &lt;@keyword&gt;function &lt;/@keyword&gt;&lt;@name&gt;releaseSwitch&lt;/@name&gt;() {
+    &lt;@keyword&gt;function&lt;/@keyword&gt; &lt;@name&gt;releaseSwitch&lt;/@name&gt;() {
         &lt;@keyword&gt;if&lt;/@keyword&gt; (&lt;@name&gt;knob&lt;/@name&gt;.&lt;@name&gt;x&lt;/@name&gt; &lt;@op&gt;==&lt;/@op&gt; &lt;@number&gt;1&lt;/@number&gt;) {
             &lt;@keyword&gt;if&lt;/@keyword&gt; (&lt;@name&gt;toggleswitch&lt;/@name&gt;.&lt;@name&gt;state&lt;/@name&gt; &lt;@op&gt;==&lt;/@op&gt; &lt;@string&gt;&amp;quot;off&amp;quot;&lt;/@string&gt;) &lt;@keyword&gt;return&lt;/@keyword&gt;;
         }
