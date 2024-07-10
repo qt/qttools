@@ -130,9 +130,6 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
         && package.licenseId != "NONE"_L1) {
         out << "\\l{https://spdx.org/licenses/" << package.licenseId << ".html}"
             << "{" << package.license << "}.\n\n";
-    } else if (package.licenseId.startsWith("urn:dje:license:"_L1)) {
-        out << "\\l{https://enterprise.dejacode.com/licenses/public/" << package.licenseId.mid(16)
-            << "/}{" << package.license << "}.\n\n";
     } else {
         out << package.license << ".\n\n";
     }
