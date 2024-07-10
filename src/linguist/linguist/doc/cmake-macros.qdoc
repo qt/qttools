@@ -405,6 +405,7 @@ qt_add_translations([target]
                     [NO_GENERATE_PLURALS_TS_FILE]
                     [RESOURCE_PREFIX prefix]
                     [OUTPUT_TARGETS variable-name]
+                    [TS_FILES_OUTPUT_VARIABLE variable-name]    # since 6.8
                     [QM_FILES_OUTPUT_VARIABLE variable-name]
                     [SOURCES source1.cpp [sources2.cpp ...]]
                     [INCLUDE_DIRECTORIES directory1 [directory2 ...]]
@@ -485,6 +486,9 @@ argument.
 
 By default, the \c{.ts} file names are constructed from \c{PROJECT_NAME}. You
 can specify a different base name with the \c{TS_FILE_BASE} argument.
+
+Since Qt 6.8, you can specify the \c TS_FILES_OUTPUT_VARIABLE argument to store
+the automatically determined \c{.ts} file paths in a variable.
 
 \include cmake-macros.qdoc plurals-ts-file
 

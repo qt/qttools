@@ -510,6 +510,7 @@ function(qt6_add_translations)
         __QT_INTERNAL_DEFAULT_QM_OUT_DIR
         LUPDATE_TARGET
         LRELEASE_TARGET
+        TS_FILES_OUTPUT_VARIABLE
         QM_FILES_OUTPUT_VARIABLE
         RESOURCE_PREFIX
         OUTPUT_TARGETS)
@@ -578,6 +579,11 @@ function(qt6_add_translations)
         endif()
     endif()
 
+    # Store all .ts file paths in a user-specified variable.
+    if(DEFINED arg_TS_FILES_OUTPUT_VARIABLE)
+        set("${arg_TS_FILES_OUTPUT_VARIABLE}" ${arg_PLURALS_TS_FILE} ${arg_TS_FILES} PARENT_SCOPE)
+    endif()
+
     # Defer the actual function call if SOURCE_TARGETS was not given and an immediate call was not
     # requested.
     set(source_targets "${arg_SOURCE_TARGETS}")
@@ -631,6 +637,7 @@ function(qt6_add_translations)
             set(ignored_variables
                 TS_FILE_BASE
                 TS_FILE_DIR
+                TS_FILES_OUTPUT_VARIABLE
             )
             list(REMOVE_ITEM to_forward ${path_variables} ${ignored_variables})
             foreach(keyword IN LISTS to_forward)
@@ -777,9 +784,24 @@ if(NOT QT_NO_CREATE_VERSIONLESS_FUNCTIONS)
     function(qt_add_translations)
         if(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
             qt6_add_translations(${ARGN})
-            cmake_parse_arguments(PARSE_ARGV 1 arg "" "OUTPUT_TARGETS;QM_FILES_OUTPUT_VARIABLE" "")
+
+            set(no_value_options "")
+            set(single_value_options
+                TS_FILES_OUTPUT_VARIABLE
+                QM_FILES_OUTPUT_VARIABLE
+            )
+            set(multi_value_options
+                OUTPUT_TARGETS
+            )
+            cmake_parse_arguments(PARSE_ARGV 0 arg
+                "${no_value_options}" "${single_value_options}" "${multi_value_options}"
+            )
+
             if(arg_OUTPUT_TARGETS)
                 set(${arg_OUTPUT_TARGETS} ${${arg_OUTPUT_TARGETS}} PARENT_SCOPE)
+            endif()
+            if(arg_TS_FILES_OUTPUT_VARIABLE)
+                set(${arg_TS_FILES_OUTPUT_VARIABLE} ${${arg_TS_FILES_OUTPUT_VARIABLE}} PARENT_SCOPE)
             endif()
             if(arg_QM_FILES_OUTPUT_VARIABLE)
                 set(${arg_QM_FILES_OUTPUT_VARIABLE} ${${arg_QM_FILES_OUTPUT_VARIABLE}} PARENT_SCOPE)
