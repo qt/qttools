@@ -102,7 +102,7 @@ import QtQuick 1.0
     The \internal command will prevent QDoc from publishing this
     documentation on the public API.
     */&lt;/@comment&gt;
-    &lt;@keyword&gt;function &lt;/@keyword&gt;&lt;@name&gt;setOpacities&lt;/@name&gt;() {
+    &lt;@keyword&gt;function&lt;/@keyword&gt; &lt;@name&gt;setOpacities&lt;/@name&gt;() {
         &lt;@keyword&gt;for&lt;/@keyword&gt; (var i = 0; &lt;@name&gt;i&lt;/@name&gt; &lt;@op&gt;&amp;lt;&lt;/@op&gt; &lt;@name&gt;stack&lt;/@name&gt;.&lt;@name&gt;children&lt;/@name&gt;.&lt;@name&gt;length&lt;/@name&gt;; ++&lt;@name&gt;i&lt;/@name&gt;) {
             &lt;@name&gt;stack&lt;/@name&gt;.&lt;@name&gt;children&lt;/@name&gt;[&lt;@name&gt;i&lt;/@name&gt;].&lt;@name&gt;opacity&lt;/@name&gt; &lt;@op&gt;=&lt;/@op&gt; (&lt;@name&gt;i&lt;/@name&gt; &lt;@op&gt;==&lt;/@op&gt; &lt;@name&gt;current&lt;/@name&gt; ? &lt;@number&gt;1&lt;/@number&gt; : &lt;@number&gt;0&lt;/@number&gt;)
         }

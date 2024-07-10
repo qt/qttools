@@ -107,7 +107,7 @@ import QtQuick 1.0
     The \internal command will prevent QDoc from publishing this
     documentation on the public API.
     */</span>
-    <span class="keyword">function </span><span class="name">setOpacities</span>() {
+    <span class="keyword">function</span> <span class="name">setOpacities</span>() {
         <span class="keyword">for</span> (var i = 0; <span class="name">i</span> <span class="operator">&lt;</span> <span class="name">stack</span>.<span class="name">children</span>.<span class="name">length</span>; ++<span class="name">i</span>) {
             <span class="name">stack</span>.<span class="name">children</span>[<span class="name">i</span>].<span class="name">opacity</span> <span class="operator">=</span> (<span class="name">i</span> <span class="operator">==</span> <span class="name">current</span> ? <span class="number">1</span> : <span class="number">0</span>)
         }
