@@ -4,9 +4,9 @@
 #include "stylesheeteditor_p.h"
 #include "csshighlighter_p.h"
 #include "iconselector_p.h"
-#include "qtgradientmanager.h"
-#include "qtgradientviewdialog.h"
-#include "qtgradientutils.h"
+#include "qtgradientmanager_p.h"
+#include "qtgradientviewdialog_p.h"
+#include "qtgradientutils_p.h"
 #include "qdesigner_utils_p.h"
 
 #include <QtDesigner/abstractformwindow.h>
@@ -17,7 +17,7 @@
 #include <QtDesigner/abstractsettings.h>
 #include <QtDesigner/qextensionmanager.h>
 
-#include <texteditfindwidget.h>
+#include <texteditfindwidget_p.h>
 
 #include <QtWidgets/qcolordialog.h>
 #include <QtWidgets/qdialogbuttonbox.h>

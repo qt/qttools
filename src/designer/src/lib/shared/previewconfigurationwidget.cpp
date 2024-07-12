@@ -9,7 +9,7 @@
 #include <iconloader_p.h>
 #include <stylesheeteditor_p.h>
 
-#include <deviceskin.h>
+#include <deviceskin_p.h>
 
 #include <QtDesigner/abstractsettings.h>
 

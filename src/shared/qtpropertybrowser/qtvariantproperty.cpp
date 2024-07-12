@@ -1,9 +1,9 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qtvariantproperty.h"
-#include "qtpropertymanager.h"
-#include "qteditorfactory.h"
+#include "qtvariantproperty_p.h"
+#include "qtpropertymanager_p.h"
+#include "qteditorfactory_p.h"
 
 #include <QtCore/QVariant>
 #include <QtCore/QDate>
@@ -2253,4 +2253,4 @@ void QtVariantEditorFactory::disconnectPropertyManager(QtVariantPropertyManager 
 
 QT_END_NAMESPACE
 
-#include "moc_qtvariantproperty.cpp"
+#include "moc_qtvariantproperty_p.cpp"

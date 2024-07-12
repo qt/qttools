@@ -9,7 +9,7 @@
 
 #include <QtDesigner/abstractformwindow.h>
 
-#include <qttreepropertybrowser.h>
+#include <qttreepropertybrowser_p.h>
 
 #include <QtWidgets/qsplitter.h>
 #include <QtCore/qcoreapplication.h>

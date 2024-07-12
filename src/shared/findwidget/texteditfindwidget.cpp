@@ -20,7 +20,7 @@
     \sa QTextEdit
  */
 
-#include "texteditfindwidget.h"
+#include "texteditfindwidget_p.h"
 
 #include <QtWidgets/QCheckBox>
 #include <QtGui/QTextCursor>

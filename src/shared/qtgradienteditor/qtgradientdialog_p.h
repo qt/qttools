@@ -1,14 +1,25 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#ifndef QTGRADIENTEDITOR_H
-#define QTGRADIENTEDITOR_H
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the Qt API. It exists for the convenience
+// of Qt Designer. This header file may change from version to version
+// without notice, or even be removed.
+//
+// We mean it.
+//
 
-#include <QtWidgets/QWidget>
+#ifndef QTGRADIENTDIALOG_H
+#define QTGRADIENTDIALOG_H
+
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 
-class QtGradientEditor : public QWidget
+class QtGradientDialog : public QDialog
 {
     Q_OBJECT
     Q_PROPERTY(QGradient gradient READ gradient WRITE setGradient)
@@ -16,8 +27,8 @@ class QtGradientEditor : public QWidget
     Q_PROPERTY(bool detailsVisible READ detailsVisible WRITE setDetailsVisible)
     Q_PROPERTY(bool detailsButtonVisible READ isDetailsButtonVisible WRITE setDetailsButtonVisible)
 public:
-    QtGradientEditor(QWidget *parent = 0);
-    ~QtGradientEditor();
+    QtGradientDialog(QWidget *parent = 0);
+    ~QtGradientDialog();
 
     void setGradient(const QGradient &gradient);
     QGradient gradient() const;
@@ -34,14 +45,13 @@ public:
     QColor::Spec spec() const;
     void setSpec(QColor::Spec spec);
 
-signals:
-    void gradientChanged(const QGradient &gradient);
-    void aboutToShowDetails(bool details, int extenstionWidthHint);
+    static QGradient getGradient(bool *ok, const QGradient &initial, QWidget *parent = 0, const QString &caption = QString());
+    static QGradient getGradient(bool *ok, QWidget *parent = 0, const QString &caption = QString());
 
 private:
-    QScopedPointer<class QtGradientEditorPrivate> d_ptr;
-    Q_DECLARE_PRIVATE(QtGradientEditor)
-    Q_DISABLE_COPY_MOVE(QtGradientEditor)
+    QScopedPointer<class QtGradientDialogPrivate> d_ptr;
+    Q_DECLARE_PRIVATE(QtGradientDialog)
+    Q_DISABLE_COPY_MOVE(QtGradientDialog)
 };
 
 QT_END_NAMESPACE

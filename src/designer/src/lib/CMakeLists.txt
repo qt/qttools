@@ -9,22 +9,22 @@
 qt_internal_add_module(Designer
     PLUGIN_TYPES designer
     SOURCES
-        ../../../shared/deviceskin/deviceskin.cpp ../../../shared/deviceskin/deviceskin.h
-        ../../../shared/findwidget/abstractfindwidget.cpp ../../../shared/findwidget/abstractfindwidget.h
-        ../../../shared/findwidget/itemviewfindwidget.cpp ../../../shared/findwidget/itemviewfindwidget.h
-        ../../../shared/findwidget/texteditfindwidget.cpp ../../../shared/findwidget/texteditfindwidget.h
-        ../../../shared/qtgradienteditor/qtcolorbutton.cpp ../../../shared/qtgradienteditor/qtcolorbutton.h
-        ../../../shared/qtgradienteditor/qtcolorline.cpp ../../../shared/qtgradienteditor/qtcolorline.h
-        ../../../shared/qtgradienteditor/qtgradientdialog.cpp ../../../shared/qtgradienteditor/qtgradientdialog.h
-        ../../../shared/qtgradienteditor/qtgradienteditor.cpp ../../../shared/qtgradienteditor/qtgradienteditor.h
-        ../../../shared/qtgradienteditor/qtgradientmanager.cpp ../../../shared/qtgradienteditor/qtgradientmanager.h
-        ../../../shared/qtgradienteditor/qtgradientstopscontroller.cpp ../../../shared/qtgradienteditor/qtgradientstopscontroller.h
-        ../../../shared/qtgradienteditor/qtgradientstopsmodel.cpp ../../../shared/qtgradienteditor/qtgradientstopsmodel.h
-        ../../../shared/qtgradienteditor/qtgradientstopswidget.cpp ../../../shared/qtgradienteditor/qtgradientstopswidget.h
-        ../../../shared/qtgradienteditor/qtgradientutils.cpp ../../../shared/qtgradienteditor/qtgradientutils.h
-        ../../../shared/qtgradienteditor/qtgradientview.cpp ../../../shared/qtgradienteditor/qtgradientview.h
-        ../../../shared/qtgradienteditor/qtgradientviewdialog.cpp ../../../shared/qtgradienteditor/qtgradientviewdialog.h
-        ../../../shared/qtgradienteditor/qtgradientwidget.cpp ../../../shared/qtgradienteditor/qtgradientwidget.h
+        ../../../shared/deviceskin/deviceskin.cpp ../../../shared/deviceskin/deviceskin_p.h
+        ../../../shared/findwidget/abstractfindwidget.cpp ../../../shared/findwidget/abstractfindwidget_p.h
+        ../../../shared/findwidget/itemviewfindwidget.cpp ../../../shared/findwidget/itemviewfindwidget_p.h
+        ../../../shared/findwidget/texteditfindwidget.cpp ../../../shared/findwidget/texteditfindwidget_p.h
+        ../../../shared/qtgradienteditor/qtcolorbutton.cpp ../../../shared/qtgradienteditor/qtcolorbutton_p.h
+        ../../../shared/qtgradienteditor/qtcolorline.cpp ../../../shared/qtgradienteditor/qtcolorline_p.h
+        ../../../shared/qtgradienteditor/qtgradientdialog.cpp ../../../shared/qtgradienteditor/qtgradientdialog_p.h
+        ../../../shared/qtgradienteditor/qtgradienteditor.cpp ../../../shared/qtgradienteditor/qtgradienteditor_p.h
+        ../../../shared/qtgradienteditor/qtgradientmanager.cpp ../../../shared/qtgradienteditor/qtgradientmanager_p.h
+        ../../../shared/qtgradienteditor/qtgradientstopscontroller.cpp ../../../shared/qtgradienteditor/qtgradientstopscontroller_p.h
+        ../../../shared/qtgradienteditor/qtgradientstopsmodel.cpp ../../../shared/qtgradienteditor/qtgradientstopsmodel_p.h
+        ../../../shared/qtgradienteditor/qtgradientstopswidget.cpp ../../../shared/qtgradienteditor/qtgradientstopswidget_p.h
+        ../../../shared/qtgradienteditor/qtgradientutils.cpp ../../../shared/qtgradienteditor/qtgradientutils_p.h
+        ../../../shared/qtgradienteditor/qtgradientview.cpp ../../../shared/qtgradienteditor/qtgradientview_p.h
+        ../../../shared/qtgradienteditor/qtgradientviewdialog.cpp ../../../shared/qtgradienteditor/qtgradientviewdialog_p.h
+        ../../../shared/qtgradienteditor/qtgradientwidget.cpp ../../../shared/qtgradienteditor/qtgradientwidget_p.h
         extension/default_extensionfactory.cpp extension/default_extensionfactory.h
         extension/extension_global.h
         extension/extension.cpp extension/extension.h
@@ -400,14 +400,14 @@ qt_internal_extend_target(Designer CONDITION NOT QT_BUILD_SHARED_LIBS
     DEFINES
         QT_DESIGNER_STATIC
     SOURCES
-        ../../../shared/qtpropertybrowser/qtbuttonpropertybrowser.cpp ../../../shared/qtpropertybrowser/qtbuttonpropertybrowser.h
-        ../../../shared/qtpropertybrowser/qteditorfactory.cpp ../../../shared/qtpropertybrowser/qteditorfactory.h
-        ../../../shared/qtpropertybrowser/qtgroupboxpropertybrowser.cpp ../../../shared/qtpropertybrowser/qtgroupboxpropertybrowser.h
-        ../../../shared/qtpropertybrowser/qtpropertybrowser.cpp ../../../shared/qtpropertybrowser/qtpropertybrowser.h
+        ../../../shared/qtpropertybrowser/qtbuttonpropertybrowser.cpp ../../../shared/qtpropertybrowser/qtbuttonpropertybrowser_p.h
+        ../../../shared/qtpropertybrowser/qteditorfactory.cpp ../../../shared/qtpropertybrowser/qteditorfactory_p.h
+        ../../../shared/qtpropertybrowser/qtgroupboxpropertybrowser.cpp ../../../shared/qtpropertybrowser/qtgroupboxpropertybrowser_p.h
+        ../../../shared/qtpropertybrowser/qtpropertybrowser.cpp ../../../shared/qtpropertybrowser/qtpropertybrowser_p.h
         ../../../shared/qtpropertybrowser/qtpropertybrowserutils.cpp ../../../shared/qtpropertybrowser/qtpropertybrowserutils_p.h
-        ../../../shared/qtpropertybrowser/qtpropertymanager.cpp ../../../shared/qtpropertybrowser/qtpropertymanager.h
-        ../../../shared/qtpropertybrowser/qttreepropertybrowser.cpp ../../../shared/qtpropertybrowser/qttreepropertybrowser.h
-        ../../../shared/qtpropertybrowser/qtvariantproperty.cpp ../../../shared/qtpropertybrowser/qtvariantproperty.h
+        ../../../shared/qtpropertybrowser/qtpropertymanager.cpp ../../../shared/qtpropertybrowser/qtpropertymanager_p.h
+        ../../../shared/qtpropertybrowser/qttreepropertybrowser.cpp ../../../shared/qtpropertybrowser/qttreepropertybrowser_p.h
+        ../../../shared/qtpropertybrowser/qtvariantproperty.cpp ../../../shared/qtpropertybrowser/qtvariantproperty_p.h
     INCLUDE_DIRECTORIES
         ../../../shared/qtpropertybrowser
 )

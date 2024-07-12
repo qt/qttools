@@ -7,7 +7,7 @@
 
 qt_internal_add_app(assistant
     SOURCES
-        ../../shared/fontpanel/fontpanel.cpp ../../shared/fontpanel/fontpanel.h
+        ../../shared/fontpanel/fontpanel.cpp ../../shared/fontpanel/fontpanel_p.h
         ../shared/collectionconfiguration.cpp ../shared/collectionconfiguration.h
         aboutdialog.cpp aboutdialog.h
         bookmarkdialog.cpp bookmarkdialog.h bookmarkdialog.ui

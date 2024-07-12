@@ -24,7 +24,7 @@
     \sa QAbstractItemView
  */
 
-#include "itemviewfindwidget.h"
+#include "itemviewfindwidget_p.h"
 
 #include <QtWidgets/QAbstractItemView>
 #include <QtWidgets/QCheckBox>

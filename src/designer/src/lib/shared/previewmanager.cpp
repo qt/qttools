@@ -8,7 +8,7 @@
 #include "widgetfactory_p.h"
 #include "zoomwidget_p.h"
 
-#include <deviceskin.h>
+#include <deviceskin_p.h>
 
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/abstractformwindow.h>

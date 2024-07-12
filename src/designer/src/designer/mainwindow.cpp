@@ -8,7 +8,7 @@
 #include "qdesigner_formwindow.h"
 #include "qdesigner_toolwindow.h"
 #include "qdesigner_settings.h"
-#include "qttoolbardialog.h"
+#include "qttoolbardialog_p.h"
 
 #include <QtDesigner/abstractformwindow.h>
 

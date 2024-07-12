@@ -43,7 +43,7 @@
   <customwidget>
    <class>QtGradientView</class>
    <extends>QFrame</extends>
-   <header>qtgradientview.h</header>
+   <header>qtgradientview_p.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
