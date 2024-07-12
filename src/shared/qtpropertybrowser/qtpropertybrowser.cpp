@@ -1,7 +1,7 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qtpropertybrowser.h"
+#include "qtpropertybrowser_p.h"
 #include <QtCore/QHash>
 #include <QtGui/QIcon>
 
@@ -1903,4 +1903,4 @@ void QtAbstractPropertyBrowser::setCurrentItem(QtBrowserItem *item)
 
 QT_END_NAMESPACE
 
-#include "moc_qtpropertybrowser.cpp"
+#include "moc_qtpropertybrowser_p.cpp"

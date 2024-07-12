@@ -4,7 +4,7 @@
 #ifndef DESIGNERPROPERTYMANAGER_H
 #define DESIGNERPROPERTYMANAGER_H
 
-#include "qtvariantproperty.h"
+#include "qtvariantproperty_p.h"
 #include "brushpropertymanager.h"
 #include "fontpropertymanager.h"
 

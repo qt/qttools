@@ -21,7 +21,7 @@
 #include <actioneditor_p.h>
 #include <pluginmanager_p.h>
 #include <qtresourcemodel_p.h>
-#include <qtgradientmanager.h>
+#include <qtgradientmanager_p.h>
 #include <widgetfactory_p.h>
 #include <shared_settings_p.h>
 #include <formwindowbase_p.h>

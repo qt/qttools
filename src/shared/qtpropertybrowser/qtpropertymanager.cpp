@@ -1,7 +1,7 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qtpropertymanager.h"
+#include "qtpropertymanager_p.h"
 #include "qtpropertybrowserutils_p.h"
 
 #include <QtCore/QDateTime>
@@ -6402,5 +6402,5 @@ void QtCursorPropertyManager::uninitializeProperty(QtProperty *property)
 
 QT_END_NAMESPACE
 
-#include "moc_qtpropertymanager.cpp"
+#include "moc_qtpropertymanager_p.cpp"
 #include "qtpropertymanager.moc"

@@ -5,7 +5,7 @@
 #include "qdesigner_utils_p.h"
 #include "iconloader_p.h"
 
-#include <texteditfindwidget.h>
+#include <texteditfindwidget_p.h>
 
 #include <QtWidgets/qapplication.h>
 #if QT_CONFIG(clipboard)

@@ -1,7 +1,7 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qttoolbardialog.h"
+#include "qttoolbardialog_p.h"
 #include "ui_qttoolbardialog.h"
 
 #include <QtCore/QMap>
@@ -1762,5 +1762,5 @@ void QtToolBarDialog::hideEvent(QHideEvent *event)
 
 QT_END_NAMESPACE
 
-#include "moc_qttoolbardialog.cpp"
+#include "moc_qttoolbardialog_p.cpp"
 #include "qttoolbardialog.moc"

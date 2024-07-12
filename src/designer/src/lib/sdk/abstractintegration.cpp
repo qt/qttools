@@ -23,8 +23,8 @@
 #include <pluginmanager_p.h>
 #include <widgetfactory_p.h>
 #include <qdesigner_widgetbox_p.h>
-#include <qtgradientmanager.h>
-#include <qtgradientutils.h>
+#include <qtgradientmanager_p.h>
+#include <qtgradientutils_p.h>
 #include <qtresourcemodel_p.h>
 
 #include <QtCore/qvariant.h>

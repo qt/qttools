@@ -3,7 +3,7 @@
 #include "preferencesdialog.h"
 
 #include "centralwidget.h"
-#include "fontpanel.h"
+#include "fontpanel_p.h"
 #include "helpenginewrapper.h"
 #include "openpagesmanager.h"
 #include "helpdocsettingswidget.h"

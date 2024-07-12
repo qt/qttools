@@ -3,9 +3,9 @@
 
 #include "propertyeditor.h"
 
-#include "qttreepropertybrowser.h"
-#include "qtbuttonpropertybrowser.h"
-#include "qtvariantproperty.h"
+#include "qttreepropertybrowser_p.h"
+#include "qtbuttonpropertybrowser_p.h"
+#include "qtvariantproperty_p.h"
 #include "designerpropertymanager.h"
 #include "qdesigner_propertysheet_p.h"
 #include "formwindowbase_p.h"

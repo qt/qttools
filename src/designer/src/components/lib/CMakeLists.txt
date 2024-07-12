@@ -365,18 +365,18 @@ qt_internal_extend_target(DesignerComponentsPrivate CONDITION NOT QT_BUILD_SHARE
 
 qt_internal_extend_target(DesignerComponentsPrivate CONDITION QT_BUILD_SHARED_LIBS
     SOURCES
-        ../../../../shared/findwidget/abstractfindwidget.cpp ../../../../shared/findwidget/abstractfindwidget.h
-        ../../../../shared/findwidget/itemviewfindwidget.cpp ../../../../shared/findwidget/itemviewfindwidget.h
-        ../../../../shared/findwidget/texteditfindwidget.cpp ../../../../shared/findwidget/texteditfindwidget.h
-        ../../../../shared/qtgradienteditor/qtcolorbutton.cpp ../../../../shared/qtgradienteditor/qtcolorbutton.h
-        ../../../../shared/qtpropertybrowser/qtbuttonpropertybrowser.cpp ../../../../shared/qtpropertybrowser/qtbuttonpropertybrowser.h
-        ../../../../shared/qtpropertybrowser/qteditorfactory.cpp ../../../../shared/qtpropertybrowser/qteditorfactory.h
-        ../../../../shared/qtpropertybrowser/qtgroupboxpropertybrowser.cpp ../../../../shared/qtpropertybrowser/qtgroupboxpropertybrowser.h
-        ../../../../shared/qtpropertybrowser/qtpropertybrowser.cpp ../../../../shared/qtpropertybrowser/qtpropertybrowser.h
+        ../../../../shared/findwidget/abstractfindwidget.cpp ../../../../shared/findwidget/abstractfindwidget_p.h
+        ../../../../shared/findwidget/itemviewfindwidget.cpp ../../../../shared/findwidget/itemviewfindwidget_p.h
+        ../../../../shared/findwidget/texteditfindwidget.cpp ../../../../shared/findwidget/texteditfindwidget_p.h
+        ../../../../shared/qtgradienteditor/qtcolorbutton.cpp ../../../../shared/qtgradienteditor/qtcolorbutton_p.h
+        ../../../../shared/qtpropertybrowser/qtbuttonpropertybrowser.cpp ../../../../shared/qtpropertybrowser/qtbuttonpropertybrowser_p.h
+        ../../../../shared/qtpropertybrowser/qteditorfactory.cpp ../../../../shared/qtpropertybrowser/qteditorfactory_p.h
+        ../../../../shared/qtpropertybrowser/qtgroupboxpropertybrowser.cpp ../../../../shared/qtpropertybrowser/qtgroupboxpropertybrowser_p.h
+        ../../../../shared/qtpropertybrowser/qtpropertybrowser.cpp ../../../../shared/qtpropertybrowser/qtpropertybrowser_p.h
         ../../../../shared/qtpropertybrowser/qtpropertybrowserutils.cpp ../../../../shared/qtpropertybrowser/qtpropertybrowserutils_p.h
-        ../../../../shared/qtpropertybrowser/qtpropertymanager.cpp ../../../../shared/qtpropertybrowser/qtpropertymanager.h
-        ../../../../shared/qtpropertybrowser/qttreepropertybrowser.cpp ../../../../shared/qtpropertybrowser/qttreepropertybrowser.h
-        ../../../../shared/qtpropertybrowser/qtvariantproperty.cpp ../../../../shared/qtpropertybrowser/qtvariantproperty.h
+        ../../../../shared/qtpropertybrowser/qtpropertymanager.cpp ../../../../shared/qtpropertybrowser/qtpropertymanager_p.h
+        ../../../../shared/qtpropertybrowser/qttreepropertybrowser.cpp ../../../../shared/qtpropertybrowser/qttreepropertybrowser_p.h
+        ../../../../shared/qtpropertybrowser/qtvariantproperty.cpp ../../../../shared/qtpropertybrowser/qtvariantproperty_p.h
     INCLUDE_DIRECTORIES
         ../../../../shared/findwidget
         ../../../../shared/qtgradienteditor

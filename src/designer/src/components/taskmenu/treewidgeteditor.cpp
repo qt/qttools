@@ -8,7 +8,7 @@
 #include <qdesigner_utils_p.h>
 #include <abstractformbuilder.h>
 #include <designerpropertymanager.h>
-#include <qttreepropertybrowser.h>
+#include <qttreepropertybrowser_p.h>
 
 #include <QtDesigner/abstractformwindow.h>
 #include <QtDesigner/abstractformeditor.h>

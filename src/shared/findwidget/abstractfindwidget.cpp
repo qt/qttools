@@ -15,7 +15,7 @@
     using buttons available on the search bar.
  */
 
-#include "abstractfindwidget.h"
+#include "abstractfindwidget_p.h"
 
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QLabel>
