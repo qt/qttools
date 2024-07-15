@@ -8,6 +8,7 @@
 #include <QtCore/qreadwritelock.h>
 #include <QtCore/qregularexpression.h>
 #include <QtCore/qstringlist.h>
+#include <QtCore/qvector.h>
 
 #include <string>
 #include <unordered_map>
@@ -37,14 +38,14 @@ public:
     }
 
     void setRootDirectories(const QStringList &paths);
-    void setExclusionPatterns(const QStringList &patterns);
+    void setExclusionRegExes(const QVector<QRegularExpression> &expressions);
 
     bool isFileSignificant(const std::string &filePath) const;
 
 private:
     static FileSignificanceCheck *m_instance;
     std::vector<QDir> m_rootDirs;
-    std::vector<QRegularExpression> m_exclusionRegExes;
+    QVector<QRegularExpression> m_exclusionRegExes;
     mutable std::unordered_map<std::string, bool> m_cache;
     mutable QReadWriteLock m_cacheLock;
 };

@@ -467,8 +467,7 @@ static bool readFileContent(const QString &filePath, QString *content, QString *
 static void removeExcludedSources(Projects &projects)
 {
     for (Project &project : projects) {
-        for (const QString &ex : project.excluded) {
-            QRegularExpression rx(QRegularExpression::wildcardToRegularExpression(ex));
+        for (const QRegularExpression &rx : project.excluded) {
             for (auto it = project.sources.begin(); it != project.sources.end(); ) {
                 if (rx.match(*it).hasMatch())
                     it = project.sources.erase(it);
