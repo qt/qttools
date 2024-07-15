@@ -12,9 +12,10 @@
 #include <QList>
 #include <QLocale>
 #include <QMultiHash>
+#include <QRegularExpression>
 #include <QString>
 #include <QSet>
-
+#include <QVector>
 
 QT_BEGIN_NAMESPACE
 
@@ -53,7 +54,7 @@ public:
     QString m_sourceFileName;
     QString m_targetFileName;
     QString m_compilationDatabaseDir;
-    QStringList m_excludes;
+    QVector<QRegularExpression> m_excludes;
     QDir m_sourceDir;
     QDir m_targetDir; // FIXME: TS specific
     QSet<QString> m_projectRoots;

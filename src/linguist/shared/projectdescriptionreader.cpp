@@ -15,6 +15,7 @@
 #include <functional>
 
 using std::placeholders::_1;
+using namespace Qt::Literals::StringLiterals;
 
 class Validator
 {
@@ -131,7 +132,7 @@ private:
         result.filePath = stringValue(obj, QLatin1String("projectFile"));
         result.compileCommands = stringValue(obj, QLatin1String("compileCommands"));
         result.codec = stringValue(obj, QLatin1String("codec"));
-        result.excluded = stringListValue(obj, QLatin1String("excluded"));
+        result.excluded = wildcardsToRegExes(stringListValue(obj, QLatin1String("excluded")));
         result.includePaths = stringListValue(obj, QLatin1String("includePaths"));
         result.sources = stringListValue(obj, QLatin1String("sources"));
         if (obj.contains(QLatin1String("translations")))
@@ -169,6 +170,27 @@ private:
             return QStringLiteral("undefined");
         }
         return QStringLiteral("unknown");
+    }
+
+    static QVector<QRegularExpression> wildcardsToRegExes(const QStringList &wildcardPatterns)
+    {
+        QVector<QRegularExpression> result;
+        result.reserve(wildcardPatterns.size());
+        for (const QString &wildcardPattern : wildcardPatterns)
+            result.append(wildcardToRegEx(wildcardPattern));
+        return result;
+    }
+
+    // Return a QRegularExpression object for a TR_EXCLUDE / QT_EXCLUDE_SOURCES_FROM_TRANSLATION
+    // wildcard pattern. The regular expression is only anchored at the beginning to allow matching
+    // subdirectories.
+    static QRegularExpression wildcardToRegEx(const QString &wildcardPattern)
+    {
+        return QRegularExpression(
+            "\\A"_L1
+            + QRegularExpression::wildcardToRegularExpression(
+                wildcardPattern,
+                QRegularExpression::UnanchoredWildcardConversion));
     }
 
     QString stringValue(const QJsonObject &obj, const QString &key)
