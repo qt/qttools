@@ -782,8 +782,14 @@ bool LupdateVisitor::VisitNamedDecl(clang::NamedDecl *namedDeclaration)
     if (!fullLocation.isValid() || !fullLocation.getFileEntry())
         return true;
 
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(18,0,0))
+    auto fileEntry = fullLocation.getFileEntryRef();
+    if (fileEntry && !LupdatePrivate::isFileSignificant(fileEntry->getName().str()))
+        return true;
+#else
     if (!LupdatePrivate::isFileSignificant(fullLocation.getFileEntry()->getName().str()))
         return true;
+#endif
 
     qCDebug(lcClang) << "NamedDecl Name:   " << QString::fromStdString(namedDeclaration->getQualifiedNameAsString());
     qCDebug(lcClang) << "NamedDecl source: " << QString::fromStdString(namedDeclaration->getSourceRange().printToString(
