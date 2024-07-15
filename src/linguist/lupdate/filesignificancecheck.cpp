@@ -15,12 +15,9 @@ void FileSignificanceCheck::setRootDirectories(const QStringList &paths)
         m_rootDirs[i].setPath(paths.at(i));
 }
 
-void FileSignificanceCheck::setExclusionPatterns(const QStringList &patterns)
+void FileSignificanceCheck::setExclusionRegExes(const QVector<QRegularExpression> &expressions)
 {
-    const size_t patternsSize = static_cast<size_t>(patterns.size());
-    m_exclusionRegExes.resize(patternsSize);
-    for (size_t i = 0; i < patternsSize; ++i)
-        m_exclusionRegExes[i] = QRegularExpression::fromWildcard(patterns.at(i));
+    m_exclusionRegExes = expressions;
 }
 
 /*

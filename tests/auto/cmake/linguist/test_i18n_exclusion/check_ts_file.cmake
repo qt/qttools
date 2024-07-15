@@ -7,7 +7,6 @@ file(READ "${ts_file}" ts_file_content)
 set(expected_strings
     "<source>Hello from app1!</source>"
     "<source>Hello from MyObject1!</source>"
-    "<source>excluded5</source>" ### move to forbidden_strings when fixing QTBUG-127146
 )
 foreach(needle IN LISTS expected_strings)
     string(FIND "${ts_file_content}" "${needle}" pos)
@@ -26,6 +25,7 @@ set(forbidden_strings
     "<source>excluded2</source>"
     "<source>excluded3</source>"
     "<source>excluded4</source>"
+    "<source>excluded5</source>"
 )
 foreach(needle IN LISTS forbidden_strings)
     string(FIND "${ts_file_content}" "${needle}" pos)
