@@ -19,7 +19,6 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QLocale>
-#include <QtCore/QRegularExpression>
 #include <QtCore/QTextStream>
 
 #include <private/qtranslator_p.h>

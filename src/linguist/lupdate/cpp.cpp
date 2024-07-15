@@ -1255,8 +1255,7 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
 {
     QString cleanFile = QDir::cleanPath(file);
 
-    for (const QString &ex : std::as_const(cd.m_excludes)) {
-        QRegularExpression rx(QRegularExpression::wildcardToRegularExpression(ex));
+    for (const QRegularExpression &rx : std::as_const(cd.m_excludes)) {
         if (rx.match(cleanFile).hasMatch())
             return;
     }
