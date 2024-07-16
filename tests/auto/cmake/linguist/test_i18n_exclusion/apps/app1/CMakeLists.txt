@@ -5,6 +5,7 @@ qt_add_executable(app1
     main.cpp
     excluded1.cpp
     subdir/excluded2.cpp
+    subdir/subdir3/excluded5.cpp
     ../shared/excluded3.cpp
 )
 
