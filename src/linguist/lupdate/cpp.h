@@ -24,6 +24,8 @@ struct HashString {
     mutable uint m_hash; // We use the highest bit as a validity indicator (set => invalid)
 };
 
+QDebug operator<<(QDebug debug, const HashString &s);
+
 struct HashStringList {
     explicit HashStringList(const QList<HashString> &list) : m_list(list), m_hash(0x80000000) {}
     const QList<HashString> &value() const { return m_list; }
@@ -32,6 +34,8 @@ struct HashStringList {
     QList<HashString> m_list;
     mutable uint m_hash; // We use the highest bit as a validity indicator (set => invalid)
 };
+
+QDebug operator<<(QDebug debug, const HashStringList &lst);
 
 typedef QList<HashString> NamespaceList;
 

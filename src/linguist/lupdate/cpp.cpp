@@ -24,6 +24,11 @@ size_t qHash(const HashString &str)
     return str.m_hash;
 }
 
+QDebug operator<<(QDebug debug, const HashString &s)
+{
+    return debug << s.value();
+}
+
 size_t qHash(const HashStringList &list)
 {
     if (list.m_hash & 0x80000000) {
@@ -35,6 +40,11 @@ size_t qHash(const HashStringList &list)
         list.m_hash = hash;
     }
     return list.m_hash;
+}
+
+QDebug operator<<(QDebug debug, const HashStringList &lst)
+{
+    return debug << lst.m_list;
 }
 
 static int nextFileId;
