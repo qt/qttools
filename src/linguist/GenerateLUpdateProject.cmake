@@ -86,7 +86,7 @@ endfunction()
 
 get_filename_component(project_root "${lupdate_project_file}" DIRECTORY)
 
-# Make relative paths absolute to the project root
+# Set up a list of all path variables
 set(path_variables sources include_paths translations)
 if(lupdate_subproject_count GREATER 0)
     foreach(i RANGE 1 ${lupdate_subproject_count})
@@ -97,6 +97,16 @@ if(lupdate_subproject_count GREATER 0)
         )
     endforeach()
 endif()
+
+# Remove duplicates in include paths
+# Once we require CMake 3.27, replace this with $<LIST:REMOVE_DUPLICATES,list>.
+foreach(path_var IN LISTS path_variables)
+    if(path_var MATCHES "_include_paths$")
+        list(REMOVE_DUPLICATES lupdate_${path_var})
+    endif()
+endforeach()
+
+# Make relative paths absolute to the project root
 foreach(path_var IN LISTS path_variables)
     set(absolute_${path_var} "")
     foreach(path IN LISTS lupdate_${path_var})
