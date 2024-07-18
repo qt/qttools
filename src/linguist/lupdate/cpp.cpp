@@ -5,7 +5,6 @@
 
 #include <translator.h>
 #include <QtCore/QBitArray>
-#include <QtCore/QStack>
 #include <QtCore/QTextStream>
 #include <QtCore/QRegularExpression>
 
@@ -57,15 +56,6 @@ public:
     }
 private:
     QBitArray m_ba;
-};
-
-struct CppParserState
-{
-    NamespaceList namespaces;
-    QStack<qsizetype> namespaceDepths;
-    NamespaceList functionContext;
-    QString functionContextUnresolved;
-    QString pendingContext;
 };
 
 class CppParser : private CppParserState {
@@ -1154,6 +1144,23 @@ void CppParser::truncateNamespaces(NamespaceList *namespaces, int length)
   Functions for processing include files.
 */
 
+size_t qHash(const CppParserState &s, size_t seed)
+{
+    seed = qHash(s.namespaces, seed);
+    seed = qHash(s.namespaceDepths, seed);
+    seed = qHash(s.functionContext, seed);
+    seed = qHash(s.functionContextUnresolved, seed);
+    seed = qHash(s.pendingContext, seed);
+    return seed;
+}
+
+size_t qHash(const ResultsCacheKey &key, size_t seed)
+{
+    seed = qHash(key.cleanFile, seed);
+    seed = qHash(key.parserState, seed);
+    return seed;
+}
+
 IncludeCycleHash &CppFiles::includeCycles()
 {
     static IncludeCycleHash cycles;
@@ -1175,9 +1182,9 @@ QSet<QString> &CppFiles::blacklistedFiles()
     return blacklisted;
 }
 
-QSet<const ParseResults *> CppFiles::getResults(const QString &cleanFile)
+QSet<const ParseResults *> CppFiles::getResults(const ResultsCacheKey &key)
 {
-    IncludeCycle * const cycle = includeCycles().value(cleanFile);
+    IncludeCycle * const cycle = includeCycles().value(key);
 
     if (cycle)
         return cycle->results;
@@ -1185,16 +1192,16 @@ QSet<const ParseResults *> CppFiles::getResults(const QString &cleanFile)
         return QSet<const ParseResults *>();
 }
 
-void CppFiles::setResults(const QString &cleanFile, const ParseResults *results)
+void CppFiles::setResults(const ResultsCacheKey &key, const ParseResults *results)
 {
-    IncludeCycle *cycle = includeCycles().value(cleanFile);
+    IncludeCycle *cycle = includeCycles().value(key);
 
     if (!cycle) {
         cycle = new IncludeCycle;
-        includeCycles().insert(cleanFile, cycle);
+        includeCycles().insert(key, cycle);
     }
 
-    cycle->fileNames.insert(cleanFile);
+    cycle->fileNames.insert(key.cleanFile);
     cycle->results.insert(results);
 }
 
@@ -1218,14 +1225,15 @@ void CppFiles::setBlacklisted(const QString &cleanFile)
     blacklistedFiles().insert(cleanFile);
 }
 
-void CppFiles::addIncludeCycle(const QSet<QString> &fileNames)
+void CppFiles::addIncludeCycle(const QSet<QString> &fileNames, const CppParserState &parserState)
 {
     IncludeCycle * const cycle = new IncludeCycle;
     cycle->fileNames = fileNames;
 
     QSet<IncludeCycle *> intersectingCycles;
     for (const QString &fileName : fileNames) {
-        IncludeCycle *intersectingCycle = includeCycles().value(fileName);
+        const ResultsCacheKey key = { fileName, parserState };
+        IncludeCycle *intersectingCycle = includeCycles().value(key);
 
         if (intersectingCycle && !intersectingCycles.contains(intersectingCycle)) {
             intersectingCycles.insert(intersectingCycle);
@@ -1237,7 +1245,7 @@ void CppFiles::addIncludeCycle(const QSet<QString> &fileNames)
     qDeleteAll(intersectingCycles);
 
     for (const QString &fileName : std::as_const(cycle->fileNames))
-        includeCycles().insert(fileName, cycle);
+        includeCycles().insert({ fileName, parserState }, cycle);
 }
 
 static bool isHeader(const QString &name)
@@ -1258,21 +1266,20 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
 
     const int index = includeStack.indexOf(cleanFile);
     if (index != -1) {
-        CppFiles::addIncludeCycle(QSet<QString>(includeStack.cbegin() + index, includeStack.cend()));
+        CppFiles::addIncludeCycle(QSet<QString>(includeStack.cbegin() + index, includeStack.cend()),
+                                  *this);
         return;
     }
 
-    // If the #include is in any kind of namespace, has been blacklisted previously,
+    // If the #include has been blacklisted previously,
     // or is not a header file (stdc++ extensionless or *.h*), then really include
     // it. Otherwise it is safe to process it stand-alone and re-use the parsed
     // namespace data for inclusion into other files.
     bool isIndirect = false;
-    if (namespaces.size() == 1 && functionContext.size() == 1
-        && functionContextUnresolved.isEmpty() && pendingContext.isEmpty()
-        && !CppFiles::isBlacklisted(cleanFile)
+    if (!CppFiles::isBlacklisted(cleanFile)
         && isHeader(cleanFile)) {
 
-        QSet<const ParseResults *> res = CppFiles::getResults(cleanFile);
+        QSet<const ParseResults *> res = CppFiles::getResults(ResultsCacheKey(cleanFile, *this));
         if (!res.isEmpty()) {
             results->includes.unite(res);
             return;
@@ -2244,7 +2251,7 @@ const ParseResults *CppParser::recordResults(bool isHeader)
             results->fileId = nextFileId++;
             pr = results;
         }
-        CppFiles::setResults(yyFileName, pr);
+        CppFiles::setResults(ResultsCacheKey(yyFileName, *this), pr);
         return pr;
     } else {
         delete results;
@@ -2257,7 +2264,7 @@ void loadCPP(Translator &translator, const QStringList &filenames, ConversionDat
     QStringConverter::Encoding e = cd.m_sourceIsUtf16 ? QStringConverter::Utf16 : QStringConverter::Utf8;
 
     for (const QString &filename : filenames) {
-        if (!CppFiles::getResults(filename).isEmpty() || CppFiles::isBlacklisted(filename))
+        if (!CppFiles::getResults(ResultsCacheKey(filename)).isEmpty() || CppFiles::isBlacklisted(filename))
             continue;
 
         QFile file(filename);
