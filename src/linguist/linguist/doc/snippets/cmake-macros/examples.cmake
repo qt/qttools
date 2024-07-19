@@ -117,8 +117,10 @@ set_property(DIRECTORY tests PROPERTY QT_EXCLUDE_FROM_TRANSLATION ON)
 qt_add_executable(myapp
     main.cpp
     untranslatable.cpp
-    3rdparty/sqlite3.h
-    3rdparty/sqlite3.c
+    3rdparty/sqlite/sqlite3.h
+    3rdparty/sqlite/sqlite3.c
+    3rdparty/zlib/src/gzlib.c
+    3rdparty/zlib/src/zlib.h
 )
 set_property(TARGET myapp PROPERTY QT_EXCLUDE_SOURCES_FROM_TRANSLATION
     untranslatable.cpp

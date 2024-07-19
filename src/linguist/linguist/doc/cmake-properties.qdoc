@@ -123,6 +123,11 @@ The paths may be absolute or relative to \c{CMAKE_CURRENT_SOURCE_DIR}. The paths
 may contain wildcards in a format that is accepted by
 \l{QRegularExpression::wildcardToRegularExpression}.
 
+\section1 Examples
+
+Exclude \c untranslatable.cpp and recursively every file under the \c 3rdparty
+directory.
+
 \snippet cmake-macros/examples.cmake exclude sources from i18n
 
 \sa qt_add_lupdate
