@@ -194,6 +194,9 @@ function(_qt_internal_ensure_ts_file)
 
     file(WRITE "${arg_TS_FILE}"
         [[<?xml version="1.0" encoding="utf-8"?>
+<!--
+Run the update_translations CMake target to populate the source strings in this file.
+-->
 <!DOCTYPE TS>
 <TS/>
 ]])
