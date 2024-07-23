@@ -412,10 +412,11 @@
     lupdate application.qrc -ts myapp_en.ts
     \endcode
 
-    To process all QML files without using a \c .qrc file:
+    To process all QML files in the current working directory (or its subfolders)
+    without using a \c .qrc file:
 
     \badcode
-    lupdate -extensions qml -ts myapp_en.ts
+    lupdate . -extensions qml -ts myapp_en.ts
     \endcode
 
     To check for translatable strings in both QML and C++ source files:
