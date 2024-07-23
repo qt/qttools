@@ -10,6 +10,16 @@
     \list
       \li \l {Introduction to QDoc}
       \li \l {Getting Started with QDoc}
+        \list
+          \li \l{Installing Clang for QDoc}
+          \li \l{Creating QDoc Configuration Files}
+          \li \l{Writing Documentation}
+          \li \l{Categories of Documentation}
+            \list
+              \li \l{C++ Documentation Style}
+              \li \l{QML Documentation Style}
+            \endlist
+        \endlist
       \li \l {Command Index}
       \li \l {Topic Commands}
       \li \l {Context Commands}
@@ -40,7 +50,7 @@
             \li \l {Product Names}
             \li \l {Product Versions}
             \li \l {Tabbed Content}
-            \li \l {youtube-macro}{Linking to YouTube content}
+            \li \l {\\youtube}{Linking to YouTube content}
             \li \l {Miscellaneous Macros}
         \endlist
       \li \l {The QDoc Configuration File}

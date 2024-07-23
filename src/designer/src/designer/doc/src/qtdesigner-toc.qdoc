@@ -1,0 +1,41 @@
+// Copyright (C) 2024 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page qtdesigner-toc.html
+    \title Qt Widgets Designer module topics
+
+    The following list has links to all the individual topics (HTML files)
+    in the Qt Widgets Designer module.
+
+    \list
+    \li \l {Qt Widgets Designer}{Using the module}
+    \li \l {Getting to Know Qt Widgets Designer}
+    \li \l {A Quick Start to Qt Widgets Designer}
+    \li \l {Qt Widgets Designer's Editing Modes}
+        \list
+            \li \l {Qt Widgets Designer's Widget Editing Mode}{Widget Editing Mode}
+            \li \l {Qt Widgets Designer's Signals and Slots Editing Mode}
+                    {Signals and Slots Editing Mode}
+            \li \l {Qt Widgets Designer's Buddy Editing Mode}
+                    {Buddy Editing Mode}
+            \li \l {Qt Widgets Designer's Tab Order Editing Mode}
+                    {Tab Order Editing Mode}
+        \endlist
+    \li \l {Using Layouts in Qt Widgets Designer}{Using Layouts}
+    \li \l {Saving, Previewing and Printing Forms in Qt Widgets Designer}{Saving, Previewing and Printing Forms}
+    \li \l {Using Containers in Qt Widgets Designer}{Using Containers}
+    \li \l {Creating Main Windows in Qt Widgets Designer}{Creating Main Windows}
+    \li \l {Editing Resources with Qt Widgets Designer}{Editing Resources}
+    \li \l {Using Stylesheets with Qt Widgets Designer}{Using Stylesheets}
+    \li \l {Using a Designer UI File in Your C++ Application}
+    \li \l {Using a Designer UI File in Your Qt for Python Application}
+    \li \l {Customizing Qt Widgets Designer Forms}
+    \li \l {Using Custom Widgets with Qt Widgets Designer}{Using Custom Widgets}
+    \li \l {Creating Custom Widgets for Qt Widgets Designer}
+    \li \l {Creating Custom Widget Extensions}
+    \li \l {Qt Widgets Designer's UI File Format}
+    \li \l {Creating and Using Components for Qt Widgets Designer}
+    \endlist
+
+*/

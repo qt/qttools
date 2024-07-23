@@ -15,7 +15,10 @@ qhp.QtHelp.virtualFolder       = qthelp
 qhp.QtHelp.indexTitle          = Qt Help
 qhp.QtHelp.indexRoot           =
 
-qhp.QtHelp.subprojects         = classes
+qhp.QtHelp.subprojects = manual classes
+qhp.QtHelp.subprojects.manual.title = Qt Help
+qhp.QtHelp.subprojects.manual.indexTitle = Qt Help module topics
+qhp.QtHelp.subprojects.manual.type = manual
 qhp.QtHelp.subprojects.classes.title = C++ Classes
 qhp.QtHelp.subprojects.classes.indexTitle = Qt Help C++ Classes
 qhp.QtHelp.subprojects.classes.selectors = class fake:headerfile
@@ -36,6 +39,9 @@ imagedirs               = images
 
 navigation.landingpage = "Qt Help"
 navigation.cppclassespage = "Qt Help C++ Classes"
+# Auto-generate navigation linking based on "Qt Help module topics":
+navigation.toctitles = "Qt Help module topics"
+navigation.toctitles.inclusive = false
 
 # Enforce zero documentation warnings
 warninglimit = 0

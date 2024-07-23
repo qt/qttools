@@ -6,6 +6,19 @@ description      = QDoc Manual
 version          = $QT_VERSION
 moduleheader     =
 
+qhp.projects            = QDoc
+
+qhp.QDoc.file                = qdoc.qhp
+qhp.QDoc.namespace           = org.qt-project.qdoc.$QT_VERSION_TAG
+qhp.QDoc.virtualFolder       = qdoc
+qhp.QDoc.indexTitle          = QDoc Manual
+qhp.QDoc.indexRoot           =
+
+qhp.QDoc.subprojects = manual
+qhp.QDoc.subprojects.manual.title = QDoc Manual
+qhp.QDoc.subprojects.manual.indexTitle = QDoc Manual
+qhp.QDoc.subprojects.manual.type = manual
+
 sourcedirs = ..
 
 exampledirs = .. \
@@ -16,19 +29,6 @@ imagedirs = ../images
 tagfile = ../html/qdoc.tags
 
 examples.fileextensions = "*.cpp *.h *.js *.xq *.svg *.xml *.ui *.qhp *.qhcp *.qml *.css *.qdoc *.qdocinc *.sample"
-
-qhp.projects            = QDoc
-
-qhp.QDoc.file                = qdoc.qhp
-qhp.QDoc.namespace           = org.qt-project.qdoc.$QT_VERSION_TAG
-qhp.QDoc.virtualFolder       = qdoc
-qhp.QDoc.indexTitle          = QDoc Manual
-qhp.QDoc.indexRoot           =
-
-qhp.QDoc.subprojects         = overviews
-qhp.QDoc.subprojects.overviews.title = Overviews
-qhp.QDoc.subprojects.overviews.indexTitle = QDoc Manual
-qhp.QDoc.subprojects.overviews.selectors = doc:page
 
 depends += \
     qtconcurrent \
@@ -54,7 +54,9 @@ depends += \
 
 ignorewords += QDoc
 
-navigation.landingpage = "QDoc Manual"
+# Auto-generate navigation linking based on "QDoc Manual":
+navigation.toctitles = "QDoc Manual"
+navigation.toctitles.inclusive = true
 
 # Convenience macros for creating links to QDoc commands & configuration variables
 macro.qdoccmd = \\l{\1-command}{\\c{\\\1}}

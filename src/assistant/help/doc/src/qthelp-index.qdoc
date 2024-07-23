@@ -4,9 +4,12 @@
 /*!
     \page qthelp-index.html
     \title Qt Help
-
     \brief The QtHelp module provides classes for integrating
     online documentation in applications.
+
+    The Qt help system includes tools for generating and viewing Qt help files.
+    In addition, it provides classes for accessing help contents
+    programmatically to be able to integrate online help into Qt applications.
 
     \section1 Getting Started
 

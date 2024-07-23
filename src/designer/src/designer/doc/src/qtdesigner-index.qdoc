@@ -4,8 +4,10 @@
 /*!
     \page qtdesigner-index.html
     \title Qt Widgets Designer
-
     \brief Provides classes to create your own custom widget plugins for
+    \QD and classes to access \QD components.
+
+    Provides classes to create your own custom widget plugins for
     \QD and classes to access \QD components.
 
     In addition, the QFormBuilder class provides the possibility of
