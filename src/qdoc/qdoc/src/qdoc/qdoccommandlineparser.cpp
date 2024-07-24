@@ -48,6 +48,7 @@ QDocCommandLineParser::QDocCommandLineParser()
     defineOption.setDescription(
             QStringLiteral("Define the argument as a macro while parsing sources"));
     defineOption.setValueName(QStringLiteral("macro[=def]"));
+    defineOption.setFlags(QCommandLineOption::ShortOptionStyle);
     addOption(defineOption);
 
     dependsOption.setDescription(QStringLiteral("Specify dependent modules"));
