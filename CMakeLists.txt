@@ -18,9 +18,9 @@ if(WIN32)
     list(APPEND optional_components AxContainer)
 endif()
 
-find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core Network)
+find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core)
 find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS
-             DBus Xml Widgets Quick QuickWidgets Qml QmlLSPrivate
+             DBus Network Xml Widgets Quick QuickWidgets Qml QmlLSPrivate
              Sql PrintSupport OpenGL OpenGLWidgets ${optional_components})
 qt_internal_project_setup()
 
