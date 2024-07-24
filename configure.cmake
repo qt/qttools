@@ -42,7 +42,7 @@ endif()
 qt_feature("assistant" PRIVATE
     LABEL "Qt Assistant"
     PURPOSE "Qt Assistant is a tool for viewing on-line documentation in Qt help file format."
-    CONDITION TARGET Qt::Widgets AND QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND (sqlite_plugin_available OR QT_BUILD_SHARED_LIBS)
+    CONDITION TARGET Qt::Widgets AND TARGET Qt::Network AND QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND (sqlite_plugin_available OR QT_BUILD_SHARED_LIBS)
 )
 qt_feature("clang" PRIVATE
     LABEL "libclang found"
@@ -64,7 +64,7 @@ qt_feature("clangcpp" PRIVATE
 qt_feature("designer" PRIVATE
     LABEL "Qt Widgets Designer"
     PURPOSE "Qt Widgets Designer is the Qt tool for designing and building graphical user interfaces (GUIs) with Qt Widgets. You can compose and customize your windows or dialogs in a what-you-see-is-what-you-get (WYSIWYG) manner, and test them using different styles and resolutions."
-    CONDITION TARGET Qt::Widgets AND QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton
+    CONDITION TARGET Qt::Widgets AND TARGET Qt::Network AND QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton
 )
 qt_feature("distancefieldgenerator" PRIVATE
     LABEL "Qt Distance Field Generator"
@@ -165,4 +165,16 @@ qt_configure_add_report_entry(
     TYPE WARNING
     MESSAGE "${clangcpp_warn_msg}"
     CONDITION NOT QT_FEATURE_clangcpp
+)
+
+qt_configure_add_report_entry(
+    TYPE WARNING
+    MESSAGE "Qt Assistant will not be compiled because it requires Qt Network."
+    CONDITION NOT QT_FEATURE_assistant AND NOT TARGET Qt::Network
+)
+
+qt_configure_add_report_entry(
+    TYPE WARNING
+    MESSAGE "Qt Designer will not be compiled because it requires Qt Network."
+    CONDITION NOT QT_FEATURE_designer AND NOT TARGET Qt::Network
 )
