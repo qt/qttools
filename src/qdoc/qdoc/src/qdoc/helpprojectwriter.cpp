@@ -677,7 +677,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
             writer.writeStartElement("section");
             QString indexPath = m_gen->fullDocumentLocation(
                     m_qdb->findNodeForTarget(subproject.m_indexTitle, nullptr));
-            if (indexPath.isEmpty())
+            if (indexPath.isEmpty() && !subproject.m_indexTitle.isEmpty())
                 Config::instance().location().warning(
                         "Failed to find %1.indexTitle '%2'"_L1.arg(subproject.m_prefix, subproject.m_indexTitle));
             writer.writeAttribute("ref", indexPath);
