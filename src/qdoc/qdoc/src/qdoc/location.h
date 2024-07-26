@@ -83,6 +83,7 @@ private:
     static QString s_programName;
     static QString s_project;
     static QRegularExpression *s_spuriousRegExp;
+    static QSet<QString> s_reports;
 };
 Q_DECLARE_TYPEINFO(Location::StackEntry, Q_RELOCATABLE_TYPE);
 Q_DECLARE_TYPEINFO(Location, Q_COMPLEX_TYPE); // stkTop = &stkBottom
