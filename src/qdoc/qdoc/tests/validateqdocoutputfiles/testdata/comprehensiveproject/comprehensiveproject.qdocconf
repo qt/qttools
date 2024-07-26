@@ -89,7 +89,7 @@ qhp.Test.subprojects.test.sortPages   = true
 
 qhp.Test.subprojects.classes.title      = Classes
 qhp.Test.subprojects.classes.indexTitle = QDoc Test C++ Classes
-qhp.Test.subprojects.classes.selectors  = class namespace doc:headerfile boop:whatever
+qhp.Test.subprojects.classes.selectors  = class namespace doc:headerfile group:deprecated-classes boop:whatever
 qhp.Test.subprojects.classes.sortPages  = true
 
 qhp.Test.subprojects.qmltypes.title      = QML Types

@@ -202,7 +202,11 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     if (!node->url().isEmpty() && !(project.m_includeIndexNodes && !node->url().startsWith("http")))
         return false;
 
-    if (node->isPrivate() || node->isInternal() || node->isDontDocument())
+    // Process (members of) unseen group nodes, i.e. nodes that use \ingroup <group_name> where
+    // \group group_name itself is not documented.
+    bool unseenGroup{node->isGroup() && !node->wasSeen()};
+
+    if ((node->isPrivate() || node->isInternal() || node->isDontDocument()) && !unseenGroup)
         return false;
 
     if (node->name().isEmpty())
@@ -245,6 +249,10 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
             project.m_subprojects[i].m_nodes[objName] = node;
         }
     }
+
+    // Unseen group nodes require no further processing as they have no documentation
+    if (unseenGroup)
+        return false;
 
     switch (node->nodeType()) {
 
@@ -430,6 +438,11 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
             // Skip related non-members adopted by some other aggregate
             if (child->parent() != aggregate)
                 continue;
+            // Process unseen group nodes (even though they're marked internal)
+            if (child->isGroup() && !child->wasSeen()) {
+                childSet << child;
+                continue;
+            }
             if (child->isIndexNode() || child->isPrivate())
                 continue;
             if (child->isTextPageNode()) {
