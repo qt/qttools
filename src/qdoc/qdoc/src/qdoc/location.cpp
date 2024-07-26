@@ -20,6 +20,7 @@ int Location::s_warningCount = 0;
 int Location::s_warningLimit = -1;
 QString Location::s_programName;
 QString Location::s_project;
+QSet<QString> Location::s_reports;
 QRegularExpression *Location::s_spuriousRegExp = nullptr;
 
 /*!
@@ -271,10 +272,20 @@ void Location::fatal(const QString &message, const QString &details) const
 /*!
   Writes \a message and \a details to stderr as a formatted
   report message.
+
+  A report does not include any filename/line number information.
+  Recurring reports with an identical \a message are ignored.
+
+  A report is generated only in \e generate or \e {single-exec}
+  phase. In \e {prepare} phase, this function does nothing.
  */
 void Location::report(const QString &message, const QString &details) const
 {
-    emitMessage(Report, message, details);
+    const auto &config = Config::instance();
+    if ((!config.preparing() || config.singleExec()) && !s_reports.contains(message)) {
+        emitMessage(Report, message, details);
+        s_reports << message;
+    }
 }
 
 /*!
