@@ -24,6 +24,7 @@
                 </section>
                 <section ref="testcpp-module.html" title="Classes">
                     <section ref="crossmoduleref.html" title="CrossModuleRef Namespace Reference"/>
+                    <section ref="obsolete-classes.html" title="Obsolete Classes"/>
                     <section ref="seenclass.html" title="SeenClass Class Reference"/>
                     <section ref="testqdoc.html" title="TestQDoc Namespace Reference"/>
                     <section ref="testqdoc-test.html" title="TestQDoc::Test Class Reference">

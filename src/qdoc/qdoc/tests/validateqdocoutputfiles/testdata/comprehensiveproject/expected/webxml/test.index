@@ -58,7 +58,7 @@
         <qmlclass name="DocTest" qml-module-name="Test.NoVer" fullname="Test.NoVer.DocTest" href="qml-test-nover-doctest.html" status="active" access="public" location="DocTest.qml" since="1.1" documented="true" title="DocTest" fulltitle="DocTest" subtitle="" brief="Shadows the type name in QDoc.Test module"/>
         <class name="DontLinkToMe" href="dontlinktome.html" status="ignored" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Class that does not generate documentation"/>
         <page name="demos/hidden" href="test-demos-hidden-example.html" status="active" location="hidden.qdoc" documented="true" subtype="example" title="Hidden Demo" fulltitle="Hidden Demo" subtitle="" brief="Tagged 'broken', does not appear in examples-manifest.xml"/>
-        <page name="obsolete-classes.html" href="obsolete-classes.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Obsolete Classes" fulltitle="Obsolete Classes" subtitle="">
+        <page name="obsolete-classes.html" href="obsolete-classes.html" status="active" location="classlists.qdoc" documented="true" groups="deprecated-classes" subtype="page" title="Obsolete Classes" fulltitle="Obsolete Classes" subtitle="">
             <contents name="classes-with-obsolete-members" title="Classes with obsolete members" level="1"/>
             <contents name="testqdoc" title="TestQDoc" level="2"/>
         </page>
@@ -212,6 +212,7 @@
         </qmlvaluetype>
         <page name="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" href="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" status="active" location="classlists.qdoc" documented="true" subtype="externalpage" title="reentrant" fulltitle="reentrant" subtitle=""/>
         <group name="cpptypes" href="cpptypes.html" status="active" location="classlists.qdoc" documented="true" seen="true" title="Test C++ Types"/>
+        <group name="deprecated-classes" href="deprecated-classes.html" status="internal" seen="false" title=""/>
         <group name="testgroup" href="testgroup.html" status="internal" seen="false" title=""/>
         <module name="TestCPP" href="testcpp-module.html" status="active" since="2.0" documented="true" seen="true" title="QDoc Test C++ Classes" brief="A test module page">
             <contents name="linking-to-function-like-things" title="Linking to function-like things" level="1"/>
