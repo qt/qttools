@@ -23,9 +23,9 @@
                     <section ref="test-nover-qmlmodule.html" title="Versionless QML Module"/>
                 </section>
                 <section ref="testcpp-module.html" title="Classes">
-                    <section ref="crossmoduleref.html" title="CrossModuleRef"/>
+                    <section ref="crossmoduleref.html" title="CrossModuleRef Namespace Reference"/>
                     <section ref="seenclass.html" title="SeenClass Class Reference"/>
-                    <section ref="testqdoc.html" title="TestQDoc"/>
+                    <section ref="testqdoc.html" title="TestQDoc Namespace Reference"/>
                     <section ref="testqdoc-test.html" title="TestQDoc::Test Class Reference">
                         <section ref="testqdoc-test-members.html" title="List of all members"/>
                         <section ref="testqdoc-test-obsolete.html" title="Obsolete members"/>

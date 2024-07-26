@@ -525,7 +525,7 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     } break;
 
     case Node::Namespace:
-        writeSection(writer, href, objName);
+        writeSection(writer, href, "%1 Namespace Reference"_L1.arg(objName));
         break;
 
     case Node::Example:
