@@ -68,6 +68,9 @@ using Specialized = Struct<int, T>;
 
     friend bool operator==(const Test &lhs, const Test &rhs) { return false; }
 
+    Test() = delete;
+    Test &operator=(Test &&other) = delete;
+
 protected:
     void overload() {}
     void overload(bool b) { if (!b) return; }
