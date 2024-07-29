@@ -18,6 +18,8 @@
 #include "qwizard_container.h"
 #include "layout_propertysheet.h"
 
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractintegration.h>
 #include <QtDesigner/private/ui4_p.h>
 #include <QtDesigner/private/formbuilderextra_p.h>
 #include <QtDesigner/private/resourcebuilder_p.h>
@@ -73,8 +75,10 @@
 
 #include <QtCore/qbuffer.h>
 #include <QtCore/qdir.h>
+#include <QtCore/qlibraryinfo.h>
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qdebug.h>
+#include <QtCore/qversionnumber.h>
 #include <QtCore/qxmlstream.h>
 
 #include <algorithm>
@@ -98,6 +102,40 @@ static constexpr auto clipboardObjectName = "__qt_fake_top_level"_L1;
 #define OLD_RESOURCE_FORMAT // Support pre 4.4 format.
 
 namespace qdesigner_internal {
+
+static QVersionNumber qtVersion(const QDesignerFormEditorInterface *core)
+{
+    const QVariant v = core->integration()->property("qtVersion");
+    return v.isValid() && v.canConvert<QVersionNumber>()
+           ? v.value<QVersionNumber>() : QLibraryInfo::version();
+}
+
+static bool supportsQualifiedEnums(const QVersionNumber &qtVersion)
+{
+    if (qtVersion >= QVersionNumber{6, 6, 2})
+        return true;
+
+    switch (qtVersion.majorVersion()) {
+    case 6: // Qt 6
+        switch (qtVersion.minorVersion()) {
+        case 5: // 6.5 LTS
+            if (qtVersion.microVersion() >= 4)
+                return true;
+            break;
+        case 2: // 6.2 LTS
+            if (qtVersion.microVersion() >= 13)
+                return true;
+            break;
+        }
+        break;
+
+    case 5: // Qt 5 LTS
+        if (qtVersion >= QVersionNumber{5, 15, 18})
+            return true;
+        break;
+    }
+    return false;
+}
 
 // -------------------- QDesignerResourceBuilder: A resource builder that works on the property sheet icon types.
 class QDesignerResourceBuilder : public QResourceBuilder
@@ -1207,6 +1245,36 @@ DomLayout *QDesignerResource::createDom(QLayout *layout, DomLayout *ui_parentLay
     return l;
 }
 
+// Do not write fully qualified enumerations for spacer orientation
+// for older Qt versions since that breaks older uic
+
+static void inline fixSpacerPropertyQt5(DomProperty *p)
+{
+    if (p->attributeName() == "orientation"_L1) {
+        // "Qt::Orientation::Horizontal" -> "Qt::Horizontal"
+        QString enumValue = p->elementEnum();
+        if (enumValue.startsWith("Qt::Orientation::"_L1)) {
+            enumValue.remove(4, 13);
+            p->setElementEnum(enumValue);
+        }
+    } else if (p->attributeName() == "sizeType"_L1) {
+        // "QSizePolicy::Policy::Expanding" -> "QSizePolicy::Expanding"
+        QString enumValue = p->elementEnum();
+        if (enumValue.startsWith("QSizePolicy::Policy::"_L1)) {
+            enumValue.remove(13, 8);
+            p->setElementEnum(enumValue);
+        }
+    }
+}
+
+static void fixSpacerPropertiesQt5(DomPropertyList *properties)
+{
+    for (auto *p : *properties) {
+        if (p->kind() == DomProperty::Enum)
+            fixSpacerPropertyQt5(p);
+    }
+}
+
 DomLayoutItem *QDesignerResource::createDom(QLayoutItem *item, DomLayout *ui_layout, DomWidget *ui_parentWidget)
 {
     DomLayoutItem *ui_item = nullptr;
@@ -1220,7 +1288,10 @@ DomLayoutItem *QDesignerResource::createDom(QLayoutItem *item, DomLayout *ui_lay
         if (!objectName.isEmpty())
             spacer->setAttributeName(objectName);
         // ### filter the properties
-        spacer->setElementProperty(computeProperties(item->widget()));
+        auto properties = computeProperties(item->widget());
+        if (!supportsQualifiedEnums(qtVersion(core())))
+            fixSpacerPropertiesQt5(&properties);
+        spacer->setElementProperty(properties);
 
         ui_item = new DomLayoutItem();
         ui_item->setElementSpacer(spacer);
