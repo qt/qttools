@@ -44,6 +44,7 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qtextstream.h>
+#include <QtCore/qtimezone.h>
 
 enum SettingsView { TreeView, ButtonView };
 
@@ -1078,7 +1079,10 @@ void PropertyEditor::setObject(QObject *object)
                     }
                 }
             } else {
-                qWarning("%s", qPrintable(msgUnsupportedType(propertyName, type)));
+                // QTBUG-80417, suppress warning for QDateEdit::timeZone
+                const int typeId = value.typeId();
+                if (typeId != qMetaTypeId<QTimeZone>())
+                    qWarning("%s", qPrintable(msgUnsupportedType(propertyName, type)));
             }
         }
     }
