@@ -40,6 +40,9 @@ using namespace Qt::StringLiterals;
 
 bool HtmlGenerator::s_inUnorderedList { false };
 
+static const Atom openCodeTag {Atom::FormattingLeft, ATOM_FORMATTING_TELETYPE};
+static const Atom closeCodeTag {Atom::FormattingRight, ATOM_FORMATTING_TELETYPE};
+
 HtmlGenerator::HtmlGenerator(FileResolver& file_resolver) : XmlGenerator(file_resolver) {}
 
 static void addLink(const QString &linkTarget, QStringView nestedStuff, QString *res)
@@ -1974,7 +1977,7 @@ void HtmlGenerator::generateTheTable(const QStringList &requisiteOrder,
                                      const QString &headerText, const Aggregate *aggregate,
                                      CodeMarker *marker)
 {
-    out() << "<div class=\"table\"><table class=\"alignedsummary\" translate=\"no\">\n";
+    out() << "<div class=\"table\"><table class=\"alignedsummary requisites\" translate=\"no\">\n";
 
     for (auto it = requisiteOrder.constBegin(); it != requisiteOrder.constEnd(); ++it) {
 
@@ -2087,7 +2090,10 @@ void HtmlGenerator::addCMakeInfoToMap(const Aggregate *aggregate, QMap<QString, 
         const QString targetLinkLibrariesText = "target_link_libraries(mytarget PRIVATE "
                 + qtComponent + "::" + targetText + ")";
         const Atom lineBreak = Atom(Atom::RawString, " <br/>\n");
-        *text << findPackageText << lineBreak << targetLinkLibrariesText;
+
+        *text << openCodeTag << findPackageText << closeCodeTag << lineBreak
+              << openCodeTag << targetLinkLibrariesText << closeCodeTag;
+
         requisites.insert(CMakeInfo, *text);
     }
 }
@@ -2105,7 +2111,7 @@ void HtmlGenerator::addQtVariableToMap(const Aggregate *aggregate, QMap<QString,
 
         if (cn && !cn->qtVariable().isEmpty()) {
             text->clear();
-            *text << "QT += " + cn->qtVariable();
+            *text << openCodeTag << "QT += " + cn->qtVariable() << closeCodeTag;
             requisites.insert(qtVariableText, *text);
         }
     }
@@ -2168,10 +2174,10 @@ void HtmlGenerator::addIncludeFileToMap(const Aggregate *aggregate, CodeMarker *
 {
     if (aggregate->includeFile()) {
         text.clear();
-        text << highlightedCode(
+        text << openCodeTag << highlightedCode(
             indent(m_codeIndent, marker->markedUpInclude(*aggregate->includeFile())),
             aggregate
-        );
+        ) << closeCodeTag;
 
         requisites.insert(headerText, text);
     }
@@ -2203,7 +2209,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     if (!qcn->logicalModuleName().isEmpty() && (!collection || !collection->isInternal() || m_showInternal)) {
         QStringList parts = QStringList() << "import" << qcn->logicalModuleName() << qcn->logicalModuleVersion();
         text.clear();
-        text << parts.join(' ').trimmed();
+        text << openCodeTag << parts.join(' ').trimmed() << closeCodeTag;
         requisites.insert(importText, text);
     } else if (!qcn->isQmlBasicType() && qcn->logicalModuleName().isEmpty()) {
         qcn->doc().location().warning(QStringLiteral("Could not resolve QML import statement for type '%1'").arg(qcn->name()),
