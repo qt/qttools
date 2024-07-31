@@ -2089,7 +2089,7 @@ void HtmlGenerator::addCMakeInfoToMap(const Aggregate *aggregate, QMap<QString, 
         const QString targetText = cn->qtCMakeTargetItem().isEmpty() ? cn->qtCMakeComponent() : cn->qtCMakeTargetItem();
         const QString targetLinkLibrariesText = "target_link_libraries(mytarget PRIVATE "
                 + qtComponent + "::" + targetText + ")";
-        const Atom lineBreak = Atom(Atom::RawString, " <br/>\n");
+        const Atom lineBreak = Atom(Atom::RawString, "<br/>\n");
 
         *text << openCodeTag << findPackageText << closeCodeTag << lineBreak
               << openCodeTag << targetLinkLibrariesText << closeCodeTag;
