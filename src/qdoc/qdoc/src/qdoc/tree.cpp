@@ -335,6 +335,8 @@ void Tree::resolveEnumValueSince(EnumNode &en)
 
     const QStringList enumItems{en.doc().enumItemNames()};
     const Atom *atom = en.doc().body().firstAtom();
+    if (!atom)
+        return;
     while ((atom = findNextAtom(atom, Atom::ListTagLeft))) {
         if (atom = atom->next(); !atom)
             break;
