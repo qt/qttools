@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Numbers Class</db:title>
+<db:subtitle>QDocTests::Numbers</db:subtitle>
+<db:productname>auto as return type</db:productname>
+<db:titleabbrev>auto as return type Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>The Numbers class provides functions for manipulating numbers.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>Numbers</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="add">
+<db:title>T Numbers::add(T <db:emphasis>a</db:emphasis>, T <db:emphasis>b</db:emphasis>)</db:title>
+<db:para>Adds two numbers of the same underlying type.</db:para>
+<db:para>Returns a value containing the sum of <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
+</db:section>
+<db:section xml:id="add-1">
+<db:title>auto Numbers::add(int <db:emphasis>a</db:emphasis>, int <db:emphasis>b</db:emphasis>)</db:title>
+<db:para>Adds two numbers.</db:para>
+<db:para>Returns an integer containing the sum of <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
+</db:section>
+<db:section xml:id="adder">
+<db:title>auto Numbers::adder(ThisIsMyReallyLongAndComplicatedTemplateName <db:emphasis>a</db:emphasis>, int <db:emphasis>b</db:emphasis>)</db:title>
+<db:para>Adds two numbers of the same underlying type.</db:para>
+<db:para>Returns a value containing the sum of <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
+</db:section>
+<db:section xml:id="number">
+<db:title>auto Numbers::number() const</db:title>
+<db:para>Returns the number.</db:para>
+<db:para>Returns the number, whatever it may be.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="qdoctests-numbers.xml#setNumber">setNumber</db:link>()</db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="setNumber">
+<db:title>void Numbers::setNumber(int <db:emphasis>number</db:emphasis>)</db:title>
+<db:para>Sets the number.</db:para>
+<db:para>Sets the number to <db:code role="parameter">number</db:code>, and expects nothing more.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="qdoctests-numbers.xml#number">number</db:link>()</db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="subtract">
+<db:title>auto Numbers::subtract(int <db:emphasis>a</db:emphasis>, int <db:emphasis>b</db:emphasis>)</db:title>
+<db:para>Subtracts two numbers.</db:para>
+<db:para>Returns an integer containing the difference of <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

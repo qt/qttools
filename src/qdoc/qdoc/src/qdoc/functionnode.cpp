@@ -362,7 +362,7 @@ QString FunctionNode::signature(Node::SignatureOptions options) const
     if (options & Node::SignatureTemplateParams && templateDecl())
         elements << (*templateDecl()).to_qstring();
     if (options & Node::SignatureReturnType)
-        elements << m_returnType;
+        elements << m_returnType.first;
     elements.removeAll(QString());
 
     if (!isMacroWithoutParams()) {
@@ -470,4 +470,17 @@ bool FunctionNode::isIgnored() const
   Returns \c true if this function has overloads.
  */
 
+/*!
+    \internal
+    \brief Returns the type of the function as a string.
+
+    The returned string is either the type as declared in the header, or `auto`
+    if that's the return type in the `\\fn` command for the function.
+ */
+QString FunctionNode::returnTypeString() const
+{
+    if (m_returnType.second.has_value())
+        return m_returnType.second.value();
+    return m_returnType.first;
+}
 QT_END_NAMESPACE

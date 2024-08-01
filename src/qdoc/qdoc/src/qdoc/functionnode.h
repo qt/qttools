@@ -50,7 +50,8 @@ public:
     static Metaness getMetanessFromTopic(const QString &topic);
     static Genus getGenus(Metaness metaness);
 
-    void setReturnType(const QString &type) { m_returnType = type; }
+    void setReturnType(const QString &type) { m_returnType.first = type; }
+    void setDeclaredReturnType(const QString &type) { m_returnType.second = type; }
     void setVirtualness(const QString &value);
     void setVirtualness(Virtualness virtualness) { m_virtualness = virtualness; }
     void setConst(bool b) { m_const = b; }
@@ -59,7 +60,9 @@ public:
     void setReimpFlag() { m_reimpFlag = true; }
     void setOverridesThis(const QString &path) { m_overridesThis = path; }
 
-    [[nodiscard]] const QString &returnType() const { return m_returnType; }
+    [[nodiscard]] const QString &returnType() const { return m_returnType.first; }
+    [[nodiscard]] const std::optional<QString> &declaredReturnType() const { return m_returnType.second; }
+    [[nodiscard]] QString returnTypeString() const;
     [[nodiscard]] QString virtualness() const;
     [[nodiscard]] bool isConst() const { return m_const; }
     [[nodiscard]] bool isDefault() const override { return m_default; }
@@ -105,7 +108,7 @@ public:
     [[nodiscard]] bool isNonvirtual() const { return (m_virtualness == NonVirtual); }
     [[nodiscard]] bool isVirtual() const { return (m_virtualness == NormalVirtual); }
     [[nodiscard]] bool isPureVirtual() const { return (m_virtualness == PureVirtual); }
-    [[nodiscard]] bool returnsBool() const { return (m_returnType == QLatin1String("bool")); }
+    [[nodiscard]] bool returnsBool() const { return (m_returnType.first == QLatin1String("bool")); }
 
     Parameters &parameters() { return m_parameters; }
     [[nodiscard]] const Parameters &parameters() const { return m_parameters; }
@@ -190,7 +193,7 @@ private:
     Metaness m_metaness {};
     Virtualness m_virtualness{ NonVirtual };
     signed short m_overloadNumber {};
-    QString m_returnType {};
+    QPair<QString, std::optional<QString>> m_returnType {};
     QString m_overridesThis {};
     QString m_tag {};
     QList<PropertyNode *> m_associatedProperties {};
