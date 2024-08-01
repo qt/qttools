@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="auto as return type Reference Documentation" version="" project="auto as return type">
+    <namespace name="" status="active" access="public" module="auto as return type">
+        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="numbers.h" documented="true" module="QDocTest" brief="Contains classes for testing QDoc">
+            <class name="Numbers" fullname="QDocTests::Numbers" href="qdoctests-numbers.html" status="active" access="public" location="numbers.h" documented="true" module="QDocTest" brief="Functions for manipulating numbers">
+                <function name="add" fullname="QDocTests::Numbers::add" href="qdoctests-numbers.html#add" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="T" brief="Adds two numbers of the same underlying type" signature="T add(T a, T b)">
+                    <parameter type="T" name="a" default=""/>
+                    <parameter type="T" name="b" default=""/>
+                </function>
+                <function name="add" fullname="QDocTests::Numbers::add" href="qdoctests-numbers.html#add-1" status="active" access="public" location="numbers.h" documented="true" meta="plain" overload="true" overload-number="1" type="auto" brief="Adds two numbers" signature="auto add(int a, int b)">
+                    <parameter type="int" name="a" default=""/>
+                    <parameter type="int" name="b" default=""/>
+                </function>
+                <function name="adder" fullname="QDocTests::Numbers::adder" href="qdoctests-numbers.html#adder" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="ThisIsMyReallyLongAndComplicatedTemplateName" brief="Adds two numbers of the same underlying type" signature="ThisIsMyReallyLongAndComplicatedTemplateName adder(ThisIsMyReallyLongAndComplicatedTemplateName a, int b)">
+                    <parameter type="ThisIsMyReallyLongAndComplicatedTemplateName" name="a" default=""/>
+                    <parameter type="int" name="b" default=""/>
+                </function>
+                <function name="number" fullname="QDocTests::Numbers::number" href="qdoctests-numbers.html#number" status="active" access="public" location="numbers.h" documented="true" meta="plain" const="true" type="int" brief="Returns the number" signature="int number() const"/>
+                <function name="setNumber" fullname="QDocTests::Numbers::setNumber" href="qdoctests-numbers.html#setNumber" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="void" brief="Sets the number" signature="void setNumber(int number)">
+                    <parameter type="int" name="number" default=""/>
+                </function>
+                <function name="subtract" fullname="QDocTests::Numbers::subtract" href="qdoctests-numbers.html#subtract" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="int" brief="Subtracts two numbers" signature="int subtract(int a, int b)">
+                    <parameter type="int" name="a" default=""/>
+                    <parameter type="int" name="b" default=""/>
+                </function>
+            </class>
+        </namespace>
+        <module name="QDocTest" href="qdoctest-module.html" status="active" documented="true" seen="true" title="QDocTest Module"/>
+    </namespace>
+</INDEX>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Numbers" fullname="QDocTests::Numbers" href="qdoctests-numbers.html" status="active" access="public" location="numbers.h" documented="true" module="QDocTest" brief="Functions for manipulating numbers">
+            <description>
+                <brief>The Numbers class provides functions for manipulating numbers.</brief>
+            </description>
+            <function name="add" fullname="QDocTests::Numbers::add" href="qdoctests-numbers.html#add" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="T" brief="Adds two numbers of the same underlying type" signature="T add(T a, T b)">
+                <parameter type="T" name="a" default=""/>
+                <parameter type="T" name="b" default=""/>
+                <description>
+                    <brief>Adds two numbers of the same underlying type.</brief>
+                    <para>Returns a value containing the sum of <argument>a</argument> and <argument>b</argument>.</para>
+                </description>
+            </function>
+            <function name="add" fullname="QDocTests::Numbers::add" href="qdoctests-numbers.html#add-1" status="active" access="public" location="numbers.h" documented="true" meta="plain" overload="true" overload-number="1" type="auto" brief="Adds two numbers" signature="auto add(int a, int b)">
+                <parameter type="int" name="a" default=""/>
+                <parameter type="int" name="b" default=""/>
+                <description>
+                    <brief>Adds two numbers.</brief>
+                    <para>Returns an integer containing the sum of <argument>a</argument> and <argument>b</argument>.</para>
+                </description>
+            </function>
+            <function name="adder" fullname="QDocTests::Numbers::adder" href="qdoctests-numbers.html#adder" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="ThisIsMyReallyLongAndComplicatedTemplateName" brief="Adds two numbers of the same underlying type" signature="ThisIsMyReallyLongAndComplicatedTemplateName adder(ThisIsMyReallyLongAndComplicatedTemplateName a, int b)">
+                <parameter type="ThisIsMyReallyLongAndComplicatedTemplateName" name="a" default=""/>
+                <parameter type="int" name="b" default=""/>
+                <description>
+                    <brief>Adds two numbers of the same underlying type.</brief>
+                    <para>Returns a value containing the sum of <argument>a</argument> and <argument>b</argument>.</para>
+                </description>
+            </function>
+            <function name="number" fullname="QDocTests::Numbers::number" href="qdoctests-numbers.html#number" status="active" access="public" location="numbers.h" documented="true" meta="plain" const="true" type="int" brief="Returns the number" signature="int number() const">
+                <description>
+                    <brief>Returns the number.</brief>
+                    <para>Returns the number, whatever it may be.</para>
+                    <see-also>
+                        <link raw="setNumber()" href="qdoctests-numbers.html#setNumber" type="function">setNumber()</link>
+                    </see-also>
+                </description>
+            </function>
+            <function name="setNumber" fullname="QDocTests::Numbers::setNumber" href="qdoctests-numbers.html#setNumber" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="void" brief="Sets the number" signature="void setNumber(int number)">
+                <parameter type="int" name="number" default=""/>
+                <description>
+                    <brief>Sets the number.</brief>
+                    <para>Sets the number to <argument>number</argument>, and expects nothing more.</para>
+                    <see-also>
+                        <link raw="number()" href="qdoctests-numbers.html#number" type="function">number()</link>
+                    </see-also>
+                </description>
+            </function>
+            <function name="subtract" fullname="QDocTests::Numbers::subtract" href="qdoctests-numbers.html#subtract" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="int" brief="Subtracts two numbers" signature="int subtract(int a, int b)">
+                <parameter type="int" name="a" default=""/>
+                <parameter type="int" name="b" default=""/>
+                <description>
+                    <brief>Subtracts two numbers.</brief>
+                    <para>Returns an integer containing the difference of <argument>a</argument> and <argument>b</argument>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

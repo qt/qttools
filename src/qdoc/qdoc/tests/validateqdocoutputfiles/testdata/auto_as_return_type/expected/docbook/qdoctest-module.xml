@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QDocTest Module</db:title>
+<db:productname>auto as return type</db:productname>
+<db:titleabbrev>auto as return type Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>auto as return type Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:section xml:id="namespaces">
+<db:title>Namespaces</db:title>
+<db:variablelist role="namespaces">
+<db:varlistentry>
+<db:term><db:link xlink:href="qdoctests.xml" xlink:role="namespace">QDocTests</db:link></db:term>
+<db:listitem>
+<db:para>The QDocTests namespace contains classes for testing QDoc.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:variablelist role="classes">
+<db:varlistentry>
+<db:term><db:link xlink:href="qdoctests-numbers.xml" xlink:role="class">QDocTests::Numbers</db:link></db:term>
+<db:listitem>
+<db:para>The Numbers class provides functions for manipulating numbers.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:anchor xml:id="details"/>
+<db:para>The <db:link xlink:href="qdoctest-module.xml">QDocTest</db:link> module provides classes for testing QDoc.</db:para>
+</db:article>

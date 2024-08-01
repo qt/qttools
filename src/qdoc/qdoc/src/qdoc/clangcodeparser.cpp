@@ -861,6 +861,16 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
                 if ((*fnNode)->isFunction(Node::CPP)) {
                     auto *fn = static_cast<FunctionNode *>(*fnNode);
                     readParameterNamesAndAttributes(fn, cursor);
+
+                    const clang::Decl* declaration = get_cursor_declaration(cursor);
+                    assert(declaration);
+                    const auto function_declaration = declaration->getAsFunction();
+                    if (function_declaration) {
+                        const auto declaredReturnType = QString::fromStdString(function_declaration->getDeclaredReturnType().getAsString());
+                        const QLatin1String autoString{"auto"};
+                        if (fn->returnType() != autoString && declaredReturnType == autoString)
+                            fn->setDeclaredReturnType(declaredReturnType);
+                    }
                 }
             } else { // Possibly an implicitly generated special member
                 QString name = functionName(cursor);

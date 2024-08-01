@@ -101,7 +101,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
                 synopsis = protect((*templateDecl).to_qstring()) + QLatin1Char(' ');
         }
         if (style != Section::AllMembers && !func->returnType().isEmpty())
-            synopsis += typified(func->returnType(), true);
+            synopsis += typified(func->returnTypeString(), true);
         synopsis += name;
         if (!func->isMacroWithoutParams()) {
             synopsis += QLatin1Char('(');
@@ -141,7 +141,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
                 synopsis.append(" &&");
         } else if (style == Section::AllMembers) {
             if (!func->returnType().isEmpty() && func->returnType() != "void")
-                synopsis += " : " + typified(func->returnType());
+                synopsis += " : " + typified(func->returnTypeString());
         } else {
             if (func->isRef())
                 synopsis.append(" &");
@@ -247,7 +247,7 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
     } else if (node->isFunction(Node::QML)) {
         const auto *func = static_cast<const FunctionNode *>(node);
         if (!func->returnType().isEmpty())
-            synopsis = typified(func->returnType(), true) + name;
+            synopsis = typified(func->returnTypeString(), true) + name;
         else
             synopsis = name;
         synopsis += QLatin1Char('(');

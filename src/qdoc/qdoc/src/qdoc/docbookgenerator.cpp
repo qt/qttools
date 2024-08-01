@@ -3220,7 +3220,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             if (functionNode->returnType() == "void")
                 m_writer->writeEmptyElement(dbNamespace, "void");
             else
-                m_writer->writeTextElement(dbNamespace, "type", functionNode->returnType());
+                m_writer->writeTextElement(dbNamespace, "type", functionNode->returnTypeString());
             newLine();
         }
         // Remove two characters from the plain name to only get the name
@@ -3767,7 +3767,7 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
 
         // Name and parameters.
         if (style != Section::AllMembers && !func->returnType().isEmpty())
-            typified(func->returnType(), relative, true, generateType);
+            typified(func->returnTypeString(), relative, true, generateType);
         m_writer->writeCharacters(namePrefix);
         generateSynopsisName(node, relative, generateNameLink);
 
@@ -3804,7 +3804,7 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
         } else if (style == Section::AllMembers) {
             if (!func->returnType().isEmpty() && func->returnType() != "void") {
                 m_writer->writeCharacters(QStringLiteral(" : "));
-                typified(func->returnType(), relative, false, generateType);
+                typified(func->returnTypeString(), relative, false, generateType);
             }
         } else {
             QString synopsis;
