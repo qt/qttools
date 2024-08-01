@@ -549,7 +549,7 @@ static QString reconstructQualifiedPathForCursor(CXCursor cur)
 }
 
 /*!
-  Find the node from the QDocDatabase \a qdb that corrseponds to the declaration
+  Find the node from the QDocDatabase \a qdb that corresponds to the declaration
   represented by the cursor \a cur, if it exists.
  */
 static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
