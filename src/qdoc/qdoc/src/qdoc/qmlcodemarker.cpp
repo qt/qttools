@@ -84,11 +84,6 @@ QString QmlCodeMarker::markedUpName(const Node *node)
     return name;
 }
 
-QString QmlCodeMarker::markedUpInclude(const QString &include)
-{
-    return addMarkUp("import " + include, nullptr, Location{});
-}
-
 QString QmlCodeMarker::addMarkUp(const QString &code, const Node * /* relative */,
                                  const Location &location)
 {

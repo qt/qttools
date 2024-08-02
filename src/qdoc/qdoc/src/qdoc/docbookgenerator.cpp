@@ -3621,9 +3621,6 @@ void DocBookGenerator::typified(const QString &string, const Node *relative, boo
                                 bool generateType)
 {
     // Adapted from CodeMarker::typified and HtmlGenerator::highlightedCode.
-    // Note: CppCodeMarker::markedUpIncludes is not needed for DocBook, as this part is natively
-    // generated as DocBook. Hence, there is no need to reimplement <@headerfile> from
-    // HtmlGenerator::highlightedCode.
     QString result;
     QString pendingWord;
 

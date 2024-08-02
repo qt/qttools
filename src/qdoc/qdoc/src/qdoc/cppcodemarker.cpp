@@ -318,24 +318,6 @@ QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *r
     return parts.join(QLatin1String("<@op>::</@op>"));
 }
 
-QString CppCodeMarker::markedUpInclude(const QString &include)
-{
-    return "<@preprocessor>#include &lt;<@headerfile>" + include + "</@headerfile>&gt;</@preprocessor>";
-}
-
-/*
-    @char
-    @class
-    @comment
-    @function
-    @keyword
-    @number
-    @op
-    @preprocessor
-    @string
-    @type
-*/
-
 QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
                                  const Location & /* location */)
 {
