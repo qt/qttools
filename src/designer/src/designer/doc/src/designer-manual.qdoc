@@ -1840,6 +1840,22 @@ pixmap property in the property editor.
 
     \snippet calculatorform/CMakeLists.txt 1
 
+    In specific cases, such as the example below where the include directive
+    uses a relative path, \l{qt6_add_ui}{qt_add_ui} can be used to generate the
+    \c{ui_calculatorform.h} file instead of relying on
+    \l{CMake AUTOUIC Documentation}{AUTOUIC}.
+
+    \l{When to prefer qt_add_ui over AUTOUIC}
+
+    \code
+        #include "src/files/ui_calculatorform.h"
+    \endcode
+
+    \code
+        qt_add_ui(calculatorform SOURCES calculatorform.ui
+                  INCLUDE_PREFIX src/files)
+    \endcode
+
     For \c qmake:
 
     \snippet calculatorform/calculatorform.pro 0
