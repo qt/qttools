@@ -37,8 +37,6 @@ public:
     {
         return QString();
     }
-    virtual QString markedUpInclude(const QString & /*include*/) { return QString(); }
-
     static void initialize();
     static void terminate();
     static CodeMarker *markerForCode(const QString &code);

@@ -103,8 +103,7 @@ private:
     void beginLink(const QString &link, const Node *node, const Node *relative);
     void endLink();
     void generateExtractionMark(const Node *node, ExtractionMarkType markType);
-    void addIncludeFileToMap(const Aggregate *aggregate, CodeMarker *marker,
-                              QMap<QString, Text> &requisites, Text& text,
+    void addIncludeFileToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites, Text& text,
                               const QString &headerText);
     void addSinceToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites, Text *text,
                        const QString &sinceText) const;
@@ -122,7 +121,7 @@ private:
     void addInheritedByToMap(QMap<QString, Text> &requisites, Text *text,
                              const QString &inheritedBytext, ClassNode *classe);
     void generateTheTable(const QStringList &requisiteOrder, const QMap<QString, Text> &requisites,
-                          const QString &headerText, const Aggregate *aggregate,
+                          const Aggregate *aggregate,
                           CodeMarker *marker);
     inline void openUnorderedList();
     inline void closeUnorderedList();

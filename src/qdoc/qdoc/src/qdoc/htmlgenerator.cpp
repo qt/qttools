@@ -1943,7 +1943,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
     const QStringList requisiteorder { headerText,         cmakeText,    qtVariableText,  sinceText,
                                        nativeTypeText, inheritsText, inheritedBytext, statusText };
 
-    addIncludeFileToMap(aggregate, marker, requisites, text, headerText);
+    addIncludeFileToMap(aggregate, requisites, text, headerText);
     addSinceToMap(aggregate, requisites, &text, sinceText);
 
     if (aggregate->isClassNode() || aggregate->isNamespace()) {
@@ -1965,7 +1965,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
 
     if (!requisites.isEmpty()) {
         // generate the table
-        generateTheTable(requisiteorder, requisites, headerText, aggregate, marker);
+        generateTheTable(requisiteorder, requisites, aggregate, marker);
     }
 }
 
@@ -1974,8 +1974,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
  */
 void HtmlGenerator::generateTheTable(const QStringList &requisiteOrder,
                                      const QMap<QString, Text> &requisites,
-                                     const QString &headerText, const Aggregate *aggregate,
-                                     CodeMarker *marker)
+                                     const Aggregate *aggregate, CodeMarker *marker)
 {
     out() << "<div class=\"table\"><table class=\"alignedsummary requisites\" translate=\"no\">\n";
 
@@ -1987,10 +1986,7 @@ void HtmlGenerator::generateTheTable(const QStringList &requisiteOrder,
                   << ":"
                      "</td><td class=\"memItemRight bottomAlign\"> ";
 
-            if (*it == headerText)
-                out() << requisites.value(*it).toString();
-            else
-                generateText(requisites.value(*it), aggregate, marker);
+            generateText(requisites.value(*it), aggregate, marker);
             out() << "</td></tr>\n";
         }
     }
@@ -2166,19 +2162,16 @@ void HtmlGenerator::addStatusToMap(const Aggregate *aggregate, QMap<QString, Tex
 
 /*!
  * \internal
- * Adds the includes (from the \\includefile command) to the map.
+ * Adds the include file (resolved automatically or set with the
+ * \\inheaderfile command) to the map.
  */
-void HtmlGenerator::addIncludeFileToMap(const Aggregate *aggregate, CodeMarker *marker,
+void HtmlGenerator::addIncludeFileToMap(const Aggregate *aggregate,
                                          QMap<QString, Text> &requisites, Text& text,
                                          const QString &headerText)
 {
     if (aggregate->includeFile()) {
         text.clear();
-        text << openCodeTag << highlightedCode(
-            indent(m_codeIndent, marker->markedUpInclude(*aggregate->includeFile())),
-            aggregate
-        ) << closeCodeTag;
-
+        text << openCodeTag << "#include <%1>"_L1.arg(*aggregate->includeFile()) << closeCodeTag;
         requisites.insert(headerText, text);
     }
 }
@@ -2194,12 +2187,12 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     QMap<QString, Text> requisites;
     Text text;
 
-    const QString importText = "Import Statement:";
-    const QString sinceText = "Since:";
-    const QString inheritedBytext = "Inherited By:";
-    const QString inheritsText = "Inherits:";
-    const QString nativeTypeText = "In C++:";
-    const QString statusText = "Status:";
+    const QString importText = "Import Statement";
+    const QString sinceText = "Since";
+    const QString inheritedBytext = "Inherited By";
+    const QString inheritsText = "Inherits";
+    const QString nativeTypeText = "In C++";
+    const QString statusText = "Status";
 
     // add the module name and version to the map
     QString logicalModuleVersion;
@@ -2266,25 +2259,8 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     const QStringList requisiteorder { importText, sinceText, nativeTypeText, inheritsText,
                                        inheritedBytext, statusText };
 
-    if (!requisites.isEmpty()) {
-        // generate the table
-        out() << "<div class=\"table\"><table class=\"alignedsummary\" translate=\"no\">\n";
-        for (const auto &requisite : requisiteorder) {
-
-            if (requisites.contains(requisite)) {
-                out() << "<tr>"
-                      << "<td class=\"memItemLeft rightAlign topAlign\"> " << requisite
-                      << "</td><td class=\"memItemRight bottomAlign\"> ";
-
-                if (requisite == importText)
-                    out() << requisites.value(requisite).toString();
-                else
-                    generateText(requisites.value(requisite), qcn, marker);
-                out() << "</td></tr>";
-            }
-        }
-        out() << "</table></div>";
-    }
+    if (!requisites.isEmpty())
+        generateTheTable(requisiteorder, requisites, qcn, marker);
 }
 
 void HtmlGenerator::generateBrief(const Node *node, CodeMarker *marker, const Node *relative,

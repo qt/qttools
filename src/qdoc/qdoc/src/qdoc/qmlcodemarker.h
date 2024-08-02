@@ -24,7 +24,6 @@ public:
                          const Location &location) override;
 
     QString markedUpName(const Node *node) override;
-    QString markedUpInclude(const QString &include) override;
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
     QList<QQmlJS::SourceLocation> extractPragmas(QString &script);
