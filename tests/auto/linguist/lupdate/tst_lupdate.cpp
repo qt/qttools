@@ -9,6 +9,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QElapsedTimer>
 #include <QtCore/private/qconfig_p.h>
 #include <QtCore/QSet>
 
@@ -19,6 +20,10 @@
 
 using namespace Qt::Literals::StringLiterals;
 
+// The slowest test (clang-proparsing) has been observed to take 22s in COIN/Linux.
+// Windows does not run the clang tests.
+static constexpr int TIMEOUT = 120000;
+
 class tst_lupdate : public QObject
 {
     Q_OBJECT
@@ -26,6 +31,7 @@ public:
     tst_lupdate();
 
 private slots:
+    void cleanupTestCase();
     void good_data();
     void good();
 #if CHECK_SIMTEXTH
@@ -36,6 +42,8 @@ private slots:
 private:
     QString m_cmdLupdate;
     QString m_basePath;
+    QElapsedTimer m_timer;
+    qint64 m_maxElapsed = -1;
 
     void doCompare(QStringList actual, const QString &expectedFn, bool err);
     void doCompare(const QString &actualFn, const QString &expectedFn, bool err);
@@ -44,9 +52,16 @@ private:
 
 tst_lupdate::tst_lupdate()
 {
+    m_timer.start();
     QString binPath = QLibraryInfo::path(QLibraryInfo::BinariesPath);
     m_cmdLupdate = binPath + QLatin1String("/lupdate");
     m_basePath = QFINDTESTDATA("testdata/");
+}
+
+void tst_lupdate::cleanupTestCase()
+{
+    if (m_maxElapsed > 0)
+        qInfo().noquote().nospace() << "max elapsed: " << m_maxElapsed << "ms";
 }
 
 static bool prepareMatch(const QString &expect, QString *tmpl, int *require, int *accept)
@@ -245,6 +260,35 @@ void tst_lupdate::good_data()
 #endif
 }
 
+static QByteArray msgStartFailed(const QProcess &process)
+{
+    const QString result = u'"' + process.program() + u' ' + process.arguments().join(u' ')
+                           +  "\": "_L1 + process.errorString();
+    return result.toLocal8Bit();
+}
+
+static QByteArray msgTimeout(const QProcess &process)
+{
+    const QString result = u'"' + process.program() + u' ' + process.arguments().join(u' ')
+                           +  "\" timed out: "_L1 + process.errorString();
+    return result.toLocal8Bit();
+}
+
+static QByteArray msgCrashed(const QProcess &process, const QByteArray &output)
+{
+    const QString result = u'"' + process.program() + u' ' + process.arguments().join(u' ')
+                           + "\" crashed\n"_L1;
+    return result.toLocal8Bit() + output;
+}
+
+static QByteArray msgExitCode(const QProcess &process, const QByteArray &output)
+{
+    const QString result = u'"' + process.program() + u' ' + process.arguments().join(u' ')
+                           + "\" exited with code "_L1 + QString::number(process.exitCode())
+                           + u'\n';
+    return result.toLocal8Bit() + output;
+}
+
 void tst_lupdate::good()
 {
     QFETCH(QString, directory);
@@ -309,22 +353,30 @@ void tst_lupdate::good()
     QProcess proc;
     proc.setWorkingDirectory(workDir);
     proc.setProcessChannelMode(QProcess::MergedChannels);
-    const QString command = m_cmdLupdate + ' ' + lupdateArguments.join(' ');
+    const auto startTime = m_timer.elapsed();
     proc.start(m_cmdLupdate, lupdateArguments, QIODevice::ReadWrite | QIODevice::Text);
-    QVERIFY2(proc.waitForStarted(), qPrintable(command + QLatin1String(" :") + proc.errorString()));
-    QVERIFY2(proc.waitForFinished(60000), qPrintable(command));
-    const QString output = QString::fromLocal8Bit(proc.readAll());
-    QVERIFY2(proc.exitStatus() == QProcess::NormalExit,
-             qPrintable(QLatin1Char('"') + command + "\" crashed\n" + output));
-    QVERIFY2(!proc.exitCode(),
-             qPrintable(QLatin1Char('"') + command + "\" exited with code " +
-             QString::number(proc.exitCode()) + '\n' + output));
+    QVERIFY2(proc.waitForStarted(), msgStartFailed(proc).constData());
+    if (!proc.waitForFinished(TIMEOUT)) {
+        const auto message = msgTimeout(proc);
+        proc.kill();
+        proc.waitForFinished(50);
+        QFAIL(message.constData());
+    }
+    const auto elapsed = m_timer.elapsed() - startTime;
+    if (elapsed > m_maxElapsed)
+        m_maxElapsed = elapsed;
+
+    const QByteArray output = proc.readAll();
+    QVERIFY2(proc.exitStatus() == QProcess::NormalExit, msgCrashed(proc, output).constData());
+    QVERIFY2(proc.exitCode() == 0, msgExitCode(proc, output).constData());
+
+    qInfo().noquote().nospace() << elapsed << "ms";
 
     // If the file expectedoutput.txt exists, compare the
     // console output with the content of that file
     QFile outfile(dir + "/expectedoutput.txt");
     if (outfile.exists()) {
-        QStringList errslist = output.split(QLatin1Char('\n'));
+        QStringList errslist = QString::fromLocal8Bit(output).split(u'\n');
         doCompare(errslist, outfile.fileName(), true);
         if (QTest::currentTestFailed())
             return;
