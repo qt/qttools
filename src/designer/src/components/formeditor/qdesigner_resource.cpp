@@ -75,7 +75,6 @@
 
 #include <QtCore/qbuffer.h>
 #include <QtCore/qdir.h>
-#include <QtCore/qlibraryinfo.h>
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qversionnumber.h>
@@ -102,13 +101,6 @@ static constexpr auto clipboardObjectName = "__qt_fake_top_level"_L1;
 #define OLD_RESOURCE_FORMAT // Support pre 4.4 format.
 
 namespace qdesigner_internal {
-
-static QVersionNumber qtVersion(const QDesignerFormEditorInterface *core)
-{
-    const QVariant v = core->integration()->property("qtVersion");
-    return v.isValid() && v.canConvert<QVersionNumber>()
-           ? v.value<QVersionNumber>() : QLibraryInfo::version();
-}
 
 static bool supportsQualifiedEnums(const QVersionNumber &qtVersion)
 {
@@ -1289,7 +1281,7 @@ DomLayoutItem *QDesignerResource::createDom(QLayoutItem *item, DomLayout *ui_lay
             spacer->setAttributeName(objectName);
         // ### filter the properties
         auto properties = computeProperties(item->widget());
-        if (!supportsQualifiedEnums(qtVersion(core())))
+        if (!supportsQualifiedEnums(core()->integration()->qtVersion()))
             fixSpacerPropertiesQt5(&properties);
         spacer->setElementProperty(properties);
 

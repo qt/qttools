@@ -30,6 +30,7 @@
 #include <QtCore/qvariant.h>
 #include <QtCore/qfile.h>
 #include <QtCore/qdir.h>
+#include <QtCore/qlibraryinfo.h>
 
 #include <QtCore/qdebug.h>
 
@@ -89,6 +90,14 @@ using namespace Qt::StringLiterals;
     \property QDesignerIntegrationInterface::headerLowercase
 
     Returns whether headers of promoted widgets should be lower-cased (as the user types the class name).
+*/
+
+/*!
+    \property  QDesignerIntegrationInterface::qtVersion
+
+    Determines the Qt version used when writing out forms.
+
+    \since 6.9
 */
 
 /*!
@@ -203,6 +212,7 @@ public:
         m_core(core) {}
 
     QDesignerFormEditorInterface *m_core;
+    QVersionNumber qtVersion{QLibraryInfo::version()};
 };
 
 QDesignerIntegrationInterface::QDesignerIntegrationInterface(QDesignerFormEditorInterface *core, QObject *parent)
@@ -221,6 +231,16 @@ QDesignerFormEditorInterface *QDesignerIntegrationInterface::core() const
 bool QDesignerIntegrationInterface::hasFeature(Feature f) const
 {
     return (features() & f) != 0;
+}
+
+QVersionNumber QDesignerIntegrationInterface::qtVersion() const
+{
+    return d->qtVersion;
+}
+
+void QDesignerIntegrationInterface::setQtVersion(const QVersionNumber &qtVersion)
+{
+    d->qtVersion = qtVersion;
 }
 
 void QDesignerIntegrationInterface::emitObjectNameChanged(QDesignerFormWindowInterface *formWindow, QObject *object, const QString &newName, const QString &oldName)

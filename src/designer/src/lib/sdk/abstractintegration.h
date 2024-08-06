@@ -10,6 +10,7 @@
 #include <QtCore/qscopedpointer.h>
 #include <QtCore/qstringlist.h>
 #include <QtCore/qflags.h>
+#include <QtCore/qversionnumber.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -29,6 +30,7 @@ class QDESIGNER_SDK_EXPORT QDesignerIntegrationInterface: public QObject
     Q_OBJECT
     Q_PROPERTY(QString headerSuffix READ headerSuffix WRITE setHeaderSuffix)
     Q_PROPERTY(bool headerLowercase READ isHeaderLowercase WRITE setHeaderLowercase)
+    Q_PROPERTY(QVersionNumber qtVersion READ qtVersion WRITE setQtVersion)
 
 public:
     enum ResourceFileWatcherBehaviour
@@ -62,6 +64,9 @@ public:
 
     virtual bool isHeaderLowercase() const = 0;
     virtual void setHeaderLowercase(bool headerLowerCase) = 0;
+
+    QVersionNumber qtVersion() const;
+    void setQtVersion(const QVersionNumber &qtVersion);
 
     virtual Feature features() const = 0;
     bool hasFeature(Feature f) const;
