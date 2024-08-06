@@ -52,8 +52,6 @@ qt_internal_add_app(linguist
         Qt::GuiPrivate
         Qt::UiToolsPrivate
         Qt::Widgets
-    ENABLE_AUTOGEN_TOOLS
-        uic
 )
 
 qt_internal_extend_target(linguist CONDITION QT_FEATURE_printsupport
@@ -61,6 +59,17 @@ qt_internal_extend_target(linguist CONDITION QT_FEATURE_printsupport
         printout.cpp printout.h
     LIBRARIES
         Qt::PrintSupport
+)
+
+qt_add_ui(linguist
+    SOURCES
+        batchtranslation.ui
+        finddialog.ui
+        mainwindow.ui
+        phrasebookbox.ui
+        statistics.ui
+        translatedialog.ui
+        translationsettings.ui
 )
 
 # Resources:
