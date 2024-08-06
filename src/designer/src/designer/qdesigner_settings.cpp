@@ -180,11 +180,7 @@ void QDesignerSettings::setUiMode(UIMode mode)
 
 UIMode QDesignerSettings::uiMode() const
 {
-#ifdef Q_OS_MACOS
-    const UIMode defaultMode = TopLevelMode;
-#else
-    const UIMode defaultMode = DockedMode;
-#endif
+    constexpr UIMode defaultMode = DockedMode;
     UIMode uiMode = static_cast<UIMode>(value(u"UI/currentMode"_s, defaultMode).toInt());
     return uiMode;
 }
