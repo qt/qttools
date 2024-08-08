@@ -16,7 +16,8 @@
 #include <QtTest/QtTest>
 #include <QtTools/private/qttools-config_p.h>
 
-#include <iostream>
+#include <algorithm>
+#include <limits>
 
 using namespace Qt::Literals::StringLiterals;
 
@@ -45,7 +46,7 @@ private:
     QElapsedTimer m_timer;
     qint64 m_maxElapsed = -1;
 
-    void doCompare(QStringList actual, const QString &expectedFn, bool err);
+    static void doCompare(QList<QStringView> actual, const QString &expectedFn, bool err);
     void doCompare(const QString &actualFn, const QString &expectedFn, bool err);
 };
 
@@ -54,7 +55,7 @@ tst_lupdate::tst_lupdate()
 {
     m_timer.start();
     QString binPath = QLibraryInfo::path(QLibraryInfo::BinariesPath);
-    m_cmdLupdate = binPath + QLatin1String("/lupdate");
+    m_cmdLupdate = binPath + "/lupdate"_L1;
     m_basePath = QFINDTESTDATA("testdata/");
 }
 
@@ -64,62 +65,64 @@ void tst_lupdate::cleanupTestCase()
         qInfo().noquote().nospace() << "max elapsed: " << m_maxElapsed << "ms";
 }
 
-static bool prepareMatch(const QString &expect, QString *tmpl, int *require, int *accept)
+static bool prepareMatch(QStringView expect, QString *tmpl, qsizetype *require, qsizetype *accept)
 {
     if (expect.startsWith(QLatin1Char('\\'))) {
-        *tmpl = expect.mid(1);
+        *tmpl = expect.sliced(1).toString();
         *require = *accept = 1;
-    } else if (expect.startsWith(QLatin1Char('?'))) {
-        *tmpl = expect.mid(1);
+    } else if (expect.startsWith(u'?')) {
+        *tmpl = expect.sliced(1).toString();
         *require = 0;
         *accept = 1;
-    } else if (expect.startsWith(QLatin1Char('*'))) {
-        *tmpl = expect.mid(1);
+    } else if (expect.startsWith(u'*')) {
+        *tmpl = expect.sliced(1).toString();
         *require = 0;
-        *accept = INT_MAX;
-    } else if (expect.startsWith(QLatin1Char('+'))) {
-        *tmpl = expect.mid(1);
+        *accept = std::numeric_limits<qsizetype>::max();
+    } else if (expect.startsWith(u'+')) {
+        *tmpl = expect.sliced(1).toString();
         *require = 1;
-        *accept = INT_MAX;
-    } else if (expect.startsWith(QLatin1Char('{'))) {
-        int brc = expect.indexOf(QLatin1Char('}'), 1);
+        *accept = std::numeric_limits<qsizetype>::max();
+    } else if (expect.startsWith(u'{')) {
+        const auto brc = expect.indexOf(u'}', 1);
         if (brc < 0)
             return false;
-        *tmpl = expect.mid(brc + 1);
-        QString sub = expect.mid(1, brc - 1);
-        int com = sub.indexOf(QLatin1Char(','));
-        bool ok;
+        *tmpl = expect.sliced(brc + 1).toString();
+        auto sub = expect.sliced(1, brc - 1);
+        const auto com = sub.indexOf(u',');
+        bool ok{};
         if (com < 0) {
             *require = *accept = sub.toInt(&ok);
             return ok;
-        } else {
-            *require = sub.left(com).toInt();
-            *accept = sub.mid(com + 1).toInt(&ok);
-            if (!ok)
-                *accept = INT_MAX;
-            return *accept >= *require;
         }
+        *require = sub.left(com).toInt();
+        *accept = sub.sliced(com + 1).toInt(&ok);
+        if (!ok)
+            *accept = std::numeric_limits<qsizetype>::max();
+        return *accept >= *require;
     } else {
-        *tmpl = expect;
+        *tmpl = expect.toString();
         *require = *accept = 1;
     }
     return true;
 }
 
-void tst_lupdate::doCompare(QStringList actual, const QString &expectedFn, bool err)
+static bool isStashMessage(QStringView v)
+{
+    return v.startsWith("Info: creating stash file "_L1);
+}
+
+void tst_lupdate::doCompare(QList<QStringView> actual, const QString &expectedFn, bool err)
 {
     QFile file(expectedFn);
     QVERIFY2(file.open(QIODevice::ReadOnly | QIODevice::Text), qPrintable(expectedFn));
-    QStringList expected = QString(file.readAll()).split('\n');
+    const QString expectedS = QString::fromUtf8(file.readAll());
+    auto expected = QStringView{expectedS}.split(u'\n');
 
-    for (int i = actual.size() - 1; i >= 0; --i) {
-        if (actual.at(i).startsWith(QLatin1String("Info: creating stash file ")))
-            actual.removeAt(i);
-    }
+    actual.erase(std::remove_if(actual.begin(), actual.end(), isStashMessage), actual.end());
 
-    int ei = 0, ai = 0, em = expected.size(), am = actual.size();
-    int oei = 0, oai = 0, oem = em, oam = am;
-    int require = 0, accept = 0;
+    qsizetype ei = 0, ai = 0, em = expected.size(), am = actual.size();
+    qsizetype oei = 0, oai = 0, oem = em, oam = am;
+    qsizetype require = 0, accept = 0;
     QString tmpl;
     forever {
         if (!accept) {
@@ -130,8 +133,8 @@ void tst_lupdate::doCompare(QStringList actual, const QString &expectedFn, bool 
                 break;
             }
             if (!prepareMatch(expected.at(ei++), &tmpl, &require, &accept))
-                QFAIL(qPrintable(QString("Malformed expected %1 at %3:%2")
-                                 .arg(err ? "output" : "result").arg(ei).arg(expectedFn)));
+                QFAIL(qPrintable(QString("Malformed expected %1 at %3:%2"_L1)
+                                 .arg(err ? "output"_L1 : "result"_L1).arg(ei).arg(expectedFn)));
         }
         if (ai == am) {
             if (require <= 0) {
@@ -140,7 +143,9 @@ void tst_lupdate::doCompare(QStringList actual, const QString &expectedFn, bool 
             }
             break;
         }
-        if (err ? !QRegularExpression(QRegularExpression::anchoredPattern(tmpl)).match(actual.at(ai)).hasMatch() : (actual.at(ai) != tmpl)) {
+        if (err
+             ? !QRegularExpression(QRegularExpression::anchoredPattern(tmpl)).matchView(actual.at(ai)).hasMatch()
+             : (actual.at(ai) != tmpl)) {
             if (require <= 0) {
                 accept = 0;
                 continue;
@@ -153,12 +158,13 @@ void tst_lupdate::doCompare(QStringList actual, const QString &expectedFn, bool 
                     if (ei == em)
                         break;
                     if (!prepareMatch(expected.at(--em), &tmpl, &require, &accept))
-                        QFAIL(qPrintable(QString("Malformed expected %1 at %3:%2")
-                                         .arg(err ? "output" : "result")
+                        QFAIL(qPrintable(QString("Malformed expected %1 at %3:%2"_L1)
+                                         .arg(err ? "output"_L1 : "result"_L1)
                                          .arg(em + 1).arg(expectedFn)));
                 }
-                if (ai == am || (err ? !QRegularExpression(QRegularExpression::anchoredPattern(tmpl)).match(actual.at(am - 1)).hasMatch() :
-                                       (actual.at(am - 1) != tmpl))) {
+                if (ai == am || (err
+                                 ? !QRegularExpression(QRegularExpression::anchoredPattern(tmpl)).matchView(actual.at(am - 1)).hasMatch()
+                                 : (actual.at(am - 1) != tmpl))) {
                     if (require <= 0) {
                         accept = 0;
                         continue;
@@ -176,38 +182,44 @@ void tst_lupdate::doCompare(QStringList actual, const QString &expectedFn, bool 
         ai++;
     }
     QString diff;
-    for (int j = qMax(0, oai - 3); j < oai; j++)
-        diff += actual.at(j) + '\n';
-    diff += "<<<<<<< got\n";
-    for (int j = oai; j < oam; j++) {
-        diff += actual.at(j) + '\n';
+    for (qsizetype j = qMax(qsizetype(0), oai - 3); j < oai; j++) {
+        diff += actual.at(j);
+        diff += u'\n';
+    }
+    diff += "<<<<<<< got\n"_L1;
+    for (qsizetype j = oai; j < oam; j++) {
+        diff += actual.at(j);
+        diff += u'\n';
         if (j >= oai + 5) {
-            diff += "...\n";
+            diff += "...\n"_L1;
             break;
         }
     }
-    diff += "=========\n";
-    for (int j = oei; j < oem; j++) {
-        diff += expected.at(j) + '\n';
+    diff += "=========\n"_L1;
+    for (qsizetype j = oei; j < oem; j++) {
+        diff += expected.at(j);
+        diff += u'\n';
         if (j >= oei + 5) {
-            diff += "...\n";
+            diff += "...\n"_L1;
             break;
         }
     }
-    diff += ">>>>>>> expected\n";
-    for (int j = oam; j < qMin(oam + 3, actual.size()); j++)
-        diff += actual.at(j) + '\n';
-    QFAIL(qPrintable((err ? "Output for " : "Result for ")
-                     + expectedFn + " does not meet expectations:\n" + diff));
+    diff += ">>>>>>> expected\n"_L1;
+    for (qsizetype j = oam; j < qMin(oam + 3, actual.size()); j++) {
+        diff += actual.at(j);
+        diff += u'\n';
+    }
+    QFAIL(qPrintable((err ? "Output for "_L1 : "Result for "_L1)
+                     + expectedFn + " does not meet expectations:\n"_L1 + diff));
     }
 
 void tst_lupdate::doCompare(const QString &actualFn, const QString &expectedFn, bool err)
 {
     QFile afile(actualFn);
     QVERIFY2(afile.open(QIODevice::ReadOnly | QIODevice::Text), qPrintable(actualFn));
-    QStringList actual = QString(afile.readAll()).split('\n');
+    const QString actual = QString::fromUtf8(afile.readAll());
 
-    doCompare(actual, expectedFn, err);
+    doCompare(QStringView{actual}.split(u'\n'), expectedFn, err);
 }
 
 void tst_lupdate::good_data()
@@ -215,19 +227,19 @@ void tst_lupdate::good_data()
     QTest::addColumn<QString>("directory");
     QTest::addColumn<bool>("useClangCpp");
 
-    QDir parsingDir(m_basePath + "good");
+    QDir parsingDir(m_basePath + "good"_L1);
     QStringList dirs = parsingDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
 
 #ifndef Q_OS_WIN
-    dirs.removeAll(QLatin1String("backslashes"));
+    dirs.removeAll("backslashes"_L1);
 #endif
 #ifndef Q_OS_MACOS
-    dirs.removeAll(QLatin1String("parseobjc"));
+    dirs.removeAll("parseobjc"_L1);
 #endif
     QSet<QString> ignoredTests = {
-        "lacksqobject_clang_parser", "parsecontexts_clang_parser", "parsecpp2_clang_parser",
-        "parsecpp_clang_parser",     "prefix_clang_parser",        "preprocess_clang_parser",
-        "parsecpp_clang_only"};
+        "lacksqobject_clang_parser"_L1, "parsecontexts_clang_parser"_L1, "parsecpp2_clang_parser"_L1,
+        "parsecpp_clang_parser"_L1,     "prefix_clang_parser"_L1,        "preprocess_clang_parser"_L1,
+        "parsecpp_clang_only"_L1};
 
     // Add test rows for the "classic" lupdate
     for (const QString &dir : dirs) {
@@ -239,23 +251,23 @@ void tst_lupdate::good_data()
 #if QT_CONFIG(clangcpp) && QT_CONFIG(widgets)
     // Add test rows for the clang-based lupdate
     ignoredTests = {
-        "lacksqobject",
-        "parsecontexts",
-        "parsecpp",
+        "lacksqobject"_L1,
+        "parsecontexts"_L1,
+        "parsecpp"_L1,
         "parsecpp2",
-        "parseqrc_json",
-        "prefix",
-        "preprocess",
-        "proparsing2", // llvm8 cannot handle file name without extension
-        "respfile", //@lst not supported with the new parser yet (include not properly set in the compile_command.json)
-        "cmdline_deeppath", //no project file, new parser does not support (yet) this way of launching lupdate
-        "cmdline_order", // no project, new parser do not pickup on macro defined but not used. Test not needed for new parser.
-        "cmdline_recurse", // recursive scan without project file not supported (yet) with the new parser
+        "parseqrc_json"_L1,
+        "prefix"_L1,
+        "preprocess"_L1,
+        "proparsing2"_L1, // llvm8 cannot handle file name without extension
+        "respfile"_L1, //@lst not supported with the new parser yet (include not properly set in the compile_command.json)
+        "cmdline_deeppath"_L1, //no project file, new parser does not support (yet) this way of launching lupdate
+        "cmdline_order"_L1, // no project, new parser do not pickup on macro defined but not used. Test not needed for new parser.
+        "cmdline_recurse"_L1 // recursive scan without project file not supported (yet) with the new parser
     };
     for (const QString &dir : dirs) {
         if (ignoredTests.contains(dir))
             continue;
-        QTest::newRow("clang-" + dir.toLocal8Bit()) << dir << true;
+        QTest::newRow(("clang-"_ba + dir.toLocal8Bit()).constData()) << dir << true;
     }
 #endif
 }
@@ -294,46 +306,47 @@ void tst_lupdate::good()
     QFETCH(QString, directory);
     QFETCH(bool, useClangCpp);
 
-    QString dir = m_basePath + "good/" + directory;
+    QString dir = m_basePath + "good/"_L1 + directory;
     QString workDir = dir;
-    QStringList generatedtsfiles(QLatin1String("project.ts"));
+    QStringList generatedtsfiles("project.ts"_L1);
     QStringList lupdateArguments;
 
-    QFile file(dir + "/lupdatecmd");
+    QFile file(dir + "/lupdatecmd"_L1);
     if (file.exists()) {
         QVERIFY2(file.open(QIODevice::ReadOnly | QIODevice::Text), qPrintable(file.fileName()));
         while (!file.atEnd()) {
             QByteArray cmdstring = file.readLine().simplified();
-            if (cmdstring.startsWith('#'))
+            if (cmdstring.startsWith(u'#'))
                 continue;
-            if (cmdstring.startsWith("lupdate")) {
-                for (auto argument : cmdstring.mid(8).simplified().split(' '))
+            if (cmdstring.startsWith("lupdate"_L1)) {
+                for (auto argument : cmdstring.sliced(8).simplified().split(' '))
                     lupdateArguments += argument;
                 break;
-            } else if (cmdstring.startsWith("TRANSLATION:")) {
+            }
+            if (cmdstring.startsWith("TRANSLATION:"_L1)) {
                 cmdstring.remove(0, 12);
                 generatedtsfiles.clear();
-                const auto parts = cmdstring.split(' ');
+                const auto parts = cmdstring.split(u' ');
                 for (const QByteArray &s : parts)
                     if (!s.isEmpty())
-                        generatedtsfiles << s;
-            } else if (cmdstring.startsWith("cd ")) {
+                        generatedtsfiles << QLatin1StringView(s);
+            } else if (cmdstring.startsWith("cd "_L1)) {
                 cmdstring.remove(0, 3);
-                workDir = QDir::cleanPath(dir + QLatin1Char('/') + cmdstring);
+                workDir = QDir::cleanPath(dir + u'/' + QLatin1StringView(cmdstring));
             }
         }
         file.close();
     }
 
     for (const QString &ts : std::as_const(generatedtsfiles)) {
-        QString genTs = workDir + QLatin1Char('/') + ts;
+        QString genTs = workDir + u'/' + ts;
         QFile::remove(genTs);
-        QString beforetsfile = dir + QLatin1Char('/') + ts + QLatin1String(".before");
+        QString beforetsfile = dir + u'/' + ts + ".before"_L1;
         if (QFile::exists(beforetsfile))
             QVERIFY2(QFile::copy(beforetsfile, genTs), qPrintable(beforetsfile));
     }
 
-    file.setFileName(workDir + QStringLiteral("/.qmake.cache"));
+    file.setFileName(workDir + "/.qmake.cache"_L1);
     QVERIFY(file.open(QIODevice::WriteOnly));
     file.close();
 
@@ -342,13 +355,13 @@ void tst_lupdate::good()
         if (QFile::exists(dir + u"/project.json"_s)) {
             lupdateArguments << u"-project"_s << u"project.json"_s;
         } else {
-            lupdateArguments.append(QLatin1String("project.pro"));
+            lupdateArguments.append("project.pro"_L1);
         }
     }
 
-    lupdateArguments.prepend("-silent");
+    lupdateArguments.prepend("-silent"_L1);
     if (useClangCpp)
-        lupdateArguments.append("-clang-parser");
+        lupdateArguments.append("-clang-parser"_L1);
 
     QProcess proc;
     proc.setWorkingDirectory(workDir);
@@ -374,21 +387,21 @@ void tst_lupdate::good()
 
     // If the file expectedoutput.txt exists, compare the
     // console output with the content of that file
-    QFile outfile(dir + "/expectedoutput.txt");
+    QFile outfile(dir + "/expectedoutput.txt"_L1);
     if (outfile.exists()) {
-        QStringList errslist = QString::fromLocal8Bit(output).split(u'\n');
-        doCompare(errslist, outfile.fileName(), true);
+        const QString errslist = QString::fromLocal8Bit(output);
+        doCompare(QStringView{errslist}.split(u'\n'), outfile.fileName(), true);
         if (QTest::currentTestFailed())
             return;
     }
 
     for (const QString &ts : std::as_const(generatedtsfiles)) {
-        if (dir.endsWith("preprocess_clang_parser")) {
-            doCompare(workDir + QLatin1Char('/') + ts,
-                      dir + QLatin1Char('/') + ts + QLatin1String(".result"), true);
+        if (dir.endsWith("preprocess_clang_parser"_L1)) {
+            doCompare(workDir + u'/' + ts,
+                      dir + u'/' + ts + ".result"_L1, true);
         } else {
-        doCompare(workDir + QLatin1Char('/') + ts,
-                  dir + QLatin1Char('/') + ts + QLatin1String(".result"), false);
+        doCompare(workDir + u'/' + ts,
+                  dir + u'/' + ts + ".result"_L1, false);
         }
     }
 }
