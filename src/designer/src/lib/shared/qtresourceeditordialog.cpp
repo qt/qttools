@@ -301,39 +301,50 @@ public:
 
 public slots:
 
-    QtQrcFile *insertQrcFile(const QString &path, QtQrcFile *beforeQrcFile = nullptr, bool newFile = false);
-    void moveQrcFile(QtQrcFile *qrcFile, QtQrcFile *beforeQrcFile);
-    void setInitialState(QtQrcFile *qrcFile, const QtQrcFileData &initialState);
-    void removeQrcFile(QtQrcFile *qrcFile);
+    QtQrcFile *insertQrcFile(const QString &path, qdesigner_internal::QtQrcFile *beforeQrcFile = nullptr,
+                             bool newFile = false);
+    void moveQrcFile(QtQrcFile *qrcFile, qdesigner_internal::QtQrcFile *beforeQrcFile);
+    void setInitialState(qdesigner_internal::QtQrcFile *qrcFile,
+                         const QtQrcFileData &initialState);
+    void removeQrcFile(qdesigner_internal::QtQrcFile *qrcFile);
 
-    QtResourcePrefix *insertResourcePrefix(QtQrcFile *qrcFile, const QString &prefix,
-                    const QString &language, QtResourcePrefix *beforeResourcePrefix = nullptr);
-    void moveResourcePrefix(QtResourcePrefix *resourcePrefix, QtResourcePrefix *beforeResourcePrefix); // the same qrc file???
-    void changeResourcePrefix(QtResourcePrefix *resourcePrefix, const QString &newPrefix);
-    void changeResourceLanguage(QtResourcePrefix *resourcePrefix, const QString &newLanguage);
-    void removeResourcePrefix(QtResourcePrefix *resourcePrefix);
+    QtResourcePrefix *insertResourcePrefix(qdesigner_internal::QtQrcFile *qrcFile,
+                                           const QString &prefix, const QString &language,
+                                           QtResourcePrefix *beforeResourcePrefix = nullptr);
+    void moveResourcePrefix(qdesigner_internal::QtResourcePrefix *resourcePrefix, QtResourcePrefix *beforeResourcePrefix); // the same qrc file???
+    void changeResourcePrefix(qdesigner_internal::QtResourcePrefix *resourcePrefix, const QString &newPrefix);
+    void changeResourceLanguage(qdesigner_internal::QtResourcePrefix *resourcePrefix, const QString &newLanguage);
+    void removeResourcePrefix(qdesigner_internal::QtResourcePrefix *resourcePrefix);
 
-    QtResourceFile *insertResourceFile(QtResourcePrefix *resourcePrefix, const QString &path,
-                    const QString &alias, QtResourceFile *beforeResourceFile = nullptr);
-    void moveResourceFile(QtResourceFile *resourceFile, QtResourceFile *beforeResourceFile); // the same prefix???
-    void changeResourceAlias(QtResourceFile *resourceFile, const QString &newAlias);
-    void removeResourceFile(QtResourceFile *resourceFile);
+    QtResourceFile *insertResourceFile(qdesigner_internal::QtResourcePrefix *resourcePrefix,
+                                       const QString &path, const QString &alias,
+                                       qdesigner_internal::QtResourceFile *beforeResourceFile = nullptr);
+    void moveResourceFile(qdesigner_internal::QtResourceFile *resourceFile,
+                          qdesigner_internal::QtResourceFile *beforeResourceFile); // the same prefix???
+    void changeResourceAlias(qdesigner_internal::QtResourceFile *resourceFile, const QString &newAlias);
+    void removeResourceFile(qdesigner_internal::QtResourceFile *resourceFile);
 
 signals:
-    void qrcFileInserted(QtQrcFile *qrcFile);
-    void qrcFileMoved(QtQrcFile *qrcFile, QtQrcFile *oldBeforeQrcFile);
-    void qrcFileRemoved(QtQrcFile *qrcFile);
+    void qrcFileInserted(qdesigner_internal::QtQrcFile *qrcFile);
+    void qrcFileMoved(qdesigner_internal::QtQrcFile *qrcFile,
+                      qdesigner_internal::QtQrcFile *oldBeforeQrcFile);
+    void qrcFileRemoved(qdesigner_internal::QtQrcFile *qrcFile);
 
-    void resourcePrefixInserted(QtResourcePrefix *resourcePrefix);
-    void resourcePrefixMoved(QtResourcePrefix *resourcePrefix, QtResourcePrefix *oldBeforeResourcePrefix);
-    void resourcePrefixChanged(QtResourcePrefix *resourcePrefix, const QString &oldPrefix);
-    void resourceLanguageChanged(QtResourcePrefix *resourcePrefix, const QString &oldLanguage);
-    void resourcePrefixRemoved(QtResourcePrefix *resourcePrefix);
+    void resourcePrefixInserted(qdesigner_internal::QtResourcePrefix *resourcePrefix);
+    void resourcePrefixMoved(qdesigner_internal::QtResourcePrefix *resourcePrefix,
+                             qdesigner_internal::QtResourcePrefix *oldBeforeResourcePrefix);
+    void resourcePrefixChanged(qdesigner_internal::QtResourcePrefix *resourcePrefix,
+                               const QString &oldPrefix);
+    void resourceLanguageChanged(qdesigner_internal::QtResourcePrefix *resourcePrefix,
+                                 const QString &oldLanguage);
+    void resourcePrefixRemoved(qdesigner_internal::QtResourcePrefix *resourcePrefix);
 
-    void resourceFileInserted(QtResourceFile *resourceFile);
-    void resourceFileMoved(QtResourceFile *resourceFile, QtResourceFile *oldBeforeResourceFile);
-    void resourceAliasChanged(QtResourceFile *resourceFile, const QString &oldAlias);
-    void resourceFileRemoved(QtResourceFile *resourceFile);
+    void resourceFileInserted(qdesigner_internal::QtResourceFile *resourceFile);
+    void resourceFileMoved(qdesigner_internal::QtResourceFile *resourceFile,
+                           qdesigner_internal::QtResourceFile *oldBeforeResourceFile);
+    void resourceAliasChanged(qdesigner_internal::QtResourceFile *resourceFile,
+                              const QString &oldAlias);
+    void resourceFileRemoved(qdesigner_internal::QtResourceFile *resourceFile);
 private:
 
     QList<QtQrcFile *> m_qrcFiles;
