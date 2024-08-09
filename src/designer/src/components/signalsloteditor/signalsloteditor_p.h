@@ -84,11 +84,11 @@ public:
     static QString columnText(const SignalSlotConnection *con, int column);
 
 private slots:
-    void connectionAdded(Connection *con);
+    void connectionAdded(qdesigner_internal::Connection *con);
     void connectionRemoved(int idx);
-    void aboutToRemoveConnection(Connection *con);
+    void aboutToRemoveConnection(qdesigner_internal::Connection *con);
     void aboutToAddConnection(int idx);
-    void connectionChanged(Connection *con);
+    void connectionChanged(qdesigner_internal::Connection *con);
 
 private:
     QPointer<SignalSlotEditor> m_editor;

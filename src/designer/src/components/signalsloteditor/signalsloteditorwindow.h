@@ -32,7 +32,7 @@ public slots:
     void setActiveFormWindow(QDesignerFormWindowInterface *form);
 
 private slots:
-    void updateDialogSelection(Connection *con);
+    void updateDialogSelection(qdesigner_internal::Connection *con);
     void updateEditorSelection(const QModelIndex &index);
 
     void objectNameChanged(QDesignerFormWindowInterface *formWindow, QObject *object, const QString &newName, const QString &oldName);

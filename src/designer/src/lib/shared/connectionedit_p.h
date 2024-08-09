@@ -154,12 +154,12 @@ public:
 
 signals:
     void aboutToAddConnection(int idx);
-    void connectionAdded(Connection *con);
-    void aboutToRemoveConnection(Connection *con);
+    void connectionAdded(qdesigner_internal::Connection *con);
+    void aboutToRemoveConnection(qdesigner_internal::Connection *con);
     void connectionRemoved(int idx);
-    void connectionSelected(Connection *con);
+    void connectionSelected(qdesigner_internal::Connection *con);
     void widgetActivated(QWidget *wgt);
-    void connectionChanged(Connection *con);
+    void connectionChanged(qdesigner_internal::Connection *con);
 
 public slots:
     void selectNone();
