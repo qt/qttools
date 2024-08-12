@@ -83,6 +83,11 @@
                 "file type" : "module and plugin",
                 "spdx"      : ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
+            "src/assistant/plugins/help/" : {
+                "comment" : "help engine plugin",
+                "file type" : "module and plugin",
+                "spdx"      : ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
+            },
             "src/assistant/qhelpgenerator/" : {
                 "comment" : "",
                 "file type" : "tools",
