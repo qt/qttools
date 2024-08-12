@@ -192,11 +192,26 @@ function(_qt_internal_ensure_ts_file)
         return()
     endif()
 
-    file(WRITE "${arg_TS_FILE}"
+    set(content
         [[<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS/>
-]])
+<TS version="2.1"]])
+
+    set(scope_args "")
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
+        set(scope_args DIRECTORY ${PROJECT_SOURCE_DIR})
+    endif()
+    get_property(language SOURCE "${arg_TS_FILE}" ${scope_args} PROPERTY
+        _qt_i18n_translated_language)
+    if(NOT "${language}" STREQUAL "")
+        string(APPEND content " language=\"${language}\"")
+    endif()
+
+    if(NOT "${QT_I18N_SOURCE_LANGUAGE}" STREQUAL "")
+        string(APPEND content " sourcelanguage=\"${QT_I18N_SOURCE_LANGUAGE}\"")
+    endif()
+    string(APPEND content "/>\n")
+    file(WRITE "${arg_TS_FILE}" "${content}")
 endfunction()
 
 # Needed to locate Qt6LupdateProject.json.in file inside functions
@@ -549,6 +564,11 @@ function(qt6_add_translations)
         set(arg_RESOURCE_PREFIX "/i18n")
     endif()
 
+    set(scope_args)
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
+        set(scope_args DIRECTORY ${PROJECT_SOURCE_DIR})
+    endif()
+
     # Determine the .ts file paths if necessary. This must happen before function deferral.
     if(NOT DEFINED arg_TS_FILES)
         if(NOT DEFINED arg_TS_FILE_DIR)
@@ -560,7 +580,11 @@ function(qt6_add_translations)
         endif()
         set(arg_TS_FILES "")
         foreach(lang IN LISTS QT_I18N_TRANSLATED_LANGUAGES)
-            list(APPEND arg_TS_FILES "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${lang}.ts")
+            set(ts_file "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${lang}.ts")
+            list(APPEND arg_TS_FILES "${ts_file}")
+            set_source_files_properties(${ts_file} ${scope_args} PROPERTIES
+                _qt_i18n_translated_language ${lang}
+            )
         endforeach()
 
         # Default the source language to "en" in case the user doesn't use
@@ -576,6 +600,9 @@ function(qt6_add_translations)
             AND NOT "${source_lang}" IN_LIST QT_I18N_TRANSLATED_LANGUAGES)
             set(arg_PLURALS_TS_FILE
                 "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${source_lang}.ts")
+            set_source_files_properties(${arg_PLURALS_TS_FILE} ${scope_args} PROPERTIES
+                _qt_i18n_translated_language ${source_lang}
+            )
         endif()
     endif()
 
