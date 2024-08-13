@@ -250,12 +250,15 @@ static clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
         adjustedArgsTemp.push_back("-fparse-all-comments");
         adjustedArgsTemp.push_back("-nostdinc");
 
+#if defined(Q_PROCESSOR_X86) || defined(Q_OS_MACOS)
         // Turn off SSE support to avoid usage of gcc builtins.
         // TODO: Look into what Qt Creator does.
         // Pointers: HeaderPathFilter::removeGccInternalIncludePaths()
         //           and gccInstallDir() in gcctoolchain.cpp
-        // Also needed for Mac, No need for CLANG_RESOURCE_DIR when this is part of the argument.
+        // Also needed for Macs (and if libclang is built for X86)
+        // No need for CLANG_RESOURCE_DIR when this is part of the argument.
         adjustedArgsTemp.push_back("-mno-sse");
+#endif
 
 #ifdef Q_OS_WIN
         adjustedArgsTemp.push_back("-fms-compatibility-version=19");
