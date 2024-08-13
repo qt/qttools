@@ -12,6 +12,7 @@
 #include <QtCore/QElapsedTimer>
 #include <QtCore/private/qconfig_p.h>
 #include <QtCore/QSet>
+#include <QtCore/QSysInfo>
 
 #include <QtTest/QtTest>
 #include <QtTools/private/qttools-config_p.h>
@@ -249,6 +250,12 @@ void tst_lupdate::good_data()
     }
 
 #if QT_CONFIG(clangcpp) && QT_CONFIG(widgets)
+    if (QSysInfo::currentCpuArchitecture() == "arm64"_L1
+        && QSysInfo::kernelType() == "linux"_L1 ) {
+        qDebug("clangcpp tests are skipped on linux arm64, see also QTBUG-127751");
+        return;
+    }
+
     // Add test rows for the clang-based lupdate
     ignoredTests = {
         "lacksqobject"_L1,
