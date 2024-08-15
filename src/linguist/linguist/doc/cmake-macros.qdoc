@@ -486,6 +486,9 @@ argument.
 By default, the \c{.ts} file names are constructed from \c{PROJECT_NAME}. You
 can specify a different base name with the \c{TS_FILE_BASE} argument.
 
+\note \c TS_FILE_DIR and \c TS_FILE_BASE have no effect for explicitly specified
+\c{.ts} files.
+
 \include cmake-macros.qdoc plurals-ts-file
 
 A plurals-only \c{.ts} is automatically generated unless the option \c
