@@ -487,6 +487,9 @@ argument.
 By default, the \c{.ts} file names are constructed from \c{PROJECT_NAME}. You
 can specify a different base name with the \c{TS_FILE_BASE} argument.
 
+\note \c TS_FILE_DIR and \c TS_FILE_BASE have no effect for explicitly specified
+\c{.ts} files.
+
 Since Qt 6.8, you can specify the \c TS_FILES_OUTPUT_VARIABLE argument to store
 the automatically determined \c{.ts} file paths in a variable.
 
