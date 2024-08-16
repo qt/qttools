@@ -51,10 +51,17 @@ qt_internal_add_app(assistant
         Qt::Widgets
         Qt::PrintSupport
         qlitehtml
-    ENABLE_AUTOGEN_TOOLS
-        uic
     ATTRIBUTION_FILE_DIR_PATHS
         ../qlitehtml/src/3rdparty
+)
+
+qt_add_ui(assistant SOURCES
+    bookmarkdialog.ui
+    bookmarkmanagerwidget.ui
+    bookmarkwidget.ui
+    helpdocsettingswidget.ui
+    preferencesdialog.ui
+    topicchooser.ui
 )
 
 # Resources:

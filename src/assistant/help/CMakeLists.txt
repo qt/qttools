@@ -23,10 +23,10 @@ qt_internal_add_module(Help
         qhelpsearchindexwriter.cpp qhelpsearchindexwriter_p.h
         qhelpsearchresult.cpp qhelpsearchresult.h
     # QtHelp
-        qfilternamedialog.cpp qfilternamedialog.ui qfilternamedialog_p.h
+        qfilternamedialog.cpp qfilternamedialog_p.h
         qhelpcontentwidget.cpp qhelpcontentwidget.h
         qhelpengine.cpp qhelpengine.h
-        qhelpfiltersettingswidget.cpp qhelpfiltersettingswidget.h qhelpfiltersettingswidget.ui
+        qhelpfiltersettingswidget.cpp qhelpfiltersettingswidget.h
         qhelpindexwidget.cpp qhelpindexwidget.h
         qhelpsearchengine.cpp qhelpsearchengine.h
         qhelpsearchquerywidget.cpp qhelpsearchquerywidget.h
@@ -42,9 +42,13 @@ qt_internal_add_module(Help
         Qt::Gui
         Qt::Sql
         Qt::Widgets
-    ENABLE_AUTOGEN_TOOLS
-        uic
     NO_GENERATE_CPP_EXPORTS
+)
+
+qt_add_ui(Help
+    SOURCES
+        qfilternamedialog.ui
+        qhelpfiltersettingswidget.ui
 )
 
 # Resources:
