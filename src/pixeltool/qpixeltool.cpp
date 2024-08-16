@@ -20,6 +20,7 @@
 #include <qstandardpaths.h>
 #include <qtextstream.h>
 #include <qwindow.h>
+#include <qmetaobject.h>
 #include <private/qhighdpiscaling_p.h>
 
 #include <qdebug.h>
@@ -440,6 +441,12 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
                    this, &QPixelTool::copyToClipboard);
     menu.addAction("Copy color value to clipboard"_L1, Qt::Key_C,
                    this, &QPixelTool::copyColorToClipboard);
+    // Screen
+    menu.addSeparator();
+    menu.addAction("Copy screen shot to clipboard"_L1, QKeySequence(),
+                   this, &QPixelTool::copyScreenShotToClipboard);
+    menu.addAction("Copy screen info to clipboard"_L1, QKeySequence(),
+                   this, &QPixelTool::copyScreenInfoToClipboard);
 #endif // QT_CONFIG(clipboard)
 
     menu.addSeparator();
@@ -635,6 +642,40 @@ void QPixelTool::copyColorToClipboard()
 {
     QGuiApplication::clipboard()->setText(QColor(m_currentColor).name());
 }
+
+void QPixelTool::copyScreenShotToClipboard()
+{
+    QPixmap screenShot = screen()->grabWindow();
+    QGuiApplication::clipboard()->setImage(screenShot.toImage());
+}
+
+void QPixelTool::copyScreenInfoToClipboard()
+{
+    const auto *screen = this->screen();
+    QString text;
+    QTextStream str(&text);
+    const auto geom = screen->geometry();
+    const auto availGeom = screen->availableGeometry();
+    auto orientationMt = QMetaEnum::fromType<Qt::ScreenOrientation>();
+
+    str << "Model/name: \"" << screen->model() << "\"/\"" << screen->name() << '"'
+        << "\nGeometry: " << geom.width() << 'x' << geom.height() << Qt::forcesign
+        << geom.x() << geom.y() << Qt::noforcesign
+        << "\nAvailable geometry: " << availGeom.width() << 'x' << availGeom.height() << Qt::forcesign
+        << availGeom.x() << availGeom.y() << Qt::noforcesign
+        << "\nDevice pixel ratio: " << screen->devicePixelRatio()
+        << "\nLogical DPI: " << screen->logicalDotsPerInchX() << ','
+        << screen->logicalDotsPerInchY() << "DPI"
+        << "\nPhysical DPI: " << screen->physicalDotsPerInchX() << ','
+        << screen->physicalDotsPerInchY() << "DPI"
+        << "\nPhysical size: " << screen->physicalSize().width()  << 'x'
+        << screen->physicalSize().height() << "mm";
+    if (const char *orientation = orientationMt.valueToKey(screen->orientation()))
+        str << "\nOrientation: " << orientation;
+    str << "\nRefresh rate: " << screen->refreshRate() << "Hz";
+    QGuiApplication::clipboard()->setText(text);
+}
+
 #endif // QT_CONFIG(clipboard)
 
 void QPixelTool::saveToFile()
