@@ -845,6 +845,9 @@ static const char *typeName(int type)
         return "invalid";
     if (type == QMetaType::User)
         return "user type";
+    const auto metaType = QMetaType(type);
+    if (metaType.isValid())
+        return metaType.name();
     return nullptr;
 }
 
@@ -854,7 +857,7 @@ static QString msgUnsupportedType(const QString &propertyName, int type)
     QTextStream str(&rc);
     const char *typeS = typeName(type);
     str << "The property \"" << propertyName << "\" of type ("
-        << (typeS ? typeS : "unknown") << ") is not supported yet!";
+        << (typeS ? typeS : "unknown") << ") is not supported yet.";
     return rc;
 }
 
