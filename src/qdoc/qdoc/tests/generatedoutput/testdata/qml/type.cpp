@@ -29,7 +29,7 @@
 
 /*!
     \qmltype Type
-    \instantiates TestQDoc::Test
+    \nativetype TestQDoc::Test
     \inqmlmodule QDoc.Test
     \brief A QML type documented in a .cpp file.
     \meta status { <Work In Progress> }
@@ -37,7 +37,7 @@
 
 /*!
     \qmltype TypeNoVersion
-    \instantiates TestQDoc::TestDerived
+    \nativetype TestQDoc::TestDerived
     \inqmlmodule Test.NoVer
     \brief Another QML type documented in a .cpp file.
 */

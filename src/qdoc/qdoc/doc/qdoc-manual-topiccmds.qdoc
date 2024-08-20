@@ -899,9 +899,9 @@
     link text.
 
     \target instantiates-command
-    \section1 \\instantiates
+    \section1 \\nativetype
 
-    The \\instantiates command is deprecated since Qt 6.8.
+    The \\nativetype command is deprecated since Qt 6.8.
     Use \qdoccmd nativetype instead.
 
 
