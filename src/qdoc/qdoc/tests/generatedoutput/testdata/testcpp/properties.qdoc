@@ -39,7 +39,7 @@
 
 /*!
     \qmltype TheType
-    \instantiates TestQDoc::TestDerived
+    \nativetype TestQDoc::TestDerived
     \inqmlmodule TheModule
 */
 
