@@ -42,7 +42,7 @@ private:
 void tst_lconvert::initTestCase()
 {
     if (!QFile::exists(dataDir + QLatin1String("plural-1.po")))
-        QProcess::execute(QLatin1String("perl"), QStringList() << dataDir + QLatin1String("makeplurals.pl") << dataDir + QLatin1String(""));
+        QProcess::execute(QLatin1String(PERL_EXECUTABLE), QStringList() << dataDir + QLatin1String("makeplurals.pl") << dataDir + QLatin1String(""));
     QVERIFY(QFile::exists(dataDir + QLatin1String("plural-1.po")));
 }
 
