@@ -11,7 +11,15 @@ if(NOT QT_BUILD_STANDALONE_TESTS AND NOT QT_BUILDING_QT)
     find_package(Qt6BuildInternals REQUIRED COMPONENTS STANDALONE_TEST)
 endif()
 
+find_package(Perl)
+if(NOT Perl_FOUND)
+    message(WARNING "Perl was not found. Skipping tst_lconvert.")
+    return()
+endif()
+
 qt_internal_add_test(tst_lconvert
     SOURCES
         tst_lconvert.cpp
+    DEFINES
+        PERL_EXECUTABLE="${PERL_EXECUTABLE}"
 )
