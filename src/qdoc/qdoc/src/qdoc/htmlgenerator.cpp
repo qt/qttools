@@ -2075,20 +2075,19 @@ void HtmlGenerator::addCMakeInfoToMap(const Aggregate *aggregate, QMap<QString, 
     if (!aggregate->physicalModuleName().isEmpty() && text != nullptr) {
         const CollectionNode *cn =
                 m_qdb->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
-        if (!cn || cn->qtCMakeComponent().isEmpty())
+
+        const auto result = cmakeRequisite(cn);
+
+        if (!result) {
             return;
+        }
 
         text->clear();
-        const QString qtComponent = "Qt" + QString::number(QT_VERSION_MAJOR);
-        const QString findPackageText = "find_package(" + qtComponent + " REQUIRED COMPONENTS "
-                + cn->qtCMakeComponent() + ")";
-        const QString targetText = cn->qtCMakeTargetItem().isEmpty() ? cn->qtCMakeComponent() : cn->qtCMakeTargetItem();
-        const QString targetLinkLibrariesText = "target_link_libraries(mytarget PRIVATE "
-                + qtComponent + "::" + targetText + ")";
+
         const Atom lineBreak = Atom(Atom::RawString, "<br/>\n");
 
-        *text << openCodeTag << findPackageText << closeCodeTag << lineBreak
-              << openCodeTag << targetLinkLibrariesText << closeCodeTag;
+        *text << openCodeTag << result->first << closeCodeTag << lineBreak
+              << openCodeTag << result->second << closeCodeTag;
 
         requisites.insert(CMakeInfo, *text);
     }

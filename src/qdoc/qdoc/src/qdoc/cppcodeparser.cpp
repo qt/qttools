@@ -516,18 +516,39 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
                             .arg(COMMAND_QTVARIABLE));
     } else if (command == COMMAND_QTCMAKEPACKAGE) {
         if (node->isModule())
-            node->setQtCMakeComponent(arg);
+            node->setCMakeComponent(arg);
         else
             doc.location().warning(
                     QStringLiteral("Command '\\%1' is only meaningful in '\\module'.")
                             .arg(COMMAND_QTCMAKEPACKAGE));
     } else if (command == COMMAND_QTCMAKETARGETITEM) {
         if (node->isModule())
-            node->setQtCMakeTargetItem(arg);
+            node->setCMakeTargetItem(QLatin1String("Qt6::") + arg);
         else
             doc.location().warning(
                     QStringLiteral("Command '\\%1' is only meaningful in '\\module'.")
                             .arg(COMMAND_QTCMAKETARGETITEM));
+    } else if (command == COMMAND_CMAKEPACKAGE) {
+        if (node->isModule())
+            node->setCMakePackage(arg);
+        else
+            doc.location().warning(
+                    QStringLiteral("Command '\\%1' is only meaningful in '\\module'.")
+                            .arg(COMMAND_CMAKEPACKAGE));
+    } else if (command == COMMAND_CMAKECOMPONENT) {
+        if (node->isModule())
+            node->setCMakeComponent(arg);
+        else
+            doc.location().warning(
+                    QStringLiteral("Command '\\%1' is only meaningful in '\\module'.")
+                            .arg(COMMAND_CMAKECOMPONENT));
+    } else if (command == COMMAND_CMAKETARGETITEM) {
+        if (node->isModule())
+            node->setCMakeTargetItem(arg);
+        else
+            doc.location().warning(
+                    QStringLiteral("Command '\\%1' is only meaningful in '\\module'.")
+                            .arg(COMMAND_CMAKETARGETITEM));
     } else if (command == COMMAND_MODULESTATE ) {
         if (!node->isModule() && !node->isQmlModule()) {
             doc.location().warning(

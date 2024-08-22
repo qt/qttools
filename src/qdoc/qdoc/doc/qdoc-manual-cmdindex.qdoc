@@ -24,6 +24,9 @@
     \li \l {c-command} {\\c}
     \li \l {caption-command} {\\caption}
     \li \l {class-command} {\\class}
+    \li \l {cmakecomponent-command} {\\cmakecomponent}
+    \li \l {cmakepackage-command} {\\cmakepackage}
+    \li \l {cmaketargetitem-command} {\\cmaketargetitem}
     \li \l {code-command} {\\code}
     \li \l {codeline-command} {\\codeline}
     \li \l {compares-command} {\\compares}

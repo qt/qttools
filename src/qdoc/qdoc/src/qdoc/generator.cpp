@@ -2216,4 +2216,69 @@ void Generator::unknownAtom(const Atom *atom)
                                     .arg(atom->typeString(), format()));
 }
 
+/*!
+ * Generate the CMake requisite for the node \a cn, i.e. the the find_package and target_link_libraries
+ * calls to use it.
+ *
+ * If only cmakepackage is set it will look like
+ *
+ * \badcode
+ * find_package(Foo REQUIRED)
+ * target_link_libraries(mytarget PRIVATE Foo:Foo)
+ * \endcode
+ *
+ * If no cmakepackage is set Qt6 is assumed.
+ *
+ * If cmakecomponent is set it will look like
+ *
+ * \badcode
+ * find_package(Qt6 REQUIRED COMPONENTS Bar)
+ * target_link_libraries(mytarget PRIVATE Qt6::Bar)
+ * \endcode
+ *
+ * If cmaketargetitem is set the item in target_link_libraries will be set accordingly
+ *
+ * \badcode
+ * find_package(Qt6 REQUIRED COMPONENTS Bar)
+ * target_link_libraries(mytarget PRIVATE My::Target)
+ * \endcode
+ *
+ * Returns a pair consisting of the find package line and link libraries line.
+ *
+ * If no sensible requisite can be created (i.e. both cmakecomponent and cmakepackage are unset)
+ * \c std::nullopt is returned.
+ */
+std::optional<std::pair<QString, QString>> Generator::cmakeRequisite(const CollectionNode *cn)
+{
+    if (!cn || (cn->cmakeComponent().isEmpty() && cn->cmakePackage().isEmpty())) {
+        return {};
+    }
+
+    const QString package =
+        cn->cmakePackage().isEmpty() ? "Qt" + QString::number(QT_VERSION_MAJOR) : cn->cmakePackage();
+
+    QString findPackageText;
+    if (cn->cmakeComponent().isEmpty()) {
+        findPackageText = "find_package(" + package + " REQUIRED)";
+    } else {
+        findPackageText = "find_package(" + package + " REQUIRED COMPONENTS " + cn->cmakeComponent() + ")";
+    }
+
+    QString targetText;
+    if (cn->cmakeTargetItem().isEmpty()) {
+        if (cn->cmakeComponent().isEmpty()) {
+            targetText = package + "::" + package;
+        } else {
+            targetText = package + "::" + cn->cmakeComponent();
+        }
+    } else {
+        targetText = cn->cmakeTargetItem();
+    }
+
+    const QString targetLinkLibrariesText = "target_link_libraries(mytarget PRIVATE " + targetText + ")";
+    const QStringList cmakeInfo { findPackageText, targetLinkLibrariesText };
+
+    return std::make_pair(findPackageText, targetLinkLibrariesText);
+}
+
 QT_END_NAMESPACE

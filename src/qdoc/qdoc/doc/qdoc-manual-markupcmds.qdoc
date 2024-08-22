@@ -2616,6 +2616,112 @@
 
     See also \qdoccmd generatelist and \l {Sorting group members}.
 
+    \target cmakepackage-command
+    \section1 \\cmakepackage
+
+    Use the \\cmakepackage command to add CMake package information to classes
+    and namespaces. This information will then appear in a table at the top of
+    the class or namespace documentation page. For example:
+
+    \badcode *
+    /*!
+        \namespace Foo
+        \inheaderfile Bar
+        \cmakepackage Baz
+        \brief A namespace.
+
+        ...
+    \1/
+    \endcode
+
+    QDoc will output this as
+
+    \quotation
+        \raw HTML
+            <h1 class="title">Foo Namespace</h1>
+            <p>A namespace. <a>More...</a></p>
+            <div class="table"><table class="alignedsummary">
+            <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;Bar&gt;</span></td></tr>
+            <tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Baz REQUIRED)<br/>target_link_libraries(mytarget PRIVATE Baz::Baz)</td></tr>
+            </table></div>
+        \endraw
+    \endquotation
+
+    \e{See also} \l{module-command}{\\module} and
+    \l{cmakecomponent}{\\cmakecomponent}}
+
+    \target cmakecomponent-command
+    \section1 \\cmakecomponent
+
+    Use the \\cmakecomponent command to add CMake component information to classes
+    and namespaces. This information will then appear in a table at the top of
+    the class or namespace documentation page. For example:
+
+    \badcode *
+    /*!
+        \namespace Foo
+        \inheaderfile Bar
+        \cmakecomponent Baz
+        \brief A namespace.
+
+        ...
+    \1/
+    \endcode
+
+    QDoc will output this as
+
+    \quotation
+        \raw HTML
+            <h1 class="title">Foo Namespace</h1>
+            <p>A namespace. <a>More...</a></p>
+            <div class="table"><table class="alignedsummary">
+            <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;Bar&gt;</span></td></tr>
+            <tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Qt6 REQUIRED COMPONENTS Baz)<br/>target_link_libraries(mytarget PRIVATE Qt6::Baz)</td></tr>
+            </table></div>
+        \endraw
+    \endquotation
+
+    \e{See also} \l{module-command}{\\module} and
+    \l{cmakepackage}{\\cmakepackage}}
+
+    \target cmaketargetitem-command
+    \section1 \\cmaketargetitem
+
+    Use the \\cmaketargetitem command to override the \e {item} part of the
+    CMake \c{target_link_libraries} information that's added to classes and
+    namespaces. The command must be used in conjunction with the
+    \l{module-command}{\\module} and \l{cmakecomponent}{\\cmakecomponent}}
+    commands. For example:
+
+    \badcode *
+    /*!
+        \namespace Foo
+        \inheaderfile Bar
+        \cmakecomponent Baz
+        \cmaketargetitem Qt6::BazPrivate
+        \brief A namespace.
+
+        ...
+    \1/
+    \endcode
+
+    QDoc will output this as
+
+    \quotation
+        \raw HTML
+            <h1 class="title">Foo Namespace</h1>
+            <p>A namespace. <a>More...</a></p>
+            <div class="table"><table class="alignedsummary">
+            <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;Bar&gt;</span></td></tr>
+            <tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Qt6 REQUIRED COMPONENTS Baz)<br/>target_link_libraries(mytarget PRIVATE Qt6::BazPrivate)</td></tr>
+            </table></div>
+        \endraw
+    \endquotation
+
+    \e{See also} \l{module-command}{\\module} and
+    \l{cmakecomponent}{\\cmakecomponent}}
+
+
     \target qtcmakepackage-command
     \section1 \\qtcmakepackage
 

@@ -24,6 +24,9 @@
     \list
       \li \l {abstract-command} {\\abstract}
       \li \l {attribution-command} {\\attribution}
+      \li \l {cmakecomponent-command} {\\cmakecomponent}
+      \li \l {cmakepackage-command} {\\cmakepackage}
+      \li \l {cmaketargetitem-command} {\\cmaketargetitem}
       \li \l {compares-command}{\\compares} (Since QDoc 6.7)
       \li \l {compareswith-command}{\\compareswith} (Since QDoc 6.7)
       \li \l {default-command} {\\default}

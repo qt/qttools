@@ -161,6 +161,7 @@ protected:
     // provided.
     static bool comparePaths(const QString &a, const QString &b) { return (a < b); }
     static bool appendTrademark(const Atom *atom);
+    static std::optional<std::pair<QString, QString>> cmakeRequisite(const CollectionNode *cn);
 
     static Qt::SortOrder sortOrder(const QString &str)
     {

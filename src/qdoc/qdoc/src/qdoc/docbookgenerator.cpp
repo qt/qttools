@@ -2105,16 +2105,16 @@ void DocBookGenerator::generateRequisite(const QString &description, const QStri
  * \internal
  * Generates the CMake (\a description) requisites
  */
-void DocBookGenerator::generateCMakeRequisite(const QStringList &values)
+void DocBookGenerator::generateCMakeRequisite(const QString &findPackage, const QString &linkLibraries)
 {
     const QString description("CMake");
     generateStartRequisite(description);
-    m_writer->writeCharacters(values.first());
+    m_writer->writeCharacters(findPackage);
     m_writer->writeEndElement(); // para
     newLine();
 
     m_writer->writeStartElement(dbNamespace, "para");
-    m_writer->writeCharacters(values.last());
+    m_writer->writeCharacters(linkLibraries);
     generateEndRequisite();
 }
 
@@ -2186,17 +2186,11 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
         // CMake and QT variable.
         const CollectionNode *cn =
                 m_qdb->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
-        if (cn && !cn->qtCMakeComponent().isEmpty()) {
-            const QString qtComponent = "Qt" + QString::number(QT_VERSION_MAJOR);
-            const QString findpackageText = "find_package(" + qtComponent
-                    + " REQUIRED COMPONENTS " + cn->qtCMakeComponent() + ")";
-            const QString targetItem =
-                    cn->qtCMakeTargetItem().isEmpty() ? cn->qtCMakeComponent() : cn->qtCMakeTargetItem();
-            const QString targetLinkLibrariesText = "target_link_libraries(mytarget PRIVATE "
-                    + qtComponent + "::" + targetItem + ")";
-            const QStringList cmakeInfo { findpackageText, targetLinkLibrariesText };
-            generateCMakeRequisite(cmakeInfo);
+
+        if (const auto result = cmakeRequisite(cn)) {
+            generateCMakeRequisite(result->first, result->second);
         }
+
         if (cn && !cn->qtVariable().isEmpty())
             generateRequisite("qmake", "QT += " + cn->qtVariable());
     }
@@ -3397,16 +3391,12 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             if (!aggregate->physicalModuleName().isEmpty()) {
                 const CollectionNode *cn =
                         m_qdb->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
-                if (cn && !cn->qtCMakeComponent().isEmpty()) {
-                    const QString qtComponent = "Qt" + QString::number(QT_VERSION_MAJOR);
-                    const QString findpackageText = "find_package(" + qtComponent
-                            + " REQUIRED COMPONENTS " + cn->qtCMakeComponent() + ")";
-                    const QString targetLinkLibrariesText =
-                            "target_link_libraries(mytarget PRIVATE " + qtComponent + "::" + cn->qtCMakeComponent()
-                            + ")";
-                    generateSynopsisInfo("cmake-find-package", findpackageText);
-                    generateSynopsisInfo("cmake-target-link-libraries", targetLinkLibrariesText);
+
+                if (const auto result = cmakeRequisite(cn)) {
+                    generateSynopsisInfo("cmake-find-package", result->first);
+                    generateSynopsisInfo("cmake-target-link-libraries", result->second);
                 }
+
                 if (cn && !cn->qtVariable().isEmpty())
                     generateSynopsisInfo("qmake", "QT += " + cn->qtVariable());
             }

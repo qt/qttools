@@ -247,10 +247,12 @@ public:
     [[nodiscard]] QString url() const { return m_url; }
     virtual void setQtVariable(const QString &) {}
     [[nodiscard]] virtual QString qtVariable() const { return QString(); }
-    virtual void setQtCMakeComponent(const QString &) {}
-    virtual void setQtCMakeTargetItem(const QString &) {}
-    [[nodiscard]] virtual QString qtCMakeComponent() const { return QString(); }
-    [[nodiscard]] virtual QString qtCMakeTargetItem() const { return QString(); }
+    virtual void setCMakePackage(const QString &) {}
+    virtual void setCMakeComponent(const QString &) {}
+    virtual void setCMakeTargetItem(const QString &) {}
+    [[nodiscard]] virtual QString cmakePackage() const { return QString(); }
+    [[nodiscard]] virtual QString cmakeComponent() const { return QString(); }
+    [[nodiscard]] virtual QString cmakeTargetItem() const { return QString(); }
     [[nodiscard]] virtual bool hasTag(const QString &) const { return false; }
 
     void setDeprecated(const QString &sinceVersion);

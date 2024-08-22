@@ -22,10 +22,12 @@ public:
     [[nodiscard]] bool isCollectionNode() const override { return true; }
     [[nodiscard]] QString qtVariable() const override { return m_qtVariable; }
     void setQtVariable(const QString &v) override { m_qtVariable = v; }
-    [[nodiscard]] QString qtCMakeComponent() const override { return m_qtCMakeComponent; }
-    [[nodiscard]] QString qtCMakeTargetItem() const override { return m_qtCMakeTargetItem; }
-    void setQtCMakeComponent(const QString &target) override { m_qtCMakeComponent = target; }
-    void setQtCMakeTargetItem(const QString &target) override { m_qtCMakeTargetItem = target; }
+    [[nodiscard]] QString cmakePackage() const override { return m_cmakePackage; }
+    [[nodiscard]] QString cmakeComponent() const override { return m_cmakeComponent; }
+    [[nodiscard]] QString cmakeTargetItem() const override { return m_cmakeTargetItem; }
+    void setCMakePackage(const QString &package) override { m_cmakePackage = package; }
+    void setCMakeComponent(const QString &component) override { m_cmakeComponent = component; }
+    void setCMakeTargetItem(const QString &targetItem) override { m_cmakeTargetItem = targetItem; }
     void addMember(Node *node) override;
     [[nodiscard]] bool hasNamespaces() const override;
     [[nodiscard]] bool hasClasses() const override;
@@ -116,9 +118,10 @@ private:
     QString m_logicalModuleVersionMajor {};
     QString m_logicalModuleVersionMinor {};
     QString m_qtVariable {};
-    QString m_qtCMakeComponent {};
-    QString m_qtCMakeTargetItem {};
     QString m_state {};
+    QString m_cmakePackage = {};
+    QString m_cmakeComponent = {};
+    QString m_cmakeTargetItem = {};
 };
 
 QT_END_NAMESPACE
