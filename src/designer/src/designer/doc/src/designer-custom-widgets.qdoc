@@ -7,8 +7,6 @@
     \brief How to create and use custom widget plugins.
     \ingroup best-practices
 
-    \tableofcontents
-
     \section1 Creating Custom Widget Plugins
 
     When implementing a custom widget plugin for \QD, you must
