@@ -12,7 +12,7 @@
 <db:imagedata fileref="images/leonardo-da-vinci.png"/>
 </db:imageobject>
 </db:mediaobject>
-<db:programlisting language="cpp" its:translate="no">    if (n &amp;gt; 1'000)
+<db:programlisting language="cpp" its:translate="no">    if (n &gt; 1'000)
         return true;
 </db:programlisting>
 <db:section>

@@ -109,7 +109,7 @@
 <db:section xml:id="methodWithEnDashInItsDocs">
 <db:title>void Test::methodWithEnDashInItsDocs()</db:title>
 <db:para>This method has en dashes in its documentation – as you'll find represented by <db:code>--</db:code> in the sources – here and there. The important bit to note is that when passed e.g. to the \c command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</db:para>
-<db:programlisting language="cpp">for (int i = 42; i &amp;gt; 0; --i)
+<db:programlisting language="cpp">for (int i = 42; i &gt; 0; --i)
     // Do something cool during countdown.
 </db:programlisting>
 <db:para>...as it would be silly if this would output –i instead of <db:code>--i</db:code>.</db:para>

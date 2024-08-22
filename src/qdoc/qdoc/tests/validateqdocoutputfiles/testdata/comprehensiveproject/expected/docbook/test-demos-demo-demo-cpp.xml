@@ -12,7 +12,7 @@
 
 bool isOverThousand(int n)
 {
-    if (n &amp;gt; 1'000)
+    if (n &gt; 1'000)
         return true;
     return false;
 }
