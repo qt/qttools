@@ -65,7 +65,7 @@
 </db:fieldsynopsis>
 <db:para>Name of the test.</db:para>
 <db:programlisting language="qml" its:translate="no">DocTest {
-    name: &amp;quot;test&amp;quot;
+    name: &quot;test&quot;
     // ...
 }
 </db:programlisting>

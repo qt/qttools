@@ -35,7 +35,7 @@ Item {
        the \c off state.
 
        \omit
-            The \qmlproperty &amp;lt;type&amp;gt; &amp;lt;propertyname&amp;gt; is not necessary as QDoc
+            The \qmlproperty &lt;type&gt; &lt;propertyname&gt; is not necessary as QDoc
             will associate this property to the ToggleSwitch
 
            QDoc will not publish the documentation within omit and endomit.
@@ -49,10 +49,10 @@ Item {
         turn it \c on.
     */
     function toggle() {
-        if (toggleswitch.state == &amp;quot;on&amp;quot;)
-            toggleswitch.state = &amp;quot;off&amp;quot;;
+        if (toggleswitch.state == &quot;on&quot;)
+            toggleswitch.state = &quot;off&quot;;
         else
-            toggleswitch.state = &amp;quot;on&amp;quot;;
+            toggleswitch.state = &quot;on&quot;;
     }
 
     /*!
@@ -64,10 +64,10 @@ Item {
     */
     function releaseSwitch() {
         if (knob.x == 1) {
-            if (toggleswitch.state == &amp;quot;off&amp;quot;) return;
+            if (toggleswitch.state == &quot;off&quot;) return;
         }
         if (knob.x == 78) {
-            if (toggleswitch.state == &amp;quot;on&amp;quot;) return;
+            if (toggleswitch.state == &quot;on&quot;) return;
         }
         toggle();
     }
@@ -76,7 +76,7 @@ Item {
         id: background
         width: 130; height: 48
         radius: 48
-        color: &amp;quot;lightsteelblue&amp;quot;
+        color: &quot;lightsteelblue&quot;
         MouseArea { anchors.fill: parent; onClicked: toggle() }
     }
 
@@ -84,7 +84,7 @@ Item {
         id: knob
         width: 48; height: 48
         radius: width
-        color: &amp;quot;lightblue&amp;quot;
+        color: &quot;lightblue&quot;
 
         MouseArea {
             anchors.fill: parent
@@ -96,19 +96,19 @@ Item {
 
     states: [
         State {
-            name: &amp;quot;on&amp;quot;
+            name: &quot;on&quot;
             PropertyChanges { target: knob; x: 78 }
             PropertyChanges { target: toggleswitch; on: true }
         },
         State {
-            name: &amp;quot;off&amp;quot;
+            name: &quot;off&quot;
             PropertyChanges { target: knob; x: 1 }
             PropertyChanges { target: toggleswitch; on: false }
         }
     ]
 
     transitions: Transition {
-        NumberAnimation { properties: &amp;quot;x&amp;quot;; easing.type: Easing.InOutQuad; duration: 200 }
+        NumberAnimation { properties: &quot;x&quot;; easing.type: Easing.InOutQuad; duration: 200 }
     }
 }
 

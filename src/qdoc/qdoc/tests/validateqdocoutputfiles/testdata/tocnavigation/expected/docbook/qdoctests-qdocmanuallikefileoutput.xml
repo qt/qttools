@@ -10,11 +10,11 @@
 </db:info>
 <db:para>The navigation commands...</db:para>
 <db:blockquote/>
-<db:programlisting language="cpp">&amp;lt;head&amp;gt;
+<db:programlisting language="cpp">&lt;head&gt;
     ...
-    &amp;lt;link rel=&amp;quot;start&amp;quot; href=&amp;quot;basicqt.html&amp;quot; /&amp;gt;
+    &lt;link rel=&quot;start&quot; href=&quot;basicqt.html&quot; /&gt;
     ...
-&amp;lt;/head&amp;gt;
+&lt;/head&gt;
 </db:programlisting>
 <db:section xml:id="commands">
 <db:title>Commands</db:title>

@@ -270,7 +270,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
         m_writer->writeAttribute("language", "qml");
         if (m_useITS)
             m_writer->writeAttribute(itsNamespace, "translate", "no");
-        m_writer->writeCharacters(removeCodeMarkers(atom->string()));
+        m_writer->writeCharacters(plainCode(removeCodeMarkers(atom->string())));
         m_writer->writeEndElement(); // programlisting
         newLine();
         break;
@@ -279,7 +279,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
         m_writer->writeAttribute("language", "cpp");
         if (m_useITS)
             m_writer->writeAttribute(itsNamespace, "translate", "no");
-        m_writer->writeCharacters(removeCodeMarkers(atom->string()));
+        m_writer->writeCharacters(plainCode(removeCodeMarkers(atom->string())));
         m_writer->writeEndElement(); // programlisting
         newLine();
         break;
@@ -289,7 +289,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
         m_writer->writeAttribute("role", "bad");
         if (m_useITS)
             m_writer->writeAttribute(itsNamespace, "translate", "no");
-        m_writer->writeCharacters(removeCodeMarkers(atom->string()));
+        m_writer->writeCharacters(plainCode(removeCodeMarkers(atom->string())));
         m_writer->writeEndElement(); // programlisting
         newLine();
         break;

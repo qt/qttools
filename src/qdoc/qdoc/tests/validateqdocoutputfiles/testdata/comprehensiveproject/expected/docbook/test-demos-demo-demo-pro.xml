@@ -8,7 +8,7 @@
 <db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
 </db:info>
 <db:programlisting language="cpp" its:translate="no">TEMPLATE = aux
-message(&amp;quot;Nothing to see here.&amp;quot;)
+message(&quot;Nothing to see here.&quot;)
 
 </db:programlisting>
 </db:article>

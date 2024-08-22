@@ -50,7 +50,7 @@ Item {
        The color of the ProgressBar's gradient. Must bind to a color type.
 
        \omit
-           The &amp;quot;\qmlproperty &amp;lt;type&amp;gt; &amp;lt;property name&amp;gt;&amp;quot; is needed because
+           The &quot;\qmlproperty &lt;type&gt; &lt;property name&gt;&quot; is needed because
            property alias need to have their types manually entered.
 
            QDoc will not publish the documentation within omit and endomit.
@@ -66,7 +66,7 @@ Item {
        Must bind to a color type.
 
        \omit
-           The &amp;quot;\qmlproperty &amp;lt;type&amp;gt; &amp;lt;property name&amp;gt;&amp;quot; is needed because
+           The &quot;\qmlproperty &lt;type&gt; &lt;property name&gt;&quot; is needed because
            property alias need to have their types manually entered.
 
            QDoc will not publish the documentation within omit and endomit.
@@ -101,7 +101,7 @@ Item {
     }
     Text {
         anchors { right: highlight.right; rightMargin: 6; verticalCenter: parent.verticalCenter }
-        color: &amp;quot;white&amp;quot;
+        color: &quot;white&quot;
         font.bold: true
         text: Math.floor((value - minimum) / (maximum - minimum) * 100) + '%'
     }

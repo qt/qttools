@@ -29,12 +29,12 @@
 
     Rectangle {
         id: tab1
-        color: &amp;quot;red&amp;quot;
+        color: &quot;red&quot;
         //... omitted
     }
     Rectangle {
         id: tab2
-        color: &amp;quot;blue&amp;quot;
+        color: &quot;blue&quot;
         //... omitted
     }
 
