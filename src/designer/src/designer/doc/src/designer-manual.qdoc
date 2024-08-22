@@ -438,8 +438,6 @@
     facilities.
 
 
-    \tableofcontents
-
     To create and edit new forms, open the \gui File menu and select
     \gui{New Form...} or press \key{Ctrl+N}. Existing forms can also be edited
     by selecting \gui{Open Form...} from the \gui File menu or pressing
@@ -686,8 +684,6 @@
 
     To break a layout, press \key{Ctrl+0} or choose \gui{Break Layout} from
     the form's context menu, the \gui Form menu or the main toolbar.
-
-    \tableofcontents
 
     \section1 Setting A Top Level Layout
 
@@ -960,8 +956,6 @@
     connections are preserved so that they will be ready for use when your
     project is built.
 
-
-    \tableofcontents
 
     For more information on Qt's signals and sltos mechanism, refer to the
     \l{Signals and Slots} document.
