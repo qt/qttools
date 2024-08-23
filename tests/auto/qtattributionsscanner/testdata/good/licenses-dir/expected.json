@@ -1,5 +1,6 @@
 [
     {
+        "CPE": [],
         "Copyright": "Copyright",
         "CopyrightFile": "",
         "Description": "",
@@ -11,6 +12,7 @@
         "LicenseFile": "%{LICENSES_DIR}/BSD-3-Clause.txt",
         "LicenseId": "BSD-3-Clause",
         "Name": "LicensesDir",
+        "PURL": [],
         "PackageComment": "",
         "Path": "%{PWD}",
         "QDocModule": "qtest",
