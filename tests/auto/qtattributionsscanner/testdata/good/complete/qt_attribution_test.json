@@ -17,6 +17,14 @@ Line
 Usage",
     "Homepage": "www.qt.io",
     "Version": "1.0",
+    "CPE": [
+        "cpe:2.3:a:qt:qt:test-version:*:*:*:*:*:*:*",
+        "cpe:2.3:a:qt:qtbase:test-version:*:*:*:*:*:*:*"
+    ],
+    "PURL": [
+        "pkg:github/qt/qt@test-version",
+        "pkg:github/qt/qtbase@test-version"
+    ],
     "DownloadLocation": "www.qt.io/1.0",
     "SecurityCritical": true,
     "LicenseId": "xxx",
