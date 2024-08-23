@@ -1,5 +1,6 @@
 [
     {
+        "CPE": [],
         "Copyright": "",
         "CopyrightFile": "",
         "Description": "Hello world!\nLine 2",
@@ -11,6 +12,7 @@
         "LicenseFile": "",
         "LicenseId": "",
         "Name": "Test",
+        "PURL": [],
         "PackageComment": "",
         "Path": "%{PWD}/chromium",
         "QDocModule": "qtwebengine",
@@ -22,6 +24,10 @@
         "Version": ""
     },
     {
+        "CPE": [
+            "cpe:2.3:a:qt:qt:test-version:*:*:*:*:*:*:*",
+            "cpe:2.3:a:qt:qtbase:test-version:*:*:*:*:*:*:*"
+        ],
         "Copyright": "Copyright",
         "CopyrightFile": "",
         "Description": "Multi\nLine\nDescription",
@@ -33,6 +39,10 @@
         "LicenseFile": "%{PWD}/complete/../../../../../../LICENSES/BSD-3-Clause.txt",
         "LicenseId": "xxx",
         "Name": "Complete",
+        "PURL": [
+            "pkg:github/qt/qt@test-version",
+            "pkg:github/qt/qtbase@test-version"
+        ],
         "PackageComment": "just a test package",
         "Path": "%{PWD}/complete",
         "QDocModule": "qtest",
@@ -44,6 +54,7 @@
         "Version": "1.0"
     },
     {
+        "CPE": [],
         "Copyright": "Copyright",
         "CopyrightFile": "",
         "Description": "",
@@ -55,6 +66,7 @@
         "LicenseFile": "%{LICENSES_DIR}/BSD-3-Clause.txt",
         "LicenseId": "BSD-3-Clause",
         "Name": "LicensesDir",
+        "PURL": [],
         "PackageComment": "",
         "Path": "%{PWD}/licenses-dir",
         "QDocModule": "qtest",
@@ -66,6 +78,7 @@
         "Version": ""
     },
     {
+        "CPE": ["cpe:2.3:a:qt:qtbase:test-version:*:*:*:*:*:*:*"],
         "Copyright": "Copyright",
         "CopyrightFile": "",
         "Description": "",
@@ -77,6 +90,7 @@
         "LicenseFile": "",
         "LicenseId": "",
         "Name": "Minimal",
+        "PURL": ["pkg:github/qt/qtbase@test-version"],
         "PackageComment": "",
         "Path": "%{PWD}/minimal",
         "QDocModule": "qtest",
@@ -88,6 +102,7 @@
         "Version": ""
     },
     {
+        "CPE": [],
         "Copyright": "",
         "CopyrightFile": "%{PWD}/variants/COPYRIGHT.txt",
         "Description": "",
@@ -102,6 +117,7 @@
         ],
         "LicenseId": "",
         "Name": "Variants Test",
+        "PURL": [],
         "PackageComment": "",
         "Path": "%{PWD}/variants",
         "QDocModule": "qtest",
