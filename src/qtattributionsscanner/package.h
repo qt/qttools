@@ -33,6 +33,9 @@ struct Package {
     QString copyrightFile; // Path to file containing copyright owners. Optional.
     QString copyrightFileContents;
 
+    QStringList cpeList; // List of CPE values. Optional.
+    QStringList purlList; // List of PURL values. Optional.
+
     QString packageComment; // Further comments about the package. Optional.
 };
 

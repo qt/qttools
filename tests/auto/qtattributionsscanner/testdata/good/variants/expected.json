@@ -1,5 +1,6 @@
 [
     {
+        "CPE": [],
         "Copyright": "",
         "CopyrightFile": "%{PWD}/COPYRIGHT.txt",
         "Description": "",
@@ -14,6 +15,7 @@
         ],
         "LicenseId": "",
         "Name": "Variants Test",
+        "PURL": [],
         "PackageComment": "",
         "Path": "%{PWD}",
         "QDocModule": "qtest",
