@@ -20,7 +20,7 @@ find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 \ingroup cmake-commands-qtlinguisttools
 
 \title qt_add_translation
-\target qt6_add_translation
+\keyword qt6_add_translation
 
 \summary {Compiles Qt Linguist .ts files into .qm files.}
 
@@ -75,7 +75,7 @@ sub-directory:
 \ingroup cmake-commands-qtlinguisttools
 
 \title qt_create_translation
-\target qt6_create_translation
+\keyword qt6_create_translation
 
 \summary {Sets up the Qt Linguist translation toolchain.}
 
@@ -129,7 +129,7 @@ files in the build directory:
 \ingroup cmake-commands-qtlinguisttools
 
 \title qt_add_lupdate
-\target qt6_add_lupdate
+\keyword qt6_add_lupdate
 
 \summary {Add targets to generate or update Qt Linguist .ts files.}
 
@@ -253,7 +253,7 @@ qt_add_lupdate(
 \ingroup cmake-commands-qtlinguisttools
 
 \title qt_add_lrelease
-\target qt6_add_lrelease
+\keyword qt6_add_lrelease
 
 \summary {Add targets to transform Qt Linguist .ts files into .qm files.}
 
@@ -383,7 +383,7 @@ qt_add_lrelease(
 \ingroup cmake-commands-qtlinguisttools
 
 \title qt_add_translations
-\target qt6_add_translations
+\keyword qt6_add_translations
 
 \summary {Add targets to update and transform Qt Linguist .ts files into .qm files.}
 
@@ -690,7 +690,7 @@ qt_add_translations(frogger
 \ingroup cmake-commands-qtlinguisttools
 
 \title qt_collect_translation_source_targets
-\target qt6_collect_translation_source_targets
+\keyword qt6_collect_translation_source_targets
 
 \summary {Collects targets that are eligible for translation.}
 
