@@ -50,7 +50,8 @@ depends += \
     qttestlib \
     qtuitools \
     qtwidgets \
-    qtxml
+    qtxml \
+    qtassistant
 
 ignorewords += QDoc
 
