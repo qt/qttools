@@ -324,7 +324,7 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
                 p.copyright = value;
             } else {
                 if (logLevel != SilentLog) {
-                    std::cerr << qPrintable(tr("File %1: Expected JSON array of string or"
+                    std::cerr << qPrintable(tr("File %1: Expected JSON array of strings or "
                                                "string as value of %2.").arg(
                                                 QDir::toNativeSeparators(filePath), key)) << std::endl;
                     validPackage = false;
