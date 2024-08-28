@@ -6,7 +6,6 @@
 
 #include "access.h"
 #include "classnode.h"
-#include "codechunk.h"
 #include "config.h"
 #include "enumnode.h"
 #include "functionnode.h"
