@@ -863,12 +863,10 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
 
                     const clang::Decl* declaration = get_cursor_declaration(cursor);
                     assert(declaration);
-                    const auto function_declaration = declaration->getAsFunction();
-                    if (function_declaration) {
-                        const auto declaredReturnType = QString::fromStdString(function_declaration->getDeclaredReturnType().getAsString());
-                        const QLatin1String autoString{"auto"};
-                        if (fn->returnType() != autoString && declaredReturnType == autoString)
-                            fn->setDeclaredReturnType(declaredReturnType);
+                    if (const auto function_declaration = declaration->getAsFunction()) {
+                        auto declaredReturnType = function_declaration->getDeclaredReturnType();
+                        if (llvm::dyn_cast_if_present<clang::AutoType>(declaredReturnType.getTypePtrOrNull()))
+                            fn->setDeclaredReturnType(QString::fromStdString(declaredReturnType.getAsString()));
                     }
                 }
             } else { // Possibly an implicitly generated special member
