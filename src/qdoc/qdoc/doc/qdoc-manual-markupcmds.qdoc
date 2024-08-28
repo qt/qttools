@@ -3140,7 +3140,6 @@
     \1/
     \endcode
 
-    QDoc renders this page \l{corefeatures.html} {as shown here}.
 
     \target 2-argument-form
     \section2 \\include filename snippet-identifier
