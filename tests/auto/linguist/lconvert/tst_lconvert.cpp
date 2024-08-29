@@ -3,6 +3,9 @@
 
 #include <QtTest/QtTest>
 #include <QtCore/QFile>
+#include <QtCore/QTextStream>
+
+using namespace Qt::Literals::StringLiterals;
 
 class tst_lconvert : public QObject
 {
@@ -39,10 +42,56 @@ private:
     QString lconvert;
 };
 
+static void writePoMessages(QTextStream &out, int num, const QString &str)
+{
+    for (int i = 0; i < (1 << num); ++i) {
+        out << "\n";
+        out << "msgid \"singular " << str << " " << i << "\"\n";
+        out << "msgid_plural \"plural " << str << " " << i << "\"\n";
+        for (int j = 0; j < num; ++j) {
+            QString tr;
+            if ((i & (1 << j)) == 0)
+                tr = u"translated %1 %2 %3"_s.arg(str).arg(i).arg(j);
+            out << "msgstr[" << j << "] \"" << tr << "\"\n";
+        }
+    }
+}
+
+static void createPluralPoFile(const QString &outdir, int num, const QString &lang,
+                               const QString &pluralForms)
+{
+    QString filename = outdir + u"plural-%1.po"_s.arg(num);
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qWarning() << "Cannot write file in" << outdir;
+        return;
+    }
+
+    QTextStream out(&file);
+    out << R"(msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-FooBar: yup\n"
+"X-Language: )" << lang << R"(\n"
+"Plural-Forms: )" << pluralForms << "\\n\"\n";
+
+    writePoMessages(out, num, "one"_L1);
+    writePoMessages(out, num, "two"_L1);
+    writePoMessages(out, num, "three"_L1);
+    writePoMessages(out, num, "four"_L1);
+}
+
 void tst_lconvert::initTestCase()
 {
-    if (!QFile::exists(dataDir + QLatin1String("plural-1.po")))
-        QProcess::execute(QLatin1String(PERL_EXECUTABLE), QStringList() << dataDir + QLatin1String("makeplurals.pl") << dataDir + QLatin1String(""));
+    if (!QFile::exists(dataDir + QLatin1String("plural-1.po"))) {
+        createPluralPoFile(dataDir, 1, u"zh_CN"_s, u"nplurals=1; plural=0;"_s);
+        createPluralPoFile(dataDir, 2, u"de_DE"_s, u"nplurals=2; plural=(n != 1);"_s);
+        createPluralPoFile(dataDir, 3, u"pl_PL"_s,
+                           u"nplurals=3; plural=(n==1 ? 0 : n%10>=2 && "_s
+                           u"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"_s);
+    }
     QVERIFY(QFile::exists(dataDir + QLatin1String("plural-1.po")));
 }
 
