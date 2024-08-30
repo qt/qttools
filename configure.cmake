@@ -111,12 +111,40 @@ qt_configure_add_summary_entry(ARGS "qtplugininfo")
 qt_configure_end_summary_section() # end of "Qt Tools" section
 qt_configure_add_report_entry(
     TYPE WARNING
-    MESSAGE "QDoc will not be compiled, probably because clang's C and C++ libraries could not be located. This means that you cannot build the Qt documentation.
-You may need to set CMAKE_PREFIX_PATH or LLVM_INSTALL_DIR to the location of your llvm installation.
-Other than clang's libraries, you may need to install another package, such as clang itself, to provide the ClangConfig.cmake file needed to detect your libraries. Once this
-file is in place, the configure script may be able to detect your system-installed libraries without further environment variables.
+    MESSAGE "
+QDoc will not be compiled, probably because clang's C and C++ libraries could not be located.
+This means that you cannot build the Qt documentation. You may need to set the CMake varibles
+CMAKE_PREFIX_PATH or LLVM_INSTALL_DIR to the location of your llvm installation.
+Other than clang's libraries, you may need to install another package, such as clang itself, to
+provide the ClangConfig.cmake file needed to detect your libraries. Once this file is in place,
+the configure script may be able to detect your system-installed libraries without further
+environment variables.
+
+NOTE: You WILL also need to set the FEATURE_clang CMake variable to ON to re-try finding the
+dependencies.
+
 On macOS, you can use Homebrew's llvm package.
-You will also need to set the FEATURE_clang CMake variable to ON to re-evaluate this check."
+Run `brew install llvm` and then configure with
+
+ `configure LLVM_INSTALL_DIR=/opt/homebrew/opt/llvm FEATURE_clang=ON` for macOS arm64
+or
+ `configure LLVM_INSTALL_DIR=/usr/local/opt/llvm FEATURE_clang_ON` for macOS x86_64.
+
+On Linux, you can try installing the clang package from your distribution's package manager.
+On Debian / Ubuntu run `sudo apt install libclang-dev`.
+On Fedora / RHEL run `sudo dnf install clang-devel`.
+On ArchLinux run `sudo pacman -S clang`.
+
+Alternatively, you can use the prebuilt binaries hosted by Qt.
+These let you link LLVM/Clang libraries statically, but only support Release builds on Windows.
+https://download.qt.io/development_releases/prebuilt/libclang/qt/
+
+After installing, reconfigure with
+
+ `/qt_src/configure FEATURE_clang=ON` for a top-level build that includes the qttools repo
+or
+ `/qt_build/qt-configure-module /path/to/qttools FEATURE_clang=ON` for a per-submodule build
+"
     CONDITION NOT QT_FEATURE_clang
 )
 qt_configure_add_report_entry(
@@ -138,7 +166,13 @@ qt_configure_add_report_entry(
 set(clangcpp_warn_msg "")
 if(QT_FEATURE_clang AND NOT QT_FEATURE_clang_rtti)
     string(APPEND clangcpp_warn_msg
-        "LLVM was found, but it was not built with RTTI support. "
+        "LLVM was found, but it was not built with RTTI support.
+Consider using a different prebuilt LLVM package or building LLVM with RTTI support to
+enable the Clang-based lupdate parser.
+Configuring LLVM with RTTI support can be done by setting the LLVM_ENABLE_RTTI CMake
+variable to ON. See https://llvm.org/docs/CMake.html#building-llvm-with-cmake
+and https://llvm.org/docs/CMake.html#llvm-related-variables for details.
+"
     )
 endif()
 string(APPEND clangcpp_warn_msg
