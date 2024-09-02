@@ -252,7 +252,7 @@ BookmarkModel::setData(const QModelIndex &index, const QVariant &value, int role
     if (BookmarkItem *item = itemFromIndex(index)) {
         if (role == Qt::EditRole) {
             const bool isFolder = index.data(UserRoleFolder).toBool();
-            if (!isFolder || (isFolder && index.column() == 0))
+            if (!isFolder || index.column() == 0)
                 result = item->setData(index.column(), value);
         } else if (role == UserRoleExpanded) {
             result = item->setData(UserRoleExpanded, value);
