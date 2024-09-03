@@ -500,6 +500,10 @@ static inline QString messageBoxTitle()
 
 void QDesignerResource::save(QIODevice *dev, QWidget *widget)
 {
+    // Do not write fully qualified enumerations for spacer/line orientations
+    // and other enum/flag properties for older Qt versions since that breaks
+    // older uic.
+    d->m_fullyQualifiedEnums = supportsQualifiedEnums(qtVersion(m_formWindow->core()));
     QAbstractFormBuilder::save(dev, widget);
 }
 
@@ -1245,36 +1249,6 @@ DomLayout *QDesignerResource::createDom(QLayout *layout, DomLayout *ui_parentLay
     return l;
 }
 
-// Do not write fully qualified enumerations for spacer orientation
-// for older Qt versions since that breaks older uic
-
-static void inline fixSpacerPropertyQt5(DomProperty *p)
-{
-    if (p->attributeName() == "orientation"_L1) {
-        // "Qt::Orientation::Horizontal" -> "Qt::Horizontal"
-        QString enumValue = p->elementEnum();
-        if (enumValue.startsWith("Qt::Orientation::"_L1)) {
-            enumValue.remove(4, 13);
-            p->setElementEnum(enumValue);
-        }
-    } else if (p->attributeName() == "sizeType"_L1) {
-        // "QSizePolicy::Policy::Expanding" -> "QSizePolicy::Expanding"
-        QString enumValue = p->elementEnum();
-        if (enumValue.startsWith("QSizePolicy::Policy::"_L1)) {
-            enumValue.remove(13, 8);
-            p->setElementEnum(enumValue);
-        }
-    }
-}
-
-static void fixSpacerPropertiesQt5(DomPropertyList *properties)
-{
-    for (auto *p : *properties) {
-        if (p->kind() == DomProperty::Enum)
-            fixSpacerPropertyQt5(p);
-    }
-}
-
 DomLayoutItem *QDesignerResource::createDom(QLayoutItem *item, DomLayout *ui_layout, DomWidget *ui_parentWidget)
 {
     DomLayoutItem *ui_item = nullptr;
@@ -1288,10 +1262,7 @@ DomLayoutItem *QDesignerResource::createDom(QLayoutItem *item, DomLayout *ui_lay
         if (!objectName.isEmpty())
             spacer->setAttributeName(objectName);
         // ### filter the properties
-        auto properties = computeProperties(item->widget());
-        if (!supportsQualifiedEnums(qtVersion(core())))
-            fixSpacerPropertiesQt5(&properties);
-        spacer->setElementProperty(properties);
+        spacer->setElementProperty(computeProperties(item->widget()));
 
         ui_item = new DomLayoutItem();
         ui_item->setElementSpacer(spacer);
@@ -2029,7 +2000,9 @@ DomProperty *QDesignerResource::createProperty(QObject *object, const QString &p
 
     if (value.canConvert<PropertySheetFlagValue>()) {
         const PropertySheetFlagValue f = qvariant_cast<PropertySheetFlagValue>(value);
-        const QString flagString = f.metaFlags.toString(f.value, DesignerMetaFlags::FullyQualified);
+        const auto mode = d->m_fullyQualifiedEnums
+                          ? DesignerMetaFlags::FullyQualified : DesignerMetaFlags::Qualified;
+        const QString flagString = f.metaFlags.toString(f.value, mode);
         if (flagString.isEmpty())
             return nullptr;
 
@@ -2043,8 +2016,10 @@ DomProperty *QDesignerResource::createProperty(QObject *object, const QString &p
     }
     if (value.canConvert<PropertySheetEnumValue>()) {
         const PropertySheetEnumValue e = qvariant_cast<PropertySheetEnumValue>(value);
+        const auto mode = d->m_fullyQualifiedEnums
+                          ? DesignerMetaEnum::FullyQualified : DesignerMetaEnum::Qualified;
         bool ok;
-        const QString id = e.metaEnum.toString(e.value, DesignerMetaEnum::FullyQualified, &ok);
+        const QString id = e.metaEnum.toString(e.value, mode, &ok);
         if (!ok)
             designerWarning(e.metaEnum.messageToStringFailed(e.value));
         if (id.isEmpty())
