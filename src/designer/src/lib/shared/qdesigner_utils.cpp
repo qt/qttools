@@ -146,11 +146,11 @@ namespace qdesigner_internal
         if (ok)
             *ok = valueOk;
 
-        if (!valueOk || sm == NameOnly)
+        if (!valueOk)
             return item;
 
         QString qualifiedItem;
-        appendQualifiedName(item,  qualifiedItem);
+        appendQualifiedName(item, sm, qualifiedItem);
         return qualifiedItem;
     }
 
@@ -205,10 +205,7 @@ namespace qdesigner_internal
         for (const auto &id : flagIds) {
             if (!rc.isEmpty())
                 rc += u'|';
-            if (sm == FullyQualified)
-                appendQualifiedName(id, rc);
-            else
-                rc += id;
+            appendQualifiedName(id, sm, rc);
         }
         return rc;
     }
