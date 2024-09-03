@@ -2,7 +2,10 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
 #pragma once
 
-#include <array>
+// dummy declaration
+namespace std {
+    template <class T, int N> struct array;
+}
 
 template <typename T>
 class TemplatedClass

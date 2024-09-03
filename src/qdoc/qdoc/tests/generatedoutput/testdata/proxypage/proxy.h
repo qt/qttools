@@ -2,7 +2,10 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 #pragma once
 
-#include <utility>
+// dummy declaration
+namespace std {
+    template<class T1, class T2> struct pair;
+}
 
 template <class T1, class T2>
 using StdPair = std::pair<T1, T2>;
