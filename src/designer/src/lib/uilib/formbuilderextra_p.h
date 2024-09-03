@@ -157,6 +157,7 @@ public:
     QHash<QObject*, bool> m_laidout;
     QHash<QString, QAction*> m_actions;
     QHash<QString, QActionGroup*> m_actionGroups;
+    bool m_fullyQualifiedEnums = true;
     int m_defaultMargin;
     int m_defaultSpacing;
     QDir m_workingDirectory;

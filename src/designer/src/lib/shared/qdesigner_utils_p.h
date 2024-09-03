@@ -63,6 +63,9 @@ template <class IntType>
 class MetaEnum
 {
 public:
+    enum SerializationMode { FullyQualified,
+                             Qualified }; // Qt pre 6.7 without enum name
+
     using KeyToValueMap = std::map<QString, IntType, std::less<>>;
 
     MetaEnum(const QString &enumName, const QString &scope, const QString &separator);
@@ -81,7 +84,7 @@ public:
     const KeyToValueMap &keyToValueMap() const { return m_keyToValueMap; }
 
 protected:
-    void appendQualifiedName(const QString &key, QString &target) const;
+    void appendQualifiedName(const QString &key, SerializationMode sm, QString &target) const;
 
 private:
     QString m_enumName;
@@ -135,13 +138,16 @@ IntType MetaEnum<IntType>::keyToValue(QStringView key, bool *ok) const
 }
 
 template <class IntType>
-void MetaEnum<IntType>::appendQualifiedName(const QString &key, QString &target) const
+void MetaEnum<IntType>::appendQualifiedName(const QString &key, SerializationMode sm,
+                                            QString &target) const
 {
     if (!m_scope.isEmpty()) {
         target += m_scope;
         target += m_separator;
     }
-    target += m_enumName + m_separator + key;
+    if (sm == FullyQualified)
+        target += m_enumName + m_separator;
+    target += key;
 }
 
 // -------------- DesignerMetaEnum: Meta type for enumerations
@@ -152,7 +158,6 @@ public:
     DesignerMetaEnum(const QString &name, const QString &scope, const QString &separator);
     DesignerMetaEnum() = default;
 
-    enum SerializationMode { FullyQualified, NameOnly };
     QString toString(int value, SerializationMode sm, bool *ok = nullptr) const;
 
     QString messageToStringFailed(int value) const;
@@ -173,7 +178,6 @@ public:
                                const QString &separator);
     DesignerMetaFlags() = default;
 
-    enum SerializationMode { FullyQualified, NameOnly };
     QString toString(int value, SerializationMode sm) const;
     QStringList flags(int value) const;
 

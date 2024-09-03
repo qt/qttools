@@ -33,7 +33,6 @@ void uiLibWarning(const QString &message) {
     qWarning("Designer: %s", qPrintable(message));
 }
 
-
 QFormBuilderExtra::CustomWidgetData::CustomWidgetData() = default;
 
 QFormBuilderExtra::CustomWidgetData::CustomWidgetData(const DomCustomWidget *dcw) :

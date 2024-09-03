@@ -690,37 +690,48 @@ static inline QFormLayout::ItemRole formLayoutRole(int column, int colspan)
 }
 #endif
 
-static inline QString alignmentValue(Qt::Alignment a)
+static inline QString alignmentPrefix(bool fullyQualifiedEnums)
+{
+    return fullyQualifiedEnums ? "Qt::AlignmentFlag::"_L1 : "Qt::"_L1;
+}
+
+static inline QString alignmentValue(Qt::Alignment a, bool fullyQualifiedEnums)
 {
     QLatin1StringView h;
     QLatin1StringView v;
     switch (a & Qt::AlignHorizontal_Mask) {
     case Qt::AlignLeft:
-        h = "Qt::AlignmentFlag::AlignLeft"_L1;
+        h = "AlignLeft"_L1;
         break;
     case Qt::AlignRight:
-        h = "Qt::AlignmentFlag::AlignRight"_L1;
+        h = "AlignRight"_L1;
         break;
     case Qt::AlignHCenter:
-        h = "Qt::AlignmentFlag::AlignHCenter"_L1;
+        h = "AlignHCenter"_L1;
         break;
     case Qt::AlignJustify:
-        h = "Qt::AlignmentFlag::AlignJustify"_L1;
+        h = "AlignJustify"_L1;
         break;
     }
     switch (a & Qt::AlignVertical_Mask) {
     case Qt::AlignTop:
-        v = "Qt::AlignmentFlag::AlignTop"_L1;
+        v = "AlignTop"_L1;
         break;
     case Qt::AlignBottom:
-        v = "Qt::AlignmentFlag::AlignBottom"_L1;
+        v = "AlignBottom"_L1;
         break;
     case Qt::AlignVCenter:
-        v = "Qt::AlignmentFlag::AlignVCenter"_L1;
+        v = "AlignVCenter"_L1;
         break;
     }
-
-    return h + (v.isEmpty() || h.isEmpty() ? ""_L1 : "|"_L1) + v;
+    QString result;
+    if (h.isEmpty())
+        result += alignmentPrefix(fullyQualifiedEnums) + h;
+    if (!h.isEmpty() && !v.isEmpty())
+        result += u'|';
+    if (!v.isEmpty())
+        result += alignmentPrefix(fullyQualifiedEnums) + v;
+    return result;
 }
 
 static inline Qt::Alignment alignmentFromDom(const QString &in)
@@ -1296,7 +1307,8 @@ DomLayout *QAbstractFormBuilder::createDom(QLayout *layout, DomLayout *ui_layout
             if (item.columnSpan > 1)
                 ui_item->setAttributeColSpan(item.columnSpan);
             if (item.alignment)
-                ui_item->setAttributeAlignment(alignmentValue(item.alignment));
+                ui_item->setAttributeAlignment(alignmentValue(item.alignment,
+                                               d->m_fullyQualifiedEnums));
             ui_items.append(ui_item);
         }
     }
@@ -1348,8 +1360,10 @@ DomSpacer *QAbstractFormBuilder::createDom(QSpacerItem *spacer, DomLayout *ui_la
     // orientation property
     prop = new DomProperty(); // ### we don't implemented the case where expandingDirections() is both Vertical and Horizontal
     prop->setAttributeName("orientation"_L1);
-    prop->setElementEnum((spacer->expandingDirections() & Qt::Horizontal) != 0 ?
-                         "Qt:::Orientation::Horizontal"_L1 : "Qt:::Orientation::Vertical"_L1);
+    QString value = d->m_fullyQualifiedEnums ? "Qt::Orientation::"_L1 : "Qt::"_L1;
+    value += spacer->expandingDirections().testFlag(Qt::Horizontal)
+             ? "Horizontal"_L1 : "Vertical"_L1;
+    prop->setElementEnum(value);
     properties.append(prop);
 
     ui_spacer->setElementProperty(properties);
@@ -2421,6 +2435,7 @@ void QAbstractFormBuilder::reset()
     d->m_actionGroups.clear();
     d->m_defaultMargin = INT_MIN;
     d->m_defaultSpacing = INT_MIN;
+    d->m_fullyQualifiedEnums = true;
 }
 
 /*!
