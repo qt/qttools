@@ -8,7 +8,8 @@
 #include "qdesigner_settings.h"
 #include "qdesigner_workbench.h"
 #include "mainwindow.h"
-
+#include <QtDesigner/abstractintegration.h>
+#include <QtDesigner/abstractformeditor.h>
 #include <qdesigner_propertysheet_p.h>
 
 #include <QtGui/qevent.h>
@@ -27,8 +28,12 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qcommandlineparser.h>
 #include <QtCore/qcommandlineoption.h>
+#include <QtCore/qversionnumber.h>
+#include <QtCore/qvariant.h>
 
 #include <QtDesigner/QDesignerComponents>
+
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
@@ -137,6 +142,7 @@ struct Options
     QStringList files;
     QString resourceDir{QLibraryInfo::path(QLibraryInfo::TranslationsPath)};
     QStringList pluginPaths;
+    std::optional<QVersionNumber> qtVersion;
     bool server{false};
     quint16 clientPort{0};
     bool enableInternalDynamicProperties{false};
@@ -168,6 +174,11 @@ static inline QDesigner::ParseArgumentsResult
                                                u"path"_s);
     parser.addOption(pluginPathsOption);
 
+    const QCommandLineOption qtVersionOption(u"qt-version"_s,
+                                             u"Qt Version for writing .ui files"_s,
+                                             u"version"_s);
+    parser.addOption(qtVersionOption);
+
     parser.addPositionalArgument(u"files"_s,
                                  u"The UI files to open."_s);
 
@@ -196,6 +207,9 @@ static inline QDesigner::ParseArgumentsResult
     const auto pluginPathValues = parser.values(pluginPathsOption);
     for (const auto &pluginPath : pluginPathValues)
         options->pluginPaths.append(pluginPath.split(QDir::listSeparator(), Qt::SkipEmptyParts));
+
+    if (parser.isSet(qtVersionOption))
+        options->qtVersion = QVersionNumber::fromString(parser.value(qtVersionOption));
 
     options->enableInternalDynamicProperties = parser.isSet(internalDynamicPropertyOption);
     options->files = parser.positionalArguments();
@@ -249,6 +263,15 @@ QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
 
     if (m_workbench->formWindowCount() > 0)
         suppressNewFormShow = true;
+
+    if (options.qtVersion.has_value()) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+        m_workbench->core()->integration()->setQtVersion(options.qtVersion.value());
+#else
+        auto version = QVariant::fromValue(options.qtVersion.value());
+        m_workbench->core()->integration()->setProperty("qtVersion", version);
+#endif
+    }
 
     // Show up error box with parent now if something went wrong
     if (m_initializationErrors.isEmpty()) {
