@@ -161,7 +161,8 @@
 
         \li Run \c lupdate to incorporate any new text added to the application.
             \c lupdate synchronizes the user-visible text from the application
-            with the translations. It does not destroy any data.
+            with the translations. Existing translations in the TS file are
+            preserved.
 
         \li Run \c lrelease to read the TS files and produce the QM files used
             by the application at runtime.
