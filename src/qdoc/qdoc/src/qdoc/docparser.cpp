@@ -1319,15 +1319,21 @@ QString DocParser::detailsUnknownCommand(const QSet<QString> &metaCommandSet, co
 /*!
     \internal
 
-    Issues a warning about the duplicate definition of a target or keyword in
-    at \a location. \a duplicateDefinition is the target being processed; the
-    already registered definition is \a previousDefinition.
+    Issues a warning about an empty or duplicate definition of either a
+    \\target or \\keyword command (determined by \a cmdString) at
+    \a location. \a duplicateDefinition is the target being processed;
+    the already registered definition is \a previousDefinition.
  */
-static void warnAboutPreexistingTarget(const Location &location, const QString &duplicateDefinition, const QString &previousDefinition)
+static void warnAboutEmptyOrPreexistingTarget(const Location &location, const QString &duplicateDefinition,
+                                              const QString &cmdString, const QString &previousDefinition)
 {
-    location.warning(
-            QStringLiteral("Duplicate target name '%1'. The previous occurrence is here: %2")
-                    .arg(duplicateDefinition, previousDefinition));
+    if (duplicateDefinition.isEmpty()) {
+        location.warning("Expected an argument for \\%1"_L1.arg(cmdString));
+    } else {
+        location.warning(
+                "Duplicate %3 name '%1'. The previous occurrence is here: %2"_L1
+                        .arg(duplicateDefinition, previousDefinition, cmdString));
+    }
 }
 
 /*!
@@ -1346,8 +1352,9 @@ static void warnAboutPreexistingTarget(const Location &location, const QString &
  */
 void DocParser::insertTarget(const QString &target)
 {
-    if (m_targetMap.contains(target))
-        return warnAboutPreexistingTarget(location(), target, m_targetMap[target].toString());
+    if (target.isEmpty() || m_targetMap.contains(target))
+        return warnAboutEmptyOrPreexistingTarget(location(), target,
+                s_utilities.cmdHash.key(CMD_TARGET), m_targetMap[target].toString());
 
     m_targetMap.insert(target, location());
     m_private->constructExtra();
@@ -1372,8 +1379,9 @@ void DocParser::insertTarget(const QString &target)
  */
 void DocParser::insertKeyword(const QString &keyword)
 {
-    if (m_targetMap.contains(keyword))
-        return warnAboutPreexistingTarget(location(), keyword, m_targetMap[keyword].toString());
+    if (keyword.isEmpty() || m_targetMap.contains(keyword))
+        return warnAboutEmptyOrPreexistingTarget(location(), keyword,
+                s_utilities.cmdHash.key(CMD_KEYWORD), m_targetMap[keyword].toString());
 
     m_targetMap.insert(keyword, location());
     m_private->constructExtra();
