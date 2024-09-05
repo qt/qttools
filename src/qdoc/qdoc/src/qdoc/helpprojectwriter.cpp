@@ -250,6 +250,14 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         }
     }
 
+    auto appendDocKeywords = [&](const Node *n) {
+        for (const auto *kw : n->doc().keywords()) {
+                if (!kw->string().isEmpty()) {
+                    project.m_keywords.append(Keyword(kw->string(), kw->string(),
+                            m_gen->fullDocumentLocation(n)));
+                }
+            }
+    };
     // Unseen group nodes require no further processing as they have no documentation
     if (unseenGroup)
         return false;
@@ -263,19 +271,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         break;
     case Node::QmlType:
     case Node::QmlValueType:
-        if (node->doc().hasKeywords()) {
-            const auto keywords = node->doc().keywords();
-            for (const Atom *keyword : keywords) {
-                if (!keyword->string().isEmpty()) {
-                    project.m_keywords.append(Keyword(keyword->string(), keyword->string(),
-                                                      m_gen->fullDocumentLocation(node)));
-                }
-                else
-                    node->doc().location().warning(
-                            QStringLiteral("Bad keyword in %1")
-                                    .arg(m_gen->fullDocumentLocation(node)));
-            }
-        }
+        appendDocKeywords(node);
         project.m_keywords.append(keywordDetails(node));
         break;
 
@@ -308,21 +304,8 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     case Node::Group:
     case Node::Module:
     case Node::QmlModule: {
-        const auto *cn = static_cast<const CollectionNode *>(node);
-        if (!cn->fullTitle().isEmpty()) {
-            if (cn->doc().hasKeywords()) {
-                const auto keywords = cn->doc().keywords();
-                for (const Atom *keyword : keywords) {
-                    if (!keyword->string().isEmpty()) {
-                        project.m_keywords.append(
-                                Keyword(keyword->string(), keyword->string(),
-                                        m_gen->fullDocumentLocation(node)));
-                    } else
-                        cn->doc().location().warning(
-                                QStringLiteral("Bad keyword in %1")
-                                        .arg(m_gen->fullDocumentLocation(node)));
-                }
-            }
+        if (!node->fullTitle().isEmpty()) {
+            appendDocKeywords(node);
             project.m_keywords.append(keywordDetails(node));
         }
     } break;
@@ -379,21 +362,8 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         // Page nodes (such as manual pages) contain subtypes, titles and other
         // attributes.
     case Node::Page: {
-        const auto *pn = static_cast<const PageNode *>(node);
-        if (!pn->fullTitle().isEmpty()) {
-            if (pn->doc().hasKeywords()) {
-                const auto keywords = pn->doc().keywords();
-                for (const Atom *keyword : keywords) {
-                    if (!keyword->string().isEmpty()) {
-                        project.m_keywords.append(
-                                Keyword(keyword->string(), keyword->string(),
-                                        m_gen->fullDocumentLocation(node)));
-                    } else {
-                        QString loc = m_gen->fullDocumentLocation(node);
-                        pn->doc().location().warning(QStringLiteral("Bad keyword in %1").arg(loc));
-                    }
-                }
-            }
+        if (!node->fullTitle().isEmpty()) {
+            appendDocKeywords(node);
             project.m_keywords.append(keywordDetails(node));
         }
         break;
