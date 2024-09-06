@@ -14,7 +14,54 @@ elseif(DEFINED CACHE{LLVM_INSTALL_DIR})
     list(PREPEND CMAKE_PREFIX_PATH "${LLVM_INSTALL_DIR}")
 endif()
 
-find_package(Clang CONFIG)
+include(FindPackageHandleStandardArgs)
+set(WrapLibClang_FOUND FALSE)
+
+if(QT_NO_FIND_PACKAGE_CLANG_WORKAROUND)
+    find_package(Clang CONFIG)
+else()
+    set(__qt_wraplibclang_message
+        "This probably means that one or more packages necessary for find_package(Clang) are not"
+        "installed. See below for more information. You can turn off this pre-check by setting the"
+        "CMake variable QT_NO_FIND_PACKAGE_CLANG_WORKAROUND to ON."
+    )
+
+    # Try to find the LLVM package. ClangConfig.cmake has a find_package(LLVM REQUIRED) call, which
+    # will break if clang is installed but the LLVM CMake files are not installed.
+    find_package(LLVM CONFIG)
+    if(NOT LLVM_FOUND)
+        list(PREPEND __qt_wraplibclang_message "The LLVM package could not be found.")
+        string(REPLACE ";" " " __qt_wraplibclang_message "${__qt_wraplibclang_message}")
+        find_package_handle_standard_args(WrapLibClang
+            REQUIRED_VARS WrapLibClang_FOUND
+            REASON_FAILURE_MESSAGE "${__qt_wraplibclang_message}")
+        unset(__qt_wraplibclang_message)
+        return()
+    endif()
+
+    # Try to find libClang libraries - either one of the static libs or the whole shared object.
+    # ClangTargets.cmake checks for the presence of these libraries.
+    find_library(__qt_wraplibclang clangBasic HINTS ${LLVM_LIBRARY_DIRS})
+    if(__qt_wraplibclang STREQUAL "__qt_wraplibclang-NOTFOUND")
+        unset(__qt_wraplibclang CACHE)
+        find_library(__qt_wraplibclang clang HINTS ${LLVM_LIBRARY_DIRS})
+    endif()
+    if(__qt_wraplibclang STREQUAL "__qt_wraplibclang-NOTFOUND")
+        unset(__qt_wraplibclang CACHE)
+        list(PREPEND __qt_wraplibclang_message "The clang libraries could not be located.")
+        string(REPLACE ";" " " __qt_wraplibclang_message "${__qt_wraplibclang_message}")
+        find_package_handle_standard_args(WrapLibClang
+            REQUIRED_VARS WrapLibClang_FOUND
+            REASON_FAILURE_MESSAGE "${__qt_wraplibclang_message}")
+        unset(__qt_wraplibclang_message)
+        return()
+    endif()
+    unset(__qt_wraplibclang CACHE)
+
+    # Now, we're pretty certain that we can find the 'Clang' package without running into errors.
+    find_package(Clang ${LLVM_VERSION} EXACT CONFIG)
+endif()
+
 # LLVM versions >= 16 come with Findzstd.cmake that creates a target for libzstd.
 # Disable its global promotion to prevent interference with FindWrapZSTD.cmake.
 if(TARGET zstd::libzstd)
@@ -32,7 +79,6 @@ if(__qt_wrap_clang_backup_prefix)
     unset(__qt_wrap_clang_backup_prefix)
 endif()
 
-set(WrapLibClang_FOUND FALSE)
 set(__wrap_lib_clang_requested_version_found FALSE)
 
 # Need to explicitly handle the version check, because the Clang package doesn't.
@@ -89,7 +135,6 @@ if(TARGET libclang AND ((TARGET clang-cpp AND TARGET LLVM) OR TARGET clangHandle
     endif()
 endif()
 
-include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(WrapLibClang
     REQUIRED_VARS WrapLibClang_FOUND
     VERSION_VAR LLVM_PACKAGE_VERSION)
