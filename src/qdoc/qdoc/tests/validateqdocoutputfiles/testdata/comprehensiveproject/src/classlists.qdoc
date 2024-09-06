@@ -37,6 +37,11 @@
 
     //! a section title shadowing a known property name
     \section1 someProp
+
+    //! A section title tied to a keyword; the keyword entry
+    //! in the qhp uses the ref of the section title
+    \keyword indexedKeyword
+    \section1 indexedKeyword property
 */
 
 /*!

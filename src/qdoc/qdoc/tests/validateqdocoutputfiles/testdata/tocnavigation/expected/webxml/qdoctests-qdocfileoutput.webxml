@@ -71,7 +71,7 @@
                         </item>
                         <item>
                             <para>
-                                <link raw="link-test-target" href="qdoctests-qdocfileoutput-linking.html#link-test-target" type="page" page="Testing QDoc's link command">Linking using a \target string</link></para>
+                                <link raw="link-test-target" href="qdoctests-qdocfileoutput-linking.html#link-targets" type="page" page="Testing QDoc's link command">Linking using a \target string</link></para>
                         </item>
                         <item>
                             <para>

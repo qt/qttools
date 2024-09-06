@@ -24,10 +24,13 @@ class QDocDatabase;
 struct TargetRec
 {
 public:
-    enum TargetType { Unknown, Target, Keyword, Contents };
+    enum TargetType { Unknown, Target, Keyword, Contents, ContentsKeyword };
 
     TargetRec(QString name, TargetRec::TargetType type, Node *node, int priority)
-        : m_node(node), m_ref(std::move(name)), m_type(type), m_priority(priority)
+        : m_node(node),
+          m_ref(std::move(name)),
+          m_type(type == ContentsKeyword ? Keyword : type),
+          m_priority(priority)
     {
         // Discard the dedicated ref for keywords - they always
         // link to the top of the QDoc comment they appear in

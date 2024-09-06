@@ -35,6 +35,28 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
+  \class TargetRec
+  \brief A record of a linkable target within the documentation.
+*/
+
+/*!
+    \enum TargetRec::TargetType
+
+    A type of a linkable target record.
+
+    \value Unknown
+           Unknown/target not set.
+    \value Target
+           A location marked with a \\target command.
+    \value Keyword
+           A location marked with a \\keyword command.
+    \value Contents
+           A table of contents item (section title).
+    \value ContentsKeyword
+           A \\keyword tied to a section title.
+*/
+
+/*!
   Constructs a Tree. \a qdb is the pointer to the singleton
   qdoc database that is constructing the tree. This might not
   be necessary, and it might be removed later.
@@ -788,6 +810,18 @@ void Tree::addTargetsToTargetMap(Node *node) {
     }
 }
 
+/*
+    If atom \a a is immediately followed by a
+    section title (\section1..\section4 command),
+    returns the SectionLeft atom; otherwise nullptr.
+*/
+static const Atom *nextSection(const Atom *a)
+{
+    while (a && a->next(Atom::SectionRight))
+        a = a->next(); // skip closing section atoms
+    return a ? a->next(Atom::SectionLeft) : nullptr;
+}
+
 /*!
     \internal
 
@@ -801,9 +835,11 @@ void Tree::addKeywordsToTargetMaps(Node *node) {
         QString ref = refForAtom(i);
         QString title = i->string();
         if (!ref.isEmpty() && !title.isEmpty()) {
-            auto *target = new TargetRec(ref, TargetRec::Keyword, node, 1);
+            auto *target = new TargetRec(ref, nextSection(i) ? TargetRec::ContentsKeyword : TargetRec::Keyword, node, 1);
             m_nodesByTargetRef.insert(Utilities::asAsciiPrintable(title), target);
             m_nodesByTargetTitle.insert(title, target);
+            if (!target->isEmpty())
+                i->append(target->m_ref);
         }
     }
 }
@@ -948,6 +984,9 @@ const PageNode *Tree::findPageNodeByTitle(const QString &title) const
 /*!
   Returns a canonical title for the \a atom, if the \a atom
   is a SectionLeft, SectionHeadingLeft, Keyword, or Target.
+
+  If a target or a keyword is immediately followed by a
+  section, the former adopts the title (ref) of the latter.
  */
 QString Tree::refForAtom(const Atom *atom)
 {
@@ -964,6 +1003,8 @@ QString Tree::refForAtom(const Atom *atom)
     case Atom::Target:
         [[fallthrough]];
     case Atom::Keyword:
+        if (const auto *section = nextSection(atom))
+            return refForAtom(section);
         return Utilities::asAsciiPrintable(atom->string());
     default:
         return {};
