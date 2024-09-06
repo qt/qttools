@@ -20,8 +20,10 @@
             <qmlproperty name="name" fullname="QDoc.Test.AbstractParent.name" status="active" access="public" location="parent.qdoc" documented="true" type="string" attached="false" writable="true" brief="Name of this parent"/>
         </qmlclass>
         <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking" subtitle="">
+            <keyword name="indexedkeyword" title="indexedKeyword"/>
             <contents name="testqdoc" title="TestQDoc" level="1"/>
             <contents name="someprop" title="someProp" level="1"/>
+            <contents name="indexedkeyword-property" title="indexedKeyword property" level="1"/>
         </page>
         <page name="cmaketest" href="test-cmaketest-example.html" status="active" location="cmaketest.qdoc" documented="true" subtype="example" title="CMake Example Project" fulltitle="CMake Example Project" subtitle="">
             <page name="cmaketest/main.cpp" href="test-cmaketest-main-cpp.html" status="active" subtype="file" title="" fulltitle="main.cpp Example File" subtitle="cmaketest/main.cpp"/>

@@ -253,8 +253,15 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     auto appendDocKeywords = [&](const Node *n) {
         for (const auto *kw : n->doc().keywords()) {
                 if (!kw->string().isEmpty()) {
+                    QStringList ref_parts = m_gen->fullDocumentLocation(n).split('#'_L1);
+                    // Use keyword's custom anchor if it has one
+                    if (kw->count() > 1) {
+                        if (ref_parts.count() > 1)
+                            ref_parts.pop_back();
+                        ref_parts << kw->string(1);
+                    }
                     project.m_keywords.append(Keyword(kw->string(), kw->string(),
-                            m_gen->fullDocumentLocation(n)));
+                            ref_parts.join('#'_L1)));
                 }
             }
     };

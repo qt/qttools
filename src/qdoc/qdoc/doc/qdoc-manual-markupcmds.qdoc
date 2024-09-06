@@ -1771,14 +1771,21 @@
     and the location to generated indices.
 
     The \\keyword command is like the \l {target-command} {\\target}
-    command, except when linking to keyword the link goes to the top of
-    the QDoc comment where the \\keyword appears in. If you want to
-    create a link target to a \c section unit within a \\page, use
-    \\target instead.
+    command, except that when linking to a keyword, by default the link
+    goes to the top of the QDoc comment (topic) the \\keyword appears in.
 
-    Keywords are also registered in indices of generated offline
-    documentation files (.qch). This allows users to look up the location
-    by keyword, for instance, in
+    If you want to create a keyword for a \c section unit within a
+    topic, add the \\keyword directly above the section title:
+
+    \badcode
+    \keyword debug
+    \section1 Debug command line option (--debug)
+    ...
+    \endcode
+
+    Unlike \\target, keywords are registered in indices of generated
+    offline documentation files (.qch). This allows users to look up the
+    location by keyword, for instance, in
     \l[QtAssistant]{Searching for Keywords}{Qt Assistant's Index Search},
     and makes the keyword accessible in \QC's context help.
 

@@ -2,8 +2,10 @@
 <WebXML>
     <document>
         <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking" subtitle="">
+            <keyword name="indexedkeyword" title="indexedKeyword"/>
             <contents name="testqdoc" title="TestQDoc" level="1"/>
             <contents name="someprop" title="someProp" level="1"/>
+            <contents name="indexedkeyword-property" title="indexedKeyword property" level="1"/>
             <description>
                 <section id="testqdoc">
                     <heading level="1">TestQDoc</heading>
@@ -29,6 +31,9 @@
                 </section>
                 <section id="someprop">
                     <heading level="1">someProp</heading>
+                </section>
+                <section id="indexedkeyword-property">
+                    <heading level="1">indexedKeyword property</heading>
                 </section>
             </description>
         </page>

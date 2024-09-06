@@ -29,4 +29,7 @@
 <db:section xml:id="someprop">
 <db:title>someProp</db:title>
 </db:section>
+<db:section xml:id="indexedkeyword-property">
+<db:title>indexedKeyword property</db:title>
+</db:section>
 </db:article>
