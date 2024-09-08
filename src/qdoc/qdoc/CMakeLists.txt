@@ -17,6 +17,7 @@ endif()
 
 qt_get_tool_target_name(target_name qdoc)
 qt_internal_add_tool(${target_name}
+    REQUIRED_FOR_DOCS
     TARGET_DESCRIPTION "Qt Documentation Compiler"
     TOOLS_TARGET Tools
     USER_FACING
