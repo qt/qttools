@@ -181,7 +181,7 @@ public:
     [[nodiscard]] Aggregate *aggregate() const { return m_aggregate; }
 
 private:
-    void stdRefPageSwitch(SectionVector &v, Node *n, Node *t = nullptr);
+    void stdRefPageSwitch(SectionVector &v, Node *n);
     void distributeNodeInSummaryVector(SectionVector &sv, Node *n);
     void distributeNodeInDetailsVector(SectionVector &dv, Node *n);
     void distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n);

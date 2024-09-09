@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="SharedCommentsInNamespace Reference Documentation" version="" project="SharedCommentsInNamespace">
+    <namespace name="" status="active" access="public" module="sharedcommentsinnamespace">
+        <namespace name="Test" href="test.html" status="active" access="public" location="test.h" documented="true" module="Mod">
+            <function name="bar" fullname="Test::bar" href="test.html#bar" status="active" access="public" location="test.h" documented="true" meta="plain" type="void" signature="void bar()"/>
+            <function name="foo" fullname="Test::foo" href="test.html#foo" status="active" access="public" location="test.h" documented="true" meta="plain" type="void" signature="void foo()"/>
+        </namespace>
+        <module name="Mod" href="mod-module.html" status="active" documented="true" seen="true" title=""/>
+    </namespace>
+</INDEX>

@@ -518,15 +518,29 @@ void Sections::reduce(QList<Section> &v)
 }
 
 /*!
+  \internal
+
+  Returns the node to test when distributing \a node based on
+  Node::nodeType().
+
+  It returns either \a node itself, or if \a node is a shared comment
+  node, the first node in its collective.
+*/
+static Node *nodeToTestForDistribution(Node *node)
+{
+    if (node && node->isSharedCommentNode() && node->hasDoc()) {
+        if (auto *scn = static_cast<SharedCommentNode *>(node); scn->collective().size())
+            return scn->collective().first(); // TODO: warn about mixed node types in collective?
+    }
+    return node;
+}
+
+/*!
   This is a private helper function for buildStdRefPageSections().
  */
-void Sections::stdRefPageSwitch(SectionVector &v, Node *n, Node *t)
+void Sections::stdRefPageSwitch(SectionVector &v, Node *n)
 {
-    // t is the reference node to be tested, n is the node to be distributed.
-    // t differs from n only for shared comment nodes.
-    if (!t)
-        t = n;
-
+    auto *t = nodeToTestForDistribution(n);
     switch (t->nodeType()) {
     case Node::Namespace:
         v[StdNamespaces].insert(n);
@@ -557,14 +571,6 @@ void Sections::stdRefPageSwitch(SectionVector &v, Node *n, Node *t)
             else
                 v[StdVariables].insert(n);
         }
-    }
-        return;
-    case Node::SharedComment: {
-        auto *scn = static_cast<SharedCommentNode *>(t);
-        if (!scn->doc().isEmpty() && scn->collective().size())
-            stdRefPageSwitch(
-                    v, scn,
-                    scn->collective().first()); // TODO: warn about mixed node types in collective?
     }
         return;
     default:
@@ -601,7 +607,8 @@ void Sections::buildStdRefPageSections()
         Node *n = *it;
         if (documentAll || n->hasDoc()) {
             stdRefPageSwitch(stdSummarySections(), n);
-            stdRefPageSwitch(stdDetailsSections(), n);
+            if (!n->isSharingComment())
+                stdRefPageSwitch(stdDetailsSections(), n);
         }
     }
     if (!m_aggregate->relatedByProxy().isEmpty()) {
@@ -720,16 +727,7 @@ void Sections::distributeNodeInDetailsVector(SectionVector &dv, Node *n)
     if (n->isSharingComment())
         return;
 
-    // t is the reference node to be tested - typically it's this node (n), but for
-    // shared comment nodes we need to distribute based on the nodes in its collective.
-    Node *t = n;
-
-    if (n->isSharedCommentNode() && n->hasDoc()) {
-        auto *scn = static_cast<SharedCommentNode *>(n);
-        if (scn->collective().size())
-            t = scn->collective().first(); // TODO: warn about mixed node types in collective?
-    }
-
+    auto *t = nodeToTestForDistribution(n);
     if (t->isFunction()) {
         auto *fn = static_cast<FunctionNode *>(t);
         if (fn->isRelatedNonmember()) {
@@ -765,18 +763,10 @@ void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
     if (n->isSharingComment())
         return;
 
-    // t is the reference node to be tested - typically it's this node (n), but for
-    // shared comment nodes we need to distribute based on the nodes in its collective.
-    Node *t = n;
-
-    if (n->isSharedCommentNode() && n->hasDoc()) {
-        if (n->isPropertyGroup()) {
-            dv[QmlProperties].insert(n);
-            return;
-        }
-        auto *scn = static_cast<SharedCommentNode *>(n);
-        if (scn->collective().size())
-            t = scn->collective().first(); // TODO: warn about mixed node types in collective?
+    auto *t = nodeToTestForDistribution(n);
+    if (t != n && n->isPropertyGroup()) {
+        dv[QmlProperties].insert(n);
+        return;
     }
 
     if (t->isQmlProperty()) {
