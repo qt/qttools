@@ -96,7 +96,6 @@ qt_internal_add_tool(${target_name}
         # To provide the ability to workaround version-specific Clang issues.
         # A re-export of (LLVM|CLANG)_VERSION_MAJOR done in WrapLibClang.cmake
         LIBCLANG_VERSION_MAJOR=${QT_LIB_CLANG_VERSION_MAJOR}
-        QDOC2_COMPAT
 )
 qt_internal_return_unless_building_tools()
 
