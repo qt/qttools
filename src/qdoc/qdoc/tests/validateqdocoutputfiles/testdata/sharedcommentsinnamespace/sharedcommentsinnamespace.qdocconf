@@ -1,0 +1,7 @@
+project = SharedCommentsInNamespace
+
+{sourcedirs,headerdirs} = ./src
+
+locationinfo         = false
+warninglimit         = 0
+warninglimit.enabled = true
