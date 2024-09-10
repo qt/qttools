@@ -93,6 +93,7 @@ class TestDerived : public Test {
     Q_PROPERTY(int *intProp READ getInt STORED false CONSTANT FINAL)
     Q_PROPERTY(const QString *name READ name)
     QDOC_PROPERTY(bool boolProp READ boolProp WRITE setBoolProp NOTIFY boolPropChanged RESET resetBoolProp REVISION 1)
+    QDOC_PROPERTY(bool secondBoolProp READ secondBoolProp NOTIFY boolPropChanged)
 #endif
 
 public:
@@ -107,6 +108,7 @@ public:
     const QString &someProp();
     int *getInt();
     bool boolProp();
+    bool secondBoolProp() { return boolProp(); }
     const QString *name() const;
 
     Q_INVOKABLE void invokeMe() const {}

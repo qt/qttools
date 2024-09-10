@@ -29,6 +29,11 @@
 */
 
 /*!
+    \property TestQDoc::TestDerived::secondBoolProp
+    A property sharing a notifier signal with boolProp.
+*/
+
+/*!
     \fn TestQDoc::TestDerived::invokeMe() const
     \brief Something invokable.
 */

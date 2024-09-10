@@ -54,6 +54,7 @@
 <li class="fn" translate="no"><b><a href="testqdoc-testderived.html#intProp-prop" translate="no">intProp</a></b> : int* const</li>
 </ul></td><td class="topAlign"><ul>
 <li class="fn" translate="no"><b><a href="testqdoc-testderived.html#name-prop" translate="no">name</a></b> : const QString*</li>
+<li class="fn" translate="no"><b><a href="testqdoc-testderived.html#secondBoolProp-prop" translate="no">secondBoolProp</a></b> : const bool</li>
 <li class="fn" translate="no"><b><a href="testqdoc-testderived.html#someProp-prop" translate="no">someProp</a></b> : QString</li>
 </ul>
 </td></tr>
@@ -65,6 +66,7 @@
 <tr><td class="memItemLeft rightAlign topAlign"> int *</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#intProp-prop" translate="no">getInt</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#invokeMe" translate="no">invokeMe</a></b>() const</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> const QString *</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#name-prop" translate="no">name</a></b>() const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#secondBoolProp-prop" translate="no">secondBoolProp</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> const QString &amp;</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#someProp-prop" translate="no">someProp</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> TestQDoc::TestDerived::NotTypedef </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#someValue" translate="no">someValue</a></b>()</td></tr>
 </table></div>
@@ -139,6 +141,18 @@
 <tr><td class="memItemLeft topAlign rightAlign"> const QString *</td><td class="memItemRight bottomAlign"><span class="name"><b>name</b></span>() const</td></tr>
 </table></div>
 <!-- @@@name -->
+<!-- $$$secondBoolProp-prop$$$secondBoolProp$$$boolPropChanged -->
+<h3 class="fn" translate="no" id="secondBoolProp-prop"><code class="details extra" translate="no">[read-only]</code> <span class="name">secondBoolProp</span> : const <span class="type">bool</span></h3>
+<p>A property sharing a notifier signal with <a href="testqdoc-testderived.html#boolProp-prop" translate="no">boolProp</a>.</p>
+<p><b>Access functions:</b></p>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft topAlign rightAlign"> bool </td><td class="memItemRight bottomAlign"><span class="name"><b>secondBoolProp</b></span>()</td></tr>
+</table></div>
+<p><b>Notifier signal:</b></p>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft topAlign rightAlign"> void </td><td class="memItemRight bottomAlign"><span class="name"><b><a href="testqdoc-testderived.html#boolProp-prop" translate="no">boolPropChanged</a></b></span>()</td></tr>
+</table></div>
+<!-- @@@secondBoolProp -->
 <!-- $$$someProp-prop$$$someProp -->
 <h3 class="fn" translate="no" id="someProp-prop"><code class="details extra" translate="no">[bindable read-only]</code> <span class="name">someProp</span> : <span class="type">QString</span></h3>
 <div class="admonition note"><p><b>Note: </b>This property supports <a href="https://wiki.qt.io/QProperty">QProperty</a> bindings.</p>

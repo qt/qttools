@@ -119,10 +119,7 @@ public:
     [[nodiscard]] const QString &overridesThis() const { return m_overridesThis; }
     [[nodiscard]] const QList<PropertyNode *> &associatedProperties() const { return m_associatedProperties; }
     [[nodiscard]] bool hasAssociatedProperties() const { return !m_associatedProperties.isEmpty(); }
-    [[nodiscard]] bool hasOneAssociatedProperty() const
-    {
-        return (m_associatedProperties.size() == 1);
-    }
+    [[nodiscard]] const PropertyNode *primaryAssociatedProperty() const;
     [[nodiscard]] QString element() const override { return parent()->name(); }
     [[nodiscard]] bool isAttached() const override { return m_attached; }
     [[nodiscard]] QString qmlTypeName() const override { return parent()->qmlTypeName(); }

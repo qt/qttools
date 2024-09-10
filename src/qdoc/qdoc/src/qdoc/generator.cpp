@@ -495,8 +495,8 @@ QString Generator::fullDocumentLocation(const Node *node)
         default:
             if (fn->isDtor())
                 anchorRef = "#dtor." + fn->name().mid(1);
-            else if (fn->hasOneAssociatedProperty() && fn->doc().isEmpty())
-                return fullDocumentLocation(fn->associatedProperties()[0]);
+            else if (const auto *p = fn->primaryAssociatedProperty(); p && fn->doc().isEmpty())
+                return fullDocumentLocation(p);
             else if (fn->overloadNumber() > 0)
                 anchorRef = QLatin1Char('#') + cleanRef(fn->name()) + QLatin1Char('-')
                         + QString::number(fn->overloadNumber());
