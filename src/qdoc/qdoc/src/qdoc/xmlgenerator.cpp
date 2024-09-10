@@ -280,8 +280,8 @@ QString XmlGenerator::refForNode(const Node *node)
                 ref += QLatin1Char('-') + QString::number(fn->overloadNumber());
             break;
         default:
-            if (fn->hasOneAssociatedProperty() && fn->doc().isEmpty()) {
-                return refForNode(fn->associatedProperties()[0]);
+            if (const auto *p = fn->primaryAssociatedProperty(); p && fn->doc().isEmpty()) {
+                return refForNode(p);
             } else {
                 ref = fn->name();
                 if (fn->overloadNumber() != 0)

@@ -292,6 +292,13 @@
             <arglist>()</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
+            <type>bool</type>
+            <name>secondBoolProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>secondBoolProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
             <type>const QString &amp;</type>
             <name>someProp</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
@@ -416,6 +423,12 @@
             <name>name</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
             <anchor>name-prop</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="bool">
+            <name>secondBoolProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>secondBoolProp-prop</anchor>
             <arglist></arglist>
         </member>
         <member kind="property" type="QString">

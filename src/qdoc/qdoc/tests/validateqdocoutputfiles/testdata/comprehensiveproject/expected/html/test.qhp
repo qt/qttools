@@ -179,6 +179,8 @@
             <keyword name="rear" id="AbstractParent::rear" ref="qml-qdoc-test-abstractparent.html#rear-method"/>
             <keyword name="resetBoolProp" id="TestDerived::resetBoolProp" ref="testqdoc-testderived.html#boolProp-prop"/>
             <keyword name="sampleReadOnlyProperty" id="TabWidget::sampleReadOnlyProperty" ref="qml-uicomponents-tabwidget.html#sampleReadOnlyProperty-prop"/>
+            <keyword name="secondBoolProp" id="TestDerived::secondBoolProp" ref="testqdoc-testderived.html#secondBoolProp-prop"/>
+            <keyword name="secondBoolProp" id="TestDerived::secondBoolProp" ref="testqdoc-testderived.html#secondBoolProp-prop"/>
             <keyword name="secondColor" id="ProgressBar::secondColor" ref="qml-uicomponents-progressbar.html#secondColor-prop"/>
             <keyword name="setBindableProp" id="TestDerived::setBindableProp" ref="testqdoc-testderived.html#bindableProp-prop"/>
             <keyword name="setBoolProp" id="TestDerived::setBoolProp" ref="testqdoc-testderived.html#boolProp-prop"/>

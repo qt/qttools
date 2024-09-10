@@ -149,13 +149,14 @@
                 <function name="bindableProp" fullname="TestQDoc::TestDerived::bindableProp" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" meta="plain" associated-property="bindableProp" type="QBindable&lt;QString&gt;" signature="QBindable&lt;QString&gt; bindableProp()"/>
                 <function name="bindablePropChanged" fullname="TestQDoc::TestDerived::bindablePropChanged" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" meta="signal" associated-property="bindableProp" type="void" signature="void bindablePropChanged()"/>
                 <function name="boolProp" fullname="TestQDoc::TestDerived::boolProp" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="plain" associated-property="boolProp" type="bool" signature="bool boolProp()"/>
-                <function name="boolPropChanged" fullname="TestQDoc::TestDerived::boolPropChanged" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="signal" associated-property="boolProp" type="void" signature="void boolPropChanged()"/>
+                <function name="boolPropChanged" fullname="TestQDoc::TestDerived::boolPropChanged" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="signal" associated-property="boolProp,secondBoolProp" type="void" signature="void boolPropChanged()"/>
                 <function name="emitSomething" fullname="TestQDoc::TestDerived::emitSomething" href="testqdoc-testderived.html#emitSomething" status="active" access="public" location="testcpp.h" documented="true" meta="signal" type="void" signature="void emitSomething()"/>
                 <function name="getInt" fullname="TestQDoc::TestDerived::getInt" href="testqdoc-testderived.html#intProp-prop" status="active" access="public" location="testcpp.h" meta="plain" associated-property="intProp" type="int *" signature="int * getInt()"/>
                 <function name="id" fullname="TestQDoc::TestDerived::id" href="testqdoc-testderived.html#id" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" override="true" type="int" signature="int id() override"/>
                 <function name="invokeMe" fullname="TestQDoc::TestDerived::invokeMe" href="testqdoc-testderived.html#invokeMe" status="active" access="public" location="testcpp.h" documented="true" meta="plain" const="true" type="void" brief="Something invokable" signature="void invokeMe() const"/>
                 <function name="name" fullname="TestQDoc::TestDerived::name" href="testqdoc-testderived.html#name-prop" status="active" access="public" location="testcpp.h" meta="plain" const="true" associated-property="name" type="const QString *" signature="const QString * name() const"/>
                 <function name="resetBoolProp" fullname="TestQDoc::TestDerived::resetBoolProp" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="slot" associated-property="boolProp" type="void" signature="void resetBoolProp()"/>
+                <function name="secondBoolProp" fullname="TestQDoc::TestDerived::secondBoolProp" href="testqdoc-testderived.html#secondBoolProp-prop" status="active" access="public" location="testcpp.h" meta="plain" associated-property="secondBoolProp" type="bool" signature="bool secondBoolProp()"/>
                 <function name="setBindableProp" fullname="TestQDoc::TestDerived::setBindableProp" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" meta="slot" associated-property="bindableProp" type="void" signature="void setBindableProp(const QString &amp;s)">
                     <parameter type="const QString &amp;" name="s" default=""/>
                 </function>
@@ -184,6 +185,10 @@
                 </property>
                 <property name="name" fullname="TestQDoc::TestDerived::name" href="testqdoc-testderived.html#name-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false" brief="This property holds a name">
                     <getter name="name"/>
+                </property>
+                <property name="secondBoolProp" fullname="TestQDoc::TestDerived::secondBoolProp" href="testqdoc-testderived.html#secondBoolProp-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false">
+                    <getter name="secondBoolProp"/>
+                    <notifier name="boolPropChanged"/>
                 </property>
                 <property name="someProp" fullname="TestQDoc::TestDerived::someProp" href="testqdoc-testderived.html#someProp-prop" status="active" access="public" location="testcpp.h" documented="true" bindable="true" writable="false">
                     <getter name="someProp"/>

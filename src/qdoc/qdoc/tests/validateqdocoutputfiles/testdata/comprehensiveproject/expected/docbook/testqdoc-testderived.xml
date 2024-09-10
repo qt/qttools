@@ -185,6 +185,38 @@
 </db:listitem>
 </db:itemizedlist>
 </db:section>
+<db:section xml:id="secondBoolProp-prop">
+<db:title its:translate="no">[read-only] secondBoolProp : const bool</db:title>
+<db:fieldsynopsis>
+<db:modifier>(Qt property)</db:modifier>
+<db:type>bool</db:type>
+<db:varname>secondBoolProp</db:varname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="getter">secondBoolProp</db:synopsisinfo>
+<db:synopsisinfo role="notifier">boolPropChanged</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>A property sharing a notifier signal with <db:link xlink:href="testqdoc-testderived.xml#boolProp-prop">boolProp</db:link>.</db:para>
+<db:para>
+<db:emphasis role="bold">Access functions:
+</db:emphasis>
+</db:para>
+<db:itemizedlist its:translate="no">
+<db:listitem>
+<db:para><db:type>bool</db:type> <db:emphasis role="bold"><db:link xlink:href="">secondBoolProp</db:link></db:emphasis>()</db:para>
+</db:listitem>
+</db:itemizedlist>
+<db:para>
+<db:emphasis role="bold">Notifier signal:
+</db:emphasis>
+</db:para>
+<db:itemizedlist its:translate="no">
+<db:listitem>
+<db:para><db:type>void</db:type> <db:emphasis role="bold"><db:link xlink:href="testqdoc-testderived.xml#boolProp-prop">boolPropChanged</db:link></db:emphasis>()</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
 <db:section xml:id="someProp-prop">
 <db:title its:translate="no">[bindable read-only] someProp : QString</db:title>
 <db:fieldsynopsis>

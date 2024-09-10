@@ -320,6 +320,33 @@ void FunctionNode::addAssociatedProperty(PropertyNode *p)
 }
 
 /*!
+  Returns the \e primary associated property, if this is an
+  access function for one or more properties.
+
+  An associated property is considered a primary if this
+  function's name starts with the property name. If there's
+  no such property, return the first one available as a
+  fallback.
+
+  If no associated properties exist, returns \nullptr.
+ */
+const PropertyNode *FunctionNode::primaryAssociatedProperty() const
+{
+    if (m_associatedProperties.isEmpty())
+        return nullptr;
+    if (m_associatedProperties.size() == 1)
+        return m_associatedProperties[0];
+
+    auto it = std::find_if(
+            m_associatedProperties.cbegin(), m_associatedProperties.cend(),
+                    [this](const PropertyNode *p) {
+                        return name().startsWith(p->name());
+                    });
+
+    return it != m_associatedProperties.cend() ? *it : m_associatedProperties[0];
+}
+
+/*!
     \reimp
 
     Returns \c true if this is an access function for an obsolete property,
