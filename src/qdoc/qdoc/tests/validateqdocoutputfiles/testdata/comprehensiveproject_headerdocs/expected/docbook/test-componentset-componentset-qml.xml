@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QML Documentation Example</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>Example for documenting QML types.</db:para>
+</db:abstract>
+</db:info>
+<db:programlisting language="qml" its:translate="no">// Copyright (C) 2023 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+import QtQuick 2.0
+
+Item {
+}
+
+</db:programlisting>
+</db:article>

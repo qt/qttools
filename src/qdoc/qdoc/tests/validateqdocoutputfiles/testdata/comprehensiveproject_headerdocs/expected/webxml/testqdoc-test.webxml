@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class threadsafety="reentrant" name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="1.1" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
+            <description>
+                <brief>A class in a namespace.</brief>
+            </description>
+            <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" location="testcpp.h" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
+                <parameter type="int &amp;" name="x" default=""/>
+                <description>
+                    <brief>A macro with argument <argument>x</argument>.</brief>
+                </description>
+            </function>
+            <function name="Test" fullname="TestQDoc::Test::Test" href="testqdoc-test.html#Test" status="active" access="public" location="testcpp.h" documented="true" meta="constructor" signature="Test()">
+                <description>
+                    <para>The constructor is deleted.</para>
+                </description>
+            </function>
+            <function name="anotherObsoleteMember" fullname="TestQDoc::Test::anotherObsoleteMember" href="testqdoc-test-obsolete.html#anotherObsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void anotherObsoleteMember()">
+                <description>
+                    <para>Use <link raw="obsoleteMember()" href="testqdoc-test.html#obsoleteMember" type="function">obsoleteMember()</link> instead.</para>
+                </description>
+            </function>
+            <function name="deprecatedMember" fullname="TestQDoc::Test::deprecatedMember" href="testqdoc-test-obsolete.html#deprecatedMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void deprecatedMember()">
+                <description>
+                    <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>
+                </description>
+            </function>
+            <function name="funcPtr" fullname="TestQDoc::Test::funcPtr" href="testqdoc-test.html#funcPtr" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void (*)(bool)" signature="void (*)(bool) funcPtr(bool b, const char *s)">
+                <parameter type="bool" name="b" default=""/>
+                <parameter type="const char *" name="s" default=""/>
+                <description>
+                    <para>Returns a pointer to a function that takes a boolean. Uses <argument>b</argument> and <argument>s</argument>.</para>
+                </description>
+            </function>
+            <function name="funcTemplate" fullname="TestQDoc::Test::funcTemplate" href="testqdoc-test.html#funcTemplate" status="active" access="protected" location="testcpp.h" documented="true" meta="plain" type="void" brief="Function template with two parameters, a and b" signature="void funcTemplate(T1 a, T2 b)">
+                <parameter type="T1" name="a" default=""/>
+                <parameter type="T2" name="b" default=""/>
+                <description>
+                    <brief>Function template with two parameters, <argument>a</argument> and <argument>b</argument>.</brief>
+                </description>
+            </function>
+            <function name="inlineFunction" fullname="TestQDoc::Test::inlineFunction" href="testqdoc-test.html#inlineFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void" brief="An inline function, documented using the \fn QDoc command" signature="void inlineFunction()">
+                <description>
+                    <brief>An inline function, documented using the \fn QDoc command.</brief>
+                </description>
+            </function>
+            <function name="methodWithEmDashInItsDocs" fullname="TestQDoc::Test::methodWithEmDashInItsDocs" href="testqdoc-test.html#methodWithEmDashInItsDocs" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void methodWithEmDashInItsDocs()">
+                <description>
+                    <para>This method has em dashes in its documentation—as you'll find represented by <teletype type="highlighted">---</teletype> in the sources—here and there. The important bit to note is that when passed e.g. to the \c command, the three hyphens are processed as input to the command and not replaced by an em dash.</para>
+                    <para>-----------------------------------------------------------------------</para>
+                    <para>People can still add a bunch of dashes, though, without QDoc replacing them all with a series of em dashes.</para>
+                    <para>—You can also start a new paragraph with an em dash, if you want to.</para>
+                    <see-also>
+                        <link raw="methodWithEnDashInItsDocs" href="testqdoc-test.html#methodWithEnDashInItsDocs" type="function">methodWithEnDashInItsDocs</link>
+                    </see-also>
+                </description>
+            </function>
+            <function name="methodWithEnDashInItsDocs" fullname="TestQDoc::Test::methodWithEnDashInItsDocs" href="testqdoc-test.html#methodWithEnDashInItsDocs" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void methodWithEnDashInItsDocs()">
+                <description>
+                    <para>This method has en dashes in its documentation – as you'll find represented by <teletype type="highlighted">--</teletype> in the sources – here and there. The important bit to note is that when passed e.g. to the \c command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</para>
+                    <code>for (int i = 42; i &gt; 0; --i)
+    // Do something cool during countdown.</code>
+                    <para>...as it would be silly if this would output –i instead of <teletype type="highlighted">--i</teletype>.</para>
+                    <para>-----------------------------------------------------------------------</para>
+                    <para>It still allows people to add a bunch of dashes, though, without replacing them all with a series of en dashes. Of course, they might want to use the \hr command instead, like this:</para>
+                    <para>– You can also start a new paragraph with an en dash, if you want to.</para>
+                    <see-also>methodWithEnDashInItsDocs</see-also>
+                </description>
+            </function>
+            <function name="obsoleteMember" fullname="TestQDoc::Test::obsoleteMember" href="testqdoc-test-obsolete.html#obsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void obsoleteMember()">
+                <description>
+                    <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>
+                </description>
+            </function>
+            <function name="operator++" fullname="TestQDoc::Test::operator++" href="testqdoc-test-obsolete.html#operator-2b-2b" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator++()">
+                <description/>
+            </function>
+            <function name="operator--" fullname="TestQDoc::Test::operator--" href="testqdoc-test-obsolete.html#operator--" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator--()">
+                <description/>
+            </function>
+            <function name="operator=" fullname="TestQDoc::Test::operator=" href="testqdoc-test.html#operator-eq" status="active" access="public" location="testcpp.h" documented="true" meta="move-assign" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other)" groups="testgroup">
+                <parameter type="TestQDoc::Test &amp;&amp;" name="other" default=""/>
+                <description>
+                    <para>The move assignment operator is deleted. <argument>other</argument> cannot be moved from.</para>
+                </description>
+            </function>
+            <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="2" meta="plain" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
+                <parameter type="const TestQDoc::Test &amp;" name="lhs" default=""/>
+                <parameter type="const TestQDoc::Test &amp;" name="rhs" default=""/>
+                <description>
+                    <para>Returns true if <argument>lhs</argument> and <argument>rhs</argument> are equal.</para>
+                </description>
+            </function>
+            <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload" status="active" access="protected" location="testcpp.h" documented="true" meta="plain" type="void" signature="void overload()">
+                <description/>
+            </function>
+            <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload-1" status="active" access="protected" location="testcpp.h" documented="true" since="Test 1.2" meta="plain" overload="true" overload-number="1" type="void" signature="void overload(bool b)">
+                <parameter type="bool" name="b" default=""/>
+                <description/>
+            </function>
+            <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" since="Test 1.0" meta="plain" type="int" signature="int someFunction(int, int v)">
+                <parameter type="int" name="" default=""/>
+                <parameter type="int" name="v" default="0"/>
+                <description>
+                    <para>Function that takes a parameter <argument>v</argument>. Also returns the value of <argument>v</argument>.</para>
+                </description>
+            </function>
+            <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" threadsafety="non-reentrant" status="active" access="public" location="testcpp.h" documented="true" since="2.0" meta="plain" const="true" type="void" signature="void someFunctionDefaultArg(int i, bool b) const" groups="testgroup">
+                <parameter type="int" name="i" default=""/>
+                <parameter type="bool" name="b" default="false"/>
+                <description>
+                    <para>Function that takes a parameter <argument>i</argument> and <argument>b</argument>.</para>
+                </description>
+            </function>
+            <function name="virtualFun" fullname="TestQDoc::Test::virtualFun" href="testqdoc-test.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" type="void" signature="void virtualFun()">
+                <description>
+                    <para>Function that must be reimplemented.</para>
+                </description>
+            </function>
+            <struct name="Struct" fullname="TestQDoc::Test::Struct" href="testqdoc-test-struct.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="Templated struct">
+                <description>
+                    <brief>Templated struct.</brief>
+                </description>
+            </struct>
+            <typedef name="SomeType" fullname="TestQDoc::Test::SomeType" href="testqdoc-test.html#SomeType-typedef" status="active" access="public" location="testcpp.h" documented="true">
+                <description>
+                    <brief>A typedef.</brief>
+                </description>
+            </typedef>
+            <typedef name="Specialized" fullname="TestQDoc::Test::Specialized" href="testqdoc-test.html#Specialized-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="Struct&lt;int, T&gt;">
+                <description/>
+            </typedef>
+            <property name="id" fullname="TestQDoc::Test::id" href="testqdoc-test.html#id-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false">
+                <description/>
+            </property>
+        </class>
+    </document>
+</WebXML>

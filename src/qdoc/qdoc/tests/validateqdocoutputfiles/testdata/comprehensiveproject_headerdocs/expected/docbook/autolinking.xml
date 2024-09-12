@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Autolinking</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
+</db:info>
+<db:section xml:id="testqdoc">
+<db:title>TestQDoc</db:title>
+<db:para>The string <db:link xlink:href="testqdoc.xml">TestQDoc</db:link> links to the C++ namespace unless linking explicitly, <db:link xlink:href="autolinking.xml#testqdoc">like this</db:link>, or <db:link xlink:href="testqdoc.xml">this</db:link>. Also,</db:para>
+<db:para>Autolinks:</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-testderived.xml">TestQDoc::TestDerived</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+<db:para>Explicit links:</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-testderived.xml">TestQDoc::TestDerived</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="obsolete-classes.xml#testqdoc">Obsolete Classes#TestQDoc</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="someprop">
+<db:title>someProp</db:title>
+</db:section>
+<db:section xml:id="indexedkeyword-property">
+<db:title>indexedKeyword property</db:title>
+</db:section>
+</db:article>

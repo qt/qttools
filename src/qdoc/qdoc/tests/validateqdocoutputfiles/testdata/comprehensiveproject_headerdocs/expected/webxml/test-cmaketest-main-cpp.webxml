@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="cmaketest/main.cpp" href="test-cmaketest-main-cpp.html" title="main.cpp Example File" fulltitle="main.cpp Example File" subtitle="cmaketest/main.cpp">
+            <description>
+                <code>&lt;@type&gt;void&lt;/@type&gt; main(){}</code>
+            </description>
+        </page>
+    </document>
+</WebXML>

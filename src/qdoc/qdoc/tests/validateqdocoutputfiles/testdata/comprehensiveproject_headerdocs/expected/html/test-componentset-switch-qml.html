@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- examples.qdoc -->
+  <meta name="description" content="Example for documenting QML types.">
+  <title>QML Documentation Example | Qt 6.2.11</title>
+</head>
+<body>
+<h1 class="title">QML Documentation Example</h1>
+<pre class="qml" translate="no"><span class="comment">// Copyright (C) 2016 The Qt Company Ltd.</span>
+<span class="comment">// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause</span>
+
+import QtQuick 1.0
+
+<span class="comment">/*!
+    \qmltype ToggleSwitch
+    \inqmlmodule UIComponents
+    \brief A component that can be turned on or off.
+
+    A toggle switch has two states: an \c on and an \c off state. The \c off
+    state is when the \l on property is set to \c false.
+
+    The ToggleSwitch component is part of the \l {UI Components} module.
+
+    This documentation is part of the \l{componentset}{UIComponents} example.
+
+*/</span>
+<span class="type">Item</span> {
+    <span class="name">id</span>: <span class="name">toggleswitch</span>
+    <span class="name">width</span>: <span class="name">background</span>.<span class="name">width</span>; <span class="name">height</span>: <span class="name">background</span>.<span class="name">height</span>
+
+    <span class="comment">/*!
+       Indicates the state of the switch. If \c false, then the switch is in
+       the \c off state.
+
+       \omit
+            The \qmlproperty &lt;type&gt; &lt;propertyname&gt; is not necessary as QDoc
+            will associate this property to the ToggleSwitch
+
+           QDoc will not publish the documentation within omit and endomit.
+       \endomit
+    */</span>
+    property <span class="type">bool</span> <span class="name">on</span>: <span class="number">false</span>
+
+    <span class="comment">/*!
+        A method to toggle the switch. If the switch is \c on, the toggling it
+        will turn it \c off. Toggling a switch in the \c off position will
+        turn it \c on.
+    */</span>
+    <span class="keyword">function</span> <span class="name">toggle</span>() {
+        <span class="keyword">if</span> (<span class="name">toggleswitch</span>.<span class="name">state</span> <span class="operator">==</span> <span class="string">&quot;on&quot;</span>)
+            <span class="name">toggleswitch</span>.<span class="name">state</span> <span class="operator">=</span> <span class="string">&quot;off&quot;</span>;
+        <span class="keyword">else</span>
+            <span class="name">toggleswitch</span>.<span class="name">state</span> <span class="operator">=</span> <span class="string">&quot;on&quot;</span>;
+    }
+
+    <span class="comment">/*!
+        \internal
+
+        An internal function to synchronize the switch's internals. This
+        function is not for public access. The \internal command will
+        prevent QDoc from publishing this comment in the public API.
+    */</span>
+    <span class="keyword">function</span> <span class="name">releaseSwitch</span>() {
+        <span class="keyword">if</span> (<span class="name">knob</span>.<span class="name">x</span> <span class="operator">==</span> <span class="number">1</span>) {
+            <span class="keyword">if</span> (<span class="name">toggleswitch</span>.<span class="name">state</span> <span class="operator">==</span> <span class="string">&quot;off&quot;</span>) <span class="keyword">return</span>;
+        }
+        <span class="keyword">if</span> (<span class="name">knob</span>.<span class="name">x</span> <span class="operator">==</span> <span class="number">78</span>) {
+            <span class="keyword">if</span> (<span class="name">toggleswitch</span>.<span class="name">state</span> <span class="operator">==</span> <span class="string">&quot;on&quot;</span>) <span class="keyword">return</span>;
+        }
+        <span class="name">toggle</span>();
+    }
+
+    <span class="type">Rectangle</span> {
+        <span class="name">id</span>: <span class="name">background</span>
+        <span class="name">width</span>: <span class="number">130</span>; <span class="name">height</span>: <span class="number">48</span>
+        <span class="name">radius</span>: <span class="number">48</span>
+        <span class="name">color</span>: <span class="string">&quot;lightsteelblue&quot;</span>
+        <span class="type">MouseArea</span> { <span class="name">anchors</span>.fill: <span class="name">parent</span>; <span class="name">onClicked</span>: <span class="name">toggle</span>() }
+    }
+
+    <span class="type">Rectangle</span> {
+        <span class="name">id</span>: <span class="name">knob</span>
+        <span class="name">width</span>: <span class="number">48</span>; <span class="name">height</span>: <span class="number">48</span>
+        <span class="name">radius</span>: <span class="name">width</span>
+        <span class="name">color</span>: <span class="string">&quot;lightblue&quot;</span>
+
+        <span class="type">MouseArea</span> {
+            <span class="name">anchors</span>.fill: <span class="name">parent</span>
+            <span class="name">drag</span>.target: <span class="name">knob</span>; <span class="name">drag</span>.axis: <span class="name">Drag</span>.<span class="name">XAxis</span>; <span class="name">drag</span>.minimumX: <span class="number">1</span>; <span class="name">drag</span>.maximumX: <span class="number">78</span>
+            <span class="name">onClicked</span>: <span class="name">toggle</span>()
+            <span class="name">onReleased</span>: <span class="name">releaseSwitch</span>()
+        }
+    }
+
+    <span class="name">states</span>: [
+        <span class="type">State</span> {
+            <span class="name">name</span>: <span class="string">&quot;on&quot;</span>
+            <span class="type">PropertyChanges</span> { <span class="name">target</span>: <span class="name">knob</span>; <span class="name">x</span>: <span class="number">78</span> }
+            <span class="type">PropertyChanges</span> { <span class="name">target</span>: <span class="name">toggleswitch</span>; <span class="name">on</span>: <span class="number">true</span> }
+        },
+        <span class="type">State</span> {
+            <span class="name">name</span>: <span class="string">&quot;off&quot;</span>
+            <span class="type">PropertyChanges</span> { <span class="name">target</span>: <span class="name">knob</span>; <span class="name">x</span>: <span class="number">1</span> }
+            <span class="type">PropertyChanges</span> { <span class="name">target</span>: <span class="name">toggleswitch</span>; <span class="name">on</span>: <span class="number">false</span> }
+        }
+    ]
+
+    <span class="name">transitions</span>: <span class="name">Transition</span> {
+        <span class="type">NumberAnimation</span> { <span class="name">properties</span>: <span class="string">&quot;x&quot;</span>; <span class="name">easing</span>.type: <span class="name">Easing</span>.<span class="name">InOutQuad</span>; <span class="name">duration</span>: <span class="number">200</span> }
+    }
+}</pre>

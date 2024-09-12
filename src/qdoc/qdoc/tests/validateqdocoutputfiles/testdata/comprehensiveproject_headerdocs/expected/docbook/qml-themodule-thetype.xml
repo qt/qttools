@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title its:translate="no">TheType QML Type</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
+</db:info>
+<db:variablelist its:translate="no">
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import TheModule</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>In C++:</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-testderived.xml">TestDerived</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="property-documentation">
+<db:title>Property Documentation</db:title>
+<db:section xml:id="name-prop">
+<db:title>[read-only] name : string</db:title>
+<db:fieldsynopsis>
+<db:type>string</db:type>
+<db:varname>name</db:varname>
+<db:modifier>[read-only]</db:modifier>
+
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>Read-only status of this property is resolved from Q_PROPERTY.</db:para>
+</db:section>
+</db:section>
+</db:article>

@@ -1,0 +1,101 @@
+project = Test
+productname = Qt
+description = "A test project for QDoc build artifacts"
+
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+documentationinheaders = true
+
+# images
+imagedirs = ./src/images
+
+# zero warning policy
+warninglimit = 20
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
+
+outputformats = HTML WebXML DocBook
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+WebXML.nosubdirs = true
+WebXML.outputsubdir = webxml
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+DocBook.its = true
+DocBook.usedocbookextensions = true
+
+includepaths += -I./src
+
+headerdirs = ./src
+sourcedirs = ./src
+
+exampledirs = ./src/snippets \
+              ./src/qml
+
+macro.CMDFN = \\\\fn
+
+navigation.cppclassespage = "QDoc Test C++ Classes"
+
+macro.ver               = "\1"
+macro.ver.match         = "^(\\d+\\.\\d+)"
+macro.versionnote.HTML      = "<p><b>This \1 was introduced in version \2.</b></p>\n"
+macro.versionnote.DocBook   = "<db:para>This \1 was introduced in version \2.</db:para>\n"
+
+moduleheader = TestCPP
+
+examples.fileextensions = "*.qml *.cpp"
+
+macro.begincomment      = "\\c{/*}"
+macro.QDocTestVer       = "1.1"
+
+navigation.qmltypespage     = "QDoc.Test QML Module"
+navigation.qmltypestitle    = "Types"
+warninglimit += 1
+
+manifestmeta.examplecategories = "Application Examples" \
+                                 "Desktop" \
+                                 "Mobile" \
+                                 "Embedded"
+tagfile = testtagfile.tags
+version = 6.2.11
+
+examplesinstallpath = test
+
+exampledirs += ./src/examples
+
+excludedirs += ./src/examples/demos/demo/excludes
+
+# Configure .qhp generation
+qhp.projects            = Test
+
+qhp.Test.file           = test.qhp
+qhp.Test.namespace      = org.qt-project.test.001
+qhp.Test.virtualFolder  = test
+qhp.Test.indexTitle     = UI Components
+qhp.Test.indexRoot      =
+
+qhp.Test.subprojects    = test classes qmltypes undefined
+qhp.Test.subprojects.test.title       = Test
+qhp.Test.subprojects.test.indexTitle  = UI Components
+qhp.Test.subprojects.test.selectors   = doc:page fake:example module qmlmodule
+qhp.Test.subprojects.test.sortPages   = true
+
+qhp.Test.subprojects.classes.title      = Classes
+qhp.Test.subprojects.classes.indexTitle = QDoc Test C++ Classes
+qhp.Test.subprojects.classes.selectors  = class namespace doc:headerfile group:deprecated-classes boop:whatever
+qhp.Test.subprojects.classes.sortPages  = true
+
+qhp.Test.subprojects.qmltypes.title      = QML Types
+qhp.Test.subprojects.qmltypes.indexTitle = UI Components
+qhp.Test.subprojects.qmltypes.selectors  = qmlmodule:UIComponents,QDoc.Test
+qhp.Test.subprojects.qmltypes.sortPages  = true
+
+# Add some meta-data to the example
+manifestmeta.filters = test
+
+manifestmeta.test.names = *
+manifestmeta.test.attributes = isTest:true
+manifestmeta.test.tags = test

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="qmlmodules.html" href="qmlmodules.html" status="active" location="modules.qdoc" documented="true" subtype="page" title="QML Modules" fulltitle="QML Modules" subtitle="">
+            <contents name="qml-types" title="QML types" level="1"/>
+            <contents name="qml-value-types" title="QML value types" level="1"/>
+            <description>
+                <generatedlist contents="qml-modules"/>
+                <section id="qml-types">
+                    <heading level="1">QML types</heading>
+                    <generatedlist contents="qmltypesbymodule QDoc.Test"/>
+                </section>
+                <section id="qml-value-types">
+                    <heading level="1">QML value types</heading>
+                    <generatedlist contents="qmlvaluetypes"/>
+                    <generatedlist contents="qmlvaluetypesbymodule QDoc.Test"/>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>

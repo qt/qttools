@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title its:translate="no">QDoc Test C++ Classes</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>A test module page.</db:para>
+<db:para>This module was introduced in Qt 2.0.</db:para>
+</db:abstract>
+</db:info>
+<db:para>A test module page.</db:para>
+<db:para>This module was introduced in Qt 2.0.</db:para>
+<db:section xml:id="namespaces">
+<db:title>Namespaces</db:title>
+<db:variablelist role="namespaces">
+<db:varlistentry>
+<db:term><db:link xlink:href="crossmoduleref.xml" xlink:role="namespace">CrossModuleRef</db:link></db:term>
+<db:listitem>
+<db:para>Namespace that has documented functions in multiple modules.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="testqdoc.xml" xlink:role="namespace">TestQDoc</db:link></db:term>
+<db:listitem>
+<db:para>A namespace.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:variablelist role="classes">
+<db:varlistentry>
+<db:term><db:link xlink:href="seenclass.xml" xlink:role="class">SeenClass</db:link></db:term>
+<db:listitem>
+<db:para>A public but undocumented class.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="testqdoc-test.xml" xlink:role="class">TestQDoc::Test</db:link></db:term>
+<db:listitem>
+<db:para>A class in a namespace.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="testqdoc-test-struct.xml" xlink:role="class">TestQDoc::Test::Struct</db:link></db:term>
+<db:listitem>
+<db:para>Templated struct.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="testqdoc-testderived.xml" xlink:role="class">TestQDoc::TestDerived</db:link></db:term>
+<db:listitem>
+<db:para>A class in a namespace, derived from Test.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="testqdoc-vec.xml" xlink:role="class">TestQDoc::Vec</db:link></db:term>
+<db:listitem>
+<db:para>Type alias that has its own reference.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:note>
+<db:para>This is just a test. /* Look, Ma! {I'm made of arguments!} */</db:para>
+</db:note>
+<db:section xml:id="linking-to-function-like-things">
+<db:title>Linking to function-like things</db:title>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-test.xml#someFunctionDefaultArg">someFunctionDefaultArg</db:link>()</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-test.xml#QDOCTEST_MACRO2">QDOCTEST_MACRO2</db:link>()</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-test.xml#QDOCTEST_MACRO2">QDOCTEST_MACRO2</db:link>(int &amp;x)</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="testcpp-module.xml#section">section()</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="testcpp-module.xml#section">section() is a section title</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-test.xml#Test">open( parenthesis</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="https://en.cppreference.com/w/cpp/utility/move">C++11 added std::move(T&amp;&amp; t)</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+<db:section xml:id="section">
+<db:title>section()</db:title>
+</db:section>
+</db:section>
+</db:section>
+</db:article>

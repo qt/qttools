@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="componentset/TabWidget.qml" href="test-componentset-tabwidget-qml.html" title="TabWidget.qml Example File" fulltitle="TabWidget.qml Example File" subtitle="componentset/TabWidget.qml">
+            <description>
+                <code>&lt;@comment&gt;// Copyright (C) 2016 The Qt Company Ltd.&lt;/@comment&gt;
+&lt;@comment&gt;// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause&lt;/@comment&gt;
+
+import QtQuick 1.0
+
+&lt;@comment&gt;/*!
+    \qmltype TabWidget
+    \inqmlmodule UIComponents
+    \brief A widget that places its children as tabs.
+
+    A TabWidget places its children as tabs in a view. Selecting
+    a tab involves selecting the tab at the top.
+
+    The TabWidget component is part of the \l {UI Components} module.
+
+    This documentation is part of the \l{componentset}{UIComponents} example.
+
+    \section1 Adding Tabs
+
+    To add a tab, declare the tab as a child of the TabWidget.
+
+    \code
+    TabWidget {
+        id: tabwidget
+
+        Rectangle {
+            id: tab1
+            color: &amp;quot;red&amp;quot;
+            //... omitted
+        }
+        Rectangle {
+            id: tab2
+            color: &amp;quot;blue&amp;quot;
+            //... omitted
+        }
+
+    }
+    \endcode
+
+*/&lt;/@comment&gt;
+&lt;@type&gt;Item&lt;/@type&gt; {
+    &lt;@name&gt;id&lt;/@name&gt;: &lt;@name&gt;tabWidget&lt;/@name&gt;
+
+    &lt;@comment&gt;/*!
+    \internal
+
+    Setting the default property to stack.children means any child items
+    of the TabWidget are actually added to the 'stack' item's children.
+
+    See the \l{&amp;quot;Property Binding in QML&amp;quot;}
+    documentation for details on default properties.
+
+    This is an implementation detail, not meant for public knowledge. Putting
+    the \internal command at the beginning will cause QDoc to not publish this
+    documentation in the public API page.
+
+    Normally, a property alias needs to have a
+    &amp;quot;\qmlproperty &amp;lt;type&amp;gt; &amp;lt;propertyname&amp;gt;&amp;quot; to assign the alias a type.
+
+    */&lt;/@comment&gt;
+    default property &lt;@type&gt;alias&lt;/@type&gt; &lt;@name&gt;content&lt;/@name&gt;: &lt;@name&gt;stack&lt;/@name&gt;.&lt;@name&gt;children&lt;/@name&gt;
+
+    &lt;@comment&gt;/*!
+        The currently active tab in the TabWidget.
+    */&lt;/@comment&gt;
+    property &lt;@type&gt;int&lt;/@type&gt; &lt;@name&gt;current&lt;/@name&gt;: &lt;@number&gt;0&lt;/@number&gt;
+
+    &lt;@comment&gt;/*!
+        A sample \c{read-only} property.
+        A contrived property to demonstrate QDoc's ability to detect
+        read-only properties.
+
+        The signature is:
+        \code
+        readonly property int sampleReadOnlyProperty: 0
+        \endcode
+
+        Note that the property must be initialized to a value.
+
+    */&lt;/@comment&gt;
+    readonly property &lt;@type&gt;int&lt;/@type&gt; &lt;@name&gt;sampleReadOnlyProperty&lt;/@name&gt;: &lt;@number&gt;0&lt;/@number&gt;
+
+    &lt;@comment&gt;/*!
+    \internal
+
+    This handler is an implementation
+    detail. The \c{\internal} command will prevent QDoc from publishing this
+    documentation on the public API.
+    */&lt;/@comment&gt;
+    &lt;@name&gt;onCurrentChanged&lt;/@name&gt;: &lt;@name&gt;setOpacities&lt;/@name&gt;()
+    &lt;@name&gt;Component&lt;/@name&gt;.onCompleted: &lt;@name&gt;setOpacities&lt;/@name&gt;()
+
+    &lt;@comment&gt;/*!
+    \internal
+
+    An internal function to set the opacity.
+    The \internal command will prevent QDoc from publishing this
+    documentation on the public API.
+    */&lt;/@comment&gt;
+    &lt;@keyword&gt;function&lt;/@keyword&gt; &lt;@name&gt;setOpacities&lt;/@name&gt;() {
+        &lt;@keyword&gt;for&lt;/@keyword&gt; (var i = 0; &lt;@name&gt;i&lt;/@name&gt; &lt;@op&gt;&amp;lt;&lt;/@op&gt; &lt;@name&gt;stack&lt;/@name&gt;.&lt;@name&gt;children&lt;/@name&gt;.&lt;@name&gt;length&lt;/@name&gt;; ++&lt;@name&gt;i&lt;/@name&gt;) {
+            &lt;@name&gt;stack&lt;/@name&gt;.&lt;@name&gt;children&lt;/@name&gt;[&lt;@name&gt;i&lt;/@name&gt;].&lt;@name&gt;opacity&lt;/@name&gt; &lt;@op&gt;=&lt;/@op&gt; (&lt;@name&gt;i&lt;/@name&gt; &lt;@op&gt;==&lt;/@op&gt; &lt;@name&gt;current&lt;/@name&gt; ? &lt;@number&gt;1&lt;/@number&gt; : &lt;@number&gt;0&lt;/@number&gt;)
+        }
+    }
+
+    &lt;@type&gt;Row&lt;/@type&gt; {
+        &lt;@name&gt;id&lt;/@name&gt;: &lt;@name&gt;header&lt;/@name&gt;
+
+        &lt;@type&gt;Repeater&lt;/@type&gt; {
+            &lt;@name&gt;model&lt;/@name&gt;: &lt;@name&gt;stack&lt;/@name&gt;.&lt;@name&gt;children&lt;/@name&gt;.&lt;@name&gt;length&lt;/@name&gt;
+            &lt;@name&gt;delegate&lt;/@name&gt;: &lt;@name&gt;Rectangle&lt;/@name&gt; {
+                &lt;@name&gt;width&lt;/@name&gt;: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;width&lt;/@name&gt; &lt;@op&gt;/&lt;/@op&gt; &lt;@name&gt;stack&lt;/@name&gt;.&lt;@name&gt;children&lt;/@name&gt;.&lt;@name&gt;length&lt;/@name&gt;; &lt;@name&gt;height&lt;/@name&gt;: &lt;@number&gt;36&lt;/@number&gt;
+
+                &lt;@type&gt;Rectangle&lt;/@type&gt; {
+                    &lt;@name&gt;width&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;.&lt;@name&gt;width&lt;/@name&gt;; &lt;@name&gt;height&lt;/@name&gt;: &lt;@number&gt;1&lt;/@number&gt;
+                    &lt;@type&gt;anchors&lt;/@type&gt; { &lt;@name&gt;bottom&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;.&lt;@name&gt;bottom&lt;/@name&gt;; &lt;@name&gt;bottomMargin&lt;/@name&gt;: &lt;@number&gt;1&lt;/@number&gt; }
+                    &lt;@name&gt;color&lt;/@name&gt;: &lt;@string&gt;&amp;quot;#acb2c2&amp;quot;&lt;/@string&gt;
+                }
+                &lt;@type&gt;BorderImage&lt;/@type&gt; {
+                    &lt;@type&gt;anchors&lt;/@type&gt; { &lt;@name&gt;fill&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;; &lt;@name&gt;leftMargin&lt;/@name&gt;: &lt;@number&gt;2&lt;/@number&gt;; &lt;@name&gt;topMargin&lt;/@name&gt;: &lt;@number&gt;5&lt;/@number&gt;; &lt;@name&gt;rightMargin&lt;/@name&gt;: &lt;@number&gt;1&lt;/@number&gt; }
+                    &lt;@type&gt;border&lt;/@type&gt; { &lt;@name&gt;left&lt;/@name&gt;: &lt;@number&gt;7&lt;/@number&gt;; &lt;@name&gt;right&lt;/@name&gt;: &lt;@number&gt;7&lt;/@number&gt; }
+                    &lt;@name&gt;source&lt;/@name&gt;: &lt;@string&gt;&amp;quot;tab.png&amp;quot;&lt;/@string&gt;
+                    &lt;@name&gt;visible&lt;/@name&gt;: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;current&lt;/@name&gt; &lt;@op&gt;==&lt;/@op&gt; &lt;@name&gt;index&lt;/@name&gt;
+                }
+                &lt;@type&gt;Text&lt;/@type&gt; {
+                    &lt;@name&gt;horizontalAlignment&lt;/@name&gt;: &lt;@name&gt;Qt&lt;/@name&gt;.&lt;@name&gt;AlignHCenter&lt;/@name&gt;; &lt;@name&gt;verticalAlignment&lt;/@name&gt;: &lt;@name&gt;Qt&lt;/@name&gt;.&lt;@name&gt;AlignVCenter&lt;/@name&gt;
+                    &lt;@name&gt;anchors&lt;/@name&gt;.fill: &lt;@name&gt;parent&lt;/@name&gt;
+                    &lt;@name&gt;text&lt;/@name&gt;: &lt;@name&gt;stack&lt;/@name&gt;.&lt;@name&gt;children&lt;/@name&gt;[&lt;@name&gt;index&lt;/@name&gt;].&lt;@name&gt;title&lt;/@name&gt;
+                    &lt;@name&gt;elide&lt;/@name&gt;: &lt;@name&gt;Text&lt;/@name&gt;.&lt;@name&gt;ElideRight&lt;/@name&gt;
+                    &lt;@name&gt;font&lt;/@name&gt;.bold: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;current&lt;/@name&gt; &lt;@op&gt;==&lt;/@op&gt; &lt;@name&gt;index&lt;/@name&gt;
+                }
+                &lt;@type&gt;MouseArea&lt;/@type&gt; {
+                    &lt;@name&gt;anchors&lt;/@name&gt;.fill: &lt;@name&gt;parent&lt;/@name&gt;
+                    &lt;@name&gt;onClicked&lt;/@name&gt;: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;current&lt;/@name&gt; &lt;@op&gt;=&lt;/@op&gt; &lt;@name&gt;index&lt;/@name&gt;
+                }
+            }
+        }
+    }
+
+    &lt;@type&gt;Item&lt;/@type&gt; {
+        &lt;@name&gt;id&lt;/@name&gt;: &lt;@name&gt;stack&lt;/@name&gt;
+        &lt;@name&gt;width&lt;/@name&gt;: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;width&lt;/@name&gt;
+        &lt;@name&gt;anchors&lt;/@name&gt;.top: &lt;@name&gt;header&lt;/@name&gt;.&lt;@name&gt;bottom&lt;/@name&gt;; &lt;@name&gt;anchors&lt;/@name&gt;.bottom: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;bottom&lt;/@name&gt;
+    }
+}</code>
+            </description>
+        </page>
+    </document>
+</WebXML>

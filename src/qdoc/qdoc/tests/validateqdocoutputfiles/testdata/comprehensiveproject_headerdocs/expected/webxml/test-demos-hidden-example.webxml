@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="demos/hidden" href="test-demos-hidden-example.html" status="active" location="hidden.qdoc" documented="true" subtype="example" title="Hidden Demo" fulltitle="Hidden Demo" subtitle="" brief="Tagged 'broken', does not appear in examples-manifest.xml">
+            <description>
+                <brief>Tagged 'broken', does not appear in examples-manifest.xml.</brief>
+                <para>Also missing an image, but that's OK as it's broken anyway.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>

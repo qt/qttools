@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="SeenClass" href="seenclass.html" status="active" access="public" location="dont.h" since="2.0" documented="true" module="TestCPP" brief="A public but undocumented class">
+            <description>
+                <brief>A public but undocumented class.</brief>
+            </description>
+        </class>
+    </document>
+</WebXML>

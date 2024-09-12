@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QML Modules</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
+</db:info>
+<db:variablelist role="qml-modules">
+<db:varlistentry>
+<db:term><db:link xlink:href="test-empty-qmlmodule.xml" xlink:role="">No QML Types Here</db:link></db:term>
+<db:listitem>
+<db:para>A QML module with no member types.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="qdoc-test-qmlmodule.xml" xlink:role="">QDoc.Test QML Module</db:link></db:term>
+<db:listitem>
+<db:para>QML Types for the Test module.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="themodule-qmlmodule.xml" xlink:role="">TheModule</db:link></db:term>
+<db:listitem>
+<db:para></db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="uicomponents-qmlmodule.xml" xlink:role="">UI Components</db:link></db:term>
+<db:listitem>
+<db:para>Basic set of UI components.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="test-nover-qmlmodule.xml" xlink:role="">Versionless QML Module</db:link></db:term>
+<db:listitem>
+<db:para>QML Types for the Test module without version.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="qml-types">
+<db:title>QML types</db:title>
+<db:variablelist role="qmltypesbymodule QDoc.Test">
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-qdoc-test-abstractparent.xml" xlink:role="">AbstractParent</db:link></db:term>
+<db:listitem>
+<db:para>Abstract base QML type.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-qdoc-test-child.xml" xlink:role="">Child</db:link></db:term>
+<db:listitem>
+<db:para>A Child inheriting its parent.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-qdoc-test-doctest.xml" xlink:role="">DocTest</db:link></db:term>
+<db:listitem>
+<db:para>Represents a doc test case.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-qdoc-test-type.xml" xlink:role="">Type</db:link></db:term>
+<db:listitem>
+<db:para>A QML type documented in a .cpp file.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-qdoc-test-yetanotherchild.xml" xlink:role="">YetAnotherChild</db:link></db:term>
+<db:listitem>
+<db:para>A type inheriting from internal abstract parent.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="qml-value-types">
+<db:title>QML value types</db:title>
+<db:simplelist>
+<db:member><db:link xlink:href="i">I</db:link></db:member>
+</db:simplelist>
+<db:variablelist role="qmlvaluetypes">
+<db:varlistentry xml:id="i">
+<db:term><db:emphasis role="bold">I</db:emphasis></db:term>
+<db:listitem>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="qml-int.xml">int</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:variablelist role="qmlvaluetypesbymodule QDoc.Test">
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-int.xml" xlink:role="">int</db:link></db:term>
+<db:listitem>
+<db:para>An integer value type.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+</db:article>

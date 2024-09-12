@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tagfile>
+    <compound kind="class">
+        <name>QDoc.Test.AbstractParent</name>
+        <filename>qml-qdoc-test-abstractparent.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>name</name>
+            <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
+            <anchor>name-method</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>name</name>
+            <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
+            <anchor>name-method</anchor>
+            <arglist>(Child child, name)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>rear</name>
+            <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
+            <anchor>rear-method</anchor>
+            <arglist>(Child child, var method)</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>QDoc.Test.Child</name>
+        <filename>qml-qdoc-test-child.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>name</name>
+            <anchorfile>qml-qdoc-test-child.html</anchorfile>
+            <anchor>name-method</anchor>
+            <arglist>(Child child, name)</arglist>
+        </member>
+    </compound>
+    <compound kind="namespace">
+        <name>CrossModuleRef</name>
+        <filename>crossmoduleref.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>documentMe</name>
+            <anchorfile>crossmoduleref.html</anchorfile>
+            <anchor>documentMe</anchor>
+            <arglist>()</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>QDoc.Test.DocTest</name>
+        <filename>qml-qdoc-test-doctest.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>completed</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>completed-signal</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>fail</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>fail-method</anchor>
+            <arglist>(message)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>fail_hard</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>fail_hard-method</anchor>
+            <arglist>(msg, option)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>foo</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>foo-signal</anchor>
+            <arglist>(var bar)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>itsHappening</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>itsHappening-signal</anchor>
+            <arglist>(bool really)</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>Test.NoVer.DocTest</name>
+        <filename>qml-test-nover-doctest.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>QDoc.Test.OldType</name>
+        <filename>qml-qdoc-test-oldtype.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>UIComponents.ProgressBar</name>
+        <filename>qml-uicomponents-progressbar.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>SeenClass</name>
+        <filename>seenclass.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>UIComponents.Switch</name>
+        <filename>qml-uicomponents-switch.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>toggle</name>
+            <anchorfile>qml-uicomponents-switch.html</anchorfile>
+            <anchor>toggle-method</anchor>
+            <arglist>()</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>UIComponents.TabWidget</name>
+        <filename>qml-uicomponents-tabwidget.html</filename>
+    </compound>
+    <compound kind="namespace">
+        <name>TestQDoc</name>
+        <filename>testqdoc.html</filename>
+        <class>TestQDoc::Test</class>
+        <class>TestQDoc::TestDerived</class>
+        <class>TestQDoc::Vec</class>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>QDOCTEST_MACRO</name>
+            <anchorfile>testqdoc.html</anchorfile>
+            <anchor>QDOCTEST_MACRO</anchor>
+            <arglist>QDOCTEST_MACRO</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>TestQDoc::Test</name>
+        <filename>testqdoc-test.html</filename>
+        <class>TestQDoc::Test::Struct</class>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>QDOCTEST_MACRO2</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>QDOCTEST_MACRO2</anchor>
+            <arglist>(int &amp;x)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>Test</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>Test</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>TestQDoc::Test &amp;</type>
+            <name>operator++</name>
+            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
+            <anchor>operator-2b-2b</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>TestQDoc::Test &amp;</type>
+            <name>operator--</name>
+            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
+            <anchor>operator--</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>TestQDoc::Test &amp;</type>
+            <name>operator=</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>operator-eq</anchor>
+            <arglist>(TestQDoc::Test &amp;&amp;other)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>bool</type>
+            <name>operator==</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>operator-eq-eq</anchor>
+            <arglist>(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>int</type>
+            <name>someFunction</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>someFunction</anchor>
+            <arglist>(int, int v)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void (*)(bool)</type>
+            <name>funcPtr</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>funcPtr</anchor>
+            <arglist>(*)(bool) funcPtr(bool b, const char *s)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>anotherObsoleteMember</name>
+            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
+            <anchor>anotherObsoleteMember</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>deprecatedMember</name>
+            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
+            <anchor>deprecatedMember</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="protected" virtualness="non" static="no">
+            <type>void</type>
+            <name>funcTemplate</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>funcTemplate</anchor>
+            <arglist>(T1 a, T2 b)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>inlineFunction</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>inlineFunction</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>methodWithEmDashInItsDocs</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>methodWithEmDashInItsDocs</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>methodWithEnDashInItsDocs</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>methodWithEnDashInItsDocs</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>obsoleteMember</name>
+            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
+            <anchor>obsoleteMember</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="protected" virtualness="non" static="no">
+            <type>void</type>
+            <name>overload</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>overload</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="protected" virtualness="non" static="no">
+            <type>void</type>
+            <name>overload</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>overload-1</anchor>
+            <arglist>(bool b)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="virtual" static="no">
+            <type>virtual void</type>
+            <name>virtualFun</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>virtualFun</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>someFunctionDefaultArg</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>someFunctionDefaultArg</anchor>
+            <arglist>(int i, bool b) const const</arglist>
+        </member>
+        <member kind="typedef" type="">
+            <name>SomeType</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>SomeType-typedef</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="typedef" type="">
+            <name>Specialized</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>Specialized-typedef</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="int">
+            <name>id</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>id-prop</anchor>
+            <arglist></arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>TestQDoc::Test::Struct</name>
+        <filename>testqdoc-test-struct.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>TestQDoc::TestDerived</name>
+        <filename>testqdoc-testderived.html</filename>
+        <base>Test</base>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>QBindable&lt;QString&gt;</type>
+            <name>bindableProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>bindableProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>TestQDoc::TestDerived::NotTypedef</type>
+            <name>someValue</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>someValue</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>bool</type>
+            <name>boolProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>boolProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>bool</type>
+            <name>secondBoolProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>secondBoolProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>const QString &amp;</type>
+            <name>someProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>someProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>int *</type>
+            <name>getInt</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>intProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="virtual" static="no">
+            <type>virtual int</type>
+            <name>id</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>id</anchor>
+            <arglist>() override</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>bindablePropChanged</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>bindableProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>boolPropChanged</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>boolProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>emitSomething</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>emitSomething</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>resetBoolProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>boolProp-prop</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>setBindableProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>bindableProp-prop</anchor>
+            <arglist>(const QString &amp;s)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>setBoolProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>boolProp-prop</anchor>
+            <arglist>(bool b)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="yes">
+            <type>void</type>
+            <name>staticObsoleteMember</name>
+            <anchorfile>testqdoc-testderived-obsolete.html</anchorfile>
+            <anchor>staticObsoleteMember</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="virtual" static="no">
+            <type>virtual void</type>
+            <name>virtualFun</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>virtualFun</anchor>
+            <arglist>() override</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>const QString *</type>
+            <name>name</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>name-prop</anchor>
+            <arglist>() const const</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>invokeMe</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>invokeMe</anchor>
+            <arglist>() const const</arglist>
+        </member>
+        <member kind="typedef" type="">
+            <name>DerivedType</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>DerivedType-typedef</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="typedef" type="">
+            <name>NotTypedef</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>NotTypedef-typedef</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="QString">
+            <name>bindableProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>bindableProp-prop</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="bool">
+            <name>boolProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>boolProp-prop</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="int*">
+            <name>intProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>intProp-prop</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="const QString*">
+            <name>name</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>name-prop</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="bool">
+            <name>secondBoolProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>secondBoolProp-prop</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="QString">
+            <name>someProp</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>someProp-prop</anchor>
+            <arglist></arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>TestQDoc::Vec</name>
+        <filename>testqdoc-vec.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>TheModule.TheType</name>
+        <filename>qml-themodule-thetype.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>QDoc.Test.Type</name>
+        <filename>qml-qdoc-test-type.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>Type</type>
+            <name>copy</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>copy-method</anchor>
+            <arglist>(a)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>completed</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>completed-signal</anchor>
+            <arglist>(int status)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>configured</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>configured-signal</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>deprecatedMethod</name>
+            <anchorfile>qml-qdoc-test-type-obsolete.html</anchorfile>
+            <anchor>deprecatedMethod-method</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>disable</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>disable-method</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>enable</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>enable-method</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>futureDeprecated</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>futureDeprecated-method</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>group.created</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>group.created-signal</anchor>
+            <arglist>()</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>Test.NoVer.TypeNoVersion</name>
+        <filename>qml-test-nover-typenoversion.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>QDoc.Test.YetAnotherChild</name>
+        <filename>qml-qdoc-test-yetanotherchild.html</filename>
+    </compound>
+</tagfile>

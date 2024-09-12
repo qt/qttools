@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QML Documentation Example</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>Example for documenting QML types.</db:para>
+</db:abstract>
+</db:info>
+<db:programlisting language="qml" its:translate="no">// Copyright (C) 2016 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
+
+import QtQuick 1.0
+
+/*!
+    \qmltype ToggleSwitch
+    \inqmlmodule UIComponents
+    \brief A component that can be turned on or off.
+
+    A toggle switch has two states: an \c on and an \c off state. The \c off
+    state is when the \l on property is set to \c false.
+
+    The ToggleSwitch component is part of the \l {UI Components} module.
+
+    This documentation is part of the \l{componentset}{UIComponents} example.
+
+*/
+Item {
+    id: toggleswitch
+    width: background.width; height: background.height
+
+    /*!
+       Indicates the state of the switch. If \c false, then the switch is in
+       the \c off state.
+
+       \omit
+            The \qmlproperty &lt;type&gt; &lt;propertyname&gt; is not necessary as QDoc
+            will associate this property to the ToggleSwitch
+
+           QDoc will not publish the documentation within omit and endomit.
+       \endomit
+    */
+    property bool on: false
+
+    /*!
+        A method to toggle the switch. If the switch is \c on, the toggling it
+        will turn it \c off. Toggling a switch in the \c off position will
+        turn it \c on.
+    */
+    function toggle() {
+        if (toggleswitch.state == &quot;on&quot;)
+            toggleswitch.state = &quot;off&quot;;
+        else
+            toggleswitch.state = &quot;on&quot;;
+    }
+
+    /*!
+        \internal
+
+        An internal function to synchronize the switch's internals. This
+        function is not for public access. The \internal command will
+        prevent QDoc from publishing this comment in the public API.
+    */
+    function releaseSwitch() {
+        if (knob.x == 1) {
+            if (toggleswitch.state == &quot;off&quot;) return;
+        }
+        if (knob.x == 78) {
+            if (toggleswitch.state == &quot;on&quot;) return;
+        }
+        toggle();
+    }
+
+    Rectangle {
+        id: background
+        width: 130; height: 48
+        radius: 48
+        color: &quot;lightsteelblue&quot;
+        MouseArea { anchors.fill: parent; onClicked: toggle() }
+    }
+
+    Rectangle {
+        id: knob
+        width: 48; height: 48
+        radius: width
+        color: &quot;lightblue&quot;
+
+        MouseArea {
+            anchors.fill: parent
+            drag.target: knob; drag.axis: Drag.XAxis; drag.minimumX: 1; drag.maximumX: 78
+            onClicked: toggle()
+            onReleased: releaseSwitch()
+        }
+    }
+
+    states: [
+        State {
+            name: &quot;on&quot;
+            PropertyChanges { target: knob; x: 78 }
+            PropertyChanges { target: toggleswitch; on: true }
+        },
+        State {
+            name: &quot;off&quot;
+            PropertyChanges { target: knob; x: 1 }
+            PropertyChanges { target: toggleswitch; on: false }
+        }
+    ]
+
+    transitions: Transition {
+        NumberAnimation { properties: &quot;x&quot;; easing.type: Easing.InOutQuad; duration: 200 }
+    }
+}
+
+</db:programlisting>
+</db:article>

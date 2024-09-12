@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="componentset/ProgressBar.qml" href="test-componentset-progressbar-qml.html" title="ProgressBar.qml Example File" fulltitle="ProgressBar.qml Example File" subtitle="componentset/ProgressBar.qml">
+            <description>
+                <code>&lt;@comment&gt;// Copyright (C) 2016 The Qt Company Ltd.&lt;/@comment&gt;
+&lt;@comment&gt;// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause&lt;/@comment&gt;
+
+import QtQuick 1.0
+
+&lt;@comment&gt;/*!
+    \qmltype ProgressBar
+    \inqmlmodule UIComponents
+    \brief A component that shows the progress of an event.
+
+    A ProgressBar shows the linear progress of an event as its \l value.
+    The range is specified using the \l {minimum} and the \l{maximum} values.
+
+    The ProgressBar component is part of the \l {UI Components} module.
+
+    This documentation is part of the \l{componentset}{UIComponents} example.
+*/&lt;/@comment&gt;
+&lt;@type&gt;Item&lt;/@type&gt; {
+    &lt;@name&gt;id&lt;/@name&gt;: &lt;@name&gt;progressbar&lt;/@name&gt;
+
+    &lt;@comment&gt;/*!
+        The minimum value of the ProgressBar range.
+        The \l value must not be less than this value.
+    */&lt;/@comment&gt;
+    property &lt;@type&gt;int&lt;/@type&gt; &lt;@name&gt;minimum&lt;/@name&gt;: &lt;@number&gt;0&lt;/@number&gt;
+
+    &lt;@comment&gt;/*!
+        The maximum value of the ProgressBar range.
+        The \l value must not be more than this value.
+    */&lt;/@comment&gt;
+    property &lt;@type&gt;int&lt;/@type&gt; &lt;@name&gt;maximum&lt;/@name&gt;: &lt;@number&gt;100&lt;/@number&gt;
+
+    &lt;@comment&gt;/*!
+        The value of the progress.
+    */&lt;/@comment&gt;
+    property &lt;@type&gt;int&lt;/@type&gt; &lt;@name&gt;value&lt;/@name&gt;: &lt;@number&gt;0&lt;/@number&gt;
+
+    &lt;@comment&gt;/*!
+       \qmlproperty color ProgressBar::color
+       The color of the ProgressBar's gradient. Must bind to a color type.
+
+       \omit
+           The &amp;quot;\qmlproperty &amp;lt;type&amp;gt; &amp;lt;property name&amp;gt;&amp;quot; is needed because
+           property alias need to have their types manually entered.
+
+           QDoc will not publish the documentation within omit and endomit.
+       \endomit
+
+       \sa secondColor
+    */&lt;/@comment&gt;
+    property &lt;@type&gt;alias&lt;/@type&gt; &lt;@name&gt;color&lt;/@name&gt;: &lt;@name&gt;gradient1&lt;/@name&gt;.&lt;@name&gt;color&lt;/@name&gt;
+
+    &lt;@comment&gt;/*!
+       \qmlproperty color ProgressBar::secondColor
+       The second color of the ProgressBar's gradient.
+       Must bind to a color type.
+
+       \omit
+           The &amp;quot;\qmlproperty &amp;lt;type&amp;gt; &amp;lt;property name&amp;gt;&amp;quot; is needed because
+           property alias need to have their types manually entered.
+
+           QDoc will not publish the documentation within omit and endomit.
+       \endomit
+
+        \sa color
+    */&lt;/@comment&gt;
+    property &lt;@type&gt;alias&lt;/@type&gt; &lt;@name&gt;secondColor&lt;/@name&gt;: &lt;@name&gt;gradient2&lt;/@name&gt;.&lt;@name&gt;color&lt;/@name&gt;
+
+    &lt;@name&gt;width&lt;/@name&gt;: &lt;@number&gt;250&lt;/@number&gt;; &lt;@name&gt;height&lt;/@name&gt;: &lt;@number&gt;23&lt;/@number&gt;
+    &lt;@name&gt;clip&lt;/@name&gt;: &lt;@number&gt;true&lt;/@number&gt;
+
+    &lt;@type&gt;Rectangle&lt;/@type&gt; {
+        &lt;@name&gt;id&lt;/@name&gt;: &lt;@name&gt;highlight&lt;/@name&gt;
+
+        &lt;@comment&gt;/*!
+            An internal documentation comment. The widthDest property is not
+            a public API and therefore will not be exposed.
+        */&lt;/@comment&gt;
+        property &lt;@type&gt;int&lt;/@type&gt; &lt;@name&gt;widthDest&lt;/@name&gt;: ((&lt;@name&gt;progressbar&lt;/@name&gt;.&lt;@name&gt;width&lt;/@name&gt; &lt;@op&gt;*&lt;/@op&gt; (&lt;@name&gt;value&lt;/@name&gt; &lt;@op&gt;-&lt;/@op&gt; &lt;@name&gt;minimum&lt;/@name&gt;)) &lt;@op&gt;/&lt;/@op&gt; (&lt;@name&gt;maximum&lt;/@name&gt; &lt;@op&gt;-&lt;/@op&gt; &lt;@name&gt;minimum&lt;/@name&gt;) &lt;@op&gt;-&lt;/@op&gt; &lt;@number&gt;6&lt;/@number&gt;)
+
+        &lt;@name&gt;width&lt;/@name&gt;: &lt;@name&gt;highlight&lt;/@name&gt;.&lt;@name&gt;widthDest&lt;/@name&gt;
+        Behavior on &lt;@name&gt;width&lt;/@name&gt; { &lt;@type&gt;SmoothedAnimation&lt;/@type&gt; { &lt;@name&gt;velocity&lt;/@name&gt;: &lt;@number&gt;1200&lt;/@number&gt; } }
+
+        &lt;@type&gt;anchors&lt;/@type&gt; { &lt;@name&gt;left&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;.&lt;@name&gt;left&lt;/@name&gt;; &lt;@name&gt;top&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;.&lt;@name&gt;top&lt;/@name&gt;; &lt;@name&gt;bottom&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;.&lt;@name&gt;bottom&lt;/@name&gt;; &lt;@name&gt;margins&lt;/@name&gt;: &lt;@number&gt;3&lt;/@number&gt; }
+        &lt;@name&gt;radius&lt;/@name&gt;: &lt;@number&gt;1&lt;/@number&gt;
+        &lt;@name&gt;gradient&lt;/@name&gt;: &lt;@name&gt;Gradient&lt;/@name&gt; {
+            &lt;@type&gt;GradientStop&lt;/@type&gt; { &lt;@name&gt;id&lt;/@name&gt;: &lt;@name&gt;gradient1&lt;/@name&gt;; &lt;@name&gt;position&lt;/@name&gt;: &lt;@number&gt;0.0&lt;/@number&gt; }
+            &lt;@type&gt;GradientStop&lt;/@type&gt; { &lt;@name&gt;id&lt;/@name&gt;: &lt;@name&gt;gradient2&lt;/@name&gt;; &lt;@name&gt;position&lt;/@name&gt;: &lt;@number&gt;1.0&lt;/@number&gt; }
+        }
+
+    }
+    &lt;@type&gt;Text&lt;/@type&gt; {
+        &lt;@type&gt;anchors&lt;/@type&gt; { &lt;@name&gt;right&lt;/@name&gt;: &lt;@name&gt;highlight&lt;/@name&gt;.&lt;@name&gt;right&lt;/@name&gt;; &lt;@name&gt;rightMargin&lt;/@name&gt;: &lt;@number&gt;6&lt;/@number&gt;; &lt;@name&gt;verticalCenter&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;.&lt;@name&gt;verticalCenter&lt;/@name&gt; }
+        &lt;@name&gt;color&lt;/@name&gt;: &lt;@string&gt;&amp;quot;white&amp;quot;&lt;/@string&gt;
+        &lt;@name&gt;font&lt;/@name&gt;.bold: &lt;@number&gt;true&lt;/@number&gt;
+        &lt;@name&gt;text&lt;/@name&gt;: &lt;@name&gt;Math&lt;/@name&gt;.&lt;@name&gt;floor&lt;/@name&gt;((&lt;@name&gt;value&lt;/@name&gt; &lt;@op&gt;-&lt;/@op&gt; &lt;@name&gt;minimum&lt;/@name&gt;) &lt;@op&gt;/&lt;/@op&gt; (&lt;@name&gt;maximum&lt;/@name&gt; &lt;@op&gt;-&lt;/@op&gt; &lt;@name&gt;minimum&lt;/@name&gt;) &lt;@op&gt;*&lt;/@op&gt; &lt;@number&gt;100&lt;/@number&gt;) &lt;@op&gt;+&lt;/@op&gt; &lt;@string&gt;'%'&lt;/@string&gt;
+    }
+}</code>
+            </description>
+        </page>
+    </document>
+</WebXML>

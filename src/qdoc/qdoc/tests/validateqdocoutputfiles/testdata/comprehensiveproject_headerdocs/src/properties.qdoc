@@ -1,0 +1,23 @@
+// Copyright (C) 2020 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule TheModule
+*/
+
+/*!
+    \qmltype TheType
+    \nativetype TestQDoc::TestDerived
+    \inqmlmodule TheModule
+*/
+
+/*!
+    \qmlproperty string TheType::name
+    \brief Read-only status of this property is resolved from Q_PROPERTY.
+*/
+
+/*!
+    //! avoid link warnings for auto-generated links to QProperty
+    \externalpage https://wiki.qt.io/QProperty
+    \title QProperty
+*/

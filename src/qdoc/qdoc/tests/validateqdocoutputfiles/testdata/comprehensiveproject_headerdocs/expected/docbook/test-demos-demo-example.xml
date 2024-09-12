@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Demo</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
+</db:info>
+<db:mediaobject>
+<db:imageobject>
+<db:imagedata fileref="images/leonardo-da-vinci.png"/>
+</db:imageobject>
+</db:mediaobject>
+<db:programlisting language="cpp" its:translate="no">    if (n &gt; 1'000)
+        return true;
+</db:programlisting>
+<db:section>
+<db:title>List of Files</db:title>
+<db:para>Files:</db:para>
+<db:section>
+<db:title>List of Files</db:title>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="demos/demo/demo.cpp">demos/demo/demo.cpp</db:link></db:para></db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="demos/demo/demo.pro">demos/demo/demo.pro</db:link></db:para></db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="demos/demo/dontxclude/CMakeLists.txt">demos/demo/dontxclude/CMakeLists.txt</db:link></db:para></db:listitem>
+</db:itemizedlist>
+</db:section>
+</db:section></db:article>

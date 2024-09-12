@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Test C++ Types</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
+</db:info>
+<db:anchor xml:id="details"/>
+<db:itemizedlist role="testgroup">
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-test.xml" xlink:role="class">TestQDoc::Test</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-test.xml#QDOCTEST_MACRO2" xlink:role="function">TestQDoc::Test::QDOCTEST_MACRO2</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-test.xml#operator-eq" xlink:role="function">TestQDoc::Test::operator=()</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-test.xml#someFunctionDefaultArg" xlink:role="function">TestQDoc::Test::someFunctionDefaultArg()</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+<db:variablelist role="members">
+<db:varlistentry>
+<db:term><db:link xlink:href="testqdoc-test.xml" xlink:role="class">TestQDoc::Test</db:link></db:term>
+<db:listitem>
+<db:para>A class in a namespace.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:article>

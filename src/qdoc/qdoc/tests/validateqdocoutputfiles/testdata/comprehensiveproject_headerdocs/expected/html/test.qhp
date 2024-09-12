@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+    <namespace>org.qt-project.test.001</namespace>
+    <virtualFolder>test</virtualFolder>
+    <metaData name="version" value="6.2.11"/>
+    <filterSection>
+        <toc>
+            <section ref="uicomponents-qmlmodule.html" title="UI Components">
+                <section ref="uicomponents-qmlmodule.html" title="Test">
+                    <section ref="themodule-qmlmodule.html" title=""/>
+                    <section ref="autolinking.html" title="Autolinking"/>
+                    <section ref="test-cmaketest-example.html" title="CMake Example Project"/>
+                    <section ref="classes.html" title="Classes"/>
+                    <section ref="test-demos-demo-example.html" title="Demo"/>
+                    <section ref="test-demos-hidden-example.html" title="Hidden Demo"/>
+                    <section ref="test-empty-qmlmodule.html" title="No QML Types Here"/>
+                    <section ref="obsolete-classes.html" title="Obsolete Classes"/>
+                    <section ref="testcpp-module.html" title="QDoc Test C++ Classes"/>
+                    <section ref="qdoc-test-qmlmodule.html" title="QDoc.Test QML Module"/>
+                    <section ref="test-componentset-example.html" title="QML Documentation Example"/>
+                    <section ref="qmlmodules.html" title="QML Modules"/>
+                    <section ref="uicomponents-qmlmodule.html" title="UI Components"/>
+                    <section ref="test-nover-qmlmodule.html" title="Versionless QML Module"/>
+                </section>
+                <section ref="testcpp-module.html" title="Classes">
+                    <section ref="crossmoduleref.html" title="CrossModuleRef Namespace Reference"/>
+                    <section ref="obsolete-classes.html" title="Obsolete Classes"/>
+                    <section ref="seenclass.html" title="SeenClass Class Reference"/>
+                    <section ref="testqdoc.html" title="TestQDoc Namespace Reference"/>
+                    <section ref="testqdoc-test.html" title="TestQDoc::Test Class Reference">
+                        <section ref="testqdoc-test-members.html" title="List of all members"/>
+                        <section ref="testqdoc-test-obsolete.html" title="Obsolete members"/>
+                    </section>
+                    <section ref="testqdoc-testderived.html" title="TestQDoc::TestDerived Class Reference">
+                        <section ref="testqdoc-testderived-members.html" title="List of all members"/>
+                        <section ref="testqdoc-testderived-obsolete.html" title="Obsolete members"/>
+                    </section>
+                    <section ref="testqdoc-vec.html" title="TestQDoc::Vec Class Reference"/>
+                </section>
+                <section ref="uicomponents-qmlmodule.html" title="QML Types">
+                    <section ref="qml-qdoc-test-abstractparent.html" title="AbstractParent Type Reference">
+                        <section ref="qml-qdoc-test-abstractparent-members.html" title="List of all members"/>
+                    </section>
+                    <section ref="qml-qdoc-test-child.html" title="Child Type Reference">
+                        <section ref="qml-qdoc-test-child-members.html" title="List of all members"/>
+                    </section>
+                    <section ref="qml-qdoc-test-doctest.html" title="DocTest Type Reference">
+                        <section ref="qml-qdoc-test-doctest-members.html" title="List of all members"/>
+                    </section>
+                    <section ref="qml-qdoc-test-oldtype.html" title="OldType Type Reference">
+                        <section ref="qml-qdoc-test-oldtype-members.html" title="List of all members"/>
+                    </section>
+                    <section ref="qml-qdoc-test-type.html" title="Type Type Reference">
+                        <section ref="qml-qdoc-test-type-members.html" title="List of all members"/>
+                        <section ref="qml-qdoc-test-type-obsolete.html" title="Obsolete members"/>
+                    </section>
+                    <section ref="qml-qdoc-test-yetanotherchild.html" title="YetAnotherChild Type Reference">
+                        <section ref="qml-qdoc-test-yetanotherchild-members.html" title="List of all members"/>
+                    </section>
+                    <section ref="qml-int.html" title="int Type Reference"/>
+                    <section ref="qml-uicomponents-progressbar.html" title="ProgressBar Type Reference">
+                        <section ref="qml-uicomponents-progressbar-members.html" title="List of all members"/>
+                    </section>
+                    <section ref="qml-uicomponents-switch.html" title="Switch Type Reference">
+                        <section ref="qml-uicomponents-switch-members.html" title="List of all members"/>
+                    </section>
+                    <section ref="qml-uicomponents-tabwidget.html" title="TabWidget Type Reference">
+                        <section ref="qml-uicomponents-tabwidget-members.html" title="List of all members"/>
+                    </section>
+                </section>
+            </section>
+        </toc>
+        <keywords>
+            <keyword name="AbstractParent" id="QML.AbstractParent" ref="qml-qdoc-test-abstractparent.html"/>
+            <keyword name="AbstractParent" id="QML.QDoc.Test1.AbstractParent" ref="qml-qdoc-test-abstractparent.html"/>
+            <keyword name="Autolinking" id="Autolinking" ref="autolinking.html"/>
+            <keyword name="Child" id="QML.Child" ref="qml-qdoc-test-child.html"/>
+            <keyword name="Child" id="QML.QDoc.Test1.Child" ref="qml-qdoc-test-child.html"/>
+            <keyword name="Classes" id="Classes" ref="classes.html"/>
+            <keyword name="CrossModuleRef" id="CrossModuleRef" ref="crossmoduleref.html"/>
+            <keyword name="DocTest" id="QML.DocTest" ref="qml-qdoc-test-doctest.html"/>
+            <keyword name="DocTest" id="QML.QDoc.Test1.DocTest" ref="qml-qdoc-test-doctest.html"/>
+            <keyword name="DocTest" id="QML.DocTest" ref="qml-test-nover-doctest.html"/>
+            <keyword name="DocTest" id="QML.Test.NoVer.DocTest" ref="qml-test-nover-doctest.html"/>
+            <keyword name="Obsolete Classes" id="Obsolete Classes" ref="obsolete-classes.html"/>
+            <keyword name="OldType" id="QML.OldType" ref="qml-qdoc-test-oldtype.html"/>
+            <keyword name="OldType" id="QML.QDoc.Test1.OldType" ref="qml-qdoc-test-oldtype.html"/>
+            <keyword name="ProgressBar" id="QML.ProgressBar" ref="qml-uicomponents-progressbar.html"/>
+            <keyword name="ProgressBar" id="QML.UIComponents1.ProgressBar" ref="qml-uicomponents-progressbar.html"/>
+            <keyword name="QDOCTEST_MACRO" id="QDOCTEST_MACRO" ref="testqdoc.html#QDOCTEST_MACRO"/>
+            <keyword name="QDOCTEST_MACRO2" id="QDOCTEST_MACRO2" ref="testqdoc-test.html#QDOCTEST_MACRO2"/>
+            <keyword name="QDoc Test C++ Classes" id="QDoc Test C++ Classes" ref="testcpp-module.html"/>
+            <keyword name="QDoc.Test" id="QML.Test.QDoc" ref="qdoc-test-qmlmodule.html"/>
+            <keyword name="QML Modules" id="QML Modules" ref="qmlmodules.html"/>
+            <keyword name="SeenClass" id="SeenClass" ref="seenclass.html"/>
+            <keyword name="Struct" id="Test::Struct" ref="testqdoc-test-struct.html"/>
+            <keyword name="Switch" id="QML.Switch" ref="qml-uicomponents-switch.html"/>
+            <keyword name="Switch" id="QML.UIComponents1.Switch" ref="qml-uicomponents-switch.html"/>
+            <keyword name="TabWidget" id="QML.TabWidget" ref="qml-uicomponents-tabwidget.html"/>
+            <keyword name="TabWidget" id="QML.UIComponents1.TabWidget" ref="qml-uicomponents-tabwidget.html"/>
+            <keyword name="Test" id="TestQDoc::Test" ref="testqdoc-test.html"/>
+            <keyword name="Test C++ Types" id="Test C++ Types" ref="cpptypes.html"/>
+            <keyword name="Test.Empty" id="QML.Empty.Test" ref="test-empty-qmlmodule.html"/>
+            <keyword name="Test.NoVer" id="QML.NoVer.Test" ref="test-nover-qmlmodule.html"/>
+            <keyword name="Test::SomeType" id="Test::SomeType" ref="testqdoc-test.html#SomeType-typedef"/>
+            <keyword name="Test::Specialized" id="Test::Specialized" ref="testqdoc-test.html#Specialized-typedef"/>
+            <keyword name="TestDerived" id="TestQDoc::TestDerived" ref="testqdoc-testderived.html"/>
+            <keyword name="TestDerived::DerivedType" id="TestDerived::DerivedType" ref="testqdoc-testderived.html#DerivedType-typedef"/>
+            <keyword name="TestDerived::NotTypedef" id="TestDerived::NotTypedef" ref="testqdoc-testderived.html#NotTypedef-typedef"/>
+            <keyword name="TestQDoc" id="TestQDoc" ref="testqdoc.html"/>
+            <keyword name="TheType" id="QML.TheType" ref="qml-themodule-thetype.html"/>
+            <keyword name="TheType" id="QML.TheModule.TheType" ref="qml-themodule-thetype.html"/>
+            <keyword name="Type" id="QML.Type" ref="qml-qdoc-test-type.html"/>
+            <keyword name="Type" id="QML.QDoc.Test1.Type" ref="qml-qdoc-test-type.html"/>
+            <keyword name="TypeNoVersion" id="QML.TypeNoVersion" ref="qml-test-nover-typenoversion.html"/>
+            <keyword name="TypeNoVersion" id="QML.Test.NoVer.TypeNoVersion" ref="qml-test-nover-typenoversion.html"/>
+            <keyword name="UIComponents" id="QML.UIComponents" ref="uicomponents-qmlmodule.html"/>
+            <keyword name="Vec" id="TestQDoc::Vec" ref="testqdoc-vec.html"/>
+            <keyword name="YetAnotherChild" id="QML.YetAnotherChild" ref="qml-qdoc-test-yetanotherchild.html"/>
+            <keyword name="YetAnotherChild" id="QML.QDoc.Test1.YetAnotherChild" ref="qml-qdoc-test-yetanotherchild.html"/>
+            <keyword name="abs" id="int::abs" ref="qml-int.html#abs-method"/>
+            <keyword name="active" id="DocTest::active" ref="qml-qdoc-test-doctest.html#active-prop"/>
+            <keyword name="anotherObsoleteMember" id="Test::anotherObsoleteMember" ref="testqdoc-test-obsolete.html#anotherObsoleteMember"/>
+            <keyword name="bindableProp" id="TestDerived::bindableProp" ref="testqdoc-testderived.html#bindableProp-prop"/>
+            <keyword name="bindableProp" id="TestDerived::bindableProp" ref="testqdoc-testderived.html#bindableProp-prop"/>
+            <keyword name="bindablePropChanged" id="TestDerived::bindablePropChanged" ref="testqdoc-testderived.html#bindableProp-prop"/>
+            <keyword name="boolProp" id="TestDerived::boolProp" ref="testqdoc-testderived.html#boolProp-prop"/>
+            <keyword name="boolProp" id="TestDerived::boolProp" ref="testqdoc-testderived.html#boolProp-prop"/>
+            <keyword name="boolPropChanged" id="TestDerived::boolPropChanged" ref="testqdoc-testderived.html#boolProp-prop"/>
+            <keyword name="children" id="AbstractParent::children" ref="qml-qdoc-test-abstractparent.html#children-prop"/>
+            <keyword name="color" id="ProgressBar::color" ref="qml-uicomponents-progressbar.html#color-prop"/>
+            <keyword name="completed" id="DocTest::completed" ref="qml-qdoc-test-doctest.html#completed-signal"/>
+            <keyword name="completed" id="Type::completed" ref="qml-qdoc-test-type.html#completed-signal"/>
+            <keyword name="configured" id="Type::configured" ref="qml-qdoc-test-type.html#configured-signal"/>
+            <keyword name="copy" id="Type::copy" ref="qml-qdoc-test-type.html#copy-method"/>
+            <keyword name="current" id="TabWidget::current" ref="qml-uicomponents-tabwidget.html#current-prop"/>
+            <keyword name="deprecatedMember" id="Test::deprecatedMember" ref="testqdoc-test-obsolete.html#deprecatedMember"/>
+            <keyword name="deprecatedMethod" id="Type::deprecatedMethod" ref="qml-qdoc-test-type-obsolete.html#deprecatedMethod-method"/>
+            <keyword name="disable" id="Type::disable" ref="qml-qdoc-test-type.html#disable-method"/>
+            <keyword name="documentMe" id="CrossModuleRef::documentMe" ref="crossmoduleref.html#documentMe"/>
+            <keyword name="emitSomething" id="TestDerived::emitSomething" ref="testqdoc-testderived.html#emitSomething"/>
+            <keyword name="enable" id="Type::enable" ref="qml-qdoc-test-type.html#enable-method"/>
+            <keyword name="fail" id="DocTest::fail" ref="qml-qdoc-test-doctest.html#fail-method"/>
+            <keyword name="fail_hard" id="DocTest::fail_hard" ref="qml-qdoc-test-doctest.html#fail_hard-method"/>
+            <keyword name="fifth" id="Type::fifth" ref="qml-qdoc-test-type.html#fifth-prop"/>
+            <keyword name="foo" id="DocTest::foo" ref="qml-qdoc-test-doctest.html#foo-signal"/>
+            <keyword name="fourth" id="Type::fourth" ref="qml-qdoc-test-type.html#fourth-prop"/>
+            <keyword name="funcPtr" id="Test::funcPtr" ref="testqdoc-test.html#funcPtr"/>
+            <keyword name="funcTemplate" id="Test::funcTemplate" ref="testqdoc-test.html#funcTemplate"/>
+            <keyword name="futureDeprecated" id="Type::futureDeprecated" ref="qml-qdoc-test-type.html#futureDeprecated-method"/>
+            <keyword name="getInt" id="TestDerived::getInt" ref="testqdoc-testderived.html#intProp-prop"/>
+            <keyword name="group.created" id="Type::group.created" ref="qml-qdoc-test-type.html#group.created-signal"/>
+            <keyword name="group.first" id="Type::group.first" ref="qml-qdoc-test-type.html#group.first-prop"/>
+            <keyword name="group.second" id="Type::group.second" ref="qml-qdoc-test-type.html#group.second-prop"/>
+            <keyword name="group.third" id="Type::group.third" ref="qml-qdoc-test-type.html#group.third-prop"/>
+            <keyword name="id" id="Type::id" ref="qml-qdoc-test-type.html#id-prop"/>
+            <keyword name="id" id="Test::id" ref="testqdoc-test.html#id-prop"/>
+            <keyword name="id" id="TestDerived::id" ref="testqdoc-testderived.html#id"/>
+            <keyword name="indexedKeyword" id="indexedKeyword" ref="autolinking.html#indexedkeyword-property"/>
+            <keyword name="inlineFunction" id="Test::inlineFunction" ref="testqdoc-test.html#inlineFunction"/>
+            <keyword name="int" id="QML.int" ref="qml-int.html"/>
+            <keyword name="int" id="QML.QDoc.Test1.int" ref="qml-int.html"/>
+            <keyword name="intProp" id="TestDerived::intProp" ref="testqdoc-testderived.html#intProp-prop"/>
+            <keyword name="invokeMe" id="TestDerived::invokeMe" ref="testqdoc-testderived.html#invokeMe"/>
+            <keyword name="itsHappening" id="DocTest::itsHappening" ref="qml-qdoc-test-doctest.html#itsHappening-signal"/>
+            <keyword name="maximum" id="ProgressBar::maximum" ref="qml-uicomponents-progressbar.html#maximum-prop"/>
+            <keyword name="methodWithEmDashInItsDocs" id="Test::methodWithEmDashInItsDocs" ref="testqdoc-test.html#methodWithEmDashInItsDocs"/>
+            <keyword name="methodWithEnDashInItsDocs" id="Test::methodWithEnDashInItsDocs" ref="testqdoc-test.html#methodWithEnDashInItsDocs"/>
+            <keyword name="minimum" id="ProgressBar::minimum" ref="qml-uicomponents-progressbar.html#minimum-prop"/>
+            <keyword name="name" id="AbstractParent::name" ref="qml-qdoc-test-abstractparent.html#name-method"/>
+            <keyword name="name" id="AbstractParent::name" ref="qml-qdoc-test-abstractparent.html#name-prop"/>
+            <keyword name="name" id="Child::name" ref="qml-qdoc-test-child.html#name-method"/>
+            <keyword name="name" id="Child::name" ref="qml-qdoc-test-child.html#name-prop"/>
+            <keyword name="name" id="DocTest::name" ref="qml-qdoc-test-doctest.html#name-prop"/>
+            <keyword name="name" id="Type::name" ref="qml-qdoc-test-type.html#name-prop"/>
+            <keyword name="name" id="TheType::name" ref="qml-themodule-thetype.html#name-prop"/>
+            <keyword name="name" id="TestDerived::name" ref="testqdoc-testderived.html#name-prop"/>
+            <keyword name="name" id="TestDerived::name" ref="testqdoc-testderived.html#name-prop"/>
+            <keyword name="obsoleteMember" id="Test::obsoleteMember" ref="testqdoc-test-obsolete.html#obsoleteMember"/>
+            <keyword name="on" id="Switch::on" ref="qml-uicomponents-switch.html#on-prop"/>
+            <keyword name="operator++" id="Test::operator++" ref="testqdoc-test-obsolete.html#operator-2b-2b"/>
+            <keyword name="operator--" id="Test::operator--" ref="testqdoc-test-obsolete.html#operator--"/>
+            <keyword name="operator=" id="Test::operator=" ref="testqdoc-test.html#operator-eq"/>
+            <keyword name="operator==" id="operator==" ref="testqdoc-test.html#operator-eq-eq"/>
+            <keyword name="overload" id="Test::overload" ref="testqdoc-test.html#overload"/>
+            <keyword name="rear" id="AbstractParent::rear" ref="qml-qdoc-test-abstractparent.html#rear-method"/>
+            <keyword name="resetBoolProp" id="TestDerived::resetBoolProp" ref="testqdoc-testderived.html#boolProp-prop"/>
+            <keyword name="sampleReadOnlyProperty" id="TabWidget::sampleReadOnlyProperty" ref="qml-uicomponents-tabwidget.html#sampleReadOnlyProperty-prop"/>
+            <keyword name="secondBoolProp" id="TestDerived::secondBoolProp" ref="testqdoc-testderived.html#secondBoolProp-prop"/>
+            <keyword name="secondBoolProp" id="TestDerived::secondBoolProp" ref="testqdoc-testderived.html#secondBoolProp-prop"/>
+            <keyword name="secondColor" id="ProgressBar::secondColor" ref="qml-uicomponents-progressbar.html#secondColor-prop"/>
+            <keyword name="setBindableProp" id="TestDerived::setBindableProp" ref="testqdoc-testderived.html#bindableProp-prop"/>
+            <keyword name="setBoolProp" id="TestDerived::setBoolProp" ref="testqdoc-testderived.html#boolProp-prop"/>
+            <keyword name="someFunction" id="Test::someFunction" ref="testqdoc-test.html#someFunction"/>
+            <keyword name="someFunctionDefaultArg" id="Test::someFunctionDefaultArg" ref="testqdoc-test.html#someFunctionDefaultArg"/>
+            <keyword name="someProp" id="TestDerived::someProp" ref="testqdoc-testderived.html#someProp-prop"/>
+            <keyword name="someProp" id="TestDerived::someProp" ref="testqdoc-testderived.html#someProp-prop"/>
+            <keyword name="someValue" id="TestDerived::someValue" ref="testqdoc-testderived.html#someValue"/>
+            <keyword name="staticObsoleteMember" id="TestDerived::staticObsoleteMember" ref="testqdoc-testderived-obsolete.html#staticObsoleteMember"/>
+            <keyword name="toggle" id="Switch::toggle" ref="qml-uicomponents-switch.html#toggle-method"/>
+            <keyword name="type" id="Type::type" ref="qml-qdoc-test-type.html#type-attached-prop"/>
+            <keyword name="value" id="ProgressBar::value" ref="qml-uicomponents-progressbar.html#value-prop"/>
+            <keyword name="virtualFun" id="Test::virtualFun" ref="testqdoc-test.html#virtualFun"/>
+            <keyword name="virtualFun" id="TestDerived::virtualFun" ref="testqdoc-testderived.html#virtualFun"/>
+        </keywords>
+        <files>
+            <file>autolinking.html</file>
+            <file>classes.html</file>
+            <file>cpptypes.html</file>
+            <file>crossmoduleref.html</file>
+            <file>images/leonardo-da-vinci.png</file>
+            <file>obsolete-classes.html</file>
+            <file>qdoc-test-qmlmodule.html</file>
+            <file>qml-int.html</file>
+            <file>qml-qdoc-test-abstractparent-members.html</file>
+            <file>qml-qdoc-test-abstractparent.html</file>
+            <file>qml-qdoc-test-child-members.html</file>
+            <file>qml-qdoc-test-child.html</file>
+            <file>qml-qdoc-test-doctest-members.html</file>
+            <file>qml-qdoc-test-doctest.html</file>
+            <file>qml-qdoc-test-oldtype-members.html</file>
+            <file>qml-qdoc-test-oldtype.html</file>
+            <file>qml-qdoc-test-type-members.html</file>
+            <file>qml-qdoc-test-type-obsolete.html</file>
+            <file>qml-qdoc-test-type.html</file>
+            <file>qml-qdoc-test-yetanotherchild-members.html</file>
+            <file>qml-qdoc-test-yetanotherchild.html</file>
+            <file>qml-test-nover-doctest-members.html</file>
+            <file>qml-test-nover-doctest.html</file>
+            <file>qml-test-nover-typenoversion-members.html</file>
+            <file>qml-test-nover-typenoversion.html</file>
+            <file>qml-themodule-thetype-members.html</file>
+            <file>qml-themodule-thetype.html</file>
+            <file>qml-uicomponents-progressbar-members.html</file>
+            <file>qml-uicomponents-progressbar.html</file>
+            <file>qml-uicomponents-switch-members.html</file>
+            <file>qml-uicomponents-switch.html</file>
+            <file>qml-uicomponents-tabwidget-members.html</file>
+            <file>qml-uicomponents-tabwidget.html</file>
+            <file>qmlmodules.html</file>
+            <file>seenclass.html</file>
+            <file>test-cmaketest-cmakelists-txt.html</file>
+            <file>test-cmaketest-example.html</file>
+            <file>test-cmaketest-main-cpp.html</file>
+            <file>test-componentset-componentset-pro.html</file>
+            <file>test-componentset-componentset-qml.html</file>
+            <file>test-componentset-example.html</file>
+            <file>test-componentset-progressbar-qml.html</file>
+            <file>test-componentset-switch-qml.html</file>
+            <file>test-componentset-tabwidget-qml.html</file>
+            <file>test-demos-demo-demo-cpp.html</file>
+            <file>test-demos-demo-demo-pro.html</file>
+            <file>test-demos-demo-dontxclude-cmakelists-txt.html</file>
+            <file>test-demos-demo-example.html</file>
+            <file>test-demos-hidden-example.html</file>
+            <file>test-empty-qmlmodule.html</file>
+            <file>test-nover-qmlmodule.html</file>
+            <file>testcpp-module.html</file>
+            <file>testqdoc-test-members.html</file>
+            <file>testqdoc-test-obsolete.html</file>
+            <file>testqdoc-test-struct.html</file>
+            <file>testqdoc-test.html</file>
+            <file>testqdoc-testderived-members.html</file>
+            <file>testqdoc-testderived-obsolete.html</file>
+            <file>testqdoc-testderived.html</file>
+            <file>testqdoc-vec.html</file>
+            <file>testqdoc.html</file>
+            <file>themodule-qmlmodule.html</file>
+            <file>uicomponents-qmlmodule.html</file>
+        </files>
+    </filterSection>
+</QtHelpProject>

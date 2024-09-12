@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title its:translate="no">TestQDoc Namespace</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>A namespace.</db:para>
+<db:para>This namespace was introduced in Qt 2.0.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist its:translate="no">
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TestCPP</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Since</db:term>
+<db:listitem>
+<db:para>Qt 2.0</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>CMake</db:term>
+<db:listitem>
+<db:para>find_package(Qt6 REQUIRED COMPONENTS QDocTest)</db:para>
+<db:para>target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>qmake</db:term>
+<db:listitem>
+<db:para>QT += testcpp</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:section xml:id="usage">
+<db:title>Usage</db:title>
+<db:para>This namespace is for testing QDoc output.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:section>
+<db:title>class <db:link xlink:href="testqdoc-test.xml" xlink:role="class">Test</db:link></db:title>
+<db:para>A class in a namespace.</db:para>
+</db:section>
+<db:section>
+<db:title>class <db:link xlink:href="testqdoc-testderived.xml" xlink:role="class">TestDerived</db:link></db:title>
+<db:para>A class in a namespace, derived from <db:link xlink:href="testqdoc-test.xml">Test</db:link>.</db:para>
+</db:section>
+<db:section>
+<db:title>class <db:link xlink:href="testqdoc-vec.xml" xlink:role="class">Vec</db:link></db:title>
+<db:para>Type alias that has its own reference.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="macro-documentation">
+<db:title>Macro Documentation</db:title>
+<db:section xml:id="QDOCTEST_MACRO">
+<db:title its:translate="no">[since Test 0.9] QDOCTEST_MACRO</db:title>
+<db:methodsynopsis>
+<db:methodname>QDOCTEST_MACRO</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">macrowithoutparams</db:synopsisinfo>
+<db:synopsisinfo role="signature">QDOCTEST_MACRO</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This macro was introduced in Test 0.9.</db:para>
+</db:section>
+</db:section>
+</db:article>

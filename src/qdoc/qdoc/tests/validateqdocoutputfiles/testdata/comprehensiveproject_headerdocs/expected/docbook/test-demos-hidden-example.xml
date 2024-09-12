@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Hidden Demo</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>Tagged 'broken', does not appear in examples-manifest.xml.</db:para>
+</db:abstract>
+</db:info>
+<db:para>Also missing an image, but that's OK as it's broken anyway.</db:para>
+</db:article>

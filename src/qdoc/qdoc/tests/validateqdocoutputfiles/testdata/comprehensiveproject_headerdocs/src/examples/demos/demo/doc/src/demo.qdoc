@@ -1,0 +1,11 @@
+// Copyright (C) 2020 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \example demos/demo
+    \title Demo
+    \image leonardo-da-vinci.png
+    //! Icon made by Smashicons from www.flaticon.com
+
+    \snippet demos/demo/demo.cpp integer literal with separator
+*/

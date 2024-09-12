@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- examples.qdoc -->
+  <meta name="description" content="Example for documenting QML types.">
+  <title>QML Documentation Example | Qt 6.2.11</title>
+</head>
+<body>
+<h1 class="title">QML Documentation Example</h1>
+<pre class="qml" translate="no"><span class="comment">// Copyright (C) 2016 The Qt Company Ltd.</span>
+<span class="comment">// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause</span>
+
+import QtQuick 1.0
+
+<span class="comment">/*!
+    \qmltype TabWidget
+    \inqmlmodule UIComponents
+    \brief A widget that places its children as tabs.
+
+    A TabWidget places its children as tabs in a view. Selecting
+    a tab involves selecting the tab at the top.
+
+    The TabWidget component is part of the \l {UI Components} module.
+
+    This documentation is part of the \l{componentset}{UIComponents} example.
+
+    \section1 Adding Tabs
+
+    To add a tab, declare the tab as a child of the TabWidget.
+
+    \code
+    TabWidget {
+        id: tabwidget
+
+        Rectangle {
+            id: tab1
+            color: &quot;red&quot;
+            //... omitted
+        }
+        Rectangle {
+            id: tab2
+            color: &quot;blue&quot;
+            //... omitted
+        }
+
+    }
+    \endcode
+
+*/</span>
+<span class="type">Item</span> {
+    <span class="name">id</span>: <span class="name">tabWidget</span>
+
+    <span class="comment">/*!
+    \internal
+
+    Setting the default property to stack.children means any child items
+    of the TabWidget are actually added to the 'stack' item's children.
+
+    See the \l{&quot;Property Binding in QML&quot;}
+    documentation for details on default properties.
+
+    This is an implementation detail, not meant for public knowledge. Putting
+    the \internal command at the beginning will cause QDoc to not publish this
+    documentation in the public API page.
+
+    Normally, a property alias needs to have a
+    &quot;\qmlproperty &lt;type&gt; &lt;propertyname&gt;&quot; to assign the alias a type.
+
+    */</span>
+    default property <span class="type">alias</span> <span class="name">content</span>: <span class="name">stack</span>.<span class="name">children</span>
+
+    <span class="comment">/*!
+        The currently active tab in the TabWidget.
+    */</span>
+    property <span class="type"><a href="qml-int.html" translate="no">int</a></span> <span class="name">current</span>: <span class="number">0</span>
+
+    <span class="comment">/*!
+        A sample \c{read-only} property.
+        A contrived property to demonstrate QDoc's ability to detect
+        read-only properties.
+
+        The signature is:
+        \code
+        readonly property int sampleReadOnlyProperty: 0
+        \endcode
+
+        Note that the property must be initialized to a value.
+
+    */</span>
+    readonly property <span class="type"><a href="qml-int.html" translate="no">int</a></span> <span class="name">sampleReadOnlyProperty</span>: <span class="number">0</span>
+
+    <span class="comment">/*!
+    \internal
+
+    This handler is an implementation
+    detail. The \c{\internal} command will prevent QDoc from publishing this
+    documentation on the public API.
+    */</span>
+    <span class="name">onCurrentChanged</span>: <span class="name">setOpacities</span>()
+    <span class="name">Component</span>.onCompleted: <span class="name">setOpacities</span>()
+
+    <span class="comment">/*!
+    \internal
+
+    An internal function to set the opacity.
+    The \internal command will prevent QDoc from publishing this
+    documentation on the public API.
+    */</span>
+    <span class="keyword">function</span> <span class="name">setOpacities</span>() {
+        <span class="keyword">for</span> (var i = 0; <span class="name">i</span> <span class="operator">&lt;</span> <span class="name">stack</span>.<span class="name">children</span>.<span class="name">length</span>; ++<span class="name">i</span>) {
+            <span class="name">stack</span>.<span class="name">children</span>[<span class="name">i</span>].<span class="name">opacity</span> <span class="operator">=</span> (<span class="name">i</span> <span class="operator">==</span> <span class="name">current</span> ? <span class="number">1</span> : <span class="number">0</span>)
+        }
+    }
+
+    <span class="type">Row</span> {
+        <span class="name">id</span>: <span class="name">header</span>
+
+        <span class="type">Repeater</span> {
+            <span class="name">model</span>: <span class="name">stack</span>.<span class="name">children</span>.<span class="name">length</span>
+            <span class="name">delegate</span>: <span class="name">Rectangle</span> {
+                <span class="name">width</span>: <span class="name">tabWidget</span>.<span class="name">width</span> <span class="operator">/</span> <span class="name">stack</span>.<span class="name">children</span>.<span class="name">length</span>; <span class="name">height</span>: <span class="number">36</span>
+
+                <span class="type">Rectangle</span> {
+                    <span class="name">width</span>: <span class="name">parent</span>.<span class="name">width</span>; <span class="name">height</span>: <span class="number">1</span>
+                    <span class="type">anchors</span> { <span class="name">bottom</span>: <span class="name">parent</span>.<span class="name">bottom</span>; <span class="name">bottomMargin</span>: <span class="number">1</span> }
+                    <span class="name">color</span>: <span class="string">&quot;#acb2c2&quot;</span>
+                }
+                <span class="type">BorderImage</span> {
+                    <span class="type">anchors</span> { <span class="name">fill</span>: <span class="name">parent</span>; <span class="name">leftMargin</span>: <span class="number">2</span>; <span class="name">topMargin</span>: <span class="number">5</span>; <span class="name">rightMargin</span>: <span class="number">1</span> }
+                    <span class="type">border</span> { <span class="name">left</span>: <span class="number">7</span>; <span class="name">right</span>: <span class="number">7</span> }
+                    <span class="name">source</span>: <span class="string">&quot;tab.png&quot;</span>
+                    <span class="name">visible</span>: <span class="name">tabWidget</span>.<span class="name">current</span> <span class="operator">==</span> <span class="name">index</span>
+                }
+                <span class="type">Text</span> {
+                    <span class="name">horizontalAlignment</span>: <span class="name">Qt</span>.<span class="name">AlignHCenter</span>; <span class="name">verticalAlignment</span>: <span class="name">Qt</span>.<span class="name">AlignVCenter</span>
+                    <span class="name">anchors</span>.fill: <span class="name">parent</span>
+                    <span class="name">text</span>: <span class="name">stack</span>.<span class="name">children</span>[<span class="name">index</span>].<span class="name">title</span>
+                    <span class="name">elide</span>: <span class="name">Text</span>.<span class="name">ElideRight</span>
+                    <span class="name">font</span>.bold: <span class="name">tabWidget</span>.<span class="name">current</span> <span class="operator">==</span> <span class="name">index</span>
+                }
+                <span class="type">MouseArea</span> {
+                    <span class="name">anchors</span>.fill: <span class="name">parent</span>
+                    <span class="name">onClicked</span>: <span class="name">tabWidget</span>.<span class="name">current</span> <span class="operator">=</span> <span class="name">index</span>
+                }
+            }
+        }
+    }
+
+    <span class="type">Item</span> {
+        <span class="name">id</span>: <span class="name">stack</span>
+        <span class="name">width</span>: <span class="name">tabWidget</span>.<span class="name">width</span>
+        <span class="name">anchors</span>.top: <span class="name">header</span>.<span class="name">bottom</span>; <span class="name">anchors</span>.bottom: <span class="name">tabWidget</span>.<span class="name">bottom</span>
+    }
+}</pre>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="demos/demo/demo.pro" href="test-demos-demo-demo-pro.html" title="demo.pro Example File" fulltitle="demo.pro Example File" subtitle="demos/demo/demo.pro">
+            <description>
+                <code>TEMPLATE = aux
+message(&amp;quot;Nothing to see here.&amp;quot;)</code>
+            </description>
+        </page>
+    </document>
+</WebXML>

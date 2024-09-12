@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Obsolete Classes</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
+</db:info>
+<db:section xml:id="classes-with-obsolete-members">
+<db:title>Classes with obsolete members</db:title>
+<db:variablelist role="obsoletecppmembers">
+<db:varlistentry>
+<db:term><db:emphasis role="bold">T</db:emphasis></db:term>
+<db:listitem>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-test.xml" role="class">Test</db:link> (<db:link xlink:href="testqdoc.xml" xlink:role="namespace">TestQDoc</db:link>)</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-testderived.xml" role="class">TestDerived</db:link> (<db:link xlink:href="testqdoc.xml" xlink:role="namespace">TestQDoc</db:link>)</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="testqdoc">
+<db:title>TestQDoc</db:title>
+</db:section>
+</db:section>
+</db:article>
