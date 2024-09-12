@@ -456,9 +456,6 @@ function(qt6_add_lrelease)
     set(qm_files "")
     foreach(ts_file ${ts_files})
         if(NOT EXISTS "${ts_file}")
-            message(WARNING "Translation file '${ts_file}' does not exist. "
-                "Consider building the target 'update_translations' to create an initial "
-                "version of that file.")
             _qt_internal_ensure_ts_file(TS_FILE "${ts_file}")
         endif()
 
