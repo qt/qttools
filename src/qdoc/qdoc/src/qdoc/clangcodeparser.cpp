@@ -207,9 +207,15 @@ static std::string get_expression_as_string(const clang::Expr* expression, const
  * If the parameter has no default value the empty string will be returned.
  */
 static std::string get_default_value_initializer_as_string(const clang::TemplateTypeParmDecl* parameter) {
+#if LIBCLANG_VERSION_MAJOR >= 19
+    return (parameter && parameter->hasDefaultArgument()) ?
+                get_fully_qualified_type_name(parameter->getDefaultArgument().getArgument().getAsType(), parameter->getASTContext()) :
+                "";
+#else
     return (parameter && parameter->hasDefaultArgument()) ?
                 get_fully_qualified_type_name(parameter->getDefaultArgument(), parameter->getASTContext()) :
                 "";
+#endif
 
 }
 
@@ -223,8 +229,13 @@ static std::string get_default_value_initializer_as_string(const clang::Template
  * If the parameter as no default value the empty string will be returned.
  */
 static std::string get_default_value_initializer_as_string(const clang::NonTypeTemplateParmDecl* parameter) {
+#if LIBCLANG_VERSION_MAJOR >= 19
+    return (parameter && parameter->hasDefaultArgument()) ?
+        get_expression_as_string(parameter->getDefaultArgument().getSourceExpression(), parameter->getASTContext()) : "";
+#else
     return (parameter && parameter->hasDefaultArgument()) ?
         get_expression_as_string(parameter->getDefaultArgument(), parameter->getASTContext()) : "";
+#endif
 
 }
 
@@ -244,7 +255,7 @@ static std::string get_default_value_initializer_as_string(const clang::Template
         const clang::TemplateName template_name = parameter->getDefaultArgument().getArgument().getAsTemplate();
 
         llvm::raw_string_ostream ss{default_value};
-        template_name.print(ss, parameter->getASTContext().getPrintingPolicy(), clang::TemplateName::Qualified::Fully);
+        template_name.print(ss, parameter->getASTContext().getPrintingPolicy(), clang::TemplateName::Qualified::AsWritten);
     }
 
     return default_value;
