@@ -128,7 +128,7 @@ qt_configure_add_report_entry(
     TYPE WARNING
     MESSAGE "
 QDoc will not be compiled, probably because clang's C and C++ libraries could not be located.
-This means that you cannot build the Qt documentation. You may need to set the CMake varibles
+This means that you cannot build the Qt documentation. You may need to set the CMake variables
 CMAKE_PREFIX_PATH or LLVM_INSTALL_DIR to the location of your llvm installation.
 Other than clang's libraries, you may need to install another package, such as clang itself, to
 provide the ClangConfig.cmake file needed to detect your libraries. Once this file is in place,
@@ -148,7 +148,7 @@ or
 On Linux, you can try installing the clang package from your distribution's package manager.
 On Debian / Ubuntu run `sudo apt install libclang-dev`.
 On Fedora / RHEL run `sudo dnf install clang-devel`.
-On ArchLinux run `sudo pacman -S clang`.
+On ArchLinux run `sudo pacman -S clang llvm`.
 
 Alternatively, you can use the prebuilt binaries hosted by Qt.
 These let you link LLVM/Clang libraries statically, but only support Release builds on Windows.
