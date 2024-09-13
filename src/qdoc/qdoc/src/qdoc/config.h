@@ -239,7 +239,6 @@ private:
 
 struct ConfigStrings
 {
-    static QString ALIAS;
     static QString AUTOLINKERRORS;
     static QString BUILDVERSION;
     static QString CODEINDENT;
