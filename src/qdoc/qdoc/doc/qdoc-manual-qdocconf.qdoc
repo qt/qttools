@@ -146,6 +146,8 @@
     \li \l {examples-variable} {examples}
     \li \l {examplesinstallpath-variable} {examplesinstallpath}
     \li \l {examples.fileextensions-variable} {examples.fileextensions}
+    \li \l {examples.warnaboutmissingimages-variable} {examples.warnaboutmissingimages}
+    \li \l {examples.warnaboutmissingprojectfiles-variable} {examples.warnaboutmissingprojectfiles}
     \li \l {excludedirs-variable} {excludedirs}
     \li \l {excludefiles-variable} {excludefiles}
     \li \l {extraimages-variable} {extraimages}
@@ -476,6 +478,34 @@
     \endcode
 
     See also \l{headers.fileextensions}.
+
+    \target examples.warnaboutmissingimages-variable
+    \section1 examples.warnaboutmissingimages
+
+    While processing example documentation, QDoc may emit warnings if an example
+    doesn't contain any images. This warning can be disabled by setting the
+    following configuration variable in the .qdocconf file for the project:
+
+    \c {examples.warnaboutmissingimages = false}
+
+    This configuration variable was introduced to QDoc with Qt 6.9.
+
+    See also \l{examples.warnaboutmissingprojectfiles-variable}
+    {examples.warnaboutmissingprojectfiles}.
+
+    \target examples.warnaboutmissingprojectfiles-variable
+    \section1 examples.warnaboutmissingprojectfiles
+
+    While processing example documentation, QDoc may emit warnings if an example
+    doesn't contain a project file. This warning can be disabled by setting the
+    following configuration variable in the .qdocconf file for the project:
+
+    \c {examples.warnaboutmissingprojectfiles = false}
+
+    This configuration variable was introduced to QDoc with Qt 6.9.
+
+    See also \l{examples.warnaboutmissingimages-variable}
+    {examples.warnaboutmissingimages}.
 
     \target excludedirs-variable
     \section1 excludedirs

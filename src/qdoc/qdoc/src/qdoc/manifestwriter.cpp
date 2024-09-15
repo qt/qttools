@@ -23,10 +23,18 @@ QT_BEGIN_NAMESPACE
 void warnAboutUnusedAttributes(const QStringList &usedAttributes, const ExampleNode *example)
 {
     QMap<QString, QString> attributesToWarnFor;
-    attributesToWarnFor.insert(QStringLiteral("imageUrl"),
-            QStringLiteral("Example documentation should have at least one '\\image'"));
-    attributesToWarnFor.insert(QStringLiteral("projectPath"),
-            QStringLiteral("Example has no project file"));
+    bool missingImageWarning = Config::instance().get(CONFIG_EXAMPLES + Config::dot + CONFIG_WARNABOUTMISSINGIMAGES).asBool();
+    bool missingProjectFileWarning = Config::instance().get(CONFIG_EXAMPLES + Config::dot + CONFIG_WARNABOUTMISSINGPROJECTFILES).asBool();
+
+    if (missingImageWarning)
+        attributesToWarnFor.insert(QStringLiteral("imageUrl"),
+                QStringLiteral("Example documentation should have at least one '\\image'"));
+    if (missingProjectFileWarning)
+        attributesToWarnFor.insert(QStringLiteral("projectPath"),
+                QStringLiteral("Example has no project file"));
+
+    if (attributesToWarnFor.empty())
+        return;
 
     for (auto it = attributesToWarnFor.cbegin(); it != attributesToWarnFor.cend(); ++it) {
         if (!usedAttributes.contains(it.key()))

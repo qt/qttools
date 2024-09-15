@@ -89,6 +89,8 @@ QString ConfigStrings::FILEEXTENSIONS = QStringLiteral("fileextensions");
 QString ConfigStrings::IMAGEEXTENSIONS = QStringLiteral("imageextensions");
 QString ConfigStrings::QMLTYPESPAGE = QStringLiteral("qmltypespage");
 QString ConfigStrings::QMLTYPESTITLE = QStringLiteral("qmltypestitle");
+QString ConfigStrings::WARNABOUTMISSINGIMAGES = QStringLiteral("warnaboutmissingimages");
+QString ConfigStrings::WARNABOUTMISSINGPROJECTFILES = QStringLiteral("warnaboutmissingprojectfiles");
 QString ConfigStrings::WARNINGLIMIT = QStringLiteral("warninglimit");
 
 /*!
@@ -370,6 +372,8 @@ void Config::reset()
     setStringList(CONFIG_OUTPUTFORMATS, QStringList("HTML"));
     setStringList(CONFIG_TABSIZE, QStringList("8"));
     setStringList(CONFIG_LOCATIONINFO, QStringList("true"));
+    setStringList(CONFIG_WARNABOUTMISSINGIMAGES, QStringList("true"));
+    setStringList(CONFIG_WARNABOUTMISSINGPROJECTFILES, QStringList("true"));
 
     // Publish options from the command line as config variables
     const auto setListFlag = [this](const QString &key, bool test) {
