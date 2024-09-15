@@ -17,6 +17,7 @@ HTML.nosubdirs = true
 HTML.outputsubdir = .
 
 project = TestCPP
+productname = Qt
 includepaths += -I../testcpp
 
 headers = ../testcpp/testcpp.h

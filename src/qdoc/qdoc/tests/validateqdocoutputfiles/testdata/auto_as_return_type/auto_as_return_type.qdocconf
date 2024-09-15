@@ -1,4 +1,5 @@
 project = auto as return type
+productname = Qt
 
 locationinfo = false
 

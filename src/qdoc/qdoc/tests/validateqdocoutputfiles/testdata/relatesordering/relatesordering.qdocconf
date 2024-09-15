@@ -1,4 +1,5 @@
 project = RelatesOrdering
+productname = Qt
 
 {sourcedirs,headerdirs} = .
 

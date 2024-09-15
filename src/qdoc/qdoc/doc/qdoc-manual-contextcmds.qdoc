@@ -510,15 +510,18 @@
     the associated functionality was added.
 
     If the argument passed to \\since contains no spaces, it is assumed to be
-    a version number string for the Qt project, and QDoc will prefix it with
-    'Qt' in the generated output. The argument can also contain the project
-    name explicitly:
+    shorthand notation for the \l {productname-variable}{productname}, and QDoc
+    will prefix the version with the value of \c productname in the generated
+    output. If the \c productname variable is undefined, QDoc generates only
+    the version string.
+
+    The argument can also contain the product name explicitly:
 
     \badcode
     \since MyFramework 2.0
     \endcode
 
-    In this case, the arguments (project and version) are used as is.
+    In this case, the arguments (product and version) are used as is.
 
     \section2 Inheritance of Since Information
 

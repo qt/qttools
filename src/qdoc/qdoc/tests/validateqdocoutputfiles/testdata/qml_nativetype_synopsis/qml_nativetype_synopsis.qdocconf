@@ -1,4 +1,5 @@
 project = QML nativetype synopsis test
+productname = Qt
 
 locationinfo = false
 

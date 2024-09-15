@@ -1,3 +1,7 @@
+project = Test
+productname = Qt
+description = "A test project for QDoc build artifacts"
+
 sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
@@ -46,9 +50,6 @@ macro.versionnote.HTML      = "<p><b>This \1 was introduced in version \2.</b></
 macro.versionnote.DocBook   = "<db:para>This \1 was introduced in version \2.</db:para>\n"
 
 moduleheader = TestCPP
-
-project = Test
-description = "A test project for QDoc build artifacts"
 
 examples.fileextensions = "*.qml *.cpp"
 

@@ -1,4 +1,5 @@
 project = ModuleState
+productname = Qt
 
 headerdirs  = ./src
 sourcedirs  = ./src

@@ -1,4 +1,5 @@
 project = A minimal QDoc configuration
+productname = Qt
 
 locationinfo = false
 

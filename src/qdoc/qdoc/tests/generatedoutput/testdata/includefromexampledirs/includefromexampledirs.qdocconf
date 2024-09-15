@@ -1,3 +1,7 @@
+project = Test
+productname = Qt
+description = "A test project for QDoc build artifacts"
+
 sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
@@ -25,8 +29,6 @@ navigation.cppclassespage = "QDoc Test C++ Classes"
 
 moduleheader = TestCPP
 
-project = Test
-description = "A test project for QDoc build artifacts"
 outputdir = ./html
 
 exampledirs = ../qml

@@ -289,6 +289,7 @@ struct ConfigStrings
     static QString OUTPUTFORMATS;
     static QString OUTPUTPREFIXES;
     static QString OUTPUTSUFFIXES;
+    static QString PRODUCTNAME;
     static QString PROJECT;
     static QString REDIRECTDOCUMENTATIONTODEVNULL;
     static QString QHP;
@@ -366,6 +367,7 @@ struct ConfigStrings
 #define CONFIG_OUTPUTFORMATS ConfigStrings::OUTPUTFORMATS
 #define CONFIG_OUTPUTPREFIXES ConfigStrings::OUTPUTPREFIXES
 #define CONFIG_OUTPUTSUFFIXES ConfigStrings::OUTPUTSUFFIXES
+#define CONFIG_PRODUCTNAME ConfigStrings::PRODUCTNAME
 #define CONFIG_PROJECT ConfigStrings::PROJECT
 #define CONFIG_REDIRECTDOCUMENTATIONTODEVNULL ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL
 #define CONFIG_QHP ConfigStrings::QHP

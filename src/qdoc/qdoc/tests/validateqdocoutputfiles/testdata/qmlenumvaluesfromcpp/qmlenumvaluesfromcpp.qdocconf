@@ -1,4 +1,6 @@
 project = QmlEnumValuesFromCpp
+productname = Qt
+
 moduleheader = class.h
 includepaths = ./src
 

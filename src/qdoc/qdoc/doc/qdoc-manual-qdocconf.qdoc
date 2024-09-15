@@ -171,6 +171,7 @@
     \li \l {outputformats-variable} {outputformats}
     \li \l {outputprefixes-variable} {outputprefixes}
     \li \l {outputsuffixes-variable} {outputsuffixes}
+    \li \l {productname-variable} {productname}
     \li \l {project-variable} {project}
     \li \l {sourcedirs-variable} {sourcedirs}
     \li \l {sources-variable} {sources}
@@ -1764,6 +1765,24 @@
     documentation only uses the \c depends variable.
 
     See also \l depends, \l project and \l url.
+
+    \target productname-variable
+    \section1 productname
+
+    Use the \c productname variable if the name of the product being documented
+    is different from the name of the documentation \qdocvar project. This is
+    particularly useful for larger documentation sets that consist of multiple
+    documentation projects and/or modules, as it allows QDoc to generate the
+    product name instead of project name in certain contexts, such as the
+    \qdoccmd since command.
+
+    For example, Qt defines \e Qt as the \c productname, while each individual
+    module defines its own \c project name. This allows authors to use the
+    shorthand notation for the \qdoccmd since command.
+
+    This configuration variable was introduced to QDoc with Qt 6.9.
+
+    See also \qdoccmd {since}.
 
     \target project-variable
     \section1 project

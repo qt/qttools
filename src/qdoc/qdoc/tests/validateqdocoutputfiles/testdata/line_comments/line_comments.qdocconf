@@ -1,4 +1,5 @@
 project = LineComment
+productname = Qt
 
 {headerdirs,sourcedirs,exampledirs} = ./src
 

@@ -1,4 +1,5 @@
 project = OutputFromQDocFiles
+productname = Qt
 description = "A test project for QDoc build artifacts"
 buildversion = "$project - $description"
 moduleheader =

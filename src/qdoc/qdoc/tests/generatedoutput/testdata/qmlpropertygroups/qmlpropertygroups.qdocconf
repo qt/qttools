@@ -26,6 +26,7 @@ navigation.cppclassespage = "QDoc Test C++ Classes"
 moduleheader = TestCPP
 
 project = Test
+productname = Qt
 description = "A test project for QDoc build artifacts"
 outputdir = ./html
 

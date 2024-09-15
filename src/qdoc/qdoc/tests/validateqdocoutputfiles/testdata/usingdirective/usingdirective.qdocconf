@@ -1,3 +1,6 @@
+project = UsingDirective
+productname = Qt
+
 sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
@@ -23,5 +26,4 @@ DocBook.outputsubdir = docbook
 WebXML.nosubdirs = true
 WebXML.outputsubdir = webxml
 
-project = UsingDirective
 {includepaths,headerdirs,sourcedirs} = ./src/

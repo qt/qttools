@@ -1,3 +1,6 @@
+project = ProxyPage
+productname = Qt
+
 sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
@@ -11,7 +14,6 @@ warninglimit.enabled = true
 # don't write host system-specific paths to index files
 locationinfo = false
 
-project = ProxyPage
 includepaths += ./src
 {sourcedirs,headerdirs} = ./src
 

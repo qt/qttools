@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
 
 project = NonAsciiCharacterInput
+productname = Qt
 
 headerdirs  = ./src
 sourcedirs  = ./src

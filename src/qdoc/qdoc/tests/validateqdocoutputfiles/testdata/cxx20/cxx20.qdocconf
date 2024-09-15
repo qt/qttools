@@ -1,4 +1,5 @@
 project = cxx20
+productname = Qt
 
 headerdirs  = ./src
 sourcedirs  = ./src

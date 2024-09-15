@@ -1,3 +1,6 @@
+project = TestGlobals
+productname = Qt
+
 sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
@@ -16,7 +19,6 @@ locationinfo = false
 HTML.nosubdirs = true
 HTML.outputsubdir = html
 
-project = TestGlobals
 includepaths += -I./src/globalfunc
 
 headers = ./src/global.h

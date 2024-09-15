@@ -1108,9 +1108,11 @@ QString Generator::formatSince(const Node *node)
 {
     QStringList since = node->since().split(QLatin1Char(' '));
 
-    // If there is only one argument, assume it is the Qt version number.
-    if (since.size() == 1)
-        return "Qt " + since[0];
+    // If there is only one argument, assume it is the product version number.
+    if (since.size() == 1) {
+        const QString productName = Config::instance().get(CONFIG_PRODUCTNAME).asString();
+        return productName.isEmpty() ? node->since() :  productName +  " " + since[0];
+    }
 
     // Otherwise, use the original <project> <version> string.
     return node->since();
