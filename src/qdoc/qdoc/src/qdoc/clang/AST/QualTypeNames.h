@@ -84,8 +84,9 @@ static inline bool getFullyQualifiedTemplateName(const ASTContext &Ctx,
   assert(ArgTDecl != nullptr);
   QualifiedTemplateName *QTName = TName.getAsQualifiedTemplateName();
 
-  if (QTName && !QTName->hasTemplateKeyword()) {
-    NNS = QTName->getQualifier();
+  if (QTName &&
+      !QTName->hasTemplateKeyword() &&
+      (NNS = QTName->getQualifier())) {
     NestedNameSpecifier *QNNS = getFullyQualifiedNestedNameSpecifier(
         Ctx, NNS, WithGlobalNsPrefix);
     if (QNNS != NNS) {
@@ -288,8 +289,8 @@ static inline NestedNameSpecifier *createNestedNameSpecifierForScopeOf(
   assert(Decl);
 
   const DeclContext *DC = Decl->getDeclContext()->getRedeclContext();
-  const auto *Outer = dyn_cast_or_null<NamedDecl>(DC);
-  const auto *OuterNS = dyn_cast_or_null<NamespaceDecl>(DC);
+  const auto *Outer = dyn_cast<NamedDecl>(DC);
+  const auto *OuterNS = dyn_cast<NamespaceDecl>(DC);
   if (Outer && !(OuterNS && OuterNS->isAnonymousNamespace())) {
     if (OuterNS) {
       return createNestedNameSpecifier(Ctx, OuterNS, WithGlobalNsPrefix);
