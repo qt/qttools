@@ -101,8 +101,30 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="81"/>
+        <location filename="main.py" line="80"/>
         <source>A raw string with escaped quote&quot;bla</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id_1">
+        <location filename="main.py" line="85"/>
+        <source>msg1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id_2">
+        <location filename="main.py" line="87"/>
+        <source>msg2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.py" line="89"/>
+        <source>msg3</source>
+        <extracomment>Extra comment 3</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.py" line="92"/>
+        <source>msg4</source>
+        <extracomment>Extra comment 4</extracomment>
         <translation type="unfinished"></translation>
     </message>
 </context>

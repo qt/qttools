@@ -77,6 +77,17 @@ class Window(QMainWindow):
         msg = self.tr(r"A raw strin\g""continued\\")
         msg = self.tr(r"A raw string with escaped quote\"bla")
 
+    def test_pyside2863(self):
+        """PYSIDE-2863, Check whether id and extra comments are correctly associated."""
+        #= id_1
+        msg = self.tr("msg1")
+        #= id_2
+        msg = self.tr("msg2")
+        #: Extra comment 3
+        msg = self.tr("msg3")
+        #: Extra comment 4
+        msg = self.tr("msg4")
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
