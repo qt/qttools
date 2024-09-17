@@ -155,6 +155,7 @@ private:
 
     // Generator configuration, set before starting the generation.
     QString m_project {};
+    QString m_productName {};
     QString m_projectDescription {};
     QString m_naturalLanguage {};
     QString m_buildVersion {};

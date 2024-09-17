@@ -2,7 +2,7 @@
 <db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
 <db:info>
 <db:title>The source for this page has a line comment in its sa command</db:title>
-<db:productname>LineComment</db:productname>
+<db:productname>Qt</db:productname>
 <db:titleabbrev>LineComment Reference Documentation</db:titleabbrev>
 <db:abstract>
 <db:para>LineComment Reference Documentation.</db:para></db:abstract>

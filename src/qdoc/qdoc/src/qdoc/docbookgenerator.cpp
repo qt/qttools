@@ -142,6 +142,7 @@ void DocBookGenerator::initializeGenerator()
     m_config = &Config::instance();
 
     m_project = m_config->get(CONFIG_PROJECT).asString();
+    m_productName = m_config->get(CONFIG_PRODUCTNAME).asString();
 
     m_projectDescription = m_config->get(CONFIG_DESCRIPTION).asString();
     if (m_projectDescription.isEmpty() && !m_project.isEmpty())
@@ -1771,8 +1772,9 @@ void DocBookGenerator::generateHeader(const QString &title, const QString &subTi
         newLine();
     }
 
-    if (!m_project.isEmpty()) {
-        m_writer->writeTextElement(dbNamespace, "productname", m_project);
+    if (!m_productName.isEmpty() || !m_project.isEmpty()) {
+        m_writer->writeTextElement(dbNamespace, "productname", m_productName.isEmpty() ?
+                m_project : m_productName);
         newLine();
     }
 

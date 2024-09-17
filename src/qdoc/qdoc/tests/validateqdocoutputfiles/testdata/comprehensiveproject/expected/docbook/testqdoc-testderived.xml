@@ -3,7 +3,7 @@
 <db:info>
 <db:title its:translate="no">TestDerived Class</db:title>
 <db:subtitle its:translate="no">TestQDoc::TestDerived</db:subtitle>
-<db:productname>Test</db:productname>
+<db:productname>Qt</db:productname>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
 <db:para>A class in a namespace, derived from <db:link xlink:href="testqdoc-test.xml">Test</db:link>.</db:para>

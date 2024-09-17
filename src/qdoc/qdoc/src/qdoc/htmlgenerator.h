@@ -145,6 +145,7 @@ private:
     QString m_address {};
     bool m_noNavigationBar { false };
     QString m_project {};
+    QString m_productName {};
     QString m_projectDescription {};
     QString m_projectUrl {};
     QString m_navigationLinks {};

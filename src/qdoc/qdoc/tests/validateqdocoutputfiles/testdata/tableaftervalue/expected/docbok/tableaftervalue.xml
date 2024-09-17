@@ -2,7 +2,7 @@
 <db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
 <db:info>
 <db:title>TableAfterValue Class</db:title>
-<db:productname>TableAfterValue</db:productname>
+<db:productname>Qt</db:productname>
 <db:titleabbrev>TableAfterValue Reference Documentation</db:titleabbrev>
 <db:abstract>
 <db:para>Test that the \table command can follow a \value command.</db:para>

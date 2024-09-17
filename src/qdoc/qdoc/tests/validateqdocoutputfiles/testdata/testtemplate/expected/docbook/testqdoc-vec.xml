@@ -3,7 +3,7 @@
 <db:info>
 <db:title>Vec Class</db:title>
 <db:subtitle>template &lt;typename T&gt; class TestQDoc::Vec</db:subtitle>
-<db:productname>TestTemplate</db:productname>
+<db:productname>Qt</db:productname>
 <db:titleabbrev>TestTemplate Reference Documentation</db:titleabbrev>
 <db:abstract>
 <db:para>Type alias that has its own reference.</db:para>

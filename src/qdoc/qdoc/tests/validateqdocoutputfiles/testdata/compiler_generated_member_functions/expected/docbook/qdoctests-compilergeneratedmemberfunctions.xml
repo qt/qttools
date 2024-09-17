@@ -3,7 +3,7 @@
 <db:info>
 <db:title>CompilerGeneratedMemberFunctions Class</db:title>
 <db:subtitle>QDocTests::CompilerGeneratedMemberFunctions</db:subtitle>
-<db:productname>Compiler generated member functions</db:productname>
+<db:productname>Qt</db:productname>
 <db:titleabbrev>Compiler generated member functions Reference Documentation</db:titleabbrev>
 <db:abstract>
 <db:para>A test class for compiler-generated member functions.</db:para>

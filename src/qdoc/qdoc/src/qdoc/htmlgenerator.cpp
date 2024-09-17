@@ -149,6 +149,7 @@ void HtmlGenerator::initializeGenerator()
     tocDepth = config->get(formatDot + HTMLGENERATOR_TOCDEPTH).asInt();
 
     m_project = config->get(CONFIG_PROJECT).asString();
+    m_productName = config->get(CONFIG_PRODUCTNAME).asString();
     m_projectDescription = config->get(CONFIG_DESCRIPTION)
             .asString(m_project + QLatin1String(" Reference Documentation"));
 
@@ -1770,23 +1771,19 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
         // "title | hometitle version"
         if (title != m_hometitle)
             titleSuffix = m_hometitle;
-    } else if (!m_project.isEmpty()) {
-        // for projects outside of Qt or Qt 5: "title | project version"
-        if (title != m_project)
-            titleSuffix = m_project;
-    } else
-        // default: "title | Qt version"
-        titleSuffix = QLatin1String("Qt ");
-
+    } else {
+        // "title | productname version"
+        titleSuffix = m_productName.isEmpty() ? m_project : m_productName;
+    }
     if (title == titleSuffix)
         titleSuffix.clear();
 
-    QString divider;
-    if (!titleSuffix.isEmpty() && !title.isEmpty())
-        divider = QLatin1String(" | ");
-
-    // Generating page title
-    out() << "  <title>" << protectEnc(title) << divider << titleSuffix;
+    out() << "  <title>";
+    if (!titleSuffix.isEmpty() && !title.isEmpty()) {
+        out() << "%1 | %2"_L1.arg(protectEnc(title), titleSuffix);
+    } else {
+        out() << protectEnc(title);
+    }
 
     // append a full version to the suffix if neither suffix nor title
     // include (a prefix of) version information
@@ -1798,8 +1795,12 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
         auto match = re.match(versionedTitle);
         if (match.hasMatch())
             titleVersion = QVersionNumber::fromString(match.captured());
-        if (titleVersion.isNull() || !titleVersion.isPrefixOf(projectVersion))
-            out() << QLatin1Char(' ') << projectVersion.toString();
+        if (titleVersion.isNull() || !titleVersion.isPrefixOf(projectVersion)) {
+            // Prefix with product name if one exists
+            if (!m_productName.isEmpty() && titleSuffix != m_productName)
+                out() << " | %1"_L1.arg(m_productName);
+            out() << " %1"_L1.arg(projectVersion.toString());
+        }
     }
     out() << "</title>\n";
 

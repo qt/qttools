@@ -2,7 +2,7 @@
 <db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
 <db:info>
 <db:title>QDocTest Module</db:title>
-<db:productname>auto as return type</db:productname>
+<db:productname>Qt</db:productname>
 <db:titleabbrev>auto as return type Reference Documentation</db:titleabbrev>
 <db:abstract>
 <db:para>auto as return type Reference Documentation.</db:para></db:abstract>
