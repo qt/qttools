@@ -1,0 +1,160 @@
+version = 1
+
+[[annotations]]
+path = ["src/qdbus/**",
+        "src/linguist/**",
+        "src/distancefieldgenerator/mainwindow.ui",
+        "src/designer/src/designer/**",
+        "src/designer/src/components/**",
+        "src/designer/data/**",
+        "src/assistant/assistant/**"]
+precedence = "closest"
+comment = "tool, according to licenseRule.json"
+SPDX-FileCopyrightText = "Copyright (C) 2024 The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"
+
+[[annotations]]
+path = ["src/shared/**",
+        "src/designer/src/lib/**",
+        "src/designer/src/plugins/**",
+        "src/assistant/help/**"]
+precedence = "closest"
+comment = "module and plugin, according to licenseRule.json"
+SPDX-FileCopyrightText = "Copyright (C) 2024 The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"
+
+[[annotations]]
+path = ["tests/**.ts*",
+        "tests/**.ui",
+        "tests/**.html",
+        "tests/**.qch",
+        "tests/**.qhc",
+        "tests/**.qhp",
+        "tests/**.qph",
+        "tests/**.css",
+        "tests/**.qml",
+        "tests/**.txt",
+        "tests/**cmd",
+        "tests/**.po*",
+        "tests/**.js",
+        "tests/**.lst",
+        "tests/**expected.error",
+        "tests/**main.mjs",
+        "tests/**main.py",
+        "tests/auto/cmake/linguist/test_i18n_auto_ts_file_names/lib.cpp",
+        "tests/auto/linguist/lconvert/data/test-trans_seg.xlf",
+        "tests/auto/linguist/lconvert/data/untranslated.qm",
+        "tests/auto/linguist/lrelease/testdata/dupes.errors",
+        "tests/auto/linguist/lupdate/testdata/good/language/main.cpp",
+        "tests/auto/linguist/lupdate/testdata/good/parsecpp_clang_only/test_line_directive.cpp",
+        "tests/auto/linguist/lupdate/testdata/good/parsecpp_clang_parser/my_include.h",
+        "tests/auto/linguist/lupdate/testdata/good/proparsing2/include.h",
+        "src/qdoc/qdoc/tests/**xml",
+        "src/qdoc/qdoc/tests/**.html",
+        "src/qdoc/qdoc/tests/**.png",
+        "src/qdoc/qdoc/tests/**.index",
+        "src/qdoc/qdoc/tests/generatedoutput/testdata/**",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/**",
+        "src/qdoc/qdoc/tests/config/testdata/**",
+        "src/qdoc/qdoc/tests/qdoccommandlineparser/tst_arguments.txt",
+        "tests/auto/linguist/lupdate/testdata/good/parsecpp_typed_enum/my_class.cpp",
+        "tests/auto/linguist/lupdate/testdata/good/parsecpp_typed_enum/my_class.h",
+        "tests/auto/linguist/lupdate/testdata/good/parsecpp_template/template_classes.cpp"]
+precedence = "closest"
+comment = "test"
+SPDX-FileCopyrightText = "Copyright (C) 2024 The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only"
+
+[[annotations]]
+path = ["**.pro", "**.qrc", "**CMakeLists.txt", ".cmake.conf", "**.yaml", "**.json",
+        "**.cfg", "**.plist", "**.pri", "**.prf"]
+precedence = "closest"
+comment = "build system"
+SPDX-FileCopyrightText = "Copyright (C) 2024 The Qt Company Ltd."
+SPDX-License-Identifier = "BSD-3-Clause"
+
+[[annotations]]
+path = [".tag", "**/.gitattributes", "**.gitignore"]
+precedence = "closest"
+comment = "version control system. Licensed as build system"
+SPDX-FileCopyrightText = "Copyright (C) 2024 The Qt Company Ltd."
+SPDX-License-Identifier = "BSD-3-Clause"
+
+[[annotations]]
+path = ["**/doc/images/**", "**/doc/snippets/**", "examples/**", "src/qdoc/qdoc/doc/examples"]
+comment = "this must be after the build system table because example and snippets take precedence over build system"
+precedence = "closest"
+SPDX-FileCopyrightText = "Copyright (C) 2024 The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR BSD-3-Clause"
+
+[[annotations]]
+path = ["**/README*", "**.qdocconf", "**.qdoc.sample", "**.qdoc", "**.qdocinc",
+        ".gitmodules"]
+comment = "documentation"
+precedence = "closest"
+SPDX-FileCopyrightText = "Copyright (C) 2024 The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only"
+
+[[annotations]]
+path = ["**.toml", "licenseRule.json"]
+comment = "documentation"
+precedence = "override"
+SPDX-FileCopyrightText = "Copyright (C) 2024 The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only"
+
+[[annotations]]
+path = ["**/qt_attribution.json"]
+comment = "documentation"
+precedence = "override"
+SPDX-FileCopyrightText = "Copyright (C) 2024 The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only"
+
+[[annotations]]
+path = ["**LICENSE*"]
+precedence = "override"
+comment = "License file."
+SPDX-FileCopyrightText = "None"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "examples/linguist/trollprint/trollprint_pt.ts"
+precedence = "override"
+comment = "example. Copyright in file needs to be ignored"
+SPDX-FileCopyrightText = "Copyright (C) 2024 The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR BSD-3-Clause"
+
+[[annotations]]
+path = ["src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject/expected/webxml/test-componentset-switch-qml.webxml",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject/expected/webxml/test-componentset-tabwidget-qml.webxml",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject/expected/webxml/test-componentset-progressbar-qml.webxml",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject/expected/html/test-componentset-tabwidget-qml.html",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject/expected/html/test-componentset-progressbar-qml.html",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject/expected/html/test-componentset-switch-qml.html",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject_headerdocs/expected/webxml/test-componentset-tabwidget-qml.webxml",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject_headerdocs/expected/webxml/test-componentset-progressbar-qml.webxml",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject_headerdocs/expected/html/test-componentset-progressbar-qml.html",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject_headerdocs/expected/html/test-componentset-switch-qml.html",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject_headerdocs/expected/html/test-componentset-tabwidget-qml.html",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject_headerdocs/expected/webxml/test-componentset-switch-qml.webxml"]
+precedence = "override"
+comment = "reuse ignore those file, trouble reading. documentation example."
+SPDX-FileCopyrightText = "Copyright (C) 2016 The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR BSD-3-Clause"
+
+[[annotations]]
+path = ["src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject/expected/webxml/test-demos-demo-demo-cpp.webxml",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject/expected/webxml/test-componentset-componentset-qml.webxml",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject/expected/html/test-demos-demo-demo-cpp.html",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject/expected/html/test-componentset-componentset-qml.html",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject_headerdocs/expected/html/test-demos-demo-demo-cpp.html",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject_headerdocs/expected/webxml/test-componentset-componentset-qml.webxml",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject_headerdocs/expected/html/test-componentset-componentset-qml.html",
+        "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject_headerdocs/expected/webxml/test-demos-demo-demo-cpp.webxml"]
+precedence = "override"
+comment = "reuse ignore those file, trouble reading."
+SPDX-FileCopyrightText = "Copyright (C) 2023 The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"
+
+
+
+

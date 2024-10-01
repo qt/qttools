@@ -1,0 +1,7 @@
+version = 1
+
+[[annotations]]
+path = "QualTypeNames.h"
+precedence = "closest"
+SPDX-FileCopyrightText = "Copyright assigned to LLVM project contributors."
+SPDX-License-Identifier = "Apache-2.0 WITH LLVM-exception"
