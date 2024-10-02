@@ -2705,7 +2705,7 @@
     \section3 Sorting group members
 
     When generating a list of group members, they are sorted in ascending
-    order, based on user-visible name or title. Since QDoc 6.9, the default
+    order, based on user-visible name or title. Since QDoc 6.8, the default
     sort order can be modified:
 
     \badcode
@@ -2718,7 +2718,7 @@
 
     \section4 Sort key
 
-    Since QDoc 6.9, a custom sort key can be assigned to one or
+    Since QDoc 6.8, a custom sort key can be assigned to one or
     more group members using the \qdoccmd meta command:
 
     \badcode
