@@ -725,7 +725,7 @@ static inline QString alignmentValue(Qt::Alignment a, bool fullyQualifiedEnums)
         break;
     }
     QString result;
-    if (h.isEmpty())
+    if (!h.isEmpty())
         result += alignmentPrefix(fullyQualifiedEnums) + h;
     if (!h.isEmpty() && !v.isEmpty())
         result += u'|';
