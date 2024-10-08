@@ -262,6 +262,9 @@
         \li \c {-recursive}
         \li Recursively scan directories (default).
     \row
+        \li \c {-warnings-are-errors}
+        \li Treat warnings as errors.
+    \row
         \li \c {-I <includepath> or -I<includepath>}
         \li Look for include files in this additional location. You can specify
             multiple paths.

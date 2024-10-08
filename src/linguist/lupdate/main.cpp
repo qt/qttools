@@ -200,6 +200,25 @@ static void printErr(const QString & out)
     std::cerr << qPrintable(out);
 }
 
+static void printWarning(UpdateOptions options,
+                         const QString &msg,
+                         const QString &warningMsg = {},
+                         const QString &errorMsg = {})
+{
+    QString text = msg;
+    if (options & Werror) {
+        text.prepend("lupdate error: "_L1);
+        if (!errorMsg.isEmpty())
+            text.append(" "_L1).append(errorMsg);
+    } else {
+        text.prepend("lupdate warning: "_L1);
+        if (!warningMsg.isEmpty())
+            text.append(" "_L1).append(warningMsg);
+    }
+
+    printErr(text);
+}
+
 static void recursiveFileInfoList(const QDir &dir,
     const QSet<QString> &nameFilters, QDir::Filters filter,
     QFileInfoList *fileinfolist)
@@ -241,6 +260,8 @@ static void printUsage()
         "           Do not recursively scan directories.\n"
         "    -recursive\n"
         "           Recursively scan directories (default).\n"
+        "    -warnings-are-errors\n"
+        "           Treat warnings as errors.\n"
         "    -I <includepath> or -I<includepath>\n"
         "           Additional location to look for include files.\n"
         "           May be specified multiple times.\n"
@@ -342,11 +363,13 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
 {
     for (int i = 0; i < fetchedTor.messageCount(); i++) {
         const TranslatorMessage &msg = fetchedTor.constMessage(i);
-        if (!msg.id().isEmpty() && msg.sourceText().isEmpty())
-            printErr(QStringLiteral("lupdate warning: Message with id '%1' has no source.\n")
-                     .arg(msg.id()));
+        if (!msg.id().isEmpty() && msg.sourceText().isEmpty()) {
+            printWarning(options,
+                         "Message with id '%1' has no source.\n"_L1.arg(msg.id()));
+            if (options & Werror)
+                return;
+        }
     }
-
     QList<Translator> aliens;
     for (const QString &fileName : alienFiles) {
         ConversionData cd;
@@ -359,7 +382,6 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
         tor.resolveDuplicates();
         aliens << tor;
     }
-
     QDir dir;
     QString err;
     for (const QString &fileName : tsFileNames) {
@@ -375,14 +397,24 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
             }
             tor.resolveDuplicates();
             cd.clearErrors();
-            if (!targetLanguage.isEmpty() && targetLanguage != tor.languageCode())
-                printErr(QStringLiteral("lupdate warning: Specified target language '%1' disagrees with"
-                                " existing file's language '%2'. Ignoring.\n")
-                         .arg(targetLanguage, tor.languageCode()));
-            if (!sourceLanguage.isEmpty() && sourceLanguage != tor.sourceLanguageCode())
-                printErr(QStringLiteral("lupdate warning: Specified source language '%1' disagrees with"
-                                " existing file's language '%2'. Ignoring.\n")
-                         .arg(sourceLanguage, tor.sourceLanguageCode()));
+            if (!targetLanguage.isEmpty() && targetLanguage != tor.languageCode()) {
+                printWarning(options,
+                             "Specified target language '%1' disagrees with"
+                                            " existing file's language '%2'.\n"_L1
+                                     .arg(targetLanguage, tor.languageCode()),
+                             u"Ignoring.\n"_s);
+                if (options & Werror)
+                    return;
+            }
+            if (!sourceLanguage.isEmpty() && sourceLanguage != tor.sourceLanguageCode()) {
+                printWarning(options,
+                             "Specified source language '%1' disagrees with"
+                                     " existing file's language '%2'.\n"_L1
+                                     .arg(sourceLanguage, tor.sourceLanguageCode()),
+                             u"Ignoring.\n"_s);
+                if (options & Werror)
+                    return;
+            }
             // If there is translation in the file, the language should be recognized
             // (when the language is not recognized, plural translations are lost)
             if (tor.translationsExist()) {
@@ -541,8 +573,8 @@ static bool processTs(Translator &fetchedTor, const QString &file, ConversionDat
     return false;
 }
 
-static void processSources(Translator &fetchedTor,
-                           const QStringList &sourceFiles, ConversionData &cd, bool *fail)
+static void processSources(Translator &fetchedTor, const QStringList &sourceFiles,
+                           ConversionData &cd, UpdateOptions options, bool *fail)
 {
 #ifdef QT_NO_QML
     bool requireQmlSupport = false;
@@ -576,8 +608,14 @@ static void processSources(Translator &fetchedTor,
     }
 
 #ifdef QT_NO_QML
-    if (requireQmlSupport)
-        printErr(QStringLiteral("lupdate warning: Some files have been ignored due to missing qml/javascript support\n"));
+    if (requireQmlSupport) {
+        printWarning(options, u"missing qml/javascript support\n"_s,
+                     u"Some files have been ignored.\n"_s);
+        if (options & Werror)
+            return;
+    }
+#else
+    Q_UNUSED(options)
 #endif
 
     if (useClangToParseCpp) {
@@ -630,9 +668,11 @@ public:
     }
 
 private:
+
     void processProject(UpdateOptions options, const Project &prj, bool topLevel,
                         bool nestComplain, Translator *parentTor, bool *fail) const
     {
+
         QString codecForSource = prj.codec.toLower();
         if (!codecForSource.isEmpty()) {
             if (codecForSource == QLatin1String("utf-16")
@@ -642,8 +682,12 @@ private:
                        || codecForSource == QLatin1String("utf8")) {
                 options &= ~SourceIsUtf16;
             } else {
-                printErr(QStringLiteral("lupdate warning: Codec for source '%1' is invalid."
-                                " Falling back to UTF-8.\n").arg(codecForSource));
+                printWarning(
+                        options,
+                        "Codec for source '%1' is invalid.\n"_L1.arg(codecForSource),
+                        u"Falling back to UTF-8.\n"_s);
+                if (options & Werror)
+                    return;
                 options &= ~SourceIsUtf16;
             }
         }
@@ -670,12 +714,17 @@ private:
             tsFiles = *prj.translations;
             if (parentTor) {
                 if (topLevel) {
-                    printErr(QStringLiteral("lupdate warning: TS files from command line "
-                                    "will override TRANSLATIONS in %1.\n").arg(projectFile));
+                    printWarning(options, u"Existing top level."_s,
+                                 "TS files from command line will "
+                                 "override TRANSLATIONS in %1.\n"_L1.arg(projectFile),
+                                 u"Terminating the operation.\n"_s);
+                    if (options & Werror)
+                        return;
                     goto noTrans;
                 } else if (nestComplain) {
-                    printErr(QStringLiteral("lupdate warning: TS files from command line "
-                                    "prevent recursing into %1.\n").arg(projectFile));
+                    printWarning(options,
+                                "TS files from command line "
+                                "prevent recursing into %1.\n"_L1.arg(projectFile));
                     return;
                 }
             }
@@ -687,24 +736,29 @@ private:
             }
             Translator tor;
             processProjects(false, options, prj.subProjects, false, &tor, fail);
-            processSources(tor, sources, cd, fail);
+            processSources(tor, sources, cd, options, fail);
             updateTsFiles(tor, tsFiles, QStringList(), m_sourceLanguage, m_targetLanguage,
                           options, fail);
             return;
         }
 
+
       noTrans:
+
         if (!parentTor) {
             if (topLevel) {
-                printErr(QStringLiteral("lupdate warning: no TS files specified. Only diagnostics "
-                                "will be produced for '%1'.\n").arg(projectFile));
+                printWarning(options, u"no TS files specified."_s,
+                             "Only diagnostics will be produced for %1.\n"_L1.arg(projectFile),
+                             u"Terminating the operation.\n"_s);
+                if (options & Werror)
+                    return;
             }
             Translator tor;
             processProjects(false, options, prj.subProjects, nestComplain, &tor, fail);
-            processSources(tor, sources, cd, fail);
+            processSources(tor, sources, cd, options, fail);
         } else {
             processProjects(false, options, prj.subProjects, nestComplain, parentTor, fail);
-            processSources(*parentTor, sources, cd, fail);
+            processSources(*parentTor, sources, cd, options, fail);
         }
     }
 
@@ -753,6 +807,8 @@ int main(int argc, char **argv)
     bool metTsFlag = false;
     bool metXTsFlag = false;
     bool recursiveScan = true;
+
+    bool fail = false;
 
     QString extensions = m_defaultExtensions;
     QSet<QString> extensionsNameFilters;
@@ -847,6 +903,9 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-verbose")) {
             options |= Verbose;
             continue;
+        } else if (arg == QLatin1String("-warnings-are-errors")) {
+            options |= Werror;
+            continue;
         } else if (arg == QLatin1String("-no-recursive")) {
             recursiveScan = false;
             continue;
@@ -925,8 +984,7 @@ int main(int argc, char **argv)
                  commandLineCompilationDatabaseDir = args[i];
              }
             continue;
-        }
-        else if (arg == QLatin1String("-project-roots")) {
+        } else if (arg == QLatin1String("-project-roots")) {
             while ((i + 1) != argc && !args[i + 1].startsWith(QLatin1String("-"))) {
                  i++;
                  rootDirs << args[i];
@@ -973,8 +1031,11 @@ int main(int argc, char **argv)
                         if (!fi.exists() || fi.isWritable()) {
                             tsFileNames.append(QFileInfo(file).absoluteFilePath());
                         } else {
-                            printErr(QStringLiteral("lupdate warning: For some reason, '%1' is not writable.\n")
-                                     .arg(file));
+                            printWarning(options,
+                                         "For some reason, '%1' is not writable.\n"_L1
+                                                 .arg(file));
+                            if (options & Werror)
+                                return 1;
                         }
                         found = true;
                         break;
@@ -1060,9 +1121,12 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    if (!targetLanguage.isEmpty() && tsFileNames.size() != 1)
-        printErr(u"lupdate warning: -target-language usually only"
-                  " makes sense with exactly one TS file.\n"_s);
+    if (!targetLanguage.isEmpty() && tsFileNames.size() != 1) {
+        printWarning(options,
+                     u"-target-language usually only makes sense with exactly one TS file.\n"_s);
+        if (options & Werror)
+            return 1;
+    }
 
     if (proFiles.isEmpty() && resourceFiles.isEmpty() && sourceFiles.size() == 1
         && QFileInfo(sourceFiles.first()).fileName() == u"CMakeLists.txt"_s) {
@@ -1096,11 +1160,14 @@ int main(int argc, char **argv)
             expandQrcFiles(project);
     }
 
-    bool fail = false;
     if (projectDescription.empty()) {
-        if (tsFileNames.isEmpty())
-            printErr(u"lupdate warning:"
-                      " no TS files specified. Only diagnostics will be produced.\n"_s);
+        if (tsFileNames.isEmpty()) {
+            printWarning(options, u"no TS files specified."_s,
+                         u"Only diagnostics will be produced.\n"_s,
+                         u"Terminating the operation.\n"_s);
+            if (options & Werror)
+                return 1;
+        }
 
         Translator fetchedTor;
         ConversionData cd;
@@ -1113,7 +1180,7 @@ int main(int argc, char **argv)
         cd.m_rootDirs = rootDirs;
         for (const QString &resource : std::as_const(resourceFiles))
             sourceFiles << getResources(resource);
-        processSources(fetchedTor, sourceFiles, cd, &fail);
+        processSources(fetchedTor, sourceFiles, cd, options, &fail);
         updateTsFiles(fetchedTor, tsFileNames, alienFiles,
                       sourceLanguage, targetLanguage, options, &fail);
     } else {

@@ -1,1 +1,1 @@
-lupdate warning: no TS files specified\. Only diagnostics will be produced for '.*/project\.pro'\.
+lupdate warning: no TS files specified. Only diagnostics will be produced for .*/project\.pro\.
