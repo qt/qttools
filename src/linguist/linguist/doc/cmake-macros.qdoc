@@ -270,6 +270,8 @@ qt_add_lrelease(TS_FILES file1.ts [file2.ts ...]
                 [EXCLUDE_FROM_ALL]
                 [NO_GLOBAL_TARGET]
                 [QM_FILES_OUTPUT_VARIABLE variable-name]
+                [MERGE_QT_TRANSLATIONS]
+                [QT_TRANSLATION_CATALOGS catalog1 [catalog2 ...]]
                 [OPTIONS ...])
 \endcode
 
@@ -345,6 +347,43 @@ Pass \c{NO_GLOBAL_TARGET} to \c{qt_add_lrelease} to prevent this behavior.
 The name of this target can be overridden by setting the variable
 \c{QT_GLOBAL_LRELEASE_TARGET} before calling \c{qt_add_lrelease}.
 
+\section1 Merging Qt-provided translations
+
+Since Qt 6.9, you can merge the translations that are provided by Qt into
+application-specific \c{.qm} files. To do that, pass the \c
+MERGE_QT_TRANSLATIONS option to \c{qt_add_translations}. This will determine the
+Qt translation catalogs that belong to the modules used by your project and
+merge them into the \c{.qm} files that are produced by \c{lrelease}.
+
+The Qt translation catalogs are determined by the \c find_package calls in the
+scope of your \c{CMakeLists.txt} where \c qt_add_translations is called. For
+example, the following sequence will merge the catalogs \c qtbase and
+\c{qtmultimedia} into your \c{.qm} files:
+
+\badcode
+find_package(Qt6 COMPONENTS MultimediaWidgets)
+...
+qt_add_lrelease(
+    TS_FILES myapp_de.ts myapp_fi.ts
+    MERGE_QT_TRANSLATIONS
+)
+\endcode
+
+To explicitly specify the catalogs, use the \c QT_TRANSLATION_CATALOGS argument:
+
+\badcode
+qt_add_lrelease(
+    TS_FILES myapp_de.ts myapp_fi.ts
+    MERGE_QT_TRANSLATIONS
+    QT_TRANSLATION_CATALOGS qtbase qtmultimedia
+)
+\endcode
+
+If your project supports a language for which Qt doesn't offer its own
+translation, a warning will be issued at configure time. You can suppress this
+warning by setting the CMake variable \c QT_NO_MISSING_CATALOG_LANGUAGE_WARNING
+to \c{ON}.
+
 \section1 Deprecated Command Signature
 
 Older versions of \c qt_add_lrelease took a target as the first argument. This
@@ -413,6 +452,8 @@ qt_add_translations([target]
                     [LUPDATE_OPTIONS ...]
                     [LRELEASE_TARGET target-name]
                     [LRELEASE_OPTIONS ...]
+                    [MERGE_QT_TRANSLATIONS]
+                    [QT_TRANSLATION_CATALOGS catalog1 [catalog2 ...]]
                     [IMMEDIATE_CALL])
 \endcode
 
@@ -578,6 +619,43 @@ files.
 
 Since Qt 6.7, the target in the first argument is not used for source extraction
 anymore.
+
+\section1 Merging Qt-provided translations
+
+Since Qt 6.9, you can merge the translations that are provided by Qt into
+application-specific \c{.qm} files. To do that, pass the \c
+MERGE_QT_TRANSLATIONS option to \c{qt_add_translations}. This will determine the
+Qt translation catalogs that belong to the modules used by your project and
+merge them into the \c{.qm} files that are produced by \c{lrelease}.
+
+The Qt translation catalogs are determined by the \c find_package calls in the
+scope of your \c{CMakeLists.txt} where \c qt_add_translations is called. For
+example, the following sequence will merge the catalogs \c qtbase and
+\c{qtmultimedia} into your \c{.qm} files:
+
+\badcode
+find_package(Qt6 COMPONENTS MultimediaWidgets)
+...
+qt_add_translations(my_app MERGE_QT_TRANSLATIONS)
+\endcode
+
+To explicitly specify the catalogs, use the \c QT_TRANSLATION_CATALOGS argument:
+
+\badcode
+qt_add_translations(my_app
+    MERGE_QT_TRANSLATIONS
+    QT_TRANSLATION_CATALOGS qtbase qtmultimedia
+)
+\endcode
+
+If your project supports a language for which Qt doesn't offer its own
+translation, a warning will be issued at configure time. You can suppress this
+warning by setting the CMake variable \c QT_NO_MISSING_CATALOG_LANGUAGE_WARNING
+to \c{ON}.
+
+If the automatic determination of \c{.ts} file names is not used then you must
+ensure that the \l QT_I18N_TRANSLATED_LANGUAGE source file property is set on
+each of the \c{.ts} files.
 
 \section1 Examples
 
