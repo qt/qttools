@@ -556,13 +556,16 @@ static void processSources(Translator &fetchedTor,
             loadUI(fetchedTor, sourceFile, cd);
 #ifndef QT_NO_QML
         else if (sourceFile.endsWith(QLatin1String(".js"), Qt::CaseInsensitive)
-                 || sourceFile.endsWith(QLatin1String(".qs"), Qt::CaseInsensitive))
+                 || sourceFile.endsWith(QLatin1String(".qs"), Qt::CaseInsensitive)) {
             loadQScript(fetchedTor, sourceFile, cd);
-        else if (sourceFile.endsWith(QLatin1String(".qml"), Qt::CaseInsensitive))
+        } else if (sourceFile.endsWith(QLatin1String(".mjs"), Qt::CaseInsensitive)) {
+            loadJSModule(fetchedTor, sourceFile, cd);
+        } else if (sourceFile.endsWith(QLatin1String(".qml"), Qt::CaseInsensitive))
             loadQml(fetchedTor, sourceFile, cd);
 #else
         else if (sourceFile.endsWith(QLatin1String(".qml"), Qt::CaseInsensitive)
                  || sourceFile.endsWith(QLatin1String(".js"), Qt::CaseInsensitive)
+                 || sourceFile.endsWith(QLatin1String(".mjs"), Qt::CaseInsensitive)
                  || sourceFile.endsWith(QLatin1String(".qs"), Qt::CaseInsensitive))
             requireQmlSupport = true;
 #endif // QT_NO_QML
@@ -726,7 +729,8 @@ int main(int argc, char **argv)
 #endif // Q_OS_WIN32
 #endif
 
-    m_defaultExtensions = QLatin1String("java,jui,ui,c,c++,cc,cpp,cxx,ch,h,h++,hh,hpp,hxx,js,qs,qml,qrc");
+    m_defaultExtensions = QLatin1String("java,jui,ui,c,c++,cc,cpp,cxx,ch,h,"_L1
+                                        "h++,hh,hpp,hxx,js,mjs,qs,qml,qrc"_L1);
 
     QStringList args = app.arguments();
     QStringList tsFileNames;
@@ -1025,6 +1029,7 @@ int main(int argc, char **argv)
                                     && !fn.endsWith(QLatin1String(".jui"))
                                     && !fn.endsWith(QLatin1String(".ui"))
                                     && !fn.endsWith(QLatin1String(".js"))
+                                    && !fn.endsWith(QLatin1String(".mjs"))
                                     && !fn.endsWith(QLatin1String(".qs"))
                                     && !fn.endsWith(QLatin1String(".qml"))) {
                                 int offset = 0;

@@ -48,6 +48,7 @@ bool loadUI(Translator &translator, const QString &filename, ConversionData &cd)
 
 #ifndef QT_NO_QML
 bool loadQScript(Translator &translator, const QString &filename, ConversionData &cd);
+bool loadJSModule(Translator &translator, const QString &filename, ConversionData &cd);
 bool loadQml(Translator &translator, const QString &filename, ConversionData &cd);
 #endif
 
