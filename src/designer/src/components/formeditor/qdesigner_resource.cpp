@@ -1010,6 +1010,11 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
         const QString &propertyName = p->attributeName();
         if (propertyName == "numDigits"_L1 && o->inherits("QLCDNumber")) { // Deprecated in Qt 4, removed in Qt 5.
             applyProperty(o, p, u"digitCount"_s, sheet, dynamicSheet);
+        // Qt 6 reading Qt 7 forms
+        } else if (propertyName == "horizontalSizeConstraint"_L1 && o->inherits("QLayout")) {
+            applyProperty(o, p, u"sizeConstraint"_s, sheet, dynamicSheet);
+        } else if (propertyName == "verticalSizeConstraint"_L1 && o->inherits("QLayout")) {
+            // ignore
         } else {
             applyProperty(o, p, propertyName, sheet, dynamicSheet);
         }
