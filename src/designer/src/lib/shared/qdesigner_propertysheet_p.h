@@ -119,7 +119,12 @@ public:
                         PropertyLayoutSpacing,
                         PropertyLayoutHorizontalSpacing,
                         PropertyLayoutVerticalSpacing,
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
                         PropertyLayoutSizeConstraint,
+#else
+                        PropertyLayoutHorizontalSizeConstraint,
+                        PropertyLayoutVerticalSizeConstraint,
+#endif
                         PropertyLayoutFieldGrowthPolicy,
                         PropertyLayoutRowWrapPolicy,
                         PropertyLayoutLabelAlignment,

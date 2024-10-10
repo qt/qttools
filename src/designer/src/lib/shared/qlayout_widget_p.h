@@ -47,11 +47,16 @@ struct QDESIGNER_SHARED_EXPORT LayoutProperties
         ObjectNameProperty  = 0x1,
         LeftMarginProperty = 0x2, TopMarginProperty = 0x4, RightMarginProperty = 0x8, BottomMarginProperty = 0x10,
         SpacingProperty = 0x20, HorizSpacingProperty = 0x40, VertSpacingProperty = 0x80,
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
         SizeConstraintProperty = 0x100,
-        FieldGrowthPolicyProperty = 0x200, RowWrapPolicyProperty = 0x400, LabelAlignmentProperty = 0x0800, FormAlignmentProperty = 0x1000,
-        BoxStretchProperty = 0x2000, GridRowStretchProperty = 0x4000, GridColumnStretchProperty = 0x8000,
-        GridRowMinimumHeightProperty = 0x10000, GridColumnMinimumWidthProperty = 0x20000,
-        AllProperties = 0xFFFF};
+#else
+        HorizSizeConstraintProperty = 0x100, VertSizeConstraintProperty = 0x200,
+#endif
+        FieldGrowthPolicyProperty = 0x400, RowWrapPolicyProperty = 0x800,
+        LabelAlignmentProperty = 0x1000, FormAlignmentProperty = 0x2000,
+        BoxStretchProperty = 0x4000, GridRowStretchProperty = 0x8000, GridColumnStretchProperty = 0x10000,
+        GridRowMinimumHeightProperty = 0x20000, GridColumnMinimumWidthProperty = 0x40000,
+        AllProperties = 0xFFFFF};
 
     // return a PropertyMask of visible properties
     static int visibleProperties(const QLayout *layout);
@@ -68,8 +73,15 @@ struct QDESIGNER_SHARED_EXPORT LayoutProperties
 
     QVariant m_objectName; // receives a PropertySheetStringValue
     bool m_objectNameChanged;
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
     QVariant m_sizeConstraint;
     bool m_sizeConstraintChanged;
+#else
+    QVariant m_horizSizeConstraint;
+    bool m_horizSizeConstraintChanged;
+    QVariant m_vertSizeConstraint;
+    bool m_vertSizeConstraintChanged;
+#endif
 
     bool m_fieldGrowthPolicyChanged;
     QVariant m_fieldGrowthPolicy;

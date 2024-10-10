@@ -65,7 +65,12 @@ static constexpr auto layoutBottomMarginC = "layoutBottomMargin"_L1;
 static constexpr auto layoutSpacingC = "layoutSpacing"_L1;
 static constexpr auto layoutHorizontalSpacingC = "layoutHorizontalSpacing"_L1;
 static constexpr auto layoutVerticalSpacingC = "layoutVerticalSpacing"_L1;
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
 static constexpr auto layoutSizeConstraintC = "layoutSizeConstraint"_L1;
+#else
+static constexpr auto layoutHorizontalSizeConstraintC = "horizontalSizeConstraint"_L1;
+static constexpr auto layoutVerticalSizeConstraintC = "verticalSizeConstraint"_L1;
+#endif
 // form layout
 static constexpr auto layoutFieldGrowthPolicyC = "layoutFieldGrowthPolicy"_L1;
 static constexpr auto layoutRowWrapPolicyC = "layoutRowWrapPolicy"_L1;
@@ -445,7 +450,12 @@ QString QDesignerPropertySheetPrivate::transformLayoutPropertyName(int index) co
         {QDesignerPropertySheet::PropertyLayoutSpacing, u"spacing"_s},
         {QDesignerPropertySheet::PropertyLayoutHorizontalSpacing, u"horizontalSpacing"_s},
         {QDesignerPropertySheet::PropertyLayoutVerticalSpacing, u"verticalSpacing"_s},
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
         {QDesignerPropertySheet::PropertyLayoutSizeConstraint, u"sizeConstraint"_s},
+#else
+        {QDesignerPropertySheet::PropertyLayoutHorizontalSizeConstraint, layoutHorizontalSizeConstraintC},
+        {QDesignerPropertySheet::PropertyLayoutVerticalSizeConstraint, layoutVerticalSizeConstraintC},
+#endif
         {QDesignerPropertySheet::PropertyLayoutFieldGrowthPolicy, u"fieldGrowthPolicy"_s},
         {QDesignerPropertySheet::PropertyLayoutRowWrapPolicy, u"rowWrapPolicy"_s},
         {QDesignerPropertySheet::PropertyLayoutLabelAlignment, u"labelAlignment"_s},
@@ -503,7 +513,12 @@ QDesignerPropertySheet::PropertyType QDesignerPropertySheet::propertyTypeFromNam
         {layoutSpacingC,            PropertyLayoutSpacing},
         {layoutHorizontalSpacingC,  PropertyLayoutHorizontalSpacing},
         {layoutVerticalSpacingC,    PropertyLayoutVerticalSpacing},
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
         {layoutSizeConstraintC,     PropertyLayoutSizeConstraint},
+#else
+        {layoutHorizontalSizeConstraintC, PropertyLayoutHorizontalSizeConstraint},
+        {layoutVerticalSizeConstraintC,   PropertyLayoutVerticalSizeConstraint},
+#endif
         {layoutFieldGrowthPolicyC,  PropertyLayoutFieldGrowthPolicy},
         {layoutRowWrapPolicyC,      PropertyLayoutRowWrapPolicy},
         {layoutLabelAlignmentC,     PropertyLayoutLabelAlignment},
@@ -621,7 +636,12 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
                 layoutObjectNameC, layoutLeftMarginC, layoutTopMarginC, layoutRightMarginC, layoutBottomMarginC, layoutSpacingC, layoutHorizontalSpacingC, layoutVerticalSpacingC,
                 layoutFieldGrowthPolicyC, layoutRowWrapPolicyC, layoutLabelAlignmentC, layoutFormAlignmentC,
                 layoutboxStretchPropertyC, layoutGridRowStretchPropertyC, layoutGridColumnStretchPropertyC,
-                layoutGridRowMinimumHeightC, layoutGridColumnMinimumWidthC, layoutSizeConstraintC
+                layoutGridRowMinimumHeightC, layoutGridColumnMinimumWidthC,
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
+                layoutSizeConstraintC
+#else
+                layoutHorizontalSizeConstraintC, layoutVerticalSizeConstraintC
+#endif
             };
             static constexpr int fakeLayoutPropertyCount = sizeof(fakeLayoutProperties)/sizeof(fakeLayoutProperties[0]);
             const int size = count();
@@ -798,7 +818,12 @@ bool QDesignerPropertySheet::isDynamic(int index) const
     case PropertyLayoutHorizontalSpacing:
     case PropertyLayoutVerticalSpacing:
     case PropertyLayoutObjectName:
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
     case PropertyLayoutSizeConstraint:
+#else
+    case PropertyLayoutHorizontalSizeConstraint:
+    case PropertyLayoutVerticalSizeConstraint:
+#endif
     case PropertyLayoutFieldGrowthPolicy:
     case PropertyLayoutRowWrapPolicy:
     case PropertyLayoutLabelAlignment:
@@ -1296,7 +1321,12 @@ bool QDesignerPropertySheet::reset(int index)
            case PropertyLayoutObjectName:
               setProperty(index, QString());
               return true;
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
            case PropertyLayoutSizeConstraint:
+#else
+           case PropertyLayoutHorizontalSizeConstraint:
+           case PropertyLayoutVerticalSizeConstraint:
+#endif
               setProperty(index, QVariant(QLayout::SetDefaultConstraint));
               return true;
            case PropertyLayoutBoxStretch:
@@ -1417,7 +1447,12 @@ bool QDesignerPropertySheet::isFakeLayoutProperty(int index) const
 
     switch (propertyType(index)) {
     case PropertyLayoutObjectName:
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
     case PropertyLayoutSizeConstraint:
+#else
+    case PropertyLayoutHorizontalSizeConstraint:
+    case PropertyLayoutVerticalSizeConstraint:
+#endif
         return true;
     case PropertyLayoutLeftMargin:
     case PropertyLayoutTopMargin:

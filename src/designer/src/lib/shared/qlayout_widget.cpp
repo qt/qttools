@@ -81,7 +81,12 @@ QT_BEGIN_NAMESPACE
 using namespace Qt::StringLiterals;
 
 static constexpr auto objectNameC = "objectName"_L1;
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
 static constexpr auto sizeConstraintC = "sizeConstraint"_L1;
+#else
+static constexpr auto horizSizeConstraintC = "horizontalSizeConstraint"_L1;
+static constexpr auto vertSizeConstraintC = "verticalSizeConstraint"_L1;
+#endif
 
 /* A padding spacer element that is used to represent an empty form layout cell. It should grow with its cell.
  * Should not be used on a grid as it causes resizing inconsistencies */
@@ -221,8 +226,13 @@ void LayoutProperties::clear()
 
     m_objectName = QVariant();
     m_objectNameChanged = false;
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
     m_sizeConstraint = QVariant(QLayout::SetDefaultConstraint);
     m_sizeConstraintChanged = false;
+#else
+    m_horizSizeConstraint = m_vertSizeConstraint = QVariant(QLayout::SetDefaultConstraint);
+    m_horizSizeConstraintChanged = m_vertSizeConstraintChanged = false;
+#endif
 
     m_fieldGrowthPolicyChanged = m_rowWrapPolicyChanged =  m_labelAlignmentChanged = m_formAlignmentChanged = false;
     m_fieldGrowthPolicy =  m_rowWrapPolicy =  m_formAlignment = QVariant();
@@ -237,8 +247,11 @@ int LayoutProperties::visibleProperties(const  QLayout *layout)
     const bool isFormLayout = qobject_cast<const QFormLayout*>(layout);
     const bool isGridLike = qobject_cast<const QGridLayout*>(layout) || isFormLayout;
     int rc = ObjectNameProperty|LeftMarginProperty|TopMarginProperty|RightMarginProperty|BottomMarginProperty|
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
              SizeConstraintProperty;
-
+#else
+             HorizSizeConstraintProperty | VertSizeConstraintProperty;
+#endif
     rc |= isGridLike ? (HorizSpacingProperty|VertSpacingProperty) : SpacingProperty;
     if (isFormLayout) {
         rc |= FieldGrowthPolicyProperty|RowWrapPolicyProperty|LabelAlignmentProperty|FormAlignmentProperty;
@@ -313,7 +326,15 @@ int LayoutProperties::fromPropertySheet(const QDesignerFormEditorInterface *core
             if (intValueFromSheet(sheet, QLatin1StringView(spacingPropertyNamesC[i]), m_spacings + i, m_spacingsChanged + i))
                 rc |= spacingFlags[i];
     // sizeConstraint, flags
-    variantPropertyFromSheet(mask, SizeConstraintProperty, sheet, sizeConstraintC, &m_sizeConstraint, &m_sizeConstraintChanged, &rc);
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
+    variantPropertyFromSheet(mask, SizeConstraintProperty, sheet, sizeConstraintC,
+                             &m_sizeConstraint, &m_sizeConstraintChanged, &rc);
+#else
+    variantPropertyFromSheet(mask, HorizSizeConstraintProperty, sheet, horizSizeConstraintC,
+                             &m_horizSizeConstraint, &m_horizSizeConstraintChanged, &rc);
+    variantPropertyFromSheet(mask, VertSizeConstraintProperty, sheet, vertSizeConstraintC,
+                             &m_vertSizeConstraint, &m_vertSizeConstraintChanged, &rc);
+#endif
     variantPropertyFromSheet(mask, FieldGrowthPolicyProperty, sheet, fieldGrowthPolicyPropertyC, &m_fieldGrowthPolicy, &m_fieldGrowthPolicyChanged, &rc);
     variantPropertyFromSheet(mask, RowWrapPolicyProperty, sheet, rowWrapPolicyPropertyC, &m_rowWrapPolicy, &m_rowWrapPolicyChanged, &rc);
     variantPropertyFromSheet(mask, LabelAlignmentProperty, sheet, labelAlignmentPropertyC, &m_labelAlignment, &m_labelAlignmentChanged, &rc);
@@ -382,7 +403,15 @@ int LayoutProperties::toPropertySheet(const QDesignerFormEditorInterface *core, 
             if (intValueToSheet(sheet, QLatin1StringView(spacingPropertyNamesC[i]), m_spacings[i], m_spacingsChanged[i], applyChanged))
                 rc |= spacingFlags[i];
     // sizeConstraint
-    variantPropertyToSheet(mask, SizeConstraintProperty, applyChanged, sheet, sizeConstraintC, m_sizeConstraint, m_sizeConstraintChanged, &rc);
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
+    variantPropertyToSheet(mask, SizeConstraintProperty, applyChanged, sheet,
+                           sizeConstraintC, m_sizeConstraint, m_sizeConstraintChanged, &rc);
+#else
+    variantPropertyToSheet(mask, HorizSizeConstraintProperty, applyChanged, sheet,
+                           horizSizeConstraintC, m_horizSizeConstraint, m_horizSizeConstraintChanged, &rc);
+    variantPropertyToSheet(mask, VertSizeConstraintProperty, applyChanged, sheet,
+                           vertSizeConstraintC, m_vertSizeConstraint, m_vertSizeConstraintChanged, &rc);
+#endif
     variantPropertyToSheet(mask, FieldGrowthPolicyProperty, applyChanged, sheet, fieldGrowthPolicyPropertyC, m_fieldGrowthPolicy, m_fieldGrowthPolicyChanged, &rc);
     variantPropertyToSheet(mask, RowWrapPolicyProperty, applyChanged, sheet, rowWrapPolicyPropertyC, m_rowWrapPolicy, m_rowWrapPolicyChanged, &rc);
     variantPropertyToSheet(mask, LabelAlignmentProperty, applyChanged, sheet, labelAlignmentPropertyC, m_labelAlignment, m_labelAlignmentChanged, &rc);
