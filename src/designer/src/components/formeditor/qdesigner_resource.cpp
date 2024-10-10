@@ -495,7 +495,9 @@ void QDesignerResource::save(QIODevice *dev, QWidget *widget)
     // Do not write fully qualified enumerations for spacer/line orientations
     // and other enum/flag properties for older Qt versions since that breaks
     // older uic.
-    d->m_fullyQualifiedEnums = supportsQualifiedEnums(m_formWindow->core()->integration()->qtVersion());
+    const auto qtVersion = m_formWindow->core()->integration()->qtVersion();
+    d->m_fullyQualifiedEnums = supportsQualifiedEnums(qtVersion);
+    d->m_separateSizeConstraints = qtVersion >= QVersionNumber(7, 0, 0);
     QAbstractFormBuilder::save(dev, widget);
 }
 
@@ -1002,6 +1004,14 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
         const QString &propertyName = p->attributeName();
         if (propertyName == "numDigits"_L1 && o->inherits("QLCDNumber")) { // Deprecated in Qt 4, removed in Qt 5.
             applyProperty(o, p, u"digitCount"_s, sheet, dynamicSheet);
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0) // Qt 6 reading Qt 7 forms
+        } else if (propertyName == "horizontalSizeConstraint"_L1 && o->inherits("QLayout")) {
+            applyProperty(o, p, u"sizeConstraint"_s, sheet, dynamicSheet);
+#else                                        // Qt 7 reading pre Qt 7 forms
+        } else if (propertyName == "sizeConstraint"_L1 && o->inherits("QLayout")) {
+            applyProperty(o, p, u"horizontalSizeConstraint"_s, sheet, dynamicSheet);
+            applyProperty(o, p, u"verticalSizeConstraint"_s, sheet, dynamicSheet);
+#endif
         } else {
             applyProperty(o, p, propertyName, sheet, dynamicSheet);
         }
@@ -1586,6 +1596,9 @@ bool QDesignerResource::checkProperty(QObject *obj, const QString &prop) const
     if (prop == "objectName"_L1 || prop == "spacerName"_L1)  // ### don't store the property objectName
         return false;
 
+    if (!d->m_separateSizeConstraints && prop == "verticalSizeConstraint"_L1) // 7.0
+        return false;
+
     QWidget *check_widget = nullptr;
     if (obj->isWidgetType())
         check_widget = static_cast<QWidget*>(obj);
@@ -2029,7 +2042,13 @@ DomProperty *QDesignerResource::createProperty(QObject *object, const QString &p
         // check if we have a standard cpp set function
         if (!hasSetter(core(), object, propertyName))
             p->setAttributeStdset(0);
-        p->setAttributeName(propertyName);
+        // Map "horizontalSizeConstraint" to "sizeConstraint" for Qt 6
+        if (!d->m_separateSizeConstraints && propertyName == "horizontalSizeConstraint"_L1
+            && object->inherits("QLayout")) {
+            p->setAttributeName("sizeConstraint"_L1);
+        } else {
+            p->setAttributeName(propertyName);
+        }
         p->setElementEnum(id);
         return applyProperStdSetAttribute(object, propertyName, p);
     }
