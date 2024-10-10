@@ -21,6 +21,8 @@ class QDesignerContainerExtension;
 class QDesignerFormEditorInterface;
 class QDesignerCustomWidgetInterface;
 class QDesignerWidgetDataBaseItemInterface;
+class QDesignerPropertySheetExtension;
+class QDesignerDynamicPropertySheetExtension;
 
 class QTabWidget;
 class QStackedWidget;
@@ -115,6 +117,9 @@ protected:
     DomProperty *applyProperStdSetAttribute(QObject *object, const QString &propertyName, DomProperty *property);
 
 private:
+    void applyProperty(QObject *o, DomProperty* p, const QString &propertyName,
+                       QDesignerPropertySheetExtension *sheet,
+                       QDesignerDynamicPropertySheetExtension *dynamicSheet = nullptr);
     DomResources *saveResources(const QStringList &qrcPaths);
     bool canCompressSpacings(QObject *object) const;
     QStringList mergeWithLoadedPaths(const QStringList &paths) const;
