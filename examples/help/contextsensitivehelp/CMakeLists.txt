@@ -27,6 +27,10 @@ set_target_properties(contextsensitivehelp PROPERTIES
     MACOSX_BUNDLE TRUE
 )
 
+target_compile_definitions(contextsensitivehelp PUBLIC
+    SRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/"
+)
+
 target_link_libraries(contextsensitivehelp PUBLIC
     Qt6::Core
     Qt6::Gui
