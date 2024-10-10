@@ -10,6 +10,8 @@ HEADERS += wateringconfigdialog.h \
 
 FORMS   += wateringconfigdialog.ui
 
+DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
 target.path = $$[QT_INSTALL_EXAMPLES]/help/contextsensitivehelp
 docs.files += $$PWD/docs
 docs.path = $$target.path
