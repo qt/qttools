@@ -179,10 +179,8 @@ public:
     static void registerFileFormat(const FileFormat &format);
     static QList<FileFormat> &registeredFileFormats();
 
-    enum {
-        TextVariantSeparator = 0x2762, // some weird character nobody ever heard of :-D
-        BinaryVariantSeparator = 0x9c // unicode "STRING TERMINATOR"
-    };
+    static constexpr QChar TextVariantSeparator{0x2762}; // some weird character nobody ever heard of :-D
+    static constexpr QChar BinaryVariantSeparator{0x9c}; // unicode "STRING TERMINATOR"
 
 private:
     void insert(int idx, const TranslatorMessage &msg);

@@ -2507,7 +2507,7 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
 
             // Truncated variants are permitted to be "denormalized"
             for (int i = 0; i < translations.size(); ++i) {
-                int sep = translations.at(i).indexOf(QChar(Translator::BinaryVariantSeparator));
+                int sep = translations.at(i).indexOf(Translator::BinaryVariantSeparator);
                 if (sep >= 0)
                     translations[i].truncate(sep);
             }

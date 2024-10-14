@@ -550,8 +550,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
             QStringList translations;
             for (const QByteArray &bstr : std::as_const(item.msgStr)) {
                 QString str = toUnicode(bstr);
-                str.replace(QChar(Translator::TextVariantSeparator),
-                            QChar(Translator::BinaryVariantSeparator));
+                str.replace(Translator::TextVariantSeparator, Translator::BinaryVariantSeparator);
                 translations << str;
             }
             msg.setTranslations(translations);
@@ -828,8 +827,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
         out << poEscapedString(prefix, QLatin1String("msgid"), noWrap, msg.sourceText());
         if (!msg.isPlural()) {
             QString transl = msg.translation();
-            transl.replace(QChar(Translator::BinaryVariantSeparator),
-                           QChar(Translator::TextVariantSeparator));
+            transl.replace(Translator::BinaryVariantSeparator, Translator::TextVariantSeparator);
             out << poEscapedString(prefix, QLatin1String("msgstr"), noWrap, transl);
         } else {
             QString plural = msg.extra(QLatin1String("po-msgid_plural"));

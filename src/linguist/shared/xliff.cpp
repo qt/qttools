@@ -270,8 +270,7 @@ static void writeTransUnits(QTextStream &ts, const TranslatorMessage &msg, const
         QString translation;
         if (transit != transend) {
             translation = *transit;
-            translation.replace(QChar(Translator::BinaryVariantSeparator),
-                                QChar(Translator::TextVariantSeparator));
+            translation.replace(Translator::BinaryVariantSeparator, Translator::TextVariantSeparator);
             ++transit;
             puttrans = true;
         }
@@ -583,8 +582,7 @@ bool XLIFFHandler::endElement(QStringView namespaceURI, QStringView localName,
         }
     } else if (localName == QLatin1String("target")) {
         if (popContext(XC_restype_translation)) {
-            accum.replace(QChar(Translator::TextVariantSeparator),
-                          QChar(Translator::BinaryVariantSeparator));
+            accum.replace(Translator::TextVariantSeparator, Translator::BinaryVariantSeparator);
             m_translations.append(accum);
         }
     } else if (localName == QLatin1String("mrk")) {

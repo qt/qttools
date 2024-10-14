@@ -64,8 +64,7 @@ bool QPHReader::read(Translator &translator)
             else if (m_currentField == DefinitionField)
                 m_currentDefinition += text();
         } else if (isEndElement() && name() == QLatin1String("phrase")) {
-            m_currentTarget.replace(QChar(Translator::TextVariantSeparator),
-                                    QChar(Translator::BinaryVariantSeparator));
+            m_currentTarget.replace(Translator::TextVariantSeparator, Translator::BinaryVariantSeparator);
             TranslatorMessage msg;
             msg.setSourceText(m_currentSource);
             msg.setTranslation(m_currentTarget);

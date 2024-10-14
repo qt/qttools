@@ -462,7 +462,7 @@ static void writeExtras(QTextStream &t, const char *indent,
 static void writeVariants(QTextStream &t, const char *indent, const QString &input)
 {
     int offset;
-    if ((offset = input.indexOf(QChar(Translator::BinaryVariantSeparator))) >= 0) {
+    if ((offset = input.indexOf(Translator::BinaryVariantSeparator)) >= 0) {
         t << " variants=\"yes\">";
         int start = 0;
         forever {
@@ -472,7 +472,7 @@ static void writeVariants(QTextStream &t, const char *indent, const QString &inp
             if (offset == input.size())
                 break;
             start = offset + 1;
-            offset = input.indexOf(QChar(Translator::BinaryVariantSeparator), start);
+            offset = input.indexOf(Translator::BinaryVariantSeparator, start);
             if (offset < 0)
                 offset = input.size();
         }
