@@ -9,4 +9,6 @@
 
     \brief Using the QHelpEngineCore class to implement context-sensitive help
     for applications.
+
+    \image ../images/context-sensitive-help-example.png
 */
