@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- templated_callables.cpp -->
+  <title>&lt;templated_callables.h&gt; | Qt</title>
+</head>
+<body>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">&lt;templated_callables.h&gt;</h1>
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;templated_callables.h&gt;</code></td></tr>
+</table></div>
+<h2 id="functions">Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_defaulted_non_type_template_parameter" translate="no">templated_function_with_defaulted_non_type_template_parameter</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_defaulted_template_template_parameter" translate="no">templated_function_with_defaulted_template_template_parameter</a></b>(Container&lt;T, size&gt;)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_defaulted_type_template_parameter" translate="no">templated_function_with_defaulted_type_template_parameter</a></b>(T)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_non_type_template_parameter" translate="no">templated_function_with_non_type_template_parameter</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_non_type_template_parameter_pack" translate="no">templated_function_with_non_type_template_parameter_pack</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_placeholder_non_type_template_parameter" translate="no">templated_function_with_placeholder_non_type_template_parameter</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_template_template_parameter" translate="no">templated_function_with_template_template_parameter</a></b>(K&lt;T&gt;)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_template_template_parameter_pack" translate="no">templated_function_with_template_template_parameter_pack</a></b>(Container&lt;T&gt;...)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_type_template_parameter" translate="no">templated_function_with_type_template_parameter</a></b>(T)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_type_template_parameter_pack" translate="no">templated_function_with_type_template_parameter_pack</a></b>(Ts...)</td></tr>
+</table></div>
+<!-- $$$<templated_callables.h>-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>Containing headers for the tested free functions.</p>
+</div>
+<!-- @@@<templated_callables.h> -->
+<div class="func">
+<h2>Function Documentation</h2>
+<!-- $$$templated_function_with_defaulted_non_type_template_parameter[overload1]$$$templated_function_with_defaulted_non_type_template_parameter -->
+<h3 class="fn" translate="no" id="templated_function_with_defaulted_non_type_template_parameter">template &lt;char Category = 'A'&gt; <span class="type">void</span> <span class="name">templated_function_with_defaulted_non_type_template_parameter</span>()</h3>
+<p>A templated function with a defaulted non type template parameter.</p>
+<!-- @@@templated_function_with_defaulted_non_type_template_parameter -->
+<!-- $$$templated_function_with_defaulted_template_template_parameter[overload1]$$$templated_function_with_defaulted_template_template_parameterContainer<T,size> -->
+<h3 class="fn" translate="no" id="templated_function_with_defaulted_template_template_parameter">template &lt;typename T, int size, template &lt;typename, int &gt; typename Container = std::array&gt; <span class="type">void</span> <span class="name">templated_function_with_defaulted_template_template_parameter</span>(<span class="type">Container</span>&lt;<span class="type">T</span>, <span class="type">size</span>&gt;)</h3>
+<p>A templated function with a defaulted template template parameter.</p>
+<!-- @@@templated_function_with_defaulted_template_template_parameter -->
+<!-- $$$templated_function_with_defaulted_type_template_parameter[overload1]$$$templated_function_with_defaulted_type_template_parameterT -->
+<h3 class="fn" translate="no" id="templated_function_with_defaulted_type_template_parameter">template &lt;typename T = char&gt; <span class="type">void</span> <span class="name">templated_function_with_defaulted_type_template_parameter</span>(<span class="type">T</span>)</h3>
+<p>A templated function with a defaulted type template parameter.</p>
+<!-- @@@templated_function_with_defaulted_type_template_parameter -->
+<!-- $$$templated_function_with_non_type_template_parameter[overload1]$$$templated_function_with_non_type_template_parameter -->
+<h3 class="fn" translate="no" id="templated_function_with_non_type_template_parameter">template &lt;char Category&gt; <span class="type">void</span> <span class="name">templated_function_with_non_type_template_parameter</span>()</h3>
+<p>A templated function with a non-defaulted non type template parameter.</p>
+<!-- @@@templated_function_with_non_type_template_parameter -->
+<!-- $$$templated_function_with_non_type_template_parameter_pack[overload1]$$$templated_function_with_non_type_template_parameter_pack -->
+<h3 class="fn" translate="no" id="templated_function_with_non_type_template_parameter_pack">template &lt;unsigned int... Weights&gt; <span class="type">void</span> <span class="name">templated_function_with_non_type_template_parameter_pack</span>()</h3>
+<p>A templated function with a non type template parameter pack.</p>
+<!-- @@@templated_function_with_non_type_template_parameter_pack -->
+<!-- $$$templated_function_with_placeholder_non_type_template_parameter[overload1]$$$templated_function_with_placeholder_non_type_template_parameter -->
+<h3 class="fn" translate="no" id="templated_function_with_placeholder_non_type_template_parameter">template &lt;auto Iterator&gt; <span class="type">void</span> <span class="name">templated_function_with_placeholder_non_type_template_parameter</span>()</h3>
+<p>A templated function with a placeholder non type template parameter.</p>
+<!-- @@@templated_function_with_placeholder_non_type_template_parameter -->
+<!-- $$$templated_function_with_template_template_parameter[overload1]$$$templated_function_with_template_template_parameterK<T> -->
+<h3 class="fn" translate="no" id="templated_function_with_template_template_parameter">template &lt;typename T, template &lt;typename&gt; typename K&gt; <span class="type">void</span> <span class="name">templated_function_with_template_template_parameter</span>(<span class="type">K</span>&lt;<span class="type">T</span>&gt;)</h3>
+<p>A templated function with a non-defaulted template template parameter.</p>
+<!-- @@@templated_function_with_template_template_parameter -->
+<!-- $$$templated_function_with_template_template_parameter_pack[overload1]$$$templated_function_with_template_template_parameter_packContainer<T>... -->
+<h3 class="fn" translate="no" id="templated_function_with_template_template_parameter_pack">template &lt;typename T, template &lt;typename&gt; typename... Container&gt; <span class="type">void</span> <span class="name">templated_function_with_template_template_parameter_pack</span>(<span class="type">Container</span>&lt;<span class="type">T</span>&gt;...)</h3>
+<p>A templated function with a template template parameter pack.</p>
+<!-- @@@templated_function_with_template_template_parameter_pack -->
+<!-- $$$templated_function_with_type_template_parameter[overload1]$$$templated_function_with_type_template_parameterT -->
+<h3 class="fn" translate="no" id="templated_function_with_type_template_parameter">template &lt;typename T&gt; <span class="type">void</span> <span class="name">templated_function_with_type_template_parameter</span>(<span class="type">T</span>)</h3>
+<p>A templated function with a non-defaulted type template parameter.</p>
+<!-- @@@templated_function_with_type_template_parameter -->
+<!-- $$$templated_function_with_type_template_parameter_pack[overload1]$$$templated_function_with_type_template_parameter_packTs... -->
+<h3 class="fn" translate="no" id="templated_function_with_type_template_parameter_pack">template &lt;typename... Ts&gt; <span class="type">void</span> <span class="name">templated_function_with_type_template_parameter_pack</span>(<span class="type">Ts</span>...)</h3>
+<p>A templated function with a type template parameter pack.</p>
+<!-- @@@templated_function_with_type_template_parameter_pack -->
+</div>
+</body>
+</html>

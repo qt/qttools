@@ -1,0 +1,15 @@
+project = templatedcallables
+productname = Qt
+
+{headerdirs,sourcedirs} = ./src
+documentationinheaders = true
+
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+warninglimit = 0
+warninglimit.enabled = true
+locationinfo = false

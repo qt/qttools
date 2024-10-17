@@ -572,9 +572,21 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
         return qdb->primaryTreeRoot();
 
     Node *p = findNodeForCursor(qdb, clang_getCursorSemanticParent(cur));
-    if (p == nullptr)
-        return nullptr;
-    if (!p->isAggregate())
+    // Special case; if the cursor represents a template type|non-type|template parameter
+    // and its semantic parent is a function, return a pointer to the function node.
+    if (p && p->isFunction(Node::CPP)) {
+        switch (kind) {
+        case CXCursor_TemplateTypeParameter:
+        case CXCursor_NonTypeTemplateParameter:
+        case CXCursor_TemplateTemplateParameter:
+            return p;
+        default:
+            break;
+        }
+    }
+
+    // ...otherwise, the semantic parent must be an Aggregate node.
+    if (!p || !p->isAggregate())
         return nullptr;
     auto parent = static_cast<Aggregate *>(p);
 
