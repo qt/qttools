@@ -255,6 +255,10 @@ void tst_lupdate::good_data()
         qDebug("clangcpp tests are skipped on linux arm64, see also QTBUG-127751");
         return;
     }
+    if (QSysInfo::kernelType() == "darwin"_L1) {
+        qDebug("clangcpp tests are skipped on macOS, see also QTBUG-130006 and QTBUG-130096");
+        return;
+    }
 
     // Add test rows for the clang-based lupdate
     ignoredTests = {
