@@ -607,6 +607,14 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
     case CXCursor_ConversionFunction: {
         NodeVector candidates;
         parent->findChildren(functionName(cur), candidates);
+        // Hidden friend functions are recorded under their lexical parent in the database
+        if (candidates.isEmpty() && get_cursor_declaration(cur)->getFriendObjectKind() != clang::Decl::FOK_None) {
+            if (auto *lexical_parent = findNodeForCursor(qdb, clang_getCursorLexicalParent(cur));
+                    lexical_parent && lexical_parent->isAggregate() && lexical_parent != parent) {
+                static_cast<Aggregate *>(lexical_parent)->findChildren(functionName(cur), candidates);
+            }
+        }
+
         if (candidates.isEmpty())
             return nullptr;
 

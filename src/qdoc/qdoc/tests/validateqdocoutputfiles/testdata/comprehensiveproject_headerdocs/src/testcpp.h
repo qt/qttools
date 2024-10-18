@@ -201,7 +201,7 @@ using Specialized = Struct<int, T>;
     virtual void virtualFun();
 
 /*!
-    \fn bool Test::operator==(const Test &lhs, const Test &rhs)
+    //! \fn bool Test::operator==(const Test &lhs, const Test &rhs)
 
     Returns true if \a lhs and \a rhs are equal.
 */
