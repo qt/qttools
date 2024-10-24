@@ -8,6 +8,8 @@
 # IN_FILE: .cmake file that sets lupdate_* variables
 # OUT_FILE: lupdate project .json file
 
+cmake_minimum_required(VERSION 3.16)
+
 include("${IN_FILE}")
 
 # Converts a CMake list into a string containing a JSON array
