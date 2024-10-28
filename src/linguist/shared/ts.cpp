@@ -574,12 +574,14 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
                             if (ln != -1)
                                 ld = QString::number(ln);
                         }
-                        t << "        <location";
-                        if (!fn.isEmpty())
-                            t << " filename=\"" << fn << "\"";
-                        if (!ld.isEmpty())
+
+                        if (!ld.isEmpty()) {
+                            t << "        <location";
+                            if (!fn.isEmpty())
+                                t << " filename=\"" << fn << "\"";
                             t << " line=\"" << ld << "\"";
-                        t << "/>\n";
+                            t << "/>\n";
+                        }
                     }
                 }
 

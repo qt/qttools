@@ -692,6 +692,7 @@ bool XLIFFHandler::finalizeMessage(bool isPlural)
     msg.setOldComment(m_oldComment);
     msg.setExtraComment(m_extraComment);
     msg.setTranslatorComment(m_translatorComment);
+    msg.setFileName(m_fileName);
     if (m_sources.size() > 1 && m_sources[1] != m_sources[0])
         m_extra.insert(QLatin1String("po-msgid_plural"), m_sources[1]);
     if (!m_oldSources.isEmpty()) {
