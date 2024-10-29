@@ -938,7 +938,7 @@ void Sections::buildStdQmlTypeRefPageSections()
                     qPrintable(qtn->name()));
             break;
         }
-        qtn = static_cast<QmlTypeNode *>(qtn->qmlBaseNode());
+        qtn = qtn->qmlBaseNode();
     }
 
     reduce(summarySections);
