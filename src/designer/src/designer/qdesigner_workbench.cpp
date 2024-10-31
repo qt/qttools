@@ -840,6 +840,22 @@ void QDesignerWorkbench::bringAllToFront()
         raiseWindow(dfw);
 }
 
+void QDesignerWorkbench::requestActivate()
+{
+    switch (m_mode) {
+    case NeutralMode:
+        break;
+    case TopLevelMode:
+        bringAllToFront();
+        widgetBoxToolWindow()->windowHandle()->requestActivate();
+        break;
+    case DockedMode:
+        raiseWindow(m_dockedMainWindow);
+        m_dockedMainWindow->windowHandle()->requestActivate();
+        break;
+    }
+}
+
 // Resize a form window taking MDI decorations into account
 // Apply maximum size as there is no layout connection between
 // the form's main container and the integration's outer

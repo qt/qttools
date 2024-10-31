@@ -86,6 +86,7 @@ public slots:
     void bringAllToFront();
     void toggleFormMinimizationState();
     void showNewForm();
+    void requestActivate();
 
 private slots:
     void switchToNeutralMode();

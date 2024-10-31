@@ -295,6 +295,7 @@ bool QDesigner::event(QEvent *ev)
     switch (ev->type()) {
     case QEvent::FileOpen:
         m_workbench->readInForm(static_cast<QFileOpenEvent *>(ev)->file());
+        m_workbench->requestActivate();
         eaten = true;
         break;
     case QEvent::Close: {
