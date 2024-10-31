@@ -15,12 +15,14 @@ struct ImportRec
 {
     QString m_moduleName {};
     QString m_majorMinorVersion {};
-    QString m_importUri {}; // subdirectory of module directory
+    QString m_importUri {};
+    QString m_importId {};
 
-    ImportRec(QString name, QString version, QString importUri)
+    ImportRec(QString name, QString version, QString importUri, QStringView importId)
         : m_moduleName(std::move(name)),
           m_majorMinorVersion(std::move(version)),
-          m_importUri(std::move(importUri))
+          m_importUri(std::move(importUri)),
+          m_importId(importId)
     {
     }
     QString &name() { return m_moduleName; }

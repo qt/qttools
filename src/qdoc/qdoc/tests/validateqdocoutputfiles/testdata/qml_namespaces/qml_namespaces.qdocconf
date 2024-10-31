@@ -1,0 +1,14 @@
+project = Qml Namespaces
+sourcedirs = src
+
+productname = Qt
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false

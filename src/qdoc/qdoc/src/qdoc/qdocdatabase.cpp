@@ -652,16 +652,22 @@ QmlTypeNode *QDocDatabase::findQmlType(const QString &qmid, const QString &name)
  */
 QmlTypeNode *QDocDatabase::findQmlType(const ImportRec &record, const QString &name)
 {
-    if (!record.isEmpty()) {
-        const QString qmName = record.m_importUri.isEmpty() ?
-                record.m_moduleName : record.m_importUri;
-        const QStringList dotSplit{name.split(QLatin1Char('.'))};
-        for (const auto &namePart : dotSplit) {
-            if (auto *qcn = m_forest.lookupQmlType(qmName + u"::"_s + namePart); qcn)
-                return qcn;
-        }
+    if (record.isEmpty())
+        return nullptr;
+
+    QString type{name};
+
+    // If the import is under a namespace (id) and the type name is not prefixed with that id,
+    // then we know the type is not available under this import.
+    if (!record.m_importId.isEmpty()) {
+        const QString namespacePrefix{"%1."_L1.arg(record.m_importId)};
+        if (!type.startsWith(namespacePrefix))
+            return nullptr;
+        type.remove(0, namespacePrefix.size());
     }
-    return nullptr;
+
+    const QString qmName = record.m_importUri.isEmpty() ? record.m_moduleName : record.m_importUri;
+    return m_forest.lookupQmlType(qmName + u"::"_s + type);
 }
 
 /*!

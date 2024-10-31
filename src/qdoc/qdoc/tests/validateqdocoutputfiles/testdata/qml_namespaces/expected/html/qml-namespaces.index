@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Qml Namespaces Reference Documentation" version="" project="Qml Namespaces">
+    <namespace name="" status="active" access="public" module="qml namespaces">
+        <qmlclass name="AbstractApplicationWindow" qml-module-name="Some.Module" qml-base-type="QtQuick.Controls::ApplicationWindow" fullname="Some.Module.AbstractApplicationWindow" href="qml-some-module-abstractapplicationwindow.html" status="active" access="public" location="AbstractApplicationWindow.qml" documented="true" title="AbstractApplicationWindow" fulltitle="AbstractApplicationWindow" subtitle=""/>
+        <qmlclass name="AbstractApplicationWindow" qml-module-name="QtQuick.Controls" fullname="QtQuick.Controls.AbstractApplicationWindow" href="qml-qtquick-controls-abstractapplicationwindow.html" status="active" access="public" location="modules.qdoc" documented="true" title="AbstractApplicationWindow" fulltitle="AbstractApplicationWindow" subtitle=""/>
+        <qmlclass name="ApplicationWindow" qml-module-name="Some.Module" qml-base-type="Some.Module::AbstractApplicationWindow" fullname="Some.Module.ApplicationWindow" href="qml-some-module-applicationwindow.html" status="active" access="public" location="ApplicationWindow.qml" documented="true" title="ApplicationWindow" fulltitle="ApplicationWindow" subtitle="" brief="A window that provides some basic features needed for all apps"/>
+        <qmlclass name="ApplicationWindow" qml-module-name="QtQuick.Controls" fullname="QtQuick.Controls.ApplicationWindow" href="qml-qtquick-controls-applicationwindow.html" status="active" access="public" location="modules.qdoc" documented="true" title="ApplicationWindow" fulltitle="ApplicationWindow" subtitle=""/>
+        <qmlmodule name="QtQuick.Controls" qml-module-name="QtQuick.Controls" href="qtquick-controls-qmlmodule.html" status="active" location="modules.qdoc" documented="true" seen="true" title=""/>
+        <qmlmodule name="Some.Module" qml-module-name="Some.Module" href="some-module-qmlmodule.html" status="active" location="modules.qdoc" documented="true" seen="true" title=""/>
+    </namespace>
+</INDEX>

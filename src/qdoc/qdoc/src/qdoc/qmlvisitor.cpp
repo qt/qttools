@@ -536,7 +536,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiImport *import)
         version = m_document.mid(start, end - start);
     }
     QString importUri = getFullyQualifiedId(import->importUri);
-    m_importList.append(ImportRec(name, version, importUri));
+    m_importList.append(ImportRec(name, version, importUri, import->importId));
 
     return true;
 }
