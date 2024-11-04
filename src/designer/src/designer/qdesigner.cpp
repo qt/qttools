@@ -275,13 +275,18 @@ QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
 
     // Show up error box with parent now if something went wrong
     if (m_initializationErrors.isEmpty()) {
-        if (!suppressNewFormShow)
+        if (!isServerOrClientEnabled() && !suppressNewFormShow)
             m_workbench->showNewForm();
     } else {
         showErrorMessageBox(m_initializationErrors);
         m_initializationErrors.clear();
     }
     return result;
+}
+
+bool QDesigner::isServerOrClientEnabled() const
+{
+    return m_server || m_client;
 }
 
 bool QDesigner::event(QEvent *ev)
