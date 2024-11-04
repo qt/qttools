@@ -38,6 +38,7 @@ public:
 
     QDesignerWorkbench *workbench() const;
     QDesignerServer *server() const;
+    bool isServerOrClientEnabled() const;
     MainWindowBase *mainWindow() const;
     void setMainWindow(MainWindowBase *tw);
 
