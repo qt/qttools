@@ -812,9 +812,13 @@
     \target relates-command
     \section2 \\relates
 
-    The \\relates command is for including the documentation of a
-    global element to some class or header file. The argument is a
-    class name or header file. For template types, use the type name only.
+    The \\relates command is for including the documentation of an
+    entity (a function, macro, typedef, enum, or variable) to a class,
+    namespace, or header file. The argument is the name of the class,
+    namespace, or header the entity is related to.
+
+    If the argument refers to a templated type, use the type name only
+    (without template parameters).
 
     \badcode *
     /\1!
@@ -833,8 +837,8 @@
     }
     \endcode
 
-    The documentation for this function will be included on the reference page
-    for class QChar.
+    The documentation for this function is included on the reference
+    page for class QChar, listed under the \e {Related Non-members} section.
 */
 
 /*!

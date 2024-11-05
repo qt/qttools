@@ -416,11 +416,6 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         if (node->isAggregate()) {
             doc.location().warning("Invalid '\\%1' not allowed in '\\%2'"_L1
                     .arg(COMMAND_RELATES, node->nodeTypeString()));
-        } else if (!node->isRelatedNonmember() && node->parent()->isClassNode()) {
-            if (!doc.isInternal()) {
-                doc.location().warning("Invalid '\\%1' ('%2' must be global)"_L1
-                        .arg(COMMAND_RELATES, node->name()));
-            }
         }
     } else if (command == COMMAND_NEXTPAGE) {
         CodeParser::setLink(node, Node::NextLink, arg);

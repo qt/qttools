@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="ClassRelates Reference Documentation" version="" project="ClassRelates">
+    <namespace name="" status="active" access="public" module="classrelates">
+        <namespace name="Foo" href="foo.html" status="active" access="public" location="bar.h" documented="true" module="Foo">
+            <function name="createBar" href="foo-bar.html#createBar" status="active" access="public" location="bar.h" documented="true" related="0" meta="plain" type="Foo::Bar" signature="Foo::Bar createBar()"/>
+            <function name="doStuff" fullname="Foo::doStuff" href="foo.html#doStuff" status="active" access="public" location="foo.h" documented="true" meta="plain" type="void" signature="void doStuff()"/>
+            <class name="Bar" fullname="Foo::Bar" href="foo-bar.html" status="active" access="public" location="bar.h" documented="true" module="Foo">
+                <function name="createBar" href="foo-bar.html#createBar" status="active" access="public" location="bar.h" documented="true" related="0" meta="plain" type="Foo::Bar" signature="Foo::Bar createBar()"/>
+            </class>
+        </namespace>
+        <module name="Foo" href="foo-module.html" status="active" location="foo.qdoc" documented="true" seen="true" title="Foo C++ Classes"/>
+    </namespace>
+</INDEX>

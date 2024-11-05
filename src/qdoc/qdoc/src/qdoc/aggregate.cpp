@@ -219,35 +219,38 @@ void Aggregate::markUndocumentedChildrenInternal()
 
 /*!
     Adopts each non-aggregate C++ node (function/macro, typedef, enum, variable,
-    or a shared comment node with genus Node::CPP) in the global scope to the
-    aggregate specified in the node's documentation using the \\relates command.
+    or a shared comment node with genus Node::CPP) to the aggregate specified in
+    the node's documentation using the \\relates command.
 
     If the target Aggregate is not found in the primary tree, creates a new
     ProxyNode to use as the parent.
 */
 void Aggregate::resolveRelates()
 {
-    Q_ASSERT(name().isEmpty()); // Must be called on the root namespace
     auto *database = QDocDatabase::qdocDB();
 
     for (auto *node : m_children) {
-        if (node->isRelatedNonmember() || node->isAggregate())
+        if (node->isRelatedNonmember())
             continue;
         if (node->genus() != Node::CPP)
             continue;
 
-        const auto &relates_args = node->doc().metaCommandArgs("relates"_L1);
-        if (relates_args.isEmpty())
-            continue;
+        if (!node->isAggregate()) {
+            const auto &relates_args = node->doc().metaCommandArgs("relates"_L1);
+            if (relates_args.isEmpty())
+                continue;
 
-        auto *aggregate = database->findRelatesNode(relates_args[0].first.split("::"_L1));
-        if (!aggregate)
-            aggregate = new ProxyNode(this, relates_args[0].first);
-        else if (node->parent() == aggregate)
-            continue;
+            auto *aggregate = database->findRelatesNode(relates_args[0].first.split("::"_L1));
+            if (!aggregate)
+                aggregate = new ProxyNode(this, relates_args[0].first);
+            else if (node->parent() == aggregate)
+                continue;
 
-        aggregate->adoptChild(node);
-        node->setRelatedNonmember(true);
+            aggregate->adoptChild(node);
+            node->setRelatedNonmember(true);
+        } else {
+            static_cast<Aggregate*>(node)->resolveRelates();
+        }
     }
 }
 
