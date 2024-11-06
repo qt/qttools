@@ -24,7 +24,7 @@
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qcombobox.h>
 #include <QtWidgets/qapplication.h>
-#include <QtWidgets/qitemdelegate.h>
+#include <QtWidgets/qstyleditemdelegate.h>
 #include <QtWidgets/qitemeditorfactory.h>
 #include <QtWidgets/qtreeview.h>
 #include <QtWidgets/qheaderview.h>
@@ -537,7 +537,7 @@ void InlineEditor::setText(const QString &text)
 
 // ------------------ ConnectionDelegate
 
-class ConnectionDelegate : public QItemDelegate
+class ConnectionDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
@@ -557,7 +557,7 @@ private:
 };
 
 ConnectionDelegate::ConnectionDelegate(QWidget *parent)
-    : QItemDelegate(parent)
+    : QStyledItemDelegate(parent)
 {
     m_form = nullptr;
 
@@ -584,7 +584,7 @@ QWidget *ConnectionDelegate::createEditor(QWidget *parent,
     if (m_form == nullptr)
         return nullptr;
 
-    QWidget *w = QItemDelegate::createEditor(parent, option, index);
+    QWidget *w = QStyledItemDelegate::createEditor(parent, option, index);
     InlineEditor *inline_editor = qobject_cast<InlineEditor*>(w);
     Q_ASSERT(inline_editor != nullptr);
     const QAbstractItemModel *model = index.model();

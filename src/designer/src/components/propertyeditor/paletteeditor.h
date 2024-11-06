@@ -5,7 +5,7 @@
 #define PALETTEEDITOR_H
 
 #include "ui_paletteeditor.h"
-#include <QtWidgets/qitemdelegate.h>
+#include <QtWidgets/qstyleditemdelegate.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -156,7 +156,7 @@ private:
     bool m_edited = false;
 };
 
-class ColorDelegate : public QItemDelegate
+class ColorDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 

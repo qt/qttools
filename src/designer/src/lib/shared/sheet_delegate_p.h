@@ -18,7 +18,7 @@
 
 #include "shared_global_p.h"
 
-#include <QtWidgets/qitemdelegate.h>
+#include <QtWidgets/qstyleditemdelegate.h>
 #include <QtWidgets/qtreeview.h>
 
 QT_BEGIN_NAMESPACE
@@ -27,7 +27,7 @@ class QTreeView;
 
 namespace qdesigner_internal {
 
-class QDESIGNER_SHARED_EXPORT SheetDelegate: public QItemDelegate
+class QDESIGNER_SHARED_EXPORT SheetDelegate: public QStyledItemDelegate
 {
     Q_OBJECT
 public:

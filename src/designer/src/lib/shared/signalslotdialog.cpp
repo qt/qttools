@@ -18,7 +18,7 @@
 
 #include <QtGui/qstandarditemmodel.h>
 #include <QtGui/qvalidator.h>
-#include <QtWidgets/qitemdelegate.h>
+#include <QtWidgets/qstyleditemdelegate.h>
 #include <QtWidgets/qlineedit.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qmessagebox.h>
@@ -53,7 +53,7 @@ static QStandardItem *createDisabledItem(const QString &text)
 namespace {
     // Internal helper class: A Delegate that validates using RegExps and additionally checks
     // on closing (adds missing parentheses).
-    class SignatureDelegate : public QItemDelegate {
+    class SignatureDelegate : public QStyledItemDelegate {
     public:
         SignatureDelegate(QObject * parent = nullptr);
         QWidget * createEditor (QWidget * parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const override;
@@ -65,7 +65,7 @@ namespace {
     };
 
     SignatureDelegate::SignatureDelegate(QObject * parent) :
-        QItemDelegate(parent),
+        QStyledItemDelegate(parent),
         m_signatureRegexp(signatureRegExp),
         m_methodNameRegexp(methodNameRegExp)
     {
@@ -75,7 +75,7 @@ namespace {
 
     QWidget * SignatureDelegate::createEditor ( QWidget * parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const
     {
-        QWidget *rc = QItemDelegate::createEditor(parent, option, index);
+        QWidget *rc = QStyledItemDelegate::createEditor(parent, option, index);
         QLineEdit *le = qobject_cast<QLineEdit *>(rc);
         Q_ASSERT(le);
         le->setValidator(new QRegularExpressionValidator(m_signatureRegexp, le));
@@ -96,7 +96,7 @@ namespace {
                 return;
             }
         }
-        QItemDelegate::setModelData(editor, model, index);
+        QStyledItemDelegate::setModelData(editor, model, index);
     }
 
     // ------ FakeMethodMetaDBCommand: Undo Command to change fake methods in the meta DB.

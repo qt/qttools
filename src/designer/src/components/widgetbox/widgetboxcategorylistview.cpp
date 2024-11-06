@@ -12,7 +12,7 @@
 #include <QtGui/qvalidator.h>
 #include <QtWidgets/qlistview.h>
 #include <QtWidgets/qlineedit.h>
-#include <QtWidgets/qitemdelegate.h>
+#include <QtWidgets/qstyleditemdelegate.h>
 #include <QtCore/qsortfilterproxymodel.h>
 
 #include <QtCore/qabstractitemmodel.h>
@@ -307,10 +307,10 @@ QDesignerWidgetBoxInterface::Widget WidgetBoxCategoryModel::widgetAt(int row) co
 
 /* WidgetSubBoxItemDelegate, ensures a valid name using a regexp validator */
 
-class WidgetBoxCategoryEntryDelegate : public QItemDelegate
+class WidgetBoxCategoryEntryDelegate : public QStyledItemDelegate
 {
 public:
-    explicit WidgetBoxCategoryEntryDelegate(QWidget *parent = nullptr) : QItemDelegate(parent) {}
+    explicit WidgetBoxCategoryEntryDelegate(QWidget *parent = nullptr) : QStyledItemDelegate(parent) {}
     QWidget *createEditor(QWidget *parent,
                           const QStyleOptionViewItem &option,
                           const QModelIndex &index) const override;
@@ -320,7 +320,7 @@ QWidget *WidgetBoxCategoryEntryDelegate::createEditor(QWidget *parent,
                                                 const QStyleOptionViewItem &option,
                                                 const QModelIndex &index) const
 {
-    QWidget *result = QItemDelegate::createEditor(parent, option, index);
+    QWidget *result = QStyledItemDelegate::createEditor(parent, option, index);
     if (QLineEdit *line_edit = qobject_cast<QLineEdit*>(result)) {
         static const QRegularExpression re(u"^[_a-zA-Z][_a-zA-Z0-9]*$"_s);
         Q_ASSERT(re.isValid());

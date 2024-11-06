@@ -662,7 +662,7 @@ void RoleEditor::emitResetProperty()
 
 //////////////////////////
 ColorDelegate::ColorDelegate(QDesignerFormEditorInterface *core, QObject *parent) :
-    QItemDelegate(parent),
+    QStyledItemDelegate(parent),
     m_core(core)
 {
 }
@@ -722,7 +722,7 @@ void ColorDelegate::setModelData(QWidget *ed, QAbstractItemModel *model,
 void ColorDelegate::updateEditorGeometry(QWidget *ed,
                 const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QItemDelegate::updateEditorGeometry(ed, option, index);
+    QStyledItemDelegate::updateEditorGeometry(ed, option, index);
     ed->setGeometry(ed->geometry().adjusted(0, 0, -1, -1));
 }
 
@@ -752,7 +752,7 @@ void ColorDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt,
         painter->fillRect(option.rect, br);
         painter->restore();
     }
-    QItemDelegate::paint(painter, option, index);
+    QStyledItemDelegate::paint(painter, option, index);
 
 
     const QColor color = static_cast<QRgb>(QApplication::style()->styleHint(QStyle::SH_Table_GridLineColor, &option));
@@ -768,7 +768,7 @@ void ColorDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt,
 
 QSize ColorDelegate::sizeHint(const QStyleOptionViewItem &opt, const QModelIndex &index) const
 {
-    return QItemDelegate::sizeHint(opt, index) + QSize(4, 4);
+    return QStyledItemDelegate::sizeHint(opt, index) + QSize(4, 4);
 }
 }
 
