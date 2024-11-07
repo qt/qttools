@@ -52,7 +52,8 @@ protected:
     void generateRequisites(const Aggregate *inner);
     void generateQmlRequisites(const QmlTypeNode *qcn);
     void generateSortedNames(const ClassNode *cn, const QList<RelatedClass> &rc);
-    void generateSortedQmlNames(const Node *base, const NodeList &subs);
+    void generateSortedQmlNames(const Node *base, const QStringList &knownTypes,
+                                const NodeList &subs);
     bool generateStatus(const Node *node);
     void generateGroupReferenceText(const Node *node);
     bool generateThreadSafeness(const Node *node);

@@ -2142,13 +2142,22 @@ void DocBookGenerator::generateSortedNames(const ClassNode *cn, const QList<Rela
     }
 }
 
-void DocBookGenerator::generateSortedQmlNames(const Node *base, const NodeList &subs)
+void DocBookGenerator::generateSortedQmlNames(const Node *base, const QStringList &knownTypes,
+                                              const NodeList &subs)
 {
     // From Generator::appendSortedQmlNames.
     QMap<QString, Node *> classMap;
+    QStringList typeNames(knownTypes);
+    for (const auto sub : subs)
+        typeNames << sub->name();
 
-    for (auto sub : subs)
-        classMap[sub->plainFullName(base).toLower()] = sub;
+    for (auto sub : subs) {
+        QString key{sub->plainFullName(base).toLower()};
+        // Disambiguate with '(<QML module name>)' if there are clashing type names
+        if (typeNames.count(sub->name()) > 1)
+            key.append(": (%1)"_L1.arg(sub->logicalModuleName()));
+        classMap[key] = sub;
+    }
 
     QStringList names = classMap.keys();
     names.sort();
@@ -2156,6 +2165,8 @@ void DocBookGenerator::generateSortedQmlNames(const Node *base, const NodeList &
     int index = 0;
     for (const QString &name : names) {
         generateFullName(classMap.value(name), base);
+        if (name.contains(':'))
+            m_writer->writeCharacters(name.section(':', 1));
         m_writer->writeCharacters(Utilities::comma(index++, names.size()));
     }
 }
@@ -2319,6 +2330,10 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
     if (!generates_something)
         return;
 
+    QStringList knownTypeNames{qcn->name()};
+    if (base)
+        knownTypeNames << base->name();
+
     // Start writing the elements as a list.
     m_writer->writeStartElement(dbNamespace, "variablelist");
     if (m_useITS)
@@ -2337,7 +2352,7 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
     // Inherited by.
     if (!subs.isEmpty()) {
         generateStartRequisite("Inherited By:");
-        generateSortedQmlNames(qcn, subs);
+        generateSortedQmlNames(qcn, knownTypeNames, subs);
         generateEndRequisite();
     }
 
@@ -2345,6 +2360,13 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
     if (base) {
         generateStartRequisite("Inherits:");
         generateSimpleLink(fullDocumentLocation(base), base->name());
+        // Disambiguate with '(<QML module name>)' if there are clashing type names
+        for (const auto sub : std::as_const(subs)) {
+            if (knownTypeNames.contains(sub->name())) {
+                m_writer->writeCharacters(" (%1)"_L1.arg(base->logicalModuleName()));
+                break;
+            }
+        }
         generateEndRequisite();
     }
 
@@ -3486,21 +3508,26 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         if (!qcn->since().isEmpty())
             generateSynopsisInfo("since", formatSince(qcn));
 
+        QmlTypeNode *base = qcn->qmlBaseNode();
+        while (base && base->isInternal())
+            base = base->qmlBaseNode();
+
+        QStringList knownTypeNames{qcn->name()};
+        if (base)
+            knownTypeNames << base->name();
+
         // Inherited by.
         NodeList subs;
         QmlTypeNode::subclasses(qcn, subs);
         if (!subs.isEmpty()) {
             m_writer->writeTextElement(dbNamespace, "synopsisinfo");
             m_writer->writeAttribute("role", "inheritedBy");
-            generateSortedQmlNames(qcn, subs);
+            generateSortedQmlNames(qcn, knownTypeNames, subs);
             m_writer->writeEndElement(); // synopsisinfo
             newLine();
         }
 
         // Inherits.
-        QmlTypeNode *base = qcn->qmlBaseNode();
-        while (base && base->isInternal())
-            base = base->qmlBaseNode();
         if (base) {
             const Node *otherNode = nullptr;
             Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(base));
@@ -3509,6 +3536,13 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             m_writer->writeTextElement(dbNamespace, "synopsisinfo");
             m_writer->writeAttribute("role", "inherits");
             generateSimpleLink(link, base->name());
+            // Disambiguate with '(<QML module name>)' if there are clashing type names
+            for (const auto sub : std::as_const(subs)) {
+                if (knownTypeNames.contains(sub->name())) {
+                    m_writer->writeCharacters(" (%1)"_L1.arg(base->logicalModuleName()));
+                    break;
+                }
+            }
             m_writer->writeEndElement(); // synopsisinfo
             newLine();
         }

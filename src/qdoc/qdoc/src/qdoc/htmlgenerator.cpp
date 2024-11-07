@@ -2229,24 +2229,36 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
 
     // add the inherits to the map
     QmlTypeNode *base = qcn->qmlBaseNode();
+    NodeList subs;
+    QmlTypeNode::subclasses(qcn, subs);
+    QStringList knownTypeNames{qcn->name()};
+
     while (base && base->isInternal()) {
         base = base->qmlBaseNode();
     }
     if (base) {
+        knownTypeNames << base->name();
         text.clear();
         text << Atom::ParaLeft << Atom(Atom::LinkNode, CodeMarker::stringForNode(base))
              << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << Atom(Atom::String, base->name())
-             << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom::ParaRight;
+             << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+
+        // Disambiguate with '(<QML module name>)' if there are clashing type names
+        for (const auto sub : std::as_const(subs)) {
+            if (knownTypeNames.contains(sub->name())) {
+                text << Atom(Atom::String, " (%1)"_L1.arg(base->logicalModuleName()));
+                break;
+            }
+        }
+        text << Atom::ParaRight;
         requisites.insert(inheritsText, text);
     }
 
     // add the inherited-by to the map
-    NodeList subs;
-    QmlTypeNode::subclasses(qcn, subs);
     if (!subs.isEmpty()) {
         text.clear();
         text << Atom::ParaLeft;
-        int count = appendSortedQmlNames(text, qcn, subs);
+        int count = appendSortedQmlNames(text, qcn, knownTypeNames, subs);
         text << Atom::ParaRight;
         if (count > 0)
             requisites.insert(inheritedBytext, text);

@@ -3,8 +3,10 @@ sourcedirs = src
 
 productname = Qt
 
-HTML.nosubdirs = true
-HTML.outputsubdir = html
+outputformats = HTML DocBook
+
+{HTML.nosubdirs,HTML.outputsubdir} = html
+{DocBook.nosubdirs,DocBook.outputsubdir,DocBook.its,DocBook.usedocbookextensions} = docbook
 
 # zero warning policy
 warninglimit = 0
