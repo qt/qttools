@@ -2343,12 +2343,8 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
 
     // Inherits.
     if (base) {
-        const Node *otherNode = nullptr;
-        Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(base));
-        QString link = getAutoLink(&a, qcn, &otherNode);
-
         generateStartRequisite("Inherits:");
-        generateSimpleLink(link, base->name());
+        generateSimpleLink(fullDocumentLocation(base), base->name());
         generateEndRequisite();
     }
 
