@@ -1,0 +1,29 @@
+[
+    {
+        "CPE": [],
+        "Copyright": "",
+	"CopyrightFile": "",
+        "Description": "",
+        "DownloadLocation": "",
+        "Files": "",
+        "Homepage": "",
+        "Id": "local",
+        "License": "License",
+	"LicenseFiles": [
+            "%{PWD}/LICENSE.Id1.txt",
+            "%{PWD}/LICENSE.Id2.txt"
+        ],
+	 "LicenseId": "Id1 AND Id2",
+        "Name": "Local Test",
+        "PURL": [],
+        "PackageComment": "",
+        "Path": "%{PWD}",
+        "QDocModule": "qtest",
+        "QtParts": [
+            "libs"
+        ],
+        "QtUsage": "Usage",
+        "SecurityCritical": false,
+        "Version": ""
+    }
+]

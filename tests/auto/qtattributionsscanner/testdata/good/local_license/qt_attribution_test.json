@@ -1,0 +1,10 @@
+{
+  "Id": "local",
+  "Name": "Local Test",
+
+  "QDocModule": "qtest",
+  "QtUsage": "Usage",
+  "License": "License",
+
+  "LicenseId": "Id1 AND Id2"
+}

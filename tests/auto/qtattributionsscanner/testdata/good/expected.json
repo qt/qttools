@@ -78,6 +78,31 @@
         "Version": ""
     },
     {
+        "CPE":[],
+        "Copyright":"",
+        "CopyrightFile":"",
+        "Description":"",
+        "DownloadLocation":"",
+        "Files":"",
+        "Homepage":"",
+        "Id":"local",
+        "License":"License",
+        "LicenseFiles":[
+            "%{PWD}/local_license/LICENSE.Id1.txt",
+            "%{PWD}/local_license/LICENSE.Id2.txt"
+        ],
+        "LicenseId":"Id1 AND Id2",
+        "Name":"Local Test",
+        "PURL":[],
+        "PackageComment":"",
+        "Path":"%{PWD}/local_license",
+        "QDocModule":"qtest",
+        "QtParts":["libs"],
+        "QtUsage":"Usage",
+        "SecurityCritical":false,
+        "Version":""
+    },
+    {
         "CPE": ["cpe:2.3:a:qt:qtbase:test-version:*:*:*:*:*:*:*"],
         "Copyright": "Copyright",
         "CopyrightFile": "",

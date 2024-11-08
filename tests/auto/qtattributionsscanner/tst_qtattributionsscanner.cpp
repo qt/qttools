@@ -59,6 +59,9 @@ void tst_qtattributionsscanner::test_data()
     QTest::newRow("variants") << QStringLiteral("good/variants/qt_attribution_test.json") << true
                               << QStringLiteral("good/variants/expected.json")
                               << QStringLiteral("good/variants/expected.error");
+    QTest::newRow("local_license") << QStringLiteral("good/local_license/qt_attribution_test.json") << true
+                              << QStringLiteral("good/local_license/expected.json")
+                              << QStringLiteral("good/local_license/expected.error");
 }
 
 void tst_qtattributionsscanner::readExpectedFile(const QString &baseDir, const QString &fileName, QByteArray *content)
