@@ -1188,7 +1188,9 @@ void Generator::generateNoexceptNote(const Node* node, CodeMarker* marker) {
                 Text text;
                 text << Atom::NoteLeft
                         << (nodes.size() > 1 ? QString::fromStdString(" ("s + std::to_string(counter) + ")"s) : QString::fromStdString("This ") + typeString(node))
-                        << " does not throw any exception when " << "\"" << *exception_info << "\"" << " is true."
+                        << " is noexcept when "
+                        << Atom(Atom::C, marker->markedUpCode(*exception_info, nullptr, Location()))
+                        << " is " << Atom(Atom::C, "true") << "."
                     << Atom::NoteRight;
                 generateText(text, node, marker);
             }
