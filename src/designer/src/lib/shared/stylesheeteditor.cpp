@@ -3,6 +3,7 @@
 
 #include "stylesheeteditor_p.h"
 #include "csshighlighter_p.h"
+#include "iconloader_p.h"
 #include "iconselector_p.h"
 #include "qtgradientmanager_p.h"
 #include "qtgradientviewdialog_p.h"
@@ -46,21 +47,16 @@ namespace qdesigner_internal {
 StyleSheetEditor::StyleSheetEditor(QWidget *parent)
     : QTextEdit(parent)
 {
-    enum : int { DarkThreshold = 200 }; // Observed 239 on KDE/Dark
-
     setTabStopDistance(fontMetrics().horizontalAdvance(u' ') * 4);
     setAcceptRichText(false);
 
-    const QColor textColor = palette().color(QPalette::WindowText);
-    const bool darkMode = textColor.red() > DarkThreshold
-        && textColor.green() > DarkThreshold
-        && textColor.blue() > DarkThreshold;
+    const bool darkMode = isDarkMode();
 
     CssHighlightColors colors;
     colors.selector = darkMode ? QColor(Qt::red).lighter() : QColor(Qt::darkRed);
     const QColor blue(Qt::blue);
     colors.property = darkMode ? blue.lighter() : blue;
-    colors.pseudo1 = colors.pseudo2 = colors.value = textColor;
+    colors.pseudo1 = colors.pseudo2 = colors.value = palette().color(QPalette::WindowText);
     colors.quote = darkMode ? Qt::magenta : Qt::darkMagenta;
     colors.comment = darkMode ? Qt::green : Qt::darkGreen;
 

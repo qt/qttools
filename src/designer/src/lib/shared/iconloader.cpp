@@ -5,14 +5,34 @@
 
 #include <QtCore/qfile.h>
 #include <QtCore/qoperatingsystemversion.h>
+
+#include <QtGui/qcolor.h>
+#include <QtGui/qguiapplication.h>
 #include <QtGui/qicon.h>
+#include <QtGui/qpalette.h>
 #include <QtGui/qpixmap.h>
+#include <QtGui/qstylehints.h>
 
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
 namespace qdesigner_internal {
+
+// Check for "Dark Mode", either system-wide or usage of a dark style
+static bool isLight(const QColor &textColor)
+{
+    enum : int { DarkThreshold = 200 }; // Observed 239 on KDE/Dark
+
+    return textColor.red() > DarkThreshold && textColor.green() > DarkThreshold
+        && textColor.blue() > DarkThreshold;
+}
+
+QDESIGNER_SHARED_EXPORT bool isDarkMode()
+{
+    return QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark
+        || isLight(QGuiApplication::palette().color(QPalette::WindowText));
+}
 
 QDESIGNER_SHARED_EXPORT QIcon createIconSet(QIcon::ThemeIcon themeIcon,
                                             QLatin1StringView name)
