@@ -159,6 +159,7 @@ Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *n
                         QmlPropertyNode *n = parent->hasQmlProperty(qpa->m_name, isAttached);
                         if (n == nullptr)
                             n = new QmlPropertyNode(parent, qpa->m_name, qpa->m_type, isAttached);
+                        n->setIsList(qpa->m_isList);
                         n->setLocation(doc.location());
                         n->setDoc(doc);
                         // Use the const-overload of QmlPropertyNode::isReadOnly() as there's
@@ -576,6 +577,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
                     qmlPropNode->markDefault();
                 if (member->requiredToken().isValid())
                     qmlPropNode->setRequired();
+                qmlPropNode->setIsList(member->typeModifier == "list"_L1);
                 applyDocumentation(member->firstSourceLocation(), qmlPropNode);
             }
         }

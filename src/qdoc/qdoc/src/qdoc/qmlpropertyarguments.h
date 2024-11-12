@@ -23,6 +23,7 @@ struct QmlPropertyArguments
     QString m_module {};
     QString m_qmltype {};
     QString m_name {};
+    bool m_isList { false };
 
     static std::optional<QmlPropertyArguments>
     parse(const QString &arg, const Location &loc,

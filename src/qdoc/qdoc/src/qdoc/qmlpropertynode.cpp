@@ -13,6 +13,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 /*!
   Constructor for the QML property node.
  */
@@ -70,6 +72,20 @@ bool QmlPropertyNode::setEnumNode(const QString &path, const QString &registered
     );
     m_enumNode.second = registeredQmlName;
     return m_enumNode.first != nullptr;
+}
+
+/*!
+    Marks this property as a list if \a isList is \c true.
+    The \c m_type member of a list property is wrapped with
+    \c {list<>}.
+*/
+void QmlPropertyNode::setIsList(bool isList)
+{
+    if (m_isList != FlagValueDefault)
+        return;
+
+    if ((m_isList = toFlagValue(isList)))
+        m_type = "list<%1>"_L1.arg(m_type);
 }
 
 /*!

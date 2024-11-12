@@ -21,6 +21,7 @@ public:
     void setStored(bool stored) { m_stored = toFlagValue(stored); }
     void setDefaultValue(const QString &value) { m_defaultValue = value; }
     void setRequired() { m_required = toFlagValue(true); }
+    void setIsList(bool isList);
     bool setEnumNode(const QString &path, const QString &registeredQmlName);
 
     [[nodiscard]] const QString &dataType() const { return m_type; }
@@ -62,6 +63,7 @@ private:
     bool m_isAlias { false };
     bool m_isDefault { false };
     bool m_attached {};
+    FlagValue m_isList { FlagValueDefault };
     FlagValue m_readOnly { FlagValueDefault };
     FlagValue m_required { FlagValueDefault };
     std::pair<EnumNode *, QString> m_enumNode { nullptr, {} };

@@ -156,6 +156,7 @@
             <keyword name="int" id="QML.QDoc.Test1.int" ref="qml-int.html"/>
             <keyword name="intProp" id="TestDerived::intProp" ref="testqdoc-testderived.html#intProp-prop"/>
             <keyword name="invokeMe" id="TestDerived::invokeMe" ref="testqdoc-testderived.html#invokeMe"/>
+            <keyword name="items" id="DocTest::items" ref="qml-qdoc-test-doctest.html#items-prop"/>
             <keyword name="itsHappening" id="DocTest::itsHappening" ref="qml-qdoc-test-doctest.html#itsHappening-signal"/>
             <keyword name="maximum" id="ProgressBar::maximum" ref="qml-uicomponents-progressbar.html#maximum-prop"/>
             <keyword name="methodWithEmDashInItsDocs" id="Test::methodWithEmDashInItsDocs" ref="testqdoc-test.html#methodWithEmDashInItsDocs"/>
@@ -170,6 +171,7 @@
             <keyword name="name" id="TheType::name" ref="qml-themodule-thetype.html#name-prop"/>
             <keyword name="name" id="TestDerived::name" ref="testqdoc-testderived.html#name-prop"/>
             <keyword name="name" id="TestDerived::name" ref="testqdoc-testderived.html#name-prop"/>
+            <keyword name="numbers" id="DocTest::numbers" ref="qml-qdoc-test-doctest.html#numbers-prop"/>
             <keyword name="obsoleteMember" id="Test::obsoleteMember" ref="testqdoc-test-obsolete.html#obsoleteMember"/>
             <keyword name="on" id="Switch::on" ref="qml-uicomponents-switch.html#on-prop"/>
             <keyword name="operator++" id="Test::operator++" ref="testqdoc-test-obsolete.html#operator-2b-2b"/>
