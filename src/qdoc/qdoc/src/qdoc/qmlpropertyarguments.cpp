@@ -43,9 +43,9 @@ QT_BEGIN_NAMESPACE
     is already known.
 
     Returns a populated QmlPropertyArguments container with the property type
-    (m_type), property name (m_name), and optionally, the parent QML type name
-    (m_qmltype) and QML module name (m_module) if those were present in the
-    argument string.
+    (m_type), whether the type is a list type (m_isList), property name
+    (m_name), and optionally, the parent QML type name (m_qmltype) and QML
+    module name (m_module) if those were present in the argument string.
 
     If the argument string is incorrect, outputs a warning using \a loc and
     returns \c nullopt.
@@ -63,6 +63,8 @@ QmlPropertyArguments::parse(const QString &str, const Location &loc, ParsingOpti
         return std::nullopt;
     }
     args.m_type = input.first(offset);
+    if ((args.m_isList = args.m_type.startsWith("list<"_L1)))
+        args.m_type.slice(5).chop(1);
 
     auto segments = input.slice(++offset).split("::"_L1);
     if (segments.size() > 3 || (segments.size() == 1 &&

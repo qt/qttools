@@ -52,6 +52,18 @@
 </db:para>
 </db:section>
 </db:section>
+<db:section xml:id="items-prop">
+<db:title>items : list&lt;Item&gt;</db:title>
+<db:fieldsynopsis>
+<db:type>list&lt;Item&gt;</db:type>
+<db:varname>items</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>List of items.</db:para>
+</db:section>
 <db:section xml:id="name-prop">
 <db:title>[required] name : string</db:title>
 <db:fieldsynopsis>
@@ -69,6 +81,18 @@
     // ...
 }
 </db:programlisting>
+</db:section>
+<db:section xml:id="numbers-prop">
+<db:title>numbers : list&lt;int&gt;</db:title>
+<db:fieldsynopsis>
+<db:type>list&lt;int&gt;</db:type>
+<db:varname>numbers</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>Magic numbers.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="signal-documentation">

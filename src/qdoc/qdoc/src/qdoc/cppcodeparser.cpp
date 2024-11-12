@@ -251,6 +251,7 @@ std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedD
                     continue;
                 }
                 auto *qpn = new QmlPropertyNode(qmlType, qpa->m_name, qpa->m_type, attached);
+                qpn->setIsList(qpa->m_isList);
                 qpn->setLocation(doc.startLocation());
                 qpn->setGenus(Node::QML);
 
