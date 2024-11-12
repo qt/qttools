@@ -17,6 +17,7 @@
 #include "namespacenode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
+#include "qmlpropertyarguments.h"
 #include "qmlpropertynode.h"
 #include "sharedcommentnode.h"
 
@@ -196,53 +197,6 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
     return nullptr;
 }
 
-/*!
-  A QML property argument has the form...
-
-  <type> <QML-type>::<name>
-  <type> <QML-module>::<QML-type>::<name>
-
-  This function splits the argument into one of those
-  two forms. The three part form is the old form, which
-  was used before the creation of Qt Quick 2 and Qt
-  Components. A <QML-module> is the QML equivalent of a
-  C++ namespace. So this function splits \a arg on "::"
-  and stores the parts in \a type, \a module, \a qmlTypeName,
-  and \a name, and returns \c true. If any part other than
-  \a module is not found, a qdoc warning is emitted and
-  false is returned.
-
-  \note The two QML types \e{Component} and \e{QtObject}
-  never have a module qualifier.
- */
-bool CppCodeParser::splitQmlPropertyArg(const QString &arg, QString &type, QString &module,
-                                        QString &qmlTypeName, QString &name,
-                                        const Location &location)
-{
-    QStringList blankSplit = arg.split(QLatin1Char(' '));
-    if (blankSplit.size() > 1) {
-        type = blankSplit[0];
-        QStringList colonSplit(blankSplit[1].split("::"));
-        if (colonSplit.size() == 3) {
-            module = colonSplit[0];
-            qmlTypeName = colonSplit[1];
-            name = colonSplit[2];
-            return true;
-        }
-        if (colonSplit.size() == 2) {
-            module.clear();
-            qmlTypeName = colonSplit[0];
-            name = colonSplit[1];
-            return true;
-        }
-        location.warning(
-                QStringLiteral("Unrecognizable QML module/component qualifier for %1").arg(arg));
-    } else {
-        location.warning(QStringLiteral("Missing property type for %1").arg(arg));
-    }
-    return false;
-}
-
 std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedDocumentation &untied)
 {
     const Doc &doc = untied.documentation;
@@ -250,62 +204,53 @@ std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedD
     if (topics.isEmpty())
         return {};
 
-    QString arg;
-    QString type;
-    QString group;
-    QString qmlModule;
-    QString property;
-    QString qmlTypeName;
-
     std::vector<TiedDocumentation> tied{};
 
-    Topic topic = topics.at(0);
-    arg = topic.m_args;
-    if (splitQmlPropertyArg(arg, type, qmlModule, qmlTypeName, property, doc.location())) {
-        qsizetype i = property.indexOf('.');
-        if (i != -1)
-            group = property.left(i);
-    }
-
-    QDocDatabase *database = QDocDatabase::qdocDB();
+    auto firstTopicArgs =
+            QmlPropertyArguments::parse(topics.at(0).m_args, doc.location(),
+                    QmlPropertyArguments::ParsingOptions::RequireQualifiedPath);
+    if (!firstTopicArgs)
+        return {};
 
     NodeList sharedNodes;
-    QmlTypeNode *qmlType = database->findQmlTypeInPrimaryTree(qmlModule, qmlTypeName);
+    QDocDatabase *database = QDocDatabase::qdocDB();
+    QmlTypeNode *qmlType = database->findQmlTypeInPrimaryTree((*firstTopicArgs).m_module,
+                                                              (*firstTopicArgs).m_qmltype);
     // Note: Constructing a QmlType node by default, as opposed to QmlValueType.
     // This may lead to unexpected behavior if documenting \qmlvaluetype's properties
     // before the type itself.
     if (qmlType == nullptr) {
-        qmlType = new QmlTypeNode(database->primaryTreeRoot(), qmlTypeName, Node::QmlType);
+        qmlType = new QmlTypeNode(database->primaryTreeRoot(), (*firstTopicArgs).m_qmltype, Node::QmlType);
         qmlType->setLocation(doc.startLocation());
-        if (!qmlModule.isEmpty())
-            database->addToQmlModule(qmlModule, qmlType);
+        if (!(*firstTopicArgs).m_module.isEmpty())
+            database->addToQmlModule((*firstTopicArgs).m_module, qmlType);
     }
 
     for (const auto &topicCommand : topics) {
         QString cmd = topicCommand.m_topic;
-        arg = topicCommand.m_args;
         if ((cmd == COMMAND_QMLPROPERTY) || (cmd == COMMAND_QMLATTACHEDPROPERTY)) {
             bool attached = cmd.contains(QLatin1String("attached"));
-            if (splitQmlPropertyArg(arg, type, qmlModule, qmlTypeName, property, doc.location())) {
-                if (qmlType != database->findQmlTypeInPrimaryTree(qmlModule, qmlTypeName)) {
+            if (auto qpa = QmlPropertyArguments::parse(topicCommand.m_args, doc.location(),
+                    QmlPropertyArguments::ParsingOptions::RequireQualifiedPath)) {
+                if (qmlType != database->findQmlTypeInPrimaryTree(qpa->m_module, qpa->m_qmltype)) {
                     doc.startLocation().warning(
                             QStringLiteral(
                                     "All properties in a group must belong to the same type: '%1'")
-                                    .arg(arg));
+                                    .arg(topicCommand.m_args));
                     continue;
                 }
-                QmlPropertyNode *existingProperty = qmlType->hasQmlProperty(property, attached);
+                QmlPropertyNode *existingProperty = qmlType->hasQmlProperty(qpa->m_name, attached);
                 if (existingProperty) {
                     processMetaCommands(doc, existingProperty);
                     if (!doc.body().isEmpty()) {
                         doc.startLocation().warning(
                                 QStringLiteral("QML property documented multiple times: '%1'")
-                                        .arg(arg), QStringLiteral("also seen here: %1")
+                                        .arg(topicCommand.m_args), QStringLiteral("also seen here: %1")
                                                 .arg(existingProperty->location().toString()));
                     }
                     continue;
                 }
-                auto *qpn = new QmlPropertyNode(qmlType, property, type, attached);
+                auto *qpn = new QmlPropertyNode(qmlType, qpa->m_name, qpa->m_type, attached);
                 qpn->setLocation(doc.startLocation());
                 qpn->setGenus(Node::QML);
 
@@ -325,6 +270,11 @@ std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedD
     // the topic nodes - which need to be written to index before the related
     // scn.
     if (sharedNodes.size() > 1) {
+        // Resolve QML property group identifier (if any) from the first topic
+        // command arguments.
+        QString group;
+        if (auto dot = (*firstTopicArgs).m_name.indexOf('.'_L1); dot != -1)
+            group = (*firstTopicArgs).m_name.left(dot);
         auto *scn = new SharedCommentNode(qmlType, sharedNodes.size(), group);
         scn->setLocation(doc.startLocation());
 

@@ -68,6 +68,7 @@ qt_internal_add_tool(${target_name}
         src/qdoc/qmlcodemarker.cpp
         src/qdoc/qmlcodeparser.cpp
         src/qdoc/qmlmarkupvisitor.cpp
+        src/qdoc/qmlpropertyarguments.cpp
         src/qdoc/qmlpropertynode.cpp
         src/qdoc/qmltypenode.cpp
         src/qdoc/qmlvisitor.cpp

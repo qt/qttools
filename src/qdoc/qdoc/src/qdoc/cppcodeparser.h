@@ -56,8 +56,6 @@ protected:
     virtual Node *processTopicCommand(const Doc &doc, const QString &command,
                                       const ArgPair &arg);
     std::vector<TiedDocumentation> processQmlProperties(const UntiedDocumentation& untied);
-    bool splitQmlPropertyArg(const QString &arg, QString &type, QString &module, QString &element,
-                             QString &name, const Location &location);
 
 private:
     void setExampleFileLists(ExampleNode *en);

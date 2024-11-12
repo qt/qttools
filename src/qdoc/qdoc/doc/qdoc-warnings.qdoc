@@ -218,7 +218,7 @@
         \li <name> having moved to another namespace or class
     \endlist
 
-    \section1 Unrecognizable QML module/component qualifier for <identifier>
+    \section1 Unrecognizable QML module/type qualifier for <identifier>
 
     A parameter passed to \l {qmlproperty-command}{\\qmlproperty} or
     \l {qmlmethod-command}{\\qmlmethod} contains a combination of
@@ -226,7 +226,7 @@
 
     Example:
     \badcode
-    Unrecognizable QML module/component qualifier for real QtQuick::DragHandler::DragAxis::minimum
+    Unrecognizable QML module/type qualifier for real QtQuick::DragHandler::DragAxis::minimum
     \endcode
 
     DragHandler doesn't have a property called DragAxis.
