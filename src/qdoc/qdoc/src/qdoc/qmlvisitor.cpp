@@ -9,6 +9,7 @@
 #include "functionnode.h"
 #include "node.h"
 #include "qdocdatabase.h"
+#include "qmlpropertyarguments.h"
 #include "qmlpropertynode.h"
 #include "tokenizer.h"
 #include "utilities.h"
@@ -149,16 +150,15 @@ Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *n
             QString args = topicsUsed.at(i).m_args;
             if (topic.endsWith(QLatin1String("property"))) {
                 auto *qmlProperty = static_cast<QmlPropertyNode *>(node);
-                QmlPropArgs qpa;
-                if (splitQmlPropertyArg(doc, args, qpa)) {
-                    if (qpa.m_name == node->name()) {
+                if (auto qpa = QmlPropertyArguments::parse(args, doc.location())) {
+                    if (qpa->m_name == node->name()) {
                         if (qmlProperty->isAlias())
-                            qmlProperty->setDataType(qpa.m_type);
+                            qmlProperty->setDataType(qpa->m_type);
                     } else {
                         bool isAttached = topic.contains(QLatin1String("attached"));
-                        QmlPropertyNode *n = parent->hasQmlProperty(qpa.m_name, isAttached);
+                        QmlPropertyNode *n = parent->hasQmlProperty(qpa->m_name, isAttached);
                         if (n == nullptr)
-                            n = new QmlPropertyNode(parent, qpa.m_name, qpa.m_type, isAttached);
+                            n = new QmlPropertyNode(parent, qpa->m_name, qpa->m_type, isAttached);
                         n->setLocation(doc.location());
                         n->setDoc(doc);
                         // Use the const-overload of QmlPropertyNode::isReadOnly() as there's
@@ -342,51 +342,6 @@ bool QmlSignatureParser::matchFunctionDecl()
     if (!match(Tok_RightParen))
         return false;
     return true;
-}
-
-/*!
-  A QML property argument has the form...
-
-  <type> <component>::<name>
-  <type> <QML-module>::<component>::<name>
-
-  This function splits the argument into one of those
-  two forms. The three part form is the old form, which
-  was used before the creation of QtQuick 2 and Qt
-  Components. A <QML-module> is the QML equivalent of a
-  C++ namespace. So this function splits \a arg on "::"
-  and stores the parts in the \e {type}, \e {module},
-  \e {component}, and \a {name}, fields of \a qpa. If it
-  is successful, it returns \c true. If not enough parts
-  are found, a qdoc warning is emitted and false is
-  returned.
- */
-bool QmlDocVisitor::splitQmlPropertyArg(const Doc &doc, const QString &arg, QmlPropArgs &qpa)
-{
-    qpa.clear();
-    QStringList blankSplit = arg.split(QLatin1Char(' '));
-    if (blankSplit.size() > 1) {
-        qpa.m_type = blankSplit[0];
-        QStringList colonSplit(blankSplit[1].split("::"));
-        if (colonSplit.size() == 3) {
-            qpa.m_module = colonSplit[0];
-            qpa.m_component = colonSplit[1];
-            qpa.m_name = colonSplit[2];
-            return true;
-        } else if (colonSplit.size() == 2) {
-            qpa.m_component = colonSplit[0];
-            qpa.m_name = colonSplit[1];
-            return true;
-        } else if (colonSplit.size() == 1) {
-            qpa.m_name = colonSplit[0];
-            return true;
-        }
-        doc.location().warning(
-                QStringLiteral("Unrecognizable QML module/component qualifier for %1.").arg(arg));
-    } else {
-        doc.location().warning(QStringLiteral("Missing property type for %1.").arg(arg));
-    }
-    return false;
 }
 
 /*!

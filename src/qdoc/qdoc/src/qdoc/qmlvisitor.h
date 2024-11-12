@@ -16,22 +16,6 @@ QT_BEGIN_NAMESPACE
 
 class Aggregate;
 
-struct QmlPropArgs
-{
-    QString m_type {};
-    QString m_module {};
-    QString m_component {};
-    QString m_name;
-
-    void clear()
-    {
-        m_type.clear();
-        m_module.clear();
-        m_component.clear();
-        m_name.clear();
-    }
-};
-
 class QmlDocVisitor : public QQmlJS::AST::Visitor
 {
 public:
@@ -72,7 +56,6 @@ private:
     [[nodiscard]] QQmlJS::SourceLocation precedingComment(quint32 offset) const;
     Node *applyDocumentation(QQmlJS::SourceLocation location, Node *node);
     void applyMetacommands(QQmlJS::SourceLocation location, Node *node, Doc &doc);
-    bool splitQmlPropertyArg(const Doc &doc, const QString &arg, QmlPropArgs &qpa);
 
     QQmlJS::Engine *m_engine { nullptr };
     quint32 m_lastEndOffset {};
