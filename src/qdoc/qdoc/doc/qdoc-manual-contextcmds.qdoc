@@ -277,7 +277,7 @@
     \l {QtQuick::State::changes}{State} type.
 
     \target qmlenumeratorsfrom-command
-    \section1 \\qmlenenumeratorsfrom
+    \section1 \\qmlenumeratorsfrom
 
     Use the \\qmlenumeratorsfrom command in a \qdoccmd qmlproperty topic
     with a property type \e enumeration, to automatically replicate the
