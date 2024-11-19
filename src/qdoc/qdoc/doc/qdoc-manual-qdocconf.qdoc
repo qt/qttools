@@ -863,8 +863,10 @@
     \section1 macro
 
     The \c macro variable is used to create your own simple QDoc
-    commands. The syntax is \tt {macro.\e{command} = \e{definition}},
-    where the definition is written using QDoc syntax.
+    commands. The syntax is \tt {macro.\e{command} = \e{definition}}.
+    \e command is limited to a combination of letter and number
+    characters, but no special characters like dash or underscore.
+    \e definition is written using QDoc syntax.
 
     A macro variable can be restricted for use in one type of output
     generation. By appending \c {.HTML} to the macro name, for
