@@ -1291,13 +1291,18 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
             case 0: // Source text
                 {
                     MultiMessageItem *msgItem = mci->multiMessageItem(row);
-                    if (msgItem->text().isEmpty()) {
+
+                    auto text = msgItem->text();
+                    if (text.isEmpty())
+                        text = msgItem->id();
+
+                    if (text.isEmpty()) {
                         if (mci->context().isEmpty())
                             return tr("<file header>");
                         else
                             return tr("<context comment>");
                     }
-                    return msgItem->text().simplified();
+                    return text.simplified();
                 }
             default: // Status or dummy column => no text
                 return QVariant();
