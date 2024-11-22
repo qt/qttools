@@ -92,8 +92,6 @@ qt_internal_add_tool(${target_name}
         Qt::QmlPrivate
         WrapLibClang::WrapLibClang
     DEFINES
-        #(CLANG_RESOURCE_DIR=\"/clang//include\") # special case remove
-        CLANG_RESOURCE_DIR=${QT_LIBCLANG_RESOURCE_DIR}
         # To provide the ability to workaround version-specific Clang issues.
         # A re-export of (LLVM|CLANG)_VERSION_MAJOR done in WrapLibClang.cmake
         LIBCLANG_VERSION_MAJOR=${QT_LIB_CLANG_VERSION_MAJOR}
