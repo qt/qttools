@@ -62,6 +62,7 @@
                 <parameter type="bool" name="really" default=""/>
             </function>
             <qmlproperty name="active" fullname="QDoc.Test.DocTest.active" href="qml-qdoc-test-doctest.html#active-prop" status="active" access="public" documented="true" type="bool" attached="false" writable="true"/>
+            <qmlproperty name="boolNumbers" fullname="QDoc.Test.DocTest.boolNumbers" href="qml-qdoc-test-doctest.html#boolNumbers-prop" status="active" access="public" documented="true" type="list&lt;bool&gt;" attached="false" writable="true"/>
             <qmlproperty name="items" fullname="QDoc.Test.DocTest.items" href="qml-qdoc-test-doctest.html#items-prop" status="active" access="public" documented="true" type="list&lt;Item&gt;" attached="false" writable="true"/>
             <qmlproperty name="name" fullname="QDoc.Test.DocTest.name" href="qml-qdoc-test-doctest.html#name-prop" status="active" access="public" documented="true" type="string" attached="false" writable="true" required="true"/>
             <qmlproperty name="numbers" fullname="QDoc.Test.DocTest.numbers" href="qml-qdoc-test-doctest.html#numbers-prop" status="active" access="public" documented="true" type="list&lt;int&gt;" attached="false" writable="true"/>

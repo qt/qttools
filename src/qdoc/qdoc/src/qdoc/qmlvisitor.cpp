@@ -152,8 +152,8 @@ Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *n
                 auto *qmlProperty = static_cast<QmlPropertyNode *>(node);
                 if (auto qpa = QmlPropertyArguments::parse(args, doc.location())) {
                     if (qpa->m_name == node->name()) {
-                        if (qmlProperty->isAlias())
-                            qmlProperty->setDataType(qpa->m_type);
+                        // Allow overriding data type from the arguments
+                        qmlProperty->setDataType(qpa->m_type);
                     } else {
                         bool isAttached = topic.contains(QLatin1String("attached"));
                         QmlPropertyNode *n = parent->hasQmlProperty(qpa->m_name, isAttached);

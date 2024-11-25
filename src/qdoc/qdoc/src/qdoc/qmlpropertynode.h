@@ -17,7 +17,7 @@ class QmlPropertyNode : public Node
 public:
     QmlPropertyNode(Aggregate *parent, const QString &name, QString type, bool attached);
 
-    void setDataType(const QString &dataType) override { m_type = dataType; }
+    void setDataType(const QString &dataType) override;
     void setStored(bool stored) { m_stored = toFlagValue(stored); }
     void setDefaultValue(const QString &value) { m_defaultValue = value; }
     void setRequired() { m_required = toFlagValue(true); }

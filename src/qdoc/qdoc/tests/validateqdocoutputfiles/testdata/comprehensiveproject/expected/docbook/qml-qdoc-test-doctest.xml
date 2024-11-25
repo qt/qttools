@@ -52,6 +52,18 @@
 </db:para>
 </db:section>
 </db:section>
+<db:section xml:id="boolNumbers-prop">
+<db:title>boolNumbers : list&lt;bool&gt;</db:title>
+<db:fieldsynopsis>
+<db:type>list&lt;bool&gt;</db:type>
+<db:varname>boolNumbers</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>Property with overridden type.</db:para>
+</db:section>
 <db:section xml:id="items-prop">
 <db:title>items : list&lt;Item&gt;</db:title>
 <db:fieldsynopsis>
