@@ -59,6 +59,12 @@ Item {
     property list<Item> items
 
     /*!
+        \qmlproperty list<bool> boolNumbers
+        Property with overridden type.
+    */
+    property list<int> boolNumbers
+
+    /*!
         Whether the test is active.
         \default true
 

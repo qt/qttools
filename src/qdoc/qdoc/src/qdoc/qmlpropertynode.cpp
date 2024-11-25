@@ -31,6 +31,21 @@ QmlPropertyNode::QmlPropertyNode(Aggregate *parent, const QString &name, QString
 }
 
 /*!
+    Sets the data type of this property to \a dataType,
+    preserving the list property modifier if one is set
+    already.
+*/
+void QmlPropertyNode::setDataType(const QString &dataType)
+{
+    m_type = dataType;
+    // Re-apply list modifier if needed
+    if (auto is_list = m_isList; is_list == FlagValueTrue) {
+        m_isList = FlagValueDefault;
+        setIsList(true);
+    }
+}
+
+/*!
   \fn bool QmlPropertyNode::isReadOnly() const
 
   Returns \c true if this QML property node is marked as a

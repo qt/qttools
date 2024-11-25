@@ -120,6 +120,7 @@
             <keyword name="bindableProp" id="TestDerived::bindableProp" ref="testqdoc-testderived.html#bindableProp-prop"/>
             <keyword name="bindableProp" id="TestDerived::bindableProp" ref="testqdoc-testderived.html#bindableProp-prop"/>
             <keyword name="bindablePropChanged" id="TestDerived::bindablePropChanged" ref="testqdoc-testderived.html#bindableProp-prop"/>
+            <keyword name="boolNumbers" id="DocTest::boolNumbers" ref="qml-qdoc-test-doctest.html#boolNumbers-prop"/>
             <keyword name="boolProp" id="TestDerived::boolProp" ref="testqdoc-testderived.html#boolProp-prop"/>
             <keyword name="boolProp" id="TestDerived::boolProp" ref="testqdoc-testderived.html#boolProp-prop"/>
             <keyword name="boolPropChanged" id="TestDerived::boolPropChanged" ref="testqdoc-testderived.html#boolProp-prop"/>
