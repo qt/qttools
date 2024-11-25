@@ -255,7 +255,8 @@ MainWindow::MainWindow()
       m_settingCurrentMessage(false),
       m_fileActiveModel(-1),
       m_editActiveModel(-1),
-      m_statistics(0)
+      m_statistics(0),
+      m_recentFiles(10)
 {
     setUnifiedTitleAndToolBarOnMac(true);
     m_ui.setupUi(this);
@@ -677,17 +678,11 @@ bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
     }
     statusBar()->showMessage(tr("%n translation unit(s) loaded.", 0, totalCount), MessageMS);
     modelCountChanged();
-    recentFiles().addFiles(m_dataModel->srcFileNames());
+    m_recentFiles.addFiles(m_dataModel->srcFileNames());
 
     revalidate();
     QApplication::restoreOverrideCursor();
     return true;
-}
-
-RecentFiles &MainWindow::recentFiles()
-{
-    static RecentFiles recentFiles(10);
-    return recentFiles;
 }
 
 void MainWindow::open()
@@ -721,7 +716,7 @@ bool MainWindow::closeAll()
         m_dataModel->closeAll();
         modelCountChanged();
         initViewHeaders();
-        recentFiles().closeGroup();
+        m_recentFiles.closeGroup();
         return true;
     }
     return false;
@@ -750,8 +745,8 @@ static QString fileFilters(bool allFirst)
 QStringList MainWindow::pickTranslationFiles()
 {
     QString dir;
-    if (!recentFiles().isEmpty())
-        dir = QFileInfo(recentFiles().lastOpenedFile()).path();
+    if (!m_recentFiles.isEmpty())
+        dir = QFileInfo(m_recentFiles.lastOpenedFile()).path();
 
     QString varFilt;
     if (m_dataModel->modelCount()) {
@@ -783,7 +778,7 @@ void MainWindow::saveAll()
     for (int i = 0; i < m_dataModel->modelCount(); ++i)
         if (m_dataModel->isModelWritable(i))
             saveInternal(i);
-    recentFiles().closeGroup();
+    m_recentFiles.closeGroup();
 }
 
 void MainWindow::save()
@@ -805,7 +800,7 @@ void MainWindow::saveAs()
         if (m_dataModel->saveAs(m_currentIndex.model(), newFilename, this)) {
             updateCaption();
             statusBar()->showMessage(tr("File saved."), MessageMS);
-            recentFiles().addFiles(m_dataModel->srcFileNames());
+            m_recentFiles.addFiles(m_dataModel->srcFileNames());
         }
     }
 }
@@ -2658,7 +2653,7 @@ void MainWindow::readConfig()
     m_phraseView->setMaxCandidates(config.value(settingPath("Options/NumberOfGuesses"),
                                                 PhraseView::getDefaultMaxCandidates()).toInt());
 
-    recentFiles().readConfig();
+    m_recentFiles.readConfig();
 
     int size = config.beginReadArray(settingPath("OpenedPhraseBooks"));
     for (int i = 0; i < size; ++i) {
@@ -2689,7 +2684,7 @@ void MainWindow::writeConfig()
         m_ui.actionVisualizeWhitespace->isChecked());
     config.setValue(settingPath("MainWindowState"),
         saveState());
-    recentFiles().writeConfig();
+    m_recentFiles.writeConfig();
 
     config.setValue(settingPath("Options/EditorFontsize"), m_messageEditor->fontSize());
     config.setValue(settingPath("Options/NumberOfGuesses"), m_phraseView->getMaxCandidates());
@@ -2706,7 +2701,7 @@ void MainWindow::writeConfig()
 void MainWindow::setupRecentFilesMenu()
 {
     m_ui.menuRecentlyOpenedFiles->clear();
-    for (const QStringList &strList : recentFiles().filesLists())
+    for (const QStringList &strList : m_recentFiles.filesLists())
         if (strList.size() == 1) {
             const QString &str = strList.first();
             m_ui.menuRecentlyOpenedFiles->addAction(
