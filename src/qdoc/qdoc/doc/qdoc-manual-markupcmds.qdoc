@@ -2378,7 +2378,14 @@
     \section1 \\note
 
     The \\note command defines a new paragraph preceded by "Note:"
-    in bold.
+    in bold. The command takes a continuous paragraph as the argument,
+    terminating after the end of the paragraph. The note command is only for
+    shorter statements and not for longer multiline paragraphs.
+
+    Similar to the \l{warning-command}{\\warning} command, the note is for
+    short and important statements. See
+    \l{https://wiki.qt.io/Qt_Writing_Guidelines}{Qt Writing Guidelines} for
+    usage information.
 
     \target tableofcontents-command
     \section1 \\tableofcontents
