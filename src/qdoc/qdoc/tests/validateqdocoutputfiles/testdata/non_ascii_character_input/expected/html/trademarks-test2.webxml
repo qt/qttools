@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="trademarks-test2.html" href="trademarks-test2.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="Test Example2™" fulltitle="Test Example2™" subtitle="">
+            <description>
+                <para>This should be linkable.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>

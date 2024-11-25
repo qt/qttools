@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="trademarks.html" href="trademarks.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="Trademark Test" fulltitle="Trademark Test" subtitle="">
+            <contents name="example1-f18e807d" title="Example1™" level="1"/>
+            <contents name="linking" title="Linking" level="1"/>
+            <description>
+                <section id="example1-f18e807d">
+                    <heading level="1">Example1™</heading>
+                    <para>Tests whether a section with a trademark can be linked to. The heading should contain a trademark symbol. This link should work: <link raw="Test Example2™" href="trademarks-test2.html" type="page" page="Test Example2™">Test Example2™</link>.</para>
+                </section>
+                <section id="linking">
+                    <heading level="1">Linking</heading>
+                    <para>It should be possible to link to the previous section from here: <link raw="Example1™" href="trademarks.html#example1-f18e807d" type="page" page="Trademark Test">Example1™</link> and <link raw="Example1™" href="trademarks.html#example1-f18e807d" type="page" page="Trademark Test">this link</link>.</para>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>

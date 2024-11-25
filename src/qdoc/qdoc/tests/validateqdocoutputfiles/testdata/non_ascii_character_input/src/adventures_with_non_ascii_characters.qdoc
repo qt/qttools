@@ -87,3 +87,26 @@
     This page exists solely to understand how QDoc will generate the file name
     for a page that mixes printable ascii with non-latin characters in its name.
 */
+
+/*!
+    \page trademarks.html
+    \title Trademark Test
+
+    \section1 Example1™
+
+    Tests whether a section with a trademark can be linked to.
+    The heading should contain a trademark symbol.
+    This link should work: \l{Test Example2™}.
+
+    \section1 Linking
+
+    It should be possible to link to the previous section from here:
+    \l{Example1™} and \l{Example1™}{this link}.
+*/
+
+/*!
+    \page trademarks-test2.html
+    \title Test Example2™
+
+    This should be linkable.
+*/
