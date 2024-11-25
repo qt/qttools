@@ -40,7 +40,6 @@
     \li \l {example-command} {\\example}
     \li \l {externalpage-command} {\\externalpage}
     \li \l {fn-command} {\\fn}
-    \li \l {footnote-command} {\\footnote}
     \li \l {generatelist-command} {\\generatelist}
     \li \l {group-command} {\\group}
     \li \l {header-command} {\\header}

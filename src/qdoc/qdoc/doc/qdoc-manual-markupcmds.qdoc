@@ -29,7 +29,6 @@
     \li \l {e-command} {\\e}
     \li \l {else-command} {\\else}
     \li \l {endif-command} {\\endif}
-    \li \l {footnote-command} {\\footnote}
     \li \l {generatelist-command} {\\generatelist}
     \li \l {header-command} {\\header}
     \li \l {e-command} {\\i} (deprecated, use \\e)
@@ -2363,16 +2362,6 @@
 
     But you can redefine the \b{<blockquote>} tag in your style.css file.
 
-    \target footnote-command
-    \section1 \\footnote
-
-    The \\footnote and \\endfootnote commands delimit a footnote.
-
-    The footnote is rendered at the bottom of the page.
-
-    \warning The \b{\\footnote} and \b{\\endfootnote} commands
-    have not been implemented. The footnote is rendered as a regular
-    HTML paragraph.
 
     \target note-command
     \section1 \\note
