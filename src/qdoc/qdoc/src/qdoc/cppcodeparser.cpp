@@ -179,8 +179,11 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         auto *qcn = database->findQmlTypeInPrimaryTree(qmid, arg.first);
         // A \qmlproperty may have already constructed a placeholder type
         // without providing a module identifier; allow such cases
-        if (!qcn && !qmid.isEmpty())
+        if (!qcn && !qmid.isEmpty()) {
             qcn = database->findQmlTypeInPrimaryTree(QString(), arg.first);
+            if (qcn && !qcn->logicalModuleName().isEmpty())
+                qcn = nullptr;
+        }
         if (!qcn || qcn->nodeType() != nodeType)
             qcn = new QmlTypeNode(database->primaryTreeRoot(), arg.first, nodeType);
         if (!qmid.isEmpty())

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="ClashingQmlTypes Reference Documentation" version="" project="ClashingQmlTypes">
+    <namespace name="" status="active" access="public" module="clashingqmltypes">
+        <qmlclass name="Foo" qml-module-name="BarMod" fullname="BarMod.Foo" href="qml-barmod-foo.html" status="active" access="public" location="test.qdoc" documented="true" title="Foo" fulltitle="Foo" subtitle=""/>
+        <qmlclass name="Foo" qml-module-name="FooMod" fullname="FooMod.Foo" href="qml-foomod-foo.html" status="active" access="public" location="test.qdoc" documented="true" title="Foo" fulltitle="Foo" subtitle=""/>
+        <qmlmodule name="BarMod" qml-module-name="BarMod" href="barmod-qmlmodule.html" status="active" location="test.qdoc" documented="true" seen="true" title=""/>
+        <qmlmodule name="FooMod" qml-module-name="FooMod" href="foomod-qmlmodule.html" status="active" location="test.qdoc" documented="true" seen="true" title=""/>
+    </namespace>
+</INDEX>
