@@ -475,7 +475,7 @@ void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &write
 
     // Do not generate a 'List of all members' for namespaces or header files,
     // but always generate it for derived classes and QML types (but not QML value types)
-    if (!node->isNamespace() && !node->isHeader() && !node->isQmlBasicType()
+    if (!node->isNamespace() && !node->isHeader() && !node->isQmlBasicType() && !node->isWrapper()
         && (derivedClass || node->isQmlType() || !project.m_memberStatus[node].isEmpty())) {
         QString membersPath = href + QStringLiteral("-members.html");
         writeSection(writer, membersPath, QStringLiteral("List of all members"));
