@@ -133,10 +133,12 @@ a period (.), as QDoc does not do this automatically.
 
 \snippet examples/qml.qdoc.sample enums
 
-The QDoc comment lists the values of the enumeration. If the enumeration is
-implemented in C++, the documentation may link to the corresponding C++
-enumeration. However, the QDoc comment should advise that the enumeration
-is a C++ enumeration.
+The QDoc comment lists the values of the enumeration.
 
+If the enumeration is implemented in C++, consider using the
+\l{qmlenumeratorsfrom-command}{\\qmlenumeratorsfrom} command.
+If this isn't possible, the documentation may also directly link to the
+corresponding C++ enumeration. However, the QDoc comment should then advise that
+the enumeration is a C++ enumeration.
 */
 
