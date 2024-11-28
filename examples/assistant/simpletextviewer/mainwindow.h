@@ -22,6 +22,7 @@ public:
     MainWindow();
 
 private slots:
+    void updateWindowTitle(const QString &fileName);
     void about();
     void showDocumentation();
     void open();

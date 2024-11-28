@@ -30,6 +30,8 @@ MainWindow::MainWindow()
 
     setWindowTitle(tr("Simple Text Viewer"));
     resize(750, 400);
+
+    connect(textViewer, &TextEdit::fileNameChanged, this, &MainWindow::updateWindowTitle);
 // ![1]
 }
 //! [1]
@@ -40,6 +42,11 @@ void MainWindow::closeEvent(QCloseEvent *)
     delete assistant;
 }
 //! [2]
+
+void MainWindow::updateWindowTitle(const QString &fileName)
+{
+    setWindowTitle(tr("Simple Text Viewer - %1").arg(fileName));
+}
 
 void MainWindow::about()
 {

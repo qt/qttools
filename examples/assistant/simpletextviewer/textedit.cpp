@@ -24,6 +24,7 @@ void TextEdit::setContents(const QString &fileName)
         else
             setPlainText(data);
     }
+    emit fileNameChanged(fileName);
 }
 
 QVariant TextEdit::loadResource(int type, const QUrl &name)

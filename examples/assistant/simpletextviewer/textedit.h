@@ -15,6 +15,9 @@ public:
     TextEdit(QWidget *parent = nullptr);
     void setContents(const QString &fileName);
 
+signals:
+    void fileNameChanged(const QString &fileName);
+
 private:
     QVariant loadResource(int type, const QUrl &name) override;
     QUrl srcUrl;
