@@ -819,4 +819,13 @@
     unconditionally warn about all such events. This may be useful when tracking
     down the offending definitions.
 
+    \section1 Invalid QML property type
+
+    The type used to declare a QML property was not a valid
+    \l{QML Value Types}{QML value type} or \l{QML Object Types}{QML object type},
+    or it was a C++ or Qt type.
+
+    This warning typically occurs when developers refer to the underlying Qt
+    type used to implement a QML type, such as QStringList instead of
+    \c{list<string>}.
 */

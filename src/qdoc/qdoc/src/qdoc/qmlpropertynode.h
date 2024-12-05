@@ -25,6 +25,7 @@ public:
     bool setEnumNode(const QString &path, const QString &registeredQmlName);
 
     [[nodiscard]] const QString &dataType() const { return m_type; }
+    [[nodiscard]] bool validateDataType(const QString &type = QString()) const;
     [[nodiscard]] const QString &defaultValue() const { return m_defaultValue; }
     [[nodiscard]] bool isStored() const { return fromFlagValue(m_stored, true); }
     bool isRequired();
@@ -67,6 +68,9 @@ private:
     FlagValue m_readOnly { FlagValueDefault };
     FlagValue m_required { FlagValueDefault };
     std::pair<EnumNode *, QString> m_enumNode { nullptr, {} };
+    static QSet<QString> cppQmlValueTypes;
+    static QRegularExpression cppBasicList;
+    static QRegularExpression qmlBasicList;
 };
 
 QT_END_NAMESPACE
