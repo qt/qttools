@@ -220,15 +220,14 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     // Only add nodes to the set for each subproject if they match a selector.
     // Those that match will be listed in the table of contents.
 
-    for (int i = 0; i < project.m_subprojects.size(); i++) {
-        SubProject subproject = project.m_subprojects[i];
+    for (auto &subproject : project.m_subprojects) {
         // No selectors: accept all nodes.
         if (subproject.m_selectors.isEmpty()) {
-            project.m_subprojects[i].m_nodes[objName] = node;
+            subproject.m_nodes.insert(objName, node);
         } else if (subproject.m_selectors.contains(node->nodeType())) {
             // Add all group members for '[group|module|qmlmodule]:name' selector
             if (node->isCollectionNode()) {
-                if (project.m_subprojects[i].m_groups.contains(node->name().toLower())) {
+                if (subproject.m_groups.contains(node->name().toLower())) {
                     const auto *cn = static_cast<const CollectionNode *>(node);
                     const auto members = cn->members();
                     for (const Node *m : members) {
@@ -236,17 +235,17 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
                             continue;
                         QString memberName =
                                 m->isTextPageNode() ? m->fullTitle() : m->fullDocumentName();
-                        project.m_subprojects[i].m_nodes[memberName] = m;
+                        subproject.m_nodes.insert(memberName, m);
                     }
                     continue;
-                } else if (!project.m_subprojects[i].m_groups.isEmpty()) {
+                } else if (!subproject.m_groups.isEmpty()) {
                     continue; // Node does not represent specified group(s)
                 }
             } else if (node->isTextPageNode()) {
                 if (node->isExternalPage() || node->fullTitle().isEmpty())
                     continue;
             }
-            project.m_subprojects[i].m_nodes[objName] = node;
+            subproject.m_nodes.insert(objName, node);
         }
     }
 
