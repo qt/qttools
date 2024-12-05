@@ -44,7 +44,13 @@ static bool validatePackage(Package &p, const QString &filePath, Checks checks, 
         if (logLevel != SilentLog)
             missingPropertyWarning(filePath, u"Id"_s);
         validPackage = false;
+    } else if (!p.id.isLower() || p.id.contains(' '_L1)) {
+        if (logLevel != SilentLog)
+            std::cerr << qPrintable(tr("File %1: Expected 'Id' should be lower case and withtout spaces.")
+                                        .arg(QDir::toNativeSeparators(filePath))) << std::endl;
+        validPackage = false;
     }
+
     if (p.license.isEmpty()) {
         if (logLevel != SilentLog)
             missingPropertyWarning(filePath, u"License"_s);
@@ -281,7 +287,8 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
             } else {
                 if (logLevel != SilentLog) {
                     std::cerr << qPrintable(tr("File %1: Expected JSON array of strings as value "
-                                               "of Files."));
+                                               "of Files.").arg(QDir::toNativeSeparators(filePath)))
+                              << std::endl;
                     validPackage = false;
                     continue;
                 }
