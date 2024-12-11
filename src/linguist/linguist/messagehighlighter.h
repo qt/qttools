@@ -17,6 +17,7 @@ class MessageHighlighter : public QSyntaxHighlighter
 
 public:
     MessageHighlighter(QTextEdit *textEdit);
+    void adjustColors();
 
 protected:
     void highlightBlock(const QString &text) override;

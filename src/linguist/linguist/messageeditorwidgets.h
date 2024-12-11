@@ -64,7 +64,9 @@ public slots:
     void setVisualizeWhitespace(bool value);
 
 private:
-    MessageHighlighter *m_highlighter;
+    bool event(QEvent *event) override;
+
+    MessageHighlighter *m_highlighter = nullptr;
 };
 
 /*

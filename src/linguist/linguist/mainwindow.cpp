@@ -2838,7 +2838,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
                 m_messageEditor->decreaseFontSize();
         }
     }
-    return false;
+    return QMainWindow::eventFilter(object, event);
 }
 
 QT_END_NAMESPACE

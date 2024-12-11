@@ -79,6 +79,7 @@ FormatTextEdit::FormatTextEdit(QWidget *parent)
 {
     setLineWrapMode(QTextEdit::WidgetWidth);
     setAcceptRichText(false);
+    m_highlighter = new MessageHighlighter(this);
 
     // Do not set different background if disabled
     QPalette p = palette();
@@ -86,8 +87,6 @@ FormatTextEdit::FormatTextEdit(QWidget *parent)
     setPalette(p);
 
     setEditable(true);
-
-    m_highlighter = new MessageHighlighter(this);
 }
 
 FormatTextEdit::~FormatTextEdit()
@@ -141,6 +140,15 @@ void FormatTextEdit::setVisualizeWhitespace(bool value)
                         & ~QTextOption::ShowTabsAndSpaces);
     }
     document()->setDefaultTextOption(option);
+}
+
+bool FormatTextEdit::event(QEvent *event)
+{
+    if ((event->type() == QEvent::ApplicationPaletteChange
+         || event->type() == QEvent::PaletteChange)
+        && m_highlighter)
+        m_highlighter->adjustColors();
+    return ExpandingTextEdit::event(event);
 }
 
 FormWidget::FormWidget(const QString &label, bool isEditable, QWidget *parent)

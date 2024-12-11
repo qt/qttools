@@ -8,5 +8,6 @@
 
 const QString &settingsPrefix();
 QString settingPath(const char *path);
+bool isDarkMode();
 
 #endif // GLOBALS_H

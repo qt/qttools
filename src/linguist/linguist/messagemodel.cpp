@@ -1084,7 +1084,8 @@ MultiContextItem *MultiDataModel::findContext(const QString &context) const
 
 MessageItem *MultiDataModel::messageItem(const MultiDataIndex &index, int model) const
 {
-    if (index.context() < contextCount() && model >= 0 && model < modelCount()) {
+    if (index.context() < contextCount() && index.context() >= 0 && model >= 0
+        && model < modelCount()) {
         MultiContextItem *mc = multiContextItem(index.context());
         if (index.message() < mc->messageCount())
             return mc->messageItem(model, index.message());

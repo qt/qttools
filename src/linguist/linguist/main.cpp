@@ -104,6 +104,7 @@ int main(int argc, char **argv)
 #ifdef Q_OS_MAC
     eventFilter.setMainWindow(&mw);
 #endif // Q_OS_MAC
+    app.installEventFilter(&mw);
     mw.show();
     QApplication::restoreOverrideCursor();
 

@@ -3,6 +3,8 @@
 
 #include "messagehighlighter.h"
 
+#include "globals.h"
+
 #include <QtCore/QTextStream>
 #include <QtWidgets/QTextEdit>
 
@@ -11,37 +13,7 @@ QT_BEGIN_NAMESPACE
 MessageHighlighter::MessageHighlighter(QTextEdit *textEdit)
     : QSyntaxHighlighter(textEdit->document())
 {
-    QTextCharFormat entityFormat;
-    entityFormat.setForeground(Qt::red);
-    m_formats[Entity] = entityFormat;
-
-    QTextCharFormat tagFormat;
-    tagFormat.setForeground(Qt::darkMagenta);
-    m_formats[Tag] = tagFormat;
-
-    QTextCharFormat commentFormat;
-    commentFormat.setForeground(Qt::gray);
-    commentFormat.setFontItalic(true);
-    m_formats[Comment] = commentFormat;
-
-    QTextCharFormat attributeFormat;
-    attributeFormat.setForeground(Qt::black);
-    attributeFormat.setFontItalic(true);
-    m_formats[Attribute] = attributeFormat;
-
-    QTextCharFormat valueFormat;
-    valueFormat.setForeground(Qt::blue);
-    m_formats[Value] = valueFormat;
-
-    QTextCharFormat acceleratorFormat;
-    acceleratorFormat.setFontUnderline(true);
-    m_formats[Accelerator] = acceleratorFormat;
-
-    QTextCharFormat variableFormat;
-    variableFormat.setForeground(Qt::blue);
-    m_formats[Variable] = variableFormat;
-
-    rehighlight();
+    adjustColors();
 }
 
 void MessageHighlighter::highlightBlock(const QString &text)
@@ -168,6 +140,47 @@ void MessageHighlighter::highlightBlock(const QString &text)
         }
     }
     setCurrentBlockState(state);
+}
+
+void MessageHighlighter::adjustColors()
+{
+    QTextCharFormat entityFormat;
+    QTextCharFormat tagFormat;
+    QTextCharFormat commentFormat;
+    QTextCharFormat attributeFormat;
+    QTextCharFormat valueFormat;
+    QTextCharFormat acceleratorFormat;
+    QTextCharFormat variableFormat;
+
+    if (isDarkMode()) {
+        entityFormat.setForeground(Qt::red);
+        tagFormat.setForeground(QColor(Qt::darkMagenta).lighter());
+        commentFormat.setForeground(Qt::gray);
+        attributeFormat.setForeground(QColor(Qt::darkGray).lighter());
+        valueFormat.setForeground(QColor(Qt::darkGreen).lighter());
+        variableFormat.setForeground(QColor(Qt::darkGreen).lighter());
+    } else {
+        entityFormat.setForeground(Qt::red);
+        tagFormat.setForeground(Qt::darkMagenta);
+        commentFormat.setForeground(Qt::gray);
+        attributeFormat.setForeground(Qt::black);
+        valueFormat.setForeground(Qt::darkGreen);
+        variableFormat.setForeground(Qt::darkGreen);
+    }
+
+    commentFormat.setFontItalic(true);
+    attributeFormat.setFontItalic(true);
+    acceleratorFormat.setFontUnderline(true);
+
+    m_formats[Entity] = entityFormat;
+    m_formats[Tag] = tagFormat;
+    m_formats[Comment] = commentFormat;
+    m_formats[Attribute] = attributeFormat;
+    m_formats[Value] = valueFormat;
+    m_formats[Accelerator] = acceleratorFormat;
+    m_formats[Variable] = variableFormat;
+
+    rehighlight();
 }
 
 QT_END_NAMESPACE

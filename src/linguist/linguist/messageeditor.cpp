@@ -521,6 +521,11 @@ bool MessageEditor::eventFilter(QObject *o, QEvent *e)
         QWidget *widget = static_cast<QWidget *>(o);
         if (widget != m_focusWidget)
             trackFocus(widget);
+    } else if (e->type() == QEvent::ApplicationPaletteChange
+               || e->type() == QEvent::PaletteChange) {
+        QPalette p;
+        p.setBrush(QPalette::Window, p.brush(QPalette::Active, QPalette::Base));
+        setPalette(p);
     }
 
     return QScrollArea::eventFilter(o, e);
