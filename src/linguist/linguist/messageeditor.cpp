@@ -130,7 +130,7 @@ void MessageEditor::setupEditorPage()
 
     QBoxLayout *horizontalLayout = new QHBoxLayout;
     horizontalLayout->addLayout(subLayout);
-    horizontalLayout->addWidget(m_ncrModeBox);
+    horizontalLayout->addWidget(m_ncrModeBox, 0, Qt::AlignTop | Qt::AlignRight);
 
     m_layout = new QVBoxLayout;
     m_layout->setSpacing(2);

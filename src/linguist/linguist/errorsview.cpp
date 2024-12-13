@@ -3,6 +3,7 @@
 
 #include "errorsview.h"
 
+#include "globals.h"
 #include "messagemodel.h"
 
 #include <QtCore/QList>
@@ -67,10 +68,7 @@ QString ErrorsView::firstError()
 
 void ErrorsView::addError(int model, const QString &error)
 {
-    // NOTE: Three statics instead of one just for GCC 3.3.5
-    static QLatin1String imageLocation(":/images/s_check_danger.png");
-    static QPixmap image(imageLocation);
-    static QIcon pxDanger(image);
+    static QIcon pxDanger = UnicodeIconGenerator().create(u'!', Qt::red);
     QString lang;
     if (m_dataModel->modelCount() > 1)
         lang = m_dataModel->model(model)->localizedLanguage() + QLatin1String(": ");

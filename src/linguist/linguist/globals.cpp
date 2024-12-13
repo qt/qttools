@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "globals.h"
-#include <QColor>
+
 #include <QApplication>
-#include <QStyleHints>
+#include <QColor>
 #include <QPalette>
+#include <QPainter>
+#include <QStyleHints>
 
 const QString &settingsPrefix()
 {
@@ -32,4 +34,23 @@ bool isDarkMode()
 {
     return QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark
             || isLight(QGuiApplication::palette().color(QPalette::WindowText));
+}
+
+QPixmap UnicodeIconGenerator::create(QChar unicode, Qt::GlobalColor color)
+{
+    QPixmap pixmap(16, 16);
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    painter.setFont(*m_font);
+    painter.setPen(color);
+    painter.drawText(pixmap.rect(), Qt::AlignCenter, unicode);
+    painter.end();
+    return pixmap;
+}
+
+UnicodeIconGenerator::UnicodeIconGenerator()
+    : m_font(std::make_unique<QFont>())
+{
+    m_font->setBold(true);
+    m_font->setPointSize(18);
 }

@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "messagemodel.h"
+
+#include "globals.h"
 #include "statistics.h"
 
 #include <QtCore/QCoreApplication>
@@ -1365,18 +1367,35 @@ int MessageModel::columnCount(const QModelIndex &parent) const
 
 QVariant MessageModel::data(const QModelIndex &index, int role) const
 {
-    static QVariant pxOn  =
-        QVariant::fromValue(QPixmap(QLatin1String(":/images/s_check_on.png")));
-    static QVariant pxOff =
-        QVariant::fromValue(QPixmap(QLatin1String(":/images/s_check_off.png")));
-    static QVariant pxObsolete =
-        QVariant::fromValue(QPixmap(QLatin1String(":/images/s_check_obsolete.png")));
-    static QVariant pxDanger =
-        QVariant::fromValue(QPixmap(QLatin1String(":/images/s_check_danger.png")));
-    static QVariant pxWarning =
-        QVariant::fromValue(QPixmap(QLatin1String(":/images/s_check_warning.png")));
-    static QVariant pxEmpty =
-        QVariant::fromValue(QPixmap(QLatin1String(":/images/s_check_empty.png")));
+    static UnicodeIconGenerator pg;
+
+    static QVariant pxOn;
+    static QVariant pxOff;
+    static QVariant pxObsolete;
+    static QVariant pxDanger;
+    static QVariant pxWarning;
+    static QVariant pxEmpty;
+
+    static Qt::ColorScheme mode = Qt::ColorScheme::Unknown; // to prevent creating new QPixmaps
+                                                            // every time the method is called
+
+    if (bool dark = isDarkMode(); dark && mode != Qt::ColorScheme::Dark) {
+        pxOn = pg.create(QChar(0x2713), Qt::darkGreen);
+        pxOff = pg.create(u'?', Qt::yellow);
+        pxObsolete = pg.create(QChar(0x2713), Qt::gray);
+        pxDanger = pg.create(u'!', Qt::red);
+        pxWarning = pg.create(QChar(0x2713), Qt::yellow);
+        pxEmpty = pg.create(u'?', Qt::white);
+        mode = Qt::ColorScheme::Dark;
+    } else if (!dark && mode != Qt::ColorScheme::Light) {
+        pxOn = pg.create(QChar(0x2713), Qt::darkGreen);
+        pxOff = pg.create(u'?', Qt::darkYellow);
+        pxObsolete = pg.create(QChar(0x2713), Qt::gray);
+        pxDanger = pg.create(u'!', Qt::red);
+        pxWarning = pg.create(QChar(0x2713), Qt::darkYellow);
+        pxEmpty = pg.create(u'?', Qt::darkBlue);
+        mode = Qt::ColorScheme::Light;
+    }
 
     int row = index.row();
     int column = index.column() - 1;

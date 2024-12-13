@@ -175,8 +175,7 @@ private:
 
 static const QVariant &pxObsolete()
 {
-    static const QVariant v =
-        QVariant::fromValue(QPixmap(QLatin1String(":/images/s_check_obsolete.png")));
+    static const QVariant v = UnicodeIconGenerator().create(QChar(0x2713), Qt::gray);
     return v;
 }
 
@@ -1813,28 +1812,17 @@ void MainWindow::setupMenuBar()
     const QString prefix = QApplication::platformName().compare(QStringLiteral("cocoa"), Qt::CaseInsensitive) ?
                            QStringLiteral(":/images/win") : QStringLiteral(":/images/mac");
 
-    m_ui.actionOpen->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen,
-                                              QIcon(prefix + QStringLiteral("/fileopen.png"))));
-    m_ui.actionOpenAux->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen,
-                                                 QIcon(prefix + QStringLiteral("/fileopen.png"))));
-    m_ui.actionSave->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSave,
-                                              QIcon(prefix + QStringLiteral("/filesave.png"))));
-    m_ui.actionSaveAll->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSave,
-                                                 QIcon(prefix + QStringLiteral("/filesave.png"))));
-    m_ui.actionPrint->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentPrint,
-                                               QIcon(prefix + QStringLiteral("/print.png"))));
-    m_ui.actionRedo->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditRedo,
-                                              QIcon(prefix + QStringLiteral("/redo.png"))));
-    m_ui.actionUndo->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditUndo,
-                                              QIcon(prefix + QStringLiteral("/undo.png"))));
-    m_ui.actionCut->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditCut,
-                                             QIcon(prefix + QStringLiteral("/editcut.png"))));
-    m_ui.actionCopy->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditCopy,
-                                              QIcon(prefix + QStringLiteral("/editcopy.png"))));
-    m_ui.actionPaste->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditPaste,
-                                               QIcon(prefix + QStringLiteral("/editpaste.png"))));
-    m_ui.actionFind->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditFind,
-                                              QIcon(prefix + QStringLiteral("/searchfind.png"))));
+    m_ui.actionOpen->setIcon(QIcon(prefix + QStringLiteral("/fileopen.png")));
+    m_ui.actionOpenAux->setIcon(QIcon(prefix + QStringLiteral("/fileopen.png")));
+    m_ui.actionSave->setIcon(QIcon(prefix + QStringLiteral("/filesave.png")));
+    m_ui.actionSaveAll->setIcon(QIcon(prefix + QStringLiteral("/filesave.png")));
+    m_ui.actionPrint->setIcon(QIcon(prefix + QStringLiteral("/print.png")));
+    m_ui.actionRedo->setIcon(QIcon(prefix + QStringLiteral("/redo.png")));
+    m_ui.actionUndo->setIcon(QIcon(prefix + QStringLiteral("/undo.png")));
+    m_ui.actionCut->setIcon(QIcon(prefix + QStringLiteral("/editcut.png")));
+    m_ui.actionCopy->setIcon(QIcon(prefix + QStringLiteral("/editcopy.png")));
+    m_ui.actionPaste->setIcon(QIcon(prefix + QStringLiteral("/editpaste.png")));
+    m_ui.actionFind->setIcon(QIcon(prefix + QStringLiteral("/searchfind.png")));
 
     // No well defined theme icons for these actions
     m_ui.actionAccelerators->setIcon(QIcon(prefix + QStringLiteral("/accelerator.png")));
