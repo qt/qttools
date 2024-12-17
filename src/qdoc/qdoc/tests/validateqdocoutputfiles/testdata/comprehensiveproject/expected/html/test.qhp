@@ -150,6 +150,8 @@
             <keyword name="group.first" id="Type::group.first" ref="qml-qdoc-test-type.html#group.first-prop"/>
             <keyword name="group.second" id="Type::group.second" ref="qml-qdoc-test-type.html#group.second-prop"/>
             <keyword name="group.third" id="Type::group.third" ref="qml-qdoc-test-type.html#group.third-prop"/>
+            <keyword name="icon.name" id="DocTest::icon.name" ref="qml-qdoc-test-doctest.html#icon.name-prop"/>
+            <keyword name="icon.source" id="DocTest::icon.source" ref="qml-qdoc-test-doctest.html#icon.source-prop"/>
             <keyword name="id" id="Type::id" ref="qml-qdoc-test-type.html#id-prop"/>
             <keyword name="id" id="TestDerived::id" ref="testqdoc-testderived.html#id"/>
             <keyword name="indexedKeyword" id="indexedKeyword" ref="autolinking.html#indexedkeyword-property"/>

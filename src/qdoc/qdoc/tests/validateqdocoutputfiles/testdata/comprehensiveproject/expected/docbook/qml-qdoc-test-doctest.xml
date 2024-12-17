@@ -64,6 +64,28 @@
 </db:fieldsynopsis>
 <db:para>Property with overridden type.</db:para>
 </db:section>
+<db:section xml:id="icon-prop">
+<db:title>icon group</db:title>
+<db:bridgehead renderas="sect2" xml:id="icon.name-prop">icon.name : string</db:bridgehead>
+<db:fieldsynopsis>
+<db:type>string</db:type>
+<db:varname>icon.name</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:bridgehead renderas="sect2" xml:id="icon.source-prop">icon.source : string</db:bridgehead>
+<db:fieldsynopsis>
+<db:type>string</db:type>
+<db:varname>icon.source</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>Holds an icon.</db:para>
+</db:section>
 <db:section xml:id="items-prop">
 <db:title>items : list&lt;Item&gt;</db:title>
 <db:fieldsynopsis>
