@@ -167,6 +167,13 @@
     comment preceding its definition, and a separate \\fn comment
     elsewhere.
 
+    \section1 <topic> cannot be mixed with other topic commands
+
+    QDoc allows multiple topic commands in a single documentation
+    comment for certain \l{Writing Documentation#Multiple topics}{use cases}.
+    Using multiple topic commands from different categories prints
+    out this warning, and the topic generates no output.
+
     \section1 Namespace <name> documented more than once
 
     This warning means that a documentation set contains two comments

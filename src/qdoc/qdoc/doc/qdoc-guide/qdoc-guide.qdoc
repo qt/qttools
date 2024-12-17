@@ -275,6 +275,8 @@
         \li \l{page-command}{\\page} - for creating a page.
     \endlist
 
+    \section3 Multiple topics
+
     A QDoc comment can contain multiple topic commands in the same category, with
     some restrictions. This way, it's possible to write a single comment that
     documents all overloads of a function (using multiple \l {fn-command}{\\fn}

@@ -172,10 +172,24 @@ Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *n
                     }
                 } else
                     qCDebug(lcQdoc) << "Failed to parse QML property:" << topic << args;
-            } else if (topic.endsWith(QLatin1String("method")) || topic == COMMAND_QMLSIGNAL) {
+            } else if (topic == COMMAND_QMLSIGNAL || topic == COMMAND_QMLMETHOD ||
+                       topic == COMMAND_QMLATTACHEDSIGNAL || topic == COMMAND_QMLATTACHEDMETHOD) {
                 if (node->isFunction()) {
-                    auto *fn = static_cast<FunctionNode *>(node);
-                    QmlSignatureParser qsp(fn, args, doc.location());
+                    QmlSignatureParser qsp(static_cast<FunctionNode *>(node), args, doc.location());
+                    if (nodes.size() > 1) {
+                        doc.location().warning("\\%1 cannot be mixed with other topic commands"_L1.arg(topic));
+                        nodes = {node};
+                    }
+                    break;
+                }
+            } else if (topic == COMMAND_QMLTYPE || topic == COMMAND_QMLVALUETYPE ||
+                       topic == COMMAND_QMLBASICTYPE) {
+                if (node->isQmlType()) {
+                    if (nodes.size() > 1) {
+                        doc.location().warning("\\%1 cannot be mixed with other topic commands"_L1.arg(topic));
+                        nodes = {node};
+                    }
+                    break;
                 }
             }
         }
