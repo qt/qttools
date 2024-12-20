@@ -3,7 +3,7 @@
 
 # Need to stop building these apps by default because they would fail
 # in device_and_simulator and webassembly builds.
-if(IOS OR WASM)
+if(UIKIT OR WASM)
    set(_qt_additional_tools_to_exclude qtplugininfo)
 endif()
 
