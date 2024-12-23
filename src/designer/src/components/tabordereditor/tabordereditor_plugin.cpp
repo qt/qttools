@@ -6,6 +6,8 @@
 #include "tabordereditor_plugin.h"
 #include "tabordereditor_tool.h"
 
+#include <iconloader_p.h>
+
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/abstractformwindow.h>
 #include <QtDesigner/abstractformwindowmanager.h>
@@ -31,9 +33,7 @@ void TabOrderEditorPlugin::initialize(QDesignerFormEditorInterface *core)
 
     m_action = new QAction(tr("Edit Tab Order"), this);
     m_action->setObjectName(u"_qt_edit_tab_order_action"_s);
-    QIcon icon = QIcon::fromTheme(u"designer-edit-tabs"_s,
-                                  QIcon(core->resourceLocation() + "/tabordertool.png"_L1));
-    m_action->setIcon(icon);
+    m_action->setIcon(createIconSet("tabordertool.png"_L1));
     m_action->setEnabled(false);
 
     setParent(core);

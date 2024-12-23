@@ -6,6 +6,8 @@
 #include "buddyeditor_plugin.h"
 #include "buddyeditor_tool.h"
 
+#include <iconloader_p.h>
+
 #include <QtDesigner/abstractformwindow.h>
 #include <QtDesigner/abstractformwindowmanager.h>
 #include <QtDesigner/abstractformeditor.h>
@@ -31,9 +33,7 @@ void BuddyEditorPlugin::initialize(QDesignerFormEditorInterface *core)
 
     m_action = new QAction(tr("Edit Buddies"), this);
     m_action->setObjectName(u"__qt_edit_buddies_action"_s);
-    QIcon buddyIcon = QIcon::fromTheme(u"designer-edit-buddy"_s,
-                                       QIcon(core->resourceLocation() + "/buddytool.png"_L1));
-    m_action->setIcon(buddyIcon);
+    m_action->setIcon(createIconSet("buddytool.png"_L1));
     m_action->setEnabled(false);
 
     setParent(core);

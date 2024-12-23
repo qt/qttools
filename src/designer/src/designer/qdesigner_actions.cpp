@@ -319,9 +319,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     shortcuts.append(QKeySequence(Qt::Key_F3));
     shortcuts.append(QKeySequence(Qt::Key_Escape));
     m_editWidgetsAction->setShortcuts(shortcuts);
-    QIcon fallback(m_core->resourceLocation() + "/widgettool.png"_L1);
-    m_editWidgetsAction->setIcon(QIcon::fromTheme(u"designer-edit-widget"_s,
-                                                  fallback));
+    m_editWidgetsAction->setIcon(qdesigner_internal::createIconSet("widgettool.png"_L1));
     connect(m_editWidgetsAction, &QAction::triggered, this, &QDesignerActions::editWidgetsSlot);
     m_editWidgetsAction->setChecked(true);
     m_editWidgetsAction->setEnabled(false);
