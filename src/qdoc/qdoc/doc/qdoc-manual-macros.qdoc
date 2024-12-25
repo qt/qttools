@@ -345,8 +345,9 @@
     \endtabcontent
     \endcode
 
-    \note These macros only work with the online template, so you usually
-    need to use conditional text to get good results also for the offline help.
+    \note These macros only work with the online template and DocBook, so you
+    usually need to use conditional text to get good results also for the
+    offline help.
 
     For example, to show instructions for the CMake and qmake build systems in
     tabs:
