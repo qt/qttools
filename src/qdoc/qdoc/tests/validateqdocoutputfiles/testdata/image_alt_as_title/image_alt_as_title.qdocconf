@@ -1,0 +1,24 @@
+project = ImageAltAsTitle
+productname = Qt
+
+headerdirs  = ./src
+sourcedirs  = ./src
+exampledirs = ./src
+
+outputformats             = HTML
+
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+# images
+imagedirs = ./src/images
+usealttextastitle = true
+
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+

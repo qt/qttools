@@ -183,6 +183,7 @@
     \li \l {tabsize-variable} {tabsize}
     \li \l {url-variable} {url}
     \li \l {url.examples-variable} {url.examples}
+    \li \l {usealttextastitle-variable} {usealttextastitle}
     \li \l {version-variable} {version}
     \li \l {versionsym-variable} {versionsym}
     \li \l {warninglimit-variable} {warninglimit}
@@ -1934,6 +1935,19 @@
     \c {url.examples} variable was introduced in QDoc version 5.13.
 
     See also \l url, \l examplesinstallpath, and \l {example-command}{\\example}.
+
+
+    \target usealttextastitle-variable
+    \section1 usealttextastitle
+    In some cases, it's desirable to provide a "tooltip" for images when
+    rendered in graphical browsers. QDoc offers a way to do this, where the
+    \e alt text given as an optional string to the \qdoccmd image command is
+    also used as the \e title attribute for the image. Enable this behavior
+    by setting the this variable with \c {usealttextastitle = true} in your
+    QDoc configuration file.
+
+    This configuration variable was introduced to QDoc with Qt 6.9.
+
 
     \target howto
     \section1 How to Support Derived Projects

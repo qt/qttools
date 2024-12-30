@@ -1849,15 +1849,18 @@
     argument, and renders it centered as a separate paragraph.
 
     The command takes two arguments. The first argument is the name of
-    the image file. The second argument is optional and is a simple
-    description of the image, equivalent to the HTML alt="" in an image
-    tag. The description is used for tooltips and for browsers that don't
-    support images, like the Lynx text browser.
+    the image file. The second argument should be a description of what
+    the image contains, and is used for the HTML \c alt attribute.
+    Its contents is read aloud by screen readers, and its use is therefore
+    strongly recommended for accessibility purposes. It may also be used by
+    browsers that don't support images, like the Lynx text browser. You
+    can also set the \l {usealttextastitle-variable} {usealttextastitle}
+    variable to make QDoc generate a \e title attribute for the image, which
+    commonly is rendered by graphical text browsers as a tooltip when the user
+    hovers the mouse over the image.
 
-    The remaining text \e{after} the file name is the optional,
-    description argument. Be sure to follow the file name or the
-    description with a line break. Curly brackets are required if the
-    description argument spans multiple lines.
+    Be sure to follow the file name or the description with a line break.
+    Curly brackets are required if the description argument spans multiple lines.
 
     \badcode *
     /\1!

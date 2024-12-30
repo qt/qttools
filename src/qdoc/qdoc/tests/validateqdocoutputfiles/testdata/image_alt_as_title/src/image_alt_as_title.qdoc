@@ -1,0 +1,17 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page page-with-an-image-that-has-a-title-attribute.html
+    \title This page starts with an image
+    \brief This page has an image that has a title attribute.
+    \image leonardo-da-vinci.png This is the alternate text for the image
+    \caption If you hover over the image, a tooltip should pop up in your
+             browser with the text
+             "This is the alternate text for the image".
+
+    The image should render as expected, and the alternate text should be
+    there, too. This text is contained in its own paragraph following the
+    image.
+*/
+

@@ -84,6 +84,7 @@ QString ConfigStrings::TIMESTAMPS = QStringLiteral("timestamps");
 QString ConfigStrings::TOCTITLES = QStringLiteral("toctitles");
 QString ConfigStrings::TRADEMARKSPAGE = QStringLiteral("trademarkspage");
 QString ConfigStrings::URL = QStringLiteral("url");
+QString ConfigStrings::USEALTTEXTASTITLE = QStringLiteral("usealttextastitle");
 QString ConfigStrings::VERSION = QStringLiteral("version");
 QString ConfigStrings::VERSIONSYM = QStringLiteral("versionsym");
 QString ConfigStrings::FILEEXTENSIONS = QStringLiteral("fileextensions");

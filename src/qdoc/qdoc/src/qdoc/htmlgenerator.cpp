@@ -655,17 +655,11 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
             // TODO: [uncentralized-output-directory-structure]
             out() << "<img src=\"" << "images/" + protectEnc(file_name) << '"';
 
-            // TODO: [same-result-branching]
-            // If text is empty protectEnc should return the empty
-            // string itself, such that the two branches would still
-            // result in the same output.
-            // Ensure that this is the case and then flatten the branch if so.
-            if (!text.isEmpty())
-                out() << " alt=\"" << protectEnc(text) << '"';
-            else
-                out() << " alt=\"\"";
-
-            out() << " />";
+            const QString altAndTitleText = protectEnc(text);
+            out() << " alt=\"" << altAndTitleText;
+            if (Config::instance().get(CONFIG_USEALTTEXTASTITLE).asBool())
+                out()  << "\" title=\"" << altAndTitleText;
+            out() << "\" />";
 
             // TODO: [uncentralized-output-directory-structure]
             m_helpProjectWriter->addExtraFile("images/" + file_name);
@@ -3363,6 +3357,9 @@ QString HtmlGenerator::protectEnc(const QString &string)
 
 QString HtmlGenerator::protect(const QString &string)
 {
+    if (string.isEmpty())
+        return string;
+
 #define APPEND(x)                                                                                  \
     if (html.isEmpty()) {                                                                          \
         html = string;                                                                             \
