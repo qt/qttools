@@ -1552,6 +1552,9 @@
     table of contents entry for a subproject. Multiple selectors can be listed,
     separated by whitespace.
 
+    \note If a subproject does not define a \c selectors property, all pages
+    in the project are included by default.
+
     \table
     \header \li Selector             \li Description
     \row    \li \c namespace         \li Namespaces
@@ -1573,6 +1576,9 @@
                                          Multiple group names can be listed as
                                          a comma-separated list.
                                          (Introduced in QDoc 5.6).
+    \row    \li \c none              \li Selects nothing; only a link to the
+                                         \c indexTitle is generated.
+                                         (Introduced in QDoc 6.9).
     \endtable
 
     Available subtypes for the \c doc selector:

@@ -82,7 +82,7 @@ qhp.Test.virtualFolder  = test
 qhp.Test.indexTitle     = UI Components
 qhp.Test.indexRoot      =
 
-qhp.Test.subprojects    = test classes qmltypes undefined
+qhp.Test.subprojects    = test classes qmltypes empty undefined
 qhp.Test.subprojects.test.title       = Test
 qhp.Test.subprojects.test.indexTitle  = UI Components
 qhp.Test.subprojects.test.selectors   = doc:page fake:example module qmlmodule
@@ -97,6 +97,10 @@ qhp.Test.subprojects.qmltypes.title      = QML Types
 qhp.Test.subprojects.qmltypes.indexTitle = UI Components
 qhp.Test.subprojects.qmltypes.selectors  = qmlmodule:UIComponents,QDoc.Test
 qhp.Test.subprojects.qmltypes.sortPages  = true
+
+qhp.Test.subprojects.empty.title      = Autolinking
+qhp.Test.subprojects.empty.indexTitle = Autolinking
+qhp.Test.subprojects.empty.selectors  = none
 
 # Add some meta-data to the example
 manifestmeta.filters = test

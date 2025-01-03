@@ -123,6 +123,7 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
     typeHash["variable"] = Node::Variable;
     typeHash["group"] = Node::Group;
     typeHash["module"] = Node::Module;
+    typeHash["none"] = Node::NoType;
     typeHash["qmlmodule"] = Node::QmlModule;
     typeHash["qmlproperty"] = Node::QmlProperty;
     typeHash["qmlclass"] = Node::QmlType; // Legacy alias for 'qmltype'
