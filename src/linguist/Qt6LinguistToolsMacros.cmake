@@ -367,7 +367,7 @@ set(lupdate_subproject${n}_autogen_dir \"${autogen_dir}\")
 endfunction()
 
 function(_qt_internal_store_languages_from_ts_files_in_targets targets ts_files)
-    if(NOT APPLE)
+    if(NOT APPLE OR QT_SKIP_STORE_LANGUAGES_FROM_TS_FILES)
         return()
     endif()
     set(supported_languages "")
