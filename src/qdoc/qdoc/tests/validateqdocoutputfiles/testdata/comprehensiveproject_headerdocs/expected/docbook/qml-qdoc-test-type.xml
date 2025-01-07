@@ -17,19 +17,19 @@
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
-<db:term>Since:</db:term>
+<db:term>Since</db:term>
 <db:listitem>
 <db:para>Qt 1.1</db:para>
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
-<db:term>In C++:</db:term>
+<db:term>In C++</db:term>
 <db:listitem>
 <db:para><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:para>
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
-<db:term>Status:</db:term>
+<db:term>Status</db:term>
 <db:listitem>
 <db:para>&lt;Work In Progress&gt;</db:para>
 </db:listitem>

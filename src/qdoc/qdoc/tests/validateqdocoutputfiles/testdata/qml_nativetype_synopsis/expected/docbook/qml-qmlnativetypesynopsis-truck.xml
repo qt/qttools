@@ -17,13 +17,13 @@
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
-<db:term>Since:</db:term>
+<db:term>Since</db:term>
 <db:listitem>
 <db:para>Qt 6.8</db:para>
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
-<db:term>In C++:</db:term>
+<db:term>In C++</db:term>
 <db:listitem>
 <db:para><db:link xlink:href="cppcar.xml">CppCar</db:link></db:para>
 </db:listitem>

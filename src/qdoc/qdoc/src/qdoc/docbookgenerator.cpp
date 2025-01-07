@@ -2304,9 +2304,17 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
 void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
 {
     // From HtmlGenerator::generateQmlRequisites, but simplified: no need to store all the elements,
-    // they can be produced one by one.
+    // they can be produced one by one and still keep the right order.
     if (!qcn)
         return;
+
+    const QString importText = "Import Statement";
+    const QString sinceText = "Since";
+    const QString inheritedByText = "Inherited By";
+    const QString inheritsText = "Inherits";
+    const QString nativeTypeText = "In C++";
+    const QString groupText = "Group";
+    const QString statusText = "Status";
 
     const CollectionNode *collection = qcn->logicalModule();
 
@@ -2338,23 +2346,24 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
 
     if (generate_import_statement) {
         QStringList parts = QStringList() << "import" << qcn->logicalModuleName() << qcn->logicalModuleVersion();
-        generateRequisite("Import Statement", parts.join(' ').trimmed());
+        generateRequisite(importText, parts.join(' ').trimmed());
     }
 
     // Since and project.
     if (!qcn->since().isEmpty())
-        generateRequisite("Since:", formatSince(qcn));
+        generateRequisite(sinceText, formatSince(qcn));
 
-    // Inherited by.
-    if (!subs.isEmpty()) {
-        generateStartRequisite("Inherited By:");
-        generateSortedQmlNames(qcn, knownTypeNames, subs);
+    // Native type information.
+    ClassNode *cn = (const_cast<QmlTypeNode *>(qcn))->classNode();
+    if (cn && cn->isQmlNativeType() && cn->status() != Node::Internal) {
+        generateStartRequisite(nativeTypeText);
+        generateSimpleLink(fullDocumentLocation(cn), cn->name());
         generateEndRequisite();
     }
 
     // Inherits.
     if (base) {
-        generateStartRequisite("Inherits:");
+        generateStartRequisite(inheritsText);
         generateSimpleLink(fullDocumentLocation(base), base->name());
         // Disambiguate with '(<QML module name>)' if there are clashing type names
         for (const auto sub : std::as_const(subs)) {
@@ -2366,24 +2375,23 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
         generateEndRequisite();
     }
 
-    // Native type information.
-    ClassNode *cn = (const_cast<QmlTypeNode *>(qcn))->classNode();
-    if (cn && cn->isQmlNativeType() && cn->status() != Node::Internal) {
-        generateStartRequisite("In C++:");
-        generateSimpleLink(fullDocumentLocation(cn), cn->name());
+    // Inherited by.
+    if (!subs.isEmpty()) {
+        generateStartRequisite(inheritedByText);
+        generateSortedQmlNames(qcn, knownTypeNames, subs);
         generateEndRequisite();
     }
 
     // Group.
     if (!qcn->groupNames().empty()) {
-        generateStartRequisite("Group");
+        generateStartRequisite(groupText);
         generateGroupReferenceText(qcn);
         generateEndRequisite();
     }
 
     // Status.
     if (auto status = formatStatus(qcn, m_qdb); status)
-        generateRequisite("Status:", status.value());
+        generateRequisite(statusText, status.value());
 
     m_writer->writeEndElement(); // variablelist
     newLine();
