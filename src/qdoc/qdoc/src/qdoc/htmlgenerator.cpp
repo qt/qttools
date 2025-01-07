@@ -1932,7 +1932,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
 
     const QString headerText = "Header";
     const QString sinceText = "Since";
-    const QString inheritedBytext = "Inherited By";
+    const QString inheritedByText = "Inherited By";
     const QString inheritsText = "Inherits";
     const QString nativeTypeText = "In QML";
     const QString qtVariableText = "qmake";
@@ -1941,7 +1941,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
 
     // The order of the requisites matter
     const QStringList requisiteorder { headerText,         cmakeText,    qtVariableText,  sinceText,
-                                       nativeTypeText, inheritsText, inheritedBytext, statusText };
+                                       nativeTypeText, inheritsText, inheritedByText, statusText };
 
     addIncludeFileToMap(aggregate, requisites, text, headerText);
     addSinceToMap(aggregate, requisites, &text, sinceText);
@@ -1957,7 +1957,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
             addQmlNativeTypesToMap(requisites, &text, nativeTypeText, classe);
 
         addInheritsToMap(requisites, &text, inheritsText, classe);
-        addInheritedByToMap(requisites, &text, inheritedBytext, classe);
+        addInheritedByToMap(requisites, &text, inheritedByText, classe);
     }
 
     // Add the state description (if any) to the map
@@ -1998,7 +1998,7 @@ void HtmlGenerator::generateTheTable(const QStringList &requisiteOrder,
  * Adds inherited by information to the map.
  */
 void HtmlGenerator::addInheritedByToMap(QMap<QString, Text> &requisites, Text *text,
-                                        const QString &inheritedBytext, ClassNode *classe)
+                                        const QString &inheritedByText, ClassNode *classe)
 {
     if (!classe->derivedClasses().isEmpty()) {
         text->clear();
@@ -2006,7 +2006,7 @@ void HtmlGenerator::addInheritedByToMap(QMap<QString, Text> &requisites, Text *t
         int count = appendSortedNames(*text, classe, classe->derivedClasses());
         *text << Atom::ParaRight;
         if (count > 0)
-            requisites.insert(inheritedBytext, *text);
+            requisites.insert(inheritedByText, *text);
     }
 }
 
@@ -2189,7 +2189,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
 
     const QString importText = "Import Statement";
     const QString sinceText = "Since";
-    const QString inheritedBytext = "Inherited By";
+    const QString inheritedByText = "Inherited By";
     const QString inheritsText = "Inherits";
     const QString nativeTypeText = "In C++";
     const QString statusText = "Status";
@@ -2261,7 +2261,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
         int count = appendSortedQmlNames(text, qcn, knownTypeNames, subs);
         text << Atom::ParaRight;
         if (count > 0)
-            requisites.insert(inheritedBytext, text);
+            requisites.insert(inheritedByText, text);
     }
 
     // Add the state description (if any) to the map
@@ -2269,7 +2269,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
 
     // The order of the requisites matter
     const QStringList requisiteorder { importText, sinceText, nativeTypeText, inheritsText,
-                                       inheritedBytext, statusText };
+                                       inheritedByText, statusText };
 
     if (!requisites.isEmpty())
         generateTheTable(requisiteorder, requisites, qcn, marker);
