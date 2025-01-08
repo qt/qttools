@@ -21,6 +21,7 @@ QString separator(qsizetype wordPosition, qsizetype numberOfWords);
 QString comma(qsizetype wordPosition, qsizetype numberOfWords);
 QString asAsciiPrintable(const QString &name);
 QStringList getInternalIncludePaths(const QString &compiler);
+bool isGeneratedFile(const QString &path);
 }
 
 QT_END_NAMESPACE
