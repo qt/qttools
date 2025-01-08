@@ -1,6 +1,7 @@
 // Copyright (C) 2021 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
+#include <QtCore/qfileinfo.h>
 #include <QtCore/qprocess.h>
 #include <QCryptographicHash>
 #include "location.h"
@@ -247,6 +248,14 @@ QStringList getInternalIncludePaths(const QString &compiler)
     }
 
     return result;
+}
+
+bool isGeneratedFile(const QString &path)
+{
+    QString fileName = QFileInfo(path).fileName();
+    return fileName.startsWith("moc_") ||
+           fileName.startsWith("qrc_") ||
+           fileName.startsWith("ui_");
 }
 
 } // namespace Utilities

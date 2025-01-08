@@ -74,6 +74,12 @@ static void parseSourceFiles(
         sources.end()
     );
 
+    sources.erase(std::remove_if(sources.begin(), sources.end(),
+        [](const QString &source) {
+            return Utilities::isGeneratedFile(source);
+        }),
+        sources.end());
+
     auto qml_sources =
         std::stable_partition(sources.begin(), sources.end(), [](const QString& source){
             return CodeParser::parserForSourceFile(source) == CodeParser::parserForLanguage("QML");
