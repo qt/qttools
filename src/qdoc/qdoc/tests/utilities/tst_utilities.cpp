@@ -58,6 +58,8 @@ private slots:
     void nodeForString_InvalidString();
     void roundTrip_ValidPointer();
     void roundTrip_NullPointer();
+
+    void isGeneratedFile();
 };
 
 void tst_Utilities::loggingCategoryName()
@@ -250,6 +252,25 @@ void tst_Utilities::nodeForString_InvalidString()
     // Passing a non‑numeric string should yield a null pointer
     const INode *back = Utilities::nodeForString(QStringLiteral("not a number"));
     QCOMPARE(back, nullptr);
+}
+
+void tst_Utilities::isGeneratedFile()
+{
+    const QStringList listOfPaths {
+        "", "/", "abc.cpp", "moc.cpp", "moc/cpp", "/moc/cpp",
+        "moc_abc.cpp", "ui_def.cpp", "qrc_ghi.cpp",
+        "/moc_abc.cpp", "abc/ui_def.cpp", "/def/qrc_ghi.cpp"
+    };
+    const QVector<bool> expected = {
+        false, false, false, false, false, false,
+        true, true, true, true, true, true
+    };
+    int index = 0;
+    QVector<bool> result(12);
+    for (const auto &path : listOfPaths) {
+        result[index++] = Utilities::isGeneratedFile(path);
+    }
+    QCOMPARE(result, expected);
 }
 
 QTEST_APPLESS_MAIN(tst_Utilities)

@@ -22,6 +22,7 @@
 #include "qmlpropertyarguments.h"
 #include "qmlpropertynode.h"
 #include "sharedcommentnode.h"
+#include "utilities.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qmap.h>
@@ -804,8 +805,7 @@ void CppCodeParser::setExampleFileLists(ExampleNode *en)
                     mainCpp = fileName;
                 return true;
             }
-            return fileName.contains("/qrc_") || fileName.contains("/moc_")
-                    || fileName.contains("/ui_");
+            return Utilities::isGeneratedFile(fileName);
         };
 
         exampleFiles.erase(
