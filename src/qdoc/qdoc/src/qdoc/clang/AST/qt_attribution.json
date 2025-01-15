@@ -14,7 +14,7 @@
         "Version": "16.0",
         "License": "Apache License 2.0",
         "LicenseId": "Apache-2.0 WITH LLVM-exception",
-        "LicenseFile": "LLVM_LICENSE.txt",
+        "LicenseFile": "LICENSE.LLVM.txt",
         "Copyright": "Copyright assigned to LLVM project contributors."
     }
 ]

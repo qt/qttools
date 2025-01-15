@@ -7,5 +7,5 @@
   "License": "License",
 
   "CopyrightFile": "COPYRIGHT.txt",
-  "LicenseFiles": [ "LICENSE1.txt", "LICENSE2.txt" ]
+  "LicenseFiles": [ "LICENSE.1.txt", "LICENSE.2.txt" ]
 }

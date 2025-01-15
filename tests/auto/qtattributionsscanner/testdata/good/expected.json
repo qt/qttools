@@ -137,8 +137,8 @@
         "Id": "variants",
         "License": "License",
         "LicenseFiles": [
-            "%{PWD}/variants/LICENSE1.txt",
-            "%{PWD}/variants/LICENSE2.txt"
+            "%{PWD}/variants/LICENSE.1.txt",
+            "%{PWD}/variants/LICENSE.2.txt"
         ],
         "LicenseId": "",
         "Name": "Variants Test",
