@@ -14,7 +14,7 @@
         "Version": "2.13.10",
         "License": "Boost Software License 1.0",
         "LicenseId": "BSL-1.0",
-        "LicenseFile": "CATCH_LICENSE.txt",
+        "LicenseFile": "LICENSE.CATCH.txt",
         "Copyright": "Copyright (c) 2022 Two Blue Cubes Ltd. All rights reserved."
     }
 ]
