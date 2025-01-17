@@ -164,9 +164,14 @@ std::pair<QString, int> XmlGenerator::getAtomListValue(const Atom *atom)
         lookAhead = lookAhead->next();
         Q_ASSERT(lookAhead && lookAhead->type() == Atom::String);
         t += QLatin1String(" (since ");
-        if (lookAhead->string().at(0).isDigit())
-            t += QLatin1String("Qt ");
-        t += lookAhead->string() + QLatin1String(")");
+        const QString sinceString = lookAhead->string();
+        if (sinceString.at(0).isDigit()) {
+            const QString productName = Config::instance().get(CONFIG_PRODUCTNAME).asString();
+            t += productName.isEmpty() ? sinceString : productName + " " + sinceString;
+        } else {
+            t += sinceString;
+        }
+        t += QLatin1String(")");
         skipAhead = 4;
     } else {
         skipAhead = 1;
