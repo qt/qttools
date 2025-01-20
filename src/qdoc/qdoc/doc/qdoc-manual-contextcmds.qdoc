@@ -784,12 +784,14 @@
     \section2 \\reimp
 
     The \\reimp command is for indicating that a function is a
-    reimplementation of a virtual function.
+    reimplementation of a virtual function without requiring any
+    additional documentation.
+
+    By default, QDoc will omit a reimplemented virtual function from the
+    class reference unless it is documented. This command ensures that an
+    otherwise undocumented function will be included.
 
     The command must stand on its own line.
-
-    QDoc will omit the reimplemented function from the class
-    reference.
 
     \badcode *
     /\1!
