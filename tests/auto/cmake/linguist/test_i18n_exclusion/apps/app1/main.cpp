@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
 #include <QCoreApplication>
+#include <QDebug>
 #include "lib1.h"
 #include "lib2.h"
 #include "subdir2/excluded4.cpp"
