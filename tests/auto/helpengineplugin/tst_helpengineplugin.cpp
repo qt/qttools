@@ -38,16 +38,13 @@ void tst_HelpEnginePlugin::documentationForItem_data()
         if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
             return file;
         QString code = f.readAll();
-        DomCreationOptions options;
-        options.setFlag(DomCreationOption::WithScriptExpressions);
-        options.setFlag(DomCreationOption::WithSemanticAnalysis);
-        options.setFlag(DomCreationOption::WithRecovery);
+        DomCreationOption option = DomCreationOption::Extended;
         QStringList dirs = { QLibraryInfo::path(QLibraryInfo::Qml2ImportsPath) };
         auto envPtr = DomEnvironment::create(
                 dirs,
                 QQmlJS::Dom::DomEnvironment::Option::SingleThreaded
                         | QQmlJS::Dom::DomEnvironment::Option::NoDependencies,
-                options);
+                option);
         envPtr->loadBuiltins();
         envPtr->loadFile(FileToLoad::fromMemory(envPtr, filePath, code),
                          [&file](Path, const DomItem &, const DomItem &newIt) {
