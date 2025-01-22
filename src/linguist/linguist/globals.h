@@ -4,25 +4,30 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include <QFont>
 #include <QPixmap>
 #include <QString>
 
-#include <memory>
+QT_BEGIN_NAMESPACE
 
 const QString &settingsPrefix();
 QString settingPath(const char *path);
+
 bool isDarkMode();
 
-class UnicodeIconGenerator
+class QFont;
+
+class MarkIcon
 {
 public:
-    QPixmap create(QChar unicode, Qt::GlobalColor color);
+    enum TranslationMarks { onMark, offMark, obsoleteMark, dangerMark, warningMark, emptyMark };
 
-    UnicodeIconGenerator();
+    static QPixmap create(TranslationMarks mark, bool darkMode = isDarkMode());
 
 private:
-    std::unique_ptr<QFont> m_font;
+    static QPixmap createInternal(QChar unicode, const QColor &color);
+    static const QFont &getFont();
 };
+
+QT_END_NAMESPACE
 
 #endif // GLOBALS_H

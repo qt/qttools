@@ -175,7 +175,7 @@ private:
 
 static const QVariant &pxObsolete()
 {
-    static const QVariant v = UnicodeIconGenerator().create(QChar(0x2713), Qt::gray);
+    static const QVariant v = MarkIcon::create(MarkIcon::obsoleteMark);
     return v;
 }
 
@@ -2825,6 +2825,8 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
             else
                 m_messageEditor->decreaseFontSize();
         }
+    } else if (event->type() == QEvent::ApplicationPaletteChange) {
+        m_dataModel->updateColors();
     }
     return QMainWindow::eventFilter(object, event);
 }

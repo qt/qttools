@@ -416,6 +416,7 @@ public:
     static QStringList prettifyFileNames(const QStringList &names);
 
     QBrush brushForModel(int model) const;
+    void updateColors();
 
 signals:
     void modelAppended();
@@ -458,7 +459,7 @@ private:
 
     MessageModel *m_msgModel;
 
-    QColor m_colors[7];
+    QColor const *m_colors;
     QBitmap m_bitmap;
 };
 

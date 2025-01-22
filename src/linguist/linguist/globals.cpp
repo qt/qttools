@@ -5,9 +5,22 @@
 
 #include <QApplication>
 #include <QColor>
+#include <QFont>
+#include <QStyleHints>
 #include <QPalette>
 #include <QPainter>
-#include <QStyleHints>
+
+namespace {
+// Check for "Dark Mode", either system-wide or usage of a dark style
+static bool isLight(const QColor &textColor)
+{
+    constexpr int DarkThreshold = 200;
+    return textColor.red() > DarkThreshold && textColor.green() > DarkThreshold
+            && textColor.blue() > DarkThreshold;
+}
+} // namespace
+
+QT_BEGIN_NAMESPACE
 
 const QString &settingsPrefix()
 {
@@ -22,35 +35,52 @@ QString settingPath(const char *path)
     return settingsPrefix() + QLatin1String(path);
 }
 
-// Check for "Dark Mode", either system-wide or usage of a dark style
-static bool isLight(const QColor &textColor)
-{
-    constexpr int DarkThreshold = 200;
-    return textColor.red() > DarkThreshold && textColor.green() > DarkThreshold
-            && textColor.blue() > DarkThreshold;
-}
-
 bool isDarkMode()
 {
     return QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark
             || isLight(QGuiApplication::palette().color(QPalette::WindowText));
 }
 
-QPixmap UnicodeIconGenerator::create(QChar unicode, Qt::GlobalColor color)
+QPixmap MarkIcon::create(TranslationMarks mark, bool darkMode)
 {
+    switch (mark) {
+    case onMark:
+        return darkMode ? createInternal(QChar(0x2713), QColor(Qt::darkGreen).lighter())
+                        : createInternal(QChar(0x2713), Qt::darkGreen);
+    case offMark:
+        return darkMode ? createInternal(u'?', Qt::yellow) : createInternal(u'?', Qt::darkYellow);
+    case obsoleteMark:
+        return createInternal(QChar(0x2713), Qt::gray);
+    case dangerMark:
+        return createInternal(u'!', Qt::red);
+    case warningMark:
+        return darkMode ? createInternal(QChar(0x2713), Qt::yellow)
+                        : createInternal(QChar(0x2713), Qt::darkYellow);
+    case emptyMark:
+        return darkMode ? createInternal(u'?', Qt::white) : createInternal(u'?', Qt::darkBlue);
+    };
+    Q_UNREACHABLE_RETURN({});
+}
+
+QPixmap MarkIcon::createInternal(QChar unicode, const QColor &color)
+{
+    static QFont font = getFont();
     QPixmap pixmap(16, 16);
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
-    painter.setFont(*m_font);
+    painter.setFont(font);
     painter.setPen(color);
     painter.drawText(pixmap.rect(), Qt::AlignCenter, unicode);
     painter.end();
     return pixmap;
 }
 
-UnicodeIconGenerator::UnicodeIconGenerator()
-    : m_font(std::make_unique<QFont>())
+const QFont &MarkIcon::getFont()
 {
-    m_font->setBold(true);
-    m_font->setPointSize(18);
+    static QFont font;
+    font.setBold(true);
+    font.setPointSize(14);
+    return font;
 }
+
+QT_END_NAMESPACE
