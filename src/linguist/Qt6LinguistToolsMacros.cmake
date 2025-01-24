@@ -178,6 +178,16 @@ function(qt_internal_make_paths_absolute out_var)
     set("${out_var}" "${result}" PARENT_SCOPE)
 endfunction()
 
+# Guess the language of a TS file from its file name.
+# If the language cannot be guessed, return the empty string.
+function(_qt_internal_guess_language_from_ts_file_name out_var file_path)
+    set(result "")
+    if(file_path MATCHES "_([a-zA-Z][a-zA-Z](_[a-zA-Z][a-zA-Z])?)\\.[tT][sS]$")
+        set(result "${CMAKE_MATCH_1}")
+    endif()
+    set("${out_var}" "${result}" PARENT_SCOPE)
+endfunction()
+
 # If the given TS_FILE does not exist, write an initial .ts file that can be read by lrelease and
 # updated by lupdate.
 function(_qt_internal_ensure_ts_file)
@@ -206,6 +216,9 @@ Run the update_translations CMake target to populate the source strings in this 
     endif()
     get_property(language SOURCE "${arg_TS_FILE}" ${scope_args} PROPERTY
         _qt_i18n_translated_language)
+    if("${language}" STREQUAL "")
+        _qt_internal_guess_language_from_ts_file_name(language "${arg_TS_FILE}")
+    endif()
     if(NOT "${language}" STREQUAL "")
         string(APPEND content " language=\"${language}\"")
     endif()
