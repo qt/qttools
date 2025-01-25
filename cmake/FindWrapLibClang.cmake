@@ -18,7 +18,12 @@ include(FindPackageHandleStandardArgs)
 set(WrapLibClang_FOUND FALSE)
 
 if(QT_NO_FIND_PACKAGE_CLANG_WORKAROUND)
-    find_package(Clang CONFIG)
+    set(CLANG_FOUND FALSE)
+    foreach(VERSION ${QDOC_SUPPORTED_CLANG_VERSIONS})
+        if(NOT CLANG_FOUND)
+            find_package(Clang ${VERSION} CONFIG QUIET)
+        endif()
+    endforeach()
 else()
     set(__qt_wraplibclang_message
         "This probably means that one or more packages necessary for find_package(Clang) are not"
@@ -28,7 +33,12 @@ else()
 
     # Try to find the LLVM package. ClangConfig.cmake has a find_package(LLVM REQUIRED) call, which
     # will break if clang is installed but the LLVM CMake files are not installed.
-    find_package(LLVM CONFIG)
+    set(LLVM_FOUND FALSE)
+    foreach(VERSION ${QDOC_SUPPORTED_CLANG_VERSIONS})
+        if(NOT LLVM_FOUND)
+            find_package(LLVM ${VERSION} CONFIG QUIET)
+        endif()
+    endforeach()
     if(NOT LLVM_FOUND)
         list(PREPEND __qt_wraplibclang_message "The LLVM package could not be found.")
         string(REPLACE ";" " " __qt_wraplibclang_message "${__qt_wraplibclang_message}")
