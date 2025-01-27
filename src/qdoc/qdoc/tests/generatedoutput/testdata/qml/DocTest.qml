@@ -5,7 +5,6 @@ import QtQuick 2.0
 
 /*!
     \qmltype DocTest
-    \inherits Test
     \inqmlmodule QDoc.Test
     \brief Represents a doc test case.
     \since QDoc.Test 0.9

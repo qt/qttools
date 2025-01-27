@@ -148,6 +148,9 @@ void QmlTypeNode::resolveInheritance(NodeMap &previousSearches)
         if (base->isIndexNode())
             base->resolveInheritance(previousSearches);
     }
+
+    if (!base)
+        location().warning(QStringLiteral("Unknown base '%1' for QML type '%2'").arg(qmlBaseName(), name()));
 }
 
 QT_END_NAMESPACE

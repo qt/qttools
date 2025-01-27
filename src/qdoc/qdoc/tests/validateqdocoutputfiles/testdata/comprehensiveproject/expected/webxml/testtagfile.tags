@@ -91,6 +91,10 @@
         <filename>qml-test-nover-doctest.html</filename>
     </compound>
     <compound kind="class">
+        <name>QDoc.Test.Item</name>
+        <filename>qml-qdoc-test-item.html</filename>
+    </compound>
+    <compound kind="class">
         <name>QDoc.Test.OldType</name>
         <filename>qml-qdoc-test-oldtype.html</filename>
     </compound>

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
 <db:info>
-<db:title its:translate="no">DocTest QML Type</db:title>
+<db:title its:translate="no">Item QML Type</db:title>
 <db:productname>Qt</db:productname>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
-<db:para>Shadows the type name in QDoc.Test module.</db:para>
 <db:para>This type was introduced in Qt 1.1.</db:para>
 </db:abstract>
 </db:info>
@@ -13,7 +12,7 @@
 <db:varlistentry>
 <db:term>Import Statement</db:term>
 <db:listitem>
-<db:para>import Test.NoVer</db:para>
+<db:para>import QDoc.Test 1.1</db:para>
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
@@ -23,19 +22,14 @@
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
-<db:term>Inherits</db:term>
+<db:term>Inherited By</db:term>
 <db:listitem>
-<db:para><db:link xlink:href="qml-qdoc-test-item.xml">Item</db:link></db:para>
-</db:listitem>
-</db:varlistentry>
-<db:varlistentry>
-<db:term>Status</db:term>
-<db:listitem>
-<db:para>Tech Preview</db:para>
+<db:para><db:link xlink:href="qml-qdoc-test-doctest.xml" xlink:role="">DocTest</db:link> (QDoc.Test), <db:link xlink:href="qml-test-nover-doctest.xml" xlink:role="">DocTest</db:link> (Test.NoVer), <db:link xlink:href="qml-uicomponents-progressbar.xml" xlink:role="">ProgressBar</db:link>, <db:link xlink:href="qml-uicomponents-switch.xml" xlink:role="">Switch</db:link>, and <db:link xlink:href="qml-uicomponents-tabwidget.xml" xlink:role="">TabWidget</db:link></db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
+<db:para>Placeholder for the core Item type.</db:para>
 </db:section>
 </db:article>
