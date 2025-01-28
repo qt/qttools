@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTest">
+            <description/>
+            <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" meta="constructor" signature="TestClass()">
+                <description>
+                    <para>A constructor.</para>
+                </description>
+            </function>
+            <function name="fn" fullname="TestClass::fn" href="testclass.html#fn" status="active" access="public" location="testclass.h" documented="true" meta="plain" noexcept="true" noexcept_expression="some_expression_v" type="void" signature="void fn()">
+                <description>
+                    <para>This tests the presentation of the noexcept operator.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

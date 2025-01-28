@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="NoExceptNotes Reference Documentation" version="" project="NoExceptNotes">
+    <namespace name="" status="active" access="public" module="noexceptnotes">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTest">
+            <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" meta="constructor" signature="TestClass()"/>
+            <function name="fn" fullname="TestClass::fn" href="testclass.html#fn" status="active" access="public" location="testclass.h" documented="true" meta="plain" noexcept="true" noexcept_expression="some_expression_v" type="void" signature="void fn()"/>
+        </class>
+        <module name="QDocTest" href="qdoctest-module.html" status="internal" seen="false" title=""/>
+    </namespace>
+</INDEX>

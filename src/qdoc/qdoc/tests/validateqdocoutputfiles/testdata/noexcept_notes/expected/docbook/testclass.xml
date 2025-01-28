@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TestClass Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>NoExceptNotes Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>NoExceptNotes Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TestClass</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="TestClass">
+<db:title>TestClass::TestClass()</db:title>
+<db:para>A constructor.</db:para>
+</db:section>
+<db:section xml:id="fn">
+<db:title>[noexcept(...)] void TestClass::fn()</db:title>
+<db:para>This tests the presentation of the noexcept operator.</db:para>
+</db:section>
+</db:section>
+</db:article>
