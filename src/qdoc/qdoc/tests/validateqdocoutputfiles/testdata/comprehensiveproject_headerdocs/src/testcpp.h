@@ -319,11 +319,6 @@ public:
 
 Q_SIGNALS:
 /*!
-    \fn void TestDerived::emitSomething()
-    Emitted when things happen.
-*/
-
-/*!
     \property TestQDoc::TestDerived::bindableProp
     Some property.
 
@@ -355,6 +350,9 @@ Q_SIGNALS:
     A property sharing a notifier signal with boolProp.
 */
 
+/*!
+   Emitted when things happen.
+*/
     void emitSomething(QPrivateSignal);
     void bindablePropChanged();
     Q_REVISION(1) void boolPropChanged();

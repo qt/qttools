@@ -647,8 +647,17 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
 
             const Parameters &parameters = fn->parameters();
 
-            if (parameters.count() != numArg + isVariadic)
+            if (parameters.count() != numArg + isVariadic) {
+                // Ignore possible last argument of type QPrivateSignal as it may have been dropped
+                if (numArg > 0 && parameters.isPrivateSignal() &&
+                        (parameters.isEmpty() || !parameters.last().type().endsWith(
+                                QLatin1String("QPrivateSignal")))) {
+                    if (parameters.count() != --numArg + isVariadic)
+                        continue;
+                } else {
                 continue;
+                }
+            }
 
             if (fn->isConst() != bool(clang_CXXMethod_isConst(cur)))
                 continue;
