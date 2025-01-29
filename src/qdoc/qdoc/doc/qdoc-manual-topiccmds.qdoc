@@ -793,11 +793,32 @@
     QDoc includes this QML property on the QML reference page for the
     \l [QML] {Translate} type.
 
-    If the QML property is of enumeration type, or it holds a bit-wise
-    combination of flags, the \l{value-command}{\\value} command can
-    be used to document the acceptable values.
+    The \l{default-command}{\\default} command is used to document the
+    default value of a property:
 
-    QDoc accepts also a fully qualified property name, including the
+    \badcode
+    \qmlproperty real AxisHelper::gridOpacity
+    \default 0.5
+    \endcode
+
+    If the QML property exposes a C++ enum, the QML property is defined
+    with type \c{enumeration}:
+
+    \badcode
+    \qmlproperty enumeration ParticleShape3D::ShapeType
+    \endcode
+
+    Properties with enumeration type and those that hold a bit-wise
+    combination of flags can use the \l{value-command}{\\value} command
+    to document the acceptable values.
+
+    \badcode
+    \qmlproperty enumeration Buffer::textureFilterOperation
+    Specifies the texture filtering mode...
+    \value Buffer.Nearest Use nearest-neighbor filtering.
+    \endcode
+
+    QDoc also accepts a fully qualified property name, including the
     QML module identifier:
 
     \badcode
@@ -805,7 +826,7 @@
     \endcode
 
     If specified, the module identifier (above, \c {QtQuick.Controls})
-    must match with value passed to \l {inqmlmodule-command}{\\inqmlmodule}
+    must match with the value passed to the \l {inqmlmodule-command}{\\inqmlmodule}
     command in the associated \\qmltype documentation. If the name of
     the QML type the property belongs to is unique across all types in
     the documentation project, the module identifier can be omitted.
