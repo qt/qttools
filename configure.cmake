@@ -105,7 +105,7 @@ qt_feature("qtplugininfo" PRIVATE
 )
 qt_feature("windeployqt" PRIVATE
     LABEL "Windows deployment tool"
-    PURPOSE "The Windows deployment tool is designed to automate the process of creating a deployable folder containing the Qt-related dependencies (libraries, QML imports, plugins, and translations) required to run the application from that folder. It creates a sandbox for Universal Windows Platform (UWP) or an installation tree for Windows desktop applications, which can be easily bundled into an installation package."
+    PURPOSE "The Windows deployment tool is designed to automate the process of creating a deployable folder containing the Qt-related dependencies (libraries, QML imports, plugins, and translations) required to run the application from that folder. The folder can be easily bundled into an installation package."
     CONDITION WIN32
 )
 qt_configure_add_summary_section(NAME "Qt Tools")
