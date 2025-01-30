@@ -50,12 +50,12 @@ invoked. You can find possible options in the \l{lrelease}{lrelease documentatio
 
 By default, the \c{qm} files will be placed in the current build directory
 (\c{CMAKE_CURRENT_BINARY_DIR}). To change this, you can set \c{OUTPUT_LOCATION}
-as a property of the source \c{.ts} file.
+as a property of the source \c{.ts} file before calling \c qt_add_translation.
 
 For example, with the following code, the \c{.qm} files are generated
 in a \c{translations} directory below the current build directory.
 
-\snippet cmake-macros/examples.cmake set_output_location_on_ts_file
+\snippet cmake-macros/examples.cmake set_output_location_on_ts_file_with_qt_add_translation
 
 \section1 Examples
 
@@ -312,12 +312,12 @@ documentation}.
 
 By default, the \c{.qm} files will be placed in the current build directory
 (\c{CMAKE_CURRENT_BINARY_DIR}). To change this, you can set \c{OUTPUT_LOCATION}
-as a property of the source \c{.ts} file.
+as a property of the source \c{.ts} file before calling \c qt_add_lrelease.
 
 For example, with the following code, the \c{.qm} files are generated
 in a \c{translations} directory below the current build directory.
 
-\snippet cmake-macros/examples.cmake set_output_location_on_ts_file
+\snippet cmake-macros/examples.cmake set_output_location_on_ts_file_with_qt_add_lrelease
 
 \section1 Processing Generated .qm Files
 
@@ -544,12 +544,12 @@ need to pass \c{LRELEASE_OPTIONS -idbased} to \c qt_add_translations.
 
 By default, the \c{.qm} files will be placed in the current build directory
 (\c{CMAKE_CURRENT_BINARY_DIR}). To change this, you can set \c{OUTPUT_LOCATION}
-as a property of the source \c{.ts} file.
+as a property of the source \c{.ts} file before calling \c qt_add_translations.
 
 For example, with the following code, the \c{.qm} files are generated
 in a \c{translations} directory below the current build directory.
 
-\snippet cmake-macros/examples.cmake set_output_location_on_ts_file
+\snippet cmake-macros/examples.cmake set_output_location_on_ts_file_with_qt_add_translations
 
 \section1 Embedding Generated .qm Files in Resources
 
