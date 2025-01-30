@@ -414,11 +414,13 @@ QString XmlGenerator::getLink(const Atom *atom, const Node *relative, const Node
   are not marked with the qdoc link command that qdoc has
   reason to believe should be links.
 
-  It returns the string for a link found by using the data
-  in the \a atom to search the database. It also sets \a node
-  to point to the target node for that link. \a relative points
-  to the node holding the qdoc comment where the link command
-  was found.
+  Returns the string for a link found by using the data in the \a atom to
+  search the database. \a relative points to the node holding the qdoc comment
+  where the link command was found. Sets \a node to point to the target node
+  for that link if a target was found. \a genus specifies the kind of target to
+  look for.
+
+  If no target was found, returns an empty string which may also be null.
  */
 QString XmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const Node **node,
                                   Node::Genus genus)
