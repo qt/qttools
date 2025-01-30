@@ -1742,7 +1742,9 @@
     \section2 \\target in a \\table
     When you use the \\target command in a table, make sure that the
     \\target command follows a \l {li-command}{\\li}-command (table
-    cell), and that it's either on a separate line, or the last content
+    cell), as some generators only support targets to an individual cell,
+    not to a whole row.
+    Moreover, ensure that it's either on a separate line, or the last content
     that occurs in the line it's in. This is due to how the \\target
     command works; it consumes anything up to the next line break as
     its parameter. In other words, if you have a table and need a
