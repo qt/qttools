@@ -231,7 +231,7 @@
         };
     \endcode
 
-    This enum can be cocumented this way:
+    This enum can be documented this way:
 
     \badcode *
     /\1!
