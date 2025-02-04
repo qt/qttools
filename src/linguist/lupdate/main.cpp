@@ -3,9 +3,6 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "lupdate.h"
-#if QT_CONFIG(clangcpp)
-#include "cpp_clang.h"
-#endif
 
 #include <profileutils.h>
 #include <projectdescriptionreader.h>
@@ -27,7 +24,6 @@
 
 using namespace Qt::StringLiterals;
 
-bool useClangToParseCpp = false;
 QString commandLineCompilationDatabaseDir; // for the path to the json file passed as a command line argument.
                                     // Has priority over what is in the .pro file and passed to the project.
 QStringList rootDirs;
@@ -311,21 +307,6 @@ static void printUsage()
             "           Specify the output file(s). This will override the TRANSLATIONS.\n"
             "    -version\n"
             "           Display the version of lupdate and exit.\n"
-            "    -clang-parser [compilation-database-dir]\n"
-            "           Use clang to parse cpp files. Otherwise a custom parser is used.\n"
-            "           This option needs a clang compilation database (compile_commands.json)\n"
-            "           for the files that needs to be parsed.\n"
-            "           The path to the directory containing this file can be specified on the \n"
-            "           command line, directly after the -clang-parser option, or in the .pro "
-            "file\n"
-            "           by setting the variable LUPDATE_COMPILE_COMMANDS_PATH.\n"
-            "           A directory specified on the command line takes precedence.\n"
-            "           If no path is given, the compilation database will be searched\n"
-            "           in all parent paths of the first input file.\n"
-            "    -project-roots <directory>...\n"
-            "           Specify one or more project root directories.\n"
-            "           Only files below a project root are considered for translation when using\n"
-            "           the -clang-parser option.\n"
             "    @lst-file\n"
             "           Read additional file names (one per line) or includepaths (one per\n"
             "           line, and prefixed with -I) from lst-file.\n"_L1.arg(
@@ -590,7 +571,7 @@ static bool processTs(Translator &fetchedTor, const QString &file, ConversionDat
 }
 
 static void processSources(Translator &fetchedTor, const QStringList &sourceFiles,
-                           ConversionData &cd, UpdateOptions options, bool *fail)
+                           ConversionData &cd, UpdateOptions options)
 {
 #ifdef QT_NO_QML
     bool requireQmlSupport = false;
@@ -634,16 +615,7 @@ static void processSources(Translator &fetchedTor, const QStringList &sourceFile
     Q_UNUSED(options)
 #endif
 
-    if (useClangToParseCpp) {
-#if QT_CONFIG(clangcpp)
-        ClangCppParser::loadCPP(fetchedTor, sourceFilesCpp, cd, fail);
-#else
-        *fail = true;
-        printErr(QStringLiteral("lupdate error: lupdate was built without clang support."));
-#endif
-    }
-    else
-        loadCPP(fetchedTor, sourceFilesCpp, cd);
+    loadCPP(fetchedTor, sourceFilesCpp, cd);
 
     if (!cd.error().isEmpty())
         printErr(cd.error());
@@ -750,7 +722,7 @@ private:
             }
             Translator tor;
             processProjects(false, options, prj.subProjects, false, &tor, fail);
-            processSources(tor, sources, cd, options, fail);
+            processSources(tor, sources, cd, options);
             updateTsFiles(tor, tsFiles, QStringList(), m_sourceLanguage, m_targetLanguage,
                           options, fail);
             return;
@@ -769,10 +741,10 @@ private:
             }
             Translator tor;
             processProjects(false, options, prj.subProjects, nestComplain, &tor, fail);
-            processSources(tor, sources, cd, options, fail);
+            processSources(tor, sources, cd, options);
         } else {
             processProjects(false, options, prj.subProjects, nestComplain, parentTor, fail);
-            processSources(*parentTor, sources, cd, options, fail);
+            processSources(*parentTor, sources, cd, options);
         }
     }
 
@@ -987,26 +959,8 @@ int main(int argc, char **argv)
             }
             continue;
         }
-#if QT_CONFIG(clangcpp)
-        else if (arg == "-clang-parser"_L1) {
-            useClangToParseCpp = true;
-            // the option after -clang-parser is optional
-            if ((i + 1) != argc && !args[i + 1].startsWith("-"_L1)) {
-                i++;
-                commandLineCompilationDatabaseDir = args[i];
-            }
-            continue;
-        } else if (arg == "-project-roots"_L1) {
-            while ((i + 1) != argc && !args[i + 1].startsWith("-"_L1)) {
-                i++;
-                rootDirs << args[i];
-            }
-            rootDirs.removeDuplicates();
-            continue;
-        }
-#endif
         else if (arg.startsWith("-"_L1) && arg != "-"_L1) {
-            printErr(QStringLiteral("Unrecognized option '%1'.\n").arg(arg));
+            printErr("Unrecognized option '%1'.\n"_L1.arg(arg));
             return 1;
         }
 
@@ -1189,7 +1143,7 @@ int main(int argc, char **argv)
         cd.m_rootDirs = rootDirs;
         for (const QString &resource : std::as_const(resourceFiles))
             sourceFiles << getResources(resource);
-        processSources(fetchedTor, sourceFiles, cd, options, &fail);
+        processSources(fetchedTor, sourceFiles, cd, options);
         updateTsFiles(fetchedTor, tsFileNames, alienFiles,
                       sourceLanguage, targetLanguage, options, &fail);
     } else {

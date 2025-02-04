@@ -353,26 +353,6 @@
     \row
         \li \c {-version}
         \li Display the version of \c lupdate and exit.
-    \row
-        \li \c {-clang-parser [compilation-database-dir]}
-        \li Use clang to parse .cpp files. Otherwise, use a custom
-            parser. This option needs a clang compilation database
-            (\c compile_commands.json) for the files to be parsed.
-            Specify the path to the directory containing this file
-            on the command line, directly after the \c -clang-parser
-            option, or in the project file.
-
-            When using qmake, set the \c LUPDATE_COMPILE_COMMANDS_PATH
-            variable in the .pro file.
-
-            A directory specified on the command line takes precedence. If you
-            do not specify a path, \c lupdate searches for the compilation
-            database from all parent paths of the first input file.
-    \row
-        \li \c {-project-roots <directory>...}
-        \li Specify one or more project root directories. Only files
-            below a project root are considered for translation when
-            using the \c -clang-parser option.
     \endtable
 
     \section1 Examples

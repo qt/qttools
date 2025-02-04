@@ -70,40 +70,5 @@ qt_internal_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlPrivate
         QT_NO_QML
 )
 
-qt_internal_extend_target(${target_name} CONDITION QT_FEATURE_clangcpp
-    SOURCES
-        clangtoolastreader.cpp clangtoolastreader.h
-        cpp_clang.cpp cpp_clang.h
-        filesignificancecheck.cpp filesignificancecheck.h
-        lupdatepreprocessoraction.cpp lupdatepreprocessoraction.h
-        synchronized.h
-    DEFINES
-        # special case begin
-        # remove these
-        #(CLANG_RESOURCE_DIR=\"/clang//include\")
-        #(LUPDATE_CLANG_VERSION_STR=\"\")
-        #LUPDATE_CLANG_VERSION_MAJOR=
-        #LUPDATE_CLANG_VERSION_MINOR=
-        #LUPDATE_CLANG_VERSION_PATCH=
-        # in favor of these
-        LUPDATE_CLANG_VERSION_STR="\"${QT_LIB_CLANG_VERSION}\""
-        LUPDATE_CLANG_VERSION_MAJOR=${QT_LIB_CLANG_VERSION_MAJOR}
-        LUPDATE_CLANG_VERSION_MINOR=${QT_LIB_CLANG_VERSION_MINOR}
-        LUPDATE_CLANG_VERSION_PATCH=${QT_LIB_CLANG_VERSION_PATCH}
-        # special case end
-    LIBRARIES
-        WrapLibClang::WrapLibClang
-)
-
-if(QT_FEATURE_clangcpp)
-    # If libclangTooling.a is not built with -fPIE enabled we cannot link it to lupdate.
-    # TODO: Re-enable PIE once clang is built with PIE in provisioning.
-    set_target_properties(${target_name} PROPERTIES POSITION_INDEPENDENT_CODE FALSE)
-endif()
-
 qt_internal_extend_target(${target_name} CONDITION MSVC
     DEFINES _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING)
-
-if(QT_FEATURE_clangcpp)
-    set_property(SOURCE clangtoolastreader.cpp PROPERTY SKIP_AUTOMOC ON)
-endif()

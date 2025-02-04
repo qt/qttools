@@ -1,1 +1,0 @@
-.*[/\\]lupdate[/\\]testdata[/\\]good[/\\]preprocess_clang_parser[/\\]main.cpp Code with translation information has been skipped between lines .. and ..

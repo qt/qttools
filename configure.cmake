@@ -42,10 +42,6 @@ qt_feature("qdoc" PRIVATE
     PURPOSE "QDoc is Qt's documentation generator for C++ and QML projects."
     CONDITION TARGET Qt::QmlPrivate AND QT_FEATURE_clang AND QT_FEATURE_commandlineparser AND QT_FEATURE_thread AND QT_LIB_CLANG_VERSION VERSION_GREATER_EQUAL QDOC_MINIMUM_CLANG_VERSION
 )
-qt_feature("clangcpp" PRIVATE
-    LABEL "Clang-based lupdate parser"
-    CONDITION QT_FEATURE_clang_rtti AND (NOT MSVC OR MSVC_VERSION LESS "1939" OR QT_LIB_CLANG_VERSION_MAJOR GREATER_EQUAL "16")
-)
 qt_feature("designer" PRIVATE
     LABEL "Qt Widgets Designer"
     PURPOSE "Qt Widgets Designer is the Qt tool for designing and building graphical user interfaces (GUIs) with Qt Widgets. You can compose and customize your windows or dialogs in a what-you-see-is-what-you-get (WYSIWYG) manner, and test them using different styles and resolutions."
@@ -102,7 +98,6 @@ qt_feature("fullqthelp" PUBLIC
 qt_configure_add_summary_section(NAME "Qt Tools")
 qt_configure_add_summary_entry(ARGS "assistant")
 qt_configure_add_summary_entry(ARGS "clang")
-qt_configure_add_summary_entry(ARGS "clangcpp")
 qt_configure_add_summary_entry(ARGS "designer")
 qt_configure_add_summary_entry(ARGS "distancefieldgenerator")
 #qt_configure_add_summary_entry(ARGS "kmap2qmap")
@@ -167,29 +162,6 @@ qt_configure_add_report_entry(
     TYPE WARNING
     MESSAGE "QDoc will not be compiled because it requires libclang ${QDOC_MINIMUM_CLANG_VERSION} or newer."
     CONDITION QT_LIB_CLANG_VERSION VERSION_LESS QDOC_MINIMUM_CLANG_VERSION
-)
-
-set(clangcpp_warn_msg "")
-if(QT_FEATURE_clang AND NOT QT_FEATURE_clang_rtti)
-    string(APPEND clangcpp_warn_msg
-        "LLVM was found, but it was not built with RTTI support.
-Consider using a different prebuilt LLVM package or building LLVM with RTTI support to
-enable the Clang-based lupdate parser.
-Configuring LLVM with RTTI support can be done by setting the LLVM_ENABLE_RTTI CMake
-variable to ON. See https://llvm.org/docs/CMake.html#building-llvm-with-cmake
-and https://llvm.org/docs/CMake.html#llvm-related-variables for details.
-"
-    )
-endif()
-string(APPEND clangcpp_warn_msg
-    "The Clang-based lupdate parser will not be available. "
-    "Suitable LLVM and Clang C++ libraries have not been found. "
-    "You will need to set the FEATURE_clangcpp CMake variable to ON to re-evaluate this check."
-)
-qt_configure_add_report_entry(
-    TYPE WARNING
-    MESSAGE "${clangcpp_warn_msg}"
-    CONDITION NOT QT_FEATURE_clangcpp
 )
 
 qt_configure_add_report_entry(
