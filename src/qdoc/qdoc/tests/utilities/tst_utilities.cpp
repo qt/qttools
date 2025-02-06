@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
 #include "qdoc/utilities.h"
+#include "qdoc/location.h"
 
 #include <QtTest/QtTest>
 
@@ -20,6 +21,7 @@ private slots:
     void callCommaForOneWord();
     void callCommaForTwoWords();
     void callCommaForThreeWords();
+    void uniqueId();
 };
 
 void tst_Utilities::loggingCategoryName()
@@ -127,6 +129,14 @@ void tst_Utilities::callCommaForThreeWords()
         result.append(Utilities::comma(index++, listOfWords.size()));
     }
     QCOMPARE(result, expected);
+}
+
+void tst_Utilities::uniqueId()
+{
+    const QString expected = QStringLiteral("prefix-path-1");
+    Location loc { "../some/path" };
+    loc.start();
+    QCOMPARE(Utilities::uniqueIdentifier(loc, "prefix"), expected);
 }
 
 QTEST_APPLESS_MAIN(tst_Utilities)

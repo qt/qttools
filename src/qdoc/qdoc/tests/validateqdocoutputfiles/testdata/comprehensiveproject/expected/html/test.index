@@ -176,6 +176,12 @@
                 <function name="someValue" fullname="TestQDoc::TestDerived::someValue" href="testqdoc-testderived.html#someValue" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::TestDerived::NotTypedef" signature="TestQDoc::TestDerived::NotTypedef someValue()"/>
                 <function name="staticObsoleteMember" fullname="TestQDoc::TestDerived::staticObsoleteMember" href="testqdoc-testderived-obsolete.html#staticObsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" static="true" type="void" signature="void staticObsoleteMember()"/>
                 <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" override="true" type="void" signature="void virtualFun() override"/>
+                <enum name="anonymous" fullname="TestQDoc::TestDerived::anonymous" href="testqdoc-testderived.html#anonymous-enum" status="active" access="public" location="testcpp.h" documented="true">
+                    <value name="Val1" value="0"/>
+                    <value name="Val2" value="1"/>
+                    <value name="Val3" value="0"/>
+                    <value name="Val4" value="1"/>
+                </enum>
                 <typedef name="DerivedType" fullname="TestQDoc::TestDerived::DerivedType" href="testqdoc-testderived.html#DerivedType-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="Test::SomeType"/>
                 <typedef name="NotTypedef" fullname="TestQDoc::TestDerived::NotTypedef" href="testqdoc-testderived.html#NotTypedef-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="int"/>
                 <property name="bindableProp" fullname="TestQDoc::TestDerived::bindableProp" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" documented="true" bindable="true">

@@ -590,7 +590,14 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
         return nullptr;
     auto parent = static_cast<Aggregate *>(p);
 
-    QString name = fromCXString(clang_getCursorSpelling(cur));
+    QString name;
+    if (clang_Cursor_isAnonymous(cur)) {
+        name = Utilities::uniqueIdentifier(
+                fromCXSourceLocation(clang_getCursorLocation(cur)),
+                QLatin1String("anonymous"));
+    } else {
+        name = fromCXString(clang_getCursorSpelling(cur));
+    }
     switch (kind) {
     case CXCursor_Namespace:
         return parent->findNonfunctionChild(name, &Node::isNamespace);
@@ -1092,6 +1099,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
 
         if (clang_Cursor_isAnonymous(cursor)) {
             enumTypeName = "anonymous";
+            // Generate a unique name to enable auto-tying doc comments in headers
+            // to anonymous enum declarations
+            if (Config::instance().get(CONFIG_DOCUMENTATIONINHEADERS).asBool())
+                enumTypeName = Utilities::uniqueIdentifier(fromCXSourceLocation(clang_getCursorLocation(cursor)), enumTypeName);
             if (parent_ && (parent_->isClassNode() || parent_->isNamespace())) {
                 Node *n = parent_->findNonfunctionChild(enumTypeName, &Node::isEnumType);
                 if (n)
@@ -1102,6 +1113,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             en = new EnumNode(parent_, enumTypeName, clang_EnumDecl_isScoped(cursor));
             en->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
             en->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
+            en->setAnonymous(clang_Cursor_isAnonymous(cursor));
         }
 
         // Enum values

@@ -3195,8 +3195,10 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         m_writer->writeTextElement(dbNamespace, "varname", node->plainName());
         newLine();
     } else if (node->isEnumType()) {
-        m_writer->writeTextElement(dbNamespace, "enumname", node->plainName());
-        newLine();
+        if (!enumNode->isAnonymous()) {
+            m_writer->writeTextElement(dbNamespace, "enumname", node->plainName());
+            newLine();
+        }
     } else if (node->isQmlProperty()) {
         QString name = node->name();
         if (qpn->isAttached())
@@ -3843,9 +3845,18 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
     } break;
     case Node::Enum: {
         const auto enume = static_cast<const EnumNode *>(node);
-        m_writer->writeCharacters(QStringLiteral("enum "));
-        m_writer->writeCharacters(namePrefix);
-        generateSynopsisName(node, relative, generateNameLink);
+        if (!enume->isAnonymous()) {
+            m_writer->writeCharacters("enum "_L1);
+            m_writer->writeCharacters(namePrefix);
+            generateSynopsisName(node, relative, generateNameLink);
+        } else if (generateNameLink) {
+            m_writer->writeStartElement(dbNamespace, "emphasis");
+            m_writer->writeAttribute("role", "bold");
+            generateSimpleLink(linkForNode(node, relative), "enum");
+            m_writer->writeEndElement(); // emphasis
+        } else {
+            m_writer->writeCharacters("enum"_L1);
+        }
 
         QString synopsis;
         if (style == Section::Summary) {

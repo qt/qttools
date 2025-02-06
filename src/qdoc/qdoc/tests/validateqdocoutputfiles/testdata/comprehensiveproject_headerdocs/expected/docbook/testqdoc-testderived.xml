@@ -73,6 +73,76 @@
 </db:typedefsynopsis>
 <db:para>I'm an alias, not a typedef.</db:para>
 </db:section>
+<db:section xml:id="anonymous-testcpp-h-274-enum">
+<db:title its:translate="no">[anonymous] enum</db:title>
+<db:enumsynopsis>
+<db:enumitem>
+<db:enumidentifier>Val1</db:enumidentifier>
+<db:enumvalue>0</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>Val2</db:enumidentifier>
+<db:enumvalue>1</db:enumvalue>
+</db:enumitem>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:enumsynopsis>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-testderived.xml">TestDerived</db:link></db:emphasis>::Val1</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">0</db:code></db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-testderived.xml">TestDerived</db:link></db:emphasis>::Val2</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">1</db:code></db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+<db:section xml:id="anonymous-testcpp-h-280-enum">
+<db:title its:translate="no">[anonymous] enum</db:title>
+<db:enumsynopsis>
+<db:enumitem>
+<db:enumidentifier>Val3</db:enumidentifier>
+<db:enumvalue>0</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>Val4</db:enumidentifier>
+<db:enumvalue>1</db:enumvalue>
+</db:enumitem>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:enumsynopsis>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-testderived.xml">TestDerived</db:link></db:emphasis>::Val3</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">0</db:code></db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-testderived.xml">TestDerived</db:link></db:emphasis>::Val4</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">1</db:code></db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
 </db:section>
 <db:section xml:id="property-documentation">
 <db:title>Property Documentation</db:title>

@@ -220,6 +220,34 @@
                 <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" override="true" type="void" signature="void virtualFun() override">
                     <description/>
                 </function>
+                <enum name="anonymous-testcpp-h-274" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-274" href="testqdoc-testderived.html#anonymous-testcpp-h-274-enum" status="active" access="public" location="testcpp.h" documented="true">
+                    <value name="Val1" value="0"/>
+                    <value name="Val2" value="1"/>
+                    <description>
+                        <list type="enum">
+                            <definition>
+                                <term>TestQDoc::TestDerived::Val1</term>Val1</definition>
+                            <item/>
+                            <definition>
+                                <term>TestQDoc::TestDerived::Val2</term>Val2</definition>
+                            <item/>
+                        </list>
+                    </description>
+                </enum>
+                <enum name="anonymous-testcpp-h-280" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-280" href="testqdoc-testderived.html#anonymous-testcpp-h-280-enum" status="active" access="public" location="testcpp.h" documented="true">
+                    <value name="Val3" value="0"/>
+                    <value name="Val4" value="1"/>
+                    <description>
+                        <list type="enum">
+                            <definition>
+                                <term>TestQDoc::TestDerived::Val3</term>Val3</definition>
+                            <item/>
+                            <definition>
+                                <term>TestQDoc::TestDerived::Val4</term>Val4</definition>
+                            <item/>
+                        </list>
+                    </description>
+                </enum>
                 <typedef name="DerivedType" fullname="TestQDoc::TestDerived::DerivedType" href="testqdoc-testderived.html#DerivedType-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="Test::SomeType">
                     <description>
                         <para>An aliased typedef.</para>

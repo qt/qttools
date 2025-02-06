@@ -266,6 +266,18 @@ class TestDerived : public Test {
     QDOC_PROPERTY(bool secondBoolProp READ secondBoolProp NOTIFY boolPropChanged)
 
 public:
+
+    /*!
+        \value Val1
+        \value Val2
+    */
+    enum { Val1, Val2 };
+
+    /*!
+        \value Val3
+        \value Val4
+    */
+    enum { Val3, Val4 };
 /*!
     \typealias TestQDoc::TestDerived::DerivedType
     An aliased typedef.

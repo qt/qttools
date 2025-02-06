@@ -6,7 +6,7 @@
 #include "classnode.h"
 #include "config.h"
 #include "functionnode.h"
-#include "node.h"
+#include "enumnode.h"
 #include "propertynode.h"
 #include "qmlpropertynode.h"
 
@@ -180,6 +180,10 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
     QStringList extra;
     if (style == Section::Details) {
         switch (node->nodeType()) {
+        case Node::Enum:
+            if (static_cast<const EnumNode *>(node)->isAnonymous())
+                extra << "anonymous";
+            break;
         case Node::Function: {
             const auto *func = static_cast<const FunctionNode *>(node);
             if (func->isStatic()) {

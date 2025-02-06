@@ -12,11 +12,14 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_LOGGING_CATEGORY(lcQdoc)
 Q_DECLARE_LOGGING_CATEGORY(lcQdocClang)
 
+class Location;
+
 namespace Utilities {
 void startDebugging(const QString &message);
 void stopDebugging(const QString &message);
 bool debugging();
 
+QString uniqueIdentifier(const Location &loc, const QString &prefix);
 QString separator(qsizetype wordPosition, qsizetype numberOfWords);
 QString comma(qsizetype wordPosition, qsizetype numberOfWords);
 QString asAsciiPrintable(const QString &name);

@@ -97,6 +97,9 @@ class TestDerived : public Test {
 #endif
 
 public:
+
+    enum { Val1, Val2 };
+    enum { Val3, Val4 };
     using DerivedType = Test::SomeType;
     using NotTypedef = int;
     void virtualFun() override;

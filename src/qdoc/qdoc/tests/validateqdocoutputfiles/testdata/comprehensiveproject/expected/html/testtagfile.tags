@@ -274,6 +274,35 @@
         <name>TestQDoc::TestDerived</name>
         <filename>testqdoc-testderived.html</filename>
         <base>Test</base>
+        <member kind="enumeration">
+            <name>anonymous</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>anonymous-enum</anchor>
+        </member>
+        <member kind="enumvalue">
+            <name>Val1</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>anonymous-enum</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="enumvalue">
+            <name>Val2</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>anonymous-enum</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="enumvalue">
+            <name>Val3</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>anonymous-enum</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="enumvalue">
+            <name>Val4</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>anonymous-enum</anchor>
+            <arglist></arglist>
+        </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type>QBindable&lt;QString&gt;</type>
             <name>bindableProp</name>

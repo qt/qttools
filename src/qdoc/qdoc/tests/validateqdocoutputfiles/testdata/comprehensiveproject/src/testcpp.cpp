@@ -310,6 +310,16 @@ void TestDerived::staticObsoleteMember()
 }
 
 /*!
+    //! Documents enumerators from all unnamed enums
+    \enum TestQDoc::TestDerived::anonymous
+
+    \value Val1
+    \value Val2
+    \value Val3
+    \value Val4
+*/
+
+/*!
 \if defined(test_properties)
     \fn void TestDerived::emitSomething()
     Emitted when things happen.

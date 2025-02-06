@@ -151,10 +151,13 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
         break;
     case Node::Enum:
         enume = static_cast<const EnumNode *>(node);
-        synopsis = "enum ";
+        synopsis = "enum";
         if (enume->isScoped())
-            synopsis += "class ";
-        synopsis += name;
+            synopsis += " class";
+        if (!enume->isAnonymous())
+            synopsis += " %1"_L1.arg(name);
+        else if (style != Section::Details)
+            synopsis = linkTag(node, synopsis); // Unnamed enum: Make `enum` a link to details
         if (style == Section::Summary) {
             synopsis += " { ";
 

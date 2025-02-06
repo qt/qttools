@@ -110,6 +110,11 @@
             <keyword name="TestDerived" id="TestQDoc::TestDerived" ref="testqdoc-testderived.html"/>
             <keyword name="TestDerived::DerivedType" id="TestDerived::DerivedType" ref="testqdoc-testderived.html#DerivedType-typedef"/>
             <keyword name="TestDerived::NotTypedef" id="TestDerived::NotTypedef" ref="testqdoc-testderived.html#NotTypedef-typedef"/>
+            <keyword name="TestDerived::Val1" id="TestDerived::Val1" ref="testqdoc-testderived.html#anonymous-enum"/>
+            <keyword name="TestDerived::Val2" id="TestDerived::Val2" ref="testqdoc-testderived.html#anonymous-enum"/>
+            <keyword name="TestDerived::Val3" id="TestDerived::Val3" ref="testqdoc-testderived.html#anonymous-enum"/>
+            <keyword name="TestDerived::Val4" id="TestDerived::Val4" ref="testqdoc-testderived.html#anonymous-enum"/>
+            <keyword name="TestDerived::anonymous" id="TestDerived::anonymous" ref="testqdoc-testderived.html#anonymous-enum"/>
             <keyword name="TestQDoc" id="TestQDoc" ref="testqdoc.html"/>
             <keyword name="TheType" id="QML.TheType" ref="qml-themodule-thetype.html"/>
             <keyword name="TheType" id="QML.TheModule.TheType" ref="qml-themodule-thetype.html"/>

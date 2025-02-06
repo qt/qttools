@@ -42,6 +42,19 @@ bool debugging()
 }
 
 /*!
+    Returns a unique identifier based on location \a loc, with a
+    given \a prefix.
+*/
+QString uniqueIdentifier(const Location &loc, const QString &prefix)
+{
+    Q_ASSERT(!loc.filePath().isEmpty());
+    QFileInfo fi{loc.filePath()};
+    const auto id = QLatin1String("%1_%2_%3").arg(prefix, fi.fileName(), QString::number(loc.lineNo()));
+    return asAsciiPrintable(id);
+}
+
+
+/*!
     \internal
     Convenience method that's used to get the correct punctuation character for
     the words at \a wordPosition in a list of \a numberOfWords length.
