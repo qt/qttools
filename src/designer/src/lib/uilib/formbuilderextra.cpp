@@ -11,6 +11,9 @@
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qboxlayout.h>
 #include <QtWidgets/qgridlayout.h>
+#if QT_CONFIG(fontcombobox)
+#  include <QtWidgets/qfontcombobox.h>
+#endif
 
 #include <QtCore/qvariant.h>
 #include <QtCore/qdebug.h>
@@ -373,6 +376,16 @@ void QFormBuilderExtra::getLayoutMargins(const QList<DomProperty*> &properties,
         *right = p->elementNumber();
     if (const auto *p = propertyByName(properties, "bottomMargin"))
         *bottom = p->elementNumber();
+}
+
+bool QFormBuilderExtra::isQFontComboBox(const QWidget *w)
+{
+#if QT_CONFIG(fontcombobox)
+    return qobject_cast<const QFontComboBox*>(w) != nullptr;
+#else
+    Q_UNUSED(w);
+    return false;
+#endif
 }
 
 QString QFormBuilderExtra::boxLayoutStretch(const QBoxLayout *box)
