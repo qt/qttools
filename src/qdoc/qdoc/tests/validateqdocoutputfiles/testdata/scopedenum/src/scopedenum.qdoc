@@ -31,8 +31,8 @@
 
     Linking to \l {TestQDoc::Test::ScopedEnum::}{All}.
 
-    TestQDoc::Test::ClassicEnum::Howdy does not link,
-    but TestQDoc::Test::Howdy might.
+    TestQDoc::Test::ClassicEnum::Howdy links,
+    and TestQDoc::Test::Howdy might also link.
 */
 
 /*!
