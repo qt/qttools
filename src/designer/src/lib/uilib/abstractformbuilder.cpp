@@ -13,23 +13,39 @@
 #include <QtWidgets/qmenubar.h>
 #include <QtWidgets/qstatusbar.h>
 #include <QtWidgets/qtoolbar.h>
-#include <QtWidgets/qmdiarea.h>
+#if QT_CONFIG(mdiarea)
+#  include <QtWidgets/qmdiarea.h>
+#endif
 #include <QtWidgets/qdockwidget.h>
 #include <QtWidgets/qwizard.h>
-#include <QtWidgets/qstackedwidget.h>
-#include <QtWidgets/qtoolbox.h>
-#include <QtWidgets/qtabwidget.h>
+#if QT_CONFIG(stackedwidget)
+#  include <QtWidgets/qstackedwidget.h>
+#endif
+#if QT_CONFIG(toolbox)
+#  include <QtWidgets/qtoolbox.h>
+#endif
+#if QT_CONFIG(tabwidget)
+#  include <QtWidgets/qtabwidget.h>
+#endif
 #include <QtWidgets/qsplitter.h>
 #include <QtWidgets/qbuttongroup.h>
 #include <QtWidgets/qboxlayout.h>
 #include <QtWidgets/qformlayout.h>
 #include <QtWidgets/qgridlayout.h>
 #include <QtWidgets/qscrollarea.h>
-#include <QtWidgets/qtreewidget.h>
-#include <QtWidgets/qlistwidget.h>
+#if QT_CONFIG(treewidget)
+#  include <QtWidgets/qtreewidget.h>
+#endif
+#if QT_CONFIG(listwidget)
+#  include <QtWidgets/qlistwidget.h>
+#endif
 #include <QtWidgets/qheaderview.h>
-#include <QtWidgets/qtablewidget.h>
-#include <QtWidgets/qfontcombobox.h>
+#if QT_CONFIG(tablewidget)
+#  include <QtWidgets/qtablewidget.h>
+#endif
+#if QT_CONFIG(combobox)
+#  include <QtWidgets/qcombobox.h>
+#endif
 #include <QtWidgets/qpushbutton.h>
 #ifndef QFORMINTERNAL_NAMESPACE
 #  include <private/qlayout_p.h> // Compiling within Designer
@@ -1980,15 +1996,24 @@ QTextBuilder *QAbstractFormBuilder::textBuilder() const
 void QAbstractFormBuilder::saveExtraInfo(QWidget *widget, DomWidget *ui_widget,
                                          DomWidget *ui_parentWidget)
 {
-    if (QListWidget *listWidget = qobject_cast<QListWidget*>(widget)) {
+    if (false) {
+#if QT_CONFIG(listwidget)
+    } else if (QListWidget *listWidget = qobject_cast<QListWidget*>(widget)) {
         saveListWidgetExtraInfo(listWidget, ui_widget, ui_parentWidget);
+#endif
+#if QT_CONFIG(treewidget)
     } else if (QTreeWidget *treeWidget = qobject_cast<QTreeWidget*>(widget)) {
         saveTreeWidgetExtraInfo(treeWidget, ui_widget, ui_parentWidget);
+#endif
+#if QT_CONFIG(tablewidget)
     } else if (QTableWidget *tableWidget = qobject_cast<QTableWidget*>(widget)) {
         saveTableWidgetExtraInfo(tableWidget, ui_widget, ui_parentWidget);
+#endif
+#if QT_CONFIG(combobox)
     } else if (QComboBox *comboBox = qobject_cast<QComboBox*>(widget)) {
-        if (!qobject_cast<QFontComboBox*>(widget))
+        if (!QFormBuilderExtra::isQFontComboBox(widget))
             saveComboBoxExtraInfo(comboBox, ui_widget, ui_parentWidget);
+#endif
     } else if(QAbstractButton *ab = qobject_cast<QAbstractButton *>(widget)) {
         saveButtonExtraInfo(ab, ui_widget, ui_parentWidget);
     }
@@ -2311,7 +2336,7 @@ void QAbstractFormBuilder::loadExtraInfo(DomWidget *ui_widget, QWidget *widget, 
 #endif
 #if QT_CONFIG(combobox)
     } else if (QComboBox *comboBox = qobject_cast<QComboBox*>(widget)) {
-        if (!qobject_cast<QFontComboBox *>(widget))
+        if (!QFormBuilderExtra::isQFontComboBox(widget))
             loadComboBoxExtraInfo(ui_widget, comboBox, parentWidget);
 #endif
 #if QT_CONFIG(tabwidget)

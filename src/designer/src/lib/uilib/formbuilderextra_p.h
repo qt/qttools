@@ -151,6 +151,8 @@ public:
     static DomProperty *propertyByName(const QList<DomProperty*> &properties,
                                        QAnyStringView needle);
 
+    static bool isQFontComboBox(const QWidget *w);
+
     QStringList m_pluginPaths;
     QMap<QString, QDesignerCustomWidgetInterface*> m_customWidgets;
 

@@ -15,13 +15,24 @@
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qlayout.h>
 #include <QtWidgets/qwidget.h>
-#include <QtWidgets/qtabwidget.h>
-#include <QtWidgets/qtreewidget.h>
-#include <QtWidgets/qlistwidget.h>
-#include <QtWidgets/qtablewidget.h>
-#include <QtWidgets/qtoolbox.h>
-#include <QtWidgets/qcombobox.h>
-#include <QtWidgets/qfontcombobox.h>
+#if QT_CONFIG(tabwidget)
+#   include <QtWidgets/qtabwidget.h>
+#endif
+#if QT_CONFIG(treewidget)
+#  include <QtWidgets/qtreewidget.h>
+#endif
+#if QT_CONFIG(listwidget)
+#   include <QtWidgets/qlistwidget.h>
+#endif
+#if QT_CONFIG(tablewidget)
+#  include <QtWidgets/qtablewidget.h>
+#endif
+#if QT_CONFIG(toolbox)
+#  include <QtWidgets/qtoolbox.h>
+#endif
+#if QT_CONFIG(combobox)
+#  include <QtWidgets/qcombobox.h>
+#endif
 
 #include <QtGui/qaction.h>
 #include <QtGui/qactiongroup.h>
@@ -136,6 +147,7 @@ const QUiItemRolePair qUiItemRoles[] = {
     { -1 , -1 }
 };
 
+#if QT_CONFIG(treewidget)
 static void recursiveReTranslate(QTreeWidgetItem *item, const QByteArray &class_name, bool idBased)
 {
     const QUiItemRolePair *irs = qUiItemRoles;
@@ -155,6 +167,7 @@ static void recursiveReTranslate(QTreeWidgetItem *item, const QByteArray &class_
     for (int i = 0; i < cnt; ++i)
         recursiveReTranslate(item->child(i), class_name, idBased);
 }
+#endif
 
 template<typename T>
 static void reTranslateWidgetItem(T *item, const QByteArray &class_name, bool idBased)
@@ -170,11 +183,13 @@ static void reTranslateWidgetItem(T *item, const QByteArray &class_name, bool id
     }
 }
 
+#if QT_CONFIG(tablewidget)
 static void reTranslateTableItem(QTableWidgetItem *item, const QByteArray &class_name, bool idBased)
 {
     if (item)
         reTranslateWidgetItem(item, class_name, idBased);
 }
+#endif
 
 #define RETRANSLATE_SUBWIDGET_PROP(mainWidget, setter, propName) \
     do { \
@@ -253,7 +268,7 @@ public:
 #endif
 #if QT_CONFIG(combobox)
             } else if (QComboBox *combow = qobject_cast<QComboBox*>(o)) {
-                if (!qobject_cast<QFontComboBox*>(o)) {
+                if (!QFormBuilderExtra::isQFontComboBox(combow)) {
                     const int cnt = combow->count();
                     for (int i = 0; i < cnt; ++i) {
                         const QVariant v = combow->itemData(i, Qt::DisplayPropertyRole);
@@ -451,7 +466,7 @@ QWidget *FormBuilderPrivate::create(DomWidget *ui_widget, QWidget *parentWidget)
 #endif
 #if QT_CONFIG(combobox)
     } else if (qobject_cast<QComboBox*>(w)) {
-        if (qobject_cast<QFontComboBox*>(w))
+        if (QFormBuilderExtra::isQFontComboBox(w))
             return w;
 #endif
 #if QT_CONFIG(toolbox)
