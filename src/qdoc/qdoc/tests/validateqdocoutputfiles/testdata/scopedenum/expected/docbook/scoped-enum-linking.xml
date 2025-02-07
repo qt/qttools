@@ -8,5 +8,5 @@
 <db:para>TestCPP Reference Documentation.</db:para></db:abstract>
 </db:info>
 <db:para>Linking to <db:link xlink:href="testqdoc-test.xml#ScopedEnum-enum">All</db:link>.</db:para>
-<db:para>TestQDoc::Test::ClassicEnum::Howdy does not link, but <db:link xlink:href="testqdoc-test.xml#ClassicEnum-enum">TestQDoc::Test::Howdy</db:link> might.</db:para>
+<db:para><db:link xlink:href="testqdoc-test.xml#ClassicEnum-enum">TestQDoc::Test::ClassicEnum::Howdy</db:link> links, and <db:link xlink:href="testqdoc-test.xml#ClassicEnum-enum">TestQDoc::Test::Howdy</db:link> might also link.</db:para>
 </db:article>
