@@ -716,7 +716,7 @@ const Node *Tree::findEnumNode(const Node *node, const Node *aggregate, const QS
     // Scoped enum (path ends in enum_name :: enum_value)
     if (node && node->isEnumType() && offset == path.size() - 1) {
         const auto *en = static_cast<const EnumNode*>(node);
-        if (en->isScoped() && en->hasItem(path.last()))
+        if (en->hasItem(path.last()))
             return en;
     }
 
