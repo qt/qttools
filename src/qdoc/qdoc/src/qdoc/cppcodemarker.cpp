@@ -244,8 +244,6 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
     if (node->isQmlProperty()) {
         const auto *pn = static_cast<const QmlPropertyNode *>(node);
         synopsis = name + " : " + typified(pn->dataType());
-        if (!pn->validateDataType())
-            node->doc().location().warning(QStringLiteral("Invalid QML property type: %1").arg(pn->dataType()));
     } else if (node->isFunction(Node::QML)) {
         const auto *func = static_cast<const FunctionNode *>(node);
         if (!func->returnType().isEmpty())

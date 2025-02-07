@@ -795,6 +795,9 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                             QStringLiteral("Undocumented return value "
                                            "(hint: use 'return' or 'returns' in the text"));
             }
+        } else if (node->isQmlProperty()) {
+            if (auto *qpn = static_cast<const QmlPropertyNode *>(node); !qpn->validateDataType())
+                qpn->doc().location().warning("Invalid QML property type: %1"_L1.arg(qpn->dataType()));
         }
     }
     generateEnumValuesForQmlProperty(node, marker);
