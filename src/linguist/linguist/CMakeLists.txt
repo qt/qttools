@@ -21,7 +21,8 @@ qt_internal_add_app(linguist
         batchtranslationdialog.cpp batchtranslationdialog.h
         errorsview.cpp errorsview.h
         finddialog.cpp finddialog.h finddialog.ui
-        formpreviewview.cpp formpreviewview.h
+        uiformpreviewview.cpp uiformpreviewview.h
+        qmlformpreviewview.h qmlformpreviewview.cpp
         globals.cpp globals.h
         main.cpp
         mainwindow.cpp mainwindow.h mainwindow.ui
@@ -52,6 +53,8 @@ qt_internal_add_app(linguist
         Qt::GuiPrivate
         Qt::UiToolsPrivate
         Qt::Widgets
+        Qt::QuickWidgets
+        Qt::QuickLayouts
 )
 
 qt_internal_extend_target(linguist CONDITION QT_FEATURE_printsupport
@@ -60,6 +63,48 @@ qt_internal_extend_target(linguist CONDITION QT_FEATURE_printsupport
     LIBRARIES
         Qt::PrintSupport
 )
+
+set(available_plugins "")
+
+set(plugin_targets
+    Qt::qtquickcontrols2plugin
+    Qt::qtquick2plugin
+    Qt::qtquickdialogsplugin
+    Qt::qtquickcontrols2universalstyleplugin
+    Qt::qtquickcontrols2basicstyleplugin
+    Qt::qtquickcontrols2fluentwinui3styleplugin
+    Qt::qtquickcontrols2fusionstyleplugin
+    Qt::qtquickcontrols2imaginestyleplugin
+    Qt::qtquickcontrols2iosstyleplugin
+    Qt::qtquickcontrols2macosstyleplugin
+    Qt::qtquickcontrols2materialstyleplugin
+    Qt::qtquicktemplates2plugin
+    Qt::qtquickcontrols2implplugin
+    Qt::qtquickdialogs2quickimplplugin
+    Qt::qtquickcontrols2universalstyleimplplugin
+    Qt::qtquickcontrols2basicstyleimplplugin
+    Qt::qtquickcontrols2fluentwinui3styleimplplugin
+    Qt::qtquickcontrols2fusionstyleimplplugin
+    Qt::qtquickcontrols2imaginestyleimplplugin
+    Qt::qtquickcontrols2iosstyleimplplugin
+    Qt::qtquickcontrols2macosstyleimplplugin
+    Qt::qtquickcontrols2materialstyleimplplugin
+    Qt::quickwindow
+)
+
+foreach(plugin ${plugin_targets})
+    if(TARGET ${plugin})
+        list(APPEND available_plugins ${plugin})
+    endif()
+endforeach()
+
+if (available_plugins)
+    if(BUILD_SHARED_LIBS)
+        add_dependencies(linguist ${available_plugins})
+    else()
+        qt_internal_extend_target(linguist LIBRARIES ${available_plugins})
+    endif()
+endif()
 
 qt_add_ui(linguist
     SOURCES

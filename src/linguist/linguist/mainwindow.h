@@ -36,7 +36,8 @@ class QTreeView;
 class BatchTranslationDialog;
 class ErrorsView;
 class FocusWatcher;
-class FormPreviewView;
+class UiFormPreviewView;
+class QmlFormPreviewView;
 class MessageEditor;
 class PhraseView;
 class SourceCodeView;
@@ -129,6 +130,7 @@ private slots:
                   FindDialog::FindOptions options, int statusFilter);
     void revalidate();
     void showStatistics();
+    void toggleQmlPreview();
     void toggleVisualizeWhitespace();
     void onWhatsThis();
     void updatePhraseDicts();
@@ -193,7 +195,8 @@ private:
     PhraseView *m_phraseView;
     QStackedWidget *m_sourceAndFormView;
     SourceCodeView *m_sourceCodeView;
-    FormPreviewView *m_formPreviewView;
+    UiFormPreviewView *m_uiFormPreviewView;
+    QmlFormPreviewView *m_qmlFormPreviewView;
     ErrorsView *m_errorsView;
     QLabel *m_progressLabel;
     QLabel *m_modifiedLabel;

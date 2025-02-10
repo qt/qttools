@@ -97,6 +97,7 @@
     </widget>
     <addaction name="actionResetSorting"/>
     <addaction name="actionDisplayGuesses"/>
+    <addaction name="actionQmlPreview"/>
     <addaction name="actionLengthVariants"/>
     <addaction name="actionVisualizeWhitespace"/>
     <addaction name="separator"/>
@@ -640,6 +641,23 @@
    </property>
    <property name="whatsThis">
     <string>Display translation statistics.</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionQmlPreview">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;QML preview</string>
+   </property>
+   <property name="whatsThis">
+    <string>Display a preview of QML documents.</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>

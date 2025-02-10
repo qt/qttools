@@ -1,7 +1,7 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#include "formpreviewview.h"
+#include "uiformpreviewview.h"
 #include "messagemodel.h"
 
 #include <quiloader.h>
@@ -247,7 +247,8 @@ static void retranslateTarget(const TranslatableEntry &target, const QString &te
 #endif
 #ifndef QT_NO_TREEWIDGET
     case TranslatableTreeWidgetItem:
-        target.target.treeWidgetItem->setData(target.prop.treeIndex.column, target.prop.treeIndex.index, text);
+        target.target.treeWidgetItem->setData(target.prop.treeIndex.column,
+                                              target.prop.treeIndex.index, text);
         break;
 #endif
     }
@@ -470,8 +471,8 @@ static void highlightTargets(const QList<TranslatableEntry> &targets, bool on)
         highlightTarget(target, on);
 }
 
-FormPreviewView::FormPreviewView(QWidget *parent, MultiDataModel *dataModel)
-  : QMainWindow(parent), m_form(0), m_dataModel(dataModel)
+UiFormPreviewView::UiFormPreviewView(QWidget *parent, MultiDataModel *dataModel)
+    : QMainWindow(parent), m_form(0), m_dataModel(dataModel)
 {
     m_mdiSubWindow = new QMdiSubWindow;
     m_mdiSubWindow->setWindowFlags(m_mdiSubWindow->windowFlags() & ~Qt::WindowSystemMenuHint);
@@ -482,7 +483,7 @@ FormPreviewView::FormPreviewView(QWidget *parent, MultiDataModel *dataModel)
     m_mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 }
 
-void FormPreviewView::setSourceContext(int model, MessageItem *messageItem)
+void UiFormPreviewView::setSourceContext(int model, MessageItem *messageItem)
 {
     if (model < 0 || !messageItem) {
         m_lastModel = -1;

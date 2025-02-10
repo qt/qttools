@@ -1,8 +1,8 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#ifndef FORMPREVIEWVIEW_H
-#define FORMPREVIEWVIEW_H
+#ifndef UIFORMPREVIEWVIEW_H
+#define UIFORMPREVIEWVIEW_H
 
 #include <private/quiloader_p.h>
 
@@ -62,11 +62,11 @@ struct TranslatableEntry {
 
 typedef QHash<QUiTranslatableStringValue, QList<TranslatableEntry> > TargetsHash;
 
-class FormPreviewView : public QMainWindow
+class UiFormPreviewView : public QMainWindow
 {
     Q_OBJECT
 public:
-    FormPreviewView(QWidget *parent, MultiDataModel *dataModel);
+    UiFormPreviewView(QWidget *parent, MultiDataModel *dataModel);
 
     void setSourceContext(int model, MessageItem *messageItem);
 
@@ -86,4 +86,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif // FORMPREVIEWVIEW_H
+#endif // UIFORMPREVIEWVIEW_H
