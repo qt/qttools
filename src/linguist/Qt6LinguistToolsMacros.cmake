@@ -632,6 +632,7 @@ function(qt6_add_translations)
         __QT_INTERNAL_DEFAULT_QM_OUT_DIR
         LUPDATE_TARGET
         LRELEASE_TARGET
+        TS_FILE_DIR
         TS_FILES_OUTPUT_VARIABLE
         QM_FILES_OUTPUT_VARIABLE
         RESOURCE_PREFIX
@@ -641,7 +642,6 @@ function(qt6_add_translations)
         SOURCE_TARGETS
         TS_FILES
         TS_FILE_BASE
-        TS_FILE_DIR
         PLURALS_TS_FILE
         SOURCES
         INCLUDE_DIRECTORIES
