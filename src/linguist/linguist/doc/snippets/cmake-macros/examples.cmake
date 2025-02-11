@@ -39,6 +39,13 @@ set_source_files_properties(app_en.ts app_de.ts
 qt_add_translations(app)
 #! [set_output_location_on_ts_file_with_qt_add_translations]
 
+#! [set_qm_output_directory_with_qt_add_lrelease]
+qt_add_lrelease(
+    TS_FILES myapp_en.ts myapp_de.ts
+    QM_OUTPUT_DIRECTORY translations
+)
+#! [set_qm_output_directory_with_qt_add_lrelease]
+
 #! [set_output_location_on_ts_file_with_qt_add_lrelease]
 set_source_files_properties(app_en.ts app_de.ts
     PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translations")

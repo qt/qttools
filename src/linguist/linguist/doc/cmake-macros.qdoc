@@ -269,6 +269,7 @@ qt_add_lrelease(TS_FILES file1.ts [file2.ts ...]
                 [LRELEASE_TARGET target-name]
                 [EXCLUDE_FROM_ALL]
                 [NO_GLOBAL_TARGET]
+                [QM_OUTPUT_DIRECTORY directory]             # since 6.9
                 [QM_FILES_OUTPUT_VARIABLE variable-name]
                 [MERGE_QT_TRANSLATIONS]
                 [QT_TRANSLATION_CATALOGS catalog1 [catalog2 ...]]
@@ -312,9 +313,26 @@ You can set additional \c{OPTIONS} that should be passed when \c{lrelease} is
 invoked. You can find possible options in the \l{lrelease}{lrelease
 documentation}.
 
+\section1 Location of generated .qm files
+
 By default, the \c{.qm} files will be placed in the current build directory
-(\c{CMAKE_CURRENT_BINARY_DIR}). To change this, you can set \c{OUTPUT_LOCATION}
-as a property of the source \c{.ts} file before calling \c qt_add_lrelease.
+(\c{CMAKE_CURRENT_BINARY_DIR}). Since Qt 6.9 you can use the \c
+QM_OUTPUT_DIRECTORY argument to generate the \c{.qm} files in a different
+directory. Relative paths are considered to be below \c
+CMAKE_CURRENT_BINARY_DIR.
+
+For example, with the following code, the \c{.qm} files are generated
+in a \c{translations} directory below the current build directory.
+
+\snippet cmake-macros/examples.cmake set_qm_output_directory_with_qt_add_lrelease
+
+For more fine-grained control, you can specify the output directory of
+individual \c{.qm} files by setting the source file property \c{OUTPUT_LOCATION}
+on the corresponding \c{.ts} file. This must happen before calling \c
+qt_add_lrelease.
+
+The \c OUTPUT_LOCATION source file property overrides the directory passed via
+\c QM_OUTPUT_DIRECTORY.
 
 For example, with the following code, the \c{.qm} files are generated
 in a \c{translations} directory below the current build directory.

@@ -477,8 +477,8 @@ function(qt6_add_lrelease)
         MERGE_QT_TRANSLATIONS
         NO_GLOBAL_TARGET)
     set(oneValueArgs
-        __QT_INTERNAL_DEFAULT_QM_OUT_DIR
         LRELEASE_TARGET
+        QM_OUTPUT_DIRECTORY
         QM_FILES_OUTPUT_VARIABLE)
     set(multiValueArgs
         TS_FILES
@@ -525,8 +525,10 @@ function(qt6_add_lrelease)
     endif()
 
     set(default_qm_out_dir "${CMAKE_CURRENT_BINARY_DIR}")
-    if(NOT "${arg___QT_INTERNAL_DEFAULT_QM_OUT_DIR}" STREQUAL "")
-        set(default_qm_out_dir "${arg___QT_INTERNAL_DEFAULT_QM_OUT_DIR}")
+    if(DEFINED arg_QM_OUTPUT_DIRECTORY)
+        get_filename_component(default_qm_out_dir "${arg_QM_OUTPUT_DIRECTORY}" ABSOLUTE
+            BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}"
+        )
     endif()
 
     set(qm_files "")
@@ -835,7 +837,7 @@ function(qt6_add_translations)
         TS_FILES "${arg_TS_FILES}" ${arg_PLURALS_TS_FILE}
         QM_FILES_OUTPUT_VARIABLE qm_files
         OPTIONS "${arg_LRELEASE_OPTIONS}"
-        __QT_INTERNAL_DEFAULT_QM_OUT_DIR "${arg___QT_INTERNAL_DEFAULT_QM_OUT_DIR}"
+        QM_OUTPUT_DIRECTORY "${arg___QT_INTERNAL_DEFAULT_QM_OUT_DIR}"
         ${additional_qt_add_lrelease_args}
     )
 
