@@ -191,6 +191,31 @@ qt6_add_lrelease(app9
 )
 expect_string_value(qm_files "${CMAKE_CURRENT_BINARY_DIR}/translations/myobject_aa.qm")
 
+# Specify the output directory of .qm files with qt_add_translations.
+create_app(app10)
+qt6_add_translations(app10
+    IMMEDIATE_CALL
+    SOURCE_TARGETS app10
+    TS_FILES myobject_af.ts
+    QM_FILES_OUTPUT_VARIABLE qm_files
+    QM_OUTPUT_DIRECTORY translations
+)
+expect_string_value(qm_files "${CMAKE_CURRENT_BINARY_DIR}/translations/myobject_af.qm")
+
+# Specify the output directory of .qm files with qt_add_translations.
+create_app(app11)
+set_source_files_properties(myobject_ak.ts PROPERTIES
+    OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translations"
+)
+qt6_add_translations(app11
+    IMMEDIATE_CALL
+    SOURCE_TARGETS app11
+    TS_FILES myobject_ak.ts
+    QM_FILES_OUTPUT_VARIABLE qm_files
+    QM_OUTPUT_DIRECTORY blabliblu
+)
+expect_string_value(qm_files "${CMAKE_CURRENT_BINARY_DIR}/translations/myobject_ak.qm")
+
 # Build 'update_translations' before any of the '*_lrelease' targets.
 get_directory_property(lrelease_targets BUILDSYSTEM_TARGETS)
 list(FILTER lrelease_targets INCLUDE REGEX "_lrelease[0-9]*$")

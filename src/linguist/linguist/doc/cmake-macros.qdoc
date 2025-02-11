@@ -464,6 +464,7 @@ qt_add_translations([target]
                     [OUTPUT_TARGETS variable-name]
                     [TS_FILES_OUTPUT_VARIABLE variable-name]    # since 6.8
                     [QM_FILES_OUTPUT_VARIABLE variable-name]
+                    [QM_OUTPUT_DIRECTORY directory]             # since 6.9
                     [SOURCES source1.cpp [sources2.cpp ...]]
                     [INCLUDE_DIRECTORIES directory1 [directory2 ...]]
                     [LUPDATE_TARGET target-name]
@@ -601,9 +602,26 @@ the \l{lupdate options} and \l{lrelease options}.
 For example, to use \l{Text ID based translations}{ID based translations}, you
 need to pass \c{LRELEASE_OPTIONS -idbased} to \c qt_add_translations.
 
+\section1 Location of generated .qm files
+
 By default, the \c{.qm} files will be placed in the current build directory
-(\c{CMAKE_CURRENT_BINARY_DIR}). To change this, you can set \c{OUTPUT_LOCATION}
-as a property of the source \c{.ts} file before calling \c qt_add_translations.
+(\c{CMAKE_CURRENT_BINARY_DIR}). Since Qt 6.9 you can use the \c
+QM_OUTPUT_DIRECTORY argument to generate the \c{.qm} files in a different
+directory. Relative paths are considered to be below \c
+CMAKE_CURRENT_BINARY_DIR.
+
+For example, with the following code, the \c{.qm} files are generated
+in a \c{translations} directory below the current build directory.
+
+\snippet cmake-macros/examples.cmake set_qm_output_directory_with_qt_add_translations
+
+For more fine-grained control, you can specify the output directory of
+individual \c{.qm} files by setting the source file property \c{OUTPUT_LOCATION}
+on the corresponding \c{.ts} file. This must happen before calling \c
+qt_add_translations.
+
+The \c OUTPUT_LOCATION source file property overrides the directory passed via
+\c QM_OUTPUT_DIRECTORY.
 
 For example, with the following code, the \c{.qm} files are generated
 in a \c{translations} directory below the current build directory.

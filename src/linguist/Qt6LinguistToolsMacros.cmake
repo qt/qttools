@@ -631,12 +631,12 @@ function(qt6_add_translations)
         MERGE_QT_TRANSLATIONS
         NO_GENERATE_PLURALS_TS_FILE)
     set(oneValueArgs
-        __QT_INTERNAL_DEFAULT_QM_OUT_DIR
         LUPDATE_TARGET
         LRELEASE_TARGET
         TS_FILE_DIR
         TS_FILES_OUTPUT_VARIABLE
         QM_FILES_OUTPUT_VARIABLE
+        QM_OUTPUT_DIRECTORY
         RESOURCE_PREFIX
         OUTPUT_TARGETS)
     set(multiValueArgs
@@ -672,6 +672,13 @@ function(qt6_add_translations)
     endif()
     if(NOT DEFINED arg_RESOURCE_PREFIX AND NOT DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
         set(arg_RESOURCE_PREFIX "/i18n")
+    endif()
+
+    set(qm_out_dir "${CMAKE_CURRENT_BINARY_DIR}")
+    if(DEFINED arg_QM_OUTPUT_DIRECTORY)
+        get_filename_component(qm_out_dir "${arg_QM_OUTPUT_DIRECTORY}" ABSOLUTE
+            BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}"
+        )
     endif()
 
     set(scope_args)
@@ -745,7 +752,7 @@ function(qt6_add_translations)
                 set(qm_files "")
                 foreach(ts_file IN LISTS arg_TS_FILES arg_PLURALS_TS_FILE)
                     _qt_internal_generated_qm_file_path(qm_file "${ts_file}"
-                        "${CMAKE_CURRENT_BINARY_DIR}")
+                        "${qm_out_dir}")
                     list(APPEND qm_files "${qm_file}")
                 endforeach()
                 set("${arg_QM_FILES_OUTPUT_VARIABLE}" "${qm_files}" PARENT_SCOPE)
@@ -754,7 +761,6 @@ function(qt6_add_translations)
             # Forward options.
             set(forwarded_args
                 IMMEDIATE_CALL
-                __QT_INTERNAL_DEFAULT_QM_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}"
             )
             foreach(keyword IN LISTS options)
                 if(arg_${keyword})
@@ -837,7 +843,7 @@ function(qt6_add_translations)
         TS_FILES "${arg_TS_FILES}" ${arg_PLURALS_TS_FILE}
         QM_FILES_OUTPUT_VARIABLE qm_files
         OPTIONS "${arg_LRELEASE_OPTIONS}"
-        QM_OUTPUT_DIRECTORY "${arg___QT_INTERNAL_DEFAULT_QM_OUT_DIR}"
+        QM_OUTPUT_DIRECTORY "${qm_out_dir}"
         ${additional_qt_add_lrelease_args}
     )
 
