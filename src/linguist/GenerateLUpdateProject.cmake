@@ -21,6 +21,36 @@ function(list_to_json_array srcList jsonList)
     set(${jsonList} "[ ${joinedList} ]" PARENT_SCOPE)
 endfunction()
 
+# Remove ui_foo.h for each foo.ui file found in the sources.
+#    filter_generated_ui_headers(existing_files .../src/foo.ui .../target_autogen/include/ui_foo.h)
+#    -> .../src/foo.ui
+function(filter_generated_ui_headers out_var)
+    set(ui_file_paths ${ARGN})
+    list(FILTER ui_file_paths INCLUDE REGEX "/[^/]+\\.ui$")
+    set(filter_regex "")
+    foreach(file_path IN LISTS ui_file_paths)
+        get_filename_component(file_name "${file_path}" NAME_WLE)
+        if(NOT "${filter_regex}" STREQUAL "")
+            string(APPEND filter_regex "|")
+        endif()
+        string(APPEND filter_regex "(/ui_${file_name}\\.h$)")
+    endforeach()
+    set(result ${ARGN})
+    if(NOT "${filter_regex}" STREQUAL "")
+        list(FILTER result EXCLUDE REGEX ${filter_regex})
+    endif()
+    set("${out_var}" "${result}" PARENT_SCOPE)
+endfunction()
+
+# Remove source files that are unsuitable input for lupdate.
+#    filter_unsuitable_lupdate_input(sources main.cpp foo_de.qm bar.qml whatever_metatypes.json)
+#    -> main.cpp bar.qml
+function(filter_unsuitable_lupdate_input out_var)
+    set(result ${ARGN})
+    list(FILTER result EXCLUDE REGEX "\\.(qm|json)$")
+    set("${out_var}" "${result}" PARENT_SCOPE)
+endfunction()
+
 get_filename_component(project_root "${lupdate_project_file}" DIRECTORY)
 
 # Make relative paths absolute to the project root
@@ -42,7 +72,10 @@ foreach(path IN LISTS absolute_sources)
     endif()
 endforeach()
 
-list_to_json_array("${existing_sources}" json_sources)
+filter_generated_ui_headers(sources ${existing_sources})
+filter_unsuitable_lupdate_input(sources ${sources})
+
+list_to_json_array("${sources}" json_sources)
 list_to_json_array("${absolute_include_paths}" json_include_paths)
 list_to_json_array("${absolute_translations}" json_translations)
 

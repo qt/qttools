@@ -9,15 +9,17 @@
     \keyword Qt Designer
 
     \QD is the Qt tool for designing and building graphical user
-    interfaces (GUIs) with \l {Qt Widgets}. You can compose and customize your
-    windows or dialogs in a what-you-see-is-what-you-get (WYSIWYG) manner, and
-    test them using different styles and resolutions.
+    interfaces (GUIs) with \l {Qt Widgets}. For user interface design with
+    \l {Qt Quick}, see \l {Qt Design Studio Manual} {Qt Design Studio}.
 
-    Widgets and forms created with \QD integrate seamlessly with programmed
-    code, using Qt's signals and slots mechanism, so that you can easily assign
-    behavior to graphical elements. All properties set in \QD can be changed
-    dynamically within the code. Furthermore, features like widget promotion
-    and custom plugins allow you to use your own components with \QD.
+    You can compose and customize your windows or dialogs in a
+    what-you-see-is-what-you-get (WYSIWYG) manner, and test them using different
+    styles and resolutions. Widgets and forms created with \QD integrate
+    seamlessly with programmed code, using Qt's signals and slots mechanism, so
+    that you can easily assign behavior to graphical elements. All properties
+    set in \QD can be changed dynamically within the code. Furthermore, features
+    like widget promotion and custom plugins allow you to use your own
+    components with \QD.
 
     \note You have the option of using \l {Qt Quick} and
     \l {Qt Design Studio Manual}{Qt Design Studio} for user interface
