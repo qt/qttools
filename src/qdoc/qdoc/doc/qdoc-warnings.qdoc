@@ -890,4 +890,9 @@
         ...
         \sa setSize(double)
     \endcode
+
+    \section1 Unknown base <name> for QML type <type>
+
+    The type name declared as the base type for a QML type was not found, or
+    it was not declared with the \l{inherits-commands}{\\inherits} command.
 */
