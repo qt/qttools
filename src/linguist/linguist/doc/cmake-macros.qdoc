@@ -456,13 +456,13 @@ qt_add_translations([target]
                     [TARGETS target1 [target2...]]
                     [SOURCE_TARGETS target1 [target2...]]
                     [TS_FILE_BASE name]
-                    [TS_FILE_DIR directory]
                     [TS_FILES file1.ts [file2.ts ...]]
                     [PLURALS_TS_FILE file.ts]
                     [NO_GENERATE_PLURALS_TS_FILE]
                     [RESOURCE_PREFIX prefix]
                     [OUTPUT_TARGETS variable-name]
                     [TS_FILES_OUTPUT_VARIABLE variable-name]    # since 6.8
+                    [TS_OUTPUT_DIRECTORY directory]             # since 6.9
                     [QM_FILES_OUTPUT_VARIABLE variable-name]
                     [QM_OUTPUT_DIRECTORY directory]             # since 6.9
                     [SOURCES source1.cpp [sources2.cpp ...]]
@@ -541,17 +541,21 @@ This will create the files \c{myproject_de.ts} and \c{myproject_fr.ts} in the
 project's source directory.
 
 By default, the \c{.ts} files are created in \c{CMAKE_CURRENT_SOURCE_DIR}. You
-can change the location by passing a different directory with the \c TS_FILE_DIR
-argument.
+can change the location by passing a different directory with the \c
+TS_OUTPUT_DIRECTORY argument.
 
 By default, the \c{.ts} file names are constructed from \c{PROJECT_NAME}. You
 can specify a different base name with the \c{TS_FILE_BASE} argument.
 
-\note \c TS_FILE_DIR and \c TS_FILE_BASE have no effect for explicitly specified
-\c{.ts} files.
+\note \c TS_OUTPUT_DIRECTORY and \c TS_FILE_BASE have no effect for explicitly
+specified \c{.ts} files.
 
 Since Qt 6.8, you can specify the \c TS_FILES_OUTPUT_VARIABLE argument to store
 the automatically determined \c{.ts} file paths in a variable.
+
+Before Qt 6.9, the argument \c TS_OUTPUT_DIRECTORY was called \c TS_FILE_DIR.
+That name is still an alias for \c TS_OUTPUT_DIRECTORY to keep older project
+files working.
 
 \include cmake-macros.qdoc plurals-ts-file
 
@@ -784,7 +788,7 @@ qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES de fr)
 ...
 qt_add_translations(frogger
     TS_FILE_BASE froggo
-    TS_FILE_DIR translations
+    TS_OUTPUT_DIRECTORY translations
 )
 \endcode
 

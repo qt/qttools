@@ -633,8 +633,9 @@ function(qt6_add_translations)
     set(oneValueArgs
         LUPDATE_TARGET
         LRELEASE_TARGET
-        TS_FILE_DIR
+        TS_FILE_DIR              # alias for TS_OUTPUT_DIRECTORY
         TS_FILES_OUTPUT_VARIABLE
+        TS_OUTPUT_DIRECTORY
         QM_FILES_OUTPUT_VARIABLE
         QM_OUTPUT_DIRECTORY
         RESOURCE_PREFIX
@@ -689,7 +690,11 @@ function(qt6_add_translations)
     # Determine the .ts file paths if necessary. This must happen before function deferral.
     if(NOT DEFINED arg_TS_FILES)
         if(NOT DEFINED arg_TS_FILE_DIR)
-            set(arg_TS_FILE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+            if(DEFINED arg_TS_OUTPUT_DIRECTORY)
+                set(arg_TS_FILE_DIR "${arg_TS_OUTPUT_DIRECTORY}")
+            else()
+                set(arg_TS_FILE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+            endif()
         endif()
         if(NOT DEFINED arg_TS_FILE_BASE)
             set(arg_TS_FILE_BASE "${PROJECT_NAME}")

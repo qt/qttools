@@ -104,6 +104,24 @@ list(APPEND expected_files
 list(APPEND unexpected_files
     "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_an.ts")
 
+# Check whether TS_OUTPUT_DIRECTORY works.
+my_add_library(lib11 STATIC lib.cpp)
+set(QT_I18N_SOURCE_LANGUAGE aa)
+set(QT_I18N_TRANSLATED_LANGUAGES ab)
+qt_add_translations(TARGETS lib11 TS_OUTPUT_DIRECTORY translations)
+list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/translations/test_i18n_auto_ts_file_names_aa.ts"
+    "${CMAKE_CURRENT_SOURCE_DIR}/translations/test_i18n_auto_ts_file_names_ab.ts")
+
+# Check whether TS_FILE_BASE and TS_OUTPUT_DIRECTORY work together.
+my_add_library(lib12 STATIC lib.cpp)
+set(QT_I18N_SOURCE_LANGUAGE af)
+set(QT_I18N_TRANSLATED_LANGUAGES ak)
+qt_add_translations(TARGETS lib12 TS_FILE_BASE lib12 TS_OUTPUT_DIRECTORY translations)
+list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/translations/lib12_af.ts"
+    "${CMAKE_CURRENT_SOURCE_DIR}/translations/lib12_ak.ts")
+
 function(check_ts_file_paths)
     foreach(filepath IN LISTS expected_files)
         if(NOT EXISTS "${filepath}")

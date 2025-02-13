@@ -36,7 +36,7 @@ target_link_libraries(i18n PUBLIC
 )
 
 qt_add_translations(i18n
-    TS_FILE_DIR translations
+    TS_OUTPUT_DIRECTORY translations
 )
 
 install(TARGETS i18n
