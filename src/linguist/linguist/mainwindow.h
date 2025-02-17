@@ -142,6 +142,7 @@ private slots:
 private:
     QModelIndex nextContext(const QModelIndex &index) const;
     QModelIndex prevContext(const QModelIndex &index) const;
+    QModelIndex firstMessage() const;
     QModelIndex nextMessage(const QModelIndex &currentIndex, bool checkUnfinished = false) const;
     QModelIndex prevMessage(const QModelIndex &currentIndex, bool checkUnfinished = false) const;
     bool doNext(bool checkUnfinished);
@@ -215,7 +216,7 @@ private:
     TranslateDialog *m_translateDialog;
     QString m_latestFindText;
     int m_latestCaseSensitivity;
-    int m_remainingCount;
+    QModelIndex m_searchIndex;
     int m_hitCount;
 
     BatchTranslationDialog *m_batchTranslateDialog;

@@ -1260,37 +1260,35 @@ void MainWindow::translate(int mode)
             m_dataModel->setFinished(m_currentIndex, markFinished);
         }
 
+        const QModelIndex firstIndex = firstMessage();
         if (findText != m_latestFindText || caseSensitivity != m_latestCaseSensitivity) {
             m_latestFindText = findText;
             m_latestCaseSensitivity = caseSensitivity;
-            m_remainingCount = m_dataModel->messageCount();
+            m_searchIndex = firstIndex;
             m_hitCount = 0;
         }
 
-        QModelIndex index = m_messageView->currentIndex();
-        int prevRemained = m_remainingCount;
         forever {
-            if (--m_remainingCount <= 0) {
-                if (!m_hitCount)
-                    break;
-                m_remainingCount = m_dataModel->messageCount() - 1;
-                if (QMessageBox::question(m_translateDialog, tr("Translate - Qt Linguist"),
-                        tr("No more occurrences of '%1'. Start over?").arg(findText),
-                        QMessageBox::Yes|QMessageBox::No) != QMessageBox::Yes)
-                    return;
-                m_remainingCount -= prevRemained;
-            }
-
-            index = nextMessage(index);
-
-            QModelIndex realIndex = m_sortedMessagesModel->mapToSource(index);
+            QModelIndex realIndex = m_sortedMessagesModel->mapToSource(m_searchIndex);
             MultiDataIndex dataIndex = m_messageModel->dataIndex(realIndex, m_currentIndex.model());
+            m_searchIndex = nextMessage(m_searchIndex);
             if (MessageItem *m = m_dataModel->messageItem(dataIndex)) {
                 if (!m->isObsolete() && m->compare(findText, false, caseSensitivity)) {
                     setCurrentMessage(realIndex, m_currentIndex.model());
                     ++translatedCount;
                     ++m_hitCount;
                     break;
+                }
+            }
+
+            if (m_searchIndex == firstIndex && m_hitCount) {
+                if (QMessageBox::question(
+                            m_translateDialog, tr("Translate - Qt Linguist"),
+                            tr("No more occurrences of '%1'. Start over?").arg(findText),
+                            QMessageBox::Yes | QMessageBox::No)
+                    != QMessageBox::Yes) {
+                    m_searchIndex = prevMessage(m_searchIndex);
+                    return;
                 }
             }
         }
@@ -1804,6 +1802,17 @@ QModelIndex MainWindow::prevContext(const QModelIndex &index) const
 
     return m_sortedMessagesModel->mapFromSource(
             m_sortedContextsModel->mapToSource(sortedContextIndex));
+}
+
+QModelIndex MainWindow::firstMessage() const
+{
+    QModelIndex id = m_sortedMessagesModel->index(0, 0);
+    QModelIndex firstId;
+    if (id.isValid() && m_sortedMessagesModel->hasChildren(id))
+        firstId = m_sortedMessagesModel->index(0, 0, id);
+    else if (id.isValid())
+        firstId = id;
+    return firstId;
 }
 
 QModelIndex MainWindow::nextMessage(const QModelIndex &currentIndex, bool checkUnfinished) const
