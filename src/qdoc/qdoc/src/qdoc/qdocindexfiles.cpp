@@ -1358,10 +1358,11 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
                                            IndexSectionWriter *post)
 {
     /*
-      Note that groups, modules, and QML modules are written
+      Note that groups, modules, QML modules, and proxies are written
       after all the other nodes.
      */
-    if (node->isCollectionNode() || node->isGroup() || node->isModule() || node->isQmlModule())
+    if (node->isCollectionNode() || node->isGroup() || node->isModule() ||
+        node->isQmlModule() || node->isProxyNode())
         return;
 
     if (node->isInternal() && !Config::instance().showInternal())
@@ -1380,11 +1381,10 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
         if (node == root_) {
             /*
               We wait until the end of the index file to output the group, module,
-              and QML module elements. By outputting them at the end, when we read
-              the index file back in, all the group, module, and QML module member
-              elements will have already been created. It is then only necessary to
-              create the group, module, or QML module element and add each member to
-              its member list.
+              QML module, and proxy nodes. By outputting them at the end, when we read
+              the index file back in, all the group/module/proxy member
+              nodes will have already been created. It is then only necessary to
+              create the collection node and add each member to its member list.
             */
             const CNMap &groups = m_qdb->groups();
             if (!groups.isEmpty()) {
@@ -1407,6 +1407,16 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
                 for (auto it = qmlModules.constBegin(); it != qmlModules.constEnd(); ++it) {
                     if (generateIndexSection(writer, it.value(), post))
                         writer.writeEndElement();
+                }
+            }
+
+            for (auto *p : m_qdb->primaryTree()->proxies()) {
+                if (generateIndexSection(writer, p, post)) {
+                    auto aggregate = static_cast<Aggregate *>(p);
+                    generateFunctionSections(writer, aggregate);
+                    for (auto *n : aggregate->nonfunctionList())
+                        generateIndexSections(writer, n, post);
+                    writer.writeEndElement();
                 }
             }
         }
