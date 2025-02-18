@@ -18,10 +18,18 @@
 /*!
     \page some-attribution-1.html
     \attribution
-    \title Attribution-1
+    \title Attribution-1 (duplicate)
     \brief WTFPL License version 2
 
     Duplicated license attribution page.
+*/
+
+/*!
+    \page some-attribution-2.html
+    \title Attribution-2 (duplicate)
+    \brief Public Domain
+
+    Duplicated attribution page without \\attribution.
 */
 
 /*!
