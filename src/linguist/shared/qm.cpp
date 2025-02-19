@@ -635,11 +635,11 @@ bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd)
 
     for (int i = 0; i != translator.messageCount(); ++i) {
         const TranslatorMessage &msg = translator.message(i);
+        bool idBased = msg.context().isEmpty() && !msg.id().isEmpty();
         TranslatorMessage::Type typ = msg.type();
         if (typ != TranslatorMessage::Obsolete && typ != TranslatorMessage::Vanished) {
             if (typ == TranslatorMessage::Unfinished) {
-                if (msg.translation().isEmpty() && msg.id().isEmpty()
-                    && cd.m_unTrPrefix.isEmpty()) {
+                if (msg.translation().isEmpty() && !idBased && cd.m_unTrPrefix.isEmpty()) {
                     ++untranslated;
                     continue;
                 } else {
@@ -652,12 +652,12 @@ bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd)
             }
             QStringList tlns = msg.translations();
             if (msg.type() == TranslatorMessage::Unfinished
-                && (!msg.id().isEmpty() || !cd.m_unTrPrefix.isEmpty()))
+                && (idBased || !cd.m_unTrPrefix.isEmpty()))
                 for (int j = 0; j < tlns.size(); ++j)
                     if (tlns.at(j).isEmpty())
                         tlns[j] = cd.m_unTrPrefix + msg.sourceText();
-            if (!msg.id().isEmpty()) {
-                if (!msg.context().isEmpty() || !msg.comment().isEmpty())
+            if (idBased) {
+                if (!msg.comment().isEmpty())
                     ++droppedData;
                 releaser.insertIdBased(msg, tlns);
             } else {

@@ -2,44 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
-    <name></name>
-    <message id="quit_id">
-        <location filename="main.py" line="19"/>
-        <source>Quit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="id_1">
-        <location filename="main.py" line="83"/>
-        <source>msg1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="id_2">
-        <location filename="main.py" line="85"/>
-        <source>msg2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="id1">
-        <location filename="main.py" line="97"/>
-        <source>msg with id1</source>
-        <label>label1</label>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="id2">
-        <location filename="main.py" line="104"/>
-        <location filename="main.py" line="107"/>
-        <source>propagating label</source>
-        <label>label3</label>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="id3">
-        <location filename="main.py" line="111"/>
-        <location filename="main.py" line="114"/>
-        <source>invalid usage of label, contradicting labels for id</source>
-        <label>label4</label>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>CONTEXT</name>
     <message>
         <location filename="main.py" line="41"/>
@@ -91,6 +53,11 @@
         <extracomment>File menu</extracomment>
         <translation type="unfinished"></translation>
     </message>
+    <message id="quit_id">
+        <location filename="main.py" line="19"/>
+        <source>Quit</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="main.py" line="20"/>
         <source>CTRL+Q</source>
@@ -138,6 +105,16 @@
         <source>A raw string with escaped quote&quot;bla</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="id_1">
+        <location filename="main.py" line="83"/>
+        <source>msg1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id_2">
+        <location filename="main.py" line="85"/>
+        <source>msg2</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="main.py" line="87"/>
         <source>msg3</source>
@@ -170,9 +147,29 @@
         <source>before&#xa0;&#xa0;middle<byte value="x1f"/>&#xa0;&#xa0;after</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="id1">
+        <location filename="main.py" line="97"/>
+        <source>msg with id1</source>
+        <label>label1</label>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="main.py" line="100"/>
         <source>invalid usage of label because of missing id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id2">
+        <location filename="main.py" line="104"/>
+        <location filename="main.py" line="107"/>
+        <source>propagating label</source>
+        <label>label3</label>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id3">
+        <location filename="main.py" line="111"/>
+        <location filename="main.py" line="114"/>
+        <source>invalid usage of label, contradicting labels for id</source>
+        <label>label4</label>
         <translation type="unfinished"></translation>
     </message>
 </context>
