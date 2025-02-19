@@ -3,6 +3,33 @@
 <TS version="2.1">
 <context>
     <name></name>
+    <message id="id_foo">
+        <location filename="main.js" line="53"/>
+        <source>This string has an identifier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id_bar">
+        <location filename="main.js" line="56"/>
+        <source>This string also has an identifier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id_baz">
+        <location filename="main.js" line="69"/>
+        <source>This string has a lot of information</source>
+        <extracomment>This is a comment for the translator.</extracomment>
+        <translation type="unfinished"></translation>
+        <extra-foo>123</extra-foo>
+        <extra-magic-stuff>This means something special.</extra-magic-stuff>
+    </message>
+    <message id="id_babar">
+        <location filename="main.js" line="77"/>
+        <source>This string has even more information</source>
+        <extracomment>This is another comment for the translator.</extracomment>
+        <translation type="unfinished"></translation>
+        <extra-foo-bar>Important stuff</extra-foo-bar>
+        <extra-needle-in-haystack>Found</extra-needle-in-haystack>
+        <extra-overflow>True</extra-overflow>
+    </message>
     <message id="qtn_foo_bar">
         <location filename="main.js" line="85"/>
         <source></source>
@@ -40,11 +67,6 @@
         <location filename="main.js" line="38"/>
         <source>Qt is the very best</source>
         <extracomment>Another C-style comment, followed by yet another one.</extracomment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="id_bar">
-        <location filename="main.js" line="56"/>
-        <source>This string also has an identifier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -96,15 +118,6 @@
         <location filename="main.js" line="50"/>
         <source>I refuse to comment on that</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message id="id_babar">
-        <location filename="main.js" line="77"/>
-        <source>This string has even more information</source>
-        <extracomment>This is another comment for the translator.</extracomment>
-        <translation type="unfinished"></translation>
-        <extra-foo-bar>Important stuff</extra-foo-bar>
-        <extra-needle-in-haystack>Found</extra-needle-in-haystack>
-        <extra-overflow>True</extra-overflow>
     </message>
 </context>
 <context>
@@ -159,24 +172,11 @@
         <source>No comment to your comment</source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="id_foo">
-        <location filename="main.js" line="53"/>
-        <source>This string has an identifier</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <location filename="main.js" line="59"/>
         <source>This string has meta-data</source>
         <translation type="unfinished"></translation>
         <extra-loc-blank>False</extra-loc-blank>
-    </message>
-    <message id="id_baz">
-        <location filename="main.js" line="69"/>
-        <source>This string has a lot of information</source>
-        <extracomment>This is a comment for the translator.</extracomment>
-        <translation type="unfinished"></translation>
-        <extra-foo>123</extra-foo>
-        <extra-magic-stuff>This means something special.</extra-magic-stuff>
     </message>
     <message>
         <location filename="main.js" line="79"/>

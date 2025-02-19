@@ -25,8 +25,7 @@ public:
           m_cd(cd),
           m_lineNumber(-1),
           m_isTrString(false),
-          m_insideStringList(false),
-          m_idBasedTranslations(false)
+          m_insideStringList(false)
     {
     }
     ~UiReader() override = default;
@@ -54,7 +53,6 @@ private:
     int m_lineNumber;
     bool m_isTrString;
     bool m_insideStringList;
-    bool m_idBasedTranslations;
 };
 
 bool UiReader::startElement(QStringView namespaceURI, QStringView localName,
@@ -71,9 +69,6 @@ bool UiReader::startElement(QStringView namespaceURI, QStringView localName,
         flush();
         m_insideStringList = true;
         readTranslationAttributes(atts);
-    } else if (qName == "ui"_L1) { // UI "header"
-        const auto attr = QStringLiteral("idbasedtr");
-        m_idBasedTranslations = atts.hasAttribute(attr) && atts.value(attr) == "true"_L1;
     }
     m_accum.clear();
     return true;
@@ -121,7 +116,7 @@ bool UiReader::fatalError(qint64 line, qint64 column, const QString &message)
 
 void UiReader::flush()
 {
-    if (!m_context.isEmpty() && !m_source.isEmpty()) {
+    if ((!m_context.isEmpty() || !m_id.isEmpty()) && !m_source.isEmpty()) {
         TranslatorMessage msg(m_context, m_source,
            m_comment, QString(), m_cd.m_sourceFileName,
            m_lineNumber, QStringList());
@@ -144,8 +139,7 @@ void UiReader::readTranslationAttributes(const QXmlStreamAttributes &atts)
         m_isTrString = true;
         m_comment = atts.value(QStringLiteral("comment")).toString();
         m_extracomment = atts.value(QStringLiteral("extracomment")).toString();
-        if (m_idBasedTranslations)
-            m_id = atts.value(QStringLiteral("id")).toString();
+        m_id = atts.value(QStringLiteral("id")).toString();
         if (!m_cd.m_noUiLines)
             m_lineNumber = static_cast<int>(reader.lineNumber());
     } else {

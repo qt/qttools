@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
-    <name>FindDialog</name>
+    <name></name>
     <message id="windowTitleId">
         <location filename="project.ui" line="18"/>
         <source>Qt Assistant - Finn text</source>

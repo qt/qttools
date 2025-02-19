@@ -53,7 +53,8 @@ feature.
 Options:
     -help  Display this information and exit
     -idbased
-           Use IDs instead of source strings for message keying
+           Deprecated. The flag is not required anymore and will be removed
+           in a future version. It was used to enable ID based translation.
     -compress
            Compress the QM files
     -nounfinished
@@ -191,7 +192,8 @@ int main(int argc, char **argv)
             cd.m_saveMode = SaveStripped;
             continue;
         } else if (!strcmp(arg, "-idbased")) {
-            cd.m_idBased = true;
+            printOut("The flag -idbased is depreciated and not required anymore."
+                     "It will be removed in a future version"_L1);
             continue;
         } else if (!strcmp(arg, "-nocompress")) {
             cd.m_saveMode = SaveEverything;

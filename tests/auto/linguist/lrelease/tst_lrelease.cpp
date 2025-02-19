@@ -152,7 +152,7 @@ void tst_lrelease::compressed()
 
 void tst_lrelease::idbased()
 {
-    QVERIFY(!QProcess::execute(lrelease, QStringList() << "-idbased" << (dataDir + "idbased.ts")));
+    QVERIFY(!QProcess::execute(lrelease, QStringList{ (dataDir + "idbased.ts") }));
 
     QTranslator translator;
     QVERIFY(translator.load(dataDir + "idbased.qm"));
@@ -164,7 +164,8 @@ void tst_lrelease::idbased()
 
 void tst_lrelease::markuntranslated()
 {
-    QVERIFY(!QProcess::execute(lrelease, QStringList() << "-markuntranslated" << "#" << "-idbased" << (dataDir + "idbased.ts")));
+    QVERIFY(!QProcess::execute(lrelease,
+                               QStringList{ "-markuntranslated", "#", (dataDir + "idbased.ts") }));
 
     QTranslator translator;
     QVERIFY(translator.load(dataDir + "idbased.qm"));

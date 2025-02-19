@@ -499,7 +499,8 @@
         \li Display up-to-date help information and exit.
     \row
         \li \c {-idbased}
-        \li Use IDs instead of source strings for message keying.
+        \li Deprecated. The flag is not required anymore and will be removed
+            in a future version. It was used to enable ID based translation.
     \row
         \li \c {-compress}
         \li Compress the QM files.
@@ -1395,15 +1396,13 @@
     When building with CMake, use the prefix \c qml_ for .ts files.
     For example, \c qml_en.ts. In the CMakeLists.txt file, add the
     \l qt_add_translations function, where you list the *.ts files
-    as values of \c TS_FILES, set the value of RESOURCE_PREFIX to the
-    URI of the main.qml file for the project followed by /i18n, and
-    set the value of \c LRELEASE_OPTIONS to \c -idbased:
+    as values of \c TS_FILES, and set the value of RESOURCE_PREFIX to the
+    URI of the main.qml file for the project followed by /i18n:
 
     \badcode
     qt_add_translations(${CMAKE_PROJECT_NAME}
         TS_FILES i18n/qml_de_DE.ts i18n/qml_en_US.ts
         RESOURCE_PREFIX Main/i18n
-        LRELEASE_OPTIONS -idbased
     )
     \endcode
 
@@ -1425,8 +1424,8 @@
     The generation of the final .qm files could be scripted something like this:
 
     \code
-    lrelease -idbased <project-dir>/i18n/myapp-text_en_GB.ts
-    lrelease -idbased <project-dir>/i18n/myapp-text_en_US.ts
+    lrelease <project-dir>/i18n/myapp-text_en_GB.ts
+    lrelease <project-dir>/i18n/myapp-text_en_US.ts
     ...
     \endcode
 

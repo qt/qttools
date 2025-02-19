@@ -59,7 +59,6 @@ public:
     bool m_sortContexts = false;
     bool m_sortMessages = false;
     bool m_noUiLines = false;
-    bool m_idBased = false;
     TranslatorSaveMode m_saveMode = SaveEverything;
     QStringList m_rootDirs;
 };
