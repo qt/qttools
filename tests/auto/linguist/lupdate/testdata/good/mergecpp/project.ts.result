@@ -15,11 +15,6 @@
         <oldsource>World</oldsource>
         <translation type="unfinished">Welt</translation>
     </message>
-    <message id="new_id">
-        <location filename="finddialog.cpp" line="66"/>
-        <source>this is just some text</source>
-        <translation type="unfinished">Unfertige Uebersetzung</translation>
-    </message>
     <message id="qtn_virtual">
         <location filename="finddialog.cpp" line="70"/>
         <source></source>
@@ -65,14 +60,15 @@
             <numerusform></numerusform>
         </translation>
     </message>
+    <message id="new_id">
+        <location filename="finddialog.cpp" line="66"/>
+        <source>this is just some text</source>
+        <translation type="unfinished">Unfertige Uebersetzung</translation>
+    </message>
     <message>
         <location filename="finddialog.cpp" line="72"/>
         <source></source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>this is just some text</source>
-        <translation type="obsolete">Unfertige Uebersetzung</translation>
     </message>
 </context>
 </TS>

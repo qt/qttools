@@ -41,12 +41,7 @@ public:
     uint hash() const;
 
     QString id() const { return m_id; }
-    void setId(const QString &id)
-    {
-        m_id = id;
-        if (!m_id.isEmpty())
-            m_context.clear();
-    }
+    void setId(const QString &id) { m_id = id; }
 
     QString label() const { return m_label; }
     void setLabel(const QString &label) { m_label = label; }

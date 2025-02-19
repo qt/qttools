@@ -3,37 +3,6 @@
 <TS version="2.1">
 <context>
     <name></name>
-    <message id="id_foo">
-        <location filename="main.qml" line="57"/>
-        <location filename="main_test_pragma.qml" line="58"/>
-        <source>This string has an identifier</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="id_bar">
-        <location filename="main.qml" line="60"/>
-        <location filename="main_test_pragma.qml" line="61"/>
-        <source>This string also has an identifier</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="id_baz">
-        <location filename="main.qml" line="73"/>
-        <location filename="main_test_pragma.qml" line="74"/>
-        <source>This string has a lot of information</source>
-        <extracomment>This is a comment for the translator.</extracomment>
-        <translation type="unfinished"></translation>
-        <extra-foo>123</extra-foo>
-        <extra-magic-stuff>This means something special.</extra-magic-stuff>
-    </message>
-    <message id="id_babar">
-        <location filename="main.qml" line="81"/>
-        <location filename="main_test_pragma.qml" line="82"/>
-        <source>This string has even more information</source>
-        <extracomment>This is another comment for the translator.</extracomment>
-        <translation type="unfinished"></translation>
-        <extra-foo-bar>Important stuff</extra-foo-bar>
-        <extra-needle-in-haystack>Found</extra-needle-in-haystack>
-        <extra-overflow>True</extra-overflow>
-    </message>
     <message id="qtn_foo_bar">
         <location filename="main.qml" line="89"/>
         <location filename="main_test_pragma.qml" line="90"/>
@@ -68,12 +37,6 @@
         <source>Source text</source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="id1">
-        <location filename="main.qml" line="112"/>
-        <source>msg with id1</source>
-        <label>label1</label>
-        <translation type="unfinished"></translation>
-    </message>
     <message id="id2">
         <location filename="main.qml" line="119"/>
         <location filename="main.qml" line="121"/>
@@ -103,6 +66,12 @@
         <location filename="main_test_pragma.qml" line="43"/>
         <source>Qt is the very best</source>
         <extracomment>Another C-style comment, followed by yet another one.</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id_bar">
+        <location filename="main.qml" line="60"/>
+        <location filename="main_test_pragma.qml" line="61"/>
+        <source>This string also has an identifier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -162,6 +131,16 @@
         <location filename="main_test_pragma.qml" line="55"/>
         <source>I refuse to comment on that</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message id="id_babar">
+        <location filename="main.qml" line="81"/>
+        <location filename="main_test_pragma.qml" line="82"/>
+        <source>This string has even more information</source>
+        <extracomment>This is another comment for the translator.</extracomment>
+        <translation type="unfinished"></translation>
+        <extra-foo-bar>Important stuff</extra-foo-bar>
+        <extra-needle-in-haystack>Found</extra-needle-in-haystack>
+        <extra-overflow>True</extra-overflow>
     </message>
 </context>
 <context>
@@ -302,11 +281,26 @@
         <source>No comment to your comment</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="id_foo">
+        <location filename="main.qml" line="57"/>
+        <location filename="main_test_pragma.qml" line="58"/>
+        <source>This string has an identifier</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="main.qml" line="63"/>
         <source>This string has meta-data</source>
         <translation type="unfinished"></translation>
         <extra-loc-blank>False</extra-loc-blank>
+    </message>
+    <message id="id_baz">
+        <location filename="main.qml" line="73"/>
+        <location filename="main_test_pragma.qml" line="74"/>
+        <source>This string has a lot of information</source>
+        <extracomment>This is a comment for the translator.</extracomment>
+        <translation type="unfinished"></translation>
+        <extra-foo>123</extra-foo>
+        <extra-magic-stuff>This means something special.</extra-magic-stuff>
     </message>
     <message>
         <location filename="main.qml" line="83"/>
@@ -335,6 +329,12 @@
     <message>
         <location filename="main.qml" line="108"/>
         <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id1">
+        <location filename="main.qml" line="112"/>
+        <source>msg with id1</source>
+        <label>label1</label>
         <translation type="unfinished"></translation>
     </message>
     <message>
