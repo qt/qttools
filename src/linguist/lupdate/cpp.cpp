@@ -19,8 +19,6 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const QString CppMagicComment = u"TRANSLATOR"_s;
-
 size_t qHash(const HashString &str)
 {
     if (str.m_hash & 0x80000000)
