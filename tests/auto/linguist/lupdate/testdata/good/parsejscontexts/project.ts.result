@@ -2,6 +2,15 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name>Baz</name>
+    <message>
+        <location filename="main.js" line="12"/>
+        <source></source>
+        <comment>This is a comment to the translator.</comment>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>Foo</name>
     <message>
         <location filename="main.js" line="25"/>

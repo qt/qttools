@@ -4,9 +4,13 @@
 #include "cpp.h"
 
 #include <translator.h>
+#include "metastrings.h"
+
 #include <QtCore/QBitArray>
 #include <QtCore/QTextStream>
 #include <QtCore/QRegularExpression>
+
+#include <iostream>
 
 QT_BEGIN_NAMESPACE
 
@@ -221,12 +225,7 @@ private:
 
     bool metaExpected;
     QString context;
-    QString text;
-    QString comment;
-    QString extracomment;
-    QString msgid;
-    QString sourcetext;
-    TranslatorMessage::ExtraData extra;
+    MetaStrings m_metaStrings;
 
     QString prospectiveContext;
     ParseResults *results;
@@ -1528,13 +1527,13 @@ void CppParser::recordMessage(int line, const QString &context, const QString &t
 
 void CppParser::handleTr(QString &prefix, bool plural)
 {
-    if (!sourcetext.isEmpty())
+    if (!m_metaStrings.sourcetext().isEmpty())
         yyMsg() << "//% cannot be used with tr() / QT_TR_NOOP(). Ignoring\n";
     int line = yyLineNo;
     yyTok = getToken();
+    QString text;
     if (matchString(&text)) {
-        comment.clear();
-
+        QString comment;
         if (yyTok == Tok_RightParen) {
             // no comment
         } else if (match(Tok_Comma) && matchStringOrNull(&comment)) {   //comment
@@ -1614,26 +1613,25 @@ void CppParser::handleTr(QString &prefix, bool plural)
         }
 
       gotctx:
-        recordMessage(line, context, text, comment, extracomment, msgid, extra, plural);
+          recordMessage(line, context, text, comment, m_metaStrings.extracomment(),
+                        m_metaStrings.msgid(), m_metaStrings.extra(), plural);
     }
-    sourcetext.clear(); // Will have warned about that already
-    extracomment.clear();
-    msgid.clear();
-    extra.clear();
+    m_metaStrings.clear();
     metaExpected = false;
 }
 
 void CppParser::handleTranslate(bool plural)
 {
-    if (!sourcetext.isEmpty())
+    if (!m_metaStrings.sourcetext().isEmpty())
         yyMsg() << "//% cannot be used with translate() / QT_TRANSLATE_NOOP(). Ignoring\n";
     int line = yyLineNo;
     yyTok = getToken();
+    QString text;
     if (matchString(&context)
         && match(Tok_Comma)
         && matchString(&text) && !text.isEmpty())
     {
-        comment.clear();
+        QString comment;
         if (yyTok != Tok_RightParen) {
             // look for comment
             if (match(Tok_Comma) && matchStringOrNull(&comment)) {
@@ -1667,30 +1665,26 @@ void CppParser::handleTranslate(bool plural)
                 return;
             }
         }
-        recordMessage(line, context, text, comment, extracomment, msgid, extra, plural);
+        recordMessage(line, context, text, comment, m_metaStrings.extracomment(),
+                      m_metaStrings.msgid(), m_metaStrings.extra(), plural);
     }
-    sourcetext.clear(); // Will have warned about that already
-    extracomment.clear();
-    msgid.clear();
-    extra.clear();
+    m_metaStrings.clear();
     metaExpected = false;
 }
 
 void CppParser::handleTrId(bool plural)
 {
-    if (!msgid.isEmpty())
+    if (!m_metaStrings.msgid().isEmpty())
         yyMsg() << "//= cannot be used with qtTrId() / QT_TRID_NOOP(). Ignoring\n";
     int line = yyLineNo;
     yyTok = getToken();
+    QString msgid;
     if (matchString(&msgid) && !msgid.isEmpty()) {
         plural |= match(Tok_Comma);
-        recordMessage(line, QString(), ParserTool::transcode(sourcetext), QString(), extracomment,
-                      msgid, extra, plural);
+        recordMessage(line, QString(), ParserTool::transcode(m_metaStrings.sourcetext()), QString(),
+                      m_metaStrings.extracomment(), msgid, m_metaStrings.extra(), plural);
     }
-    sourcetext.clear();
-    extracomment.clear();
-    msgid.clear();
-    extra.clear();
+    m_metaStrings.clear();
     metaExpected = false;
 }
 
@@ -1801,8 +1795,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
         //qDebug() << "TOKEN: " << yyTok;
         switch (yyTok) {
         case Tok_QuotedInclude: {
-            text = QDir(QFileInfo(yyFileName).absolutePath()).absoluteFilePath(yyWord);
-            text.detach();
+            QString text = QDir(QFileInfo(yyFileName).absolutePath()).absoluteFilePath(yyWord);
             if (QFileInfo(text).isFile()) {
                 processInclude(text, cd, includeStack, inclusions);
                 yyTok = getToken();
@@ -1818,8 +1811,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 goto incOk;
             }
             for (const QString &incPath : std::as_const(cd.m_includePath)) {
-                text = QDir(incPath).absoluteFilePath(yyWord);
-                text.detach();
+                QString text = QDir(incPath).absoluteFilePath(yyWord);
                 if (QFileInfo(text).isFile()) {
                     processInclude(text, cd, includeStack, inclusions);
                     goto incOk;
@@ -1851,7 +1843,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
 
                 // Find class name including qualification
                 forever {
-                    text = yyWord;
+                    QString text = yyWord;
                     text.detach();
                     fct.setValue(text);
                     yyTok = getToken();
@@ -1931,7 +1923,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
         case Tok_namespace:
             yyTok = getToken();
             if (yyTok == Tok_Ident) {
-                text = yyWord;
+                QString text = yyWord;
                 text.detach();
                 HashString ns = HashString(text);
                 NamespaceList nestedNamespaces;
@@ -1996,7 +1988,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     fullName.append(HashString(QString()));
                 while (yyTok == Tok_ColonColon || yyTok == Tok_Ident) {
                     if (yyTok == Tok_Ident) {
-                        text = yyWord;
+                        QString text = yyWord;
                         text.detach();
                         fullName.append(HashString(text));
                     }
@@ -2011,7 +2003,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     fullName.append(HashString(QString()));
                 while (yyTok == Tok_ColonColon || yyTok == Tok_Ident) {
                     if (yyTok == Tok_Ident) {
-                        text = yyWord;
+                        QString text = yyWord;
                         text.detach();
                         fullName.append(HashString(text));
                     }
@@ -2104,12 +2096,9 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             maybeInTrailingReturnType = false;
             prospectiveContext.clear();
             prefix.clear();
-            if (!sourcetext.isEmpty() || !extracomment.isEmpty() || !msgid.isEmpty() || !extra.isEmpty()) {
+            if (m_metaStrings.hasData()) {
                 yyMsg() << "Discarding unconsumed meta data\n";
-                sourcetext.clear();
-                extracomment.clear();
-                msgid.clear();
-                extra.clear();
+                m_metaStrings.clear();
             }
             metaExpected = true;
             yyTok = getToken();
@@ -2239,91 +2228,20 @@ void CppParser::processComment()
     if (!tor || !metaExpected)
         return;
 
-    const QChar *ptr = yyWord.unicode();
-    if (*ptr == u':' && ptr[1].isSpace()) {
-        yyWord.remove(0, 2);
-        extracomment += yyWord;
-        extracomment.detach();
-    } else if (*ptr == u'=' && ptr[1].isSpace()) {
-        yyWord.remove(0, 2);
-        msgid = yyWord.simplified();
-        msgid.detach();
-    } else if (*ptr == u'~' && ptr[1].isSpace()) {
-        yyWord.remove(0, 2);
-        text = yyWord.trimmed();
-        int k = text.indexOf(u' ');
-        if (k > -1) {
-            QString commentvalue = text.mid(k + 1).trimmed();
-            if (commentvalue.startsWith(u'"') && commentvalue.endsWith(u'"')
-                && commentvalue.size() != 1) {
-                commentvalue = commentvalue.sliced(1, commentvalue.size() - 2);
-            }
-            extra.insert(text.left(k), commentvalue);
-        }
-        text.clear();
-    } else if (*ptr == u'%' && ptr[1].isSpace()) {
-        sourcetext.reserve(sourcetext.size() + yyWord.size() - 2);
-        ushort *ptr = (ushort *)sourcetext.data() + sourcetext.size();
-        int p = 2, c;
-        forever {
-            if (p >= yyWord.size())
-                break;
-            c = yyWord.unicode()[p++].unicode();
-            if (isspace(c))
-                continue;
-            if (c != '"') {
-                yyMsg() << "Unexpected character in meta string\n";
-                break;
-            }
-            forever {
-                if (p >= yyWord.size()) {
-                  whoops:
-                    yyMsg() << "Unterminated meta string\n";
-                    break;
-                }
-                c = yyWord.unicode()[p++].unicode();
-                if (c == '"')
-                    break;
-                if (c == '\\') {
-                    if (p >= yyWord.size())
-                        goto whoops;
-                    c = yyWord.unicode()[p++].unicode();
-                    if (c == '\n')
-                        goto whoops;
-                    *ptr++ = '\\';
-                }
-                *ptr++ = c;
-            }
-        }
-        sourcetext.resize(ptr - (ushort *)sourcetext.data());
-    } else {
-        const ushort *uc = (const ushort *)yyWord.unicode(); // Is zero-terminated
-        int idx = 0;
-        ushort c;
-        while ((c = uc[idx]) == ' ' || c == '\t' || c == '\n')
-            ++idx;
-        if (!memcmp(uc + idx, CppMagicComment.unicode(), CppMagicComment.size() * 2)) {
-            idx += CppMagicComment.size();
-            comment = QString::fromRawData(yyWord.unicode() + idx,
-                                           yyWord.size() - idx).simplified();
-            int k = comment.indexOf(u' ');
-            if (k == -1) {
-                context = comment;
-            } else {
-                context = comment.left(k);
-                comment.remove(0, k + 1);
-                TranslatorMessage msg(
-                        ParserTool::transcode(context), QString(),
-                        ParserTool::transcode(comment), QString(),
-                        yyFileName, yyLineNo, QStringList(),
-                        TranslatorMessage::Finished, false);
-                msg.setExtraComment(ParserTool::transcode(extracomment.simplified()));
-                extracomment.clear();
-                tor->append(msg);
-                tor->setExtras(extra);
-                extra.clear();
-            }
-        }
+    if (!m_metaStrings.parse(yyWord)) {
+        yyMsg() << m_metaStrings.popError().toStdString();
+        return;
+    }
+
+    if (m_metaStrings.magicComment()) {
+        auto [context, comment] = *m_metaStrings.magicComment();
+        TranslatorMessage msg(ParserTool::transcode(context), QString(),
+                              ParserTool::transcode(comment), QString(), yyFileName, yyLineNo,
+                              QStringList(), TranslatorMessage::Finished, false);
+        msg.setExtraComment(ParserTool::transcode(m_metaStrings.extracomment().simplified()));
+        tor->append(msg);
+        tor->setExtras(m_metaStrings.extra());
+        m_metaStrings.clear();
     }
 }
 

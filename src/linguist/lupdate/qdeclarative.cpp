@@ -4,6 +4,7 @@
 #include "lupdate.h"
 
 #include <translator.h>
+#include <metastrings.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
@@ -128,16 +129,17 @@ protected:
                         plural = true;
                 }
 
-                if (!sourcetext.isEmpty())
+                if (!m_metaStrings.sourcetext().isEmpty())
                     yyMsg(identLineNo) << qPrintable(QStringLiteral("//% cannot be used with %1(). Ignoring\n").arg(name));
 
                 TranslatorMessage msg(m_component, ParserTool::transcode(source),
                     comment, QString(), m_fileName,
                     node->firstSourceLocation().startLine, QStringList(),
                     TranslatorMessage::Unfinished, plural);
-                msg.setExtraComment(ParserTool::transcode(extracomment.simplified()));
-                msg.setId(msgid);
-                msg.setExtras(extra);
+                msg.setExtraComment(
+                        ParserTool::transcode(m_metaStrings.extracomment().simplified()));
+                msg.setId(m_metaStrings.msgid());
+                msg.setExtras(m_metaStrings.extra());
                 m_translator->extend(msg, m_cd);
                 consumeComment();
                 break; }
@@ -158,7 +160,7 @@ protected:
                 if (!createString(sourceNode->expression, &source))
                     return;
 
-                if (!sourcetext.isEmpty())
+                if (!m_metaStrings.sourcetext().isEmpty())
                     yyMsg(identLineNo) << qPrintable(QStringLiteral("//% cannot be used with %1(). Ignoring\n").arg(name));
 
                 QString comment;
@@ -176,9 +178,10 @@ protected:
                     comment, QString(), m_fileName,
                     node->firstSourceLocation().startLine, QStringList(),
                     TranslatorMessage::Unfinished, plural);
-                msg.setExtraComment(ParserTool::transcode(extracomment.simplified()));
-                msg.setId(msgid);
-                msg.setExtras(extra);
+                msg.setExtraComment(
+                        ParserTool::transcode(m_metaStrings.extracomment().simplified()));
+                msg.setId(m_metaStrings.msgid());
+                msg.setExtras(m_metaStrings.extra());
                 m_translator->extend(msg, m_cd);
                 consumeComment();
                 break; }
@@ -193,20 +196,21 @@ protected:
                 if (!createString(node->arguments->expression, &id))
                     return;
 
-                if (!msgid.isEmpty()) {
+                if (!m_metaStrings.msgid().isEmpty()) {
                     yyMsg(identLineNo) << qPrintable(QStringLiteral("//= cannot be used with %1(). Ignoring\n").arg(name));
                     return;
                 }
 
                 bool plural = node->arguments->next;
 
-                TranslatorMessage msg(QString(), ParserTool::transcode(sourcetext),
-                    QString(), QString(), m_fileName,
-                    node->firstSourceLocation().startLine, QStringList(),
-                    TranslatorMessage::Unfinished, plural);
-                msg.setExtraComment(ParserTool::transcode(extracomment.simplified()));
+                TranslatorMessage msg(QString(), ParserTool::transcode(m_metaStrings.sourcetext()),
+                                      QString(), QString(), m_fileName,
+                                      node->firstSourceLocation().startLine, QStringList(),
+                                      TranslatorMessage::Unfinished, plural);
+                msg.setExtraComment(
+                        ParserTool::transcode(m_metaStrings.extracomment().simplified()));
                 msg.setId(id);
-                msg.setExtras(extra);
+                msg.setExtras(m_metaStrings.extra());
                 m_translator->extend(msg, m_cd);
                 consumeComment();
                 break; }
@@ -258,10 +262,7 @@ private:
     QString m_component;
 
     // comments
-    QString extracomment;
-    QString msgid;
-    TranslatorMessage::ExtraData extra;
-    QString sourcetext;
+    MetaStrings m_metaStrings;
     QString trcontext;
     QList<SourceLocation> m_todo;
 };
@@ -304,7 +305,7 @@ void FindTrCalls::postVisit(AST::Node *node)
     if (node->statementCast() != 0 || node->uiObjectMemberCast()) {
         processComments(node->lastSourceLocation().end());
 
-        if (!sourcetext.isEmpty() || !extracomment.isEmpty() || !msgid.isEmpty() || !extra.isEmpty()) {
+        if (m_metaStrings.hasData()) {
             yyMsg(node->lastSourceLocation().startLine) << "Discarding unconsumed meta data\n";
             consumeComment();
         }
@@ -325,10 +326,7 @@ void FindTrCalls::processComments(quint32 offset, bool flush)
 void FindTrCalls::consumeComment()
 {
     // keep the current `trcontext'
-    extracomment.clear();
-    msgid.clear();
-    extra.clear();
-    sourcetext.clear();
+    m_metaStrings.clear();
 }
 
 void FindTrCalls::processComment(const SourceLocation &loc)
@@ -336,68 +334,22 @@ void FindTrCalls::processComment(const SourceLocation &loc)
     if (!loc.length)
         return;
 
-    const QStringView commentStr = engine->midRef(loc.begin(), loc.length);
-    const QChar *chars = commentStr.constData();
-    const int length = commentStr.size();
+    auto commentStr = QString(engine->midRef(loc.begin(), loc.length));
 
-    // Try to match the logic of the C++ parser.
-    if (*chars == u':' && chars[1].isSpace()) {
-        if (!extracomment.isEmpty())
-            extracomment += u' ';
-        extracomment += QString(chars+2, length-2);
-    } else if (*chars == u'=' && chars[1].isSpace()) {
-        msgid = QString(chars+2, length-2).simplified();
-    } else if (*chars == u'~' && chars[1].isSpace()) {
-        QString text = QString(chars+2, length-2).trimmed();
-        int k = text.indexOf(u' ');
-        if (k > -1) {
-            QString commentvalue = text.mid(k + 1).trimmed();
-            if (commentvalue.startsWith(u'"') && commentvalue.endsWith(u'"')
-                && commentvalue.size() != 1) {
-                commentvalue = commentvalue.sliced(1, commentvalue.size() - 2);
-            }
-            extra.insert(text.left(k), commentvalue);
-        }
-    } else if (*chars == u'%' && chars[1].isSpace()) {
-        sourcetext.reserve(sourcetext.size() + length-2);
-        ushort *ptr = (ushort *)sourcetext.data() + sourcetext.size();
-        int p = 2, c;
-        forever {
-            if (p >= length)
-                break;
-            c = chars[p++].unicode();
-            if (std::isspace(c))
-                continue;
-            if (c != '"') {
-                yyMsg(loc.startLine) << "Unexpected character in meta string\n";
-                break;
-            }
-            forever {
-                if (p >= length) {
-                  whoops:
-                    yyMsg(loc.startLine) << "Unterminated meta string\n";
-                    break;
-                }
-                c = chars[p++].unicode();
-                if (c == '"')
-                    break;
-                if (c == '\\') {
-                    if (p >= length)
-                        goto whoops;
-                    c = chars[p++].unicode();
-                    if (c == '\r' || c == '\n')
-                        goto whoops;
-                    *ptr++ = '\\';
-                }
-                *ptr++ = c;
-            }
-        }
-        sourcetext.resize(ptr - (ushort *)sourcetext.data());
-    } else {
-        int idx = 0;
-        ushort c;
-        while ((c = chars[idx].unicode()) == ' ' || c == '\t' || c == '\r' || c == '\n')
-            ++idx;
+    if (!m_metaStrings.parse(commentStr)) {
+        yyMsg(loc.startLine) << m_metaStrings.popError().toStdString();
+        return;
+    }
+
+    if (m_metaStrings.magicComment()) {
+        auto [context, comment] = *m_metaStrings.magicComment();
+        TranslatorMessage msg(ParserTool::transcode(context), QString(),
+                              ParserTool::transcode(comment), QString(), m_fileName, loc.startLine,
+                              QStringList(), TranslatorMessage::Finished, false);
+        msg.setExtraComment(ParserTool::transcode(m_metaStrings.extracomment().simplified()));
+        m_translator->append(msg);
+        m_translator->setExtras(m_metaStrings.extra());
+        m_metaStrings.clear();
     }
 }
 

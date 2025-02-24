@@ -35,6 +35,8 @@ qt_internal_add_tool(${target_name}
         ../shared/xliff.cpp
         ../shared/xmlparser.cpp ../shared/xmlparser.h
         cpp.cpp cpp.h
+        metastrings.h
+        metastrings.cpp
         java.cpp
         python.cpp
         lupdate.h

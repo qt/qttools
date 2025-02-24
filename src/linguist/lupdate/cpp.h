@@ -9,8 +9,6 @@
 #include <QtCore/QSet>
 #include <QtCore/QStack>
 
-#include <iostream>
-
 QT_BEGIN_NAMESPACE
 
 struct HashString {
