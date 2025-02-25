@@ -861,6 +861,36 @@ static QString msgUnsupportedType(const QString &propertyName, int type)
     return rc;
 }
 
+static QString msgDeprecatedProperty(const QLatin1StringView version,
+                                     const QString &baseTip)
+{
+    return PropertyEditor::tr("Deprecated since Qt %1: %2").arg(version, baseTip);
+}
+
+static QString basePropertyToolTip(const QString &propertyName, int type)
+{
+    QString result;
+    if (const char *typeS = typeName(type))
+        result = propertyName + " ("_L1 + QLatin1StringView(typeS) + u')';
+    return result;
+}
+
+static QString propertyToolTip(const QDesignerFormEditorInterface *core,
+                               const QString &className,
+                               const QString &propertyName, int type)
+{
+    const QDesignerCustomWidgetData customData = core->pluginManager()->customWidgetData(className);
+    if (!customData.isNull()) {
+        if (QString customToolTip = customData.propertyToolTip(propertyName); !customToolTip.isEmpty())
+            return customToolTip;
+    }
+    const QString base = basePropertyToolTip(propertyName, type);
+    // QTBUG-108199, timeSpec deprecation
+    if (type == QtVariantPropertyManager::enumTypeId() && propertyName == "timeSpec"_L1)
+        return msgDeprecatedProperty("6.9"_L1, base);
+    return base;
+}
+
 void PropertyEditor::setObject(QObject *object)
 {
     QDesignerFormWindowInterface *oldFormWindow = QDesignerFormWindowInterface::findFormWindow(m_object);
@@ -948,7 +978,6 @@ void PropertyEditor::setObject(QObject *object)
 
     if (m_propertySheet) {
         const QString className = WidgetFactory::classNameOf(formWindow->core(), m_object);
-        const QDesignerCustomWidgetData customData = formWindow->core()->pluginManager()->customWidgetData(className);
 
         QtProperty *lastProperty = nullptr;
         QtProperty *lastGroup = nullptr;
@@ -994,15 +1023,9 @@ void PropertyEditor::setObject(QObject *object)
             if (property != nullptr) {
                 const bool dynamicProperty = (dynamicSheet && dynamicSheet->isDynamicProperty(i))
                             || (sheet && sheet->isDefaultDynamicProperty(i));
-                QString descriptionToolTip;
-                if (!dynamicProperty && !customData.isNull())
-                    descriptionToolTip = customData.propertyToolTip(propertyName);
-                if (descriptionToolTip.isEmpty()) {
-                    if (const char *typeS = typeName(type)) {
-                        descriptionToolTip = propertyName + " ("_L1
-                            + QLatin1StringView(typeS) + ')'_L1;
-                    }
-                }
+                QString descriptionToolTip = dynamicProperty
+                        ? basePropertyToolTip(propertyName, type)
+                        : propertyToolTip(formWindow->core(), className, propertyName, type);
                 if (!descriptionToolTip.isEmpty())
                     property->setDescriptionToolTip(descriptionToolTip);
                 switch (type) {
