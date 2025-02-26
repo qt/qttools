@@ -68,6 +68,26 @@
         <source>Source text</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="id1">
+        <location filename="main.qml" line="112"/>
+        <source>msg with id1</source>
+        <label>label1</label>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id2">
+        <location filename="main.qml" line="119"/>
+        <location filename="main.qml" line="121"/>
+        <source>propagating label</source>
+        <label>label3</label>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id4">
+        <location filename="main.qml" line="125"/>
+        <location filename="main.qml" line="127"/>
+        <source>invalid usage of label, contradicting labels for id</source>
+        <label>label4</label>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>BarContext</name>
@@ -315,6 +335,11 @@
     <message>
         <location filename="main.qml" line="108"/>
         <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.qml" line="115"/>
+        <source>invalid usage of label because of missing id</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

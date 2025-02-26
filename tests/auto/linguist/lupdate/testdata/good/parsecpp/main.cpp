@@ -728,3 +728,31 @@ class QTBUG36589 : QObject {
         tr("string after an enum class");
     }
 };
+
+class TestMetaStrings : QObject
+{
+    Q_OBJECT
+    void func()
+    {
+        //= id1
+        //@ label1
+        tr("msg with id1");
+
+        //@ label2
+        tr("invalid usage of label because of missing id");
+
+        //@ label3
+        //% "propagating label"
+        qtTrId("id2");
+
+        qtTrId("id2");
+
+        //% "invalid usage of label, contradicting labels for id"
+        //@ label4
+        qtTrId("id4");
+        //@ label5
+        qtTrId("id4");
+
+        //@ label6
+    }
+};

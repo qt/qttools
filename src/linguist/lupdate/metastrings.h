@@ -28,6 +28,7 @@ public:
     QString extracomment() const { return m_extracomment; }
     QString msgid() const { return m_msgid; }
     QString sourcetext() const { return m_sourcetext; }
+    QString label() const { return m_label; }
     QHash<QString, QString> extra() const { return m_extra; }
     QString popError() { return std::move(m_error); }
 
@@ -36,6 +37,7 @@ private:
     QString m_extracomment; //:
     QString m_msgid; //=
     QString m_sourcetext; //%
+    QString m_label; //@
     QHash<QString, QString> m_extra; //~
     QString m_error;
 };

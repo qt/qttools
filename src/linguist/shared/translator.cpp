@@ -118,17 +118,16 @@ void Translator::extend(const TranslatorMessage &msg, ConversionData &cd)
             emsg.setSourceText(msg.sourceText());
             addIndex(index, msg);
         } else if (!msg.sourceText().isEmpty() && emsg.sourceText() != msg.sourceText()) {
-            cd.appendError(QString::fromLatin1("Contradicting source strings for message with id '%1'.")
-                           .arg(emsg.id()));
+            cd.appendError(
+                    "Contradicting source strings for message with id '%1'."_L1.arg(emsg.id()));
             return;
         }
         if (emsg.extras().isEmpty()) {
             emsg.setExtras(msg.extras());
         } else if (!msg.extras().isEmpty() && emsg.extras() != msg.extras()) {
-            cd.appendError(QString::fromLatin1("Contradicting meta data for for %1.")
-                           .arg(!emsg.id().isEmpty()
-                                ? QString::fromLatin1("message with id '%1'").arg(emsg.id())
-                                : QString::fromLatin1("message '%1'").arg(makeMsgId(msg))));
+            cd.appendError("Contradicting meta data for %1."_L1.arg(
+                    !emsg.id().isEmpty() ? "message with id '%1'"_L1.arg(emsg.id())
+                                         : "message '%1'"_L1.arg(makeMsgId(msg))));
             return;
         }
         emsg.addReferenceUniq(msg.fileName(), msg.lineNumber());
@@ -145,6 +144,10 @@ void Translator::extend(const TranslatorMessage &msg, ConversionData &cd)
             }
             emsg.setExtraComment(cmt);
         }
+        if (emsg.label().isEmpty())
+            emsg.setLabel(msg.label());
+        else if (!msg.label().isEmpty() && emsg.label() != msg.label())
+            cd.appendError("Contradicting label for message with id %1"_L1.arg(emsg.id()));
     }
 }
 

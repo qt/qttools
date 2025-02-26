@@ -130,7 +130,12 @@ protected:
                 }
 
                 if (!m_metaStrings.sourcetext().isEmpty())
-                    yyMsg(identLineNo) << qPrintable(QStringLiteral("//% cannot be used with %1(). Ignoring\n").arg(name));
+                    yyMsg(identLineNo)
+                            << qPrintable("//% cannot be used with %1(). Ignoring\n"_L1.arg(name));
+
+                if (!m_metaStrings.label().isEmpty() && m_metaStrings.msgid().isEmpty())
+                    yyMsg(identLineNo) << qPrintable(
+                            "labels cannot be used with text-based translation. Ignoring\n"_L1);
 
                 TranslatorMessage msg(m_component, ParserTool::transcode(source),
                     comment, QString(), m_fileName,
@@ -139,6 +144,8 @@ protected:
                 msg.setExtraComment(
                         ParserTool::transcode(m_metaStrings.extracomment().simplified()));
                 msg.setId(m_metaStrings.msgid());
+                if (!m_metaStrings.msgid().isEmpty())
+                    msg.setLabel(m_metaStrings.label());
                 msg.setExtras(m_metaStrings.extra());
                 m_translator->extend(msg, m_cd);
                 consumeComment();
@@ -163,6 +170,10 @@ protected:
                 if (!m_metaStrings.sourcetext().isEmpty())
                     yyMsg(identLineNo) << qPrintable(QStringLiteral("//% cannot be used with %1(). Ignoring\n").arg(name));
 
+                if (!m_metaStrings.label().isEmpty() && m_metaStrings.msgid().isEmpty())
+                    yyMsg(identLineNo) << qPrintable(
+                            "labels cannot be used with text-based translation. Ignoring\n"_L1);
+
                 QString comment;
                 bool plural = false;
                 if (AST::ArgumentList *commentNode = sourceNode->next) {
@@ -181,6 +192,8 @@ protected:
                 msg.setExtraComment(
                         ParserTool::transcode(m_metaStrings.extracomment().simplified()));
                 msg.setId(m_metaStrings.msgid());
+                if (!m_metaStrings.msgid().isEmpty())
+                    msg.setLabel(m_metaStrings.label());
                 msg.setExtras(m_metaStrings.extra());
                 m_translator->extend(msg, m_cd);
                 consumeComment();
@@ -210,6 +223,7 @@ protected:
                 msg.setExtraComment(
                         ParserTool::transcode(m_metaStrings.extracomment().simplified()));
                 msg.setId(id);
+                msg.setLabel(m_metaStrings.label());
                 msg.setExtras(m_metaStrings.extra());
                 m_translator->extend(msg, m_cd);
                 consumeComment();

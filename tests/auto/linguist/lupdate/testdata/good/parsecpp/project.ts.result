@@ -44,6 +44,26 @@ backslashed \ stuff.</source>
         <source>This is the source</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="id1">
+        <location filename="main.cpp" line="739"/>
+        <source>msg with id1</source>
+        <label>label1</label>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id2">
+        <location filename="main.cpp" line="746"/>
+        <location filename="main.cpp" line="748"/>
+        <source>propagating label</source>
+        <label>label3</label>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="id4">
+        <location filename="main.cpp" line="752"/>
+        <location filename="main.cpp" line="754"/>
+        <source>invalid usage of label, contradicting labels for id</source>
+        <label>label4</label>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Abc::NamespacedFinalClass</name>
@@ -588,6 +608,14 @@ backslashed \ stuff.</source>
     <message>
         <location filename="main.cpp" line="354"/>
         <source>Test value</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TestMetaStrings</name>
+    <message>
+        <location filename="main.cpp" line="742"/>
+        <source>invalid usage of label because of missing id</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

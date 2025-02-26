@@ -92,6 +92,29 @@ class Window(QMainWindow):
         msg = self.tr("before\U000000A0middle\U000000A0after")
         msg = self.tr("before\u00A0\U000000A0middle\x1F\U000000A0\u00A0after")
 
+        #= id1
+        #@ label1
+        self.tr("msg with id1");
+
+        #@ label2
+        self.tr("invalid usage of label because of missing id");
+
+        #@ label3
+        #= id2
+        self.tr("propagating label");
+
+        #= id2
+        self.tr("propagating label");
+
+        #= id3
+        #@ label4
+        self.tr("invalid usage of label, contradicting labels for id");
+        #= id3
+        #@ label5
+        self.tr("invalid usage of label, contradicting labels for id");
+
+        #@ label6
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 

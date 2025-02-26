@@ -71,6 +71,10 @@ bool MetaStrings::parse(QString &string)
             }
         }
         m_sourcetext.resize(ptr - (ushort *)m_sourcetext.data());
+    } else if (*ptr == u'@' && ptr[1].isSpace()) {
+        string.remove(0, 2);
+        m_label = string.trimmed().simplified();
+        m_label.detach();
     } else if (const QString trimmed = string.trimmed(); trimmed.startsWith(CppMagicComment)) {
         qsizetype idx = CppMagicComment.size();
         QString comment =
@@ -90,6 +94,7 @@ void MetaStrings::clear()
     m_magicComment.reset();
     m_extracomment.clear();
     m_msgid.clear();
+    m_label.clear();
     m_sourcetext.clear();
     m_extra.clear();
 }
@@ -97,7 +102,7 @@ void MetaStrings::clear()
 bool MetaStrings::hasData() const
 {
     return !m_msgid.isEmpty() || m_magicComment || !m_sourcetext.isEmpty()
-            || !m_extracomment.isEmpty() || !m_extra.isEmpty();
+            || !m_extracomment.isEmpty() || !m_extra.isEmpty() || !m_label.isEmpty();
 }
 
 QT_END_NAMESPACE

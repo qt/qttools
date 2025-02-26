@@ -107,5 +107,25 @@ QtObject {
         // empty texts are supported
         qsTr("");
 
+        //= id1
+        //@ label1
+        qsTr("msg with id1");
+
+        //@ label2
+        qsTr("invalid usage of label because of missing id");
+
+        //@ label3
+        //% "propagating label"
+        qsTrId("id2");
+
+        qsTrId("id2");
+
+        //% "invalid usage of label, contradicting labels for id"
+        //@ label4
+        qsTrId("id4");
+        //@ label5
+        qsTrId("id4");
+
+        //@ label6
     }
 }

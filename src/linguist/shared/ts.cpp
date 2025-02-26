@@ -166,6 +166,7 @@ bool TSReader::read(Translator &translator)
     static const QString strdependencies = u"dependencies"_s;
     static const QString strdependency = u"dependency"_s;
     static const QString strextracomment = u"extracomment"_s;
+    static const QString strlabel = u"label"_s;
     static const QString strfilename = u"filename"_s;
     static const QString strid = u"id"_s;
     static const QString strlanguage = u"language"_s;
@@ -300,6 +301,9 @@ bool TSReader::read(Translator &translator)
                                 } else if (elementStarts(strextracomment)) {
                                     // <extracomment>...</extracomment>
                                     msg.setExtraComment(readContents());
+                                } else if (elementStarts(strlabel)) {
+                                    // <label>...</label>
+                                    msg.setLabel(readContents());
                                 } else if (elementStarts(strtranslatorcomment)) {
                                     // <translatorcomment>...</translatorcomment>
                                     msg.setTranslatorComment(readContents());
@@ -368,7 +372,7 @@ bool TSReader::read(Translator &translator)
                                     }
                                     // </translation>
                                 } else if (isStartElement()
-                                        && name().toString().startsWith(strextrans)) {
+                                           && name().toString().startsWith(strextrans)) {
                                     // <extra-...>
                                     QString tag = name().toString();
                                     msg.setExtra(tag.mid(6), readContents());
@@ -610,6 +614,9 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
                     if (!msg.extraComment().isEmpty())
                         t << "        <extracomment>" << tsProtect(msg.extraComment())
                           << "</extracomment>\n";
+
+                    if (!msg.label().isEmpty())
+                        t << "        <label>" << tsProtect(msg.label()) << "</label>\n";
 
                     if (!msg.translatorComment().isEmpty())
                         t << "        <translatorcomment>" << tsProtect(msg.translatorComment())

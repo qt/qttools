@@ -17,6 +17,8 @@
 #include <cstdio>
 #include <cstring>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 class PythonParser
@@ -43,7 +45,8 @@ class PythonParser
     enum class StringType { NoString, String, FormatString, RawString };
 
 public:
-    PythonParser(Translator &translator, const QString &fileName, bool &error) : tor(translator)
+    PythonParser(Translator &translator, const QString &fileName, bool &error, ConversionData &cd)
+        : tor(translator), m_cd(cd)
     {
 #ifdef Q_CC_MSVC
         const auto *fileNameC = reinterpret_cast<const wchar_t *>(fileName.utf16());
@@ -66,8 +69,7 @@ public:
       (2) the call appears within an inlined function;
       (3) the call appears within a function defined outside the class definition.
     */
-    void parse(ConversionData &cd, const QByteArray &initialContext = {},
-               const QByteArray &defaultContext = {})
+    void parse(const QByteArray &initialContext = {}, const QByteArray &defaultContext = {})
     {
         QByteArray context;
         QByteArray text;
@@ -140,7 +142,7 @@ public:
                                               QString::fromUtf8(comment), {}, yyFileName, lineNo,
                                               {}, TranslatorMessage::Unfinished, plural);
                     setMessageParameters(&message, metaBackup);
-                    tor.extend(message, cd);
+                    tor.extend(message, m_cd);
                 }
             } break;
             case Tok_translate: {
@@ -152,7 +154,7 @@ public:
                                               QString::fromUtf8(comment), {}, yyFileName, lineNo,
                                               {}, TranslatorMessage::Unfinished, plural);
                     setMessageParameters(&message, metaBackup);
-                    tor.extend(message, cd);
+                    tor.extend(message, m_cd);
                 } else {
                     metaStrings = std::move(metaBackup);
                 }
@@ -704,7 +706,7 @@ private:
         return false;
     }
 
-    void setMessageParameters(TranslatorMessage *message, MetaStrings &meta)
+    void setMessageParameters(TranslatorMessage *message, const MetaStrings &meta)
     {
         // PYSIDE-2863: parseTranslate() can read past the message
         // and capture extraComments intended for the next message.
@@ -713,6 +715,12 @@ private:
         message->setExtraComment(ParserTool::transcode(meta.extracomment().simplified()));
         message->setId(meta.msgid());
         message->setExtras(meta.extra());
+        if (!meta.label().isEmpty() && meta.msgid().isEmpty())
+            m_cd.appendError("%1:%2: labels cannot be used with text-based translation. "
+                             "Ignoring\n"_L1.arg(yyFileName)
+                                     .arg(yyLineNo));
+        else
+            message->setLabel(meta.label());
     }
 
     QString yyFileName;
@@ -724,7 +732,6 @@ private:
     int yyParenDepth;
     int yyLineNo = 1;
     int yyCurLineNo;
-    Translator &tor;
     // the file to read from (if reading from a file)
     FILE *yyInFile;
     // the string to read from and current position in the string (otherwise)
@@ -739,19 +746,21 @@ private:
     using ContextStack = QStack<ContextPair>;
     ContextStack yyContextStack;
     MetaStrings metaStrings;
+    Translator &tor;
+    ConversionData &m_cd;
 };
 
 bool loadPython(Translator &translator, const QString &fileName, ConversionData &cd)
 {
 
     bool error = false;
-    PythonParser parser(translator, fileName, error);
+    PythonParser parser(translator, fileName, error, cd);
     if (error) {
         cd.appendError(QStringLiteral("Cannot open %1").arg(fileName));
         return false;
     }
 
-    parser.parse(cd);
+    parser.parse();
     return true;
 }
 

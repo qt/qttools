@@ -1,3 +1,6 @@
 .*/lupdate/testdata/good/parsecpp/main.cpp:620: tr\(\) cannot be called without context
 .*/lupdate/testdata/good/parsecpp/main.cpp:622: tr\(\) cannot be called without context
+.*/lupdate/testdata/good/parsecpp/main.cpp:742: labels cannot be used with text-based translation. Ignoring
+.*/lupdate/testdata/good/parsecpp/main.cpp:757: Discarding unconsumed meta data
+Contradicting label for message with id id4
 lupdate warning: Message with id 'yet_another_id' has no source.

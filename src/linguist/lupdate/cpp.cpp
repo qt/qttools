@@ -149,10 +149,10 @@ private:
     bool matchStringOrNull(QString *s);
     bool matchExpression();
 
-    void recordMessage(
-        int line, const QString &context, const QString &text, const QString &comment,
-        const QString &extracomment, const QString &msgid, const TranslatorMessage::ExtraData &extra,
-        bool plural);
+    void recordMessage(int line, const QString &context, const QString &text,
+                       const QString &comment, const QString &extracomment, const QString &msgid,
+                       const QString &label, const TranslatorMessage::ExtraData &extra,
+                       bool plural);
 
     void handleTr(QString &prefix, bool plural);
     void handleTranslate(bool plural);
@@ -1515,8 +1515,10 @@ bool CppParser::matchExpression()
     return true;
 }
 
-void CppParser::recordMessage(int line, const QString &context, const QString &text, const QString &comment,
-    const QString &extracomment, const QString &msgid, const TranslatorMessage::ExtraData &extra, bool plural)
+void CppParser::recordMessage(int line, const QString &context, const QString &text,
+                              const QString &comment, const QString &extracomment,
+                              const QString &msgid, const QString &label,
+                              const TranslatorMessage::ExtraData &extra, bool plural)
 {
     TranslatorMessage msg(
         ParserTool::transcode(context), text, ParserTool::transcode(comment), QString(),
@@ -1525,6 +1527,8 @@ void CppParser::recordMessage(int line, const QString &context, const QString &t
     msg.setExtraComment(ParserTool::transcode(extracomment.simplified()));
     msg.setId(msgid);
     msg.setExtras(extra);
+    if (!msgid.isEmpty())
+        msg.setLabel(label);
     tor->append(msg);
 }
 
@@ -1532,6 +1536,9 @@ void CppParser::handleTr(QString &prefix, bool plural)
 {
     if (!m_metaStrings.sourcetext().isEmpty())
         yyMsg() << "//% cannot be used with tr() / QT_TR_NOOP(). Ignoring\n";
+    if (!m_metaStrings.label().isEmpty() && m_metaStrings.msgid().isEmpty())
+        yyMsg() << "labels cannot be used with text-based translation. Ignoring\n";
+
     int line = yyLineNo;
     yyTok = getToken();
     QString text;
@@ -1617,7 +1624,8 @@ void CppParser::handleTr(QString &prefix, bool plural)
 
       gotctx:
           recordMessage(line, context, text, comment, m_metaStrings.extracomment(),
-                        m_metaStrings.msgid(), m_metaStrings.extra(), plural);
+                        m_metaStrings.msgid(), m_metaStrings.label(), m_metaStrings.extra(),
+                        plural);
     }
     m_metaStrings.clear();
     metaExpected = false;
@@ -1627,6 +1635,8 @@ void CppParser::handleTranslate(bool plural)
 {
     if (!m_metaStrings.sourcetext().isEmpty())
         yyMsg() << "//% cannot be used with translate() / QT_TRANSLATE_NOOP(). Ignoring\n";
+    if (!m_metaStrings.label().isEmpty() && m_metaStrings.msgid().isEmpty())
+        yyMsg() << "labels cannot be used with text-based translation. Ignoring\n";
     int line = yyLineNo;
     yyTok = getToken();
     QString text;
@@ -1669,7 +1679,7 @@ void CppParser::handleTranslate(bool plural)
             }
         }
         recordMessage(line, context, text, comment, m_metaStrings.extracomment(),
-                      m_metaStrings.msgid(), m_metaStrings.extra(), plural);
+                      m_metaStrings.msgid(), m_metaStrings.label(), m_metaStrings.extra(), plural);
     }
     m_metaStrings.clear();
     metaExpected = false;
@@ -1685,7 +1695,8 @@ void CppParser::handleTrId(bool plural)
     if (matchString(&msgid) && !msgid.isEmpty()) {
         plural |= match(Tok_Comma);
         recordMessage(line, QString(), ParserTool::transcode(m_metaStrings.sourcetext()), QString(),
-                      m_metaStrings.extracomment(), msgid, m_metaStrings.extra(), plural);
+                      m_metaStrings.extracomment(), msgid, m_metaStrings.label(),
+                      m_metaStrings.extra(), plural);
     }
     m_metaStrings.clear();
     metaExpected = false;

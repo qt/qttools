@@ -48,6 +48,7 @@ private:
     QString m_comment;
     QString m_extracomment;
     QString m_id;
+    QString m_label;
 
     QString m_accum;
     int m_lineNumber;
@@ -140,6 +141,13 @@ void UiReader::readTranslationAttributes(const QXmlStreamAttributes &atts)
         m_comment = atts.value(QStringLiteral("comment")).toString();
         m_extracomment = atts.value(QStringLiteral("extracomment")).toString();
         m_id = atts.value(QStringLiteral("id")).toString();
+        const QString label = atts.value(QStringLiteral("label")).toString();
+        if (!m_id.isEmpty())
+            m_label = label;
+        else if (!label.isEmpty())
+            m_cd.appendError("%1:%2: labels cannot be used with text-based translation. "
+                             "Ignoring\n"_L1.arg(m_cd.m_sourceFileName)
+                                     .arg(m_lineNumber));
         if (!m_cd.m_noUiLines)
             m_lineNumber = static_cast<int>(reader.lineNumber());
     } else {
@@ -152,7 +160,7 @@ bool loadUI(Translator &translator, const QString &filename, ConversionData &cd)
     cd.m_sourceFileName = filename;
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
-        cd.appendError(QStringLiteral("Cannot open %1: %2").arg(filename, file.errorString()));
+        cd.appendError("Cannot open %1: %2"_L1.arg(filename, file.errorString()));
         return false;
     }
 

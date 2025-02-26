@@ -202,6 +202,7 @@ Translator merge(
             m.setExtras(extras);
             m.setExtraComment(mv->extraComment());
             m.setId(mv->id());
+            m.setLabel(mv->label());
         }
 
 
