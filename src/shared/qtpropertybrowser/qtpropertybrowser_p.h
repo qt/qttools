@@ -29,6 +29,7 @@ public:
     virtual ~QtProperty();
 
     QList<QtProperty *> subProperties() const;
+    QtProperty *parentProperty() const;
 
     QtAbstractPropertyManager *propertyManager() const;
 
