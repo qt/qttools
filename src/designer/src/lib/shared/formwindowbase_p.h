@@ -140,6 +140,9 @@ public:
     bool useIdBasedTranslations() const;
     void setUseIdBasedTranslations(bool v);
 
+    QString idBasedTranslationLabel() const;
+    void setIdBasedTranslationLabel(const QString&);
+
     bool connectSlotsByName() const;
     void setConnectSlotsByName(bool v);
 

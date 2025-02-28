@@ -6,11 +6,13 @@
     <message id="windowTitleId">
         <location filename="project.ui" line="18"/>
         <source>Qt Assistant - Finn text</source>
+        <label>formLabel</label>
         <translation type="unfinished"></translation>
     </message>
     <message id="heightId">
         <location filename="project.ui" line="21"/>
         <source>Finn tekst - Der Bjørn möchte auch mal.</source>
+        <label>formLabel</label>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -65,6 +65,7 @@ public:
     FormWindowBase::ResourceFileSaveMode m_saveResourcesBehaviour;
     bool m_useIdBasedTranslations;
     bool m_connectSlotsByName;
+    QString m_idBasedTranslationLabel;
 };
 
 FormWindowBasePrivate::FormWindowBasePrivate(QDesignerFormEditorInterface *core) :
@@ -513,6 +514,16 @@ bool FormWindowBase::useIdBasedTranslations() const
 void FormWindowBase::setUseIdBasedTranslations(bool v)
 {
     m_d->m_useIdBasedTranslations = v;
+}
+
+QString FormWindowBase::idBasedTranslationLabel() const
+{
+    return m_d->m_idBasedTranslationLabel;
+}
+
+void FormWindowBase::setIdBasedTranslationLabel(const QString &v)
+{
+    m_d->m_idBasedTranslationLabel = v;
 }
 
 bool FormWindowBase::connectSlotsByName() const

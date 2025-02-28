@@ -70,6 +70,8 @@ bool UiReader::startElement(QStringView namespaceURI, QStringView localName,
         flush();
         m_insideStringList = true;
         readTranslationAttributes(atts);
+    } else if (qName == "ui"_L1) {
+        m_label = QString(atts.value("label"));
     }
     m_accum.clear();
     return true;
@@ -123,6 +125,7 @@ void UiReader::flush()
            m_lineNumber, QStringList());
         msg.setExtraComment(m_extracomment);
         msg.setId(m_id);
+        msg.setLabel(m_label);
         m_translator.extend(msg, m_cd);
     }
     m_source.clear();
@@ -141,13 +144,8 @@ void UiReader::readTranslationAttributes(const QXmlStreamAttributes &atts)
         m_comment = atts.value(QStringLiteral("comment")).toString();
         m_extracomment = atts.value(QStringLiteral("extracomment")).toString();
         m_id = atts.value(QStringLiteral("id")).toString();
-        QString label = atts.value(QStringLiteral("label")).toString();
-        if (!m_id.isEmpty())
-            m_label = std::move(label);
-        else if (!label.isEmpty())
-            m_cd.appendError("%1:%2: labels cannot be used with text-based translation. "
-                             "Ignoring\n"_L1.arg(m_cd.m_sourceFileName)
-                                     .arg(m_lineNumber));
+        if (m_id.isEmpty())
+            m_label.clear();
         if (!m_cd.m_noUiLines)
             m_lineNumber = static_cast<int>(reader.lineNumber());
     } else {
