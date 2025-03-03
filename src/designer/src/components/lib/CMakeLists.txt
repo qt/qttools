@@ -56,6 +56,8 @@ qt_internal_add_module(DesignerComponentsPrivate
         ../propertyeditor/propertyeditor.cpp ../propertyeditor/propertyeditor.h
         ../propertyeditor/propertyeditor_global.h
         ../propertyeditor/qlonglongvalidator.cpp ../propertyeditor/qlonglongvalidator.h
+        ../propertyeditor/resetdecorator.cpp ../propertyeditor/resetdecorator.h
+        ../propertyeditor/texteditor.cpp ../propertyeditor/texteditor.h
         ../propertyeditor/stringlisteditor.cpp ../propertyeditor/stringlisteditor.h
         ../propertyeditor/stringlisteditorbutton.cpp ../propertyeditor/stringlisteditorbutton.h
         ../signalsloteditor/connectdialog.cpp  ../signalsloteditor/connectdialog_p.h
