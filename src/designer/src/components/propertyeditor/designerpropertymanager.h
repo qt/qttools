@@ -139,7 +139,6 @@ private:
 
     QHash<const QtProperty *, FlagData> m_flagValues;
     QHash<const QtProperty *, QList<QtProperty *>> m_propertyToFlags;
-    QHash<const QtProperty *, QtProperty *> m_flagToProperty;
 
     int alignToIndexH(uint align) const;
     int alignToIndexV(uint align) const;
@@ -157,7 +156,6 @@ private:
 
     QHash<const QtProperty *, QMap<std::pair<QIcon::Mode, QIcon::State>, QtProperty *>> m_propertyToIconSubProperties;
     QHash<const QtProperty *, std::pair<QIcon::Mode, QIcon::State>> m_iconSubPropertyToState;
-    PropertyToPropertyMap m_iconSubPropertyToProperty;
     PropertyToPropertyMap m_propertyToTheme;
     PropertyToPropertyMap m_propertyToThemeEnum;
 
