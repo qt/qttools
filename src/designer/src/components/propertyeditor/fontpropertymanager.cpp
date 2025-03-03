@@ -65,7 +65,6 @@ namespace qdesigner_internal {
             const int index = it.value().size();
             m_fontSubPropertyToFlag.insert(property, index);
             it.value().push_back(property);
-            m_fontSubPropertyToProperty[property] = m_createdFontProperty;
             resetMap[property] = true;
         }
 
@@ -154,7 +153,6 @@ namespace qdesigner_internal {
 
         m_propertyToFontSubProperties.erase(sit);
         m_fontSubPropertyToFlag.remove(property);
-        m_fontSubPropertyToProperty.remove(property);
 
         return true;
     }
@@ -185,11 +183,11 @@ namespace qdesigner_internal {
 
     bool FontPropertyManager::resetFontSubProperty(QtVariantPropertyManager *vm, QtProperty *property)
     {
-        const auto it = m_fontSubPropertyToProperty.find(property);
-        if (it == m_fontSubPropertyToProperty.end())
+        auto *parentItem = property->parentProperty();
+        if (!m_propertyToFontSubProperties.contains(parentItem))
             return false;
 
-        QtVariantProperty *fontProperty = vm->variantProperty(it.value());
+        QtVariantProperty *fontProperty = vm->variantProperty(parentItem);
 
         QVariant v = fontProperty->value();
         QFont font = qvariant_cast<QFont>(v);

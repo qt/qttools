@@ -379,7 +379,9 @@ void DesignerPropertyManager::slotValueChanged(QtProperty *property, const QVari
         return;
     }
 
-    if (QtProperty *flagProperty = m_flagToProperty.value(property, 0)) {
+    auto *parentItem = property->parentProperty();
+    if (m_flagValues.contains(parentItem)) {
+        auto *flagProperty = parentItem;
         const auto subFlags = m_propertyToFlags.value(flagProperty);
         const qsizetype subFlagCount = subFlags.size();
         // flag changed
@@ -465,7 +467,8 @@ void DesignerPropertyManager::slotValueChanged(QtProperty *property, const QVari
             return;
 
         variantProperty(alignProperty)->setValue(newValue);
-    } else if (QtProperty *iProperty = m_iconSubPropertyToProperty.value(property, 0)) {
+    } else if (m_iconValues.contains(parentItem)) {
+        QtProperty *iProperty = parentItem;
         QtVariantProperty *iconProperty = variantProperty(iProperty);
         PropertySheetIconValue icon = qvariant_cast<PropertySheetIconValue>(iconProperty->value());
         const auto itState = m_iconSubPropertyToState.constFind(property);
@@ -491,11 +494,12 @@ void DesignerPropertyManager::slotValueChanged(QtProperty *property, const QVari
 
 void DesignerPropertyManager::slotPropertyDestroyed(QtProperty *property)
 {
-    if (QtProperty *flagProperty = m_flagToProperty.value(property, 0)) {
+    auto *parentItem = property->parentProperty();
+    if (m_flagValues.contains(parentItem)) {
+        auto *flagProperty = parentItem;
         const auto it = m_propertyToFlags.find(flagProperty);
         auto &propertyList = it.value();
         propertyList.replace(propertyList.indexOf(property), 0);
-        m_flagToProperty.remove(property);
     } else if (QtProperty *alignProperty = m_alignHToProperty.value(property, 0)) {
         m_propertyToAlignH.remove(alignProperty);
         m_alignHToProperty.remove(property);
@@ -505,7 +509,8 @@ void DesignerPropertyManager::slotPropertyDestroyed(QtProperty *property)
     } else if (m_stringManager.destroy(property)
                || m_stringListManager.destroy(property)
                || m_keySequenceManager.destroy(property)) {
-    } else if (QtProperty *iconProperty = m_iconSubPropertyToProperty.value(property, 0)) {
+    } else if (m_iconValues.contains(parentItem)) {
+        auto *iconProperty = parentItem;
         if (m_propertyToTheme.value(iconProperty) == property) {
             m_propertyToTheme.remove(iconProperty);
         } else if (m_propertyToThemeEnum.value(iconProperty) == property) {
@@ -517,7 +522,6 @@ void DesignerPropertyManager::slotPropertyDestroyed(QtProperty *property)
             propertyList.remove(state);
             m_iconSubPropertyToState.remove(property);
         }
-        m_iconSubPropertyToProperty.remove(property);
     } else {
         m_fontManager.slotPropertyDestroyed(property);
         m_brushManager.slotPropertyDestroyed(property);
@@ -667,12 +671,7 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
             return;
 
         const auto pfit = m_propertyToFlags.find(property);
-        for (QtProperty *prop : std::as_const(pfit.value())) {
-            if (prop) {
-                delete prop;
-                m_flagToProperty.remove(prop);
-            }
-        }
+        qDeleteAll(std::as_const(pfit.value()));
         pfit.value().clear();
 
         QList<uint> values;
@@ -683,7 +682,6 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
             prop->setPropertyName(flagName);
             property->addSubProperty(prop);
             m_propertyToFlags[property].append(prop);
-            m_flagToProperty[prop] = property;
             values.append(pair.second);
         }
 
@@ -1510,14 +1508,12 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
             QtVariantProperty *themeEnumProp = addProperty(QMetaType::Int, tr("Theme"));
             m_intValues[themeEnumProp] = -1;
             themeEnumProp->setAttribute(themeEnumAttributeC, true);
-            m_iconSubPropertyToProperty[themeEnumProp] = property;
             m_propertyToThemeEnum[property] = themeEnumProp;
             m_resetMap[themeEnumProp] = true;
             property->addSubProperty(themeEnumProp);
 
             QtVariantProperty *themeProp = addProperty(QMetaType::QString, tr("XDG Theme"));
             themeProp->setAttribute(themeAttributeC, true);
-            m_iconSubPropertyToProperty[themeProp] = property;
             m_propertyToTheme[property] = themeProp;
             m_resetMap[themeProp] = true;
             property->addSubProperty(themeProp);
@@ -1555,7 +1551,6 @@ void DesignerPropertyManager::createIconSubProperty(QtProperty *iconProperty, QI
     QtVariantProperty *subProp = addProperty(DesignerPropertyManager::designerPixmapTypeId(), subName);
     m_propertyToIconSubProperties[iconProperty][pair] = subProp;
     m_iconSubPropertyToState[subProp] = pair;
-    m_iconSubPropertyToProperty[subProp] = iconProperty;
     m_resetMap[subProp] = true;
     iconProperty->addSubProperty(subProp);
 }
@@ -1564,14 +1559,11 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
 {
     m_resetMap.remove(property);
 
-    const auto propList = m_propertyToFlags.value(property);
-    for (QtProperty *prop : propList) {
-        if (prop) {
-            delete prop;
-            m_flagToProperty.remove(prop);
-        }
+    const auto pfit = m_propertyToFlags.find(property);
+    if (pfit != m_propertyToFlags.end()) {
+        qDeleteAll(std::as_const(pfit.value()));
+        m_propertyToFlags.erase(pfit);
     }
-    m_propertyToFlags.remove(property);
     m_flagValues.remove(property);
 
     QtProperty *alignH = m_propertyToAlignH.value(property);
@@ -1589,15 +1581,11 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
     m_stringListManager.uninitialize(property);
     m_keySequenceManager.uninitialize(property);
 
-    if (QtProperty *iconTheme = m_propertyToTheme.value(property)) {
-        delete iconTheme; // Delete first (QTBUG-126182)
-        m_iconSubPropertyToProperty.remove(iconTheme);
-    }
+    if (QtProperty *iconTheme = m_propertyToTheme.value(property))
+        delete iconTheme;
 
-    if (QtProperty *iconThemeEnum = m_propertyToThemeEnum.value(property)) {
-        delete iconThemeEnum; // Delete first (QTBUG-126182)
-        m_iconSubPropertyToProperty.remove(iconThemeEnum);
-    }
+    if (QtProperty *iconThemeEnum = m_propertyToThemeEnum.value(property))
+        delete iconThemeEnum;
 
     m_propertyToAlignH.remove(property);
     m_propertyToAlignV.remove(property);
@@ -1618,11 +1606,9 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
         QtProperty *subIcon = itIcon.value();
         delete subIcon;
         m_iconSubPropertyToState.remove(subIcon);
-        m_iconSubPropertyToProperty.remove(subIcon);
     }
     m_propertyToIconSubProperties.remove(property);
     m_iconSubPropertyToState.remove(property);
-    m_iconSubPropertyToProperty.remove(property);
 
     m_intValues.remove(property);
     m_uintValues.remove(property);
@@ -1655,8 +1641,8 @@ bool DesignerPropertyManager::resetFontSubProperty(QtProperty *property)
 
 bool DesignerPropertyManager::resetIconSubProperty(QtProperty *property)
 {
-    QtProperty *iconProperty = m_iconSubPropertyToProperty.value(property);
-    if (!iconProperty)
+    auto *parentItem = property->parentProperty();
+    if (!m_iconValues.contains(parentItem))
         return false;
 
     if (m_pixmapValues.contains(property)) {

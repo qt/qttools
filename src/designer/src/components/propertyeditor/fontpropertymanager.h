@@ -82,7 +82,6 @@ private:
 
     QHash<QtProperty *, PropertyList> m_propertyToFontSubProperties;
     QHash<QtProperty *, int> m_fontSubPropertyToFlag;
-    PropertyToPropertyMap m_fontSubPropertyToProperty;
     QtProperty *m_createdFontProperty = nullptr;
     QStringList m_aliasingEnumNames;
     QStringList m_hintingPreferenceEnumNames;
