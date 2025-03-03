@@ -96,6 +96,7 @@ static void parseSourceFiles(
         for (auto untied : untied_documentation) {
             auto result = cpp_code_parser.processTopicArgs(untied);
             tied_documentation.insert(tied_documentation.end(), result.first.begin(), result.first.end());
+            errors.insert(errors.end(), result.second.begin(), result.second.end());
         };
 
         cpp_code_parser.processMetaCommands(tied_documentation);
