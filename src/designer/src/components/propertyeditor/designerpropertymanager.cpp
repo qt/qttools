@@ -115,24 +115,16 @@ void TranslatablePropertyManager<PropertySheetValue>::initialize(QtVariantProper
 template <class PropertySheetValue>
 bool TranslatablePropertyManager<PropertySheetValue>::uninitialize(QtProperty *property)
 {
-    if (QtProperty *comment = m_valueToComment.value(property)) {
+    if (QtProperty *comment = m_valueToComment.value(property))
         delete comment;
-        m_commentToValue.remove(comment);
-    } else {
+    else
         return false;
-    }
-    if (QtProperty *translatable = m_valueToTranslatable.value(property)) {
+    if (QtProperty *translatable = m_valueToTranslatable.value(property))
         delete translatable;
-        m_translatableToValue.remove(translatable);
-    }
-    if (QtProperty *disambiguation = m_valueToDisambiguation.value(property)) {
+    if (QtProperty *disambiguation = m_valueToDisambiguation.value(property))
         delete disambiguation;
-        m_disambiguationToValue.remove(disambiguation);
-    }
-    if (QtProperty *id = m_valueToId.value(property)) {
+    if (QtProperty *id = m_valueToId.value(property))
         delete id;
-        m_idToValue.remove(id);
-    }
 
     m_values.remove(property);
     m_valueToComment.remove(property);
@@ -1566,16 +1558,10 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
     }
     m_flagValues.remove(property);
 
-    QtProperty *alignH = m_propertyToAlignH.value(property);
-    if (alignH) {
+    if (QtProperty *alignH = m_propertyToAlignH.value(property))
         delete alignH;
-        m_alignHToProperty.remove(alignH);
-    }
-    QtProperty *alignV = m_propertyToAlignV.value(property);
-    if (alignV) {
+    if (QtProperty *alignV = m_propertyToAlignV.value(property))
         delete alignV;
-        m_alignVToProperty.remove(alignV);
-    }
 
     m_stringManager.uninitialize(property);
     m_stringListManager.uninitialize(property);
@@ -1602,11 +1588,9 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
     m_defaultPixmaps.remove(property);
 
     const auto &iconSubProperties = m_propertyToIconSubProperties.value(property);
-    for (auto itIcon = iconSubProperties.cbegin(), end = iconSubProperties.cend(); itIcon != end; ++itIcon) {
-        QtProperty *subIcon = itIcon.value();
-        delete subIcon;
-        m_iconSubPropertyToState.remove(subIcon);
-    }
+    for (auto itIcon = iconSubProperties.cbegin(), end = iconSubProperties.cend(); itIcon != end; ++itIcon)
+        delete itIcon.value();
+
     m_propertyToIconSubProperties.remove(property);
     m_iconSubPropertyToState.remove(property);
 
