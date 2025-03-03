@@ -631,7 +631,6 @@ bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd)
     int finished = 0;
     int unfinished = 0;
     int untranslated = 0;
-    int missingIds = 0;
     int droppedData = 0;
 
     for (int i = 0; i != translator.messageCount(); ++i) {
@@ -676,10 +675,6 @@ bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd)
         }
     }
 
-    if (missingIds)
-        cd.appendError(QCoreApplication::translate("LRelease",
-            "Dropped %n message(s) which had no ID.", 0,
-            missingIds));
     if (droppedData)
         cd.appendError(QCoreApplication::translate("LRelease",
             "Excess context/disambiguation dropped from %n message(s).", 0,
