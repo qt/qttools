@@ -1415,7 +1415,7 @@ void QtAbstractPropertyBrowserPrivate::slotPropertyDataChanged(QtProperty *prope
     if (it == m_propertyToIndexes.constEnd())
         return;
 
-    const auto indexes = it.value();
+    const auto &indexes = it.value();
     for (QtBrowserItem *idx : indexes)
         q_ptr->itemChanged(idx);
     //q_ptr->propertyChanged(property);
