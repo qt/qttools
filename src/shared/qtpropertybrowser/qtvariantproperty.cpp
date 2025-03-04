@@ -359,7 +359,7 @@ QtVariantProperty *QtVariantPropertyManagerPrivate::createSubProperty(QtVariantP
 {
     int type = internalPropertyToType(internal);
     if (!type)
-        return 0;
+        return nullptr;
 
     bool wasCreatingSubProperties = m_creatingSubProperties;
     m_creatingSubProperties = true;
@@ -1288,7 +1288,7 @@ QtVariantProperty *QtVariantPropertyManager::variantProperty(const QtProperty *p
 {
     const auto it = d_ptr->m_propertyToType.constFind(property);
     if (it == d_ptr->m_propertyToType.constEnd())
-        return 0;
+        return nullptr;
     return it.value().first;
 }
 
@@ -1320,7 +1320,7 @@ bool QtVariantPropertyManager::isPropertyTypeSupported(int propertyType) const
 QtVariantProperty *QtVariantPropertyManager::addProperty(int propertyType, const QString &name)
 {
     if (!isPropertyTypeSupported(propertyType))
-        return 0;
+        return nullptr;
 
     bool wasCreating = d_ptr->m_creatingProperty;
     d_ptr->m_creatingProperty = true;
@@ -1330,7 +1330,7 @@ QtVariantProperty *QtVariantPropertyManager::addProperty(int propertyType, const
     d_ptr->m_propertyType = 0;
 
     if (!property)
-        return 0;
+        return nullptr;
 
     return variantProperty(property);
 }
@@ -1863,7 +1863,7 @@ void QtVariantPropertyManager::uninitializeProperty(QtProperty *property)
 QtProperty *QtVariantPropertyManager::createProperty()
 {
     if (!d_ptr->m_creatingProperty)
-        return 0;
+        return nullptr;
 
     auto *property = new QtVariantProperty(this);
     d_ptr->m_propertyToType.insert(property, {property, d_ptr->m_propertyType});
@@ -2141,7 +2141,7 @@ QWidget *QtVariantEditorFactory::createEditor(QtVariantPropertyManager *manager,
     const int propType = manager->propertyType(property);
     QtAbstractEditorFactoryBase *factory = d_ptr->m_typeToFactory.value(propType, nullptr);
     if (!factory)
-        return 0;
+        return nullptr;
     return factory->createEditor(wrappedProperty(property), parent);
 }
 

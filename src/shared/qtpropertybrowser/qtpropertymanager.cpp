@@ -336,7 +336,7 @@ static void setMinimumValue(PropertyManager *manager, PropertyManagerPrivate *ma
             QtProperty *property, const Value &minVal)
 {
     void (PropertyManagerPrivate::*setSubPropertyRange)(QtProperty *,
-                    ValueChangeParameter, ValueChangeParameter, ValueChangeParameter) = 0;
+                    ValueChangeParameter, ValueChangeParameter, ValueChangeParameter) = nullptr;
     setBorderValue<ValueChangeParameter, PropertyManagerPrivate, PropertyManager, Value, PrivateData>(manager, managerPrivate,
             propertyChangedSignal, valueChangedSignal, rangeChangedSignal,
             property, &PropertyManagerPrivate::Data::minimumValue, &PropertyManagerPrivate::Data::setMinimumValue, minVal, setSubPropertyRange);
@@ -350,7 +350,7 @@ static void setMaximumValue(PropertyManager *manager, PropertyManagerPrivate *ma
             QtProperty *property, const Value &maxVal)
 {
     void (PropertyManagerPrivate::*setSubPropertyRange)(QtProperty *,
-                    ValueChangeParameter, ValueChangeParameter, ValueChangeParameter) = 0;
+                    ValueChangeParameter, ValueChangeParameter, ValueChangeParameter) = nullptr;
     setBorderValue<ValueChangeParameter, PropertyManagerPrivate, PropertyManager, Value, PrivateData>(manager, managerPrivate,
             propertyChangedSignal, valueChangedSignal, rangeChangedSignal,
             property, &PropertyManagerPrivate::Data::maximumValue, &PropertyManagerPrivate::Data::setMaximumValue, maxVal, setSubPropertyRange);
@@ -2226,7 +2226,7 @@ void QtLocalePropertyManagerPrivate::slotEnumChanged(QtProperty *property, int v
         const QLocale loc = m_values[prop];
         QLocale::Language newLanguage = loc.language();
         QLocale::Territory newTerritory = loc.territory();
-        metaEnumProvider()->indexToLocale(value, 0, &newLanguage, 0);
+        metaEnumProvider()->indexToLocale(value, 0, &newLanguage, nullptr);
         QLocale newLoc(newLanguage, newTerritory);
         q_ptr->setValue(prop, newLoc);
     } else if (QtProperty *prop = m_territoryToProperty.value(property, nullptr)) {
@@ -4874,7 +4874,7 @@ void QtFlagPropertyManagerPrivate::slotPropertyDestroyed(QtProperty *property)
     if (flagProperty == nullptr)
         return;
 
-    m_propertyToFlags[flagProperty].replace(m_propertyToFlags[flagProperty].indexOf(property), 0);
+    m_propertyToFlags[flagProperty].replace(m_propertyToFlags[flagProperty].indexOf(property), nullptr);
     m_flagToProperty.remove(property);
 }
 
@@ -5152,16 +5152,14 @@ class QtSizePolicyPropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtSizePolicyPropertyManager)
 public:
 
-    QtSizePolicyPropertyManagerPrivate();
-
     void slotIntChanged(QtProperty *property, int value);
     void slotEnumChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
 
     QHash<const QtProperty *, QSizePolicy> m_values;
 
-    QtIntPropertyManager *m_intPropertyManager;
-    QtEnumPropertyManager *m_enumPropertyManager;
+    QtIntPropertyManager *m_intPropertyManager = nullptr;
+    QtEnumPropertyManager *m_enumPropertyManager = nullptr;
 
     QHash<const QtProperty *, QtProperty *> m_propertyToHPolicy;
     QHash<const QtProperty *, QtProperty *> m_propertyToVPolicy;
@@ -5173,10 +5171,6 @@ public:
     QHash<const QtProperty *, QtProperty *> m_hStretchToProperty;
     QHash<const QtProperty *, QtProperty *> m_vStretchToProperty;
 };
-
-QtSizePolicyPropertyManagerPrivate::QtSizePolicyPropertyManagerPrivate()
-{
-}
 
 void QtSizePolicyPropertyManagerPrivate::slotIntChanged(QtProperty *property, int value)
 {
@@ -5475,8 +5469,6 @@ class QtFontPropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtFontPropertyManager)
 public:
 
-    QtFontPropertyManagerPrivate();
-
     void slotIntChanged(QtProperty *property, int value);
     void slotEnumChanged(QtProperty *property, int value);
     void slotBoolChanged(QtProperty *property, bool value);
@@ -5510,15 +5502,9 @@ public:
     QHash<const QtProperty *, QtProperty *> m_kerningToProperty;
     QHash<const QtProperty *, QtProperty *> m_weightToProperty;
 
-    bool m_settingValue;
-    QTimer *m_fontDatabaseChangeTimer;
+    bool m_settingValue = false;
+    QTimer *m_fontDatabaseChangeTimer = nullptr;
 };
-
-QtFontPropertyManagerPrivate::QtFontPropertyManagerPrivate() :
-    m_settingValue(false),
-    m_fontDatabaseChangeTimer(0)
-{
-}
 
 void QtFontPropertyManagerPrivate::slotIntChanged(QtProperty *property, int value)
 {

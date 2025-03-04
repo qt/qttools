@@ -1060,7 +1060,7 @@ class QtBrowserItemPrivate
 {
 public:
     QtBrowserItemPrivate(QtAbstractPropertyBrowser *browser, QtProperty *property, QtBrowserItem *parent)
-        : m_browser(browser), m_property(property), m_parent(parent), q_ptr(0) {}
+        : m_browser(browser), m_property(property), m_parent(parent) {}
 
     void addChild(QtBrowserItem *index, QtBrowserItem *after);
     void removeChild(QtBrowserItem *index);
@@ -1069,7 +1069,7 @@ public:
     QtProperty *m_property;
     QtBrowserItem *m_parent;
 
-    QtBrowserItem *q_ptr;
+    QtBrowserItem *q_ptr = nullptr;
 
     QList<QtBrowserItem *> m_children;
 
@@ -1187,8 +1187,6 @@ class QtAbstractPropertyBrowserPrivate
     QtAbstractPropertyBrowser *q_ptr;
     Q_DECLARE_PUBLIC(QtAbstractPropertyBrowser)
 public:
-    QtAbstractPropertyBrowserPrivate();
-
     void insertSubTree(QtProperty *property,
             QtProperty *parentProperty);
     void removeSubTree(QtProperty *property,
@@ -1213,13 +1211,8 @@ public:
     QList<QtBrowserItem *> m_topLevelIndexes;
     QHash<QtProperty *, QList<QtBrowserItem *> > m_propertyToIndexes;
 
-    QtBrowserItem *m_currentItem;
+    QtBrowserItem *m_currentItem = nullptr;
 };
-
-QtAbstractPropertyBrowserPrivate::QtAbstractPropertyBrowserPrivate() :
-   m_currentItem(0)
-{
-}
 
 void QtAbstractPropertyBrowserPrivate::insertSubTree(QtProperty *property,
             QtProperty *parentProperty)
@@ -1746,10 +1739,10 @@ QtBrowserItem *QtAbstractPropertyBrowser::insertProperty(QtProperty *property,
         }
         pos++;
     }
-    d_ptr->createBrowserIndexes(property, 0, afterProperty);
+    d_ptr->createBrowserIndexes(property, nullptr, afterProperty);
 
     // traverse inserted subtree and connect to manager's signals
-    d_ptr->insertSubTree(property, 0);
+    d_ptr->insertSubTree(property, nullptr);
 
     d_ptr->m_subItems.insert(newPos, property);
     //propertyInserted(property, 0, properAfterProperty);
@@ -1777,10 +1770,11 @@ void QtAbstractPropertyBrowser::removeProperty(QtProperty *property)
     while (pos < pendingList.size()) {
         if (pendingList.at(pos) == property) {
             d_ptr->m_subItems.removeAt(pos); //perhaps this two lines
-            d_ptr->removeSubTree(property, 0); //should be moved down after propertyRemoved call.
-            //propertyRemoved(property, 0);
+            d_ptr->removeSubTree(property,
+                                 nullptr); // should be moved down after propertyRemoved call.
+            // propertyRemoved(property, 0);
 
-            d_ptr->removeBrowserIndexes(property, 0);
+            d_ptr->removeBrowserIndexes(property, nullptr);
 
             // when item is deleted, item will call removeItem for top level items,
             // and itemRemoved for nested items.

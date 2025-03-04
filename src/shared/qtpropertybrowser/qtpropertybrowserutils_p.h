@@ -68,7 +68,7 @@ public:
 class QtBoolEdit : public QWidget {
     Q_OBJECT
 public:
-    QtBoolEdit(QWidget *parent = 0);
+    QtBoolEdit(QWidget *parent = nullptr);
 
     bool textVisible() const { return m_textVisible; }
     void setTextVisible(bool textVisible);
