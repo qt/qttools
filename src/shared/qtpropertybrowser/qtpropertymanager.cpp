@@ -2341,7 +2341,7 @@ QString QtLocalePropertyManager::valueText(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return {};
 
-    const QLocale loc = it.value();
+    const QLocale &loc = it.value();
 
     int langIdx = 0;
     int territoryIdx = 0;
@@ -2351,7 +2351,7 @@ QString QtLocalePropertyManager::valueText(const QtProperty *property) const
         qWarning("QtLocalePropertyManager::valueText: Unknown language %d", loc.language());
         return tr("<Invalid>");
     }
-    const QString languageName = me->languageEnumNames().at(langIdx);
+    QString languageName = me->languageEnumNames().at(langIdx); // enable move
     if (territoryIdx < 0) {
         qWarning("QtLocalePropertyManager::valueText: Unknown territory %d for %s", loc.territory(), qPrintable(languageName));
         return languageName;
@@ -2374,7 +2374,7 @@ void QtLocalePropertyManager::setValue(QtProperty *property, const QLocale &val)
     if (it == d_ptr->m_values.end())
         return;
 
-    const QLocale loc = it.value();
+    const QLocale &loc = it.value();
     if (loc == val)
         return;
 
@@ -5786,7 +5786,7 @@ void QtFontPropertyManager::setValue(QtProperty *property, const QFont &val)
     if (it == d_ptr->m_values.end())
         return;
 
-    const QFont oldVal = it.value();
+    const QFont &oldVal = it.value();
     if (oldVal == val && oldVal.resolveMask() == val.resolveMask())
         return;
 
