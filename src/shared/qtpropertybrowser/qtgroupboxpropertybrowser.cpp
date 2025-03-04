@@ -255,7 +255,7 @@ void QtGroupBoxPropertyBrowserPrivate::propertyRemoved(QtBrowserItem *index)
 
     if (!parentItem) {
         removeRow(m_mainLayout, row);
-    } else if (parentItem->children.size() != 0) {
+    } else if (!parentItem->children.empty()) {
         removeRow(parentItem->layout, row);
     } else {
         WidgetItem *par = parentItem->parent;

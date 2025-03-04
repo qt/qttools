@@ -394,7 +394,7 @@ void QtProperty::setModified(bool modified)
 void QtProperty::addSubProperty(QtProperty *property)
 {
     QtProperty *after = nullptr;
-    if (d_ptr->m_subItems.size() > 0)
+    if (!d_ptr->m_subItems.empty())
         after = d_ptr->m_subItems.last();
     insertSubProperty(property, after);
 }
@@ -1706,7 +1706,7 @@ void QtAbstractPropertyBrowser::clear()
 QtBrowserItem *QtAbstractPropertyBrowser::addProperty(QtProperty *property)
 {
     QtProperty *afterProperty = nullptr;
-    if (d_ptr->m_subItems.size() > 0)
+    if (!d_ptr->m_subItems.empty())
         afterProperty = d_ptr->m_subItems.last();
     return insertProperty(property, afterProperty);
 }
