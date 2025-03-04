@@ -1300,9 +1300,7 @@ QtVariantProperty *QtVariantPropertyManager::variantProperty(const QtProperty *p
 */
 bool QtVariantPropertyManager::isPropertyTypeSupported(int propertyType) const
 {
-    if (d_ptr->m_typeToValueType.contains(propertyType))
-        return true;
-    return false;
+    return d_ptr->m_typeToValueType.contains(propertyType);
 }
 
 /*!
