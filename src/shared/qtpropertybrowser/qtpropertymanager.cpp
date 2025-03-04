@@ -530,10 +530,7 @@ QtGroupPropertyManager::QtGroupPropertyManager(QObject *parent)
 /*!
     Destroys this manager, and all the properties it has created.
 */
-QtGroupPropertyManager::~QtGroupPropertyManager()
-{
-
-}
+QtGroupPropertyManager::~QtGroupPropertyManager() = default;
 
 /*!
     \reimp

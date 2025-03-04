@@ -714,9 +714,7 @@ QtTreePropertyBrowser::QtTreePropertyBrowser(QWidget *parent)
 
     \sa QtProperty, QtAbstractPropertyManager
 */
-QtTreePropertyBrowser::~QtTreePropertyBrowser()
-{
-}
+QtTreePropertyBrowser::~QtTreePropertyBrowser() = default;
 
 /*!
     \property QtTreePropertyBrowser::indentation

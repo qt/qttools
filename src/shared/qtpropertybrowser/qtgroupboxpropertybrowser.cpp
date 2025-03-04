@@ -41,10 +41,10 @@ public:
 private:
     void updateLater();
     void updateItem(WidgetItem *item);
-    void insertRow(QGridLayout *layout, int row) const;
-    void removeRow(QGridLayout *layout, int row) const;
+    static void insertRow(QGridLayout *layout, int row);
+    static void removeRow(QGridLayout *layout, int row);
 
-    bool hasHeader(WidgetItem *item) const;
+    static bool hasHeader(const WidgetItem *item);
 
     QHash<QtBrowserItem *, WidgetItem *> m_indexToItem;
     QHash<WidgetItem *, QtBrowserItem *> m_itemToIndex;
@@ -283,7 +283,7 @@ void QtGroupBoxPropertyBrowserPrivate::propertyRemoved(QtBrowserItem *index)
     delete item;
 }
 
-void QtGroupBoxPropertyBrowserPrivate::insertRow(QGridLayout *layout, int row) const
+void QtGroupBoxPropertyBrowserPrivate::insertRow(QGridLayout *layout, int row)
 {
     QHash<QLayoutItem *, QRect> itemToPos;
     int idx = 0;
@@ -303,7 +303,7 @@ void QtGroupBoxPropertyBrowserPrivate::insertRow(QGridLayout *layout, int row) c
     }
 }
 
-void QtGroupBoxPropertyBrowserPrivate::removeRow(QGridLayout *layout, int row) const
+void QtGroupBoxPropertyBrowserPrivate::removeRow(QGridLayout *layout, int row)
 {
     QHash<QLayoutItem *, QRect> itemToPos;
     int idx = 0;
@@ -323,7 +323,7 @@ void QtGroupBoxPropertyBrowserPrivate::removeRow(QGridLayout *layout, int row) c
     }
 }
 
-bool QtGroupBoxPropertyBrowserPrivate::hasHeader(WidgetItem *item) const
+bool QtGroupBoxPropertyBrowserPrivate::hasHeader(const WidgetItem *item)
 {
     return item->widget;
 }
