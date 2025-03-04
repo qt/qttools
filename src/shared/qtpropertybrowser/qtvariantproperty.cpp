@@ -165,9 +165,7 @@ QtVariantProperty::QtVariantProperty(QtVariantPropertyManager *manager)
 
     \sa QtProperty::~QtProperty()
 */
-QtVariantProperty::~QtVariantProperty()
-{
-}
+QtVariantProperty::~QtVariantProperty() = default;
 
 /*!
     Returns the property's current value.
@@ -300,7 +298,7 @@ public:
 
     void valueChanged(QtProperty *property, const QVariant &val);
 
-    int internalPropertyToType(QtProperty *property) const;
+    static int internalPropertyToType(QtProperty *property);
     QtVariantProperty *createSubProperty(QtVariantProperty *parent, QtVariantProperty *after,
             QtProperty *internal);
     void removeSubProperty(QtVariantProperty *property);
@@ -339,7 +337,7 @@ QtVariantPropertyManagerPrivate::QtVariantPropertyManagerPrivate() :
 {
 }
 
-int QtVariantPropertyManagerPrivate::internalPropertyToType(QtProperty *property) const
+int QtVariantPropertyManagerPrivate::internalPropertyToType(QtProperty *property)
 {
     int type = 0;
     QtAbstractPropertyManager *internPropertyManager = property->propertyManager();
@@ -2022,9 +2020,7 @@ QtVariantEditorFactory::QtVariantEditorFactory(QObject *parent)
 /*!
     Destroys this factory, and all the widgets it has created.
 */
-QtVariantEditorFactory::~QtVariantEditorFactory()
-{
-}
+QtVariantEditorFactory::~QtVariantEditorFactory() = default;
 
 /*!
     \internal

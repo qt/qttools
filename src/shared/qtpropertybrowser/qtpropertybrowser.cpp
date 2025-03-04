@@ -1167,10 +1167,7 @@ QtBrowserItem::QtBrowserItem(QtAbstractPropertyBrowser *browser, QtProperty *pro
     d_ptr->q_ptr = this;
 }
 
-QtBrowserItem::~QtBrowserItem()
-{
-}
-
+QtBrowserItem::~QtBrowserItem() = default;
 
 ////////////////////////////////////
 
@@ -1229,16 +1226,18 @@ void QtAbstractPropertyBrowserPrivate::insertSubTree(QtProperty *property,
     QtAbstractPropertyManager *manager = property->propertyManager();
     if (m_managerToProperties[manager].isEmpty()) {
         // connect manager's signals
-        q_ptr->connect(manager, &QtAbstractPropertyManager::propertyInserted,
-                       q_ptr, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
-                       { slotPropertyInserted(property, parent, after); });
-        q_ptr->connect(manager, &QtAbstractPropertyManager::propertyRemoved,
-                       q_ptr, [this](QtProperty *property, QtProperty *parent)
-                       { slotPropertyRemoved(property, parent); });
-        q_ptr->connect(manager, &QtAbstractPropertyManager::propertyDestroyed,
-                       q_ptr, [this](QtProperty *property) { slotPropertyDestroyed(property); });
-        q_ptr->connect(manager, &QtAbstractPropertyManager::propertyChanged,
-                       q_ptr, [this](QtProperty *property) { slotPropertyDataChanged(property); });
+        QObject::connect(manager, &QtAbstractPropertyManager::propertyInserted,
+                         q_ptr, [this](QtProperty *property, QtProperty *parent, QtProperty *after) {
+                             slotPropertyInserted(property, parent, after);
+                         });
+        QObject::connect(manager, &QtAbstractPropertyManager::propertyRemoved,
+                         q_ptr, [this](QtProperty *property, QtProperty *parent) {
+                             slotPropertyRemoved(property, parent);
+                         });
+        QObject::connect(manager, &QtAbstractPropertyManager::propertyDestroyed,
+                         q_ptr, [this](QtProperty *property) { slotPropertyDestroyed(property); });
+        QObject::connect(manager, &QtAbstractPropertyManager::propertyChanged,
+                         q_ptr, [this](QtProperty *property) { slotPropertyDataChanged(property); });
     }
     m_managerToProperties[manager].append(property);
     m_propertyToParents[property].append(parentProperty);
@@ -1265,10 +1264,13 @@ void QtAbstractPropertyBrowserPrivate::removeSubTree(QtProperty *property,
     m_managerToProperties[manager].removeAll(property);
     if (m_managerToProperties[manager].isEmpty()) {
         // disconnect manager's signals
-        q_ptr->disconnect(manager, &QtAbstractPropertyManager::propertyInserted, q_ptr, nullptr);
-        q_ptr->disconnect(manager, &QtAbstractPropertyManager::propertyRemoved, q_ptr, nullptr);
-        q_ptr->disconnect(manager, &QtAbstractPropertyManager::propertyDestroyed, q_ptr, nullptr);
-        q_ptr->disconnect(manager, &QtAbstractPropertyManager::propertyChanged, q_ptr, nullptr);
+        QObject::disconnect(manager, &QtAbstractPropertyManager::propertyInserted,
+                            q_ptr, nullptr);
+        QObject::disconnect(manager, &QtAbstractPropertyManager::propertyRemoved,
+                            q_ptr, nullptr);
+        QObject::disconnect(manager, &QtAbstractPropertyManager::propertyDestroyed, q_ptr, nullptr);
+        QObject::disconnect(manager, &QtAbstractPropertyManager::propertyChanged,
+                            q_ptr, nullptr);
 
         m_managerToProperties.remove(manager);
     }

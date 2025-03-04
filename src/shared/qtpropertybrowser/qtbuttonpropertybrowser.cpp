@@ -43,12 +43,12 @@ public:
 private:
     void updateLater();
     void updateItem(WidgetItem *item);
-    void insertRow(QGridLayout *layout, int row) const;
-    void removeRow(QGridLayout *layout, int row) const;
+    static void insertRow(QGridLayout *layout, int row);
+    static void removeRow(QGridLayout *layout, int row);
     int gridRow(WidgetItem *item) const;
-    int gridSpan(WidgetItem *item) const;
+    static int gridSpan(WidgetItem *item);
     void setExpanded(WidgetItem *item, bool expanded);
-    QToolButton *createButton(QWidget *parent = nullptr) const;
+    static QToolButton *createButton(QWidget *parent = nullptr);
 
     QHash<QtBrowserItem *, WidgetItem *> m_indexToItem;
     QHash<WidgetItem *, QtBrowserItem *> m_itemToIndex;
@@ -59,7 +59,7 @@ private:
     QList<WidgetItem *> m_recreateQueue;
 };
 
-QToolButton *QtButtonPropertyBrowserPrivate::createButton(QWidget *parent) const
+QToolButton *QtButtonPropertyBrowserPrivate::createButton(QWidget *parent)
 {
     auto *button = new QToolButton(parent);
     button->setCheckable(true);
@@ -93,7 +93,7 @@ int QtButtonPropertyBrowserPrivate::gridRow(WidgetItem *item) const
     return -1;
 }
 
-int QtButtonPropertyBrowserPrivate::gridSpan(WidgetItem *item) const
+int QtButtonPropertyBrowserPrivate::gridSpan(WidgetItem *item)
 {
     if (item->container && item->expanded)
         return 2;
@@ -241,8 +241,8 @@ void QtButtonPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, QtBr
             parentItem->container = container;
             parentItem->button = createButton();
             m_buttonToItem[parentItem->button] = parentItem;
-            q_ptr->connect(parentItem->button, &QAbstractButton::toggled,
-                           q_ptr, [this](bool checked) { slotToggled(checked); });
+            QObject::connect(parentItem->button, &QAbstractButton::toggled,
+                             q_ptr, [this](bool checked) { slotToggled(checked); });
             parentItem->layout = new QGridLayout();
             container->setLayout(parentItem->layout);
             if (parentItem->label) {
@@ -353,7 +353,7 @@ void QtButtonPropertyBrowserPrivate::propertyRemoved(QtBrowserItem *index)
     delete item;
 }
 
-void QtButtonPropertyBrowserPrivate::insertRow(QGridLayout *layout, int row) const
+void QtButtonPropertyBrowserPrivate::insertRow(QGridLayout *layout, int row)
 {
     QHash<QLayoutItem *, QRect> itemToPos;
     int idx = 0;
@@ -373,7 +373,7 @@ void QtButtonPropertyBrowserPrivate::insertRow(QGridLayout *layout, int row) con
     }
 }
 
-void QtButtonPropertyBrowserPrivate::removeRow(QGridLayout *layout, int row) const
+void QtButtonPropertyBrowserPrivate::removeRow(QGridLayout *layout, int row)
 {
     QHash<QLayoutItem *, QRect> itemToPos;
     int idx = 0;
