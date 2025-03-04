@@ -182,42 +182,47 @@ static CandidateList similarTextHeuristicCandidates(MultiDataModel *model, int m
 
     StringSimilarityMatcher stringmatcher(QString::fromLatin1(text));
 
-    for (MultiDataModelIterator it(model, mi); it.isValid(); ++it) {
-        MessageItem *m = it.current();
-        if (!m)
-            continue;
+    auto findCandidates = [&candidates, maxCandidates, &scores, &stringmatcher](auto it) {
+        for (; it.isValid(); ++it) {
+            MessageItem *m = it.current();
+            if (!m)
+                continue;
 
-        TranslatorMessage mtm = m->message();
-        if (mtm.type() == TranslatorMessage::Unfinished
-            || mtm.translation().isEmpty())
-            continue;
+            TranslatorMessage mtm = m->message();
+            if (mtm.type() == TranslatorMessage::Unfinished || mtm.translation().isEmpty())
+                continue;
 
-        QString s = m->text();
+            QString s = m->text();
 
-        int score = stringmatcher.getSimilarityScore(s);
+            int score = stringmatcher.getSimilarityScore(s);
 
-        if (candidates.size() == maxCandidates && score > scores[maxCandidates - 1])
-            candidates.removeLast();
-        if (candidates.size() < maxCandidates && score >= textSimilarityThreshold ) {
-            Candidate cand(mtm.context(), s, mtm.comment(), mtm.translation());
+            if (candidates.size() == maxCandidates && score > scores[maxCandidates - 1])
+                candidates.removeLast();
+            if (candidates.size() < maxCandidates && score >= textSimilarityThreshold) {
+                Candidate cand(mtm.context(), s, mtm.comment(), mtm.translation(), mtm.id(),
+                               m->label());
 
-            int i;
-            for (i = 0; i < candidates.size(); ++i) {
-                if (score >= scores.at(i)) {
-                    if (score == scores.at(i)) {
-                        if (candidates.at(i) == cand)
-                            goto continue_outer_loop;
-                    } else {
-                        break;
+                int i;
+                for (i = 0; i < candidates.size(); ++i) {
+                    if (score >= scores.at(i)) {
+                        if (score == scores.at(i)) {
+                            if (candidates.at(i) == cand)
+                                goto continue_outer_loop;
+                        } else {
+                            break;
+                        }
                     }
                 }
+                scores.insert(i, score);
+                candidates.insert(i, cand);
             }
-            scores.insert(i, score);
-            candidates.insert(i, cand);
+        continue_outer_loop:;
         }
-        continue_outer_loop:
-        ;
-    }
+    };
+
+    findCandidates(MultiDataModelIterator(TEXTBASED, model, mi));
+    findCandidates(MultiDataModelIterator(IDBASED, model, mi));
+
     return candidates;
 }
 
@@ -242,12 +247,14 @@ void PhraseView::setSourceText(int model, const QString &sourceText)
         int n = 0;
         for (const Candidate &candidate : cl) {
             QString def;
+            QString group = candidate.context.isEmpty() ? candidate.label : candidate.context;
             if (n < 9)
                 def = tr("Guess from '%1' (%2)")
-                      .arg(candidate.context, QKeySequence(Qt::CTRL | (Qt::Key_0 + (n + 1)))
-                                              .toString(QKeySequence::NativeText));
+                              .arg(group,
+                                   QKeySequence(Qt::CTRL | (Qt::Key_0 + (n + 1)))
+                                           .toString(QKeySequence::NativeText));
             else
-                def = tr("Guess from '%1'").arg(candidate.context);
+                def = tr("Guess from '%1'").arg(group);
             Phrase *guess = new Phrase(candidate.source, candidate.translation, def, candidate, n);
             m_guesses.append(guess);
             m_phraseModel->addPhrase(guess);

@@ -16,12 +16,15 @@ class Translator;
 struct Candidate
 {
     Candidate() {}
-    Candidate(const QString &c, const QString &s, const QString &d, const QString &t)
-        : context(c), source(s), disambiguation(d), translation(t)
+    Candidate(const QString &c, const QString &s, const QString &d, const QString &t,
+              const QString &i, const QString &l)
+        : context(c), source(s), label(l), id(i), disambiguation(d), translation(t)
     {}
 
     QString context;
     QString source;
+    QString label;
+    QString id;
     QString disambiguation;
     QString translation;
 };

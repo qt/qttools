@@ -85,39 +85,46 @@ void BatchTranslationDialog::startTranslation()
     int msgidx = 0;
     const bool translateTranslated = m_ui.ckTranslateTranslated->isChecked();
     const bool translateFinished = m_ui.ckTranslateFinished->isChecked();
-    for (MultiDataModelIterator it(m_dataModel, m_modelIndex); it.isValid(); ++it) {
-        if (MessageItem *m = it.current()) {
-            if (!m->isObsolete()
-                && (translateTranslated || m->translation().isEmpty())
-                && (translateFinished || !m->isFinished())) {
 
-                // Go through them in the order the user specified in the phrasebookList
-                for (int b = 0; b < m_model.rowCount(); ++b) {
-                    QModelIndex idx(m_model.index(b, 0));
-                    QVariant checkState = m_model.data(idx, Qt::CheckStateRole);
-                    if (checkState == Qt::Checked) {
-                        PhraseBook *pb = m_phrasebooks[m_model.data(idx, Qt::UserRole).toInt()];
-                        const auto phrases = pb->phrases();
-                        for (const Phrase *ph : phrases) {
-                            if (ph->source() == m->text()) {
-                                m_dataModel->setTranslation(it, ph->target());
-                                m_dataModel->setFinished(it, m_ui.ckMarkFinished->isChecked());
-                                ++translatedcount;
-                                goto done; // break 2;
+    auto translate = [translateTranslated, translateFinished, &translatedcount, &msgidx,
+                      dlgProgress, this](auto it) {
+        for (; it.isValid(); ++it) {
+            if (MessageItem *m = it.current()) {
+                if (!m->isObsolete() && (translateTranslated || m->translation().isEmpty())
+                    && (translateFinished || !m->isFinished())) {
+
+                    // Go through them in the order the user specified in the phrasebookList
+                    for (int b = 0; b < m_model.rowCount(); ++b) {
+                        QModelIndex idx(m_model.index(b, 0));
+                        QVariant checkState = m_model.data(idx, Qt::CheckStateRole);
+                        if (checkState == Qt::Checked) {
+                            PhraseBook *pb = m_phrasebooks[m_model.data(idx, Qt::UserRole).toInt()];
+                            const auto phrases = pb->phrases();
+                            for (const Phrase *ph : phrases) {
+                                if (ph->source() == m->text()) {
+                                    m_dataModel->setTranslation(it, ph->target());
+                                    m_dataModel->setFinished(it, m_ui.ckMarkFinished->isChecked());
+                                    ++translatedcount;
+                                    goto done; // break 2;
+                                }
                             }
                         }
                     }
                 }
             }
+        done:
+            ++msgidx;
+            if (!(msgidx & 15))
+                dlgProgress->setValue(msgidx);
+            qApp->processEvents();
+            if (dlgProgress->wasCanceled())
+                break;
         }
-      done:
-        ++msgidx;
-        if (!(msgidx & 15))
-            dlgProgress->setValue(msgidx);
-        qApp->processEvents();
-        if (dlgProgress->wasCanceled())
-            break;
-    }
+    };
+
+    translate(MultiDataModelIterator(IDBASED, m_dataModel, m_modelIndex));
+    translate(MultiDataModelIterator(TEXTBASED, m_dataModel, m_modelIndex));
+
     dlgProgress->hide();
 
     setCursor(oldCursor);

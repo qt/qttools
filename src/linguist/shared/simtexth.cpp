@@ -177,7 +177,8 @@ CandidateList similarTextHeuristicCandidates(const Translator *tor,
             candidates.removeLast();
 
         if (candidates.size() < maxCandidates && score >= textSimilarityThreshold) {
-            Candidate cand(mtm.context(), s, mtm.comment(), mtm.translation());
+            Candidate cand(mtm.context(), s, mtm.comment(), mtm.translation(), mtm.id(),
+                           mtm.label());
 
             int i;
             for (i = 0; i < candidates.size(); i++) {

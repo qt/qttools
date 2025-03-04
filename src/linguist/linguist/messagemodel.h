@@ -33,6 +33,7 @@ public:
 
     QString id() const { return m_message.id(); }
     QString context() const { return m_message.context(); }
+    QString label() const { return m_message.label(); }
     QString text() const;
     QString pluralText() const;
     QString comment() const { return m_message.comment(); }
@@ -63,11 +64,14 @@ private:
     bool m_ncrMode;
 };
 
+enum TranslationType { IDBASED, TEXTBASED };
 
-class ContextItem
+class GroupItem
 {
 public:
-    ContextItem(const QString &context);
+    GroupItem(TranslationType type, const QString &group) : m_group(group), m_translationType(type)
+    {
+    }
 
     int finishedDangerCount() const { return m_finishedDangerCount; }
     int unfinishedDangerCount() const { return m_unfinishedDangerCount; }
@@ -76,7 +80,8 @@ public:
     int unfinishedCount() const { return m_nonobsoleteCount - m_finishedCount; }
     int nonobsoleteCount() const { return m_nonobsoleteCount; }
 
-    QString context() const { return m_context; }
+    QString group() const { return m_group; }
+    TranslationType translationType() const { return m_translationType; }
     QString comment() const { return m_comment; }
     QString fullContext() const { return m_comment.trimmed(); }
 
@@ -88,6 +93,7 @@ public:
     int messageCount() const { return msgItemList.size(); }
 
     MessageItem *findMessage(const QString &sourcetext, const QString &comment) const;
+    MessageItem *findMessageById(const QString &msgid) const;
 
 private:
     friend class DataModel;
@@ -103,41 +109,46 @@ private:
     void incrementNonobsoleteCount() { ++m_nonobsoleteCount; }
 
     QString m_comment;
-    QString m_context;
-    int m_finishedCount;
-    int m_finishedDangerCount;
-    int m_unfinishedDangerCount;
-    int m_nonobsoleteCount;
+    QString m_group;
+    TranslationType m_translationType;
+    int m_finishedCount = 0;
+    int m_finishedDangerCount = 0;
+    int m_unfinishedDangerCount = 0;
+    int m_nonobsoleteCount = 0;
     QList<MessageItem> msgItemList;
 };
-
 
 class DataIndex
 {
 public:
-    DataIndex() : m_context(-1), m_message(-1) {}
-    DataIndex(int context, int message) : m_context(context), m_message(message) {}
-    int context() const { return m_context; }
+    DataIndex(TranslationType type, int group = -1, int message = -1)
+        : m_group(group), m_message(message), m_type(type)
+    {
+    }
+    int group() const { return m_group; }
     int message() const { return m_message; }
-    bool isValid() const { return m_context >= 0; }
-protected:
-    int m_context;
-    int m_message;
-};
+    bool isValid() const { return m_group >= 0; }
+    bool isIdBased() const { return m_type == IDBASED; }
+    TranslationType translationType() const { return m_type; }
 
+protected:
+    int m_group;
+    int m_message;
+    TranslationType m_type;
+};
 
 class DataModelIterator : public DataIndex
 {
 public:
-    DataModelIterator(DataModel *model, int contextNo = 0, int messageNo = 0);
+    DataModelIterator(TranslationType type, DataModel *model = 0, int groupNo = 0,
+                      int messageNo = 0);
     MessageItem *current() const;
     bool isValid() const;
     void operator++();
+
 private:
-    DataModelIterator() {}
     DataModel *m_model; // not owned
 };
-
 
 class DataModel : public QObject
 {
@@ -149,11 +160,13 @@ public:
 
     // Specializations
     int contextCount() const { return m_contextList.size(); }
-    ContextItem *findContext(const QString &context) const;
-    MessageItem *findMessage(const QString &context, const QString &sourcetext,
-        const QString &comment) const;
+    int labelCount() const { return m_labelList.size(); }
+    GroupItem *findGroup(const QString &group, TranslationType type) const;
+    MessageItem *findMessage(const QString &context, const QString &label,
+                             const QString &sourcetext, const QString &comment) const;
 
-    ContextItem *contextItem(int index) const;
+    GroupItem *groupItem(int index, TranslationType type) const;
+    GroupItem *groupItem(DataIndex) const;
     MessageItem *messageItem(const DataIndex &index) const;
 
     int messageCount() const { return m_numMessages; }
@@ -202,7 +215,9 @@ signals:
 
 private:
     friend class DataModelIterator;
-    QList<ContextItem> m_contextList;
+
+    QList<GroupItem> m_contextList;
+    QList<GroupItem> m_labelList;
 
     bool save(const QString &fileName, QWidget *parent);
     void updateLocale();
@@ -230,11 +245,13 @@ private:
     QList<bool> m_countRefNeeds;
 };
 
-
 struct MultiMessageItem
 {
 public:
-    MultiMessageItem(const MessageItem *m);
+    MultiMessageItem(const MessageItem *m)
+        : m_id(m->id()), m_text(m->text()), m_pluralText(m->pluralText()), m_comment(m->comment())
+    {
+    }
     QString id() const { return m_id; }
     QString text() const { return m_text; }
     QString pluralText() const { return m_pluralText; }
@@ -263,27 +280,26 @@ private:
     QString m_text;
     QString m_pluralText;
     QString m_comment;
-    int m_nonnullCount; // all
-    int m_nonobsoleteCount; // all
-    int m_editableCount; // read-write
-    int m_unfinishedCount; // read-write
+    int m_nonnullCount = 0; // all
+    int m_nonobsoleteCount = 0; // all
+    int m_editableCount = 0; // read-write
+    int m_unfinishedCount = 0; // read-write
 };
 
-struct MultiContextItem
+struct MultiGroupItem
 {
 public:
-    MultiContextItem(int oldCount, ContextItem *ctx, bool writable);
+    MultiGroupItem(int oldCount, GroupItem *groupItem, bool writable);
 
-    ContextItem *contextItem(int model) const { return m_contextList[model]; }
-
+    GroupItem *groupItem(int model) const { return m_groupList[model]; }
     MultiMessageItem *multiMessageItem(int msgIdx) const
         { return const_cast<MultiMessageItem *>(&m_multiMessageList[msgIdx]); }
     MessageItem *messageItem(int model, int msgIdx) const { return m_messageLists[model][msgIdx]; }
     int firstNonobsoleteMessageIndex(int msgIdx) const;
     int findMessage(const QString &sourcetext, const QString &comment) const;
     int findMessageById(const QString &id) const;
-
-    QString context() const { return m_context; }
+    QString group() const { return m_group; }
+    TranslationType translationType() const { return m_translationType; }
     QString comment() const { return m_comment; }
     int messageCount() const { return m_messageLists.isEmpty() ? 0 : m_messageLists[0].size(); }
     // For item count in context list
@@ -295,7 +311,7 @@ public:
 private:
     friend class MultiDataModel;
     void appendEmptyModel();
-    void assignLastModel(ContextItem *ctx, bool writable);
+    void assignLastModel(GroupItem *g, bool writable);
     void removeModel(int pos);
     void moveModel(int oldPos, int newPos); // newPos is *before* removing at oldPos
     void putMessageItem(int pos, MessageItem *m);
@@ -308,52 +324,51 @@ private:
     void incrementNonobsoleteCount() { ++m_nonobsoleteCount; }
     void decrementNonobsoleteCount() { --m_nonobsoleteCount; }
 
-    QString m_context;
+    QString m_group;
     QString m_comment;
+    TranslationType m_translationType;
     QList<MultiMessageItem> m_multiMessageList;
-    QList<ContextItem *> m_contextList;
+    QList<GroupItem *> m_groupList;
     // The next two could be in the MultiMessageItems, but are here for efficiency
     QList<QList<MessageItem *> > m_messageLists;
     QList<QList<MessageItem *> *> m_writableMessageLists;
-    int m_finishedCount; // read-write
-    int m_editableCount; // read-write
-    int m_nonobsoleteCount; // all (note: this counts messages, not multi-messages)
+    int m_finishedCount = 0; // read-write
+    int m_editableCount = 0; // read-write
+    int m_nonobsoleteCount = 0; // all (note: this counts messages, not multi-messages)
 };
 
-
-class MultiDataIndex
+class MultiDataIndex : public DataIndex
 {
 public:
-    MultiDataIndex() : m_model(-1), m_context(-1), m_message(-1) {}
-    MultiDataIndex(int model, int context, int message)
-        : m_model(model), m_context(context), m_message(message) {}
+    MultiDataIndex(TranslationType type = TEXTBASED, int model = -1, int group = -1,
+                   int message = -1)
+        : DataIndex(type, group, message), m_model(model)
+    {
+    }
     void setModel(int model) { m_model = model; }
     int model() const { return m_model; }
-    int context() const { return m_context; }
-    int message() const { return m_message; }
-    bool isValid() const { return m_context >= 0; }
     bool operator==(const MultiDataIndex &other) const
-        { return m_model == other.m_model && m_context == other.m_context && m_message == other.m_message; }
+    {
+        return m_model == other.m_model && m_group == other.m_group && m_message == other.m_message;
+    }
     bool operator!=(const MultiDataIndex &other) const { return !(*this == other); }
-protected:
-    int m_model;
-    int m_context;
-    int m_message;
-};
 
+private:
+    int m_model = -1;
+};
 
 class MultiDataModelIterator : public MultiDataIndex
 {
 public:
-    MultiDataModelIterator(MultiDataModel *model, int modelNo, int contextNo = 0, int messageNo = 0);
+    MultiDataModelIterator(TranslationType type, MultiDataModel *model = 0, int modelNo = -1,
+                           int groupNo = 0, int messageNo = 0);
     MessageItem *current() const;
     bool isValid() const;
     void operator++();
+
 private:
-    MultiDataModelIterator() {}
     MultiDataModel *m_dataModel; // not owned
 };
-
 
 class MessageModel;
 
@@ -379,6 +394,7 @@ public:
 
     // Entire multi-model
     int modelCount() const { return m_dataModels.size(); }
+    int labelCount() const { return m_multiLabelList.size(); }
     int contextCount() const { return m_multiContextList.size(); }
     int messageCount() const { return m_numMessages; }
     // Next two needed for progress indicator in main window
@@ -403,14 +419,23 @@ public:
 
     // Retrieve items
     DataModel *model(int i) { return m_dataModels[i]; }
-    MultiContextItem *multiContextItem(int ctxIdx) const
-        { return const_cast<MultiContextItem *>(&m_multiContextList[ctxIdx]); }
-    MultiMessageItem *multiMessageItem(const MultiDataIndex &index) const
-        { return multiContextItem(index.context())->multiMessageItem(index.message()); }
+
+    MultiGroupItem *multiGroupItem(const MultiDataIndex &index) const;
+    MultiGroupItem *multiGroupItem(int idx, TranslationType type) const
+    {
+        const auto &list = type == IDBASED ? m_multiLabelList : m_multiContextList;
+        return const_cast<MultiGroupItem *>(&list[idx]);
+    }
+
+    MultiMessageItem *multiMessageItem(const MultiDataIndex &index) const;
     MessageItem *messageItem(const MultiDataIndex &index, int model) const;
-    MessageItem *messageItem(const MultiDataIndex &index) const { return messageItem(index, index.model()); }
-    int findContextIndex(const QString &context) const;
-    MultiContextItem *findContext(const QString &context) const;
+    MessageItem *messageItem(const MultiDataIndex &index) const
+    {
+        return messageItem(index, index.model());
+    }
+
+    int findGroupIndex(const QString &group, TranslationType type) const;
+    MultiGroupItem *findGroup(const QString &group, TranslationType type) const;
 
     static QString condenseFileNames(const QStringList &names);
     static QStringList prettifyFileNames(const QStringList &names);
@@ -425,8 +450,8 @@ signals:
     void languageChanged(int model);
     void statsChanged(const StatisticalData &newStats);
     void modifiedChanged(bool);
-    void multiContextDataChanged(const MultiDataIndex &index);
-    void contextDataChanged(const MultiDataIndex &index);
+    void multiGroupDataChanged(const MultiDataIndex &index);
+    void groupDataChanged(const MultiDataIndex &index);
     void messageDataChanged(const MultiDataIndex &index);
     void translationChanged(const MultiDataIndex &index); // Only the primary one
 
@@ -438,8 +463,7 @@ private:
     friend class MultiDataModelIterator;
     friend class MessageModel;
 
-    ContextItem *contextItem(const MultiDataIndex &index) const
-        { return multiContextItem(index.context())->contextItem(index.model()); }
+    GroupItem *groupItem(const MultiDataIndex &index) const;
 
     void updateCountsOnAdd(int model, bool writable);
     void updateCountsOnRemove(int model, bool writable);
@@ -454,10 +478,11 @@ private:
 
     bool m_modified;
 
-    QList<MultiContextItem> m_multiContextList;
+    QList<MultiGroupItem> m_multiLabelList;
+    QList<MultiGroupItem> m_multiContextList;
     QList<DataModel *> m_dataModels;
-
-    MessageModel *m_msgModel;
+    MessageModel *m_textBasedMsgModel;
+    MessageModel *m_idBasedMsgModel;
 
     QColor const *m_colors;
     QBitmap m_bitmap;
@@ -469,8 +494,7 @@ class MessageModel : public QAbstractItemModel
 
 public:
     enum { SortRole = Qt::UserRole };
-
-    MessageModel(QObject *parent, MultiDataModel *data);
+    MessageModel(TranslationType translationType, QObject *parent, MultiDataModel *data);
 
     // QAbstractItemModel
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
@@ -482,18 +506,22 @@ public:
     // Convenience
     MultiDataIndex dataIndex(const QModelIndex &index, int model) const;
     MultiDataIndex dataIndex(const QModelIndex &index) const
-        { return dataIndex(index, index.column() - 1 < m_data->modelCount() ? index.column() - 1 : -1); }
+    {
+        return dataIndex(index,
+                         index.column() - 1 < m_data->modelCount() ? index.column() - 1 : -1);
+    }
     QModelIndex modelIndex(const MultiDataIndex &index);
 
 private slots:
-    void multiContextItemChanged(const MultiDataIndex &index);
-    void contextItemChanged(const MultiDataIndex &index);
+    void multiGroupItemChanged(const MultiDataIndex &index);
+    void groupItemChanged(const MultiDataIndex &index);
     void messageItemChanged(const MultiDataIndex &index);
 
 private:
     friend class MultiDataModel;
 
     MultiDataModel *m_data; // not owned
+    const TranslationType m_translationType;
 };
 
 QT_END_NAMESPACE

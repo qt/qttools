@@ -8,8 +8,6 @@
 
 #include "messageeditor.h"
 #include "messageeditorwidgets.h"
-#include "simtexth.h"
-#include "phrasemodel.h"
 
 #include <QApplication>
 #include <QBoxLayout>

@@ -44,6 +44,7 @@ class SourceCodeView;
 class Statistics;
 class TranslateDialog;
 class TranslationSettingsDialog;
+class SortedGroupsModel;
 
 class MainWindow : public QMainWindow
 {
@@ -114,13 +115,16 @@ private slots:
     void updateCaption();
     void updateLatestModel(const QModelIndex &index);
     void selectedContextChanged(const QModelIndex &sortedIndex, const QModelIndex &oldIndex);
+    void selectedLabelChanged(const QModelIndex &sortedIndex, const QModelIndex &oldIndex);
     void selectedMessageChanged(const QModelIndex &sortedIndex, const QModelIndex &oldIndex);
     void setCurrentMessageFromGuess(int modelIndex, const Candidate &tm);
+    void contextAndLabelTabChanged();
 
     // To synchronize from the message editor to the model ...
     void updateTranslation(const QStringList &translations);
     void updateTranslatorComment(const QString &comment);
 
+    void updateVisibleColumns();
     void updateActiveModel(int);
     void refreshItemViews();
     void toggleFinished(const QModelIndex &index);
@@ -142,8 +146,10 @@ private slots:
 #endif
 
 private:
-    QModelIndex nextContext(const QModelIndex &index) const;
-    QModelIndex prevContext(const QModelIndex &index) const;
+
+    friend class SortedGroupsModel;
+    QModelIndex nextGroup(const QModelIndex &index) const;
+    QModelIndex prevGroup(const QModelIndex &index) const;
     QModelIndex firstMessage() const;
     QModelIndex nextMessage(const QModelIndex &currentIndex, bool checkUnfinished = false) const;
     QModelIndex prevMessage(const QModelIndex &currentIndex, bool checkUnfinished = false) const;
@@ -159,7 +165,6 @@ private:
     void setCurrentMessage(const QModelIndex &index);
     void setCurrentMessage(const QModelIndex &index, int model);
     QModelIndex setMessageViewRoot(const QModelIndex &index);
-    QModelIndex currentContextIndex() const;
     QModelIndex currentMessageIndex() const;
     PhraseBook *doOpenPhraseBook(const QString &name);
     bool isPhraseBookOpen(const QString &name);
@@ -183,17 +188,24 @@ private:
     void updateDanger(const MultiDataIndex &index, bool verbose);
     void updateIcons();
     bool searchItem(DataModel::FindLocation where, const QString &searchWhat);
-
     QProcess *m_assistantProcess;
     QTreeView *m_contextView;
+    QTreeView *m_labelView;
     QTreeView *m_messageView;
     MultiDataModel *m_dataModel;
-    MessageModel *m_messageModel;
+    MessageModel *m_idBasedMessageModel;
+    MessageModel *m_textBasedMessageModel;
+    MessageModel *m_activeMessageModel;
     QSortFilterProxyModel *m_sortedContextsModel;
-    QSortFilterProxyModel *m_sortedMessagesModel;
+    QSortFilterProxyModel *m_sortedLabelsModel;
+    QSortFilterProxyModel *m_activeSortedGroupsModel;
+    QSortFilterProxyModel *m_sortedIdBasedMessagesModel;
+    QSortFilterProxyModel *m_sortedTextBasedMessagesModel;
+    QSortFilterProxyModel *m_activeSortedMessagesModel;
     MessageEditor *m_messageEditor;
     PhraseView *m_phraseView;
     QStackedWidget *m_sourceAndFormView;
+    QTabWidget *m_contextAndLabelView;
     SourceCodeView *m_sourceCodeView;
     UiFormPreviewView *m_uiFormPreviewView;
     QmlFormPreviewView *m_qmlFormPreviewView;
@@ -226,11 +238,11 @@ private:
     TranslationSettingsDialog *m_translationSettingsDialog;
 
     bool m_settingCurrentMessage;
+    std::optional<TranslationType> m_activeTranslationType;
     int m_fileActiveModel;
     int m_editActiveModel;
     MultiDataIndex m_currentIndex;
-
-    QDockWidget *m_contextDock;
+    QDockWidget *m_contextAndLabelDock;
     QDockWidget *m_messagesDock;
     QDockWidget *m_phrasesDock;
     QDockWidget *m_sourceAndFormDock;

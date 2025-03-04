@@ -254,14 +254,14 @@ static void retranslateTarget(const TranslatableEntry &target, const QString &te
     }
 }
 
-static void retranslateTargets(
-    const QList<TranslatableEntry> &targets, const QUiTranslatableStringValue &tsv,
-    const DataModel *dataModel, const QString &className)
+static void retranslateTargets(const QList<TranslatableEntry> &targets,
+                               const QUiTranslatableStringValue &tsv, const DataModel *dataModel,
+                               const QString &className, const QString &labelName)
 {
     QString sourceText = QString::fromUtf8(tsv.value());
     QString text;
-    if (MessageItem *msg = dataModel->findMessage(
-            className, sourceText, QString::fromUtf8(tsv.qualifier())))
+    if (MessageItem *msg = dataModel->findMessage(className, labelName, sourceText,
+                                                  QString::fromUtf8(tsv.qualifier())))
         text = msg->translation();
     if (text.isEmpty() && !tsv.value().isEmpty())
         text = u'#' + sourceText;
@@ -533,6 +533,7 @@ void UiFormPreviewView::setSourceContext(int model, MessageItem *messageItem)
         m_mdiArea->cascadeSubWindows();
         m_lastFormName = fileName;
         m_lastClassName = messageItem->context();
+        m_lastLabelName = messageItem->label();
         m_lastModel = -1;
     } else {
         highlightTargets(m_highlights, false);
@@ -543,10 +544,12 @@ void UiFormPreviewView::setSourceContext(int model, MessageItem *messageItem)
     m_highlights = m_targets.value(tsv);
     if (m_lastModel != model) {
         for (auto it = m_targets.cbegin(), end = m_targets.cend(); it != end; ++it)
-            retranslateTargets(*it, it.key(), m_dataModel->model(model), m_lastClassName);
+            retranslateTargets(*it, it.key(), m_dataModel->model(model), m_lastClassName,
+                               m_lastLabelName);
         m_lastModel = model;
     } else {
-        retranslateTargets(m_highlights, tsv, m_dataModel->model(model), m_lastClassName);
+        retranslateTargets(m_highlights, tsv, m_dataModel->model(model), m_lastClassName,
+                           m_lastLabelName);
     }
     highlightTargets(m_highlights, true);
 }

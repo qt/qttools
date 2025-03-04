@@ -81,6 +81,7 @@ private:
 
     QString m_lastFormName;
     QString m_lastClassName;
+    QString m_lastLabelName;
     int m_lastModel;
 };
 

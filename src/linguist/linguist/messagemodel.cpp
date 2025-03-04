@@ -148,26 +148,18 @@ void MessageItem::setTranslations(const QStringList &translations)
 
 /******************************************************************************
  *
- * ContextItem
+ * GroupItem
  *
  *****************************************************************************/
 
-ContextItem::ContextItem(const QString &context)
-  : m_context(context),
-    m_finishedCount(0),
-    m_finishedDangerCount(0),
-    m_unfinishedDangerCount(0),
-    m_nonobsoleteCount(0)
-{}
-
-void ContextItem::appendToComment(const QString &str)
+void GroupItem::appendToComment(const QString &str)
 {
     if (!m_comment.isEmpty())
         m_comment += "\n\n"_L1;
     m_comment += str;
 }
 
-MessageItem *ContextItem::messageItem(int i) const
+MessageItem *GroupItem::messageItem(int i) const
 {
     if (i >= 0 && i < msgItemList.size())
         return const_cast<MessageItem *>(&msgItemList[i]);
@@ -175,12 +167,22 @@ MessageItem *ContextItem::messageItem(int i) const
     return 0;
 }
 
-MessageItem *ContextItem::findMessage(const QString &sourcetext, const QString &comment) const
+MessageItem *GroupItem::findMessage(const QString &sourcetext, const QString &comment) const
 {
     for (int i = 0; i < messageCount(); ++i) {
         MessageItem *mi = messageItem(i);
         if (mi->text() == sourcetext && mi->comment() == comment)
             return mi;
+    }
+    return 0;
+}
+
+MessageItem *GroupItem::findMessageById(const QString &msgid) const
+{
+    for (int i = 0, cnt = messageCount(); i < cnt; ++i) {
+        MessageItem *m = messageItem(i);
+        if (m->id() == msgid)
+            return m;
     }
     return 0;
 }
@@ -210,57 +212,75 @@ QStringList DataModel::normalizedTranslations(const MessageItem &m) const
             Translator::normalizedTranslations(m.message(), m_numerusForms.size());
     QStringList ncrTranslations;
     ncrTranslations.reserve(translations.size());
-    for (const QString &translate : translations)
+    for (const QString &translate : std::as_const(translations))
         ncrTranslations.append(adjustNcrVisibility(translate, m.ncrMode()));
     return ncrTranslations;
 }
 
-ContextItem *DataModel::contextItem(int context) const
+GroupItem *DataModel::groupItem(int groupId, TranslationType type) const
 {
-    if (context >= 0 && context < m_contextList.size())
-        return const_cast<ContextItem *>(&m_contextList[context]);
-    Q_ASSERT(context >= 0 && context < m_contextList.size());
+    const auto &list = type == IDBASED ? m_labelList : m_contextList;
+    if (groupId >= 0 && groupId < list.size())
+        return const_cast<GroupItem *>(&list[groupId]);
     return 0;
+}
+
+GroupItem *DataModel::groupItem(DataIndex index) const
+{
+    return groupItem(index.group(), index.translationType());
 }
 
 MessageItem *DataModel::messageItem(const DataIndex &index) const
 {
-    if (ContextItem *c = contextItem(index.context()))
-        return c->messageItem(index.message());
+    if (GroupItem *g = groupItem(index))
+        return g->messageItem(index.message());
     return 0;
 }
 
-ContextItem *DataModel::findContext(const QString &context) const
+GroupItem *DataModel::findGroup(const QString &groupName, TranslationType type) const
 {
-    for (int c = 0; c < m_contextList.size(); ++c) {
-        ContextItem *ctx = contextItem(c);
-        if (ctx->context() == context)
-            return ctx;
+    const auto &list = type == IDBASED ? m_labelList : m_contextList;
+    for (int g = 0; g < list.size(); ++g) {
+        GroupItem *gi = groupItem(g, type);
+        if (gi->group() == groupName)
+            return gi;
     }
     return 0;
 }
 
-MessageItem *DataModel::findMessage(const QString &context,
-    const QString &sourcetext, const QString &comment) const
+MessageItem *DataModel::findMessage(const QString &context, const QString &label,
+                                    const QString &sourcetext, const QString &comment) const
 {
-    if (ContextItem *ctx = findContext(context))
-        return ctx->findMessage(sourcetext, comment);
+    if (context.isEmpty()) {
+        if (GroupItem *gi = findGroup(label, IDBASED))
+            return gi->findMessage(sourcetext, comment);
+    } else {
+        if (GroupItem *gi = findGroup(context, TEXTBASED))
+            return gi->findMessage(sourcetext, comment);
+    }
     return 0;
 }
 
 static int calcMergeScore(const DataModel *one, const DataModel *two)
 {
     int inBoth = 0;
-    for (int i = 0; i < two->contextCount(); ++i) {
-        ContextItem *oc = two->contextItem(i);
-        if (ContextItem *c = one->findContext(oc->context())) {
-            for (int j = 0; j < oc->messageCount(); ++j) {
-                MessageItem *m = oc->messageItem(j);
-                if (c->findMessage(m->text(), m->comment()))
-                    ++inBoth;
+
+    auto countSameMessages = [two, one, &inBoth](int count, TranslationType type) {
+        for (int i = 0; i < count; ++i) {
+            GroupItem *gi = two->groupItem(i, type);
+            if (GroupItem *g = one->findGroup(gi->group(), type)) {
+                for (int j = 0; j < gi->messageCount(); ++j) {
+                    MessageItem *m = gi->messageItem(j);
+                    if (g->findMessage(m->text(), m->comment()))
+                        ++inBoth;
+                }
             }
         }
-    }
+    };
+
+    countSameMessages(two->contextCount(), TEXTBASED);
+    countSameMessages(two->labelCount(), IDBASED);
+
     return inBoth * 100 / two->messageCount();
 }
 
@@ -319,35 +339,45 @@ bool DataModel::load(const QString &fileName, bool *langGuessed, QWidget *parent
     m_relativeLocations = (tor.locationsType() == Translator::RelativeLocations);
     m_extra = tor.extras();
     m_contextList.clear();
+    m_labelList.clear();
     m_numMessages = 0;
-
-    QHash<QString, int> contexts;
 
     m_srcWords = 0;
     m_srcChars = 0;
     m_srcCharsSpc = 0;
 
-    for (const TranslatorMessage &msg : tor.messages()) {
-        if (!contexts.contains(msg.context())) {
-            contexts.insert(msg.context(), m_contextList.size());
-            m_contextList.append(ContextItem(msg.context()));
+    auto loadMessage = [this](const TranslatorMessage &msg, const QString &group,
+                              QList<GroupItem> &list, QHash<QString, int> &groups,
+                              TranslationType type) {
+        if (!groups.contains(group)) {
+            groups.insert(group, list.size());
+            list.append(GroupItem(type, group));
         }
-
-        ContextItem *c = contextItem(contexts.value(msg.context()));
+        GroupItem *gi = groupItem(groups.value(group), type);
         if (msg.sourceText() == QLatin1String(ContextComment)) {
-            c->appendToComment(msg.comment());
+            gi->appendToComment(msg.comment());
         } else {
             MessageItem tmp(msg);
             if (msg.type() == TranslatorMessage::Finished)
-                c->incrementFinishedCount();
-            if (msg.type() == TranslatorMessage::Finished || msg.type() == TranslatorMessage::Unfinished) {
+                gi->incrementFinishedCount();
+            if (msg.type() == TranslatorMessage::Finished
+                || msg.type() == TranslatorMessage::Unfinished) {
                 doCharCounting(tmp.text(), m_srcWords, m_srcChars, m_srcCharsSpc);
                 doCharCounting(tmp.pluralText(), m_srcWords, m_srcChars, m_srcCharsSpc);
-                c->incrementNonobsoleteCount();
+                gi->incrementNonobsoleteCount();
             }
-            c->appendMessage(tmp);
+            gi->appendMessage(tmp);
             ++m_numMessages;
         }
+    };
+
+    QHash<QString, int> labels;
+    QHash<QString, int> contexts;
+    for (const TranslatorMessage &msg : tor.messages()) {
+        if (const QString ctx = msg.context(); !ctx.isEmpty())
+            loadMessage(msg, ctx, m_contextList, contexts, TEXTBASED);
+        else
+            loadMessage(msg, msg.label(), m_labelList, labels, IDBASED);
     }
 
     // Try to detect the correct language in the following order
@@ -403,7 +433,9 @@ bool DataModel::load(const QString &fileName, bool *langGuessed, QWidget *parent
 bool DataModel::save(const QString &fileName, QWidget *parent)
 {
     Translator tor;
-    for (DataModelIterator it(this); it.isValid(); ++it)
+    for (DataModelIterator it(IDBASED, this); it.isValid(); ++it)
+        tor.append(it.current()->message());
+    for (DataModelIterator it(TEXTBASED, this); it.isValid(); ++it)
         tor.append(it.current()->message());
 
     tor.setLanguageCode(Translator::makeLanguageCode(m_language, m_territory));
@@ -441,7 +473,9 @@ bool DataModel::release(const QString &fileName, bool verbose, bool ignoreUnfini
     Translator tor;
     QLocale locale(m_language, m_territory);
     tor.setLanguageCode(locale.name());
-    for (DataModelIterator it(this); it.isValid(); ++it)
+    for (DataModelIterator it(IDBASED, this); it.isValid(); ++it)
+        tor.append(it.current()->message());
+    for (DataModelIterator it(TEXTBASED, this); it.isValid(); ++it)
         tor.append(it.current()->message());
     ConversionData cd;
     cd.m_verbose = verbose;
@@ -522,9 +556,10 @@ void DataModel::setSourceLanguageAndTerritory(QLocale::Language lang, QLocale::T
 
 void DataModel::updateStatistics()
 {
+
     StatisticalData stats {};
-    for (DataModelIterator it(this); it.isValid(); ++it) {
-        const MessageItem *mi = it.current();
+
+    auto updateMessageStatistics = [&stats, this](const MessageItem *mi) {
         if (mi->isObsolete()) {
             stats.obsoleteMsg++;
         } else if (mi->isFinished()) {
@@ -548,7 +583,13 @@ void DataModel::updateStatistics()
             else
                 stats.unfinishedMsgNoDanger++;
         }
-    }
+    };
+
+    for (DataModelIterator it(IDBASED, this); it.isValid(); ++it)
+        updateMessageStatistics(it.current());
+    for (DataModelIterator it(TEXTBASED, this); it.isValid(); ++it)
+        updateMessageStatistics(it.current());
+
     stats.wordsSource = m_srcWords;
     stats.charsSource = m_srcChars;
     stats.charsSpacesSource = m_srcCharsSpc;
@@ -584,21 +625,25 @@ QString DataModel::prettifyFileName(const QString &fn)
  *
  *****************************************************************************/
 
-DataModelIterator::DataModelIterator(DataModel *model, int context, int message)
-  : DataIndex(context, message), m_model(model)
+DataModelIterator::DataModelIterator(TranslationType type, DataModel *model, int group, int message)
+    : DataIndex(type, group, message), m_model(model)
 {
 }
 
 bool DataModelIterator::isValid() const
 {
-    return m_context < m_model->m_contextList.size();
+    const qsizetype size =
+            isIdBased() ? m_model->m_labelList.size() : m_model->m_contextList.size();
+    return m_group < size;
 }
 
 void DataModelIterator::operator++()
 {
     ++m_message;
-    if (m_message >= m_model->m_contextList.at(m_context).messageCount()) {
-        ++m_context;
+    const qsizetype size = isIdBased() ? m_model->m_labelList.at(m_group).messageCount()
+                                       : m_model->m_contextList.at(m_group).messageCount();
+    if (m_message >= size) {
+        ++m_group;
         m_message = 0;
     }
 }
@@ -608,42 +653,21 @@ MessageItem *DataModelIterator::current() const
     return m_model->messageItem(*this);
 }
 
-
 /******************************************************************************
  *
- * MultiMessageItem
+ * MultiGroupItem
  *
  *****************************************************************************/
 
-MultiMessageItem::MultiMessageItem(const MessageItem *m)
-    : m_id(m->id()),
-      m_text(m->text()),
-      m_pluralText(m->pluralText()),
-      m_comment(m->comment()),
-      m_nonnullCount(0),
-      m_nonobsoleteCount(0),
-      m_editableCount(0),
-      m_unfinishedCount(0)
-{
-}
-
-/******************************************************************************
- *
- * MultiContextItem
- *
- *****************************************************************************/
-
-MultiContextItem::MultiContextItem(int oldCount, ContextItem *ctx, bool writable)
-    : m_context(ctx->context()),
-      m_comment(ctx->comment()),
-      m_finishedCount(0),
-      m_editableCount(0),
-      m_nonobsoleteCount(0)
+MultiGroupItem::MultiGroupItem(int oldCount, GroupItem *groupItem, bool writable)
+    : m_group(groupItem->group()),
+      m_comment(groupItem->comment()),
+      m_translationType(groupItem->translationType())
 {
     QList<MessageItem *> mList;
     QList<MessageItem *> eList;
-    for (int j = 0; j < ctx->messageCount(); ++j) {
-        MessageItem *m = ctx->messageItem(j);
+    for (int j = 0; j < groupItem->messageCount(); ++j) {
+        MessageItem *m = groupItem->messageItem(j);
         mList.append(m);
         eList.append(0);
         m_multiMessageList.append(MultiMessageItem(m));
@@ -651,52 +675,52 @@ MultiContextItem::MultiContextItem(int oldCount, ContextItem *ctx, bool writable
     for (int i = 0; i < oldCount; ++i) {
         m_messageLists.append(eList);
         m_writableMessageLists.append(0);
-        m_contextList.append(0);
+        m_groupList.append(0);
     }
     m_messageLists.append(mList);
     m_writableMessageLists.append(writable ? &m_messageLists.last() : 0);
-    m_contextList.append(ctx);
+    m_groupList.append(groupItem);
 }
 
-void MultiContextItem::appendEmptyModel()
+void MultiGroupItem::appendEmptyModel()
 {
     QList<MessageItem *> eList;
     for (int j = 0; j < messageCount(); ++j)
         eList.append(0);
     m_messageLists.append(eList);
     m_writableMessageLists.append(0);
-    m_contextList.append(0);
+    m_groupList.append(0);
 }
 
-void MultiContextItem::assignLastModel(ContextItem *ctx, bool writable)
+void MultiGroupItem::assignLastModel(GroupItem *g, bool writable)
 {
     if (writable)
         m_writableMessageLists.last() = &m_messageLists.last();
-    m_contextList.last() = ctx;
+    m_groupList.last() = g;
 }
 
 // XXX this is not needed, yet
-void MultiContextItem::moveModel(int oldPos, int newPos)
+void MultiGroupItem::moveModel(int oldPos, int newPos)
 {
-    m_contextList.insert(newPos, m_contextList[oldPos]);
+    m_groupList.insert(newPos, m_groupList[oldPos]);
     m_messageLists.insert(newPos, m_messageLists[oldPos]);
     m_writableMessageLists.insert(newPos, m_writableMessageLists[oldPos]);
     removeModel(oldPos < newPos ? oldPos : oldPos + 1);
 }
 
-void MultiContextItem::removeModel(int pos)
+void MultiGroupItem::removeModel(int pos)
 {
-    m_contextList.removeAt(pos);
+    m_groupList.removeAt(pos);
     m_messageLists.removeAt(pos);
     m_writableMessageLists.removeAt(pos);
 }
 
-void MultiContextItem::putMessageItem(int pos, MessageItem *m)
+void MultiGroupItem::putMessageItem(int pos, MessageItem *m)
 {
     m_messageLists.last()[pos] = m;
 }
 
-void MultiContextItem::appendMessageItems(const QList<MessageItem *> &m)
+void MultiGroupItem::appendMessageItems(const QList<MessageItem *> &m)
 {
     QList<MessageItem *> nullItems = m; // Basically, just a reservation
     for (int i = 0; i < nullItems.size(); ++i)
@@ -708,14 +732,14 @@ void MultiContextItem::appendMessageItems(const QList<MessageItem *> &m)
         m_multiMessageList.append(MultiMessageItem(mi));
 }
 
-void MultiContextItem::removeMultiMessageItem(int pos)
+void MultiGroupItem::removeMultiMessageItem(int pos)
 {
     for (int i = 0; i < m_messageLists.size(); ++i)
         m_messageLists[i].removeAt(pos);
     m_multiMessageList.removeAt(pos);
 }
 
-int MultiContextItem::firstNonobsoleteMessageIndex(int msgIdx) const
+int MultiGroupItem::firstNonobsoleteMessageIndex(int msgIdx) const
 {
     for (int i = 0; i < m_messageLists.size(); ++i)
         if (m_messageLists[i][msgIdx] && !m_messageLists[i][msgIdx]->isObsolete())
@@ -723,7 +747,7 @@ int MultiContextItem::firstNonobsoleteMessageIndex(int msgIdx) const
     return -1;
 }
 
-int MultiContextItem::findMessage(const QString &sourcetext, const QString &comment) const
+int MultiGroupItem::findMessage(const QString &sourcetext, const QString &comment) const
 {
     for (int i = 0, cnt = messageCount(); i < cnt; ++i) {
         MultiMessageItem *m = multiMessageItem(i);
@@ -733,7 +757,7 @@ int MultiContextItem::findMessage(const QString &sourcetext, const QString &comm
     return -1;
 }
 
-int MultiContextItem::findMessageById(const QString &id) const
+int MultiGroupItem::findMessageById(const QString &id) const
 {
     for (int i = 0, cnt = messageCount(); i < cnt; ++i) {
         MultiMessageItem *m = multiMessageItem(i);
@@ -811,29 +835,50 @@ bool MultiDataModel::isWellMergeable(const DataModel *dm) const
         return true;
 
     int inBothNew = 0;
-    for (int i = 0; i < dm->contextCount(); ++i) {
-        ContextItem *c = dm->contextItem(i);
-        if (MultiContextItem *mc = findContext(c->context())) {
-            for (int j = 0; j < c->messageCount(); ++j) {
-                MessageItem *m = c->messageItem(j);
-                if (mc->findMessage(m->text(), m->comment()) >= 0)
-                    ++inBothNew;
-            }
-        }
-    }
-    int newRatio = inBothNew * 100 / dm->messageCount();
 
-    int inBothOld = 0;
-    for (int k = 0; k < contextCount(); ++k) {
-        MultiContextItem *mc = multiContextItem(k);
-        if (ContextItem *c = dm->findContext(mc->context())) {
-            for (int j = 0; j < mc->messageCount(); ++j) {
-                MultiMessageItem *m = mc->multiMessageItem(j);
-                if (c->findMessage(m->text(), m->comment()))
-                    ++inBothOld;
+    auto countInBothNew = [dm, &inBothNew, this](int count, TranslationType type) {
+        for (int i = 0; i < count; ++i) {
+            GroupItem *g = dm->groupItem(i, type);
+            if (MultiGroupItem *mgi = findGroup(g->group(), type)) {
+                for (int j = 0; j < g->messageCount(); ++j) {
+                    MessageItem *m = g->messageItem(j);
+                    // During merging, when calculating the well-mergeability ratio,
+                    // we reward ID-based messages with the same IDs for having the same label.
+                    // This is not a strict requirement, since linguists can still represent
+                    // merging of the messages with the same ID and different labels reasonably.
+                    // However, if too many messages share the same ID but have different labels,
+                    // merging them provides little value and may reduce user convenience.
+                    if ((type == TEXTBASED && mgi->findMessage(m->text(), m->comment()) >= 0)
+                        || (type == IDBASED && mgi->findMessageById(m->id()) >= 0))
+                        ++inBothNew;
+                }
             }
         }
-    }
+    };
+
+    countInBothNew(dm->contextCount(), TEXTBASED);
+    countInBothNew(dm->labelCount(), IDBASED);
+
+    int newRatio = inBothNew * 100 / dm->messageCount();
+    int inBothOld = 0;
+
+    auto countInBothOld = [this, dm, &inBothOld](int count, TranslationType type) {
+        for (int k = 0; k < count; ++k) {
+            MultiGroupItem *mgi = multiGroupItem(k, type);
+            if (GroupItem *g = dm->findGroup(mgi->group(), type)) {
+                for (int j = 0; j < mgi->messageCount(); ++j) {
+                    MultiMessageItem *m = mgi->multiMessageItem(j);
+                    if ((type == TEXTBASED && g->findMessage(m->text(), m->comment()))
+                        || (type == IDBASED && g->findMessageById(m->id())))
+                        ++inBothOld;
+                }
+            }
+        }
+    };
+
+    countInBothOld(contextCount(), TEXTBASED);
+    countInBothOld(labelCount(), IDBASED);
+
     int oldRatio = inBothOld * 100 / messageCount();
 
     return newRatio + oldRatio > 90;
@@ -842,58 +887,64 @@ bool MultiDataModel::isWellMergeable(const DataModel *dm) const
 void MultiDataModel::append(DataModel *dm, bool readWrite)
 {
     int insCol = modelCount() + 1;
-    m_msgModel->beginInsertColumns(QModelIndex(), insCol, insCol);
     m_dataModels.append(dm);
-    for (int j = 0; j < contextCount(); ++j) {
-        m_msgModel->beginInsertColumns(m_msgModel->createIndex(j, 0), insCol, insCol);
-        m_multiContextList[j].appendEmptyModel();
-        m_msgModel->endInsertColumns();
-    }
-    m_msgModel->endInsertColumns();
-    int appendedContexts = 0;
-    for (int i = 0; i < dm->contextCount(); ++i) {
-        ContextItem *c = dm->contextItem(i);
-        int mcx = findContextIndex(c->context());
-        if (mcx >= 0) {
-            MultiContextItem *mc = multiContextItem(mcx);
-            mc->assignLastModel(c, readWrite);
-            QList<MessageItem *> appendItems;
-            for (int j = 0; j < c->messageCount(); ++j) {
-                MessageItem *m = c->messageItem(j);
 
-                int msgIdx = -1;
-                if (!m->id().isEmpty()) // id based translation
-                    msgIdx = mc->findMessageById(m->id());
-
-                if (msgIdx == -1)
-                    msgIdx = mc->findMessage(m->text(), m->comment());
-
-                if (msgIdx >= 0)
-                    mc->putMessageItem(msgIdx, m);
-                else
-                    appendItems << m;
-            }
-            if (!appendItems.isEmpty()) {
-                int msgCnt = mc->messageCount();
-                m_msgModel->beginInsertRows(m_msgModel->createIndex(mcx, 0),
-                                            msgCnt, msgCnt + appendItems.size() - 1);
-                mc->appendMessageItems(appendItems);
-                m_msgModel->endInsertRows();
-                m_numMessages += appendItems.size();
-            }
-        } else {
-            m_multiContextList << MultiContextItem(modelCount() - 1, c, readWrite);
-            m_numMessages += c->messageCount();
-            ++appendedContexts;
+    auto appendGroups = [this, dm, readWrite, insCol](TranslationType type, MessageModel *msgModel,
+                                                      QList<MultiGroupItem> &multiGroupList) {
+        qsizetype count = type == IDBASED ? labelCount() : contextCount();
+        msgModel->beginInsertColumns(QModelIndex(), insCol, insCol);
+        for (int j = 0; j < count; ++j) {
+            msgModel->beginInsertColumns(msgModel->createIndex(j, 0), insCol, insCol);
+            multiGroupList[j].appendEmptyModel();
+            msgModel->endInsertColumns();
         }
-    }
-    if (appendedContexts) {
-        // Do that en block to avoid itemview inefficiency. It doesn't hurt that we
-        // announce the availability of the data "long" after it was actually added.
-        m_msgModel->beginInsertRows(QModelIndex(),
-                                    contextCount() - appendedContexts, contextCount() - 1);
-        m_msgModel->endInsertRows();
-    }
+        msgModel->endInsertColumns();
+        count = type == IDBASED ? dm->labelCount() : dm->contextCount();
+        int appendedGroups = 0;
+        for (int i = 0; i < count; ++i) {
+            GroupItem *g = dm->groupItem(i, type);
+            int gidx = findGroupIndex(g->group(), type);
+            if (gidx >= 0) {
+                MultiGroupItem *mgi = multiGroupItem(gidx, type);
+                mgi->assignLastModel(g, readWrite);
+                QList<MessageItem *> appendItems;
+                for (int j = 0; j < g->messageCount(); ++j) {
+                    MessageItem *m = g->messageItem(j);
+
+                    int msgIdx = type == IDBASED ? mgi->findMessageById(m->id())
+                                                 : mgi->findMessage(m->text(), m->comment());
+
+                    if (msgIdx >= 0)
+                        mgi->putMessageItem(msgIdx, m);
+                    else
+                        appendItems << m;
+                }
+                if (!appendItems.isEmpty()) {
+                    int msgCnt = mgi->messageCount();
+                    msgModel->beginInsertRows(msgModel->createIndex(gidx, 0), msgCnt,
+                                              msgCnt + appendItems.size() - 1);
+                    mgi->appendMessageItems(appendItems);
+                    msgModel->endInsertRows();
+                    m_numMessages += appendItems.size();
+                }
+            } else {
+                multiGroupList << MultiGroupItem(modelCount() - 1, g, readWrite);
+                m_numMessages += g->messageCount();
+                ++appendedGroups;
+            }
+        }
+        if (appendedGroups) {
+            // Do that en block to avoid itemview inefficiency. It doesn't hurt that we
+            // announce the availability of the data "long" after it was actually added.
+            const qsizetype groupCount = type == IDBASED ? labelCount() : contextCount();
+            msgModel->beginInsertRows(QModelIndex(), groupCount - appendedGroups, groupCount - 1);
+            msgModel->endInsertRows();
+        }
+    };
+
+    appendGroups(TEXTBASED, m_textBasedMsgModel, m_multiContextList);
+    appendGroups(IDBASED, m_idBasedMsgModel, m_multiLabelList);
+
     dm->setWritable(readWrite);
     updateCountsOnAdd(modelCount() - 1, readWrite);
     connect(dm, &DataModel::modifiedChanged,
@@ -910,47 +961,61 @@ void MultiDataModel::close(int model)
     if (m_dataModels.size() == 1) {
         closeAll();
     } else {
-        updateCountsOnRemove(model, isModelWritable(model));
         int delCol = model + 1;
-        m_msgModel->beginRemoveColumns(QModelIndex(), delCol, delCol);
-        for (int i = m_multiContextList.size(); --i >= 0;) {
-            m_msgModel->beginRemoveColumns(m_msgModel->createIndex(i, 0), delCol, delCol);
-            m_multiContextList[i].removeModel(model);
-            m_msgModel->endRemoveColumns();
-        }
-        delete m_dataModels.takeAt(model);
-        m_msgModel->endRemoveColumns();
-        emit modelDeleted(model);
-        for (int i = m_multiContextList.size(); --i >= 0;) {
-            MultiContextItem &mc = m_multiContextList[i];
-            QModelIndex contextIdx = m_msgModel->createIndex(i, 0);
-            for (int j = mc.messageCount(); --j >= 0;)
-                if (mc.multiMessageItem(j)->isEmpty()) {
-                    m_msgModel->beginRemoveRows(contextIdx, j, j);
-                    mc.removeMultiMessageItem(j);
-                    m_msgModel->endRemoveRows();
-                    --m_numMessages;
-                }
-            if (!mc.messageCount()) {
-                m_msgModel->beginRemoveRows(QModelIndex(), i, i);
-                m_multiContextList.removeAt(i);
-                m_msgModel->endRemoveRows();
+        auto removeModel = [delCol, model](auto *msgModel, auto &list) {
+            msgModel->beginRemoveColumns(QModelIndex(), delCol, delCol);
+            for (int i = list.size(); --i >= 0;) {
+                msgModel->beginRemoveColumns(msgModel->createIndex(i, 0), delCol, delCol);
+                list[i].removeModel(model);
+                msgModel->endRemoveColumns();
             }
-        }
+            msgModel->endRemoveColumns();
+        };
+
+        updateCountsOnRemove(model, isModelWritable(model));
+        removeModel(m_idBasedMsgModel, m_multiLabelList);
+        removeModel(m_textBasedMsgModel, m_multiContextList);
+        delete m_dataModels.takeAt(model);
+        emit modelDeleted(model);
+
+        auto removeMessages = [this](auto *msgModel, auto &list) {
+            for (int i = list.size(); --i >= 0;) {
+                auto &mi = list[i];
+                QModelIndex idx = msgModel->createIndex(i, 0);
+                for (int j = mi.messageCount(); --j >= 0;)
+                    if (mi.multiMessageItem(j)->isEmpty()) {
+                        msgModel->beginRemoveRows(idx, j, j);
+                        mi.removeMultiMessageItem(j);
+                        msgModel->endRemoveRows();
+                        --m_numMessages;
+                    }
+                if (!mi.messageCount()) {
+                    msgModel->beginRemoveRows(QModelIndex(), i, i);
+                    list.removeAt(i);
+                    msgModel->endRemoveRows();
+                }
+            }
+        };
+
+        removeMessages(m_idBasedMsgModel, m_multiLabelList);
+        removeMessages(m_textBasedMsgModel, m_multiContextList);
         onModifiedChanged();
     }
 }
 
 void MultiDataModel::closeAll()
 {
-    m_msgModel->beginResetModel();
+    m_idBasedMsgModel->beginResetModel();
+    m_textBasedMsgModel->beginResetModel();
     m_numFinished = 0;
     m_numEditable = 0;
     m_numMessages = 0;
     qDeleteAll(m_dataModels);
     m_dataModels.clear();
     m_multiContextList.clear();
-    m_msgModel->endResetModel();
+    m_multiLabelList.clear();
+    m_textBasedMsgModel->endResetModel();
+    m_idBasedMsgModel->endResetModel();
     emit allModelsDeleted();
     onModifiedChanged();
 }
@@ -963,6 +1028,8 @@ void MultiDataModel::moveModel(int oldPos, int newPos)
     m_dataModels.removeAt(delPos);
     for (int i = 0; i < m_multiContextList.size(); ++i)
         m_multiContextList[i].moveModel(oldPos, newPos);
+    for (int i = 0; i < m_multiLabelList.size(); ++i)
+        m_multiLabelList[i].moveModel(oldPos, newPos);
 }
 
 QStringList MultiDataModel::prettifyFileNames(const QStringList &names)
@@ -1044,6 +1111,11 @@ QString MultiDataModel::condensedSrcFileNames(bool pretty) const
     return condenseFileNames(srcFileNames(pretty));
 }
 
+MultiMessageItem *MultiDataModel::multiMessageItem(const MultiDataIndex &index) const
+{
+    return multiGroupItem(index)->multiMessageItem(index.message());
+}
+
 bool MultiDataModel::isModified() const
 {
     for (const DataModel *mdl : m_dataModels)
@@ -1069,6 +1141,11 @@ void MultiDataModel::onLanguageChanged()
     emit languageChanged(i);
 }
 
+GroupItem *MultiDataModel::groupItem(const MultiDataIndex &index) const
+{
+    return multiGroupItem(index)->groupItem(index.model());
+}
+
 int MultiDataModel::isFileLoaded(const QString &name) const
 {
     for (int i = 0; i < m_dataModels.size(); ++i)
@@ -1077,36 +1154,44 @@ int MultiDataModel::isFileLoaded(const QString &name) const
     return -1;
 }
 
-int MultiDataModel::findContextIndex(const QString &context) const
+int MultiDataModel::findGroupIndex(const QString &group, TranslationType type) const
 {
-    for (int i = 0; i < m_multiContextList.size(); ++i) {
-        const MultiContextItem &mc = m_multiContextList[i];
-        if (mc.context() == context)
+    const auto &list = type == IDBASED ? m_multiLabelList : m_multiContextList;
+    for (int i = 0; i < list.size(); ++i) {
+        const MultiGroupItem &mg = list[i];
+        if (mg.group() == group)
             return i;
     }
     return -1;
 }
 
-MultiContextItem *MultiDataModel::findContext(const QString &context) const
+MultiGroupItem *MultiDataModel::findGroup(const QString &group, TranslationType type) const
 {
-    for (int i = 0; i < m_multiContextList.size(); ++i) {
-        const MultiContextItem &mc = m_multiContextList[i];
-        if (mc.context() == context)
-            return const_cast<MultiContextItem *>(&mc);
+    const auto &list = type == IDBASED ? m_multiLabelList : m_multiContextList;
+    for (int i = 0; i < list.size(); ++i) {
+        const MultiGroupItem &mgi = list[i];
+        if (mgi.group() == group)
+            return const_cast<MultiGroupItem *>(&mgi);
     }
     return 0;
 }
 
+MultiGroupItem *MultiDataModel::multiGroupItem(const MultiDataIndex &index) const
+{
+    const auto &list = index.isIdBased() ? m_multiLabelList : m_multiContextList;
+    return const_cast<MultiGroupItem *>(&list[index.group()]);
+}
+
 MessageItem *MultiDataModel::messageItem(const MultiDataIndex &index, int model) const
 {
-    if (index.context() < contextCount() && index.context() >= 0 && model >= 0
-        && model < modelCount()) {
-        MultiContextItem *mc = multiContextItem(index.context());
-        if (index.message() < mc->messageCount())
-            return mc->messageItem(model, index.message());
+    qsizetype groupCount = index.isIdBased() ? labelCount() : contextCount();
+    if (index.group() < groupCount && index.group() >= 0 && model >= 0 && model < modelCount()) {
+        MultiGroupItem *mgi = multiGroupItem(index);
+        if (index.message() < mgi->messageCount())
+            return mgi->messageItem(model, index.message());
     }
     Q_ASSERT(model >= 0 && model < modelCount());
-    Q_ASSERT(index.context() < contextCount());
+    Q_ASSERT(index.group() < groupCount);
     return 0;
 }
 
@@ -1122,9 +1207,9 @@ void MultiDataModel::setTranslation(const MultiDataIndex &index, const QString &
 
 void MultiDataModel::setFinished(const MultiDataIndex &index, bool finished)
 {
-    MultiContextItem *mc = multiContextItem(index.context());
-    MultiMessageItem *mm = mc->multiMessageItem(index.message());
-    ContextItem *c = contextItem(index);
+    MultiGroupItem *mgi = multiGroupItem(index);
+    MultiMessageItem *mm = mgi->multiMessageItem(index.message());
+    GroupItem *gi = groupItem(index);
     MessageItem *m = messageItem(index);
     TranslatorMessage::Type type = m->type();
     if (type == TranslatorMessage::Unfinished && finished) {
@@ -1132,18 +1217,17 @@ void MultiDataModel::setFinished(const MultiDataIndex &index, bool finished)
         mm->decrementUnfinishedCount();
         if (!mm->countUnfinished()) {
             incrementFinishedCount();
-            mc->incrementFinishedCount();
-            emit multiContextDataChanged(index);
+            mgi->incrementFinishedCount();
+            emit multiGroupDataChanged(index);
         }
-        c->incrementFinishedCount();
+        gi->incrementFinishedCount();
         if (m->danger()) {
-            c->incrementFinishedDangerCount();
-            c->decrementUnfinishedDangerCount();
-            if (!c->unfinishedDangerCount()
-                || c->finishedCount() == c->nonobsoleteCount())
-                emit contextDataChanged(index);
-        } else if (c->finishedCount() == c->nonobsoleteCount()) {
-            emit contextDataChanged(index);
+            gi->incrementFinishedDangerCount();
+            gi->decrementUnfinishedDangerCount();
+            if (!gi->unfinishedDangerCount() || gi->finishedCount() == gi->nonobsoleteCount())
+                emit groupDataChanged(index);
+        } else if (gi->finishedCount() == gi->nonobsoleteCount()) {
+            emit groupDataChanged(index);
         }
         emit messageDataChanged(index);
         setModified(index.model(), true);
@@ -1152,18 +1236,18 @@ void MultiDataModel::setFinished(const MultiDataIndex &index, bool finished)
         mm->incrementUnfinishedCount();
         if (mm->countUnfinished() == 1) {
             decrementFinishedCount();
-            mc->decrementFinishedCount();
-            emit multiContextDataChanged(index);
+            mgi->decrementFinishedCount();
+            emit multiGroupDataChanged(index);
         }
-        c->decrementFinishedCount();
+        gi->decrementFinishedCount();
         if (m->danger()) {
-            c->decrementFinishedDangerCount();
-            c->incrementUnfinishedDangerCount();
-            if (c->unfinishedDangerCount() == 1
-                || c->finishedCount() + 1 == c->nonobsoleteCount())
-                emit contextDataChanged(index);
-        } else if (c->finishedCount() + 1 == c->nonobsoleteCount()) {
-            emit contextDataChanged(index);
+            gi->decrementFinishedDangerCount();
+            gi->incrementUnfinishedDangerCount();
+            if (gi->unfinishedDangerCount() == 1
+                || gi->finishedCount() + 1 == gi->nonobsoleteCount())
+                emit groupDataChanged(index);
+        } else if (gi->finishedCount() + 1 == gi->nonobsoleteCount()) {
+            emit groupDataChanged(index);
         }
         emit messageDataChanged(index);
         setModified(index.model(), true);
@@ -1172,29 +1256,29 @@ void MultiDataModel::setFinished(const MultiDataIndex &index, bool finished)
 
 void MultiDataModel::setDanger(const MultiDataIndex &index, bool danger)
 {
-    ContextItem *c = contextItem(index);
+    GroupItem *gi = groupItem(index);
     MessageItem *m = messageItem(index);
     if (!m->danger() && danger) {
         if (m->isFinished()) {
-            c->incrementFinishedDangerCount();
-            if (c->finishedDangerCount() == 1)
-                emit contextDataChanged(index);
+            gi->incrementFinishedDangerCount();
+            if (gi->finishedDangerCount() == 1)
+                emit groupDataChanged(index);
         } else {
-            c->incrementUnfinishedDangerCount();
-            if (c->unfinishedDangerCount() == 1)
-                emit contextDataChanged(index);
+            gi->incrementUnfinishedDangerCount();
+            if (gi->unfinishedDangerCount() == 1)
+                emit groupDataChanged(index);
         }
         emit messageDataChanged(index);
         m->setDanger(danger);
     } else if (m->danger() && !danger) {
         if (m->isFinished()) {
-            c->decrementFinishedDangerCount();
-            if (!c->finishedDangerCount())
-                emit contextDataChanged(index);
+            gi->decrementFinishedDangerCount();
+            if (!gi->finishedDangerCount())
+                emit groupDataChanged(index);
         } else {
-            c->decrementUnfinishedDangerCount();
-            if (!c->unfinishedDangerCount())
-                emit contextDataChanged(index);
+            gi->decrementUnfinishedDangerCount();
+            if (!gi->unfinishedDangerCount())
+                emit groupDataChanged(index);
         }
         emit messageDataChanged(index);
         m->setDanger(danger);
@@ -1203,57 +1287,59 @@ void MultiDataModel::setDanger(const MultiDataIndex &index, bool danger)
 
 void MultiDataModel::updateCountsOnAdd(int model, bool writable)
 {
-    for (int i = 0; i < m_multiContextList.size(); ++i) {
-        MultiContextItem &mc = m_multiContextList[i];
-        for (int j = 0; j < mc.messageCount(); ++j)
-            if (MessageItem *m = mc.messageItem(model, j)) {
-                MultiMessageItem *mm = mc.multiMessageItem(j);
+    auto updateCount = [model, writable, this](auto &mg) {
+        for (int j = 0; j < mg.messageCount(); ++j)
+            if (MessageItem *m = mg.messageItem(model, j)) {
+                MultiMessageItem *mm = mg.multiMessageItem(j);
                 mm->incrementNonnullCount();
                 if (!m->isObsolete()) {
                     if (writable) {
                         if (!mm->countEditable()) {
-                            mc.incrementEditableCount();
+                            mg.incrementEditableCount();
                             incrementEditableCount();
                             if (m->isFinished()) {
-                                mc.incrementFinishedCount();
+                                mg.incrementFinishedCount();
                                 incrementFinishedCount();
                             } else {
                                 mm->incrementUnfinishedCount();
                             }
                         } else if (!m->isFinished()) {
                             if (!mm->isUnfinished()) {
-                                mc.decrementFinishedCount();
+                                mg.decrementFinishedCount();
                                 decrementFinishedCount();
                             }
                             mm->incrementUnfinishedCount();
                         }
                         mm->incrementEditableCount();
                     }
-                    mc.incrementNonobsoleteCount();
+                    mg.incrementNonobsoleteCount();
                     mm->incrementNonobsoleteCount();
                 }
             }
-    }
+    };
+    for (auto &mg : m_multiContextList)
+        updateCount(mg);
+    for (auto &mg : m_multiLabelList)
+        updateCount(mg);
 }
 
 void MultiDataModel::updateCountsOnRemove(int model, bool writable)
 {
-    for (int i = 0; i < m_multiContextList.size(); ++i) {
-        MultiContextItem &mc = m_multiContextList[i];
-        for (int j = 0; j < mc.messageCount(); ++j)
-            if (MessageItem *m = mc.messageItem(model, j)) {
-                MultiMessageItem *mm = mc.multiMessageItem(j);
+    auto updateCount = [model, writable, this](auto &mg) {
+        for (int j = 0; j < mg.messageCount(); ++j)
+            if (MessageItem *m = mg.messageItem(model, j)) {
+                MultiMessageItem *mm = mg.multiMessageItem(j);
                 mm->decrementNonnullCount();
                 if (!m->isObsolete()) {
                     mm->decrementNonobsoleteCount();
-                    mc.decrementNonobsoleteCount();
+                    mg.decrementNonobsoleteCount();
                     if (writable) {
                         mm->decrementEditableCount();
                         if (!mm->countEditable()) {
-                            mc.decrementEditableCount();
+                            mg.decrementEditableCount();
                             decrementEditableCount();
                             if (m->isFinished()) {
-                                mc.decrementFinishedCount();
+                                mg.decrementFinishedCount();
                                 decrementFinishedCount();
                             } else {
                                 mm->decrementUnfinishedCount();
@@ -1261,14 +1347,18 @@ void MultiDataModel::updateCountsOnRemove(int model, bool writable)
                         } else if (!m->isFinished()) {
                             mm->decrementUnfinishedCount();
                             if (!mm->isUnfinished()) {
-                                mc.incrementFinishedCount();
+                                mg.incrementFinishedCount();
                                 incrementFinishedCount();
                             }
                         }
                     }
                 }
             }
-    }
+    };
+    for (auto &mg : m_multiContextList)
+        updateCount(mg);
+    for (auto &mg : m_multiLabelList)
+        updateCount(mg);
 }
 
 /******************************************************************************
@@ -1277,8 +1367,9 @@ void MultiDataModel::updateCountsOnRemove(int model, bool writable)
  *
  *****************************************************************************/
 
-MultiDataModelIterator::MultiDataModelIterator(MultiDataModel *dataModel, int model, int context, int message)
-  : MultiDataIndex(model, context, message), m_dataModel(dataModel)
+MultiDataModelIterator::MultiDataModelIterator(TranslationType type, MultiDataModel *dataModel,
+                                               int model, int group, int message)
+    : MultiDataIndex(type, model, group, message), m_dataModel(dataModel)
 {
 }
 
@@ -1286,15 +1377,20 @@ void MultiDataModelIterator::operator++()
 {
     Q_ASSERT(isValid());
     ++m_message;
-    if (m_message >= m_dataModel->m_multiContextList.at(m_context).messageCount()) {
-        ++m_context;
+    const qsizetype count = isIdBased()
+            ? m_dataModel->m_multiLabelList.at(m_group).messageCount()
+            : m_dataModel->m_multiContextList.at(m_group).messageCount();
+    if (m_message >= count) {
+        ++m_group;
         m_message = 0;
     }
 }
 
 bool MultiDataModelIterator::isValid() const
 {
-    return m_context < m_dataModel->m_multiContextList.size();
+    const qsizetype size = isIdBased() ? m_dataModel->m_multiLabelList.size()
+                                       : m_dataModel->m_multiContextList.size();
+    return m_group < size;
 }
 
 MessageItem *MultiDataModelIterator::current() const
@@ -1302,23 +1398,23 @@ MessageItem *MultiDataModelIterator::current() const
     return m_dataModel->messageItem(*this);
 }
 
-
 /******************************************************************************
  *
  * MessageModel
  *
  *****************************************************************************/
 
-MessageModel::MessageModel(QObject *parent, MultiDataModel *data)
-  : QAbstractItemModel(parent), m_data(data)
+MessageModel::MessageModel(TranslationType translationType, QObject *parent, MultiDataModel *data)
+    : QAbstractItemModel(parent), m_data(data), m_translationType(translationType)
 {
-    data->m_msgModel = this;
-    connect(m_data, &MultiDataModel::multiContextDataChanged,
-            this, &MessageModel::multiContextItemChanged);
-    connect(m_data, &MultiDataModel::contextDataChanged,
-            this, &MessageModel::contextItemChanged);
-    connect(m_data, &MultiDataModel::messageDataChanged,
-            this, &MessageModel::messageItemChanged);
+    if (translationType == IDBASED)
+        data->m_idBasedMsgModel = this;
+    else
+        data->m_textBasedMsgModel = this;
+    connect(m_data, &MultiDataModel::multiGroupDataChanged, this,
+            &MessageModel::multiGroupItemChanged);
+    connect(m_data, &MultiDataModel::groupDataChanged, this, &MessageModel::groupItemChanged);
+    connect(m_data, &MultiDataModel::messageDataChanged, this, &MessageModel::messageItemChanged);
 }
 
 QModelIndex MessageModel::index(int row, int column, const QModelIndex &parent) const
@@ -1337,45 +1433,50 @@ QModelIndex MessageModel::parent(const QModelIndex& index) const
     return QModelIndex();
 }
 
-void MessageModel::multiContextItemChanged(const MultiDataIndex &index)
+void MessageModel::multiGroupItemChanged(const MultiDataIndex &index)
 {
-    QModelIndex idx = createIndex(index.context(), m_data->modelCount() + 2);
+    if (index.translationType() != m_translationType)
+        return;
+    QModelIndex idx = createIndex(index.group(), m_data->modelCount() + 2);
     emit dataChanged(idx, idx);
 }
 
-void MessageModel::contextItemChanged(const MultiDataIndex &index)
+void MessageModel::groupItemChanged(const MultiDataIndex &index)
 {
-    QModelIndex idx = createIndex(index.context(), index.model() + 1);
+    if (index.translationType() != m_translationType)
+        return;
+    QModelIndex idx = createIndex(index.group(), index.model() + 1);
     emit dataChanged(idx, idx);
 }
 
 void MessageModel::messageItemChanged(const MultiDataIndex &index)
 {
-    QModelIndex idx = createIndex(index.message(), index.model() + 1, index.context() + 1);
+    if (index.translationType() != m_translationType)
+        return;
+    QModelIndex idx = createIndex(index.message(), index.model() + 1, index.group() + 1);
     emit dataChanged(idx, idx);
 }
 
 QModelIndex MessageModel::modelIndex(const MultiDataIndex &index)
 {
     if (index.message() < 0) // Should be unused case
-        return createIndex(index.context(), index.model() + 1);
-    return createIndex(index.message(), index.model() + 1, index.context() + 1);
+        return createIndex(index.group(), index.model() + 1);
+    return createIndex(index.message(), index.model() + 1, index.group() + 1);
 }
 
 int MessageModel::rowCount(const QModelIndex &parent) const
 {
     if (!parent.isValid())
-        return m_data->contextCount(); // contexts
+        return m_translationType == IDBASED ? m_data->labelCount()
+                                            : m_data->contextCount(); // contexts
     if (!parent.internalId()) // messages
-        return m_data->multiContextItem(parent.row())->messageCount();
+        return m_data->multiGroupItem(parent.row(), m_translationType)->messageCount();
     return 0;
 }
 
-int MessageModel::columnCount(const QModelIndex &parent) const
+int MessageModel::columnCount(const QModelIndex &) const
 {
-    if (!parent.isValid())
-        return m_data->modelCount() + 3;
-    return m_data->modelCount() + 2;
+    return m_data->modelCount() + 3;
 }
 
 QVariant MessageModel::data(const QModelIndex &index, int role) const
@@ -1403,6 +1504,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
 
     int row = index.row();
     int column = index.column() - 1;
+
     if (column < 0)
         return QVariant();
 
@@ -1413,34 +1515,30 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
     } else if (index.internalId()) {
         // this is a message
         int crow = index.internalId() - 1;
-        MultiContextItem *mci = m_data->multiContextItem(crow);
-        if (row >= mci->messageCount() || !index.isValid())
+        MultiGroupItem *mgi = m_data->multiGroupItem(crow, m_translationType);
+        if (row >= mgi->messageCount() || !index.isValid())
             return QVariant();
 
         if (role == Qt::DisplayRole || (role == Qt::ToolTipRole && column == numLangs)) {
             switch (column - numLangs) {
             case 0: // Source text
-                {
-                    MultiMessageItem *msgItem = mci->multiMessageItem(row);
-
-                    auto text = msgItem->text();
-                    if (text.isEmpty())
-                        text = msgItem->id();
-
-                    if (text.isEmpty()) {
-                        if (mci->context().isEmpty())
-                            return tr("<file header>");
-                        else
-                            return tr("<context comment>");
-                    }
+            {
+                if (m_translationType == IDBASED)
+                    return mgi->multiMessageItem(row)->id();
+                else if (const QString text = mgi->multiMessageItem(row)->text(); !text.isEmpty())
                     return text.simplified();
-                }
+                else
+                    return tr("<context comment>");
+            }
+            case 1:
+                if (m_translationType == IDBASED)
+                    return mgi->multiMessageItem(row)->text();
             default: // Status or dummy column => no text
                 return QVariant();
             }
         }
         else if (role == Qt::DecorationRole && column < numLangs) {
-            if (MessageItem *msgItem = mci->messageItem(column, row)) {
+            if (MessageItem *msgItem = mgi->messageItem(column, row)) {
                 switch (msgItem->message().type()) {
                 case TranslatorMessage::Unfinished:
                     if (msgItem->translation().isEmpty())
@@ -1461,11 +1559,11 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
         else if (role == SortRole) {
             switch (column - numLangs) {
             case 0: // Source text
-                return mci->multiMessageItem(row)->text().simplified().remove(u'&');
+                return mgi->multiMessageItem(row)->text().simplified().remove(u'&');
             case 1: // Dummy column
                 return QVariant();
             default:
-                if (MessageItem *msgItem = mci->messageItem(column, row)) {
+                if (MessageItem *msgItem = mgi->messageItem(column, row)) {
                     int rslt = !msgItem->translation().isEmpty();
                     if (!msgItem->danger())
                         rslt |= 2;
@@ -1477,42 +1575,41 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
                 }
                 return INT_MAX;
             }
-        }
-        else if (role == Qt::ForegroundRole && column > 0
-                 && mci->multiMessageItem(row)->isObsolete()) {
+        } else if (role == Qt::ForegroundRole && column > 0
+                   && mgi->multiMessageItem(row)->isObsolete()) {
             return QBrush(Qt::darkGray);
-        }
-        else if (role == Qt::ForegroundRole && column == numLangs
-                 && mci->multiMessageItem(row)->text().isEmpty()) {
+        } else if (role == Qt::ForegroundRole && column == numLangs
+                   && mgi->multiMessageItem(row)->text().isEmpty()) {
             return QBrush(QColor(0, 0xa0, 0xa0));
-        }
-        else if (role == Qt::BackgroundRole) {
+        } else if (role == Qt::BackgroundRole) {
             if (column < numLangs && numLangs != 1)
                 return m_data->brushForModel(column);
         }
     } else {
-        // this is a context
-        if (row >= m_data->contextCount() || !index.isValid())
+        // this is a context or a label
+        const qsizetype groupCount =
+                m_translationType == IDBASED ? m_data->labelCount() : m_data->contextCount();
+        if (row >= groupCount || !index.isValid())
             return QVariant();
 
-        MultiContextItem *mci = m_data->multiContextItem(row);
-
+        MultiGroupItem *mgi = m_data->multiGroupItem(row, m_translationType);
         if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
             switch (column - numLangs) {
-            case 0: // Context
-                {
-                    if (mci->context().isEmpty())
-                        return tr("<unnamed context>");
-                    return mci->context().simplified();
+            case 0: // Context/Label
+            {
+                const QString groupName = mgi->group().simplified();
+                if (m_translationType == IDBASED and groupName.isEmpty()) {
+                    return tr("<unnamed label>");
                 }
-            case 1:
-                {
-                    if (role == Qt::ToolTipRole) {
-                        return tr("%n unfinished message(s) left.", 0,
-                                  mci->getNumEditable() - mci->getNumFinished());
-                    }
-                    return QString::asprintf("%d/%d", mci->getNumFinished(), mci->getNumEditable());
+                return groupName;
+            }
+            case 1: {
+                if (role == Qt::ToolTipRole) {
+                    return tr("%n unfinished message(s) left.", 0,
+                              mgi->getNumEditable() - mgi->getNumFinished());
                 }
+                return QString::asprintf("%d/%d", mgi->getNumFinished(), mgi->getNumEditable());
+            }
             default:
                 return QVariant(); // Status => no text
             }
@@ -1523,50 +1620,47 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
             return boldFont;
         }
         else if (role == Qt::DecorationRole && column < numLangs) {
-            if (ContextItem *contextItem = mci->contextItem(column)) {
-                if (contextItem->isObsolete())
+            if (GroupItem *groupItem = mgi->groupItem(column)) {
+                if (groupItem->isObsolete())
                     return pxObsolete;
-                if (contextItem->isFinished())
-                    return contextItem->finishedDangerCount() > 0 ? pxWarning : pxOn;
-                return contextItem->unfinishedDangerCount() > 0 ? pxDanger : pxOff;
+                if (groupItem->isFinished())
+                    return groupItem->finishedDangerCount() > 0 ? pxWarning : pxOn;
+                return groupItem->unfinishedDangerCount() > 0 ? pxDanger : pxOff;
             }
             return QVariant();
         }
         else if (role == SortRole) {
             switch (column - numLangs) {
-            case 0: // Context (same as display role)
-                return mci->context().simplified();
+            case 0: // Context/Label (same as display role)
+                return mgi->group().simplified();
             case 1: // Items
-                return mci->getNumEditable();
+                return mgi->getNumEditable();
             default: // Percent
-                if (ContextItem *contextItem = mci->contextItem(column)) {
-                    int totalItems = contextItem->nonobsoleteCount();
-                    int percent = totalItems ? (100 * contextItem->finishedCount()) / totalItems : 100;
+                if (GroupItem *groupItem = mgi->groupItem(column)) {
+                    int totalItems = groupItem->nonobsoleteCount();
+                    int percent =
+                            totalItems ? (100 * groupItem->finishedCount()) / totalItems : 100;
                     int rslt = percent * (((1 << 28) - 1) / 100) + totalItems;
-                    if (contextItem->isObsolete()) {
+                    if (groupItem->isObsolete()) {
                         rslt |= (1 << 30);
-                    } else if (contextItem->isFinished()) {
+                    } else if (groupItem->isFinished()) {
                         rslt |= (1 << 29);
-                        if (!contextItem->finishedDangerCount())
+                        if (!groupItem->finishedDangerCount())
                             rslt |= (1 << 28);
                     } else {
-                        if (!contextItem->unfinishedDangerCount())
+                        if (!groupItem->unfinishedDangerCount())
                             rslt |= (1 << 28);
                     }
                     return rslt;
                 }
                 return INT_MAX;
             }
-        }
-        else if (role == Qt::ForegroundRole && column >= numLangs
-                 && m_data->multiContextItem(row)->isObsolete()) {
+        } else if (role == Qt::ForegroundRole && column >= numLangs && mgi->isObsolete()) {
             return QBrush(Qt::darkGray);
-        }
-        else if (role == Qt::ForegroundRole && column == numLangs
-                 && m_data->multiContextItem(row)->context().isEmpty()) {
+        } else if (role == Qt::ForegroundRole && column == numLangs
+                   && m_translationType == IDBASED) {
             return QBrush(QColor(0, 0xa0, 0xa0));
-        }
-        else if (role == Qt::BackgroundRole) {
+        } else if (role == Qt::BackgroundRole) {
             if (column < numLangs && numLangs != 1) {
                 QBrush brush = m_data->brushForModel(column);
                 if (row & 1) {
@@ -1583,7 +1677,7 @@ MultiDataIndex MessageModel::dataIndex(const QModelIndex &index, int model) cons
 {
     Q_ASSERT(index.isValid());
     Q_ASSERT(index.internalId());
-    return MultiDataIndex(model, index.internalId() - 1, index.row());
+    return MultiDataIndex(m_translationType, model, index.internalId() - 1, index.row());
 }
 
 QT_END_NAMESPACE
