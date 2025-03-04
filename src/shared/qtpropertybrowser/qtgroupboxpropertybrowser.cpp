@@ -79,7 +79,7 @@ void QtGroupBoxPropertyBrowserPrivate::slotUpdate()
         WidgetItem *par = item->parent;
         QWidget *w = nullptr;
         QGridLayout *l = nullptr;
-        int oldRow = -1;
+        qsizetype oldRow = -1;
         if (!par) {
             w = q_ptr;
             l = m_mainLayout;
@@ -130,7 +130,7 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
 
     QGridLayout *layout = nullptr;
     QWidget *parentWidget = nullptr;
-    int row = -1;
+    qsizetype row = -1;
     if (!afterItem) {
         row = 0;
         if (parentItem)
@@ -236,7 +236,7 @@ void QtGroupBoxPropertyBrowserPrivate::propertyRemoved(QtBrowserItem *index)
 
     WidgetItem *parentItem = item->parent;
 
-    int row = -1;
+    qsizetype row = -1;
 
     if (parentItem) {
         row = parentItem->children.indexOf(item);

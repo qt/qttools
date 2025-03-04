@@ -425,7 +425,7 @@ void QtMetaEnumProvider::initLocale()
 
         if (!locales.isEmpty() && !m_languageToIndex.contains(language)) {
             const auto territories = sortedTerritories(locales);
-            int langIdx = m_languageEnumNames.size();
+            qsizetype langIdx = m_languageEnumNames.size();
             m_indexToLanguage[langIdx] = language;
             m_languageToIndex[language] = langIdx;
             QStringList territoryNames;
@@ -5625,7 +5625,7 @@ void QtFontPropertyManagerPrivate::slotFontDatabaseDelayedChange()
     if (!m_propertyToFamily.isEmpty()) {
         for (QtProperty *familyProp : std::as_const(m_propertyToFamily)) {
             const int oldIdx = m_enumPropertyManager->value(familyProp);
-            int newIdx = m_familyNames.indexOf(oldFamilies.at(oldIdx));
+            qsizetype newIdx = m_familyNames.indexOf(oldFamilies.at(oldIdx));
             if (newIdx < 0)
                 newIdx = 0;
             m_enumPropertyManager->setEnumNames(familyProp, m_familyNames);
@@ -5809,7 +5809,7 @@ void QtFontPropertyManager::setValue(QtProperty *property, const QFont &val)
 
     it.value() = val;
 
-    int idx = d_ptr->m_familyNames.indexOf(val.family());
+    qsizetype idx = d_ptr->m_familyNames.indexOf(val.family());
     if (idx == -1)
         idx = 0;
     bool settingValue = d_ptr->m_settingValue;
@@ -5862,7 +5862,7 @@ void QtFontPropertyManager::initializeProperty(QtProperty *property)
     if (d_ptr->m_familyNames.isEmpty())
         d_ptr->m_familyNames = QFontDatabase::families();
     d_ptr->m_enumPropertyManager->setEnumNames(familyProp, d_ptr->m_familyNames);
-    int idx = d_ptr->m_familyNames.indexOf(val.family());
+    qsizetype idx = d_ptr->m_familyNames.indexOf(val.family());
     if (idx == -1)
         idx = 0;
     d_ptr->m_enumPropertyManager->setValue(familyProp, idx);
