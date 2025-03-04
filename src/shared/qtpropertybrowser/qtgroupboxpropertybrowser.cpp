@@ -248,14 +248,10 @@ void QtGroupBoxPropertyBrowserPrivate::propertyRemoved(QtBrowserItem *index)
         m_children.removeAt(row);
     }
 
-    if (item->widget)
-        delete item->widget;
-    if (item->label)
-        delete item->label;
-    if (item->widgetLabel)
-        delete item->widgetLabel;
-    if (item->groupBox)
-        delete item->groupBox;
+    delete item->widget;
+    delete item->label;
+    delete item->widgetLabel;
+    delete item->groupBox;
 
     if (!parentItem) {
         removeRow(m_mainLayout, row);

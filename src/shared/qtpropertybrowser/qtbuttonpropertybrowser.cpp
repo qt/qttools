@@ -308,16 +308,11 @@ void QtButtonPropertyBrowserPrivate::propertyRemoved(QtBrowserItem *index)
 
     m_buttonToItem.remove(item->button);
 
-    if (item->widget)
-        delete item->widget;
-    if (item->label)
-        delete item->label;
-    if (item->widgetLabel)
-        delete item->widgetLabel;
-    if (item->button)
-        delete item->button;
-    if (item->container)
-        delete item->container;
+    delete item->widget;
+    delete item->label;
+    delete item->widgetLabel;
+    delete item->button;
+    delete item->container;
 
     if (!parentItem) {
         removeRow(m_mainLayout, row);
