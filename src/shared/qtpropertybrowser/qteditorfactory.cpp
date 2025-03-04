@@ -1512,7 +1512,7 @@ bool QtCharEdit::eventFilter(QObject *o, QEvent *e)
             action->setText(actionString);
         }
         QAction *actionBefore = nullptr;
-        if (actions.size() > 0)
+        if (!actions.empty())
             actionBefore = actions[0];
         auto *clearAction = new QAction(tr("Clear Char"), menu);
         menu->insertAction(actionBefore, clearAction);

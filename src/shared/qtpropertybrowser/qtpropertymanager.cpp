@@ -4727,7 +4727,7 @@ void QtEnumPropertyManager::setValue(QtProperty *property, int val)
     if (val >= data.enumNames.size())
         return;
 
-    if (val < 0 && data.enumNames.size() > 0)
+    if (val < 0 && !data.enumNames.empty())
         return;
 
     if (val < 0)
@@ -4769,7 +4769,7 @@ void QtEnumPropertyManager::setEnumNames(QtProperty *property, const QStringList
 
     data.val = -1;
 
-    if (enumNames.size() > 0)
+    if (!enumNames.empty())
         data.val = 0;
 
     it.value() = data;
