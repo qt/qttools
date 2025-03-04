@@ -73,7 +73,7 @@ class QtAbstractPropertyManager : public QObject
     Q_OBJECT
 public:
     explicit QtAbstractPropertyManager(QObject *parent = nullptr);
-    ~QtAbstractPropertyManager();
+    ~QtAbstractPropertyManager() override;
 
     QSet<QtProperty *> properties() const;
     void clear() const;
@@ -212,7 +212,7 @@ class QtAbstractPropertyBrowser : public QWidget
     Q_OBJECT
 public:
     explicit QtAbstractPropertyBrowser(QWidget *parent = nullptr);
-    ~QtAbstractPropertyBrowser();
+    ~QtAbstractPropertyBrowser() override;
 
     QList<QtProperty *> properties() const;
     QList<QtBrowserItem *> items(QtProperty *property) const;

@@ -26,7 +26,7 @@ class QtButtonPropertyBrowser : public QtAbstractPropertyBrowser
     Q_OBJECT
 public:
     QtButtonPropertyBrowser(QWidget *parent = nullptr);
-    ~QtButtonPropertyBrowser();
+    ~QtButtonPropertyBrowser() override;
 
     void setExpanded(QtBrowserItem *item, bool expanded);
     bool isExpanded(QtBrowserItem *item) const;
