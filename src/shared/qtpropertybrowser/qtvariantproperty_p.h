@@ -28,7 +28,7 @@ class QtVariantPropertyManager;
 class QtVariantProperty : public QtProperty
 {
 public:
-    ~QtVariantProperty();
+    ~QtVariantProperty() override;
     QVariant value() const;
     QVariant attributeValue(const QString &attribute) const;
     int valueType() const;
@@ -48,7 +48,7 @@ class QtVariantPropertyManager : public QtAbstractPropertyManager
     Q_OBJECT
 public:
     QtVariantPropertyManager(QObject *parent = nullptr);
-    ~QtVariantPropertyManager();
+    ~QtVariantPropertyManager() override;
 
     virtual QtVariantProperty *addProperty(int propertyType, const QString &name = QString());
 
@@ -94,7 +94,8 @@ class QtVariantEditorFactory : public QtAbstractEditorFactory<QtVariantPropertyM
     Q_OBJECT
 public:
     QtVariantEditorFactory(QObject *parent = nullptr);
-    ~QtVariantEditorFactory();
+    ~QtVariantEditorFactory() override;
+
 protected:
     void connectPropertyManager(QtVariantPropertyManager *manager) override;
     QWidget *createEditor(QtVariantPropertyManager *manager, QtProperty *property,

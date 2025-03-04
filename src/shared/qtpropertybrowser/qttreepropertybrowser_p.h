@@ -43,7 +43,7 @@ public:
     Q_ENUM(ResizeMode)
 
     QtTreePropertyBrowser(QWidget *parent = nullptr);
-    ~QtTreePropertyBrowser();
+    ~QtTreePropertyBrowser() override;
 
     int indentation() const;
     void setIndentation(int i);
