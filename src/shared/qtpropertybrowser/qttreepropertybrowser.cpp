@@ -588,10 +588,7 @@ void QtTreePropertyBrowserPrivate::updateItem(QTreeWidgetItem *item)
     bool isEnabled = wasEnabled;
     if (property->isEnabled()) {
         QTreeWidgetItem *parent = item->parent();
-        if (!parent || (parent->flags() & Qt::ItemIsEnabled))
-            isEnabled = true;
-        else
-            isEnabled = false;
+        isEnabled = !parent || (parent->flags() & Qt::ItemIsEnabled);
     } else {
         isEnabled = false;
     }
