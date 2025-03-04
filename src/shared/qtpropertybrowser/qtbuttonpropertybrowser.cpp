@@ -48,7 +48,7 @@ private:
     int gridRow(WidgetItem *item) const;
     int gridSpan(WidgetItem *item) const;
     void setExpanded(WidgetItem *item, bool expanded);
-    QToolButton *createButton(QWidget *panret = 0) const;
+    QToolButton *createButton(QWidget *parent = nullptr) const;
 
     QHash<QtBrowserItem *, WidgetItem *> m_indexToItem;
     QHash<WidgetItem *, QtBrowserItem *> m_itemToIndex;

@@ -1461,7 +1461,7 @@ class QtCharEdit : public QWidget
 {
     Q_OBJECT
 public:
-    QtCharEdit(QWidget *parent = 0);
+    QtCharEdit(QWidget *parent = nullptr);
 
     QChar value() const;
     bool eventFilter(QObject *o, QEvent *e) override;
@@ -1910,27 +1910,19 @@ class QtCursorEditorFactoryPrivate
     QtCursorEditorFactory *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtCursorEditorFactory)
 public:
-    QtCursorEditorFactoryPrivate();
-
     void slotPropertyChanged(QtProperty *property, const QCursor &cursor);
     void slotEnumChanged(QtProperty *property, int value);
     void slotEditorDestroyed(QObject *object);
 
-    QtEnumEditorFactory *m_enumEditorFactory;
-    QtEnumPropertyManager *m_enumPropertyManager;
+    QtEnumEditorFactory *m_enumEditorFactory = nullptr;
+    QtEnumPropertyManager *m_enumPropertyManager = nullptr;
 
     QHash<QtProperty *, QtProperty *> m_propertyToEnum;
     QHash<QtProperty *, QtProperty *> m_enumToProperty;
     QHash<QtProperty *, QWidgetList > m_enumToEditors;
     QHash<QWidget *, QtProperty *> m_editorToEnum;
-    bool m_updatingEnum;
+    bool m_updatingEnum = false;
 };
-
-QtCursorEditorFactoryPrivate::QtCursorEditorFactoryPrivate()
-    : m_updatingEnum(false)
-{
-
-}
 
 void QtCursorEditorFactoryPrivate::slotPropertyChanged(QtProperty *property, const QCursor &cursor)
 {

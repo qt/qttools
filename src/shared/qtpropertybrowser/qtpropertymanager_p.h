@@ -29,7 +29,7 @@ class QtGroupPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtGroupPropertyManager(QObject *parent = 0);
+    QtGroupPropertyManager(QObject *parent = nullptr);
     ~QtGroupPropertyManager();
 
 protected:
@@ -45,7 +45,7 @@ class QtIntPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtIntPropertyManager(QObject *parent = 0);
+    QtIntPropertyManager(QObject *parent = nullptr);
     ~QtIntPropertyManager();
 
     int value(const QtProperty *property) const;
@@ -79,7 +79,7 @@ class QtBoolPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtBoolPropertyManager(QObject *parent = 0);
+    QtBoolPropertyManager(QObject *parent = nullptr);
     ~QtBoolPropertyManager();
 
     bool value(const QtProperty *property) const;
@@ -105,7 +105,7 @@ class QtDoublePropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtDoublePropertyManager(QObject *parent = 0);
+    QtDoublePropertyManager(QObject *parent = nullptr);
     ~QtDoublePropertyManager();
 
     double value(const QtProperty *property) const;
@@ -142,7 +142,7 @@ class QtStringPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtStringPropertyManager(QObject *parent = 0);
+    QtStringPropertyManager(QObject *parent = nullptr);
     ~QtStringPropertyManager();
 
     QString value(const QtProperty *property) const;
@@ -170,7 +170,7 @@ class QtDatePropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtDatePropertyManager(QObject *parent = 0);
+    QtDatePropertyManager(QObject *parent = nullptr);
     ~QtDatePropertyManager();
 
     QDate value(const QtProperty *property) const;
@@ -201,7 +201,7 @@ class QtTimePropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtTimePropertyManager(QObject *parent = 0);
+    QtTimePropertyManager(QObject *parent = nullptr);
     ~QtTimePropertyManager();
 
     QTime value(const QtProperty *property) const;
@@ -226,7 +226,7 @@ class QtDateTimePropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtDateTimePropertyManager(QObject *parent = 0);
+    QtDateTimePropertyManager(QObject *parent = nullptr);
     ~QtDateTimePropertyManager();
 
     QDateTime value(const QtProperty *property) const;
@@ -251,7 +251,7 @@ class QtKeySequencePropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtKeySequencePropertyManager(QObject *parent = 0);
+    QtKeySequencePropertyManager(QObject *parent = nullptr);
     ~QtKeySequencePropertyManager();
 
     QKeySequence value(const QtProperty *property) const;
@@ -276,7 +276,7 @@ class QtCharPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtCharPropertyManager(QObject *parent = 0);
+    QtCharPropertyManager(QObject *parent = nullptr);
     ~QtCharPropertyManager();
 
     QChar value(const QtProperty *property) const;
@@ -302,7 +302,7 @@ class QtLocalePropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtLocalePropertyManager(QObject *parent = 0);
+    QtLocalePropertyManager(QObject *parent = nullptr);
     ~QtLocalePropertyManager();
 
     QtEnumPropertyManager *subEnumPropertyManager() const;
@@ -329,7 +329,7 @@ class QtPointPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtPointPropertyManager(QObject *parent = 0);
+    QtPointPropertyManager(QObject *parent = nullptr);
     ~QtPointPropertyManager();
 
     QtIntPropertyManager *subIntPropertyManager() const;
@@ -356,7 +356,7 @@ class QtPointFPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtPointFPropertyManager(QObject *parent = 0);
+    QtPointFPropertyManager(QObject *parent = nullptr);
     ~QtPointFPropertyManager();
 
     QtDoublePropertyManager *subDoublePropertyManager() const;
@@ -386,7 +386,7 @@ class QtSizePropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtSizePropertyManager(QObject *parent = 0);
+    QtSizePropertyManager(QObject *parent = nullptr);
     ~QtSizePropertyManager();
 
     QtIntPropertyManager *subIntPropertyManager() const;
@@ -419,7 +419,7 @@ class QtSizeFPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtSizeFPropertyManager(QObject *parent = 0);
+    QtSizeFPropertyManager(QObject *parent = nullptr);
     ~QtSizeFPropertyManager();
 
     QtDoublePropertyManager *subDoublePropertyManager() const;
@@ -455,7 +455,7 @@ class QtRectPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtRectPropertyManager(QObject *parent = 0);
+    QtRectPropertyManager(QObject *parent = nullptr);
     ~QtRectPropertyManager();
 
     QtIntPropertyManager *subIntPropertyManager() const;
@@ -485,7 +485,7 @@ class QtRectFPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtRectFPropertyManager(QObject *parent = 0);
+    QtRectFPropertyManager(QObject *parent = nullptr);
     ~QtRectFPropertyManager();
 
     QtDoublePropertyManager *subDoublePropertyManager() const;
@@ -518,7 +518,7 @@ class QtEnumPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtEnumPropertyManager(QObject *parent = 0);
+    QtEnumPropertyManager(QObject *parent = nullptr);
     ~QtEnumPropertyManager();
 
     int value(const QtProperty *property) const;
@@ -550,7 +550,7 @@ class QtFlagPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtFlagPropertyManager(QObject *parent = 0);
+    QtFlagPropertyManager(QObject *parent = nullptr);
     ~QtFlagPropertyManager();
 
     QtBoolPropertyManager *subBoolPropertyManager() const;
@@ -580,7 +580,7 @@ class QtSizePolicyPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtSizePolicyPropertyManager(QObject *parent = 0);
+    QtSizePolicyPropertyManager(QObject *parent = nullptr);
     ~QtSizePolicyPropertyManager();
 
     QtIntPropertyManager *subIntPropertyManager() const;
@@ -608,7 +608,7 @@ class QtFontPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtFontPropertyManager(QObject *parent = 0);
+    QtFontPropertyManager(QObject *parent = nullptr);
     ~QtFontPropertyManager();
 
     QtIntPropertyManager *subIntPropertyManager() const;
@@ -638,7 +638,7 @@ class QtColorPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtColorPropertyManager(QObject *parent = 0);
+    QtColorPropertyManager(QObject *parent = nullptr);
     ~QtColorPropertyManager();
 
     QtIntPropertyManager *subIntPropertyManager() const;
@@ -666,7 +666,7 @@ class QtCursorPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtCursorPropertyManager(QObject *parent = 0);
+    QtCursorPropertyManager(QObject *parent = nullptr);
     ~QtCursorPropertyManager();
 
 #ifndef QT_NO_CURSOR

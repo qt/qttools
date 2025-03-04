@@ -12,7 +12,7 @@ QT_BEGIN_NAMESPACE
 
 class QtGroupBoxPropertyBrowserPrivate
 {
-    QtGroupBoxPropertyBrowser *q_ptr;
+    QtGroupBoxPropertyBrowser *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtGroupBoxPropertyBrowser)
 public:
 
@@ -262,10 +262,10 @@ void QtGroupBoxPropertyBrowserPrivate::propertyRemoved(QtBrowserItem *index)
         QGridLayout *l = (par ? par->layout : m_mainLayout);
         if (parentItem->widget) {
             parentItem->widget->hide();
-            parentItem->widget->setParent(0);
+            parentItem->widget->setParent(nullptr);
         } else if (parentItem->widgetLabel) {
             parentItem->widgetLabel->hide();
-            parentItem->widgetLabel->setParent(0);
+            parentItem->widgetLabel->setParent(nullptr);
         } else {
             //parentItem->widgetLabel = new QLabel(w);
         }

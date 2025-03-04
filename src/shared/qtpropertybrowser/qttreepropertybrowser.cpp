@@ -32,11 +32,10 @@ class QtPropertyEditorView;
 
 class QtTreePropertyBrowserPrivate
 {
-    QtTreePropertyBrowser *q_ptr;
+    QtTreePropertyBrowser *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtTreePropertyBrowser)
 
 public:
-    QtTreePropertyBrowserPrivate();
     void init(QWidget *parent);
 
     void propertyInserted(QtBrowserItem *index, QtBrowserItem *afterIndex);
@@ -77,13 +76,13 @@ private:
 
     QHash<QtBrowserItem *, QColor> m_indexToBackgroundColor;
 
-    QtPropertyEditorView *m_treeWidget;
+    QtPropertyEditorView *m_treeWidget = nullptr;
 
-    bool m_headerVisible;
-    QtTreePropertyBrowser::ResizeMode m_resizeMode;
-    class QtPropertyEditorDelegate *m_delegate;
-    bool m_markPropertiesWithoutValue;
-    bool m_browserChangedBlocked;
+    bool m_headerVisible = true;
+    QtTreePropertyBrowser::ResizeMode m_resizeMode = QtTreePropertyBrowser::Stretch;
+    class QtPropertyEditorDelegate *m_delegate = nullptr;
+    bool m_markPropertiesWithoutValue = false;
+    bool m_browserChangedBlocked = false;
     QIcon m_expandIcon;
 };
 
@@ -92,7 +91,7 @@ class QtPropertyEditorView : public QTreeWidget
 {
     Q_OBJECT
 public:
-    QtPropertyEditorView(QWidget *parent = 0);
+    QtPropertyEditorView(QWidget *parent = nullptr);
 
     void setEditorPrivate(QtTreePropertyBrowserPrivate *editorPrivate)
         { m_editorPrivate = editorPrivate; }
@@ -106,12 +105,11 @@ protected:
     void drawRow(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 private:
-    QtTreePropertyBrowserPrivate *m_editorPrivate;
+    QtTreePropertyBrowserPrivate *m_editorPrivate = nullptr;
 };
 
 QtPropertyEditorView::QtPropertyEditorView(QWidget *parent) :
-    QTreeWidget(parent),
-    m_editorPrivate(0)
+    QTreeWidget(parent)
 {
     connect(header(), &QHeaderView::sectionDoubleClicked, this, &QTreeView::resizeColumnToContents);
 }
@@ -192,9 +190,7 @@ class QtPropertyEditorDelegate : public QItemDelegate
 {
     Q_OBJECT
 public:
-    QtPropertyEditorDelegate(QObject *parent = 0)
-        : QItemDelegate(parent), m_editorPrivate(0), m_editedItem(0), m_editedWidget(0)
-        {}
+    using QItemDelegate::QItemDelegate;
 
     void setEditorPrivate(QtTreePropertyBrowserPrivate *editorPrivate)
         { m_editorPrivate = editorPrivate; }
@@ -231,9 +227,9 @@ private:
 
     using PropertyToEditorMap = QHash<QtProperty *, QWidget *>;
     mutable PropertyToEditorMap m_propertyToEditor;
-    QtTreePropertyBrowserPrivate *m_editorPrivate;
-    mutable QTreeWidgetItem *m_editedItem;
-    mutable QWidget *m_editedWidget;
+    QtTreePropertyBrowserPrivate *m_editorPrivate = nullptr;
+    mutable QTreeWidgetItem *m_editedItem = nullptr;
+    mutable QWidget *m_editedWidget = nullptr;
 };
 
 int QtPropertyEditorDelegate::indentation(const QModelIndex &index) const
@@ -368,15 +364,6 @@ bool QtPropertyEditorDelegate::eventFilter(QObject *object, QEvent *event)
 }
 
 //  -------- QtTreePropertyBrowserPrivate implementation
-QtTreePropertyBrowserPrivate::QtTreePropertyBrowserPrivate() :
-    m_treeWidget(0),
-    m_headerVisible(true),
-    m_resizeMode(QtTreePropertyBrowser::Stretch),
-    m_delegate(0),
-    m_markPropertiesWithoutValue(false),
-    m_browserChangedBlocked(false)
-{
-}
 
 // Draw an icon indicating opened/closing branches
 static QIcon drawIndicatorIcon(const QPalette &palette, QStyle *style)
@@ -546,7 +533,7 @@ void QtTreePropertyBrowserPrivate::propertyRemoved(QtBrowserItem *index)
     QTreeWidgetItem *item = m_indexToItem.value(index);
 
     if (m_treeWidget->currentItem() == item) {
-        m_treeWidget->setCurrentItem(0);
+        m_treeWidget->setCurrentItem(nullptr);
     }
 
     delete item;
