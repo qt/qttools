@@ -474,10 +474,15 @@ void QtMetaEnumProvider::indexToLocale(int languageIndex, int territoryIndex, QL
 {
     QLocale::Language l = QLocale::C;
     QLocale::Territory c = QLocale::AnyTerritory;
-    if (m_indexToLanguage.contains(languageIndex)) {
-        l = m_indexToLanguage[languageIndex];
-        if (m_indexToTerritory.contains(languageIndex) && m_indexToTerritory[languageIndex].contains(territoryIndex))
-            c = m_indexToTerritory[languageIndex][territoryIndex];
+    const auto lit = m_indexToLanguage.constFind(languageIndex);
+    if (lit != m_indexToLanguage.cend()) {
+        l = lit.value();
+        const auto tit = m_indexToTerritory.constFind(languageIndex);
+        if (tit != m_indexToTerritory.end()) {
+            const auto tit2 = tit.value().constFind(territoryIndex);
+            if (tit2 != tit.value().cend())
+                c = tit2.value();
+        }
     }
     if (language)
         *language = l;
@@ -489,10 +494,15 @@ void QtMetaEnumProvider::localeToIndex(QLocale::Language language, QLocale::Terr
 {
     int l = -1;
     int c = -1;
-    if (m_languageToIndex.contains(language)) {
-        l = m_languageToIndex[language];
-        if (m_territoryToIndex.contains(language) && m_territoryToIndex[language].contains(territory))
-            c = m_territoryToIndex[language][territory];
+    const auto lit = m_languageToIndex.constFind(language);
+    if (lit != m_languageToIndex.cend()) {
+        l = lit.value();
+        const auto tit = m_territoryToIndex.constFind(language);
+        if (tit != m_territoryToIndex.cend()) {
+            const auto tit2 = tit.value().constFind(territory);
+            if (tit2 != tit.value().cend())
+                c = tit2.value();
+        }
     }
 
     if (languageIndex)

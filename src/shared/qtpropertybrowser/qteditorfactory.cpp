@@ -2029,10 +2029,8 @@ void QtCursorEditorFactory::connectPropertyManager(QtCursorPropertyManager *mana
 QWidget *QtCursorEditorFactory::createEditor(QtCursorPropertyManager *manager, QtProperty *property,
         QWidget *parent)
 {
-    QtProperty *enumProp = nullptr;
-    if (d_ptr->m_propertyToEnum.contains(property)) {
-        enumProp = d_ptr->m_propertyToEnum[property];
-    } else {
+    QtProperty *enumProp = d_ptr->m_propertyToEnum.value(property, nullptr);
+    if (enumProp == nullptr) {
         enumProp = d_ptr->m_enumPropertyManager->addProperty(property->propertyName());
         auto *cdb = QtCursorDatabase::instance();
         d_ptr->m_enumPropertyManager->setEnumNames(enumProp, cdb->cursorShapeNames());

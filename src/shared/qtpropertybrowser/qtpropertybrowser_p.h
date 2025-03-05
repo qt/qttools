@@ -138,12 +138,13 @@ public:
     }
     void removePropertyManager(PropertyManager *manager)
     {
-        if (!m_managers.contains(manager))
+        auto it = m_managers.constFind(manager);
+        if (it == m_managers.cend())
             return;
         disconnect(manager, &QObject::destroyed,
                 this, &QtAbstractEditorFactory<PropertyManager>::managerDestroyed);
         disconnectPropertyManager(manager);
-        m_managers.remove(manager);
+        m_managers.erase(it);
     }
     QSet<PropertyManager *> propertyManagers() const
     {

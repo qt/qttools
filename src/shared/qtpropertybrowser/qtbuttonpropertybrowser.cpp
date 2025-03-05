@@ -113,10 +113,11 @@ void QtButtonPropertyBrowserPrivate::slotEditorDestroyed()
     auto *editor = qobject_cast<QWidget *>(q_ptr->sender());
     if (!editor)
         return;
-    if (!m_widgetToItem.contains(editor))
-        return;
-    m_widgetToItem[editor]->widget = nullptr;
-    m_widgetToItem.remove(editor);
+    const auto it = m_widgetToItem.find(editor);
+    if (it != m_widgetToItem.end()) {
+        it.value()->widget = nullptr;
+        m_widgetToItem.erase(it);
+    }
 }
 
 void QtButtonPropertyBrowserPrivate::slotUpdate()

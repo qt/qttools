@@ -495,10 +495,11 @@ void QtProperty::propertyChanged()
 
 void QtAbstractPropertyManagerPrivate::propertyDestroyed(QtProperty *property)
 {
-    if (m_properties.contains(property)) {
+    const auto it = m_properties.constFind(property);
+    if (it != m_properties.cend()) {
         emit q_ptr->propertyDestroyed(property);
         q_ptr->uninitializeProperty(property);
-        m_properties.remove(property);
+        m_properties.erase(it);
     }
 }
 
@@ -1214,11 +1215,12 @@ public:
 void QtAbstractPropertyBrowserPrivate::insertSubTree(QtProperty *property,
             QtProperty *parentProperty)
 {
-    if (m_propertyToParents.contains(property)) {
+    const auto it = m_propertyToParents.find(property);
+    if (it != m_propertyToParents.end()) {
         // property was already inserted, so its manager is connected
         // and all its children are inserted and theirs managers are connected
         // we just register new parent (parent has to be new).
-        m_propertyToParents[property].append(parentProperty);
+        it.value().append(parentProperty);
         // don't need to update m_managerToProperties map since
         // m_managerToProperties[manager] already contains property.
         return;
@@ -1250,19 +1252,20 @@ void QtAbstractPropertyBrowserPrivate::insertSubTree(QtProperty *property,
 void QtAbstractPropertyBrowserPrivate::removeSubTree(QtProperty *property,
             QtProperty *parentProperty)
 {
-    if (!m_propertyToParents.contains(property)) {
-        // ASSERT
+    const auto pit = m_propertyToParents.find(property);
+    if (pit == m_propertyToParents.end()) // ASSERT
         return;
-    }
-
-    m_propertyToParents[property].removeAll(parentProperty);
-    if (!m_propertyToParents[property].isEmpty())
+    pit.value().removeAll(parentProperty);
+    if (!pit.value().isEmpty())
         return;
 
-    m_propertyToParents.remove(property);
+    m_propertyToParents.erase(pit);
     QtAbstractPropertyManager *manager = property->propertyManager();
-    m_managerToProperties[manager].removeAll(property);
-    if (m_managerToProperties[manager].isEmpty()) {
+
+    const auto mit = m_managerToProperties.find(manager);
+    Q_ASSERT(mit != m_managerToProperties.end());
+    mit.value().removeAll(property);
+    if (mit.value().isEmpty()) {
         // disconnect manager's signals
         QObject::disconnect(manager, &QtAbstractPropertyManager::propertyInserted,
                             q_ptr, nullptr);
@@ -1272,7 +1275,7 @@ void QtAbstractPropertyBrowserPrivate::removeSubTree(QtProperty *property,
         QObject::disconnect(manager, &QtAbstractPropertyManager::propertyChanged,
                             q_ptr, nullptr);
 
-        m_managerToProperties.remove(manager);
+        m_managerToProperties.erase(mit);
     }
 
     const auto subList = property->subProperties();
@@ -1808,17 +1811,14 @@ void QtAbstractPropertyBrowser::removeProperty(QtProperty *property)
 QWidget *QtAbstractPropertyBrowser::createEditor(QtProperty *property,
                 QWidget *parent)
 {
-    QtAbstractEditorFactoryBase *factory = nullptr;
-    QtAbstractPropertyManager *manager = property->propertyManager();
-
-    if (m_viewToManagerToFactory()->contains(this) &&
-        (*m_viewToManagerToFactory())[this].contains(manager)) {
-        factory = (*m_viewToManagerToFactory())[this][manager];
+    QWidget *w = nullptr;
+    const auto vit = m_viewToManagerToFactory()->constFind(this);
+    if (vit != m_viewToManagerToFactory()->cend()) {
+        const auto fit = vit.value().constFind(property->propertyManager());
+        if (fit != vit.value().cend())
+            w = fit.value()->createEditor(property, parent);
     }
 
-    if (!factory)
-        return nullptr;
-    QWidget *w = factory->createEditor(property, parent);
     // Since some editors can be QComboBoxes, and we changed their focus policy in Qt 5
     // to make them feel more native on Mac, we need to relax the focus policy to something
     // more permissive to keep the combo box from losing focus, allowing it to stay alive,

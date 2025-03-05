@@ -1417,9 +1417,7 @@ int QtVariantPropertyManager::valueType(const QtProperty *property) const
 */
 int QtVariantPropertyManager::valueType(int propertyType) const
 {
-    if (d_ptr->m_typeToValueType.contains(propertyType))
-        return d_ptr->m_typeToValueType[propertyType];
-    return 0;
+    return d_ptr->m_typeToValueType.value(propertyType, 0);
 }
 
 /*!
