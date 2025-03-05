@@ -112,9 +112,7 @@ QIcon QtCursorDatabase::cursorToShapeIcon(const QCursor &cursor) const
 int QtCursorDatabase::cursorToValue(const QCursor &cursor) const
 {
 #ifndef QT_NO_CURSOR
-    Qt::CursorShape shape = cursor.shape();
-    if (m_cursorShapeToValue.contains(shape))
-        return m_cursorShapeToValue[shape];
+    return m_cursorShapeToValue.value(cursor.shape(), -1);
 #endif
     return -1;
 }
@@ -122,8 +120,9 @@ int QtCursorDatabase::cursorToValue(const QCursor &cursor) const
 #ifndef QT_NO_CURSOR
 QCursor QtCursorDatabase::valueToCursor(int value) const
 {
-    if (m_valueToCursorShape.contains(value))
-        return QCursor(m_valueToCursorShape[value]);
+    auto it = m_valueToCursorShape.constFind(value);
+    if (it != m_valueToCursorShape.cend())
+        return QCursor(it.value());
     return {};
 }
 #endif
