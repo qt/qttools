@@ -24,7 +24,6 @@ public:
     QWidget *createEditor(QtProperty *property, QWidget *parent) const
         { return q_ptr->createEditor(property, parent); }
 
-    void slotEditorDestroyed();
     void slotUpdate();
 
     struct WidgetItem
@@ -48,7 +47,6 @@ private:
 
     QHash<QtBrowserItem *, WidgetItem *> m_indexToItem;
     QHash<WidgetItem *, QtBrowserItem *> m_itemToIndex;
-    QHash<QWidget *, WidgetItem *> m_widgetToItem;
     QGridLayout *m_mainLayout;
     QList<WidgetItem *> m_children;
     QList<WidgetItem *> m_recreateQueue;
@@ -60,17 +58,6 @@ void QtGroupBoxPropertyBrowserPrivate::init(QWidget *parent)
     parent->setLayout(m_mainLayout);
     auto *item = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
     m_mainLayout->addItem(item, 0, 0);
-}
-
-void QtGroupBoxPropertyBrowserPrivate::slotEditorDestroyed()
-{
-    auto *editor = qobject_cast<QWidget *>(q_ptr->sender());
-    if (!editor)
-        return;
-    if (!m_widgetToItem.contains(editor))
-        return;
-    m_widgetToItem[editor]->widget = nullptr;
-    m_widgetToItem.remove(editor);
 }
 
 void QtGroupBoxPropertyBrowserPrivate::slotUpdate()
@@ -203,13 +190,8 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
     newItem->label = new QLabel(parentWidget);
     newItem->label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     newItem->widget = createEditor(index->property(), parentWidget);
-    if (!newItem->widget) {
+    if (!newItem->widget)
         newItem->widgetLabel = new QLabel(parentWidget);
-    } else {
-        QObject::connect(newItem->widget, &QWidget::destroyed,
-                         q_ptr, [this] { slotEditorDestroyed(); });
-        m_widgetToItem[newItem->widget] = newItem;
-    }
 
     insertRow(layout, row);
     int span = 1;
