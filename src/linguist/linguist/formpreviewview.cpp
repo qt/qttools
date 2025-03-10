@@ -7,7 +7,13 @@
 #include <quiloader.h>
 
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QFontComboBox>
+#ifndef QT_NO_COMBOBOX
+#  ifndef QT_NO_FONTCOMBOBOX
+#    include <QtWidgets/QFontComboBox>
+#  else
+#    include <QtWidgets/QComboBox>
+#  endif
+#endif // QT_NO_COMBOBOX
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QListWidget>
@@ -140,7 +146,11 @@ static void buildTargets(QObject *o, TargetsHash *targets)
 #endif
 #ifndef QT_NO_COMBOBOX
     } else if (QComboBox *combow = qobject_cast<QComboBox*>(o)) {
+#  ifndef QT_NO_FONTCOMBOBOX
         if (!qobject_cast<QFontComboBox*>(o)) {
+#  else
+        {
+#  endif
             const int cnt = combow->count();
             for (int i = 0; i < cnt; ++i) {
                 const QVariant v = combow->itemData(i, Qt::DisplayPropertyRole);
@@ -148,7 +158,7 @@ static void buildTargets(QObject *o, TargetsHash *targets)
                     INSERT_TARGET(v, TranslatableComboBoxItem, comboBox = combow, index = i);
             }
         }
-#endif
+#endif // QT_NO_COMBOBOX
 #ifndef QT_NO_LISTWIDGET
     } else if (QListWidget *listw = qobject_cast<QListWidget*>(o)) {
         const int cnt = listw->count();
