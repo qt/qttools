@@ -607,9 +607,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         skipToNextPreprocessorCommand();
                     break;
                 case CMD_IMAGE:
-                    leaveValueList();
-                    appendAtom(Atom(Atom::Image, getArgument()));
-                    appendAtom(Atom(Atom::ImageText, getRestOfLine()));
+                    cmd_image();
                     break;
                 case CMD_IMPORTANT:
                     leavePara();
@@ -1730,6 +1728,44 @@ void DocParser::endSection(int, int) // (int unit, int endCmd)
     leavePara();
     appendAtom(Atom(Atom::SectionRight, QString::number(m_currentSection)));
     m_currentSection = (Doc::NoSection);
+}
+
+/*!
+    \internal
+
+    Processes CMD_IMAGE. The first argument to the command is the image file
+    name. The rest of the line is an optional string that's used as the text
+    description of the image (e.g. the HTML <img> alt attribute). The optional
+    argument can be wrapped in curly braces, in which case it can span multiple
+    lines.
+
+    This function may modify the optional argument by removing one pair of
+    double quotes, if they wrap the string.
+ */
+void DocParser::cmd_image()
+{
+    leaveValueList();
+    const QString imageFileName = getArgument();
+    QString imageText;
+    if (isLeftBraceAhead())
+        imageText = getArgument();
+    else
+        imageText = getRestOfLine();
+
+    if (imageText.length() > 1) {
+        if (imageText.front() == '"' && imageText.back() == '"') {
+            imageText.removeFirst();
+            imageText.removeLast();
+        }
+    }
+
+    if (imageText.isEmpty())
+        location().report(QStringLiteral("\\%1 %2 is without a textual description, "
+                                         "QDoc will not generate an alt text for the image.")
+                                  .arg(cmdName(CMD_IMAGE))
+                                  .arg(imageFileName));
+    appendAtom(Atom(Atom::Image, imageFileName));
+    appendAtom(Atom(Atom::ImageText, imageText));
 }
 
 /*!
