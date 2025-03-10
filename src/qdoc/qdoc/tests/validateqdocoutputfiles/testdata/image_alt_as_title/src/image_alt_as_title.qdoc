@@ -13,5 +13,36 @@
     The image should render as expected, and the alternate text should be
     there, too. This text is contained in its own paragraph following the
     image.
+
+    This image has an alt text that spans multiple lines:
+    \image leonardo-da-vinci.png {This is
+                                  the multi
+                                  line alternate
+                                  text for
+                                  the image}
+
+   \image {leonardo-da-vinci-small.png} {an alt text} and more text.
+
+    \section1 A section with inline images.
+    This section contains two \\inlineimage command invocations.
+
+    Lorem ipsum odor amet, consectetuer adipiscing elit. Pretium pellentesque
+    nibh fusce rhoncus pellentesque. Tortor condimentum facilisis enim mi ornare
+    molestie maecenas. Dapibus sed potenti urna tincidunt, finibus varius litora
+    felis nibh. Nullam est malesuada integer potenti hac sit.
+    \inlineimage leonardo-da-vinci-small.png "an alt text in quotes"
+    Habitasse turpis risus eget purus ut sollicitudin sapien.
+
+    Morbi arcu conubia ac finibus fusce maximus tristique, tristiquetorquent.
+    Conubia justo venenatis pharetra tortor quisque accumsan senectus. Nec
+    lacinia velit vestibulum platea vel magnis dignissim penatibus. Cras ad
+    parturient metus laoreet primis faucibus vel nulla hac.
+    \inlineimage leonardo-da-vinci-small.png {an alt text in curly brackets
+    because it spans multiple lines}.
+    Facilisi nisl porttitor, eleifend ultrices id quam tristique. Magnis curae
+    gravida sem penatibus non enim elit penatibus. Semper etiam efficitur mi
+    ipsum euismod euismod risus. Ex maximus hendrerit laoreet mus natoque
+    augue. Cubilia elementum ridiculus tincidunt convallis tempor cras nulla eu
+    per.
 */
 

@@ -1849,7 +1849,7 @@
     argument, and renders it centered as a separate paragraph.
 
     The command takes two arguments. The first argument is the name of
-    the image file. The second argument should be a description of what
+    the image file. The second argument is a description of what
     the image contains, and is used for the HTML \c alt attribute.
     Its contents is read aloud by screen readers, and its use is therefore
     strongly recommended for accessibility purposes. It may also be used by
@@ -1859,14 +1859,23 @@
     commonly is rendered by graphical text browsers as a tooltip when the user
     hovers the mouse over the image.
 
-    Be sure to follow the file name or the description with a line break.
+    While QDoc is quite forgiving, you should wrap both the file name and the
+    description in curly braces, like so:
+    \badcode
+    \image {Bandit.png} {A Golden Retriever holding a bag of coffee in its mouth}
+    \endcode
+    This syntax is the most explicit and should always give the expected result.
+    If not, be sure to follow the file name or the description with a line break.
     Curly brackets are required if the description argument spans multiple lines.
+    If the description is wrapped in double quotes, QDoc will remove them before
+    generating output. Special characters may be replaced with the corresponding
+    HTML entity code in QDoc's HTML output.
 
     \badcode *
     /\1!
         Qt is a C++ toolkit for cross-platform GUI application development.
 
-        \image happyguy.jpg "Happy guy"
+        \image {happyguy.jpg} {Happy guy}
 
         Qt provides single-source portability across Microsoft
         Windows, macOS, Linux, and all major commercial Unix
