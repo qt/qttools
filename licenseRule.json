@@ -1,6 +1,6 @@
 [
     {
-       "comment" : [ "file_pattern_ending: strings matched against the end of a file name.",
+       "comment": [ "file_pattern_ending: strings matched against the end of a file name.",
                      "location keys: regular expression matched against the beginning of",
                      "the file path (relative to the git submodule root).",
                      "spdx: list of SPDX-License-Expression's allowed in the matching files.",
@@ -9,224 +9,230 @@
                      "unless they are examples",
                      "Files with other endings can also be build system files"
                     ],
-        "file_pattern_ending" : ["CMakeLists.txt", ".cmake", ".pro", ".prf", "configure",
-                                 ".gitignore", ".pri", ".cfg", ".qrc", ".plist",
-                                 ".cmake.conf", ".gitattributes", ".tag",
-                                 "coin/axivion/ci_config_linux.json", ".yaml", ".gitmodules"],
-        "location" : {
-            "" : {
-                   "comment" : "File with other endings also belong to the build system file type",
-                   "file type" : "build system",
-                   "spdx"      : ["BSD-3-Clause"]
+        "file_pattern_ending": ["CMakeLists.txt", ".cmake", ".pro", ".prf", "configure",
+                                 ".pri", ".cfg", ".qrc", ".plist",
+                                 ".cmake.conf", ".tag",
+                                 "coin/axivion/ci_config_linux.json", ".yaml"],
+        "location": {
+            "": {
+                   "comment": "File with other endings also belong to the build system file type",
+                   "file type": "build system",
+                   "spdx": ["BSD-3-Clause"]
                   },
-            "(.*)(examples/|snippets/)" : {
-                   "comment" : "Example takes precedence",
-                   "file type" : "examples and snippets",
-                   "spdx" : ["LicenseRef-Qt-Commercial OR BSD-3-Clause"]
+            "(.*)(examples/|snippets/)": {
+                   "comment": "Example takes precedence",
+                   "file type": "examples and snippets",
+                   "spdx": ["LicenseRef-Qt-Commercial OR BSD-3-Clause"]
                   }
        }
     },
     {
-        "file_pattern_ending" : [".qdoc", ".qdocinc" , ".qdocconf", ".qdoc.sample", "README.md",
-                                 "README", "qt_attribution.json", "REUSE.toml", "README_test.chromium",
-                                 "licenseRule.json"],
-        "location" :{
-            "" : {
-                "comment" : "",
-                "file type" : "documentation",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only"]
-            },
-            "src/qdoc/qdoc/tests/generatedoutput/testdata/(?!REUSE.toml)" : {
-                "comment" : "",
-                "file type" : "test",
-                "spdx" : ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
-            },
-            "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/(?!REUSE.toml)" : {
-                "comment" : "",
-                "file type" : "test",
-                "spdx" : ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
-            },
-            "src/qdoc/qdoc/tests/config/testdata/(?!REUSE.toml)" : {
-                "comment" : "",
-                "file type" : "test",
-                "spdx" : ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
+        "comments": ["Files with the following endings are infrastructure licensed"],
+        "file_pattern_ending": [".gitattributes", ".gitignore", ".gitmodules", ".gitreview",
+                                "clang-format", "licenseRule.json", "REUSE.toml"],
+        "location":{
+            "": {
+                "comment": "Default",
+                "file type": "infrastructure",
+                "spdx": ["LicenseRef-Qt-Commercial OR BSD-3-Clause"]
             }
         }
     },
     {
-        "comments" : ["Files with the following endings are tool licensed",
+        "file_pattern_ending": [".qdoc", ".qdocinc" , ".qdocconf", ".qdoc.sample", "README.md",
+                                 "README", "qt_attribution.json", "README_test.chromium"],
+        "location":{
+            "": {
+                "comment": "",
+                "file type": "documentation",
+                "spdx": ["LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only"]
+            },
+            "src/qdoc/qdoc/tests/generatedoutput/testdata/(?!REUSE.toml)": {
+                "comment": "",
+                "file type": "test",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
+            },
+            "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/(?!REUSE.toml)": {
+                "comment": "",
+                "file type": "test",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
+            },
+            "src/qdoc/qdoc/tests/config/testdata/(?!REUSE.toml)": {
+                "comment": "",
+                "file type": "test",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
+            }
+        }
+    },
+    {
+        "comments": ["Files with the following endings are tool licensed",
                       "unless they are in example or snippet, in which case",
                       "the should be accordingly licensed.",
                       "At the moment there is no such file in example not snippet."],
-        "file_pattern_ending" : [".sh", ".py", ".pl", ".bat", ".ps1"],
-        "location" :{
-            "" : {
-                "comment" : "",
-                "file type" : "tools",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
+        "file_pattern_ending": [".sh", ".py", ".pl", ".bat", ".ps1"],
+        "location":{
+            "": {
+                "comment": "",
+                "file type": "tools",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
-            "tests/auto/linguist/lupdate/testdata/good/parsepython/main.py" : {
-                "comment" : "",
-                "file type" : "test",
-                "spdx" : ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
+            "tests/auto/linguist/lupdate/testdata/good/parsepython/main.py": {
+                "comment": "",
+                "file type": "test",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
             },
-            "(.*)(examples/|snippets/)" : {
-                "comment" : "Example takes precedence",
-                "file type" : "examples and snippets",
-                "spdx" : ["LicenseRef-Qt-Commercial OR BSD-3-Clause"]
+            "(.*)(examples/|snippets/)": {
+                "comment": "Example takes precedence",
+                "file type": "examples and snippets",
+                "spdx": ["LicenseRef-Qt-Commercial OR BSD-3-Clause"]
             }
         }
     },
     {
-        "comment" : ["All other files",
+        "comment": ["All other files",
                  "The licensing is defined only by the file location in the Qt module repository.",
                  "NO <file_pattern_ending> key for this case!",
                  "This needs to be the last entry of the file."],
-        "location" : {
-            "" : {
-                "comment" : "tools repository",
-                "file type" : "tools",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
+        "location": {
+            "": {
+                "comment": "tools repository",
+                "file type": "tools",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
-            "dist/" : {
-                "comment" : "Default",
-                "file type" : "documentation",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only"]
+            "dist/": {
+                "comment": "Default",
+                "file type": "documentation",
+                "spdx": ["LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only"]
             },
-            "src/designer/src/plugins/" : {
-                "comment" : "plugins for Qt Widgets Designer, but also Qt UI Tools",
-                "file type" : "module and plugin",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
+            "src/designer/src/plugins/": {
+                "comment": "plugins for Qt Widgets Designer, but also Qt UI Tools",
+                "file type": "module and plugin",
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
-            "src/uiplugin/" : {
-                "comment" : "UiTools links UiPlugin",
-                "file type" : "module and plugin",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
+            "src/uiplugin/": {
+                "comment": "UiTools links UiPlugin",
+                "file type": "module and plugin",
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
-            "src/assistant/help/" : {
-                "comment" : "library",
-                "file type" : "module and plugin",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
+            "src/assistant/help/": {
+                "comment": "library",
+                "file type": "module and plugin",
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
-            "src/assistant/plugins/help/" : {
-                "comment" : "help engine plugin",
-                "file type" : "module and plugin",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
+            "src/assistant/plugins/help/": {
+                "comment": "help engine plugin",
+                "file type": "module and plugin",
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
-            "src/assistant/qhelpgenerator/" : {
-                "comment" : "",
-                "file type" : "tools",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
+            "src/assistant/qhelpgenerator/": {
+                "comment": "",
+                "file type": "tools",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
-            "src/assistant/shared/" : {
-                "comment" : "used in library and tools",
-                "file type" : "module and plugin",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
+            "src/assistant/shared/": {
+                "comment": "used in library and tools",
+                "file type": "module and plugin",
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
-            "src/assistant/" : {
-                "comment" : "for a tool",
-                "file type" : "tools",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
+            "src/designer/src/lib/uilib/": {
+                "comment": "code used in src/uitools",
+                "file type": "module and plugin",
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
-            "src/designer/src/lib/uilib/" : {
-                "comment" : "code used in src/uitools",
-                "file type" : "module and plugin",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
+            "src/designer/": {
+                "comment": "for a tool",
+                "file type": "tools",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
-            "src/designer/" : {
-                "comment" : "for a tool",
-                "file type" : "tools",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
+            "src/uilib/": {
+                "comment": "library",
+                "file type": "module and plugin",
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
-            "src/uilib/" : {
-                "comment" : "library",
-                "file type" : "module and plugin",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
+            "src/shared/": {
+                "comment": "used by some libraries",
+                "file type": "module and plugin",
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
-            "src/shared/" : {
-                "comment" : "used by some libraries",
-                "file type" : "module and plugin",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
+            "src/uitools/": {
+                "comment": "code for the Qt Ui Tools library",
+                "file type": "module and plugin",
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
-            "src/uitools/" : {
-                "comment" : "code for the Qt Ui Tools library",
-                "file type" : "module and plugin",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
+            "src/qdoc/qdoc/src/qdoc/": {
+                "comment": "",
+                "file type": "tools",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
-            "src/qdoc/qdoc/src/qdoc/" : {
-                "comment" : "",
-                "file type" : "tools",
-                "spdx"      : ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
+            "src/qdoc/catch/include/catch/catch.hpp": {
+                "comment": "src/qdoc/catch/LICENSE.CATCH.txt",
+                "file type": "module and plugin",
+                "spdx": ["BSL-1.0"]
             },
-            "src/qdoc/catch/include/catch/catch.hpp" : {
-                "comment" : "src/qdoc/catch/LICENSE.CATCH.txt",
-                "file type" : "module and plugin",
-                "spdx"      : ["BSL-1.0"]
+            "tests/": {
+                "comment": "",
+                "file type": "test",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
             },
-            "tests/" : {
-                "comment" : "",
-                "file type" : "test",
-                "spdx" : ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
+            "src/qdoc/qdoc/tests/": {
+                "comment": "",
+                "file type": "test",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
             },
-            "src/qdoc/qdoc/tests/" : {
-                "comment" : "",
-                "file type" : "test",
-                "spdx" : ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
+            "src/qdoc/qdoc/tests/(validateqdocoutputfiles|generatedoutput)/.*/(examples|snippets)": {
+                "comment": "",
+                "file type": "test",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
             },
-            "src/qdoc/qdoc/tests/(validateqdocoutputfiles|generatedoutput)/.*/(examples|snippets)" : {
-                "comment" : "",
-                "file type" : "test",
-                "spdx" : ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
+            "(.*)(examples/|snippets/)": {
+                "comment": "",
+                "file type": "examples and snippets",
+                "spdx": ["LicenseRef-Qt-Commercial OR BSD-3-Clause"]
             },
-            "(.*)(examples/|snippets/)" : {
-                "comment" : "",
-                "file type" : "examples and snippets",
-                "spdx" : ["LicenseRef-Qt-Commercial OR BSD-3-Clause"]
+            "(examples|.*).*/doc/images/": {
+                "comment": "Documentation asset",
+                "file type": "documentation",
+                "spdx": ["LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only"]
             },
-            "(examples|.*).*/doc/images/" : {
-                "comment" : "Documentation asset",
-                "file type" : "documentation",
-                "spdx" : ["LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only"]
+            "src/assistant/assistant/doc/images/": {
+                "comment": "Documentation asset",
+                "file type": "documentation",
+                "spdx": ["LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only"]
             },
-            "src/assistant/assistant/doc/images/" : {
-                "comment" : "Documentation asset",
-                "file type" : "documentation",
-                "spdx" : ["LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only"]
+            "tests/auto/linguist/lconvert/data/test-kde-.*.po": {
+                "comment": "",
+                "file type": "public domain",
+                "spdx": ["CC0-1.0"]
             },
-            "tests/auto/linguist/lconvert/data/test-kde-.*.po" : {
-                "comment" : "",
-                "file type" : "public domain",
-                "spdx" : ["CC0-1.0"]
+            "tests/auto/linguist/lconvert/data/wrapping.po": {
+                "comment": "",
+                "file type": "public domain",
+                "spdx": ["CC0-1.0"]
             },
-            "tests/auto/linguist/lconvert/data/wrapping.po" : {
-                "comment" : "",
-                "file type" : "public domain",
-                "spdx" : ["CC0-1.0"]
+            "tests/auto/linguist/lconvert/data/test1-.*.po": {
+                "comment": "",
+                "file type": "public domain",
+                "spdx": ["CC0-1.0"]
             },
-            "tests/auto/linguist/lconvert/data/test1-.*.po" : {
-                "comment" : "",
-                "file type" : "public domain",
-                "spdx" : ["CC0-1.0"]
+            "tests/auto/linguist/lconvert/data/test-translator-comment.po": {
+                "comment": "",
+                "file type": "public domain",
+                "spdx": ["CC0-1.0"]
             },
-            "tests/auto/linguist/lconvert/data/test-translator-comment.po" : {
-                "comment" : "",
-                "file type" : "public domain",
-                "spdx" : ["CC0-1.0"]
+            "tests/auto/linguist/lconvert/data/test-empty-comment.po": {
+                "comment": "",
+                "file type": "public domain",
+                "spdx": ["CC0-1.0"]
             },
-            "tests/auto/linguist/lconvert/data/test-empty-comment.po" : {
-                "comment" : "",
-                "file type" : "public domain",
-                "spdx" : ["CC0-1.0"]
+            "tests/auto/linguist/lconvert/data/test-developer-comment.po": {
+                "comment": "",
+                "file type": "public domain",
+                "spdx": ["CC0-1.0"]
             },
-            "tests/auto/linguist/lconvert/data/test-developer-comment.po" : {
-                "comment" : "",
-                "file type" : "public domain",
-                "spdx" : ["CC0-1.0"]
-            },
-            "src/qdoc/qdoc/src/qdoc/clang/AST/QualTypeNames.h" : {
-                "comment" : "",
-                "file type" : "3rd party",
-                "spdx" : ["Apache-2.0 WITH LLVM-exception"]
+            "src/qdoc/qdoc/src/qdoc/clang/AST/QualTypeNames.h": {
+                "comment": "",
+                "file type": "3rd party",
+                "spdx": ["Apache-2.0 WITH LLVM-exception"]
             }
         }
     }
