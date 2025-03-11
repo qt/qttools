@@ -78,7 +78,7 @@ bool MetaStrings::parse(QString &string)
         if (int k = comment.indexOf(u' '); k != -1) {
             QString context = comment.left(k);
             comment.remove(0, k + 1);
-            m_magicComment.emplace(MagicComment{ context, comment });
+            m_magicComment.emplace(MagicComment{ std::move(context), std::move(comment) });
         }
     }
 

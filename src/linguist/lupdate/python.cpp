@@ -255,7 +255,6 @@ private:
 
         yyIndentationSize = -1;
         yyContinuousSpaceCount = 0;
-        yyCountingIndentation = false;
         yyContextStack.clear();
     }
 
@@ -723,7 +722,7 @@ private:
     char yyString[65536];
     size_t yyStringLen;
     int yyParenDepth;
-    int yyLineNo;
+    int yyLineNo = 1;
     int yyCurLineNo;
     Translator &tor;
     // the file to read from (if reading from a file)
@@ -733,7 +732,7 @@ private:
     int buf;
     int yyIndentationSize;
     int yyContinuousSpaceCount;
-    bool yyCountingIndentation;
+    bool yyCountingIndentation = false;
     // (Context, indentation level) pair.
     using ContextPair = QPair<QByteArray, int>;
     // Stack of (Context, indentation level) pairs.
