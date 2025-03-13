@@ -675,11 +675,13 @@ function(qt6_add_translations)
         set(arg_RESOURCE_PREFIX "/i18n")
     endif()
 
-    set(qm_out_dir "${CMAKE_CURRENT_BINARY_DIR}")
     if(DEFINED arg_QM_OUTPUT_DIRECTORY)
         get_filename_component(qm_out_dir "${arg_QM_OUTPUT_DIRECTORY}" ABSOLUTE
             BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}"
         )
+    else()
+        set(qm_out_dir "${CMAKE_CURRENT_BINARY_DIR}")
+        set(arg_QM_OUTPUT_DIRECTORY "${qm_out_dir}")
     endif()
 
     set(scope_args)
