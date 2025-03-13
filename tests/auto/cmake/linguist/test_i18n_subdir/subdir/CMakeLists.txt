@@ -8,3 +8,6 @@ qt_add_translations(app1
     TS_FILES app1_de.ts
     NO_GENERATE_PLURALS_TS_FILE
 )
+
+include(../../build_time_checks.cmake)
+check_file_is_built("${CMAKE_CURRENT_BINARY_DIR}/app1_de.qm")
