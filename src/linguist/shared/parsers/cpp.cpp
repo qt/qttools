@@ -4,7 +4,8 @@
 #include "cpp.h"
 
 #include <translator.h>
-#include "metastrings.h"
+#include <parsers/metastrings.h>
+#include <parsers/trparser.h>
 
 #include <QtCore/QBitArray>
 #include <QtCore/QTextStream>
@@ -142,6 +143,8 @@ private:
 
     int getChar();
     TokenType lookAheadToSemicolonOrLeftBrace();
+    int lookBackFunctionCallStart(int prefixSize);
+    int lookAheadFunctionCallEnd(int functionStart);
     TokenType getToken();
 
     void processComment();
@@ -155,11 +158,11 @@ private:
     void recordMessage(int line, const QString &context, const QString &text,
                        const QString &comment, const QString &extracomment, const QString &msgid,
                        const QString &label, const TranslatorMessage::ExtraData &extra,
-                       bool plural);
+                       bool plural, int startOffset, int endOffset);
 
     void handleTr(QString &prefix, bool plural);
-    void handleTranslate(bool plural);
-    void handleTrId(bool plural);
+    void handleTranslate(int prefixSize, bool plural);
+    void handleTrId(int prefixSize, bool plural);
     void handleDeclareTrFunctions();
 
     void processInclude(const QString &file, ConversionData &cd,
@@ -1543,7 +1546,7 @@ bool CppParser::matchString(QString *s)
             return matches;
         matches = true;
         if (yyTok == Tok_String)
-            *s += ParserTool::transcode(yyWord);
+            *s += transcode(yyWord);
         else
             *s += yyWord;
         s->detach();
@@ -1611,19 +1614,20 @@ bool CppParser::skipExpression()
 }
 
 void CppParser::recordMessage(int line, const QString &context, const QString &text,
-                              const QString &comment, const QString &extracomment,
-                              const QString &msgid, const QString &label,
-                              const TranslatorMessage::ExtraData &extra, bool plural)
+                            const QString &comment, const QString &extracomment,
+                            const QString &msgid, const QString &label,
+                            const TranslatorMessage::ExtraData &extra,
+                            bool plural, int startOffset, int endOffset)
 {
-    TranslatorMessage msg(
-        ParserTool::transcode(context), text, ParserTool::transcode(comment), QString(),
-        yyFileName, line, QStringList(),
-        TranslatorMessage::Unfinished, plural);
-    msg.setExtraComment(ParserTool::transcode(extracomment.simplified()));
+    TranslatorMessage msg(transcode(context), text, transcode(comment), QString(), yyFileName, line,
+                          QStringList(), TranslatorMessage::Unfinished, plural);
+    msg.setExtraComment(transcode(extracomment.simplified()));
     msg.setId(msgid);
     msg.setExtras(extra);
     if (!msgid.isEmpty())
         msg.setLabel(label);
+    msg.setStartOffset(startOffset);
+    msg.setEndOffset(endOffset);
     tor->append(msg);
 }
 
@@ -1631,10 +1635,11 @@ void CppParser::handleTr(QString &prefix, bool plural)
 {
     if (!m_metaStrings.sourcetext().isEmpty())
         yyMsg() << "//% cannot be used with tr() / QT_TR_NOOP(). Ignoring\n";
-    if (!m_metaStrings.label().isEmpty() && m_metaStrings.msgid().isEmpty())
+    if (!m_metaStrings.label().isEmpty())
         yyMsg() << "labels cannot be used with text-based translation. Ignoring\n";
 
     int line = yyLineNo;
+    const int startOffset = lookBackFunctionCallStart(prefix.size());
     yyTok = getToken();
     QString text;
     if (matchString(&text)) {
@@ -1646,6 +1651,7 @@ void CppParser::handleTr(QString &prefix, bool plural)
                 // ok,
             } else if (match(Tok_Comma)) {
                 plural = true;
+                skipExpression();
             }
         }
         if (!pendingContext.isEmpty() && !prefix.startsWith("::"_L1)) {
@@ -1718,20 +1724,21 @@ void CppParser::handleTr(QString &prefix, bool plural)
         }
 
       gotctx:
-          recordMessage(line, context, text, comment, m_metaStrings.extracomment(),
-                        m_metaStrings.msgid(), m_metaStrings.label(), m_metaStrings.extra(),
-                        plural);
+        const int endOffset = yyInPtr - (const ushort *)yyInStr.unicode() - 1;
+        recordMessage(line, context, text, comment, m_metaStrings.extracomment(),
+                    m_metaStrings.msgid(), m_metaStrings.label(), m_metaStrings.extra(),
+                    plural, startOffset, endOffset);
     }
     m_metaStrings.clear();
-    metaExpected = false;
 }
 
-void CppParser::handleTranslate(bool plural)
+void CppParser::handleTranslate(int prefixSize, bool plural)
 {
     if (!m_metaStrings.sourcetext().isEmpty())
         yyMsg() << "//% cannot be used with translate() / QT_TRANSLATE_NOOP(). Ignoring\n";
-    if (!m_metaStrings.label().isEmpty() && m_metaStrings.msgid().isEmpty())
+    if (!m_metaStrings.label().isEmpty())
         yyMsg() << "labels cannot be used with text-based translation. Ignoring\n";
+    const int startOffset = lookBackFunctionCallStart(prefixSize);
     int line = yyLineNo;
     yyTok = getToken();
     QString text;
@@ -1773,28 +1780,32 @@ void CppParser::handleTranslate(bool plural)
                 return;
             }
         }
+        const int endOffset = yyInPtr - (const ushort *)yyInStr.unicode() - 1;
+
         recordMessage(line, context, text, comment, m_metaStrings.extracomment(),
-                      m_metaStrings.msgid(), m_metaStrings.label(), m_metaStrings.extra(), plural);
+                      m_metaStrings.msgid(), m_metaStrings.label(), m_metaStrings.extra(),
+                      plural, startOffset, endOffset);
     }
     m_metaStrings.clear();
-    metaExpected = false;
 }
 
-void CppParser::handleTrId(bool plural)
+void CppParser::handleTrId(int prefixSize, bool plural)
 {
     if (!m_metaStrings.msgid().isEmpty())
         yyMsg() << "//= cannot be used with qtTrId() / QT_TRID_NOOP(). Ignoring\n";
     int line = yyLineNo;
+    const int startOffset = lookBackFunctionCallStart(prefixSize);
     yyTok = getToken();
     QString msgid;
     if (matchString(&msgid) && !msgid.isEmpty()) {
         plural |= match(Tok_Comma);
-        recordMessage(line, QString(), ParserTool::transcode(m_metaStrings.sourcetext()), QString(),
-                      m_metaStrings.extracomment(), msgid, m_metaStrings.label(),
-                      m_metaStrings.extra(), plural);
+        const int endOffset = yyInPtr - (const ushort *)yyInStr.unicode() - 1;
+
+        recordMessage(line, QString(), transcode(m_metaStrings.sourcetext()), QString(),
+                    m_metaStrings.extracomment(), msgid, m_metaStrings.label(),
+                    m_metaStrings.extra(), plural, startOffset, endOffset);
     }
     m_metaStrings.clear();
-    metaExpected = false;
 }
 
 void CppParser::handleDeclareTrFunctions()
@@ -1829,6 +1840,51 @@ void CppParser::parse(ConversionData &cd, const QStringList &includeStack,
     parseInternal(cd, includeStack, inclusions);
 }
 
+int CppParser::lookBackFunctionCallStart(int prefixSize)
+{
+    const int funcNameOffset = yyInPtr - (const ushort *)yyInStr.unicode();
+    QStringView prefix = QStringView(yyInStr).sliced(0, funcNameOffset);
+    do
+        prefix.chop(1);
+    while (prefix.back() != '('_L1);
+    prefix.chop(prefixSize + yyWord.size() + 1);
+
+    auto chopMatch = [](auto& str, const auto& match) {
+        if (str.endsWith(match)) {
+            str.chop(match.size());
+            return true;
+        }
+        return false;
+    };
+    while (chopMatch(prefix, "."_L1) || chopMatch(prefix, "->"_L1)) {
+        int pos = prefix.size() - 1;
+        if (prefix.at(pos) == ')'_L1) {
+            int count = 1;
+            pos--;
+            while (count != 0 && pos >= 0) {
+                if (QChar c = prefix.at(pos--); c == ')'_L1)
+                    count++;
+                else if (c == '('_L1)
+                    count--;
+                else if (c == "\""_L1 || c == "'"_L1) {
+                    const QChar quotation = c;
+                    while (pos >= 0) {
+                        c = prefix[pos--];
+                        if (c == '\\'_L1)
+                            pos--;
+                        else if (c == quotation)
+                            break;
+                    }
+                }
+            }
+        }
+        while (pos >= 0 && (prefix.at(pos).isLetterOrNumber() || prefix.at(pos) == '_'_L1))
+            pos--;
+        prefix.slice(0, pos + 1);
+    }
+    return prefix.size();
+}
+
 bool CppParser::parseTranslate(QString &prefix)
 {
     bool forcePlural = false;
@@ -1857,7 +1913,7 @@ bool CppParser::parseTranslate(QString &prefix)
     case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
     case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
         if (tor)
-            handleTranslate(forcePlural);
+            handleTranslate(prefix.size(), forcePlural);
         break;
     case TrFunctionAliasManager::Function_QT_TRID_N_NOOP:
         forcePlural = true;
@@ -1866,7 +1922,7 @@ bool CppParser::parseTranslate(QString &prefix)
     case TrFunctionAliasManager::Function_qTrId:
     case TrFunctionAliasManager::Function_QT_TRID_NOOP:
         if (tor)
-            handleTrId(forcePlural);
+            handleTrId(prefix.size(), forcePlural);
         break;
     default:
         return false;
@@ -2306,17 +2362,13 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             yyTok = getToken();
             break;
         case Tok_RightParen:
-            if (yyParenDepth == 0) {
-                if (!yyTokColonSeen && !pendingContext.isEmpty()
-                    && yyBraceDepth == namespaceDepths.size()) {
-                    // Demote the pendingContext to prospectiveContext.
-                    prospectiveContext = pendingContext;
-                    pendingContext.clear();
-                }
-                metaExpected = true;
-            } else {
-                metaExpected = false;
+            if (yyParenDepth == 0 && !yyTokColonSeen && !pendingContext.isEmpty()
+                && yyBraceDepth == namespaceDepths.size()) {
+                // Demote the pendingContext to prospectiveContext.
+                prospectiveContext = pendingContext;
+                pendingContext.clear();
             }
+            metaExpected = true;
             yyTok = getToken();
             break;
         case Tok_decltype:
@@ -2381,10 +2433,10 @@ void CppParser::processComment()
 
     if (m_metaStrings.magicComment()) {
         auto [context, comment] = *m_metaStrings.magicComment();
-        TranslatorMessage msg(ParserTool::transcode(context), QString(),
-                              ParserTool::transcode(comment), QString(), yyFileName, yyLineNo,
-                              QStringList(), TranslatorMessage::Finished, false);
-        msg.setExtraComment(ParserTool::transcode(m_metaStrings.extracomment().simplified()));
+        TranslatorMessage msg(transcode(context), QString(), transcode(comment), QString(),
+                              yyFileName, yyLineNo, QStringList(), TranslatorMessage::Finished,
+                              false);
+        msg.setExtraComment(transcode(m_metaStrings.extracomment().simplified()));
         tor->append(msg);
         tor->setExtras(m_metaStrings.extra());
         m_metaStrings.clear();

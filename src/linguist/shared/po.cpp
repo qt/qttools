@@ -528,7 +528,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                         bool ok;
                         int lno = ref.mid(pos + 1).toInt(&ok);
                         if (ok) {
-                            msg.addReference(ref.left(pos), lno);
+                            msg.addReference(ref.left(pos), lno, -1, -1);
                             continue;
                         }
                     }

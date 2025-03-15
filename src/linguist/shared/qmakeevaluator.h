@@ -8,7 +8,7 @@
 #  error PROEVALUATOR_FULL is incompatible with PROEVALUATOR_THREAD_SAFE due to cache() implementation
 #endif
 
-#include "qmakeparser.h"
+#include "parsers/qmakeparser.h"
 #include "qmakevfs.h"
 #include "ioutils.h"
 

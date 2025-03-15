@@ -334,7 +334,6 @@
     <message id="id1">
         <location filename="main.qml" line="112"/>
         <source>msg with id1</source>
-        <label>label1</label>
         <translation type="unfinished"></translation>
     </message>
     <message>

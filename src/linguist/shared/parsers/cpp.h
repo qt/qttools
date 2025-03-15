@@ -4,14 +4,14 @@
 #ifndef CPP_H
 #define CPP_H
 
-#include "lupdate.h"
-
+#include <translator.h>
 #include <QtCore/QSet>
 #include <QtCore/QStack>
 
 QT_BEGIN_NAMESPACE
 
-struct HashString {
+struct HashString
+{
     HashString() : m_hash(0x80000000) {}
     explicit HashString(const QString &str) : m_str(str), m_hash(0x80000000) {}
     void setValue(const QString &str) { m_str = str; m_hash = 0x80000000; }

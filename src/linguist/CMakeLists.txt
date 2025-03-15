@@ -15,6 +15,7 @@ add_subdirectory(lrelease)
 add_subdirectory(lrelease-pro)
 add_subdirectory(lupdate)
 add_subdirectory(lupdate-pro)
+add_subdirectory(ltext2id)
 if(QT_FEATURE_process AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton
     AND QT_FEATURE_png AND QT_FEATURE_mdiarea AND QT_FEATURE_syntaxhighlighter
     AND TARGET Qt::Widgets AND TARGET Qt::Quick)

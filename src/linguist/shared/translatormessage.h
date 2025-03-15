@@ -22,12 +22,19 @@ public:
     {
         QString m_fileName;
         int m_lineNumber;
+        int m_startOffset;
+        int m_endOffset;
     public:
-        Reference(const QString &n, int l) : m_fileName(n), m_lineNumber(l) {}
+        Reference(const QString &n, int l, int start, int end) :
+              m_fileName(n), m_lineNumber(l),
+              m_startOffset(start), m_endOffset(end) {}
         bool operator==(const Reference &other) const
-            { return fileName() == other.fileName() && lineNumber() == other.lineNumber(); }
+        { return fileName() == other.fileName()
+                    && lineNumber() == other.lineNumber();}
         QString fileName() const { return m_fileName; }
         int lineNumber() const { return m_lineNumber; }
+        int startOffset() const { return m_startOffset; }
+        int endOffset() const { return m_endOffset; }
     };
     typedef QList<Reference> References;
 
@@ -80,15 +87,19 @@ public:
     void setTsLineNumber(int lineNumber) { m_tsLineNumber = lineNumber; }
     void clearReferences();
     void setReferences(const References &refs);
-    void addReference(const QString &fileName, int lineNumber);
-    void addReference(const Reference &ref) { addReference(ref.fileName(), ref.lineNumber()); }
-    void addReferenceUniq(const QString &fileName, int lineNumber);
+    void addReference(const QString &fileName, int lineNumber, int startOffset, int endOffset);
+    void addReference(const Reference &ref) { addReference(ref.fileName(), ref.lineNumber(), ref.startOffset(), ref.endOffset()); }
+    void addReferenceUniq(const QString &fileName, int lineNumber, int startOffset, int endOffset);
     References extraReferences() const { return m_extraRefs; }
-    References allReferences() const;
+    const References allReferences() const;
     QString userData() const { return m_userData; }
     void setUserData(const QString &userData) { m_userData = userData; }
     QString extraComment() const { return m_extraComment; }
     void setExtraComment(const QString &extraComment) { m_extraComment = extraComment; }
+    int startOffset() const { return m_startOffset; }
+    void setStartOffset(int startOffset) { m_startOffset = startOffset; }
+    int endOffset() const { return m_endOffset; }
+    void setEndOffset(int endOffset) { m_endOffset = endOffset; }
     QString translatorComment() const { return m_translatorComment; }
     void setTranslatorComment(const QString &translatorComment) { m_translatorComment = translatorComment; }
     QString warning() const {return m_warning;}
@@ -135,7 +146,8 @@ private:
     int         m_tsLineNumber = -1;
     References  m_extraRefs;
     bool        m_warningOnly = false;
-
+    int         m_startOffset = 0;
+    int         m_endOffset = 0;
     Type m_type;
     bool m_plural;
 };

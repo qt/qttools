@@ -18,7 +18,7 @@ qt_internal_add_tool(${target_name}
         ../shared/qmakebuiltins.cpp
         ../shared/qmakeevaluator.cpp ../shared/qmakeevaluator.h ../shared/qmakeevaluator_p.h
         ../shared/qmakeglobals.cpp ../shared/qmakeglobals.h
-        ../shared/qmakeparser.cpp ../shared/qmakeparser.h
+        ../shared/parsers/qmakeparser.cpp ../shared/parsers/qmakeparser.h
         ../shared/qmakevfs.cpp ../shared/qmakevfs.h
         ../shared/qrcreader.cpp ../shared/qrcreader.h
         main.cpp

@@ -139,7 +139,7 @@ void Translator::extend(const TranslatorMessage &msg, ConversionData &cd)
                                          : "message '%1'"_L1.arg(makeMsgId(msg))));
             return;
         }
-        emsg.addReferenceUniq(msg.fileName(), msg.lineNumber());
+        emsg.addReferenceUniq(msg.fileName(), msg.lineNumber(), msg.startOffset(), msg.endOffset());
         if (!msg.extraComment().isEmpty()) {
             QString cmt = emsg.extraComment();
             if (!cmt.isEmpty()) {
@@ -508,7 +508,7 @@ void Translator::dropUiLines()
             const QString &fn = itref.fileName();
             if (fn.endsWith(uiXt) || fn.endsWith(juiXt)) {
                 if (++have[fn] == 1)
-                    refs.append(TranslatorMessage::Reference(fn, -1));
+                    refs.append(TranslatorMessage::Reference(fn, -1, -1, -1));
             } else {
                 refs.append(itref);
             }
@@ -679,7 +679,7 @@ void Translator::makeFileNamesAbsolute(const QDir &originalPath)
             QFileInfo fi (fileName);
             if (fi.isRelative())
                 fileName = originalPath.absoluteFilePath(fileName);
-            msg.addReference(fileName, ref.lineNumber());
+            msg.addReference(fileName, ref.lineNumber(), ref.startOffset(), ref.endOffset());
         }
     }
 }

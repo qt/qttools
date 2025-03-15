@@ -1,0 +1,66 @@
+// Copyright (C) 2025 The Qt Company Ltd
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+struct Tr
+{
+    Q_DECLARE_TR_FUNCTIONS(QtC::Git)
+};
+
+
+void func()
+{
+    QStringList headers; // Keep in sync with GerritChange::toHtml()
+    //% "Subject"
+    //@ QtC::Git
+    headers << "#" << qtTrId("QtC::Git-Subject") << //% "Owner"
+//@ QtC::Git
+//ltext2id error: QtC::Git-Owner
+qtTrId("QtC::Git-Owner")
+            //% "Updated"
+            //@ QtC::Git
+            //ltext2id error: QtC::Git-Updated
+            << qtTrId("QtC::Git-Updated") << //% "Project"
+//@ QtC::Git
+//ltext2id error: QtC::Git-Project
+qtTrId("QtC::Git-Project")
+            //% "Approvals"
+            //@ QtC::Git
+            //ltext2id error: QtC::Git-Approvals
+            << qtTrId("QtC::Git-Approvals") << //% "Status"
+//@ QtC::Git
+//ltext2id error: QtC::Git-Status
+qtTrId("QtC::Git-Status");
+
+    const QString help
+        //% "Macro mode. Type \"%1\" to stop recording and \"%2\" to play the macro."
+        //@ QtC::Git
+        //ltext2id error: QtC::Git-Macroamodeoa-98983
+        = qtTrId("QtC::Git-Macroamodeoa-98983")
+              .arg(endShortcut, executeShortcut);
+    QPushButton *acceptButton
+        //% "Accept"
+        //@ QtC::Git
+        //ltext2id error: QtC::Git-Accept
+        = buttonBox.addButton(qtTrId("QtC::Git-Accept"), QDialogButtonBox::ButtonRole::YesRole);
+            
+    auto v = m_separatedView->prepareObject<ImageViewer>(item);
+            v->setInfo(item->address
+                           //% "%1 Object at %2"
+                           //@ QtC::Git
+                           //ltext2id error: QtC::Git-f1a-76198
+                           ? qtTrId("QtC::Git-f1a-76198").arg(item->type, item->hexAddress())
+                           //% "%1 Object at Unknown Address"
+                           //@ QtC::Git
+                           : qtTrId("QtC::Git-f1a-9950").arg(item->type) + "    "
+                                 //% "Size: %1x%2, %3 byte, format: %4, depth: %5"
+                                 //@ QtC::Git
+                                 + qtTrId("QtC::Git-Size{af1xf-30676")
+                                       .arg(width)
+                                       .arg(height)
+                                       .arg(nbytes)
+                                       .arg(im.format())
+                                       .arg(im.depth()));
+
+}
+
+

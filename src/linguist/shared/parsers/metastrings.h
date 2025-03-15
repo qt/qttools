@@ -9,6 +9,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class MetaStrings
 {
 public:
@@ -31,6 +33,12 @@ public:
     QString label() const { return m_label; }
     QHash<QString, QString> extra() const { return m_extra; }
     QString popError() { return std::move(m_error); }
+
+    inline static constexpr auto extraCommentAnotation = QLatin1Char(':');
+    inline static constexpr auto idAnotation = QLatin1Char('=');
+    inline static constexpr auto sourceTextAnotation = QLatin1Char('%');
+    inline static constexpr auto labelAnotation = QLatin1Char('@');
+    inline static constexpr auto extraAnotation = QLatin1Char('~');
 
 private:
     std::optional<MagicComment> m_magicComment; // TRANSLATOR

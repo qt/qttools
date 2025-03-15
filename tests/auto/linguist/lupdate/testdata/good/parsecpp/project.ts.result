@@ -32,21 +32,21 @@ backslashed \ stuff.</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="id2">
-        <location filename="main.cpp" line="746"/>
-        <location filename="main.cpp" line="748"/>
+        <location filename="main.cpp" line="742"/>
+        <location filename="main.cpp" line="744"/>
         <source>propagating label</source>
         <label>label3</label>
         <translation type="unfinished"></translation>
     </message>
     <message id="id4">
-        <location filename="main.cpp" line="752"/>
-        <location filename="main.cpp" line="754"/>
+        <location filename="main.cpp" line="748"/>
+        <location filename="main.cpp" line="750"/>
         <source>invalid usage of label, contradicting labels for id</source>
         <label>label4</label>
         <translation type="unfinished"></translation>
     </message>
     <message id="qtrid_alias_test">
-        <location filename="main.cpp" line="779"/>
+        <location filename="main.cpp" line="775"/>
         <source>Testing qTrId alias function</source>
         <translation type="unfinished"></translation>
     </message>
@@ -89,7 +89,7 @@ backslashed \ stuff.</source>
 <context>
     <name>Core</name>
     <message>
-        <location filename="main.cpp" line="775"/>
+        <location filename="main.cpp" line="771"/>
         <source>Save Selected</source>
         <translation type="unfinished"></translation>
     </message>
@@ -607,14 +607,8 @@ backslashed \ stuff.</source>
 </context>
 <context>
     <name>TestMetaStrings</name>
-    <message id="id1">
-        <location filename="main.cpp" line="739"/>
-        <source>msg with id1</source>
-        <label>label1</label>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
-        <location filename="main.cpp" line="742"/>
+        <location filename="main.cpp" line="738"/>
         <source>invalid usage of label because of missing id</source>
         <translation type="unfinished"></translation>
     </message>

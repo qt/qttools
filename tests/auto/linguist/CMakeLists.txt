@@ -5,4 +5,4 @@ add_subdirectory(lrelease)
 add_subdirectory(lconvert)
 add_subdirectory(lupdate)
 add_subdirectory(lcheck)
-
+add_subdirectory(ltext2id)

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "translator.h"
-#include "xmlparser.h"
+#include "parsers/xmlparser.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QMap>
@@ -592,7 +592,7 @@ bool XLIFFHandler::endElement(QStringView namespaceURI, QStringView localName,
     } else if (localName == "context-group"_L1) {
         if (popContext(XC_context_group)) {
             m_refs.append(TranslatorMessage::Reference(
-                m_extraFileName.isEmpty() ? m_fileName : m_extraFileName, m_lineNumber));
+                m_extraFileName.isEmpty() ? m_fileName : m_extraFileName, m_lineNumber, -1, -1));
             m_extraFileName.clear();
             m_lineNumber = -1;
         } else {

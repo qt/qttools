@@ -38,6 +38,7 @@
                 \li \l {Using lrelease}
                 \li \l {Using lconvert}
                 \li \l {Using lcheck}
+                \li \l {Using ltext2id}
             \endlist
         \li
             \list
@@ -574,7 +575,7 @@
     \target lconvert
 
     \previouspage Using lrelease
-    \nextpage Using lconvert
+    \nextpage Using lcheck
 
     \title Using lconvert
 
@@ -732,7 +733,7 @@
 \page linguist-lcheck.html
 \target lcheck
 \previouspage Using lconvert
-\nextpage Translators
+\nextpage Using ltext2id
 
 \title Using lcheck
 
@@ -881,9 +882,143 @@ lcheck translations/myapp_de.ts
 */
 
 /*!
+\page linguist-ltext2id.html
+\target ltext2id
+\previouspage Using lcheck
+\nextpage Translators
+
+\title Using ltext2id
+
+The \c ltext2id command line tool converts a project that uses
+text-based translations to use ID-based translations. It scans the
+project tree, updates source code to call the ID-based translation
+APIs, and adjusts the related \c {TS} files accordingly. In the case
+of any failed conversions, the source will be annotated with
+\c {//ltext2id error:} at the failed locations.
+
+\note Make a full backup (or work on a clean Git branch) before
+running \c ltext2id. The tool modifies source files and \c {TS} files
+in place.
+
+For best results, include both the sources and the \c {TS} files in
+the project root you pass to the tool so that updates stay consistent
+between code and translations.
+
+\section1 ltext2id syntax
+
+\badcode
+ltext2id [options] [project-root]
+\endcode
+
+Where:
+
+\list
+    \li \c options means one or several \l {ltext2id options}.
+    \li \c project-root is the directory to process recursively.
+\endlist
+
+To view the latest help, enter:
+
+\badcode
+ltext2id -help
+\endcode
+
+\section2 ltext2id options
+
+\table
+\header
+ \li Option
+ \li Action
+\row
+ \li \c {-help}
+ \li Display up-to-date help information and exit.
+\row
+    \li \c {-no-labels}
+    \li Do not generate labels for ID-based translations.
+        By default, message contexts are used as labels so that
+        entries keep a similar visualization in Qt Linguist.
+\row
+    \li \c {-sort-messages}
+    \li Sort messages in a context alphabetically in TS files.
+\row
+    \li \c {-source-utf16}
+    \li Treat source files as UTF-16 encoded (default: false).
+\row
+    \li \c {-quiet}
+    \li Suppress progress output.
+\row
+    \li \c {-only-meta-id}
+    \li Only suggest IDs by inserting meta strings; do \e not perform
+        the actual transformation to ID-based calls.
+\row
+    \li \c {-no-auto-id}
+    \li Do not auto-generate IDs when meta-string IDs are missing.
+        Translation function calls without meta IDs are ignored.
+\row
+    \li \c {-version}
+    \li Display the version of \c ltext2id and exit.
+\endtable
+
+\section1 Examples
+
+\section2 Convert a project to ID-based translations
+
+Run the tool at the project root. The source code and \c {TS} files
+under that directory are updated in place.
+
+\badcode
+ltext2id path/to/project
+\endcode
+
+\section2 Generate only ID suggestions (no code changes)
+
+Use \c -only-meta-id to inject meta-string ID suggestions without
+rewriting calls to the ID-based API. As a result, the translation
+calls are annotated by '//~ meta-id <id>' (cpp) meta string
+specifying the suggested IDs (meta ID).
+
+\badcode
+ltext2id -only-meta-id path/to/project
+\endcode
+
+\section2 Disable label generation
+
+Prevent label generation if you do not want contexts mirrored as
+labels in Qt Linguist:
+
+\badcode
+ltext2id -no-labels path/to/project
+\endcode
+
+\section2 Avoid auto-generated IDs
+
+Skip auto-generation for calls missing meta IDs, i.e., IDs
+already specified using the meta string '//~ meta-id <id>' (cpp):
+
+\badcode
+ltext2id -no-auto-id path/to/project
+\endcode
+
+\section2 Work with UTF-16 source files
+
+If your sources are UTF-16 encoded, enable the option:
+
+\badcode
+ltext2id -source-utf16 path/to/project
+\endcode
+
+\section1 Exit status
+
+\c ltext2id returns a non-zero exit code on failure (for example,
+when it encounters an unrecoverable error while transforming files).
+Inspect the in-place source annotations marked with
+\c {//ltext2id error:} to fix the remaining issues.
+*/
+
+/*!
     \page linguist-translators.html
 
-    \previouspage Using lcheck
+    \previouspage Using ltext2id
     \nextpage Qt Linguist user interface
 
     \title Translators

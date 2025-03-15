@@ -1,0 +1,35 @@
+<ui version="4.0" idbasedtr="false">
+<comment>
+* Copyright (C) 201725 The Qt Company Ltd.
+* SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+</comment>
+ <exportmacro></exportmacro>
+ <class>FindDialog</class>
+ <widget class="QWidget" name="FindDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>172</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Qt Assistant - Finn text</string>
+  </property>
+  <property name="height" >
+   <string>Finn tekst - Der Bjørn möchte auch mal.</string>
+  </property>
+ </widget>
+ <tabstops>
+  <tabstop>comboFind</tabstop>
+  <tabstop>checkWords</tabstop>
+  <tabstop>checkCase</tabstop>
+  <tabstop>radioForward</tabstop>
+  <tabstop>radioBackward</tabstop>
+  <tabstop>findButton</tabstop>
+  <tabstop>closeButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

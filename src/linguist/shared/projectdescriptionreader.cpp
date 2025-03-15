@@ -130,7 +130,6 @@ private:
         Project result;
         QJsonObject obj = v.toObject();
         result.filePath = stringValue(obj, "projectFile"_L1);
-        result.compileCommands = stringValue(obj, "compileCommands"_L1);
         result.codec = stringValue(obj, "codec"_L1);
         result.excluded = wildcardsToRegExes(stringListValue(obj, "excluded"_L1));
         result.includePaths = stringListValue(obj, "includePaths"_L1);

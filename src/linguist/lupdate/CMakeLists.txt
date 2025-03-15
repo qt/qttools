@@ -23,16 +23,16 @@ qt_internal_add_tool(${target_name}
         ../shared/translatormessage.cpp ../shared/translatormessage.h
         ../shared/ts.cpp
         ../shared/xliff.cpp
-        ../shared/xmlparser.cpp ../shared/xmlparser.h
-        cpp.cpp cpp.h
-        metastrings.h
-        metastrings.cpp
-        java.cpp
-        python.cpp
-        lupdate.h
+        ../shared/parsers/xmlparser.cpp ../shared/parsers/xmlparser.h
+        ../shared/parsers/cpp.cpp ../shared/parsers/cpp.h
+        ../shared/parsers/metastrings.h
+        ../shared/parsers/metastrings.cpp
+        ../shared/parsers/java.cpp
+        ../shared/parsers/python.cpp
+        ../shared/parsers/ui.cpp
+        ../shared/parsers/trparser.cpp ../shared/parsers/trparser.h
         main.cpp
         merge.cpp
-        ui.cpp
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_CAST_TO_ASCII
@@ -52,7 +52,7 @@ qt_internal_return_unless_building_tools()
 
 qt_internal_extend_target(${target_name} CONDITION TARGET Qt::QmlPrivate
     SOURCES
-        qdeclarative.cpp
+        ../shared/parsers/qdeclarative.cpp
     LIBRARIES
         Qt::QmlPrivate
 )

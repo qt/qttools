@@ -30,31 +30,35 @@ TranslatorMessage::TranslatorMessage(const QString &context,
 {
 }
 
-void TranslatorMessage::addReference(const QString &fileName, int lineNumber)
+void TranslatorMessage::addReference(const QString &fileName, int lineNumber, int startOffset, int endOffset)
 {
     if (m_fileName.isEmpty()) {
         m_fileName = fileName;
         m_lineNumber = lineNumber;
+        m_startOffset = startOffset;
+        m_endOffset = endOffset;
     } else {
-        m_extraRefs.append(Reference(fileName, lineNumber));
+        m_extraRefs.append(Reference(fileName, lineNumber, startOffset, endOffset));
     }
 }
 
-void TranslatorMessage::addReferenceUniq(const QString &fileName, int lineNumber)
+void TranslatorMessage::addReferenceUniq(const QString &fileName, int lineNumber, int startOffset, int endOffset)
 {
     if (m_fileName.isEmpty()) {
         m_fileName = fileName;
         m_lineNumber = lineNumber;
+        m_startOffset = startOffset;
+        m_endOffset = endOffset;
     } else {
-        if (fileName == m_fileName && lineNumber == m_lineNumber)
+        if (fileName == m_fileName && lineNumber == m_lineNumber && startOffset == m_startOffset)
             return;
         if (!m_extraRefs.isEmpty()) { // Rather common case, so special-case it
             for (const Reference &ref : std::as_const(m_extraRefs)) {
-                if (fileName == ref.fileName() && lineNumber == ref.lineNumber())
+                if (fileName == ref.fileName() && lineNumber == ref.lineNumber() && startOffset == m_startOffset)
                     return;
             }
         }
-        m_extraRefs.append(Reference(fileName, lineNumber));
+        m_extraRefs.append(Reference(fileName, lineNumber, startOffset, endOffset));
     }
 }
 
@@ -72,17 +76,19 @@ void TranslatorMessage::setReferences(const TranslatorMessage::References &refs0
         const Reference &ref = refs.takeFirst();
         m_fileName = ref.fileName();
         m_lineNumber = ref.lineNumber();
+        m_startOffset = ref.startOffset();
+        m_endOffset = ref.endOffset();
         m_extraRefs = refs;
     } else {
         clearReferences();
     }
 }
 
-TranslatorMessage::References TranslatorMessage::allReferences() const
+const TranslatorMessage::References TranslatorMessage::allReferences() const
 {
     References refs;
     if (!m_fileName.isEmpty()) {
-        refs.append(Reference(m_fileName, m_lineNumber));
+        refs.append(Reference(m_fileName, m_lineNumber, m_startOffset, m_endOffset));
         refs += m_extraRefs;
     }
     return refs;

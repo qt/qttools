@@ -18,7 +18,7 @@ qt_internal_add_tool(${target_name}
         ../shared/translatormessage.cpp ../shared/translatormessage.h
         ../shared/ts.cpp
         ../shared/xliff.cpp
-        ../shared/xmlparser.cpp ../shared/xmlparser.h
+        ../shared/parsers/xmlparser.cpp ../shared/parsers/xmlparser.h
         main.cpp
     DEFINES
         QT_NO_CAST_FROM_ASCII

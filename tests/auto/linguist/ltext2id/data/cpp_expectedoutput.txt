@@ -1,0 +1,4 @@
+ltext2id: processing source file .*fails_copy\.cpp
+ltext2id: verifying source file .*fails_copy\.cpp
+ltext2id failed to migrate some translations. Please look for the comments from ltext2id annotated by '//ltext2id error:' in your source code to find the failed transformations and fix them manually as instructed.
+ltext2id: finished migration from text-based to id-based translation.

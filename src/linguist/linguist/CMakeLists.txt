@@ -26,12 +26,12 @@ qt_internal_add_app(linguist
         ../shared/translatormessage.cpp ../shared/translatormessage.h
         ../shared/ts.cpp
         ../shared/xliff.cpp
-        ../shared/xmlparser.cpp ../shared/xmlparser.h
         ../shared/auto-translation/translationprotocol.h
         ../shared/auto-translation/ollama.cpp
         ../shared/auto-translation/ollama.h
         ../shared/auto-translation/machinetranslator.cpp
         ../shared/auto-translation/machinetranslator.h
+        ../shared/parsers/xmlparser.cpp ../shared/parsers/xmlparser.h
         batchtranslation.ui
         batchtranslationdialog.cpp batchtranslationdialog.h
         errorsview.cpp errorsview.h

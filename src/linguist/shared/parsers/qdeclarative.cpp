@@ -1,10 +1,10 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#include "lupdate.h"
 
 #include <translator.h>
-#include <metastrings.h>
+#include <parsers/metastrings.h>
+#include <parsers/trparser.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
@@ -100,6 +100,7 @@ protected:
             switch (trFunctionAliasManager.trFunctionByName(name)) {
             case TrFunctionAliasManager::Function_qsTr:
             case TrFunctionAliasManager::Function_QT_TR_NOOP: {
+                int startOffset = node->firstSourceLocation().begin();
                 if (!node->arguments) {
                     yyMsg(identLineNo)
                         << qPrintable(QStringLiteral("%1() requires at least one argument.\n")
@@ -133,25 +134,25 @@ protected:
                     yyMsg(identLineNo)
                             << qPrintable("//% cannot be used with %1(). Ignoring\n"_L1.arg(name));
 
-                if (!m_metaStrings.label().isEmpty() && m_metaStrings.msgid().isEmpty())
+                if (!m_metaStrings.label().isEmpty())
                     yyMsg(identLineNo) << qPrintable(
                             "labels cannot be used with text-based translation. Ignoring\n"_L1);
 
-                TranslatorMessage msg(m_component, ParserTool::transcode(source),
-                    comment, QString(), m_fileName,
-                    node->firstSourceLocation().startLine, QStringList(),
-                    TranslatorMessage::Unfinished, plural);
-                msg.setExtraComment(
-                        ParserTool::transcode(m_metaStrings.extracomment().simplified()));
+                int endOffset = node->lastSourceLocation().end();
+                TranslatorMessage msg(m_component, transcode(source), comment, QString(),
+                                      m_fileName, node->firstSourceLocation().startLine,
+                                      QStringList(), TranslatorMessage::Unfinished, plural);
+                msg.setExtraComment(transcode(m_metaStrings.extracomment().simplified()));
                 msg.setId(m_metaStrings.msgid());
-                if (!m_metaStrings.msgid().isEmpty())
-                    msg.setLabel(m_metaStrings.label());
                 msg.setExtras(m_metaStrings.extra());
+                msg.setStartOffset(startOffset);
+                msg.setEndOffset(endOffset);
                 m_translator->extend(msg, m_cd);
                 consumeComment();
                 break; }
             case TrFunctionAliasManager::Function_qsTranslate:
             case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP: {
+                int startOffset = node->firstSourceLocation().begin();
                 if (! (node->arguments && node->arguments->next)) {
                     yyMsg(identLineNo) << qPrintable(QStringLiteral("%1() requires at least two arguments.\n").arg(name));
                     return;
@@ -170,7 +171,7 @@ protected:
                 if (!m_metaStrings.sourcetext().isEmpty())
                     yyMsg(identLineNo) << qPrintable(QStringLiteral("//% cannot be used with %1(). Ignoring\n").arg(name));
 
-                if (!m_metaStrings.label().isEmpty() && m_metaStrings.msgid().isEmpty())
+                if (!m_metaStrings.label().isEmpty())
                     yyMsg(identLineNo) << qPrintable(
                             "labels cannot be used with text-based translation. Ignoring\n"_L1);
 
@@ -184,17 +185,15 @@ protected:
                     if (commentNode->next)
                         plural = true;
                 }
-
-                TranslatorMessage msg(context, ParserTool::transcode(source),
-                    comment, QString(), m_fileName,
-                    node->firstSourceLocation().startLine, QStringList(),
-                    TranslatorMessage::Unfinished, plural);
-                msg.setExtraComment(
-                        ParserTool::transcode(m_metaStrings.extracomment().simplified()));
+                int endOffset = node->lastSourceLocation().end();
+                TranslatorMessage msg(context, transcode(source), comment, QString(), m_fileName,
+                                      node->firstSourceLocation().startLine, QStringList(),
+                                      TranslatorMessage::Unfinished, plural);
+                msg.setExtraComment(transcode(m_metaStrings.extracomment().simplified()));
                 msg.setId(m_metaStrings.msgid());
-                if (!m_metaStrings.msgid().isEmpty())
-                    msg.setLabel(m_metaStrings.label());
                 msg.setExtras(m_metaStrings.extra());
+                msg.setStartOffset(startOffset);
+                msg.setEndOffset(endOffset);
                 m_translator->extend(msg, m_cd);
                 consumeComment();
                 break; }
@@ -204,6 +203,7 @@ protected:
                     yyMsg(identLineNo) << qPrintable(QStringLiteral("%1() requires at least one argument.\n").arg(name));
                     return;
                 }
+                int startOffset = node->firstSourceLocation().begin();
 
                 QString id;
                 if (!createString(node->arguments->expression, &id))
@@ -215,16 +215,16 @@ protected:
                 }
 
                 bool plural = node->arguments->next;
-
-                TranslatorMessage msg(QString(), ParserTool::transcode(m_metaStrings.sourcetext()),
-                                      QString(), QString(), m_fileName,
-                                      node->firstSourceLocation().startLine, QStringList(),
-                                      TranslatorMessage::Unfinished, plural);
-                msg.setExtraComment(
-                        ParserTool::transcode(m_metaStrings.extracomment().simplified()));
+                int endOffset = node->lastSourceLocation().end();
+                TranslatorMessage msg(QString(), transcode(m_metaStrings.sourcetext()), QString(),
+                                      QString(), m_fileName, node->firstSourceLocation().startLine,
+                                      QStringList(), TranslatorMessage::Unfinished, plural);
+                msg.setExtraComment(transcode(m_metaStrings.extracomment().simplified()));
                 msg.setId(id);
                 msg.setLabel(m_metaStrings.label());
                 msg.setExtras(m_metaStrings.extra());
+                msg.setStartOffset(startOffset);
+                msg.setEndOffset(endOffset);
                 m_translator->extend(msg, m_cd);
                 consumeComment();
                 break; }
@@ -357,10 +357,10 @@ void FindTrCalls::processComment(const SourceLocation &loc)
 
     if (m_metaStrings.magicComment()) {
         auto [context, comment] = *m_metaStrings.magicComment();
-        TranslatorMessage msg(ParserTool::transcode(context), QString(),
-                              ParserTool::transcode(comment), QString(), m_fileName, loc.startLine,
-                              QStringList(), TranslatorMessage::Finished, false);
-        msg.setExtraComment(ParserTool::transcode(m_metaStrings.extracomment().simplified()));
+        TranslatorMessage msg(transcode(context), QString(), transcode(comment), QString(),
+                              m_fileName, loc.startLine, QStringList(), TranslatorMessage::Finished,
+                              false);
+        msg.setExtraComment(transcode(m_metaStrings.extracomment().simplified()));
         m_translator->append(msg);
         m_translator->setExtras(m_metaStrings.extra());
         m_metaStrings.clear();

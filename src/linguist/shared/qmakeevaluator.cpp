@@ -5,7 +5,7 @@
 #include "qmakeevaluator_p.h"
 
 #include "qmakeglobals.h"
-#include "qmakeparser.h"
+#include "parsers/qmakeparser.h"
 #include "qmakevfs.h"
 #include "ioutils.h"
 

@@ -1,0 +1,142 @@
+// Copyright (C) 2025 The Qt Company Ltd
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+//% "One"
+//@ main_copy
+qsTrId("main_copy-One");
+//% "Two"
+//@ FooContext
+qsTrId("FooContext-Two");
+
+//% "One"
+//@ main_copy
+qsTrId("main_copy-One-86689");
+
+//: My first comment.
+//% "See comment"
+//@ main_copy
+qsTrId("main_copy-Seeacomment");
+
+//: My second comment.
+//% "See other comment"
+//@ BarContext
+qsTrId("BarContext-Seeaothera-70508");
+
+//: My third comment
+//: spans two lines.
+//% "The comment explains it all"
+//@ main_copy
+qsTrId("main_copy-Theacommenta-72980");
+
+//: My fourth comment
+//: spans a whopping
+//: three lines.
+//% "It should be clear by now"
+//@ BazContext
+qsTrId("BazContext-Itashoulda-53058");
+
+/*: C-style comment. */
+//% "I love C++"
+//@ main_copy
+qsTrId("main_copy-Ialovea-21777");
+
+/*: Another C-style comment. */
+//% "I really love C++"
+//@ FooContext
+qsTrId("FooContext-Iareallya-58646");
+
+/*: C-style comment, followed by */
+/*: another one. */
+//% "Qt is the best"
+//@ main_copy
+qsTrId("main_copy-Qtaisa-67326");
+
+/*: Another C-style comment, followed by */
+/*: yet another one. */
+//% "Qt is the very best"
+//@ BarContext
+qsTrId("BarContext-Qtaisa-36085");
+
+// This comment doesn't have any effect.
+//% "The comment had no effect"
+//@ main_copy
+qsTrId("main_copy-Theacommenta-81139");
+
+// This comment doesn't have any effect either.
+//% "The comment had no effect, really"
+//@ BazContext
+qsTrId("BazContext-Theacommenta-32007");
+
+/* This C-style comment doesn't have any effect. */
+//% "No comment to your comment"
+//@ main_copy
+qsTrId("main_copy-Noacommenta-1313");
+
+/* This C-style comment doesn't have any effect either. */
+//% "I refuse to comment on that"
+//@ FooContext
+qsTrId("FooContext-Iarefusea-92824");
+
+//% "This string has an identifier"
+//@ main_copy
+qsTrId("id_foo");
+
+//% "This string also has an identifier"
+//@ BarContext
+qsTrId("id_bar");
+
+//~ loc-blank False
+//% "This string has meta-data"
+//@ main_copy
+qsTrId("main_copy-Thisastringa-36243");
+
+//~ loc-layout_id foo_dialog
+//% "This string also has meta-data"
+//@ BazContext
+qsTrId("BazContext-Thisastringa-61533");
+
+// This comment is to be ignored.
+//: This is a comment for the translator.
+//~ foo 123
+//~ magic-stuff This means something special.
+//% "This string has a lot of information"
+//@ main_copy
+qsTrId("id_baz");
+
+// This comment is also to be ignored.
+//: This is another comment for the translator.
+//~ foo-bar Important stuff
+//~ needle-in-haystack Found
+//~ overflow True
+//% "This string has even more information"
+//@ FooContext
+qsTrId("id_babar");
+
+//% "This string has disambiguation"
+//@ main_copy
+qsTrId("main_copy-Thisastringa-13309");
+
+//% "This string also has disambiguation"
+//@ BarContext
+qsTrId("BarContext-Thisastringa-79241");
+
+//% "This string contains plurals"
+//@ main_copy
+qsTrId("main_copy-Thisastringa-94434" , 10);
+
+//% "source1"
+qsTrId("qtn_foo_bar");
+
+//: qsTrId() with comment, meta-data and plurals.
+//~ well-tested True
+//% "source2"
+qsTrId("qtn_bar_baz", 10);
+
+//~ quoted " string with spaces "
+//% "translation with extras-quoted field"
+//@ main_copy
+qsTrId("main_copy-translationawitha-24798");
+//~ quoted "empty string"
+//% ""
+//@ main_copy
+qsTrId("main_copy-");

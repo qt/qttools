@@ -2,13 +2,12 @@
 // Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com, author Marc Mutz <marc.mutz@kdab.com>
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#include "lupdate.h"
-
 #include <profileutils.h>
 #include <projectdescriptionreader.h>
-#include <qrcreader.h>
-#include <runqttool.h>
+#include <parsers/trparser.h>
 #include <translator.h>
+#include <runqttool.h>
+#include <qrcreader.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -23,171 +22,6 @@
 #include <iostream>
 
 using namespace Qt::StringLiterals;
-
-QString commandLineCompilationDatabaseDir; // for the path to the json file passed as a command line argument.
-                                    // Has priority over what is in the .pro file and passed to the project.
-QStringList rootDirs;
-
-// Can't have an array of QStaticStringData<N> for different N, so
-// use QString, which requires constructor calls. Doesn't matter
-// much, since this is in an app, not a lib:
-static const QString defaultTrFunctionNames[] = {
-// MSVC can't handle the lambda in this array if QStringLiteral expands
-// to a lambda. In that case, use a QString instead.
-#if defined(Q_CC_MSVC) && defined(Q_COMPILER_LAMBDA)
-#define STRINGLITERAL(F) QLatin1String(#F),
-#else
-#define STRINGLITERAL(F) QStringLiteral(#F),
-#endif
-    LUPDATE_FOR_EACH_TR_FUNCTION(STRINGLITERAL)
-#undef STRINGLITERAL
-};
-Q_STATIC_ASSERT((TrFunctionAliasManager::NumTrFunctions == sizeof defaultTrFunctionNames / sizeof *defaultTrFunctionNames));
-
-static int trFunctionByDefaultName(const QString &trFunctionName)
-{
-    for (int i = 0; i < TrFunctionAliasManager::NumTrFunctions; ++i)
-        if (trFunctionName == defaultTrFunctionNames[i])
-            return i;
-    return -1;
-}
-
-TrFunctionAliasManager::TrFunctionAliasManager()
-    : m_trFunctionAliases()
-{
-    for (int i = 0; i < NumTrFunctions; ++i)
-        m_trFunctionAliases[i].push_back(defaultTrFunctionNames[i]);
-}
-
-TrFunctionAliasManager::~TrFunctionAliasManager() {}
-
-int TrFunctionAliasManager::trFunctionByName(const QString &trFunctionName) const
-{
-    ensureTrFunctionHashUpdated();
-    // this function needs to be fast
-    const auto it = m_nameToTrFunctionMap.constFind(trFunctionName);
-    return it == m_nameToTrFunctionMap.cend() ? -1 : *it;
-}
-
-void TrFunctionAliasManager::modifyAlias(int trFunction, const QString &alias, Operation op)
-{
-    QList<QString> &list = m_trFunctionAliases[trFunction];
-    if (op == SetAlias)
-        list.clear();
-    list.push_back(alias);
-    m_nameToTrFunctionMap.clear();
-}
-
-void TrFunctionAliasManager::ensureTrFunctionHashUpdated() const
-{
-    if (!m_nameToTrFunctionMap.empty())
-        return;
-
-    NameToTrFunctionMap nameToTrFunctionMap;
-    for (int i = 0; i < NumTrFunctions; ++i)
-        for (const QString &alias : m_trFunctionAliases[i])
-            nameToTrFunctionMap[alias] = TrFunction(i);
-    // commit:
-    m_nameToTrFunctionMap.swap(nameToTrFunctionMap);
-}
-
-const TrFunctionAliasManager::NameToTrFunctionMap &TrFunctionAliasManager::nameToTrFunctionMap() const
-{
-    ensureTrFunctionHashUpdated();
-    return m_nameToTrFunctionMap;
-}
-
-static QStringList availableFunctions()
-{
-    QStringList result;
-    result.reserve(TrFunctionAliasManager::NumTrFunctions);
-    for (int i = 0; i < TrFunctionAliasManager::NumTrFunctions; ++i)
-        result.push_back(defaultTrFunctionNames[i]);
-    return result;
-}
-
-QStringList TrFunctionAliasManager::availableFunctionsWithAliases() const
-{
-    QStringList result;
-    result.reserve(NumTrFunctions);
-    for (int i = 0; i < NumTrFunctions; ++i)
-        result.push_back(defaultTrFunctionNames[i] + " (="_L1 + m_trFunctionAliases[i].join(u'=')
-                         + u')');
-    return result;
-}
-
-QStringList TrFunctionAliasManager::listAliases() const
-{
-    QStringList result;
-    result.reserve(NumTrFunctions);
-    for (int i = 0; i < NumTrFunctions; ++i) {
-        for (int ii = 1; ii < m_trFunctionAliases[i].size() ; ii++) {
-            // ii = 0 is the default name. Not listed here
-            result.push_back(m_trFunctionAliases[i][ii]);
-        }
-    }
-    return result;
-}
-
-TrFunctionAliasManager trFunctionAliasManager;
-
-QString ParserTool::transcode(const QString &str)
-{
-    static const char tab[] = "abfnrtv";
-    static const char backTab[] = "\a\b\f\n\r\t\v";
-    // This function has to convert back to bytes, as C's \0* sequences work at that level.
-    const QByteArray in = str.toUtf8();
-    QByteArray out;
-
-    out.reserve(in.size());
-    for (qsizetype i = 0; i < in.size();) {
-        uchar c = in[i++];
-        if (c == '\\') {
-            if (i >= in.size())
-                break;
-            c = in[i++];
-
-            if (c == '\n')
-                continue;
-
-            if (c == 'x' || c == 'u' || c == 'U') {
-                qsizetype maxSize = 2; // \x
-                if (c == 'u')
-                    maxSize = 4;
-                else if (c == 'U')
-                    maxSize = 8;
-                maxSize = std::min(in.size(), i + maxSize);
-
-                const bool unicode = (c != 'x');
-                QByteArray hex;
-                while (i < maxSize && isxdigit((c = in[i]))) {
-                    hex += c;
-                    i++;
-                }
-                if (unicode)
-                    out += QString(QChar(hex.toUInt(nullptr, 16))).toUtf8();
-                else
-                    out += hex.toUInt(nullptr, 16);
-            } else if (c >= '0' && c < '8') {
-                QByteArray oct;
-                int n = 0;
-                oct += c;
-                while (n < 2 && i < in.size() && (c = in[i]) >= '0' && c < '8') {
-                    i++;
-                    n++;
-                    oct += c;
-                }
-                out += oct.toUInt(0, 8);
-            } else {
-                const char *p = strchr(tab, c);
-                out += !p ? c : backTab[p - tab];
-            }
-        } else {
-            out += c;
-        }
-    }
-    return QString::fromUtf8(out.constData(), out.size());
-}
 
 static QString m_defaultExtensions;
 
@@ -551,76 +385,6 @@ static void expandQrcFiles(Project &project)
         project.sources << getResources(qrcFile);
 }
 
-static bool processTs(Translator &fetchedTor, const QString &file, ConversionData &cd)
-{
-    for (const Translator::FileFormat &fmt : std::as_const(Translator::registeredFileFormats())) {
-        if (file.endsWith(u'.' + fmt.extension, Qt::CaseInsensitive)) {
-            Translator tor;
-            if (tor.load(file, cd, fmt.extension)) {
-                for (TranslatorMessage msg : tor.messages()) {
-                    msg.setType(TranslatorMessage::Unfinished);
-                    msg.setTranslations(QStringList());
-                    msg.setTranslatorComment(QString());
-                    fetchedTor.extend(msg, cd);
-                }
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
-static void processSources(Translator &fetchedTor, const QStringList &sourceFiles,
-                           ConversionData &cd, UpdateOptions options)
-{
-#ifdef QT_NO_QML
-    bool requireQmlSupport = false;
-#endif
-    QStringList sourceFilesCpp;
-    for (const auto &sourceFile : sourceFiles) {
-        if (sourceFile.endsWith(".java"_L1, Qt::CaseInsensitive))
-            loadJava(fetchedTor, sourceFile, cd);
-        else if (sourceFile.endsWith(".ui"_L1, Qt::CaseInsensitive)
-                 || sourceFile.endsWith(".jui"_L1, Qt::CaseInsensitive))
-            loadUI(fetchedTor, sourceFile, cd);
-#ifndef QT_NO_QML
-        else if (sourceFile.endsWith(".js"_L1, Qt::CaseInsensitive)
-                 || sourceFile.endsWith(".qs"_L1, Qt::CaseInsensitive)) {
-            loadQScript(fetchedTor, sourceFile, cd);
-        } else if (sourceFile.endsWith(".mjs"_L1, Qt::CaseInsensitive)) {
-            loadJSModule(fetchedTor, sourceFile, cd);
-        } else if (sourceFile.endsWith(".qml"_L1, Qt::CaseInsensitive))
-            loadQml(fetchedTor, sourceFile, cd);
-#else
-        else if (sourceFile.endsWith(".qml"_L1, Qt::CaseInsensitive)
-                 || sourceFile.endsWith(".js"_L1, Qt::CaseInsensitive)
-                 || sourceFile.endsWith(".mjs"_L1, Qt::CaseInsensitive)
-                 || sourceFile.endsWith(".qs"_L1, Qt::CaseInsensitive))
-            requireQmlSupport = true;
-#endif // QT_NO_QML
-        else if (sourceFile.endsWith(u".py", Qt::CaseInsensitive))
-            loadPython(fetchedTor, sourceFile, cd);
-        else if (!processTs(fetchedTor, sourceFile, cd))
-            sourceFilesCpp << sourceFile;
-    }
-
-#ifdef QT_NO_QML
-    if (requireQmlSupport) {
-        printWarning(options, u"missing qml/javascript support\n"_s,
-                     u"Some files have been ignored.\n"_s);
-        if (options & Werror)
-            return;
-    }
-#else
-    Q_UNUSED(options)
-#endif
-
-    loadCPP(fetchedTor, sourceFilesCpp, cd);
-
-    if (!cd.error().isEmpty())
-        printErr(cd.error());
-}
-
 static QSet<QString> projectRoots(const QString &projectFile, const QStringList &sourceFiles)
 {
     const QString proPath = QFileInfo(projectFile).path();
@@ -686,14 +450,9 @@ private:
         QStringList projectRootDirs;
         for (auto dir : cd.m_projectRoots)
             projectRootDirs.append(dir);
-        cd.m_rootDirs = projectRootDirs;
         cd.m_includePath = prj.includePaths;
         cd.m_excludes = prj.excluded;
         cd.m_sourceIsUtf16 = options & SourceIsUtf16;
-        if (commandLineCompilationDatabaseDir.isEmpty())
-            cd.m_compilationDatabaseDir = prj.compileCommands;
-        else
-            cd.m_compilationDatabaseDir = commandLineCompilationDatabaseDir;
 
         QStringList tsFiles;
         if (prj.translations) {
@@ -722,7 +481,7 @@ private:
             }
             Translator tor;
             processProjects(false, options, prj.subProjects, false, &tor, fail);
-            processSources(tor, sources, cd, options);
+            processSources(tor, sources, cd);
             updateTsFiles(tor, tsFiles, QStringList(), m_sourceLanguage, m_targetLanguage,
                           options, fail);
             return;
@@ -741,10 +500,10 @@ private:
             }
             Translator tor;
             processProjects(false, options, prj.subProjects, nestComplain, &tor, fail);
-            processSources(tor, sources, cd, options);
+            processSources(tor, sources, cd);
         } else {
             processProjects(false, options, prj.subProjects, nestComplain, parentTor, fail);
-            processSources(*parentTor, sources, cd, options);
+            processSources(*parentTor, sources, cd);
         }
     }
 
@@ -1139,11 +898,9 @@ int main(int argc, char **argv)
         cd.m_projectRoots = projectRoots;
         cd.m_includePath = includePath;
         cd.m_allCSources = allCSources;
-        cd.m_compilationDatabaseDir = commandLineCompilationDatabaseDir;
-        cd.m_rootDirs = rootDirs;
         for (const QString &resource : std::as_const(resourceFiles))
             sourceFiles << getResources(resource);
-        processSources(fetchedTor, sourceFiles, cd, options);
+        processSources(fetchedTor, sourceFiles, cd);
         updateTsFiles(fetchedTor, tsFileNames, alienFiles,
                       sourceLanguage, targetLanguage, options, &fail);
     } else {

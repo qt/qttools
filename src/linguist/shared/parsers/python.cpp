@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include <translator.h>
-#include "lupdate.h"
-#include "metastrings.h"
+#include <parsers/trparser.h>
+#include <parsers/metastrings.h>
 
 #include <QtCore/qhash.h>
 #include <QtCore/qlist.h>
@@ -442,12 +442,10 @@ private:
                 }
                 if (metaStrings.magicComment()) {
                     auto [context, comment] = *metaStrings.magicComment();
-                    TranslatorMessage msg(ParserTool::transcode(context), QString(),
-                                          ParserTool::transcode(comment), QString(), yyFileName,
-                                          yyCurLineNo, QStringList(), TranslatorMessage::Finished,
-                                          false);
-                    msg.setExtraComment(
-                            ParserTool::transcode(metaStrings.extracomment().simplified()));
+                    TranslatorMessage msg(transcode(context), QString(), transcode(comment),
+                                          QString(), yyFileName, yyCurLineNo, QStringList(),
+                                          TranslatorMessage::Finished, false);
+                    msg.setExtraComment(transcode(metaStrings.extracomment().simplified()));
                     tor.append(msg);
                     tor.setExtras(metaStrings.extra());
                     metaStrings.clear();
@@ -712,15 +710,13 @@ private:
         // and capture extraComments intended for the next message.
         // Use only extraComments for the current message.
 
-        message->setExtraComment(ParserTool::transcode(meta.extracomment().simplified()));
+        message->setExtraComment(transcode(meta.extracomment().simplified()));
         message->setId(meta.msgid());
         message->setExtras(meta.extra());
-        if (!meta.label().isEmpty() && meta.msgid().isEmpty())
+        if (!meta.label().isEmpty())
             m_cd.appendError("%1:%2: labels cannot be used with text-based translation. "
                              "Ignoring\n"_L1.arg(yyFileName)
                                      .arg(yyLineNo));
-        else
-            message->setLabel(meta.label());
     }
 
     QString yyFileName;

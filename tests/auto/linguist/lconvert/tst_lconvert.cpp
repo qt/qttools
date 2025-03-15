@@ -1,9 +1,11 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
-#include <QtTest/QtTest>
-#include <QtCore/QFile>
-#include <QtCore/QTextStream>
+#include <QFile>
+#include <QLibraryInfo>
+#include <QProcess>
+#include <QTest>
+#include <QTextStream>
 
 using namespace Qt::Literals::StringLiterals;
 

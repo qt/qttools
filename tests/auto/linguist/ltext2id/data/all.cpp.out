@@ -1,0 +1,777 @@
+// Copyright (C) 2025 The Qt Company Ltd
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+#include <QtCore>
+QString qt_detectRTLLanguage()
+{
+    //% "QT_LAYOUT_DIRECTION"
+    //@ QCoreApplication
+    return qtTrId("QCoreApplication-QTLAYOUT-634"); // == QLatin1String("RTL");
+}
+
+class Dialog2
+{
+    Q_OBJECT
+    void func();
+    void func3();
+    int getCount() const { return 2; }
+};
+
+void Dialog2::func()
+{
+    int n = getCount();
+    //% "%n files"
+    //@ Dialog2
+    qtTrId("Dialog2-fna-27205" , n);
+    //% "%n cars"
+    //@ Dialog2
+    qtTrId("Dialog2-fna-69328" , n);
+    //% "&Find %n cars"
+    //@ Dialog2
+    qtTrId("Dialog2-gFindaf-5548" , n);
+    //% "Search in %n items?"
+    //@ Dialog2
+    qtTrId("Dialog2-Searchainaf-79544" , n);
+    //% "%1. Search in %n items?"
+    //@ Dialog2
+    qtTrId("Dialog2-f1oa-85018" , n);
+    //% "Age: %1"
+    //@ Dialog2
+    qtTrId("Dialog2-Age{af1");
+    //% "There are %n house(s)"
+    //@ Dialog2
+    qtTrId("Dialog2-Thereaareaf-89651" , getCount());
+    //% "Plurals and function call"
+    //@ translate: There are %n house(s)
+    qtTrId("translate: There are %n house(s)-Pluralsaanda-51377" , getCount());
+    //% "%n house(s)"
+    //@ Plurals, QCoreApplication
+    qtTrId("Plurals, QCoreApplication-fna-61606" , n);
+    //% "%n car(s)"
+    //@ Plurals, QCoreApplication
+    qtTrId("Plurals, QCoreApplication-fna-26815" , 1);
+    //% "%n horse(s)"
+    //@ Plurals, QCoreApplication
+    qtTrId("Plurals, QCoreApplication-fna-56748" , getCount());
+    QTranslator trans;
+    //% "Simple"
+    //@ QTranslator
+    qtTrId("QTranslator-Simple");
+    //% "Simple"
+    //@ QTranslator
+    qtTrId("QTranslator-Simple");
+    //% "Simple with comment"
+    //@ QTranslator
+    qtTrId("QTranslator-Simpleawitha-70311");
+    //% "Plural without comment"
+    //@ QTranslator
+    qtTrId("QTranslator-Pluralawithouta-57919" , 1);
+    //% "Plural with comment"
+    //@ QTranslator
+    qtTrId("QTranslator-Pluralawitha-83843" , n);
+    //% "Plural with comment"
+    //@ QTranslator
+    qtTrId("QTranslator-Pluralawitha-32045" , getCount());
+    //% "Plural with comment and static cast"
+    //@ QTranslator
+    qtTrId("QTranslator-Pluralawitha-12749" , static_cast<long>(getCount()));
+}
+
+typedef struct S_
+{
+    int a;
+} S, *SPtr;
+class ForwardDecl;
+
+#define FT_DEFINE_SERVICE(name)                                      \
+    typedef struct FT_Service_##name##Rec_ FT_Service_##name##Rec;   \
+    typedef struct FT_Service_##name##Rec_ const *FT_Service_##name; \
+    struct FT_Service_##name##Rec_
+
+void Dialog2::func3()
+{
+    //% "func3"
+    //@ Dialog2
+    qtTrId("Dialog2-func3");
+}
+
+namespace Gui {
+class BaseClass
+{
+};
+} // namespace Gui
+
+class TestClass : QObject
+{
+    Q_OBJECT
+
+    //% "inline function"
+    //@ TestClass
+    inline QString inlineFunc1() { return qtTrId("TestClass-inlineafunction-49197"); }
+
+    //% "inline function 2"
+    //@ TestClass
+    QString inlineFunc2() { return qtTrId("TestClass-inlineafunctiona-15831"); }
+
+    //% "static inline function"
+    //@ TestClass
+    static inline QString staticInlineFunc() { return qtTrId("TestClass-staticainlinea-95232"); }
+
+    class NoQObject : public Gui::BaseClass
+    {
+    public:
+        inline QString hello() { return QString("hello"); }
+    };
+};
+
+class Testing : QObject
+{
+    Q_OBJECT
+
+    inline QString f1()
+    {
+        //: this is an extra comment for the translator
+        //% "extra-commented string"
+        //@ Testing
+        return qtTrId("Testing-extrancommenteda-21095");
+        //% "not extra-commented string"
+        //@ Testing
+        return qtTrId("Testing-notaextran-84860");
+        /*: another extra-comment */
+        //% "another extra-commented string"
+        //@ Testing
+        return qtTrId("Testing-anotheraextran-84557");
+        /*: blah! */
+        //% "works in translate, too"
+        //@ scope
+        return qtTrId("scope-worksaina-71845" , 0);
+    }
+};
+
+//: extra comment for NOOP
+//: which spans multiple lines
+//% "string"
+//@ scope
+const char *c_1 = QT_TRID_NOOP("scope-string") /*: complain & ignore */; // 4.4 says the line of this is at the next statement
+//: extra comment for NOOP
+const char *c_2[2] = QT_TRANSLATE_NOOP3_UTF8("scope", "string", "comment"); // 4.4 doesn't see this
+
+//% "string continuation on next line"
+//@ scope
+const char *c_3 = QT_TRID_NOOP("scope-stringacontinuationa-97886");
+
+class TestingTake17 : QObject
+{
+    Q_OBJECT
+
+    void function(void)
+    {
+        //: random comment
+        //~ loc-layout_id fooish_bar
+        //~ po-ignore_me totally foo-barred  nonsense
+        //% "something cool"
+        //@ TestingTake17
+        qtTrId("this_is_an_id");
+
+        //% "less cool"
+        //@ TestingTake17
+        qtTrId("TestingTake17-lessacool");
+
+        //% "even more cool"
+        //@ TestingTake17
+        qtTrId("another_id");
+    }
+};
+
+//: again an extra comment, this time for id-based NOOP
+//% "This is supposed\tto be quoted \" newline\n"
+//% "backslashed \\ stuff."
+const char *c_4 = QT_TRID_NOOP("this_a_id");
+
+//~ some thing
+//% "This needs to be here. Really."
+QString test = qtTrId("this_another_id", 2);
+
+class YetAnotherTest : QObject
+{
+    Q_OBJECT
+
+    void function(void)
+    {
+        //
+        //:
+        //=
+        //~
+        // #
+        //=============
+        //~~~~~~~~~~~~~
+        //:::::::::::::
+        //% "nothing"
+        //@ YetAnotherTest
+        qtTrId("YetAnotherTest-nothing");
+    }
+};
+
+class Bogus : QObject
+{
+    Q_OBJECT
+    static const char *const s_stringss[];
+    static const char *const s_strings[];
+};
+
+//% "this should be in Bogus"
+//@ Bogus
+const char *const Bogus::s_strings[] = { QT_TRID_NOOP("Bogus-thisashoulda-86121") };
+
+//% "this should be in Bogus"
+//@ Bogus
+const char *const Bogus::s_stringss[] = { QT_TRID_NOOP("Bogus-thisashoulda-86121") };
+
+void bogosity()
+{
+    // no spaces here. test collateral damage from ignoring equal sign
+    //% "just QObject"
+    //@ QObject
+    QString toto = qtTrId("QObject-justaQObject");
+}
+
+namespace Internal {
+
+class Message : public QObject
+{
+    Q_OBJECT
+public:
+    Message(QObject *parent = 0);
+};
+
+} // namespace Internal
+
+namespace Internal {
+
+static inline QString message1()
+{
+    //% "message1"
+    //@ Internal::Message
+    return qtTrId("Internal::Message-message1"); // Had no namespace
+}
+
+static inline QString message2()
+{
+    //% "message2"
+    //@ Internal::Message
+    return qtTrId("Internal::Message-message2"); // Already had namespace
+}
+
+} // namespace Internal
+
+class LotsaFun : public QObject
+{
+    Q_OBJECT
+public:
+    LotsaFun *operator<<(int i);
+};
+
+LotsaFun *LotsaFun::operator<<(int i)
+{
+    //% "this is inside operator<<"
+    //@ LotsaFun
+    qtTrId("LotsaFun-thisaisa-78754");
+    return this;
+}
+
+namespace NameSchpace {
+
+class YetMoreFun : public QObject
+{
+    Q_OBJECT
+public:
+    void funStuff();
+};
+
+} // namespace NameSchpace
+
+namespace NameSchpace {
+
+#define somevar 1
+
+void YetMoreFun::funStuff()
+{
+    //% "funStuff!"
+    //@ NameSchpace::YetMoreFun
+    qtTrId("NameSchpace::YetMoreFun-funStuffb!");
+}
+
+} // namespace NameSchpace
+
+void blubb()
+{
+    QMap<QString, QString> d;
+    //% "bracketed"
+    //@ LotsaFun
+    d[qtTrId("LotsaFun-bracketed")] = "plain";
+}
+
+class TestClass2
+{
+    Q_DECLARE_TR_FUNCTIONS(TestClass);
+
+public:
+    static const char TEST_STRING[];
+};
+
+//% "Test value"
+//@ TestClass
+const char TestClass2::TEST_STRING[] = QT_TRID_NOOP("TestClass-Testavalue");
+
+class Class42 : public NameSchpace::YetMoreFun, Gui::BaseClass
+{
+    Q_OBJECT
+    void foo();
+    //% "does that make sense?"
+    //@ Class42
+    Class42() : NameSchpace::YetMoreFun(), Gui::BaseClass() { qtTrId("Class42-doesathata-3807"); }
+    void hello(int something, QString str);
+};
+
+void Class42::foo()
+{
+    //% "and does that?"
+    //@ Class42
+    qtTrId("Class42-andadoesa-65283");
+}
+
+//% "eyo"
+//@ Class42
+void Class42::hello(int something /*= 17 */, QString str = qtTrId("Class42-eyo")) { }
+
+#include "included.cpp"
+
+// test TR_EXCLUDE
+#include "notincluded.cpp"
+
+void dupeFail()
+{
+    // First just the Id.
+    qtTrId("dupe_id");
+
+    // Then with source
+    //% "This is the source"
+    qtTrId("dupe_id");
+
+    // Finally, same source, but without ID.
+    QCoreApplication::translate("", "This is the source");
+}
+
+namespace Abc {
+class NamespacedFinalClass;
+}
+
+class FinalClass final : public QObject
+{
+    Q_OBJECT
+
+    class SubClass final
+    {
+        //% "nested class context with final"
+        //@ FinalClass
+        void f() { qtTrId("FinalClass-nestedaclassa-67547"); }
+    };
+
+    //% "class context with final"
+    //@ FinalClass
+    void f() { qtTrId("FinalClass-classacontexta-22149"); }
+};
+
+class Abc::NamespacedFinalClass final : public QObject
+{
+    Q_OBJECT
+
+    //% "namespaced class with final"
+    //@ Abc::NamespacedFinalClass
+    void f() { qtTrId("Abc::NamespacedFinalClass-namespacedaclassa-93875"); }
+};
+
+void nullptrInPlural()
+{
+    //% "%n nullptr(s)"
+    //@ QObject
+    qtTrId("QObject-fna-86780" , 3);
+    //% "%n car(s) text"
+    //@ Plurals, nullptr
+    qtTrId("Plurals, nullptr-fna-44969" , 1);
+}
+
+class nullptrClass : public QObject
+{
+    Q_OBJECT
+
+    //% "%n car(s)"
+    //@ nullptrClass
+    void f() { qtTrId("nullptrClass-fna-29442" , 2); }
+};
+
+void nullMacroInPlural()
+{
+    //% "%n NULL(s)"
+    //@ QObject
+    qtTrId("QObject-fna-39326" , 3);
+    //% "%n Q_NULLPTR(s)"
+    //@ QObject
+    qtTrId("QObject-fna-50081" , 3);
+}
+
+class ListInitializationClass : public NameSchpace::YetMoreFun, Gui::BaseClass
+{
+    Q_OBJECT
+
+    ListInitializationClass()
+        : NameSchpace::YetMoreFun(), 
+        Gui::BaseClass{}, 
+        a{ 0 }, 
+        b(1), 
+        //% "Hello World"
+        //@ ListInitializationClass
+        c(qtTrId("ListInitializationClass-HelloaWorld"))
+    {
+        //% "ListInitializationClass in-class constructor"
+        //@ ListInitializationClass
+        qtTrId("ListInitializationClass-ListInitializationClassainn-25559");
+    }
+
+    ListInitializationClass(int a);
+
+    ListInitializationClass(int a, int b, int c);
+
+    int a;
+    int b;
+    QString c;
+};
+
+ListInitializationClass::ListInitializationClass(int a) // :
+//    b{ { 2, 3 }}[a]
+{
+    //% "ListInitializationClass out-of-class single member initializer"
+    //@ ListInitializationClass
+    qtTrId("ListInitializationClass-ListInitializationClassaoutn-70249");
+}
+
+ListInitializationClass::ListInitializationClass(int a, int b, int c)
+    : NameSchpace::YetMoreFun{},
+      Gui::BaseClass(),
+      a{ 2 + (a / 3) },
+      b(b),
+      //% "%n item(s)"
+      //@ ListInitializationClass
+      c{ qtTrId("ListInitializationClass-fna-80040" , c) }
+{
+    //% "ListInitializationClass out-of-class multi member initializer"
+    //@ ListInitializationClass
+    qtTrId("ListInitializationClass-ListInitializationClassaoutn-1547");
+}
+
+class LambdaMemberClass : public Gui::BaseClass
+{
+    Q_OBJECT
+
+    LambdaMemberClass()
+        : Gui::BaseClass(),
+          a{ []() { /*std::cout << */
+                    //% "Hello"
+                    //@ QObject
+                    qtTrId("QObject-Hello");
+          } },
+          b([]() { /*std::cout << "World\n";*/ })
+    {
+        //% "LambdaMemberClass in-class constructor"
+        //@ LambdaMemberClass
+        qtTrId("LambdaMemberClass-LambdaMemberClassainn-13046");
+    }
+
+    LambdaMemberClass(void *);
+
+    std::function<void()> a;
+    std::function<void()> b;
+};
+
+LambdaMemberClass::LambdaMemberClass(void *)
+    : Gui::BaseClass{},
+      a([]() { /*std::cout <<*/
+               //% "Hallo "
+               //@ QObject
+               qtTrId("QObject-Halloa ");
+      }),
+      b{ []() { /*std::cout << "Welt\n";*/ } }
+{
+    //% "LambdaMemberClass out-of-class constructor"
+    //@ LambdaMemberClass
+    qtTrId("LambdaMemberClass-LambdaMemberClassaoutn-23253");
+}
+
+// Template parameters in base class initialization
+class TemplateClass : QVarLengthArray<char, sizeof(std::size_t)>, std::vector<int>
+{
+    Q_DECLARE_TR_FUNCTIONS(TemplateClass)
+    QString member;
+
+public:
+    TemplateClass()
+        : QVarLengthArray<char, sizeof(std::size_t)>(),
+          std::vector<int>(3),
+          //% "TemplateClass() in-class member initialization"
+          //@ TemplateClass
+          member(qtTrId("TemplateClass-TemplateClassijainn-2032"))
+    {
+        //% "TemplateClass() in-class body"
+        //@ TemplateClass
+        qtTrId("TemplateClass-TemplateClassijainn-56106");
+    }
+
+    TemplateClass(void *);
+    TemplateClass(int);
+};
+
+TemplateClass::TemplateClass(void *)
+    : QVarLengthArray<char, sizeof(std::size_t)>(),
+      std::vector<int>{ 1, 2 },
+      //% "TemplateClass(void *) out-of-class member initialization"
+      //@ TemplateClass
+      member{ qtTrId("TemplateClass-TemplateClassivoidakja-22839") }
+{
+    //% "TemplateClass(void *) out-of-class body"
+    //@ TemplateClass
+    qtTrId("TemplateClass-TemplateClassivoidakja-27846");
+}
+
+void ternary()
+{
+    const auto aaa = true ?
+                          //: comment, aaa, true
+            //% "ternary, true, aaa"
+            //@ QObject
+            qtTrId("QObject-ternarymatruema-96134")
+                          //% "ternary, failure, aaa"
+                          //@ QObject
+                          : qtTrId("QObject-ternarymafailurema-61222");
+
+    const auto bbb = true ?
+                          //: comment, bbb, true
+            //% "ternary, bbb, true"
+            //@ QObject
+            qtTrId("QObject-ternarymabbbma-71757")
+                          :
+                          //: comment, bbb, false
+            //% "ternary, bbb, false"
+            //@ QObject
+            qtTrId("QObject-ternarymabbbma-60393");
+
+    //% "ternary, fff, true"
+    //@ QObject
+    const auto ccc = true ? qtTrId("QObject-ternarymafffma-40748"): //% "ternary, fff, false"
+//@ QObject
+qtTrId("QObject-ternarymafffma-64929");
+}
+
+class TernaryClass : public QObject
+{
+    Q_OBJECT
+
+    void f()
+    {
+        const auto ccc = true ?
+                              //: comment, ccc, true
+                //% "ternary, ccc, true"
+                //@ TernaryClass
+                qtTrId("TernaryClass-ternarymacccma-36713")
+                              //% "ternary, ccc, false"
+                              //@ TernaryClass
+                              : qtTrId("TernaryClass-ternarymacccma-6199");
+
+        const auto ddd = true ?
+                              //: comment, ddd, true
+                //% "ternary, ddd, true"
+                //@ TernaryClass
+                qtTrId("TernaryClass-ternarymadddma-29323")
+                              :
+                              //: comment, ddd, false
+                //% "ternary, ddd, false"
+                //@ TernaryClass
+                qtTrId("TernaryClass-ternarymadddma-81307");
+    }
+};
+
+namespace Private {
+template <class T>
+struct Class1
+{
+    T t;
+};
+template <class T>
+struct Class1<T &> : Class1<T>
+{
+};
+template <class T>
+struct Class2
+{
+    enum { Value = sizeof(T) };
+};
+} // namespace Private
+class TranslatedAfterPrivate
+{
+    Q_OBJECT
+    //% "Must be in context TranslatedAfterPrivate"
+    //@ TranslatedAfterPrivate
+    TranslatedAfterPrivate() { qtTrId("TranslatedAfterPrivate-Mustabea-86746"); }
+};
+
+#include <QObject>
+class AClass
+{
+    //% "message after system include without space"
+    //@ QObject
+    QString aa = qtTrId("QObject-messageaaftera-92243");
+};
+#include "qobject.h"
+class AAClass
+{
+    //% "message after local include without space"
+    //@ QObject
+    QString aa = qtTrId("QObject-messageaaftera-81654");
+};
+
+QString unicodeEscape()
+{
+    //% "Context"
+    //@ QCoreApplication
+    return qtTrId("QCoreApplication-Context-42460");
+}
+
+namespace Outer::Inner {
+
+class Class
+{
+    Q_OBJECT
+    //% "MoreFunStuff!"
+    //@ Outer::Inner::Class
+    void function() { qtTrId("Outer::Inner::Class-MoreFunStuffb!"); }
+};
+
+} // namespace Outer::Inner
+
+//% "string %n"
+//@ scope
+static const char *const test_string_n1[] = { QT_TRID_N_NOOP("scope-stringafn") };
+
+static const char *const test_string_n2[] = QT_TRANSLATE_N_NOOP3("scope", "string %n", "comment");
+class testing
+{
+    Q_OBJECT
+    void test();
+};
+void testing::test()
+{
+    //% "%n test"
+    //@ testing
+    static const char *const test_string_n3[] = { QT_TRID_N_NOOP("testing-fna-97572") };
+}
+
+class Hogus : QObject
+{
+    Q_OBJECT
+    static const QString myString;
+};
+
+//% "this should be in Hogus"
+//@ Hogus
+const QString Hogus::myString(QT_TRID_NOOP("Hogus-thisashoulda-33622"));
+
+class QTBUG99415 : QObject
+{
+    Q_OBJECT
+    //% "text1"
+    //@ QTBUG99415
+    const QString text1() const noexcept { return qtTrId("QTBUG99415-text1"); }
+    const QString text2() const noexcept;
+};
+
+const QString QTBUG99415::text2() const noexcept
+{
+    //% "text2"
+    //@ QTBUG99415
+    return qtTrId("QTBUG99415-text2");
+}
+
+class QTBUG110630 : QObject
+{
+    Q_OBJECT
+    const QString txt()
+    {
+        //~ quoted " string with spaces "
+        //% "translation with extras-quoted field"
+        //@ QTBUG110630
+        qtTrId("QTBUG110630-translationawitha-24798");
+    }
+};
+
+// enum class - C++11
+enum class Bar : unsigned short;
+class QTBUG36589 : QObject
+{
+    Q_OBJECT
+    //% "string after an enum class"
+    //@ QTBUG36589
+    const QString txt() { qtTrId("QTBUG36589-stringaaftera-31419");
+        //% "tr with a \"string\" inside it"
+        //@ QTBUG36589
+        qtTrId("QTBUG36589-trawitha-15510");
+        //% "another tr with a 'string' inside it"
+        //@ QTBUG36589
+        qtTrId("QTBUG36589-anotheratra-34446");
+        //% "yet another tr with a 'string' inside it"
+        //@ QTBUG36589
+        qtTrId("QTBUG36589-yetaanothera-60884");
+    }
+};
+
+class TestMetaStrings : QObject
+{
+    Q_OBJECT
+    void func()
+    {
+        //@ label1
+        //% "msg with id1"
+        //@ TestMetaStrings
+        qtTrId("id1");
+
+        //@ label3
+        //% "propagating label"
+        qtTrId("id2");
+
+        qtTrId("id2");
+
+        //@ label5
+        //% "source"
+        qtTrId("id4");
+        
+
+        //% "This is going to be a meta string spanning over\n"
+        //% "multiple lines."
+        //@ TestMetaStrings
+        qtTrId("TestMetaStrings-Thisaisa-51380");
+    }
+};
+
+struct Tr
+{
+    Q_DECLARE_TR_FUNCTIONS(QtC::Help)
+};
+
+void observedBugs() {
+     m_includeOldEntriesAction->setToolTip(
+                //% "Include branches and tags that have not been active for %n days."
+                //@ QtC::Help
+                qtTrId("QtC::Help-Includeabranchesa-664" , Constants::OBSOLETE_COMMIT_AGE_IN_DAYS));
+
+     //% "[Only %n MB of output shown]"
+     //@ QtC::Help
+     qtTrId("QtC::Help-|Onlyaf-55430" , maxSize / 1024 / 1024);
+}

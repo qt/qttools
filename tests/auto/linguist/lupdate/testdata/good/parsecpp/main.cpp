@@ -734,10 +734,6 @@ class TestMetaStrings : QObject
     Q_OBJECT
     void func()
     {
-        //= id1
-        //@ label1
-        tr("msg with id1");
-
         //@ label2
         tr("invalid usage of label because of missing id");
 

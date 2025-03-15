@@ -14,19 +14,19 @@ QT_BEGIN_NAMESPACE
 bool MetaStrings::parse(QString &string)
 {
     const QChar *ptr = string.unicode();
-    if (*ptr == u':' && ptr[1].isSpace()) {
+    if (*ptr == extraCommentAnotation && ptr[1].isSpace()) {
         string.remove(0, 2);
         m_extracomment += string;
         if (!m_extracomment.endsWith(u'\n'))
             m_extracomment.push_back(u'\n');
         m_extracomment.detach();
-    } else if (*ptr == u'=' && ptr[1].isSpace()) {
+    } else if (*ptr == idAnotation && ptr[1].isSpace()) {
         string.remove(0, 2);
         m_msgid = string.simplified();
         m_msgid.detach();
         m_error =
                 "Setting translation IDs using //= or #= is deprecated and will be removed in the upcoming versions.\n"_L1;
-    } else if (*ptr == u'~' && ptr[1].isSpace()) {
+    } else if (*ptr == extraAnotation && ptr[1].isSpace()) {
         string.remove(0, 2);
         const QString trimmed = string.trimmed();
         int k = trimmed.indexOf(u' ');
@@ -38,7 +38,7 @@ bool MetaStrings::parse(QString &string)
             }
             m_extra.insert(trimmed.left(k), commentvalue);
         }
-    } else if (*ptr == u'%' && ptr[1].isSpace()) {
+    } else if (*ptr == sourceTextAnotation && ptr[1].isSpace()) {
         m_sourcetext.reserve(m_sourcetext.size() + string.size() - 2);
         ushort *ptr = (ushort *)m_sourcetext.data() + m_sourcetext.size();
         int p = 2, c;
@@ -73,7 +73,7 @@ bool MetaStrings::parse(QString &string)
             }
         }
         m_sourcetext.resize(ptr - (ushort *)m_sourcetext.data());
-    } else if (*ptr == u'@' && ptr[1].isSpace()) {
+    } else if (*ptr == labelAnotation && ptr[1].isSpace()) {
         string.remove(0, 2);
         m_label = string.trimmed().simplified();
         m_label.detach();

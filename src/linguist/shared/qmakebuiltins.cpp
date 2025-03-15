@@ -5,7 +5,7 @@
 
 #include "qmakeevaluator_p.h"
 #include "qmakeglobals.h"
-#include "qmakeparser.h"
+#include "parsers/qmakeparser.h"
 #include "qmakevfs.h"
 #include "ioutils.h"
 
@@ -34,9 +34,7 @@
 
 #ifdef Q_OS_UNIX
 #include <time.h>
-#include <errno.h>
 #include <unistd.h>
-#include <signal.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <sys/utsname.h>

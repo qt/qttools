@@ -322,7 +322,7 @@ bool TSReader::read(Translator &translator)
                                     }
                                     const QString lin = atts.value(strline).toString();
                                     if (lin.isEmpty()) {
-                                        refs.append(TranslatorMessage::Reference(fileName, -1));
+                                        refs.append(TranslatorMessage::Reference(fileName, -1, -1, -1));
                                     } else {
                                         bool bOK;
                                         int lineNo = lin.toInt(&bOK);
@@ -331,7 +331,7 @@ bool TSReader::read(Translator &translator)
                                                 lineNo = (currentLine[fileName] += lineNo);
                                                 maybeRelative = true;
                                             }
-                                            refs.append(TranslatorMessage::Reference(fileName, lineNo));
+                                            refs.append(TranslatorMessage::Reference(fileName, lineNo, -1, -1));
                                         }
                                     }
                                     readContents();
@@ -536,7 +536,7 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
             return m1.sourceText() < m2.sourceText();
         };
         for (QList<TranslatorMessage> &contextMessages : messageOrder)
-            std::sort(contextMessages.begin(), contextMessages.end(), messageComparator);
+            std::stable_sort(contextMessages.begin(), contextMessages.end(), messageComparator);
     }
 
     QHash<QString, int> currentLine;
