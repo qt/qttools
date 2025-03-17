@@ -1794,6 +1794,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
         switch (yyTok) {
         case Tok_QuotedInclude: {
             QString text = QDir(QFileInfo(yyFileName).absolutePath()).absoluteFilePath(yyWord);
+            text.detach();
             if (QFileInfo(text).isFile()) {
                 processInclude(text, cd, includeStack, inclusions);
                 yyTok = getToken();
@@ -1810,6 +1811,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             }
             for (const QString &incPath : std::as_const(cd.m_includePath)) {
                 QString text = QDir(incPath).absoluteFilePath(yyWord);
+                text.detach();
                 if (QFileInfo(text).isFile()) {
                     processInclude(text, cd, includeStack, inclusions);
                     goto incOk;
