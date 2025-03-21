@@ -158,6 +158,7 @@ public:
     static int numParams(const QString &value);
     static void pushWorkingDir(const QString &dir);
     static void popWorkingDir();
+    bool reportMissingAltTextForImages() { return m_reportMissingAltTextForImages; }
 
     static const QString dot;
 
@@ -235,6 +236,8 @@ private:
     QDocCommandLineParser m_parser {};
 
     QDocPass m_qdocPass { Neither };
+
+    bool m_reportMissingAltTextForImages{ false };
 };
 
 struct ConfigStrings
@@ -293,6 +296,7 @@ struct ConfigStrings
     static QString PRODUCTNAME;
     static QString PROJECT;
     static QString REDIRECTDOCUMENTATIONTODEVNULL;
+    static QString REPORTMISSINGALTTEXTFORIMAGES;
     static QString QHP;
     static QString QUOTINGINFORMATION;
     static QString SCRIPTS;
@@ -375,6 +379,7 @@ struct ConfigStrings
 #define CONFIG_PRODUCTNAME ConfigStrings::PRODUCTNAME
 #define CONFIG_PROJECT ConfigStrings::PROJECT
 #define CONFIG_REDIRECTDOCUMENTATIONTODEVNULL ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL
+#define CONFIG_REPORTMISSINGALTTEXTFORIMAGES ConfigStrings::REPORTMISSINGALTTEXTFORIMAGES
 #define CONFIG_QHP ConfigStrings::QHP
 #define CONFIG_QUOTINGINFORMATION ConfigStrings::QUOTINGINFORMATION
 #define CONFIG_SCRIPTS ConfigStrings::SCRIPTS
