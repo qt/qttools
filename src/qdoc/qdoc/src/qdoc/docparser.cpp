@@ -1759,7 +1759,7 @@ void DocParser::cmd_image()
         }
     }
 
-    if (imageText.isEmpty())
+    if (imageText.isEmpty() && Config::instance().reportMissingAltTextForImages())
         location().report(QStringLiteral("\\%1 %2 is without a textual description, "
                                          "QDoc will not generate an alt text for the image.")
                                   .arg(cmdName(CMD_IMAGE))

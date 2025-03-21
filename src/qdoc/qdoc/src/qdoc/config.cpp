@@ -67,6 +67,8 @@ QString ConfigStrings::PRODUCTNAME QStringLiteral("productname");
 QString ConfigStrings::PROJECT = QStringLiteral("project");
 QString ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL =
         QStringLiteral("redirectdocumentationtodevnull");
+QString ConfigStrings::REPORTMISSINGALTTEXTFORIMAGES =
+        QStringLiteral("reportmissingaltTextforimages");
 QString ConfigStrings::QHP = QStringLiteral("qhp");
 QString ConfigStrings::QUOTINGINFORMATION = QStringLiteral("quotinginformation");
 QString ConfigStrings::SCRIPTS = QStringLiteral("scripts");
@@ -389,6 +391,8 @@ void Config::reset()
     SET(CONFIG_AUTOLINKERRORS, autoLinkErrorsOption);
 #undef SET
     m_showInternal = m_configVars.value(CONFIG_SHOWINTERNAL).asBool();
+    m_reportMissingAltTextForImages =
+            m_configVars.value(CONFIG_REPORTMISSINGALTTEXTFORIMAGES).asBool();
     setListFlag(CONFIG_NOLINKERRORS,
                 m_parser.isSet(m_parser.noLinkErrorsOption)
                         || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
