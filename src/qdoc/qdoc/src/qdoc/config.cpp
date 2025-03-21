@@ -68,7 +68,7 @@ QString ConfigStrings::PROJECT = QStringLiteral("project");
 QString ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL =
         QStringLiteral("redirectdocumentationtodevnull");
 QString ConfigStrings::REPORTMISSINGALTTEXTFORIMAGES =
-        QStringLiteral("reportmissingaltTextforimages");
+        QStringLiteral("reportmissingalttextforimages");
 QString ConfigStrings::QHP = QStringLiteral("qhp");
 QString ConfigStrings::QUOTINGINFORMATION = QStringLiteral("quotinginformation");
 QString ConfigStrings::SCRIPTS = QStringLiteral("scripts");
