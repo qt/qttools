@@ -391,8 +391,6 @@ void Config::reset()
     SET(CONFIG_AUTOLINKERRORS, autoLinkErrorsOption);
 #undef SET
     m_showInternal = m_configVars.value(CONFIG_SHOWINTERNAL).asBool();
-    m_reportMissingAltTextForImages =
-            m_configVars.value(CONFIG_REPORTMISSINGALTTEXTFORIMAGES).asBool();
     setListFlag(CONFIG_NOLINKERRORS,
                 m_parser.isSet(m_parser.noLinkErrorsOption)
                         || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
@@ -429,6 +427,8 @@ void Config::load(const QString &fileName)
     // Prefetch values that are used internally
     m_exampleFiles = getCanonicalPathList(CONFIG_EXAMPLES);
     m_exampleDirs = getCanonicalPathList(CONFIG_EXAMPLEDIRS);
+    m_reportMissingAltTextForImages =
+            m_configVars.value(CONFIG_REPORTMISSINGALTTEXTFORIMAGES).asBool();
 }
 
 /*!
