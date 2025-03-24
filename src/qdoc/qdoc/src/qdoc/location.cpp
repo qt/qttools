@@ -13,6 +13,8 @@
 #include <cstdio>
 #include <cstdlib>
 
+using namespace Qt::Literals::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 int Location::s_tabSize;
@@ -382,6 +384,8 @@ void Location::emitMessage(MessageType type, const QString &message, const QStri
     }
     if (type != Report)
         result.prepend(toString());
+    else
+        result.prepend("qdoc: '%1': "_L1.arg(s_project));
     fprintf(stderr, "%s\n", result.toLatin1().data());
     fflush(stderr);
 }
