@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <group name="group2" href="group2.html" status="active" location="group.qdoc" documented="true" seen="true" title="Group2">
+            <description>
+                <relation href="e.html" type="page" meta="next" description="Page E"/>
+                <relation href="c.html" type="page" meta="previous" description="Page C"/>
+                <table width="100%">
+                    <row>
+                        <item>
+                            <para>
+                                <link raw="Page D" href="d.html" type="page" page="Page D"/>
+                            </para>
+                        </item>
+                        <item>
+                            <para></para>
+                        </item>
+                    </row>
+                    <row>
+                        <item>
+                            <para>
+                                <link raw="Page E" href="e.html" type="page" page="Page E"/>
+                            </para>
+                        </item>
+                        <item>
+                            <para></para>
+                        </item>
+                    </row>
+                </table>
+            </description>
+        </group>
+    </document>
+</WebXML>

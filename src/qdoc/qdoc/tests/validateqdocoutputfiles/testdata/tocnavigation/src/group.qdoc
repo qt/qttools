@@ -1,0 +1,37 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \page a.html
+    \title Page A
+    \ingroup group
+*/
+/*!
+    \externalpage http://localhost
+    \title Page B
+    \ingroup group
+*/
+
+/*!
+    \page c.html
+    \title Page C
+    \ingroup group
+*/
+
+
+/*!
+    \group group2
+    \title Group2
+*/
+
+/*!
+    \page d.html
+    \title Page D
+    \ingroup group2
+*/
+
+/*!
+    \page e.html
+    \title Page E
+    \ingroup group2
+*/

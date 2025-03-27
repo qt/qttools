@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Group2</db:title>
+<db:productname>Qt</db:productname>
+<db:edition>OutputFromQDocFiles - A test project for QDoc build artifacts</db:edition>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="c.xml" xlink:type="arc" xlink:arcrole="prev" xlink:title="Page C"/></db:extendedlink>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="e.xml" xlink:type="arc" xlink:arcrole="next" xlink:title="Page E"/></db:extendedlink>
+<db:abstract>
+<db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
+</db:info>
+<db:anchor xml:id="details"/>
+<db:itemizedlist role="members">
+<db:listitem>
+<db:para><db:link xlink:href="d.xml" xlink:role="page">Page D</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="e.xml" xlink:role="page">Page E</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:article>

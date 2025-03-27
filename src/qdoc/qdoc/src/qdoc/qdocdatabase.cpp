@@ -1536,7 +1536,7 @@ void QDocDatabase::updateNavigation()
 
             auto *atom = body.firstAtom();
 
-            std::pair<PageNode *, Atom *> prev { nullptr, nullptr };
+            std::pair<PageNode *, QString> prev { nullptr, QString() };
 
             std::stack<const PageNode *> tocStack;
             tocStack.push(inclusive ? tocPage : nullptr);
@@ -1645,8 +1645,7 @@ void QDocDatabase::updateNavigation()
                             page->setLink(
                                 Node::PreviousLink,
                                 prev.first->title(),
-                                // TODO: [possible-assertion-failure][imprecise-types][atoms-link]
-                                prev.second->linkText()
+                                prev.second
                             );
                         }
 
@@ -1667,9 +1666,43 @@ void QDocDatabase::updateNavigation()
                             tocStack.push(nullptr);
 
                         tocStack.push(page);
-                        prev = { page, atom };
+                        // TODO: [possible-assertion-failure][imprecise-types][atoms-link]
+                        prev = { page, atom->linkText() };
                     }
-                        break;
+                    break;
+
+                    case Atom::AnnotatedList:
+                    case Atom::GeneratedList: {
+                        if (const auto *cn = getCollectionNode(atom->string(), NodeType::Group)) {
+                            const auto sortOrder{Generator::sortOrder(atom->strings().last())};
+                            NodeList members{cn->members()};
+                            // Drop non-page nodes and index nodes so that we do not generate navigational
+                            // links pointing outside of this documentation set.
+                            members.erase(std::remove_if(members.begin(), members.end(),
+                                    [](const Node *n) {
+                                        return n->isIndexNode() || !n->isPageNode() || n->isExternalPage();
+                                    }), members.end());
+                            if (members.isEmpty())
+                                break;
+
+                            if (sortOrder == Qt::DescendingOrder)
+                                std::sort(members.rbegin(), members.rend(), Node::nodeSortKeyOrNameLessThan);
+                            else
+                                std::sort(members.begin(), members.end(), Node::nodeSortKeyOrNameLessThan);
+
+                            // `members` now has local PageNode pointers, adjust prev/next links for each.
+                            // Do not set a navigation parent node as group members use the group node as
+                            // their nav. parent.
+                            for (auto *m : members) {
+                                auto *page = static_cast<PageNode *>(m);
+                                prev.first->setLink(Node::NextLink, page->title(), page->fullName());
+                                page->setLink(Node::PreviousLink, prev.first->title(), prev.second);
+                                prev = { page, page->fullName() };
+                            }
+                        }
+                    }
+                    break;
+
                     default:
                         break;
                 }

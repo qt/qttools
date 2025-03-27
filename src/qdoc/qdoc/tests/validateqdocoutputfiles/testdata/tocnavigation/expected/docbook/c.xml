@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Page C</db:title>
+<db:productname>Qt</db:productname>
+<db:edition>OutputFromQDocFiles - A test project for QDoc build artifacts</db:edition>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="a.xml" xlink:type="arc" xlink:arcrole="prev" xlink:title="Page A"/></db:extendedlink>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="group2.xml" xlink:type="arc" xlink:arcrole="next" xlink:title="Group2"/></db:extendedlink>
+<db:abstract>
+<db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
+</db:info>
+</db:article>

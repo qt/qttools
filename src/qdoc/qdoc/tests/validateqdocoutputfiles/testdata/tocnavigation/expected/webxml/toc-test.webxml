@@ -37,6 +37,35 @@
                             </item>
                         </list>
                     </item>
+                    <item>
+                        <para>Group <generatedlist contents="group"/>
+                        </para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="Group2" href="group2.html" type="">Group2</link> <table width="100%">
+                                <row>
+                                    <item>
+                                        <para>
+                                            <link raw="Page D" href="d.html" type="page" page="Page D"/>
+                                        </para>
+                                    </item>
+                                    <item>
+                                        <para></para>
+                                    </item>
+                                </row>
+                                <row>
+                                    <item>
+                                        <para>
+                                            <link raw="Page E" href="e.html" type="page" page="Page E"/>
+                                        </para>
+                                    </item>
+                                    <item>
+                                        <para></para>
+                                    </item>
+                                </row>
+                            </table></para>
+                    </item>
                 </list>
             </description>
         </page>

@@ -19,5 +19,9 @@
             \li \l {crash.html}{Random page}
             \li \l {Table of Contents}
         \endlist
+        \li Group
+        \generatelist group
+        \li \l {Group2}
+        \annotatedlist [descending] group2
     \endlist
 */

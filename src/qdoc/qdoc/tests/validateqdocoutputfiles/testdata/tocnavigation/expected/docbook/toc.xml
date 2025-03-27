@@ -6,6 +6,7 @@
 <db:edition>OutputFromQDocFiles - A test project for QDoc build artifacts</db:edition>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:extendedlink xlink:type="extended"><db:link xlink:to="" xlink:type="arc" xlink:arcrole="prev" xlink:title="Random page"/></db:extendedlink>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="a.xml" xlink:type="arc" xlink:arcrole="next" xlink:title="Page A"/></db:extendedlink>
 <db:abstract>
 <db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
 </db:info>

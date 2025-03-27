@@ -15,6 +15,11 @@
             <contents name="images" title="Images" level="1"/>
             <contents name="commands-not-yet-tested" title="Commands not yet tested" level="1"/>
         </page>
+        <page name="a.html" href="a.html" status="active" location="group.qdoc" documented="true" groups="group" subtype="page" title="Page A" fulltitle="Page A" subtitle=""/>
+        <page name="http://localhost" href="http://localhost" status="active" location="group.qdoc" documented="true" groups="group" subtype="externalpage" title="Page B" fulltitle="Page B" subtitle=""/>
+        <page name="c.html" href="c.html" status="active" location="group.qdoc" documented="true" groups="group" subtype="page" title="Page C" fulltitle="Page C" subtitle=""/>
+        <page name="d.html" href="d.html" status="active" location="group.qdoc" documented="true" groups="group2" subtype="page" title="Page D" fulltitle="Page D" subtitle=""/>
+        <page name="e.html" href="e.html" status="active" location="group.qdoc" documented="true" groups="group2" subtype="page" title="Page E" fulltitle="Page E" subtitle=""/>
         <page name="toc-test.html" href="toc-test.html" status="active" location="toc.qdoc" documented="true" subtype="page" title="TOC" fulltitle="TOC" subtitle=""/>
         <page name="toc.html" href="toc.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Table of Contents" fulltitle="Table of Contents" subtitle=""/>
         <page name="qdoctests-qdocfileoutput.html" href="qdoctests-qdocfileoutput.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Testing QDoc output from .qdoc files" fulltitle="Testing QDoc output from .qdoc files" subtitle="" brief="This is a simple page for testing purposes only">
@@ -30,5 +35,7 @@
             <contents name="link-targets" title="Link targets" level="1"/>
         </page>
         <page name="crash.html" href="crash.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="" fulltitle="" subtitle=""/>
+        <group name="group" href="group.html" status="internal" seen="false" title=""/>
+        <group name="group2" href="group2.html" status="active" location="group.qdoc" documented="true" seen="true" title="Group2"/>
     </namespace>
 </INDEX>

@@ -178,6 +178,7 @@ protected:
     static bool appendTrademark(const Atom *atom);
     static std::optional<std::pair<QString, QString>> cmakeRequisite(const CollectionNode *cn);
 
+public:
     static Qt::SortOrder sortOrder(const QString &str)
     {
         return (str == "descending") ? Qt::DescendingOrder : Qt::AscendingOrder;
