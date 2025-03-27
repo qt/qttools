@@ -1117,6 +1117,48 @@
     Qt 5.10 > Qt Quick > QML Types > Item QML Type
     \endcode
 
+    \section2 Table of contents and navigation links
+
+    If there are one or more pages that act as a table of contents (TOC),
+    list their titles in \c navigation.toctitles to automate
+    the navigational (\e {previous} and \e {next} page) link generation
+    for all pages listed in a TOC.
+
+    QDoc expects a \qdoccmd {list} of links on each TOC page. Nested
+    sub-lists are allowed.
+
+    For example,
+
+    \badcode
+    \list
+        \li \l {Home}
+        \li \l {Getting started}
+        \li What's new
+            \list
+                \li \l {What's new in v1.3} {v1.3}
+                \li \l {What's new in v1.2} {v1.2}
+                \li \l {What's new in v1.1} {v1.1}
+            \endlist
+    \endlist
+    \endcode
+
+    Since QDoc version 6.10, also \qdoccmd {generatelist} can appear
+    in the table of contents list:
+
+    \badcode
+    \list
+        \li \l {Home}
+        \li \l {Getting started}
+        \li What's new
+        \generatelist [descending] whatsnew
+    \endlist
+    \endcode
+
+    Here, the result is similar to the first \\list, assuming all
+    three `What's new` pages are part of the same \c whatsnew group.
+
+    See also \qdoccmd {ingroup}.
+
     \target outputdir-variable
     \section1 outputdir
 

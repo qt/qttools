@@ -29,6 +29,7 @@ imagedirs = ./src/images
 
 sources = ./src/qdoctests-outputfromqdocfiles.qdoc \
           ./src/qdoctests-outputfromqdocmanuallikefiles.qdoc \
+          ./src/group.qdoc \
           ./src/toc.qdoc
 
 exampledirs = ./src/snippets

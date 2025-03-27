@@ -3,6 +3,7 @@
     <document>
         <page name="toc.html" href="toc.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Table of Contents" fulltitle="Table of Contents" subtitle="">
             <description>
+                <relation href="a.html" type="page" meta="next" description="Page A"/>
                 <relation href="" type="page" meta="previous" description="Random page"/>
                 <list type="bullet">
                     <item>
