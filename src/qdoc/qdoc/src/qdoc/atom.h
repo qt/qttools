@@ -200,6 +200,7 @@ protected:
 #define ATOM_FORMATTING_INDEX "index"
 #define ATOM_FORMATTING_ITALIC "italic"
 #define ATOM_FORMATTING_LINK "link"
+#define ATOM_FORMATTING_NOTRANSLATE "notranslate"
 #define ATOM_FORMATTING_PARAMETER "parameter"
 #define ATOM_FORMATTING_SPAN "span "
 #define ATOM_FORMATTING_SUBSCRIPT "subscript"

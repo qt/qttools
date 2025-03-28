@@ -195,6 +195,8 @@
     alternative text, which should be added as an attribute to the inline
     image.
 
+    \notranslate {Waffles} is not to be translated.
+
     File quoting:
 
     \quotefromfile main.cpp

@@ -114,6 +114,7 @@
 <db:imagedata fileref="images/01.png"/>
 </db:imageobject>
 </db:inlinemediaobject> inline image with alternative text, which should be added as an attribute to the inline image.</db:para>
+<db:para><db:phrase>Waffles</db:phrase> is not to be translated.</db:para>
 <db:para>File quoting:</db:para>
 <db:programlisting language="cpp">    if (false) {
         return 1;

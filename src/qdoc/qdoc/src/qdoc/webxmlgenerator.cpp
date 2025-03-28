@@ -431,7 +431,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
             writer.writeStartElement("subscript");
         else if (atom->string() == ATOM_FORMATTING_SUPERSCRIPT)
             writer.writeStartElement("superscript");
-        else if (atom->string() == ATOM_FORMATTING_TELETYPE)
+        else if (atom->string() == ATOM_FORMATTING_TELETYPE || atom->string() == ATOM_FORMATTING_NOTRANSLATE)
             writer.writeStartElement("teletype");
         else if (atom->string() == ATOM_FORMATTING_PARAMETER)
             writer.writeStartElement("argument");
@@ -450,7 +450,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
             writer.writeEndElement();
         else if (atom->string() == ATOM_FORMATTING_SUPERSCRIPT)
             writer.writeEndElement();
-        else if (atom->string() == ATOM_FORMATTING_TELETYPE)
+        else if (atom->string() == ATOM_FORMATTING_TELETYPE || atom->string() == ATOM_FORMATTING_NOTRANSLATE)
             writer.writeEndElement();
         else if (atom->string() == ATOM_FORMATTING_PARAMETER)
             writer.writeEndElement();

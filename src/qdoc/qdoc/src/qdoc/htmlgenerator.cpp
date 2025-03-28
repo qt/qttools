@@ -119,6 +119,7 @@ void HtmlGenerator::initializeGenerator()
                      { ATOM_FORMATTING_TELETYPE, "<code translate=\"no\">",
                        "</code>" }, // <tt> tag is not supported in HTML5
                      { ATOM_FORMATTING_TRADEMARK, "<span translate=\"no\">", "&#8482;" },
+                     { ATOM_FORMATTING_NOTRANSLATE, "<span translate=\"no\">", "</span>" },
                      { ATOM_FORMATTING_UICONTROL, "<b translate=\"no\">", "</b>" },
                      { ATOM_FORMATTING_UNDERLINE, "<u>", "</u>" },
                      { nullptr, nullptr, nullptr } };

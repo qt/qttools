@@ -81,6 +81,7 @@ enum {
     CMD_LIST,
     CMD_META,
     CMD_NOTE,
+    CMD_NOTRANSLATE,
     CMD_O,
     CMD_OMIT,
     CMD_OMITVALUE,
@@ -187,6 +188,7 @@ static struct
              { "list", CMD_LIST },
              { "meta", CMD_META },
              { "note", CMD_NOTE },
+             { "notranslate", CMD_NOTRANSLATE },
              { "o", CMD_O },
              { "omit", CMD_OMIT },
              { "omitvalue", CMD_OMITVALUE },
@@ -705,6 +707,9 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                 case CMD_NOTE:
                     leavePara();
                     enterPara(Atom::NoteLeft, Atom::NoteRight);
+                    break;
+                case CMD_NOTRANSLATE:
+                    startFormat(ATOM_FORMATTING_NOTRANSLATE, cmd);
                     break;
                 case CMD_O:
                     location().warning(QStringLiteral("'\\o' is deprecated. Use '\\li'"));

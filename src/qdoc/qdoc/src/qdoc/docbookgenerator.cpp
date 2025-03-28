@@ -349,6 +349,10 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
                         "trademark" : "phrase");
             if (m_useITS)
                 m_writer->writeAttribute(itsNamespace, "translate", "no");
+        } else if (atom->string() == ATOM_FORMATTING_NOTRANSLATE) {
+            m_writer->writeStartElement(dbNamespace, "phrase");
+            if (m_useITS)
+                m_writer->writeAttribute(itsNamespace, "translate", "no");
         } else {
             relative->location().warning(QStringLiteral("Unsupported formatting: %1").arg(atom->string()));
         }
@@ -361,7 +365,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
             || atom->string() == ATOM_FORMATTING_TELETYPE
             || atom->string() == ATOM_FORMATTING_PARAMETER
             || atom->string() == ATOM_FORMATTING_UICONTROL
-            || atom->string() == ATOM_FORMATTING_TRADEMARK) {
+            || atom->string() == ATOM_FORMATTING_TRADEMARK
+            || atom->string() == ATOM_FORMATTING_NOTRANSLATE) {
             m_writer->writeEndElement();
         } else if (atom->string() == ATOM_FORMATTING_LINK) {
             if (atom->string() == ATOM_FORMATTING_TELETYPE)
