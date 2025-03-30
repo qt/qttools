@@ -177,12 +177,14 @@ private:
     void init();
     void start(const Location &loc);
     /*
-      This limit on the length of a lexeme seems fairly high, but a
-      doc comment can be arbitrarily long. The previous 65,536 limit
-      was reached by Mark Summerfield.
-    */
-    enum { yyLexBufSize = 524288 };
+      Represents the maximum amount of characters that a token can be composed
+      of.
 
+      When a token with more characters than the maximum amount is encountered, a
+      warning is issued and parsing continues, discarding all characters from the
+      currently parsed token that don't fit into the buffer.
+    */
+    enum { yyLexBufSize = 1048576 };
     int getch() { return yyPos == yyIn.size() ? EOF : yyIn[yyPos++]; }
 
     inline int getChar()

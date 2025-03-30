@@ -176,6 +176,7 @@ static const QLocale::Language englishStyleLanguages[] = {
     QLocale::Friulian,
     QLocale::WesternFrisian,
     QLocale::Galician,
+    QLocale::Ganda,
     QLocale::Georgian,
     QLocale::German,
     QLocale::Greek,
