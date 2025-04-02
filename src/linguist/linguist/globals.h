@@ -9,23 +9,12 @@
 
 QT_BEGIN_NAMESPACE
 
+enum class TranslationMarks { OnMark, OffMark, ObsoleteMark, DangerMark, WarningMark, EmptyMark };
+
 const QString &settingsPrefix();
 QString settingPath(const char *path);
 bool isDarkMode();
-
-class QFont;
-
-class MarkIcon
-{
-public:
-    enum TranslationMarks { onMark, offMark, obsoleteMark, dangerMark, warningMark, emptyMark };
-
-    static QPixmap create(TranslationMarks mark, bool darkMode = isDarkMode());
-
-private:
-    static QPixmap createInternal(QChar unicode, const QColor &color);
-    static const QFont &getFont();
-};
+QPixmap createMarkIcon(TranslationMarks mark, bool darkMode = isDarkMode());
 
 QT_END_NAMESPACE
 

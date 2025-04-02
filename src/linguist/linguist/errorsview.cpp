@@ -70,7 +70,7 @@ QString ErrorsView::firstError()
 
 void ErrorsView::addError(int model, const QString &error)
 {
-    static QIcon pxDanger = MarkIcon::create(MarkIcon::dangerMark);
+    static QIcon pxDanger = createMarkIcon(TranslationMarks::DangerMark);
     QString lang;
     if (m_dataModel->modelCount() > 1)
         lang = m_dataModel->model(model)->localizedLanguage() + ": "_L1;

@@ -5,9 +5,7 @@
 
 #include <QApplication>
 #include <QColor>
-#include <QFont>
 #include <QPalette>
-#include <QPainter>
 #include <QStyleHints>
 
 namespace {
@@ -43,46 +41,30 @@ bool isDarkMode()
             || isLight(QGuiApplication::palette().color(QPalette::WindowText));
 }
 
-QPixmap MarkIcon::create(TranslationMarks mark, bool darkMode)
+QPixmap createMarkIcon(TranslationMarks mark, bool darkMode)
 {
+    const QString prefix = darkMode ? ":/images/darkmarks"_L1 : ":/images/lightmarks"_L1;
     switch (mark) {
-    case onMark:
-        return darkMode ? createInternal(QChar(0x2713), QColor(Qt::darkGreen).lighter())
-                        : createInternal(QChar(0x2713), Qt::darkGreen);
-    case offMark:
-        return darkMode ? createInternal(u'?', Qt::yellow) : createInternal(u'?', Qt::darkYellow);
-    case obsoleteMark:
-        return createInternal(QChar(0x2713), Qt::gray);
-    case dangerMark:
-        return createInternal(u'!', Qt::red);
-    case warningMark:
-        return darkMode ? createInternal(QChar(0x2713), Qt::yellow)
-                        : createInternal(QChar(0x2713), Qt::darkYellow);
-    case emptyMark:
-        return darkMode ? createInternal(u'?', Qt::white) : createInternal(u'?', Qt::darkBlue);
+    case TranslationMarks::OnMark:
+        return QPixmap(prefix + "/on-mark"_L1)
+                .scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    case TranslationMarks::OffMark:
+        return QPixmap(prefix + "/off-mark"_L1)
+                .scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    case TranslationMarks::ObsoleteMark:
+        return QPixmap(prefix + "/obsolete-mark"_L1)
+                .scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    case TranslationMarks::DangerMark:
+        return QPixmap(prefix + "/danger-mark"_L1)
+                .scaled(24, 24, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    case TranslationMarks::WarningMark:
+        return QPixmap(prefix + "/warning-mark"_L1)
+                .scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    case TranslationMarks::EmptyMark:
+        return QPixmap(prefix + "/empty-mark"_L1)
+                .scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     };
     Q_UNREACHABLE_RETURN({});
-}
-
-QPixmap MarkIcon::createInternal(QChar unicode, const QColor &color)
-{
-    static QFont font = getFont();
-    QPixmap pixmap(16, 16);
-    pixmap.fill(Qt::transparent);
-    QPainter painter(&pixmap);
-    painter.setFont(font);
-    painter.setPen(color);
-    painter.drawText(pixmap.rect(), Qt::AlignCenter, unicode);
-    painter.end();
-    return pixmap;
-}
-
-const QFont &MarkIcon::getFont()
-{
-    static QFont font;
-    font.setBold(true);
-    font.setPointSize(14);
-    return font;
 }
 
 QT_END_NAMESPACE

@@ -131,7 +131,7 @@ private slots:
     void slotSelectionChanged();
     void minusButtonClicked();
     void plusButtonClicked();
-
+    void updateIcons();
 private:
     void addEditor(int idx);
     void updateLayout();

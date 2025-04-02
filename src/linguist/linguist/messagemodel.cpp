@@ -1392,12 +1392,12 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
 
     if (bool dark = isDarkMode();
         (dark && mode != Qt::ColorScheme::Dark) || (!dark && mode != Qt::ColorScheme::Light)) {
-        pxOn = MarkIcon::create(MarkIcon::onMark, dark);
-        pxOff = MarkIcon::create(MarkIcon::offMark, dark);
-        pxObsolete = MarkIcon::create(MarkIcon::obsoleteMark, dark);
-        pxDanger = MarkIcon::create(MarkIcon::dangerMark, dark);
-        pxWarning = MarkIcon::create(MarkIcon::warningMark, dark);
-        pxEmpty = MarkIcon::create(MarkIcon::emptyMark, dark);
+        pxOn = createMarkIcon(TranslationMarks::OnMark, dark);
+        pxOff = createMarkIcon(TranslationMarks::OffMark, dark);
+        pxObsolete = createMarkIcon(TranslationMarks::ObsoleteMark, dark);
+        pxDanger = createMarkIcon(TranslationMarks::DangerMark, dark);
+        pxWarning = createMarkIcon(TranslationMarks::WarningMark, dark);
+        pxEmpty = createMarkIcon(TranslationMarks::EmptyMark, dark);
         mode = dark ? Qt::ColorScheme::Dark : Qt::ColorScheme::Light;
     }
 
@@ -1516,6 +1516,11 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
             default:
                 return QVariant(); // Status => no text
             }
+        }
+        else if (role == Qt::FontRole && column == m_data->modelCount()) {
+            QFont boldFont;
+            boldFont.setBold(true);
+            return boldFont;
         }
         else if (role == Qt::DecorationRole && column < numLangs) {
             if (ContextItem *contextItem = mci->contextItem(column)) {

@@ -3,6 +3,7 @@
 
 #include "messageeditorwidgets.h"
 #include "messagehighlighter.h"
+#include "globals.h"
 
 #include <translator.h>
 
@@ -236,10 +237,9 @@ protected:
 FormMultiWidget::FormMultiWidget(const QString &label, QWidget *parent)
     : QWidget(parent),
       m_hideWhenEmpty(false),
-      m_multiEnabled(false),
-      m_plusIcon(QIcon(":/images/plus.png"_L1)), // make static
-      m_minusIcon(QIcon(":/images/minus.png"_L1))
+      m_multiEnabled(false)
 {
+    updateIcons();
     m_label = new QLabel(this);
     QFont fnt;
     fnt.setBold(true);
@@ -250,12 +250,28 @@ FormMultiWidget::FormMultiWidget(const QString &label, QWidget *parent)
             new ButtonWrapper(makeButton(m_plusIcon, &FormMultiWidget::plusButtonClicked), 0));
 }
 
+void FormMultiWidget::updateIcons()
+{
+    const QString prefix = isDarkMode() ? ":/images/darkicons"_L1: ":/images/lighticons"_L1;
+    m_plusIcon = QIcon(prefix + "/plus-square-fill.png"_L1);
+    m_minusIcon = QIcon(prefix + "/minus-square-fill.png"_L1);
+    for (QAbstractButton *button: std::as_const(m_minusButtons))
+        button->setIcon(m_minusIcon);
+    for (QWidget *button: std::as_const(m_plusButtons)) {
+        QWidget *w = button->layout()->itemAt(0)->widget();
+        if (auto b = qobject_cast<QAbstractButton*>(w); b)
+            b->setIcon(m_plusIcon);
+    }
+}
+
 QAbstractButton *FormMultiWidget::makeButton(const QIcon &icon)
 {
     QAbstractButton *btn = new QToolButton(this);
     btn->setIcon(icon);
     btn->setFixedSize(icon.availableSizes().first() /* + something */);
     btn->setFocusPolicy(Qt::NoFocus);
+    btn->setStyleSheet("border: none; background: transparent;"_L1);
+
     return btn;
 }
 
@@ -306,6 +322,8 @@ bool FormMultiWidget::eventFilter(QObject *watched, QEvent *event)
                 return true;
             }
         }
+    } else if (event->type() == QEvent::ApplicationPaletteChange) {
+        updateIcons();
     }
     return false;
 }

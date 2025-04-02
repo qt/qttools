@@ -16,7 +16,6 @@
 #include "messageeditor.h"
 #include "messagemodel.h"
 #include "phrasebookbox.h"
-#include "phrasemodel.h"
 #include "phraseview.h"
 #include "printout.h"
 #include "sourcecodeview.h"
@@ -309,35 +308,9 @@ static bool hasFormPreview(const QString &fileName)
 
 QT_BEGIN_NAMESPACE
 
-class ContextItemDelegate : public QItemDelegate
-{
-public:
-    ContextItemDelegate(QObject *parent, MultiDataModel *model) : QItemDelegate(parent), m_dataModel(model) {}
-
-    void paint(QPainter *painter, const QStyleOptionViewItem &option,
-        const QModelIndex &index) const override
-    {
-        const QAbstractItemModel *model = index.model();
-        Q_ASSERT(model);
-
-        if (!model->parent(index).isValid()) {
-            if (index.column() - 1 == m_dataModel->modelCount()) {
-                QStyleOptionViewItem opt = option;
-                opt.font.setBold(true);
-                QItemDelegate::paint(painter, opt, index);
-                return;
-            }
-        }
-        QItemDelegate::paint(painter, option, index);
-    }
-
-private:
-    MultiDataModel *m_dataModel;
-};
-
 static const QVariant &pxObsolete()
 {
-    static const QVariant v = MarkIcon::create(MarkIcon::obsoleteMark);
+    static const QVariant v = createMarkIcon(TranslationMarks::ObsoleteMark);
     return v;
 }
 
@@ -450,7 +423,6 @@ MainWindow::MainWindow()
     m_contextView->setUniformRowHeights(true);
     m_contextView->setAlternatingRowColors(true);
     m_contextView->setAllColumnsShowFocus(true);
-    m_contextView->setItemDelegate(new ContextItemDelegate(this, m_dataModel));
     m_contextView->setSortingEnabled(true);
     m_contextView->setWhatsThis(tr("This panel lists the source contexts."));
     m_contextView->setModel(m_sortedContextsModel);
@@ -1967,44 +1939,52 @@ QString MainWindow::friendlyString(const QString& str)
     return f.simplified();
 }
 
+void MainWindow::updateIcons()
+{
+    const QString prefix = isDarkMode() ? ":/images/darkicons/"_L1: ":/images/lighticons/"_L1;
+    auto getIcon = [&prefix](const QString &name) {
+        QIcon icon;
+        icon.addPixmap(QPixmap(prefix + name + QStringLiteral(".png")), QIcon::Normal);
+        icon.addPixmap(QPixmap(prefix + name + QStringLiteral("-disabled.png")), QIcon::Disabled);
+        return icon;
+    };
+
+    QIcon openIcon = getIcon("open-new"_L1);
+    m_ui.actionOpen->setIcon(openIcon);
+    m_ui.actionOpenAux->setIcon(openIcon);
+    QIcon saveIcon = getIcon("save-fl-disk"_L1);
+    m_ui.actionSave->setIcon(saveIcon);
+    m_ui.actionSaveAll->setIcon(saveIcon);
+    m_ui.actionPrint->setIcon(getIcon("print"_L1));
+    m_ui.actionRedo->setIcon(getIcon("redo-arrow-right"_L1));
+    m_ui.actionUndo->setIcon(getIcon("undo-arrow-left"_L1));
+    m_ui.actionCut->setIcon(getIcon("cut"_L1));
+    m_ui.actionCopy->setIcon(getIcon("copy-general"_L1));
+    m_ui.actionPaste->setIcon(getIcon("paste-general"_L1));
+    m_ui.actionFind->setIcon(getIcon("search-magnifier"_L1));
+
+    m_ui.actionAccelerators->setIcon(getIcon("/check-ampersands"_L1));
+    m_ui.actionOpenPhraseBook->setIcon(getIcon("library"_L1));
+    m_ui.actionDone->setIcon(getIcon("mark-current-translation-done"_L1));
+    m_ui.actionDoneAndNext->setIcon(getIcon("mark-current-translation-done-move-to-next"_L1));
+    m_ui.actionNext->setIcon(getIcon("next-translation-item"_L1));
+    m_ui.actionNextUnfinished->setIcon(getIcon("next-unfinished-translation-item"_L1));
+    m_ui.actionPhraseMatches->setIcon(getIcon("check-phrase-suggestions"_L1));
+    m_ui.actionSurroundingWhitespace->setIcon(getIcon("check-white-spaces"_L1));
+    m_ui.actionEndingPunctuation->setIcon(getIcon("check-ending-pontuation"_L1));
+    m_ui.actionPrev->setIcon(getIcon("previous-translation-item"_L1));
+    m_ui.actionPrevUnfinished->setIcon(getIcon("previous-unfinished-translation-item"_L1));
+    m_ui.actionPlaceMarkerMatches->setIcon(getIcon("check-place-markers"_L1));
+    m_ui.actionWhatsThis->setIcon(getIcon("hit-help-chosen-option"_L1));
+}
+
 void MainWindow::setupMenuBar()
 {
-
     m_ui.menuRecentlyOpenedFiles->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpenRecent));
     m_ui.actionCloseAll->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::WindowClose));
     m_ui.actionExit->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ApplicationExit));
     m_ui.actionSelectAll->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditSelectAll));
-
-    // Prefer theme icons when available for these actions
-    const QString prefix = QApplication::platformName().compare(QStringLiteral("cocoa"), Qt::CaseInsensitive) ?
-                           QStringLiteral(":/images/win") : QStringLiteral(":/images/mac");
-
-    m_ui.actionOpen->setIcon(QIcon(prefix + QStringLiteral("/fileopen.png")));
-    m_ui.actionOpenAux->setIcon(QIcon(prefix + QStringLiteral("/fileopen.png")));
-    m_ui.actionSave->setIcon(QIcon(prefix + QStringLiteral("/filesave.png")));
-    m_ui.actionSaveAll->setIcon(QIcon(prefix + QStringLiteral("/filesave.png")));
-    m_ui.actionPrint->setIcon(QIcon(prefix + QStringLiteral("/print.png")));
-    m_ui.actionRedo->setIcon(QIcon(prefix + QStringLiteral("/redo.png")));
-    m_ui.actionUndo->setIcon(QIcon(prefix + QStringLiteral("/undo.png")));
-    m_ui.actionCut->setIcon(QIcon(prefix + QStringLiteral("/editcut.png")));
-    m_ui.actionCopy->setIcon(QIcon(prefix + QStringLiteral("/editcopy.png")));
-    m_ui.actionPaste->setIcon(QIcon(prefix + QStringLiteral("/editpaste.png")));
-    m_ui.actionFind->setIcon(QIcon(prefix + QStringLiteral("/searchfind.png")));
-
-    // No well defined theme icons for these actions
-    m_ui.actionAccelerators->setIcon(QIcon(prefix + QStringLiteral("/accelerator.png")));
-    m_ui.actionOpenPhraseBook->setIcon(QIcon(prefix + QStringLiteral("/book.png")));
-    m_ui.actionDone->setIcon(QIcon(prefix + QStringLiteral("/done.png")));
-    m_ui.actionDoneAndNext->setIcon(QIcon(prefix + QStringLiteral("/doneandnext.png")));
-    m_ui.actionNext->setIcon(QIcon(prefix + QStringLiteral("/next.png")));
-    m_ui.actionNextUnfinished->setIcon(QIcon(prefix + QStringLiteral("/nextunfinished.png")));
-    m_ui.actionPhraseMatches->setIcon(QIcon(prefix + QStringLiteral("/phrase.png")));
-    m_ui.actionSurroundingWhitespace->setIcon(QIcon(prefix + QStringLiteral("/surroundingwhitespace.png")));
-    m_ui.actionEndingPunctuation->setIcon(QIcon(prefix + QStringLiteral("/punctuation.png")));
-    m_ui.actionPrev->setIcon(QIcon(prefix + QStringLiteral("/prev.png")));
-    m_ui.actionPrevUnfinished->setIcon(QIcon(prefix + QStringLiteral("/prevunfinished.png")));
-    m_ui.actionPlaceMarkerMatches->setIcon(QIcon(prefix + QStringLiteral("/validateplacemarkers.png")));
-    m_ui.actionWhatsThis->setIcon(QIcon(prefix + QStringLiteral("/whatsthis.png")));
+    updateIcons();
 
     // File menu
     connect(m_ui.menuFile, &QMenu::aboutToShow, this, &MainWindow::fileAboutToShow);
@@ -2831,6 +2811,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
         }
     } else if (event->type() == QEvent::ApplicationPaletteChange) {
         m_dataModel->updateColors();
+        updateIcons();
     }
     return QMainWindow::eventFilter(object, event);
 }

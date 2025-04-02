@@ -179,7 +179,7 @@ private:
 
     // FIXME: move to DataModel
     void updateDanger(const MultiDataIndex &index, bool verbose);
-
+    void updateIcons();
     bool searchItem(DataModel::FindLocation where, const QString &searchWhat);
 
     QProcess *m_assistantProcess;
