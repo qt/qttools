@@ -71,6 +71,7 @@ QString ConfigStrings::REPORTMISSINGALTTEXTFORIMAGES =
         QStringLiteral("reportmissingalttextforimages");
 QString ConfigStrings::QHP = QStringLiteral("qhp");
 QString ConfigStrings::QUOTINGINFORMATION = QStringLiteral("quotinginformation");
+QString ConfigStrings::ROOTDIR = QStringLiteral("rootdir");
 QString ConfigStrings::SCRIPTS = QStringLiteral("scripts");
 QString ConfigStrings::SHOWINTERNAL = QStringLiteral("showinternal");
 QString ConfigStrings::SINGLEEXEC = QStringLiteral("singleexec");
@@ -358,6 +359,7 @@ void Config::clear()
     m_configVars.clear();
     m_includeFilesMap.clear();
     m_excludedPaths.reset();
+    m_sourceLink.reset();
 }
 
 /*!
@@ -415,6 +417,10 @@ void Config::load(const QString &fileName)
         m_location = Location(fileName);
     else
         m_location.setEtc(true);
+
+    // Resolve variables that are interpreted as paths
+    QString varName{CONFIG_URL + dot + CONFIG_SOURCES + dot + CONFIG_ROOTDIR};
+    setStringList(varName, getCanonicalPathList(varName, Validate));
 
     expandVariables();
 
@@ -1421,6 +1427,26 @@ const Config::ExcludedPaths& Config::getExcludedPaths() {
     m_excludedPaths.emplace(ExcludedPaths{std::move(excludedDirs), std::move(excludedFiles)});
 
     return *m_excludedPaths;
+}
+
+/*!
+    Returns a SourceLink struct with settings required to
+    construct source links to API entities.
+*/
+const Config::SourceLink &Config::getSourceLink()
+{
+    if (m_sourceLink)
+        return *m_sourceLink;
+
+    const auto srcUrl{CONFIG_URL + Config::dot + CONFIG_SOURCES};
+
+    const auto baseUrl = m_configVars.value(srcUrl).asString();
+    const auto rootPath = m_configVars.value(srcUrl + dot + CONFIG_ROOTDIR).asString();
+    const auto linkText = m_configVars.value(srcUrl + dot + "linktext").asString();
+    const auto enabled = m_configVars.value(srcUrl + dot + "enabled").asBool();
+
+    m_sourceLink.emplace(SourceLink{baseUrl, rootPath, linkText, enabled});
+    return *m_sourceLink;
 }
 
 std::set<Config::HeaderFilePath> Config::getHeaderFiles() {

@@ -1,6 +1,10 @@
 project = Test
 productname = Qt
 description = "A test project for QDoc build artifacts"
+url.sources = "http://localhost/\1?v\=1.0#L\2"
+url.sources.rootdir = ../../../../../../.. # root of qttools repository
+url.sources.linktext = (source)
+url.sources.enabled = true
 
 sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"

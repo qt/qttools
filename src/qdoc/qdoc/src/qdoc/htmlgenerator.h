@@ -94,6 +94,7 @@ private:
 
     void generateFullName(const Node *apparentNode, const Node *relative,
                           const Node *actualNode = nullptr);
+    void generateSourceLink(const Node *node);
     void generateDetailedMember(const Node *node, const PageNode *relative, CodeMarker *marker);
     void generateLink(const Atom *atom);
 

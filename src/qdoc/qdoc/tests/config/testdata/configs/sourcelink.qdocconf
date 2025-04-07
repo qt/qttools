@@ -1,0 +1,5 @@
+project = SourceLink
+
+url.sources             = "http://localhost/"
+url.sources.rootdir     = .
+url.sources.linktext    = link

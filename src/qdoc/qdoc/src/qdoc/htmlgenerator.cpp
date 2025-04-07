@@ -3421,6 +3421,40 @@ void HtmlGenerator::generateFullName(const Node *apparentNode, const Node *relat
         out() << "</a>";
 }
 
+/*!
+    Generates a link to the declaration of the C++ API entity
+    represented by \a node.
+*/
+void HtmlGenerator::generateSourceLink(const Node *node)
+{
+    Q_ASSERT(node);
+    if (node->genus() != Genus::CPP)
+        return;
+
+    const auto srcLink = Config::instance().getSourceLink();
+    if (!srcLink.enabled)
+        return;
+
+    // With no valid configuration or location, do nothing
+    const auto &loc{node->declLocation()};
+    if (loc.isEmpty() || srcLink.baseUrl.isEmpty() || srcLink.rootPath.isEmpty())
+        return;
+
+    QString srcUrl{srcLink.baseUrl};
+    if (!srcUrl.contains('\1'_L1)) {
+        if (!srcUrl.endsWith('/'_L1))
+            srcUrl += '/'_L1;
+        srcUrl += '\1'_L1;
+    }
+
+    QDir rootDir{srcLink.rootPath};
+    srcUrl.replace('\1'_L1, rootDir.relativeFilePath(loc.filePath()));
+    srcUrl.replace('\2'_L1, QString::number(loc.lineNo()));
+    const auto &description{"View declaration of this %1"_L1.arg(node->nodeTypeString())};
+    out() << "<a class=\"srclink\" href=\"%1\" title=\"%2\">%3</a>"_L1
+            .arg(srcUrl, description, srcLink.linkText);
+}
+
 void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *relative,
                                            CodeMarker *marker)
 {
@@ -3436,6 +3470,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
             nodeRef = refForNode(sharedNode);
             out() << R"(<h3 class="fn fngroupitem" translate="no" id=")" << nodeRef << "\">";
             generateSynopsis(sharedNode, relative, marker, Section::Details);
+            generateSourceLink(sharedNode);
             out() << "</h3>";
         }
         if (collective.size() > 1)
@@ -3448,10 +3483,12 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
             generateSynopsis(etn, relative, marker, Section::Details);
             out() << "<br/>";
             generateSynopsis(etn->flagsType(), relative, marker, Section::Details);
+            generateSourceLink(node);
             out() << "</h3>\n";
         } else {
             out() << R"(<h3 class="fn" translate="no" id=")" << nodeRef << "\">";
             generateSynopsis(node, relative, marker, Section::Details);
+            generateSourceLink(node);
             out() << "</h3>" << '\n';
         }
     }

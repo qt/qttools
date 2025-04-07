@@ -21,6 +21,7 @@ private slots:
     void includepaths();
     void getExampleProjectFile();
     void expandVars();
+    void sourceLink();
 
 private:
     Config &initConfig(const QStringList &args = QStringList(),
@@ -173,6 +174,20 @@ void::tst_Config::expandVars()
     QCOMPARE(config.get("expanded3").asString(), "foobar foobar baz");
     QCOMPARE(config.get("literally").asString(), "$data ${data}");
     QCOMPARE(config.get("csvlist").asString(), "a,b,c");
+}
+
+void::tst_Config::sourceLink()
+{
+    auto &config = initConfig();
+    const auto docConfig = QFINDTESTDATA("/testdata/configs/sourcelink.qdocconf");
+    if (!docConfig.isEmpty())
+        config.load(docConfig);
+
+    auto dir = QFileInfo(docConfig).dir();
+    QCOMPARE(config.getSourceLink().rootPath, dir.absolutePath());
+    QCOMPARE(config.getSourceLink().baseUrl, "http://localhost/");
+    QCOMPARE(config.getSourceLink().linkText, "link");
+    QCOMPARE(config.getSourceLink().enabled, false);
 }
 
 QTEST_APPLESS_MAIN(tst_Config)

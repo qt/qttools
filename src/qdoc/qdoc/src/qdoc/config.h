@@ -188,6 +188,14 @@ public:
     };
     const ExcludedPaths& getExcludedPaths();
 
+    struct SourceLink {
+        QString baseUrl;
+        QString rootPath;
+        QString linkText;
+        bool enabled;
+    };
+    const SourceLink &getSourceLink();
+
     struct HeaderFilePath {
         QString path;
         QString filename;
@@ -213,6 +221,7 @@ private:
     QString m_currentDir {};
     QString m_previousCurrentDir {};
     std::optional<ExcludedPaths> m_excludedPaths{};
+    std::optional<SourceLink> m_sourceLink{};
 
     bool m_showInternal { false };
     static bool m_debug;
@@ -299,6 +308,7 @@ struct ConfigStrings
     static QString REPORTMISSINGALTTEXTFORIMAGES;
     static QString QHP;
     static QString QUOTINGINFORMATION;
+    static QString ROOTDIR;
     static QString SCRIPTS;
     static QString SHOWINTERNAL;
     static QString SINGLEEXEC;
@@ -382,6 +392,7 @@ struct ConfigStrings
 #define CONFIG_REPORTMISSINGALTTEXTFORIMAGES ConfigStrings::REPORTMISSINGALTTEXTFORIMAGES
 #define CONFIG_QHP ConfigStrings::QHP
 #define CONFIG_QUOTINGINFORMATION ConfigStrings::QUOTINGINFORMATION
+#define CONFIG_ROOTDIR ConfigStrings::ROOTDIR
 #define CONFIG_SCRIPTS ConfigStrings::SCRIPTS
 #define CONFIG_SHOWINTERNAL ConfigStrings::SHOWINTERNAL
 #define CONFIG_SINGLEEXEC ConfigStrings::SINGLEEXEC

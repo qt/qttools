@@ -183,6 +183,7 @@
     \li \l {tabsize-variable} {tabsize}
     \li \l {url-variable} {url}
     \li \l {url.examples-variable} {url.examples}
+    \li \l {url.sources-variable} {url.sources}
     \li \l {usealttextastitle-variable} {usealttextastitle}
     \li \l {version-variable} {version}
     \li \l {versionsym-variable} {versionsym}
@@ -1936,6 +1937,46 @@
 
     See also \l url, \l examplesinstallpath, and \l {example-command}{\\example}.
 
+    \target url.sources-variable
+    \section1 url.sources
+
+    The \c {url.sources} variable holds the base URL for the C++ source
+    code associated with the current project. This is a URL for viewing
+    the project's sources in a repository, for example, on \e {github.com}.
+
+    Enable the source links by setting \c {url.sources.enabled} to
+    \c true. When enabled, QDoc generates a link to a declaration
+    in the \e synopsis (signature) of each documented C++ entity in its
+    \e {Detailed description} section.
+
+    In addition, define the root directory of the sources with
+    \c {url.sources.rootdir}. The generated link is composed of the
+    base URL (\c {url.sources}) and the path of the source file, relative
+    to \c {url.sources.rootdir}.
+
+    If the URL contains more components after the path (for example, a query
+    string specifying a branch), \\1 acts as a placeholder for
+    the path. Similarly, \\2 acts as a placeholder for the line number.
+
+    \c {url.sources.linktext} sets the user-visible link text for source
+    links. By default, the link text is an empty string; use the \c {a.srclink}
+    CSS selector to style the links in the HTML output.
+
+    For example, with the following configuration in
+    \c {qtbase/src/gui/doc/qtgui.qdocconf}:
+
+    \badcode
+    url.sources = "https://code.qt.io/cgit/qt/qtbase.git/tree/\1?h=$QT_VER#n\2"
+    url.sources.rootdir = ../../..    # root of the `qtbase` repository
+    url.sources.linktext = "(source)"
+    url.sources.enabled = true
+    \endcode
+
+    QDoc will generate links to \e code.qt.io for each documented C++
+    entity, specific to the branch defined with the \c QT_VER environment
+    variable.
+
+    The \c {url.sources} variable was introduced to QDoc with Qt 6.10.
 
     \target usealttextastitle-variable
     \section1 usealttextastitle
