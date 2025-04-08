@@ -1391,7 +1391,6 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
     else
         htmlTitle.append(" QML Type");
 
-
     generateHeader(htmlTitle, qcn, marker);
     Sections sections(qcn);
     generateTableOfContents(qcn, marker, &sections.stdQmlTypeSummarySections());
@@ -1922,8 +1921,8 @@ void HtmlGenerator::generateFooter(const Node *node)
 }
 
 /*!
-Lists the required imports and includes in a table.
-The number of rows is known.
+    Lists the required imports and includes in a table.
+    The number of rows is known.
 */
 void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
 {
@@ -2043,7 +2042,7 @@ void HtmlGenerator::addInheritsToMap(QMap<QString, Text> &requisites, Text *text
     \internal
     Add the QML/C++ native type information to the map.
  */
- void HtmlGenerator::addQmlNativeTypesToMap(QMap<QString, Text> &requisites, Text *text,
+void HtmlGenerator::addQmlNativeTypesToMap(QMap<QString, Text> &requisites, Text *text,
                                             const QString &nativeTypeText, ClassNode *classe) const
 {
     if (!text)
@@ -2177,13 +2176,14 @@ void HtmlGenerator::addIncludeFileToMap(const Aggregate *aggregate,
 }
 
 /*!
-Lists the required imports and includes in a table.
-The number of rows is known.
+    Lists the required imports and includes in a table.
+    The number of rows is known.
 */
 void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
 {
     if (qcn == nullptr)
         return;
+
     QMap<QString, Text> requisites;
     Text text;
 
