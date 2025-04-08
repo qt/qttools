@@ -562,6 +562,9 @@ files working.
 A plurals-only \c{.ts} is automatically generated unless the option \c
 NO_GENERATE_PLURALS_TS_FILE is specified.
 
+If you need a full translation of the source language, add it to
+\l{QT_I18N_TRANSLATED_LANGUAGES}
+
 For example,
 \badcode
 project(myapp)
@@ -573,25 +576,9 @@ qt_add_executable(myapp ...)
 ...
 qt_add_translations(myapp)
 \endcode
+
 creates the full translation file \c{myapp_de.ts} and the plurals-only file
 \c{myapp_en.ts}.
-
-If you need a full translation of the source language, add it to
-\l{QT_I18N_TRANSLATED_LANGUAGES}
-
-For example,
-\badcode
-project(myapp)
-qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES en de)
-qt_add_executable(myapp ...)
-...
-qt_add_translations(myapp)
-\endcode
-creates the full translation files
-\list
-\li \c{myapp_en.ts}
-\li \c{myapp_de.ts}
-\endlist
 
 \section1 Options
 
