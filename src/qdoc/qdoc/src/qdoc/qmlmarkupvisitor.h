@@ -6,6 +6,7 @@
 
 #include "node.h"
 #include "tree.h"
+#include "utilities.h"
 
 #include <QtCore/qstring.h>
 
@@ -109,9 +110,6 @@ public:
     bool visit(QQmlJS::AST::FunctionExpression *) override;
     bool visit(QQmlJS::AST::FormalParameterList *) override;
     bool visit(QQmlJS::AST::DebuggerStatement *) override;
-
-protected:
-    QString protect(const QString &string);
 
 private:
     typedef QHash<QString, QString> StringHash;

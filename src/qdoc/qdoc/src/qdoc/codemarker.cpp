@@ -255,36 +255,9 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
     return extraStr;
 }
 
-static const QString samp = QLatin1String("&amp;");
-static const QString slt = QLatin1String("&lt;");
-static const QString sgt = QLatin1String("&gt;");
-static const QString squot = QLatin1String("&quot;");
-
 QString CodeMarker::protect(const QString &str)
 {
-    qsizetype n = str.size();
-    QString marked;
-    marked.reserve(n * 2 + 30);
-    const QChar *data = str.constData();
-    for (int i = 0; i != n; ++i) {
-        switch (data[i].unicode()) {
-        case '&':
-            marked += samp;
-            break;
-        case '<':
-            marked += slt;
-            break;
-        case '>':
-            marked += sgt;
-            break;
-        case '"':
-            marked += squot;
-            break;
-        default:
-            marked += data[i];
-        }
-    }
-    return marked;
+    return Utilities::protect(str);
 }
 
 void CodeMarker::appendProtectedString(QString *output, QStringView str)
@@ -295,16 +268,16 @@ void CodeMarker::appendProtectedString(QString *output, QStringView str)
     for (int i = 0; i != n; ++i) {
         switch (data[i].unicode()) {
         case '&':
-            *output += samp;
+            *output += Utilities::samp;
             break;
         case '<':
-            *output += slt;
+            *output += Utilities::slt;
             break;
         case '>':
-            *output += sgt;
+            *output += Utilities::sgt;
             break;
         case '"':
-            *output += squot;
+            *output += Utilities::squot;
             break;
         default:
             *output += data[i];

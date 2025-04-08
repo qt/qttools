@@ -50,40 +50,6 @@ QmlMarkupVisitor::QmlMarkupVisitor(const QString &source,
     }
 }
 
-// The protect() function is a copy of the one from CppCodeMarker.
-
-static const QString samp = QLatin1String("&amp;");
-static const QString slt = QLatin1String("&lt;");
-static const QString sgt = QLatin1String("&gt;");
-static const QString squot = QLatin1String("&quot;");
-
-QString QmlMarkupVisitor::protect(const QString &str)
-{
-    qsizetype n = str.size();
-    QString marked;
-    marked.reserve(n * 2 + 30);
-    const QChar *data = str.constData();
-    for (int i = 0; i != n; ++i) {
-        switch (data[i].unicode()) {
-        case '&':
-            marked += samp;
-            break;
-        case '<':
-            marked += slt;
-            break;
-        case '>':
-            marked += sgt;
-            break;
-        case '"':
-            marked += squot;
-            break;
-        default:
-            marked += data[i];
-        }
-    }
-    return marked;
-}
-
 QString QmlMarkupVisitor::markedUpCode()
 {
     if (int(m_cursor) < m_source.size())
@@ -104,7 +70,7 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
         if (extra.trimmed().isEmpty())
             m_output += extra;
         else
-            m_output += protect(extra); // text that should probably have been caught by the parser
+            m_output += Utilities::protect(extra); // text that should probably have been caught by the parser
 
         m_cursor = finish;
         return;
@@ -126,7 +92,7 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
         quint32 j = m_extraLocations[m_extraIndex].offset - 2;
         if (i <= j && j < finish) {
             if (i < j)
-                m_output += protect(m_source.mid(i, j - i));
+                m_output += Utilities::protect(m_source.mid(i, j - i));
 
             quint32 l = m_extraLocations[m_extraIndex].length;
             if (m_extraTypes[m_extraIndex] == Comment) {
@@ -135,10 +101,10 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
                 else
                     l += 2;
                 m_output += QLatin1String("<@comment>");
-                m_output += protect(m_source.mid(j, l));
+                m_output += Utilities::protect(m_source.mid(j, l));
                 m_output += QLatin1String("</@comment>");
             } else
-                m_output += protect(m_source.mid(j, l));
+                m_output += Utilities::protect(m_source.mid(j, l));
 
             m_extraIndex++;
             i = j + l;
@@ -150,7 +116,7 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
     if (extra.trimmed().isEmpty())
         m_output += extra;
     else
-        m_output += protect(extra); // text that should probably have been caught by the parser
+        m_output += Utilities::protect(extra); // text that should probably have been caught by the parser
 
     m_cursor = finish;
 }
@@ -170,7 +136,7 @@ void QmlMarkupVisitor::addMarkedUpToken(QQmlJS::SourceLocation &location,
     m_output += QString(QLatin1String("<@%1")).arg(tagName);
     for (const auto &key : attributes)
         m_output += QString(QLatin1String(" %1=\"%2\"")).arg(key, attributes[key]);
-    m_output += QString(QLatin1String(">%2</@%3>")).arg(protect(sourceText(location)), tagName);
+    m_output += QString(QLatin1String(">%2</@%3>")).arg(Utilities::protect(sourceText(location)), tagName);
     m_cursor += location.length;
 }
 
@@ -198,7 +164,7 @@ void QmlMarkupVisitor::addVerbatim(QQmlJS::SourceLocation first,
         return;
 
     QString text = m_source.mid(start, finish - start);
-    m_output += protect(text);
+    m_output += Utilities::protect(text);
     m_cursor = finish;
 }
 
