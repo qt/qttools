@@ -6,18 +6,20 @@
 
 #include "mywidget.h"
 
+using namespace Qt::StringLiterals;
+
 //! [0]
-QWidget *loadCustomWidget(QWidget *parent)
+QWidget *loadCustomWidget(const QString &className, QWidget *parent)
 {
     QUiLoader loader;
-    QWidget *myWidget;
-
     QStringList availableWidgets = loader.availableWidgets();
 
-    if (availableWidgets.contains("AnalogClock"))
-        myWidget = loader.createWidget("AnalogClock", parent);
+    if (!availableWidgets.contains(className)) {
+        qWarning() << "Cannot create widget" << className;
+        return nullptr;
+    }
 
-    return myWidget;
+    return loader.createWidget(className, parent);
 }
 //! [0]
 
@@ -27,7 +29,7 @@ int main(int argc, char *argv[])
     MyWidget widget;
     widget.show();
 
-    QWidget *customWidget = loadCustomWidget(0);
-    customWidget->show();
+    if (QWidget *customWidget = loadCustomWidget("AnalogClock"_L1, nullptr))
+        customWidget->show();
     return app.exec();
 }
