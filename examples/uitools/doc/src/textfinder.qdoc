@@ -81,8 +81,9 @@
     \c{loadUiFile} and \c{loadTextFile}.
 
     The \c{loadUiFile} function loads the user interface file previously
-    created in \l{Qt Widgets Designer}. First, the content of the \c{textfinder.ui}
-    file is loaded from the resource system. Then a QUiLoader instance is
+    created in \l{Qt Widgets Designer}. First, the \c{textfinder.ui}
+    file is located and opened from the resource system.
+    Then a QUiLoader instance is
     created, and the QUiLoader::load() function is called, with the first
     argument being the open file, and the second argument being the pointer of
     the widget that should be set as the parent. The created QWidget is
@@ -90,11 +91,9 @@
 
     \snippet textfinder/textfinder.cpp 4
 
-    In a similar vein, the \c loadTextFile function loads \c{input.txt} from
-    the resources. Data is read using QTextStream into a QString with the
-    QTextStream::readAll() function. We explicitly set the encoding to
-    \e{UTF-8}, because QTextStream by default uses the current system locale.
-    Finally, the loaded text is returned.
+    In a similar vein, the \c loadTextFile function locates and opens
+    \c{input.txt} from the resources. It then returns the file's content
+    using the QTextStream::readAll() function.
 
     \snippet textfinder/textfinder.cpp 5
 
