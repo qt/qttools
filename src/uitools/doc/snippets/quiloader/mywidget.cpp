@@ -10,11 +10,12 @@
 MyWidget::MyWidget(QWidget *parent)
     : QWidget(parent)
 {
-    QUiLoader loader;
     QFile file(":/forms/myform.ui");
-    file.open(QFile::ReadOnly);
+    if (!file.open(QFile::ReadOnly))
+        qFatal("Cannot open resource file");
+
+    QUiLoader loader;
     QWidget *myWidget = loader.load(&file, this);
-    file.close();
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(myWidget);
