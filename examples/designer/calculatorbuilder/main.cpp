@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 //! [0]
-#include <QtUiTools>
+#include <QUiLoader>
 //! [0]
 
 #include <QApplication>
@@ -12,21 +12,17 @@
 
 #include <QFile>
 
-#include <memory>
-
 using namespace Qt::StringLiterals;
 
 //! [1]
 static QWidget *loadCalculatorForm(QWidget *parent = nullptr)
 {
-    QUiLoader loader;
-
     QFile file(u":/forms/calculatorform.ui"_s);
     if (!file.open(QFile::ReadOnly))
         return nullptr;
-    QWidget *formWidget = loader.load(&file, parent);
-    file.close();
-    if (formWidget == nullptr)
+
+    QWidget *formWidget = QUiLoader().load(&file, parent);
+    if (!formWidget)
         return nullptr;
 //! [1]
 
