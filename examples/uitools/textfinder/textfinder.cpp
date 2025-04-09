@@ -20,10 +20,10 @@ using namespace Qt::StringLiterals;
 static QWidget *loadUiFile(QWidget *parent)
 {
     QFile file(u":/forms/textfinder.ui"_s);
-    file.open(QIODevice::ReadOnly);
+    if (!file.open(QIODevice::ReadOnly))
+        qFatal("Cannot open resource file");
 
-    QUiLoader loader;
-    return loader.load(&file, parent);
+    return QUiLoader().load(&file, parent);
 }
 //! [4]
 
@@ -31,9 +31,10 @@ static QWidget *loadUiFile(QWidget *parent)
 static QString loadTextFile()
 {
     QFile inputFile(u":/forms/input.txt"_s);
-    inputFile.open(QIODevice::ReadOnly);
-    QTextStream in(&inputFile);
-    return in.readAll();
+    if (!inputFile.open(QIODevice::ReadOnly))
+        qFatal("Cannot open resource file");
+
+    return QTextStream(&inputFile).readAll();
 }
 //! [5]
 
