@@ -17,7 +17,6 @@
 #include "node.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
-#include "qmlpropertynode.h"
 #include "sharedcommentnode.h"
 #include "tagfilewriter.h"
 #include "tree.h"
@@ -32,7 +31,6 @@
 
 #include <cctype>
 #include <deque>
-#include <string>
 
 QT_BEGIN_NAMESPACE
 
