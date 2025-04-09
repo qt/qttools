@@ -117,12 +117,7 @@ CodeMarker *CodeMarker::markerForLanguage(const QString &lang)
 
 const Node *CodeMarker::nodeForString(const QString &string)
 {
-#if QT_POINTER_SIZE == 4
-    const quintptr n = string.toUInt();
-#else
-    const quintptr n = string.toULongLong();
-#endif
-    return reinterpret_cast<const Node *>(n);
+    return reinterpret_cast<const Node *>(string.toULongLong());
 }
 
 QString CodeMarker::stringForNode(const Node *node)
