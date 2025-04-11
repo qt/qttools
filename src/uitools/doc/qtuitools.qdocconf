@@ -15,7 +15,13 @@ qhp.QtUiTools.virtualFolder       = qtuitools
 qhp.QtUiTools.indexTitle          = Qt UI Tools
 qhp.QtHelp.indexRoot           =
 
-qhp.QtUiTools.subprojects         = classes
+qhp.QtUiTools.subprojects         = examples classes
+
+qhp.QtUiTools.subprojects.examples.title = Examples
+qhp.QtUiTools.subprojects.examples.indexTitle = Qt UI Tools Examples
+qhp.QtUiTools.subprojects.examples.selectors = example
+qhp.QtUiTools.subprojects.examples.sortPages = true
+
 qhp.QtUiTools.subprojects.classes.title = C++ Classes
 qhp.QtUiTools.subprojects.classes.indexTitle = Qt UI Tools C++ Classes
 qhp.QtUiTools.subprojects.classes.selectors = class fake:headerfile
