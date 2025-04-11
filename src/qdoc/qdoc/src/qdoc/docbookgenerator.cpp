@@ -2937,7 +2937,7 @@ void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
 /*!
   Generate a file with the contents of a C++ or QML source file.
  */
-void DocBookGenerator::generateExampleFilePage(const Node *node, ResolvedFile resolved_file, CodeMarker*)
+void DocBookGenerator::generateExampleFilePage(const PageNode *node, ResolvedFile resolved_file, CodeMarker*)
 {
     // TODO: [generator-insufficient-structural-abstraction]
 

@@ -287,7 +287,7 @@ void HtmlGenerator::generateDocs()
 /*!
   Generate an html file with the contents of a C++ or QML source file.
  */
-void HtmlGenerator::generateExampleFilePage(const Node *en, ResolvedFile resolved_file, CodeMarker *marker)
+void HtmlGenerator::generateExampleFilePage(const PageNode *en, ResolvedFile resolved_file, CodeMarker *marker)
 {
     SubTitleSize subTitleSize = LargeSubTitle;
     QString fullTitle = en->fullTitle();

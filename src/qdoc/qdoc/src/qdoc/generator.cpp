@@ -285,9 +285,8 @@ QFile *Generator::openSubPageFile(const PageNode *node, const QString &fileName)
   Attaches a QTextStream to the created file, which is written
   to all over the place using out().
  */
-void Generator::beginSubPage(const Node *node, const QString &fileName)
+void Generator::beginSubPage(const PageNode *node, const QString &fileName)
 {
-    Q_ASSERT(node->isPageNode());
     QFile *outFile = openSubPageFile(static_cast<const PageNode*>(node), fileName);
     auto *out = new QTextStream(outFile);
     outStreamStack.push(out);
@@ -1074,8 +1073,9 @@ void Generator::generateDocumentation(Node *node)
      */
     CodeMarker *marker = CodeMarker::markerForFileName(node->location().filePath());
 
-    if (node->parent() != nullptr) {
-        if (node->isCollectionNode()) {
+    if (node->parent() != nullptr && node->isPageNode()) {
+        PageNode *pageNode = static_cast<PageNode *>(node);
+        if (pageNode->isCollectionNode()) {
             /*
               A collection node collects: groups, C++ modules, or QML
               modules. Testing for a CollectionNode must be done
@@ -1098,7 +1098,7 @@ void Generator::generateDocumentation(Node *node)
             auto *cn = static_cast<CollectionNode *>(node);
             if (cn->wasSeen()) {
                 m_qdb->mergeCollections(cn);
-                beginSubPage(node, fileName(node));
+                beginSubPage(pageNode, fileName(node));
                 generateCollectionNode(cn, marker);
                 endSubPage();
             } else if (cn->isGenericCollection()) {
@@ -1109,27 +1109,27 @@ void Generator::generateDocumentation(Node *node)
                 name.replace(QChar(' '), QString("-"));
                 QString filename =
                         cn->tree()->physicalModuleName() + "-" + name + "." + fileExtension();
-                beginSubPage(node, filename);
+                beginSubPage(pageNode, filename);
                 generateGenericCollectionPage(cn, marker);
                 endSubPage();
             }
         } else if (node->isTextPageNode()) {
-            beginSubPage(node, fileName(node));
-            generatePageNode(static_cast<PageNode *>(node), marker);
+            beginSubPage(pageNode, fileName(node));
+            generatePageNode(pageNode, marker);
             endSubPage();
         } else if (node->isAggregate()) {
             if ((node->isClassNode() || node->isHeader() || node->isNamespace())
                 && node->docMustBeGenerated()) {
-                beginSubPage(node, fileName(node));
+                beginSubPage(pageNode, fileName(node));
                 generateCppReferencePage(static_cast<Aggregate *>(node), marker);
                 endSubPage();
             } else if (node->isQmlType()) {
-                beginSubPage(node, fileName(node));
+                beginSubPage(pageNode, fileName(node));
                 auto *qcn = static_cast<QmlTypeNode *>(node);
                 generateQmlTypePage(qcn, marker);
                 endSubPage();
             } else if (node->isProxyNode()) {
-                beginSubPage(node, fileName(node));
+                beginSubPage(pageNode, fileName(node));
                 generateProxyPage(static_cast<Aggregate *>(node), marker);
                 endSubPage();
             }

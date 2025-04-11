@@ -96,9 +96,9 @@ public:
 
 protected:
     static QFile *openSubPageFile(const PageNode *node, const QString &fileName);
-    void beginSubPage(const Node *node, const QString &fileName);
+    void beginSubPage(const PageNode *node, const QString &fileName);
     void endSubPage();
-    virtual void generateExampleFilePage(const Node *, ResolvedFile, CodeMarker * = nullptr) {}
+    virtual void generateExampleFilePage(const PageNode *, ResolvedFile, CodeMarker * = nullptr) {}
     virtual void generateAlsoList(const Node *node, CodeMarker *marker);
     virtual void generateAlsoList(const Node *node) { generateAlsoList(node, nullptr); }
     virtual qsizetype generateAtom(const Atom *, const Node *, CodeMarker *) { return 0; }

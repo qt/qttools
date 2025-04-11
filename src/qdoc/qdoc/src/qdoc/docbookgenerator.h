@@ -111,7 +111,7 @@ private:
     void generateClassHierarchy(const Node *relative, NodeMultiMap &classMap);
     void generateFunctionIndex(const Node *relative);
     void generateLegaleseList(const Node *relative);
-    void generateExampleFilePage(const Node *en, ResolvedFile resolved_file, CodeMarker* = nullptr) override;
+    void generateExampleFilePage(const PageNode *en, ResolvedFile resolved_file, CodeMarker* = nullptr) override;
     void generateRequiredLinks(const Node *node);
     void generateLinkToExample(const ExampleNode *en, const QString &baseUrl);
 

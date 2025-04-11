@@ -35,7 +35,7 @@ public:
     static QString protect(const QString &string);
 
 protected:
-    void generateExampleFilePage(const Node *en, ResolvedFile resolved_file, CodeMarker *marker) override;
+    void generateExampleFilePage(const PageNode *en, ResolvedFile resolved_file, CodeMarker *marker) override;
     qsizetype generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker) override;
     void generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker) override;
     void generateProxyPage(Aggregate *aggregate, CodeMarker *marker) override;

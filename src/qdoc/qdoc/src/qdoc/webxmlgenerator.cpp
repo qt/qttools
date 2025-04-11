@@ -101,7 +101,7 @@ void WebXMLGenerator::generatePageNode(PageNode *pn, CodeMarker * /* marker */)
     endSubPage();
 }
 
-void WebXMLGenerator::generateExampleFilePage(const Node *en, ResolvedFile resolved_file, CodeMarker* /* marker */)
+void WebXMLGenerator::generateExampleFilePage(const PageNode *en, ResolvedFile resolved_file, CodeMarker* /* marker */)
 {
     // TODO: [generator-insufficient-structural-abstraction]
 

@@ -32,7 +32,7 @@ protected:
     void generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker) override;
     void generatePageNode(PageNode *pn, CodeMarker *marker) override;
     void generateDocumentation(Node *node) override;
-    void generateExampleFilePage(const Node *en, ResolvedFile file, CodeMarker *marker = nullptr) override;
+    void generateExampleFilePage(const PageNode *en, ResolvedFile file, CodeMarker *marker = nullptr) override;
     [[nodiscard]] QString fileExtension() const override;
 
     virtual const Atom *addAtomElements(QXmlStreamWriter &writer, const Atom *atom,
