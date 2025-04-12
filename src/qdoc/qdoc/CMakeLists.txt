@@ -47,6 +47,7 @@ qt_internal_add_tool(${target_name}
         src/qdoc/filesystem/fileresolver.cpp
         src/qdoc/functionnode.cpp
         src/qdoc/generator.cpp
+        src/qdoc/genustypes.h
         src/qdoc/headernode.cpp
         src/qdoc/helpprojectwriter.cpp
         src/qdoc/htmlgenerator.cpp

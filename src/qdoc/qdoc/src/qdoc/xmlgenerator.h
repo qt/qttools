@@ -5,8 +5,10 @@
 #ifndef XMLGENERATOR_H
 #define XMLGENERATOR_H
 
-#include "node.h"
 #include "generator.h"
+#include "genustypes.h"
+#include "node.h"
+
 #include "filesystem/fileresolver.h"
 
 #include <QtCore/qmap.h>
@@ -28,7 +30,7 @@ protected:
     static int hOffset(const Node *node);
 
     static void rewritePropertyBrief(const Atom *atom, const Node *relative);
-    static Node::NodeType typeFromString(const Atom *atom);
+    static NodeType typeFromString(const Atom *atom);
     static void setImageFileName(const Node *relative, const QString &fileName);
     static std::pair<QString, int> getAtomListValue(const Atom *atom);
     static std::pair<QString, QString> getTableWidthAttr(const Atom *atom);
@@ -38,7 +40,7 @@ protected:
     QString linkForNode(const Node *node, const Node *relative);
     QString getLink(const Atom *atom, const Node *relative, const Node **node);
     QString getAutoLink(const Atom *atom, const Node *relative, const Node **node,
-                        Node::Genus = Node::DontCare);
+                        Genus = Genus::DontCare);
 
     std::pair<QString, QString> anchorForNode(const Node *node);
 

@@ -4,6 +4,7 @@
 #ifndef SHAREDCOMMENTNODE_H
 #define SHAREDCOMMENTNODE_H
 
+#include "genustypes.h"
 #include "node.h"
 
 #include <QtCore/qglobal.h>
@@ -17,7 +18,7 @@ class QmlTypeNode;
 class SharedCommentNode : public Node
 {
 public:
-    explicit SharedCommentNode(Node *node) : Node(Node::SharedComment, node->parent(), QString())
+    explicit SharedCommentNode(Node *node) : Node(NodeType::SharedComment, node->parent(), QString())
     {
         m_collective.reserve(1);
         append(node);

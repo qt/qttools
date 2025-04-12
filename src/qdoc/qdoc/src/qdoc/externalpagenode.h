@@ -4,6 +4,7 @@
 #ifndef EXTERNALPAGENODE_H
 #define EXTERNALPAGENODE_H
 
+#include "genustypes.h"
 #include "pagenode.h"
 
 #include <QtCore/qglobal.h>
@@ -14,7 +15,7 @@ class ExternalPageNode : public PageNode
 {
 public:
     ExternalPageNode(Aggregate *parent, const QString &url)
-        : PageNode(Node::ExternalPage, parent, url)
+        : PageNode(NodeType::ExternalPage, parent, url)
     {
         setUrl(url);
     }

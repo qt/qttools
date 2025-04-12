@@ -7,6 +7,7 @@
 #include "collectionnode.h"
 #include "functionnode.h"
 #include "generator.h"
+#include "genustypes.h"
 #include "qdocindexfiles.h"
 #include "tree.h"
 
@@ -268,7 +269,7 @@ void QDocForest::newPrimaryTree(const QString &module)
   title as a fallback if no higher-priority targets are found.
  */
 const Node *QDocForest::findNodeForTarget(QStringList &targetPath, const Node *relative,
-                                          Node::Genus genus, QString &ref)
+                                          Genus genus, QString &ref)
 {
     int flags = SearchBaseClasses | SearchEnumValues;
 
@@ -307,7 +308,7 @@ const Node *QDocForest::findNodeForTarget(QStringList &targetPath, const Node *r
  */
 const FunctionNode *QDocForest::findFunctionNode(const QStringList &path,
                                                  const Parameters &parameters, const Node *relative,
-                                                 Node::Genus genus)
+                                                 Genus genus)
 {
     for (const auto *tree : searchOrder()) {
         const FunctionNode *fn = tree->findFunctionNode(path, parameters, relative, genus);
@@ -681,7 +682,7 @@ QmlTypeNode *QDocDatabase::findQmlTypeInPrimaryTree(const QString &qmid, const Q
 {
     if (!qmid.isEmpty())
         return primaryTree()->lookupQmlType(qmid + u"::"_s + name);
-    return static_cast<QmlTypeNode *>(primaryTreeRoot()->findChildNode(name, Node::QML, TypesOnly));
+    return static_cast<QmlTypeNode *>(primaryTreeRoot()->findChildNode(name, Genus::QML, TypesOnly));
 }
 
 /*!
@@ -1090,7 +1091,7 @@ void QDocDatabase::resolveProxies()
   The entire forest is searched, but the first match is accepted.
  */
 const FunctionNode *QDocDatabase::findFunctionNode(const QString &target, const Node *relative,
-                                                   Node::Genus genus)
+                                                   Genus genus)
 {
     QString signature;
     QString function = target;
@@ -1116,7 +1117,7 @@ const FunctionNode *QDocDatabase::findFunctionNode(const QString &target, const 
   When searching the index trees, the search begins at the
   root.
  */
-const Node *QDocDatabase::findTypeNode(const QString &type, const Node *relative, Node::Genus genus)
+const Node *QDocDatabase::findTypeNode(const QString &type, const Node *relative, Genus genus)
 {
     QStringList path = type.split("::");
     if ((path.size() == 1) && (path.at(0)[0].isLower() || path.at(0) == QString("T"))) {
@@ -1144,7 +1145,7 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
         QStringList path = target.split("::");
         int flags = SearchBaseClasses | SearchEnumValues;
         for (const auto *tree : searchOrder()) {
-            const Node *n = tree->findNode(path, relative, flags, Node::DontCare);
+            const Node *n = tree->findNode(path, relative, flags, Genus::DontCare);
             if (n)
                 return n;
             relative = nullptr;
@@ -1157,7 +1158,7 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
 QStringList QDocDatabase::groupNamesForNode(Node *node)
 {
     QStringList result;
-    CNMap *m = primaryTree()->getCollectionMap(Node::Group);
+    CNMap *m = primaryTree()->getCollectionMap(NodeType::Group);
 
     if (!m)
         return result;
@@ -1206,16 +1207,16 @@ void QDocDatabase::generateIndex(const QString &fileName, const QString &url, co
 */
 const CollectionNode *QDocDatabase::getModuleNode(const Node *relative)
 {
-    Node::NodeType moduleType{Node::Module};
+    NodeType moduleType{NodeType::Module};
     QString moduleName;
     switch (relative->genus())
     {
-    case Node::CPP:
-        moduleType = Node::Module;
+    case Genus::CPP:
+        moduleType = NodeType::Module;
         moduleName = relative->physicalModuleName();
         break;
-    case Node::QML:
-        moduleType = Node::QmlModule;
+    case Genus::QML:
+        moduleType = NodeType::QmlModule;
         moduleName = relative->logicalModuleName();
         break;
     default:
@@ -1232,7 +1233,7 @@ const CollectionNode *QDocDatabase::getModuleNode(const Node *relative)
   and merges them into the collection node map \a cnm. Nodes
   that match the \a relative node are not included.
  */
-void QDocDatabase::mergeCollections(Node::NodeType type, CNMap &cnm, const Node *relative)
+void QDocDatabase::mergeCollections(NodeType type, CNMap &cnm, const Node *relative)
 {
     cnm.clear();
     CNMultiMap cnmm;
@@ -1424,7 +1425,7 @@ void QDocDatabase::mergeCollections(CollectionNode *c)
   \a ref is also not valid.
  */
 const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, QString &ref,
-                                          Node::Genus genus)
+                                          Genus genus)
 {
     const Node *node = nullptr;
 

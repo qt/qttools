@@ -178,7 +178,7 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
             writer.writeAttribute("level", "1");
             writer.writeCharacters("Namespaces");
             writer.writeEndElement(); // heading
-            NodeMap namespaces{cnn->getMembers(Node::Namespace)};
+            NodeMap namespaces{cnn->getMembers(NodeType::Namespace)};
             generateAnnotatedList(writer, node, namespaces);
             writer.writeEndElement(); // section
         }
@@ -271,7 +271,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
 
     switch (atom->type()) {
     case Atom::AnnotatedList: {
-        const CollectionNode *cn = m_qdb->getCollectionNode(atom->string(), Node::Group);
+        const CollectionNode *cn = m_qdb->getCollectionNode(atom->string(), NodeType::Group);
         if (cn)
             generateAnnotatedList(writer, relative, cn->members());
     } break;
@@ -280,7 +280,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         QString link{};
 
         if (!m_inLink && !m_inSectionHeading) {
-            link = getAutoLink(atom, relative, &node, Node::API);
+            link = getAutoLink(atom, relative, &node, Genus::API);
 
             if (!link.isEmpty() && node && node->isDeprecated()
                 && relative->parent() != node && !relative->isDeprecated()) {
@@ -305,10 +305,10 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
 
         writer.writeStartElement("brief");
         switch (relative->nodeType()) {
-        case Node::Property:
+        case NodeType::Property:
             writer.writeCharacters("This property");
             break;
-        case Node::Variable:
+        case NodeType::Variable:
             writer.writeCharacters("This variable");
             break;
         default:
@@ -783,10 +783,10 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom, cons
         writer.writeAttribute("type", targetType(node));
         if (node) {
             switch (node->nodeType()) {
-            case Node::Enum:
+            case NodeType::Enum:
                 writer.writeAttribute("enum", fullName);
                 break;
-            case Node::Example: {
+            case NodeType::Example: {
                 const auto *en = static_cast<const ExampleNode *>(node);
                 const QString fileTitle = atom ? exampleFileTitle(en, atom->string()) : QString();
                 if (!fileTitle.isEmpty()) {
@@ -795,10 +795,10 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom, cons
                 }
             }
                 Q_FALLTHROUGH();
-            case Node::Page:
+            case NodeType::Page:
                 writer.writeAttribute("page", fullName);
                 break;
-            case Node::Property: {
+            case NodeType::Property: {
                 const auto *propertyNode = static_cast<const PropertyNode *>(node);
                 if (!propertyNode->getters().empty())
                     writer.writeAttribute("getter", propertyNode->getters().at(0)->fullName());

@@ -5,6 +5,7 @@
 #define ENUMNODE_H
 
 #include "access.h"
+#include "genustypes.h"
 #include "node.h"
 #include "typedefnode.h"
 
@@ -21,7 +22,7 @@ class EnumNode : public Node
 {
 public:
     EnumNode(Aggregate *parent, const QString &name, bool isScoped = false)
-        : Node(Enum, parent, name), m_isScoped(isScoped)
+        : Node(NodeType::Enum, parent, name), m_isScoped(isScoped)
     {
     }
 

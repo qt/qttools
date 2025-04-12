@@ -6,6 +6,7 @@
 #include "access.h"
 #include "enumnode.h"
 #include "functionnode.h"
+#include "genustypes.h"
 #include "namespacenode.h"
 #include "propertynode.h"
 #include "qmlpropertynode.h"
@@ -86,14 +87,14 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
     }
 
     switch (node->nodeType()) {
-    case Node::Namespace:
-    case Node::Class:
-    case Node::Struct:
-    case Node::Union:
+    case NodeType::Namespace:
+    case NodeType::Class:
+    case NodeType::Struct:
+    case NodeType::Union:
         synopsis = Node::nodeTypeString(node->nodeType());
         synopsis += QLatin1Char(' ') + name;
         break;
-    case Node::Function:
+    case NodeType::Function:
         func = (const FunctionNode *)node;
         if (style == Section::Details) {
             auto templateDecl = node->templateDecl();
@@ -149,7 +150,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
                 synopsis.append(" &&");
         }
         break;
-    case Node::Enum:
+    case NodeType::Enum:
         enume = static_cast<const EnumNode *>(node);
         synopsis = "enum";
         if (enume->isScoped())
@@ -185,7 +186,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
             synopsis += QLatin1Char('}');
         }
         break;
-    case Node::TypeAlias:
+    case NodeType::TypeAlias:
         if (style == Section::Details) {
             auto templateDecl = node->templateDecl();
             if (templateDecl)
@@ -193,22 +194,22 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
         }
         synopsis += name;
         break;
-    case Node::Typedef:
+    case NodeType::Typedef:
         if (static_cast<const TypedefNode *>(node)->associatedEnum())
             synopsis = "flags ";
         synopsis += name;
         break;
-    case Node::Property: {
+    case NodeType::Property: {
         auto property = static_cast<const PropertyNode *>(node);
         synopsis = name + " : " + typified(property->qualifiedDataType());
         break;
     }
-    case Node::QmlProperty: {
+    case NodeType::QmlProperty: {
         auto property = static_cast<const QmlPropertyNode *>(node);
         synopsis = name + " : " + typified(property->dataType());
         break;
     }
-    case Node::Variable:
+    case NodeType::Variable:
         variable = static_cast<const VariableNode *>(node);
         if (style == Section::AllMembers) {
             synopsis = name + " : " + typified(variable->dataType());
@@ -247,7 +248,7 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
     if (node->isQmlProperty()) {
         const auto *pn = static_cast<const QmlPropertyNode *>(node);
         synopsis = name + " : " + typified(pn->dataType());
-    } else if (node->isFunction(Node::QML)) {
+    } else if (node->isFunction(Genus::QML)) {
         const auto *func = static_cast<const FunctionNode *>(node);
         if (!func->returnType().isEmpty())
             synopsis = typified(func->returnTypeString(), true) + name;

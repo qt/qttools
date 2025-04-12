@@ -5,6 +5,7 @@
 #define VARIABLENODE_H
 
 #include "aggregate.h"
+#include "genustypes.h"
 #include "node.h"
 
 #include <QtCore/qglobal.h>
@@ -34,9 +35,9 @@ private:
 };
 
 inline VariableNode::VariableNode(Aggregate *parent, const QString &name)
-    : Node(Variable, parent, name)
+    : Node(NodeType::Variable, parent, name)
 {
-    setGenus(Node::CPP);
+    setGenus(Genus::CPP);
 }
 
 QT_END_NAMESPACE

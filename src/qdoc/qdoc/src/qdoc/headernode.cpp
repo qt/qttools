@@ -10,7 +10,7 @@ QT_BEGIN_NAMESPACE
   \brief This class represents a C++ header file.
  */
 
-HeaderNode::HeaderNode(Aggregate *parent, const QString &name) : Aggregate(HeaderFile, parent, name)
+    HeaderNode::HeaderNode(Aggregate *parent, const QString &name) : Aggregate(NodeType::HeaderFile, parent, name)
 {
     // Set the include file with enclosing angle brackets removed
     if (name.startsWith(QChar('<')) && name.size() > 2)

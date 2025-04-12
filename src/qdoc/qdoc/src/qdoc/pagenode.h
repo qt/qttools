@@ -4,6 +4,7 @@
 #ifndef PAGENODE_H
 #define PAGENODE_H
 
+#include "genustypes.h"
 #include "node.h"
 
 #include <QtCore/qglobal.h>
@@ -17,7 +18,7 @@ class Aggregate;
 class PageNode : public Node
 {
 public:
-    PageNode(Aggregate *parent, const QString &name) : Node(Page, parent, name) {}
+    PageNode(Aggregate *parent, const QString &name) : Node(NodeType::Page, parent, name) {}
     PageNode(NodeType type, Aggregate *parent, const QString &name) : Node(type, parent, name) {}
 
     [[nodiscard]] bool isPageNode() const override { return true; }

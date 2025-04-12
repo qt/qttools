@@ -7,6 +7,7 @@
 #include "config.h"
 #include "functionnode.h"
 #include "enumnode.h"
+#include "genustypes.h"
 #include "propertynode.h"
 #include "qmlpropertynode.h"
 
@@ -175,11 +176,11 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
     QStringList extra;
     if (style == Section::Details) {
         switch (node->nodeType()) {
-        case Node::Enum:
+        case NodeType::Enum:
             if (static_cast<const EnumNode *>(node)->isAnonymous())
                 extra << "anonymous";
             break;
-        case Node::Function: {
+        case NodeType::Function: {
             const auto *func = static_cast<const FunctionNode *>(node);
             if (func->isStatic()) {
                 extra << "static";
@@ -216,10 +217,10 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
                 extra << "invokable";
         }
         break;
-        case Node::TypeAlias:
+        case NodeType::TypeAlias:
             extra << "alias";
             break;
-        case Node::Property: {
+        case NodeType::Property: {
             auto propertyNode = static_cast<const PropertyNode *>(node);
             if (propertyNode->propertyType() == PropertyNode::PropertyType::BindableProperty)
                 extra << "bindable";
@@ -227,7 +228,7 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
                 extra << "read-only";
         }
         break;
-        case Node::QmlProperty: {
+        case NodeType::QmlProperty: {
             auto qmlProperty = static_cast<const QmlPropertyNode *>(node);
             if (qmlProperty->isDefault())
                 extra << u"default"_s;
@@ -375,31 +376,31 @@ QString CodeMarker::taggedNode(const Node *node)
     const QString &name = node->name();
 
     switch (node->nodeType()) {
-    case Node::Namespace:
+    case NodeType::Namespace:
         tag = QLatin1String("@namespace");
         break;
-    case Node::Class:
-    case Node::Struct:
-    case Node::Union:
+    case NodeType::Class:
+    case NodeType::Struct:
+    case NodeType::Union:
         tag = QLatin1String("@class");
         break;
-    case Node::Enum:
+    case NodeType::Enum:
         tag = QLatin1String("@enum");
         break;
-    case Node::TypeAlias:
-    case Node::Typedef:
+    case NodeType::TypeAlias:
+    case NodeType::Typedef:
         tag = QLatin1String("@typedef");
         break;
-    case Node::Function:
+    case NodeType::Function:
         tag = QLatin1String("@function");
         break;
-    case Node::Property:
+    case NodeType::Property:
         tag = QLatin1String("@property");
         break;
-    case Node::QmlType:
+    case NodeType::QmlType:
         tag = QLatin1String("@property");
         break;
-    case Node::Page:
+    case NodeType::Page:
         tag = QLatin1String("@property");
         break;
     default:

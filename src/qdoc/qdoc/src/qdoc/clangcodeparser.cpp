@@ -9,6 +9,7 @@
 #include "config.h"
 #include "enumnode.h"
 #include "functionnode.h"
+#include "genustypes.h"
 #include "namespacenode.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
@@ -574,7 +575,7 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
     Node *p = findNodeForCursor(qdb, clang_getCursorSemanticParent(cur));
     // Special case; if the cursor represents a template type|non-type|template parameter
     // and its semantic parent is a function, return a pointer to the function node.
-    if (p && p->isFunction(Node::CPP)) {
+    if (p && p->isFunction(Genus::CPP)) {
         switch (kind) {
         case CXCursor_TemplateTypeParameter:
         case CXCursor_NonTypeTemplateParameter:
@@ -637,7 +638,7 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
             );
 
         for (Node *candidate : std::as_const(candidates)) {
-            if (!candidate->isFunction(Node::CPP))
+            if (!candidate->isFunction(Genus::CPP))
                 continue;
 
             auto fn = static_cast<FunctionNode *>(candidate);
@@ -906,7 +907,7 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
         } else {
             *fnNode = findNodeForCursor(qdb_, cursor);
             if (*fnNode) {
-                if ((*fnNode)->isFunction(Node::CPP)) {
+                if ((*fnNode)->isFunction(Genus::CPP)) {
                     auto *fn = static_cast<FunctionNode *>(*fnNode);
                     readParameterNamesAndAttributes(fn, cursor);
 
@@ -996,11 +997,11 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         CXCursorKind actualKind = (kind == CXCursor_ClassTemplate) ?
                  clang_getTemplateCursorKind(cursor) : kind;
 
-        Node::NodeType type = Node::Class;
+        NodeType type = NodeType::Class;
         if (actualKind == CXCursor_StructDecl)
-            type = Node::Struct;
+            type = NodeType::Struct;
         else if (actualKind == CXCursor_UnionDecl)
-            type = Node::Union;
+            type = NodeType::Union;
 
         auto *classe = new ClassNode(type, semanticParent, className);
         classe->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
@@ -1482,7 +1483,7 @@ Node *ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
     }
     auto *node = findNodeForCursor(qdb_, *decl_it);
     // borrow the parameter name from the definition
-    if (node && node->isFunction(Node::CPP))
+    if (node && node->isFunction(Genus::CPP))
         readParameterNamesAndAttributes(static_cast<FunctionNode *>(node), *decl_it);
     return node;
 }

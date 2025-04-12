@@ -4,12 +4,14 @@
 #include "qmlpropertynode.h"
 
 #include "classnode.h"
-#include "propertynode.h"
 #include "enumnode.h"
-
-#include <utility>
+#include "genustypes.h"
+#include "propertynode.h"
 #include "qdocdatabase.h"
 #include "utilities.h"
+
+#include <utility>
+
 
 QT_BEGIN_NAMESPACE
 
@@ -20,7 +22,7 @@ using namespace Qt::StringLiterals;
  */
 QmlPropertyNode::QmlPropertyNode(Aggregate *parent, const QString &name, QString type,
                                  bool attached)
-    : Node(QmlProperty, parent, name),
+    : Node(NodeType::QmlProperty, parent, name),
       m_type(std::move(type)),
       m_attached(attached)
 {

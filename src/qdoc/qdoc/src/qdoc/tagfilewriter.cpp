@@ -8,6 +8,7 @@
 #include "classnode.h"
 #include "enumnode.h"
 #include "functionnode.h"
+#include "genustypes.h"
 #include "htmlgenerator.h"
 #include "location.h"
 #include "node.h"
@@ -43,13 +44,13 @@ void TagFileWriter::generateTagFileCompounds(QXmlStreamWriter &writer, const Agg
 
         QString kind;
         switch (node->nodeType()) {
-        case Node::Namespace:
+        case NodeType::Namespace:
             kind = "namespace";
             break;
-        case Node::Class:
-        case Node::Struct:
-        case Node::Union:
-        case Node::QmlType:
+        case NodeType::Class:
+        case NodeType::Struct:
+        case NodeType::Union:
+        case NodeType::QmlType:
             kind = "class";
             break;
         default:
@@ -119,32 +120,32 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
         QString nodeName;
         QString kind;
         switch (node->nodeType()) {
-        case Node::Enum:
+        case NodeType::Enum:
             nodeName = "member";
             kind = "enumeration";
             break;
-        case Node::TypeAlias: // Treated as typedef
-        case Node::Typedef:
+        case NodeType::TypeAlias: // Treated as typedef
+        case NodeType::Typedef:
             nodeName = "member";
             kind = "typedef";
             break;
-        case Node::Property:
+        case NodeType::Property:
             nodeName = "member";
             kind = "property";
             break;
-        case Node::Function:
+        case NodeType::Function:
             nodeName = "member";
             kind = "function";
             break;
-        case Node::Namespace:
+        case NodeType::Namespace:
             nodeName = "namespace";
             break;
-        case Node::Class:
-        case Node::Struct:
-        case Node::Union:
+        case NodeType::Class:
+        case NodeType::Struct:
+        case NodeType::Union:
             nodeName = "class";
             break;
-        case Node::Variable:
+        case NodeType::Variable:
         default:
             continue;
         }
@@ -174,17 +175,17 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
             writer.writeAttribute("kind", kind);
 
         switch (node->nodeType()) {
-        case Node::Class:
-        case Node::Struct:
-        case Node::Union:
+        case NodeType::Class:
+        case NodeType::Struct:
+        case NodeType::Union:
             writer.writeCharacters(node->fullDocumentName());
             writer.writeEndElement();
             break;
-        case Node::Namespace:
+        case NodeType::Namespace:
             writer.writeCharacters(node->fullDocumentName());
             writer.writeEndElement();
             break;
-        case Node::Function: {
+        case NodeType::Function: {
             /*
               Function nodes contain information about
               the type of function being described.
@@ -219,7 +220,7 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
         }
             writer.writeEndElement(); // member
             break;
-        case Node::Property: {
+        case NodeType::Property: {
             const auto *propertyNode = static_cast<const PropertyNode *>(node);
             writer.writeAttribute("type", propertyNode->dataType());
             writer.writeTextElement("name", objName);
@@ -231,7 +232,7 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
         }
             writer.writeEndElement(); // member
             break;
-        case Node::Enum: {
+        case NodeType::Enum: {
             const auto *enumNode = static_cast<const EnumNode *>(node);
             writer.writeTextElement("name", objName);
             const QStringList pieces =
@@ -250,8 +251,8 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
                 writer.writeEndElement(); // member
             }
         } break;
-        case Node::TypeAlias: // Treated as typedef
-        case Node::Typedef: {
+        case NodeType::TypeAlias: // Treated as typedef
+        case NodeType::Typedef: {
             const auto *typedefNode = static_cast<const TypedefNode *>(node);
             if (typedefNode->associatedEnum())
                 writer.writeAttribute("type", typedefNode->associatedEnum()->fullDocumentName());
@@ -267,7 +268,7 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
             writer.writeEndElement(); // member
             break;
 
-        case Node::Variable:
+        case NodeType::Variable:
         default:
             break;
         }

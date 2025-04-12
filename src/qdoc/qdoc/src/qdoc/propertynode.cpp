@@ -17,7 +17,7 @@ QT_BEGIN_NAMESPACE
   The constructor sets the \a parent and the \a name, but
   everything else is left to default values.
  */
-PropertyNode::PropertyNode(Aggregate *parent, const QString &name) : Node(Property, parent, name)
+    PropertyNode::PropertyNode(Aggregate *parent, const QString &name) : Node(NodeType::Property, parent, name)
 {
     // nothing
 }

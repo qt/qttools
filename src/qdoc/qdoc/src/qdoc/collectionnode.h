@@ -4,6 +4,7 @@
 #ifndef COLLECTIONNODE_H
 #define COLLECTIONNODE_H
 
+#include "genustypes.h"
 #include "pagenode.h"
 
 #include <QtCore/qglobal.h>
@@ -53,7 +54,7 @@ public:
         return result;
     }
 
-    NodeMap getMembers(Node::NodeType type) const
+    NodeMap getMembers(NodeType type) const
     {
         return getMembers([type](const Node *n) {
                     return n->nodeType() == type;

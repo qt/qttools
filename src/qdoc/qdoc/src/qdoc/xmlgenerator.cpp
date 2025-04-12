@@ -67,23 +67,23 @@ bool XmlGenerator::isOneColumnValueTable(const Atom *atom)
 int XmlGenerator::hOffset(const Node *node)
 {
     switch (node->nodeType()) {
-    case Node::Namespace:
-    case Node::Class:
-    case Node::Struct:
-    case Node::Union:
-    case Node::Module:
+    case NodeType::Namespace:
+    case NodeType::Class:
+    case NodeType::Struct:
+    case NodeType::Union:
+    case NodeType::Module:
         return 2;
-    case Node::QmlModule:
-    case Node::QmlValueType:
-    case Node::QmlType:
-    case Node::Page:
-    case Node::Group:
+    case NodeType::QmlModule:
+    case NodeType::QmlValueType:
+    case NodeType::QmlType:
+    case NodeType::Page:
+    case NodeType::Group:
         return 1;
-    case Node::Enum:
-    case Node::TypeAlias:
-    case Node::Typedef:
-    case Node::Function:
-    case Node::Property:
+    case NodeType::Enum:
+    case NodeType::TypeAlias:
+    case NodeType::Typedef:
+    case NodeType::Function:
+    case NodeType::Property:
     default:
         return 3;
     }
@@ -95,7 +95,7 @@ int XmlGenerator::hOffset(const Node *node)
  */
 void XmlGenerator::rewritePropertyBrief(const Atom *atom, const Node *relative)
 {
-    if (relative->nodeType() != Node::Property && relative->nodeType() != Node::Variable)
+    if (relative->nodeType() != NodeType::Property && relative->nodeType() != NodeType::Variable)
         return;
     atom = atom->next();
     if (!atom || atom->type() != Atom::String)
@@ -106,7 +106,7 @@ void XmlGenerator::rewritePropertyBrief(const Atom *atom, const Node *relative)
     const QStringList words{ "the", "a", "an", "whether", "which" };
     if (words.contains(firstWord)) {
         QString str = QLatin1String("This ")
-                + QLatin1String(relative->nodeType() == Node::Property ? "property" : "variable")
+                + QLatin1String(relative->nodeType() == NodeType::Property ? "property" : "variable")
                 + QLatin1String(" holds ") + atom->string().left(1).toLower()
                 + atom->string().mid(1);
         const_cast<Atom *>(atom)->setString(str);
@@ -116,15 +116,15 @@ void XmlGenerator::rewritePropertyBrief(const Atom *atom, const Node *relative)
 /*!
   Returns the type of this atom as an enumeration.
  */
-Node::NodeType XmlGenerator::typeFromString(const Atom *atom)
+NodeType XmlGenerator::typeFromString(const Atom *atom)
 {
     const auto &name = atom->string();
     if (name.startsWith(QLatin1String("qml")))
-        return Node::QmlModule;
+        return NodeType::QmlModule;
     else if (name.startsWith(QLatin1String("groups")))
-        return Node::Group;
+        return NodeType::Group;
     else
-        return Node::Module;
+        return NodeType::Module;
 }
 
 /*!
@@ -259,18 +259,18 @@ QString XmlGenerator::refForNode(const Node *node)
 {
     QString ref;
     switch (node->nodeType()) {
-    case Node::Enum:
+    case NodeType::Enum:
         ref = node->name() + "-enum";
         break;
-    case Node::Typedef: {
+    case NodeType::Typedef: {
         const auto *tdf = static_cast<const TypedefNode *>(node);
         if (tdf->associatedEnum())
             return refForNode(tdf->associatedEnum());
     } Q_FALLTHROUGH();
-    case Node::TypeAlias:
+    case NodeType::TypeAlias:
         ref = node->name() + "-typedef";
         break;
-    case Node::Function: {
+    case NodeType::Function: {
         const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
         case FunctionNode::QmlSignal:
@@ -295,20 +295,20 @@ QString XmlGenerator::refForNode(const Node *node)
             break;
         }
     } break;
-    case Node::SharedComment: {
+    case NodeType::SharedComment: {
         if (!node->isPropertyGroup())
             break;
     } Q_FALLTHROUGH();
-    case Node::QmlProperty:
+    case NodeType::QmlProperty:
         if (node->isAttached())
             ref = node->name() + "-attached-prop";
         else
             ref = node->name() + "-prop";
         break;
-    case Node::Property:
+    case NodeType::Property:
         ref = node->name() + "-prop";
         break;
-    case Node::Variable:
+    case NodeType::Variable:
         ref = node->name() + "-var";
         break;
     default:
@@ -421,7 +421,7 @@ QString XmlGenerator::getLink(const Atom *atom, const Node *relative, const Node
   was found.
  */
 QString XmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const Node **node,
-                                  Node::Genus genus)
+                                  Genus genus)
 {
     QString ref;
 
@@ -464,28 +464,28 @@ QString XmlGenerator::targetType(const Node *node)
         return QStringLiteral("external");
 
     switch (node->nodeType()) {
-    case Node::Namespace:
+    case NodeType::Namespace:
         return QStringLiteral("namespace");
-    case Node::Class:
-    case Node::Struct:
-    case Node::Union:
+    case NodeType::Class:
+    case NodeType::Struct:
+    case NodeType::Union:
         return QStringLiteral("class");
-    case Node::Page:
-    case Node::Example:
+    case NodeType::Page:
+    case NodeType::Example:
         return QStringLiteral("page");
-    case Node::Enum:
+    case NodeType::Enum:
         return QStringLiteral("enum");
-    case Node::TypeAlias:
+    case NodeType::TypeAlias:
         return QStringLiteral("alias");
-    case Node::Typedef:
+    case NodeType::Typedef:
         return QStringLiteral("typedef");
-    case Node::Property:
+    case NodeType::Property:
         return QStringLiteral("property");
-    case Node::Function:
+    case NodeType::Function:
         return QStringLiteral("function");
-    case Node::Variable:
+    case NodeType::Variable:
         return QStringLiteral("variable");
-    case Node::Module:
+    case NodeType::Module:
         return QStringLiteral("module");
     default:
         break;

@@ -4,6 +4,7 @@
 #ifndef AGGREGATE_H
 #define AGGREGATE_H
 
+#include "genustypes.h"
 #include "pagenode.h"
 
 #include <optional>
@@ -23,7 +24,7 @@ class Aggregate : public PageNode
 public:
     using FunctionMap = QMap<QString, std::vector<FunctionNode*>>;
 
-    [[nodiscard]] Node *findChildNode(const QString &name, Node::Genus genus,
+    [[nodiscard]] Node *findChildNode(const QString &name, Genus genus,
                                       int findFlags = 0) const;
     Node *findNonfunctionChild(const QString &name, bool (Node::*)() const);
     void findChildren(const QString &name, NodeVector &nodes) const;

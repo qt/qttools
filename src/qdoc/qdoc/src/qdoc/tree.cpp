@@ -474,7 +474,7 @@ Node *Tree::findNodeRecursive(const QStringList &path, int pathIndex, const Node
   (Unknown).
  */
 const Node *Tree::findNodeForTarget(const QStringList &path, const QString &target,
-                                    const Node *start, int flags, Node::Genus genus,
+                                    const Node *start, int flags, Genus genus,
                                     QString &ref, TargetRec::TargetType *targetType) const
 {
     const Node *node = nullptr;
@@ -489,7 +489,7 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
         return n;
     };
 
-    if (genus == Node::DontCare || genus == Node::DOC) {
+    if (genus == Genus::DontCare || genus == Genus::DOC) {
         if (node = findPageNodeByTitle(path.at(0)); node) {
             if (node = set_ref_from_target(node); node)
                 return node;
@@ -519,7 +519,7 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
       the type.
     */
     int path_idx = 0;
-    if ((genus == Node::QML || genus == Node::DontCare)
+    if ((genus == Genus::QML || genus == Genus::DontCare)
         && path.size() >= 2 && !path[0].isEmpty()) {
         if (auto *qcn = lookupQmlType(path.sliced(0, 2).join(QLatin1String("::"))); qcn) {
             current = qcn;
@@ -571,7 +571,7 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
   most often the root of this Tree.
  */
 const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QString &target,
-                                     const Node *node, int flags, Node::Genus genus,
+                                     const Node *node, int flags, Genus genus,
                                      QString &ref) const
 {
     /*
@@ -595,7 +595,7 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
         NodeVector nodes;
         static_cast<const Aggregate *>(node)->findChildren(name, nodes);
         for (const auto *child : std::as_const(nodes)) {
-            if (genus != Node::DontCare && !(genus & child->genus()))
+            if (genus != Genus::DontCare && !(hasCommonGenusType(genus, child->genus())))
                 continue;
             const Node *t = matchPathAndTarget(path, idx + 1, target, child, flags, genus, ref);
             if (t && !t->isPrivate())
@@ -609,7 +609,7 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
         if (enumNode)
             return enumNode;
     }
-    if (((genus == Node::CPP) || (genus == Node::DontCare)) && node->isClassNode()
+    if (((genus == Genus::CPP) || (genus == Genus::DontCare)) && node->isClassNode()
         && (flags & SearchBaseClasses)) {
         const ClassList bases = allBaseClasses(static_cast<const ClassNode *>(node));
         for (const auto *base : bases) {
@@ -632,7 +632,7 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
   restrict the search.
  */
 const Node *Tree::findNode(const QStringList &path, const Node *start, int flags,
-                           Node::Genus genus) const
+                           Genus genus) const
 {
     const Node *current = start;
     if (current == nullptr)
@@ -651,7 +651,7 @@ const Node *Tree::findNode(const QStringList &path, const Node *start, int flags
           If the answer is yes, the reference identifies a QML
           type node.
         */
-        if (((genus == Node::QML) || (genus == Node::DontCare)) && (path.size() >= 2)
+        if (((genus == Genus::QML) || (genus == Genus::DontCare)) && (path.size() >= 2)
             && !path[0].isEmpty()) {
             QmlTypeNode *qcn = lookupQmlType(QString(path[0] + "::" + path[1]));
             if (qcn != nullptr) {
@@ -680,7 +680,7 @@ const Node *Tree::findNode(const QStringList &path, const Node *start, int flags
                 return enumNode;
 
 
-            if (!next && ((genus == Node::CPP) || (genus == Node::DontCare))
+            if (!next && ((genus == Genus::CPP) || (genus == Genus::DontCare))
                 && node->isClassNode() && (flags & SearchBaseClasses)) {
                 const ClassList bases = allBaseClasses(static_cast<const ClassNode *>(node));
                 for (const auto *base : bases) {
@@ -922,14 +922,14 @@ void Tree::addToPageNodeByTitleMap(Node *node) {
   Searches for a \a target anchor, matching the given \a genus, and returns
   the associated TargetRec instance.
  */
-const TargetRec *Tree::findUnambiguousTarget(const QString &target, Node::Genus genus) const
+const TargetRec *Tree::findUnambiguousTarget(const QString &target, Genus genus) const
 {
     auto findBestCandidate = [&](const TargetMap &tgtMap, const QString &key) {
         TargetRec *best = nullptr;
         auto [it, end] = tgtMap.equal_range(key);
         while (it != end) {
             TargetRec *candidate = it.value();
-            if ((genus == Node::DontCare) || (genus & candidate->genus())) {
+            if ((genus == Genus::DontCare) || (hasCommonGenusType(genus, candidate->genus()))) {
                 if (!best || (candidate->m_priority < best->m_priority))
                     best = candidate;
             }
@@ -1033,14 +1033,14 @@ QString Tree::refForAtom(const Atom *atom)
   Returns a pointer to the collection map specified by \a type.
   Returns null if \a type is not specified.
  */
-CNMap *Tree::getCollectionMap(Node::NodeType type)
+CNMap *Tree::getCollectionMap(NodeType type)
 {
     switch (type) {
-    case Node::Group:
+    case NodeType::Group:
         return &m_groups;
-    case Node::Module:
+    case NodeType::Module:
         return &m_modules;
-    case Node::QmlModule:
+    case NodeType::QmlModule:
         return &m_qmlModules;
     default:
         break;
@@ -1054,7 +1054,7 @@ CNMap *Tree::getCollectionMap(Node::NodeType type)
   to it is returned. If a collection is not found, null is
   returned.
  */
-CollectionNode *Tree::getCollection(const QString &name, Node::NodeType type)
+CollectionNode *Tree::getCollection(const QString &name, NodeType type)
 {
     CNMap *map = getCollectionMap(type);
     if (map) {
@@ -1079,7 +1079,7 @@ CollectionNode *Tree::getCollection(const QString &name, Node::NodeType type)
   If it is \c{DontCare}, 0 is returned, which is a programming
   error.
  */
-CollectionNode *Tree::findCollection(const QString &name, Node::NodeType type)
+CollectionNode *Tree::findCollection(const QString &name, NodeType type)
 {
     CNMap *m = getCollectionMap(type);
     if (!m) // error
@@ -1232,10 +1232,10 @@ void Tree::insertQmlType(const QString &key, QmlTypeNode *n)
   \a relative is ull, the search begins at the tree root.
  */
 const FunctionNode *Tree::findFunctionNode(const QStringList &path, const Parameters &parameters,
-                                           const Node *relative, Node::Genus genus) const
+                                           const Node *relative, Genus genus) const
 {
     if (path.size() == 3 && !path[0].isEmpty()
-        && ((genus == Node::QML) || (genus == Node::DontCare))) {
+        && ((genus == Genus::QML) || (genus == Genus::DontCare))) {
         QmlTypeNode *qcn = lookupQmlType(QString(path[0] + "::" + path[1]));
         if (qcn == nullptr) {
             QStringList p(path[1]);
@@ -1249,8 +1249,8 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &path, const Parame
 
     if (relative == nullptr)
         relative = root();
-    else if (genus != Node::DontCare) {
-        if (!(genus & relative->genus()))
+    else if (genus != Genus::DontCare) {
+        if (!(hasCommonGenusType(genus, relative->genus())))
             relative = root();
     }
 

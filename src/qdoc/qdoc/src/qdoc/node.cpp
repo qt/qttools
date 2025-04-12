@@ -111,72 +111,6 @@ bool Node::nodeSortKeyOrNameLessThan(const Node *n1, const Node *n2)
 }
 
 /*!
-  \enum Node::NodeType
-
-  An unsigned char value that identifies an object as a
-  particular subclass of Node.
-
-  \value NoType The node type has not been set yet.
-  \value Namespace The Node subclass is NamespaceNode, which represents a C++
-         namespace.
-  \value Class The Node subclass is ClassNode, which represents a C++ class.
-  \value Struct The Node subclass is ClassNode, which represents a C struct.
-  \value Union The Node subclass is ClassNode, which represents a C union
-         (currently no known uses).
-  \value HeaderFile The Node subclass is HeaderNode, which represents a header
-         file.
-  \value Page The Node subclass is PageNode, which represents a text page from
-         a .qdoc file.
-  \value Enum The Node subclass is EnumNode, which represents an enum type or
-         enum class.
-  \value Example The Node subclass is ExampleNode, which represents an example
-         subdirectory.
-  \value ExternalPage The Node subclass is ExternalPageNode, which is for
-         linking to an external page.
-  \value Function The Node subclass is FunctionNode, which can represent C++,
-         and QML functions.
-  \value Typedef The Node subclass is TypedefNode, which represents a C++
-         typedef.
-  \value Property The Node subclass is PropertyNode, which represents a use of
-         Q_Property.
-  \value Variable The Node subclass is VariableNode, which represents a global
-         variable or class data member.
-  \value Group The Node subclass is CollectionNode, which represents a group of
-         documents.
-  \value Module The Node subclass is CollectionNode, which represents a C++
-         module.
-  \value QmlType The Node subclass is QmlTypeNode, which represents a QML type.
-  \value QmlModule The Node subclass is CollectionNode, which represents a QML
-         module.
-  \value QmlProperty The Node subclass is QmlPropertyNode, which represents a
-         property in a QML type.
-  \value QmlBasicType The Node subclass is QmlTypeNode, which represents a
-         value type like int, etc.
-  \value SharedComment The Node subclass is SharedCommentNode, which represents
-         a collection of nodes that share the same documentation comment.
-  \omitvalue Collection
-  \value Proxy The Node subclass is ProxyNode, which represents one or more
-         entities that are documented in the current module but which actually
-         reside in a different module.
-  \omitvalue LastType
-*/
-
-/*!
-  \enum Node::Genus
-
-  An unsigned char value that specifies whether the Node represents a
-  C++ element, a QML element, or a text document.
-  The Genus values are also passed to search functions to specify the
-  Genus of Tree Node that can satisfy the search.
-
-  \value DontCare The Genus is not specified. Used when calling Tree search functions to indicate
-                  the search can accept any Genus of Node.
-  \value CPP The Node represents a C++ element.
-  \value QML The Node represents a QML element.
-  \value DOC The Node represents a text document.
-*/
-
-/*!
     \internal
     \fn setComparisonCategory(const ComparisonCategory category)
 
@@ -605,37 +539,37 @@ Node::Node(NodeType type, Aggregate *parent, QString name)
   own Genus value separately, because class FunctionNode
   is a subclass of Node.
  */
-Node::Genus Node::getGenus(Node::NodeType t)
+Genus Node::getGenus(NodeType t)
 {
     switch (t) {
-    case Node::Enum:
-    case Node::Class:
-    case Node::Struct:
-    case Node::Union:
-    case Node::Module:
-    case Node::TypeAlias:
-    case Node::Typedef:
-    case Node::Property:
-    case Node::Variable:
-    case Node::Function:
-    case Node::Namespace:
-    case Node::HeaderFile:
-        return Node::CPP;
-    case Node::QmlType:
-    case Node::QmlModule:
-    case Node::QmlProperty:
-    case Node::QmlValueType:
-        return Node::QML;
-    case Node::Page:
-    case Node::Group:
-    case Node::Example:
-    case Node::ExternalPage:
-        return Node::DOC;
-    case Node::Collection:
-    case Node::SharedComment:
-    case Node::Proxy:
+    case NodeType::Enum:
+    case NodeType::Class:
+    case NodeType::Struct:
+    case NodeType::Union:
+    case NodeType::Module:
+    case NodeType::TypeAlias:
+    case NodeType::Typedef:
+    case NodeType::Property:
+    case NodeType::Variable:
+    case NodeType::Function:
+    case NodeType::Namespace:
+    case NodeType::HeaderFile:
+        return Genus::CPP;
+    case NodeType::QmlType:
+    case NodeType::QmlModule:
+    case NodeType::QmlProperty:
+    case NodeType::QmlValueType:
+        return Genus::QML;
+    case NodeType::Page:
+    case NodeType::Group:
+    case NodeType::Example:
+    case NodeType::ExternalPage:
+        return Genus::DOC;
+    case NodeType::Collection:
+    case NodeType::SharedComment:
+    case NodeType::Proxy:
     default:
-        return Node::DontCare;
+        return Genus::DontCare;
     }
 }
 
@@ -678,52 +612,52 @@ QString Node::nodeTypeString() const
 QString Node::nodeTypeString(NodeType t)
 {
     switch (t) {
-    case Namespace:
+    case NodeType::Namespace:
         return QLatin1String("namespace");
-    case Class:
+    case NodeType::Class:
         return QLatin1String("class");
-    case Struct:
+    case NodeType::Struct:
         return QLatin1String("struct");
-    case Union:
+    case NodeType::Union:
         return QLatin1String("union");
-    case HeaderFile:
+    case NodeType::HeaderFile:
         return QLatin1String("header");
-    case Page:
+    case NodeType::Page:
         return QLatin1String("page");
-    case Enum:
+    case NodeType::Enum:
         return QLatin1String("enum");
-    case Example:
+    case NodeType::Example:
         return QLatin1String("example");
-    case ExternalPage:
+    case NodeType::ExternalPage:
         return QLatin1String("external page");
-    case TypeAlias:
-    case Typedef:
+    case NodeType::TypeAlias:
+    case NodeType::Typedef:
         return QLatin1String("typedef");
-    case Function:
+    case NodeType::Function:
         return QLatin1String("function");
-    case Property:
+    case NodeType::Property:
         return QLatin1String("property");
-    case Proxy:
+    case NodeType::Proxy:
         return QLatin1String("proxy");
-    case Variable:
+    case NodeType::Variable:
         return QLatin1String("variable");
-    case Group:
+    case NodeType::Group:
         return QLatin1String("group");
-    case Module:
+    case NodeType::Module:
         return QLatin1String("module");
 
-    case QmlType:
+    case NodeType::QmlType:
         return QLatin1String("QML type");
-    case QmlValueType:
+    case NodeType::QmlValueType:
         return QLatin1String("QML value type");
-    case QmlModule:
+    case NodeType::QmlModule:
         return QLatin1String("QML module");
-    case QmlProperty:
+    case NodeType::QmlProperty:
         return QLatin1String("QML property");
 
-    case SharedComment:
+    case NodeType::SharedComment:
         return QLatin1String("shared comment");
-    case Collection:
+    case NodeType::Collection:
         return QLatin1String("collection");
     default:
         break;

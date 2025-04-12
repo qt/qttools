@@ -5,6 +5,7 @@
 #define TREE_H
 
 #include "examplenode.h"
+#include "genustypes.h"
 #include "namespacenode.h"
 #include "node.h"
 #include "propertynode.h"
@@ -39,7 +40,7 @@ public:
     }
 
     [[nodiscard]] bool isEmpty() const { return m_ref.isEmpty(); }
-    [[nodiscard]] Node::Genus genus() const { return (m_node ? m_node->genus() : Node::DontCare); }
+    [[nodiscard]] Genus genus() const { return (m_node ? m_node->genus() : Genus::DontCare); }
 
     Node *m_node { nullptr };
     QString m_ref {};
@@ -85,18 +86,18 @@ private: // The rest of the class is private.
     ClassNode *findClassNode(const QStringList &path, const Node *start = nullptr) const;
     [[nodiscard]] NamespaceNode *findNamespaceNode(const QStringList &path) const;
     const FunctionNode *findFunctionNode(const QStringList &path, const Parameters &parameters,
-                                         const Node *relative, Node::Genus genus) const;
+                                         const Node *relative, Genus genus) const;
     Node *findNodeRecursive(const QStringList &path, int pathIndex, const Node *start,
                             bool (Node::*)() const) const;
     const Node *findNodeForTarget(const QStringList &path, const QString &target, const Node *node,
-                                  int flags, Node::Genus genus, QString &ref,
+                                  int flags, Genus genus, QString &ref,
                                   TargetRec::TargetType *targetType = nullptr) const;
     const Node *matchPathAndTarget(const QStringList &path, int idx, const QString &target,
-                                   const Node *node, int flags, Node::Genus genus,
+                                   const Node *node, int flags, Genus genus,
                                    QString &ref) const;
 
     const Node *findNode(const QStringList &path, const Node *relative, int flags,
-                         Node::Genus genus) const;
+                         Genus genus) const;
 
     Aggregate *findRelatesNode(const QStringList &path);
     const Node *findEnumNode(const Node *node, const Node *aggregate, const QStringList &path, int offset) const;
@@ -109,7 +110,7 @@ private: // The rest of the class is private.
     void addKeywordsToTargetMaps(Node *node);
     void addTargetsToTargetMap(Node *node);
 
-    const TargetRec *findUnambiguousTarget(const QString &target, Node::Genus genus) const;
+    const TargetRec *findUnambiguousTarget(const QString &target, Genus genus) const;
     [[nodiscard]] const PageNode *findPageNodeByTitle(const QString &title) const;
 
     void addPropertyFunction(PropertyNode *property, const QString &funcName,
@@ -126,19 +127,19 @@ private: // The rest of the class is private.
 
     ClassList allBaseClasses(const ClassNode *classe) const;
 
-    CNMap *getCollectionMap(Node::NodeType type);
+    CNMap *getCollectionMap(NodeType type);
     [[nodiscard]] const CNMap &groups() const { return m_groups; }
     [[nodiscard]] const CNMap &modules() const { return m_modules; }
     [[nodiscard]] const CNMap &qmlModules() const { return m_qmlModules; }
 
-    CollectionNode *getCollection(const QString &name, Node::NodeType type);
-    CollectionNode *findCollection(const QString &name, Node::NodeType type);
+    CollectionNode *getCollection(const QString &name, NodeType type);
+    CollectionNode *findCollection(const QString &name, NodeType type);
 
-    CollectionNode *findGroup(const QString &name) { return findCollection(name, Node::Group); }
-    CollectionNode *findModule(const QString &name) { return findCollection(name, Node::Module); }
+    CollectionNode *findGroup(const QString &name) { return findCollection(name, NodeType::Group); }
+    CollectionNode *findModule(const QString &name) { return findCollection(name, NodeType::Module); }
     CollectionNode *findQmlModule(const QString &name)
     {
-        return findCollection(name, Node::QmlModule);
+        return findCollection(name, NodeType::QmlModule);
     }
 
     CollectionNode *addGroup(const QString &name) { return findGroup(name); }

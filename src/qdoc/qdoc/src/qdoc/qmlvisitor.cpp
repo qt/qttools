@@ -7,6 +7,7 @@
 #include "codechunk.h"
 #include "codeparser.h"
 #include "functionnode.h"
+#include "genustypes.h"
 #include "node.h"
 #include "qdocdatabase.h"
 #include "qmlpropertyarguments.h"
@@ -118,7 +119,7 @@ Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *n
     // needed.
     if (!loc.isValid()) {
         if (!node)
-            node = new QmlTypeNode(m_current, m_name, Node::QmlType);
+            node = new QmlTypeNode(m_current, m_name, NodeType::QmlType);
         comment_loc.setLineNo(location.startLine);
         node->setLocation(comment_loc);
         return node;
@@ -137,7 +138,7 @@ Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *n
             qmid = args.first().first;
         node = QDocDatabase::qdocDB()->findQmlTypeInPrimaryTree(qmid, m_name);
         if (!node) {
-            node = new QmlTypeNode(m_current, m_name, Node::QmlType);
+            node = new QmlTypeNode(m_current, m_name, NodeType::QmlType);
             node->setLocation(comment_loc);
         }
     }

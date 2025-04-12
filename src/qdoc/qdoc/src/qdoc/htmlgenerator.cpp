@@ -291,7 +291,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
 {
     qsizetype idx, skipAhead = 0;
     static bool in_para = false;
-    Node::Genus genus = Node::DontCare;
+    Genus genus = Genus::DontCare;
 
     switch (atom->type()) {
     case Atom::AutoLink: {
@@ -301,7 +301,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
             break;
         }
         // Allow auto-linking to nodes in API reference
-        genus = Node::API;
+        genus = Genus::API;
     }
         Q_FALLTHROUGH();
     case Atom::NavAutoLink:
@@ -363,7 +363,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
     case Atom::Qml:
         out() << "<pre class=\"qml\" translate=\"no\">"
               << trimmedTrailing(highlightedCode(indent(m_codeIndent, atom->string()), relative,
-                                                 false, Node::QML),
+                                                 false, Genus::QML),
                                  m_codePrefix, m_codeSuffix)
               << "</pre>\n";
         break;
@@ -442,7 +442,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         }
         break;
     case Atom::AnnotatedList: {
-        if (const auto *cn = m_qdb->getCollectionNode(atom->string(), Node::Group); cn)
+        if (const auto *cn = m_qdb->getCollectionNode(atom->string(), NodeType::Group); cn)
             generateList(cn, marker, atom->string(), Generator::sortOrder(atom->strings().last()));
     } break;
     case Atom::GeneratedList: {
@@ -468,20 +468,20 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         } else if ((idx = atom->string().indexOf(QStringLiteral("bymodule"))) != -1) {
             QDocDatabase *qdb = QDocDatabase::qdocDB();
             QString moduleName = atom->string().mid(idx + 8).trimmed();
-            Node::NodeType moduleType = typeFromString(atom);
+            NodeType moduleType = typeFromString(atom);
             if (const auto *cn = qdb->getCollectionNode(moduleName, moduleType)) {
                 NodeMap map;
                 switch (moduleType) {
-                case Node::Module:
+                case NodeType::Module:
                     // classesbymodule <module_name>
                     map = cn->getMembers([](const Node *n) { return n->isClassNode(); });
                     generateAnnotatedList(relative, marker, map.values(), sortOrder);
                     break;
-                case Node::QmlModule:
+                case NodeType::QmlModule:
                     if (atom->string().contains(QLatin1String("qmlvaluetypes")))
-                        map = cn->getMembers(Node::QmlValueType); // qmlvaluetypesbymodule <module_name>
+                        map = cn->getMembers(NodeType::QmlValueType); // qmlvaluetypesbymodule <module_name>
                     else
-                        map = cn->getMembers(Node::QmlType);      // qmltypesbymodule <module_name>
+                        map = cn->getMembers(NodeType::QmlType);      // qmltypesbymodule <module_name>
                     generateAnnotatedList(relative, marker, map.values(), sortOrder);
                     break;
                 default: // fall back to listing all members
@@ -520,7 +520,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         } else if (atom->string() == QLatin1String("related")) {
             generateList(relative, marker, "related", sortOrder);
         } else {
-            const CollectionNode *cn = m_qdb->getCollectionNode(atom->string(), Node::Group);
+            const CollectionNode *cn = m_qdb->getCollectionNode(atom->string(), NodeType::Group);
             if (cn) {
                 if (!generateGroupList(const_cast<CollectionNode *>(cn), sortOrder))
                     relative->location().warning(
@@ -1491,7 +1491,7 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
     generateTitle(fullTitle, Text() << cn->subtitle(), subTitleSize, cn, marker);
 
     // Generate brief for C++ modules, status for all modules.
-    if (cn->genus() != Node::DOC && cn->genus() != Node::DontCare) {
+    if (cn->genus() != Genus::DOC && cn->genus() != Genus::DontCare) {
         if (cn->isModule())
             generateBrief(cn, marker);
         generateStatus(cn, marker);
@@ -1500,7 +1500,7 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
 
     if (cn->isModule()) {
         if (!cn->noAutoList()) {
-            NodeMap nmm{cn->getMembers(Node::Namespace)};
+            NodeMap nmm{cn->getMembers(NodeType::Namespace)};
             if (!nmm.isEmpty()) {
                 ref = registerRef("namespaces");
                 out() << "<h2 id=\"" << ref << "\">Namespaces</h2>\n";
@@ -1876,7 +1876,7 @@ void HtmlGenerator::generateTitle(const QString &title, const Text &subtitle,
 {
     out() << QString(m_prologue).replace("\\" + COMMAND_VERSION, m_qdb->version());
     QString attribute;
-    if (relative->genus() & Node::API)
+    if (isApiGenus(relative->genus()))
         attribute = R"( translate="no")";
 
     if (!title.isEmpty())
@@ -2057,7 +2057,7 @@ void HtmlGenerator::addCMakeInfoToMap(const Aggregate *aggregate, QMap<QString, 
 {
     if (!aggregate->physicalModuleName().isEmpty() && text != nullptr) {
         const CollectionNode *cn =
-                m_qdb->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
+                m_qdb->getCollectionNode(aggregate->physicalModuleName(), NodeType::Module);
 
         const auto result = cmakeRequisite(cn);
 
@@ -2085,7 +2085,7 @@ void HtmlGenerator::addQtVariableToMap(const Aggregate *aggregate, QMap<QString,
 {
     if (!aggregate->physicalModuleName().isEmpty()) {
         const CollectionNode *cn =
-                m_qdb->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
+                m_qdb->getCollectionNode(aggregate->physicalModuleName(), NodeType::Module);
 
         if (cn && !cn->qtVariable().isEmpty()) {
             text->clear();
@@ -2938,7 +2938,7 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
         marked.remove("<@type>");
         marked.remove("</@type>");
     }
-    out() << highlightedCode(marked, relative, false, Node::QML);
+    out() << highlightedCode(marked, relative, false, Genus::QML);
 }
 
 /*!
@@ -2974,14 +2974,14 @@ void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker,
                                  const QString &selector, Qt::SortOrder sortOrder)
 {
     CNMap cnm;
-    Node::NodeType type = Node::NoType;
+    NodeType type = NodeType::NoType;
     if (selector == QLatin1String("overviews"))
-        type = Node::Group;
+        type = NodeType::Group;
     else if (selector == QLatin1String("cpp-modules"))
-        type = Node::Module;
+        type = NodeType::Module;
     else if (selector == QLatin1String("qml-modules"))
-        type = Node::QmlModule;
-    if (type != Node::NoType) {
+        type = NodeType::QmlModule;
+    if (type != NodeType::NoType) {
         NodeList nodeList;
         m_qdb->mergeCollections(type, cnm, relative);
         const auto collectionList = cnm.values();
@@ -3185,7 +3185,7 @@ void HtmlGenerator::generateSynopsis(const Node *node, const Node *relative, Cod
 }
 
 QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *relative,
-                                       bool alignNames, Node::Genus genus)
+                                       bool alignNames, Genus genus)
 {
     QString src = markedCode;
     QString html;
@@ -3533,7 +3533,7 @@ void HtmlGenerator::beginLink(const QString &link, const Node *node, const Node 
         return;
 
     const QString &translate_attr =
-            (node && node->genus() & Node::API) ? " translate=\"no\""_L1 : ""_L1;
+    (node && isApiGenus(node->genus())) ? " translate=\"no\""_L1 : ""_L1;
 
     if (node == nullptr || (relative != nullptr && node->status() == relative->status()))
         out() << "<a href=\"" << m_link << "\"%1>"_L1.arg(translate_attr);
@@ -3647,7 +3647,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
         out() << qmlItemHeader;
         for (const auto &sharedNode : sharedNodes) {
             // Generate the node only if it's a QML method
-            if (sharedNode->isFunction(Node::QML))
+            if (sharedNode->isFunction(Genus::QML))
                 generateQmlMethod(sharedNode);
             else if (sharedNode->isQmlProperty())
                 generateQmlProperty(sharedNode);

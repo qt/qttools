@@ -14,11 +14,14 @@ qt_internal_add_test(tst_QDoc
     ${CMAKE_CURRENT_LIST_DIR}/boundaries/filesystem/catch_filepath.cpp
     ${CMAKE_CURRENT_LIST_DIR}/boundaries/filesystem/catch_directorypath.cpp
     ${CMAKE_CURRENT_LIST_DIR}/filesystem/catch_fileresolver.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/node/catch_genustypes.cpp
 
     ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/boundaries/filesystem/filepath.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/boundaries/filesystem/directorypath.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/boundaries/filesystem/resolvedfile.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/filesystem/fileresolver.cpp
+
+    ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/genustypes.h
   INCLUDE_DIRECTORIES
     ${CMAKE_CURRENT_LIST_DIR}/../../src/
   LIBRARIES

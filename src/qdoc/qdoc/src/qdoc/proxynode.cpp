@@ -36,7 +36,7 @@ QT_BEGIN_NAMESPACE
   appends this node to that Tree's proxy list so it will be
   easy to find later.
  */
-ProxyNode::ProxyNode(Aggregate *parent, const QString &name) : Aggregate(Node::Proxy, parent, name)
+ProxyNode::ProxyNode(Aggregate *parent, const QString &name) : Aggregate(NodeType::Proxy, parent, name)
 {
     tree()->appendProxy(this);
 }

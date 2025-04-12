@@ -4,6 +4,7 @@
 #ifndef EXAMPLENODE_H
 #define EXAMPLENODE_H
 
+#include "genustypes.h"
 #include "pagenode.h"
 
 #include <QtCore/qglobal.h>
@@ -15,7 +16,7 @@ QT_BEGIN_NAMESPACE
 class ExampleNode : public PageNode
 {
 public:
-    ExampleNode(Aggregate *parent, const QString &name) : PageNode(Node::Example, parent, name) {}
+    ExampleNode(Aggregate *parent, const QString &name) : PageNode(NodeType::Example, parent, name) {}
     [[nodiscard]] QString imageFileName() const override { return m_imageFileName; }
     void setImageFileName(const QString &ifn) override { m_imageFileName = ifn; }
     [[nodiscard]] const QStringList &files() const { return m_files; }

@@ -40,7 +40,7 @@ QT_BEGIN_NAMESPACE
   in normalizeOverloads(), when all the overloads are known.
  */
 FunctionNode::FunctionNode(Aggregate *parent, const QString &name)
-    : Node(Function, parent, name),
+    : Node(NodeType::Function, parent, name),
       m_const(false),
       m_default(false),
       m_static(false),
@@ -72,7 +72,7 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString &name)
   in normalizeOverloads(), when all the overloads are known.
  */
 FunctionNode::FunctionNode(Metaness kind, Aggregate *parent, const QString &name, bool attached)
-    : Node(Function, parent, name),
+    : Node(NodeType::Function, parent, name),
       m_const(false),
       m_default(false),
       m_static(false),
@@ -181,7 +181,7 @@ static void buildTopicMetanessMap()
   one of the values of Metaness. If not, Node::DontCare is
   returned.
  */
-Node::Genus FunctionNode::getGenus(FunctionNode::Metaness metaness)
+Genus FunctionNode::getGenus(FunctionNode::Metaness metaness)
 {
     switch (metaness) {
     case FunctionNode::Plain:
@@ -196,14 +196,14 @@ Node::Genus FunctionNode::getGenus(FunctionNode::Metaness metaness)
     case FunctionNode::Native:
     case FunctionNode::CAssign:
     case FunctionNode::MAssign:
-        return Node::CPP;
+        return Genus::CPP;
     case FunctionNode::QmlSignal:
     case FunctionNode::QmlSignalHandler:
     case FunctionNode::QmlMethod:
-        return Node::QML;
+        return Genus::QML;
     }
 
-    return Node::DontCare;
+    return Genus::DontCare;
 }
 
 /*!

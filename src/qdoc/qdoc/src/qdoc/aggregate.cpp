@@ -71,16 +71,16 @@ Aggregate::~Aggregate()
   find all this node's children that have the given \a name,
   and return the one that satisfies the \a genus requirement.
  */
-Node *Aggregate::findChildNode(const QString &name, Node::Genus genus, int findFlags) const
+Node *Aggregate::findChildNode(const QString &name, Genus genus, int findFlags) const
 {
-    if (genus == Node::DontCare) {
+    if (genus == Genus::DontCare) {
         Node *node = m_nonfunctionMap.value(name);
         if (node)
             return node;
     } else {
         const NodeList &nodes = m_nonfunctionMap.values(name);
         for (auto *node : nodes) {
-            if (genus & node->genus()) {
+            if (hasCommonGenusType(genus, node->genus())) {
                 if (findFlags & TypesOnly) {
                     if (!node->isTypedef() && !node->isClassNode()
                         && !node->isQmlType() && !node->isEnumType())
@@ -91,7 +91,7 @@ Node *Aggregate::findChildNode(const QString &name, Node::Genus genus, int findF
             }
         }
     }
-    if (genus != Node::DontCare && !(genus & this->genus()))
+    if (genus != Genus::DontCare && !(hasCommonGenusType(genus, this->genus())))
         return nullptr;
 
     auto it = m_functionMap.find(name);
@@ -232,7 +232,7 @@ void Aggregate::resolveRelates()
     for (auto *node : m_children) {
         if (node->isRelatedNonmember())
             continue;
-        if (node->genus() != Node::CPP)
+        if (node->genus() != Genus::CPP)
             continue;
 
         if (!node->isAggregate()) {
@@ -411,7 +411,7 @@ void Aggregate::adoptChild(Node *child)
  */
 QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n) const
 {
-    NodeType goal = Node::QmlProperty;
+    NodeType goal = NodeType::QmlProperty;
     for (auto *child : std::as_const(m_children)) {
         if (child->nodeType() == goal) {
             if (child->name() == n)
@@ -427,7 +427,7 @@ QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n) const
  */
 QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n, bool attached) const
 {
-    NodeType goal = Node::QmlProperty;
+    NodeType goal = NodeType::QmlProperty;
     for (auto *child : std::as_const(m_children)) {
         if (child->nodeType() == goal) {
             if (child->name() == n && child->isAttached() == attached)
@@ -697,26 +697,26 @@ QString Aggregate::typeWord(bool cap) const
 {
     if (cap) {
         switch (nodeType()) {
-        case Node::Class:
+        case NodeType::Class:
             return "Class"_L1;
-        case Node::Struct:
+        case NodeType::Struct:
             return "Struct"_L1;
-        case Node::Union:
+        case NodeType::Union:
             return "Union"_L1;
-        case Node::Namespace:
+        case NodeType::Namespace:
             return "Namespace"_L1;
         default:
             break;
         }
     } else {
         switch (nodeType()) {
-        case Node::Class:
+        case NodeType::Class:
             return "class"_L1;
-        case Node::Struct:
+        case NodeType::Struct:
             return "struct"_L1;
-        case Node::Union:
+        case NodeType::Union:
             return "union"_L1;
-        case Node::Namespace:
+        case NodeType::Namespace:
             return "namespace"_L1;
         default:
             break;

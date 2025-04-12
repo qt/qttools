@@ -484,14 +484,14 @@ QString Generator::fullDocumentLocation(const Node *node)
     }
 
     switch (node->nodeType()) {
-    case Node::Class:
-    case Node::Struct:
-    case Node::Union:
-    case Node::Namespace:
-    case Node::Proxy:
+    case NodeType::Class:
+    case NodeType::Struct:
+    case NodeType::Union:
+    case NodeType::Namespace:
+    case NodeType::Proxy:
         parentName = fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
         break;
-    case Node::Function: {
+    case NodeType::Function: {
         const auto *fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
         case FunctionNode::QmlSignal:
@@ -522,39 +522,39 @@ QString Generator::fullDocumentLocation(const Node *node)
       the latter returns the name in lower-case. For
       HTML anchors, we need to preserve the case.
     */
-    case Node::Enum:
+    case NodeType::Enum:
         anchorRef = QLatin1Char('#') + node->name() + "-enum";
         break;
-    case Node::Typedef: {
+    case NodeType::Typedef: {
         const auto *tdef = static_cast<const TypedefNode *>(node);
         if (tdef->associatedEnum())
             return fullDocumentLocation(tdef->associatedEnum());
     } Q_FALLTHROUGH();
-    case Node::TypeAlias:
+    case NodeType::TypeAlias:
         anchorRef = QLatin1Char('#') + node->name() + "-typedef";
         break;
-    case Node::Property:
+    case NodeType::Property:
         anchorRef = QLatin1Char('#') + node->name() + "-prop";
         break;
-    case Node::SharedComment: {
+    case NodeType::SharedComment: {
         if (!node->isPropertyGroup())
             break;
     } Q_FALLTHROUGH();
-    case Node::QmlProperty:
+    case NodeType::QmlProperty:
         if (node->isAttached())
             anchorRef = QLatin1Char('#') + node->name() + "-attached-prop";
         else
             anchorRef = QLatin1Char('#') + node->name() + "-prop";
         break;
-    case Node::Variable:
+    case NodeType::Variable:
         anchorRef = QLatin1Char('#') + node->name() + "-var";
         break;
-    case Node::QmlType:
-    case Node::Page:
-    case Node::Group:
-    case Node::HeaderFile:
-    case Node::Module:
-    case Node::QmlModule: {
+    case NodeType::QmlType:
+    case NodeType::Page:
+    case NodeType::Group:
+    case NodeType::HeaderFile:
+    case NodeType::Module:
+    case NodeType::QmlModule: {
         parentName = fileBase(node);
         parentName.replace(QLatin1Char('/'), QLatin1Char('-'))
                 .replace(QLatin1Char('.'), QLatin1Char('-'));
@@ -1194,7 +1194,7 @@ void Generator::generateNoexceptNote(const Node* node, CodeMarker* marker) {
 
     std::size_t counter{1};
     for (const Node* node : nodes) {
-        if (node->isFunction(Node::CPP)) {
+        if (node->isFunction(Genus::CPP)) {
             if (auto exception_info = static_cast<const FunctionNode*>(node)->getNoexcept(); exception_info && !(*exception_info).isEmpty()) {
                 Text text;
                 text << Atom::NoteLeft
@@ -1898,9 +1898,9 @@ QString Generator::outputPrefix(const Node *node)
     // Omit prefix for module pages
     if (node->isPageNode() && !node->isCollectionNode()) {
         switch (node->genus()) {
-        case Node::QML:
+        case Genus::QML:
             return s_outputPrefixes[u"QML"_s];
-        case Node::CPP:
+        case Genus::CPP:
             return s_outputPrefixes[u"CPP"_s];
         default:
             break;
@@ -1913,9 +1913,9 @@ QString Generator::outputSuffix(const Node *node)
 {
     if (node->isPageNode()) {
         switch (node->genus()) {
-        case Node::QML:
+        case Genus::QML:
             return s_outputSuffixes[u"QML"_s];
-        case Node::CPP:
+        case Genus::CPP:
             return s_outputSuffixes[u"CPP"_s];
         default:
             break;
@@ -2178,25 +2178,25 @@ QString Generator::trimmedTrailing(const QString &string, const QString &prefix,
 QString Generator::typeString(const Node *node)
 {
     switch (node->nodeType()) {
-    case Node::Namespace:
+    case NodeType::Namespace:
         return "namespace";
-    case Node::Class:
+    case NodeType::Class:
         return "class";
-    case Node::Struct:
+    case NodeType::Struct:
         return "struct";
-    case Node::Union:
+    case NodeType::Union:
         return "union";
-    case Node::QmlType:
-    case Node::QmlValueType:
+    case NodeType::QmlType:
+    case NodeType::QmlValueType:
         return "type";
-    case Node::Page:
+    case NodeType::Page:
         return "documentation";
-    case Node::Enum:
+    case NodeType::Enum:
         return "enum";
-    case Node::Typedef:
-    case Node::TypeAlias:
+    case NodeType::Typedef:
+    case NodeType::TypeAlias:
         return "typedef";
-    case Node::Function: {
+    case NodeType::Function: {
         const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
         case FunctionNode::QmlSignal:
@@ -2213,13 +2213,13 @@ QString Generator::typeString(const Node *node)
         }
         return "function";
     }
-    case Node::Property:
-    case Node::QmlProperty:
+    case NodeType::Property:
+    case NodeType::QmlProperty:
         return "property";
-    case Node::Module:
-    case Node::QmlModule:
+    case NodeType::Module:
+    case NodeType::QmlModule:
         return "module";
-    case Node::SharedComment: {
+    case NodeType::SharedComment: {
         const auto &collective = static_cast<const SharedCommentNode *>(node)->collective();
         return collective.first()->nodeTypeString();
     }

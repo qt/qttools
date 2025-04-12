@@ -15,12 +15,12 @@ QMultiMap<const Node *, Node *> QmlTypeNode::s_inheritedBy;
   Constructs a Qml type.
 
   The new node has the given \a parent, name \a name, and a specific node
-  \a type. Valid types are Node::QmlType and Node::QmlValueType.
+  \a type. Valid types are NodeType::QmlType and NodeType::QmlValueType.
  */
-QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString &name, Node::NodeType type)
+QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString &name, NodeType type)
     : Aggregate(type, parent, name)
 {
-    Q_ASSERT(type == Node::QmlType || type == Node::QmlValueType);
+    Q_ASSERT(type == NodeType::QmlType || type == NodeType::QmlValueType);
     setTitle(name);
 }
 

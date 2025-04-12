@@ -11,6 +11,7 @@
 #include "config.h"
 #include "enumnode.h"
 #include "functionnode.h"
+#include "genustypes.h"
 #include "htmlgenerator.h"
 #include "node.h"
 #include "qdocdatabase.h"
@@ -103,51 +104,51 @@ void HelpProjectWriter::reset(const QString &defaultFileName, Generator *g)
 
 void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList &selectors)
 {
-    QHash<QString, Node::NodeType> typeHash;
-    typeHash["namespace"] = Node::Namespace;
-    typeHash["class"] = Node::Class;
-    typeHash["struct"] = Node::Struct;
-    typeHash["union"] = Node::Union;
-    typeHash["header"] = Node::HeaderFile;
-    typeHash["headerfile"] = Node::HeaderFile;
-    typeHash["doc"] = Node::Page; // Unused (supported but ignored as a prefix)
-    typeHash["fake"] = Node::Page; // Unused (supported but ignored as a prefix)
-    typeHash["page"] = Node::Page;
-    typeHash["enum"] = Node::Enum;
-    typeHash["example"] = Node::Example;
-    typeHash["externalpage"] = Node::ExternalPage;
-    typeHash["typedef"] = Node::Typedef;
-    typeHash["typealias"] = Node::TypeAlias;
-    typeHash["function"] = Node::Function;
-    typeHash["property"] = Node::Property;
-    typeHash["variable"] = Node::Variable;
-    typeHash["group"] = Node::Group;
-    typeHash["module"] = Node::Module;
-    typeHash["none"] = Node::NoType;
-    typeHash["qmlmodule"] = Node::QmlModule;
-    typeHash["qmlproperty"] = Node::QmlProperty;
-    typeHash["qmlclass"] = Node::QmlType; // Legacy alias for 'qmltype'
-    typeHash["qmltype"] = Node::QmlType;
-    typeHash["qmlbasictype"] = Node::QmlValueType; // Legacy alias for 'qmlvaluetype'
-    typeHash["qmlvaluetype"] = Node::QmlValueType;
+    QHash<QString, NodeType> typeHash;
+    typeHash["namespace"] = NodeType::Namespace;
+    typeHash["class"] = NodeType::Class;
+    typeHash["struct"] = NodeType::Struct;
+    typeHash["union"] = NodeType::Union;
+    typeHash["header"] = NodeType::HeaderFile;
+    typeHash["headerfile"] = NodeType::HeaderFile;
+    typeHash["doc"] = NodeType::Page; // Unused (supported but ignored as a prefix)
+    typeHash["fake"] = NodeType::Page; // Unused (supported but ignored as a prefix)
+    typeHash["page"] = NodeType::Page;
+    typeHash["enum"] = NodeType::Enum;
+    typeHash["example"] = NodeType::Example;
+    typeHash["externalpage"] = NodeType::ExternalPage;
+    typeHash["typedef"] = NodeType::Typedef;
+    typeHash["typealias"] = NodeType::TypeAlias;
+    typeHash["function"] = NodeType::Function;
+    typeHash["property"] = NodeType::Property;
+    typeHash["variable"] = NodeType::Variable;
+    typeHash["group"] = NodeType::Group;
+    typeHash["module"] = NodeType::Module;
+    typeHash["none"] = NodeType::NoType;
+    typeHash["qmlmodule"] = NodeType::QmlModule;
+    typeHash["qmlproperty"] = NodeType::QmlProperty;
+    typeHash["qmlclass"] = NodeType::QmlType; // Legacy alias for 'qmltype'
+    typeHash["qmltype"] = NodeType::QmlType;
+    typeHash["qmlbasictype"] = NodeType::QmlValueType; // Legacy alias for 'qmlvaluetype'
+    typeHash["qmlvaluetype"] = NodeType::QmlValueType;
 
     for (const QString &selector : selectors) {
         QStringList pieces = selector.split(QLatin1Char(':'));
         // Remove doc: or fake: prefix
-        if (pieces.size() > 1 && typeHash.value(pieces[0].toLower()) == Node::Page)
+        if (pieces.size() > 1 && typeHash.value(pieces[0].toLower()) == NodeType::Page)
             pieces.takeFirst();
 
         QString typeName = pieces.takeFirst().toLower();
         if (!typeHash.contains(typeName))
             continue;
 
-        subproject.m_selectors << typeHash.value(typeName);
+        subproject.m_selectors << static_cast<unsigned char>(typeHash.value(typeName));
         if (!pieces.isEmpty()) {
             pieces = pieces[0].split(QLatin1Char(','));
             for (const auto &piece : std::as_const(pieces)) {
-                if (typeHash[typeName] == Node::Group
-                    || typeHash[typeName] == Node::Module
-                    || typeHash[typeName] == Node::QmlModule) {
+                if (typeHash[typeName] == NodeType::Group
+                    || typeHash[typeName] == NodeType::Module
+                    || typeHash[typeName] == NodeType::QmlModule) {
                     subproject.m_groups << piece.toLower();
                 }
             }
@@ -225,7 +226,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         // No selectors: accept all nodes.
         if (subproject.m_selectors.isEmpty()) {
             subproject.m_nodes.insert(objName, node);
-        } else if (subproject.m_selectors.contains(node->nodeType())) {
+        } else if (subproject.m_selectors.contains(static_cast<unsigned char>(node->nodeType()))) {
             // Add all group members for '[group|module|qmlmodule]:name' selector
             if (node->isCollectionNode()) {
                 if (subproject.m_groups.contains(node->name().toLower())) {
@@ -271,22 +272,22 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
 
     switch (node->nodeType()) {
 
-    case Node::Class:
-    case Node::Struct:
-    case Node::Union:
+    case NodeType::Class:
+    case NodeType::Struct:
+    case NodeType::Union:
         project.m_keywords.append(keywordDetails(node));
         break;
-    case Node::QmlType:
-    case Node::QmlValueType:
+    case NodeType::QmlType:
+    case NodeType::QmlValueType:
         appendDocKeywords(node);
         project.m_keywords.append(keywordDetails(node));
         break;
 
-    case Node::Namespace:
+    case NodeType::Namespace:
         project.m_keywords.append(keywordDetails(node));
         break;
 
-    case Node::Enum:
+    case NodeType::Enum:
         project.m_keywords.append(keywordDetails(node));
         {
             const auto *enumNode = static_cast<const EnumNode *>(node);
@@ -308,21 +309,21 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         }
         break;
 
-    case Node::Group:
-    case Node::Module:
-    case Node::QmlModule: {
+    case NodeType::Group:
+    case NodeType::Module:
+    case NodeType::QmlModule: {
         if (!node->fullTitle().isEmpty()) {
             appendDocKeywords(node);
             project.m_keywords.append(keywordDetails(node));
         }
     } break;
 
-    case Node::Property:
-    case Node::QmlProperty:
+    case NodeType::Property:
+    case NodeType::QmlProperty:
         project.m_keywords.append(keywordDetails(node));
         break;
 
-    case Node::Function: {
+    case NodeType::Function: {
         const auto *funcNode = static_cast<const FunctionNode *>(node);
 
         /*
@@ -349,8 +350,8 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         if (node->parent())
             project.m_memberStatus[node->parent()].insert(node->status());
     } break;
-    case Node::TypeAlias:
-    case Node::Typedef: {
+    case NodeType::TypeAlias:
+    case NodeType::Typedef: {
         const auto *typedefNode = static_cast<const TypedefNode *>(node);
         Keyword typedefDetails = keywordDetails(node);
         const EnumNode *enumNode = typedefNode->associatedEnum();
@@ -362,13 +363,13 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         project.m_keywords.append(typedefDetails);
     } break;
 
-    case Node::Variable: {
+    case NodeType::Variable: {
         project.m_keywords.append(keywordDetails(node));
     } break;
 
         // Page nodes (such as manual pages) contain subtypes, titles and other
         // attributes.
-    case Node::Page: {
+    case NodeType::Page: {
         if (!node->fullTitle().isEmpty()) {
             appendDocKeywords(node);
             project.m_keywords.append(keywordDetails(node));
@@ -493,11 +494,11 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
 
     switch (node->nodeType()) {
 
-    case Node::Class:
-    case Node::Struct:
-    case Node::Union:
-    case Node::QmlType:
-    case Node::QmlValueType: {
+    case NodeType::Class:
+    case NodeType::Struct:
+    case NodeType::Union:
+    case NodeType::QmlType:
+    case NodeType::QmlValueType: {
         QString typeStr = m_gen->typeString(node);
         if (!typeStr.isEmpty())
             typeStr[0] = typeStr[0].toTitleCase();
@@ -514,20 +515,20 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
         writer.writeEndElement(); // section
     } break;
 
-    case Node::Namespace:
+    case NodeType::Namespace:
         writeSection(writer, href, "%1 Namespace Reference"_L1.arg(objName));
         break;
 
-    case Node::Example:
-    case Node::HeaderFile:
-    case Node::Page:
-    case Node::Group:
-    case Node::Module:
-    case Node::QmlModule: {
+    case NodeType::Example:
+    case NodeType::HeaderFile:
+    case NodeType::Page:
+    case NodeType::Group:
+    case NodeType::Module:
+    case NodeType::QmlModule: {
         writer.writeStartElement("section");
         writer.writeAttribute("ref", href);
         writer.writeAttribute("title", node->fullTitle());
-        if (node->nodeType() == Node::HeaderFile)
+        if (node->nodeType() == NodeType::HeaderFile)
             addMembers(project, writer, node);
         writer.writeEndElement(); // section
     } break;

@@ -13,6 +13,7 @@
 #include "externalpagenode.h"
 #include "functionnode.h"
 #include "generator.h"
+#include "genustypes.h"
 #include "headernode.h"
 #include "namespacenode.h"
 #include "qdocdatabase.h"
@@ -34,12 +35,12 @@ QT_BEGIN_NAMESPACE
   All these can appear in a C++ namespace. Don't add
   anything that can't be in a C++ namespace.
  */
-static const QMap<QString, Node::NodeType> s_nodeTypeMap{
-    { COMMAND_NAMESPACE, Node::Namespace }, { COMMAND_NAMESPACE, Node::Namespace },
-    { COMMAND_CLASS, Node::Class },         { COMMAND_STRUCT, Node::Struct },
-    { COMMAND_UNION, Node::Union },         { COMMAND_ENUM, Node::Enum },
-    { COMMAND_TYPEALIAS, Node::TypeAlias }, { COMMAND_TYPEDEF, Node::Typedef },
-    { COMMAND_PROPERTY, Node::Property },   { COMMAND_VARIABLE, Node::Variable }
+static const QMap<QString, NodeType> s_nodeTypeMap{
+    { COMMAND_NAMESPACE, NodeType::Namespace }, { COMMAND_NAMESPACE, NodeType::Namespace },
+    { COMMAND_CLASS, NodeType::Class },         { COMMAND_STRUCT, NodeType::Struct },
+    { COMMAND_UNION, NodeType::Union },         { COMMAND_ENUM, NodeType::Enum },
+    { COMMAND_TYPEALIAS, NodeType::TypeAlias }, { COMMAND_TYPEDEF, NodeType::Typedef },
+    { COMMAND_PROPERTY, NodeType::Property },   { COMMAND_VARIABLE, NodeType::Variable }
 };
 
 typedef bool (Node::*NodeTypeTestFunc)() const;
@@ -95,13 +96,13 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
           this way to allow the writer to refer to the entity
           without including the namespace qualifier.
          */
-        Node::NodeType type = s_nodeTypeMap[command];
+        NodeType type = s_nodeTypeMap[command];
         QStringList words = arg.first.split(QLatin1Char(' '));
         QStringList path;
         qsizetype idx = 0;
         Node *node = nullptr;
 
-        if (type == Node::Variable && words.size() > 1)
+        if (type == NodeType::Variable && words.size() > 1)
             idx = words.size() - 1;
         path = words[idx].split("::");
 
@@ -113,7 +114,7 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
                 auto access = node->access();
                 auto loc = node->location();
                 auto templateDecl = node->templateDecl();
-                node = new ClassNode(Node::Class, node->parent(), node->name());
+                node = new ClassNode(NodeType::Class, node->parent(), node->name());
                 node->setAccess(access);
                 node->setLocation(loc);
                 node->setTemplateDecl(templateDecl);
@@ -126,7 +127,7 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
                                 .arg(arg.first, command));
             }
         } else if (node->isAggregate()) {
-            if (type == Node::Namespace) {
+            if (type == NodeType::Namespace) {
                 auto *ns = static_cast<NamespaceNode *>(node);
                 ns->markSeen();
                 ns->setWhereDocumented(ns->tree()->camelCaseModuleName());
@@ -172,7 +173,7 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
     } else if (command == COMMAND_QMLTYPE ||
                command == COMMAND_QMLVALUETYPE ||
                command == COMMAND_QMLBASICTYPE) {
-        auto nodeType = (command == COMMAND_QMLTYPE) ? Node::QmlType : Node::QmlValueType;
+        auto nodeType = (command == COMMAND_QMLTYPE) ? NodeType::QmlType : NodeType::QmlValueType;
         QString qmid;
         if (auto args = doc.metaCommandArgs(COMMAND_INQMLMODULE); !args.isEmpty())
             qmid = args.first().first;
@@ -220,7 +221,7 @@ std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedD
     // This may lead to unexpected behavior if documenting \qmlvaluetype's properties
     // before the type itself.
     if (qmlType == nullptr) {
-        qmlType = new QmlTypeNode(database->primaryTreeRoot(), (*firstTopicArgs).m_qmltype, Node::QmlType);
+        qmlType = new QmlTypeNode(database->primaryTreeRoot(), (*firstTopicArgs).m_qmltype, NodeType::QmlType);
         qmlType->setLocation(doc.startLocation());
         if (!(*firstTopicArgs).m_module.isEmpty())
             database->addToQmlModule((*firstTopicArgs).m_module, qmlType);
@@ -253,7 +254,7 @@ std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedD
                 auto *qpn = new QmlPropertyNode(qmlType, qpa->m_name, qpa->m_type, attached);
                 qpn->setIsList(qpa->m_isList);
                 qpn->setLocation(doc.startLocation());
-                qpn->setGenus(Node::QML);
+                qpn->setGenus(Genus::QML);
 
                 tied.emplace_back(TiedDocumentation{doc, qpn});
 
@@ -647,7 +648,7 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     // This may lead to unexpected behavior if documenting \qmlvaluetype's methods
     // before the type itself.
     if (!aggregate) {
-        aggregate = new QmlTypeNode(database->primaryTreeRoot(), elementName, Node::QmlType);
+        aggregate = new QmlTypeNode(database->primaryTreeRoot(), elementName, NodeType::QmlType);
         aggregate->setLocation(location);
         if (!moduleName.isEmpty())
             database->addToQmlModule(moduleName, aggregate);
@@ -900,11 +901,11 @@ static void checkModuleInclusion(Node *n)
     if (n->physicalModuleName().isEmpty()) {
         if (n->isInAPI() && !n->name().isEmpty()) {
             switch (n->nodeType()) {
-            case Node::Class:
-            case Node::Struct:
-            case Node::Union:
-            case Node::Namespace:
-            case Node::HeaderFile:
+            case NodeType::Class:
+            case NodeType::Struct:
+            case NodeType::Union:
+            case NodeType::Namespace:
+            case NodeType::HeaderFile:
                 break;
             default:
                 return;

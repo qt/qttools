@@ -4,6 +4,7 @@
 #include "atom.h"
 
 #include "location.h"
+#include "genustypes.h"
 #include "qdocdatabase.h"
 
 #include <QtCore/qregularexpression.h>
@@ -379,7 +380,7 @@ LinkAtom::LinkAtom(const QString &p1, const QString &p2, Location location)
     : Atom(Atom::Link, p1),
       location(location),
       m_resolved(false),
-      m_genus(Node::DontCare),
+      m_genus(Genus::DontCare),
       m_domain(nullptr),
       m_squareBracketParams(p2)
 {
@@ -405,19 +406,19 @@ void LinkAtom::resolveSquareBracketParams()
         }
 
         if (param == "qml") {
-            m_genus = Node::QML;
+            m_genus = Genus::QML;
             continue;
         }
         if (param == "cpp") {
-            m_genus = Node::CPP;
+            m_genus = Genus::CPP;
             continue;
         }
         if (param == "doc") {
-            m_genus = Node::DOC;
+            m_genus = Genus::DOC;
             continue;
         }
         if (param == "api") {
-            m_genus = Node::API;
+            m_genus = Genus::API;
             continue;
         }
         break;
