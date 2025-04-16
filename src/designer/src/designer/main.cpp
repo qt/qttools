@@ -4,22 +4,13 @@
 #include "qdesigner.h"
 #include <QtCore/qlibraryinfo.h>
 #include <QtCore/qdir.h>
-#include <QtCore/qoperatingsystemversion.h>
 
 #include <stdlib.h>
 
 QT_USE_NAMESPACE
 
-static const char rhiBackEndVar[] = "QSG_RHI_BACKEND";
-
 int main(int argc, char *argv[])
 {
-    // Enable the QWebEngineView, QQuickWidget plugins on Windows.
-    if (QOperatingSystemVersion::currentType() == QOperatingSystemVersion::Windows
-        && !qEnvironmentVariableIsSet(rhiBackEndVar)) {
-        qputenv(rhiBackEndVar, "gl");
-    }
-
     // required for QWebEngineView
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
