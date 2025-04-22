@@ -1,0 +1,8 @@
+project = Project-A
+
+sources.fileextensions = "*.qdoc"
+sourcedirs = src/a
+
+locationinfo         = false
+warninglimit         = 0
+warninglimit.enabled = true

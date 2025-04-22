@@ -362,12 +362,16 @@ QString XmlGenerator::linkForNode(const Node *node, const Node *relative)
     }
 
     /*
-      If the output is going to subdirectories, the
-      two nodes have different output directories if 'node'
-      was read from index.
+      If the output is going to subdirectories, the two nodes have
+      different output directories if `node` was read from index or
+      is located in a different tree than `relative`. These two
+      conditions may differ only when running in single-exec mode
+      where QDoc does not load index files (or mark nodes as being
+      index nodes).
      */
     if (relative && (node != relative)) {
-        if (useOutputSubdirs() && !node->isExternalPage() && node->isIndexNode())
+        if (useOutputSubdirs() && !node->isExternalPage() &&
+                (node->isIndexNode() || node->tree() != relative->tree()))
             link.prepend("../%1/"_L1.arg(node->tree()->physicalModuleName()));
     }
     return link;
