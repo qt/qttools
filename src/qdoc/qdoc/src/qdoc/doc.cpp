@@ -373,38 +373,48 @@ void Doc::terminate()
 }
 
 /*!
-  Trims the deadwood out of \a str. i.e., this function
-  cleans up \a str.
+  Replaces any asterisks used as a left margin in the comment \a str with
+  spaces then trims the comment syntax from the start and end of the string,
+  leaving only the text content. Updates the \a location to refer to the
+  location of the content in the original file.
  */
 void Doc::trimCStyleComment(Location &location, QString &str)
 {
     QString cleaned;
     Location m = location;
-    bool metAsterColumn = true;
-    int asterColumn = location.columnNo() + 1;
+    bool metMargin = true;
+    int marginColumn = location.columnNo() + 1;
     int i;
 
     for (i = 0; i < str.size(); ++i) {
-        if (m.columnNo() == asterColumn) {
+        if (m.columnNo() == marginColumn) {
+            // Stop cleaning if the expected asterisk was missing.
             if (str[i] != '*')
                 break;
             cleaned += ' ';
-            metAsterColumn = true;
+            metMargin = true;
         } else {
             if (str[i] == '\n') {
-                if (!metAsterColumn)
+                // Break if the line ends before any asterisks are found.
+                if (!metMargin)
                     break;
-                metAsterColumn = false;
+                metMargin = false;
             }
             cleaned += str[i];
         }
         m.advance(str[i]);
     }
+    // Only replace the string if a fully cleaned version was created
+    // to avoid producing incomplete or corrupted strings.
     if (cleaned.size() == str.size())
         str = std::move(cleaned);
 
+    // Update the location to refer to the start of the comment text.
     for (int i = 0; i < 3; ++i)
         location.advance(str[i]);
+
+    // Remove the comment syntax from the start (leading comment marker
+    // and newline) and end (comment marker).
     str = str.mid(3, str.size() - 5);
 }
 
