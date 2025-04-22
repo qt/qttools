@@ -132,6 +132,7 @@ void tst_validateQdocOutputFiles::qdocProjects_data()
     using namespace Qt::StringLiterals;
     QTest::addColumn<QString>("qdocconf");
     QTest::addColumn<QString>("expectedPath");
+    QTest::addColumn<QString>("extraArgs");
 
     QDirIterator qdocconfit(m_testDataDirectory, QStringList { u"*.qdocconf"_s },
                             QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
@@ -140,11 +141,19 @@ void tst_validateQdocOutputFiles::qdocProjects_data()
         if (configFile.baseName() != configFile.dir().dirName())
             continue;
 
+        QString extraArgs{configFile.dir().absolutePath() + u"/args.txt"_s};
+        if (QFileInfo::exists(extraArgs))
+            extraArgs.insert(0, u'@');
+        else
+            extraArgs.clear();
+
         const QString testName =
                 configFile.dir().dirName() + u'/' + configFile.fileName();
 
         QTest::newRow(testName.toUtf8().constData())
-                << configFile.absoluteFilePath() << configFile.dir().absolutePath() + "/expected/";
+                << configFile.absoluteFilePath()
+                << configFile.dir().absolutePath() + "/expected/"
+                << extraArgs;
     }
 }
 
@@ -152,6 +161,7 @@ void tst_validateQdocOutputFiles::qdocProjects()
 {
     QFETCH(const QString, qdocconf);
     QFETCH(const QString, expectedPath);
+    QFETCH(const QString, extraArgs);
 
     QString actualPath{m_outputDir->path()};
     if (regenerate) {
@@ -161,7 +171,9 @@ void tst_validateQdocOutputFiles::qdocProjects()
             qCritical("Cannot remove expected output directory, aborting!");
     }
 
-    const QStringList arguments{ "-outputdir", actualPath, m_extraParams, qdocconf };
+    QStringList arguments{ "-outputdir", actualPath, m_extraParams, qdocconf };
+    if (!extraArgs.isEmpty())
+        arguments << extraArgs;
 
     runQDocProcess(arguments);
 

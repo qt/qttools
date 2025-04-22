@@ -22,14 +22,17 @@ includes the diff in its output if this happens.
    directory should be descriptive of the test project.
 2. Create a `.qdocconf` file in the new directory. See
    [The .qdocconf file](# The .qdocconf file) below for further details.
-3. Add the necessary files (.qdoc, .h/.cpp, .qml, etc) so that the project
+3. If the test requires additional command line arguments passed to QDoc,
+   create an `args.txt` file in the same location as the main .qdocconf
+   file. See [The args.txt file](# The args.txt file) below.
+4. Add the necessary files (.qdoc, .h/.cpp, .qml, etc) so that the project
    can be built in a meaningful manner.
-4. Run QDoc on the project.
-5. Verify that the output looks correct.
-6. Copy the output into `[testdata/[new test directory]/expected`.
-7. Run the test executable and verify that the test output includes a **PASS**
+5. Run QDoc on the project.
+6. Verify that the output looks correct.
+7. Copy the output into `[testdata/[new test directory]/expected`.
+8. Run the test executable and verify that the test output includes a **PASS**
    line for the new test-case.
-8. Push your change upstream.
+9. Push your change upstream.
 
 ## Update the expected content for all tests
 If you make a change to QDoc that causes significant changes in output, you may
@@ -71,6 +74,12 @@ QDoc project in the directory. Observe the following:
      format, for example `html`, `docbook`, `webxml`, etc.
 - Place the sources for your new test in a subdirectory of the test project
   directory. By convention, the sources are placed in a directory named `src`.
+
+### The args.txt file
+An optional `args.txt` file, located in the same directory as the main .qdocconf
+file, is used for passing additional command line arguments to QDoc for a
+particular test. The file can contain any argument(s) accepted by QDoc on the
+command line.
 
 ### The `expected` directory
 The `expected` directory contains the expected output from QDoc
