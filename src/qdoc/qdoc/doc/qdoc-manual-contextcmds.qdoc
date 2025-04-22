@@ -439,11 +439,10 @@
     \target modulestate-command
     \section1 \\modulestate
 
-    The \\modulestate command can be used within a \\module or \\qmlmodule
-    topic to provide a module state description other than \e preliminary or
-    \e deprecated.
+    Use the \\modulestate command within a \\module or \\qmlmodule
+    topic to provide a custom module state description.
 
-    Rest of the line is taken as an argument that describes the module's
+    The command takes an argument that describes the module's
     state. For example:
 
     \badcode *
@@ -458,6 +457,9 @@
     \quotation
     This module is in \e {Technical Preview} state.
     \endquotation
+
+    \note Do not use this command to deprecate a module. Use the
+    \l {deprecated-command}{\\deprecated} instead.
 
     In HTML output, this state information appears also in the navigation
     bar (breadcrumbs) of reference pages for the module's members.
