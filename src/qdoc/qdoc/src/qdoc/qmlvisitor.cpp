@@ -269,36 +269,34 @@ bool QmlSignatureParser::match(int target)
  */
 bool QmlSignatureParser::matchTypeAndName(CodeChunk *type, QString *var)
 {
-    /*
-      This code is really hard to follow... sorry. The loop is there to match
-      Alpha::Beta::Gamma::...::Omega.
-     */
+    // Match code with scope operators, such as Alpha::Beta::Gamma::...::Omega.
     for (;;) {
-        bool virgin = true;
-
-        // If not an identifier, try to match a sequence of qualifiers.
-        if (tok_ != Tok_Ident) {
+        if (match(Tok_Ident)) {
+            type->append(previousLexeme());
+        } else {
+            // If not an identifier, try to match a sequence of modifiers.
+            bool hasModifiers = false;
             while (match(Tok_signed) || match(Tok_unsigned) || match(Tok_short) || match(Tok_long)
                    || match(Tok_int64)) {
                 // Append the matched qualifier token.
                 type->append(previousLexeme());
-                virgin = false;
+                hasModifiers = true;
+            }
+
+            // Match and append a type, or return false.
+            if (hasModifiers && (match(Tok_int) || match(Tok_char) || match(Tok_double))) {
+                type->append(previousLexeme());
+            } else if (!hasModifiers) {
+                if (match(Tok_void) || match(Tok_int) ||
+                    match(Tok_char) || match(Tok_double)) {
+                    type->append(previousLexeme());
+                } else {
+                    return false;
+                }
             }
         }
 
-        if (virgin) {
-            if (match(Tok_Ident)) {
-                type->append(previousLexeme());
-            } else if (match(Tok_void) || match(Tok_int) || match(Tok_char) || match(Tok_double)
-                       || match(Tok_Ellipsis))
-                type->append(previousLexeme());
-            else
-                return false;
-        } else if (match(Tok_int) || match(Tok_char) || match(Tok_double)) {
-            type->append(previousLexeme());
-        }
-
-        // Match and append a namespace separator or break.
+        // Match and append a scope operator, or break to go to the next stage.
         if (match(Tok_Gulbrandsen))
             type->append(previousLexeme());
         else
