@@ -60,22 +60,13 @@ static int category(QChar ch)
 
   \brief The CodeChunk class represents a tiny piece of C++ code.
 
-  \note I think this class should be eliminated (mws 11/12/2018
-
-  The class provides conversion between a list of lexemes and a string.  It adds
-  spaces at the right place for consistent style.  The tiny pieces of code it
+  The class provides conversion between a list of lexemes and a string. It adds
+  spaces in the right places for consistent style. The tiny pieces of code it
   represents are data types, enum values, and default parameter values.
 
-  Apart from the piece of code itself, there are two bits of metainformation
-  stored in CodeChunk: the base and the hotspot.  The base is the part of the
-  piece that may be a hypertext link.  The base of
-
-      QMap<QString, QString>
-
-  is QMap.
-
-  The hotspot is the place the variable name should be inserted in the case of a
-  variable (or parameter) declaration.  The hotspot of
+  Apart from the piece of code itself, the chunk also records a hotspot, which
+  is the place the variable name should be inserted in the case of a variable
+  or parameter declaration. The hotspot of
 
       char * []
 
@@ -83,16 +74,14 @@ static int category(QChar ch)
 */
 
 /*!
-  Appends \a lexeme to the current string contents, inserting
-  a space if appropriate.
+  Appends \a lexeme to the current string contents, inserting a space if
+  appropriate.
  */
 void CodeChunk::append(const QString &lexeme)
 {
     if (!m_str.isEmpty() && !lexeme.isEmpty()) {
-        /*
-          Should there be a space or not between the code chunk so far and the
-          new lexeme?
-        */
+        // Insert a space between the contents of the code chunk and the new
+        // lexeme if needed.
         int cat1 = category(m_str.at(m_str.size() - 1));
         int cat2 = category(lexeme[0]);
         if (needSpace[cat1][cat2])

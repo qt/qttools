@@ -2371,6 +2371,11 @@ QStringList DocParser::getMacroArguments(const QString &name, const Macro &macro
     return args;
 }
 
+/*!
+    Returns the next token as an optional argument unless the token is
+    another command. The next token can be preceded by spaces and an optional
+    newline.
+*/
 QString DocParser::getOptionalArgument()
 {
     skipSpacesOrOneEndl();

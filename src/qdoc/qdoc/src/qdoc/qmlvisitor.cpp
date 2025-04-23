@@ -275,9 +275,11 @@ bool QmlSignatureParser::matchTypeAndName(CodeChunk *type, QString *var)
     for (;;) {
         bool virgin = true;
 
+        // If not an identifier, try to match a sequence of qualifiers.
         if (tok_ != Tok_Ident) {
             while (match(Tok_signed) || match(Tok_unsigned) || match(Tok_short) || match(Tok_long)
                    || match(Tok_int64)) {
+                // Append the matched qualifier token.
                 type->append(previousLexeme());
                 virgin = false;
             }
@@ -295,12 +297,14 @@ bool QmlSignatureParser::matchTypeAndName(CodeChunk *type, QString *var)
             type->append(previousLexeme());
         }
 
+        // Match and append a namespace separator or break.
         if (match(Tok_Gulbrandsen))
             type->append(previousLexeme());
         else
             break;
     }
 
+    // Matches a sequence of & * const ^ tokens.
     while (match(Tok_Ampersand) || match(Tok_Aster) || match(Tok_const) || match(Tok_Caret))
         type->append(previousLexeme());
 
@@ -310,9 +314,11 @@ bool QmlSignatureParser::matchTypeAndName(CodeChunk *type, QString *var)
      */
     type->appendHotspot();
 
+    // Set the variable name if it is unset and an identifier is matched.
     if ((var != nullptr) && match(Tok_Ident))
         *var = previousLexeme();
 
+    // Skip pairs of braces and their contents.
     if (tok_ == Tok_LeftBracket) {
         int bracketDepth0 = tokenizer_->bracketDepth();
         while ((tokenizer_->bracketDepth() >= bracketDepth0 && tok_ != Tok_Eoi)
