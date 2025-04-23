@@ -629,7 +629,7 @@ DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *
     const int pindex = meta->indexOfProperty(pname.toLatin1());
     if (pindex != -1) {
         QMetaProperty meta_property = meta->property(pindex);
-        if ((v.metaType().id() == QMetaType::Int || v.metaType().id() == QMetaType::UInt) && meta_property.isEnumType()) {
+        if (v.canConvert<int>() && meta_property.isEnumType()) {
             const QMetaEnum e = meta_property.enumerator();
             if (e.isFlag())
                 dom_prop->setElementSet(QString::fromLatin1(e.valueToKeys(v.toInt())));
