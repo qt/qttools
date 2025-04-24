@@ -1281,11 +1281,6 @@
     unique identifier (text ID) that you use in the source code instead of text.
     This makes it much easier to manage large numbers of translated texts.
 
-    \note You must use only plain-text-based or only text-ID-based functions in
-    one application. If you mix them, you will end up with an incomplete set of
-    texts to be translated.
-
-
     \section1 Internationalizing with text IDs
 
     When using text IDs instead of plain text, the general method of
