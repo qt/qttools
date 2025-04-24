@@ -11,6 +11,8 @@ QT_BEGIN_NAMESPACE
 
 int editDistance(const QString &s, const QString &t);
 QString nearestName(const QString &actual, const QSet<QString> &candidates);
+QString suggestName(const QString &str, const QSet<QString> &commandSet,
+                    const QSet<QString> &excludeSet = {});
 
 QT_END_NAMESPACE
 

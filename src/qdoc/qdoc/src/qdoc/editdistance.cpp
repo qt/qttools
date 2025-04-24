@@ -65,4 +65,18 @@ QString nearestName(const QString &actual, const QSet<QString> &candidates)
     return QString();
 }
 
+/*!
+    Returns a suggestion for the closest match to \a str in the given
+    \a commandSet. If no closest match is found, or if it is in the supplied
+    \a excludeSet containing matches to avoid, returns an empty string.
+*/
+QString suggestName(const QString &str, const QSet<QString> &commandSet,
+                    const QSet<QString> &excludeSet)
+{
+    QString best = nearestName(str, commandSet);
+    if (best.isEmpty() || excludeSet.contains(best))
+        return QString();
+    return best;
+}
+
 QT_END_NAMESPACE

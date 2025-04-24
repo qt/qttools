@@ -1321,10 +1321,7 @@ QString DocParser::detailsUnknownCommand(const QSet<QString> &metaCommandSet, co
         ++i;
     }
 
-    QString best = nearestName(str, commandSet);
-    if (best.isEmpty())
-        return QString();
-    return QStringLiteral("Maybe you meant '\\%1'?").arg(best);
+    return "Maybe you meant '\\%1'?"_L1.arg(suggestName(str, commandSet));
 }
 
 /*!

@@ -791,15 +791,11 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 || allItems.size() > documentedItems.size()) {
                 for (const auto &it : allItems) {
                     if (!definedItems.contains(it)) {
-                        QString details;
-                        QString best = nearestName(it, definedItems);
-                        if (!best.isEmpty() && !documentedItems.contains(best))
-                            details = QStringLiteral("Maybe you meant '%1'?").arg(best);
-
                         node->doc().location().warning(
                                 QStringLiteral("No such enum item '%1' in %2")
                                         .arg(it, node->plainFullName()),
-                                details);
+                                QStringLiteral("Maybe you meant '%1'?")
+                                        .arg(suggestName(it, definedItems, documentedItems)));
                     } else if (!documentedItems.contains(it)) {
                         node->doc().location().warning(
                                 QStringLiteral("Undocumented enum item '%1' in %2")
@@ -827,13 +823,9 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 }
                 for (const auto &name : documentedNames) {
                     if (!declaredNames.contains(name) && CodeParser::isWorthWarningAbout(fn->doc())) {
-                        QString best = nearestName(name, declaredNames);
-                        QString details;
-                        if (!best.isEmpty())
-                            details = QStringLiteral("Maybe you meant '%1'?").arg(best);
                         fn->doc().location().warning(QStringLiteral("No such parameter '%1' in %2")
                                                              .arg(name, fn->plainFullName()),
-                                                     details);
+                                                     suggestName(name, declaredNames));
                     }
                 }
             }
