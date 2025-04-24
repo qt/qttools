@@ -72,7 +72,7 @@ QVariant domPropertyToVariant(QAbstractFormBuilder *afb,const QMetaObject *meta,
         if (!ok) {
             uiLibWarning(QCoreApplication::translate("QFormBuilder",
                                                      "The value \"%1\" of the set-type property %2 could not be read.").
-                                                     arg(p->attributeName(), p->elementSet()));
+                                                     arg(p->elementSet(), p->attributeName()));
             return {};
         }
         return result;
@@ -101,7 +101,7 @@ QVariant domPropertyToVariant(QAbstractFormBuilder *afb,const QMetaObject *meta,
         if (!ok) {
             uiLibWarning(QCoreApplication::translate("QFormBuilder",
                                                      "The value \"%1\" of the enum-type property %2 could not be read.").
-                         arg(p->attributeName(), enumValue));
+                         arg(enumValue, p->attributeName()));
             return {};
         }
         return result;
