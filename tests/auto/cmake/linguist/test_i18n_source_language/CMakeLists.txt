@@ -60,10 +60,9 @@ get_directory_property(targets BUILDSYSTEM_TARGETS)
 list(FILTER targets INCLUDE REGEX "^lib[0-9]+$")
 list(LENGTH targets targets_length)
 
-# Build the 'update_translations' target by default and check the native language .ts files.
-string(REPLACE ";" "\\\\;" native_ts_files "${native_ts_files}")
-add_custom_target(force_ts_update ALL
-    COMMAND "${CMAKE_COMMAND}" -DNR_OF_TARGETS=${targets_length}
-            -P "${CMAKE_CURRENT_SOURCE_DIR}/check_ts_files.cmake"
-)
-add_dependencies(force_ts_update update_translations)
+# Write the .ts file names to a file that's read by post_build_check.cmake.
+set(ts_files "")
+foreach(i RANGE 1 ${targets_length})
+    list(APPEND ts_files "lib${i}_en.ts")
+endforeach()
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/ts_files.txt" "${ts_files}")
