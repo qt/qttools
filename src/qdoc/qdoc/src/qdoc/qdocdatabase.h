@@ -328,8 +328,7 @@ public:
     [[nodiscard]] QString version() const { return m_version; }
 
     void readIndexes(const QStringList &indexFiles);
-    void generateIndex(const QString &fileName, const QString &url, const QString &title,
-                       Generator *g);
+    void generateIndex(const QString &fileName, const QString &url, const QString &title);
 
     void processForest();
 

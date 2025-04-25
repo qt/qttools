@@ -48,8 +48,7 @@ private:
     bool adoptRelatedNode(Aggregate *adoptiveParent, int index);
     void writeTargets(QXmlStreamWriter &writer, Node *node);
 
-    void generateIndex(const QString &fileName, const QString &url, const QString &title,
-                       Generator *g);
+    void generateIndex(const QString &fileName, const QString &url, const QString &title);
     void generateFunctionSection(QXmlStreamWriter &writer, FunctionNode *fn);
     void generateFunctionSections(QXmlStreamWriter &writer, Aggregate *aggregate);
     bool generateIndexSection(QXmlStreamWriter &writer, Node *node,

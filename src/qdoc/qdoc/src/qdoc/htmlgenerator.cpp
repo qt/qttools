@@ -244,7 +244,7 @@ void HtmlGenerator::generateDocs()
         QString fileBase =
                 m_project.toLower().simplified().replace(QLatin1Char(' '), QLatin1Char('-'));
         m_qdb->generateIndex(outputDir() + QLatin1Char('/') + fileBase + ".index", m_projectUrl,
-                             m_projectDescription, this);
+                             m_projectDescription);
     }
 
     if (!config->preparing()) {

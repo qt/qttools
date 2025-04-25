@@ -1191,12 +1191,11 @@ void QDocDatabase::readIndexes(const QStringList &indexFiles)
   index file is generated with the parameters \a url and \a title,
   using the generator \a g.
  */
-void QDocDatabase::generateIndex(const QString &fileName, const QString &url, const QString &title,
-                                 Generator *g)
+void QDocDatabase::generateIndex(const QString &fileName, const QString &url, const QString &title)
 {
     QString t = fileName.mid(fileName.lastIndexOf(QChar('/')) + 1);
     primaryTree()->setIndexFileName(t);
-    QDocIndexFiles::qdocIndexFiles()->generateIndex(fileName, url, title, g);
+    QDocIndexFiles::qdocIndexFiles()->generateIndex(fileName, url, title);
     QDocIndexFiles::destroyQDocIndexFiles();
 }
 

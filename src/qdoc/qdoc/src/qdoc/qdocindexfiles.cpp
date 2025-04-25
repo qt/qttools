@@ -1433,7 +1433,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
   \a g is a pointer to the current Generator in use, stored for later use.
  */
 void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
-                                   const QString &title, Generator *g)
+                                   const QString &title)
 {
     QFile file(fileName);
     if (!file.open(QFile::WriteOnly | QFile::Text))
@@ -1441,7 +1441,7 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
 
     qCDebug(lcQdoc) << "Writing index file:" << fileName;
 
-    m_gen = g;
+    m_gen = Generator::currentGenerator();
     m_relatedNodes.clear();
     QXmlStreamWriter writer(&file);
     writer.setAutoFormatting(true);
