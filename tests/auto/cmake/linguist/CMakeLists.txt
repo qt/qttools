@@ -60,11 +60,17 @@ include("${_Qt6CTestMacros}")
 _qt_internal_test_expect_pass(test_add_translation_macro)
 _qt_internal_test_expect_pass(test_create_translation_macro)
 _qt_internal_test_expect_pass(test_create_translation_same_base_names)
-_qt_internal_test_expect_pass(test_translation_api)
+_qt_internal_test_expect_pass(test_translation_api
+    BINARY "${CMAKE_COMMAND}"
+    BINARY_ARGS -P "${CMAKE_CURRENT_SOURCE_DIR}/test_translation_api/post_build_check.cmake"
+)
 _qt_internal_test_expect_pass(test_i18n_auto_ts_file_names)
 _qt_internal_test_expect_pass(test_i18n_exclusion)
 _qt_internal_test_expect_pass(test_i18n_filter_autogen_files)
-_qt_internal_test_expect_pass(test_i18n_source_language)
+_qt_internal_test_expect_pass(test_i18n_source_language
+    BINARY "${CMAKE_COMMAND}"
+    BINARY_ARGS -P "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_source_language/post_build_check.cmake"
+)
 if(NOT CMAKE_CROSSCOMPILING)
     _qt_internal_test_expect_pass(test_i18n_find_package_in_subdir BINARY app1)
     _qt_internal_test_expect_pass(test_i18n_merge_qt_translations BINARY myapp)
