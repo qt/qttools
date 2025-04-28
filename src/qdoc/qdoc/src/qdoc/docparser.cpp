@@ -609,7 +609,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         skipToNextPreprocessorCommand();
                     break;
                 case CMD_IMAGE:
-                    cmd_image();
+                    cmd_image(cmd);
                     break;
                 case CMD_IMPORTANT:
                     leavePara();
@@ -631,14 +631,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 }
                 case CMD_INLINEIMAGE:
-                    enterPara();
-                    appendAtom(Atom(Atom::InlineImage, getArgument()));
-                    //Append ImageText only if the following
-                    //argument is enclosed in braces.
-                    if (isLeftBraceAhead()) {
-                        appendAtom(Atom(Atom::ImageText, getArgument()));
-                        appendAtom(Atom(Atom::String, " "));
-                    }
+                    cmd_image(cmd);
                     break;
                 case CMD_INDEX:
                     if (m_paragraphState == OutsideParagraph) {
@@ -1738,23 +1731,38 @@ void DocParser::endSection(int, int) // (int unit, int endCmd)
 /*!
     \internal
 
-    Processes CMD_IMAGE. The first argument to the command is the image file
-    name. The rest of the line is an optional string that's used as the text
-    description of the image (e.g. the HTML <img> alt attribute). The optional
-    argument can be wrapped in curly braces, in which case it can span multiple
-    lines.
+    \brief Processes CMD_IMAGE and CMD_INLINEIMAGE, as specified by \a cmd.
+
+    The first argument to the command is the image file name. The rest of the
+    line is an optional string that's used as the text description of the image
+    (e.g. the HTML <img> alt attribute). The optional argument can be wrapped in
+    curly braces, in which case it can span multiple lines.
 
     This function may modify the optional argument by removing one pair of
     double quotes, if they wrap the string.
  */
-void DocParser::cmd_image()
-{
-    leaveValueList();
+void DocParser::cmd_image(int cmd) {
+    Atom::AtomType imageAtom{};
+    switch (cmd) {
+    case CMD_IMAGE: {
+        leaveValueList();
+        imageAtom = Atom::AtomType::Image;
+        break;
+    }
+    case CMD_INLINEIMAGE: {
+        enterPara();
+        imageAtom = Atom::AtomType::InlineImage;
+        break;
+    }
+    default:
+        break;
+    }
+
     const QString imageFileName = getArgument();
     QString imageText;
     if (isLeftBraceAhead())
         imageText = getArgument();
-    else
+    else if (cmd == CMD_IMAGE)
         imageText = getRestOfLine();
 
     if (imageText.length() > 1) {
@@ -1767,9 +1775,9 @@ void DocParser::cmd_image()
     if (imageText.isEmpty() && Config::instance().reportMissingAltTextForImages())
         location().report(QStringLiteral("\\%1 %2 is without a textual description, "
                                          "QDoc will not generate an alt text for the image.")
-                                  .arg(cmdName(CMD_IMAGE))
+                                  .arg(cmdName(cmd))
                                   .arg(imageFileName));
-    appendAtom(Atom(Atom::Image, imageFileName));
+    appendAtom(Atom(imageAtom, imageFileName));
     appendAtom(Atom(Atom::ImageText, imageText));
 }
 

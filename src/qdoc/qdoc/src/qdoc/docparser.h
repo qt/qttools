@@ -101,7 +101,7 @@ private:
     static bool isCode(const Atom *atom);
     static bool isQuote(const Atom *atom);
     static void expandArgumentsInString(QString &str, const QStringList &args);
-    void cmd_image();
+    void cmd_image(int cmd);
 
     QStack<qsizetype> m_openedInputs {};
 
