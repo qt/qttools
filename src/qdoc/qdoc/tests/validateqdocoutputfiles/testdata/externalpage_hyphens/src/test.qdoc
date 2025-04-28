@@ -1,0 +1,56 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+\externalpage https://datatracker.ietf.org/doc/html/rfc6749
+\title RFC 6749
+*/
+
+/*!
+\externalpage https://datatracker.ietf.org/doc/html/rfc6749#section-1.3.1
+\title RFC 6749 -
+*/
+
+/*!
+\externalpage https://en.wikipedia.org/wiki/Diacritic
+\title åøæ
+*/
+
+/*!
+\externalpage https://doc.qt.io/qt-6/qwidget.html
+\title 小部件
+*/
+
+/*!
+\externalpage https://decoy.invalid
+\title ---
+*/
+
+/*!
+\externalpage https://empty.invalid
+\title 
+*/
+
+/*!
+\module QDocTest
+\title External Link Tests
+
+We have defined external pages for "RFC 6749", "RFC6749 -", "åøæ", "小部件"
+and "---".
+
+\l{RFC 6749}
+
+\l{RFC 6749 -}
+
+A link like this should fail: \\l{RFC 6749-}
+
+A link like this should fail: \\l{-RFC 6749}
+
+\l{åøæ}
+
+\l{小部件}
+
+\l{---}
+
+An empty link will fail: \\l{}
+*/

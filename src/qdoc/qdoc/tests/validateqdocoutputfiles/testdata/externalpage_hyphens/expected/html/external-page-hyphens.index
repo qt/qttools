@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="External Page Hyphens Reference Documentation" version="" project="External Page Hyphens">
+    <namespace name="" status="active" access="public" module="external page hyphens">
+        <page name="https://decoy.invalid" href="https://decoy.invalid" status="active" location="test.qdoc" documented="true" subtype="externalpage" title="---" fulltitle="---" subtitle=""/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc6749" href="https://datatracker.ietf.org/doc/html/rfc6749" status="active" location="test.qdoc" documented="true" subtype="externalpage" title="RFC 6749" fulltitle="RFC 6749" subtitle=""/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc6749#section-1.3.1" href="https://datatracker.ietf.org/doc/html/rfc6749#section-1.3.1" status="active" location="test.qdoc" documented="true" subtype="externalpage" title="RFC 6749 -" fulltitle="RFC 6749 -" subtitle=""/>
+        <page name="https://empty.invalid" href="https://empty.invalid" status="active" location="test.qdoc" documented="true" subtype="externalpage" title="" fulltitle="" subtitle=""/>
+        <page name="https://en.wikipedia.org/wiki/Diacritic" href="https://en.wikipedia.org/wiki/Diacritic" status="active" location="test.qdoc" documented="true" subtype="externalpage" title="åøæ" fulltitle="åøæ" subtitle=""/>
+        <page name="https://doc.qt.io/qt-6/qwidget.html" href="https://doc.qt.io/qt-6/qwidget.html" status="active" location="test.qdoc" documented="true" subtype="externalpage" title="小部件" fulltitle="小部件" subtitle=""/>
+        <module name="QDocTest" href="qdoctest-module.html" status="active" location="test.qdoc" documented="true" seen="true" title="External Link Tests"/>
+    </namespace>
+</INDEX>
