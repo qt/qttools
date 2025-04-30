@@ -1760,10 +1760,13 @@ void DocParser::cmd_image(int cmd) {
 
     const QString imageFileName = getArgument();
     QString imageText;
-    if (isLeftBraceAhead())
+    bool hasAltTextArgument{false};
+    if (isLeftBraceAhead()) {
+        hasAltTextArgument = true;
         imageText = getArgument();
-    else if (cmd == CMD_IMAGE)
+    } else if (cmd == CMD_IMAGE) {
         imageText = getRestOfLine();
+    }
 
     if (imageText.length() > 1) {
         if (imageText.front() == '"' && imageText.back() == '"') {
@@ -1772,7 +1775,7 @@ void DocParser::cmd_image(int cmd) {
         }
     }
 
-    if (imageText.isEmpty() && Config::instance().reportMissingAltTextForImages())
+    if (!hasAltTextArgument && imageText.isEmpty() && Config::instance().reportMissingAltTextForImages())
         location().report(QStringLiteral("\\%1 %2 is without a textual description, "
                                          "QDoc will not generate an alt text for the image.")
                                   .arg(cmdName(cmd))

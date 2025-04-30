@@ -23,6 +23,13 @@
 
     \image {leonardo-da-vinci-small.png} {an alt text} and more text.
 
+    This image doesn't have an alt text, but also doesn't generate a warning:
+    \image {leonardo-da-vinci-small.png} {}
+
+    This image generates a warning if the .qdocconf for this project contains
+    \c {reportmissingalttextforimages = true}.
+    \image {leonardo-da-vinci-small.png}
+
     \section1 A section with inline images.
     This section contains two \\inlineimage command invocations.
 
