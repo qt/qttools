@@ -25,8 +25,6 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-#define USE_LAYOUT_SIZE_CONSTRAINT
-
 static constexpr auto leftMargin = "leftMargin"_L1;
 static constexpr auto topMargin = "topMargin"_L1;
 static constexpr auto rightMargin = "rightMargin"_L1;
@@ -199,14 +197,12 @@ LayoutPropertySheet::LayoutPropertySheet(QLayout *l, QObject *parent)
             setAttribute(pindex, true);
         }
     }
-#ifdef USE_LAYOUT_SIZE_CONSTRAINT
     // SizeConstraint cannot possibly be handled as a real property
     // as it affects the layout parent widget and thus
     // conflicts with Designer's special layout widget.
     // It will take effect on the preview only.
     pindex = createFakeProperty(sizeConstraint);
     setPropertyGroup(pindex, layoutGroup);
-#endif
 }
 
 LayoutPropertySheet::~LayoutPropertySheet() = default;
