@@ -37,8 +37,6 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-#define USE_LAYOUT_SIZE_CONSTRAINT
-
 static const QDesignerMetaObjectInterface *propertyIntroducedBy(const QDesignerMetaObjectInterface *meta, int index)
 {
     if (index >= meta->propertyOffset())
@@ -623,10 +621,7 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
                 layoutObjectNameC, layoutLeftMarginC, layoutTopMarginC, layoutRightMarginC, layoutBottomMarginC, layoutSpacingC, layoutHorizontalSpacingC, layoutVerticalSpacingC,
                 layoutFieldGrowthPolicyC, layoutRowWrapPolicyC, layoutLabelAlignmentC, layoutFormAlignmentC,
                 layoutboxStretchPropertyC, layoutGridRowStretchPropertyC, layoutGridColumnStretchPropertyC,
-                layoutGridRowMinimumHeightC, layoutGridColumnMinimumWidthC
-#ifdef USE_LAYOUT_SIZE_CONSTRAINT
-                , layoutSizeConstraintC
-#endif
+                layoutGridRowMinimumHeightC, layoutGridColumnMinimumWidthC, layoutSizeConstraintC
             };
             static constexpr int fakeLayoutPropertyCount = sizeof(fakeLayoutProperties)/sizeof(fakeLayoutProperties[0]);
             const int size = count();
