@@ -41,10 +41,15 @@ void FindDialog::verify()
         m_regExp.setPattern(led->text());
         validRegExp = m_regExp.isValid();
     }
-    if (validRegExp && m_redText)
-        led->setStyleSheet(QStringLiteral("color: auto;"));
-    else if (!validRegExp && !m_redText)
-        led->setStyleSheet(QStringLiteral("color: red;"));
+    if (validRegExp && m_redText) {
+        QPalette p = led->palette();
+        p.setColor(QPalette::Text, palette().color(QPalette::Text));
+        led->setPalette(p);
+    } else if (!validRegExp && !m_redText) {
+        QPalette p = led->palette();
+        p.setColor(QPalette::Text, Qt::red);
+        led->setPalette(p);
+    }
     m_redText = !validRegExp;
     findNxt->setEnabled(!led->text().isEmpty() && validRegExp);
 }

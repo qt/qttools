@@ -270,8 +270,9 @@ QAbstractButton *FormMultiWidget::makeButton(const QIcon &icon)
     btn->setIcon(icon);
     btn->setFixedSize(icon.availableSizes().first() /* + something */);
     btn->setFocusPolicy(Qt::NoFocus);
+#ifndef QT_NO_STYLE_STYLESHEET
     btn->setStyleSheet("border: none; background: transparent;"_L1);
-
+#endif
     return btn;
 }
 
