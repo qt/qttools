@@ -230,10 +230,7 @@ Translator merge(
             }
         }
 
-        if (options & NoLocations)
-            outTor.append(mv);
-        else
-            outTor.appendSorted(mv);
+        outTor.appendSorted(mv);
         ++neww;
     }
 
@@ -264,10 +261,7 @@ Translator merge(
                 mv.clearReferences();
                 mv.setType(mv.type() == TranslatorMessage::Finished
                            ? TranslatorMessage::Vanished : TranslatorMessage::Obsolete);
-                if (options & NoLocations)
-                    outTor.append(mv);
-                else
-                    outTor.appendSorted(mv);
+                outTor.appendSorted(mv);
                 ++known;
                 ++obsoleted;
             }
