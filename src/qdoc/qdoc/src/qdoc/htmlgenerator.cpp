@@ -1236,35 +1236,6 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
                 out() << "</h3>";
                 generateBrief(member, marker, aggregate);
             }
-
-            QStringList names;
-            names << member->name();
-            if (member->isFunction()) {
-                const auto *func = reinterpret_cast<const FunctionNode *>(member);
-                if (func->isSomeCtor() || func->isDtor() || func->overloadNumber() != 0)
-                    names.clear();
-            } else if (member->isProperty()) {
-                const auto *prop = reinterpret_cast<const PropertyNode *>(member);
-                if (!prop->getters().isEmpty() && !names.contains(prop->getters().first()->name()))
-                    names << prop->getters().first()->name();
-                if (!prop->setters().isEmpty())
-                    names << prop->setters().first()->name();
-                if (!prop->resetters().isEmpty())
-                    names << prop->resetters().first()->name();
-                if (!prop->notifiers().isEmpty())
-                    names << prop->notifiers().first()->name();
-            } else if (member->isEnumType()) {
-                const auto *enume = reinterpret_cast<const EnumNode *>(member);
-                if (enume->flagsType())
-                    names << enume->flagsType()->name();
-                const auto &enumItemNameList = enume->doc().enumItemNames();
-                const auto &omitEnumItemNameList = enume->doc().omitEnumItemNames();
-                const auto items = QSet<QString>(enumItemNameList.cbegin(), enumItemNameList.cend())
-                        - QSet<QString>(omitEnumItemNameList.cbegin(), omitEnumItemNameList.cend());
-                for (const QString &enumName : items) {
-                    names << plainCode(marker->markedUpEnumValue(enumName, enume));
-                }
-            }
         }
         if (headerGenerated && !section.divClass().isEmpty())
             out() << "</div>\n";
@@ -1330,26 +1301,6 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
                     generateFullName(member, aggregate);
                     out() << "</h3>";
                     generateBrief(member, marker, aggregate);
-                }
-
-                QStringList names;
-                names << member->name();
-                if (member->isFunction()) {
-                    const auto *func = reinterpret_cast<const FunctionNode *>(member);
-                    if (func->isSomeCtor() || func->isDtor() || func->overloadNumber() != 0)
-                        names.clear();
-                } else if (member->isEnumType()) {
-                    const auto *enume = reinterpret_cast<const EnumNode *>(member);
-                    if (enume->flagsType())
-                        names << enume->flagsType()->name();
-                    const auto &enumItemNameList = enume->doc().enumItemNames();
-                    const auto &omitEnumItemNameList = enume->doc().omitEnumItemNames();
-                    const auto items =
-                            QSet<QString>(enumItemNameList.cbegin(), enumItemNameList.cend())
-                            - QSet<QString>(omitEnumItemNameList.cbegin(),
-                                            omitEnumItemNameList.cend());
-                    for (const QString &enumName : items)
-                        names << plainCode(marker->markedUpEnumValue(enumName, enume));
                 }
             }
         }
