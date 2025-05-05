@@ -1,11 +1,13 @@
 // Copyright (C) 2021 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
+#include "utilities.h"
+
+#include "location.h"
+
+#include <QtCore/qcryptographichash.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qprocess.h>
-#include <QCryptographicHash>
-#include "location.h"
-#include "utilities.h"
 
 QT_BEGIN_NAMESPACE
 
