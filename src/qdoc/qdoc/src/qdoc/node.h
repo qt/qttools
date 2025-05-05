@@ -9,6 +9,7 @@
 #include "doc.h"
 #include "enumitem.h"
 #include "importrec.h"
+#include "inode.h"
 #include "genustypes.h"
 #include "parameters.h"
 #include "relatedclass.h"
@@ -49,7 +50,7 @@ typedef QMap<QString, NodeMultiMap> NodeMultiMapMap;
 typedef QMap<QString, CollectionNode *> CNMap;
 typedef QMultiMap<QString, CollectionNode *> CNMultiMap;
 
-class Node
+class Node : public INode
 {
 public:
     enum Status : unsigned char {
@@ -84,10 +85,10 @@ public:
     [[nodiscard]] virtual Tree *tree() const;
     [[nodiscard]] Aggregate *root() const;
 
-    [[nodiscard]] NodeType nodeType() const { return m_nodeType; }
+    [[nodiscard]] NodeType nodeType() const override { return m_nodeType; }
     [[nodiscard]] QString nodeTypeString() const;
 
-    [[nodiscard]] Genus genus() const { return m_genus; }
+    [[nodiscard]] Genus genus() const override { return m_genus; }
     void setGenus(Genus t) { m_genus = t; }
     static Genus getGenus(NodeType t);
 
@@ -159,7 +160,8 @@ public:
     [[nodiscard]] QString plainName() const;
     QString plainFullName(const Node *relative = nullptr) const;
     [[nodiscard]] QString plainSignature() const;
-    QString fullName(const Node *relative = nullptr) const;
+    QString fullName() const override { return fullName(nullptr); }
+    QString fullName(const Node *relative) const;
     [[nodiscard]] virtual QString signature(Node::SignatureOptions) const { return plainName(); }
 
     [[nodiscard]] const QString &fileNameBase() const { return m_fileNameBase; }
@@ -208,7 +210,7 @@ public:
     virtual void markReadOnly(bool) {}
 
     [[nodiscard]] Aggregate *parent() const { return m_parent; }
-    [[nodiscard]] const QString &name() const { return m_name; }
+    [[nodiscard]] const QString &name() const override { return m_name; }
     [[nodiscard]] QString physicalModuleName() const { return m_physicalModuleName; }
     [[nodiscard]] QString url() const { return m_url; }
     virtual void setQtVariable(const QString &) {}
