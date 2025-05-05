@@ -12,12 +12,16 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_LOGGING_CATEGORY(lcQdoc)
 Q_DECLARE_LOGGING_CATEGORY(lcQdocClang)
 
+class INode;
 class Location;
 
 namespace Utilities {
 void startDebugging(const QString &message);
 void stopDebugging(const QString &message);
 bool debugging();
+
+const INode *nodeForString(const QString &string);
+QString stringForNode(const INode *node);
 
 QString uniqueIdentifier(const Location &loc, const QString &prefix);
 QString separator(qsizetype wordPosition, qsizetype numberOfWords);

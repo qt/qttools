@@ -676,7 +676,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
         skipAhead = 1;
     } break;
     case Atom::LinkNode: {
-        const Node *node = CodeMarker::nodeForString(atom->string());
+        const Node *node = static_cast<const Node*>(Utilities::nodeForString(atom->string()));
         beginLink(linkForNode(node, relative), node, relative);
         skipAhead = 1;
     } break;
@@ -3442,7 +3442,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
 
                 for (auto item : std::as_const(nativeTypes)) {
                     const Node *otherNode{nullptr};
-                    Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(item));
+                    Atom a = Atom(Atom::LinkNode, Utilities::stringForNode(item));
                     const QString &link = getAutoLink(&a, aggregate, &otherNode);
                     generateSimpleLink(link, item->name());
                 }
@@ -3531,7 +3531,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         // Inherits.
         if (base) {
             const Node *otherNode = nullptr;
-            Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(base));
+            Atom a = Atom(Atom::LinkNode, Utilities::stringForNode(base));
             QString link = getAutoLink(&a, base, &otherNode);
 
             m_writer->writeTextElement(dbNamespace, "synopsisinfo");
@@ -3553,7 +3553,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
 
         if (cn && cn->isQmlNativeType() && (cn->status() != Node::Internal)) {
             const Node *otherNode = nullptr;
-            Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(qcn));
+            Atom a = Atom(Atom::LinkNode, Utilities::stringForNode(qcn));
             QString link = getAutoLink(&a, cn, &otherNode);
 
             m_writer->writeTextElement(dbNamespace, "synopsisinfo");

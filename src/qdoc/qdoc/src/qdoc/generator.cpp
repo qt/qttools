@@ -94,7 +94,7 @@ void Generator::appendFullName(Text &text, const Node *apparentNode, const Node 
 {
     if (actualNode == nullptr)
         actualNode = apparentNode;
-    text << Atom(Atom::LinkNode, CodeMarker::stringForNode(actualNode))
+    text << Atom(Atom::LinkNode, Utilities::stringForNode(actualNode))
          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
          << Atom(Atom::String, apparentNode->plainFullName(relative))
          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
@@ -105,7 +105,7 @@ void Generator::appendFullName(Text &text, const Node *apparentNode, const QStri
 {
     if (actualNode == nullptr)
         actualNode = apparentNode;
-    text << Atom(Atom::LinkNode, CodeMarker::stringForNode(actualNode))
+    text << Atom(Atom::LinkNode, Utilities::stringForNode(actualNode))
          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << Atom(Atom::String, fullName)
          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
 }
@@ -117,7 +117,7 @@ void Generator::appendFullName(Text &text, const Node *apparentNode, const QStri
  */
 void Generator::appendSignature(Text &text, const Node *node)
 {
-    text << Atom(Atom::LinkNode, CodeMarker::stringForNode(node))
+    text << Atom(Atom::LinkNode, Utilities::stringForNode(node))
          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
          << Atom(Atom::String, node->signature(Node::SignaturePlain))
          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);

@@ -727,7 +727,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         skipAhead = 1;
     } break;
     case Atom::LinkNode: {
-        const Node *node = CodeMarker::nodeForString(atom->string());
+        const Node *node = static_cast<const Node*>(Utilities::nodeForString(atom->string()));
         beginLink(linkForNode(node, relative), node, relative);
         skipAhead = 1;
     } break;
@@ -1115,7 +1115,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         brief << "The " << ns->name() << " namespace includes the following elements from module "
               << ns->tree()->camelCaseModuleName() << ". The full namespace is "
               << "documented in module " << NS->tree()->camelCaseModuleName()
-              << Atom(Atom::LinkNode, CodeMarker::stringForNode(NS))
+              << Atom(Atom::LinkNode, Utilities::stringForNode(NS))
               << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << Atom(Atom::String, " here.")
               << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
         out() << "<p>";
@@ -1623,7 +1623,7 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
 
     // Helper to add an item to navigation bar based on a target node
     auto addNavItemNode = [&](const Node *node, const QString &title) {
-        navigationbar << Atom(itemLeft) << Atom(Atom::LinkNode, CodeMarker::stringForNode(node))
+        navigationbar << Atom(itemLeft) << Atom(Atom::LinkNode, Utilities::stringForNode(node))
                       << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
                       << Atom(Atom::String, title)
                       << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom(itemRight);
@@ -2039,7 +2039,7 @@ void HtmlGenerator::addQmlNativeTypesToMap(QMap<QString, Text> &requisites, Text
     qsizetype index { 0 };
 
     for (const auto &item : std::as_const(nativeTypes)) {
-        *text << Atom(Atom::LinkNode, CodeMarker::stringForNode(item))
+        *text << Atom(Atom::LinkNode, Utilities::stringForNode(item))
               << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
               << Atom(Atom::String, item->name())
               << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
@@ -2203,7 +2203,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     ClassNode *cn = qcn->classNode();
     if (cn && cn->isQmlNativeType() && !cn->isInternal()) {
         text.clear();
-        text << Atom(Atom::LinkNode, CodeMarker::stringForNode(cn));
+        text << Atom(Atom::LinkNode, Utilities::stringForNode(cn));
         text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
         text << Atom(Atom::String, cn->name());
         text << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
@@ -2222,7 +2222,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     if (base) {
         knownTypeNames << base->name();
         text.clear();
-        text << Atom::ParaLeft << Atom(Atom::LinkNode, CodeMarker::stringForNode(base))
+        text << Atom::ParaLeft << Atom(Atom::LinkNode, Utilities::stringForNode(base))
              << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << Atom(Atom::String, base->name())
              << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
 
@@ -3217,7 +3217,7 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
             i += 2;
             if (parseArg(src, linkTag, &i, srcSize, &arg, &par1)) {
                 html += QLatin1String("<b>");
-                const Node *n = CodeMarker::nodeForString(par1.toString());
+                const Node *n = static_cast<const Node*>(Utilities::nodeForString(par1.toString()));
                 QString link = linkForNode(n, relative);
                 addLink(link, arg, &html);
                 html += QLatin1String("</b>");

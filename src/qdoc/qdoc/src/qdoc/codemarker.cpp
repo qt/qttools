@@ -10,6 +10,7 @@
 #include "genustypes.h"
 #include "propertynode.h"
 #include "qmlpropertynode.h"
+#include "utilities.h"
 
 #include <QtCore/qobjectdefs.h>
 
@@ -114,16 +115,6 @@ CodeMarker *CodeMarker::markerForLanguage(const QString &lang)
             return marker;
     }
     return nullptr;
-}
-
-const Node *CodeMarker::nodeForString(const QString &string)
-{
-    return reinterpret_cast<const Node *>(string.toULongLong());
-}
-
-QString CodeMarker::stringForNode(const Node *node)
-{
-    return QString::number(reinterpret_cast<quintptr>(node));
 }
 
 /*!
@@ -441,7 +432,7 @@ QString CodeMarker::taggedQmlNode(const Node *node)
 
 QString CodeMarker::linkTag(const Node *node, const QString &body)
 {
-    return QLatin1String("<@link node=\"") + stringForNode(node) + QLatin1String("\">") + body
+    return QLatin1String("<@link node=\"") + Utilities::stringForNode(node) + QLatin1String("\">") + body
             + QLatin1String("</@link>");
 }
 
