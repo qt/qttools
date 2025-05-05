@@ -3,7 +3,6 @@
 
 #include "atom.h"
 
-#include "location.h"
 #include "genustypes.h"
 #include "qdocdatabase.h"
 

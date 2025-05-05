@@ -17,15 +17,21 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef QMultiMap<QString, Node *> NodeMultiMap;
-
 class Aggregate;
+class ClassNode;
 class CodeMarker;
+class CollectionNode;
 class ExampleNode;
 class FunctionNode;
 class Location;
 class Node;
+class PageNode;
 class QDocDatabase;
+class QmlTypeNode;
+
+struct RelatedClass;
+
+typedef QMultiMap<QString, Node *> NodeMultiMap;
 
 class Generator
 {
@@ -136,10 +142,10 @@ protected:
                   QStringView *par1 = nullptr);
     void unknownAtom(const Atom *atom);
     int appendSortedQmlNames(Text &text, const Node *base, const QStringList &knownTypes,
-                             const NodeList &subs);
+                             const QList<Node *> &subs);
 
-    static bool hasExceptions(const Node *node, NodeList &reentrant, NodeList &threadsafe,
-                              NodeList &nonreentrant);
+    static bool hasExceptions(const Node *node, QList<Node *> &reentrant, QList<Node *> &threadsafe,
+                              QList<Node *> &nonreentrant);
 
     QString naturalLanguage;
     QString tagFile_;
@@ -152,7 +158,7 @@ protected:
     int appendSortedNames(Text &text, const ClassNode *classe,
                           const QList<RelatedClass> &classes);
     void appendSignature(Text &text, const Node *node);
-    void signatureList(const NodeList &nodes, const Node *relative, CodeMarker *marker);
+    void signatureList(const QList<Node *> &nodes, const Node *relative, CodeMarker *marker);
 
     void addImageToCopy(const ExampleNode *en, const ResolvedFile& resolved_file);
     // TODO: This seems to be used as the predicate in std::sort calls.

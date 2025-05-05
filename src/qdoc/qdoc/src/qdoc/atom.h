@@ -5,7 +5,7 @@
 #define ATOM_H
 
 #include "genustypes.h"
-#include "node.h"
+#include "location.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qstringlist.h>

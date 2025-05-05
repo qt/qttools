@@ -5,6 +5,7 @@
 
 #include "atom.h"
 #include "config.h"
+#include "doc.h"
 #include "docutilities.h"
 #include "location.h"
 #include "openedlist.h"
@@ -20,7 +21,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class Doc;
 class DocPrivate;
 class CodeMarker;
 struct Macro;
