@@ -23,6 +23,7 @@ class CodeMarker;
 class CollectionNode;
 class ExampleNode;
 class FunctionNode;
+class INode;
 class Location;
 class Node;
 class PageNode;
@@ -174,6 +175,10 @@ protected:
     {
         return (str == "descending") ? Qt::DescendingOrder : Qt::AscendingOrder;
     }
+
+    static void addNodeLink(Text &text, const QString &nodeRef, const QString &linkText);
+    static void addNodeLink(Text &text, const INode *node, const QString &linkText = QString());
+
 
 private:
     static Generator *s_currentGenerator;

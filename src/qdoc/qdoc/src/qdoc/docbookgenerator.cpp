@@ -23,6 +23,7 @@
 #include "qmlpropertynode.h"
 #include "sharedcommentnode.h"
 #include "typedefnode.h"
+#include "utilities.h"
 #include "variablenode.h"
 
 #include <QtCore/qlist.h>
@@ -1888,11 +1889,8 @@ void DocBookGenerator::generateHeader(const QString &title, const QString &subTi
             brief << "The " << ns->name()
                   << " namespace includes the following elements from module "
                   << ns->tree()->camelCaseModuleName() << ". The full namespace is "
-                  << "documented in module " << NS->tree()->camelCaseModuleName()
-                  << Atom(Atom::LinkNode, fullDocumentLocation(NS))
-                  << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                  << Atom(Atom::String, " here.")
-                  << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+                  << "documented in module " << NS->tree()->camelCaseModuleName();
+            addNodeLink(brief, fullDocumentLocation(NS), " here.");
         } else {
             brief = node->doc().briefText();
         }

@@ -15,6 +15,7 @@
 #include "enumnode.h"
 #include "examplenode.h"
 #include "functionnode.h"
+#include "inode.h"
 #include "node.h"
 #include "openedlist.h"
 #include "propertynode.h"
@@ -94,10 +95,8 @@ void Generator::appendFullName(Text &text, const Node *apparentNode, const Node 
 {
     if (actualNode == nullptr)
         actualNode = apparentNode;
-    text << Atom(Atom::LinkNode, Utilities::stringForNode(actualNode))
-         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-         << Atom(Atom::String, apparentNode->plainFullName(relative))
-         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+
+    addNodeLink(text, actualNode, apparentNode->plainFullName(relative));
 }
 
 void Generator::appendFullName(Text &text, const Node *apparentNode, const QString &fullName,
@@ -105,9 +104,8 @@ void Generator::appendFullName(Text &text, const Node *apparentNode, const QStri
 {
     if (actualNode == nullptr)
         actualNode = apparentNode;
-    text << Atom(Atom::LinkNode, Utilities::stringForNode(actualNode))
-         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << Atom(Atom::String, fullName)
-         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+
+    addNodeLink(text, actualNode, fullName);
 }
 
 /*!
@@ -117,10 +115,7 @@ void Generator::appendFullName(Text &text, const Node *apparentNode, const QStri
  */
 void Generator::appendSignature(Text &text, const Node *node)
 {
-    text << Atom(Atom::LinkNode, Utilities::stringForNode(node))
-         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-         << Atom(Atom::String, node->signature(Node::SignaturePlain))
-         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+    addNodeLink(text, node, node->signature(Node::SignaturePlain));
 }
 
 /*!
@@ -2300,5 +2295,40 @@ std::optional<std::pair<QString, QString>> Generator::cmakeRequisite(const Colle
 
     return std::make_pair(findPackageText, targetLinkLibrariesText);
 }
+
+/*!
+    \brief Adds a formatted link to the specified \a text stream.
+
+    This function creates a sequence of Atom objects that together form a link
+    and appends them to the \a text. The \a nodeRef parameter specifies the
+    target of the link (typically obtained via stringForNode()), and \a linkText
+    specifies the visible text for the link.
+
+    \sa Atom, stringForNode()
+*/
+void Generator::addNodeLink(Text &text, const QString &nodeRef, const QString &linkText) {
+    text << Atom(Atom::LinkNode, nodeRef)
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+         << Atom(Atom::String, linkText)
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+}
+
+/*!
+    \overload
+
+    This convenience overload automatically obtains the node reference string
+    using stringForNode(). If \a linkText is empty, the node's name is used as
+    the link text; otherwise, the specified \a linkText is used.
+
+    \sa stringForNode()
+*/
+void Generator::addNodeLink(Text &text, const INode *node, const QString &linkText) {
+    addNodeLink(
+        text,
+        Utilities::stringForNode(node),
+        linkText.isEmpty() ? node->name() : linkText
+    );
+}
+
 
 QT_END_NAMESPACE

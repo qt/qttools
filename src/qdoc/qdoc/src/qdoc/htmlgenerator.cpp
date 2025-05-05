@@ -1114,10 +1114,8 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         Text brief;
         brief << "The " << ns->name() << " namespace includes the following elements from module "
               << ns->tree()->camelCaseModuleName() << ". The full namespace is "
-              << "documented in module " << NS->tree()->camelCaseModuleName()
-              << Atom(Atom::LinkNode, Utilities::stringForNode(NS))
-              << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << Atom(Atom::String, " here.")
-              << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+              << "documented in module " << NS->tree()->camelCaseModuleName();
+        addNodeLink(brief, NS, " here.");
         out() << "<p>";
         generateText(brief, ns, marker);
         out() << "</p>\n";
@@ -1623,10 +1621,9 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
 
     // Helper to add an item to navigation bar based on a target node
     auto addNavItemNode = [&](const Node *node, const QString &title) {
-        navigationbar << Atom(itemLeft) << Atom(Atom::LinkNode, Utilities::stringForNode(node))
-                      << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                      << Atom(Atom::String, title)
-                      << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom(itemRight);
+        navigationbar << Atom(itemLeft);
+        addNodeLink(navigationbar, node, title);
+        navigationbar << Atom(itemRight);
     };
 
     // Resolve the associated module (collection) node and its 'state' description
@@ -2039,10 +2036,7 @@ void HtmlGenerator::addQmlNativeTypesToMap(QMap<QString, Text> &requisites, Text
     qsizetype index { 0 };
 
     for (const auto &item : std::as_const(nativeTypes)) {
-        *text << Atom(Atom::LinkNode, Utilities::stringForNode(item))
-              << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-              << Atom(Atom::String, item->name())
-              << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+        addNodeLink(*text, item);
         *text << Utilities::comma(index++, nativeTypes.size());
     }
     requisites.insert(nativeTypeText, *text);
@@ -2200,13 +2194,9 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     }
 
     // add the native type to the map
-    ClassNode *cn = qcn->classNode();
-    if (cn && cn->isQmlNativeType() && !cn->isInternal()) {
+    if (ClassNode *cn = qcn->classNode(); cn && cn->isQmlNativeType() && !cn->isInternal()) {
         text.clear();
-        text << Atom(Atom::LinkNode, Utilities::stringForNode(cn));
-        text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
-        text << Atom(Atom::String, cn->name());
-        text << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+        addNodeLink(text, cn);
         requisites.insert(nativeTypeText, text);
     }
 
@@ -2222,9 +2212,8 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     if (base) {
         knownTypeNames << base->name();
         text.clear();
-        text << Atom::ParaLeft << Atom(Atom::LinkNode, Utilities::stringForNode(base))
-             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << Atom(Atom::String, base->name())
-             << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+        text << Atom::ParaLeft;
+        addNodeLink(text, base);
 
         // Disambiguate with '(<QML module name>)' if there are clashing type names
         for (const auto sub : std::as_const(subs)) {
