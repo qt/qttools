@@ -55,7 +55,7 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
     QString document = in.readAll();
     in.close();
 
-    QString newCode = document;
+    QString newCode = std::move(document);
     extractPragmas(newCode);
 
     QQmlJS::Engine engine{};

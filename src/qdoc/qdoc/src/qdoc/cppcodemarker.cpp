@@ -218,7 +218,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
         }
         break;
     default:
-        synopsis = name;
+        synopsis = std::move(name);
     }
 
     QString extra = CodeMarker::extraSynopsis(node, style);
@@ -265,16 +265,16 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
                 QString paramName;
                 if (!name.isEmpty()) {
                     synopsis += typified(type, true);
-                    paramName = name;
+                    paramName = std::move(name);
                 } else {
-                    paramName = type;
+                    paramName = std::move(type);
                 }
                 synopsis += "<@param>" + protect(paramName) + "</@param>";
             }
         }
         synopsis += QLatin1Char(')');
     } else {
-        synopsis = name;
+        synopsis = std::move(name);
     }
 
     QString extra = CodeMarker::extraSynopsis(node, summary ? Section::Summary : Section::Details);

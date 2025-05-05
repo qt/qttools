@@ -93,7 +93,7 @@ static void parseSourceFiles(
         auto [untied_documentation, tied_documentation] = source_file_parser(tag_source_file(source));
         std::vector<FnMatchError> errors{};
 
-        for (auto untied : untied_documentation) {
+        for (const auto &untied : std::as_const(untied_documentation)) {
             auto result = cpp_code_parser.processTopicArgs(untied);
             tied_documentation.insert(tied_documentation.end(), result.first.begin(), result.first.end());
             errors.insert(errors.end(), result.second.begin(), result.second.end());
@@ -478,7 +478,7 @@ static void processQdocconfFile(const QString &fileName)
     if (root) {
         QString title{config.get(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGPAGE).asString()};
         root->tree()->setIndexTitle(
-                config.get(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGTITLE).asString(title));
+                config.get(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGTITLE).asString(std::move(title)));
     }
 
 

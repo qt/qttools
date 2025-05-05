@@ -88,7 +88,7 @@ void HelpProjectWriter::reset(const QString &defaultFileName, Generator *g)
             subproject.m_type = config.get(subprefix + "type").asString();
             readSelectors(subproject, config.get(subprefix + "selectors").asStringList());
             subprefix.chop(1);
-            subproject.m_prefix = subprefix; // Stored for error reporting purposes
+            subproject.m_prefix = std::move(subprefix); // Stored for error reporting purposes
             project.m_subprojects.append(subproject);
         }
 
@@ -304,7 +304,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
                     name = id = item.name();
                 }
                 QString ref = m_gen->fullDocumentLocation(node);
-                project.m_keywords.append(Keyword(name, id, ref));
+                project.m_keywords.append(Keyword(std::move(name), std::move(id), std::move(ref)));
             }
         }
         break;

@@ -1076,7 +1076,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         m_private->m_metaCommandMap[cmdStr].append(ArgPair(arg, bracketedArg));
                         if (possibleTopics.contains(cmdStr)) {
                             if (!cmdStr.endsWith(QLatin1String("propertygroup")))
-                                m_private->m_topics.append(Topic(cmdStr, arg));
+                                m_private->m_topics.append(Topic(cmdStr, std::move(arg)));
                         }
                     } else if (s_utilities.macroHash.contains(cmdStr)) {
                         const Macro &macro = s_utilities.macroHash.value(cmdStr);

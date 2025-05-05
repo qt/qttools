@@ -395,7 +395,7 @@ static RelaxedTemplateDeclaration get_template_declaration(const clang::Template
             kind,
             template_parameter->isTemplateParameterPack(),
             {
-                type,
+                std::move(type),
                 template_parameter->getNameAsString(),
                 get_default_value_initializer_as_string(template_parameter)
             },
@@ -472,7 +472,7 @@ static QString readFile(CXFile cxFile, unsigned int offset1, unsigned int offset
 
     QFile file(QString::fromUtf8(fileName));
     if (file.open(QIODeviceBase::ReadOnly)) { // binary to match clang offsets
-        FileCacheEntry entry{fileName, file.readAll()};
+        FileCacheEntry entry{std::move(fileName), file.readAll()};
         cache.prepend(entry);
         while (cache.size() > 5)
             cache.removeLast();
@@ -753,7 +753,7 @@ public:
         : qdb_(qdb), parent_(qdb->primaryTreeRoot())
     {
         std::transform(allHeaders.cbegin(), allHeaders.cend(), std::inserter(allHeaders_, allHeaders_.begin()),
-                       [](const auto& header_file_path) { return header_file_path.filename; });
+                       [](const auto& header_file_path) -> const QString& { return header_file_path.filename; });
     }
 
     QDocDatabase *qdocDB() { return qdb_; }
@@ -1139,7 +1139,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
                 }
             }
 
-            en->addItem(EnumItem(fromCXString(clang_getCursorSpelling(cur)), value));
+            en->addItem(EnumItem(fromCXString(clang_getCursorSpelling(cur)), std::move(value)));
             return CXChildVisit_Continue;
         });
         return CXChildVisit_Continue;
@@ -1653,7 +1653,7 @@ std::optional<PCHFile> buildPCH(
         it = std::find_if(include_paths.begin(), include_paths.end(),
                             FindPredicate(candidate, module, FindPredicate::Any));
     if (it != include_paths.end())
-        header = candidate;
+        header = std::move(candidate);
 
     if (header.isEmpty()) {
         qWarning() << "(qdoc) Could not find the module header in include paths for module"
@@ -1717,7 +1717,7 @@ std::optional<PCHFile> buildPCH(
     visitor.visitChildren(cur);
     qCDebug(lcQdoc) << "PCH built and visited for" << module_header;
 
-    return std::make_optional(PCHFile{std::move(pch_directory), pch_name});
+    return std::make_optional(PCHFile{std::move(pch_directory), std::move(pch_name)});
 }
 
 static float getUnpatchedVersion(QString t)
@@ -1811,7 +1811,7 @@ ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
                 bool future = false;
                 if (doc.metaCommandsUsed().contains(COMMAND_SINCE)) {
                     QString sinceVersion = doc.metaCommandArgs(COMMAND_SINCE).at(0).first;
-                    if (getUnpatchedVersion(sinceVersion) >
+                    if (getUnpatchedVersion(std::move(sinceVersion)) >
                         getUnpatchedVersion(Config::instance().get(CONFIG_VERSION).asString()))
                         future = true;
                 }

@@ -209,7 +209,7 @@ QFile *Generator::openSubPageFile(const PageNode *node, const QString &fileName)
 
     QString path = outputDir() + QLatin1Char('/') + fileName;
 
-    auto outPath = s_redirectDocumentationToDevNull ? QStringLiteral("/dev/null") : path;
+    const auto &outPath = s_redirectDocumentationToDevNull ? QStringLiteral("/dev/null") : path;
     auto outFile = new QFile(outPath);
 
     if (!s_redirectDocumentationToDevNull && outFile->exists()) {
@@ -953,9 +953,11 @@ void Generator::generateFileList(const ExampleNode *en, CodeMarker *marker, bool
             continue;
         }
 
-        auto file{*maybe_resolved_file};
-        if (images) addImageToCopy(en, file);
-        else        generateExampleFilePage(en, file, marker);
+        const auto &file{*maybe_resolved_file};
+        if (images)
+            addImageToCopy(en, file);
+        else
+            generateExampleFilePage(en, file, marker);
 
         openedList.next();
         text << Atom(Atom::ListItemNumber, openedList.numberString())
@@ -1158,7 +1160,7 @@ std::optional<QString> formatStatus(const Node *node, QDocDatabase *qdb)
         if (!status.isEmpty())
             return {status};
     }
-    const auto since = node->deprecatedSince();
+    const auto &since = node->deprecatedSince();
     if (node->status() == Node::Deprecated) {
         status = u"Deprecated"_s;
         if (!since.isEmpty())
@@ -1195,7 +1197,7 @@ void Generator::generateNoexceptNote(const Node* node, CodeMarker* marker) {
     std::size_t counter{1};
     for (const Node* node : nodes) {
         if (node->isFunction(Genus::CPP)) {
-            if (auto exception_info = static_cast<const FunctionNode*>(node)->getNoexcept(); exception_info && !(*exception_info).isEmpty()) {
+            if (const auto &exception_info = static_cast<const FunctionNode*>(node)->getNoexcept(); exception_info && !(*exception_info).isEmpty()) {
                 Text text;
                 text << Atom::NoteLeft
                         << (nodes.size() > 1 ? QString::fromStdString(" ("s + std::to_string(counter) + ")"s) : QString::fromStdString("This ") + typeString(node))
@@ -1228,7 +1230,7 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
                 break;
             }
         }
-        if (const auto version = node->deprecatedSince(); !version.isEmpty()) {
+        if (const auto &version = node->deprecatedSince(); !version.isEmpty()) {
             text << Atom::ParaLeft << "This " << typeString(node)
                  << " is scheduled for deprecation in version "
                  << version << "." << Atom::ParaRight;

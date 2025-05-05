@@ -241,7 +241,7 @@ QmlSignatureParser::QmlSignatureParser(FunctionNode *func, const QString &signat
     : signature_(signature), func_(func), location_(loc)
 {
     QByteArray latin1 = signature.toLatin1();
-    Tokenizer stringTokenizer(location_, latin1);
+    Tokenizer stringTokenizer(location_, std::move(latin1));
     stringTokenizer.setParsingFnOrMacro(true);
     tokenizer_ = &stringTokenizer;
     readToken();
@@ -547,7 +547,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiImport *import)
         version = m_document.mid(start, end - start);
     }
     QString importUri = getFullyQualifiedId(import->importUri);
-    m_importList.append(ImportRec(name, version, importUri, import->importId));
+    m_importList.append(ImportRec(std::move(name), std::move(version), std::move(importUri), import->importId));
 
     return true;
 }
@@ -626,7 +626,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
                 QString name = member->name.toString();
                 QmlPropertyNode *qmlPropNode = qmlType->hasQmlProperty(name);
                 if (qmlPropNode == nullptr)
-                    qmlPropNode = new QmlPropertyNode(qmlType, name, type, false);
+                    qmlPropNode = new QmlPropertyNode(qmlType, std::move(name), std::move(type), false);
                 qmlPropNode->markReadOnly(member->isReadonly());
                 if (member->isDefaultMember())
                     qmlPropNode->markDefault();

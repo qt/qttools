@@ -393,7 +393,7 @@ void Doc::trimCStyleComment(Location &location, QString &str)
         m.advance(str[i]);
     }
     if (cleaned.size() == str.size())
-        str = cleaned;
+        str = std::move(cleaned);
 
     for (int i = 0; i < 3; ++i)
         location.advance(str[i]);

@@ -1296,7 +1296,7 @@ void Config::load(Location location, const QString &fileName)
                         if (!var.isEmpty()) {
                             const QByteArray val = qgetenv(var.toLatin1().constData());
                             if (val.isNull()) {
-                                expandVars << ExpandVar(rhsValues.size(), word.size(), var, delim);
+                                expandVars << ExpandVar(rhsValues.size(), word.size(), std::move(var), delim);
                                 needsExpansion = true;
                             } else if (braces) { // ${VAR} inserts content from an env. variable for processing
                                 text.insert(i, QString::fromLatin1(val));
@@ -1418,7 +1418,7 @@ const Config::ExcludedPaths& Config::getExcludedPaths() {
     QSet<QString> excludedDirs = QSet<QString>(excludedDirList.cbegin(), excludedDirList.cend());
     QSet<QString> excludedFiles = QSet<QString>(excludedFilesList.cbegin(), excludedFilesList.cend());
 
-    m_excludedPaths.emplace(ExcludedPaths{excludedDirs, excludedFiles});
+    m_excludedPaths.emplace(ExcludedPaths{std::move(excludedDirs), std::move(excludedFiles)});
 
     return *m_excludedPaths;
 }

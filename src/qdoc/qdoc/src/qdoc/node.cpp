@@ -700,9 +700,9 @@ bool Node::fromFlagValue(FlagValue fv, bool defaultValue)
 void Node::setLink(LinkType linkType, const QString &link, const QString &desc)
 {
     std::pair<QString, QString> linkPair;
-    linkPair.first = link;
-    linkPair.second = desc;
-    m_linkMap[linkType] = linkPair;
+    linkPair.first = std::move(link);
+    linkPair.second = std::move(desc);
+    m_linkMap[linkType] = std::move(linkPair);
 }
 
 /*!

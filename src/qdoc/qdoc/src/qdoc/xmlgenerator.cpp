@@ -203,9 +203,9 @@ std::pair<QString, QString> XmlGenerator::getTableWidthAttr(const Atom *atom)
     }
     if (!p1.isEmpty()) {
         if (p1 == QLatin1String("borderless"))
-            attr = p1;
+            attr = std::move(p1);
         else if (p1.contains(QLatin1Char('%')))
-            width = p1;
+            width = std::move(p1);
     }
 
     // Many times, in the documentation, there is a space before the % sign:

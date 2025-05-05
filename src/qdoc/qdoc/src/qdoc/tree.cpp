@@ -356,7 +356,7 @@ void Tree::resolveEnumValueSince(EnumNode &en)
     while ((atom = atom->find(Atom::ListTagLeft))) {
         if (atom = atom->next(); !atom)
             break;
-        if (auto val = atom->string(); enumItems.contains(val)) {
+        if (const auto &val = atom->string(); enumItems.contains(val)) {
             if (atom = atom->next(); atom && atom->next(Atom::SinceTagLeft))
                 en.setSince(val, atom->next()->next()->string());
         }
@@ -803,7 +803,7 @@ void Tree::addTargetsToTargetMap(Node *node) {
         const QString title = i->string();
         if (!ref.isEmpty() && !title.isEmpty()) {
             QString key = Utilities::asAsciiPrintable(title);
-            auto *target = new TargetRec(ref, TargetRec::Target, node, 2);
+            auto *target = new TargetRec(std::move(ref), TargetRec::Target, node, 2);
             m_nodesByTargetRef.insert(key, target);
             m_nodesByTargetTitle.insert(title, target);
         }

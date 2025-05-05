@@ -250,8 +250,8 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             location = Location(indexUrl + QLatin1Char('/') + name);
         else if (!indexUrl.isNull())
             location = Location(name);
-    } else if (elementName == QLatin1String("qmlclass") || elementName == QLatin1String("qmlvaluetype")
-               || elementName == QLatin1String("qmlbasictype")) {
+    } else if (parent && (elementName == QLatin1String("qmlclass") || elementName == QLatin1String("qmlvaluetype")
+                          || elementName == QLatin1String("qmlbasictype"))) {
         auto *qmlTypeNode = new QmlTypeNode(parent, name,
                     elementName == QLatin1String("qmlclass") ? NodeType::QmlType : NodeType::QmlValueType);
         qmlTypeNode->setTitle(attributes.value(QLatin1String("title")).toString());
@@ -281,7 +281,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         bool readonly = false;
         if (attributes.value(QLatin1String("writable")) == QLatin1String("false"))
             readonly = true;
-        auto *qmlPropertyNode = new QmlPropertyNode(parent, name, type, attached);
+        auto *qmlPropertyNode = new QmlPropertyNode(parent, name, std::move(type), attached);
         qmlPropertyNode->markReadOnly(readonly);
         if (attributes.value(QLatin1String("required")) == QLatin1String("true"))
             qmlPropertyNode->setRequired();
@@ -1265,9 +1265,9 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         }
     }
 
-    const auto return_type = fn->returnType();
+    const auto &return_type = fn->returnType();
     if (!return_type.isEmpty())
-        writer.writeAttribute("type", return_type);
+        writer.writeAttribute("type", std::move(return_type));
 
     if (fn->isCppNode()) {
         if (!brief.isEmpty())

@@ -364,7 +364,7 @@ bool Parameters::parse(const QString &signature)
     Tokenizer *outerTokenizer = m_tokenizer;
     int outerTok = m_tok;
 
-    QByteArray latin1 = signature.toLatin1();
+    const QByteArray &latin1 = signature.toLatin1();
     Tokenizer stringTokenizer(Location(), latin1);
     stringTokenizer.setParsingFnOrMacro(true);
     m_tokenizer = &stringTokenizer;

@@ -9,7 +9,7 @@
 
 struct ResolvedFile {
 public:
-    ResolvedFile(QString query, FilePath filepath) : query{query}, filepath{filepath} {}
+    ResolvedFile(QString query, FilePath filepath) : query{std::move(query)}, filepath{std::move(filepath)} {}
 
     [[nodiscard]] const QString& get_query() const { return query; }
     [[nodiscard]] const QString& get_path() const { return filepath.value(); }

@@ -53,7 +53,7 @@ static const QMap<QString, NodeTypeTestFunc> s_nodeTypeTestFuncMap{
 };
 
 CppCodeParser::CppCodeParser(FnCommandParser&& parser)
-    : fn_parser{parser}
+    : fn_parser{std::move(parser)}
 {
     Config &config = Config::instance();
     QStringList exampleFilePatterns{config.get(CONFIG_EXAMPLES
@@ -111,9 +111,9 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         if (node == nullptr && command == COMMAND_CLASS) {
             node = database->findNodeByNameAndType(path, &Node::isTypeAlias);
             if (node) {
-                auto access = node->access();
-                auto loc = node->location();
-                auto templateDecl = node->templateDecl();
+                const auto &access = node->access();
+                const auto &loc = node->location();
+                const auto &templateDecl = node->templateDecl();
                 node = new ClassNode(NodeType::Class, node->parent(), node->name());
                 node->setAccess(access);
                 node->setLocation(loc);

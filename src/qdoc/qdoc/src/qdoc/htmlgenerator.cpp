@@ -1859,7 +1859,7 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
                 node->doc().location().warning(
                         QStringLiteral("Cannot link to '%1'").arg(linkPair.first));
             if (linkNode == nullptr || linkNode == node)
-                anchorPair = linkPair;
+                anchorPair = std::move(linkPair);
             else
                 anchorPair = anchorForNode(linkNode);
             out() << R"(  <link rel="start" href=")" << anchorPair.first << "\" />\n";
@@ -1936,7 +1936,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
 
     if (aggregate->isClassNode()) {
         auto *classe = dynamic_cast<ClassNode *>(aggregate);
-        if (classe->isQmlNativeType() && !classe->isInternal())
+        if (classe && classe->isQmlNativeType() && !classe->isInternal())
             addQmlNativeTypesToMap(requisites, &text, nativeTypeText, classe);
 
         addInheritsToMap(requisites, &text, inheritsText, classe);
@@ -2251,8 +2251,9 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     addStatusToMap(qcn, requisites, text, statusText);
 
     // The order of the requisites matter
-    const QStringList requisiteorder { importText, sinceText, nativeTypeText, inheritsText,
-                                       inheritedByText, statusText };
+    const QStringList requisiteorder {std::move(importText), std::move(sinceText),
+                                      std::move(nativeTypeText), std::move(inheritsText),
+                                      std::move(inheritedByText), std::move(statusText)};
 
     if (!requisites.isEmpty())
         generateTheTable(requisiteorder, requisites, qcn, marker);
@@ -3004,6 +3005,8 @@ void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker,
         }
         auto *node = const_cast<Node *>(relative);
         auto *collectionNode = static_cast<CollectionNode *>(node);
+        if (!collectionNode)
+            return;
         m_qdb->mergeCollections(collectionNode);
         generateAnnotatedList(collectionNode, marker, collectionNode->members(), sortOrder);
     }

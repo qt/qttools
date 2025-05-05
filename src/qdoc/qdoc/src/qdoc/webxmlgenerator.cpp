@@ -126,7 +126,7 @@ void WebXMLGenerator::generateExampleFilePage(const Node *en, ResolvedFile resol
     }
 
     Quoter quoter;
-    Doc::quoteFromFile(en->doc().location(), quoter, resolved_file);
+    Doc::quoteFromFile(en->doc().location(), quoter, std::move(resolved_file));
     QString code = quoter.quoteTo(en->location(), QString(), QString());
     writer.writeTextElement("code", trimmedTrailing(code, QString(), QString()));
 
@@ -148,7 +148,7 @@ void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer, Node *node
         qdocIndexFiles->generateIndexSections(writer, node, this);
         // generateIndexSections does nothing for groups, so handle them explicitly
         if (node->isGroup())
-            qdocIndexFiles->generateIndexSection(writer, node, this);
+            std::ignore = qdocIndexFiles->generateIndexSection(writer, node, this);
     }
 }
 

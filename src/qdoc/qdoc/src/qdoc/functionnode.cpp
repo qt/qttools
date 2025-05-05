@@ -452,8 +452,8 @@ QString FunctionNode::signature(Node::SignatureOptions options) const
     }
 
     // Template declarations
-    const auto t1{f1->templateDecl()};
-    const auto t2{f2->templateDecl()};
+    const auto &t1{f1->templateDecl()};
+    const auto &t2{f2->templateDecl()};
     if (!t1 && !t2)
         return 0;
 

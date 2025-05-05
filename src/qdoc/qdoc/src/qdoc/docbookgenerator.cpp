@@ -2234,7 +2234,7 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
 
         // Inherits.
         QList<RelatedClass>::ConstIterator r;
-        if (!classe->baseClasses().isEmpty()) {
+        if (classe && !classe->baseClasses().isEmpty()) {
             generateStartRequisite("Inherits");
 
             r = classe->baseClasses().constBegin();
@@ -2423,7 +2423,7 @@ bool DocBookGenerator::generateStatus(const Node *node)
                 return true;
             }
         }
-        if (const auto version = node->deprecatedSince(); !version.isEmpty()) {
+        if (const auto &version = node->deprecatedSince(); !version.isEmpty()) {
             m_writer->writeStartElement(dbNamespace, "para");
             m_writer->writeCharacters("This " + typeString(node)
                                       + " is scheduled for deprecation in version "
@@ -2842,7 +2842,7 @@ void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
             continue;
         }
 
-        auto file{*maybe_resolved_file};
+        const auto &file{*maybe_resolved_file};
         if (images) addImageToCopy(en, file);
         else        generateExampleFilePage(en, file);
 
