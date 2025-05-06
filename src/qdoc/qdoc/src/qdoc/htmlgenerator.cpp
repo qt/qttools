@@ -1110,12 +1110,12 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     generateTableOfContents(aggregate, marker, summarySections);
     generateTitle(title, subtitleText, SmallSubTitle, aggregate, marker);
     if (ns && !ns->hasDoc() && ns->docNode()) {
-        NamespaceNode *NS = ns->docNode();
+        NamespaceNode *fullNamespace = ns->docNode();
         Text brief;
         brief << "The " << ns->name() << " namespace includes the following elements from module "
               << ns->tree()->camelCaseModuleName() << ". The full namespace is "
-              << "documented in module " << NS->tree()->camelCaseModuleName();
-        addNodeLink(brief, NS, " here.");
+              << "documented in module " << fullNamespace->tree()->camelCaseModuleName();
+        addNodeLink(brief, fullNamespace, " here.");
         out() << "<p>";
         generateText(brief, ns, marker);
         out() << "</p>\n";
