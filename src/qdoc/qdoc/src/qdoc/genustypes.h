@@ -4,7 +4,11 @@
 #ifndef GENUSTYPES_H
 #define GENUSTYPES_H
 
+#include <QtGlobal>
+
 #include <type_traits>
+
+QT_BEGIN_NAMESPACE
 
 /*!
     \headerfile genustypes.h
@@ -167,6 +171,8 @@ enum class NodeType : unsigned char {
     Collection,
     Proxy
 };
+
+QT_END_NAMESPACE
 
 #endif // GENUSTYPES_H
 
