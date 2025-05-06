@@ -1,0 +1,15 @@
+project = Macro expansion in links
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions  = "*.h *.hpp"
+sources.fileextensions  = "*.cpp *.qml *.qdoc"
+
+headerdirs  = ./src
+sourcedirs  = ./src
+
+macro.TEST = "Test Page"
+
+warninglimit = 0
+warninglimit.enabled = true

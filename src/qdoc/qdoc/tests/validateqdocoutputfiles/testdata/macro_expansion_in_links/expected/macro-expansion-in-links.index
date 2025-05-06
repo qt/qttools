@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Macro expansion in links Reference Documentation" version="" project="Macro expansion in links">
+    <namespace name="" status="active" access="public" module="macro expansion in links">
+        <page name="another-page.html" href="another-page.html" status="active" location="anotherpage.qdoc" documented="true" subtype="page" title="Another page" fulltitle="Another page" subtitle=""/>
+        <page name="testpage.html" href="testpage.html" status="active" location="testpage.qdoc" documented="true" subtype="page" title="Test Page" fulltitle="Test Page" subtitle=""/>
+    </namespace>
+</INDEX>
