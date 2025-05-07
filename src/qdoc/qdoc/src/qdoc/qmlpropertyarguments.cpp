@@ -17,7 +17,13 @@ QT_BEGIN_NAMESPACE
     \enum QmlPropertyArguments::ParsingOptions
 
     \value None
+           No options specified.
     \value RequireQualifiedPath
+           Require the path segment to be qualified with a
+           QML type name.
+    \value IgnoreType Don’t require a type segment when parsing.
+
+    \sa parse()
 */
 
 /*!
@@ -39,6 +45,8 @@ QT_BEGIN_NAMESPACE
     <type> <name>
     \endcode
 
+    \e {<type>} can be omitted if \c IgnoreType option is set.
+
     This syntax is accepted in QmlDocVisitor where the associated QML type
     is already known.
 
@@ -59,12 +67,15 @@ QmlPropertyArguments::parse(const QString &str, const Location &loc, ParsingOpti
     QmlPropertyArguments args;
     auto offset = input.indexOf(' '_L1);
     if (offset == -1) {
-        loc.warning("Missing property type for %1."_L1.arg(str));
-        return std::nullopt;
+        if ((opts & ParsingOptions::IgnoreType) == ParsingOptions::None) {
+            loc.warning("Missing property type for %1."_L1.arg(str));
+            return std::nullopt;
+        }
+    } else {
+        args.m_type = input.first(offset);
+        if ((args.m_isList = args.m_type.startsWith("list<"_L1)))
+            args.m_type.slice(5).chop(1);
     }
-    args.m_type = input.first(offset);
-    if ((args.m_isList = args.m_type.startsWith("list<"_L1)))
-        args.m_type.slice(5).chop(1);
 
     auto segments = input.slice(++offset).split("::"_L1);
     if (segments.size() > 3 || (segments.size() == 1 &&

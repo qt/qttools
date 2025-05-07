@@ -16,7 +16,8 @@ struct QmlPropertyArguments
 {
     enum class ParsingOptions {
         None = 0x0,
-        RequireQualifiedPath = 0x1
+        RequireQualifiedPath = 0x1,
+        IgnoreType = 0x2
     };
 
     QString m_type {};
@@ -36,6 +37,15 @@ struct QmlPropertyArguments
             static_cast<std::underlying_type<ParsingOptions>::type>(rhs)
         );
     }
+
+    friend ParsingOptions operator|(ParsingOptions lhs, ParsingOptions rhs)
+    {
+        return static_cast<ParsingOptions>(
+            static_cast<std::underlying_type<ParsingOptions>::type>(lhs) |
+            static_cast<std::underlying_type<ParsingOptions>::type>(rhs)
+        );
+    }
+
 };
 
 QT_END_NAMESPACE
