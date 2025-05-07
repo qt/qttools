@@ -96,7 +96,11 @@ public:
     [[nodiscard]] bool isClass() const { return m_nodeType == NodeType::Class; }
     [[nodiscard]] bool isCppNode() const { return genus() == Genus::CPP; }
     [[nodiscard]] bool isDontDocument() const { return (m_status == DontDocument); }
-    [[nodiscard]] bool isEnumType() const { return m_nodeType == NodeType::Enum; }
+    [[nodiscard]] bool isEnumType() const
+    {
+        return m_nodeType == NodeType::Enum || m_nodeType == NodeType::QmlEnum;
+    }
+    [[nodiscard]] bool isEnumType(Genus g) const { return (genus() == g) && isEnumType(); }
     [[nodiscard]] bool isExample() const { return m_nodeType == NodeType::Example; }
     [[nodiscard]] bool isExternalPage() const { return m_nodeType == NodeType::ExternalPage; }
     [[nodiscard]] bool isFunction(Genus g = Genus::DontCare) const

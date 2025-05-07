@@ -121,6 +121,7 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
         QString kind;
         switch (node->nodeType()) {
         case NodeType::Enum:
+        case NodeType::QmlEnum:
             nodeName = "member";
             kind = "enumeration";
             break;
@@ -232,6 +233,7 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
         }
             writer.writeEndElement(); // member
             break;
+        case NodeType::QmlEnum:
         case NodeType::Enum: {
             const auto *enumNode = static_cast<const EnumNode *>(node);
             writer.writeTextElement("name", objName);

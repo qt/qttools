@@ -710,7 +710,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
             newLine();
 
             m_threeColumnEnumValueTable = isThreeColumnEnumValueTable(atom);
-            if (m_threeColumnEnumValueTable && relative->nodeType() == NodeType::Enum) {
+            if (m_threeColumnEnumValueTable && relative->isEnumType(Genus::CPP)) {
                 // With three columns, if not in \enum topic, skip the value column
                 m_writer->writeTextElement(dbNamespace, "th", "Value");
                 newLine();
@@ -770,7 +770,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
             m_writer->writeEndElement(); // td
             newLine();
 
-            if (relative->nodeType() == NodeType::Enum) {
+            if (relative->isEnumType(Genus::CPP)) {
                 const auto enume = static_cast<const EnumNode *>(relative);
                 QString itemValue = enume->itemValue(atom->next()->string());
 
@@ -4146,7 +4146,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
         }
     } else {
         const EnumNode *etn;
-        if (node->isEnumType() && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
+        if (node->isEnumType(Genus::CPP) && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
             startSectionBegin(node);
             if (m_useITS)
                 m_writer->writeAttribute(itsNamespace, "translate", "no");
@@ -4224,7 +4224,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
                 generateSectionList(notifiers, node);
             }
         }
-    } else if (node->isEnumType()) {
+    } else if (node->isEnumType(Genus::CPP)) {
         const auto en = static_cast<const EnumNode *>(node);
 
         if (m_qflagsHref.isEmpty()) {

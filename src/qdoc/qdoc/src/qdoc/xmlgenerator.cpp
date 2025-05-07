@@ -260,6 +260,7 @@ QString XmlGenerator::refForNode(const Node *node)
     QString ref;
     switch (node->nodeType()) {
     case NodeType::Enum:
+    case NodeType::QmlEnum:
         ref = node->name() + "-enum";
         break;
     case NodeType::Typedef: {

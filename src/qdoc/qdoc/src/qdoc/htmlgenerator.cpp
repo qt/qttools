@@ -752,7 +752,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                 out() << "<th class=\"tblConst\">Constant</th>";
 
                 // If not in \enum topic, skip the value column
-                if (relative->isEnumType())
+                if (relative->isEnumType(Genus::CPP))
                     out() << "<th class=\"tblval\">Value</th>";
 
                 out() << "<th class=\"tbldscr\">Description</th></tr>\n";
@@ -792,7 +792,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
             QString t = protectEnc(plainCode(marker->markedUpEnumValue(pair.first, relative)));
             out() << "<tr><td class=\"topAlign\"><code translate=\"no\">" << t << "</code>";
 
-            if (relative->isEnumType()) {
+            if (relative->isEnumType(Genus::CPP)) {
                 out() << "</td><td class=\"topAlign tblval\">";
                 const auto *enume = static_cast<const EnumNode *>(relative);
                 QString itemValue = enume->itemValue(atom->next()->string());
@@ -3429,7 +3429,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
         out() << '\n';
     } else {
         nodeRef = refForNode(node);
-        if (node->isEnumType() && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
+        if (node->isEnumType(Genus::CPP) && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
             out() << R"(<h3 class="flags" id=")" << nodeRef << "\">";
             generateSynopsis(etn, relative, marker, Section::Details);
             out() << "<br/>";
@@ -3475,7 +3475,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
                 generateSectionList(notifiers, node, marker);
             }
         }
-    } else if (node->isEnumType()) {
+    } else if (node->isEnumType(Genus::CPP)) {
         const auto *enumTypeNode = static_cast<const EnumNode *>(node);
         if (enumTypeNode->flagsType()) {
             out() << "<p>The " << protectEnc(enumTypeNode->flagsType()->name())

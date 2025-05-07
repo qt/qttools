@@ -555,6 +555,7 @@ Genus Node::getGenus(NodeType t)
     case NodeType::Namespace:
     case NodeType::HeaderFile:
         return Genus::CPP;
+    case NodeType::QmlEnum:
     case NodeType::QmlType:
     case NodeType::QmlModule:
     case NodeType::QmlProperty:

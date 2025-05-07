@@ -21,6 +21,7 @@ class Aggregate;
 class EnumNode : public Node
 {
 public:
+    using Node::Node;
     EnumNode(Aggregate *parent, const QString &name, bool isScoped = false)
         : Node(NodeType::Enum, parent, name), m_isScoped(isScoped)
     {

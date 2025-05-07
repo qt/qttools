@@ -128,6 +128,8 @@ inline constexpr bool isApiGenus(Genus g) {
            of documents.
     \value Module The Node subclass is CollectionNode, which represents a C++
            module.
+    \value QmlEnum The Node subclass is QmlEnumNode, which represents a QML
+           enumeration.
     \value QmlType The Node subclass is QmlTypeNode, which represents a QML
            type.
     \value QmlModule The Node subclass is CollectionNode, which represents a QML
@@ -163,6 +165,7 @@ enum class NodeType : unsigned char {
     Variable,
     Group,
     Module,
+    QmlEnum,
     QmlType,
     QmlModule,
     QmlProperty,

@@ -748,7 +748,7 @@ void Sections::distributeNodeInDetailsVector(SectionVector &dv, Node *n)
         dv[DetailsRelatedNonmembers].insert(n);
         return;
     }
-    if (t->isEnumType() || t->isTypedef()) {
+    if (t->isEnumType(Genus::CPP) || t->isTypedef()) {
         if (t->name() != QLatin1String("QtGadgetHelper"))
             dv[DetailsMemberTypes].insert(n);
         return;

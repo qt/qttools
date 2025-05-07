@@ -518,6 +518,7 @@ QString Generator::fullDocumentLocation(const Node *node)
       HTML anchors, we need to preserve the case.
     */
     case NodeType::Enum:
+    case NodeType::QmlEnum:
         anchorRef = QLatin1Char('#') + node->name() + "-enum";
         break;
     case NodeType::Typedef: {
