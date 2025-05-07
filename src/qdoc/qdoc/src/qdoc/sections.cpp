@@ -73,6 +73,7 @@ QList<Section> Sections::s_stdCppClassDetailsSections {
 };
 
 QList<Section> Sections::s_stdQmlTypeSummarySections {
+    { "Enumerations",        "enumeration",       "enumerations",        "", Section::Summary },
     { "Properties",          "property",          "properties",          "", Section::Summary },
     { "Attached Properties", "attached property", "attached properties", "", Section::Summary },
     { "Signals",             "signal",            "signals",             "", Section::Summary },
@@ -83,6 +84,7 @@ QList<Section> Sections::s_stdQmlTypeSummarySections {
 };
 
 QList<Section> Sections::s_stdQmlTypeDetailsSections {
+    { "Enumeration Documentation",       "member",         "members",         "qmlenum",    Section::Details },
     { "Property Documentation",          "member",         "members",         "qmlprop",    Section::Details },
     { "Attached Property Documentation", "member",         "members",         "qmlattprop", Section::Details },
     { "Signal Documentation",            "signal",         "signals",         "qmlsig",     Section::Details },
@@ -105,6 +107,7 @@ QList<Section> Sections::s_sinceSections {
     { "New Properties",              "", "", "", Section::Details },
     { "New Variables",               "", "", "", Section::Details },
     { "New QML Types",               "", "", "", Section::Details },
+    { "New QML Enumeration Types",   "", "", "", Section::Details },
     { "New QML Properties",          "", "", "", Section::Details },
     { "New QML Signals",             "", "", "", Section::Details },
     { "New QML Signal Handlers",     "", "", "", Section::Details },
@@ -450,6 +453,9 @@ Sections::Sections(const NodeMultiMap &nsmap) : m_aggregate(nullptr)
         case NodeType::QmlProperty:
             sections[SinceQmlProperties].appendMember(node);
             break;
+        case NodeType::QmlEnum:
+            sections[SinceQmlEnumTypes].appendMember(node);
+            break;
         default:
             break;
         }
@@ -776,6 +782,8 @@ void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
             dv[QmlAttachedProperties].insert(n);
         else
             dv[QmlProperties].insert(n);
+    } else if (t->isEnumType(Genus::QML)) {
+        dv[QmlEnumTypes].insert(n);
     } else if (t->isFunction()) {
         auto *fn = static_cast<FunctionNode *>(t);
         if (fn->isQmlSignal()) {
@@ -809,6 +817,8 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n, bool
             sv[QmlAttachedProperties].insert(pn);
         else
             sv[QmlProperties].insert(pn);
+    } else if (n->isEnumType(Genus::QML)) {
+        sv[QmlEnumTypes].insert(n);
     } else if (n->isFunction()) {
         auto *fn = static_cast<FunctionNode *>(n);
         if (fn->isQmlSignal()) {
