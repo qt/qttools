@@ -198,6 +198,28 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
     return nullptr;
 }
 
+/*!
+    Finds a QmlTypeNode \a name, under the specific \a moduleName, from the primary tree.
+    If one is not found, creates one.
+
+    Returns the found or created node.
+*/
+QmlTypeNode *findOrCreateQmlType(const QString &moduleName, const QString &name, const Location &location)
+{
+    QDocDatabase* database = QDocDatabase::qdocDB();
+    auto *aggregate = database->findQmlTypeInPrimaryTree(moduleName, name);
+    // Note: Constructing a QmlType node by default, as opposed to QmlValueType.
+    // This may lead to unexpected behavior if documenting \qmlvaluetype's members
+    // before the type itself.
+    if (!aggregate) {
+        aggregate = new QmlTypeNode(database->primaryTreeRoot(), name, NodeType::QmlType);
+        aggregate->setLocation(location);
+        if (!moduleName.isEmpty())
+            database->addToQmlModule(moduleName, aggregate);
+    }
+    return aggregate;
+}
+
 std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedDocumentation &untied)
 {
     const Doc &doc = untied.documentation;
@@ -214,18 +236,7 @@ std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedD
         return {};
 
     NodeList sharedNodes;
-    QDocDatabase *database = QDocDatabase::qdocDB();
-    QmlTypeNode *qmlType = database->findQmlTypeInPrimaryTree((*firstTopicArgs).m_module,
-                                                              (*firstTopicArgs).m_qmltype);
-    // Note: Constructing a QmlType node by default, as opposed to QmlValueType.
-    // This may lead to unexpected behavior if documenting \qmlvaluetype's properties
-    // before the type itself.
-    if (qmlType == nullptr) {
-        qmlType = new QmlTypeNode(database->primaryTreeRoot(), (*firstTopicArgs).m_qmltype, NodeType::QmlType);
-        qmlType->setLocation(doc.startLocation());
-        if (!(*firstTopicArgs).m_module.isEmpty())
-            database->addToQmlModule((*firstTopicArgs).m_module, qmlType);
-    }
+    auto *qmlType = findOrCreateQmlType((*firstTopicArgs).m_module, (*firstTopicArgs).m_qmltype, doc.startLocation());
 
     for (const auto &topicCommand : topics) {
         QString cmd = topicCommand.m_topic;
@@ -233,7 +244,7 @@ std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedD
             bool attached = cmd.contains(QLatin1String("attached"));
             if (auto qpa = QmlPropertyArguments::parse(topicCommand.m_args, doc.location(),
                     QmlPropertyArguments::ParsingOptions::RequireQualifiedPath)) {
-                if (qmlType != database->findQmlTypeInPrimaryTree(qpa->m_module, qpa->m_qmltype)) {
+                if (qmlType != QDocDatabase::qdocDB()->findQmlTypeInPrimaryTree(qpa->m_module, qpa->m_qmltype)) {
                     doc.startLocation().warning(
                             QStringLiteral(
                                     "All properties in a group must belong to the same type: '%1'")
@@ -641,18 +652,7 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     }
     funcName = colonSplit.last();
 
-    QDocDatabase* database = QDocDatabase::qdocDB();
-
-    auto *aggregate = database->findQmlTypeInPrimaryTree(moduleName, elementName);
-    // Note: Constructing a QmlType node by default, as opposed to QmlValueType.
-    // This may lead to unexpected behavior if documenting \qmlvaluetype's methods
-    // before the type itself.
-    if (!aggregate) {
-        aggregate = new QmlTypeNode(database->primaryTreeRoot(), elementName, NodeType::QmlType);
-        aggregate->setLocation(location);
-        if (!moduleName.isEmpty())
-            database->addToQmlModule(moduleName, aggregate);
-    }
+    auto *aggregate = findOrCreateQmlType(moduleName, elementName, location);
 
     QString params;
     QStringList leftParenSplit = funcArg.split('(');
