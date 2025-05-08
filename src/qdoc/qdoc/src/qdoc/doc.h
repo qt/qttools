@@ -67,6 +67,8 @@ public:
     [[nodiscard]] bool hasTargets() const;
     [[nodiscard]] bool isInternal() const;
     [[nodiscard]] bool isMarkedReimp() const;
+    [[nodiscard]] QList<ArgPair> overloadList() const;
+    [[nodiscard]] inline bool hasOverloadCommand() const { return !overloadList().isEmpty(); }
     [[nodiscard]] const QList<Atom *> &tableOfContents() const;
     [[nodiscard]] const QList<int> &tableOfContentsLevels() const;
     [[nodiscard]] const QList<Atom *> &keywords() const;

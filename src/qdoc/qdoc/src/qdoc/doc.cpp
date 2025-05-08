@@ -231,6 +231,14 @@ bool Doc::isMarkedReimp() const
 }
 
 /*!
+  Returns the list of arguments passed to the \c{\overload} command.
+ */
+QList<ArgPair> Doc::overloadList() const
+{
+    return metaCommandArgs(u"overload"_s);
+}
+
+/*!
   Returns a reference to the list of topic commands used in the
   current qdoc comment. Normally there is only one, but there
   can be multiple \e{qmlproperty} commands, for example.

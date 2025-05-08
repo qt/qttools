@@ -1786,22 +1786,9 @@ void DocParser::cmd_overload()
 
     leavePara();
     m_private->m_metacommandsUsed.insert(cmd);
-    QString p1 = isBlankLine() ? QString() : getRestOfLine();
+    const QString overloadArgument = isBlankLine() ? getMetaCommandArgument(cmd) : getRestOfLine();
 
-    if (!p1.isEmpty()) {
-        appendAtom(Atom(Atom::ParaLeft));
-        appendAtom(Atom(Atom::String, "This function overloads "));
-        appendAtom(Atom(Atom::AutoLink, p1));
-        appendAtom(Atom(Atom::String, "."));
-        appendAtom(Atom(Atom::ParaRight));
-    } else {
-        appendAtom(Atom(Atom::ParaLeft));
-        appendAtom(Atom(Atom::String, "This is an overloaded function."));
-        appendAtom(Atom(Atom::ParaRight));
-        p1 = getMetaCommandArgument(cmd);
-    }
-
-    m_private->m_metaCommandMap[cmd].append(ArgPair(p1, QString()));
+    m_private->m_metaCommandMap[cmd].append(ArgPair(overloadArgument, QString()));
 }
 
 /*!

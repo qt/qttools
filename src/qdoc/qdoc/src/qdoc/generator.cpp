@@ -717,6 +717,8 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 generateAddendum(node, Invokable, marker);
             if (fn->hasAssociatedProperties())
                 generateAddendum(node, AssociatedProperties, marker);
+            if (fn->hasOverloads() && fn->doc().hasOverloadCommand())
+                generateAddendum(node, OverloadNote, marker);
         }
 
         // Generate warnings
@@ -1341,6 +1343,18 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
              << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << "QProperty"
              << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
         text << " bindings.";
+        break;
+    }
+    case OverloadNote:
+    {
+        const auto &args = node->doc().overloadList();
+        if (args.first().first.isEmpty()) {
+            text << "This is an overloaded function.";
+        } else {
+            text << "This function overloads "
+                 << Atom(Atom::AutoLink, args.first().first)
+                 << ".";
+        }
         break;
     }
     default:

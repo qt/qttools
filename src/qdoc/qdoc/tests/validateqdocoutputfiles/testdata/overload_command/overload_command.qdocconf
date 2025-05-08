@@ -1,0 +1,25 @@
+project = Overload command test
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions  = "*.h *.hpp"
+sources.fileextensions  = "*.cpp *.qml *.qdoc"
+
+headerdirs  = ./src
+sourcedirs  = ./src
+
+warninglimit = 0
+warninglimit.enabled = true
+
+# Configure .qhp generation
+qhp.projects            = Test
+qhp.Test.file           = test.qhp
+qhp.Test.namespace      = org.qt-project.test.001
+qhp.Test.virtualFolder  = test
+qhp.Test.indexTitle     = UI Components
+qhp.Test.indexRoot      =
+qhp.Test.subprojects    = classes
+qhp.Test.subprojects.classes.title      = Classes
+qhp.Test.subprojects.classes.selectors  = class namespace doc:headerfile group:deprecated-classes
+qhp.Test.subprojects.classes.sortPages  = true
