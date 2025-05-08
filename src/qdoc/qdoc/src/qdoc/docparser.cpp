@@ -1034,24 +1034,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     enterPara(Atom::WarningLeft, Atom::WarningRight);
                     break;
                 case CMD_OVERLOAD:
-                    leavePara();
-                    m_private->m_metacommandsUsed.insert(cmdStr);
-                    p1.clear();
-                    if (!isBlankLine())
-                        p1 = getRestOfLine();
-                    if (!p1.isEmpty()) {
-                        appendAtom(Atom(Atom::ParaLeft));
-                        appendAtom(Atom(Atom::String, "This function overloads "));
-                        appendAtom(Atom(Atom::AutoLink, p1));
-                        appendAtom(Atom(Atom::String, "."));
-                        appendAtom(Atom(Atom::ParaRight));
-                    } else {
-                        appendAtom(Atom(Atom::ParaLeft));
-                        appendAtom(Atom(Atom::String, "This is an overloaded function."));
-                        appendAtom(Atom(Atom::ParaRight));
-                        p1 = getMetaCommandArgument(cmdStr);
-                    }
-                    m_private->m_metaCommandMap[cmdStr].append(ArgPair(p1, QString()));
+                    cmd_overload();
                     break;
                 case NOT_A_CMD:
                     if (metaCommandSet.contains(cmdStr)) {
@@ -1774,6 +1757,43 @@ void DocParser::cmd_image(int cmd) {
                                   .arg(imageFileName));
     appendAtom(Atom(imageAtom, imageFileName));
     appendAtom(Atom(Atom::ImageText, imageText));
+}
+
+/*!
+    \brief Processes the \\overload command in documentation comments.
+
+    This function registers metadata when the \\overload command is used in a
+    documentation comment. It records the use of the command and stores any
+    arguments to the command. Arguments are optional and can be passed with or
+    without curly braces. This allows the user to use either of:
+
+    \badcode
+        \overload someFunction
+        \overload {someFunction}
+    \endcode
+ */
+void DocParser::cmd_overload()
+{
+    const QString cmd{"overload"};
+
+    leavePara();
+    m_private->m_metacommandsUsed.insert(cmd);
+    QString p1 = isBlankLine() ? QString() : getRestOfLine();
+
+    if (!p1.isEmpty()) {
+        appendAtom(Atom(Atom::ParaLeft));
+        appendAtom(Atom(Atom::String, "This function overloads "));
+        appendAtom(Atom(Atom::AutoLink, p1));
+        appendAtom(Atom(Atom::String, "."));
+        appendAtom(Atom(Atom::ParaRight));
+    } else {
+        appendAtom(Atom(Atom::ParaLeft));
+        appendAtom(Atom(Atom::String, "This is an overloaded function."));
+        appendAtom(Atom(Atom::ParaRight));
+        p1 = getMetaCommandArgument(cmd);
+    }
+
+    m_private->m_metaCommandMap[cmd].append(ArgPair(p1, QString()));
 }
 
 /*!
