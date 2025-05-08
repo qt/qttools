@@ -4,6 +4,7 @@
 #include "cppcodeparser.h"
 
 #include "access.h"
+#include "qmlenumnode.h"
 #include "classnode.h"
 #include "clangcodeparser.h"
 #include "collectionnode.h"
@@ -191,6 +192,8 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
             database->addToQmlModule(qmid, qcn);
         qcn->setLocation(doc.startLocation());
         return qcn;
+    } else if (command == COMMAND_QMLENUM) {
+        return processQmlEnumTopic(doc.enumItemNames(), doc.location(), arg.first);
     } else if ((command == COMMAND_QMLSIGNAL) || (command == COMMAND_QMLMETHOD)
                || (command == COMMAND_QMLATTACHEDSIGNAL) || (command == COMMAND_QMLATTACHEDMETHOD)) {
         Q_UNREACHABLE();
@@ -614,6 +617,39 @@ void CppCodeParser::processMetaCommands(const Doc &doc, Node *node)
             });
         }
     }
+}
+
+/*!
+    Creates an EnumNode instance explicitly for the \qmlenum command.
+    Utilizes QmlPropertyArguments for argument (\a arg) parsing.
+
+    Adds a list of \a enumItemNames as enumerators to facilitate linking
+    via enumerator names.
+*/
+EnumNode *CppCodeParser::processQmlEnumTopic(const QStringList &enumItemNames,
+                                             const Location &location, const QString &arg)
+{
+    if (arg.isEmpty()) {
+        location.warning(u"Missing argument to \\%1 command."_s.arg(COMMAND_QMLENUM));
+        return nullptr;
+    }
+
+    auto parsedArgs = QmlPropertyArguments::parse(arg, location,
+            QmlPropertyArguments::ParsingOptions::RequireQualifiedPath |
+            QmlPropertyArguments::ParsingOptions::IgnoreType);
+
+    if (!parsedArgs)
+        return nullptr;
+
+    auto *qmlType = findOrCreateQmlType((*parsedArgs).m_module, (*parsedArgs).m_qmltype, location);
+
+    auto *enumNode = new QmlEnumNode(qmlType, (*parsedArgs).m_name);
+    enumNode->setLocation(location);
+
+    for (const auto &item : enumItemNames)
+        enumNode->addItem(EnumItem(item, 0));
+
+    return enumNode;
 }
 
 /*!

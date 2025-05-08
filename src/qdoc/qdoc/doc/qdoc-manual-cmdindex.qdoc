@@ -93,6 +93,7 @@
     \li \l {qmlvaluetype-command} {\\qmlvaluetype}
     \li \l {qmlclass-command} {\\qmlclass} (deprecated, use \\qmltype)
     \li \l {qmldefault-command} {\\qmldefault}
+    \li \l {qmlenum-command} {\\qmlenum}
     \li \qdoccmd qmlenumeratorsfrom
     \li \l {qmltype-command} {\\qmltype}
     \li \l {qmlmethod-command} {\\qmlmethod}

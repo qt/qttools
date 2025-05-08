@@ -4525,6 +4525,10 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
 
             startSectionEnd();
         }
+    } else if (node->isEnumType(Genus::QML)) {
+        startSectionBegin(node);
+        generateDocBookSynopsis(node);
+        startSectionEnd();
     } else { // assume the node is a method/signal handler
         startSectionBegin(node);
         generateQmlMethodTitle(node);

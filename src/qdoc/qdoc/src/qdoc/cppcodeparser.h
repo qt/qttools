@@ -12,6 +12,7 @@
 QT_BEGIN_NAMESPACE
 
 class ClassNode;
+class EnumNode;
 class ExampleNode;
 class FunctionNode;
 class Aggregate;
@@ -25,7 +26,7 @@ public:
         COMMAND_MACRO, COMMAND_MODULE, COMMAND_NAMESPACE, COMMAND_PAGE,
         COMMAND_PROPERTY, COMMAND_TYPEALIAS, COMMAND_TYPEDEF, COMMAND_VARIABLE,
         COMMAND_QMLTYPE, COMMAND_QMLPROPERTY, COMMAND_QMLPROPERTYGROUP,
-        COMMAND_QMLATTACHEDPROPERTY, COMMAND_QMLSIGNAL, COMMAND_QMLATTACHEDSIGNAL,
+        COMMAND_QMLATTACHEDPROPERTY, COMMAND_QMLENUM, COMMAND_QMLSIGNAL, COMMAND_QMLATTACHEDSIGNAL,
         COMMAND_QMLMETHOD, COMMAND_QMLATTACHEDMETHOD, COMMAND_QMLVALUETYPE, COMMAND_QMLBASICTYPE,
         COMMAND_QMLMODULE, COMMAND_STRUCT, COMMAND_UNION,
     };
@@ -62,6 +63,8 @@ private:
     static void processComparesCommand(Node *node, const QString &arg, const Location &loc);
     void processQmlNativeTypeCommand(Node *node, const QString &cmd,
                                      const QString &arg, const Location &loc);
+    EnumNode *processQmlEnumTopic(const QStringList &enumItemNames, const Location &location,
+                                  const QString &arg);
 
 private:
     FnCommandParser fn_parser;

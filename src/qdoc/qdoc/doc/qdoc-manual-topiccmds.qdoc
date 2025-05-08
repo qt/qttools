@@ -710,6 +710,45 @@
     This command is deprecated. Use \l{qmltype-command} {\\qmltype}
     instead.
 
+    \target qmlenum-command
+    \section1 \\qmlenum
+
+    The \\qmlenum command is for documenting a QML enumeration. The command
+    takes a single argument: the full name of the enumeration type, including
+    the parent QML type and, optionally, the QML module.
+
+    The enumerators and their descriptions are documented using
+    \qdoccmd {value} commands.
+
+    For example,
+
+    \badcode *
+    /\1!
+        \qmlenum My.Module::Color::Channel
+        \brief Specifies a color channel in the RGB colorspace.
+
+        \value R
+               Red color channel
+
+        \value G
+               Green color channel
+
+        \value B
+               Blue color channel
+    \1/
+    \endcode
+
+    This generates documentation for an enumeration \e Channel, with three
+    enumerators: \e {Color.R}, \e {Color.G}, and \e {Color.B}.
+
+    Alternatively, it's possible to replicate the enumerators' documentation
+    from an existing C++ \qdoccmd {enum} topic, by using the
+    \qdoccmd {qmlenumeratorsfrom} command.
+
+    This command was introduced with Qt 6.10.
+
+    See also \qdoccmd {qmlenumeratorsfrom}.
+
     \target qmlmethod-command
     \section1 \\qmlmethod
 
