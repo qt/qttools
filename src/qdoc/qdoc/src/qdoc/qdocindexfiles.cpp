@@ -10,6 +10,7 @@
 #include "comparisoncategory.h"
 #include "config.h"
 #include "enumnode.h"
+#include "qmlenumnode.h"
 #include "examplenode.h"
 #include "externalpagenode.h"
 #include "functionnode.h"
@@ -361,8 +362,12 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
 
         node = pageNode;
 
-    } else if (elementName == QLatin1String("enum")) {
-        auto *enumNode = new EnumNode(parent, name, attributes.hasAttribute("scoped"));
+    } else if (elementName == QLatin1String("enum") || elementName == QLatin1String("qmlenum")) {
+        EnumNode *enumNode;
+        if (elementName == QLatin1String("enum"))
+            enumNode = new EnumNode(parent, name, attributes.hasAttribute("scoped"));
+        else
+            enumNode = new QmlEnumNode(parent, name);
 
         if (!indexUrl.isEmpty())
             location = Location(indexUrl + QLatin1Char('/') + parent->name().toLower() + ".html");
@@ -836,6 +841,9 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     case NodeType::HeaderFile:
         nodeName = "header";
         break;
+    case NodeType::QmlEnum:
+        nodeName = "qmlenum";
+        break;
     case NodeType::QmlType:
     case NodeType::QmlValueType:
         nodeName = (node->nodeType() == NodeType::QmlType) ? "qmlclass" : "qmlvaluetype";
@@ -1086,6 +1094,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;
+    case NodeType::QmlEnum:
     case NodeType::Enum: {
         const auto *enumNode = static_cast<const EnumNode *>(node);
         if (enumNode->isScoped())
@@ -1096,7 +1105,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         for (const auto &item : items) {
             writer.writeStartElement("value");
             writer.writeAttribute("name", item.name());
-            writer.writeAttribute("value", item.value());
+            if (node->isEnumType(Genus::CPP))
+                writer.writeAttribute("value", item.value());
             if (!item.since().isEmpty())
                 writer.writeAttribute("since", item.since());
             writer.writeEndElement(); // value
