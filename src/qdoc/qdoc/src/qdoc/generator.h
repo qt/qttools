@@ -41,6 +41,12 @@ public:
         OverloadNote
     };
 
+    enum class AdmonitionPrefix : unsigned char
+    {
+        None,
+        Note
+    };
+
     Generator(FileResolver& file_resolver);
     virtual ~Generator();
 
@@ -119,10 +125,10 @@ protected:
     void generateNoexceptNote(const Node *node, CodeMarker *marker);
     void generateStatus(const Node *node, CodeMarker *marker);
     virtual void generateAddendum(const Node *node, Addendum type, CodeMarker *marker,
-                                  bool generateNote);
+                                  AdmonitionPrefix prefix);
     virtual void generateAddendum(const Node *node, Addendum type, CodeMarker *marker)
     {
-        generateAddendum(node, type, marker, true);
+        generateAddendum(node, type, marker, AdmonitionPrefix::Note);
     };
     void generateThreadSafeness(const Node *node, CodeMarker *marker);
     bool generateComparisonCategory(const Node *node, CodeMarker *marker = nullptr);

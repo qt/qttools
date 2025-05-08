@@ -2676,7 +2676,7 @@ void DocBookGenerator::generateBody(const Node *node)
             generateReimplementsClause(fn);
         else if (node->isProperty()) {
             if (static_cast<const PropertyNode *>(node)->propertyType() != PropertyNode::PropertyType::StandardProperty)
-                generateAddendum(node, BindableProperty, nullptr, false);
+                generateAddendum(node, BindableProperty, nullptr, AdmonitionPrefix::None);
         }
 
         // Generate the body.
@@ -2688,13 +2688,13 @@ void DocBookGenerator::generateBody(const Node *node)
         // Output what is after the main body.
         if (fn) {
             if (fn->isQmlSignal())
-                generateAddendum(node, QmlSignalHandler, nullptr, true);
+                generateAddendum(node, QmlSignalHandler, nullptr, AdmonitionPrefix::Note);
             if (fn->isPrivateSignal())
-                generateAddendum(node, PrivateSignal, nullptr, true);
+                generateAddendum(node, PrivateSignal, nullptr, AdmonitionPrefix::Note);
             if (fn->isInvokable())
-                generateAddendum(node, Invokable, nullptr, true);
+                generateAddendum(node, Invokable, nullptr, AdmonitionPrefix::Note);
             if (fn->hasAssociatedProperties())
-                generateAddendum(node, AssociatedProperties, nullptr, true);
+                generateAddendum(node, AssociatedProperties, nullptr, AdmonitionPrefix::Note);
         }
 
         // Warning generation skipped with respect to Generator::generateBody.
@@ -3994,13 +3994,19 @@ void DocBookGenerator::generateOverloadedSignal(const Node *node)
   is unused in this generator.
 */
 void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMarker *marker,
-                                        bool generateNote)
+                                        AdmonitionPrefix prefix)
 {
     Q_UNUSED(marker)
     Q_ASSERT(node && !node->name().isEmpty());
-    if (generateNote) {
+
+    switch (prefix) {
+    case AdmonitionPrefix::None:
+        break;
+    case AdmonitionPrefix::Note: {
         m_writer->writeStartElement(dbNamespace, "note");
         newLine();
+        break;
+        }
     }
     switch (type) {
     case Invokable:
@@ -4086,7 +4092,7 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
         break;
     }
 
-    if (generateNote) {
+    if (prefix == AdmonitionPrefix::Note) {
         m_writer->writeEndElement(); // note
         newLine();
     }
@@ -4291,9 +4297,9 @@ void DocBookGenerator::generateSectionList(const Section &section, const Node *r
         newLine();
 
         if (hasPrivateSignals)
-            generateAddendum(relative, Generator::PrivateSignal, nullptr, true);
+            generateAddendum(relative, Generator::PrivateSignal, nullptr, AdmonitionPrefix::Note);
         if (isInvokable)
-            generateAddendum(relative, Generator::Invokable, nullptr, true);
+            generateAddendum(relative, Generator::Invokable, nullptr, AdmonitionPrefix::Note);
     }
 
     if (!useObsoleteMembers && section.style() == Section::Summary
