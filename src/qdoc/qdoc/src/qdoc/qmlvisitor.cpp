@@ -8,6 +8,7 @@
 #include "codeparser.h"
 #include "functionnode.h"
 #include "genustypes.h"
+#include "nativeenum.h"
 #include "node.h"
 #include "qdocdatabase.h"
 #include "qmlpropertyarguments.h"
@@ -443,7 +444,7 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
                 if (!node->isQmlProperty()) {
                     doc.location().warning("Ignored '\\%1', applies only to '\\%2'"_L1
                             .arg(command, COMMAND_QMLPROPERTY));
-                } else if (!static_cast<QmlPropertyNode*>(node)->setEnumNode(args[0].first, args[0].second)) {
+                } else if (!static_cast<QmlPropertyNode*>(node)->nativeEnum()->resolve(args[0].first, args[0].second)) {
                     doc.location().warning("Failed to find C++ enumeration '%2' passed to \\%1"_L1
                             .arg(command, args[0].first), "Use \\value commands instead"_L1);
                 }

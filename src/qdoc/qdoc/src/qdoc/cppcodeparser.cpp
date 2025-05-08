@@ -418,10 +418,15 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
     } else if (command == COMMAND_QMLDEFAULT) {
         node->markDefault();
     } else if (command == COMMAND_QMLENUMERATORSFROM) {
-        if (!node->isQmlProperty()) {
-            doc.location().warning("Ignored '\\%1', applies only to '\\%2'"_L1
-                    .arg(command, COMMAND_QMLPROPERTY));
-        } else if (!static_cast<QmlPropertyNode*>(node)->setEnumNode(argPair.first, argPair.second)) {
+        NativeEnum *nativeEnum{nullptr};
+        if (auto *ne_if = dynamic_cast<NativeEnumInterface *>(node))
+            nativeEnum = ne_if->nativeEnum();
+        else {
+            doc.location().warning("Ignored '\\%1', applies only to '\\%2' and '\\%3'"_L1
+                    .arg(command, COMMAND_QMLPROPERTY, COMMAND_QMLENUM));
+            return;
+        }
+        if (!nativeEnum->resolve(argPair.first, argPair.second)) {
             doc.location().warning("Failed to find C++ enumeration '%2' passed to \\%1"_L1
                     .arg(command, arg), "Use \\value commands instead"_L1);
         }

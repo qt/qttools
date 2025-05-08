@@ -298,11 +298,13 @@ QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *r
 {
     const auto *node = relative->parent();
 
-    if (relative->isQmlProperty()) {
-        const auto *qpn = static_cast<const QmlPropertyNode*>(relative);
-        if (qpn->enumNode() && !enumValue.startsWith("%1."_L1.arg(qpn->enumPrefix())))
-            return "%1<@op>.</@op>%2"_L1.arg(qpn->enumPrefix(), enumValue);
-    }
+    const NativeEnum *nativeEnum{nullptr};
+    if (auto *ne_if = dynamic_cast<const NativeEnumInterface *>(relative))
+        nativeEnum = ne_if->nativeEnum();
+
+    if (nativeEnum && nativeEnum->enumNode()
+            && !enumValue.startsWith("%1."_L1.arg(nativeEnum->prefix())))
+        return "%1<@op>.</@op>%2"_L1.arg(nativeEnum->prefix(), enumValue);
 
     if (!relative->isEnumType()) {
         return enumValue;
@@ -319,7 +321,8 @@ QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *r
         parts.append(relative->name());
 
     parts.append(enumValue);
-    return parts.join(QLatin1String("<@op>::</@op>"));
+    const auto &delim = (relative->genus() == Genus::QML) ? "."_L1 : "::"_L1;
+    return parts.join("<@op>%1</@op>"_L1.arg(delim));
 }
 
 QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,

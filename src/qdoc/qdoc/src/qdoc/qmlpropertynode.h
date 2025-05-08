@@ -5,6 +5,7 @@
 #define QMLPROPERTYNODE_H
 
 #include "aggregate.h"
+#include "nativeenum.h"
 #include "node.h"
 
 #include <QtCore/qglobal.h>
@@ -12,7 +13,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class QmlPropertyNode : public Node
+class QmlPropertyNode : public Node, public NativeEnumInterface
 {
 public:
     QmlPropertyNode(Aggregate *parent, const QString &name, QString type, bool attached);
@@ -22,7 +23,6 @@ public:
     void setDefaultValue(const QString &value) { m_defaultValue = value; }
     void setRequired() { m_required = toFlagValue(true); }
     void setIsList(bool isList);
-    bool setEnumNode(const QString &path, const QString &registeredQmlName);
 
     [[nodiscard]] const QString &dataType() const { return m_type; }
     [[nodiscard]] bool validateDataType(const QString &type = QString()) const;
@@ -48,8 +48,8 @@ public:
         return parent()->logicalModuleIdentifier();
     }
     [[nodiscard]] QString element() const override { return parent()->name(); }
-    [[nodiscard]] const EnumNode *enumNode() const { return m_enumNode.first; }
-    [[nodiscard]] const QString &enumPrefix() const;
+    NativeEnum *nativeEnum() override { return &m_nativeEnum; }
+    const NativeEnum *nativeEnum() const override { return &m_nativeEnum; }
 
     void markDefault() override { m_isDefault = true; }
     void markReadOnly(bool flag) override { m_readOnly = toFlagValue(flag); }
@@ -67,7 +67,7 @@ private:
     FlagValue m_isList { FlagValueDefault };
     FlagValue m_readOnly { FlagValueDefault };
     FlagValue m_required { FlagValueDefault };
-    std::pair<EnumNode *, QString> m_enumNode { nullptr, {} };
+    NativeEnum m_nativeEnum;
     static QSet<QString> cppQmlValueTypes;
     static QRegularExpression cppBasicList;
     static QRegularExpression qmlBasicList;

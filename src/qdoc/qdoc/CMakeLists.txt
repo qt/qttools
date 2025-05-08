@@ -55,6 +55,7 @@ qt_internal_add_tool(${target_name}
         src/qdoc/main.cpp
         src/qdoc/manifestwriter.cpp
         src/qdoc/namespacenode.cpp
+        src/qdoc/nativeenum.cpp
         src/qdoc/node.cpp
         src/qdoc/openedlist.cpp
         src/qdoc/pagenode.cpp

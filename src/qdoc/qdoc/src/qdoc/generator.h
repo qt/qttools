@@ -122,7 +122,7 @@ protected:
     QMap<QString, QString> &formattingRightMap();
     const Atom *generateAtomList(const Atom *atom, const Node *relative, CodeMarker *marker,
                                  bool generate, int &numGeneratedAtoms);
-    void generateEnumValuesForQmlProperty(const Node *node, CodeMarker *marker);
+    void generateEnumValuesForQmlReference(const Node *node, CodeMarker *marker);
     void generateRequiredLinks(const Node *node, CodeMarker *marker);
     void generateLinkToExample(const ExampleNode *en, CodeMarker *marker,
                                const QString &exampleUrl);

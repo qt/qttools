@@ -801,7 +801,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 qpn->doc().location().warning("Invalid QML property type: %1"_L1.arg(qpn->dataType()));
         }
     }
-    generateEnumValuesForQmlProperty(node, marker);
+    generateEnumValuesForQmlReference(node, marker);
     generateRequiredLinks(node, marker);
 }
 
@@ -2106,18 +2106,19 @@ void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
     }
 }
 
-void Generator::generateEnumValuesForQmlProperty(const Node *node, CodeMarker *marker)
+void Generator::generateEnumValuesForQmlReference(const Node *node, CodeMarker *marker)
 {
-    if (!node->isQmlProperty())
+    const NativeEnum *nativeEnum{nullptr};
+    if (auto *ne_if = dynamic_cast<const NativeEnumInterface *>(node))
+        nativeEnum = ne_if->nativeEnum();
+    else
         return;
 
-    const auto *qpn = static_cast<const QmlPropertyNode*>(node);
-
-    if (!qpn->enumNode())
+    if (!nativeEnum->enumNode())
         return;
 
     // Retrieve atoms from C++ enum \value list
-    const auto body{qpn->enumNode()->doc().body()};
+    const auto body{nativeEnum->enumNode()->doc().body()};
     const auto *start{body.firstAtom()};
     Text text;
 
@@ -2132,9 +2133,9 @@ void Generator::generateEnumValuesForQmlProperty(const Node *node, CodeMarker *m
 
     text << Atom(Atom::ListRight, ATOM_LIST_VALUE);
     if (marker)
-        generateText(text, qpn, marker);
+        generateText(text, node, marker);
     else
-        generateText(text, qpn);
+        generateText(text, node);
 }
 
 void Generator::terminate()

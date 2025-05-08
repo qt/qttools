@@ -2704,7 +2704,7 @@ void DocBookGenerator::generateBody(const Node *node)
         // Warning generation skipped with respect to Generator::generateBody.
     }
 
-    generateEnumValuesForQmlProperty(node, nullptr);
+    generateEnumValuesForQmlReference(node, nullptr);
     generateRequiredLinks(node);
 }
 
@@ -3940,12 +3940,13 @@ void DocBookGenerator::generateEnumValue(const QString &enumValue, const Node *r
     // must be reversed so that they are processed in the order
     const auto *node = relative->parent();
 
-    if (relative->isQmlProperty()) {
-        const auto *qpn = static_cast<const QmlPropertyNode*>(relative);
-        if (qpn->enumNode() && !enumValue.startsWith("%1."_L1.arg(qpn->enumPrefix()))) {
-            m_writer->writeCharacters("%1.%2"_L1.arg(qpn->enumPrefix(), enumValue));
-            return;
-        }
+    const NativeEnum *nativeEnum{nullptr};
+    if (auto *ne_if = dynamic_cast<const NativeEnumInterface *>(relative))
+        nativeEnum = ne_if->nativeEnum();
+
+    if (nativeEnum && nativeEnum->enumNode() && !enumValue.startsWith("%1."_L1.arg(nativeEnum->prefix()))) {
+        m_writer->writeCharacters("%1.%2"_L1.arg(nativeEnum->prefix(), enumValue));
+        return;
     }
 
     if (!relative->isEnumType()) {
@@ -3966,7 +3967,7 @@ void DocBookGenerator::generateEnumValue(const QString &enumValue, const Node *r
     m_writer->writeStartElement(dbNamespace, "code");
     for (auto parent : parents) {
         generateSynopsisName(parent, relative, true);
-        m_writer->writeCharacters("::");
+        m_writer->writeCharacters((relative->genus() == Genus::QML) ? "."_L1 : "::"_L1);
     }
 
     m_writer->writeCharacters(enumValue);
