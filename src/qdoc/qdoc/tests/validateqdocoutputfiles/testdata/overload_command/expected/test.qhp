@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+    <namespace>org.qt-project.test.001</namespace>
+    <virtualFolder>test</virtualFolder>
+    <metaData name="version" value=""/>
+    <filterSection>
+        <toc>
+            <section ref="index.html" title="UI Components">
+                <section ref="" title="Classes">
+                    <section ref="testclass.html" title="TestClass Class Reference">
+                        <section ref="testclass-members.html" title="List of all members"/>
+                    </section>
+                </section>
+            </section>
+        </toc>
+        <keywords>
+            <keyword name="TestClass" id="TestClass" ref="testclass.html"/>
+            <keyword name="another_method" id="TestClass::another_method" ref="testclass.html#another_method"/>
+            <keyword name="method" id="TestClass::method" ref="testclass.html#method"/>
+        </keywords>
+        <files>
+            <file>testclass-members.html</file>
+            <file>testclass.html</file>
+        </files>
+    </filterSection>
+</QtHelpProject>

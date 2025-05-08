@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Overload command test Reference Documentation" version="" project="Overload command test">
+    <namespace name="" status="active" access="public" module="overload command test">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="classwithoverloads.h" documented="true" module="TestModule" brief="A class for the purpose of testing QDoc's \overload command">
+            <function name="another_method" fullname="TestClass::another_method" href="testclass.html#another_method" status="active" access="public" location="classwithoverloads.h" documented="true" meta="plain" type="void" signature="void another_method()"/>
+            <function name="another_method" fullname="TestClass::another_method" href="testclass.html#another_method-1" status="active" access="public" location="classwithoverloads.h" documented="true" meta="plain" overload="true" overload-number="1" type="void" signature="void another_method(float overloads)">
+                <parameter type="float" name="overloads" default=""/>
+            </function>
+            <function name="another_method" fullname="TestClass::another_method" href="testclass.html#another_method-2" status="active" access="public" location="classwithoverloads.h" documented="true" meta="plain" overload="true" overload-number="2" type="void" signature="void another_method(int number)">
+                <parameter type="int" name="number" default=""/>
+            </function>
+            <function name="method" fullname="TestClass::method" href="testclass.html#method" status="active" access="public" location="classwithoverloads.h" documented="true" meta="plain" type="void" signature="void method()"/>
+        </class>
+        <module name="TestModule" href="testmodule-module.html" status="internal" seen="false" title=""/>
+    </namespace>
+</INDEX>

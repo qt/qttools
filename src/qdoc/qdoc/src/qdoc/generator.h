@@ -37,7 +37,8 @@ public:
         PrivateSignal,
         QmlSignalHandler,
         AssociatedProperties,
-        BindableProperty
+        BindableProperty,
+        OverloadNote
     };
 
     Generator(FileResolver& file_resolver);

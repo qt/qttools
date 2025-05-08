@@ -267,9 +267,11 @@ void Aggregate::resolveRelates()
  */
 void Aggregate::normalizeOverloads()
 {
-    for (auto map_it = m_functionMap.begin(); map_it != m_functionMap.end(); ++map_it) {
-        if ((*map_it).size() > 1) {
-            std::sort((*map_it).begin(), (*map_it).end(),
+    for (auto &map_it : m_functionMap) {
+        if (map_it.size() == 1) {
+            map_it.front()->setOverloadNumber(0);
+        } else if (map_it.size() > 1) {
+            std::sort(map_it.begin(), map_it.end(),
                 [](const FunctionNode *f1, const FunctionNode *f2) -> bool {
                     if (f1->isInternal() != f2->isInternal())
                         return f2->isInternal();
@@ -282,7 +284,7 @@ void Aggregate::normalizeOverloads()
             });
             // Set overload numbers
             signed short n{0};
-            for (auto *fn : (*map_it))
+            for (auto *fn : map_it)
                 fn->setOverloadNumber(n++);
         }
     }
