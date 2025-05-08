@@ -59,7 +59,7 @@ protected:
     bool generateThreadSafeness(const Node *node);
     bool generateSince(const Node *node);
     void generateAddendum(const Node *node, Generator::Addendum type, CodeMarker *marker,
-                          bool generateNote) override;
+                          AdmonitionPrefix prefix) override;
     using Generator::generateBody;
     void generateBody(const Node *node);
 

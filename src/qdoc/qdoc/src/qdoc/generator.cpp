@@ -718,7 +718,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             if (fn->hasAssociatedProperties())
                 generateAddendum(node, AssociatedProperties, marker);
             if (fn->hasOverloads() && fn->doc().hasOverloadCommand())
-                generateAddendum(node, OverloadNote, marker);
+                generateAddendum(node, OverloadNote, marker, AdmonitionPrefix::None);
         }
 
         // Generate warnings
@@ -1267,17 +1267,22 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
   as the code marker.
 */
 void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *marker,
-                                 bool generateNote)
+                                 AdmonitionPrefix prefix)
 {
     Q_ASSERT(node && !node->name().isEmpty());
     Text text;
     text << Atom(Atom::DivLeft,
-            "class=\"admonition %1\""_L1.arg(generateNote ? u"note"_s : u"auto"_s));
+                 "class=\"admonition %1\""_L1.arg(prefix == AdmonitionPrefix::Note ? u"note"_s : u"auto"_s));
     text << Atom::ParaLeft;
 
-    if (generateNote) {
-        text  << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-              << "Note: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
+    switch (prefix) {
+    case AdmonitionPrefix::None:
+        break;
+    case AdmonitionPrefix::Note: {
+        text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+             << "Note: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
+        break;
+        }
     }
 
     switch (type) {
