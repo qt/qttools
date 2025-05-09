@@ -209,7 +209,7 @@ static bool autoDetectLicenseFiles(Package &p)
         } else if (licensesDir.exists(fileName)) {
             p.licenseFiles.append(licensesDir.filePath(fileName));
         } else {
-            std::cerr << "tr(Missing expected license file:)" << std::endl;
+            std::cerr << qPrintable(tr("Missing expected license file:")) << std::endl;
             std::cerr << qPrintable(QDir::toNativeSeparators(licensesDirLocal.filePath(fileNameLocal)))
                       << std::endl;
             if (!licensesDirPath.isEmpty()) {
