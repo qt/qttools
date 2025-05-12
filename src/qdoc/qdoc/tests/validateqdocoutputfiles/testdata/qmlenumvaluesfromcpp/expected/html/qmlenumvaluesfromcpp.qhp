@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+    <namespace></namespace>
+    <virtualFolder></virtualFolder>
+    <metaData name="version" value=""/>
+    <filterSection>
+        <toc>
+            <section ref="index.html" title="">
+                <section ref="" title="">
+                    <section ref="class.html" title="Class Class Reference">
+                        <section ref="class-members.html" title="List of all members"/>
+                    </section>
+                    <section ref="qmlmodule-qmlmodule.html" title=""/>
+                    <section ref="qml-qmlmodule-type.html" title="Type Type Reference">
+                        <section ref="qml-qmlmodule-type-members.html" title="List of all members"/>
+                    </section>
+                </section>
+            </section>
+        </toc>
+        <keywords>
+            <keyword name="Class" id="Class" ref="class.html"/>
+            <keyword name="Class::Else" id="Class::Else" ref="class.html#MoreValues-enum"/>
+            <keyword name="Class::MoreValues" id="Class::MoreValues" ref="class.html#MoreValues-enum"/>
+            <keyword name="Class::One" id="Class::One" ref="class.html#Values-enum"/>
+            <keyword name="Class::Something" id="Class::Something" ref="class.html#MoreValues-enum"/>
+            <keyword name="Class::Three" id="Class::Three" ref="class.html#Values-enum"/>
+            <keyword name="Class::Two" id="Class::Two" ref="class.html#Values-enum"/>
+            <keyword name="Class::Values" id="Class::Values" ref="class.html#Values-enum"/>
+            <keyword name="Type" id="QML.Type" ref="qml-qmlmodule-type.html"/>
+            <keyword name="Type" id="QML.QmlModule.Type" ref="qml-qmlmodule-type.html"/>
+            <keyword name="Type::And" id="Type::And" ref="qml-qmlmodule-type.html#different-enum"/>
+            <keyword name="Type::Completely" id="Type::Completely" ref="qml-qmlmodule-type.html#different-enum"/>
+            <keyword name="Type::For" id="Type::For" ref="qml-qmlmodule-type.html#different-enum"/>
+            <keyword name="Type::different" id="Type::different" ref="qml-qmlmodule-type.html#different-enum"/>
+            <keyword name="Type::more_values" id="Type::more_values" ref="qml-qmlmodule-type.html#more_values-enum"/>
+            <keyword name="something" id="Type::something" ref="qml-qmlmodule-type.html#something-prop"/>
+            <keyword name="values" id="Type::values" ref="qml-qmlmodule-type.html#values-prop"/>
+        </keywords>
+        <files>
+            <file>class-members.html</file>
+            <file>class.html</file>
+            <file>module-module.html</file>
+            <file>qml-qmlmodule-type-members.html</file>
+            <file>qml-qmlmodule-type.html</file>
+            <file>qmlmodule-qmlmodule.html</file>
+        </files>
+    </filterSection>
+</QtHelpProject>

@@ -21,3 +21,19 @@
     \qmlproperty enumeration Type::something
     \qmlenumeratorsfrom [SomeType] Class::MoreValues
 */
+
+/*!
+    \qmlenum Type::different
+
+    \value And now
+    \value For something
+    \value [since 0.9] Completely different
+*/
+
+/*!
+    \qmlenum Type::more_values
+    \qmlenumeratorsfrom [More] Class::Values
+
+    //! Attempt linking to \qmlenum enumerator
+    \sa {Type::And}{Type.And}
+*/
