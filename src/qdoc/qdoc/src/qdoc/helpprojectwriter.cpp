@@ -288,6 +288,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         break;
 
     case NodeType::Enum:
+    case NodeType::QmlEnum:
         project.m_keywords.append(keywordDetails(node));
         {
             const auto *enumNode = static_cast<const EnumNode *>(node);
