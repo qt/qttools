@@ -14,6 +14,12 @@
             </enum>
         </class>
         <qmlclass name="Type" qml-module-name="QmlModule" fullname="QmlModule.Type" href="qml-qmlmodule-type.html" status="active" access="public" location="qmltype.qdoc" documented="true" title="Type" fulltitle="Type" subtitle="">
+            <qmlenum name="different" fullname="QmlModule.Type.different" href="qml-qmlmodule-type.html#different-enum" status="active" access="public" location="qmltype.qdoc" documented="true">
+                <value name="And"/>
+                <value name="For"/>
+                <value name="Completely" since="0.9"/>
+            </qmlenum>
+            <qmlenum name="more_values" fullname="QmlModule.Type.more_values" href="qml-qmlmodule-type.html#more_values-enum" status="active" access="public" location="qmltype.qdoc" documented="true"/>
             <qmlproperty name="something" fullname="QmlModule.Type.something" href="qml-qmlmodule-type.html#something-prop" status="active" access="public" location="qmltype.qdoc" documented="true" type="enumeration" attached="false" writable="true"/>
             <qmlproperty name="values" fullname="QmlModule.Type.values" href="qml-qmlmodule-type.html#values-prop" status="active" access="public" location="qmltype.qdoc" documented="true" type="enumeration" attached="false" writable="true"/>
         </qmlclass>

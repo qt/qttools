@@ -6,12 +6,23 @@ includepaths = ./src
 
 {sourcedirs,headerdirs} = ./src
 
+tagfile = test.tag
+
 # zero warning policy
 warninglimit = 0
 warninglimit.enabled = true
 
 # don't write host system-specific paths to index files
 locationinfo = false
+
+# Configure .qhp generation
+qhp.projects            = QmlEnumValuesFromCpp
+
+qhp.Test.file           = qmlenumvaluesfromcpp.qhp
+qhp.Test.namespace      = org.qt-project.qmlenumvaluesfromcpp.001
+qhp.Test.virtualFolder  = qmlenumvaluesfromcpp
+qhp.Test.indexTitle     =
+qhp.Test.indexRoot      =
 
 outputformats = HTML WebXML DocBook
 {HTML.nosubdirs,WebXML.nosubdirs,DocBook.nosubdirs} = true
