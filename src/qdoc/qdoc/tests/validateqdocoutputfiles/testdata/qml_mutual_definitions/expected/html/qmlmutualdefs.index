@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QMLMutualDefs Reference Documentation" version="" project="QMLMutualDefs">
+    <namespace name="" status="active" access="public" module="qmlmutualdefs">
+        <qmlclass name="A" qml-module-name="QDocTest" qml-base-type="QDocTest::B" fullname="QDocTest.A" href="qml-qdoctest-a.html" status="active" access="public" location="A.qml" documented="true" title="A" fulltitle="A" subtitle=""/>
+        <qmlclass name="AbstractApplicationWindow" qml-module-name="QDocTest" qml-base-type="QDocTest::ApplicationWindow" fullname="QDocTest.AbstractApplicationWindow" href="qml-qdoctest-abstractapplicationwindow.html" status="active" access="public" location="AbstractApplicationWindow.qml" documented="true" title="AbstractApplicationWindow" fulltitle="AbstractApplicationWindow" subtitle=""/>
+        <qmlclass name="ApplicationWindow" qml-module-name="QDocTest" fullname="QDocTest.ApplicationWindow" href="qml-qdoctest-applicationwindow.html" status="active" access="public" location="ApplicationWindow.qml" documented="true" title="ApplicationWindow" fulltitle="ApplicationWindow" subtitle=""/>
+        <qmlclass name="B" qml-module-name="QDocTest" qml-base-type="QDocTest::C" fullname="QDocTest.B" href="qml-qdoctest-b.html" status="active" access="public" location="B.qml" documented="true" title="B" fulltitle="B" subtitle=""/>
+        <qmlclass name="C" qml-module-name="QDocTest" fullname="QDocTest.C" href="qml-qdoctest-c.html" status="active" access="public" location="C.qml" documented="true" title="C" fulltitle="C" subtitle=""/>
+        <qmlclass name="SelfInheriting" qml-module-name="QDocTest" fullname="QDocTest.SelfInheriting" href="qml-qdoctest-selfinheriting.html" status="active" access="public" location="SelfInheriting.qml" documented="true" title="SelfInheriting" fulltitle="SelfInheriting" subtitle=""/>
+        <qmlmodule name="QDocTest" qml-module-name="QDocTest" href="qdoctest-qmlmodule.html" status="active" location="foo.qdoc" documented="true" seen="true" title="Foo QML Types" brief="Stuff"/>
+    </namespace>
+</INDEX>

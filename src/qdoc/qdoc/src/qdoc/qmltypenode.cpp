@@ -141,16 +141,54 @@ void QmlTypeNode::resolveInheritance(NodeMap &previousSearches)
         previousSearches.insert(m_qmlBaseName, base);
     }
 
-    if (base && base != this) {
-        m_qmlBaseNode = base;
-        QmlTypeNode::addInheritedBy(base, this);
-        // Base types read from the index need resolving as they only have the name set
-        if (base->isIndexNode())
-            base->resolveInheritance(previousSearches);
+    if (base) {
+        if (base != this) {
+            m_qmlBaseNode = base;
+            QmlTypeNode::addInheritedBy(base, this);
+            // Base types read from the index need resolving as they only have the name set
+            if (base->isIndexNode())
+                base->resolveInheritance(previousSearches);
+        } else
+            location().report(QStringLiteral("Type is its own base type: '%1'").arg(name()));
     }
 
     if (!base)
         location().report(QStringLiteral("Unknown base '%1' for QML type '%2'").arg(qmlBaseName(), name()));
+}
+
+/*!
+    Checks and warns about problems with the inheritance of this QML type.
+*/
+void QmlTypeNode::checkInheritance()
+{
+    /* Use Floyd's cycle-finding algorithm (tortoise and hare) to detect base
+       types that inherit from their descendants. */
+    const QmlTypeNode *qtn = this;
+    const QmlTypeNode *hare = qtn;
+
+    // Record the previous type found by the hare for reporting.
+    QmlTypeNode *previous;
+
+    while (qtn && hare) {
+        // Examine the base node.
+        qtn = qtn->qmlBaseNode();
+
+        /* The hare node moves two nodes up the inheritance tree to increase
+           the cycle detection distance, recording the previous type in case
+           it needs to be reported. */
+        for (int i = 0; i < 2; i++)
+            if (hare) {
+                previous = const_cast<QmlTypeNode *>(hare);
+                hare = hare->qmlBaseNode();
+            }
+
+        // Only report a cycle if both nodes are non-null and identical.
+        if (qtn && hare && qtn == hare) {
+            location().report(QStringLiteral("Circular type inheritance: '%1'").arg(previous->name()));
+            previous->m_qmlBaseNode = nullptr;
+            break;
+        }
+    }
 }
 
 QT_END_NAMESPACE

@@ -688,6 +688,12 @@ void Aggregate::resolveQmlInheritance()
             continue;
         static_cast<QmlTypeNode *>(child)->resolveInheritance(previousSearches);
     }
+
+    // At this point we check for cycles in the inheritance of QML types.
+    for (auto *child : std::as_const(m_children)) {
+        if (child->isQmlType())
+            static_cast<QmlTypeNode *>(child)->checkInheritance();
+    }
 }
 
 /*!

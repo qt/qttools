@@ -1,0 +1,23 @@
+project = QMLMutualDefs
+productname = Qt
+
+moduleheader = foo.h
+headerdirs  = ./src
+sourcedirs  = ./src
+includepaths = ./src
+
+# To begin with, just test HTML to avoid too many expected output file
+outputformats = HTML
+HTML.nosubdirs = true
+
+HTML.outputsubdir = html
+
+headers.fileextensions  = "*.h *.hpp"
+sources.fileextensions  = "*.cpp *.qml *.qdoc"
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
