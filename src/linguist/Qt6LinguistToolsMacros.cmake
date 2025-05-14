@@ -418,6 +418,43 @@ function(_qt_internal_generated_qm_file_path out_var ts_file default_out_dir)
     set("${out_var}" "${qm}" PARENT_SCOPE)
 endfunction()
 
+function(_qt_internal_apply_lrelease_xcode_workaround)
+    set(no_value_options "")
+    set(single_value_options
+        LRELEASE_TARGET
+        TARGETS
+    )
+    set(multi_value_options
+        QM_FILES
+    )
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "${no_value_options}" "${single_value_options}" "${multi_value_options}"
+    )
+
+    if(NOT arg_LRELEASE_TARGET)
+        message(FATAL_ERROR "Missing LRELEASE_TARGET argument.")
+    endif()
+
+    # QTBUG-103470: Save the target responsible for driving the build of the custom command
+    # into an internal source file property. It will be added as a dependency for targets
+    # created by _qt_internal_process_resource, to avoid the Xcode issue of not allowing
+    # multiple targets depending on the output, without having a common target ancestor.
+    #
+    # We add the source file property to all target directory scopes given by the TARGETS
+    # option, which in one code path will be the qt_add_translations scope (usually root project
+    # scope), and in another case the target resource directory scope
+    # (which might be different).
+    set(scope_args "")
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18" AND arg_TARGETS)
+        set(scope_args TARGET_DIRECTORY ${arg_TARGETS})
+    endif()
+    set_source_files_properties(${qm_files}
+        ${scope_args}
+        PROPERTIES
+            _qt_resource_target_dependency "${arg_LRELEASE_TARGET}"
+    )
+endfunction()
+
 function(qt6_add_lrelease)
     set(options
         NO_TARGET_DEPENDENCY        ### Qt7: remove together with legacy signature
@@ -426,7 +463,9 @@ function(qt6_add_lrelease)
     set(oneValueArgs
         __QT_INTERNAL_DEFAULT_QM_OUT_DIR
         LRELEASE_TARGET
-        QM_FILES_OUTPUT_VARIABLE)
+        QM_FILES_OUTPUT_VARIABLE
+        __QT_INTERNAL_OUT_LRELEASE_TARGET
+    )
     set(multiValueArgs
         TS_FILES
         OPTIONS)
@@ -483,18 +522,6 @@ function(qt6_add_lrelease)
             DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::lrelease "${ts_file}"
             VERBATIM)
         list(APPEND qm_files "${qm}")
-
-        # QTBUG-103470: Save the target responsible for driving the build of the custom command
-        # into an internal source file property. It will be added as a dependency for targets
-        # created by _qt_internal_process_resource, to avoid the Xcode issue of not allowing
-        # multiple targets depending on the output, without having a common target ancestor.
-        set(scope_args "")
-        if(legacy_signature_used AND CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
-            set(scope_args TARGET_DIRECTORY ${legacy_target})
-        endif()
-        set_source_files_properties("${qm}" ${scope_args} PROPERTIES
-            _qt_resource_target_dependency "${lrelease_target}"
-        )
     endforeach()
 
     if(legacy_signature_used)
@@ -514,6 +541,13 @@ function(qt6_add_lrelease)
         add_custom_target(${lrelease_target} ${maybe_all} DEPENDS ${qm_files})
     endif()
 
+    # Apply the workaround in the lrelease_target directory scope.
+    _qt_internal_apply_lrelease_xcode_workaround(
+        LRELEASE_TARGET "${lrelease_target}"
+        TARGETS "${lrelease_target}"
+        QM_FILES ${qm_files}
+    )
+
     if(NOT DEFINED QT_GLOBAL_LRELEASE_TARGET)
         set(QT_GLOBAL_LRELEASE_TARGET release_translations)
     endif()
@@ -527,6 +561,10 @@ function(qt6_add_lrelease)
 
     if(NOT "${arg_QM_FILES_OUTPUT_VARIABLE}" STREQUAL "")
         set("${arg_QM_FILES_OUTPUT_VARIABLE}" "${qm_files}" PARENT_SCOPE)
+    endif()
+
+    if(NOT "${arg___QT_INTERNAL_OUT_LRELEASE_TARGET}" STREQUAL "")
+        set("${arg___QT_INTERNAL_OUT_LRELEASE_TARGET}" "${lrelease_target}" PARENT_SCOPE)
     endif()
 endfunction()
 
@@ -730,6 +768,7 @@ function(qt6_add_translations)
         QM_FILES_OUTPUT_VARIABLE qm_files
         OPTIONS "${arg_LRELEASE_OPTIONS}"
         __QT_INTERNAL_DEFAULT_QM_OUT_DIR "${arg___QT_INTERNAL_DEFAULT_QM_OUT_DIR}"
+        __QT_INTERNAL_OUT_LRELEASE_TARGET generated_lrelease_target
     )
 
     # Make the .ts files visible in IDEs.
@@ -759,6 +798,13 @@ function(qt6_add_translations)
     )
 
     if(NOT "${arg_RESOURCE_PREFIX}" STREQUAL "")
+        # Apply the workaround in the directory scope of all targets for which we create resources.
+        _qt_internal_apply_lrelease_xcode_workaround(
+            LRELEASE_TARGET "${generated_lrelease_target}"
+            TARGETS ${targets}
+            QM_FILES ${qm_files}
+        )
+
         set(accumulated_out_targets "")
         foreach(target IN LISTS targets)
             get_target_property(target_binary_dir ${target} BINARY_DIR)

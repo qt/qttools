@@ -74,4 +74,13 @@ _qt_internal_test_expect_pass(test_i18n_source_language
 if(NOT CMAKE_CROSSCOMPILING)
     _qt_internal_test_expect_pass(test_i18n_find_package_in_subdir BINARY app1)
     _qt_internal_test_expect_pass(test_i18n_subdir BINARY app1)
+
+    if(APPLE)
+        _qt_internal_test_expect_pass(test_i18n_subdir
+            TESTNAME test_i18n_subdir_xcode
+            GENERATOR Xcode
+            MAKE_PROGRAM xcodebuild
+            BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/test_i18n_subdir_xcode"
+        )
+    endif()
 endif()
