@@ -303,13 +303,11 @@ void Aggregate::normalizeOverloads()
 const NodeList &Aggregate::nonfunctionList()
 {
     m_nonfunctionList = m_nonfunctionMap.values();
-    // Erase duplicates
-    std::sort(m_nonfunctionList.begin(), m_nonfunctionList.end());
-    m_nonfunctionList.erase(std::unique(m_nonfunctionList.begin(), m_nonfunctionList.end()),
-                            m_nonfunctionList.end());
-
     // Sort based on node name
     std::sort(m_nonfunctionList.begin(), m_nonfunctionList.end(), Node::nodeNameLessThan);
+    // Erase duplicates
+    m_nonfunctionList.erase(std::unique(m_nonfunctionList.begin(), m_nonfunctionList.end()),
+                            m_nonfunctionList.end());
     return m_nonfunctionList;
 }
 
