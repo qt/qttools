@@ -161,7 +161,7 @@ private:
                       const QString &segments, bool isDeclaration,
                       NamespaceList *resolved, NamespaceList *unresolved) const;
     bool findNamespaceCallback(const Namespace *ns, void *context) const;
-    const Namespace *findNamespace(const NamespaceList &namespaces, int nsCount = -1) const;
+    Namespace *findNamespace(const NamespaceList &namespaces, int nsCount = -1) const;
     void enterNamespace(NamespaceList *namespaces, const HashString &name);
     void truncateNamespaces(NamespaceList *namespaces, int lenght);
     Namespace *modifyNamespace(NamespaceList *namespaces, bool haveLast = true);
@@ -1148,9 +1148,9 @@ bool CppParser::findNamespaceCallback(const Namespace *ns, void *context) const
     return true;
 }
 
-const Namespace *CppParser::findNamespace(const NamespaceList &namespaces, int nsCount) const
+Namespace *CppParser::findNamespace(const NamespaceList &namespaces, int nsCount) const
 {
-    const Namespace *ns = 0;
+    Namespace *ns = 0;
     if (nsCount == -1)
         nsCount = namespaces.size();
     visitNamespace(namespaces, nsCount, &CppParser::findNamespaceCallback, &ns);
@@ -1160,8 +1160,17 @@ const Namespace *CppParser::findNamespace(const NamespaceList &namespaces, int n
 void CppParser::enterNamespace(NamespaceList *namespaces, const HashString &name)
 {
     *namespaces << name;
-    if (!findNamespace(*namespaces))
-        modifyNamespace(namespaces, false);
+
+    Namespace *ns;
+    if (!(ns = findNamespace(*namespaces)))
+        ns = modifyNamespace(namespaces, false);
+
+    const Namespace *cns = &results->rootNamespace;
+    for (int i = 0; i < namespaces->size(); ++i) {
+        ns->usings << cns->usings;
+        if (!(cns = cns->children.value(namespaces->at(i))))
+            break;
+    }
 }
 
 void CppParser::truncateNamespaces(NamespaceList *namespaces, int length)

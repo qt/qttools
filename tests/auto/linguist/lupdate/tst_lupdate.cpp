@@ -270,6 +270,7 @@ void tst_lupdate::good_data()
         "parseqrc_json"_L1,
         "prefix"_L1,
         "preprocess"_L1,
+        "using_namespaces"_L1,
         "proparsing2"_L1, // llvm8 cannot handle file name without extension
         "respfile"_L1, //@lst not supported with the new parser yet (include not properly set in the compile_command.json)
         "cmdline_deeppath"_L1, //no project file, new parser does not support (yet) this way of launching lupdate
