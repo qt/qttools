@@ -1190,7 +1190,12 @@ void CppParser::enterNamespace(NamespaceList *namespaces, const HashString &name
     if (!(ns = findNamespace(*namespaces)))
         ns = modifyNamespace(namespaces, false);
 
-    ns->usings << ns->parent->usings;
+    const Namespace *cns = &results->rootNamespace;
+    for (int i = 0; i < namespaces->size(); ++i) {
+        ns->usings << cns->usings;
+        if (!(cns = cns->children.value(namespaces->at(i))))
+            break;
+    }
 }
 
 void CppParser::truncateNamespaces(NamespaceList *namespaces, int length)
