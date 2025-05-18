@@ -513,7 +513,7 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::ConditionalExpression *expression)
     return false;
 }
 
-bool QmlMarkupVisitor::visit(QQmlJS::AST::Expression *expression)
+bool QmlMarkupVisitor::visit(QQmlJS::AST::CommaExpression *expression)
 {
     QQmlJS::AST::Node::accept(expression->left, this);
     addVerbatim(expression->commaToken);
