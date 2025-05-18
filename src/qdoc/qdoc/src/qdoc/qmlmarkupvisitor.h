@@ -75,7 +75,7 @@ public:
     bool visit(QQmlJS::AST::NotExpression *) override;
     bool visit(QQmlJS::AST::BinaryExpression *) override;
     bool visit(QQmlJS::AST::ConditionalExpression *) override;
-    bool visit(QQmlJS::AST::Expression *) override;
+    bool visit(QQmlJS::AST::CommaExpression *) override;
 
     bool visit(QQmlJS::AST::Block *) override;
     void endVisit(QQmlJS::AST::Block *) override;
