@@ -5,6 +5,9 @@ project                 = QtDesigner
 description             = Qt Widgets Designer Manual
 examplesinstallpath     = designer
 
+# Path to the root of qttools (for automatic linking to source code)
+url.sources.rootdir     = ../../../../..
+
 qhp.projects            = QtDesigner
 
 qhp.QtDesigner.file                = qtdesigner.qhp

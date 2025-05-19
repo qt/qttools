@@ -7,6 +7,9 @@ version                 = $QT_VERSION
 
 examplesinstallpath     = uitools
 
+# Path to the root of qttools (for automatic linking to source code)
+url.sources.rootdir     = ../../..
+
 qhp.projects            = QtUiTools
 
 qhp.QtUiTools.file                = qtuitools.qhp
