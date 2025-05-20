@@ -1,0 +1,128 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \example localizedclock-switchlocale
+    \ingroup examples-linguist
+    \examplecategory {User Interface Components}
+    \meta tags {qtquick,i18n,l10n,linguist,runtime,switch}
+
+    \title Localized Clock with Runtime Language Switch
+
+    \brief The example demonstrates best practices for using
+    Qt's translation and localization features in \l{Build with CMake}{CMake}
+    and \l{Qt Quick}, in particular changing the language of an application during
+    runtime. It extends the simpler \l{Localized Clock Example}.
+
+    See the \l{Qt Linguist Manual} for more information about
+    translating Qt applications.
+
+    \section1 User Interface
+
+    The example shows the current time and date in your system's locale
+    and language. The UI texts are also localized for the following languages:
+    English, German, French, Spanish, Italian, Japanese, Korean, Portuguese,
+    Arabic, and Chinese. Users can also use a menu button to select different
+    languages and locales.
+
+    The English version of the application:
+    \image linguist-localizedclock_switchlang_en.webp
+
+    The German version after changing the language at runtime:
+    \image linguist-localizedclock_switchlang_de.webp
+
+
+    \section1 Implementation
+
+    The application has four parts:
+    \list
+        \li \l {CMakeLists.txt}
+        \li \l main.cpp
+        \li \l {Translator Manager (translator.h, translator.cpp)}
+        \li \l{localizedclock-switchlocale#Main.qml}{Main.qml}
+    \endlist
+
+    \section2 CMakeLists.txt
+    The CMake integration is the same as the
+    \l{localizedclock#CMakeLists.txt}{CMake integration} of
+    the \l{localizedclock}{Localized Clock} example.
+    Please refer to that page for more details.
+
+    \section2 main.cpp
+    The starting point of the application, responsible for loading the
+    QML module.
+
+    \quotefromfile localizedclock-switchlocale/main.cpp
+    \skipto main
+    \printuntil }
+    \printuntil }
+
+    \section2 Translator Manager (translator.h, translator.cpp)
+
+    \c TranslatorManager is a QML singleton class that manages language and
+    locale switching at runtime. The central method of the class is
+    \c TranslatorManager::switchLanguage(), which accepts a string
+    representing a language code.
+
+    While the method is marked with \l Q_INVOKABLE, the TranslatorManager
+    class is declared with \l QML_ELEMENT and \l QML_SINGLETON.
+    This allows the method to be directly accessed from QML; also, see
+    \l{localizedclock-switchlocale#Main.qml}{Main.qml}.
+
+    \quotefromfile localizedclock-switchlocale/translatormanager.cpp
+    \skipto TranslatorManager::switchLanguage
+    \printuntil }
+    \printuntil }
+    \printuntil }
+
+    \section3 Updating Translations at Runtime
+
+    Upon switching language, the previous translation
+    is removed (QCoreApplication::removeTranslator()) and a
+    new translation for the selected language is
+    loaded (QTranslator::load()) and installed
+    (QCoreApplication::installTranslator()).
+    \l QQmlEngine::retranslate() then triggers the retranslation of
+    the strings in the QML document.
+
+    \section3 Updating Date and Time Formats
+
+    Changing language could also affect how dates and times are displayed.
+    For instance, if QLocale on your system prefers locale "en_US" for
+    "en", and "de_DE" for "de":
+    \list
+        \li The application is initially loaded with "US" as the country code.
+        \li Due to the US locale conventions, the date is presented in \e MM/DD/YYYY
+            format, and the time uses a 12-hour clock.
+        \li After changing the language to German, "de_DE" is the first preferred
+            locale for the German language, so the country changes to Germany.
+        \li The German conventions bring the date in \e DD.MM.YYYY format and
+            use a 24-hour clock.
+    \endlist
+
+    Upon switching the language, the application updates its QLocale
+    according to the selected language using \l QLocale::setDefault().
+    When representing time, the function
+    \l[QML]{Date::toLocaleTimeString()}{Date.toLocaleTimeString()} takes care of localizing the time and date
+    according to the locale of the application (see \l{localizedclock-switchlocale#Main.qml}{Main.qml}).
+
+
+    \section2 Main.qml
+    The main QML file defines the application's user interface.
+    The UI presents time, date, and a counter for seconds. For the basic
+    translation (window title) and plural handling (number of seconds),
+    please refer to the \l{localizedclock#Main.qml}{Localized Clock} example.
+
+    Upon selecting an item from the \c Menu \c TranslatorManager.switchLanguage()
+    is called with the respective language code. This call also takes care of
+    retranslating the translatable texts (see
+    \l{Translator Manager (translator.h, translator.cpp)}{Translator Manager}).
+    However, we still need to invoke \c updateClock() to
+    update the time representation in the new localization format
+    when the language is changed.
+
+    \quotefromfile localizedclock-switchlocale/Main.qml
+    \skipto ListModel
+    \printuntil root.updateClock()
+    \printuntil /^ {8}\}/
+ */

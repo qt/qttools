@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ko" sourcelanguage="en">
+<context>
+    <name>Main</name>
+    <message>
+        <location filename="../Main.qml" line="17"/>
+        <source>Digital Clock</source>
+        <translation>디지털 시계</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../Main.qml" line="89"/>
+        <source>%n second(s)</source>
+        <comment>seconds</comment>
+        <translation>
+            <numerusform>%n초</numerusform>
+        </translation>
+    </message>
+</context>
+</TS>
