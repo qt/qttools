@@ -1,0 +1,301 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \example localizedclock-idbased
+    \ingroup examples-linguist
+    \examplecategory {User Interface Components}
+    \meta tags {qtquick,i18n,l10n,linguist,plurals,id-based}
+
+    \title Localized Clock with ID-based Translation
+
+    \brief The example shows best practices for using Qt's ID-based
+    translation features in CMake and Qt Quick including the handling
+    of plurals in different languages, and localized time formats.
+
+    \section1 User Interface
+    The example shows the current time and date in your system's locale and language.
+    Translation for these languages is supported:
+    English, German, French, Spanish, Italian, Japanese, Korean, Portuguese,
+    Arabic, and Chinese.
+    If your desktop is in another language, it falls back to English.
+
+    The example also accepts a locale as a command-line argument to
+    test different languages and locales without altering your system.:
+    \c {localizedClockIdBased --locale en_GB} or
+    \c {localizedClockIdBased --locale de}
+
+    By default, the application shows the time and date in the \e{current locale},
+    but it also provides a button that opens a dialog with a list of time zones.
+    The user can use the dialog to change the time zone of the clock.
+
+    \section2 ID-based Translation
+
+    In this example, we use ID-based translation, where translatable
+    texts are identified by a \e{unique ID} rather than the
+    traditional \e{context + text} combination
+    (see \l{Text ID-based translations}). This approach allows
+    translations to be reused across different contexts.
+    We demonstrate this by sharing a translation between
+    \l Main.qml and the \l{Time Zone Dialog}, a QWidget-based
+    form written in C++.
+    Another aspect of ID-based translation is that it
+    separates the text shown in the UI from the developers, making
+    the source code independent of the actual words presented
+    to the user.
+
+    In the following two screenshots from the application in English,
+    the two instances of the text "Select time zone: " in the main
+    window (QML) and the dialog (C++) share the same translation by
+    using the same ID.
+
+    Screenshot from the application window in English version:
+    \image linguist-localizedclock-idbased_en.webp
+    The dialog with a list of time zones (English version):
+    \image linguist-localizedclock-idbased-dialog_en.webp
+
+    The main window of the application in German:
+    \image linguist-localizedclock-idbased_de.webp
+    The dialog with a list of time zones (German version):
+    \image linguist-localizedclock-idbased-dialog_de.webp
+
+    \section1 Implementation
+
+    The application has five parts:
+    \list
+        \li \l CMakeLists.txt
+        \li \l main.cpp
+        \li \l {Time Zone Dialog}
+        \li \l {Time Zone Manager}
+        \li \l Main.qml
+    \endlist
+
+    \section2 CMakeLists.txt
+    The CMake file of the application enables Qt's ID-based translation
+    and localization support. Here are the relevant pieces:
+
+    \b{\c find_package(Qt6 REQUIRED COMPONENTS Core Linguist Qml Quick):}
+            Finds and links the required Qt 6 modules, including \c Linguist,
+            essential for internationalization.
+    \b{\c qt_standard_project_setup():}
+            Sets up the internationalization system with support for the listed
+            locales. Although the source language is English, an English
+            translation is still required when using ID-based
+            translation. The source code only contains the IDs and does not see
+            the source texts. Hence, we need to set up the project with the
+            English translation, so that qt_add_translations creates a TS
+            file for English; otherwise, they will be missing at runtime.
+            \quotefromfile localizedclock-idbased/CMakeLists.txt
+            \skipto qt_standard_project_setup
+            \printuntil I18N_TRANSLATED_LANGUAGES
+
+    \b{\c qt_add_translations(...):}
+            Bundles the functionality of \c lupdate and \c lrelease by generating the
+            translation source files (TS files) in the "i18n" directory using
+            \c clock as the base name, and compiling them into binary \c .qm files if
+            they contain translations.
+            \list
+            \li Generates one TS file per language
+                listed in \c I18N_TRANSLATED_LANGUAGES of \c qt_standard_project_setup.
+            \li \c MERGE_QT_TRANSLATIONS and \c {QT_TRANSLATION_CATALOGS qtbase} include
+                the Qt translations in the project. This is necessary to translate
+                the buttons of the \c QDialog widget in the \l{Time Zone Dialog}. As the text
+                on those buttons is controlled by QDialog, without including Qt
+                translations those buttons do not get translated (see the translated
+                texts of the dialog in the German screenshots in \l {ID-based Translation}).
+            \endlist
+            \quotefromfile localizedclock-idbased/CMakeLists.txt
+            \skipto qt_add_translations
+            \printuntil )
+
+    \b{\c qt_add_qml_module(...):}
+            Adds a QML module under the URI \c qtexamples.localizedclock,
+            includes the \l Main.qml file, and imports the source and header
+            files of \l{Time Zone Manager} into the QML module.
+            \quotefromfile localizedclock-idbased/CMakeLists.txt
+            \skipto qt_add_qml_module
+            \printuntil )
+
+    \section2 main.cpp
+    The starting point of the application. This part is responsible
+    for setting the locale, installing required translations, and
+    loading UI. Below is an explanation of the relevant pieces of code:
+
+    Define the locale argument, e.g., \c {--locale en_US} or \c{--locale de_DE}:
+
+    \quotefromfile localizedclock-idbased/main.cpp
+    \skipto QCommandLineParser parser
+    \printuntil parser.process
+
+    Parse the arguments, fetch the provided locale, and set the input
+    locale as the default locale of the application:
+
+    \quotefromfile localizedclock-idbased/main.cpp
+    \skipto QLocale locale
+    \printuntil QLocale::setDefault
+
+    Install the English translation regardless of the locale, to allow incomplete
+    translations for other languages. QTranslator queries translations
+    for texts in the reversed order in which the translations are installed:
+
+    \quotefromfile localizedclock-idbased/main.cpp
+    \skipto QTranslator enPlurals
+    \printuntil app.installTranslator
+
+    Install a translation according to the given locale:
+
+    \quotefromfile localizedclock-idbased/main.cpp
+    \skipto QTranslator translation
+    \printuntil }
+    \printuntil }
+    \printuntil }
+
+    As we installed English translation in the previous step, we might end
+    up with two installed translations. Qt uses the most recently installed
+    translation for any overlapping keys. Therefore, the locale-specific
+    translation will take precedence over English, and in case of any missing
+    translations, QTranslator falls back to English.
+
+    \section2 Time Zone Dialog
+    This class is a C++ \l {QWidget}-based dialog (\l QDialog) that shows a
+    \l QComboBox containing a list of time zones.
+    Below is an explanation of the code:
+
+    Enable ID-based translation in the UI form (dialog.ui):
+    \code
+    <ui version="4.0" idbasedtr="true">
+    \endcode
+
+    Set the title with ID-based translation (dialog.ui). Here,
+    "title" is the unique ID of the translation:
+    \code
+    <property name="windowTitle">
+        <string id="title">Time Zone</string>
+    </property>
+    \endcode
+
+    Add a label with ID-based translation (dialog.ui), with the
+    ID "timezonelabel":
+    \code
+    <widget class="QLabel" name="label">
+    ...
+    <property name="text">
+    <string id="timezonelabel">Select time zone</string>
+    </property>
+    ...
+    </widget>
+    \endcode
+
+    \section2 Time Zone Manager
+    A \c QML_SINGLETON class in \c C++ responsible for handling
+    time zone changes.
+
+    Upon selecting a time zone by the user, the instance of \c TimeZoneManager
+    remembers the chosen time zone:
+    \quotefromfile localizedclock-idbased/timezonemanager.cpp
+    \skipto connect
+    \printuntil connect
+
+    Updating the time zone emits a TimeZoneManager::timeZoneChanged signal:
+    \quotefromfile localizedclock-idbased/timezonemanager.cpp
+    \skipto TimeZoneManager::setTimeZone
+    \printuntil }
+    \printuntil }
+
+    \c TimeZoneManager::currentTimeZoneOffsetMs() is marked with
+    \l Q_INVOKABLE and returns the time offset of the selected time zone.
+    Since the \c TimeZoneManager class is declared with \l QML_ELEMENT
+    and \l QML_SINGLETON, the method can be directly accessed from QML
+    to update the presented time; also, see \l{Main.qml}.
+
+    \quotefromfile localizedclock-idbased/timezonemanager.cpp
+    \skipto currentTimeZoneOffsetMs
+    \printuntil }
+
+    \section2 Main.qml
+    The main QML file defines the application's user interface.
+    The UI presents time, date, current time zone, and a counter for seconds.
+    It also provides a button that opens a \l {Time Zone Dialog} to change the
+    time zone.
+    Below is an explanation of the relevant pieces of code:
+
+    \b{Define the window and set its title using \l qsTrId()
+    for ID-based translation.} The text
+    for the source language is specified using the meta string
+    notation \c {//%} (see \l {Text ID-based translations}).
+    \l lupdate parses the
+    meta strings and writes the defined source texts to the TS file.
+    As the source text is specified using meta strings and in the form
+    of a comment, they are not visible to the application at runtime.
+    Hence, when the application is loaded in the English locale, even
+    though the source language is in English, it still needs to install
+    the English translation to present the English texts.
+    Otherwise, the raw ID "Main-Digital-Clock" is shown. This is also
+    why we specified "en" in \c I18N_TRANSLATED_LANGUAGES
+    by the setup in \l{CMakeLists.txt}.
+
+    \qml
+    //% "Digital Clock"
+    title: qsTrId("Main-Digital-Clock")
+    \endqml
+
+    \b{Show the number of seconds using \l qsTrId() with plural support.}
+    Again here the text in the source language is specified using
+    the \c{//%} meta string.
+    The plural form is enabled by using the special notation "%n"
+    in the source text in the meta string (see \l{Handle Plural Forms}).
+    Depending on the value of n, the translation function returns a
+    different translation, with the correct grammatical number for the
+    target language.
+    For instance in English, if the value of \c root.seconds is larger
+    than one, the plural form is used, otherwise the singular form is used.
+    In \l{Translation Rules for Plural Forms} you find the plural rules
+    for different languages.
+
+    \qml
+    //% "%n second(s)"
+    text: qsTrId("Main-n-second-s", root.seconds)
+    \endqml
+
+    \b{Display the currently selected time zone using ID-based
+    translation,} with \c { //% "Time zone: "} specifying the
+    text in the source language:
+    \qml
+    //% "Time zone: "
+    text: qsTrId("timezone") + TimeZoneManager.timeZone;
+    \endqml
+
+    \b{A Button to open the \l {Time Zone Dialog}.} The text on the
+    button is specified using \l qsTrId() for ID-based translation.
+    In this case, the source text is not defined by meta
+    strings anymore since this is a reuse of the ID "timezonelabel",
+    which was previously used in the dialog.ui document
+    (see \l{Time Zone Dialog}). In ID-based translation, it
+    suffices to specify the source text per ID only once in the project:
+    \quotefromfile localizedclock-idbased/Main.qml
+    \skipto Button
+    \printuntil }
+
+    Upon changing the time zone and receiving the
+    \c TimeZoneManager::timeZoneChanged() signal
+    (see \l{Time Zone Manager}), update the \c diff variable with
+    the time offset of the selected time zone:
+    \quotefromfile localizedclock-idbased/Main.qml
+    \skipto Connections
+    \printuntil }
+    \printuntil }
+
+    \b{Declare a Timer} that triggers every second and updates the time,
+    date, and seconds properties. The timer calculates the time by adding the
+    current time to the time offset of the selected time zone:
+    \quotefromfile localizedclock-idbased/Main.qml
+    \skipto Timer
+    \printuntil }
+    \printuntil }
+
+    The locale affects how dates and times are displayed.
+    These are formatted according to the current locale's country conventions.
+    For example, a German locale results in 24-hour time and
+    \e DD.MM.YYYY date format, while a US locale uses a 12-hour clock and
+    \e MM/DD/YYYY date format.
+*/
