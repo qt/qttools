@@ -1,0 +1,214 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \example localizedclock
+    \ingroup examples-linguist
+    \examplecategory {User Interface Components}
+    \meta tags {qtquick,i18n,l10n,linguist,plurals}
+
+    \title Localized Clock Example
+
+    \brief The example shows best practices for using Qt's translation and
+    localization features in CMake and Qt Quick including the handling
+    of plurals in different languages, and localized time and date formats.
+
+    See the \l{Qt Linguist Manual} for more information about
+    translating Qt applications.
+
+    \section1 User Interface
+
+    The example shows the current time and date in the locale and language of
+    your system. The texts in the UI are furthermore localized for
+    the following languages:
+    English, German, French, Spanish, Italian, Japanese, Korean, Portuguese,
+    Arabic, and Chinese.
+    If your desktop is in another language, it falls back to English.
+
+    To test different languages and locales without altering your system, the
+    example also accepts a locale as command line argument. For example,
+    starting localizedClock from the command line with the option
+    \c{--locale de} shows the clock in German, with a date and time
+    format as it is common in Germany.
+
+    The screenshot shows the en_US version:
+    \image linguist-localizedclock_en_US.webp
+
+    \section2 Internationalization
+
+    In the application translation is used to set the main window
+    title and a few UI texts, including ones with placeholders
+    and plural forms. The application counts the seconds with
+    \e{plural forms} enabled (see \l{Handle Plural Forms}). As a
+    result, depending on the count of seconds, the translation function
+    returns a different translation, with the correct grammatical
+    number for the target language.
+    For instance, in English, if the count is larger
+    than \e one, the \e plural form is used, otherwise the \e singular
+    form is used. In \l{Translation Rules for Plural Forms} you find
+    the plural rules for different languages.
+
+    The locale also affects how dates and times are displayed.
+    These are formatted according to the country conventions of the current
+    locale. For example, a German locale results in 24-hour time and
+    the day written before the month, while a US locale
+    uses a 12-hour clock, and the month is written before the day.
+
+    This screenshot shows the en_GB version. Notice that the data format is
+    different than the en_US version above, while the same English plural
+    translation is loaded in both cases.
+
+    \image linguist-localizedclock_en_GB.webp
+
+    Here is the screenshot of the de_DE version, which similar to GB has a
+    different date format than US. Notice that the German translation for
+    regular and plural forms is loaded accordingly.
+
+    \image linguist-localizedclock_de_DE.webp
+
+    \section1 Implementation
+
+    The implementation has three parts:
+    \list
+    \li \l{CMakeLists.txt}
+    \li \l{main.cpp}
+    \li \l{Main.qml}
+    \endlist
+
+    \section2 CMakeLists.txt
+
+    The CMake file of the application enables Qt's translation and localization support.
+    Here are the relevant pieces:
+
+    \c find_package(Qt6 REQUIRED COMPONENTS Core Linguist Qml Quick):
+    Finds and links the required Qt 6 modules, including \c Linguist which
+    are essential for internationalization.
+
+    \c qt_standard_project_setup(...):
+    Sets up the internationalization system with support for the listed
+    locales. \c I18N_SOURCE_LANGUAGE is left at its default value (English),
+    since the source code contains English texts.
+    \quotefromfile localizedclock/CMakeLists.txt
+    \skipto qt_standard_project_setup
+    \printuntil I18N_TRANSLATED_LANGUAGES
+
+    \c qt_add_translations(...):
+    Bundles the functionality of \c lupdate and \c lrelease by generating the
+    translation source files (TS files) in the "i18n" directory using
+    \c clock as the base name, and compiling them into binary \c .qm files if
+    they contain translations. The following TS files are generated:
+    \list
+    \li "clock_{de, ar, ko, zh, ja, fr, it, es, pt}.ts": One TS file per language
+        listed in \c I18N_TRANSLATED_LANGUAGES of \c qt_standard_project_setup
+        containing the translations to that language.
+    \li "clock_en.ts": Contains English plural forms, since the source code
+        has plural form translation ("%n second(s)").
+        The function \c qt_add_translations writes only the plural forms here,
+        as we specified the language of the texts in the source code as English,
+        by leaving \c I18N_SOURCE_LANGUAGE with the default value. So the reglular
+        texts do not need translations.
+    \endlist
+    \quotefromfile localizedclock/CMakeLists.txt
+    \skipto qt_add_translations
+    \printuntil )
+
+    \c qt_add_qml_module(...):
+    Adds a QML module under the URI \c qtexamples.localizedclock, including
+    the \l Main.qml file.
+    \quotefromfile localizedclock/CMakeLists.txt
+    \skipto qt_add_qml_module
+    \printuntil )
+
+    \section2 main.cpp
+    The starting point of the application. This part is responsible
+    for setting the locale, installing required translations, and
+    loading UI. Below is an explanation of the relevant pieces of code:
+
+    Define the locale argument, e.g., \c {--locale en_US} or \c{--locale de_DE}:
+
+    \quotefromfile localizedclock/main.cpp
+    \skipto QCommandLineParser parser
+    \printuntil parser.process
+
+    Parse the arguments, fetch the provided locale, and set the input
+    locale as the default locale of the application:
+
+    \quotefromfile localizedclock/main.cpp
+    \skipto QLocale locale
+    \printuntil QLocale::setDefault
+
+
+    Install the English translation regardless of the locale, to allow incomplete
+    translations for other languages. QTranslator queries translations
+    for texts in the reversed order the translations are installed:
+
+    \quotefromfile localizedclock/main.cpp
+    \skipto QTranslator enPlurals
+    \printuntil app.installTranslator
+
+    Install a translation according to the given locale. As English translation
+    is already installed in the previous step, we might end
+    up with two installed translations here. Qt uses the most recently installed
+    translation for any overlapping keys. Therefore, the locale-specific
+    translation will take precedence over English, and in case of any missing
+    translations, QTranslator falls back to English.
+
+    \quotefromfile localizedclock/main.cpp
+    \skipto QTranslator translation
+    \printuntil }
+    \printuntil }
+    \printuntil }
+
+    \section2 Main.qml
+    This QML file defines the main UI window of the application, which
+    presents time, date, the used locale, and a counter for seconds.
+    Below is an explanation of the relevant pieces of code:
+
+    \b {Set the title of the Window using qsTr() for translation.} To
+    find the translation for this text QTranslator queries in the
+    TS file of the current language the text \e{"Digital Clock"}
+    within the context \e{"Main"} (the file name):
+
+    \qml
+    title: qsTr("Digital Clock")
+    \endqml
+
+    \b{Show the number of seconds using qsTr() with plural (numeral) support.}
+    The plural form is enabled by using the special notation "%n"
+    (see \l{Handle Plural Forms}).
+    Depending on the value of n, the translation function returns a
+    different translation, with the correct grammatical number for the
+    target language.
+    For instance in English, if the value of \c root.seconds is larger
+    than one, the plural form is used, otherwise the singular form is used.
+    In \l{Translation Rules for Plural Forms} you find the plural rules
+    for different languages.
+
+    \qml
+    text: qsTr("%n second(s)", "seconds", root.seconds)
+    \endqml
+
+    \b{Display the current locale and use qsTr() to translate
+    the source text "Locale: %1".} Also the translation needs
+    to contain the argument notation "%1". As a result, the
+    argument of the text (i.e. \c{Qt.locale().name}) can
+    correctly be used to format the text:
+
+    \qml
+    text: qsTr("Locale: %1").arg(Qt.locale().name)
+    \endqml
+
+    \b{Format the time and date according to the locale convensions.}
+    Different countires might have specific preferences on
+    how time and date should be presented.
+    For instance, the German locale uses a 24-hour clock and writes
+    the day before the month, whereas the US locale follows a
+    12-hour clock and places the month before the day.
+    The method Date.toLocaleTimeString takes these considerations
+    into account and formats the time and date correctly based
+    on the given locale:
+
+    \quotefromfile localizedclock/Main.qml
+    \skipto const now
+    \printuntil root.date
+*/
