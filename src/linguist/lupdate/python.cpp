@@ -724,21 +724,21 @@ private:
     }
 
     QString yyFileName;
-    Token yyTok;
-    int yyCh;
+    Token yyTok{};
+    int yyCh{};
     QByteArray yyIdent;
     char yyString[65536];
-    size_t yyStringLen;
-    int yyParenDepth;
+    size_t yyStringLen{};
+    int yyParenDepth{};
     int yyLineNo = 1;
-    int yyCurLineNo;
+    int yyCurLineNo{};
     // the file to read from (if reading from a file)
     FILE *yyInFile;
     // the string to read from and current position in the string (otherwise)
-    int yyInPos;
-    int buf;
-    int yyIndentationSize;
-    int yyContinuousSpaceCount;
+    int yyInPos{};
+    int buf{};
+    int yyIndentationSize{};
+    int yyContinuousSpaceCount{};
     bool yyCountingIndentation = false;
     // (Context, indentation level) pair.
     using ContextPair = QPair<QByteArray, int>;
