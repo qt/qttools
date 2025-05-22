@@ -137,6 +137,18 @@
           fully qualified with the scope of the class that declares
           the function.
 
+    \section1 No output generated for <entity> because <parent> is undocumented
+
+    QDoc issues this warning when parsing a documentation comment for an
+    API entity such as a class member, but cannot produce any output because
+    the associated parent (class) is not documented. Ensure that the parent is
+    documented and that QDoc is configured to parse the source file containing
+    the documentation comment.
+
+    If the documented member belongs to a class that is not meant to be
+    documented, mark the class as \qdoccmd {internal} or use the
+    \qdoccmd {dontdocument} command.
+
     \section1 QML type <TypeName> documented with <ClassName> as its native type. Replacing <ClassName> with <OtherClass>
     If the \qdoccmd nativetype command is used with the same argument in
     multiple QML type documentation comments that belong to the same

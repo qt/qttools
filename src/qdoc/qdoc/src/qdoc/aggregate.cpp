@@ -190,6 +190,47 @@ FunctionNode *Aggregate::findFunctionChild(const FunctionNode *clone)
     return func_it != (*funcs_it).end() ? *func_it : nullptr;
 }
 
+
+/*!
+    \internal
+    Warn about documented, non-private children under undocumented parents - unless
+    the \a child is explicitly set \internal, or their parent() does not match \a
+    aggregate, indicating that \a child is a related non-member. The latter
+    condition avoids duplicate warnings as the node appears under multiple
+    aggregates.
+
+    The warning is skipped for children of proxy nodes and namespace nodes. Proxies
+    have no documentation as they're automatically generated. For namespaces, this
+    check is done separately after merging potentially multiple namespace nodes
+    referring to the same namespace; see
+    NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace().
+
+    Likewise, the warning is skipped for children of aggregates marked with the
+    \\dontdocument command.
+
+    If either \c {-no-linkerrors} or \c {-showinternal} command-line option is set,
+    these warnings are not generated. \c {-no-linkerrors} avoids false positives
+    in cases where the aggregate is documented outside the current project and was
+    not loaded from index. With \c {-showinternal} set, the warning is not required as
+    internal nodes generate output.
+*/
+static void warnAboutDocumentedChildInUndocumentedParent(const Node *aggregate, const Node *child)
+{
+    Q_ASSERT(child);
+    const auto *parent{child->parent()};
+    if (parent && parent == aggregate && !child->isPrivate() && child->status() != Node::Internal
+            && !parent->isProxyNode() && !parent->isNamespace() &&!parent->isDontDocument()
+            && !parent->hasDoc()) {
+        const auto &config{Config::instance()};
+        if (!config.get(CONFIG_NOLINKERRORS).asBool() && !config.get(CONFIG_SHOWINTERNAL).asBool())
+            child->doc().location().warning(
+                    "No output generated for %1 '%2' because '%3' is undocumented"_L1
+                        .arg(child->nodeTypeString(),
+                             child->plainFullName(),
+                             child->parent()->name()));
+    }
+}
+
 /*!
   Mark all child nodes that have no documentation as having
   private access and internal status. qdoc will then ignore
@@ -210,6 +251,8 @@ void Aggregate::markUndocumentedChildrenInternal()
                 child->setAccess(Access::Private);
                 child->setStatus(Node::Internal);
             }
+        } else {
+            warnAboutDocumentedChildInUndocumentedParent(this, child);
         }
         if (child->isAggregate()) {
             static_cast<Aggregate *>(child)->markUndocumentedChildrenInternal();

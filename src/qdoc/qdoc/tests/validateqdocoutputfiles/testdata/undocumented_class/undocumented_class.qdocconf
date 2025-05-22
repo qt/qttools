@@ -1,0 +1,10 @@
+project = Undocumented class with documented members
+moduleheader = class.h
+{includepaths,headerdirs,sourcedirs} = src
+
+locationinfo = false
+
+# This project generates three warnings but no .html output
+# TODO: Test the actual content of warnings
+warninglimit = 3
+warninglimit.enabled = true
