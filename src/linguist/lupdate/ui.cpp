@@ -141,9 +141,9 @@ void UiReader::readTranslationAttributes(const QXmlStreamAttributes &atts)
         m_comment = atts.value(QStringLiteral("comment")).toString();
         m_extracomment = atts.value(QStringLiteral("extracomment")).toString();
         m_id = atts.value(QStringLiteral("id")).toString();
-        const QString label = atts.value(QStringLiteral("label")).toString();
+        QString label = atts.value(QStringLiteral("label")).toString();
         if (!m_id.isEmpty())
-            m_label = label;
+            m_label = std::move(label);
         else if (!label.isEmpty())
             m_cd.appendError("%1:%2: labels cannot be used with text-based translation. "
                              "Ignoring\n"_L1.arg(m_cd.m_sourceFileName)
