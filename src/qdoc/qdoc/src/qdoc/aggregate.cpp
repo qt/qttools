@@ -166,7 +166,7 @@ FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters
     // Assumes that overloads are already normalized; i.e, if there's
     // an active function, it'll be found at the start of the list.
     auto *fn = (*(*map_it).begin());
-    return (parameters.isEmpty() && !fn->isInternal()) ? fn : nullptr;
+    return (parameters.isEmpty() && !fn->isInternal() && !fn->isDeprecated()) ? fn : nullptr;
 }
 
 /*!
