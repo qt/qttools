@@ -459,7 +459,7 @@
     \endquotation
 
     \note Do not use this command to deprecate a module. Use the
-    \l {deprecated-command}{\\deprecated} instead.
+    \l {deprecated-command}{\\deprecated} command instead.
 
     In HTML output, this state information appears also in the navigation
     bar (breadcrumbs) of reference pages for the module's members.
