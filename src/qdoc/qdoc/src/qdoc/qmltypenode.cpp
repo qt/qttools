@@ -149,7 +149,7 @@ void QmlTypeNode::resolveInheritance(NodeMap &previousSearches)
             if (base->isIndexNode())
                 base->resolveInheritance(previousSearches);
         } else
-            location().report(QStringLiteral("Type is its own base type: '%1'").arg(name()));
+            location().warning(QStringLiteral("Type is its own base type: '%1'").arg(name()));
     }
 
     if (!base)
@@ -184,7 +184,7 @@ void QmlTypeNode::checkInheritance()
 
         // Only report a cycle if both nodes are non-null and identical.
         if (qtn && hare && qtn == hare) {
-            location().report(QStringLiteral("Circular type inheritance: '%1'").arg(previous->name()));
+            location().warning(QStringLiteral("Cyclic type inheritance: '%1'").arg(previous->name()));
             previous->m_qmlBaseNode = nullptr;
             break;
         }

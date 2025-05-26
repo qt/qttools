@@ -16,7 +16,7 @@ headers.fileextensions  = "*.h *.hpp"
 sources.fileextensions  = "*.cpp *.qml *.qdoc"
 
 # zero warning policy
-warninglimit = 0
+warninglimit = 3
 warninglimit.enabled = true
 
 # don't write host system-specific paths to index files
