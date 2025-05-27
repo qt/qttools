@@ -18,11 +18,16 @@ if(WIN32)
     list(APPEND optional_components AxContainer)
 endif()
 
-find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core)
+find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals)
+
+# This should be called as early as possible, just after find_package(BuildInternals) where it is
+# defined.
+qt_internal_project_setup()
+
+find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS Core)
 find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS
              DBus Network Xml Widgets Quick QuickWidgets Qml QmlLSPrivate
              Sql PrintSupport OpenGL OpenGLWidgets QuickLayouts ${optional_components})
-qt_internal_project_setup()
 
 qt_build_repo()
 
