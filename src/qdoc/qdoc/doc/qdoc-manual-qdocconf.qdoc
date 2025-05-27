@@ -142,7 +142,7 @@
     \list
     \li \l {defines-variable} {defines}
     \li \l {depends-variable} {depends}
-    \li \l {documentationinheaders-variable} {documentationinheaders} (technical preview)
+    \li \l {documentationinheaders-variable} {documentationinheaders}
     \li \l {exampledirs-variable} {exampledirs}
     \li \l {examples-variable} {examples}
     \li \l {examplesinstallpath-variable} {examplesinstallpath}
@@ -330,9 +330,7 @@
     See also \l indexes, \l project, and \l url.
 
     \target documentationinheaders-variable
-    \section1 documentationinheaders (technical preview)
-
-    \note This configuration flag enables a technical preview feature in QDoc.
+    \section1 documentationinheaders
 
     Set \c {documentationinheaders = true} to instruct QDoc to parse
     documentation comments also in header files when generating
@@ -340,6 +338,8 @@
 
     \warning In large code bases, this may impact QDoc's processing time.
     Therefore, you shouldn't set this flag unless you need it.
+
+    This feature was introduced to QDoc with Qt 6.9.
 
     \target exampledirs-variable
     \section1 exampledirs
