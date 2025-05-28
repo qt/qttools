@@ -11,6 +11,7 @@
 
         "Description": "Catch2 is a multi-paradigm test framework for C++.",
         "Homepage": "https://github.com/catchorg/Catch2",
+        "Comment": "no relevant PURL or CPE set, because the dependency is only for tests",
         "Version": "2.13.10",
         "License": "Boost Software License 1.0",
         "LicenseId": "BSL-1.0",
