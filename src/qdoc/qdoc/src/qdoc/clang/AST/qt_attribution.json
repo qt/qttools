@@ -11,6 +11,7 @@
 
         "Description": "A part of Clang's C++ API that deals with fully qualifying types.",
         "Homepage": "https://github.com/llvm/llvm-project",
+        "Comment": "no relevant PURL or CPE set, because the dependency is a single file",
         "Version": "16.0",
         "License": "Apache License 2.0",
         "LicenseId": "Apache-2.0 WITH LLVM-exception",
