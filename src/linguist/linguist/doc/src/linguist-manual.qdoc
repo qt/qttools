@@ -34,6 +34,7 @@
                 \li \l {Creating translation files}
                 \li \l {Using lupdate}
                 \li \l {Using lrelease}
+                \li \l {Using lconvert}
             \endlist
         \li
             \list
@@ -455,7 +456,7 @@
     \target lrelease
 
     \previouspage Using lupdate
-    \nextpage Translators
+    \nextpage Using lconvert
 
     \title Using lrelease
 
@@ -574,9 +575,168 @@
 */
 
 /*!
-    \page linguist-translators.html
+    \page linguist-lconvert.html
+    \target lconvert
 
     \previouspage Using lrelease
+    \nextpage Translators
+
+    \title Using lconvert
+
+    The \c lconvert command line tool filters and converts translation data
+    files.
+
+    It supports the following file formats:
+    \list
+        \li \c pot - GNU Gettext localization template files
+        \li \c qph - Qt Linguist Phrase Book
+        \li \c ts  - Qt translation sources
+        \li \c po  - GNU Gettext localization files
+        \li \c qm  - Compiled Qt translations
+        \li \c xlf - XLIFF localization files
+    \endlist
+
+    \section1 lconvert syntax
+
+    \badcode
+    lconvert [options] <infile> [<infile>...]
+    \endcode
+
+    Where:
+
+    \list
+        \li \c options means one or several \l {lconvert options}.
+        \li \c infile is an input file. You can specify multiple input files.
+    \endlist
+
+    If you specify multiple input files, they are merged with translations from
+    later files taking precedence.
+
+    To view the latest \c lconvert help, enter:
+
+    \badcode
+    lconvert -help
+    \endcode
+
+    \section2 lconvert options
+
+    \table
+    \header
+        \li Option
+        \li Action
+    \row
+        \li \c -h \br \c -help
+        \li Display up-to-date help information and exit.
+    \row
+        \li \c {-i <infile>} \br \c {-input-file <infile>}
+        \li Specify an input file. Use this option if \c{<infile>} starts with a dash.
+            Use this option several times to merge inputs.
+            May be \c {-} (standard input) for use in a pipe.
+    \row
+        \li \c {-o <outfile>} \br \c {-output-file <outfile>}
+        \li Specify an output file. Default is \c {-} (standard output).
+    \row
+        \li \c {-if <informat>} \br \c {-input-format <format>}
+        \li Specify input format for subsequent input files.
+            The format is auto-detected from the file name and defaults to \c ts.
+    \row
+         \li \c {-of <outformat>} \br \c {-output-format <outformat>}
+         \li Specify output format. See \c -if.
+    \row
+        \li \c {-drop-tags <regexp>}
+        \li Drop named extra tags when writing \c TS or \c XLIFF files.
+            You can specify this option repeatedly.
+    \row
+        \li \c {-drop-translations}
+        \li Drop existing translations and reset the status to \c unfinished.
+            That implies \c {--no-obsolete}.
+    \row
+        \li \c {-source-language <language>[_<region>]}
+        \li Specify/override the language of the source strings. Defaults to
+            POSIX if not specified and the file does not name it yet.
+    \row
+        \li \c {-target-language <language>[_<region>]}
+        \li Specify or override the language of the translation.
+            By default, the target language is read from the file content or
+            guessed from the file name.
+    \row
+        \li \c {-no-obsolete}
+        \li Drop obsolete messages.
+    \row
+         \li \c {-no-finished}
+         \li Drop finished messages.
+    \row
+        \li \c {-no-untranslated}
+        \li Drop untranslated messages.
+    \row
+        \li \c {-sort-contexts}
+        \li Sort contexts in the output \c TS file alphabetically.
+    \row
+        \li \c {-sort-messages}
+        \li Sort messages in a context alphabetically in \c TS files.
+    \row
+        \li \c {-locations {absolute|relative|none}}
+        \li Override how source code references are saved in \c TS files.
+            Default is \c absolute.
+    \row
+        \li \c {-no-ui-lines}
+        \li Drop line numbers from references to \c UI files.
+    \row
+        \li \c {-pluralonly}
+        \li Drop non-plural form messages.
+    \row
+        \li \c {-verbose}
+        \li Explain what is being done.
+    \endtable
+
+    \section1 Examples
+
+    \section2 Convert TS file to XLIFF
+
+    To convert a single TS file to XLIFF, run the following command in the
+    terminal:
+
+    \badcode
+    lconvert -o myapp_de.xlf myapp_de.ts
+    \endcode
+
+    \section2 Merge multiple QM files
+
+    The following command merges multiple QM files into \c {full_de.qm}:
+
+    \badcode
+    lconvert -o full_de.qm qtbase_de.qm myapp_de.qm mylib_de.qm
+    \endcode
+
+    \section2 Using lconvert with CMake
+
+    To call \c lconvert when configuring or building your CMake project, load
+    the \c Qt6LinguistTools package and use \c
+    {$<TARGET_FILE_NAME:Qt6::lconvert>} for locating the \c lconvert executable.
+
+    The following example adds a custom target \c xlf_de that converts a single
+    TS file to XLIFF.
+
+    \badcode
+    find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
+
+    add_custom_command(
+        OUTPUT myapp_de.xlf
+        COMMAND $<TARGET_FILE:Qt6::lconvert> -o myapp_de.xlf myapp_de.ts
+        DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/myapp_de.ts"
+        VERBATIM
+    )
+
+    add_custom_target(xlf_de
+        DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/myapp_de.xlf"
+    )
+    \endcode
+*/
+
+/*!
+    \page linguist-translators.html
+
+    \previouspage Using lconvert
     \nextpage Qt Linguist user interface
 
     \title Translators
