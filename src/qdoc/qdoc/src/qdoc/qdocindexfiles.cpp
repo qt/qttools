@@ -251,8 +251,8 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             location = Location(indexUrl + QLatin1Char('/') + name);
         else if (!indexUrl.isNull())
             location = Location(name);
-    } else if (parent && (elementName == QLatin1String("qmlclass") || elementName == QLatin1String("qmlvaluetype")
-                          || elementName == QLatin1String("qmlbasictype"))) {
+    } else if (parent && ((elementName == QLatin1String("qmlclass") || elementName == QLatin1String("qmlvaluetype")
+                           || elementName == QLatin1String("qmlbasictype")))) {
         auto *qmlTypeNode = new QmlTypeNode(parent, name,
                     elementName == QLatin1String("qmlclass") ? NodeType::QmlType : NodeType::QmlValueType);
         qmlTypeNode->setTitle(attributes.value(QLatin1String("title")).toString());
@@ -274,7 +274,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         else if (!indexUrl.isNull())
             location = Location(name);
         node = qmlTypeNode;
-    } else if (elementName == QLatin1String("qmlproperty")) {
+    } else if (parent && elementName == QLatin1String("qmlproperty")) {
         QString type = attributes.value(QLatin1String("type")).toString();
         bool attached = false;
         if (attributes.value(QLatin1String("attached")) == QLatin1String("true"))
