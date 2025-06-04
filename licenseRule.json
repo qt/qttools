@@ -6,7 +6,7 @@
                      "spdx: list of SPDX-License-Expression's allowed in the matching files.",
                      "-------------------------------------------------------",
                      "Files with the following endings are Build System licensed,",
-                     "unless they are examples",
+                     "unless they are examples or test data",
                      "Files with other endings can also be build system files"
                     ],
         "file_pattern_ending": ["CMakeLists.txt", ".cmake", ".pro", ".prf", "configure",
@@ -23,6 +23,11 @@
                    "comment": "Example takes precedence",
                    "file type": "examples and snippets",
                    "spdx": ["LicenseRef-Qt-Commercial OR BSD-3-Clause"]
+                  },
+            "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/.*/expected/": {
+                   "comment": "",
+                   "file type": "test",
+                   "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
                   }
        }
     },
