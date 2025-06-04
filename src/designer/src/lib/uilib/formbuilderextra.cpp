@@ -174,7 +174,18 @@ bool QFormBuilderExtra::applyBuddy(const QString &buddyName, BuddyMode applyMode
         return false;
     }
 
-    const QWidgetList widgets = label->topLevelWidget()->findChildren<QWidget*>(buddyName);
+    // QTBUG-96693: Because the same form can be instantiated on multiple
+    // widgets, when for example using a form for custom widgets, there can
+    // exist multiple widgets with the same buddy name in the window. Since
+    // the buddy closest to the label is the correct one to use, we search
+    // for the buddy bottom-up rather than top-down.
+    QWidgetList widgets;
+    QWidget *parent = label->parentWidget();
+    while (parent && widgets.isEmpty()) {
+        widgets = parent->findChildren<QWidget*>(buddyName);
+        parent = parent->parentWidget();
+    }
+
     if (widgets.isEmpty()) {
         label->setBuddy(nullptr);
         return false;
