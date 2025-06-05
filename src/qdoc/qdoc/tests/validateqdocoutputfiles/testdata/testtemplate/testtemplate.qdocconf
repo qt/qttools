@@ -38,3 +38,6 @@ DocBook.nosubdirs          = true
 DocBook.outputsubdir       = docbook
 WebXML.nosubdirs          = true
 WebXML.outputsubdir       = webxml
+
+# allow a single warning about self-referencing \sa documentation
+warninglimit += 1

@@ -37,3 +37,6 @@ HTML.outputsubdir                   = html
 WebXML.nosubdirs                    = true
 WebXML.outputsubdir                 = webxml
 DocBook.outputsubdir                = docbook
+
+# allow a single warning for self-referencing \sa documentation
+warninglimit += 1

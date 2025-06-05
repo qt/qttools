@@ -190,7 +190,7 @@
     already documented in another module, ensure that this module has
     a dependency to it.
 
-    See also \l {depends-variable}{depends} and {indexes-variable}{indexes}.
+    See also \l {depends-variable}{depends} and \l {indexes-variable}{indexes}.
 
     \section1 Has no \\inmodule command
 
@@ -835,4 +835,59 @@
     This warning typically occurs when developers refer to the underlying Qt
     type used to implement a QML type, such as QStringList instead of
     \c{list<string>}.
+
+    \section1 Type is its own base type: <type>
+
+    The QML type has been incorrectly defined as its own base type, possibly
+    using the \l {inherits-command}{\\inherits} command.
+
+    \section1 Cyclic type inheritance: <type>
+
+    Cyclic or circular inheritance occurs when a QML type inherits from a base
+    type that itself inherits from the original type. This can occur between
+    two mutually inheriting types, or there may be intermediate types between
+    them.
+
+    This warning indicates where a cycle in the inheritance hierarchy has been
+    detected. You should examine the \l {inherits-command}{\\inherits} command
+    for the type and follow the trail of base types until one is found that
+    inherits from a type that you have previously encountered. You should then
+    break the cycle by fixing the incorrect \l {inherits-command}{\\inherits}
+    command for one of the identified types.
+
+    \section1 Redundant link to self in \\sa command for <name>
+
+    A piece of documentation contains a link to itself in the references defined
+    in its \l {sa-command}{\\sa} command.
+
+    This problem tends to occur when there is a collection of related properties
+    or methods that refer to each other, and where the \\sa commands have been
+    copied between them, as in this example:
+
+    \badcode
+        \fn void Items::append(const Item &)
+        ...
+        \sa append(), count(), insert(), remove()
+    \endcode
+
+    It is useful to replace the self-referencing link with one to another
+    related property or method.
+
+    Alternatively, the link may not be specific enough for QDoc to resolve, as
+    in this example:
+
+    \badcode
+        \fn void MyPicture::setSize(int)
+        ...
+        \sa setSize()
+    \endcode
+
+    In this case, the intention may have been to refer to an overload that
+    accepts a \c double argument:
+
+    \badcode
+        \fn void MyPicture::setSize(int)
+        ...
+        \sa setSize(double)
+    \endcode
 */

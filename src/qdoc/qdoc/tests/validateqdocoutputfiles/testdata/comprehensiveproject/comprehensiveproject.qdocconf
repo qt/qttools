@@ -12,8 +12,8 @@ headers.fileextensions = "*.h"
 # images
 imagedirs = ./src/images
 
-# zero warning policy
-warninglimit = 0
+# warning policy
+warninglimit = 3
 warninglimit.enabled = true
 
 # don't write host system-specific paths to index files

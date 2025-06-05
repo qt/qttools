@@ -569,6 +569,14 @@ QString Generator::fullDocumentLocation(const Node *node)
     return parentName.toLower() + anchorRef;
 }
 
+/*!
+    Generates text for a "see also" list for the given \a node and \a marker
+    if a list has been defined.
+
+    Check for links to the node containing the \sa command, looking for empty
+    ref fields to ensure that a link is referring to the node itself and not
+    a different section of a larger document.
+*/
 void Generator::generateAlsoList(const Node *node, CodeMarker *marker)
 {
     QList<Text> alsoList = node->doc().alsoList();
@@ -579,8 +587,25 @@ void Generator::generateAlsoList(const Node *node, CodeMarker *marker)
         text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD) << "See also "
              << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
 
-        for (int i = 0; i < alsoList.size(); ++i)
-            text << alsoList.at(i) << Utilities::separator(i, alsoList.size());
+        QSet<QString> used;
+        QList<Text> items;
+        for (const auto &also : std::as_const(alsoList)) {
+            // Every item starts with a link atom.
+            const Atom *atom = also.firstAtom();
+            QString link = atom->string();
+            if (!used.contains(link)) {
+                items.append(also);
+                used.insert(link);
+
+                QString ref;
+                if (m_qdb->findNodeForAtom(atom, node, ref) == node && ref.isEmpty())
+                    node->doc().location().warning("Redundant link to self in \\sa command for %1"_L1.arg(node->name()));
+            }
+        }
+
+        int i = 0;
+        for (const auto &also : std::as_const(items))
+            text << also << Utilities::separator(i++, items.size());
 
         text << Atom::ParaRight;
         generateText(text, node, marker);
