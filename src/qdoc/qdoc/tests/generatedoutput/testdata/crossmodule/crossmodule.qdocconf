@@ -24,3 +24,5 @@ warninglimit.enabled = true
 # don't write host system-specific paths to index files
 locationinfo = false
 
+# allow a single warning for self-referencing \sa documentation
+warninglimit += 1

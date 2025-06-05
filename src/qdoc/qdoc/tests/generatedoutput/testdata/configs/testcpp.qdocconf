@@ -4,8 +4,8 @@ headers.fileextensions = "*.h"
 # images
 imagedirs = ../images
 
-# zero warning policy
-warninglimit = 0
+# allow a single warning for self-referencing \sa documentation
+warninglimit = 1
 warninglimit.enabled = true
 
 # don't write host system-specific paths to index files

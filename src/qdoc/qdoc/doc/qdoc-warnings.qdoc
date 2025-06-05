@@ -202,7 +202,7 @@
     already documented in another module, ensure that this module has
     a dependency to it.
 
-    See also \l {depends-variable}{depends} and {indexes-variable}{indexes}.
+    See also \l {depends-variable}{depends} and \l {indexes-variable}{indexes}.
 
     \section1 Has no \\inmodule command
 
@@ -926,4 +926,40 @@
     inherits from a type that you have previously encountered. You should then
     break the cycle by fixing the incorrect \l {inherits-command}{\\inherits}
     command for one of the identified types.
+
+    \section1 Redundant link to self in \\sa command for <name>
+
+    A piece of documentation contains a link to itself in the references defined
+    in its \l {sa-command}{\\sa} command.
+
+    This problem tends to occur when there is a collection of related properties
+    or methods that refer to each other, and where the \\sa commands have been
+    copied between them, as in this example:
+
+    \badcode
+        \fn void Items::append(const Item &)
+        ...
+        \sa append(), count(), insert(), remove()
+    \endcode
+
+    It is useful to replace the self-referencing link with one to another
+    related property or method.
+
+    Alternatively, the link may not be specific enough for QDoc to resolve, as
+    in this example:
+
+    \badcode
+        \fn void MyPicture::setSize(int)
+        ...
+        \sa setSize()
+    \endcode
+
+    In this case, the intention may have been to refer to an overload that
+    accepts a \c double argument:
+
+    \badcode
+        \fn void MyPicture::setSize(int)
+        ...
+        \sa setSize(double)
+    \endcode
 */

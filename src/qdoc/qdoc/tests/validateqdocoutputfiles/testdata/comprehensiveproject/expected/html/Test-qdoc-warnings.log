@@ -6,3 +6,4 @@
 
 src/testcpp.cpp:112: [Test] (qdoc) warning: Cannot find 'Test::id' specified with '\property' in any header file
 src/testcpp.h:19: [Test] (qdoc) warning: Undocumented property 'TestQDoc::Test::id'
+src/testcpp.cpp:176: [Test] (qdoc) warning: Redundant link to self in \sa command for methodWithEnDashInItsDocs

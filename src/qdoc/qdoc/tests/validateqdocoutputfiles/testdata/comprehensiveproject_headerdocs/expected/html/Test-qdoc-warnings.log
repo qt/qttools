@@ -4,4 +4,5 @@
 # Path-Format: relative
 #
 
+src/testcpp.h:130: [Test] (qdoc) warning: Redundant link to self in \sa command for methodWithEnDashInItsDocs
 src/qml/Item.qdoc:1: [Test] (qdoc) warning: '\brief' statement does not end with a full stop.
