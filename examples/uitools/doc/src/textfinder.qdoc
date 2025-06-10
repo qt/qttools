@@ -19,8 +19,8 @@
     loaded at runtime, from a the program resources.
 
     \table
-    \row \li \inlineimage textfinder-example-find.webp
-         \li \inlineimage textfinder-example-find2.webp
+    \row \li \inlineimage {textfinder-example-find.webp} {TextFinder find button and input}
+         \li \inlineimage {textfinder-example-find2.webp} {TextFinder Highlighted results}
     \endtable
 
     \section1 Setting Up The Resource File
@@ -42,7 +42,7 @@
 
     The screenshot below shows the preview obtained in \l{Qt Widgets Designer}.
 
-    \image doc/images/textfinder-example-userinterface.webp
+    \image {doc/images/textfinder-example-userinterface.webp} {Screenshot of TestFinder UI}
 
     In this example, we store both resources in the applicaton's executable by
     including the \c{textfinder.qrc} file. Alternatively, the files could also
