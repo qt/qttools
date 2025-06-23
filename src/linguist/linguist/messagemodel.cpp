@@ -625,7 +625,8 @@ QString DataModel::prettifyFileName(const QString &fn)
  *
  *****************************************************************************/
 
-DataModelIterator::DataModelIterator(TranslationType type, DataModel *model, int group, int message)
+DataModelIterator::DataModelIterator(TranslationType type, const DataModel *model, int group,
+                                     int message)
     : DataIndex(type, group, message), m_model(model)
 {
 }

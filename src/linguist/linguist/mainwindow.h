@@ -45,6 +45,7 @@ class Statistics;
 class TranslateDialog;
 class TranslationSettingsDialog;
 class SortedGroupsModel;
+class MachineTranslationDialog;
 
 class MainWindow : public QMainWindow
 {
@@ -128,6 +129,7 @@ private slots:
     void updateActiveModel(int);
     void refreshItemViews();
     void toggleFinished(const QModelIndex &index);
+    void openMachineTranslateDialog();
     void prevUnfinished();
     void nextUnfinished();
     void findNext(const QString &text, DataModel::FindLocation where,
@@ -251,6 +253,7 @@ private:
     Ui::MainWindow m_ui;    // menus and actions
     Statistics *m_statistics;
     RecentFiles m_recentFiles;
+    MachineTranslationDialog *m_machineTranslationDialog = 0;
 };
 
 QT_END_NAMESPACE

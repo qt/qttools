@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-<comment>
+ <comment>
 * Copyright (C) 2016 The Qt Company Ltd.
 * SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 </comment>
@@ -23,7 +24,7 @@
      <x>0</x>
      <y>0</y>
      <width>673</width>
-     <height>28</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPhrases">
@@ -121,6 +122,8 @@
     <property name="title">
      <string>&amp;Translation</string>
     </property>
+    <addaction name="actionAuto_Translation"/>
+    <addaction name="separator"/>
     <addaction name="actionPrevUnfinished"/>
     <addaction name="actionNextUnfinished"/>
     <addaction name="actionPrev"/>
@@ -209,7 +212,7 @@
     <string>Ctrl+Q</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::QuitRole</enum>
+    <enum>QAction::MenuRole::QuitRole</enum>
    </property>
   </action>
   <action name="actionSave">
@@ -264,7 +267,7 @@
     <string>Ctrl+Z</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionRedo">
@@ -281,7 +284,7 @@
     <string>Ctrl+Y</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionCut">
@@ -354,7 +357,7 @@
     <string>Ctrl+F</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionFindNext">
@@ -371,7 +374,7 @@
     <string>F3</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionPrevUnfinished">
@@ -388,7 +391,7 @@
     <string>Ctrl+K</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionNextUnfinished">
@@ -405,7 +408,7 @@
     <string>Ctrl+J</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionPrev">
@@ -422,7 +425,7 @@
     <string>Ctrl+Shift+K</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionNext">
@@ -439,7 +442,7 @@
     <string>Ctrl+Shift+J</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionDoneAndNext">
@@ -456,7 +459,7 @@
     <string>Mark this item as done and move to the next unfinished item.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionBeginFromSource">
@@ -479,7 +482,7 @@
     <string>Ctrl+B</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionAccelerators">
@@ -496,7 +499,7 @@
     <string>Toggles the validity check of accelerators, i.e. whether the number of ampersands in the source and translation text is the same. If the check fails, a message is shown in the warnings window.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionSurroundingWhitespace">
@@ -513,7 +516,7 @@
     <string>Toggles the validity check of surrounding whitespace. If the check fails, a message is shown in the warnings window.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionEndingPunctuation">
@@ -530,7 +533,7 @@
     <string>Toggles the validity check of ending punctuation. If the check fails, a message is shown in the warnings window.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionPhraseMatches">
@@ -547,7 +550,7 @@
     <string>Toggles checking that phrase suggestions are used. If the check fails, a message is shown in the warnings window.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionPlaceMarkerMatches">
@@ -564,7 +567,7 @@
     <string>Toggles the validity check of place markers, i.e. whether %1, %2, ... are used consistently in the source text and translation text. If the check fails, a message is shown in the warnings window.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionNewPhraseBook">
@@ -578,7 +581,7 @@
     <string>Ctrl+N</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionOpenPhraseBook">
@@ -592,7 +595,7 @@
     <string>Ctrl+H</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionResetSorting">
@@ -609,7 +612,7 @@
     <string>Sort the items back in the same order as in the message file.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionDisplayGuesses">
@@ -626,7 +629,7 @@
     <string>Set whether or not to display translation guesses.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionStatistics">
@@ -643,7 +646,7 @@
     <string>Display translation statistics.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionQmlPreview">
@@ -660,7 +663,7 @@
     <string>Display a preview of QML documents.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionManual">
@@ -674,7 +677,7 @@
     <string>F1</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionAbout">
@@ -682,7 +685,7 @@
     <string>About Qt Linguist</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::AboutRole</enum>
+    <enum>QAction::MenuRole::AboutRole</enum>
    </property>
   </action>
   <action name="actionAboutQt">
@@ -693,7 +696,7 @@
     <string>Display information about the Qt toolkit by Digia.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::AboutQtRole</enum>
+    <enum>QAction::MenuRole::AboutQtRole</enum>
    </property>
   </action>
   <action name="actionWhatsThis">
@@ -719,7 +722,7 @@
     <string>Shift+F1</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionSearchAndTranslate">
@@ -733,7 +736,7 @@
     <string>Replace the translation on all entries that matches the search source text.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionBatchTranslation">
@@ -747,7 +750,7 @@
     <string>Batch translate all entries using the information in the phrase books.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionReleaseAs">
@@ -833,7 +836,7 @@
     <string>F5</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionTranslationFileSettings">
@@ -844,7 +847,7 @@
     <string>Translation File &amp;Settings...</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionAddToPhraseBook">
@@ -970,7 +973,7 @@
     <string>Mark this item as done.</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::NoRole</enum>
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionFindPrev">
@@ -982,6 +985,11 @@
    </property>
    <property name="shortcut">
     <string>Shift+F3</string>
+   </property>
+  </action>
+  <action name="actionAuto_Translation">
+   <property name="text">
+    <string>AI Translation...</string>
    </property>
   </action>
  </widget>

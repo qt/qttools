@@ -9,6 +9,7 @@
 #include "mainwindow.h"
 
 #include "batchtranslationdialog.h"
+#include "machinetranslationdialog.h"
 #include "errorsview.h"
 #include "finddialog.h"
 #include "uiformpreviewview.h"
@@ -1809,11 +1810,6 @@ void MainWindow::selectedMessageChanged(const QModelIndex &sortedIndex, const QM
 
 void MainWindow::translationChanged(const MultiDataIndex &index)
 {
-    // We get that as a result of batch translation or search & translate,
-    // so the current model is known to match.
-    if (index != m_currentIndex)
-        return;
-
     m_messageEditor->showMessage(index);
     updateDanger(index, true);
 
@@ -1903,6 +1899,14 @@ void MainWindow::toggleFinished(const QModelIndex &index)
         return;
 
     m_dataModel->setFinished(dataIndex, !m->isFinished());
+}
+
+void MainWindow::openMachineTranslateDialog()
+{
+    if (!m_machineTranslationDialog)
+        m_machineTranslationDialog = new MachineTranslationDialog(this);
+    m_machineTranslationDialog->setDataModel(m_dataModel);
+    m_machineTranslationDialog->open();
 }
 
 /*
@@ -2218,6 +2222,8 @@ void MainWindow::setupMenuBar()
 
     // Translation menu
     // when updating the accelerators, remember the status bar
+    connect(m_ui.actionAuto_Translation, &QAction::triggered, this,
+            &MainWindow::openMachineTranslateDialog);
     connect(m_ui.actionPrevUnfinished, &QAction::triggered, this, &MainWindow::prevUnfinished);
     connect(m_ui.actionNextUnfinished, &QAction::triggered, this, &MainWindow::nextUnfinished);
     connect(m_ui.actionNext, &QAction::triggered, this, &MainWindow::next);

@@ -771,6 +771,7 @@
         \li \l {Reusing translations}
         \li \l {Validating translations}
         \li \l {Translating multiple languages simultaneously}
+        \li \l {AI translation}
     \endlist
 */
 
@@ -1324,7 +1325,7 @@
     \target multiple languages
 
     \previouspage Validating translations
-    \nextpage Developers
+    \nextpage AI translation
 
     \title Translating multiple languages simultaneously
 
@@ -1346,10 +1347,62 @@
 */
 
 /*!
+ \page linguist-ai-translation.html
+ \target ai translation
+
+ \previouspage Translating multiple languages simultaneously
+ \nextpage Developers
+
+ \title AI translation
+
+ The AI Translation feature lets you automatically generate
+translations for the open TS file using a local LLM via Ollama.
+
+ To use AI Translation you must first install
+\l{https://github.com/jmorganca/ollama}{Ollama} and pull at least one model, for example:
+
+ \list
+     \li \c{ollama pull 7shi/llama-translate:8b-q4_K_M}
+     \li \c{ollama pull granite3-dense:2b}
+ \endlist
+
+ Then start the Ollama server if not already started:
+
+ \code
+ ollama serve
+ \endcode
+
+ In Linguist, choose \uicontrol{Translation > AI Translation}
+to open the AI Translation dialog:
+
+ \image linguist-ai-translation-dialog.webp
+
+ The dialog provides:
+
+ \list
+     \li \uicontrol {Ollama Server}: the REST endpoint where Ollama listens
+                    (default \c http://127.0.0.1:11434).
+     \li \uicontrol Model: drop-down of locally installed models.
+     \li \uicontrol File: the TS file to translate.
+     \li \uicontrol Filter (optional): limit to strings in a specific group (context or label).
+     \li \uicontrol Translate button: start the AI translation.
+     \li \uicontrol {Apply Translations} button: apply the translated items into the TS file.
+ \endlist
+
+During translation, progress messages appear in the status bar and in the \uicontrol {Translation
+Log}. When complete, you can check out the translated texts on the log. Upon clicking on
+\uicontrol{Apply Translations}, AI-generated translations are inserted into the TS file.
+
+\note We suggest \e{7shi/llama-translate:8b-q4_K_M} as a balanced, general-purpose
+    model. Feel free to try other models to find the best combination
+    of speed, quality, and resource usage.
+*/
+
+/*!
     \page linguist-programmers.html
     \title Developers
 
-    \previouspage Translating multiple languages simultaneously
+    \previouspage AI translation
     \nextpage TS File Format
 
     \image front-coding.png

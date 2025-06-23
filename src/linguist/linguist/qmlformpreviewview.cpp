@@ -40,8 +40,9 @@ QHash<QString, QList<QObject *>> extractSources(DataModel *m, const QString &con
 {
     QHash<QString, QList<QObject *>> t;
     GroupItem *ctx = m->findGroup(contextName, TEXTBASED);
-    for (int j = 0; j < ctx->messageCount(); j++)
-        t[ctx->messageItem(j)->text()] = {};
+    if (ctx)
+        for (int j = 0; j < ctx->messageCount(); j++)
+            t[ctx->messageItem(j)->text()] = {};
 
     for (DataModelIterator it(IDBASED, m); it.isValid(); ++it)
         t[it.current()->text()] = {};

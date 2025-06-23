@@ -17,6 +17,11 @@ qt_internal_add_app(linguist
         ../shared/ts.cpp
         ../shared/xliff.cpp
         ../shared/xmlparser.cpp ../shared/xmlparser.h
+        ../shared/auto-translation/translationprotocol.h
+        ../shared/auto-translation/ollama.cpp
+        ../shared/auto-translation/ollama.h
+        ../shared/auto-translation/machinetranslator.cpp
+        ../shared/auto-translation/machinetranslator.h
         batchtranslation.ui
         batchtranslationdialog.cpp batchtranslationdialog.h
         errorsview.cpp errorsview.h
@@ -40,6 +45,7 @@ qt_internal_add_app(linguist
         translatedialog.cpp translatedialog.h translatedialog.ui
         translationsettings.ui
         translationsettingsdialog.cpp translationsettingsdialog.h
+        machinetranslationdialog.h machinetranslationdialog.cpp machinetranslationdialog.ui
     DEFINES
         QFORMINTERNAL_NAMESPACE
         QT_KEYWORDS
@@ -115,6 +121,7 @@ qt_add_ui(linguist
         statistics.ui
         translatedialog.ui
         translationsettings.ui
+        machinetranslationdialog.ui
 )
 
 # Resources:

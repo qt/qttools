@@ -140,14 +140,14 @@ protected:
 class DataModelIterator : public DataIndex
 {
 public:
-    DataModelIterator(TranslationType type, DataModel *model = 0, int groupNo = 0,
+    DataModelIterator(TranslationType type, const DataModel *model = 0, int groupNo = 0,
                       int messageNo = 0);
     MessageItem *current() const;
     bool isValid() const;
     void operator++();
 
 private:
-    DataModel *m_model; // not owned
+    const DataModel *m_model; // not owned
 };
 
 class DataModel : public QObject
