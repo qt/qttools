@@ -48,10 +48,7 @@ if(NOT QT_BUILD_SHARED_LIBS)
 ${import_plugin_code}
 ")
 
-        # CMake versions earlier than 3.18.0 can't find the generated file for some reason,
-        # failing at generation phase.
-        # Explicitly marking the file as GENERATED fixes the issue.
-        set_source_files_properties("${out_file_path}" PROPERTIES GENERATED TRUE)
+        _qt_internal_set_source_file_generated(SOURCES "${out_file_path}")
 
         target_sources(${target_name} PRIVATE "${out_file_path}")
         target_link_libraries(${target_name} PRIVATE ${needed_plugin_targets})
