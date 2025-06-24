@@ -914,9 +914,9 @@ function(qt6_add_translations)
     if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
         set(scope_args TARGET_DIRECTORY ${targets})
     endif()
-    set_source_files_properties(${qm_files}
+    _qt_internal_set_source_file_generated(
+        SOURCES ${qm_files}
         ${scope_args}
-        PROPERTIES GENERATED TRUE
     )
 
     if(NOT "${arg_RESOURCE_PREFIX}" STREQUAL "")
