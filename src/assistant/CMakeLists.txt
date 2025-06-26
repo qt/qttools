@@ -50,6 +50,7 @@ if(TARGET qlitehtml)
         qt_disable_warnings(gumbo)
     endif()
     qt_disable_warnings(qlitehtml)
+    target_link_libraries(qlitehtml PRIVATE Qt::PlatformCommonInternal)
     set_target_properties(qlitehtml PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${QT_BUILD_DIR}/${INSTALL_BINDIR}"
         LIBRARY_OUTPUT_DIRECTORY "${QT_BUILD_DIR}/${INSTALL_LIBDIR}"
