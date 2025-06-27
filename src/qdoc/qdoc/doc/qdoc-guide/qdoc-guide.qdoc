@@ -308,20 +308,6 @@
           \l {writing-context}{context commands} that document the context of
           the item.
 
-    The \l{page-command}{\\page} command is for creating articles that are not
-    part of source documentation. The command can also accept two arguments: the
-    file name of the article and the documentation type. The possible types are:
-    \list
-    \li \c howto
-    \li \c overview
-    \li \c tutorial
-    \li \c faq
-    \li \c attribution - used for documenting license attributions
-    \li \c article - \e default when there is no type
-    \endlist
-
-    \snippet examples/samples.qdocinc sample-faq
-
     The \l{Topic Commands} page has information on all of the available topic
     commands.
 
@@ -409,17 +395,12 @@
     \title Categories of Documentation
     \previouspage Writing Documentation
     \nextpage How to Resolve QDoc Warnings
-    \brief Describes the different types such as How-To's, Tutorials, Overviews,
-    Examples, and Class Documentation.
+    \brief Describes the different types of documentation pages.
 
     There are several types of predefined documentation \e categories or
     \e types:
     \list
-    \li How-To's
-    \li Tutorial
-    \li Overview
     \li Article
-    \li FAQ (Frequently Asked Questions)
     \li C++ API Documentation
     \li QML Type Documentation
     \li Code Example
@@ -582,24 +563,6 @@
     to the \\page command:
 
     \snippet examples/samples.qdocinc sample-overview
-
-    The \l{writing-topic-commands}{writing topic commands} section has a listing
-    of the available \\page command arguments.
-
-    \section1 Tutorials, How-To's, FAQ's
-
-    Tutorials, How-To's, and FAQ's are all instructional material, in that they
-    instruct or prescribe to the reader. Tutorials are content designed to guide
-    the reader along a progressive learning path for a concept or technology.
-    How-To's and FAQ's (\e{Frequently Asked Questions}) provide guidance by
-    presenting material in the form of answers to commonly asked topics.
-    How-To's and FAQ's are designed for easy reference and are not necessarily
-    presented in a linear progression.
-
-    To create these types, mark the pages by providing a \c type argument to the
-    \l{page-command}{\\page} command. The \c type argument is the second
-    argument, with the file name being the first.
-    \snippet examples/samples.qdocinc sample-faq
 
     The \l{writing-topic-commands}{writing topic commands} section has a listing
     of the available \\page command arguments.
