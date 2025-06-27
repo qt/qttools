@@ -48,17 +48,6 @@
 */
 //! [sample-page]
 
-//! [sample-faq]
-/*!
-    \page altruism-faq.html
-    \title Altruism Frequently Asked Questions
-
-    \brief All the questions about altruism, answered.
-
-    ...
-*/
-//! [sample-faq]
-
 //! [sample-example]
 /*!
     \title UI Components: Tab Widget Example
