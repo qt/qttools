@@ -579,8 +579,20 @@ void Generator::generateAlsoList(const Node *node, CodeMarker *marker)
         text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD) << "See also "
              << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
 
-        for (int i = 0; i < alsoList.size(); ++i)
-            text << alsoList.at(i) << Utilities::separator(i, alsoList.size());
+        QSet<QString> used;
+        QList<Text> items;
+        for (const auto &also : std::as_const(alsoList)) {
+            // Every item starts with a link atom.
+            QString link = also.firstAtom()->string();
+            if (!used.contains(link)) {
+                items.append(also);
+                used.insert(link);
+            }
+        }
+
+        int i = 0;
+        for (const auto &also : std::as_const(items))
+            text << also << Utilities::separator(i++, items.size());
 
         text << Atom::ParaRight;
         generateText(text, node, marker);
