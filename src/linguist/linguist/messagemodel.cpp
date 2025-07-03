@@ -1533,6 +1533,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
             case 1:
                 if (m_translationType == IDBASED)
                     return mgi->multiMessageItem(row)->text();
+                Q_FALLTHROUGH();
             default: // Status or dummy column => no text
                 return QVariant();
             }
