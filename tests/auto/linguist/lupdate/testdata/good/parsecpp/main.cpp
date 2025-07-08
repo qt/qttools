@@ -756,3 +756,21 @@ class TestMetaStrings : QObject
         //@ label6
     }
 };
+
+namespace Core {
+struct Tr
+{
+    Q_DECLARE_TR_FUNCTIONS(Core)
+};
+}
+
+using namespace Core;
+class SaveItemsDialog {
+    void adjustButtonWidths();
+};
+
+void SaveItemsDialog::adjustButtonWidths()
+{
+    QStringList possibleTexts;
+    possibleTexts << Tr::tr("Save Selected");
+}

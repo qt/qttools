@@ -122,6 +122,7 @@ private:
         Tok_RightBracket,
         Tok_LeftAngleBracket,
         Tok_RightAngleBracket,
+        Tok_LeftShift,
         Tok_QuestionMark,
         Tok_LeftBrace,
         Tok_RightBrace,
@@ -831,6 +832,10 @@ CppParser::TokenType CppParser::getToken()
                 return Tok_RightAngleBracket;
             case '<':
                 yyCh = getChar();
+                if (yyCh == '<') {
+                    yyCh = getChar();
+                    return Tok_LeftShift;
+                }
                 return Tok_LeftAngleBracket;
             case '\'':
                 yyCh = getChar();
