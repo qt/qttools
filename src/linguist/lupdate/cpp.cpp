@@ -1787,6 +1787,11 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
     bool yyTokColonSeen = false; // Start of c'tor's initializer list
     bool yyTokIdentSeen = false; // Start of initializer (member or base class)
     bool maybeInTrailingReturnType = false;
+
+    const QList<TokenType> allowedTokensInFnTemplate{
+        Tok_Ident,   Tok_decltype,         Tok_ColonColon,       Tok_Comma,
+        Tok_Integer, Tok_LeftAngleBracket, Tok_RightAngleBracket
+    };
     metaExpected = true;
 
     prospectiveContext.clear();
@@ -2040,13 +2045,29 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             modifyNamespace(&namespaces)->hasTrFunctions = true;
             yyTok = getToken();
             break;
-        case Tok_Ident:
+        case Tok_Ident: {
             if (yyTokColonSeen &&
                 yyBraceDepth == namespaceDepths.size() && yyParenDepth == 0) {
                 // member or base class identifier
                 yyTokIdentSeen = true;
             }
             yyTok = getToken();
+            QString className;
+            bool methodSpecialization = false;
+            if (yyTok == Tok_LeftAngleBracket) { // maybe a method specialization
+                int count = 1;
+                className = yyWord;
+                className.detach();
+                yyTok = getToken();
+                while (count && allowedTokensInFnTemplate.contains(yyTok)) {
+                    if (yyTok == Tok_LeftAngleBracket)
+                        count++;
+                    else if (yyTok == Tok_RightAngleBracket)
+                        count--;
+                    yyTok = getToken();
+                }
+                methodSpecialization = count == 0;
+            }
             if (yyTok == Tok_LeftParen) {
                 if (parseTranslate(prefix)) {
                     yyTok = getToken();
@@ -2056,13 +2077,14 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 }
             }
             if (yyTok == Tok_ColonColon && !maybeInTrailingReturnType && !yyTrailingSpace) {
-                prefix += yyWord;
+                prefix += methodSpecialization ? className : yyWord;
                 prefix.detach();
             } else {
                 prefix.clear();
             }
             metaExpected = false;
             break;
+        }
         case Tok_Arrow:
             if (yyParenDepth == 0 && yyBraceDepth == namespaceDepths.size())
                 maybeInTrailingReturnType = true;

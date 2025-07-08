@@ -430,3 +430,83 @@ struct A
 struct B : A<QT_TRANSLATE_NOOP("context", "text")>
 {
 };
+
+struct ClassWithTemplateFn
+{
+    Q_OBJECT
+    template <typename T>
+    void fn();
+};
+
+template <>
+void ClassWithTemplateFn::fn<bool>()
+{
+    tr("ClassWithTemplateFn");
+}
+
+template <typename ClassType>
+struct TemplateClassWithTemplateFn
+{
+    Q_OBJECT
+    template <typename T>
+    void fn();
+};
+
+template <>
+template <>
+void TemplateClassWithTemplateFn<int>::fn<bool>()
+{
+    tr("TemplateClassWithTemplateFn");
+}
+
+template <typename ClassType>
+struct TemplateClassWithFn
+{
+    Q_OBJECT
+    void fn();
+};
+
+template <>
+void TemplateClassWithFn<int>::fn()
+{
+    tr("TemplateClassWithFn");
+}
+
+namespace ns {
+
+template <typename ClassType>
+struct NsTemplateClassWithFn
+{
+    Q_OBJECT
+    void fn();
+};
+
+template <typename ClassType>
+struct NsTemplateClassWithTemplateFn
+{
+    Q_OBJECT
+    template <typename T>
+    void fn();
+};
+
+} // namespace ns
+
+template <>
+void ns::NsTemplateClassWithFn<int>::fn()
+{
+    tr("NsTemplateClassWithFn");
+}
+
+#include <QDebug>
+struct Streamer
+{
+    QDebug get();
+};
+
+template <>
+template <>
+void ns::NsTemplateClassWithTemplateFn<int>::fn<bool>()
+{
+    Streamer str;
+    str.get() << tr("NsTemplateClassWithTemplateFn");
+}
