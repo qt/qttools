@@ -70,11 +70,6 @@ bool QmlFormPreviewView::setSourceContext(int model, MessageItem *messageItem)
 
         setSource(QUrl::fromLocalFile(fileName));
         if (!errors().empty()) {
-            QString errs;
-            for (const auto &error : errors())
-                errs += error.toString() + "\n"_L1;
-            QMessageBox::warning(this, tr("Qt Linguist"),
-                                 tr("Error loading QML file: %1").arg(errs));
             m_lastError = true;
             return false;
         }
