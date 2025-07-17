@@ -740,6 +740,7 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
     }
     QString params;
     if (leftParenSplit.size() > 1) {
+        params = QString("");
         const QString &afterParen = leftParenSplit.at(1);
         qsizetype rightParen = afterParen.indexOf(')');
         if (rightParen >= 0)
@@ -753,7 +754,7 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
         macroName = macroName.mid(i);
     }
     FunctionNode::Metaness metaness = FunctionNode::MacroWithParams;
-    if (params.isEmpty())
+    if (params.isNull())
         metaness = FunctionNode::MacroWithoutParams;
     auto *macro = new FunctionNode(metaness, database->primaryTreeRoot(), macroName);
     macro->setAccess(Access::Public);
