@@ -109,6 +109,13 @@ namespace TestQDoc {
     \ingroup testgroup
 */
 
+
+/*!
+    \macro qWarning()
+    \relates TestQDoc::Test
+    \brief A macro with an empty argument list.
+*/
+
 /*!
 \if defined(test_properties)
     \property TestQDoc::Test::id
