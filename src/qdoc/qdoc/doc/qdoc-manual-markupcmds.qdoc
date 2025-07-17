@@ -971,7 +971,7 @@
     \section1 \\printline
 
     The \\printline command expands to the line from the current
-    position to the next non-blank line of the current source file.
+    position.
 
     To ensure that the documentation remains synchronized with the
     source file, a substring of the line must be specified as an
