@@ -167,7 +167,7 @@ void QmlTypeNode::checkInheritance()
     const QmlTypeNode *hare = qtn;
 
     // Record the previous type found by the hare for reporting.
-    QmlTypeNode *previous;
+    QmlTypeNode *previous = nullptr;
 
     while (qtn && hare) {
         // Examine the base node.
@@ -183,7 +183,7 @@ void QmlTypeNode::checkInheritance()
             }
 
         // Only report a cycle if both nodes are non-null and identical.
-        if (qtn && hare && qtn == hare) {
+        if (previous && qtn && hare && qtn == hare) {
             location().warning(QStringLiteral("Cyclic type inheritance: '%1'").arg(previous->name()));
             previous->m_qmlBaseNode = nullptr;
             break;
