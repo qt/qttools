@@ -7,7 +7,9 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>
+#include <QtCore/qfile.h>
 #include <QtCore/qregularexpression.h>
+#include <QtCore/qtextstream.h>
 
 #include <climits>
 #include <cstdio>
@@ -24,6 +26,8 @@ QString Location::s_programName;
 QString Location::s_project;
 QSet<QString> Location::s_reports;
 QRegularExpression *Location::s_spuriousRegExp = nullptr;
+std::unique_ptr<QFile> Location::s_warningLogFile;
+std::unique_ptr<QTextStream> Location::s_warningLogStream;
 
 /*!
   \class Location
@@ -316,6 +320,53 @@ void Location::initialize()
                 .warning(QStringLiteral("Invalid regular expression '%1'")
                         .arg(regExp.pattern()));
     }
+
+    if (config.get(CONFIG_LOGWARNINGS).asBool())
+        initializeWarningLog(config);
+}
+
+/*!
+  Initializes the warning log file, creates the output directory if needed, and
+  adds the command-line arguments to QDoc to the top of the log file.
+
+  This function assumes that log warnings are enabled and should only be
+  called when \c {CONFIG_LOGWARNINGS} is \c {true}.
+ */
+void Location::initializeWarningLog(const Config &config)
+{
+    const QString logFileName = s_project + "-qdoc-warnings.log";
+    const QString &outputDir = config.getOutputDir();
+
+    QDir dir(outputDir);
+    if (!dir.exists()) {
+        dir.mkpath(".");
+    }
+
+    const QString &logFilePath = dir.filePath(logFileName);
+
+    s_warningLogFile = std::make_unique<QFile>(logFilePath);
+    if (s_warningLogFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
+        s_warningLogStream = std::make_unique<QTextStream>(s_warningLogFile.get());
+
+        QStringList args = QCoreApplication::arguments();
+        *s_warningLogStream << args.join(' ') << Qt::endl;
+        *s_warningLogStream << Qt::endl;
+    } else {
+        Location().warning(QStringLiteral("Failed to open warning log file: %1").arg(logFilePath));
+        s_warningLogFile.reset();
+    }
+}
+
+/*!
+  Writes the message \a formattedMessage to the warning log file if it is
+  enabled and the message type \a type is a warning.
+ */
+void Location::writeToWarningLog(MessageType type, const QString &formattedMessage)
+{
+    if (type != Warning || !s_warningLogStream)
+        return;
+
+    *s_warningLogStream << formattedMessage << Qt::endl;
 }
 
 /*!
@@ -327,6 +378,9 @@ void Location::terminate()
 {
     delete s_spuriousRegExp;
     s_spuriousRegExp = nullptr;
+
+    s_warningLogStream.reset();
+    s_warningLogFile.reset();
 }
 
 /*!
@@ -388,6 +442,8 @@ void Location::emitMessage(MessageType type, const QString &message, const QStri
         result.prepend("qdoc: '%1': "_L1.arg(s_project));
     fprintf(stderr, "%s\n", result.toLatin1().data());
     fflush(stderr);
+
+    writeToWarningLog(type, result);
 }
 
 /*!

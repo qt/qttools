@@ -53,6 +53,7 @@ QString ConfigStrings::LANDINGTITLE = QStringLiteral("landingtitle");
 QString ConfigStrings::LANGUAGE = QStringLiteral("language");
 QString ConfigStrings::LOCATIONINFO = QStringLiteral("locationinfo");
 QString ConfigStrings::LOGPROGRESS = QStringLiteral("logprogress");
+QString ConfigStrings::LOGWARNINGS = QStringLiteral("logwarnings");
 QString ConfigStrings::MACRO = QStringLiteral("macro");
 QString ConfigStrings::MANIFESTMETA = QStringLiteral("manifestmeta");
 QString ConfigStrings::MODULEHEADER = QStringLiteral("moduleheader");

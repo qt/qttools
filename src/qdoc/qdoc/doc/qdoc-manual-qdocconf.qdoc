@@ -166,6 +166,7 @@
     \li \l {indexes-variable} {indexes}
     \li \l {language-variable} {language}
     \li \l {locationinfo-variable} {locationinfo}
+    \li \l {logwarnings-variable} {logwarnings}
     \li \l {macro-variable} {macro}
     \li \l {manifestmeta-variable} {manifestmeta}
     \li \l {moduleheader-variable} {moduleheader}
@@ -904,6 +905,30 @@
     The default value is \c true.
 
     The \c locationinfo variable was introduced in QDoc 5.15.
+
+    \target logwarnings-variable
+    \section1 logwarnings
+
+    The \c logwarnings boolean variable determines whether QDoc writes
+    warning messages to a log file in addition to stderr.
+
+    When set to \c true, QDoc creates a log file named
+    \c {<project>-qdoc-warnings.log} in the output directory and writes
+    all warning messages to this file. Warnings are still also written
+    to stderr as usual. The log file includes the command-line arguments
+    used to invoke QDoc at the top for reproducibility.
+
+    Setting this to \c true enables warning logging:
+
+    \badcode
+        logwarnings = true
+    \endcode
+
+    The default value is \c false.
+
+    This feature is useful for large documentation sets or CI environments
+    where warnings can be numerous and scroll by too quickly to be analyzed
+    systematically.
 
     \target macro-variable
     \section1 macro
