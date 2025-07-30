@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Snippet marker indentation test</db:title>
+<db:productname>snippet_marker_indentation</db:productname>
+<db:titleabbrev>Test for snippet marker indentation handling</db:titleabbrev>
+<db:abstract>
+<db:para>Test for snippet marker indentation handling.</db:para></db:abstract>
+</db:info>
+<db:para>This page tests snippet marker indentation handling. QDoc automatically adjusts indentation to preserve the natural code structure regardless of marker placement.</db:para>
+<db:section xml:id="over-indented-marker-example">
+<db:title>Over-indented marker example</db:title>
+<db:para>This snippet has markers that are more indented than the code. QDoc automatically uses the minimum content indentation:</db:para>
+<db:programlisting language="cpp">int x = 5;
+int y = 10;
+</db:programlisting>
+</db:section>
+<db:section xml:id="correctly-indented-marker-example">
+<db:title>Correctly indented marker example</db:title>
+<db:para>This snippet has properly aligned markers:</db:para>
+<db:programlisting language="cpp">int a = 1;
+int b = 2;
+</db:programlisting>
+</db:section>
+<db:section xml:id="under-indented-marker-example">
+<db:title>Under-indented marker example</db:title>
+<db:para>This snippet has markers less indented than the code. QDoc preserves the marker indentation level:</db:para>
+<db:programlisting language="cpp">    int c = 3;
+    int d = 4;
+</db:programlisting>
+</db:section>
+<db:section xml:id="mixed-indentation-example">
+<db:title>Mixed indentation example</db:title>
+<db:para>This snippet has mixed indentation levels. QDoc uses the minimum content indentation:</db:para>
+<db:programlisting language="cpp">int e = 1;
+    int f = 2;
+int g = 3;
+</db:programlisting>
+</db:section>
+</db:article>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test for snippet marker indentation handling" version="" project="snippet_marker_indentation">
+    <namespace name="" status="active" access="public" module="snippet_marker_indentation">
+        <page name="snippet-marker-indentation.html" href="snippet-marker-indentation.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Snippet marker indentation test" fulltitle="Snippet marker indentation test" subtitle="">
+            <contents name="over-indented-marker-example" title="Over-indented marker example" level="1"/>
+            <contents name="correctly-indented-marker-example" title="Correctly indented marker example" level="1"/>
+            <contents name="under-indented-marker-example" title="Under-indented marker example" level="1"/>
+            <contents name="mixed-indentation-example" title="Mixed indentation example" level="1"/>
+        </page>
+    </namespace>
+</INDEX>

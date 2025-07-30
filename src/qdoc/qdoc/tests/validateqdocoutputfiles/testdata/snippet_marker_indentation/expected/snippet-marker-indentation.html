@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- test.qdoc -->
+  <title>Snippet marker indentation test | snippet_marker_indentation</title>
+</head>
+<body>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#over-indented-marker-example">Over-indented marker example</a></li>
+<li class="level1"><a href="#correctly-indented-marker-example">Correctly indented marker example</a></li>
+<li class="level1"><a href="#under-indented-marker-example">Under-indented marker example</a></li>
+<li class="level1"><a href="#mixed-indentation-example">Mixed indentation example</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title">Snippet marker indentation test</h1>
+<!-- $$$snippet-marker-indentation.html-description -->
+<div class="descr" id="details">
+<p>This page tests snippet marker indentation handling. QDoc automatically adjusts indentation to preserve the natural code structure regardless of marker placement.</p>
+<h2 id="over-indented-marker-example">Over-indented marker example</h2>
+<p>This snippet has markers that are more indented than the code. QDoc automatically uses the minimum content indentation:</p>
+<pre class="cpp" translate="no"><span class="type">int</span> x <span class="operator">=</span> <span class="number">5</span>;
+<span class="type">int</span> y <span class="operator">=</span> <span class="number">10</span>;</pre>
+<h2 id="correctly-indented-marker-example">Correctly indented marker example</h2>
+<p>This snippet has properly aligned markers:</p>
+<pre class="cpp" translate="no"><span class="type">int</span> a <span class="operator">=</span> <span class="number">1</span>;
+<span class="type">int</span> b <span class="operator">=</span> <span class="number">2</span>;</pre>
+<h2 id="under-indented-marker-example">Under-indented marker example</h2>
+<p>This snippet has markers less indented than the code. QDoc preserves the marker indentation level:</p>
+<pre class="cpp" translate="no">    <span class="type">int</span> c <span class="operator">=</span> <span class="number">3</span>;
+    <span class="type">int</span> d <span class="operator">=</span> <span class="number">4</span>;</pre>
+<h2 id="mixed-indentation-example">Mixed indentation example</h2>
+<p>This snippet has mixed indentation levels. QDoc uses the minimum content indentation:</p>
+<pre class="cpp" translate="no"><span class="type">int</span> e <span class="operator">=</span> <span class="number">1</span>;
+    <span class="type">int</span> f <span class="operator">=</span> <span class="number">2</span>;
+<span class="type">int</span> g <span class="operator">=</span> <span class="number">3</span>;</pre>
+</div>
+<!-- @@@snippet-marker-indentation.html -->
+</body>
+</html>

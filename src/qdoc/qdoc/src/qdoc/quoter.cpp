@@ -9,6 +9,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 QHash<QString, QString> Quoter::s_commentHash;
 
 static void replaceMultipleNewlines(QString &s)
@@ -179,26 +181,69 @@ QString Quoter::quoteLine(const Location &docLocation, const QString &command,
     return QString();
 }
 
+/*!
+  Calculate the number of leading space characters in \a line.
+  This function only counts space characters, not tabs or other whitespace.
+  */
+int Quoter::calculateIndentation(const QString &line) const
+{
+    int indent = 0;
+    while (indent < line.size() && line[indent] == ' '_L1)
+        ++indent;
+    return indent;
+}
+
+Quoter::SnippetIndentation Quoter::analyzeContentIndentation(const Location &docLocation, const QString &delimiter)
+{
+    SnippetIndentation result;
+    const QString comment = commentForCode();
+
+    for (const QString &line : m_plainLines) {
+        if (match(docLocation, delimiter, line))
+            break; // Found end delimiter
+
+        const QString trimmed = line.trimmed();
+        if (trimmed.isEmpty() ||
+            trimmed.startsWith("QT_BEGIN_NAMESPACE"_L1) ||
+            trimmed.startsWith("QT_END_NAMESPACE"_L1) ||
+            trimmed.startsWith(comment)) {
+            continue;
+        }
+
+        result.hasNonEmptyContent = true;
+        result.minContentIndent = qMin(result.minContentIndent, calculateIndentation(line));
+    }
+    return result;
+}
+
+
 QString Quoter::quoteSnippet(const Location &docLocation, const QString &identifier)
 {
     QString comment = commentForCode();
     QString delimiter = comment + QString(" [%1]").arg(identifier);
-    QString t;
-    int indent = 0;
+    QString snippetContent;
+    int markerIndent = 0;
 
+    // Find start delimiter and get its indentation
     while (!m_plainLines.isEmpty()) {
         if (match(docLocation, delimiter, m_plainLines.first())) {
-            QString startLine = getLine();
-            while (indent < startLine.size() && startLine[indent] == QLatin1Char(' '))
-                indent++;
+            markerIndent = calculateIndentation(m_plainLines.first());
+            getLine();
             break;
         }
         getLine();
     }
+
+    const auto indentationInfo = analyzeContentIndentation(docLocation, delimiter);
+    const int unindent =
+        indentationInfo.hasNonEmptyContent
+            ? qMin(markerIndent, indentationInfo.minContentIndent)
+            : markerIndent;
+
     while (!m_plainLines.isEmpty()) {
         QString line = m_plainLines.first();
         if (match(docLocation, delimiter, line)) {
-            QString lastLine = getLine(indent);
+            QString lastLine = getLine(unindent);
             qsizetype dIndex = lastLine.indexOf(delimiter);
             if (dIndex > 0) {
                 // The delimiter might be preceded on the line by other
@@ -210,15 +255,15 @@ QString Quoter::quoteSnippet(const Location &docLocation, const QString &identif
                 if (leading.endsWith(QLatin1String("<@comment>")))
                     leading.chop(10);
                 if (!leading.trimmed().isEmpty())
-                    t += leading;
+                    snippetContent += leading;
             }
-            return t;
+            return snippetContent;
         }
-
-        t += removeSpecialLines(line, comment, indent);
+        snippetContent += removeSpecialLines(line, comment, unindent);
     }
+
     failedAtEnd(docLocation, QString("snippet (%1)").arg(delimiter));
-    return t;
+    return snippetContent;
 }
 
 QString Quoter::quoteTo(const Location &docLocation, const QString &command, const QString &pattern)

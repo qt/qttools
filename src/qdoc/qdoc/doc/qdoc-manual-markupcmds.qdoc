@@ -1317,6 +1317,18 @@
     files, \c {#!} is detected. Finally, \c{<!--} is accepted in
     \c{.html}, \c{.qrc}, \c{.ui}, \c{.xml}, and \c{.xq} files.
 
+    QDoc normalizes snippet indentation by comparing the snippet-marker's
+    space-based indentation against the snippet's minimum content indentation
+    (ignoring Qt-macros, blank lines, and full-line comments). It then
+    automatically un-indents the snippet body to whichever is smaller,
+    ensuring the generated code always preserves its natural structure
+    regardless of where the markers sit. Under-indented markers are left
+    untouched.
+
+    \note QDoc only handles space characters for indentation normalization,
+    not tabs or other whitespace. For best results, use consistent space-based
+    indentation in source files containing snippets.
+
     \target codeline-command
     \section1 \\codeline
 

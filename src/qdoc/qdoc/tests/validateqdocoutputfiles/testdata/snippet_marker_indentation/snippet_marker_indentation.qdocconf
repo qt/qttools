@@ -1,0 +1,13 @@
+project = snippet_marker_indentation
+description = Test for snippet marker indentation handling
+
+outputformats = HTML DocBook WebXML
+outputdir = out
+locationinfo = false
+warninglimit.enabled = true
+warninglimit = 0
+
+sourcedirs = src
+headerdirs = src
+exampledirs = src
+
