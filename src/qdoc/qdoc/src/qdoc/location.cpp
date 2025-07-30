@@ -11,7 +11,6 @@
 #include <QtCore/qregularexpression.h>
 #include <QtCore/qtextstream.h>
 
-#include <climits>
 #include <cstdio>
 #include <cstdlib>
 
