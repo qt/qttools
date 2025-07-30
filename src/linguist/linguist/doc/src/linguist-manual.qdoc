@@ -1590,18 +1590,39 @@ Log}. When complete, you can check out the translated texts on the log. Upon cli
     </message>
     \endcode
 
-    When using \l{Using lrelease}{lrelease}, you need to specify that the keys
-    for translated texts are based on text IDs, rather than plain text. If you
-    use \c qsTr() to mark the strings as translatable in the code, the \c id
-    attribute is not set and \c lrelease ignores them.
-
-    However, if there is no translation available for a given text (which is
+    If there is no translation available for a given text (which is
     generally the case until late in development), the text ID will be shown in
     the user interface rather than a proper text. In order to make the application
     more usable for testing, you can make \c lrelease use the \e {Engineering English}
     source text (from the \c {//%} comments) as the translated text and mark it with
     some indicator, such as an exclamation mark (!), so you can see texts that
     are not yet translated.
+
+    \section2 Grouping ID-Based Translations
+
+    You can assign each ID-based translation a \e label to organize
+    ID-based entries of large projects into smaller groups.
+    To assign a \e label to an ID-based entry, add a \c{//@} comment
+    naming the label, for example in C++:
+    \code cpp
+    //% "Open file"
+    //@ FileOperations
+    qtTrId("msg.open");
+    \endcode
+    Or in QML:
+    \code qml
+    //% "Open file"
+    //@ FileOperations
+    qsTrId("msg.open");
+    \endcode
+    When you open the TS file in \l {Qt Linguist}, the ID-based entries with
+    the same \e label are grouped together, similar to text-based
+    entries that are grouped by context.
+    Any item without a \e label appears under \c{<unnamed label>}.
+    \note Label names have no effect on lookup or uniqueness: IDs remain globally
+    unique and can still be loaded via \c{qtTrId("msgid")} without referencing a
+    label. The label tag is used only to improve the translator’s navigation
+    and does not change runtime behavior.
 
     \section1 CMake configuration
 
