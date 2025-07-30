@@ -1,0 +1,39 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page snippet-marker-indentation.html
+    \title Snippet marker indentation test
+
+    This page tests snippet marker indentation handling. QDoc automatically
+    adjusts indentation to preserve the natural code structure regardless of
+    marker placement.
+
+    \section1 Over-indented marker example
+
+    This snippet has markers that are more indented than the code.
+    QDoc automatically uses the minimum content indentation:
+
+    \snippet test.cpp overindented
+
+    \section1 Correctly indented marker example
+
+    This snippet has properly aligned markers:
+
+    \snippet test.cpp correct
+
+    \section1 Under-indented marker example
+
+    This snippet has markers less indented than the code.
+    QDoc preserves the marker indentation level:
+
+    \snippet test.cpp underindented
+
+    \section1 Mixed indentation example
+
+    This snippet has mixed indentation levels.
+    QDoc uses the minimum content indentation:
+
+    \snippet test.cpp mixed
+*/
+

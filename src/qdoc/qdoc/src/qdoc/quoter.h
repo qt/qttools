@@ -9,6 +9,8 @@
 #include <QtCore/qhash.h>
 #include <QtCore/qstringlist.h>
 
+#include <limits>
+
 QT_BEGIN_NAMESPACE
 
 class Quoter
@@ -27,6 +29,15 @@ public:
     static QStringList splitLines(const QString &line);
 
 private:
+    struct SnippetIndentation {
+        int minContentIndent = std::numeric_limits<int>::max();
+        bool hasNonEmptyContent = false;
+    };
+
+    int calculateIndentation(const QString &line) const;
+    SnippetIndentation analyzeContentIndentation(const Location &docLocation,
+                                                 const QString &delimiter);
+
     QString getLine(int unindent = 0);
     void failedAtEnd(const Location &docLocation, const QString &command);
     bool match(const Location &docLocation, const QString &pattern, const QString &line);
