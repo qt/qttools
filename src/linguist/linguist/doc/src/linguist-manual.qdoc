@@ -40,7 +40,7 @@
             \list
                 \li \l {Qt Linguist user interface}
                 \li \l {Translating strings}
-                \li \l {Selecting context to translate}
+                \li \l {Selecting context or label to translate}
                 \li \l {Selecting strings to translate}
                 \li \l {Viewing strings in context}
                 \li \l {Reusing translations}
@@ -77,7 +77,7 @@
             \list
                 \li \l {Qt Linguist user interface}
                 \li \l {Translating strings}
-                \li \l {Selecting context to translate}
+                \li \l {Selecting context or label to translate}
                 \li \l {Selecting strings to translate}
                 \li \l {Viewing strings in context}
                 \li \l {Reusing translations}
@@ -765,7 +765,7 @@
     \list
         \li \l {Qt Linguist user interface}
         \li \l {Translating strings}
-        \li \l {Selecting context to translate}
+        \li \l {Selecting context or label to translate}
         \li \l {Selecting strings to translate}
         \li \l {Viewing strings in context}
         \li \l {Reusing translations}
@@ -786,7 +786,7 @@
 
     \list
 
-        \li \uicontrol Context (\key F6) lists translation contexts.
+        \li \uicontrol Context/Label (\key F6) lists translation contexts or labels.
 
         \li \uicontrol Strings (\key F7) lists translatable strings in the
             selected context.
@@ -805,7 +805,7 @@
 
     \endlist
 
-    \image linguist-linguist.png {Qt Linguist UI}
+    \image linguist.webp {Qt Linguist UI}
 
     The translation area (1) is always visible. To show or hide the other views,
     select \uicontrol View > \uicontrol Views, or use keyboard shortcuts.
@@ -817,7 +817,7 @@
     \page linguist-translating-strings.html
 
     \previouspage Qt Linguist user interface
-    \nextpage Selecting context to translate
+    \nextpage Selecting context or label to translate
 
     \title Translating strings
 
@@ -842,7 +842,6 @@
     \uicontrol {Developer comments} field.
 
     To translate strings:
-
     \list 1
 
         \li Select \uicontrol File > \uicontrol Open to load a TS file.
@@ -850,7 +849,7 @@
         \li Select a context in the \uicontrol Context view to display translatable
             strings in the \uicontrol Strings view.
 
-            \image linguist-ui.webp {Two TS files open in Qt Linguist}
+            \image linguist-ui.webp {}
 
         \li Select a string to display it in the \uicontrol {Source text} field
             in the translation area. The whitespace within the source text is
@@ -1041,22 +1040,27 @@
     \previouspage Translating strings
     \nextpage Selecting strings to translate
 
-    \title Selecting context to translate
+    \title Selecting context or label to translate
 
-    The \uicontrol Context view lists the contexts in which strings to be translated
-    appear. The column labeled \uicontrol Context lists the context names in
+    The \uicontrol Context/Label view lists the contexts (\uicontrol {Text based}) or
+    labels (\uicontrol {ID based}) in which strings to be translated
+    appear. The text-based translations are grouped into contexts, while ID-based
+    translations are grouped into labels (see \l{Grouping ID-Based Translations}).
+    The \uicontrol Context/Label lists the \e groups (that is, context or labels)
+    based on the selected tab:
+    \list
+    \li Upon switching to the \uicontrol{Text-Based} tab,
+    \uicontrol Context lists the context names in
     alphabetical order. Each context is the name of a QML type or a subclass of
     QObject.
+    \li Upon switching to the \uicontrol{ID-Based} tab,
+    \uicontrol Label lists the label names in
+    alphabetical order. More info on labels can be found in \l{Grouping ID-Based Translations}.
+    \endlist
 
-    \image linguist-context-view.webp {Context view}
+    \image linguist-context-view.webp {Context/Label view}
 
-    A context for QObject itself contains strings passed to the static function
-    QObject::tr().
-
-    An \e{<unnamed context>} contains strings that are not in a subclass of
-    QObject.
-
-    The following icons indicate the current translation state for each context:
+    The following icons indicate the current translation state for each group:
 
     \table
     \header
@@ -1067,46 +1071,46 @@
     \row
     \li Accepted/Correct
     \li \inlineimage linguist-check-on.png
-    \li All strings in the context have been translated, and all the
+    \li All strings in the group have been translated, and all the
         translations passed the \l{Validating Translations}{validation tests}.
 
     \row
     \li Accepted/Warnings
     \li \inlineimage linguist-check-warning.png
-    \li All strings in the context have been translated or marked as translated,
+    \li All strings in the group have been translated or marked as translated,
         but at least one translation failed the validation tests.
         In the \uicontrol Strings view, you can see which string failed the test.
 
     \row
     \li Not Accepted
     \li \inlineimage linguist-check-off.png
-    \li At least one string in the context has not been translated or is not
+    \li At least one string in the group has not been translated or is not
         marked as translated.
 
     \row
     \li Obsolete
     \li \inlineimage linguist-check-obsolete.png
-    \li None of the translated strings appears in the context any more. This
-        usually means the context no longer exists in the application.
+    \li None of the translated strings appears in the group any more. This
+        usually means the context or label no longer exists in the application.
     \endtable
 
     The \uicontrol Items column displays the total number of translatable strings in
-    the context and the number of translated strings, separated by a slash (/).
-    If the numbers are equal, all the translatable strings in the context have
+    the group and the number of translated strings, separated by a slash (/).
+    If the numbers are equal, all the translatable strings in the group have
     translations.
 */
 
 /*!
     \page linguist-selecting-strings.html
 
-    \previouspage Selecting context to translate
+    \previouspage Selecting context or label to translate
     \nextpage Viewing strings in context
 
     \title Selecting strings to translate
 
     The \uicontrol Strings view lists all the translatable strings in the
-    current context and their translation acceptance state. Select a string
-    to view and edit it in the translation area.
+    current group (that is, context or label) and their translation acceptance
+    state. Select a string to view and edit it in the translation area.
 
     \image linguist-strings-view.webp {Strings view}
 
@@ -1329,16 +1333,16 @@
     \title Translating multiple languages simultaneously
 
     You can load and edit multiple translation files simultaneously.
-    The following screen shot displays \e{Polish} and \e{Japanese} translation
+    The following screen shot displays \e{German} and \e{French} translation
     files loaded.
 
-    \image linguist-linguist_2.png
+    \image linguist-linguist_2.webp {}
 
-    The translation area has color-coded text editing areas for both Polish and
-    Japanese. The \uicontrol Context view and the \uicontrol Strings view have
+    The translation area has color-coded text editing areas for both German and
+    French. The \uicontrol Context/Label view and the \uicontrol Strings view have
     color-coded status columns for each language.
 
-    The \uicontrol Items column in the \uicontrol Context view combines the values
+    The \uicontrol Items column in the \uicontrol Context/Label view combines the values
     for both languages. If the number of translatable strings does not match the
     number of accepted strings, either or both languages have strings that you
     need to translate or accept. The \uicontrol Strings view shows the translation
