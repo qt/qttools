@@ -35,7 +35,7 @@
     interface (GUI) applications.
 */
 
-/ *!
+/*!
     \page creatingdialogs.html
     \previouspage Getting Started
 
