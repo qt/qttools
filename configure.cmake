@@ -8,6 +8,8 @@
 #### Libraries
 
 
+# Include QDoc-specific configuration early (needed for feature definitions)
+include(${CMAKE_CURRENT_LIST_DIR}/src/qdoc/cmake/QDocConfiguration.cmake)
 
 #### Tests
 
