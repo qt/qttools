@@ -251,6 +251,26 @@ QString Quoter::quoteUntil(const Location &docLocation, const QString &command,
     return t;
 }
 
+/*!
+    Retrieves and processes the next line from the snippet source.
+
+    This function consumes the first line from both m_plainLines and
+    m_markedLines, applies indentation removal based on the \a unindent
+    parameter, appends a newline character, and updates the current location
+    tracking.
+
+    The \a unindent parameter specifies how many leading spaces to remove from
+    the line. This is used to normalize indentation in extracted snippets so
+    that the generated output maintains proper relative indentation. The default
+    value is \c 0.
+
+    Returns the processed line with specified indentation removed and a trailing
+    newline, or an empty string if no more lines are available.
+
+    \note This function modifies the internal state by consuming lines from both
+          m_plainLines and m_markedLines, and advances the current code
+          location.
+ */
 QString Quoter::getLine(int unindent)
 {
     if (m_plainLines.isEmpty())
