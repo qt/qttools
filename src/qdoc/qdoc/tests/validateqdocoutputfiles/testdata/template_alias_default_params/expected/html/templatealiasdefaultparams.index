@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test for template alias with default parameters" version="1.0" project="TemplateAliasDefaultParams">
+    <namespace name="" status="active" access="public" module="templatealiasdefaultparams">
+        <namespace name="TestAliases" href="testaliases.html" status="active" access="public" location="test.h" documented="true" module="TemplateAliasModule" brief="Namespace containing template alias tests">
+            <typedef name="Bar" fullname="TestAliases::Bar" href="testaliases.html#Bar-typedef" status="active" access="public" location="test.h" documented="true" aliasedtype="T[N]"/>
+            <typedef name="Foo" fullname="TestAliases::Foo" href="testaliases.html#Foo-typedef" status="active" access="public" location="test.h" documented="true" aliasedtype="int[N]"/>
+            <typedef name="SimpleAlias" fullname="TestAliases::SimpleAlias" href="testaliases.html#SimpleAlias-typedef" status="active" access="public" location="test.h" documented="true" aliasedtype="int"/>
+        </namespace>
+        <module name="TemplateAliasModule" href="templatealiasmodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" title="Template Alias Test Module" brief="Test module for template aliases with default parameters"/>
+    </namespace>
+</INDEX>
