@@ -45,6 +45,12 @@ qt_feature("qdoc" PRIVATE
     PURPOSE "QDoc is Qt's documentation generator for C++ and QML projects."
     CONDITION TARGET Qt::QmlPrivate AND QT_FEATURE_clang AND QT_FEATURE_commandlineparser AND QT_FEATURE_thread AND QT_LIB_CLANG_VERSION VERSION_GREATER_EQUAL QDOC_MINIMUM_CLANG_VERSION
 )
+qt_feature("qdoc_coverage" PRIVATE
+    LABEL "QDoc Test Coverage"
+    PURPOSE "Enables test coverage collection and reporting for QDoc using gcov/lcov."
+    # User should configure qtbase with "-developer-build -coverage gcov" for coverage instrumentation.
+    CONDITION QT_FEATURE_developer_build AND QT_BUILD_TESTS AND QDOC_COVERAGE_DEPS_FOUND
+)
 qt_feature("designer" PRIVATE
     LABEL "Qt Widgets Designer"
     PURPOSE "Qt Widgets Designer is the Qt tool for designing and building graphical user interfaces (GUIs) with Qt Widgets. You can compose and customize your windows or dialogs in a what-you-see-is-what-you-get (WYSIWYG) manner, and test them using different styles and resolutions."
@@ -108,6 +114,7 @@ qt_configure_add_summary_entry(ARGS "linguist")
 qt_configure_add_summary_entry(ARGS "pixeltool")
 qt_configure_add_summary_entry(ARGS "qdbus")
 qt_configure_add_summary_entry(ARGS "qdoc")
+qt_configure_add_summary_entry(ARGS "qdoc_coverage")
 #qt_configure_add_summary_entry(ARGS "qev")
 qt_configure_add_summary_entry(ARGS "qtattributionsscanner")
 qt_configure_add_summary_entry(ARGS "qtdiag")

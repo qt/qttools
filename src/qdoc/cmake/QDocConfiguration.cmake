@@ -11,3 +11,20 @@ set(QDOC_SUPPORTED_CLANG_VERSIONS
     "20.1" "19.1" "18.1" "17.0"
 )
 
+# Check for QDoc coverage dependencies
+find_program(LCOV_EXECUTABLE lcov DOC "Path to lcov executable")
+set(QDOC_COVERAGE_DEPS_FOUND FALSE)
+if(LCOV_EXECUTABLE)
+    execute_process(
+        COMMAND ${LCOV_EXECUTABLE} --version
+        OUTPUT_VARIABLE LCOV_VERSION_OUTPUT
+        ERROR_QUIET
+    )
+    if(LCOV_VERSION_OUTPUT MATCHES "LCOV version ([0-9]+)\\.([0-9]+)")
+        set(LCOV_MAJOR ${CMAKE_MATCH_1})
+        if(LCOV_MAJOR GREATER_EQUAL 1)
+            set(QDOC_COVERAGE_DEPS_FOUND TRUE)
+        endif()
+    endif()
+endif()
+

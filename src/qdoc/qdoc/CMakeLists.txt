@@ -116,3 +116,6 @@ qt_internal_add_docs(${target_name}
 if(QT_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
+
+# Test coverage support
+include(${CMAKE_CURRENT_LIST_DIR}/../cmake/QDocCoverage.cmake)
