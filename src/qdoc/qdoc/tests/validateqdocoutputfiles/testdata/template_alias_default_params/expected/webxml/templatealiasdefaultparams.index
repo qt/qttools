@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test for template alias with default parameters" version="1.0" project="TemplateAliasDefaultParams">
+    <namespace name="" status="active" access="public" module="templatealiasdefaultparams">
+        <module name="TemplateAliasModule" href="templatealiasmodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" title="Template Alias Test Module" brief="Test module for template aliases with default parameters"/>
+    </namespace>
+</INDEX>
