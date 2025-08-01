@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- test.h -->
+  <meta name="description" content="Namespace containing template alias tests.">
+  <title>TestAliases Namespace | TemplateAliasDefaultParams 1.0</title>
+</head>
+<body>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#types">Types</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">TestAliases Namespace</h1>
+<!-- $$$TestAliases-brief -->
+<p>Namespace containing template alias tests. <a href="#details">More...</a></p>
+<!-- @@@TestAliases -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;TestAliases&gt;</code></td></tr>
+</table></div>
+<h2 id="types">Types</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="testaliases.html#Bar-typedef" translate="no">Bar</a></b></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="testaliases.html#Foo-typedef" translate="no">Foo</a></b></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="testaliases.html#SimpleAlias-typedef" translate="no">SimpleAlias</a></b></td></tr>
+</table></div>
+<!-- $$$TestAliases-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+</div>
+<!-- @@@TestAliases -->
+<div class="types">
+<h2>Type Documentation</h2>
+<!-- $$$Bar -->
+<h3 class="fn" translate="no" id="Bar-typedef"><code class="details extra" translate="no">[alias]</code> template &lt;typename T, int N = 5&gt; TestAliases::<span class="name">Bar</span></h3>
+<p>Template alias with multiple parameters and defaults.</p>
+<p>This type alias has both a type parameter and a non-type parameter with a default value.</p>
+<!-- @@@Bar -->
+<!-- $$$Foo -->
+<h3 class="fn" translate="no" id="Foo-typedef"><code class="details extra" translate="no">[alias]</code> template &lt;int N = 1&gt; TestAliases::<span class="name">Foo</span></h3>
+<p>Template alias with default parameter. This should match correctly.</p>
+<p>This type alias demonstrates QDoc's ability to handle template aliases with default parameter values.</p>
+<!-- @@@Foo -->
+<!-- $$$SimpleAlias -->
+<h3 class="fn" translate="no" id="SimpleAlias-typedef"><code class="details extra" translate="no">[alias]</code> TestAliases::<span class="name">SimpleAlias</span></h3>
+<p>Simple alias without template parameters.</p>
+<p>This demonstrates that the fix doesn't break non-template aliases.</p>
+<!-- @@@SimpleAlias -->
+</div>
+</body>
+</html>

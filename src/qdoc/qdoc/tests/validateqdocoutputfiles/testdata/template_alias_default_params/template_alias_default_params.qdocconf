@@ -1,0 +1,23 @@
+project = TemplateAliasDefaultParams
+description = Test for template alias with default parameters
+version = 1.0
+documentationinheaders = true
+
+locationinfo = false
+warninglimit.enabled = true
+
+sourcedirs = src
+headerdirs = src
+
+outputformats = HTML DocBook WebXML
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+WebXML.quotinginformation = true
+WebXML.nosubdirs = true
+WebXML.outputsubdir = webxml
+

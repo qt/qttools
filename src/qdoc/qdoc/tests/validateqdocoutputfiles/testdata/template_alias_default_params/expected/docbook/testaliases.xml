@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TestAliases Namespace</db:title>
+<db:productname>TemplateAliasDefaultParams</db:productname>
+<db:titleabbrev>Test for template alias with default parameters</db:titleabbrev>
+<db:abstract>
+<db:para>Namespace containing template alias tests.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TestAliases</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="type-documentation">
+<db:title>Type Documentation</db:title>
+<db:section xml:id="Bar-typedef">
+<db:title>[alias] template &lt;typename T, int N = 5&gt; TestAliases::Bar</db:title>
+<db:para>Template alias with multiple parameters and defaults.</db:para>
+<db:para>This type alias has both a type parameter and a non-type parameter with a default value.</db:para>
+</db:section>
+<db:section xml:id="Foo-typedef">
+<db:title>[alias] template &lt;int N = 1&gt; TestAliases::Foo</db:title>
+<db:para>Template alias with default parameter. This should match correctly.</db:para>
+<db:para>This type alias demonstrates QDoc's ability to handle template aliases with default parameter values.</db:para>
+</db:section>
+<db:section xml:id="SimpleAlias-typedef">
+<db:title>[alias] TestAliases::SimpleAlias</db:title>
+<db:para>Simple alias without template parameters.</db:para>
+<db:para>This demonstrates that the fix doesn't break non-template aliases.</db:para>
+</db:section>
+</db:section>
+</db:article>

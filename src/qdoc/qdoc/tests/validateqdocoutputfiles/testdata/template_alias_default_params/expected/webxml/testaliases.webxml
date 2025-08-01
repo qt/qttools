@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <namespace name="TestAliases" href="testaliases.html" status="active" access="public" location="test.h" documented="true" module="TemplateAliasModule" brief="Namespace containing template alias tests">
+            <description>
+                <brief>Namespace containing template alias tests.</brief>
+            </description>
+            <typedef name="Bar" fullname="TestAliases::Bar" href="testaliases.html#Bar-typedef" status="active" access="public" location="test.h" documented="true" aliasedtype="T[N]">
+                <description>
+                    <para>Template alias with multiple parameters and defaults.</para>
+                    <para>This type alias has both a type parameter and a non-type parameter with a default value.</para>
+                </description>
+            </typedef>
+            <typedef name="Foo" fullname="TestAliases::Foo" href="testaliases.html#Foo-typedef" status="active" access="public" location="test.h" documented="true" aliasedtype="int[N]">
+                <description>
+                    <para>Template alias with default parameter. This should match correctly.</para>
+                    <para>This type alias demonstrates QDoc's ability to handle template aliases with default parameter values.</para>
+                </description>
+            </typedef>
+            <typedef name="SimpleAlias" fullname="TestAliases::SimpleAlias" href="testaliases.html#SimpleAlias-typedef" status="active" access="public" location="test.h" documented="true" aliasedtype="int">
+                <description>
+                    <para>Simple alias without template parameters.</para>
+                    <para>This demonstrates that the fix doesn't break non-template aliases.</para>
+                </description>
+            </typedef>
+        </namespace>
+    </document>
+</WebXML>

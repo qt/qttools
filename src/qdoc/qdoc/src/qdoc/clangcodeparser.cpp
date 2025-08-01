@@ -943,25 +943,36 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     switch (kind) {
     case CXCursor_TypeAliasTemplateDecl:
     case CXCursor_TypeAliasDecl: {
-        QString aliasDecl = getSpelling(clang_getCursorExtent(cursor)).simplified();
-        QStringList typeAlias = aliasDecl.split(QLatin1Char('='));
-        if (typeAlias.size() == 2) {
-            typeAlias[0] = typeAlias[0].trimmed();
-            const QLatin1String usingString("using ");
-            qsizetype usingPos = typeAlias[0].indexOf(usingString);
-            if (usingPos != -1) {
-                typeAlias[0].remove(0, usingPos + usingString.size());
-                typeAlias[0] = typeAlias[0].split(QLatin1Char(' ')).first();
-                typeAlias[1] = typeAlias[1].trimmed();
-                auto *ta = new TypeAliasNode(parent_, typeAlias[0], typeAlias[1]);
-                ta->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
-                ta->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
+        const QString aliasName = fromCXString(clang_getCursorSpelling(cursor));
+        QString aliasedType;
 
-                if (kind == CXCursor_TypeAliasTemplateDecl) {
-                    auto template_decl = llvm::dyn_cast<clang::TemplateDecl>(get_cursor_declaration(cursor));
-                    ta->setTemplateDecl(get_template_declaration(template_decl));
+        const auto *templateDecl = (kind == CXCursor_TypeAliasTemplateDecl)
+                                 ? llvm::dyn_cast<clang::TemplateDecl>(get_cursor_declaration(cursor))
+                                 : nullptr;
+
+        if (kind == CXCursor_TypeAliasTemplateDecl) {
+            // For template aliases, get the underlying TypeAliasDecl from the TemplateDecl
+            if (const auto *aliasTemplate = llvm::dyn_cast<clang::TypeAliasTemplateDecl>(templateDecl)) {
+                if (const auto *aliasDecl = aliasTemplate->getTemplatedDecl()) {
+                    clang::QualType underlyingType = aliasDecl->getUnderlyingType();
+                    aliasedType = QString::fromStdString(underlyingType.getAsString());
                 }
             }
+        } else {
+            // For non-template aliases, get the underlying type via C API
+            const CXType aliasedCXType = clang_getTypedefDeclUnderlyingType(cursor);
+            if (aliasedCXType.kind != CXType_Invalid) {
+                aliasedType = fromCXString(clang_getTypeSpelling(aliasedCXType));
+            }
+        }
+
+        if (!aliasedType.isEmpty()) {
+            auto *ta = new TypeAliasNode(parent_, aliasName, aliasedType);
+            ta->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
+            ta->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
+
+            if (templateDecl)
+                ta->setTemplateDecl(get_template_declaration(templateDecl));
         }
         return CXChildVisit_Continue;
     }
