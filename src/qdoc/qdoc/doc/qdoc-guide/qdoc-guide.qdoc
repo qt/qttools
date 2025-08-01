@@ -20,10 +20,10 @@
         \li \c Documentation in \c C++, \c QML, and \c .qdoc files
     \endlist
 
-    \note \l{QDoc Manual}{QDoc} requires \l{http://clang.llvm.org}{Clang}
-    for parsing C++ header and source files, and for parsing the function
-    signatures in \l {fn-command} {\\fn} commands. See \l {Installing Clang for QDoc}
-    for details.
+    \l {QDoc Manual} {QDoc} requires \l{https://clang.llvm.org}{Clang} for
+    parsing C++ header and source files, and for parsing the function
+    signatures in \l {fn-command} {\\fn} commands. See
+    \l {Installing Clang for QDoc} for details.
 
     This section intends to cover the basic necessities for creating a
     documentation set. Additionally, the guide presents special considerations
@@ -605,31 +605,70 @@
     \l {fn-command} {\\fn} commands. Clang is part of
     \l {https://llvm.org/}{the LLVM Compiler Infrastructure Project}.
     If you're going to build QDoc from source, you must install
-    \l{http://clang.llvm.org}{Clang 17.0} or later.
+    \l{https://clang.llvm.org}{Clang 17.0} or later.
 
-    You can get Clang through various channels:
+    \section1 Installation Options
+
+    \section2 Qt's Prebuilt Packages (Recommended)
+
+    Qt provides officially supported prebuilt LLVM/Clang packages that are
+    tested and used for Qt's official builds:
 
     \list
-    \li Qt provides the
-        \l{http://download.qt.io/development_releases/prebuilt/libclang/qt}
-        {prebuilt Clang packages} that are used for the Qt binaries in the
-        online installer. These let you link LLVM/Clang libraries statically,
-        but only support Release builds on Windows.
-    \li Linux distributions often provide a package called \e libclang-dev or
-        \e libclang-devel. Qt's build system instructs CMake to look for
-        \e {ClangConfig.cmake}, so make sure you install the package that
-        provides this file if you want to build QDoc. Running QDoc requires
-        only \e libclang.
-    \li On macOS, you can also use Homebrew's
-        \l{https://formulae.brew.sh/formula/llvm}{llvm formula}.
+    \li Download from:
+        \l {https://download.qt.io/development_releases/prebuilt/libclang/qt/}.
+    \li Available for Windows, macOS, and Linux.
+    \li Support static linking of LLVM/Clang libraries.
+    \li Version alignment with QDoc requirements and Qt’s CI.
     \endlist
 
-    \note the prebuilt binaries from \l{http://releases.llvm.org/download.html}
-    cannot be used, as they miss certain components required by QDoc.
+    \note On Windows, Qt's prebuilt packages only support Release builds.
 
-    If you install Clang in a custom location you need to tell CMake where
-    to find it. This can be done by specifying your LLVM installation path
-    using the \c LLVM_INSTALL_DIR environment variable when configuring Qt.
-    Alternatively, you can add the installation path to the \c CMAKE_PREFIX_PATH
-    CMake cache variable.
+    \section2 System Package Managers
+
+    As an alternative to Qt's prebuilt packages, you can install Clang through
+    system package managers:
+
+    \section3 Linux
+    \list
+    \li \b{Debian/Ubuntu}: \c {apt install libclang-dev}
+        Ensure you install the versioned \c {-dev} packages that provide the
+        file \e {ClangConfig.cmake}.
+    \li \b{Fedora/RHEL}: \c {dnf install clang-devel}
+    \li \b{Arch Linux}: \c {pacman -S clang llvm}
+    \endlist
+
+    \section3 macOS
+    Use Homebrew's \l{https://formulae.brew.sh/formula/llvm}{llvm formula}:
+    \list
+    \li \c {brew install llvm}
+    \li For ARM64 Macs: Configure with
+        \c {LLVM_INSTALL_DIR="/opt/homebrew/opt/llvm"}
+    \li For Intel Macs: Configure with
+        \c {LLVM_INSTALL_DIR="/usr/local/opt/llvm"}
+    \endlist
+
+    \note Qt's build system instructs CMake to look for \e {ClangConfig.cmake}.
+    Make sure your package installation provides this file. The prebuilt binaries
+    from \l{https://releases.llvm.org/download.html} cannot be used, as they miss
+    certain components required by QDoc.
+
+    \section1 Configuration
+
+    When Qt's configure script cannot locate LLVM/Clang libraries, it will
+    display platform-specific installation guidance and the exact configuration
+    commands needed for your system.
+
+    To manually specify a custom LLVM installation location:
+
+    \list
+    \li Set the \c LLVM_INSTALL_DIR variable:
+        \c {configure LLVM_INSTALL_DIR="/path/to/llvm" FEATURE_clang=ON}
+    \li Or add to \c {CMAKE_PREFIX_PATH}:
+        \c {configure CMAKE_PREFIX_PATH="/path/to/llvm" FEATURE_clang=ON}
+    \endlist
+
+    After installing LLVM/Clang libraries, always reconfigure with
+    \c {FEATURE_clang=ON} to enable QDoc compilation.
 */
+
