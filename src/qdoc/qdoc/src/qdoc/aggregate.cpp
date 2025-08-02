@@ -163,16 +163,29 @@ FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters
     if (match_it != (*map_it).end())
         return *match_it;
 
-    // Assumes that overloads are already normalized; i.e, if there's
-    // an active function, it'll be found at the start of the list.
-    auto *fn = (*(*map_it).begin());
-    // Check whether only one function has been found, so that we can
-    // link to a deprecated function as a last resort.
-    bool onlyFunction = (map_it.value().size() == 1);
-    if (parameters.isEmpty() && !fn->isInternal() && (!fn->isDeprecated() || onlyFunction))
-        return fn;
-    else
-        return nullptr;
+    // If no exact match was found and parameters are empty (e.g., from \overload command),
+    // try to find the best available function to link to.
+    if (parameters.isEmpty()) {
+        // First, try to find a non-deprecated, non-internal function
+        auto best_it = std::find_if((*map_it).begin(), (*map_it).end(),
+            [](const FunctionNode *fn) {
+                return !fn->isInternal() && !fn->isDeprecated();
+            });
+
+        if (best_it != (*map_it).end())
+            return *best_it;
+
+        // If no non-deprecated function found, fall back to any non-internal function
+        auto fallback_it = std::find_if((*map_it).begin(), (*map_it).end(),
+            [](const FunctionNode *fn) {
+                return !fn->isInternal();
+            });
+
+        if (fallback_it != (*map_it).end())
+            return *fallback_it;
+    }
+
+    return nullptr;
 }
 
 /*!
