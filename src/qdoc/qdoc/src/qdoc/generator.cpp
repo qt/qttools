@@ -1359,9 +1359,16 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
         if (args.first().first.isEmpty()) {
             text << "This is an overloaded function.";
         } else {
-            text << "This function overloads "
-                 << Atom(Atom::AutoLink, args.first().first)
-                 << ".";
+            QString target = args.first().first;
+            // If the target is not fully qualified and we have a parent class context,
+            // attempt to qualify it to improve link resolution
+            if (!target.contains("::") && node->isFunction()) {
+                const auto *parent = node->parent();
+                if (parent && (parent->isClassNode() || parent->isNamespace())) {
+                    target = parent->name() + "::" + target;
+                }
+            }
+            text << "This function overloads " << Atom(Atom::AutoLink, target) << ".";
         }
         break;
     }

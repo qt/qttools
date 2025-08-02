@@ -758,6 +758,11 @@
     the \b{\\overload} command, which will include a standard
     \e{This function overloads...}  line of text with a link
     to the documentation for the primary version of the function.
+    You can use either a fully qualified name (such as \c{QMenu::addAction()})
+    or an unqualified name (such as \c{addAction()}). When you use an unqualified
+    function name, QDoc automatically qualifies it by using the parent class or
+    namespace name. For example, \c{addAction()} becomes \c{QMenu::addAction()}
+    when used within the \c{QMenu} class documentation.
 
     \badcode *
     /\1!
