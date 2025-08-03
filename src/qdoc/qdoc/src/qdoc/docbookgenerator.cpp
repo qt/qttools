@@ -2699,6 +2699,8 @@ void DocBookGenerator::generateBody(const Node *node)
                 generateAddendum(node, Invokable, nullptr, AdmonitionPrefix::Note);
             if (fn->hasAssociatedProperties())
                 generateAddendum(node, AssociatedProperties, nullptr, AdmonitionPrefix::Note);
+            if (fn->hasOverloads() && fn->doc().hasOverloadCommand())
+                generateAddendum(node, OverloadNote, nullptr, AdmonitionPrefix::None);
         }
 
         // Warning generation skipped with respect to Generator::generateBody.
@@ -4100,6 +4102,37 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
         m_writer->writeCharacters("This property supports ");
         generateSimpleLink(link, "QProperty");
         m_writer->writeCharacters(" bindings.");
+        m_writer->writeEndElement(); // para
+        newLine();
+        break;
+    }
+    case OverloadNote: {
+        const auto &args = node->doc().overloadList();
+        m_writer->writeStartElement(dbNamespace, "para");
+        if (args.first().first.isEmpty()) {
+            m_writer->writeCharacters("This is an overloaded function.");
+        } else {
+            QString target = args.first().first;
+            // If the target is not fully qualified and we have a parent class context,
+            // attempt to qualify it to improve link resolution
+            if (!target.contains("::") && node->isFunction()) {
+                const auto *parent = node->parent();
+                if (parent && (parent->isClassNode() || parent->isNamespace())) {
+                    target = parent->name() + "::" + target;
+                }
+            }
+            m_writer->writeCharacters("This function overloads ");
+            // Use the same approach as AutoLink resolution in other generators
+            const Node *linkNode = nullptr;
+            Atom linkAtom = Atom(Atom::AutoLink, target);
+            QString link = getAutoLink(&linkAtom, node, &linkNode);
+            if (!link.isEmpty() && linkNode) {
+                generateSimpleLink(link, target);
+            } else {
+                m_writer->writeCharacters(target);
+            }
+            m_writer->writeCharacters(".");
+        }
         m_writer->writeEndElement(); // para
         newLine();
         break;
