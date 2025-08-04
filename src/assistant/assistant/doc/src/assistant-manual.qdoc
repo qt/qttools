@@ -414,5 +414,5 @@
     Furthermore, \QA \QtVersion may contain third party modules
     under following permissive licenses:
 
-    \generatelist{groupsbymodule attributions-qtassistant-tools}
+    \annotatedlist attributions-qtassistant-tools
 */

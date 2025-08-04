@@ -9,5 +9,5 @@
     \module SomeModule
     \title Some Module
 
-    \generatelist{groupsbymodule attributions-somemodule}
+    \annotatedlist attributions-somemodule
  */
