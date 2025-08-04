@@ -40,5 +40,5 @@
     the \l{GNU General Public License, version 2}.
     See \l{Qt Licensing} for further details.
 
-    \generatelist{groupsbymodule attributions-qthelp}
+    \annotatedlist attributions-qthelp
 */
