@@ -694,7 +694,7 @@ warning by setting the CMake variable \c QT_NO_MISSING_CATALOG_LANGUAGE_WARNING
 to \c{ON}.
 
 If the automatic determination of \c{.ts} file names is not used then you must
-ensure that the \l QT_I18N_TRANSLATED_LANGUAGE source file property is set on
+ensure that the \l QT_I18N_TRANSLATED_LANGUAGES source file property is set on
 each of the \c{.ts} files.
 
 \section1 Examples
