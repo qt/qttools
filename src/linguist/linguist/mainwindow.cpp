@@ -1921,7 +1921,11 @@ QModelIndex MainWindow::nextGroup(const QModelIndex &index) const
 
     int nextRow = sortedGroupIndex.row() + 1;
     if (nextRow >= m_activeSortedGroupsModel->rowCount()) {
-        m_contextAndLabelView->setCurrentIndex(1 - m_contextAndLabelView->currentIndex());
+        const QSortFilterProxyModel *inactiveModel =
+                m_activeSortedGroupsModel == m_sortedLabelsModel ? m_sortedContextsModel
+                                                                 : m_sortedLabelsModel;
+        if (inactiveModel->rowCount())
+            m_contextAndLabelView->setCurrentIndex(1 - m_contextAndLabelView->currentIndex());
         nextRow = 0;
     }
     sortedGroupIndex = m_activeSortedGroupsModel->index(nextRow, index.column());
@@ -1940,7 +1944,11 @@ QModelIndex MainWindow::prevGroup(const QModelIndex &index) const
 
     int prevRow = sortedGroupIndex.row() - 1;
     if (prevRow < 0) {
-        m_contextAndLabelView->setCurrentIndex(1 - m_contextAndLabelView->currentIndex());
+        const QSortFilterProxyModel *inactiveModel =
+                m_activeSortedGroupsModel == m_sortedLabelsModel ? m_sortedContextsModel
+                                                                 : m_sortedLabelsModel;
+        if (inactiveModel->rowCount())
+            m_contextAndLabelView->setCurrentIndex(1 - m_contextAndLabelView->currentIndex());
         prevRow = m_activeSortedGroupsModel->rowCount() - 1;
     }
     sortedGroupIndex = m_activeSortedGroupsModel->index(prevRow, index.column());
