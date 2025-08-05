@@ -758,11 +758,33 @@
     the \b{\\overload} command, which will include a standard
     \e{This function overloads...}  line of text with a link
     to the documentation for the primary version of the function.
+
     You can use either a fully qualified name (such as \c{QMenu::addAction()})
-    or an unqualified name (such as \c{addAction()}). When you use an unqualified
-    function name, QDoc automatically qualifies it by using the parent class or
-    namespace name. For example, \c{addAction()} becomes \c{QMenu::addAction()}
-    when used within the \c{QMenu} class documentation.
+    or an unqualified name (such as \c{addAction()}). When you use an
+    unqualified function name, QDoc automatically qualifies it by using the
+    parent class or namespace name. For example, \c{addAction()} becomes
+    \c{QMenu::addAction()} when used within the \c{QMenu} class documentation.
+
+    For parameterless targets like \c{\\overload functionName()}, QDoc searches
+    for a link target in this order:
+    \list 1
+        \li The function explicitly marked with \c{\\overload primary}, if one
+            exists.
+        \li The parameterless overload of that function, if one exists.
+        \li The overload QDoc determines to be primary based on its sorting
+            rules.
+    \endlist
+
+    QDoc automatically determines the primary overload by prioritizing functions
+    that are: non-internal, then non-overload (no \c{\\overload} command), then
+    documented, then by lexicographic comparison (alphabetical ordering of
+    function signatures). To override this automatic selection and explicitly
+    designate which overload should be the primary target, use
+    \c{\\overload primary} on that function.
+
+    \note If multiple functions are marked with \c{\\overload primary}, QDoc
+    will issue a warning and determine the primary overload using lexicographic
+    comparison among the competing primary candidates.
 
     \badcode *
     /\1!

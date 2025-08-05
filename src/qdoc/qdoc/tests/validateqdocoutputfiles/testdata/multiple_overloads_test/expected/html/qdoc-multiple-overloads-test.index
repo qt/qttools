@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QDoc multiple overloads test Reference Documentation" version="" project="QDoc multiple overloads test">
+    <namespace name="" status="active" access="public" module="qdoc multiple overloads test">
+        <class name="TestOverloads" href="testoverloads.html" status="active" access="public" location="testoverloads.h" documented="true" module="TestQDocOverloadCommand" brief="Demonstrates multiple overloads and the \overload primary feature">
+            <function name="failOnWarning" fullname="TestOverloads::failOnWarning" href="testoverloads.html#failOnWarning" status="active" access="public" location="testoverloads.h" documented="true" since="6.11" meta="plain" static="true" type="void" signature="void failOnWarning()"/>
+            <function name="failOnWarning" fullname="TestOverloads::failOnWarning" href="testoverloads.html#failOnWarning-1" status="active" access="public" location="testoverloads.h" documented="true" since="6.11" meta="plain" static="true" overload="true" overload-number="1" type="void" signature="void failOnWarning(const RegularExpression &amp;messagePattern)">
+                <parameter type="const RegularExpression &amp;" name="messagePattern" default=""/>
+            </function>
+            <function name="failOnWarning" fullname="TestOverloads::failOnWarning" href="testoverloads.html#failOnWarning-2" status="active" access="public" location="testoverloads.h" documented="true" since="6.11" meta="plain" static="true" overload="true" overload-number="2" type="void" signature="void failOnWarning(const char *message)">
+                <parameter type="const char *" name="message" default=""/>
+            </function>
+            <function name="primary" fullname="TestOverloads::primary" href="testoverloads.html#primary" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" static="true" type="void" signature="void primary()"/>
+            <function name="primary" fullname="TestOverloads::primary" href="testoverloads.html#primary-1" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" static="true" overload="true" overload-number="1" type="void" signature="void primary(const char *message)">
+                <parameter type="const char *" name="message" default=""/>
+            </function>
+            <function name="primary" fullname="TestOverloads::primary" href="testoverloads.html#primary-2" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" static="true" overload="true" overload-number="2" type="void" signature="void primary(int value)">
+                <parameter type="int" name="value" default=""/>
+            </function>
+            <function name="testFullyQualified" fullname="TestOverloads::testFullyQualified" href="testoverloads.html#testFullyQualified" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" static="true" type="void" signature="void testFullyQualified()"/>
+        </class>
+        <module name="TestQDocOverloadCommand" href="testqdocoverloadcommand-module.html" status="active" documented="true" seen="true" title="" brief="A test module"/>
+    </namespace>
+</INDEX>

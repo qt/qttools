@@ -315,6 +315,52 @@
     arise due to a renaming, a change in signature or the base no
     longer declaring it virtual.
 
+    \section1 Multiple primary overload definitions for <function>
+
+    QDoc issues this warning when multiple functions with the same name are
+    marked with \c{\overload primary}. Only one function in an overload
+    group should be designated as the primary overload.
+
+    The warning includes the function signatures and their source locations
+    to help identify all competing primary overloads. QDoc will determine
+    the actual primary overload using lexicographic comparison (alphabetical
+    ordering of function signatures) among the functions marked as primary.
+
+    To resolve this warning, remove the \c{primary} argument from all but
+    one of the \c{\overload primary} commands in the overload group.
+
+    Example that triggers this warning:
+
+    \badcode *
+    /\1!
+        \overload primary
+        Does something with no parameters.
+    \1/
+    void doSomething();
+
+    /\1!
+        \overload primary
+        Does something with a parameter.
+    \1/
+    void doSomething(int value);
+    \endcode
+
+    Correct approach - only one primary:
+
+    \badcode *
+    /\1!
+        \overload primary
+        Does something with no parameters.
+    \1/
+    void doSomething();
+
+    /\1!
+        \overload doSomething()
+        Does something with a parameter.
+    \1/
+    void doSomething(int value);
+    \endcode
+
     \section1 <class> tries to inherit itself
 
     The \l {inherits-command}{\\inherits} command is used to document that a QMl type

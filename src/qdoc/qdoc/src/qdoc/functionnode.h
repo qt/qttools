@@ -162,6 +162,8 @@ public:
     void setOverloadFlag() { m_overloadFlag = true; }
     void setOverloadNumber(signed short number);
     [[nodiscard]] signed short overloadNumber() const { return m_overloadNumber; }
+    void setPrimaryOverloadFlag() { m_primaryOverloadFlag = true; }
+    [[nodiscard]] bool isPrimaryOverload() const { return m_primaryOverloadFlag; }
 
     friend int compare(const FunctionNode *f1, const FunctionNode *f2);
 
@@ -177,6 +179,7 @@ private:
     bool m_reimpFlag : 1;
     bool m_attached : 1;
     bool m_overloadFlag : 1;
+    bool m_primaryOverloadFlag : 1;
     bool m_isFinal : 1;
     bool m_isOverride : 1;
     bool m_isRef : 1;

@@ -1,0 +1,24 @@
+project = QDoc multiple overloads test
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions  = "*.h *.hpp"
+sources.fileextensions  = "*.cpp *.qml *.qdoc"
+
+headerdirs  = ./src
+sourcedirs  = ./src
+
+outputformats = HTML DocBook WebXML
+HTML.outputsubdir = html
+HTML.nosubdirs = true
+
+DocBook.outputsubdir = docbook
+DocBook.nosubdirs = true
+
+WebXML.outputsubdir = webxml
+WebXML.nosubdirs = true
+
+warninglimit = 0
+warninglimit.enabled = true
+

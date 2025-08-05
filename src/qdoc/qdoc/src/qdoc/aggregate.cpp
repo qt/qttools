@@ -310,7 +310,9 @@ void Aggregate::resolveRelates()
   For sorting, active functions take precedence over internal ones, as well
   as ones marked as \\overload - the latter ones typically do not contain
   full documentation, so selecting them as the \e primary function
-  would cause unnecessary warnings to be generated.
+  would cause unnecessary warnings to be generated. However, functions
+  explicitly marked with \\overload primary take precedence over other
+  overloads and will be selected as the primary function.
 
   Otherwise, the order is set as determined by FunctionNode::compare().
  */
@@ -320,10 +322,35 @@ void Aggregate::normalizeOverloads()
         if (map_it.size() == 1) {
             map_it.front()->setOverloadNumber(0);
         } else if (map_it.size() > 1) {
+            // Check for multiple primary overloads before sorting
+            QStringList primaryOverloads;
+            for (const auto *fn : map_it) {
+                if (fn->isPrimaryOverload()) {
+                    const auto &location = "%1:%2"_L1.arg(
+                        fn->doc().location().fileName(),
+                        QString::number(fn->doc().location().lineNo()));
+                    primaryOverloads.append("%1 (%2)"_L1.arg(fn->signature(Node::SignaturePlain),
+                                                             location));
+                }
+            }
+
+            if (primaryOverloads.size() > 1) {
+                const QString functionName = map_it.front()->name();
+                const QString message = "Multiple primary overload definitions for '%1': %2"_L1.arg(
+                        functionName, primaryOverloads.join(", "));
+                const QString description = "The primary overload will be determined "
+                                            "by lexicographic comparison "
+                                            "(alphabetical ordering of function signatures)."_L1;
+                map_it.front()->doc().location().warning(message, description);
+            }
+
             std::sort(map_it.begin(), map_it.end(),
                 [](const FunctionNode *f1, const FunctionNode *f2) -> bool {
                     if (f1->isInternal() != f2->isInternal())
                         return f2->isInternal();
+                    // Prioritize functions marked with \overload primary
+                    if (f1->isPrimaryOverload() != f2->isPrimaryOverload())
+                        return f1->isPrimaryOverload();
                     if (f1->isOverload() != f2->isOverload())
                         return f2->isOverload();
                     // Prioritize documented over undocumented

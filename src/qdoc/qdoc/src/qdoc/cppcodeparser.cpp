@@ -349,12 +349,21 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
           flags and overload numbers will be resolved later
           in Aggregate::normalizeOverloads().
          */
-        if (node->isFunction())
-            static_cast<FunctionNode *>(node)->setOverloadFlag();
-        else if (node->isSharedCommentNode())
+        if (node->isFunction()) {
+            auto *fn = static_cast<FunctionNode *>(node);
+
+            // Check if this is "\overload primary"
+            const auto &overloadArgs = doc.overloadList();
+            if (!overloadArgs.isEmpty() && overloadArgs.first().first == "primary") {
+                fn->setPrimaryOverloadFlag();
+            } else {
+                fn->setOverloadFlag();
+            }
+        } else if (node->isSharedCommentNode()) {
             static_cast<SharedCommentNode *>(node)->setOverloadFlags();
-        else
+        } else {
             doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_OVERLOAD));
+        }
     } else if (command == COMMAND_REIMP) {
         if (node->parent() && !node->parent()->isInternal()) {
             if (node->isFunction()) {
