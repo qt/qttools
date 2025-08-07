@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title its:translate="no">BaseType QML Type</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>QmlImportAs Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A basic QML type for testing imports.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist its:translate="no">
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import TestModule 1.0</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherits</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="qml-testmodule-item.xml">Item</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherited By</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="qml-testmodule-deepnestedtype.xml" xlink:role="">DeepNestedType</db:link> and <db:link xlink:href="qml-testmodule-derivedtype.xml" xlink:role="">DerivedType</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="property-documentation">
+<db:title>Property Documentation</db:title>
+<db:section xml:id="title-prop">
+<db:title>title : string</db:title>
+<db:fieldsynopsis>
+<db:type>string</db:type>
+<db:varname>title</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>The title of the item.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="method-documentation">
+<db:title>Method Documentation</db:title>
+<db:section xml:id="doSomething-method">
+<db:title>void doSomething()</db:title>
+<db:para>Does something useful.</db:para>
+</db:section>
+</db:section>
+</db:article>

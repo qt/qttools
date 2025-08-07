@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- test.qdoc -->
+  <meta name="description" content="Demonstrating import &lt;@op&gt;.&lt;/@op&gt;&lt;@op&gt;.&lt;/@op&gt;&lt;@op&gt;.&lt;/@op&gt; as &lt;@op&gt;.&lt;/@op&gt;&lt;@op&gt;.&lt;/@op&gt;&lt;@op&gt;.&lt;/@op&gt; statements.">
+  <title>Import As Test | Qt</title>
+</head>
+<body>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#problem-description">Problem Description</a></li>
+<li class="level1"><a href="#comparison-with-non-aliased-qualified-types">Comparison with Non-Aliased Qualified Types</a></li>
+<li class="level1"><a href="#mixed-module-import-patterns">Mixed Module Import Patterns</a></li>
+<li class="level1"><a href="#multi-segment-qualified-names">Multi-Segment Qualified Names</a></li>
+<li class="level1"><a href="#test-cases">Test Cases</a></li>
+<li class="level2"><a href="#expected-behavior">Expected Behavior</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title">Import As Test</h1>
+<!-- $$$import-as-test.html-description -->
+<div class="descr" id="details">
+<p>This page demonstrates an issuewhere QDoc fails to generate proper links when QML types are accessed through module aliases.</p>
+<h2 id="problem-description">Problem Description</h2>
+<p>When a QML module is imported with an alias:</p>
+<pre class="qml" translate="no">import TestModule as TM
+
+<span class="type">TM.BaseType</span> {
+    <span class="name">title</span>: <span class="string">&quot;Example&quot;</span>
+}</pre>
+<p>QDoc should be able to:</p>
+<ul>
+<li>Recognize that <code translate="no">TM.BaseType</code> refers to <a href="qml-testmodule-basetype.html" translate="no">BaseType</a>.</li>
+<li>Generate proper inheritance links.</li>
+<li>Link to properties and methods from the aliased type.</li>
+</ul>
+<h2 id="comparison-with-non-aliased-qualified-types">Comparison with Non-Aliased Qualified Types</h2>
+<p>For comparison, here's how non-aliased qualified types work:</p>
+<pre class="qml" translate="no">import TestModule
+
+<span class="type">TestModule.BaseType</span> {
+    <span class="name">title</span>: <span class="string">&quot;Direct import&quot;</span>
+}</pre>
+<h2 id="mixed-module-import-patterns">Mixed Module Import Patterns</h2>
+<p>QDoc should handle different import and qualification patterns:</p>
+<pre class="qml" translate="no">import QtQuick.Controls
+import QtQml.Models as Models
+
+<span class="type"><a href="qml-testmodule-item.html" translate="no">Item</a></span> {
+    <span class="comment">// Standard module qualified types</span>
+    property <span class="type">ListModel</span> <span class="name">modelData</span>: <span class="type">Models.ListModel</span> {}
+
+    <span class="comment">// Nested property access patterns</span>
+    <span class="name">Layout.preferredSize</span>: <span class="name">Qt</span>.<span class="name">size</span>(<span class="number">100</span>, <span class="number">50</span>)
+
+    <span class="comment">// Standard QML qualified types for comparison</span>
+    <span class="name">anchors.fill</span>: <span class="name">parent</span>
+}</pre>
+<h2 id="multi-segment-qualified-names">Multi-Segment Qualified Names</h2>
+<p>More complex qualified names with multiple segments:</p>
+<pre class="qml" translate="no">import TestModule.SubModule.Deep as X
+
+<span class="type"><a href="qml-testmodule-deepnestedtype.html" translate="no">DeepNestedType</a></span> {
+    <span class="comment">// Four-segment qualified type name: X.Level1.Level2.Leaf</span>
+    <span class="name">nested</span>: <span class="type">X.Level1.Level2.Leaf</span> {
+        <span class="name">value</span>: <span class="number">42</span>
+    }
+
+    <span class="comment">// Multi-segment property access</span>
+    <span class="name">Layout.preferredWidth</span>: <span class="number">100</span>
+    <span class="name">anchors.margins.left</span>: <span class="number">10</span>
+}</pre>
+<p>This tests QDoc's ability to handle qualified names with 3+ segments like <code translate="no">X.Level1.Level2.Leaf</code> where each segment should be properly spanned and linked as a complete type reference.</p>
+<h2 id="test-cases">Test Cases</h2>
+<p>This test covers multiple scenarios for QDoc's qualified name handling:</p>
+<ul>
+<li><a href="qml-testmodule-derivedtype.html" translate="no">DerivedType</a> - Uses <code translate="no">import TestModule as TM</code> syntax (2 segments).</li>
+<li><a href="qml-testmodule-deepnestedtype.html" translate="no">DeepNestedType</a> - Uses <code translate="no">X.Level1.Level2.Leaf</code> syntax (4 segments).</li>
+<li>Module aliased types: <code translate="no">Models.ListModel</code> with <code translate="no">import QtQml.Models as Models</code>.</li>
+<li>Mixed import patterns: Both direct and aliased imports in same file.</li>
+<li>Multi-segment properties: <code translate="no">Layout.preferredWidth</code>, <code translate="no">anchors.fill</code>.</li>
+<li>The inheritance should show <a href="qml-testmodule-basetype.html" translate="no">BaseType</a> as the parent.</li>
+<li>Code examples should link to <a href="qml-testmodule-basetype.html#doSomething-method" translate="no">BaseType::doSomething</a>().</li>
+<li>Compare aliased vs non-aliased qualified type linking behavior.</li>
+</ul>
+<h3 id="expected-behavior">Expected Behavior</h3>
+<ul>
+<li>QML qualified names with &quot;.&quot; should be marked up completely: <code translate="no">&lt;span class=&quot;type&quot;&gt;TM.BaseType&lt;/span&gt;</code></li>
+<li>Module qualified types should be marked up completely: <code translate="no">&lt;span class=&quot;type&quot;&gt;Models.ListModel&lt;/span&gt;</code></li>
+<li>Property names should be marked up completely: <code translate="no">&lt;span class=&quot;name&quot;&gt;Layout.preferredSize&lt;/span&gt;</code></li>
+<li>Types that can be resolved should get clickable links: <code translate="no">&lt;a href=&quot;...&quot;&gt;TM.BaseType&lt;/a&gt;</code></li>
+<li>Multi-segment names should be handled correctly regardless of length</li>
+</ul>
+<p>}</p>
+</div>
+<!-- @@@import-as-test.html -->
+</body>
+</html>

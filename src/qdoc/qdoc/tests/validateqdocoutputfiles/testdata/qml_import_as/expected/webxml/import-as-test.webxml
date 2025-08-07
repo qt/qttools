@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="import-as-test.html" href="import-as-test.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Import As Test" fulltitle="Import As Test" subtitle="" brief="Demonstrating import ... as ... statements">
+            <contents name="problem-description" title="Problem Description" level="1"/>
+            <contents name="comparison-with-non-aliased-qualified-types" title="Comparison with Non-Aliased Qualified Types" level="1"/>
+            <contents name="mixed-module-import-patterns" title="Mixed Module Import Patterns" level="1"/>
+            <contents name="multi-segment-qualified-names" title="Multi-Segment Qualified Names" level="1"/>
+            <contents name="test-cases" title="Test Cases" level="1"/>
+            <contents name="expected-behavior" title="Expected Behavior" level="2"/>
+            <description>
+                <brief>Demonstrating <teletype type="highlighted">import ... as ...</teletype> statements.</brief>
+                <para>This page demonstrates an issuewhere QDoc fails to generate proper links when QML types are accessed through module aliases.</para>
+                <section id="problem-description">
+                    <heading level="1">Problem Description</heading>
+                    <para>When a QML module is imported with an alias:</para>
+                    <para>QDoc should be able to:</para>
+                    <list type="bullet">
+                        <item>
+                            <para>Recognize that <teletype type="highlighted">TM.BaseType</teletype> refers to <link raw="BaseType" href="qml-testmodule-basetype.html" type="">BaseType</link>.</para>
+                        </item>
+                        <item>
+                            <para>Generate proper inheritance links.</para>
+                        </item>
+                        <item>
+                            <para>Link to properties and methods from the aliased type.</para>
+                        </item>
+                    </list>
+                </section>
+                <section id="comparison-with-non-aliased-qualified-types">
+                    <heading level="1">Comparison with Non-Aliased Qualified Types</heading>
+                    <para>For comparison, here's how non-aliased qualified types work:</para>
+                </section>
+                <section id="mixed-module-import-patterns">
+                    <heading level="1">Mixed Module Import Patterns</heading>
+                    <para>QDoc should handle different import and qualification patterns:</para>
+                </section>
+                <section id="multi-segment-qualified-names">
+                    <heading level="1">Multi-Segment Qualified Names</heading>
+                    <para>More complex qualified names with multiple segments:</para>
+                    <para>This tests QDoc's ability to handle qualified names with 3+ segments like <teletype type="highlighted">X.Level1.Level2.Leaf</teletype> where each segment should be properly spanned and linked as a complete type reference.</para>
+                </section>
+                <section id="test-cases">
+                    <heading level="1">Test Cases</heading>
+                    <para>This test covers multiple scenarios for QDoc's qualified name handling:</para>
+                    <list type="bullet">
+                        <item>
+                            <para>
+                                <link raw="DerivedType" href="qml-testmodule-derivedtype.html" type="">DerivedType</link> - Uses <teletype type="highlighted">import TestModule as TM</teletype> syntax (2 segments).</para>
+                        </item>
+                        <item>
+                            <para>
+                                <link raw="DeepNestedType" href="qml-testmodule-deepnestedtype.html" type="">DeepNestedType</link> - Uses <teletype type="highlighted">X.Level1.Level2.Leaf</teletype> syntax (4 segments).</para>
+                        </item>
+                        <item>
+                            <para>Module aliased types: <teletype type="highlighted">Models.ListModel</teletype> with <teletype type="highlighted">import QtQml.Models as Models</teletype>.</para>
+                        </item>
+                        <item>
+                            <para>Mixed import patterns: Both direct and aliased imports in same file.</para>
+                        </item>
+                        <item>
+                            <para>Multi-segment properties: <teletype type="highlighted">Layout.preferredWidth</teletype>, <teletype type="highlighted">anchors.fill</teletype>.</para>
+                        </item>
+                        <item>
+                            <para>The inheritance should show <link raw="BaseType" href="qml-testmodule-basetype.html" type="">BaseType</link> as the parent.</para>
+                        </item>
+                        <item>
+                            <para>Code examples should link to <link raw="BaseType::doSomething()" href="qml-testmodule-basetype.html#doSomething-method" type="function">BaseType::doSomething()</link>.</para>
+                        </item>
+                        <item>
+                            <para>Compare aliased vs non-aliased qualified type linking behavior.</para>
+                        </item>
+                    </list>
+                </section>
+                <section id="expected-behavior">
+                    <heading level="2">Expected Behavior</heading>
+                    <list type="bullet">
+                        <item>
+                            <para>QML qualified names with &quot;.&quot; should be marked up completely: <teletype type="highlighted">&lt;span class=&quot;type&quot;&gt;TM.BaseType&lt;/span&gt;</teletype></para>
+                        </item>
+                        <item>
+                            <para>Module qualified types should be marked up completely: <teletype type="highlighted">&lt;span class=&quot;type&quot;&gt;Models.ListModel&lt;/span&gt;</teletype></para>
+                        </item>
+                        <item>
+                            <para>Property names should be marked up completely: <teletype type="highlighted">&lt;span class=&quot;name&quot;&gt;Layout.preferredSize&lt;/span&gt;</teletype></para>
+                        </item>
+                        <item>
+                            <para>Types that can be resolved should get clickable links: <teletype type="highlighted">&lt;a href=&quot;...&quot;&gt;TM.BaseType&lt;/a&gt;</teletype></para>
+                        </item>
+                        <item>
+                            <para>Multi-segment names should be handled correctly regardless of length</para>
+                        </item>
+                    </list>
+                    <para>}</para>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Import As Test</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>QmlImportAs Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Demonstrating <db:code>import ... as ...</db:code> statements.</db:para>
+</db:abstract>
+</db:info>
+<db:para>This page demonstrates an issuewhere QDoc fails to generate proper links when QML types are accessed through module aliases.</db:para>
+<db:section xml:id="problem-description">
+<db:title>Problem Description</db:title>
+<db:para>When a QML module is imported with an alias:</db:para>
+<db:programlisting language="qml" its:translate="no">import TestModule as TM
+
+TM.BaseType {
+    title: &quot;Example&quot;
+}
+</db:programlisting>
+<db:para>QDoc should be able to:</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para>Recognize that <db:code>TM.BaseType</db:code> refers to <db:link xlink:href="qml-testmodule-basetype.xml">BaseType</db:link>.</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Generate proper inheritance links.</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Link to properties and methods from the aliased type.</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="comparison-with-non-aliased-qualified-types">
+<db:title>Comparison with Non-Aliased Qualified Types</db:title>
+<db:para>For comparison, here's how non-aliased qualified types work:</db:para>
+<db:programlisting language="qml" its:translate="no">import TestModule
+
+TestModule.BaseType {
+    title: &quot;Direct import&quot;
+}
+</db:programlisting>
+</db:section>
+<db:section xml:id="mixed-module-import-patterns">
+<db:title>Mixed Module Import Patterns</db:title>
+<db:para>QDoc should handle different import and qualification patterns:</db:para>
+<db:programlisting language="qml" its:translate="no">import QtQuick.Controls
+import QtQml.Models as Models
+
+Item {
+    // Standard module qualified types
+    property ListModel modelData: Models.ListModel {}
+
+    // Nested property access patterns
+    Layout.preferredSize: Qt.size(100, 50)
+
+    // Standard QML qualified types for comparison
+    anchors.fill: parent
+}
+</db:programlisting>
+</db:section>
+<db:section xml:id="multi-segment-qualified-names">
+<db:title>Multi-Segment Qualified Names</db:title>
+<db:para>More complex qualified names with multiple segments:</db:para>
+<db:programlisting language="qml" its:translate="no">import TestModule.SubModule.Deep as X
+
+DeepNestedType {
+    // Four-segment qualified type name: X.Level1.Level2.Leaf
+    nested: X.Level1.Level2.Leaf {
+        value: 42
+    }
+
+    // Multi-segment property access
+    Layout.preferredWidth: 100
+    anchors.margins.left: 10
+}
+</db:programlisting>
+<db:para>This tests QDoc's ability to handle qualified names with 3+ segments like <db:code>X.Level1.Level2.Leaf</db:code> where each segment should be properly spanned and linked as a complete type reference.</db:para>
+</db:section>
+<db:section xml:id="test-cases">
+<db:title>Test Cases</db:title>
+<db:para>This test covers multiple scenarios for QDoc's qualified name handling:</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="qml-testmodule-derivedtype.xml">DerivedType</db:link> - Uses <db:code>import TestModule as TM</db:code> syntax (2 segments).</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="qml-testmodule-deepnestedtype.xml">DeepNestedType</db:link> - Uses <db:code>X.Level1.Level2.Leaf</db:code> syntax (4 segments).</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Module aliased types: <db:code>Models.ListModel</db:code> with <db:code>import QtQml.Models as Models</db:code>.</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Mixed import patterns: Both direct and aliased imports in same file.</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Multi-segment properties: <db:code>Layout.preferredWidth</db:code>, <db:code>anchors.fill</db:code>.</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>The inheritance should show <db:link xlink:href="qml-testmodule-basetype.xml">BaseType</db:link> as the parent.</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Code examples should link to <db:link xlink:href="qml-testmodule-basetype.xml#doSomething-method">BaseType::doSomething</db:link>().</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Compare aliased vs non-aliased qualified type linking behavior.</db:para>
+</db:listitem>
+</db:itemizedlist>
+<db:section xml:id="expected-behavior">
+<db:title>Expected Behavior</db:title>
+<db:itemizedlist>
+<db:listitem>
+<db:para>QML qualified names with &quot;.&quot; should be marked up completely: <db:code>&lt;span class=&quot;type&quot;&gt;TM.BaseType&lt;/span&gt;</db:code></db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Module qualified types should be marked up completely: <db:code>&lt;span class=&quot;type&quot;&gt;Models.ListModel&lt;/span&gt;</db:code></db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Property names should be marked up completely: <db:code>&lt;span class=&quot;name&quot;&gt;Layout.preferredSize&lt;/span&gt;</db:code></db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Types that can be resolved should get clickable links: <db:code>&lt;a href=&quot;...&quot;&gt;TM.BaseType&lt;/a&gt;</db:code></db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Multi-segment names should be handled correctly regardless of length</db:para>
+</db:listitem>
+</db:itemizedlist>
+<db:para>}</db:para>
+</db:section>
+</db:section>
+</db:article>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title its:translate="no">DerivedType QML Type</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>QmlImportAs Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A derived type that uses import as syntax.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist its:translate="no">
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import TestModule 1.0</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherits</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="qml-testmodule-basetype.xml">BaseType</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This type demonstrates the bug where QDoc fails to generate proper links for types referenced through module aliases.</db:para>
+<db:programlisting language="cpp" its:translate="no">import TestModule as TM
+
+TM.BaseType {
+    title: &quot;Derived&quot;
+}
+</db:programlisting>
+<db:para>The above code should properly link <db:link xlink:href="qml-testmodule-basetype.xml">BaseType</db:link>, even when accessed through the <db:code>TM</db:code> alias.</db:para>
+</db:section>
+<db:section xml:id="method-documentation">
+<db:title>Method Documentation</db:title>
+<db:section xml:id="callBase-method">
+<db:title>void callBase()</db:title>
+<db:para>Calls the base type's method.</db:para>
+</db:section>
+</db:section>
+</db:article>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title its:translate="no">Test Module QML Types</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>QmlImportAs Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Test module for import as bug reproduction.</db:para>
+</db:abstract>
+</db:info>
+<db:anchor xml:id="details"/>
+<db:variablelist role="members">
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-testmodule-basetype.xml" xlink:role="">BaseType</db:link></db:term>
+<db:listitem>
+<db:para>A basic QML type for testing imports.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-testmodule-deepnestedtype.xml" xlink:role="">DeepNestedType</db:link></db:term>
+<db:listitem>
+<db:para>Example demonstrating deeply nested qualified type names.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-testmodule-derivedtype.xml" xlink:role="">DerivedType</db:link></db:term>
+<db:listitem>
+<db:para>A derived type that uses import as syntax.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-testmodule-item.xml" xlink:role="">Item</db:link></db:term>
+<db:listitem>
+<db:para></db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:article>

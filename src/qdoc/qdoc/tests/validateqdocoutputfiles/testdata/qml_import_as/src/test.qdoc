@@ -1,0 +1,112 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page import-as-test.html
+    \title Import As Test
+    \brief Demonstrating \c {import ... as ...} statements.
+
+    This page demonstrates an issuewhere QDoc fails to generate proper
+    links when QML types are accessed through module aliases.
+
+    \section1 Problem Description
+
+    When a QML module is imported with an alias:
+
+    \qml
+    import TestModule as TM
+
+    TM.BaseType {
+        title: "Example"
+    }
+    \endqml
+
+    QDoc should be able to:
+    \list
+        \li Recognize that \c{TM.BaseType} refers to \l{BaseType}.
+        \li Generate proper inheritance links.
+        \li Link to properties and methods from the aliased type.
+    \endlist
+
+    \section1 Comparison with Non-Aliased Qualified Types
+
+    For comparison, here's how non-aliased qualified types work:
+
+    \qml
+    import TestModule
+
+    TestModule.BaseType {
+        title: "Direct import"
+    }
+    \endqml
+
+    \section1 Mixed Module Import Patterns
+
+    QDoc should handle different import and qualification patterns:
+
+    \qml
+    import QtQuick.Controls
+    import QtQml.Models as Models
+
+    Item {
+        // Standard module qualified types
+        property ListModel modelData: Models.ListModel {}
+
+        // Nested property access patterns
+        Layout.preferredSize: Qt.size(100, 50)
+
+        // Standard QML qualified types for comparison
+        anchors.fill: parent
+    }
+    \endqml
+
+    \section1 Multi-Segment Qualified Names
+
+    More complex qualified names with multiple segments:
+
+    \qml
+    import TestModule.SubModule.Deep as X
+
+    DeepNestedType {
+        // Four-segment qualified type name: X.Level1.Level2.Leaf
+        nested: X.Level1.Level2.Leaf {
+            value: 42
+        }
+
+        // Multi-segment property access
+        Layout.preferredWidth: 100
+        anchors.margins.left: 10
+    }
+    \endqml
+
+    This tests QDoc's ability to handle qualified names with 3+ segments
+    like \c{X.Level1.Level2.Leaf} where each segment should be properly
+    spanned and linked as a complete type reference.
+
+    \section1 Test Cases
+
+    This test covers multiple scenarios for QDoc's qualified name handling:
+
+    \list
+        \li \l{DerivedType} - Uses \c{import TestModule as TM} syntax (2 segments).
+        \li \l{DeepNestedType} - Uses \c{X.Level1.Level2.Leaf} syntax (4 segments).
+        \li Module aliased types: \c{Models.ListModel} with \c{import QtQml.Models as Models}.
+        \li Mixed import patterns: Both direct and aliased imports in same file.
+        \li Multi-segment properties: \c{Layout.preferredWidth}, \c{anchors.fill}.
+        \li The inheritance should show \l{BaseType} as the parent.
+        \li Code examples should link to \l{BaseType::doSomething()}.
+        \li Compare aliased vs non-aliased qualified type linking behavior.
+    \endlist
+
+    \section2 Expected Behavior
+
+    \list
+        \li QML qualified names with "." should be marked up completely: \c{<span class="type">TM.BaseType</span>}
+        \li Module qualified types should be marked up completely: \c{<span class="type">Models.ListModel</span>}
+        \li Property names should be marked up completely: \c{<span class="name">Layout.preferredSize</span>}
+        \li Types that can be resolved should get clickable links: \c{<a href="...">TM.BaseType</a>}
+        \li Multi-segment names should be handled correctly regardless of length
+    \endlist
+}
+
+*/

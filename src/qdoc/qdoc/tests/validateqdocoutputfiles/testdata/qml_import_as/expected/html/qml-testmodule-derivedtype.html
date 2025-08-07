@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- DerivedType.qml -->
+  <meta name="description" content="A derived type that uses import as syntax.">
+  <title>DerivedType QML Type | Qt</title>
+</head>
+<body>
+<li><a href="testmodule-qmlmodule.html" translate="no">TestModule</a></li>
+<li>DerivedType</li>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#methods">Methods</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">DerivedType QML Type</h1>
+<!-- $$$DerivedType-brief -->
+<p>A derived type that uses import as syntax. <a href="#details">More...</a></p>
+<!-- @@@DerivedType -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Import Statement:</td><td class="memItemRight bottomAlign"> <code translate="no">import TestModule 1.0</code></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> Inherits:</td><td class="memItemRight bottomAlign"> <p><a href="qml-testmodule-basetype.html" translate="no">BaseType</a></p>
+</td></tr>
+</table></div>
+<ul>
+<li><a href="qml-testmodule-derivedtype-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="methods">Methods</h2>
+<ul>
+<li class="fn" translate="no">void <b><a href="qml-testmodule-derivedtype.html#callBase-method" translate="no">callBase</a></b>()</li>
+</ul>
+<!-- $$$DerivedType-description -->
+<h2 id="details">Detailed Description</h2>
+<p>This type demonstrates the bug where QDoc fails to generate proper links for types referenced through module aliases.</p>
+<pre class="cpp" translate="no">import TestModule as TM
+
+<span class="type">TM.BaseType</span> {
+    <span class="name">title</span>: <span class="string">&quot;Derived&quot;</span>
+}</pre>
+<p>The above code should properly link <a href="qml-testmodule-basetype.html" translate="no">BaseType</a>, even when accessed through the <code translate="no">TM</code> alias.</p>
+<!-- @@@DerivedType -->
+<h2>Method Documentation</h2>
+<!-- $$$callBase[overload1]$$$callBase -->
+<div class="qmlitem"><div class="qmlproto" translate="no">
+<div class="table"><table class="qmlname">
+<tr valign="top" class="odd" id="callBase-method">
+<td class="tblQmlFuncNode"><p>
+<span class="type">void</span> <span class="name">callBase</span>()</p></td></tr>
+</table></div></div>
+<div class="qmldoc"><p>Calls the base type's method.</p>
+</div></div><!-- @@@callBase -->
+<br/>
+</body>
+</html>

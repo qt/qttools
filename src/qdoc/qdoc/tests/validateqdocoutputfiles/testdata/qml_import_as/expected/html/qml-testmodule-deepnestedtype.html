@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- DeepNestedType.qml -->
+  <meta name="description" content="Example demonstrating deeply nested qualified type names.">
+  <title>DeepNestedType QML Type | Qt</title>
+</head>
+<body>
+<li><a href="testmodule-qmlmodule.html" translate="no">TestModule</a></li>
+<li>DeepNestedType</li>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#properties">Properties</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">DeepNestedType QML Type</h1>
+<!-- $$$DeepNestedType-brief -->
+<p>Example demonstrating deeply nested qualified type names. <a href="#details">More...</a></p>
+<!-- @@@DeepNestedType -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Import Statement:</td><td class="memItemRight bottomAlign"> <code translate="no">import TestModule 1.0</code></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> Inherits:</td><td class="memItemRight bottomAlign"> <p><a href="qml-testmodule-basetype.html" translate="no">BaseType</a></p>
+</td></tr>
+</table></div>
+<ul>
+<li><a href="qml-testmodule-deepnestedtype-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="properties">Properties</h2>
+<ul>
+<li class="fn" translate="no"><b><a href="qml-testmodule-deepnestedtype.html#nested-prop" translate="no">nested</a></b> : Item</li>
+<li class="fn" translate="no"><b><a href="qml-testmodule-deepnestedtype.html#testProp-prop" translate="no">testProp</a></b> : string</li>
+</ul>
+<!-- $$$DeepNestedType-description -->
+<h2 id="details">Detailed Description</h2>
+<p>This type tests QDoc's ability to handle qualified type names with multiple segments like <code translate="no">X.Level1.Level2.Leaf</code>.</p>
+<pre class="qml" translate="no">import TestModule.SubModule.Deep as X
+
+<span class="type"><a href="qml-testmodule-deepnestedtype.html" translate="no">DeepNestedType</a></span> {
+    <span class="comment">// This should properly link X.Level1.Level2.Leaf as a complete type name</span>
+    <span class="name">nested</span>: <span class="type">X.Level1.Level2.Leaf</span> {
+        <span class="name">value</span>: <span class="number">42</span>
+        <span class="name">deepProperty</span>: <span class="string">&quot;nested value&quot;</span>
+    }
+
+    <span class="comment">// Test property bindings with multi-segment names</span>
+    <span class="name">Layout.alignment</span>: <span class="name">Qt</span>.<span class="name">AlignCenter</span>
+    <span class="name">anchors.margins.left</span>: <span class="number">10</span>
+}</pre>
+<p>The key test case is <code translate="no">X.Level1.Level2.Leaf</code> which has 4 segments:</p>
+<ul>
+<li><code translate="no">X</code> - Module alias</li>
+<li><code translate="no">Level1</code> - First level type/namespace</li>
+<li><code translate="no">Level2</code> - Second level type/namespace</li>
+<li><code translate="no">Leaf</code> - Final type name</li>
+</ul>
+<!-- @@@DeepNestedType -->
+<h2>Property Documentation</h2>
+<!-- $$$nested -->
+<div class="qmlitem"><div class="qmlproto" translate="no">
+<div class="table"><table class="qmlname">
+<tr valign="top" class="odd" id="nested-prop">
+<td class="tblQmlPropNode"><p>
+<span class="name">nested</span> : <span class="type"><a href="qml-testmodule-item.html" translate="no">Item</a></span></p></td></tr>
+</table></div></div>
+<div class="qmldoc"><p>A property that uses deeply nested type names for testing QDoc linking.</p>
+</div></div><!-- @@@nested -->
+<br/>
+<!-- $$$testProp -->
+<div class="qmlitem"><div class="qmlproto" translate="no">
+<div class="table"><table class="qmlname">
+<tr valign="top" class="odd" id="testProp-prop">
+<td class="tblQmlPropNode"><p>
+<span class="name">testProp</span> : <span class="type">string</span></p></td></tr>
+</table></div></div>
+<div class="qmldoc"><p>Property to test multi-segment property access.</p>
+</div></div><!-- @@@testProp -->
+<br/>
+</body>
+</html>

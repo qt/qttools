@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title its:translate="no">DeepNestedType QML Type</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>QmlImportAs Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Example demonstrating deeply nested qualified type names.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist its:translate="no">
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import TestModule 1.0</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherits</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="qml-testmodule-basetype.xml">BaseType</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This type tests QDoc's ability to handle qualified type names with multiple segments like <db:code>X.Level1.Level2.Leaf</db:code>.</db:para>
+<db:programlisting language="qml" its:translate="no">import TestModule.SubModule.Deep as X
+
+DeepNestedType {
+    // This should properly link X.Level1.Level2.Leaf as a complete type name
+    nested: X.Level1.Level2.Leaf {
+        value: 42
+        deepProperty: &quot;nested value&quot;
+    }
+
+    // Test property bindings with multi-segment names
+    Layout.alignment: Qt.AlignCenter
+    anchors.margins.left: 10
+}
+</db:programlisting>
+<db:para>The key test case is <db:code>X.Level1.Level2.Leaf</db:code> which has 4 segments:</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:code>X</db:code> - Module alias</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:code>Level1</db:code> - First level type/namespace</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:code>Level2</db:code> - Second level type/namespace</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:code>Leaf</db:code> - Final type name</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="property-documentation">
+<db:title>Property Documentation</db:title>
+<db:section xml:id="nested-prop">
+<db:title>nested : Item</db:title>
+<db:fieldsynopsis>
+<db:type>Item</db:type>
+<db:varname>nested</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>A property that uses deeply nested type names for testing QDoc linking.</db:para>
+</db:section>
+<db:section xml:id="testProp-prop">
+<db:title>testProp : string</db:title>
+<db:fieldsynopsis>
+<db:type>string</db:type>
+<db:varname>testProp</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>Property to test multi-segment property access.</db:para>
+</db:section>
+</db:section>
+</db:article>
