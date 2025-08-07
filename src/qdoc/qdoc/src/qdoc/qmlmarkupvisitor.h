@@ -13,6 +13,8 @@
 #include <private/qqmljsastvisitor_p.h>
 #include <private/qqmljsengine_p.h>
 
+#include <optional>
+
 QT_BEGIN_NAMESPACE
 
 class QmlMarkupVisitor : public QQmlJS::AST::Visitor
@@ -120,7 +122,9 @@ private:
                      QQmlJS::SourceLocation last = QQmlJS::SourceLocation());
     QString sourceText(const QQmlJS::SourceLocation &location);
     void throwRecursionDepthError() final;
-
+    std::optional<QQmlJS::SourceLocation>
+    getFullyQualifiedLocation(QQmlJS::AST::UiQualifiedId *id);
+    QQmlJS::SourceLocation getLocationForMarkup(QQmlJS::AST::UiQualifiedId *id);
     QQmlJS::Engine *m_engine { nullptr };
     QList<ExtraType> m_extraTypes {};
     QList<QQmlJS::SourceLocation> m_extraLocations {};

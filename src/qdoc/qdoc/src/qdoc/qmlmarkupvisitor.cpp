@@ -147,6 +147,47 @@ QString QmlMarkupVisitor::sourceText(const QQmlJS::SourceLocation &location)
     return m_source.mid(location.offset, location.length);
 }
 
+/*!
+  Returns a SourceLocation spanning the entire qualified \a id.
+
+  For a qualified identifier like \c {TM.BaseType} or \c
+  {Layout.preferredWidth}, returns a location that covers all segments including
+  dots.
+
+  Returns std::nullopt if \a id is \nullptr or has no valid tokens.
+ */
+std::optional<QQmlJS::SourceLocation>
+QmlMarkupVisitor::getFullyQualifiedLocation(QQmlJS::AST::UiQualifiedId *id) {
+    if (!id || !id->identifierToken.isValid())
+        return std::nullopt;
+
+    auto location = id->identifierToken;
+
+    for (auto current = id->next; current; current = current->next) {
+        if (!current->identifierToken.isValid())
+            continue;
+
+        const auto currentEnd =  current->identifierToken.offset + current->identifierToken.length;
+        location.length = currentEnd - location.offset;
+    }
+
+    return location;
+}
+
+/*!
+  Returns a source location suitable for markup of qualified \a id.
+
+  Attempts to span the entire qualified identifier if possible,
+  otherwise falls back to just the first token.
+ */
+QQmlJS::SourceLocation
+QmlMarkupVisitor::getLocationForMarkup(QQmlJS::AST::UiQualifiedId *id)
+{
+    if (auto fullLocation = getFullyQualifiedLocation(id))
+        return fullLocation.value();
+    return id->identifierToken;
+}
+
 void QmlMarkupVisitor::addVerbatim(QQmlJS::SourceLocation first,
                                    QQmlJS::SourceLocation last)
 {
