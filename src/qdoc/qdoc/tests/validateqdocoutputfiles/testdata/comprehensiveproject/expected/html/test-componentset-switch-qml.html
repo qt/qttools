@@ -77,7 +77,7 @@ import QtQuick 1.0
         <span class="name">width</span>: <span class="number">130</span>; <span class="name">height</span>: <span class="number">48</span>
         <span class="name">radius</span>: <span class="number">48</span>
         <span class="name">color</span>: <span class="string">&quot;lightsteelblue&quot;</span>
-        <span class="type">MouseArea</span> { <span class="name">anchors</span>.fill: <span class="name">parent</span>; <span class="name">onClicked</span>: <span class="name">toggle</span>() }
+        <span class="type">MouseArea</span> { <span class="name">anchors.fill</span>: <span class="name">parent</span>; <span class="name">onClicked</span>: <span class="name">toggle</span>() }
     }
 
     <span class="type">Rectangle</span> {
@@ -87,8 +87,8 @@ import QtQuick 1.0
         <span class="name">color</span>: <span class="string">&quot;lightblue&quot;</span>
 
         <span class="type">MouseArea</span> {
-            <span class="name">anchors</span>.fill: <span class="name">parent</span>
-            <span class="name">drag</span>.target: <span class="name">knob</span>; <span class="name">drag</span>.axis: <span class="name">Drag</span>.<span class="name">XAxis</span>; <span class="name">drag</span>.minimumX: <span class="number">1</span>; <span class="name">drag</span>.maximumX: <span class="number">78</span>
+            <span class="name">anchors.fill</span>: <span class="name">parent</span>
+            <span class="name">drag.target</span>: <span class="name">knob</span>; <span class="name">drag.axis</span>: <span class="name">Drag</span>.<span class="name">XAxis</span>; <span class="name">drag.minimumX</span>: <span class="number">1</span>; <span class="name">drag.maximumX</span>: <span class="number">78</span>
             <span class="name">onClicked</span>: <span class="name">toggle</span>()
             <span class="name">onReleased</span>: <span class="name">releaseSwitch</span>()
         }
@@ -107,7 +107,7 @@ import QtQuick 1.0
         }
     ]
 
-    <span class="name">transitions</span>: <span class="name">Transition</span> {
-        <span class="type">NumberAnimation</span> { <span class="name">properties</span>: <span class="string">&quot;x&quot;</span>; <span class="name">easing</span>.type: <span class="name">Easing</span>.<span class="name">InOutQuad</span>; <span class="name">duration</span>: <span class="number">200</span> }
+    <span class="name">transitions</span>: <span class="type">Transition</span> {
+        <span class="type">NumberAnimation</span> { <span class="name">properties</span>: <span class="string">&quot;x&quot;</span>; <span class="name">easing.type</span>: <span class="name">Easing</span>.<span class="name">InOutQuad</span>; <span class="name">duration</span>: <span class="number">200</span> }
     }
 }</pre>

@@ -72,7 +72,7 @@ import QtQuick 1.0
         &lt;@name&gt;width&lt;/@name&gt;: &lt;@number&gt;130&lt;/@number&gt;; &lt;@name&gt;height&lt;/@name&gt;: &lt;@number&gt;48&lt;/@number&gt;
         &lt;@name&gt;radius&lt;/@name&gt;: &lt;@number&gt;48&lt;/@number&gt;
         &lt;@name&gt;color&lt;/@name&gt;: &lt;@string&gt;&amp;quot;lightsteelblue&amp;quot;&lt;/@string&gt;
-        &lt;@type&gt;MouseArea&lt;/@type&gt; { &lt;@name&gt;anchors&lt;/@name&gt;.fill: &lt;@name&gt;parent&lt;/@name&gt;; &lt;@name&gt;onClicked&lt;/@name&gt;: &lt;@name&gt;toggle&lt;/@name&gt;() }
+        &lt;@type&gt;MouseArea&lt;/@type&gt; { &lt;@name&gt;anchors.fill&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;; &lt;@name&gt;onClicked&lt;/@name&gt;: &lt;@name&gt;toggle&lt;/@name&gt;() }
     }
 
     &lt;@type&gt;Rectangle&lt;/@type&gt; {
@@ -82,8 +82,8 @@ import QtQuick 1.0
         &lt;@name&gt;color&lt;/@name&gt;: &lt;@string&gt;&amp;quot;lightblue&amp;quot;&lt;/@string&gt;
 
         &lt;@type&gt;MouseArea&lt;/@type&gt; {
-            &lt;@name&gt;anchors&lt;/@name&gt;.fill: &lt;@name&gt;parent&lt;/@name&gt;
-            &lt;@name&gt;drag&lt;/@name&gt;.target: &lt;@name&gt;knob&lt;/@name&gt;; &lt;@name&gt;drag&lt;/@name&gt;.axis: &lt;@name&gt;Drag&lt;/@name&gt;.&lt;@name&gt;XAxis&lt;/@name&gt;; &lt;@name&gt;drag&lt;/@name&gt;.minimumX: &lt;@number&gt;1&lt;/@number&gt;; &lt;@name&gt;drag&lt;/@name&gt;.maximumX: &lt;@number&gt;78&lt;/@number&gt;
+            &lt;@name&gt;anchors.fill&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;
+            &lt;@name&gt;drag.target&lt;/@name&gt;: &lt;@name&gt;knob&lt;/@name&gt;; &lt;@name&gt;drag.axis&lt;/@name&gt;: &lt;@name&gt;Drag&lt;/@name&gt;.&lt;@name&gt;XAxis&lt;/@name&gt;; &lt;@name&gt;drag.minimumX&lt;/@name&gt;: &lt;@number&gt;1&lt;/@number&gt;; &lt;@name&gt;drag.maximumX&lt;/@name&gt;: &lt;@number&gt;78&lt;/@number&gt;
             &lt;@name&gt;onClicked&lt;/@name&gt;: &lt;@name&gt;toggle&lt;/@name&gt;()
             &lt;@name&gt;onReleased&lt;/@name&gt;: &lt;@name&gt;releaseSwitch&lt;/@name&gt;()
         }
@@ -102,8 +102,8 @@ import QtQuick 1.0
         }
     ]
 
-    &lt;@name&gt;transitions&lt;/@name&gt;: &lt;@name&gt;Transition&lt;/@name&gt; {
-        &lt;@type&gt;NumberAnimation&lt;/@type&gt; { &lt;@name&gt;properties&lt;/@name&gt;: &lt;@string&gt;&amp;quot;x&amp;quot;&lt;/@string&gt;; &lt;@name&gt;easing&lt;/@name&gt;.type: &lt;@name&gt;Easing&lt;/@name&gt;.&lt;@name&gt;InOutQuad&lt;/@name&gt;; &lt;@name&gt;duration&lt;/@name&gt;: &lt;@number&gt;200&lt;/@number&gt; }
+    &lt;@name&gt;transitions&lt;/@name&gt;: &lt;@type&gt;Transition&lt;/@type&gt; {
+        &lt;@type&gt;NumberAnimation&lt;/@type&gt; { &lt;@name&gt;properties&lt;/@name&gt;: &lt;@string&gt;&amp;quot;x&amp;quot;&lt;/@string&gt;; &lt;@name&gt;easing.type&lt;/@name&gt;: &lt;@name&gt;Easing&lt;/@name&gt;.&lt;@name&gt;InOutQuad&lt;/@name&gt;; &lt;@name&gt;duration&lt;/@name&gt;: &lt;@number&gt;200&lt;/@number&gt; }
     }
 }</code>
             </description>

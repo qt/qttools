@@ -88,7 +88,7 @@ import QtQuick 1.0
 
         &lt;@type&gt;anchors&lt;/@type&gt; { &lt;@name&gt;left&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;.&lt;@name&gt;left&lt;/@name&gt;; &lt;@name&gt;top&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;.&lt;@name&gt;top&lt;/@name&gt;; &lt;@name&gt;bottom&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;.&lt;@name&gt;bottom&lt;/@name&gt;; &lt;@name&gt;margins&lt;/@name&gt;: &lt;@number&gt;3&lt;/@number&gt; }
         &lt;@name&gt;radius&lt;/@name&gt;: &lt;@number&gt;1&lt;/@number&gt;
-        &lt;@name&gt;gradient&lt;/@name&gt;: &lt;@name&gt;Gradient&lt;/@name&gt; {
+        &lt;@name&gt;gradient&lt;/@name&gt;: &lt;@type&gt;Gradient&lt;/@type&gt; {
             &lt;@type&gt;GradientStop&lt;/@type&gt; { &lt;@name&gt;id&lt;/@name&gt;: &lt;@name&gt;gradient1&lt;/@name&gt;; &lt;@name&gt;position&lt;/@name&gt;: &lt;@number&gt;0.0&lt;/@number&gt; }
             &lt;@type&gt;GradientStop&lt;/@type&gt; { &lt;@name&gt;id&lt;/@name&gt;: &lt;@name&gt;gradient2&lt;/@name&gt;; &lt;@name&gt;position&lt;/@name&gt;: &lt;@number&gt;1.0&lt;/@number&gt; }
         }
@@ -97,7 +97,7 @@ import QtQuick 1.0
     &lt;@type&gt;Text&lt;/@type&gt; {
         &lt;@type&gt;anchors&lt;/@type&gt; { &lt;@name&gt;right&lt;/@name&gt;: &lt;@name&gt;highlight&lt;/@name&gt;.&lt;@name&gt;right&lt;/@name&gt;; &lt;@name&gt;rightMargin&lt;/@name&gt;: &lt;@number&gt;6&lt;/@number&gt;; &lt;@name&gt;verticalCenter&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;.&lt;@name&gt;verticalCenter&lt;/@name&gt; }
         &lt;@name&gt;color&lt;/@name&gt;: &lt;@string&gt;&amp;quot;white&amp;quot;&lt;/@string&gt;
-        &lt;@name&gt;font&lt;/@name&gt;.bold: &lt;@number&gt;true&lt;/@number&gt;
+        &lt;@name&gt;font.bold&lt;/@name&gt;: &lt;@number&gt;true&lt;/@number&gt;
         &lt;@name&gt;text&lt;/@name&gt;: &lt;@name&gt;Math&lt;/@name&gt;.&lt;@name&gt;floor&lt;/@name&gt;((&lt;@name&gt;value&lt;/@name&gt; &lt;@op&gt;-&lt;/@op&gt; &lt;@name&gt;minimum&lt;/@name&gt;) &lt;@op&gt;/&lt;/@op&gt; (&lt;@name&gt;maximum&lt;/@name&gt; &lt;@op&gt;-&lt;/@op&gt; &lt;@name&gt;minimum&lt;/@name&gt;) &lt;@op&gt;*&lt;/@op&gt; &lt;@number&gt;100&lt;/@number&gt;) &lt;@op&gt;+&lt;/@op&gt; &lt;@string&gt;'%'&lt;/@string&gt;
     }
 }</code>

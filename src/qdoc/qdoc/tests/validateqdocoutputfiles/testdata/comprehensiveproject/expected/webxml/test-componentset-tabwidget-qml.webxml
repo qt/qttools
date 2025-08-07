@@ -93,7 +93,7 @@ import QtQuick 1.0
     documentation on the public API.
     */&lt;/@comment&gt;
     &lt;@name&gt;onCurrentChanged&lt;/@name&gt;: &lt;@name&gt;setOpacities&lt;/@name&gt;()
-    &lt;@name&gt;Component&lt;/@name&gt;.onCompleted: &lt;@name&gt;setOpacities&lt;/@name&gt;()
+    &lt;@name&gt;Component.onCompleted&lt;/@name&gt;: &lt;@name&gt;setOpacities&lt;/@name&gt;()
 
     &lt;@comment&gt;/*!
     \internal
@@ -113,7 +113,7 @@ import QtQuick 1.0
 
         &lt;@type&gt;Repeater&lt;/@type&gt; {
             &lt;@name&gt;model&lt;/@name&gt;: &lt;@name&gt;stack&lt;/@name&gt;.&lt;@name&gt;children&lt;/@name&gt;.&lt;@name&gt;length&lt;/@name&gt;
-            &lt;@name&gt;delegate&lt;/@name&gt;: &lt;@name&gt;Rectangle&lt;/@name&gt; {
+            &lt;@name&gt;delegate&lt;/@name&gt;: &lt;@type&gt;Rectangle&lt;/@type&gt; {
                 &lt;@name&gt;width&lt;/@name&gt;: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;width&lt;/@name&gt; &lt;@op&gt;/&lt;/@op&gt; &lt;@name&gt;stack&lt;/@name&gt;.&lt;@name&gt;children&lt;/@name&gt;.&lt;@name&gt;length&lt;/@name&gt;; &lt;@name&gt;height&lt;/@name&gt;: &lt;@number&gt;36&lt;/@number&gt;
 
                 &lt;@type&gt;Rectangle&lt;/@type&gt; {
@@ -129,13 +129,13 @@ import QtQuick 1.0
                 }
                 &lt;@type&gt;Text&lt;/@type&gt; {
                     &lt;@name&gt;horizontalAlignment&lt;/@name&gt;: &lt;@name&gt;Qt&lt;/@name&gt;.&lt;@name&gt;AlignHCenter&lt;/@name&gt;; &lt;@name&gt;verticalAlignment&lt;/@name&gt;: &lt;@name&gt;Qt&lt;/@name&gt;.&lt;@name&gt;AlignVCenter&lt;/@name&gt;
-                    &lt;@name&gt;anchors&lt;/@name&gt;.fill: &lt;@name&gt;parent&lt;/@name&gt;
+                    &lt;@name&gt;anchors.fill&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;
                     &lt;@name&gt;text&lt;/@name&gt;: &lt;@name&gt;stack&lt;/@name&gt;.&lt;@name&gt;children&lt;/@name&gt;[&lt;@name&gt;index&lt;/@name&gt;].&lt;@name&gt;title&lt;/@name&gt;
                     &lt;@name&gt;elide&lt;/@name&gt;: &lt;@name&gt;Text&lt;/@name&gt;.&lt;@name&gt;ElideRight&lt;/@name&gt;
-                    &lt;@name&gt;font&lt;/@name&gt;.bold: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;current&lt;/@name&gt; &lt;@op&gt;==&lt;/@op&gt; &lt;@name&gt;index&lt;/@name&gt;
+                    &lt;@name&gt;font.bold&lt;/@name&gt;: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;current&lt;/@name&gt; &lt;@op&gt;==&lt;/@op&gt; &lt;@name&gt;index&lt;/@name&gt;
                 }
                 &lt;@type&gt;MouseArea&lt;/@type&gt; {
-                    &lt;@name&gt;anchors&lt;/@name&gt;.fill: &lt;@name&gt;parent&lt;/@name&gt;
+                    &lt;@name&gt;anchors.fill&lt;/@name&gt;: &lt;@name&gt;parent&lt;/@name&gt;
                     &lt;@name&gt;onClicked&lt;/@name&gt;: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;current&lt;/@name&gt; &lt;@op&gt;=&lt;/@op&gt; &lt;@name&gt;index&lt;/@name&gt;
                 }
             }
@@ -145,7 +145,7 @@ import QtQuick 1.0
     &lt;@type&gt;Item&lt;/@type&gt; {
         &lt;@name&gt;id&lt;/@name&gt;: &lt;@name&gt;stack&lt;/@name&gt;
         &lt;@name&gt;width&lt;/@name&gt;: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;width&lt;/@name&gt;
-        &lt;@name&gt;anchors&lt;/@name&gt;.top: &lt;@name&gt;header&lt;/@name&gt;.&lt;@name&gt;bottom&lt;/@name&gt;; &lt;@name&gt;anchors&lt;/@name&gt;.bottom: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;bottom&lt;/@name&gt;
+        &lt;@name&gt;anchors.top&lt;/@name&gt;: &lt;@name&gt;header&lt;/@name&gt;.&lt;@name&gt;bottom&lt;/@name&gt;; &lt;@name&gt;anchors.bottom&lt;/@name&gt;: &lt;@name&gt;tabWidget&lt;/@name&gt;.&lt;@name&gt;bottom&lt;/@name&gt;
     }
 }</code>
             </description>

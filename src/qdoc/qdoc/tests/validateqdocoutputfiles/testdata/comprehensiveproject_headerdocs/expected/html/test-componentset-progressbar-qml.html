@@ -93,7 +93,7 @@ import QtQuick 1.0
 
         <span class="type">anchors</span> { <span class="name">left</span>: <span class="name">parent</span>.<span class="name">left</span>; <span class="name">top</span>: <span class="name">parent</span>.<span class="name">top</span>; <span class="name">bottom</span>: <span class="name">parent</span>.<span class="name">bottom</span>; <span class="name">margins</span>: <span class="number">3</span> }
         <span class="name">radius</span>: <span class="number">1</span>
-        <span class="name">gradient</span>: <span class="name">Gradient</span> {
+        <span class="name">gradient</span>: <span class="type">Gradient</span> {
             <span class="type">GradientStop</span> { <span class="name">id</span>: <span class="name">gradient1</span>; <span class="name">position</span>: <span class="number">0.0</span> }
             <span class="type">GradientStop</span> { <span class="name">id</span>: <span class="name">gradient2</span>; <span class="name">position</span>: <span class="number">1.0</span> }
         }
@@ -102,7 +102,7 @@ import QtQuick 1.0
     <span class="type">Text</span> {
         <span class="type">anchors</span> { <span class="name">right</span>: <span class="name">highlight</span>.<span class="name">right</span>; <span class="name">rightMargin</span>: <span class="number">6</span>; <span class="name">verticalCenter</span>: <span class="name">parent</span>.<span class="name">verticalCenter</span> }
         <span class="name">color</span>: <span class="string">&quot;white&quot;</span>
-        <span class="name">font</span>.bold: <span class="number">true</span>
+        <span class="name">font.bold</span>: <span class="number">true</span>
         <span class="name">text</span>: <span class="name">Math</span>.<span class="name">floor</span>((<span class="name">value</span> <span class="operator">-</span> <span class="name">minimum</span>) <span class="operator">/</span> (<span class="name">maximum</span> <span class="operator">-</span> <span class="name">minimum</span>) <span class="operator">*</span> <span class="number">100</span>) <span class="operator">+</span> <span class="string">'%'</span>
     }
 }</pre>

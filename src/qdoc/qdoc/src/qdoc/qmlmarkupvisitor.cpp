@@ -269,7 +269,11 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::UiObjectBinding *binding)
 {
     QQmlJS::AST::Node::accept(binding->qualifiedId, this);
     addVerbatim(binding->colonToken);
-    QQmlJS::AST::Node::accept(binding->qualifiedTypeNameId, this);
+    if (auto fullLocation = getFullyQualifiedLocation(binding->qualifiedTypeNameId))
+        addMarkedUpToken(fullLocation.value(), "type"_L1);
+    else
+        QQmlJS::AST::Node::accept(binding->qualifiedTypeNameId, this);
+
     QQmlJS::AST::Node::accept(binding->initializer, this);
     return false;
 }
@@ -303,7 +307,7 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::UiArrayMemberList *list)
 
 bool QmlMarkupVisitor::visit(QQmlJS::AST::UiQualifiedId *id)
 {
-    addMarkedUpToken(id->identifierToken, "name"_L1);
+    addMarkedUpToken(getLocationForMarkup(id), "name"_L1);
     return false;
 }
 
@@ -788,7 +792,11 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::DebuggerStatement *statement)
 
 bool QmlMarkupVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
 {
-    addMarkedUpToken(definition->qualifiedTypeNameId->identifierToken, "type"_L1);
+    if (auto fullLocation = getFullyQualifiedLocation(definition->qualifiedTypeNameId))
+        addMarkedUpToken(fullLocation.value(), "type"_L1);
+    else
+        QQmlJS::AST::Node::accept(definition->qualifiedTypeNameId, this);
+
     QQmlJS::AST::Node::accept(definition->initializer, this);
     return false;
 }

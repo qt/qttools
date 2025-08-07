@@ -98,7 +98,7 @@ import QtQuick 1.0
     documentation on the public API.
     */</span>
     <span class="name">onCurrentChanged</span>: <span class="name">setOpacities</span>()
-    <span class="name">Component</span>.onCompleted: <span class="name">setOpacities</span>()
+    <span class="name">Component.onCompleted</span>: <span class="name">setOpacities</span>()
 
     <span class="comment">/*!
     \internal
@@ -118,7 +118,7 @@ import QtQuick 1.0
 
         <span class="type">Repeater</span> {
             <span class="name">model</span>: <span class="name">stack</span>.<span class="name">children</span>.<span class="name">length</span>
-            <span class="name">delegate</span>: <span class="name">Rectangle</span> {
+            <span class="name">delegate</span>: <span class="type">Rectangle</span> {
                 <span class="name">width</span>: <span class="name">tabWidget</span>.<span class="name">width</span> <span class="operator">/</span> <span class="name">stack</span>.<span class="name">children</span>.<span class="name">length</span>; <span class="name">height</span>: <span class="number">36</span>
 
                 <span class="type">Rectangle</span> {
@@ -134,13 +134,13 @@ import QtQuick 1.0
                 }
                 <span class="type">Text</span> {
                     <span class="name">horizontalAlignment</span>: <span class="name">Qt</span>.<span class="name">AlignHCenter</span>; <span class="name">verticalAlignment</span>: <span class="name">Qt</span>.<span class="name">AlignVCenter</span>
-                    <span class="name">anchors</span>.fill: <span class="name">parent</span>
+                    <span class="name">anchors.fill</span>: <span class="name">parent</span>
                     <span class="name">text</span>: <span class="name">stack</span>.<span class="name">children</span>[<span class="name">index</span>].<span class="name">title</span>
                     <span class="name">elide</span>: <span class="name">Text</span>.<span class="name">ElideRight</span>
-                    <span class="name">font</span>.bold: <span class="name">tabWidget</span>.<span class="name">current</span> <span class="operator">==</span> <span class="name">index</span>
+                    <span class="name">font.bold</span>: <span class="name">tabWidget</span>.<span class="name">current</span> <span class="operator">==</span> <span class="name">index</span>
                 }
                 <span class="type">MouseArea</span> {
-                    <span class="name">anchors</span>.fill: <span class="name">parent</span>
+                    <span class="name">anchors.fill</span>: <span class="name">parent</span>
                     <span class="name">onClicked</span>: <span class="name">tabWidget</span>.<span class="name">current</span> <span class="operator">=</span> <span class="name">index</span>
                 }
             }
@@ -150,6 +150,6 @@ import QtQuick 1.0
     <span class="type">Item</span> {
         <span class="name">id</span>: <span class="name">stack</span>
         <span class="name">width</span>: <span class="name">tabWidget</span>.<span class="name">width</span>
-        <span class="name">anchors</span>.top: <span class="name">header</span>.<span class="name">bottom</span>; <span class="name">anchors</span>.bottom: <span class="name">tabWidget</span>.<span class="name">bottom</span>
+        <span class="name">anchors.top</span>: <span class="name">header</span>.<span class="name">bottom</span>; <span class="name">anchors.bottom</span>: <span class="name">tabWidget</span>.<span class="name">bottom</span>
     }
 }</pre>
