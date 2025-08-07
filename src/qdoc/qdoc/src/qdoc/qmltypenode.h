@@ -39,6 +39,7 @@ public:
     void setQmlModule(CollectionNode *t) override { m_logicalModule = t; }
 
     void setImportList(const ImportList &il) { m_importList = il; }
+    [[nodiscard]] const ImportList &importList() const { return m_importList; }
     [[nodiscard]] const QString &qmlBaseName() const { return m_qmlBaseName; }
     void setQmlBaseName(const QString &name) { m_qmlBaseName = name; }
     [[nodiscard]] QmlTypeNode *qmlBaseNode() const override { return m_qmlBaseNode; }
