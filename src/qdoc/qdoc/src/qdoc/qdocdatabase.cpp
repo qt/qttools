@@ -9,6 +9,7 @@
 #include "generator.h"
 #include "genustypes.h"
 #include "qdocindexfiles.h"
+#include "qmltypenode.h"
 #include "tree.h"
 
 #include <QtCore/qregularexpression.h>
@@ -1119,6 +1120,32 @@ const FunctionNode *QDocDatabase::findFunctionNode(const QString &target, const 
  */
 const Node *QDocDatabase::findTypeNode(const QString &type, const Node *relative, Genus genus)
 {
+    // For QML contexts with qualified names containing ".", try import-aware lookup first
+    if ((genus == Genus::QML || (relative && relative->genus() == Genus::QML)) &&
+        type.contains('.') && !type.contains("::")) {
+        if (relative && relative->isQmlType()) {
+            const QmlTypeNode *qmlType = static_cast<const QmlTypeNode*>(relative);
+            const ImportList &imports = qmlType->importList();
+
+            for (const auto &import : imports) {
+                if (QmlTypeNode *found = findQmlType(import, type)) {
+                    return found;
+                }
+            }
+        }
+
+        // Fall back to regular path-based lookup for QML qualified names
+        QStringList path = type.split(".");
+        if ((path.size() == 1) && (path.at(0)[0].isLower() || path.at(0) == QString("T"))) {
+            auto it = s_typeNodeMap.find(path.at(0));
+            if (it != s_typeNodeMap.end())
+                return it.value();
+        }
+
+        return m_forest.findTypeNode(path, relative, genus);
+    }
+
+    // For C++ contexts or QML types with "::" notation, use C++ path splitting
     QStringList path = type.split("::");
     if ((path.size() == 1) && (path.at(0)[0].isLower() || path.at(0) == QString("T"))) {
         auto it = s_typeNodeMap.find(path.at(0));
