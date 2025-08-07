@@ -732,9 +732,7 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::FunctionDeclaration *declaration)
 
 bool QmlMarkupVisitor::visit(QQmlJS::AST::FormalParameterList *list)
 {
-    //    addVerbatim(list->commaToken);
     QQmlJS::AST::Node::accept(list->element, this);
-    // addMarkedUpToken(list->identifierToken, QLatin1String("name"));
     return false;
 }
 
