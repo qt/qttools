@@ -114,11 +114,11 @@ public:
 private:
     typedef QHash<QString, QString> StringHash;
     void addExtra(quint32 start, quint32 finish);
-    void addMarkedUpToken(QQmlJS::SourceLocation &location, const QString &text,
+    void addMarkedUpToken(const QQmlJS::SourceLocation &location, const QString &text,
                           const StringHash &attributes = StringHash());
     void addVerbatim(QQmlJS::SourceLocation first,
                      QQmlJS::SourceLocation last = QQmlJS::SourceLocation());
-    QString sourceText(QQmlJS::SourceLocation &location);
+    QString sourceText(const QQmlJS::SourceLocation &location);
     void throwRecursionDepthError() final;
 
     QQmlJS::Engine *m_engine { nullptr };

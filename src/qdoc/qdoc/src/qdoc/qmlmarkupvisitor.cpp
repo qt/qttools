@@ -123,7 +123,7 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
     m_cursor = finish;
 }
 
-void QmlMarkupVisitor::addMarkedUpToken(QQmlJS::SourceLocation &location,
+void QmlMarkupVisitor::addMarkedUpToken(const QQmlJS::SourceLocation &location,
                                         const QString &tagName,
                                         const QHash<QString, QString> &attributes)
 {
@@ -142,7 +142,7 @@ void QmlMarkupVisitor::addMarkedUpToken(QQmlJS::SourceLocation &location,
     m_cursor += location.length;
 }
 
-QString QmlMarkupVisitor::sourceText(QQmlJS::SourceLocation &location)
+QString QmlMarkupVisitor::sourceText(const QQmlJS::SourceLocation &location)
 {
     return m_source.mid(location.offset, location.length);
 }
