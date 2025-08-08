@@ -98,6 +98,8 @@ private:
     void generateDetailedMember(const Node *node, const PageNode *relative, CodeMarker *marker);
     void generateLink(const Atom *atom);
 
+    void emitGroupHeader(const SharedCommentNode *scn);
+
     QString fileBase(const Node *node) const override;
     QString fileName(const Node *node);
 

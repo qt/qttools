@@ -1381,14 +1381,12 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
 
     const QList<Section> &stdQmlTypeDetailsSections = sections.stdQmlTypeDetailsSections();
     for (const auto &section : stdQmlTypeDetailsSections) {
-        if (!section.isEmpty()) {
-            out() << "<h2>" << protectEnc(section.title()) << "</h2>\n";
-            const QList<Node *> &members = section.members();
-            for (const auto member : members) {
-                generateDetailedQmlMember(member, qcn, marker);
-                out() << "<br/>\n";
-            }
-        }
+        if (section.isEmpty())
+            continue;
+        out() << "<h2>" << protectEnc(section.title()) << "</h2>\n";
+        const QList<Node *> &members = section.members();
+        for (const auto member : members)
+            generateDetailedQmlMember(member, qcn, marker);
     }
     generateFooter(qcn);
     Generator::setQmlTypeContext(nullptr);
@@ -3571,6 +3569,18 @@ void HtmlGenerator::generateQmlSummary(const NodeVector &members, const Node *re
 }
 
 /*!
+    \brief Emits the <h3> header for a property group.
+*/
+void HtmlGenerator::emitGroupHeader(const SharedCommentNode *scn)
+{
+    const QString id = refForNode(scn);
+    out() << R"(<h3 class="fn qml-member qml-property-group" translate="no" id=")"
+          << id << R"(">)"
+          << "<b>" << scn->name() << " group</b>"
+          << "</h3>\n";
+}
+
+/*!
   Outputs the html detailed documentation for a section
   on a QML element reference page.
  */
@@ -3579,77 +3589,57 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
 {
     generateExtractionMark(node, MemberMark);
 
-    QString qmlItemHeader("<div class=\"qmlproto\" translate=\"no\">\n"
-                          "<div class=\"table\"><table class=\"qmlname\">\n");
-
-    QString qmlItemStart("<tr valign=\"top\" class=\"odd\" id=\"%1\">\n"
-                         "<td class=\"%2\"><p>\n");
-    QString qmlItemEnd("</p></td></tr>\n");
-
-    QString qmlItemFooter("</table></div></div>\n");
-
-    auto generateQmlProperty = [&](Node *n) {
-        out() << qmlItemStart.arg(refForNode(n), "tblQmlPropNode");
+    auto generateQmlProperty = [&](Node *n, bool isGroupItem = false) {
+        const QString nodeRef = refForNode(n);
+        const auto cssClasses = isGroupItem ? "fn qml-member qml-property fngroupitem"_L1 : "fn qml-member qml-property"_L1;
+        out() << R"(<h3 class=")"_L1 << cssClasses << R"(" translate="no" id=")"_L1 << nodeRef << "\">"_L1;
         generateQmlItem(n, relative, marker, false);
-        out() << qmlItemEnd;
+        generateSourceLink(n);
+        out() << "</h3>\n"_L1;
     };
 
-    auto generateQmlMethod = [&](Node *n) {
-        out() << qmlItemStart.arg(refForNode(n), "tblQmlFuncNode");
+    auto generateQmlMethod = [&](Node *n, bool isGroupItem = false) {
+        const QString nodeRef = refForNode(n);
+        const auto cssClasses = isGroupItem ? "fn qml-member qml-method fngroupitem"_L1 : "fn qml-member qml-method"_L1;
+        out() << R"(<h3 class=")"_L1 << cssClasses << R"(" translate="no" id=")"_L1 << nodeRef << "\">"_L1;
         generateSynopsis(n, relative, marker, Section::Details, false);
-        out() << qmlItemEnd;
+        generateSourceLink(n);
+        out() << "</h3>\n"_L1;
     };
 
-    out() << "<div class=\"qmlitem\">";
-    if (node->isPropertyGroup()) {
-        const auto *scn = static_cast<const SharedCommentNode *>(node);
-        out() << qmlItemHeader;
-        if (!scn->name().isEmpty()) {
-            const QString nodeRef = refForNode(scn);
-            out() << R"(<tr valign="top" class="even" id=")" << nodeRef << "\">";
-            out() << "<th class=\"centerAlign\"><p>";
-            out() << "<b>" << scn->name() << " group</b>";
-            out() << "</p></th></tr>\n";
+    if (node->isSharedCommentNode()) {
+        auto *scn = static_cast<const SharedCommentNode *>(node);
+        const auto shared = scn->collective();
+
+        if (scn->isPropertyGroup() && !scn->name().isEmpty())
+            emitGroupHeader(scn);
+
+        const bool isGroup = shared.size() > 1;
+
+        if (isGroup)
+            out() << "<div class=\"fngroup\">\n"_L1;
+
+        for (auto *child : std::as_const(shared)) {
+            if (child->isQmlProperty())
+                generateQmlProperty(child, isGroup);
+            else
+                generateQmlMethod(child, isGroup);
         }
-        const QList<Node *> sharedNodes = scn->collective();
-        for (const auto &sharedNode : sharedNodes) {
-            if (sharedNode->isQmlProperty())
-                generateQmlProperty(sharedNode);
-        }
-        out() << qmlItemFooter;
+
+        if (isGroup)
+            out() << "</div>"_L1;
+        out() << '\n';
     } else if (node->isQmlProperty()) {
-        out() << qmlItemHeader;
         generateQmlProperty(node);
-        out() << qmlItemFooter;
-    } else if (node->isSharedCommentNode()) {
-        const auto *scn = reinterpret_cast<const SharedCommentNode *>(node);
-        const QList<Node *> &sharedNodes = scn->collective();
-        if (sharedNodes.size() > 1)
-            out() << "<div class=\"fngroup\">\n";
-        out() << qmlItemHeader;
-        for (const auto &sharedNode : sharedNodes) {
-            // Generate the node only if it's a QML method
-            if (sharedNode->isFunction(Genus::QML))
-                generateQmlMethod(sharedNode);
-            else if (sharedNode->isQmlProperty())
-                generateQmlProperty(sharedNode);
-        }
-        out() << qmlItemFooter;
-        if (sharedNodes.size() > 1)
-            out() << "</div>"; // fngroup
     } else { // assume the node is a method/signal handler
-        out() << qmlItemHeader;
         generateQmlMethod(node);
-        out() << qmlItemFooter;
     }
 
-    out() << "<div class=\"qmldoc\">";
     generateStatus(node, marker);
     generateBody(node, marker);
     generateThreadSafeness(node, marker);
     generateSince(node, marker);
     generateAlsoList(node, marker);
-    out() << "</div></div>";
     generateExtractionMark(node, EndMark);
 }
 
