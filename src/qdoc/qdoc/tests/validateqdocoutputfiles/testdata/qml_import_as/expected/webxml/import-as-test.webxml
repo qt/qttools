@@ -8,6 +8,7 @@
             <contents name="multi-segment-qualified-names" title="Multi-Segment Qualified Names" level="1"/>
             <contents name="test-cases" title="Test Cases" level="1"/>
             <contents name="expected-behavior" title="Expected Behavior" level="2"/>
+            <contents name="manual-link-commands" title="Manual Link Commands" level="2"/>
             <description>
                 <brief>Demonstrating <teletype type="highlighted">import ... as ...</teletype> statements.</brief>
                 <para>This page demonstrates an issuewhere QDoc fails to generate proper links when QML types are accessed through module aliases.</para>
@@ -88,7 +89,22 @@
                             <para>Types that can be resolved should get clickable links: <teletype type="highlighted">&lt;a href=&quot;...&quot;&gt;TM.BaseType&lt;/a&gt;</teletype></para>
                         </item>
                         <item>
-                            <para>Multi-segment names should be handled correctly regardless of length</para>
+                            <para>Multi-segment names should be handled correctly regardless of length.</para>
+                        </item>
+                    </list>
+                </section>
+                <section id="manual-link-commands">
+                    <heading level="2">Manual Link Commands</heading>
+                    <para>QDoc should also support manual linking to QML qualified names:</para>
+                    <list type="bullet">
+                        <item>
+                            <para>Link to <link raw="TM.BaseType" href="qml-testmodule-basetype.html" type="">TM.BaseType</link> using QML context with qualified name.</para>
+                        </item>
+                        <item>
+                            <para>Link to <link raw="TM.BaseType" href="qml-testmodule-basetype.html" type="">TM.BaseType</link> using QML context with qualified name in braces.</para>
+                        </item>
+                        <item>
+                            <para>Compare with <link raw="BaseType" href="qml-testmodule-basetype.html" type="">BaseType</link> simple name linking.</para>
                         </item>
                     </list>
                     <para>}</para>

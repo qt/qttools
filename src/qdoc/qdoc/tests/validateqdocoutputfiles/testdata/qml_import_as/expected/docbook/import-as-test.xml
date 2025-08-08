@@ -122,7 +122,22 @@ DeepNestedType {
 <db:para>Types that can be resolved should get clickable links: <db:code>&lt;a href=&quot;...&quot;&gt;TM.BaseType&lt;/a&gt;</db:code></db:para>
 </db:listitem>
 <db:listitem>
-<db:para>Multi-segment names should be handled correctly regardless of length</db:para>
+<db:para>Multi-segment names should be handled correctly regardless of length.</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="manual-link-commands">
+<db:title>Manual Link Commands</db:title>
+<db:para>QDoc should also support manual linking to QML qualified names:</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para>Link to <db:link xlink:href="qml-testmodule-basetype.xml">TM.BaseType</db:link> using QML context with qualified name.</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Link to <db:link xlink:href="qml-testmodule-basetype.xml">TM.BaseType</db:link> using QML context with qualified name in braces.</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Compare with <db:link xlink:href="qml-testmodule-basetype.xml">BaseType</db:link> simple name linking.</db:para>
 </db:listitem>
 </db:itemizedlist>
 <db:para>}</db:para>

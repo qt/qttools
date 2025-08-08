@@ -17,6 +17,7 @@
 <li class="level1"><a href="#multi-segment-qualified-names">Multi-Segment Qualified Names</a></li>
 <li class="level1"><a href="#test-cases">Test Cases</a></li>
 <li class="level2"><a href="#expected-behavior">Expected Behavior</a></li>
+<li class="level2"><a href="#manual-link-commands">Manual Link Commands</a></li>
 </ul>
 </div>
 <div class="sidebar-content" id="sidebar-content"></div></div>
@@ -28,7 +29,7 @@
 <p>When a QML module is imported with an alias:</p>
 <pre class="qml" translate="no">import TestModule as TM
 
-<span class="type">TM.BaseType</span> {
+<span class="type"><a href="qml-testmodule-basetype.html" translate="no">TM.BaseType</a></span> {
     <span class="name">title</span>: <span class="string">&quot;Example&quot;</span>
 }</pre>
 <p>QDoc should be able to:</p>
@@ -92,7 +93,14 @@ import QtQml.Models as Models
 <li>Module qualified types should be marked up completely: <code translate="no">&lt;span class=&quot;type&quot;&gt;Models.ListModel&lt;/span&gt;</code></li>
 <li>Property names should be marked up completely: <code translate="no">&lt;span class=&quot;name&quot;&gt;Layout.preferredSize&lt;/span&gt;</code></li>
 <li>Types that can be resolved should get clickable links: <code translate="no">&lt;a href=&quot;...&quot;&gt;TM.BaseType&lt;/a&gt;</code></li>
-<li>Multi-segment names should be handled correctly regardless of length</li>
+<li>Multi-segment names should be handled correctly regardless of length.</li>
+</ul>
+<h3 id="manual-link-commands">Manual Link Commands</h3>
+<p>QDoc should also support manual linking to QML qualified names:</p>
+<ul>
+<li>Link to <a href="qml-testmodule-basetype.html" translate="no">TM.BaseType</a> using QML context with qualified name.</li>
+<li>Link to <a href="qml-testmodule-basetype.html" translate="no">TM.BaseType</a> using QML context with qualified name in braces.</li>
+<li>Compare with <a href="qml-testmodule-basetype.html" translate="no">BaseType</a> simple name linking.</li>
 </ul>
 <p>}</p>
 </div>

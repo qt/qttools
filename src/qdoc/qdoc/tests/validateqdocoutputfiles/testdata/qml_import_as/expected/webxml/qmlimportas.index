@@ -20,6 +20,7 @@
             <contents name="multi-segment-qualified-names" title="Multi-Segment Qualified Names" level="1"/>
             <contents name="test-cases" title="Test Cases" level="1"/>
             <contents name="expected-behavior" title="Expected Behavior" level="2"/>
+            <contents name="manual-link-commands" title="Manual Link Commands" level="2"/>
         </page>
         <qmlclass name="Item" qml-module-name="TestModule" fullname="TestModule.Item" href="qml-testmodule-item.html" status="active" access="public" location="Item.qdoc" documented="true" title="Item" fulltitle="Item" subtitle=""/>
         <qmlmodule name="TestModule" qml-module-name="TestModule" qml-module-version="1.0" href="testmodule-qmlmodule.html" status="active" location="modules.qdoc" documented="true" seen="true" title="Test Module QML Types" brief="Test module for import as bug reproduction"/>

@@ -101,11 +101,26 @@
     \section2 Expected Behavior
 
     \list
-        \li QML qualified names with "." should be marked up completely: \c{<span class="type">TM.BaseType</span>}
-        \li Module qualified types should be marked up completely: \c{<span class="type">Models.ListModel</span>}
-        \li Property names should be marked up completely: \c{<span class="name">Layout.preferredSize</span>}
-        \li Types that can be resolved should get clickable links: \c{<a href="...">TM.BaseType</a>}
-        \li Multi-segment names should be handled correctly regardless of length
+        \li QML qualified names with "." should be marked up completely:
+            \c{<span class="type">TM.BaseType</span>}
+        \li Module qualified types should be marked up completely:
+            \c{<span class="type">Models.ListModel</span>}
+        \li Property names should be marked up completely:
+            \c{<span class="name">Layout.preferredSize</span>}
+        \li Types that can be resolved should get clickable links:
+            \c{<a href="...">TM.BaseType</a>}
+        \li Multi-segment names should be handled correctly regardless of length.
+    \endlist
+
+    \section2 Manual Link Commands
+
+    QDoc should also support manual linking to QML qualified names:
+
+    \list
+        \li Link to \l [QML] TM.BaseType using QML context with qualified name.
+        \li Link to \l [QML] {TM.BaseType} using QML context with qualified
+            name in braces.
+        \li Compare with \l BaseType simple name linking.
     \endlist
 }
 

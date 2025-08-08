@@ -1142,7 +1142,21 @@ const Node *QDocDatabase::findTypeNode(const QString &type, const Node *relative
                 return it.value();
         }
 
-        return m_forest.findTypeNode(path, relative, genus);
+        // Try the full qualified path first
+        const Node *node = m_forest.findTypeNode(path, relative, genus);
+        if (node)
+            return node;
+
+        // If the full path fails and we have multiple segments, try just the last segment
+        // This handles cases like "TM.BaseType" where "TM" is an alias we can't resolve
+        // but "BaseType" might be findable as a QML type
+        if (path.size() > 1) {
+            const Node *lastSegmentNode = m_forest.findTypeNode(QStringList{path.last()}, relative, genus);
+            if (lastSegmentNode && lastSegmentNode->isQmlType())
+                return lastSegmentNode;
+        }
+
+        return nullptr;
     }
 
     // For C++ contexts or QML types with "::" notation, use C++ path splitting
@@ -1501,8 +1515,24 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
             node = findNodeByNameAndType(QStringList(first), &Node::isPageNode);
         else if (first.endsWith(QChar(')')))
             node = findFunctionNode(first, relative, genus);
-        if (node == nullptr)
+        if (node == nullptr) {
+            // For QML contexts with qualified names containing ".", use the same logic as findTypeNode
+            if (genus == Genus::QML && first.contains('.') && !first.contains("::")) {
+                // Try import-aware lookup using findTypeNode logic
+                node = findTypeNode(first, relative, genus);
+                if (node) {
+                    // Handle any fragment reference
+                    targetPath.removeFirst();
+                    if (!targetPath.isEmpty()) {
+                        ref = node->root()->tree()->getRef(targetPath.first(), node);
+                        if (ref.isEmpty())
+                            node = nullptr;
+                    }
+                    return node;
+                }
+            }
             return findNodeForTarget(targetPath, relative, genus, ref);
+        }
     }
 
     if (node != nullptr && ref.isEmpty()) {
