@@ -89,6 +89,8 @@ FormatTextEdit::FormatTextEdit(QWidget *parent)
     p.setColor(QPalette::Disabled, QPalette::Base, p.color(QPalette::Active, QPalette::Base));
     setPalette(p);
 
+    m_defaultPalette = p;
+
     setEditable(true);
 }
 
@@ -112,6 +114,7 @@ void FormatTextEdit::setEditable(bool editable)
     }
 
     setReadOnly(!editable);
+    applyReadOnlySelectionPalette();
 }
 
 void FormatTextEdit::setPlainText(const QString &text, bool userAction)
@@ -148,10 +151,33 @@ void FormatTextEdit::setVisualizeWhitespace(bool value)
 bool FormatTextEdit::event(QEvent *event)
 {
     if ((event->type() == QEvent::ApplicationPaletteChange
-         || event->type() == QEvent::PaletteChange)
-        && m_highlighter)
+         || event->type() == QEvent::PaletteChange)) {
         m_highlighter->adjustColors();
+        m_defaultPalette = palette();
+        applyReadOnlySelectionPalette();
+    }
     return ExpandingTextEdit::event(event);
+}
+
+void FormatTextEdit::applyReadOnlySelectionPalette()
+{
+    // Apply a gray selection background for read-only text in dark mode.
+    // Keep editable widgets using the default/current palette behavior.
+    if (!isReadOnly()) {
+        setPalette(m_defaultPalette);
+        return;
+    }
+
+    QPalette pal = m_defaultPalette;
+    if (isDarkMode()) {
+        const QColor gray(100, 100, 100);
+        const QColor darkText = pal.color(QPalette::Text);
+        pal.setColor(QPalette::Inactive, QPalette::Highlight, gray);
+        pal.setColor(QPalette::Inactive, QPalette::HighlightedText, darkText);
+        pal.setColor(QPalette::Disabled, QPalette::Highlight, gray);
+        pal.setColor(QPalette::Disabled, QPalette::HighlightedText, darkText);
+    }
+    setPalette(pal);
 }
 
 FormWidget::FormWidget(const QString &label, bool isEditable, QWidget *parent)

@@ -65,8 +65,10 @@ public slots:
 
 private:
     bool event(QEvent *event) override;
+    void applyReadOnlySelectionPalette();
 
     MessageHighlighter *m_highlighter = nullptr;
+    QPalette m_defaultPalette;
 };
 
 /*
