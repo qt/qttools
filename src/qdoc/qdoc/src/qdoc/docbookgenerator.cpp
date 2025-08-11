@@ -3980,37 +3980,6 @@ void DocBookGenerator::generateEnumValue(const QString &enumValue, const Node *r
 }
 
 /*!
-  If the node is an overloaded signal, and a node with an
-  example on how to connect to it
-
-  Someone didn't finish writing this comment, and I don't know what this
-  function is supposed to do, so I have not tried to complete the comment
-  yet.
- */
-void DocBookGenerator::generateOverloadedSignal(const Node *node)
-{
-    // From Generator::generateOverloadedSignal.
-    QString code = getOverloadedSignalCode(node);
-    if (code.isEmpty())
-        return;
-
-    m_writer->writeStartElement(dbNamespace, "note");
-    newLine();
-    m_writer->writeStartElement(dbNamespace, "para");
-    m_writer->writeCharacters("Signal ");
-    m_writer->writeTextElement(dbNamespace, "emphasis", node->name());
-    m_writer->writeCharacters(" is overloaded in this class. To connect to this "
-                              "signal by using the function pointer syntax, Qt "
-                              "provides a convenient helper for obtaining the "
-                              "function pointer as shown in this example:");
-    m_writer->writeTextElement(dbNamespace, "code", code);
-    m_writer->writeEndElement(); // para
-    newLine();
-    m_writer->writeEndElement(); // note
-    newLine();
-}
-
-/*!
   Generates an addendum note of type \a type for \a node. \a marker
   is unused in this generator.
 */
@@ -4148,32 +4117,75 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
         break;
     }
     case OverloadNote: {
-        const auto &args = node->doc().overloadList();
+        const auto *func = static_cast<const FunctionNode *>(node);
         m_writer->writeStartElement(dbNamespace, "para");
-        if (args.first().first.isEmpty()) {
-            m_writer->writeCharacters("This is an overloaded function.");
-        } else {
-            QString target = args.first().first;
-            // If the target is not fully qualified and we have a parent class context,
-            // attempt to qualify it to improve link resolution
-            if (!target.contains("::") && node->isFunction()) {
-                const auto *parent = node->parent();
-                if (parent && (parent->isClassNode() || parent->isNamespace())) {
-                    target = parent->name() + "::" + target;
+
+        if (func->isSignal() || func->isSlot()) {
+            auto writeDocBookLink = [&](const QString &target, const QString &label) {
+                const Node *linkNode = nullptr;
+                const Atom &linkAtom = Atom(Atom::AutoLink, target);
+                const QString &link = getAutoLink(&linkAtom, node, &linkNode);
+
+                m_writer->writeStartElement(dbNamespace, "link");
+                if (!link.isEmpty() && linkNode) {
+                    m_writer->writeAttribute(xlinkNamespace, "href", link);
+                } else {
+                    m_writer->writeAttribute(dbNamespace, "linkend", target);
                 }
+                m_writer->writeCharacters(label);
+                m_writer->writeEndElement(); // link
+            };
+
+            const QString &functionType = func->isSignal() ? "signal" : "slot";
+            const QString &configKey = func->isSignal() ? "overloadedsignalstarget" : "overloadedslotstarget";
+            const QString &defaultTarget = func->isSignal() ? "connecting-overloaded-signals" : "connecting-overloaded-slots";
+            const QString &linkTarget = Config::instance().get(configKey).asString(defaultTarget);
+
+            m_writer->writeCharacters("This " + functionType + " is overloaded. ");
+
+            QString snippet = generateOverloadSnippet(func);
+            if (!snippet.isEmpty()) {
+                m_writer->writeCharacters("To connect to this " + functionType + ":");
+                m_writer->writeEndElement(); // para
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "programlisting");
+                m_writer->writeCharacters(snippet);
+                m_writer->writeEndElement(); // programlisting
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "para");
             }
-            m_writer->writeCharacters("This function overloads ");
-            // Use the same approach as AutoLink resolution in other generators
-            const Node *linkNode = nullptr;
-            Atom linkAtom = Atom(Atom::AutoLink, target);
-            QString link = getAutoLink(&linkAtom, node, &linkNode);
-            if (!link.isEmpty() && linkNode) {
-                generateSimpleLink(link, target);
+
+            m_writer->writeCharacters("For more examples and approaches, see ");
+            writeDocBookLink(linkTarget, "connecting to overloaded " + functionType + "s");
+        } else {
+            // Original behavior for regular overloaded functions
+            const auto &args = node->doc().overloadList();
+            if (args.first().first.isEmpty()) {
+                m_writer->writeCharacters("This is an overloaded function.");
             } else {
-                m_writer->writeCharacters(target);
+                QString target = args.first().first;
+                // If the target is not fully qualified and we have a parent class context,
+                // attempt to qualify it to improve link resolution
+                if (!target.contains("::")) {
+                    const auto *parent = node->parent();
+                    if (parent && (parent->isClassNode() || parent->isNamespace())) {
+                        target = parent->name() + "::" + target;
+                    }
+                }
+                m_writer->writeCharacters("This function overloads ");
+                // Use the same approach as AutoLink resolution in other generators
+                const Node *linkNode = nullptr;
+                Atom linkAtom = Atom(Atom::AutoLink, target);
+                QString link = getAutoLink(&linkAtom, node, &linkNode);
+                if (!link.isEmpty() && linkNode) {
+                    generateSimpleLink(link, target);
+                } else {
+                    m_writer->writeCharacters(target);
+                }
+                m_writer->writeCharacters(".");
             }
-            m_writer->writeCharacters(".");
         }
+
         m_writer->writeEndElement(); // para
         newLine();
         break;
@@ -4254,7 +4266,11 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
         startSection("", "Notes");
     }
 
-    generateOverloadedSignal(node);
+    if (node->isFunction()) {
+        const auto *func = static_cast<const FunctionNode *>(node);
+        if (func->hasOverloads() && (func->isSignal() || func->isSlot()))
+            generateAddendum(node, OverloadNote, nullptr, AdmonitionPrefix::Note);
+    }
     generateComparisonCategory(node);
     generateThreadSafeness(node);
     generateSince(node);

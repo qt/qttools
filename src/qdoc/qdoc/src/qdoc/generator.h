@@ -141,8 +141,9 @@ protected:
     bool generateComparisonCategory(const Node *node, CodeMarker *marker = nullptr);
     bool generateComparisonList(const Node *node);
 
-    void generateOverloadedSignal(const Node *node, CodeMarker *marker);
-    static QString getOverloadedSignalCode(const Node *node);
+    QString generateOverloadSnippet(const FunctionNode *func);
+    QString generateObjectName(const QString &className);
+
     QString indent(int level, const QString &markedCode);
     QTextStream &out();
     QString outFileName();
