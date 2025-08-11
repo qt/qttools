@@ -3451,7 +3451,11 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
 
     generateStatus(node, marker);
     generateBody(node, marker);
-    generateOverloadedSignal(node, marker);
+    if (node->isFunction()) {
+        const auto *func = static_cast<const FunctionNode *>(node);
+        if (func->hasOverloads() && (func->isSignal() || func->isSlot()))
+            generateAddendum(node, OverloadNote, marker, AdmonitionPrefix::Note);
+    }
     generateComparisonCategory(node, marker);
     generateThreadSafeness(node, marker);
     generateSince(node, marker);

@@ -1392,20 +1392,43 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
     }
     case OverloadNote:
     {
-        const auto &args = node->doc().overloadList();
-        if (args.first().first.isEmpty()) {
-            text << "This is an overloaded function.";
-        } else {
-            QString target = args.first().first;
-            // If the target is not fully qualified and we have a parent class context,
-            // attempt to qualify it to improve link resolution
-            if (!target.contains("::") && node->isFunction()) {
-                const auto *parent = node->parent();
-                if (parent && (parent->isClassNode() || parent->isNamespace())) {
-                    target = parent->name() + "::" + target;
-                }
+        const auto *func = static_cast<const FunctionNode *>(node);
+
+        if (func->isSignal() || func->isSlot()) {
+            QString functionType = func->isSignal() ? "signal" : "slot";
+            const QString &configKey = func->isSignal() ? "overloadedsignalstarget" : "overloadedslotstarget";
+            const QString &defaultTarget = func->isSignal() ? "connecting-overloaded-signals" : "connecting-overloaded-slots";
+            const QString &linkTarget = Config::instance().get(configKey).asString(defaultTarget);
+
+            text << "This " << functionType << " is overloaded. ";
+
+            QString snippet = generateOverloadSnippet(func);
+            if (!snippet.isEmpty()) {
+                text << "To connect to this " << functionType << ":\n\n"
+                     << Atom(Atom::Code, snippet) << "\n";
             }
-            text << "This function overloads " << Atom(Atom::AutoLink, target) << ".";
+
+            text << "For more examples and approaches, see "
+                 << Atom(Atom::Link, linkTarget)
+                 << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+                 << "connecting to overloaded " << functionType << "s"
+                 << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << ".";
+        } else {
+            const auto &args = node->doc().overloadList();
+            if (args.first().first.isEmpty()) {
+                text << "This is an overloaded function.";
+            } else {
+                QString target = args.first().first;
+                // If the target is not fully qualified and we have a parent class context,
+                // attempt to qualify it to improve link resolution
+                if (!target.contains("::")) {
+                    const auto *parent = node->parent();
+                    if (parent && (parent->isClassNode() || parent->isNamespace())) {
+                        target = parent->name() + "::" + target;
+                    }
+                }
+                text << "This function overloads " << Atom(Atom::AutoLink, target) << ".";
+            }
         }
         break;
     }
@@ -1657,63 +1680,6 @@ bool Generator::generateComparisonList(const Node *node)
 
     generateText(relationshipText, node, nullptr);
     return !relationshipText.isEmpty();
-}
-
-/*!
-  Returns the string containing an example code of the input node,
-  if it is an overloaded signal. Otherwise, returns an empty string.
- */
-QString Generator::getOverloadedSignalCode(const Node *node)
-{
-    if (!node->isFunction())
-        return QString();
-    const auto func = static_cast<const FunctionNode *>(node);
-    if (!func->isSignal() || !func->hasOverloads())
-        return QString();
-
-    // Compute a friendly name for the object of that instance.
-    // e.g:  "QAbstractSocket" -> "abstractSocket"
-    QString objectName = node->parent()->name();
-    if (objectName.size() >= 2) {
-        if (objectName[0] == 'Q')
-            objectName = objectName.mid(1);
-        objectName[0] = objectName[0].toLower();
-    }
-
-    // We have an overloaded signal, show an example. Note, for const
-    // overloaded signals, one should use Q{Const,NonConst}Overload, but
-    // it is very unlikely that we will ever have public API overloading
-    // signals by const.
-    QString code = "connect(" + objectName + ", QOverload<";
-    code += func->parameters().generateTypeList();
-    code += ">::of(&" + func->parent()->name() + "::" + func->name() + "),\n    [=](";
-    code += func->parameters().generateTypeAndNameList();
-    code += "){ /* ... */ });";
-
-    return code;
-}
-
-/*!
-    If the node is an overloaded signal, add a node with an example on how to connect to it
- */
-void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
-{
-    QString code = getOverloadedSignalCode(node);
-    if (code.isEmpty())
-        return;
-
-    Text text;
-    text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-         << "Note:" << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD) << " Signal "
-         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_ITALIC) << node->name()
-         << Atom(Atom::FormattingRight, ATOM_FORMATTING_ITALIC)
-         << " is overloaded in this class. "
-            "To connect to this signal by using the function pointer syntax, Qt "
-            "provides a convenient helper for obtaining the function pointer as "
-            "shown in this example:"
-         << Atom(Atom::Code, marker->markedUpCode(code, node, node->location()));
-
-    generateText(text, node, marker);
 }
 
 /*!
@@ -2395,6 +2361,51 @@ void Generator::addNodeLink(Text &text, const INode *node, const QString &linkTe
         Utilities::stringForNode(node),
         linkText.isEmpty() ? node->name() : linkText
     );
+}
+
+/*!
+  Generates a contextual code snippet for connecting to an overloaded signal or slot.
+  Returns an empty string if the function is not a signal or slot.
+*/
+QString Generator::generateOverloadSnippet(const FunctionNode *func)
+{
+    if (!func || (!func->isSignal() && !func->isSlot()))
+        return QString();
+
+    QString className = func->parent()->name();
+    QString functionName = func->name();
+    QString parameters = func->parameters().generateTypeList();
+
+    QString objectName = generateObjectName(className);
+
+    QString snippet = QString(
+        "// Connect using qOverload:\n"
+        "connect(%1, qOverload<%2>(&%3::%4),\n"
+        "        receiver, &ReceiverClass::slot);\n\n"
+        "// Or using a lambda:\n"
+        "connect(%1, qOverload<%2>(&%3::%4),\n"
+        "        this, [](%5) { /* handle %4 */ });")
+        .arg(objectName, parameters, className, functionName,
+             func->parameters().generateTypeAndNameList());
+
+    return snippet;
+}
+
+/*!
+  Generates an appropriate object name for code snippets based on the class name.
+  Converts class names like "QComboBox" to "comboBox".
+*/
+QString Generator::generateObjectName(const QString &className)
+{
+    QString name = className;
+
+    if (name.startsWith('Q') && name.length() > 1)
+        name.remove(0, 1);
+
+    if (!name.isEmpty())
+        name[0] = name[0].toLower();
+
+    return name;
 }
 
 

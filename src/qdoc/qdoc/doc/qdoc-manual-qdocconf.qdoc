@@ -1159,6 +1159,70 @@
 
     See also \qdoccmd {ingroup}.
 
+    \target overloadedsignalstarget-variable
+    \section1 overloadedsignalstarget
+
+    \b {Default:} \c connecting-overloaded-signals
+
+    The \c overloadedsignalstarget variable specifies the link target used in
+    automatically generated notes for overloaded signals.
+
+    When QDoc encounters an overloaded signal, it generates a note with a link
+    to help documentation on connecting to overloaded signals. By default, this
+    links to a target named \c connecting-overloaded-signals.
+
+    Projects can customize this to link to their own documentation:
+
+    \badcode
+    # Link to a target within the project
+    overloadedsignalstarget = signals-guide.html#overloaded-signals
+
+    # Link to external documentation
+    overloadedsignalstarget = https://example.com/docs/signals.html#overloaded-signals
+    \endcode
+
+    The target can be:
+    \list
+        \li A simple target name (for use with \qdoccmd {target} commands):
+            \c {connecting-overloaded-signals}
+        \li A relative URL: \c {signals-guide.html#overloaded-signals}
+        \li An absolute URL: \c {https://example.com/docs/signals.html#overloaded-signals}
+    \endlist
+
+    See also \l {overloadedslotstarget-variable} {overloadedslotstarget}.
+
+    \target overloadedslotstarget-variable
+    \section1 overloadedslotstarget
+
+    \b {Default:} \c connecting-overloaded-slots
+
+    The \c overloadedslotstarget variable specifies the link target used in
+    automatically generated notes for overloaded slots.
+
+    When QDoc encounters an overloaded slot, it generates a note with a link
+    to help documentation on connecting to overloaded slots. By default, this
+    links to a target named \c connecting-overloaded-slots.
+
+    Projects can customize this to link to their own documentation:
+
+    \badcode
+    # Link to a target within the project
+    overloadedslotstarget = signals-guide.html#overloaded-slots
+
+    # Link to external documentation
+    overloadedslotstarget = https://example.com/docs/slots.html#overloaded-slots
+    \endcode
+
+    The target can be:
+    \list
+        \li A simple target name (for use with \qdoccmd {target} commands):
+            \c {connecting-overloaded-slots}
+        \li A relative URL: \c {signals-guide.html#overloaded-slots}
+        \li An absolute URL: \c {https://example.com/docs/slots.html#overloaded-slots}
+    \endlist
+
+    See also \l {overloadedsignalstarget-variable} {overloadedsignalstarget}.
+
     \target outputdir-variable
     \section1 outputdir
 
