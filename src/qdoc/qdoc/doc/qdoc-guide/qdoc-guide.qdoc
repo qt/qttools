@@ -627,13 +627,26 @@
     \section2 System Package Managers
 
     As an alternative to Qt's prebuilt packages, you can install Clang through
-    system package managers:
+    system package managers. QDoc specifically needs the Clang compiler
+    libraries and their CMake configuration files. The dependencies are:
+
+    \list
+        \li \c {llvm-<version>} (infrastructure)
+        \li \c {clang-<version>} (compiler and libraries)
+        \li \c {libclang-<version>-dev} (development headers)
+        \li \c {libclang-cpp<version>-dev} (C++ API development files)
+    \endlist
+
+    The following lists some typical invocations of package managers on popular
+    Linux distributions and macOS.
 
     \section3 Linux
+    LLVM and Clang are separate packages in most distributions. Ensure you
+    install the (versioned) \c {-dev} packages that provide the file
+    \e {ClangConfig.cmake}.
+
     \list
-    \li \b{Debian/Ubuntu}: \c {apt install libclang-dev}
-        Ensure you install the versioned \c {-dev} packages that provide the
-        file \e {ClangConfig.cmake}.
+    \li \b{Debian/Ubuntu}: \c {apt install libclang-dev clang libclang-cpp-dev}
     \li \b{Fedora/RHEL}: \c {dnf install clang-devel}
     \li \b{Arch Linux}: \c {pacman -S clang llvm}
     \endlist
@@ -671,4 +684,3 @@
     After installing LLVM/Clang libraries, always reconfigure with
     \c {FEATURE_clang=ON} to enable QDoc compilation.
 */
-
