@@ -2139,8 +2139,8 @@ void MainWindow::setupMenuBar()
     connect(m_ui.menuRecentlyOpenedFiles, &QMenu::triggered,
             this, &MainWindow::recentFileActivated);
 
-    m_ui.actionManual->setWhatsThis(tr("Display the manual for %1.").arg(tr("Qt Linguist")));
-    m_ui.actionAbout->setWhatsThis(tr("Display information about %1.").arg(tr("Qt Linguist")));
+    m_ui.actionManual->setToolTip(tr("Displays the manual for %1.").arg(tr("Qt Linguist")));
+    m_ui.actionAbout->setToolTip(tr("Displays information about %1.").arg(tr("Qt Linguist")));
     m_ui.actionDone->setShortcuts(
             { Qt::AltModifier | Qt::Key_Return, Qt::AltModifier | Qt::Key_Enter });
     m_ui.actionDoneAndNext->setShortcuts({
@@ -2461,16 +2461,16 @@ PhraseBook *MainWindow::doOpenPhraseBook(const QString& name)
 
     QAction *a = m_ui.menuClosePhraseBook->addAction(pb->friendlyPhraseBookName());
     m_phraseBookMenu[PhraseCloseMenu].insert(a, pb);
-    a->setWhatsThis(tr("Close this phrase book."));
+    a->setToolTip(tr("Close this phrase book."));
 
     a = m_ui.menuEditPhraseBook->addAction(pb->friendlyPhraseBookName());
     m_phraseBookMenu[PhraseEditMenu].insert(a, pb);
-    a->setWhatsThis(tr("Enables you to add, modify, or delete"
-        " entries in this phrase book."));
+    a->setToolTip(tr("Enables you to add, modify, or delete"
+                     " entries in this phrase book."));
 
     a = m_ui.menuPrintPhraseBook->addAction(pb->friendlyPhraseBookName());
     m_phraseBookMenu[PhrasePrintMenu].insert(a, pb);
-    a->setWhatsThis(tr("Print the entries in this phrase book."));
+    a->setToolTip(tr("Print the entries in this phrase book."));
 
     connect(pb, &PhraseBook::listChanged, this, &MainWindow::updatePhraseDicts);
     updatePhraseDicts();

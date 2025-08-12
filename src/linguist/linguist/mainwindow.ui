@@ -656,8 +656,11 @@
    <property name="text">
     <string>&amp;QML preview</string>
    </property>
+   <property name="toolTip">
+    <string>Displays a preview of QML documents.</string>
+   </property>
    <property name="whatsThis">
-    <string>Display a preview of QML documents.</string>
+    <string/>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
