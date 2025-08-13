@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="TestTocCommand Reference Documentation" version="" project="TestTocCommand" indexTitle="Test">
+    <namespace name="" status="active" access="public" module="testtoccommand">
+        <page name="gs.html" href="gs.html" status="active" location="toc.qdoc" documented="true" subtype="page" title="Getting started with testing" fulltitle="Getting started with testing" subtitle=""/>
+        <page name="req.html" href="req.html" status="active" location="toc.qdoc" documented="true" subtype="page" title="Prerequisites" fulltitle="Prerequisites" subtitle="">
+            <keyword name="checklist"/>
+        </page>
+        <page name="run.html" href="run.html" status="active" location="toc.qdoc" documented="true" subtype="page" title="Running tests" fulltitle="Running tests" subtitle=""/>
+        <page name="env.html" href="env.html" status="active" location="toc.qdoc" documented="true" subtype="page" title="Setting up the environment" fulltitle="Setting up the environment" subtitle=""/>
+        <page name="index.html" href="index.html" status="active" location="toc.qdoc" documented="true" subtype="page" title="Test" fulltitle="Test" subtitle="" brief="Landing page that lists its \toc entries"/>
+    </namespace>
+</INDEX>

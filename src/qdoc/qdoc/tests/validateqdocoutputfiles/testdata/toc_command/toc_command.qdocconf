@@ -1,0 +1,14 @@
+project = TestTocCommand
+productname = Qt
+moduleheader =
+
+warninglimit = 0
+warninglimit.enabled = true
+locationinfo = false
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+sourcedirs = ./src
+
+navigation.landingpage = Test

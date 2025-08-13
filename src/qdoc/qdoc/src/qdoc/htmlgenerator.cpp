@@ -19,6 +19,7 @@
 #include "qdocdatabase.h"
 #include "sharedcommentnode.h"
 #include "tagfilewriter.h"
+#include "tocwriter.h"
 #include "tree.h"
 #include "quoter.h"
 #include "utilities.h"
@@ -31,6 +32,7 @@
 
 #include <cctype>
 #include <deque>
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 
@@ -234,22 +236,25 @@ QString HtmlGenerator::format()
  */
 void HtmlGenerator::generateDocs()
 {
-    Node *qflags = m_qdb->findClassNode(QStringList("QFlags"));
+    Node *qflags = m_qdb->findClassNode(QStringList("QFlags"_L1));
     if (qflags)
         m_qflagsHref = linkForNode(qflags, nullptr);
     if (!config->preparing())
         Generator::generateDocs();
 
-    if (!config->generating()) {
-        QString fileBase =
-                m_project.toLower().simplified().replace(QLatin1Char(' '), QLatin1Char('-'));
-        m_qdb->generateIndex(outputDir() + QLatin1Char('/') + fileBase + ".index", m_projectUrl,
-                             m_projectDescription);
-    }
+    const QString fileBase = "%1/%2"_L1.arg(
+            outputDir(),
+            m_project.toLower().simplified().replace(' '_L1, '-'_L1)
+        );
+    if (!config->generating())
+        m_qdb->generateIndex("%1.index"_L1.arg(fileBase), m_projectUrl, m_projectDescription);
 
     if (!config->preparing()) {
         m_helpProjectWriter->generate();
         m_manifestWriter->generateManifestFiles();
+        TOCWriter tocWriter(this, m_project);
+        const QString &rootTitle = m_landingpage.isEmpty() ? m_homepage : m_landingpage;
+        tocWriter.generateTOC("%1_toc.xml"_L1.arg(fileBase), rootTitle);
         /*
           Generate the XML tag file, if it was requested.
         */
@@ -973,8 +978,10 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         if (matchAhead(atom, Atom::ParaLeft))
             skipAhead = 1;
         break;
-    case Atom::TableOfContents:
-        Q_FALLTHROUGH();
+    case Atom::TableOfContentsLeft:
+        // Skip \toc .. \endtoc content, handled separately by TOCWriter
+        std::ignore = atom->find(Atom::TableOfContentsRight, &skipAhead);
+        break;
     case Atom::Keyword:
         break;
     case Atom::Target:

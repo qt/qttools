@@ -107,7 +107,8 @@ QT_BEGIN_NAMESPACE
   \value TableRowRight
   \value TableItemLeft
   \value TableItemRight
-  \value TableOfContents
+  \value TableOfContentsLeft
+  \value TableOfContentsRight
   \value Target
   \value UnhandledFormat
   \value UnknownCommand
@@ -197,7 +198,8 @@ static const struct
              { "TableRowRight", Atom::TableRowRight },
              { "TableItemLeft", Atom::TableItemLeft },
              { "TableItemRight", Atom::TableItemRight },
-             { "TableOfContents", Atom::TableOfContents },
+             { "TableOfContentsLeft", Atom::TableOfContentsLeft },
+             { "TableOfContentsRight", Atom::TableOfContentsRight },
              { "Target", Atom::Target },
              { "UnhandledFormat", Atom::UnhandledFormat },
              { "WarningLeft", Atom::WarningLeft },

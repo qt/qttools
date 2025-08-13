@@ -743,6 +743,12 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         writer.writeEndElement(); // item
         break;
 
+    case Atom::TableOfContentsLeft:
+        // Skip to the closing \endtoc atom
+        if (const auto *endtoc = atom->find(Atom::TableOfContentsRight))
+            atom = endtoc;
+        break;
+
     case Atom::Target:
         writer.writeStartElement("target");
         writer.writeAttribute("name", Utilities::asAsciiPrintable(atom->string()));

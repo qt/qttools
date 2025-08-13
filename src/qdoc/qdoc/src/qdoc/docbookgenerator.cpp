@@ -205,8 +205,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
 {
     Q_ASSERT(m_writer);
     // From HtmlGenerator::generateAtom, without warning generation.
-    int idx = 0;
-    int skipAhead = 0;
+    qsizetype idx = 0;
+    qsizetype skipAhead = 0;
     Genus genus = Genus::DontCare;
 
     switch (atom->type()) {
@@ -1155,8 +1155,10 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
         m_writer->writeEndElement(); // th if m_inTableHeader, otherwise td
         newLine();
         break;
-    case Atom::TableOfContents:
-        Q_FALLTHROUGH();
+    case Atom::TableOfContentsLeft:
+        // Skip \toc .. \endtoc content, handled separately by TOCWriter
+        std::ignore = atom->find(Atom::TableOfContentsRight, &skipAhead);
+        break;
     case Atom::Keyword:
         break;
     case Atom::Target:

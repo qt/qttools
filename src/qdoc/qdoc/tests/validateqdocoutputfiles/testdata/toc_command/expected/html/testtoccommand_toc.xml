@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section ref="index.html" title="Test">
+    <section ref="gs.html" title="Getting started">
+        <section ref="req.html" title="Prerequisites"/>
+        <section ref="env.html" title="Setting up the environment"/>
+    </section>
+    <section ref="run.html" title="Running tests"/>
+</section>

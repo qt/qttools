@@ -57,6 +57,8 @@
       \li \l {subtitle-command}{\\subtitle}
       \li \l {threadsafe-command}{\\threadsafe}
       \li \l {title-command}{\\title}
+      \li \l {toc-command}{\\toc} (Since QDoc 6.11)
+      \li \l {tocentry-command}{\\tocentry} (Since QDoc 6.11)
       \li \l {wrapper-command}{\\wrapper}
     \endlist
 
@@ -124,6 +126,56 @@
     documentation. The generated link type tells browsers and search
     engines which document is considered by the author to be the
     starting point of the collection.
+
+    \target toc-command
+    \section2 \\toc
+
+    The \\toc and \\endtoc commands specify a list of sub-topics
+    (pages) for the topic the command appears in. A table of contents
+    (TOC) hierarchy is generated for the entire documentation
+    project based on the TOC entries on each topic.
+
+    Within the \\toc .. \\endtoc block, use \qdoccmd {tocentry} commands
+    to specify the sub-topics by title. Like the \qdoccmd {l} (link)
+    command, \\tocentry takes an optional second argument for the
+    user-visible title in the generated TOC entry.
+
+    \badcode *
+    /\1!
+        \page index.html
+        \title Qt
+        ...
+        \toc
+            \tocentry {Introduction to Qt} {Introduction}
+            \tocentry {What's new in Qt} {What's new}
+            \tocentry {Getting started}
+        \endtoc
+    \1/
+    \endcode
+
+    \\toc commands cannot be nested. However, each sub-topic can specify
+    their own TOC entries. A topic can use only one \\toc command.
+
+    QDoc writes the resulting table of contents structure in XML format
+    to a \e {<project>_toc.xml} file.
+
+    \note The root topic (index or landing page) must be specified in the project
+          configuration with either \c {navigation.landingpage} or \c
+          {navigation.homepage}. See \qdocvar navigation for more information.
+
+    The \\toc command was introduced to QDoc with Qt 6.11.
+
+    See also \qdoccmd {tocentry}.
+
+    \target tocentry-command
+    \section2 \\tocentry
+
+    Specifies a sub-topic (page) as an entry in table of contents. Can only be
+    used inside a pair of \\toc and \\endtoc commands.
+
+    The \\tocentry command was introduced to QDoc with Qt 6.11.
+
+    See also \qdoccmd {toc}.
 */
 
 /*!

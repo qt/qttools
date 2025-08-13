@@ -1,0 +1,40 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \page index.html
+    \title Test
+    \brief Landing page that lists its \\toc entries.
+
+    \toc
+        \tocentry {Getting started with testing}{Getting started}
+        \tocentry {Running tests}
+    \endtoc
+*/
+
+/*!
+    \page gs.html
+    \title Getting started with testing
+
+    \toc
+        \tocentry {checklist}{Prerequisites}
+        \tocentry {Setting up the environment}
+    \endtoc
+*/
+
+/*!
+    \keyword checklist
+    \page req.html
+    \title Prerequisites
+*/
+
+
+/*!
+    \page env.html
+    \title Setting up the environment
+*/
+
+/*!
+    \page run.html
+    \title Running tests
+*/

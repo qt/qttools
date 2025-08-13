@@ -112,6 +112,9 @@ enum {
     CMD_TABLEOFCONTENTS,
     CMD_TARGET,
     CMD_TM,
+    CMD_TOC,
+    CMD_TOCENTRY,
+    CMD_ENDTOC,
     CMD_TT,
     CMD_UICONTROL,
     CMD_UNDERLINE,
@@ -219,6 +222,9 @@ static struct
              { "tableofcontents", CMD_TABLEOFCONTENTS },
              { "target", CMD_TARGET },
              { "tm", CMD_TM, true },
+             { "toc", CMD_TOC },
+             { "tocentry", CMD_TOCENTRY },
+             { "endtoc", CMD_ENDTOC },
              { "tt", CMD_TT, true },
              { "uicontrol", CMD_UICONTROL, true },
              { "underline", CMD_UNDERLINE, true },
@@ -650,6 +656,13 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     leavePara();
                     insertKeyword(getRestOfLine());
                     break;
+                case CMD_TOCENTRY:
+                    if (m_openedCommands.top() != CMD_TOC) {
+                        location().warning("Command '\\%1' outside of '\\%2'"_L1
+                                           .arg(cmdName(cmd), cmdName(CMD_TOC)));
+                        break;
+                    }
+                    Q_FALLTHROUGH(); // \tocentry is functionally a link command
                 case CMD_L:
                     enterPara();
                     if (isLeftBracketAhead())
@@ -962,12 +975,9 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     }
                     break;
                 case CMD_TABLEOFCONTENTS:
-                    p1 = "1";
+                    // Ignore defunct command \tableofcontents. TODO: Remove entirely
                     if (isLeftBraceAhead())
-                        p1 = getArgument();
-                    p1 += QLatin1Char(',');
-                    p1 += QString::number((int)getSectioningUnit());
-                    appendAtom(Atom(Atom::TableOfContents, p1));
+                        getArgument();
                     break;
                 case CMD_TARGET:
                     if (m_openedCommands.top() == CMD_TABLE && !m_inTableItem) {
@@ -980,6 +990,18 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                      // Ignore command while parsing \section<N> argument
                     if (m_paragraphState != InSingleLineParagraph)
                         startFormat(ATOM_FORMATTING_TRADEMARK, cmd);
+                    break;
+                case CMD_TOC:
+                    if (openCommand(cmd)) {
+                        leavePara();
+                        appendAtom(Atom(Atom::TableOfContentsLeft));
+                    }
+                    break;
+                case CMD_ENDTOC:
+                    if (closeCommand(cmd)) {
+                        leavePara();
+                        appendAtom(Atom(Atom::TableOfContentsRight));
+                    }
                     break;
                 case CMD_TT:
                     startFormat(ATOM_FORMATTING_TELETYPE, cmd);
@@ -1481,7 +1503,8 @@ bool DocParser::openCommand(int cmd)
     int outer = m_openedCommands.top();
     bool ok = true;
 
-    if (cmd == CMD_COMPARESWITH && m_openedCommands.contains(cmd)) {
+    if ((cmd == CMD_COMPARESWITH || cmd == CMD_TOC)
+            && m_openedCommands.contains(cmd)) {
         location().warning(u"Cannot nest '\\%1' commands"_s.arg(cmdName(cmd)));
         return false;
     } else if (cmd != CMD_LINK) {
@@ -2697,6 +2720,8 @@ int DocParser::endCmdFor(int cmd)
         return CMD_ENDSIDEBAR;
     case CMD_TABLE:
         return CMD_ENDTABLE;
+    case CMD_TOC:
+        return CMD_ENDTOC;
     default:
         return cmd;
     }

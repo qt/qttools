@@ -80,6 +80,7 @@ qt_internal_add_tool(${target_name}
         src/qdoc/sharedcommentnode.cpp
         src/qdoc/tagfilewriter.cpp
         src/qdoc/text.cpp
+        src/qdoc/tocwriter.cpp
         src/qdoc/tokenizer.cpp
         src/qdoc/tree.cpp
         src/qdoc/typedefnode.cpp
