@@ -255,12 +255,22 @@ static const struct
     Starting from this Atom, searches the linked list for the
     atom of specified type \a t and returns it. Returns \nullptr
     if no such atom is found.
+
+    If an atom is found and \a offset is not \nullptr, it's set
+    to the number of links traversed from this atom to the found
+    atom (0 if this atom matches). \a offset is untouched when
+    not found.
 */
-const Atom *Atom::find(AtomType t) const
+const Atom *Atom::find(AtomType t, qsizetype *offset) const
 {
+    qsizetype i{0};
     const auto *a{this};
-    while (a && a->type() != t)
+    while (a && a->type() != t) {
         a = a->next();
+        ++i;
+    }
+    if (a && offset)
+        *offset = i;
     return a;
 }
 
