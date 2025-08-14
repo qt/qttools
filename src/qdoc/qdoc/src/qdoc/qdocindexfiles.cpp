@@ -395,10 +395,22 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
 
         hasReadChildren = true;
     } else if (elementName == QLatin1String("typedef")) {
+        TypedefNode *typedefNode;
         if (attributes.hasAttribute("aliasedtype"))
-            node = new TypeAliasNode(parent, name, attributes.value(QLatin1String("aliasedtype")).toString());
+            typedefNode = new TypeAliasNode(parent, name, attributes.value(QLatin1String("aliasedtype")).toString());
         else
-            node = new TypedefNode(parent, name);
+            typedefNode = new TypedefNode(parent, name);
+
+        // Associate the typedef with an enum, if specified.
+        if (attributes.hasAttribute("enum")) {
+            auto path = attributes.value(QLatin1String("enum")).toString();
+            const Node *enode = m_qdb->findNodeForTarget(path, typedefNode);
+            if (enode && enode->isEnumType()) {
+                const EnumNode *n = static_cast<const EnumNode *>(enode);
+                const_cast<EnumNode *>(n)->setFlagsType(typedefNode);
+            }
+        }
+        node = typedefNode;
 
         if (!indexUrl.isEmpty())
             location = Location(indexUrl + QLatin1Char('/') + parent->name().toLower() + ".html");
