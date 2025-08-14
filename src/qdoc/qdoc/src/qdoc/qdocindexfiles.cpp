@@ -493,7 +493,10 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
 
         hasReadChildren = true;
     } else if (elementName == QLatin1String("variable")) {
-        node = new VariableNode(parent, name);
+        auto *varNode = new VariableNode(parent, name);
+        varNode->setLeftType(attributes.value("type").toString());
+        varNode->setStatic((attributes.value("static").toString() == "true") ? true : false);
+        node = varNode;
         if (!indexUrl.isEmpty())
             location = Location(indexUrl + QLatin1Char('/') + parent->name().toLower() + ".html");
         else if (!indexUrl.isNull())
