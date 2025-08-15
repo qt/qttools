@@ -6,8 +6,18 @@
 
 /*! \qmltype Foo
     \inqmlmodule FooMod
+    \brief A Foo type in FooMod.
  */
 
 /*! \qmltype Foo
     \inqmlmodule BarMod
+    \brief A Foo type in BarMod.
+ */
+
+/*! \page qmltypes-overview.html
+    \title QML Types Overview
+
+    This page lists all QML types to demonstrate disambiguation.
+
+    \generatelist qmltypes
  */

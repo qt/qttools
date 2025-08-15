@@ -2720,10 +2720,16 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
     out() << "<div class=\"flowListDiv\" translate=\"no\">\n";
     m_numTableRows = 0;
 
+    // Build a map of all duplicate names across the entire list
+    QHash<QString, int> nameOccurrences;
+    for (const auto &[key, node] : nmm.asKeyValueRange()) {
+        QStringList pieces{node->fullName(relative).split("::"_L1)};
+        const QString &name{pieces.last()};
+        nameOccurrences[name]++;
+    }
+
     int curParNr = 0;
     int curParOffset = 0;
-    QString previousName;
-    bool multipleOccurrences = false;
 
     for (int i = 0; i < nmm.size(); i++) {
         while ((curParNr < NumParagraphs) && (curParOffset == paragraph[curParNr].size())) {
@@ -2775,16 +2781,13 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
 
             QStringList pieces{it.value()->fullName(relative).split("::"_L1)};
             const auto &name{pieces.last()};
-            next = it;
-            ++next;
-            if (name != previousName)
-                multipleOccurrences = false;
-            if ((next != paragraph[curParNr].end()) && (name == next.value()->name())) {
-                multipleOccurrences = true;
-                previousName = name;
+
+            // Add module disambiguation if there are multiple types with the same name
+            if (nameOccurrences[name] > 1) {
+                const QString moduleName = it.value()->isQmlNode() ? it.value()->logicalModuleName()
+                                                                   : it.value()->tree()->camelCaseModuleName();
+                pieces.last().append(": %1"_L1.arg(moduleName));
             }
-            if (multipleOccurrences && pieces.size() == 1)
-                pieces.last().append(": %1"_L1.arg(it.value()->tree()->camelCaseModuleName()));
 
             out() << protectEnc(pieces.last());
             out() << "</a>";
