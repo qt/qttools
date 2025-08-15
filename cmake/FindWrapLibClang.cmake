@@ -17,6 +17,18 @@ endif()
 include(FindPackageHandleStandardArgs)
 set(WrapLibClang_FOUND FALSE)
 
+# Find the zstd package before llvm gets a chance to plant its Findzstd.cmake on us. That find
+# module is most likely inconsistent with your system-provided llvmConfig.cmake, leading to
+# configuration errors. Disable find_package(zstd) within llvm if FindWrapZSTD.cmake was successful.
+# Upstream issue: https://github.com/llvm/llvm-project/issues/139666
+if(QT_FEATURE_zstd)
+    find_package(WrapZSTD QUIET)
+    set(__qt_wraplibclang_CMAKE_DISABLE_FIND_PACKAGE_zstd ${CMAKE_DISABLE_FIND_PACKAGE_zstd})
+    if(WrapZSTD_FOUND)
+        set(CMAKE_DISABLE_FIND_PACKAGE_zstd TRUE)
+    endif()
+endif()
+
 if(QT_NO_FIND_PACKAGE_CLANG_WORKAROUND)
     set(Clang_FOUND FALSE)
     foreach(VERSION ${QDOC_SUPPORTED_CLANG_VERSIONS})
@@ -70,6 +82,10 @@ else()
 
     # Now, we're pretty certain that we can find the 'Clang' package without running into errors.
     find_package(Clang ${LLVM_VERSION} EXACT CONFIG)
+endif()
+
+if(QT_FEATURE_zstd)
+    set(CMAKE_DISABLE_FIND_PACKAGE_zstd ${__qt_wraplibclang_CMAKE_DISABLE_FIND_PACKAGE_zstd})
 endif()
 
 # LLVM versions >= 16 come with Findzstd.cmake that creates a target for libzstd.
