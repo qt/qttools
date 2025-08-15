@@ -1525,11 +1525,17 @@ void DocBookGenerator::generateCompactList(const Node *relative, const NodeMulti
         newLine();
     }
 
+    // Build a map of all duplicate names across the entire list
+    QHash<QString, int> nameOccurrences;
+    for (const auto &[key, node] : nmm.asKeyValueRange()) {
+        QStringList pieces{node->fullName(relative).split("::"_L1)};
+        const QString &name{pieces.last()};
+        nameOccurrences[name]++;
+    }
+
     // Actual output.
     int curParNr = 0;
     int curParOffset = 0;
-    QString previousName;
-    bool multipleOccurrences = false;
 
     m_writer->writeStartElement(dbNamespace, "variablelist");
     m_writer->writeAttribute("role", selector);
@@ -1588,16 +1594,13 @@ void DocBookGenerator::generateCompactList(const Node *relative, const NodeMulti
             // (more than one piece).
             QStringList pieces{it.value()->fullName(relative).split("::"_L1)};
             const auto &name{pieces.last()};
-            next = it;
-            ++next;
-            if (name != previousName)
-                multipleOccurrences = false;
-            if ((next != paragraph[curParNr].end()) && (name == next.value()->name())) {
-                multipleOccurrences = true;
-                previousName = name;
+
+            // Add module disambiguation if there are multiple types with the same name
+            if (nameOccurrences[name] > 1) {
+                const QString moduleName = it.value()->isQmlNode() ? it.value()->logicalModuleName()
+                                                                   : it.value()->tree()->camelCaseModuleName();
+                pieces.last().append(": %1"_L1.arg(moduleName));
             }
-            if (multipleOccurrences && pieces.size() == 1)
-                pieces.last().append(": "_L1.arg(it.value()->tree()->camelCaseModuleName()));
 
             // Write the link to the element, which is identical if the element is obsolete or not.
             m_writer->writeStartElement(dbNamespace, "link");
