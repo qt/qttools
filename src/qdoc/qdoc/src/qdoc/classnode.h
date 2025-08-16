@@ -52,6 +52,9 @@ public:
     bool isQmlNativeType() { return !m_nativeTypeForQml.empty(); }
     const QSet<QmlTypeNode *> &qmlNativeTypes() { return m_nativeTypeForQml; }
 
+    [[nodiscard]] bool isQmlSingleton() const { return m_isQmlSingleton; }
+    void setQmlSingleton(bool singleton = true) { m_isQmlSingleton = singleton; }
+
 private:
     void promotePublicBases(const QList<RelatedClass> &bases);
 
@@ -61,6 +64,7 @@ private:
     QList<RelatedClass> m_ignoredBases {};
     bool m_abstract { false };
     bool m_wrapper { false };
+    bool m_isQmlSingleton { false };
     QSet<QmlTypeNode *> m_nativeTypeForQml;
 };
 

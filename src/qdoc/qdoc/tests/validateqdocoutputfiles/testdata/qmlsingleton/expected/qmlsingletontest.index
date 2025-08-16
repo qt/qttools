@@ -12,7 +12,9 @@
             </function>
             <function name="getMessage" fullname="MySingleton::getMessage" href="mysingleton.html#getMessage" status="active" access="public" location="singleton.h" documented="true" meta="plain" const="true" type="QString" signature="QString getMessage() const"/>
         </class>
-        <qmlclass name="MySingleton" href="qml-mysingleton.html" status="active" access="public" documented="true" title="MySingleton" fulltitle="MySingleton" subtitle="" brief="A QML singleton type using the QML_SINGLETON macro"/>
+        <qmlclass name="MySingleton" href="qml-mysingleton.html" status="active" access="public" documented="true" title="MySingleton" fulltitle="MySingleton" subtitle="" singleton="true" brief="A QML singleton type using the QML_SINGLETON macro"/>
+        <class name="MySingleton2" href="mysingleton2.html" status="active" access="public" location="collisionsingleton.h" documented="true" bases="QObject" module="QmlSingletonTest" brief="A C++ class with QML_SINGLETON to test name collision handling"/>
+        <qmlclass name="MySingleton2" href="qml-mysingleton2.html" status="active" access="public" location="collisiontest.qdoc" since="QmlSingletonTest 1.0" documented="true" title="MySingleton2" fulltitle="MySingleton2" subtitle="" singleton="true" brief="A QML singleton type that tests name collision detection"/>
         <qmlclass name="PragmaSingleton" href="qml-pragmasingleton.html" status="active" access="public" location="PragmaSingleton.qml" since="QmlSingletonTest 1.0" documented="true" title="PragmaSingleton" fulltitle="PragmaSingleton" subtitle="" singleton="true" brief="A QML singleton type using pragma singleton">
             <function name="getInfo" fullname="PragmaSingleton::getInfo" href="qml-pragmasingleton.html#getInfo-method" status="active" access="public" location="PragmaSingleton.qml" documented="true" meta="qmlmethod" type="string"/>
             <qmlproperty name="version" fullname="PragmaSingleton::version" href="qml-pragmasingleton.html#version-prop" status="active" access="public" location="PragmaSingleton.qml" documented="true" type="string" attached="false" writable="false"/>
@@ -21,6 +23,10 @@
             <function name="performAction" fullname="RegularType::performAction" href="qml-regulartype.html#performAction-method" status="active" access="public" location="regulartype.qdoc" documented="true" meta="qmlmethod" type="void"/>
             <qmlproperty name="name" fullname="RegularType::name" href="qml-regulartype.html#name-prop" status="active" access="public" location="regulartype.qdoc" documented="true" type="string" attached="false" writable="true"/>
         </qmlclass>
+        <namespace name="TestNamespace" href="testnamespace-sub-qmlsingletontest.html" status="active" access="public" location="collisionsingleton.h">
+            <class name="MySingleton2" fullname="TestNamespace::MySingleton2" href="testnamespace-mysingleton2.html" status="active" access="public" location="collisionsingleton.h" documented="true" bases="QObject" module="QmlSingletonTest" brief="A different C++ class with same QML name but no QML_SINGLETON"/>
+        </namespace>
+        <module name="QmlSingletonTest" href="qmlsingletontest-module.html" status="internal" seen="false" title=""/>
         <module name="TestModule" href="testmodule-module.html" status="active" documented="true" seen="true" title="" brief="Just another test module"/>
         <qmlmodule name="QmlSingletonTest" href="qmlsingletontest-qmlmodule.html" status="internal" seen="false" title=""/>
         <qmlmodule name="Test" href="test-qmlmodule.html" status="internal" seen="false" title=""/>

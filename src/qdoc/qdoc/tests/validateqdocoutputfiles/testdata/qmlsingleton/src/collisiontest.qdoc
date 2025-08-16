@@ -1,0 +1,17 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmltype MySingleton2
+    \nativetype MySingleton2
+    \inqmlmodule Test
+    \since QmlSingletonTest 1.0
+    \brief A QML singleton type that tests name collision detection.
+
+    This type is linked to the correct C++ class (MySingleton2) via \nativetype,
+    ensuring that the singleton flag comes from the correctly associated ClassNode,
+    not from name-based heuristics that could match the wrong class.
+
+    The presence of TestNamespace::MySingleton2 (which doesn't have QML_SINGLETON)
+    tests that we don't accidentally mark the wrong class as singleton.
+*/

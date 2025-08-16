@@ -21,6 +21,7 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qelapsedtimer.h>
 #include <QtCore/qfile.h>
+#include <QtCore/qregularexpression.h>
 #include <QtCore/qscopedvaluerollback.h>
 #include <QtCore/qtemporarydir.h>
 #include <QtCore/qtextstream.h>
@@ -804,6 +805,7 @@ public:
     Node *nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocation nextCommentLoc);
 
 private:
+    bool detectQmlSingleton(CXCursor cursor);
     /*!
       SimpleLoc represents a simple location in the main source file,
       which can be used as a key in a QMap.
@@ -853,6 +855,51 @@ private:
     void readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cursor);
     Aggregate *getSemanticParent(CXCursor cursor);
 };
+
+/*!
+  Detects if a class cursor contains the \e QML_SINGLETON macro.
+  Returns true if the macro is detected, false otherwise.
+
+  The \e QML_SINGLETON macro expands to multiple items including:
+  \list
+      \li \c {Q_CLASSINFO("QML.Singleton", "true")}
+      \li \c {enum class QmlIsSingleton}
+  \endlist
+
+  This method looks for these expansion artifacts to detect the macro.
+*/
+bool ClangVisitor::detectQmlSingleton(CXCursor cursor)
+{
+    bool hasSingletonMacro = false;
+
+    visitChildrenLambda(cursor, [&hasSingletonMacro](CXCursor child) -> CXChildVisitResult {
+        // Look for Q_CLASSINFO calls that indicate QML.Singleton
+        if (clang_getCursorKind(child) == CXCursor_CallExpr) {
+            CXSourceRange range = clang_getCursorExtent(child);
+            QString sourceText = getSpelling(range);
+            // More precise matching: look for the exact Q_CLASSINFO pattern
+            static const QRegularExpression qmlSingletonPattern(
+                R"(Q_CLASSINFO\s*\(\s*["\']QML\.Singleton["\']\s*,\s*["\']true["\']\s*\))");
+            if (qmlSingletonPattern.match(sourceText).hasMatch()) {
+                hasSingletonMacro = true;
+                return CXChildVisit_Break;
+            }
+        }
+
+        // Also check for enum class QmlIsSingleton which is part of the macro expansion
+        if (clang_getCursorKind(child) == CXCursor_EnumDecl) {
+            QString spelling = fromCXString(clang_getCursorSpelling(child));
+            if (spelling == "QmlIsSingleton"_L1) {
+                hasSingletonMacro = true;
+                return CXChildVisit_Break;
+            }
+        }
+
+        return CXChildVisit_Continue;
+    });
+
+    return hasSingletonMacro;
+}
 
 /*!
   Visits a cursor in the .cpp file.
@@ -1017,6 +1064,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         auto *classe = new ClassNode(type, semanticParent, className);
         classe->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
         classe->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
+
+        if (detectQmlSingleton(cursor)) {
+            classe->setQmlSingleton(true);
+        }
 
         if (kind == CXCursor_ClassTemplate) {
             auto template_declaration = llvm::dyn_cast<clang::TemplateDecl>(get_cursor_declaration(cursor));

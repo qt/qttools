@@ -811,6 +811,11 @@
     the \\qmltype comment should include one or more \l{ingroup-command}
     {\\ingroup} commands.
 
+    \note QDoc automatically detects QML singleton types when the corresponding
+    C++ class uses the \c{QML_SINGLETON} macro. For such types, using
+    \qdoccmd {qmltype} is sufficient, as the singleton nature will be detected
+    and documented automatically.
+
     \target qmlsingletontype-command
     \section1 \\qmlsingletontype
 
@@ -833,6 +838,10 @@
         configuration. Access it directly without instantiation.
     \1/
     \endcode
+
+    For C++ classes that use the \c{QML_SINGLETON} macro, prefer using
+    \qdoccmd {qmltype} instead, as QDoc will automatically detect the singleton
+    nature from the C++ code.
 
     \target qmlproperty-command
     \section1 \\qmlproperty

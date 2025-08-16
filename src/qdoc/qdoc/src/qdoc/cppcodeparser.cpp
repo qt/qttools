@@ -194,6 +194,11 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         qcn->setLocation(doc.startLocation());
         if (command == COMMAND_QMLSINGLETONTYPE)
             qcn->setSingleton(true);
+        if (command == COMMAND_QMLTYPE && !qcn->isSingleton()) {
+            auto classNode = database->findClassNode(arg.first.split(u"::"_s));
+            if (classNode && classNode->isQmlSingleton())
+                qcn->setSingleton(true);
+        }
         return qcn;
     } else if (command == COMMAND_QMLENUM) {
         return processQmlEnumTopic(doc.enumItemNames(), doc.location(), arg.first);
@@ -1042,6 +1047,9 @@ void CppCodeParser::processQmlNativeTypeCommand(Node *node, const QString &cmd, 
 
     qmlNode->setClassNode(classNode);
     classNode->insertQmlNativeType(qmlNode);
+
+    if (classNode->isQmlSingleton())
+        qmlNode->setSingleton(true);
 }
 
 QT_END_NAMESPACE
