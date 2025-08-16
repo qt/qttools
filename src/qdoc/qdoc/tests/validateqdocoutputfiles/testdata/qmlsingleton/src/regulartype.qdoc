@@ -1,0 +1,25 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmltype RegularType
+    \inqmlmodule QmlSingletonTest
+    \since QmlSingletonTest 1.0
+    \brief A regular QML type for comparison.
+
+    This is a regular QML type that is not a singleton.
+    It should not show any singleton indicators.
+*/
+
+/*!
+    \qmlproperty string RegularType::name
+
+    The name of this type instance.
+*/
+
+/*!
+    \qmlmethod void RegularType::performAction()
+
+    Performs an action on this instance.
+*/
+

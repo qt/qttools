@@ -172,9 +172,10 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         pn->setLocation(doc.startLocation());
         return pn;
     } else if (command == COMMAND_QMLTYPE ||
+               command == COMMAND_QMLSINGLETONTYPE ||
                command == COMMAND_QMLVALUETYPE ||
                command == COMMAND_QMLBASICTYPE) {
-        auto nodeType = (command == COMMAND_QMLTYPE) ? NodeType::QmlType : NodeType::QmlValueType;
+        auto nodeType = (command == COMMAND_QMLTYPE || command == COMMAND_QMLSINGLETONTYPE) ? NodeType::QmlType : NodeType::QmlValueType;
         QString qmid;
         if (auto args = doc.metaCommandArgs(COMMAND_INQMLMODULE); !args.isEmpty())
             qmid = args.first().first;
@@ -191,6 +192,8 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         if (!qmid.isEmpty())
             database->addToQmlModule(qmid, qcn);
         qcn->setLocation(doc.startLocation());
+        if (command == COMMAND_QMLSINGLETONTYPE)
+            qcn->setSingleton(true);
         return qcn;
     } else if (command == COMMAND_QMLENUM) {
         return processQmlEnumTopic(doc.enumItemNames(), doc.location(), arg.first);

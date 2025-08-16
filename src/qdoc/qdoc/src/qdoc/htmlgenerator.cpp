@@ -1326,6 +1326,9 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
     else
         htmlTitle.append(" QML Type");
 
+    if (qcn->isSingleton())
+        htmlTitle.append(" (Singleton)"_L1);
+
     generateHeader(htmlTitle, qcn, marker);
     Sections sections(qcn);
     generateTableOfContents(qcn, marker, &sections.stdQmlTypeSummarySections());
@@ -1334,6 +1337,11 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
     generateBrief(qcn, marker);
     generateQmlRequisites(qcn, marker);
     generateStatus(qcn, marker);
+
+    if (qcn->isSingleton()) {
+        out() << "<p><strong>Note:</strong> This type is a QML singleton. "_L1
+              << "There is only one instance of this type in the QML engine.</p>\n"_L1;
+    }
 
     QString allQmlMembersLink;
 

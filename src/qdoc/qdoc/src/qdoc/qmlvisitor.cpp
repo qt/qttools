@@ -182,8 +182,8 @@ Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *n
                     }
                     break;
                 }
-            } else if (topic == COMMAND_QMLTYPE || topic == COMMAND_QMLVALUETYPE ||
-                       topic == COMMAND_QMLBASICTYPE) {
+            } else if (topic == COMMAND_QMLTYPE || topic == COMMAND_QMLSINGLETONTYPE ||
+                       topic == COMMAND_QMLVALUETYPE || topic == COMMAND_QMLBASICTYPE) {
                 if (node->isQmlType()) {
                     if (nodes.size() > 1) {
                         doc.location().warning("\\%1 cannot be mixed with other topic commands"_L1.arg(topic));

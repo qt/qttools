@@ -1,0 +1,16 @@
+locationinfo = false
+warninglimit.enabled = true
+
+project = QmlSingletonTest
+description = QDoc test case for QML singleton documentation
+
+sourcedirs = src
+headerdirs = src
+exampledirs = src
+imagedirs = src
+
+outputdir = ./expected
+outputformats = HTML
+
+# Define module for testing
+qmltypesfile = QmlSingletonTest

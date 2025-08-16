@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QDoc test case for QML singleton documentation" version="" project="QmlSingletonTest">
+    <namespace name="" status="active" access="public" module="qmlsingletontest">
+        <qmlclass name="ExplicitSingleton" href="qml-explicitsingleton.html" status="active" access="public" location="explicitsingleton.qdoc" since="QmlSingletonTest 1.0" documented="true" title="ExplicitSingleton" fulltitle="ExplicitSingleton" subtitle="" singleton="true" brief="A QML singleton type using explicit \qmlsingletontype command">
+            <function name="doSomething" fullname="ExplicitSingleton::doSomething" href="qml-explicitsingleton.html#doSomething-method" status="active" access="public" location="explicitsingleton.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <qmlproperty name="enabled" fullname="ExplicitSingleton::enabled" href="qml-explicitsingleton.html#enabled-prop" status="active" access="public" location="explicitsingleton.qdoc" documented="true" type="bool" attached="false" writable="false"/>
+        </qmlclass>
+        <class name="MySingleton" href="mysingleton.html" status="active" access="public" location="singleton.h" documented="true" bases="QObject" module="TestModule" brief="A C++ class for a QML singleton type">
+            <function name="MySingleton" fullname="MySingleton::MySingleton" href="mysingleton.html#MySingleton" status="active" access="public" location="singleton.h" documented="true" meta="constructor" explicit="true" signature="MySingleton(QObject *parent)">
+                <parameter type="QObject *" name="parent" default="nullptr"/>
+            </function>
+            <function name="getMessage" fullname="MySingleton::getMessage" href="mysingleton.html#getMessage" status="active" access="public" location="singleton.h" documented="true" meta="plain" const="true" type="QString" signature="QString getMessage() const"/>
+        </class>
+        <qmlclass name="MySingleton" href="qml-mysingleton.html" status="active" access="public" documented="true" title="MySingleton" fulltitle="MySingleton" subtitle="" brief="A QML singleton type using the QML_SINGLETON macro"/>
+        <qmlclass name="PragmaSingleton" href="qml-pragmasingleton.html" status="active" access="public" location="PragmaSingleton.qml" since="QmlSingletonTest 1.0" documented="true" title="PragmaSingleton" fulltitle="PragmaSingleton" subtitle="" brief="A QML singleton type using pragma singleton">
+            <function name="getInfo" fullname="PragmaSingleton::getInfo" href="qml-pragmasingleton.html#getInfo-method" status="active" access="public" location="PragmaSingleton.qml" documented="true" meta="qmlmethod" type="string"/>
+            <qmlproperty name="version" fullname="PragmaSingleton::version" href="qml-pragmasingleton.html#version-prop" status="active" access="public" location="PragmaSingleton.qml" documented="true" type="string" attached="false" writable="false"/>
+        </qmlclass>
+        <qmlclass name="RegularType" href="qml-regulartype.html" status="active" access="public" location="regulartype.qdoc" since="QmlSingletonTest 1.0" documented="true" title="RegularType" fulltitle="RegularType" subtitle="" brief="A regular QML type for comparison">
+            <function name="performAction" fullname="RegularType::performAction" href="qml-regulartype.html#performAction-method" status="active" access="public" location="regulartype.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <qmlproperty name="name" fullname="RegularType::name" href="qml-regulartype.html#name-prop" status="active" access="public" location="regulartype.qdoc" documented="true" type="string" attached="false" writable="true"/>
+        </qmlclass>
+        <module name="TestModule" href="testmodule-module.html" status="active" documented="true" seen="true" title="" brief="Just another test module"/>
+        <qmlmodule name="QmlSingletonTest" href="qmlsingletontest-qmlmodule.html" status="internal" seen="false" title=""/>
+        <qmlmodule name="Test" href="test-qmlmodule.html" status="internal" seen="false" title=""/>
+    </namespace>
+</INDEX>

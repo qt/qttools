@@ -4421,6 +4421,9 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
         title.append(" QML Value Type");
     else
         title.append(" QML Type");
+
+    if (qcn->isSingleton())
+        title.append(" (Singleton)");
     // TODO: for ITS attribute, only apply translate="no" on qcn->fullTitle(),
     // not its suffix (which should be translated). generateHeader doesn't
     // allow this kind of input, the title isn't supposed to be structured.
@@ -4429,6 +4432,19 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
     generateHeader(title, qcn->subtitle(), qcn);
     generateQmlRequisites(qcn);
     generateStatus(qcn);
+
+    if (qcn->isSingleton()) {
+        m_writer->writeStartElement(dbNamespace, "note");
+        m_writer->writeStartElement(dbNamespace, "para");
+        m_writer->writeStartElement(dbNamespace, "emphasis");
+        m_writer->writeAttribute("role", "bold");
+        m_writer->writeCharacters("Note: ");
+        m_writer->writeEndElement(); // emphasis
+        m_writer->writeCharacters("This type is a QML singleton. "
+                                  "There is only one instance of this type in the QML engine.");
+        m_writer->writeEndElement(); // para
+        m_writer->writeEndElement(); // note
+    }
 
     startSection("details", "Detailed Description");
     generateBody(qcn);

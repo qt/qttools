@@ -811,6 +811,29 @@
     the \\qmltype comment should include one or more \l{ingroup-command}
     {\\ingroup} commands.
 
+    \target qmlsingletontype-command
+    \section1 \\qmlsingletontype
+
+    The \\qmlsingletontype command is for explicitly documenting a QML singleton type.
+    This command is functionally identical to \l{qmltype-command}{\\qmltype}, but it
+    explicitly marks the type as a singleton regardless of the C++ implementation.
+
+    A QML singleton type ensures only one instance exists in the QML engine.
+    The singleton designation is displayed in the generated documentation with
+    a "(Singleton)" indicator in the title and an explanatory note.
+
+    \badcode *
+    /\1!
+        \qmlsingletontype Settings
+        \inqmlmodule MyApp
+
+        \brief Provides application-wide settings as a singleton.
+
+        The Settings type is a singleton that maintains application
+        configuration. Access it directly without instantiation.
+    \1/
+    \endcode
+
     \target qmlproperty-command
     \section1 \\qmlproperty
 

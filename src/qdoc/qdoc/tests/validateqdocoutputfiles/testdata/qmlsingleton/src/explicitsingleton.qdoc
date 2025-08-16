@@ -1,0 +1,28 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlsingletontype ExplicitSingleton
+    \inqmlmodule QmlSingletonTest
+    \since QmlSingletonTest 1.0
+    \brief A QML singleton type using explicit \\qmlsingletontype command.
+
+    This type demonstrates explicit singleton documentation using
+    the \\qmlsingletontype command.
+
+    \\note This is manually documented as a singleton using the
+    \\qmlsingletontype command.
+*/
+
+/*!
+    \qmlproperty bool ExplicitSingleton::enabled
+    \readonly
+
+    Whether this singleton is enabled.
+*/
+
+/*!
+    \qmlmethod void ExplicitSingleton::doSomething()
+
+    Performs some action in the singleton.
+*/

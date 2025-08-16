@@ -96,6 +96,7 @@
     \li \l {qmlenum-command} {\\qmlenum}
     \li \qdoccmd qmlenumeratorsfrom
     \li \l {qmltype-command} {\\qmltype}
+    \li \l {qmlsingletontype-command} {\\qmlsingletontype}
     \li \l {qmlmethod-command} {\\qmlmethod}
     \li \l {qmlproperty-command} {\\qmlproperty}
     \li \l {qmlsignal-command} {\\qmlsignal}
