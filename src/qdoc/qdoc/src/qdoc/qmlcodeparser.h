@@ -30,7 +30,7 @@ public:
     void parseSourceFile(const Location &location, const QString &filePath, CppCodeParser&) override;
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
-    void extractPragmas(QString &script);
+    QStringList extractPragmas(QString &script) const;
 };
 
 QT_END_NAMESPACE

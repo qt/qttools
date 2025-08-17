@@ -51,6 +51,8 @@ public:
     void throwRecursionDepthError() final;
     [[nodiscard]] bool hasError() const;
 
+    void setSingletonPragmaFound(bool found) { m_singletonPragmaFound = found; }
+
 private:
     QString getFullyQualifiedId(QQmlJS::AST::UiQualifiedId *id);
     [[nodiscard]] QQmlJS::SourceLocation precedingComment(quint32 offset) const;
@@ -69,6 +71,7 @@ private:
     QSet<quint32> m_usedComments {};
     Aggregate *m_current { nullptr };
     bool hasRecursionDepthError { false };
+    bool m_singletonPragmaFound { false };
 };
 
 QT_END_NAMESPACE

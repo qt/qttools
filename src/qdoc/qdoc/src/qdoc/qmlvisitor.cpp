@@ -119,8 +119,11 @@ Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *n
     // No preceding comment; construct a new QML type if
     // needed.
     if (!loc.isValid()) {
-        if (!node)
+        if (!node) {
             node = new QmlTypeNode(m_current, m_name, NodeType::QmlType);
+            if (m_singletonPragmaFound)
+                static_cast<QmlTypeNode*>(node)->setSingleton(true);
+        }
         comment_loc.setLineNo(location.startLine);
         node->setLocation(comment_loc);
         return node;
@@ -142,6 +145,8 @@ Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *n
             node = new QmlTypeNode(m_current, m_name, NodeType::QmlType);
             node->setLocation(comment_loc);
         }
+        if (m_singletonPragmaFound && node->isQmlNode())
+            static_cast<QmlTypeNode*>(node)->setSingleton(true);
     }
 
     auto *parent{node->parent()};
