@@ -9,7 +9,12 @@
 
 #include <private/qqmljsast_p.h>
 
+#include <QtCore/qstringview.h>
 #include <qdebug.h>
+
+#include <optional>
+
+using namespace Qt::Literals::StringLiterals;
 
 QT_BEGIN_NAMESPACE
 
@@ -93,6 +98,67 @@ void replaceWithSpace(QString &str, int idx, int n) // Also used in qmlcodemarke
 }
 
 /*!
+  \struct PragmaInfo
+
+  \brief Container for the result of processing a pragma declaration.
+
+  \list
+      \li \c value contains the pragma value (e.g., "library", "singleton").
+      \li \c startOffset is the start position in script to replace.
+      \li \c length is the length of text to replace.
+      \li \c nextToken holds the next token after the pragma.
+  \list
+*/
+struct PragmaInfo {
+    QString value;
+    qsizetype startOffset;
+    qsizetype length;
+    int nextToken;
+};
+
+/*!
+  Processes a ".pragma <value>" declaration (JavaScript syntax).
+  Returns pragma information if successfully processed, std::nullopt otherwise.
+  Advances the lexer position but does not modify the script content.
+*/
+static std::optional<PragmaInfo> processDotPragma(QQmlJS::Lexer &lexer, const QStringView script)
+{
+    static constexpr QLatin1StringView pragma{"pragma"_L1};
+
+    qsizetype startOffset = lexer.tokenOffset();
+    qsizetype startLine = lexer.tokenStartLine();
+
+    int token = lexer.lex();
+
+    if (token != QQmlJSGrammar::T_IDENTIFIER || lexer.tokenStartLine() != startLine
+        || script.mid(lexer.tokenOffset(), lexer.tokenLength()) != pragma)
+        return std::nullopt;
+
+    token = lexer.lex();
+
+    if (token != QQmlJSGrammar::T_IDENTIFIER || lexer.tokenStartLine() != startLine)
+        return std::nullopt;
+
+    const QString pragmaValue{script.mid(lexer.tokenOffset(), lexer.tokenLength()).toString()};
+    const qsizetype endOffset = lexer.tokenLength() + lexer.tokenOffset();
+
+    token = lexer.lex();
+    if (lexer.tokenStartLine() == startLine)
+        return std::nullopt;
+
+    if (pragmaValue == "library"_L1) {
+        return PragmaInfo{
+            pragmaValue,
+            startOffset,
+            endOffset - startOffset,
+            token
+        };
+    }
+
+    return std::nullopt;
+}
+
+/*!
   Copy & paste from src/declarative/qml/qdeclarativescriptparser.cpp,
   then modified to return no values.
 
@@ -101,42 +167,24 @@ void replaceWithSpace(QString &str, int idx, int n) // Also used in qmlcodemarke
 */
 void QmlCodeParser::extractPragmas(QString &script)
 {
-    const QString pragma(QLatin1String("pragma"));
+    QQmlJS::Lexer lexer(nullptr);
+    lexer.setCode(script, 0);
 
-    QQmlJS::Lexer l(nullptr);
-    l.setCode(script, 0);
-
-    int token = l.lex();
+    int token = lexer.lex();
 
     while (true) {
-        if (token != QQmlJSGrammar::T_DOT)
+        if (token == QQmlJSGrammar::T_DOT) {
+            auto pragmaInfo = processDotPragma(lexer, script);
+            if (!pragmaInfo)
+                return;
+
+            // Apply the side effects based on helper's feedback
+            replaceWithSpace(script, pragmaInfo->startOffset, pragmaInfo->length);
+            token = pragmaInfo->nextToken;
+            // Continue processing for additional pragmas
+        } else {
             return;
-
-        int startOffset = l.tokenOffset();
-        int startLine = l.tokenStartLine();
-
-        token = l.lex();
-
-        if (token != QQmlJSGrammar::T_IDENTIFIER || l.tokenStartLine() != startLine
-            || script.mid(l.tokenOffset(), l.tokenLength()) != pragma)
-            return;
-
-        token = l.lex();
-
-        if (token != QQmlJSGrammar::T_IDENTIFIER || l.tokenStartLine() != startLine)
-            return;
-
-        QString pragmaValue = script.mid(l.tokenOffset(), l.tokenLength());
-        int endOffset = l.tokenLength() + l.tokenOffset();
-
-        token = l.lex();
-        if (l.tokenStartLine() == startLine)
-            return;
-
-        if (pragmaValue == QLatin1String("library"))
-            replaceWithSpace(script, startOffset, endOffset - startOffset);
-        else
-            return;
+        }
     }
 }
 
