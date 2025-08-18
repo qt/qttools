@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="linkparentheses.html" href="linkparentheses.html" status="active" documented="true" subtype="page" title="Test Page for Link Parentheses Issue" fulltitle="Test Page for Link Parentheses Issue" subtitle="">
+            <description>
+                <para>This page tests the fix for QTBUG-69756 where parentheses in link text cause premature link termination.</para>
+                <para>Test cases:</para>
+                <list type="bullet">
+                    <item>
+                        <para>
+                            <link raw="linkparentheses.html" href="linkparentheses.html" type="page" page="Test Page for Link Parentheses Issue">Q(Gui)Application</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="linkparentheses.html" href="linkparentheses.html" type="page" page="Test Page for Link Parentheses Issue">Text with (parentheses) in the middle</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="linkparentheses.html" href="linkparentheses.html" type="page" page="Test Page for Link Parentheses Issue">(Starting with parentheses)</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="linkparentheses.html" href="linkparentheses.html" type="page" page="Test Page for Link Parentheses Issue">Ending with (parentheses)</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="linkparentheses.html" href="linkparentheses.html" type="page" page="Test Page for Link Parentheses Issue">Multiple (sets) of (parentheses)</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="linkparentheses.html" href="linkparentheses.html" type="page" page="Test Page for Link Parentheses Issue">Normal text without parentheses</link></para>
+                    </item>
+                </list>
+                <para>All of the above links should be fully hyperlinked, including the text within parentheses.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>

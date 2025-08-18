@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Test Page for Link Parentheses Issue</db:title>
+<db:productname>LinkParentheses</db:productname>
+<db:titleabbrev>Parentheses in link text</db:titleabbrev>
+<db:abstract>
+<db:para>Parentheses in link text.</db:para></db:abstract>
+</db:info>
+<db:para>This page tests the fix for QTBUG-69756 where parentheses in link text cause premature link termination.</db:para>
+<db:para>Test cases:</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="linkparentheses.xml">Q(Gui)Application</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="linkparentheses.xml">Text with (parentheses) in the middle</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="linkparentheses.xml">(Starting with parentheses)</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="linkparentheses.xml">Ending with (parentheses)</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="linkparentheses.xml">Multiple (sets) of (parentheses)</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="linkparentheses.xml">Normal text without parentheses</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+<db:para>All of the above links should be fully hyperlinked, including the text within parentheses.</db:para>
+</db:article>
