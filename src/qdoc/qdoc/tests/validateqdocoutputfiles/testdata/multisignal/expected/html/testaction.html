@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- testaction.cpp -->
+  <meta name="description" content="A test class to demonstrate improved multi-property signal documentation.">
+  <title>TestAction Class | MultiSignalTest</title>
+</head>
+<body>
+<li>TestAction</li>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#properties">Properties</a></li>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#signals">Signals</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">TestAction Class</h1>
+<!-- $$$TestAction-brief -->
+<p>A test class to demonstrate improved multi-property signal documentation. <a href="#details">More...</a></p>
+<!-- @@@TestAction -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;TestAction&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="testaction-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="properties">Properties</h2>
+<ul>
+<li class="fn" translate="no"><b><a href="testaction.html#checkable-prop" translate="no">checkable</a></b> : bool</li>
+<li class="fn" translate="no"><b><a href="testaction.html#enabled-prop" translate="no">enabled</a></b> : bool</li>
+<li class="fn" translate="no"><b><a href="testaction.html#text-prop" translate="no">text</a></b> : QString</li>
+<li class="fn" translate="no"><b><a href="testaction.html#visible-prop" translate="no">visible</a></b> : bool</li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="testaction.html#TestAction" translate="no">TestAction</a></b>(QObject *<i>parent</i> = nullptr)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="testaction.html#checkable-prop" translate="no">isCheckable</a></b>() const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="testaction.html#enabled-prop" translate="no">isEnabled</a></b>() const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="testaction.html#visible-prop" translate="no">isVisible</a></b>() const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testaction.html#checkable-prop" translate="no">setCheckable</a></b>(bool <i>checkable</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testaction.html#enabled-prop" translate="no">setEnabled</a></b>(bool <i>enabled</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testaction.html#text-prop" translate="no">setText</a></b>(const QString &amp;<i>text</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testaction.html#visible-prop" translate="no">setVisible</a></b>(bool <i>visible</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> QString </td><td class="memItemRight bottomAlign"><b><a href="testaction.html#text-prop" translate="no">text</a></b>() const</td></tr>
+</table></div>
+<h2 id="signals">Signals</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testaction.html#changed" translate="no">changed</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testaction.html#singlePropertySignal" translate="no">singlePropertySignal</a></b>()</td></tr>
+</table></div>
+<!-- $$$TestAction-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>This class has properties with different notification patterns.</p>
+</div>
+<!-- @@@TestAction -->
+<div class="prop">
+<h2>Property Documentation</h2>
+<!-- $$$checkable-prop$$$isCheckable$$$setCheckablebool$$$singlePropertySignal -->
+<h3 class="fn" translate="no" id="checkable-prop"><span class="name">checkable</span> : <span class="type">bool</span></h3>
+<p>This property holds whether the action is checkable</p>
+<p>This property determines if the action can be toggled.</p>
+<p><b>Access functions:</b></p>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft topAlign rightAlign"> bool </td><td class="memItemRight bottomAlign"><span class="name"><b>isCheckable</b></span>() const</td></tr>
+<tr><td class="memItemLeft topAlign rightAlign"> void </td><td class="memItemRight bottomAlign"><span class="name"><b>setCheckable</b></span>(bool <i>checkable</i>)</td></tr>
+</table></div>
+<p><b>Notifier signal:</b></p>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft topAlign rightAlign"> void </td><td class="memItemRight bottomAlign"><span class="name"><b><a href="testaction.html#singlePropertySignal" translate="no">singlePropertySignal</a></b></span>()</td></tr>
+</table></div>
+<!-- @@@checkable -->
+<!-- $$$enabled-prop$$$isEnabled$$$setEnabledbool$$$changed -->
+<h3 class="fn" translate="no" id="enabled-prop"><span class="name">enabled</span> : <span class="type">bool</span></h3>
+<p>This property holds whether the action is enabled</p>
+<p>This property determines if the action can be triggered.</p>
+<p><b>Access functions:</b></p>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft topAlign rightAlign"> bool </td><td class="memItemRight bottomAlign"><span class="name"><b>isEnabled</b></span>() const</td></tr>
+<tr><td class="memItemLeft topAlign rightAlign"> void </td><td class="memItemRight bottomAlign"><span class="name"><b>setEnabled</b></span>(bool <i>enabled</i>)</td></tr>
+</table></div>
+<p><b>Notifier signal:</b></p>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft topAlign rightAlign"> void </td><td class="memItemRight bottomAlign"><span class="name"><b><a href="testaction.html#changed" translate="no">changed</a></b></span>()</td></tr>
+</table></div>
+<!-- @@@enabled -->
+<!-- $$$text-prop$$$text$$$setTextconstQString&$$$changed -->
+<h3 class="fn" translate="no" id="text-prop"><span class="name">text</span> : <span class="type">QString</span></h3>
+<p>This property holds the action's display text</p>
+<p>This property holds the text that is displayed for the action.</p>
+<p><b>Access functions:</b></p>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft topAlign rightAlign"> QString </td><td class="memItemRight bottomAlign"><span class="name"><b>text</b></span>() const</td></tr>
+<tr><td class="memItemLeft topAlign rightAlign"> void </td><td class="memItemRight bottomAlign"><span class="name"><b>setText</b></span>(const QString &amp;<i>text</i>)</td></tr>
+</table></div>
+<p><b>Notifier signal:</b></p>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft topAlign rightAlign"> void </td><td class="memItemRight bottomAlign"><span class="name"><b><a href="testaction.html#changed" translate="no">changed</a></b></span>()</td></tr>
+</table></div>
+<!-- @@@text -->
+<!-- $$$visible-prop$$$isVisible$$$setVisiblebool$$$changed -->
+<h3 class="fn" translate="no" id="visible-prop"><span class="name">visible</span> : <span class="type">bool</span></h3>
+<p>This property holds whether the action is visible</p>
+<p>This property determines if the action is shown in UI.</p>
+<p><b>Access functions:</b></p>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft topAlign rightAlign"> bool </td><td class="memItemRight bottomAlign"><span class="name"><b>isVisible</b></span>() const</td></tr>
+<tr><td class="memItemLeft topAlign rightAlign"> void </td><td class="memItemRight bottomAlign"><span class="name"><b>setVisible</b></span>(bool <i>visible</i>)</td></tr>
+</table></div>
+<p><b>Notifier signal:</b></p>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft topAlign rightAlign"> void </td><td class="memItemRight bottomAlign"><span class="name"><b><a href="testaction.html#changed" translate="no">changed</a></b></span>()</td></tr>
+</table></div>
+<!-- @@@visible -->
+</div>
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$TestAction[overload1]$$$TestActionQObject* -->
+<h3 class="fn" translate="no" id="TestAction"><code class="details extra" translate="no">[explicit]</code> TestAction::<span class="name">TestAction</span>(<span class="type">QObject</span> *<i>parent</i> = nullptr)</h3>
+<p>Constructs a TestAction with the given <i translate="no">parent</i>.</p>
+<!-- @@@TestAction -->
+<!-- $$$changed -->
+<h3 class="fn" translate="no" id="changed"><code class="details extra" translate="no">[signal]</code> <span class="type">void</span> TestAction::<span class="name">changed</span>()</h3>
+<p>This signal is emitted when certain properties of the action change. The properties that trigger this signal are enabled, visible, and text.</p>
+<div class="admonition note"><p><b>Note: </b>Notifier signal for properties <a href="testaction.html#enabled-prop" translate="no">enabled</a>, <a href="testaction.html#text-prop" translate="no">text</a>, and <a href="testaction.html#visible-prop" translate="no">visible</a>. </p>
+</div><!-- @@@changed -->
+<!-- $$$singlePropertySignal -->
+<h3 class="fn" translate="no" id="singlePropertySignal"><code class="details extra" translate="no">[signal]</code> <span class="type">void</span> TestAction::<span class="name">singlePropertySignal</span>()</h3>
+<p>This signal is emitted when the checkable property changes.</p>
+<div class="admonition note"><p><b>Note: </b>Notifier signal for property <a href="testaction.html#checkable-prop" translate="no">checkable</a>. </p>
+</div><!-- @@@singlePropertySignal -->
+</div>
+</body>
+</html>

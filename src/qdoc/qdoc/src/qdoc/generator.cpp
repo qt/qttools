@@ -1319,28 +1319,67 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
         if (nodes.isEmpty())
             return;
         std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
+
+        // Group properties by their role for more concise output
+        QMap<PropertyNode::FunctionRole, QList<const PropertyNode *>> roleGroups;
         for (const auto *n : std::as_const(nodes)) {
-            QString msg;
             const auto *pn = static_cast<const PropertyNode *>(n);
-            switch (pn->role(fn)) {
+            PropertyNode::FunctionRole role = pn->role(fn);
+            roleGroups[role].append(pn);
+        }
+
+        // Generate text for each role group in an explicit order
+        static constexpr PropertyNode::FunctionRole roleOrder[] = {
+             PropertyNode::FunctionRole::Getter,
+             PropertyNode::FunctionRole::Setter,
+             PropertyNode::FunctionRole::Resetter,
+             PropertyNode::FunctionRole::Notifier,
+             PropertyNode::FunctionRole::Bindable,
+        };
+        for (auto role : roleOrder) {
+            const auto it = roleGroups.constFind(role);
+            if (it == roleGroups.cend())
+                continue;
+
+            const auto &properties = it.value();
+
+            QString msg;
+            switch (role) {
             case PropertyNode::FunctionRole::Getter:
-                msg = QStringLiteral("Getter function");
+                msg = u"Getter function"_s;
                 break;
             case PropertyNode::FunctionRole::Setter:
-                msg = QStringLiteral("Setter function");
+                msg = u"Setter function"_s;
                 break;
             case PropertyNode::FunctionRole::Resetter:
-                msg = QStringLiteral("Resetter function");
+                msg = u"Resetter function"_s;
                 break;
             case PropertyNode::FunctionRole::Notifier:
-                msg = QStringLiteral("Notifier signal");
+                msg = u"Notifier signal"_s;
+                break;
+            case PropertyNode::FunctionRole::Bindable:
+                msg = u"Bindable function"_s;
                 break;
             default:
                 continue;
             }
-            text << msg << " for property " << Atom(Atom::Link, pn->name())
-             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << pn->name()
-             << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << ". ";
+
+            if (properties.size() == 1) {
+                const auto *pn = properties.first();
+                text << msg << u" for property "_s << Atom(Atom::Link, pn->name())
+                     << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << pn->name()
+                     << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << u". "_s;
+            } else {
+                text << msg << u" for properties "_s;
+                for (qsizetype i = 0; i < properties.size(); ++i) {
+                    const auto *pn = properties.at(i);
+                    text << Atom(Atom::Link, pn->name())
+                         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << pn->name()
+                         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
+                         << Utilities::separator(i, properties.size());
+                }
+                text << u" "_s;
+            }
         }
         break;
     }

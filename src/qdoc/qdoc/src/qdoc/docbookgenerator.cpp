@@ -4043,14 +4043,37 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
         if (!node->isFunction())
             return;
         const auto *fn = static_cast<const FunctionNode *>(node);
-        auto propertyNodes = fn->associatedProperties();
-        if (propertyNodes.isEmpty())
+        auto nodes = fn->associatedProperties();
+        if (nodes.isEmpty())
             return;
-        std::sort(propertyNodes.begin(), propertyNodes.end(), Node::nodeNameLessThan);
-        for (const auto propertyNode : std::as_const(propertyNodes)) {
+        std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
+
+        // Group properties by their role for more concise output
+        QMap<PropertyNode::FunctionRole, QList<const PropertyNode *>> roleGroups;
+        for (const auto *n : std::as_const(nodes)) {
+            const auto *pn = static_cast<const PropertyNode *>(n);
+            PropertyNode::FunctionRole role = pn->role(fn);
+            roleGroups[role].append(pn);
+        }
+
+        // Generate text for each role group in an explicit order
+        static constexpr PropertyNode::FunctionRole roleOrder[] = {
+             PropertyNode::FunctionRole::Getter,
+             PropertyNode::FunctionRole::Setter,
+             PropertyNode::FunctionRole::Resetter,
+             PropertyNode::FunctionRole::Notifier,
+             PropertyNode::FunctionRole::Bindable,
+        };
+
+        for (auto role : roleOrder) {
+            const auto it = roleGroups.constFind(role);
+            if (it == roleGroups.cend())
+                continue;
+
+            const auto &properties = it.value();
+
             QString msg;
-            const auto pn = static_cast<const PropertyNode *>(propertyNode);
-            switch (pn->role(fn)) {
+            switch (role) {
             case PropertyNode::FunctionRole::Getter:
                 msg = QStringLiteral("Getter function");
                 break;
@@ -4063,13 +4086,28 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
             case PropertyNode::FunctionRole::Notifier:
                 msg = QStringLiteral("Notifier signal");
                 break;
+            case PropertyNode::FunctionRole::Bindable:
+                msg = QStringLiteral("Bindable function");
+                break;
             default:
                 continue;
             }
+
             m_writer->writeStartElement(dbNamespace, "para");
-            m_writer->writeCharacters(msg + " for property ");
-            generateSimpleLink(linkForNode(pn, nullptr), pn->name());
-            m_writer->writeCharacters(". ");
+            if (properties.size() == 1) {
+                const auto *pn = properties.first();
+                m_writer->writeCharacters(msg + " for property ");
+                generateSimpleLink(linkForNode(pn, nullptr), pn->name());
+                m_writer->writeCharacters(". ");
+            } else {
+                m_writer->writeCharacters(msg + " for properties ");
+                for (qsizetype i = 0; i < properties.size(); ++i) {
+                    const auto *pn = properties.at(i);
+                    generateSimpleLink(linkForNode(pn, nullptr), pn->name());
+                    m_writer->writeCharacters(Utilities::separator(i, properties.size()));
+                }
+                m_writer->writeCharacters(" ");
+            }
             m_writer->writeEndElement(); // para
             newLine();
         }
