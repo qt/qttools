@@ -1,0 +1,25 @@
+project = LinkParentheses
+description = Parentheses in link text
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+locationinfo = false
+
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for QTBUG-69756 - parentheses in link text" version="" project="LinkParentheses">
+    <namespace name="" status="active" access="public" module="linkparentheses">
+        <page name="linkparentheses.html" href="linkparentheses.html" status="active" documented="true" subtype="page" title="Test Page for Link Parentheses Issue" fulltitle="Test Page for Link Parentheses Issue" subtitle=""/>
+    </namespace>
+</INDEX>
