@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- main.cpp -->
+  <title>Test Page for Link Parentheses Issue | LinkParentheses</title>
+</head>
+<body>
+<div class="sidebar"><div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title">Test Page for Link Parentheses Issue</h1>
+<!-- $$$linkparentheses.html-description -->
+<div class="descr" id="details">
+<p>This page tests the fix for QTBUG-69756 where parentheses in link text cause premature link termination.</p>
+<p>Test cases:</p>
+<ul>
+<li><a href="linkparentheses.html">Q(Gui)Application</a></li>
+<li><a href="linkparentheses.html">Text with (parentheses) in the middle</a></li>
+<li><a href="linkparentheses.html">(Starting with parentheses)</a></li>
+<li><a href="linkparentheses.html">Ending with (parentheses)</a></li>
+<li><a href="linkparentheses.html">Multiple (sets) of (parentheses)</a></li>
+<li><a href="linkparentheses.html">Normal text without parentheses</a></li>
+</ul>
+<p>All of the above links should be fully hyperlinked, including the text within parentheses.</p>
+</div>
+<!-- @@@linkparentheses.html -->
+</body>
+</html>
