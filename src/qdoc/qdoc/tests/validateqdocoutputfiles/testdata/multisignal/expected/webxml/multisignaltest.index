@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test for improved multi-property signal documentation" version="" project="MultiSignalTest">
+    <namespace name="" status="active" access="public" module="multisignaltest">
+        <class name="TestAction" href="testaction.html" status="active" access="public" location="testaction.h" documented="true" bases="QObject" module="TestModule" brief="A test class to demonstrate improved multi-property signal documentation">
+            <function name="TestAction" fullname="TestAction::TestAction" href="testaction.html#TestAction" status="active" access="public" location="testaction.h" documented="true" meta="constructor" explicit="true" signature="TestAction(QObject *parent)">
+                <parameter type="QObject *" name="parent" default="nullptr"/>
+            </function>
+            <function name="changed" fullname="TestAction::changed" href="testaction.html#changed" status="active" access="public" location="testaction.h" documented="true" meta="signal" associated-property="enabled,text,visible" type="void" signature="void changed()"/>
+            <function name="isCheckable" fullname="TestAction::isCheckable" href="testaction.html#checkable-prop" status="active" access="public" location="testaction.h" meta="plain" const="true" associated-property="checkable" type="bool" signature="bool isCheckable() const"/>
+            <function name="isEnabled" fullname="TestAction::isEnabled" href="testaction.html#enabled-prop" status="active" access="public" location="testaction.h" meta="plain" const="true" associated-property="enabled" type="bool" signature="bool isEnabled() const"/>
+            <function name="isVisible" fullname="TestAction::isVisible" href="testaction.html#visible-prop" status="active" access="public" location="testaction.h" meta="plain" const="true" associated-property="visible" type="bool" signature="bool isVisible() const"/>
+            <function name="setCheckable" fullname="TestAction::setCheckable" href="testaction.html#checkable-prop" status="active" access="public" location="testaction.h" meta="plain" associated-property="checkable" type="void" signature="void setCheckable(bool checkable)">
+                <parameter type="bool" name="checkable" default=""/>
+            </function>
+            <function name="setEnabled" fullname="TestAction::setEnabled" href="testaction.html#enabled-prop" status="active" access="public" location="testaction.h" meta="plain" associated-property="enabled" type="void" signature="void setEnabled(bool enabled)">
+                <parameter type="bool" name="enabled" default=""/>
+            </function>
+            <function name="setText" fullname="TestAction::setText" href="testaction.html#text-prop" status="active" access="public" location="testaction.h" meta="plain" associated-property="text" type="void" signature="void setText(const QString &amp;text)">
+                <parameter type="const QString &amp;" name="text" default=""/>
+            </function>
+            <function name="setVisible" fullname="TestAction::setVisible" href="testaction.html#visible-prop" status="active" access="public" location="testaction.h" meta="plain" associated-property="visible" type="void" signature="void setVisible(bool visible)">
+                <parameter type="bool" name="visible" default=""/>
+            </function>
+            <function name="singlePropertySignal" fullname="TestAction::singlePropertySignal" href="testaction.html#singlePropertySignal" status="active" access="public" location="testaction.h" documented="true" meta="signal" associated-property="checkable" type="void" signature="void singlePropertySignal()"/>
+            <function name="text" fullname="TestAction::text" href="testaction.html#text-prop" status="active" access="public" location="testaction.h" meta="plain" const="true" associated-property="text" type="QString" signature="QString text() const"/>
+            <property name="checkable" fullname="TestAction::checkable" href="testaction.html#checkable-prop" status="active" access="public" location="testaction.h" documented="true" brief="Whether the action is checkable">
+                <getter name="isCheckable"/>
+                <setter name="setCheckable"/>
+                <notifier name="singlePropertySignal"/>
+            </property>
+            <property name="enabled" fullname="TestAction::enabled" href="testaction.html#enabled-prop" status="active" access="public" location="testaction.h" documented="true" brief="Whether the action is enabled">
+                <getter name="isEnabled"/>
+                <setter name="setEnabled"/>
+                <notifier name="changed"/>
+            </property>
+            <property name="text" fullname="TestAction::text" href="testaction.html#text-prop" status="active" access="public" location="testaction.h" documented="true" brief="The action's display text">
+                <getter name="text"/>
+                <setter name="setText"/>
+                <notifier name="changed"/>
+            </property>
+            <property name="visible" fullname="TestAction::visible" href="testaction.html#visible-prop" status="active" access="public" location="testaction.h" documented="true" brief="Whether the action is visible">
+                <getter name="isVisible"/>
+                <setter name="setVisible"/>
+                <notifier name="changed"/>
+            </property>
+        </class>
+        <module name="TestModule" href="testmodule-module.html" status="active" documented="true" seen="true" title="" brief="A test module"/>
+    </namespace>
+</INDEX>
