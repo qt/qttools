@@ -301,10 +301,13 @@ void Aggregate::normalizeOverloads()
                         return f1->hasDoc();
                     return (compare(f1, f2) < 0);
             });
-            // Set overload numbers
+            // Set overload numbers only if the functions are documented.
+            // They are not visible if undocumented.
             signed short n{0};
-            for (auto *fn : map_it)
-                fn->setOverloadNumber(n++);
+            for (auto *fn : map_it) {
+                if (fn->hasDoc())
+                    fn->setOverloadNumber(n++);
+            }
         }
     }
 
