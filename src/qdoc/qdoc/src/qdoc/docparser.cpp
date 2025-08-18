@@ -1638,7 +1638,7 @@ bool DocParser::isAutoLinkString(const QString &word, qsizetype &curPos)
         } else if (latin1Ch == '(') {
             if ((curPos < len - 1) && (word.at(curPos + 1) == QLatin1Char(')'))) {
                 ++numStrangeSymbols;
-                m_position += 2;
+                curPos += 2;
             }
 
             break;
