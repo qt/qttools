@@ -521,6 +521,16 @@
         \li \c {-nounfinished}
         \li Do not include unfinished translations.
     \row
+        \li \c {-fail-on-invalid}
+        \li Fail if translations failing the following checks are found:
+        \list
+            \li validity check of accelerators
+            \li validity check of surrounding whitespaces
+            \li validity check of ending punctuation
+            \li validity check of place markers
+        \endlist
+            To get more details refer to Qt Linguist help
+    \row
         \li \c {-fail-on-unfinished}
         \li Generate an error if unfinished translations are found
     \row
@@ -759,6 +769,16 @@
     \row
         \li \c {-fail-on-unfinished}
         \li Generate an error if unfinished translations are found.
+    \row
+        \li \c {-fail-on-invalid}
+        \li Fail if translations failing the following checks are found:
+        \list
+            \li validity check of accelerators
+            \li validity check of surrounding whitespaces
+            \li validity check of ending punctuation
+            \li validity check of place markers
+        \endlist
+            To get more details refer to Qt Linguist help
     \row
         \li \c {-nounfinished}
         \li Do not include unfinished translations.

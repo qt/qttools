@@ -13,11 +13,13 @@ qt_internal_add_tool(${target_name}
     SOURCES
         ../shared/qm.cpp
         ../shared/ts.cpp
+        ../shared/validator.cpp ../shared/validator.h
         ../shared/releasehelper.cpp ../shared/releasehelper.h
         main.cpp
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_CAST_TO_ASCII
+        LINGUIST_CONSOLE_APPLICATION
     INCLUDE_DIRECTORIES
         ../shared
     LIBRARIES

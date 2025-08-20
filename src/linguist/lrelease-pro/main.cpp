@@ -35,6 +35,13 @@ Options:
     -help  Display this information and exit
     -dump-json <file>
            Only generate the project description json file.
+    -fail-on-invalid
+           Fail if translations failing the following checks are found:
+                validity check of accelerators
+                validity check of surrounding whitespaces
+                validity check of ending punctuation
+                validity check of place markers
+           To get more details refer to Qt Linguist help
     -silent
            Do not explain what is being done
     -version
@@ -62,8 +69,7 @@ int main(int argc, char **argv)
     std::optional<QString> dumpJsonFile;
     QStringList inputFiles;
 
-    bool removeIdentical = false;
-    bool failOnUnfinished = false;
+    ParamFlags params;
     QString markUntranslated;
     ConversionData cd;
 
@@ -88,9 +94,11 @@ int main(int argc, char **argv)
             }
             dumpJsonFile.emplace(QFileInfo(QLatin1String(argv[i])).absoluteFilePath());
         } else if (arg == "-removeidentical"_L1) {
-            removeIdentical = true;
+            params.removeIdentical = true;
         } else if (arg == "-fail-on-unfinished"_L1) {
-            failOnUnfinished = true;
+            params.failOnUnfinished = true;
+        } else if (arg ==  "-fail-on-invalid"_L1) {
+            params.failOnInvalid = true;
         } else if (arg == "-nounfinished"_L1) {
             cd.m_ignoreUnfinished = true;
         } else if (arg == "-markuntranslated"_L1) {
@@ -171,7 +179,7 @@ int main(int argc, char **argv)
 
     bool fail = false;
     for (const QString &tsFile : std::as_const(tsFiles)) {
-        if (!releaseTsFile(tsFile, cd, removeIdentical, failOnUnfinished))
+        if (!releaseTsFile(tsFile, cd, params))
             fail = true;
     }
 

@@ -3,6 +3,7 @@
 
 #include "releasehelper.h"
 #include "translator.h"
+#include "validator.h"
 #include "linguistproject/projectdescriptionreader.h"
 
 #include <QtCore/qfile.h>
@@ -39,19 +40,46 @@ bool loadTsFile(Translator &tor, const QString &tsFileName)
 }
 
 bool releaseTranslator(Translator &tor, const QString &qmFileName, ConversionData &cd,
-                       bool removeIdentical, bool failOnUnfinished)
+                       ParamFlags params)
 {
-    if (failOnUnfinished && tor.unfinishedTranslationsExist()) {
+    if (params.failOnUnfinished && tor.unfinishedTranslationsExist()) {
         printErr("lrelease error: cannot create '%1': existing unfinished translation(s) "
                  "found (-fail-on-unfinished)"_L1.arg(qmFileName));
         return false;
+    }
+
+    if (params.failOnInvalid) {
+        Validator::Checks checks{ true, true, true, true };
+        QLocale::Language sourceLang;
+        QLocale::Language targetLang;
+        QLocale::Territory targetTerritory;
+        QList<bool> countRefNeeds;
+        tor.languageAndTerritory(tor.sourceLanguageCode(), &sourceLang, nullptr);
+        tor.languageAndTerritory(tor.languageCode(), &targetLang, &targetTerritory);
+        QMap<Validator::ErrorType, QString> errors;
+        if (getCountNeed(targetLang, targetTerritory, countRefNeeds, nullptr))
+            for (const TranslatorMessage &msg : tor.messages()) {
+                if (msg.isTranslated() && msg.type() != TranslatorMessage::Finished) {
+                    Validator validator =
+                            Validator::fromSource(msg.sourceText(), checks, sourceLang, {});
+                    errors.insert(
+                            validator.validate(msg.translations(), msg, targetLang, countRefNeeds));
+                }
+            }
+        else
+            printErr("Could not get numerus info"_L1);
+        if (cd.isVerbose())
+            for (const QString &trs : errors)
+                printErr("Validation error for translation '%1'"_L1.arg(trs));
+        if (!errors.empty())
+            return false;
     }
 
     tor.reportDuplicates(tor.resolveDuplicates(), qmFileName, cd.isVerbose());
 
     if (cd.isVerbose())
         printOut("Updating '%1'...\n"_L1.arg(qmFileName));
-    if (removeIdentical) {
+    if (params.removeIdentical) {
         if (cd.isVerbose())
             printOut("Removing translations equal to source text in '%1'...\n"_L1.arg(qmFileName));
         tor.stripIdenticalSourceTranslations();
@@ -76,8 +104,7 @@ bool releaseTranslator(Translator &tor, const QString &qmFileName, ConversionDat
     return ok;
 }
 
-bool releaseTsFile(const QString &tsFileName, ConversionData &cd, bool removeIdentical,
-                   bool failOnUnfinished)
+bool releaseTsFile(const QString &tsFileName, ConversionData &cd, ParamFlags params)
 {
     Translator tor;
     if (!loadTsFile(tor, tsFileName))
@@ -92,7 +119,7 @@ bool releaseTsFile(const QString &tsFileName, ConversionData &cd, bool removeIde
     }
     qmFileName += ".qm"_L1;
 
-    return releaseTranslator(tor, qmFileName, cd, removeIdentical, failOnUnfinished);
+    return releaseTranslator(tor, qmFileName, cd, params);
 }
 
 QStringList translationsFromProject(const Project &project, bool topLevel)
