@@ -3060,6 +3060,10 @@ void HtmlGenerator::generateSectionList(const Section &section, const Node *rela
 
         int i = 0;
         for (const auto &member : members) {
+            // Filter out unnamed nodes. This includes regular shared comment
+            // nodes but not property groups.
+            if (member->name().isEmpty())
+                continue;
 
             if (alignNames) {
                 out() << "<tr><td class=\"memItemLeft topAlign rightAlign\"> ";
