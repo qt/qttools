@@ -15,6 +15,7 @@ qt_internal_add_tool(${target_name}
         ../shared/po.cpp
         ../shared/qm.cpp
         ../shared/qph.cpp
+        ../shared/validator.cpp ../shared/validator.h
         ../shared/translator.cpp ../shared/translator.h
         ../shared/translatormessage.cpp ../shared/translatormessage.h
         ../shared/ts.cpp
@@ -25,6 +26,7 @@ qt_internal_add_tool(${target_name}
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_CAST_TO_ASCII
+        LINGUIST_CONSOLE_APPLICATION
     INCLUDE_DIRECTORIES
         ../shared
     LIBRARIES

@@ -50,6 +50,13 @@ Options:
            Do not include unfinished translations
     -fail-on-unfinished
             Generate an error if unfinished translations are found
+    -fail-on-invalid
+            Fail if translations failing the following checks are found:
+                validity check of accelerators
+                validity check of surrounding whitespaces
+                validity check of ending punctuation
+                validity check of place markers
+            To get more details refer to Qt Linguist help
     -removeidentical
            If the translated text is the same as
            the source text, do not include the message
@@ -74,8 +81,7 @@ int main(int argc, char **argv)
 
     ConversionData cd;
     cd.m_verbose = true; // the default is true starting with Qt 4.2
-    bool removeIdentical = false;
-    bool failOnUnfinished = false;
+    ParamFlags params;
     Translator tor;
     QStringList inputFiles;
     QString outputFile;
@@ -94,13 +100,16 @@ int main(int argc, char **argv)
             cd.m_saveMode = SaveEverything;
             continue;
         } else if (!strcmp(arg, "-removeidentical")) {
-            removeIdentical = true;
+            params.removeIdentical = true;
             continue;
         } else if (!strcmp(arg, "-nounfinished")) {
             cd.m_ignoreUnfinished = true;
             continue;
         } else if (!strcmp(arg, "-fail-on-unfinished")) {
-            failOnUnfinished = true;
+            params.failOnUnfinished = true;
+            continue;
+        } else if (!strcmp(arg, "-fail-on-invalid")) {
+            params.failOnInvalid = true;
             continue;
         } else if (!strcmp(arg, "-markuntranslated")) {
             if (i == argc - 1) {
@@ -187,7 +196,7 @@ int main(int argc, char **argv)
 
     for (const QString &inputFile : std::as_const(inputFiles)) {
         if (outputFile.isEmpty()) {
-            if (!releaseTsFile(inputFile, cd, removeIdentical, failOnUnfinished))
+            if (!releaseTsFile(inputFile, cd, params))
                 return 1;
         } else {
             if (!loadTsFile(tor, inputFile))
@@ -196,7 +205,7 @@ int main(int argc, char **argv)
     }
 
     if (!outputFile.isEmpty())
-        return releaseTranslator(tor, outputFile, cd, removeIdentical, failOnUnfinished) ? 0 : 1;
+        return releaseTranslator(tor, outputFile, cd, params) ? 0 : 1;
 
     return 0;
 }

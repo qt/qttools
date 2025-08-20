@@ -13,13 +13,19 @@ class ConversionData;
 struct Project;
 using Projects = std::vector<Project>;
 
+struct ParamFlags
+{
+    bool failOnUnfinished = false;
+    bool failOnInvalid = false;
+    bool removeIdentical = false;
+};
+
 bool loadTsFile(Translator &tor, const QString &tsFileName);
 
 bool releaseTranslator(Translator &tor, const QString &qmFileName, ConversionData &cd,
-                       bool removeIdentical, bool failOnUnfinished);
+                       ParamFlags params);
 
-bool releaseTsFile(const QString &tsFileName, ConversionData &cd, bool removeIdentical,
-                   bool failOnUnfinished);
+bool releaseTsFile(const QString &tsFileName, ConversionData &cd, ParamFlags params);
 
 // Extract translation file names from project structures
 QStringList translationsFromProject(const Project &project, bool topLevel);

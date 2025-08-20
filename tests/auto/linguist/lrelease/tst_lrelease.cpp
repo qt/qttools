@@ -27,6 +27,7 @@ private slots:
     void markuntranslated();
     void dupes();
     void noTranslations();
+    void invalidTranslations();
 
 private:
     void doCompare(const QStringList &actual, const QString &expectedFn);
@@ -201,6 +202,18 @@ void tst_lrelease::noTranslations()
     QCOMPARE(proc.exitCode(), 0);
     auto stderrOutput = proc.readAllStandardError();
     QVERIFY(stderrOutput.contains("lrelease warning: Met no 'TRANSLATIONS' entry in project file"));
+}
+
+void tst_lrelease::invalidTranslations()
+{
+    QProcess proc;
+    proc.start(lrelease, { "-fail-on-invalid", dataDir + "invalid_de.ts" });
+    QVERIFY(proc.waitForFinished());
+    QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
+    QCOMPARE(proc.exitCode(), 1);
+    auto stderrOutput = proc.readAllStandardError();
+    QVERIFY(stderrOutput.contains("Validation error for translation 'Text nicht &gefunden '"));
+    QVERIFY(stderrOutput.contains("Validation error for translation 'Text gefunden %1'"));
 }
 
 QTEST_MAIN(tst_lrelease)
