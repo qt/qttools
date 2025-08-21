@@ -94,6 +94,9 @@ Node *Aggregate::findChildNode(const QString &name, Genus genus, int findFlags) 
     if (genus != Genus::DontCare && !(hasCommonGenusType(genus, this->genus())))
         return nullptr;
 
+    if (findFlags & TypesOnly)
+        return nullptr;
+
     auto it = m_functionMap.find(name);
     return it != m_functionMap.end() ? (*(*it).begin()) : nullptr;
 }
