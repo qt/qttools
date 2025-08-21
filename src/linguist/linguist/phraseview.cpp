@@ -266,14 +266,14 @@ void PhraseView::setSourceText(int model, const QString &sourceText)
 QList<Phrase *> PhraseView::getPhrases(int model, const QString &source)
 {
     QList<Phrase *> phrases;
-    const QString f = MainWindow::friendlyString(source);
+    const QString f = friendlyString(source);
     const QStringList lookupWords = f.split(u' ');
 
     for (const QString &s : lookupWords) {
         if (m_phraseDict->at(model).contains(s)) {
             const auto phraseList = m_phraseDict->at(model).value(s);
             for (Phrase *p : phraseList) {
-                if (f.contains(MainWindow::friendlyString(p->source())))
+                if (f.contains(friendlyString(p->source())))
                     phrases.append(p);
             }
         }

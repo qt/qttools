@@ -514,8 +514,7 @@ bool DataModel::setLanguageAndTerritory(QLocale::Language lang, QLocale::Territo
 
     if (lang == QLocale::C || uint(lang) > uint(QLocale::LastLanguage)) // XXX does this make any sense?
         lang = QLocale::English;
-    QByteArray rules;
-    bool ok = getNumerusInfo(lang, territory, &rules, &m_numerusForms, 0);
+    bool ok = getCountNeed(lang, territory, m_countRefNeeds, &m_numerusForms);
     QLocale loc(lang, territory);
     // Add territory name if we couldn't match the (lang, territory) combination,
     // or if the language is used in more than one territory.
@@ -530,12 +529,6 @@ bool DataModel::setLanguageAndTerritory(QLocale::Language lang, QLocale::Territo
             //: <language> (<territory>)
             ? tr("%1 (%2)").arg(loc.nativeLanguageName(), loc.nativeTerritoryName())
             : loc.nativeLanguageName();
-    m_countRefNeeds.clear();
-    for (int i = 0; i < rules.size(); ++i) {
-        m_countRefNeeds.append(!(rules.at(i) == Q_EQ && (i == (rules.size() - 2) || rules.at(i + 2) == (char)Q_NEWRULE)));
-        while (++i < rules.size() && rules.at(i) != (char)Q_NEWRULE) {}
-    }
-    m_countRefNeeds.append(true);
     if (!ok) {
         m_numerusForms.clear();
         m_numerusForms << tr("Universal Form");

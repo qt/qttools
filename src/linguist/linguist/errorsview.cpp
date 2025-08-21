@@ -33,29 +33,38 @@ void ErrorsView::clear()
     m_list->clear();
 }
 
-void ErrorsView::addError(int model, const ErrorType type, const QString &arg)
+void ErrorsView::addError(int model, const Validator::ErrorType type, const QString &arg)
 {
     switch (type) {
-      case SuperfluousAccelerator:
-        addError(model, tr("Accelerator possibly superfluous in translation."));
+    case Validator::SuperfluousAccelerator:
+        addError(model, tr("Accelerator possibly superfluous in translation: %1").arg(arg));
         break;
-      case MissingAccelerator:
-        addError(model, tr("Accelerator possibly missing in translation."));
+    case Validator::MissingAccelerator:
+        addError(model, tr("Accelerator possibly missing in translation: %1").arg(arg));
         break;
-      case SurroundingWhitespaceDiffers:
-        addError(model, tr("Translation does not have same leading and trailing whitespace as the source text."));
+    case Validator::SurroundingWhitespaceDiffers:
+        addError(model,
+                 tr("Translation does not have same leading and trailing whitespace as the source "
+                    "text: %1")
+                         .arg(arg));
         break;
-      case PunctuationDiffers:
-        addError(model, tr("Translation does not end with the same punctuation as the source text."));
+    case Validator::PunctuationDiffers:
+        addError(model,
+                 tr("Translation does not end with the same punctuation as the source text: %1")
+                         .arg(arg));
         break;
-      case IgnoredPhrasebook:
+    case Validator::IgnoredPhrasebook:
         addError(model, tr("A phrase book suggestion for '%1' was ignored.").arg(arg));
         break;
-      case PlaceMarkersDiffer:
-        addError(model, tr("Translation does not refer to the same place markers as in the source text."));
+    case Validator::PlaceMarkersDiffer:
+        addError(
+                model,
+                tr("Translation does not refer to the same place markers as in the source text: %1")
+                        .arg(arg));
         break;
-      case NumerusMarkerMissing:
-        addError(model, tr("Translation does not contain the necessary %n/%Ln place marker."));
+    case Validator::NumerusMarkerMissing:
+        addError(model,
+                 tr("Translation does not contain the necessary %n/%Ln place marker: %1").arg(arg));
         break;
       default:
         addError(model, tr("Unknown error"));

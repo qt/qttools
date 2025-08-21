@@ -1,0 +1,3 @@
+Validation error for translation 'Text nicht &gefunden '
+Validation error for translation 'Text nicht &gefunden '
+Validation error for translation 'Text gefunden %1'

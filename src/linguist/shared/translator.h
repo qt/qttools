@@ -210,6 +210,11 @@ private:
 bool getNumerusInfo(QLocale::Language language, QLocale::Territory territory, QByteArray *rules,
                     QStringList *forms, const char **gettextRules);
 
+bool getCountNeed(QLocale::Language lang, QLocale::Territory territory, QList<bool> &countRefNeeds,
+                  QStringList *forms);
+
+QString friendlyString(const QString &str);
+
 QString getNumerusInfoString();
 
 bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd);

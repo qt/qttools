@@ -35,6 +35,7 @@
                 \li \l {Using lupdate}
                 \li \l {Using lrelease}
                 \li \l {Using lconvert}
+                \li \l {Using lcheck}
             \endlist
         \li
             \list
@@ -571,7 +572,7 @@
     \target lconvert
 
     \previouspage Using lrelease
-    \nextpage Translators
+    \nextpage Using lconvert
 
     \title Using lconvert
 
@@ -726,9 +727,161 @@
 */
 
 /*!
+\page linguist-lcheck.html
+\target lcheck
+\previouspage Using lconvert
+\nextpage Translators
+
+\title Using lcheck
+
+The \c lcheck command line tool validates Qt \c {TS} translation files and
+produces a human-readable report. It is part of the Qt Linguist toolchain
+and is intended for batch or CI usage to catch common localization issues
+early. By default, \c lcheck runs a set of checks and returns a non-zero
+exit code if at least one enabled check fails.
+
+The default checks are:
+
+\list
+    \li \b Accelerator check — Verifies that the number of ampersands
+        (mnemonics) in source and translation match.
+    \li \b Surrounding whitespace check — Verifies that leading and trailing
+        whitespace of source and translation match.
+    \li \b Ending punctuation check — Verifies that source and translation
+        end with the same punctuation.
+    \li \b Place marker check — Verifies consistent usage of \c {%1}, \c {%2},
+        and so on, between source and translation.
+\endlist
+
+Each check can be disabled individually using command line options.
+
+\section1 lcheck syntax
+
+\badcode
+lcheck [options] -o report-output-file ts-file
+lcheck [options] ts-file
+\endcode
+
+Where:
+
+\list
+    \li \c options means one or several \l {lcheck options}.
+    \li \c ts-file is the \c {TS} file to validate.
+    \li \c report-output-file is the path of the file to write the report to.
+        If omitted, the report is written to the standard error stream.
+\endlist
+
+To view the latest help, enter:
+
+\badcode
+lcheck -help
+\endcode
+
+\section2 lcheck options
+
+\table
+\header
+    \li Option
+    \li Action
+\row
+    \li \c {-help}
+    \li Display up-to-date help information and exit.
+\row
+    \li \c {-no-accelerator}
+    \li Disable the accelerator (ampersand) consistency check.
+\row
+    \li \c {-no-punctuation}
+    \li Disable the ending punctuation consistency check.
+\row
+    \li \c {-no-place-marker}
+    \li Disable the check that ensures \c {%1}, \c {%2}, … are used
+        consistently between source and translation.
+\row
+    \li \c {-no-whitespaces}
+    \li Disable the surrounding whitespace consistency check.
+\row
+    \li \c {-check-finished}
+    \li Also check messages marked as \e finished. By default, finished
+        translations are not checked.
+\row
+    \li \c {-o <outfile>}
+    \li Write the validation report to \c <outfile>. If not specified, the
+        report is written to standard error.
+\row
+    \li \c {-version}
+    \li Display the version of \c lcheck and exit.
+\endtable
+
+\note The process exit status is non-zero if any enabled check fails. This
+makes \c lcheck suitable for use in CI pipelines.
+
+\section1 Examples
+
+\section2 Write a report to a file
+
+\badcode
+lcheck -o lcheck_report.txt translations/myapp_de.ts
+\endcode
+
+\section2 Disable selected checks
+
+The following command runs all checks except accelerator and punctuation:
+
+\badcode
+lcheck -no-accelerator -no-punctuation translations/myapp_de.ts
+\endcode
+
+\section2 Check finished translations as well
+
+\badcode
+lcheck -check-finished translations/myapp_de.ts
+\endcode
+
+\section2 Use lcheck in a CI step
+
+\badcode
+lcheck translations/myapp_de.ts && echo "Translations OK" || echo "Issues found"
+\endcode
+
+\section2 Using lcheck with CMake
+
+To call \c lcheck when configuring or building your CMake project, load
+the \c Qt6LinguistTools package and use \c {$<TARGET_FILE:Qt6::lcheck>}
+to locate the \c lcheck executable.
+
+The following example adds a custom target \c check_translations that runs
+\c lcheck over a TS file and writes a report next to the build artifacts.
+
+\badcode
+find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
+
+add_custom_command(
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/lcheck_report.txt"
+    COMMAND $<TARGET_FILE:Qt6::lcheck>
+            -o "${CMAKE_CURRENT_BINARY_DIR}/lcheck_report.txt"
+            "${CMAKE_CURRENT_SOURCE_DIR}/translations/myapp_de.ts"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/translations/myapp_de.ts"
+    VERBATIM
+)
+
+add_custom_target(check_translations
+    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/lcheck_report.txt"
+)
+\endcode
+
+\section2 Using lcheck with qmake
+
+You can run \c lcheck directly on a TS file without specifying a project file:
+
+\badcode
+lcheck translations/myapp_de.ts
+\endcode
+*/
+
+/*!
     \page linguist-translators.html
 
-    \previouspage Using lconvert
+    \previouspage Using lcheck
     \nextpage Qt Linguist user interface
 
     \title Translators

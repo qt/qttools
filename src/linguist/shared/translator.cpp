@@ -27,6 +27,15 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::Literals::StringLiterals;
 
+QString friendlyString(const QString &str)
+{
+    QString f = str.toLower();
+    static QRegularExpression re("[.,:;!?()-]"_L1);
+    f.replace(re, " "_L1);
+    f.remove(u'&');
+    return f.simplified();
+}
+
 Translator::Translator() :
     m_locationsType(AbsoluteLocations),
     m_indexOk(true)

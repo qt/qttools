@@ -5,6 +5,7 @@
 #define ERRORSVIEW_H
 
 #include <QListView>
+#include "validator.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -16,19 +17,9 @@ class ErrorsView : public QListView
 {
     Q_OBJECT
 public:
-    enum ErrorType {
-        SuperfluousAccelerator,
-        MissingAccelerator,
-        SurroundingWhitespaceDiffers,
-        PunctuationDiffers,
-        IgnoredPhrasebook,
-        PlaceMarkersDiffer,
-        NumerusMarkerMissing
-    };
-
     ErrorsView(MultiDataModel *dataModel, QWidget *parent = 0);
     void clear();
-    void addError(int model, const ErrorType type, const QString &arg = QString());
+    void addError(int model, const Validator::ErrorType type, const QString &arg = QString());
     QString firstError();
 private:
     void addError(int model, const QString &error);

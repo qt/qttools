@@ -58,7 +58,6 @@ public:
     ~MainWindow();
 
     bool openFiles(const QStringList &names);
-    static QString friendlyString(const QString &str);
 
 protected:
     void readConfig();

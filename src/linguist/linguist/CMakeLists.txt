@@ -22,6 +22,7 @@ qt_internal_add_app(linguist
         ../shared/qph.cpp
         ../shared/simtexth.cpp ../shared/simtexth.h
         ../shared/translator.cpp ../shared/translator.h
+        ../shared/validator.cpp ../shared/validator.h
         ../shared/translatormessage.cpp ../shared/translatormessage.h
         ../shared/ts.cpp
         ../shared/xliff.cpp

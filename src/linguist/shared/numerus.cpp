@@ -360,6 +360,21 @@ bool getNumerusInfo(QLocale::Language language, QLocale::Territory country,
     return false;
 }
 
+bool getCountNeed(QLocale::Language lang, QLocale::Territory territory, QList<bool> &countRefNeeds,
+                  QStringList *forms)
+{
+    QByteArray rules;
+    const bool ok = getNumerusInfo(lang, territory, &rules, forms, 0);
+    countRefNeeds.clear();
+    for (int i = 0; i < rules.size(); ++i) {
+        countRefNeeds.append(!(rules.at(i) == Q_EQ
+                               && (i == (rules.size() - 2) || rules.at(i + 2) == (char)Q_NEWRULE)));
+        while (++i < rules.size() && rules.at(i) != (char)Q_NEWRULE) { }
+    }
+    countRefNeeds.append(true);
+    return ok;
+}
+
 QString getNumerusInfoString()
 {
     QStringList langs;

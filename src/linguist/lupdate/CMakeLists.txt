@@ -1,16 +1,6 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-
-if(CMAKE_VERSION VERSION_LESS "3.19" AND MSVC AND CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
-    message(WARNING "lupdate will not be built in this configuration.")
-    return()
-endif()
-
-if (MINGW)
-    set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY _qt_skip_separate_debug_info ON)
-endif()
-
 #####################################################################
 ## lupdate Tool:
 #####################################################################
@@ -71,6 +61,3 @@ qt_internal_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlPrivate
     DEFINES
         QT_NO_QML
 )
-
-qt_internal_extend_target(${target_name} CONDITION MSVC
-    DEFINES _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING)
