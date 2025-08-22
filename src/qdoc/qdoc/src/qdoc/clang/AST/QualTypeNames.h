@@ -25,6 +25,7 @@ QT_WARNING_DISABLE_MSVC(4267)
 #include "clang/AST/DeclarationName.h"
 #include "clang/AST/GlobalDecl.h"
 #include "clang/AST/Mangle.h"
+#include "clang/Basic/Version.h"
 
 QT_WARNING_POP
 
@@ -160,9 +161,15 @@ static inline const Type *getFullyQualifiedTemplateType(const ASTContext &Ctx,
     // If a fully qualified arg is different from the unqualified arg,
     // allocate new type in the AST.
     if (MightHaveChanged) {
+#if CLANG_VERSION_MAJOR >= 21
+      QualType QT = Ctx.getTemplateSpecializationType(
+          TST->getTemplateName(), FQArgs, /*CanonicalArgs=*/{},
+          TST->getCanonicalTypeInternal());
+#else
       QualType QT = Ctx.getTemplateSpecializationType(
           TST->getTemplateName(), FQArgs,
           TST->getCanonicalTypeInternal());
+#endif
       // getTemplateSpecializationType returns a fully qualified
       // version of the specialization itself, so no need to qualify
       // it.
@@ -192,9 +199,15 @@ static inline const Type *getFullyQualifiedTemplateType(const ASTContext &Ctx,
       // allocate new type in the AST.
       if (MightHaveChanged) {
         TemplateName TN(TSTDecl->getSpecializedTemplate());
+#if CLANG_VERSION_MAJOR >= 21
+        QualType QT = Ctx.getTemplateSpecializationType(
+            TN, FQArgs, /*CanonicalArgs=*/{},
+            TSTRecord->getCanonicalTypeInternal());
+#else
         QualType QT = Ctx.getTemplateSpecializationType(
             TN, FQArgs,
             TSTRecord->getCanonicalTypeInternal());
+#endif
         // getTemplateSpecializationType returns a fully qualified
         // version of the specialization itself, so no need to qualify
         // it.
@@ -257,7 +270,10 @@ static inline NestedNameSpecifier *getFullyQualifiedNestedNameSpecifier(
           Ctx, Scope->getPrefix(), WithGlobalNsPrefix);
     case NestedNameSpecifier::Super:
     case NestedNameSpecifier::TypeSpec:
-    case NestedNameSpecifier::TypeSpecWithTemplate: {
+#if CLANG_VERSION_MAJOR < 21
+    case NestedNameSpecifier::TypeSpecWithTemplate:
+#endif
+    {
       const Type *Type = Scope->getAsType();
       // Find decl context.
       const TagDecl *TD = nullptr;
@@ -369,7 +385,10 @@ inline NestedNameSpecifier *createNestedNameSpecifier(const ASTContext &Ctx,
 
   return NestedNameSpecifier::Create(
       Ctx, createOuterNNS(Ctx, TD, FullyQualify, WithGlobalNsPrefix),
-      false /*No TemplateKeyword*/, TypePtr);
+#if CLANG_VERSION_MAJOR < 21
+      false /*No TemplateKeyword*/,
+#endif
+      TypePtr);
 }
 
 /// Return the fully qualified type, including fully-qualified
@@ -393,9 +412,13 @@ inline QualType getFullyQualifiedType(QualType QT, const ASTContext &Ctx,
     Qualifiers Quals = QT.getQualifiers();
     // Fully qualify the pointee and class types.
     QT = getFullyQualifiedType(QT->getPointeeType(), Ctx, WithGlobalNsPrefix);
+#if CLANG_VERSION_MAJOR >= 21
+    QT = Ctx.getMemberPointerType(QT, MPT->getQualifier(), MPT->getMostRecentCXXRecordDecl());
+#else
     QualType Class = getFullyQualifiedType(QualType(MPT->getClass(), 0), Ctx,
                                            WithGlobalNsPrefix);
     QT = Ctx.getMemberPointerType(QT, Class.getTypePtr());
+#endif
     // Add back the qualifiers.
     QT = Ctx.getQualifiedType(QT, Quals);
     return QT;
