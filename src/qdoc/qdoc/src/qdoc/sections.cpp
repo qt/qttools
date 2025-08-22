@@ -716,11 +716,11 @@ void Sections::distributeNodeInSummaryVector(SectionVector &sv, Node *n)
         return;
     if (n->isProperty())
         sv[Properties].insert(n);
-    else if (n->isPublic())
+    else if (n->isPublic() && n->isInAPI())
         sv[PublicTypes].insert(n);
     else if (n->isPrivate())
         sv[PrivateTypes].insert(n);
-    else
+    else if (n->isProtected())
         sv[ProtectedTypes].insert(n);
 }
 
