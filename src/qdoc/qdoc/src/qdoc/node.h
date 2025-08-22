@@ -241,7 +241,7 @@ public:
         return (m_defLocation.isEmpty() ? m_declLocation : m_defLocation);
     }
     [[nodiscard]] const Doc &doc() const { return m_doc; }
-    [[nodiscard]] bool isInAPI() const
+    [[nodiscard]] virtual bool isInAPI() const
     {
         return !isPrivate() && !isInternal() && !isDontDocument() && hasDoc();
     }

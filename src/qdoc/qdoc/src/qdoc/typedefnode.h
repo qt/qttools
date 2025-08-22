@@ -26,6 +26,7 @@ public:
     bool hasAssociatedEnum() const { return m_associatedEnum != nullptr; }
     const EnumNode *associatedEnum() const { return m_associatedEnum; }
     Node *clone(Aggregate *parent) override;
+    bool isInAPI() const override;
 
 private:
     void setAssociatedEnum(const EnumNode *t);

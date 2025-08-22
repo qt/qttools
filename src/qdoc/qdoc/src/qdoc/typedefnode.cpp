@@ -34,6 +34,15 @@ Node *TypedefNode::clone(Aggregate *parent)
 }
 
 /*!
+  Extends the base implementation to test whether an associated enum
+  is in the API.
+*/
+bool TypedefNode::isInAPI() const
+{
+    return Node::isInAPI() || (m_associatedEnum && m_associatedEnum->isInAPI());
+}
+
+/*!
   \class TypeAliasNode
  */
 
