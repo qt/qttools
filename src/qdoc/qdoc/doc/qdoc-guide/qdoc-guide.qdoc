@@ -44,7 +44,7 @@
         \li \l{C++ Documentation Style}
         \li \l{QML Documentation Style}
         \endlist
-    \li \l{How to Resolve QDoc Warnings}
+    \li \l{Troubleshooting QDoc Warnings}
     \endlist
 
 */
@@ -393,7 +393,7 @@
     \page qdoc-categories.html
     \title Categories of Documentation
     \previouspage Writing Documentation
-    \nextpage How to Resolve QDoc Warnings
+    \nextpage Troubleshooting QDoc Warnings
     \brief Describes the different types of documentation pages.
 
     There are several types of predefined documentation \e categories or
