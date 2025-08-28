@@ -428,6 +428,10 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
 
         fn->setReturnType(attributes.value(QLatin1String("type")).toString());
 
+        const auto &declaredTypeAttr = attributes.value(QLatin1String("declaredtype"));
+        if (!declaredTypeAttr.isEmpty())
+            fn->setDeclaredReturnType(declaredTypeAttr.toString());
+
         if (fn->isCppNode()) {
             fn->setVirtualness(attributes.value(QLatin1String("virtual")).toString());
             fn->setConst(attributes.value(QLatin1String("const")) == QLatin1String("true"));
@@ -1281,6 +1285,10 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
     const auto &return_type = fn->returnType();
     if (!return_type.isEmpty())
         writer.writeAttribute("type", std::move(return_type));
+
+    const auto &declared_return_type = fn->declaredReturnType();
+    if (declared_return_type.has_value())
+        writer.writeAttribute("declaredtype", declared_return_type.value());
 
     if (fn->isCppNode()) {
         if (!brief.isEmpty())
