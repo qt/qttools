@@ -25,7 +25,7 @@
                         <para>Returns an integer containing the sum of <argument>a</argument> and <argument>b</argument>.</para>
                     </description>
                 </function>
-                <function name="adder" fullname="QDocTests::Numbers::adder" href="qdoctests-numbers.html#adder" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="ThisIsMyReallyLongAndComplicatedTemplateName" brief="Adds two numbers of the same underlying type" signature="ThisIsMyReallyLongAndComplicatedTemplateName adder(ThisIsMyReallyLongAndComplicatedTemplateName a, int b)">
+                <function name="adder" fullname="QDocTests::Numbers::adder" href="qdoctests-numbers.html#adder" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="ThisIsMyReallyLongAndComplicatedTemplateName" declaredtype="auto" brief="Adds two numbers of the same underlying type" signature="ThisIsMyReallyLongAndComplicatedTemplateName adder(ThisIsMyReallyLongAndComplicatedTemplateName a, int b)">
                     <parameter type="ThisIsMyReallyLongAndComplicatedTemplateName" name="a" default=""/>
                     <parameter type="int" name="b" default=""/>
                     <description>
@@ -33,7 +33,7 @@
                         <para>Returns a value containing the sum of <argument>a</argument> and <argument>b</argument>.</para>
                     </description>
                 </function>
-                <function name="number" fullname="QDocTests::Numbers::number" href="qdoctests-numbers.html#number" status="active" access="public" location="numbers.h" documented="true" meta="plain" const="true" type="int" brief="Returns the number" signature="int number() const">
+                <function name="number" fullname="QDocTests::Numbers::number" href="qdoctests-numbers.html#number" status="active" access="public" location="numbers.h" documented="true" meta="plain" const="true" type="int" declaredtype="auto" brief="Returns the number" signature="int number() const">
                     <description>
                         <brief>Returns the number.</brief>
                         <para>Returns the number, whatever it may be.</para>
@@ -52,7 +52,7 @@
                         </see-also>
                     </description>
                 </function>
-                <function name="subtract" fullname="QDocTests::Numbers::subtract" href="qdoctests-numbers.html#subtract" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="int" brief="Subtracts two numbers" signature="int subtract(int a, int b)">
+                <function name="subtract" fullname="QDocTests::Numbers::subtract" href="qdoctests-numbers.html#subtract" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="int" declaredtype="auto" brief="Subtracts two numbers" signature="int subtract(int a, int b)">
                     <parameter type="int" name="a" default=""/>
                     <parameter type="int" name="b" default=""/>
                     <description>
