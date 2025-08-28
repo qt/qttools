@@ -1360,9 +1360,14 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
         QMap<PropertyNode::FunctionRole, QList<const PropertyNode *>> roleGroups;
         for (const auto *n : std::as_const(nodes)) {
             const auto *pn = static_cast<const PropertyNode *>(n);
-            PropertyNode::FunctionRole role = pn->role(fn);
-            roleGroups[role].append(pn);
+            if (pn->isInAPI()) {
+                PropertyNode::FunctionRole role = pn->role(fn);
+                roleGroups[role].append(pn);
+            }
         }
+
+        if (roleGroups.isEmpty())
+            return;
 
         // Generate text for each role group in an explicit order
         static constexpr PropertyNode::FunctionRole roleOrder[] = {
