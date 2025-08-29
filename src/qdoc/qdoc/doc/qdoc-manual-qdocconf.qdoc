@@ -160,6 +160,7 @@
     \li \l {HTML.postheader-variable} {HTML.postheader}
     \li \l {HTML.style-variable} {HTML.style}
     \li \l {includepaths-variable} {includepaths}
+    \li \l {includeprivate-variable} {includeprivate}
     \li \l {ignorewords-variable} {ignorewords}
     \li \l {ignoresince-variable} {ignoresince}
     \li \l {imagedirs-variable} {imagedirs}
@@ -754,6 +755,48 @@
           arguments when invoking QDoc.
 
     See also \l moduleheader.
+
+    \target includeprivate-variable
+    \section1 includeprivate
+
+    Use \c includeprivate to include private C++ class members in your
+    documentation. QDoc normally excludes private functions, types, and
+    variables from generated documentation.
+
+    To include all private members, set \c includeprivate to \c true:
+
+    \badcode
+    includeprivate = true
+    \endcode
+
+    You can also enable specific member types:
+
+    \badcode
+    # Include only private functions
+    includeprivate.functions = true
+
+    # Include only private types (classes, enums, typedefs)
+    includeprivate.types = true
+
+    # Include only private variables
+    includeprivate.variables = true
+    \endcode
+
+    Specific settings override the global setting. For example:
+
+    \badcode
+    includeprivate = true
+    includeprivate.types = false
+    \endcode
+
+    This configuration includes private functions and variables but
+    excludes private types.
+
+    \note Document private members only when you need to explain internal
+          APIs and implementation details. Avoid exposing implementation
+          details that users don't need.
+
+    QDoc introduced \c includeprivate in Qt 6.11.
 
     \target ignorewords-variable
     \section1 ignorewords

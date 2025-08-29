@@ -46,6 +46,7 @@ QString ConfigStrings::IGNORETOKENS = QStringLiteral("ignoretokens");
 QString ConfigStrings::IGNOREWORDS = QStringLiteral("ignorewords");
 QString ConfigStrings::IMAGEDIRS = QStringLiteral("imagedirs");
 QString ConfigStrings::INCLUDEPATHS = QStringLiteral("includepaths");
+QString ConfigStrings::INCLUDEPRIVATE = QStringLiteral("includeprivate");
 QString ConfigStrings::INCLUSIVE = QStringLiteral("inclusive");
 QString ConfigStrings::INDEXES = QStringLiteral("indexes");
 QString ConfigStrings::LANDINGPAGE = QStringLiteral("landingpage");
@@ -379,6 +380,7 @@ void Config::reset()
     setStringList(CONFIG_OUTPUTFORMATS, QStringList("HTML"));
     setStringList(CONFIG_TABSIZE, QStringList("8"));
     setStringList(CONFIG_LOCATIONINFO, QStringList("true"));
+    setStringList(CONFIG_INCLUDEPRIVATE, QStringList("false"));
     setStringList(CONFIG_WARNABOUTMISSINGIMAGES, QStringList("true"));
     setStringList(CONFIG_WARNABOUTMISSINGPROJECTFILES, QStringList("true"));
 

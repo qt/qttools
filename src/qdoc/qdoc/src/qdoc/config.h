@@ -108,6 +108,10 @@ public:
     [[nodiscard]] bool getDebug() const { return m_debug; }
     [[nodiscard]] bool getAtomsDump() const { return m_atomsDump; }
     [[nodiscard]] bool showInternal() const { return m_showInternal; }
+    [[nodiscard]] bool includePrivate() const;
+    [[nodiscard]] bool includePrivateFunction() const;
+    [[nodiscard]] bool includePrivateType() const;
+    [[nodiscard]] bool includePrivateVariable() const;
 
     void clear();
     void reset();
@@ -285,6 +289,7 @@ struct ConfigStrings
     static QString IMAGEDIRS;
     static QString IMAGES;
     static QString INCLUDEPATHS;
+    static QString INCLUDEPRIVATE;
     static QString INCLUSIVE;
     static QString INDEXES;
     static QString LANDINGPAGE;
@@ -370,6 +375,7 @@ struct ConfigStrings
 #define CONFIG_IGNOREWORDS ConfigStrings::IGNOREWORDS
 #define CONFIG_IMAGEDIRS ConfigStrings::IMAGEDIRS
 #define CONFIG_INCLUDEPATHS ConfigStrings::INCLUDEPATHS
+#define CONFIG_INCLUDEPRIVATE ConfigStrings::INCLUDEPRIVATE
 #define CONFIG_INCLUSIVE ConfigStrings::INCLUSIVE
 #define CONFIG_INDEXES ConfigStrings::INDEXES
 #define CONFIG_LANDINGPAGE ConfigStrings::LANDINGPAGE
@@ -429,6 +435,26 @@ inline bool Config::singleExec() const
 inline bool Config::dualExec() const
 {
     return !m_configVars.value(CONFIG_SINGLEEXEC).asBool();
+}
+
+inline bool Config::includePrivate() const
+{
+    return m_configVars.value(CONFIG_INCLUDEPRIVATE).asBool();
+}
+
+inline bool Config::includePrivateFunction() const
+{
+    return m_configVars.value(CONFIG_INCLUDEPRIVATE + ".functions").asBool() || includePrivate();
+}
+
+inline bool Config::includePrivateType() const
+{
+    return m_configVars.value(CONFIG_INCLUDEPRIVATE + ".types").asBool() || includePrivate();
+}
+
+inline bool Config::includePrivateVariable() const
+{
+    return m_configVars.value(CONFIG_INCLUDEPRIVATE + ".variables").asBool() || includePrivate();
 }
 
 QT_END_NAMESPACE
