@@ -22,6 +22,27 @@
 
 QT_BEGIN_NAMESPACE
 
+/*!
+    \internal
+    Returns true if the given private \a node should be included in
+    documentation based on the current configuration settings.
+*/
+static bool shouldIncludePrivateNode(const Node *node)
+{
+    Q_ASSERT(node->isPrivate());
+
+    if (node->isFunction()) {
+        return Config::instance().includePrivateFunction();
+    } else if (node->isClassNode() || node->isEnumType() || node->isTypedef()) {
+        return Config::instance().includePrivateType();
+    } else if (node->isVariable()) {
+        return Config::instance().includePrivateVariable();
+    }
+
+    // For other node types, fall back to the global setting
+    return Config::instance().includePrivate();
+}
+
 QList<Section> Sections::s_stdSummarySections {
     { "Namespaces",       "namespace",       "namespaces",       "", Section::Summary },
     { "Classes",          "class",           "classes",          "", Section::Summary },
@@ -218,7 +239,7 @@ void Section::insert(Node *node)
         }
     }
 
-    if (node->isPrivate() || node->isInternal()) {
+    if (node->isInternal() || (node->isPrivate() && !shouldIncludePrivateNode(node))) {
         irrelevant = true;
     } else if (node->isFunction()) {
         auto *func = static_cast<FunctionNode *>(node);
@@ -263,7 +284,7 @@ void Section::insert(Node *node)
  */
 bool Section::insertReimplementedMember(Node *node)
 {
-    if (!node->isPrivate() && !node->isRelatedNonmember()) {
+    if ((!node->isPrivate() || shouldIncludePrivateNode(node)) && !node->isRelatedNonmember()) {
         const auto *fn = static_cast<const FunctionNode *>(node);
         if (!fn->overridesThis().isEmpty()) {
             if (fn->parent() == m_aggregate) {
@@ -866,7 +887,7 @@ void Sections::buildStdCppClassRefPageSections()
 
     for (auto it = m_aggregate->constBegin(); it != m_aggregate->constEnd(); ++it) {
         Node *n = *it;
-        if (!n->isPrivate() && !n->isProperty() && !n->isRelatedNonmember()
+        if ((!n->isPrivate() || shouldIncludePrivateNode(n)) && !n->isProperty() && !n->isRelatedNonmember()
             && !n->isSharedCommentNode())
             allMembers.insert(n);
 
@@ -886,7 +907,7 @@ void Sections::buildStdCppClassRefPageSections()
         ClassNode *cn = stack.pop();
         for (auto it = cn->constBegin(); it != cn->constEnd(); ++it) {
             Node *n = *it;
-            if (!n->isPrivate() && !n->isProperty() && !n->isRelatedNonmember()
+            if ((!n->isPrivate() || shouldIncludePrivateNode(n)) && !n->isProperty() && !n->isRelatedNonmember()
                 && !n->isSharedCommentNode())
                 allMembers.insert(n);
         }
