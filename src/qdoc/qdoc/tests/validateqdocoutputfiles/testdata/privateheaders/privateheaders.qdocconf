@@ -1,0 +1,34 @@
+project = PrivateHeaders
+description = Test case for private header processing with showinternal
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+locationinfo = false
+warninglimit = 0
+warninglimit.enabled = true
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+# Documentation is in headers
+documentationinheaders = indeed
+
+# Enable internal documentation
+showinternal = true
+
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+

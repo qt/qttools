@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="PublicClass" href="publicclass.html" status="active" access="public" location="publicclass.h" documented="true" module="PrivateHeadersModule" brief="A public class that should always be documented">
+            <description>
+                <brief>A public class that should always be documented.</brief>
+                <para>This class is in the public header and should always appear in documentation regardless of showinternal setting.</para>
+            </description>
+            <function name="PublicClass" fullname="PublicClass::PublicClass" href="publicclass.html#PublicClass" status="active" access="public" location="publicclass.h" documented="true" meta="constructor" brief="Public constructor" signature="PublicClass()">
+                <description>
+                    <brief>Public constructor.</brief>
+                    <para>This should always appear in documentation.</para>
+                </description>
+            </function>
+            <function name="internalPublicFunction" fullname="PublicClass::internalPublicFunction" href="publicclass.html#internalPublicFunction" status="active" access="public" location="publicclass.h" documented="true" meta="plain" type="void" brief="Internal public function" signature="void internalPublicFunction()">
+                <description>
+                    <brief>Internal public function.</brief>
+                    <para>This should only appear when showinternal is enabled.</para>
+                </description>
+            </function>
+            <function name="publicFunction" fullname="PublicClass::publicFunction" href="publicclass.html#publicFunction" status="active" access="public" location="publicclass.h" documented="true" meta="plain" type="void" brief="Public function" signature="void publicFunction()">
+                <description>
+                    <brief>Public function.</brief>
+                    <para>This should always appear in documentation.</para>
+                </description>
+            </function>
+            <class name="PrivateData" fullname="PublicClass::PrivateData" href="publicclass-privatedata.html" status="active" access="private" location="publicclass_p.h" documented="true" module="PrivateHeadersModule" brief="Private implementation class for PublicClass">
+                <description>
+                    <brief>Private implementation class for <link raw="PublicClass" href="publicclass.html" type="class">PublicClass</link>.</brief>
+                    <para>This class is in a private header (_p.h) and contains internal implementation details. It should only appear in documentation when showinternal is enabled AND private headers are being processed.</para>
+                </description>
+                <function name="PrivateData" fullname="PublicClass::PrivateData::PrivateData" href="publicclass-privatedata.html#PrivateData" status="active" access="public" location="publicclass_p.h" documented="true" meta="constructor" brief="Constructor for private data" signature="PrivateData()">
+                    <description>
+                        <brief>Constructor for private data.</brief>
+                        <para>This should only appear when showinternal is enabled.</para>
+                    </description>
+                </function>
+                <function name="internalHelper" fullname="PublicClass::PrivateData::internalHelper" href="publicclass-privatedata.html#internalHelper" status="active" access="public" location="publicclass_p.h" documented="true" meta="plain" type="void" brief="Internal helper function" signature="void internalHelper()">
+                    <description>
+                        <brief>Internal helper function.</brief>
+                        <para>This function handles internal implementation details.</para>
+                    </description>
+                </function>
+                <variable name="internalData" fullname="PublicClass::PrivateData::internalData" href="publicclass-privatedata.html#internalData-var" status="active" access="public" location="publicclass_p.h" documented="true" type="int" static="false" brief="Internal data member">
+                    <description>
+                        <brief>This variable holds Internal data member..</brief>
+                        <para>Stores internal state for the public class.</para>
+                    </description>
+                </variable>
+                <variable name="regularPrivateMember" fullname="PublicClass::PrivateData::regularPrivateMember" href="publicclass-privatedata.html#regularPrivateMember-var" status="active" access="public" location="publicclass_p.h" documented="true" type="bool" static="false" brief="Regular private member">
+                    <description>
+                        <brief>This variable holds Regular private member..</brief>
+                        <para>This is a regular (non-internal) private member in a private header. It should appear when showinternal is enabled, regardless of the</para>
+                    </description>
+                </variable>
+            </class>
+            <variable name="d" fullname="PublicClass::d" href="publicclass.html#d-var" status="internal" access="private" location="publicclass.h" type="PublicClass::PrivateData *" static="false">
+                <description/>
+            </variable>
+        </class>
+    </document>
+</WebXML>

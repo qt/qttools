@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>PrivateOnlyClass Class</db:title>
+<db:productname>PrivateHeaders</db:productname>
+<db:titleabbrev>Test case for private header processing with showinternal</db:titleabbrev>
+<db:abstract>
+<db:para>A class that exists only in private headers.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>PrivateOnlyClass</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This entire class is defined in a private header and marked internal. It should only appear when both showinternal is enabled AND private headers are being processed by QDoc.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="PrivateOnlyClass">
+<db:title>PrivateOnlyClass::PrivateOnlyClass()</db:title>
+<db:para>Constructor of private-only class.</db:para>
+</db:section>
+<db:section xml:id="privateClassMethod">
+<db:title>void PrivateOnlyClass::privateClassMethod()</db:title>
+<db:para>Internal method in private class.</db:para>
+</db:section>
+</db:section>
+</db:article>

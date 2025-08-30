@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>PublicClass Class</db:title>
+<db:productname>PrivateHeaders</db:productname>
+<db:titleabbrev>Test case for private header processing with showinternal</db:titleabbrev>
+<db:abstract>
+<db:para>A public class that should always be documented.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>PublicClass</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class is in the public header and should always appear in documentation regardless of showinternal setting.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="PublicClass">
+<db:title>PublicClass::PublicClass()</db:title>
+<db:para>Public constructor.</db:para>
+<db:para>This should always appear in documentation.</db:para>
+</db:section>
+<db:section xml:id="internalPublicFunction">
+<db:title>void PublicClass::internalPublicFunction()</db:title>
+<db:para>Internal public function.</db:para>
+<db:para>This should only appear when showinternal is enabled.</db:para>
+</db:section>
+<db:section xml:id="publicFunction">
+<db:title>void PublicClass::publicFunction()</db:title>
+<db:para>Public function.</db:para>
+<db:para>This should always appear in documentation.</db:para>
+</db:section>
+</db:section>
+</db:article>

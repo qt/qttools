@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>PrivateHeadersModule</db:title>
+<db:productname>PrivateHeaders</db:productname>
+<db:titleabbrev>Test case for private header processing with showinternal</db:titleabbrev>
+<db:abstract>
+<db:para>Test case for private header processing with showinternal.</db:para></db:abstract>
+</db:info>
+<db:section xml:id="function-documentation">
+<db:title>Function Documentation</db:title>
+<db:section xml:id="internalPrivateHeaderFunction">
+<db:title>void internalPrivateHeaderFunction()</db:title>
+<db:para>Internal global function in private header.</db:para>
+<db:para>This function exists only in the private header and should only appear when showinternal is enabled and private headers are processed.</db:para>
+</db:section>
+</db:section>
+</db:article>

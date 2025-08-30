@@ -9,6 +9,7 @@
 #include "doc.h"
 #include "docbookgenerator.h"
 #include "htmlgenerator.h"
+#include "inclusionpolicy.h"
 #include "location.h"
 #include "puredocparser.h"
 #include "qdocdatabase.h"
@@ -521,7 +522,8 @@ static void processQdocconfFile(const QString &fileName)
             moduleHeader.isNull() ? project : moduleHeader,
             Config::instance().getHeaderFiles(),
             include_paths,
-            clang_defines
+            clang_defines,
+            Config::instance().createInclusionPolicy()
         );
     }
 

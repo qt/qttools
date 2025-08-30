@@ -10,6 +10,7 @@
 #include "enumnode.h"
 #include "functionnode.h"
 #include "genustypes.h"
+#include "inclusionpolicy.h"
 #include "namespacenode.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
@@ -46,6 +47,8 @@
 #include <cstdio>
 
 QT_BEGIN_NAMESPACE
+
+using namespace Qt::Literals::StringLiterals;
 
 struct CompilationIndex {
     CXIndex index = nullptr;
@@ -1679,7 +1682,8 @@ std::optional<PCHFile> buildPCH(
     QString module_header,
     const std::set<Config::HeaderFilePath>& all_headers,
     const std::vector<QByteArray>& include_paths,
-    const QList<QByteArray>& defines
+    const QList<QByteArray>& defines,
+    const InclusionPolicy& policy
 ) {
     static std::vector<const char*> arguments{};
 
@@ -1752,12 +1756,14 @@ std::optional<PCHFile> buildPCH(
         QTextStream out(&tmpHeaderFile);
         if (header.isEmpty()) {
             for (const auto& [header_path, header_name] : all_headers) {
-                if (!header_name.endsWith(QLatin1String("_p.h"))
-                    && !header_name.startsWith(QLatin1String("moc_"))) {
-                    QString line = QLatin1String("#include \"") + header_path
-                            + QLatin1String("/") + header_name + QLatin1String("\"");
-                    out << line << "\n";
+                bool shouldInclude = !header_name.startsWith("moc_"_L1);
 
+                // Conditionally include private headers based on showInternal setting
+                if (header_name.endsWith("_p.h"_L1))
+                    shouldInclude = shouldInclude && policy.showInternal;
+
+                if (shouldInclude) {
+                    out << "#include \"" << header_path << "/" << header_name << "\"\n";
                 }
             }
         } else {
@@ -1766,7 +1772,16 @@ std::optional<PCHFile> buildPCH(
                 qWarning() << "Could not find module header file" << header;
                 return std::nullopt;
             }
-            out << QLatin1String("#include \"") + header + QLatin1String("\"");
+
+            out << "#include \"" << header << "\"\n";
+
+            if (policy.showInternal) {
+                for (const auto& [header_path, header_name] : all_headers) {
+                    bool shouldInclude = !header_name.startsWith("moc_"_L1);
+                    if (header_name.endsWith("_p.h"_L1) && shouldInclude)
+                        out << "#include \"" << header_path << "/" << header_name << "\"\n";
+                }
+            }
         }
     }
 

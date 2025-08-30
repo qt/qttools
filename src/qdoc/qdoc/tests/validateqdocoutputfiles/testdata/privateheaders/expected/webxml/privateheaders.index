@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for private header processing with showinternal" version="" project="PrivateHeaders">
+    <namespace name="" status="active" access="public" module="privateheaders">
+        <function name="internalPrivateHeaderFunction" href="privateheadersmodule-privateheaders-proxy.html#internalPrivateHeaderFunction" status="active" access="public" location="publicclass_p.h" documented="true" related="0" meta="plain" type="void" brief="Internal global function in private header" signature="void internalPrivateHeaderFunction()"/>
+        <class name="PrivateOnlyClass" href="privateonlyclass.html" status="active" access="public" location="publicclass_p.h" documented="true" module="PrivateHeadersModule" brief="A class that exists only in private headers">
+            <function name="PrivateOnlyClass" fullname="PrivateOnlyClass::PrivateOnlyClass" href="privateonlyclass.html#PrivateOnlyClass" status="active" access="public" location="publicclass_p.h" documented="true" meta="constructor" brief="Constructor of private-only class" signature="PrivateOnlyClass()"/>
+            <function name="privateClassMethod" fullname="PrivateOnlyClass::privateClassMethod" href="privateonlyclass.html#privateClassMethod" status="active" access="public" location="publicclass_p.h" documented="true" meta="plain" type="void" brief="Internal method in private class" signature="void privateClassMethod()"/>
+        </class>
+        <class name="PublicClass" href="publicclass.html" status="active" access="public" location="publicclass.h" documented="true" module="PrivateHeadersModule" brief="A public class that should always be documented">
+            <function name="PublicClass" fullname="PublicClass::PublicClass" href="publicclass.html#PublicClass" status="active" access="public" location="publicclass.h" documented="true" meta="constructor" brief="Public constructor" signature="PublicClass()"/>
+            <function name="internalPublicFunction" fullname="PublicClass::internalPublicFunction" href="publicclass.html#internalPublicFunction" status="active" access="public" location="publicclass.h" documented="true" meta="plain" type="void" brief="Internal public function" signature="void internalPublicFunction()"/>
+            <function name="publicFunction" fullname="PublicClass::publicFunction" href="publicclass.html#publicFunction" status="active" access="public" location="publicclass.h" documented="true" meta="plain" type="void" brief="Public function" signature="void publicFunction()"/>
+            <class name="PrivateData" fullname="PublicClass::PrivateData" href="publicclass-privatedata.html" status="active" access="private" location="publicclass_p.h" documented="true" module="PrivateHeadersModule" brief="Private implementation class for PublicClass">
+                <function name="PrivateData" fullname="PublicClass::PrivateData::PrivateData" href="publicclass-privatedata.html#PrivateData" status="active" access="public" location="publicclass_p.h" documented="true" meta="constructor" brief="Constructor for private data" signature="PrivateData()"/>
+                <function name="internalHelper" fullname="PublicClass::PrivateData::internalHelper" href="publicclass-privatedata.html#internalHelper" status="active" access="public" location="publicclass_p.h" documented="true" meta="plain" type="void" brief="Internal helper function" signature="void internalHelper()"/>
+                <variable name="internalData" fullname="PublicClass::PrivateData::internalData" href="publicclass-privatedata.html#internalData-var" status="active" access="public" location="publicclass_p.h" documented="true" type="int" static="false" brief="Internal data member"/>
+                <variable name="regularPrivateMember" fullname="PublicClass::PrivateData::regularPrivateMember" href="publicclass-privatedata.html#regularPrivateMember-var" status="active" access="public" location="publicclass_p.h" documented="true" type="bool" static="false" brief="Regular private member"/>
+            </class>
+            <variable name="d" fullname="PublicClass::d" href="publicclass.html#d-var" status="internal" access="private" location="publicclass.h" type="PublicClass::PrivateData *" static="false"/>
+        </class>
+        <module name="PrivateHeadersModule" href="privateheadersmodule-module.html" status="active" location="publicclass.h" documented="true" seen="true" title="" brief="Test module for private header processing"/>
+        <proxy name="PrivateHeadersModule" href="privateheadersmodule-privateheaders-proxy.html" status="active" access="public">
+            <function name="internalPrivateHeaderFunction" href="privateheadersmodule-privateheaders-proxy.html#internalPrivateHeaderFunction" status="active" access="public" location="publicclass_p.h" documented="true" related="0" meta="plain" type="void" brief="Internal global function in private header" signature="void internalPrivateHeaderFunction()"/>
+        </proxy>
+    </namespace>
+</INDEX>

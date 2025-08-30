@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="PrivateOnlyClass" href="privateonlyclass.html" status="active" access="public" location="publicclass_p.h" documented="true" module="PrivateHeadersModule" brief="A class that exists only in private headers">
+            <description>
+                <brief>A class that exists only in private headers.</brief>
+                <para>This entire class is defined in a private header and marked internal. It should only appear when both showinternal is enabled AND private headers are being processed by QDoc.</para>
+            </description>
+            <function name="PrivateOnlyClass" fullname="PrivateOnlyClass::PrivateOnlyClass" href="privateonlyclass.html#PrivateOnlyClass" status="active" access="public" location="publicclass_p.h" documented="true" meta="constructor" brief="Constructor of private-only class" signature="PrivateOnlyClass()">
+                <description>
+                    <brief>Constructor of private-only class.</brief>
+                </description>
+            </function>
+            <function name="privateClassMethod" fullname="PrivateOnlyClass::privateClassMethod" href="privateonlyclass.html#privateClassMethod" status="active" access="public" location="publicclass_p.h" documented="true" meta="plain" type="void" brief="Internal method in private class" signature="void privateClassMethod()">
+                <description>
+                    <brief>Internal method in private class.</brief>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>
