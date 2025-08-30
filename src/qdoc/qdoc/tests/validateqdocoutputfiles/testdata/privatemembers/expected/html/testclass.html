@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- testclass.h -->
+  <meta name="description" content="A test class demonstrating private member documentation.">
+  <title>TestClass Class | PrivateMembers</title>
+</head>
+<body>
+<li>TestClass</li>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-types">Public Types</a></li>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#public-variables">Public Variables</a></li>
+<li class="level1"><a href="#protected-types">Protected Types</a></li>
+<li class="level1"><a href="#protected-functions">Protected Functions</a></li>
+<li class="level1"><a href="#protected-variables">Protected Variables</a></li>
+<li class="level1"><a href="#private-types">Private Types</a></li>
+<li class="level1"><a href="#private-functions">Private Functions</a></li>
+<li class="level1"><a href="#related-non-members">Related Non-Members</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">TestClass Class</h1>
+<!-- $$$TestClass-brief -->
+<p>A test class demonstrating private member documentation. <a href="#details">More...</a></p>
+<!-- @@@TestClass -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;TestClass&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="testclass-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-types">Public Types</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> enum </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#PublicEnum-enum" translate="no">PublicEnum</a></b> { PublicValue1, PublicValue2 }</td></tr>
+</table></div>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#TestClass" translate="no">TestClass</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#publicFunction" translate="no">publicFunction</a></b>()</td></tr>
+</table></div>
+<h2 id="public-variables">Public Variables</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#publicVariable-var" translate="no">publicVariable</a></b></td></tr>
+</table></div>
+<h2 id="protected-types">Protected Types</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> enum </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#ProtectedEnum-enum" translate="no">ProtectedEnum</a></b> { ProtectedValue1, ProtectedValue2 }</td></tr>
+</table></div>
+<h2 id="protected-functions">Protected Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#protectedFunction" translate="no">protectedFunction</a></b>()</td></tr>
+</table></div>
+<h2 id="protected-variables">Protected Variables</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#protectedVariable-var" translate="no">protectedVariable</a></b></td></tr>
+</table></div>
+<h2 id="private-types">Private Types</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> enum </td><td class="memItemRight bottomAlign"><b>PrivateEnum</b> { PrivateValue1, PrivateValue2 }</td></tr>
+</table></div>
+<h2 id="private-functions">Private Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b>privateFunction</b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b>privateHelper</b>()</td></tr>
+</table></div>
+<h2 id="related-non-members">Related Non-Members</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#relatedFunction" translate="no">relatedFunction</a></b>(const TestClass &amp;<i>obj</i>)</td></tr>
+</table></div>
+<!-- $$$TestClass-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>This class contains documented members at all three access levels: public, protected, and private. It is used to test the includeprivate configuration option.</p>
+</div>
+<!-- @@@TestClass -->
+<div class="types">
+<h2>Member Type Documentation</h2>
+<!-- $$$PrivateEnum$$$PrivateValue1$$$PrivateValue2 -->
+<h3 class="fn" translate="no" id="PrivateEnum-enum">enum TestClass::<span class="name">PrivateEnum</span></h3>
+<p>A private enumeration for internal use.</p>
+<p>This enumeration is used internally by the class implementation. It should only appear in documentation when includeprivate is enabled.</p>
+<div class="table"><table class="valuelist"><tr valign="top" class="odd"><th class="tblConst">Constant</th><th class="tblval">Value</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">TestClass::PrivateValue1</code></td><td class="topAlign tblval"><code translate="no">0</code></td><td class="topAlign">First private value</td></tr>
+<tr><td class="topAlign"><code translate="no">TestClass::PrivateValue2</code></td><td class="topAlign tblval"><code translate="no">1</code></td><td class="topAlign">Second private value</td></tr>
+</table></div>
+<!-- @@@PrivateEnum -->
+<!-- $$$ProtectedEnum$$$ProtectedValue1$$$ProtectedValue2 -->
+<h3 class="fn" translate="no" id="ProtectedEnum-enum">enum TestClass::<span class="name">ProtectedEnum</span></h3>
+<p>A protected enumeration.</p>
+<div class="table"><table class="valuelist"><tr valign="top" class="odd"><th class="tblConst">Constant</th><th class="tblval">Value</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">TestClass::ProtectedValue1</code></td><td class="topAlign tblval"><code translate="no">0</code></td><td class="topAlign">First protected value</td></tr>
+<tr><td class="topAlign"><code translate="no">TestClass::ProtectedValue2</code></td><td class="topAlign tblval"><code translate="no">1</code></td><td class="topAlign">Second protected value</td></tr>
+</table></div>
+<!-- @@@ProtectedEnum -->
+<!-- $$$PublicEnum$$$PublicValue1$$$PublicValue2 -->
+<h3 class="fn" translate="no" id="PublicEnum-enum">enum TestClass::<span class="name">PublicEnum</span></h3>
+<p>A public enumeration.</p>
+<div class="table"><table class="valuelist"><tr valign="top" class="odd"><th class="tblConst">Constant</th><th class="tblval">Value</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">TestClass::PublicValue1</code></td><td class="topAlign tblval"><code translate="no">0</code></td><td class="topAlign">First public value</td></tr>
+<tr><td class="topAlign"><code translate="no">TestClass::PublicValue2</code></td><td class="topAlign tblval"><code translate="no">1</code></td><td class="topAlign">Second public value</td></tr>
+</table></div>
+<!-- @@@PublicEnum -->
+</div>
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$TestClass[overload1]$$$TestClass -->
+<h3 class="fn" translate="no" id="TestClass">TestClass::<span class="name">TestClass</span>()</h3>
+<p>Default constructor.</p>
+<p>Creates a TestClass instance.</p>
+<!-- @@@TestClass -->
+<!-- $$$privateFunction[overload1]$$$privateFunction -->
+<h3 class="fn" translate="no" id="privateFunction"><code class="details extra" translate="no">[private]</code> <span class="type">void</span> TestClass::<span class="name">privateFunction</span>()</h3>
+<p>Private function for internal operations.</p>
+<p>This function performs internal operations and should only be documented when includeprivate configuration is enabled.</p>
+<!-- @@@privateFunction -->
+<!-- $$$privateHelper[overload1]$$$privateHelper -->
+<h3 class="fn" translate="no" id="privateHelper"><code class="details extra" translate="no">[private]</code> <span class="type">void</span> TestClass::<span class="name">privateHelper</span>()</h3>
+<p>Private helper function.</p>
+<p>This is another private function to test multiple private function documentation.</p>
+<!-- @@@privateHelper -->
+<!-- $$$protectedFunction[overload1]$$$protectedFunction -->
+<h3 class="fn" translate="no" id="protectedFunction"><code class="details extra" translate="no">[protected]</code> <span class="type">void</span> TestClass::<span class="name">protectedFunction</span>()</h3>
+<p>Protected function.</p>
+<p>This function is accessible to derived classes.</p>
+<!-- @@@protectedFunction -->
+<!-- $$$publicFunction[overload1]$$$publicFunction -->
+<h3 class="fn" translate="no" id="publicFunction"><span class="type">void</span> TestClass::<span class="name">publicFunction</span>()</h3>
+<p>Public function.</p>
+<p>This function is publicly accessible.</p>
+<!-- @@@publicFunction -->
+</div>
+<div class="vars">
+<h2>Member Variable Documentation</h2>
+<!-- $$$privateBoolVar -->
+<h3 class="fn" translate="no" id="privateBoolVar-var"><span class="type">bool</span> TestClass::<span class="name">privateBoolVar</span></h3>
+<p>Another private variable.</p>
+<p>This tests multiple private variable documentation.</p>
+<!-- @@@privateBoolVar -->
+<!-- $$$privateVariable -->
+<h3 class="fn" translate="no" id="privateVariable-var"><span class="type">int</span> TestClass::<span class="name">privateVariable</span></h3>
+<p>Private variable for internal state.</p>
+<p>This variable holds internal state and should only appear in documentation when includeprivate is enabled.</p>
+<!-- @@@privateVariable -->
+<!-- $$$protectedVariable -->
+<h3 class="fn" translate="no" id="protectedVariable-var"><span class="type">int</span> TestClass::<span class="name">protectedVariable</span></h3>
+<p>Protected variable.</p>
+<p>This variable is accessible to derived classes.</p>
+<!-- @@@protectedVariable -->
+<!-- $$$publicVariable -->
+<h3 class="fn" translate="no" id="publicVariable-var"><span class="type">int</span> TestClass::<span class="name">publicVariable</span></h3>
+<p>Public variable.</p>
+<p>This variable is publicly accessible.</p>
+<!-- @@@publicVariable -->
+</div>
+<div class="relnonmem">
+<h2>Related Non-Members</h2>
+<!-- $$$relatedFunction[overload1]$$$relatedFunctionconstTestClass& -->
+<h3 class="fn" translate="no" id="relatedFunction"><span class="type">void</span> <span class="name">relatedFunction</span>(const <span class="type"><a href="testclass.html" translate="no">TestClass</a></span> &amp;<i>obj</i>)</h3>
+<p>A related non-member function.</p>
+<p>This function is related to <a href="testclass.html" translate="no">TestClass</a> but not a member. It takes <i translate="no">obj</i> as argument for shits and giggles.</p>
+<!-- @@@relatedFunction -->
+</div>
+</body>
+</html>

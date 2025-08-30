@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TestClass Class</db:title>
+<db:productname>PrivateMembers</db:productname>
+<db:titleabbrev>Test case for includeprivate configuration</db:titleabbrev>
+<db:abstract>
+<db:para>A test class demonstrating private member documentation.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TestClass</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class contains documented members at all three access levels: public, protected, and private. It is used to test the includeprivate configuration option.</db:para>
+</db:section>
+<db:section xml:id="member-type-documentation">
+<db:title>Member Type Documentation</db:title>
+<db:section xml:id="PrivateEnum-enum">
+<db:title>enum TestClass::PrivateEnum</db:title>
+<db:para>A private enumeration for internal use.</db:para>
+<db:para>This enumeration is used internally by the class implementation. It should only appear in documentation when includeprivate is enabled.</db:para>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Value</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testclass.xml">TestClass</db:link></db:emphasis>::PrivateValue1</db:code></db:para>
+</db:td>
+<db:td><db:code>0</db:code></db:td>
+<db:td>
+<db:para>First private value</db:para>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testclass.xml">TestClass</db:link></db:emphasis>::PrivateValue2</db:code></db:para>
+</db:td>
+<db:td><db:code>1</db:code></db:td>
+<db:td>
+<db:para>Second private value</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+<db:section xml:id="ProtectedEnum-enum">
+<db:title>enum TestClass::ProtectedEnum</db:title>
+<db:para>A protected enumeration.</db:para>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Value</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testclass.xml">TestClass</db:link></db:emphasis>::ProtectedValue1</db:code></db:para>
+</db:td>
+<db:td><db:code>0</db:code></db:td>
+<db:td>
+<db:para>First protected value</db:para>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testclass.xml">TestClass</db:link></db:emphasis>::ProtectedValue2</db:code></db:para>
+</db:td>
+<db:td><db:code>1</db:code></db:td>
+<db:td>
+<db:para>Second protected value</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+<db:section xml:id="PublicEnum-enum">
+<db:title>enum TestClass::PublicEnum</db:title>
+<db:para>A public enumeration.</db:para>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Value</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testclass.xml">TestClass</db:link></db:emphasis>::PublicValue1</db:code></db:para>
+</db:td>
+<db:td><db:code>0</db:code></db:td>
+<db:td>
+<db:para>First public value</db:para>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testclass.xml">TestClass</db:link></db:emphasis>::PublicValue2</db:code></db:para>
+</db:td>
+<db:td><db:code>1</db:code></db:td>
+<db:td>
+<db:para>Second public value</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="TestClass">
+<db:title>TestClass::TestClass()</db:title>
+<db:para>Default constructor.</db:para>
+<db:para>Creates a <db:link xlink:href="testclass.xml">TestClass</db:link> instance.</db:para>
+</db:section>
+<db:section xml:id="privateFunction">
+<db:title>[private] void TestClass::privateFunction()</db:title>
+<db:para>Private function for internal operations.</db:para>
+<db:para>This function performs internal operations and should only be documented when includeprivate configuration is enabled.</db:para>
+</db:section>
+<db:section xml:id="privateHelper">
+<db:title>[private] void TestClass::privateHelper()</db:title>
+<db:para>Private helper function.</db:para>
+<db:para>This is another private function to test multiple private function documentation.</db:para>
+</db:section>
+<db:section xml:id="protectedFunction">
+<db:title>[protected] void TestClass::protectedFunction()</db:title>
+<db:para>Protected function.</db:para>
+<db:para>This function is accessible to derived classes.</db:para>
+</db:section>
+<db:section xml:id="publicFunction">
+<db:title>void TestClass::publicFunction()</db:title>
+<db:para>Public function.</db:para>
+<db:para>This function is publicly accessible.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="member-variable-documentation">
+<db:title>Member Variable Documentation</db:title>
+<db:section xml:id="privateBoolVar-var">
+<db:title>bool TestClass::privateBoolVar</db:title>
+<db:para>Another private variable.</db:para>
+<db:para>This tests multiple private variable documentation.</db:para>
+</db:section>
+<db:section xml:id="privateVariable-var">
+<db:title>int TestClass::privateVariable</db:title>
+<db:para>Private variable for internal state.</db:para>
+<db:para>This variable holds internal state and should only appear in documentation when includeprivate is enabled.</db:para>
+</db:section>
+<db:section xml:id="protectedVariable-var">
+<db:title>int TestClass::protectedVariable</db:title>
+<db:para>Protected variable.</db:para>
+<db:para>This variable is accessible to derived classes.</db:para>
+</db:section>
+<db:section xml:id="publicVariable-var">
+<db:title>int TestClass::publicVariable</db:title>
+<db:para>Public variable.</db:para>
+<db:para>This variable is publicly accessible.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="related-non-members">
+<db:title>Related Non-Members</db:title>
+<db:section xml:id="relatedFunction">
+<db:title>void relatedFunction(const TestClass &amp;<db:emphasis>obj</db:emphasis>)</db:title>
+<db:para>A related non-member function.</db:para>
+<db:para>This function is related to <db:link xlink:href="testclass.xml">TestClass</db:link> but not a member. It takes <db:code role="parameter">obj</db:code> as argument for shits and giggles.</db:para>
+</db:section>
+</db:section>
+</db:article>

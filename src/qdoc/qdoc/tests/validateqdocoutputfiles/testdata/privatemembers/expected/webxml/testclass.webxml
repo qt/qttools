@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="TestModule" brief="A test class demonstrating private member documentation">
+            <description>
+                <brief>A test class demonstrating private member documentation.</brief>
+                <para>This class contains documented members at all three access levels: public, protected, and private. It is used to test the includeprivate configuration option.</para>
+            </description>
+            <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" meta="constructor" brief="Default constructor" signature="TestClass()">
+                <description>
+                    <brief>Default constructor.</brief>
+                    <para>Creates a <link raw="TestClass" href="testclass.html" type="class">TestClass</link> instance.</para>
+                </description>
+            </function>
+            <function name="privateFunction" fullname="TestClass::privateFunction" href="testclass.html#privateFunction" status="active" access="private" location="testclass.h" documented="true" meta="plain" type="void" brief="Private function for internal operations" signature="void privateFunction()">
+                <description>
+                    <brief>Private function for internal operations.</brief>
+                    <para>This function performs internal operations and should only be documented when includeprivate configuration is enabled.</para>
+                </description>
+            </function>
+            <function name="privateHelper" fullname="TestClass::privateHelper" href="testclass.html#privateHelper" status="active" access="private" location="testclass.h" documented="true" meta="plain" type="void" brief="Private helper function" signature="void privateHelper()">
+                <description>
+                    <brief>Private helper function.</brief>
+                    <para>This is another private function to test multiple private function documentation.</para>
+                </description>
+            </function>
+            <function name="protectedFunction" fullname="TestClass::protectedFunction" href="testclass.html#protectedFunction" status="active" access="protected" location="testclass.h" documented="true" meta="plain" type="void" brief="Protected function" signature="void protectedFunction()">
+                <description>
+                    <brief>Protected function.</brief>
+                    <para>This function is accessible to derived classes.</para>
+                </description>
+            </function>
+            <function name="publicFunction" fullname="TestClass::publicFunction" href="testclass.html#publicFunction" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" brief="Public function" signature="void publicFunction()">
+                <description>
+                    <brief>Public function.</brief>
+                    <para>This function is publicly accessible.</para>
+                </description>
+            </function>
+            <function name="relatedFunction" href="testclass.html#relatedFunction" status="active" access="public" location="testclass.h" documented="true" related="0" meta="plain" type="void" brief="A related non-member function" signature="void relatedFunction(const TestClass &amp;obj)">
+                <parameter type="const TestClass &amp;" name="obj" default=""/>
+                <description>
+                    <brief>A related non-member function.</brief>
+                    <para>This function is related to <link raw="TestClass" href="testclass.html" type="class">TestClass</link> but not a member. It takes <argument>obj</argument> as argument for shits and giggles.</para>
+                </description>
+            </function>
+            <enum name="PrivateEnum" fullname="TestClass::PrivateEnum" href="testclass.html#PrivateEnum-enum" status="active" access="private" location="testclass.h" documented="true">
+                <value name="PrivateValue1" value="0"/>
+                <value name="PrivateValue2" value="1"/>
+                <description>
+                    <brief>A private enumeration for internal use.</brief>
+                    <para>This enumeration is used internally by the class implementation. It should only appear in documentation when includeprivate is enabled.</para>
+                    <list type="enum">
+                        <definition>
+                            <term>TestClass::PrivateValue1</term>PrivateValue1</definition>
+                        <item>
+                            <para>First private value</para>
+                        </item>
+                        <definition>
+                            <term>TestClass::PrivateValue2</term>PrivateValue2</definition>
+                        <item>
+                            <para>Second private value</para>
+                        </item>
+                    </list>
+                </description>
+            </enum>
+            <enum name="ProtectedEnum" fullname="TestClass::ProtectedEnum" href="testclass.html#ProtectedEnum-enum" status="active" access="protected" location="testclass.h" documented="true">
+                <value name="ProtectedValue1" value="0"/>
+                <value name="ProtectedValue2" value="1"/>
+                <description>
+                    <brief>A protected enumeration.</brief>
+                    <list type="enum">
+                        <definition>
+                            <term>TestClass::ProtectedValue1</term>ProtectedValue1</definition>
+                        <item>
+                            <para>First protected value</para>
+                        </item>
+                        <definition>
+                            <term>TestClass::ProtectedValue2</term>ProtectedValue2</definition>
+                        <item>
+                            <para>Second protected value</para>
+                        </item>
+                    </list>
+                </description>
+            </enum>
+            <enum name="PublicEnum" fullname="TestClass::PublicEnum" href="testclass.html#PublicEnum-enum" status="active" access="public" location="testclass.h" documented="true">
+                <value name="PublicValue1" value="0"/>
+                <value name="PublicValue2" value="1"/>
+                <description>
+                    <brief>A public enumeration.</brief>
+                    <list type="enum">
+                        <definition>
+                            <term>TestClass::PublicValue1</term>PublicValue1</definition>
+                        <item>
+                            <para>First public value</para>
+                        </item>
+                        <definition>
+                            <term>TestClass::PublicValue2</term>PublicValue2</definition>
+                        <item>
+                            <para>Second public value</para>
+                        </item>
+                    </list>
+                </description>
+            </enum>
+            <variable name="privateBoolVar" fullname="TestClass::privateBoolVar" href="testclass.html#privateBoolVar-var" status="active" access="private" location="testclass.h" documented="true" type="bool" static="false" brief="Another private variable">
+                <description>
+                    <brief>This variable holds Another private variable..</brief>
+                    <para>This tests multiple private variable documentation.</para>
+                </description>
+            </variable>
+            <variable name="privateVariable" fullname="TestClass::privateVariable" href="testclass.html#privateVariable-var" status="active" access="private" location="testclass.h" documented="true" type="int" static="false" brief="Private variable for internal state">
+                <description>
+                    <brief>This variable holds Private variable for internal state..</brief>
+                    <para>This variable holds internal state and should only appear in documentation when includeprivate is enabled.</para>
+                </description>
+            </variable>
+            <variable name="protectedVariable" fullname="TestClass::protectedVariable" href="testclass.html#protectedVariable-var" status="active" access="protected" location="testclass.h" documented="true" type="int" static="false" brief="Protected variable">
+                <description>
+                    <brief>This variable holds Protected variable..</brief>
+                    <para>This variable is accessible to derived classes.</para>
+                </description>
+            </variable>
+            <variable name="publicVariable" fullname="TestClass::publicVariable" href="testclass.html#publicVariable-var" status="active" access="public" location="testclass.h" documented="true" type="int" static="false" brief="Public variable">
+                <description>
+                    <brief>This variable holds Public variable..</brief>
+                    <para>This variable is publicly accessible.</para>
+                </description>
+            </variable>
+        </class>
+    </document>
+</WebXML>

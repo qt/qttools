@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for includeprivate configuration" version="" project="PrivateMembers">
+    <namespace name="" status="active" access="public" module="privatemembers">
+        <function name="relatedFunction" href="testclass.html#relatedFunction" status="active" access="public" location="testclass.h" documented="true" related="0" meta="plain" type="void" brief="A related non-member function" signature="void relatedFunction(const TestClass &amp;obj)">
+            <parameter type="const TestClass &amp;" name="obj" default=""/>
+        </function>
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="TestModule" brief="A test class demonstrating private member documentation">
+            <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" meta="constructor" brief="Default constructor" signature="TestClass()"/>
+            <function name="privateFunction" fullname="TestClass::privateFunction" href="testclass.html#privateFunction" status="active" access="private" location="testclass.h" documented="true" meta="plain" type="void" brief="Private function for internal operations" signature="void privateFunction()"/>
+            <function name="privateHelper" fullname="TestClass::privateHelper" href="testclass.html#privateHelper" status="active" access="private" location="testclass.h" documented="true" meta="plain" type="void" brief="Private helper function" signature="void privateHelper()"/>
+            <function name="protectedFunction" fullname="TestClass::protectedFunction" href="testclass.html#protectedFunction" status="active" access="protected" location="testclass.h" documented="true" meta="plain" type="void" brief="Protected function" signature="void protectedFunction()"/>
+            <function name="publicFunction" fullname="TestClass::publicFunction" href="testclass.html#publicFunction" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" brief="Public function" signature="void publicFunction()"/>
+            <function name="relatedFunction" href="testclass.html#relatedFunction" status="active" access="public" location="testclass.h" documented="true" related="0" meta="plain" type="void" brief="A related non-member function" signature="void relatedFunction(const TestClass &amp;obj)">
+                <parameter type="const TestClass &amp;" name="obj" default=""/>
+            </function>
+            <enum name="PrivateEnum" fullname="TestClass::PrivateEnum" href="testclass.html#PrivateEnum-enum" status="active" access="private" location="testclass.h" documented="true">
+                <value name="PrivateValue1" value="0"/>
+                <value name="PrivateValue2" value="1"/>
+            </enum>
+            <enum name="ProtectedEnum" fullname="TestClass::ProtectedEnum" href="testclass.html#ProtectedEnum-enum" status="active" access="protected" location="testclass.h" documented="true">
+                <value name="ProtectedValue1" value="0"/>
+                <value name="ProtectedValue2" value="1"/>
+            </enum>
+            <enum name="PublicEnum" fullname="TestClass::PublicEnum" href="testclass.html#PublicEnum-enum" status="active" access="public" location="testclass.h" documented="true">
+                <value name="PublicValue1" value="0"/>
+                <value name="PublicValue2" value="1"/>
+            </enum>
+            <variable name="privateBoolVar" fullname="TestClass::privateBoolVar" href="testclass.html#privateBoolVar-var" status="active" access="private" location="testclass.h" documented="true" type="bool" static="false" brief="Another private variable"/>
+            <variable name="privateVariable" fullname="TestClass::privateVariable" href="testclass.html#privateVariable-var" status="active" access="private" location="testclass.h" documented="true" type="int" static="false" brief="Private variable for internal state"/>
+            <variable name="protectedVariable" fullname="TestClass::protectedVariable" href="testclass.html#protectedVariable-var" status="active" access="protected" location="testclass.h" documented="true" type="int" static="false" brief="Protected variable"/>
+            <variable name="publicVariable" fullname="TestClass::publicVariable" href="testclass.html#publicVariable-var" status="active" access="public" location="testclass.h" documented="true" type="int" static="false" brief="Public variable"/>
+        </class>
+        <module name="TestModule" href="testmodule-module.html" status="active" location="testclass.h" documented="true" seen="true" title="" brief="Jsut another test case"/>
+    </namespace>
+</INDEX>
