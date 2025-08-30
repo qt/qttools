@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- hiddenfriendsclass.h -->
+  <meta name="description" content="A test class demonstrating hidden friend functions.">
+  <title>HiddenFriendsClass Class | HiddenFriends</title>
+</head>
+<body>
+<li>HiddenFriendsClass</li>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#related-non-members">Related Non-Members</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">HiddenFriendsClass Class</h1>
+<!-- $$$HiddenFriendsClass-brief -->
+<p>A test class demonstrating hidden friend functions. <a href="#details">More...</a></p>
+<!-- @@@HiddenFriendsClass -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;HiddenFriendsClass&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="hiddenfriendsclass-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="hiddenfriendsclass.html#HiddenFriendsClass" translate="no">HiddenFriendsClass</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="hiddenfriendsclass.html#publicMethod" translate="no">publicMethod</a></b>()</td></tr>
+</table></div>
+<h2 id="related-non-members">Related Non-Members</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="hiddenfriendsclass.html#swap" translate="no">swap</a></b>(HiddenFriendsClass &amp;<i>a</i>, HiddenFriendsClass &amp;<i>b</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="hiddenfriendsclass.html#operator-eq-eq" translate="no">operator==</a></b>(const HiddenFriendsClass &amp;<i>lhs</i>, const HiddenFriendsClass &amp;<i>rhs</i>)</td></tr>
+</table></div>
+<!-- $$$HiddenFriendsClass-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>This class contains hidden friend functions declared in the private section. These should appear in documentation regardless of includeprivate setting because they have public visibility through ADL.</p>
+</div>
+<!-- @@@HiddenFriendsClass -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$HiddenFriendsClass[overload1]$$$HiddenFriendsClass -->
+<h3 class="fn" translate="no" id="HiddenFriendsClass">HiddenFriendsClass::<span class="name">HiddenFriendsClass</span>()</h3>
+<p>Public constructor.</p>
+<p>Creates a HiddenFriendsClass instance.</p>
+<!-- @@@HiddenFriendsClass -->
+<!-- $$$publicMethod[overload1]$$$publicMethod -->
+<h3 class="fn" translate="no" id="publicMethod"><span class="type">void</span> HiddenFriendsClass::<span class="name">publicMethod</span>()</h3>
+<p>Public member function.</p>
+<p>This should always appear in documentation.</p>
+<!-- @@@publicMethod -->
+</div>
+<div class="relnonmem">
+<h2>Related Non-Members</h2>
+<!-- $$$swap[overload1]$$$swapHiddenFriendsClass&HiddenFriendsClass& -->
+<h3 class="fn" translate="no" id="swap"><span class="type">void</span> <span class="name">swap</span>(<span class="type"><a href="hiddenfriendsclass.html" translate="no">HiddenFriendsClass</a></span> &amp;<i>a</i>, <span class="type"><a href="hiddenfriendsclass.html" translate="no">HiddenFriendsClass</a></span> &amp;<i>b</i>)</h3>
+<p>Hidden friend swap function.</p>
+<p>This hidden friend should also appear in documentation. Uses the standard swap idiom.</p>
+<p><i translate="no">a</i> First object to swap. <i translate="no">b</i> Second object to swap.</p>
+<!-- @@@swap -->
+<!-- $$$operator==[overload1]$$$operator==constHiddenFriendsClass&constHiddenFriendsClass& -->
+<h3 class="fn" translate="no" id="operator-eq-eq"><span class="type">bool</span> <span class="name">operator==</span>(const <span class="type"><a href="hiddenfriendsclass.html" translate="no">HiddenFriendsClass</a></span> &amp;<i>lhs</i>, const <span class="type"><a href="hiddenfriendsclass.html" translate="no">HiddenFriendsClass</a></span> &amp;<i>rhs</i>)</h3>
+<p>Hidden friend equality operator.</p>
+<p>This hidden friend should appear in documentation despite being declared in the private section, because it has public visibility through argument-dependent lookup (ADL).</p>
+<p><i translate="no">lhs</i> Left-hand side operand. <i translate="no">rhs</i> Right-hand side operand.</p>
+<p>Returns <code translate="no">true</code> if objects are equal.</p>
+<!-- @@@operator== -->
+</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+project = HiddenFriends
+description = Test case for hidden friend functions
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+locationinfo = false
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+documentationinheaders = yessir!
+
+# NOTE: includeprivate is NOT set: this is paramount for this test!
+# Hidden friends should appear despite being in private section
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+

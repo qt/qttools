@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>HiddenFriendsClass Class</db:title>
+<db:productname>HiddenFriends</db:productname>
+<db:titleabbrev>Test case for hidden friend functions</db:titleabbrev>
+<db:abstract>
+<db:para>A test class demonstrating hidden friend functions.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>HiddenFriendsClass</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class contains hidden friend functions declared in the private section. These should appear in documentation regardless of includeprivate setting because they have public visibility through ADL.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="HiddenFriendsClass">
+<db:title>HiddenFriendsClass::HiddenFriendsClass()</db:title>
+<db:para>Public constructor.</db:para>
+<db:para>Creates a <db:link xlink:href="hiddenfriendsclass.xml">HiddenFriendsClass</db:link> instance.</db:para>
+</db:section>
+<db:section xml:id="publicMethod">
+<db:title>void HiddenFriendsClass::publicMethod()</db:title>
+<db:para>Public member function.</db:para>
+<db:para>This should always appear in documentation.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="related-non-members">
+<db:title>Related Non-Members</db:title>
+<db:section xml:id="swap">
+<db:title>void swap(HiddenFriendsClass &amp;<db:emphasis>a</db:emphasis>, HiddenFriendsClass &amp;<db:emphasis>b</db:emphasis>)</db:title>
+<db:para>Hidden friend swap function.</db:para>
+<db:para>This hidden friend should also appear in documentation. Uses the standard swap idiom.</db:para>
+<db:para><db:code role="parameter">a</db:code> First object to swap. <db:code role="parameter">b</db:code> Second object to swap.</db:para>
+</db:section>
+<db:section xml:id="operator-eq-eq">
+<db:title>bool operator==(const HiddenFriendsClass &amp;<db:emphasis>lhs</db:emphasis>, const HiddenFriendsClass &amp;<db:emphasis>rhs</db:emphasis>)</db:title>
+<db:para>Hidden friend equality operator.</db:para>
+<db:para>This hidden friend should appear in documentation despite being declared in the private section, because it has public visibility through argument-dependent lookup (ADL).</db:para>
+<db:para><db:code role="parameter">lhs</db:code> Left-hand side operand. <db:code role="parameter">rhs</db:code> Right-hand side operand.</db:para>
+<db:para>Returns <db:code>true</db:code> if objects are equal.</db:para>
+</db:section>
+</db:section>
+</db:article>

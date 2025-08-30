@@ -175,5 +175,16 @@
 <db:para>A related non-member function.</db:para>
 <db:para>This function is related to <db:link xlink:href="testclass.xml">TestClass</db:link> but not a member. It takes <db:code role="parameter">obj</db:code> as argument for shits and giggles.</db:para>
 </db:section>
+<db:section xml:id="swap">
+<db:title>void swap(TestClass &amp;<db:emphasis>a</db:emphasis>, TestClass &amp;<db:emphasis>b</db:emphasis>)</db:title>
+<db:para>Hidden friend swap function.</db:para>
+<db:para>Another hidden friend that should be publicly visible. It swaps <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
+</db:section>
+<db:section xml:id="operator-eq-eq">
+<db:title>bool operator==(const TestClass &amp;<db:emphasis>lhs</db:emphasis>, const TestClass &amp;<db:emphasis>rhs</db:emphasis>)</db:title>
+<db:para>Hidden friend equality operator.</db:para>
+<db:para>This is a hidden friend function declared in the private section but actually has public visibility through ADL. It should appear in documentation regardless of <db:code>includeprivate</db:code> setting.</db:para>
+<db:para>Returns either <db:code>true</db:code> or <db:code>false</db:code>, entirely dependent on the values of <db:code role="parameter">lhs</db:code> and <db:code role="parameter">rhs</db:code>.</db:para>
+</db:section>
 </db:section>
 </db:article>

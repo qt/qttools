@@ -12,6 +12,15 @@
                     <para>Creates a <link raw="TestClass" href="testclass.html" type="class">TestClass</link> instance.</para>
                 </description>
             </function>
+            <function name="operator==" href="testclass.html#operator-eq-eq" status="active" access="public" location="testclass.h" documented="true" related="0" meta="plain" type="bool" brief="Hidden friend equality operator" signature="bool operator==(const TestClass &amp;lhs, const TestClass &amp;rhs)">
+                <parameter type="const TestClass &amp;" name="lhs" default=""/>
+                <parameter type="const TestClass &amp;" name="rhs" default=""/>
+                <description>
+                    <brief>Hidden friend equality operator.</brief>
+                    <para>This is a hidden friend function declared in the private section but actually has public visibility through ADL. It should appear in documentation regardless of <teletype type="highlighted">includeprivate</teletype> setting.</para>
+                    <para>Returns either <teletype type="highlighted">true</teletype> or <teletype type="highlighted">false</teletype>, entirely dependent on the values of <argument>lhs</argument> and <argument>rhs</argument>.</para>
+                </description>
+            </function>
             <function name="privateFunction" fullname="TestClass::privateFunction" href="testclass.html#privateFunction" status="active" access="private" location="testclass.h" documented="true" meta="plain" type="void" brief="Private function for internal operations" signature="void privateFunction()">
                 <description>
                     <brief>Private function for internal operations.</brief>
@@ -36,11 +45,19 @@
                     <para>This function is publicly accessible.</para>
                 </description>
             </function>
-            <function name="relatedFunction" href="testclass.html#relatedFunction" status="active" access="public" location="testclass.h" documented="true" related="0" meta="plain" type="void" brief="A related non-member function" signature="void relatedFunction(const TestClass &amp;obj)">
+            <function name="relatedFunction" href="testclass.html#relatedFunction" status="active" access="public" location="testclass.h" documented="true" related="1" meta="plain" type="void" brief="A related non-member function" signature="void relatedFunction(const TestClass &amp;obj)">
                 <parameter type="const TestClass &amp;" name="obj" default=""/>
                 <description>
                     <brief>A related non-member function.</brief>
                     <para>This function is related to <link raw="TestClass" href="testclass.html" type="class">TestClass</link> but not a member. It takes <argument>obj</argument> as argument for shits and giggles.</para>
+                </description>
+            </function>
+            <function name="swap" href="testclass.html#swap" status="active" access="public" location="testclass.h" documented="true" related="2" meta="plain" type="void" brief="Hidden friend swap function" signature="void swap(TestClass &amp;a, TestClass &amp;b)">
+                <parameter type="TestClass &amp;" name="a" default=""/>
+                <parameter type="TestClass &amp;" name="b" default=""/>
+                <description>
+                    <brief>Hidden friend swap function.</brief>
+                    <para>Another hidden friend that should be publicly visible. It swaps <argument>a</argument> and <argument>b</argument>.</para>
                 </description>
             </function>
             <enum name="PrivateEnum" fullname="TestClass::PrivateEnum" href="testclass.html#PrivateEnum-enum" status="active" access="private" location="testclass.h" documented="true">

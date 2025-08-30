@@ -121,6 +121,29 @@ private:
         This tests multiple private variable documentation.
     */
     bool privateBoolVar = false;
+
+    /*!
+        \brief Hidden friend equality operator.
+
+        This is a hidden friend function declared in the private section
+        but actually has public visibility through ADL. It should appear
+        in documentation regardless of \c includeprivate setting.
+
+        Returns either \c true or \c false, entirely dependent on the values of
+        \a lhs and \a rhs.
+    */
+    friend bool operator==(const TestClass &lhs, const TestClass &rhs);
+
+    /*!
+        \brief Hidden friend swap function.
+
+        Another hidden friend that should be publicly visible.
+        It swaps \a a and \a b.
+    */
+    friend void swap(TestClass &a, TestClass &b)
+    {
+        // Inline implementation
+    }
 };
 
 /*!

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for hidden friend functions" version="" project="HiddenFriends">
+    <namespace name="" status="active" access="public" module="hiddenfriends">
+        <class name="HiddenFriendsClass" href="hiddenfriendsclass.html" status="active" access="public" location="hiddenfriendsclass.h" documented="true" module="CompletelyHidden" brief="A test class demonstrating hidden friend functions">
+            <function name="HiddenFriendsClass" fullname="HiddenFriendsClass::HiddenFriendsClass" href="hiddenfriendsclass.html#HiddenFriendsClass" status="active" access="public" location="hiddenfriendsclass.h" documented="true" meta="constructor" brief="Public constructor" signature="HiddenFriendsClass()"/>
+            <function name="operator==" href="hiddenfriendsclass.html#operator-eq-eq" status="active" access="public" location="hiddenfriendsclass.h" documented="true" related="0" meta="plain" type="bool" brief="Hidden friend equality operator" signature="bool operator==(const HiddenFriendsClass &amp;lhs, const HiddenFriendsClass &amp;rhs)">
+                <parameter type="const HiddenFriendsClass &amp;" name="lhs" default=""/>
+                <parameter type="const HiddenFriendsClass &amp;" name="rhs" default=""/>
+            </function>
+            <function name="privateMethod" fullname="HiddenFriendsClass::privateMethod" href="hiddenfriendsclass.html#privateMethod" status="active" access="private" location="hiddenfriendsclass.h" documented="true" meta="plain" type="void" brief="Private member function" signature="void privateMethod()"/>
+            <function name="publicMethod" fullname="HiddenFriendsClass::publicMethod" href="hiddenfriendsclass.html#publicMethod" status="active" access="public" location="hiddenfriendsclass.h" documented="true" meta="plain" type="void" brief="Public member function" signature="void publicMethod()"/>
+            <function name="swap" href="hiddenfriendsclass.html#swap" status="active" access="public" location="hiddenfriendsclass.h" documented="true" related="1" meta="plain" type="void" brief="Hidden friend swap function" signature="void swap(HiddenFriendsClass &amp;a, HiddenFriendsClass &amp;b)">
+                <parameter type="HiddenFriendsClass &amp;" name="a" default=""/>
+                <parameter type="HiddenFriendsClass &amp;" name="b" default=""/>
+            </function>
+        </class>
+        <module name="CompletelyHidden" href="completelyhidden-module.html" status="active" location="hiddenfriendsclass.h" documented="true" seen="true" title="" brief="Nothing to see here"/>
+    </namespace>
+</INDEX>

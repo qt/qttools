@@ -78,6 +78,8 @@
 <h2 id="related-non-members">Related Non-Members</h2>
 <div class="table"><table class="alignedsummary" translate="no">
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#relatedFunction" translate="no">relatedFunction</a></b>(const TestClass &amp;<i>obj</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#swap" translate="no">swap</a></b>(TestClass &amp;<i>a</i>, TestClass &amp;<i>b</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#operator-eq-eq" translate="no">operator==</a></b>(const TestClass &amp;<i>lhs</i>, const TestClass &amp;<i>rhs</i>)</td></tr>
 </table></div>
 <!-- $$$TestClass-description -->
 <div class="descr">
@@ -171,6 +173,17 @@
 <p>A related non-member function.</p>
 <p>This function is related to <a href="testclass.html" translate="no">TestClass</a> but not a member. It takes <i translate="no">obj</i> as argument for shits and giggles.</p>
 <!-- @@@relatedFunction -->
+<!-- $$$swap[overload1]$$$swapTestClass&TestClass& -->
+<h3 class="fn" translate="no" id="swap"><span class="type">void</span> <span class="name">swap</span>(<span class="type"><a href="testclass.html" translate="no">TestClass</a></span> &amp;<i>a</i>, <span class="type"><a href="testclass.html" translate="no">TestClass</a></span> &amp;<i>b</i>)</h3>
+<p>Hidden friend swap function.</p>
+<p>Another hidden friend that should be publicly visible. It swaps <i translate="no">a</i> and <i translate="no">b</i>.</p>
+<!-- @@@swap -->
+<!-- $$$operator==[overload1]$$$operator==constTestClass&constTestClass& -->
+<h3 class="fn" translate="no" id="operator-eq-eq"><span class="type">bool</span> <span class="name">operator==</span>(const <span class="type"><a href="testclass.html" translate="no">TestClass</a></span> &amp;<i>lhs</i>, const <span class="type"><a href="testclass.html" translate="no">TestClass</a></span> &amp;<i>rhs</i>)</h3>
+<p>Hidden friend equality operator.</p>
+<p>This is a hidden friend function declared in the private section but actually has public visibility through ADL. It should appear in documentation regardless of <code translate="no">includeprivate</code> setting.</p>
+<p>Returns either <code translate="no">true</code> or <code translate="no">false</code>, entirely dependent on the values of <i translate="no">lhs</i> and <i translate="no">rhs</i>.</p>
+<!-- @@@operator== -->
 </div>
 </body>
 </html>
