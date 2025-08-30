@@ -134,10 +134,11 @@ public:
         SinceQmlSignals = 14,
         PrivateSlots = 14,
         SinceQmlSignalHandlers = 15,
-        StaticPrivateMembers = 15,
+        PrivateVariables = 15,
+        StaticPrivateMembers = 16,
         SinceQmlMethods = 16,
-        RelatedNonmembers = 16,
-        Macros = 17
+        RelatedNonmembers = 17,
+        Macros = 18
     };
 
     explicit Sections(Aggregate *aggregate);

@@ -79,6 +79,7 @@ QList<Section> Sections::s_stdCppClassSummarySections {
     { "Private Types",            "private type",            "private types",            "", Section::Summary },
     { "Private Functions",        "private function",        "private functions",        "", Section::Summary },
     { "Private Slots",            "private slot",            "private slots",            "", Section::Summary },
+    { "Private Variables",        "private variable",        "private variables",        "", Section::Summary },
     { "Static Private Members",   "static private member",   "static private members",   "", Section::Summary },
     { "Related Non-Members",      "related non-member",      "related non-members",      "", Section::Summary },
     { "Macros",                   "macro",                   "macros",                   "", Section::Summary },
@@ -724,8 +725,10 @@ void Sections::distributeNodeInSummaryVector(SectionVector &sv, Node *n)
         } else {
             if (n->isPublic())
                 sv[PublicVariables].insert(n);
-            else if (!n->isPrivate())
+            else if (n->isProtected())
                 sv[ProtectedVariables].insert(n);
+            else if (n->isPrivate())
+                sv[PrivateVariables].insert(n);
         }
         return;
     }
