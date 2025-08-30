@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>AbstractClass Class</db:title>
+<db:productname>PrivateVirtuals</db:productname>
+<db:titleabbrev>Test case for private pure virtual methods</db:titleabbrev>
+<db:abstract>
+<db:para>A test class with private pure virtual methods.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>AbstractClass</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class demonstrates the corner case of private pure virtual methods. These methods are private but must still be implemented by derived classes.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="AbstractClass">
+<db:title>AbstractClass::AbstractClass()</db:title>
+<db:para>Public constructor.</db:para>
+<db:para>Creates an <db:link xlink:href="abstractclass.xml">AbstractClass</db:link> instance.</db:para>
+</db:section>
+<db:section xml:id="privatePureVirtual">
+<db:title>[pure virtual private] void AbstractClass::privatePureVirtual()</db:title>
+<db:para>Private pure virtual method for internal implementation.</db:para>
+<db:para>This method is private but pure virtual, meaning derived classes must implement it even though it's not publicly accessible. This creates a special case for documentation.</db:para>
+</db:section>
+<db:section xml:id="privateVirtualCalculation">
+<db:title>[pure virtual private] int AbstractClass::privateVirtualCalculation()</db:title>
+<db:para>Another private pure virtual method.</db:para>
+<db:para>Testing multiple private pure virtual methods.</db:para>
+</db:section>
+<db:section xml:id="protectedPureVirtual">
+<db:title>[pure virtual protected] void AbstractClass::protectedPureVirtual()</db:title>
+<db:para>Protected pure virtual method.</db:para>
+<db:para>This pure virtual method is accessible to derived classes.</db:para>
+</db:section>
+<db:section xml:id="publicPureVirtual">
+<db:title>[pure virtual] void AbstractClass::publicPureVirtual()</db:title>
+<db:para>Public pure virtual method.</db:para>
+<db:para>This pure virtual method is publicly accessible.</db:para>
+</db:section>
+</db:section>
+</db:article>

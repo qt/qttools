@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="UndocumentedVirtualsClass" href="undocumentedvirtualsclass.html" status="active" access="public" location="undocumentedclass.h" documented="true" module="WassilyKandinsky" brief="A test class with undocumented and internal pure virtual methods">
+            <description>
+                <brief>A test class with undocumented and internal pure virtual methods.</brief>
+                <para>This class tests edge cases of undocumented and internal private pure virtuals.</para>
+            </description>
+            <function name="UndocumentedVirtualsClass" fullname="UndocumentedVirtualsClass::UndocumentedVirtualsClass" href="undocumentedvirtualsclass.html#UndocumentedVirtualsClass" status="active" access="public" location="undocumentedclass.h" documented="true" meta="constructor" brief="Public constructor" signature="UndocumentedVirtualsClass()">
+                <description>
+                    <brief>Public constructor.</brief>
+                </description>
+            </function>
+            <function name="documentedPrivatePureVirtual" fullname="UndocumentedVirtualsClass::documentedPrivatePureVirtual" href="undocumentedvirtualsclass.html#documentedPrivatePureVirtual" status="active" access="private" location="undocumentedclass.h" documented="true" meta="plain" virtual="pure" type="void" brief="Documented private pure virtual" signature="void documentedPrivatePureVirtual() = 0">
+                <description>
+                    <brief>Documented private pure virtual.</brief>
+                    <para>This one should appear in documentation.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

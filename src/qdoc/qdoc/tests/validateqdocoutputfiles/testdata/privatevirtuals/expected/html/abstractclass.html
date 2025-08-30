@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- abstractclass.h -->
+  <meta name="description" content="A test class with private pure virtual methods.">
+  <title>AbstractClass Class | PrivateVirtuals</title>
+</head>
+<body>
+<li>AbstractClass</li>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#protected-functions">Protected Functions</a></li>
+<li class="level1"><a href="#private-functions">Private Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">AbstractClass Class</h1>
+<!-- $$$AbstractClass-brief -->
+<p>A test class with private pure virtual methods. <a href="#details">More...</a></p>
+<!-- @@@AbstractClass -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;AbstractClass&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="abstractclass-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="abstractclass.html#AbstractClass" translate="no">AbstractClass</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="abstractclass.html#publicPureVirtual" translate="no">publicPureVirtual</a></b>() = 0</td></tr>
+</table></div>
+<h2 id="protected-functions">Protected Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="abstractclass.html#protectedPureVirtual" translate="no">protectedPureVirtual</a></b>() = 0</td></tr>
+</table></div>
+<h2 id="private-functions">Private Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="abstractclass.html#privatePureVirtual" translate="no">privatePureVirtual</a></b>() = 0</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual int </td><td class="memItemRight bottomAlign"><b><a href="abstractclass.html#privateVirtualCalculation" translate="no">privateVirtualCalculation</a></b>() = 0</td></tr>
+</table></div>
+<!-- $$$AbstractClass-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>This class demonstrates the corner case of private pure virtual methods. These methods are private but must still be implemented by derived classes.</p>
+</div>
+<!-- @@@AbstractClass -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$AbstractClass[overload1]$$$AbstractClass -->
+<h3 class="fn" translate="no" id="AbstractClass">AbstractClass::<span class="name">AbstractClass</span>()</h3>
+<p>Public constructor.</p>
+<p>Creates an AbstractClass instance.</p>
+<!-- @@@AbstractClass -->
+<!-- $$$privatePureVirtual[overload1]$$$privatePureVirtual -->
+<h3 class="fn" translate="no" id="privatePureVirtual"><code class="details extra" translate="no">[pure virtual private]</code> <span class="type">void</span> AbstractClass::<span class="name">privatePureVirtual</span>()</h3>
+<p>Private pure virtual method for internal implementation.</p>
+<p>This method is private but pure virtual, meaning derived classes must implement it even though it's not publicly accessible. This creates a special case for documentation.</p>
+<!-- @@@privatePureVirtual -->
+<!-- $$$privateVirtualCalculation[overload1]$$$privateVirtualCalculation -->
+<h3 class="fn" translate="no" id="privateVirtualCalculation"><code class="details extra" translate="no">[pure virtual private]</code> <span class="type">int</span> AbstractClass::<span class="name">privateVirtualCalculation</span>()</h3>
+<p>Another private pure virtual method.</p>
+<p>Testing multiple private pure virtual methods.</p>
+<!-- @@@privateVirtualCalculation -->
+<!-- $$$protectedPureVirtual[overload1]$$$protectedPureVirtual -->
+<h3 class="fn" translate="no" id="protectedPureVirtual"><code class="details extra" translate="no">[pure virtual protected]</code> <span class="type">void</span> AbstractClass::<span class="name">protectedPureVirtual</span>()</h3>
+<p>Protected pure virtual method.</p>
+<p>This pure virtual method is accessible to derived classes.</p>
+<!-- @@@protectedPureVirtual -->
+<!-- $$$publicPureVirtual[overload1]$$$publicPureVirtual -->
+<h3 class="fn" translate="no" id="publicPureVirtual"><code class="details extra" translate="no">[pure virtual]</code> <span class="type">void</span> AbstractClass::<span class="name">publicPureVirtual</span>()</h3>
+<p>Public pure virtual method.</p>
+<p>This pure virtual method is publicly accessible.</p>
+<!-- @@@publicPureVirtual -->
+</div>
+</body>
+</html>

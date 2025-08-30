@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="AbstractClass" href="abstractclass.html" status="active" access="public" location="abstractclass.h" documented="true" module="WassilyKandinsky" brief="A test class with private pure virtual methods">
+            <description>
+                <brief>A test class with private pure virtual methods.</brief>
+                <para>This class demonstrates the corner case of private pure virtual methods. These methods are private but must still be implemented by derived classes.</para>
+            </description>
+            <function name="AbstractClass" fullname="AbstractClass::AbstractClass" href="abstractclass.html#AbstractClass" status="active" access="public" location="abstractclass.h" documented="true" meta="constructor" brief="Public constructor" signature="AbstractClass()">
+                <description>
+                    <brief>Public constructor.</brief>
+                    <para>Creates an <link raw="AbstractClass" href="abstractclass.html" type="class">AbstractClass</link> instance.</para>
+                </description>
+            </function>
+            <function name="privatePureVirtual" fullname="AbstractClass::privatePureVirtual" href="abstractclass.html#privatePureVirtual" status="active" access="private" location="abstractclass.h" documented="true" meta="plain" virtual="pure" type="void" brief="Private pure virtual method for internal implementation" signature="void privatePureVirtual() = 0">
+                <description>
+                    <brief>Private pure virtual method for internal implementation.</brief>
+                    <para>This method is private but pure virtual, meaning derived classes must implement it even though it's not publicly accessible. This creates a special case for documentation.</para>
+                </description>
+            </function>
+            <function name="privateVirtualCalculation" fullname="AbstractClass::privateVirtualCalculation" href="abstractclass.html#privateVirtualCalculation" status="active" access="private" location="abstractclass.h" documented="true" meta="plain" virtual="pure" type="int" brief="Another private pure virtual method" signature="int privateVirtualCalculation() = 0">
+                <description>
+                    <brief>Another private pure virtual method.</brief>
+                    <para>Testing multiple private pure virtual methods.</para>
+                </description>
+            </function>
+            <function name="privateVirtualMethod" fullname="AbstractClass::privateVirtualMethod" href="abstractclass.html#privateVirtualMethod" status="active" access="private" location="abstractclass.h" documented="true" meta="plain" virtual="virtual" type="void" brief="Private virtual method (not pure)" signature="void privateVirtualMethod()">
+                <description>
+                    <brief>Private virtual method (not pure).</brief>
+                    <para>This should also respect normal includeprivate settings.</para>
+                </description>
+            </function>
+            <function name="protectedPureVirtual" fullname="AbstractClass::protectedPureVirtual" href="abstractclass.html#protectedPureVirtual" status="active" access="protected" location="abstractclass.h" documented="true" meta="plain" virtual="pure" type="void" brief="Protected pure virtual method" signature="void protectedPureVirtual() = 0">
+                <description>
+                    <brief>Protected pure virtual method.</brief>
+                    <para>This pure virtual method is accessible to derived classes.</para>
+                </description>
+            </function>
+            <function name="publicPureVirtual" fullname="AbstractClass::publicPureVirtual" href="abstractclass.html#publicPureVirtual" status="active" access="public" location="abstractclass.h" documented="true" meta="plain" virtual="pure" type="void" brief="Public pure virtual method" signature="void publicPureVirtual() = 0">
+                <description>
+                    <brief>Public pure virtual method.</brief>
+                    <para>This pure virtual method is publicly accessible.</para>
+                </description>
+            </function>
+            <function name="regularPrivateMethod" fullname="AbstractClass::regularPrivateMethod" href="abstractclass.html#regularPrivateMethod" status="active" access="private" location="abstractclass.h" documented="true" meta="plain" type="void" brief="Regular private method (not pure virtual)" signature="void regularPrivateMethod()">
+                <description>
+                    <brief>Regular private method (not pure virtual).</brief>
+                    <para>This should respect normal includeprivate settings.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

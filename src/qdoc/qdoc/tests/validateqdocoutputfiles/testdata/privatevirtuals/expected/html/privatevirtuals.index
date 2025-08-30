@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for private pure virtual methods" version="" project="PrivateVirtuals">
+    <namespace name="" status="active" access="public" module="privatevirtuals">
+        <class name="AbstractClass" href="abstractclass.html" status="active" access="public" location="abstractclass.h" documented="true" module="WassilyKandinsky" brief="A test class with private pure virtual methods">
+            <function name="AbstractClass" fullname="AbstractClass::AbstractClass" href="abstractclass.html#AbstractClass" status="active" access="public" location="abstractclass.h" documented="true" meta="constructor" brief="Public constructor" signature="AbstractClass()"/>
+            <function name="privatePureVirtual" fullname="AbstractClass::privatePureVirtual" href="abstractclass.html#privatePureVirtual" status="active" access="private" location="abstractclass.h" documented="true" meta="plain" virtual="pure" type="void" brief="Private pure virtual method for internal implementation" signature="void privatePureVirtual() = 0"/>
+            <function name="privateVirtualCalculation" fullname="AbstractClass::privateVirtualCalculation" href="abstractclass.html#privateVirtualCalculation" status="active" access="private" location="abstractclass.h" documented="true" meta="plain" virtual="pure" type="int" brief="Another private pure virtual method" signature="int privateVirtualCalculation() = 0"/>
+            <function name="privateVirtualMethod" fullname="AbstractClass::privateVirtualMethod" href="abstractclass.html#privateVirtualMethod" status="active" access="private" location="abstractclass.h" documented="true" meta="plain" virtual="virtual" type="void" brief="Private virtual method (not pure)" signature="void privateVirtualMethod()"/>
+            <function name="protectedPureVirtual" fullname="AbstractClass::protectedPureVirtual" href="abstractclass.html#protectedPureVirtual" status="active" access="protected" location="abstractclass.h" documented="true" meta="plain" virtual="pure" type="void" brief="Protected pure virtual method" signature="void protectedPureVirtual() = 0"/>
+            <function name="publicPureVirtual" fullname="AbstractClass::publicPureVirtual" href="abstractclass.html#publicPureVirtual" status="active" access="public" location="abstractclass.h" documented="true" meta="plain" virtual="pure" type="void" brief="Public pure virtual method" signature="void publicPureVirtual() = 0"/>
+            <function name="regularPrivateMethod" fullname="AbstractClass::regularPrivateMethod" href="abstractclass.html#regularPrivateMethod" status="active" access="private" location="abstractclass.h" documented="true" meta="plain" type="void" brief="Regular private method (not pure virtual)" signature="void regularPrivateMethod()"/>
+        </class>
+        <class name="UndocumentedVirtualsClass" href="undocumentedvirtualsclass.html" status="active" access="public" location="undocumentedclass.h" documented="true" module="WassilyKandinsky" brief="A test class with undocumented and internal pure virtual methods">
+            <function name="UndocumentedVirtualsClass" fullname="UndocumentedVirtualsClass::UndocumentedVirtualsClass" href="undocumentedvirtualsclass.html#UndocumentedVirtualsClass" status="active" access="public" location="undocumentedclass.h" documented="true" meta="constructor" brief="Public constructor" signature="UndocumentedVirtualsClass()"/>
+            <function name="documentedPrivatePureVirtual" fullname="UndocumentedVirtualsClass::documentedPrivatePureVirtual" href="undocumentedvirtualsclass.html#documentedPrivatePureVirtual" status="active" access="private" location="undocumentedclass.h" documented="true" meta="plain" virtual="pure" type="void" brief="Documented private pure virtual" signature="void documentedPrivatePureVirtual() = 0"/>
+        </class>
+        <module name="WassilyKandinsky" href="wassilykandinsky-module.html" status="active" location="abstractclass.h" documented="true" seen="true" title="" brief="Father of abstract art"/>
+    </namespace>
+</INDEX>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title></db:title>
+<db:productname>PrivateVirtuals</db:productname>
+<db:titleabbrev>Test case for private pure virtual methods</db:titleabbrev>
+<db:abstract>
+<db:para>The father of abstract art.</db:para>
+</db:abstract>
+</db:info>
+<db:para>The father of abstract art.</db:para>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:variablelist role="classes">
+<db:varlistentry>
+<db:term><db:link xlink:href="abstractclass.xml" xlink:role="class">AbstractClass</db:link></db:term>
+<db:listitem>
+<db:para>A test class with private pure virtual methods.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="undocumentedvirtualsclass.xml" xlink:role="class">UndocumentedVirtualsClass</db:link></db:term>
+<db:listitem>
+<db:para>A test class with undocumented and internal pure virtual methods.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+</db:article>

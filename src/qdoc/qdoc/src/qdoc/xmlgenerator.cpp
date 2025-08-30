@@ -328,6 +328,11 @@ static bool shouldIncludePrivateNode(const Node *node)
         return false;
 
     if (node->isFunction()) {
+        // Special case: private pure virtual methods must always be documented
+        // because they require implementation by derived classes
+        const auto *func = static_cast<const FunctionNode *>(node);
+        if (func->isPureVirtual())
+            return true;
         return Config::instance().includePrivateFunction();
     } else if (node->isClassNode() || node->isEnumType() || node->isTypedef()) {
         return Config::instance().includePrivateType();
