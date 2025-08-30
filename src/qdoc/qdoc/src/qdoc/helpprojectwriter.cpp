@@ -422,7 +422,7 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
                 childSet << child;
                 continue;
             }
-            if (child->isIndexNode() || child->isPrivate())
+            if (child->isIndexNode() || child->isPrivate() || child->isInternal())
                 continue;
             if (child->isTextPageNode()) {
                 if (!childSet.contains(child))

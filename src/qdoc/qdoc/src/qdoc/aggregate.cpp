@@ -257,8 +257,7 @@ static void warnAboutDocumentedChildInUndocumentedParent(const Node *aggregate, 
 
 /*!
   Mark all child nodes that have no documentation as having
-  private access and internal status. qdoc will then ignore
-  them for documentation purposes.
+  internal status. QDoc will then ignore them for documentation purposes.
  */
 void Aggregate::markUndocumentedChildrenInternal()
 {
@@ -272,7 +271,6 @@ void Aggregate::markUndocumentedChildrenInternal()
                     if (static_cast<TypedefNode *>(child)->hasAssociatedEnum())
                         continue;
                 }
-                child->setAccess(Access::Private);
                 child->setStatus(Node::Internal);
             }
         } else {

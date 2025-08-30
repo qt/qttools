@@ -598,7 +598,7 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
             if (genus != Genus::DontCare && !(hasCommonGenusType(genus, child->genus())))
                 continue;
             const Node *t = matchPathAndTarget(path, idx + 1, target, child, flags, genus, ref);
-            if (t && !t->isPrivate())
+            if (t && !t->isPrivate() && !t->isInternal())
                 return t;
         }
     }
@@ -614,7 +614,7 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
         const ClassList bases = allBaseClasses(static_cast<const ClassNode *>(node));
         for (const auto *base : bases) {
             const Node *t = matchPathAndTarget(path, idx, target, base, flags, genus, ref);
-            if (t && !t->isPrivate())
+            if (t && !t->isPrivate() && !t->isInternal())
                 return t;
             if (target.isEmpty() && (flags & SearchEnumValues)) {
                 if ((t = findEnumNode(base->findChildNode(path.at(idx), genus, flags), base, path, idx)))

@@ -207,11 +207,8 @@ public:
     virtual bool setTitle(const QString &) { return false; }
     virtual bool setSubtitle(const QString &) { return false; }
 
-    void markInternal()
-    {
-        setAccess(Access::Private);
-        setStatus(Internal);
-    }
+    void markInternal() { setStatus(Internal); }
+
     virtual void markDefault() {}
     virtual void markReadOnly(bool) {}
 
