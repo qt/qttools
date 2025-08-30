@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="InternalOnlyClass" href="internalonlyclass.html" status="active" access="public" location="internalclass.h" documented="true" module="ShowInternalModule" brief="A completely internal class">
+            <description>
+                <brief>A completely internal class.</brief>
+                <para>This entire class is marked internal and should only appear when showinternal is enabled.</para>
+            </description>
+            <function name="InternalOnlyClass" fullname="InternalOnlyClass::InternalOnlyClass" href="internalonlyclass.html#InternalOnlyClass" status="active" access="public" location="internalclass.h" documented="true" meta="constructor" brief="Constructor of internal class" signature="InternalOnlyClass()">
+                <description>
+                    <brief>Constructor of internal class.</brief>
+                    <para>Even though this is a regular comment, the class is internal.</para>
+                </description>
+            </function>
+            <function name="internalFunction" fullname="InternalOnlyClass::internalFunction" href="internalonlyclass.html#internalFunction" status="active" access="public" location="internalclass.h" documented="true" meta="plain" type="void" brief="Internal function in internal class" signature="void internalFunction()">
+                <description>
+                    <brief>Internal function in internal class.</brief>
+                    <para>This is internal within an already internal class.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

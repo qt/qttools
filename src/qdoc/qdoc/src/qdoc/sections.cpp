@@ -225,7 +225,7 @@ void Section::insert(Node *node)
     const InclusionPolicy policy = Config::instance().createInclusionPolicy();
     const NodeContext context = node->createContext();
 
-    if (node->isInternal() || !InclusionFilter::isIncluded(policy, context)) {
+    if (!InclusionFilter::isIncluded(policy, context)) {
         irrelevant = true;
     } else if (node->isFunction()) {
         auto *func = static_cast<FunctionNode *>(node);
@@ -930,8 +930,10 @@ void Sections::buildStdQmlTypeRefPageSections()
     while (qtn) {
         if (!qtn->isAbstract() || !classNodes)
             classNodes = &allMembers.classNodesList().emplace_back(static_cast<const QmlTypeNode*>(qtn), NodeVector{});
+        const InclusionPolicy policy = Config::instance().createInclusionPolicy();
         for (const auto n : qtn->childNodes()) {
-            if (n->isInternal())
+            const NodeContext context = n->createContext();
+            if (!InclusionFilter::isIncluded(policy, context))
                 continue;
 
             // Skip overridden property/function documentation from abstract base type

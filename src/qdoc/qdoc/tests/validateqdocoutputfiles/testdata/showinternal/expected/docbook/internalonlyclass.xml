@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>InternalOnlyClass Class</db:title>
+<db:productname>ShowInternal</db:productname>
+<db:titleabbrev>Test case for showinternal configuration</db:titleabbrev>
+<db:abstract>
+<db:para>A completely internal class.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>InternalOnlyClass</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This entire class is marked internal and should only appear when showinternal is enabled.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="InternalOnlyClass">
+<db:title>InternalOnlyClass::InternalOnlyClass()</db:title>
+<db:para>Constructor of internal class.</db:para>
+<db:para>Even though this is a regular comment, the class is internal.</db:para>
+</db:section>
+<db:section xml:id="internalFunction">
+<db:title>void InternalOnlyClass::internalFunction()</db:title>
+<db:para>Internal function in internal class.</db:para>
+<db:para>This is internal within an already internal class.</db:para>
+</db:section>
+</db:section>
+</db:article>

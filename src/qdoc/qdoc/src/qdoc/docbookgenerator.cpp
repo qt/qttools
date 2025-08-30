@@ -16,7 +16,9 @@
 #include "functionnode.h"
 #include "generator.h"
 #include "genustypes.h"
+#include "inclusionfilter.h"
 #include "node.h"
+#include "nodecontext.h"
 #include "propertynode.h"
 #include "quoter.h"
 #include "qdocdatabase.h"
@@ -1380,8 +1382,10 @@ void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeLis
             std::sort(members.rbegin(), members.rend(), Node::nodeSortKeyOrNameLessThan);
         else
             std::sort(members.begin(), members.end(), Node::nodeSortKeyOrNameLessThan);
+        const InclusionPolicy policy = Config::instance().createInclusionPolicy();
         for (const auto &node : std::as_const(members)) {
-            if (node->isInternal() || node->isDeprecated())
+            const NodeContext context = node->createContext();
+            if (!InclusionFilter::isIncluded(policy, context) || node->isDeprecated())
                 continue;
 
             if (noItemsHaveTitle) {

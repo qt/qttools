@@ -1,0 +1,32 @@
+project = NoShowInternal
+description = Test case for showinternal disabled (default behavior)
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+locationinfo = false
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+# Documentation is in headers
+documentationinheaders = indeed
+
+# Disable internal documentation (default behavior)
+showinternal = false
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+

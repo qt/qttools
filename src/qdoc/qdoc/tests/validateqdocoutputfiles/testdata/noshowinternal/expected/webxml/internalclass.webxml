@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="InternalClass" href="internalclass.html" status="active" access="public" location="internalclass.h" documented="true" module="NoShowInternalModule" brief="A test class demonstrating showinternal functionality">
+            <description>
+                <brief>A test class demonstrating showinternal functionality.</brief>
+                <para>This class contains a mix of regular and internal documentation. Regular members should always appear, while internal members should only appear when showinternal is enabled.</para>
+            </description>
+            <function name="InternalClass" fullname="InternalClass::InternalClass" href="internalclass.html#InternalClass" status="active" access="public" location="internalclass.h" documented="true" meta="constructor" brief="Regular public constructor" signature="InternalClass()">
+                <description>
+                    <brief>Regular public constructor.</brief>
+                    <para>This should always appear in documentation.</para>
+                </description>
+            </function>
+            <function name="protectedFunction" fullname="InternalClass::protectedFunction" href="internalclass.html#protectedFunction" status="active" access="protected" location="internalclass.h" documented="true" meta="plain" type="void" brief="Regular protected function" signature="void protectedFunction()">
+                <description>
+                    <brief>Regular protected function.</brief>
+                    <para>This should always appear in documentation.</para>
+                </description>
+            </function>
+            <function name="publicFunction" fullname="InternalClass::publicFunction" href="internalclass.html#publicFunction" status="active" access="public" location="internalclass.h" documented="true" meta="plain" type="void" brief="Regular public function" signature="void publicFunction()">
+                <description>
+                    <brief>Regular public function.</brief>
+                    <para>This should always appear in documentation.</para>
+                </description>
+            </function>
+            <function name="regularPrivateFunction" fullname="InternalClass::regularPrivateFunction" href="internalclass.html#regularPrivateFunction" status="active" access="private" location="internalclass.h" documented="true" meta="plain" type="void" brief="Regular private function" signature="void regularPrivateFunction()">
+                <description>
+                    <brief>Regular private function.</brief>
+                    <para>This should appear only when includeprivate is enabled, regardless of showinternal setting.</para>
+                </description>
+            </function>
+            <enum name="PublicEnum" fullname="InternalClass::PublicEnum" href="internalclass.html#PublicEnum-enum" status="active" access="public" location="internalclass.h" documented="true">
+                <value name="RegularValue" value="0"/>
+                <value name="AnotherValue" value="1"/>
+                <description>
+                    <brief>Regular public enum.</brief>
+                    <para>This should always appear in documentation.</para>
+                    <list type="enum">
+                        <definition>
+                            <term>InternalClass::RegularValue</term>RegularValue</definition>
+                        <item>
+                            <para>Regular enum value</para>
+                        </item>
+                        <definition>
+                            <term>InternalClass::AnotherValue</term>AnotherValue</definition>
+                        <item>
+                            <para>Another regular value</para>
+                        </item>
+                    </list>
+                </description>
+            </enum>
+            <variable name="regularPrivateVar" fullname="InternalClass::regularPrivateVar" href="internalclass.html#regularPrivateVar-var" status="active" access="private" location="internalclass.h" documented="true" type="int" static="false" brief="Regular private variable">
+                <description>
+                    <brief>This variable holds Regular private variable..</brief>
+                    <para>Should follow normal includeprivate rules.</para>
+                </description>
+            </variable>
+        </class>
+    </document>
+</WebXML>

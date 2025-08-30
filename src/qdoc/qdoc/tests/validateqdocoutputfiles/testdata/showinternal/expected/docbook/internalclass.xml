@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>InternalClass Class</db:title>
+<db:productname>ShowInternal</db:productname>
+<db:titleabbrev>Test case for showinternal configuration</db:titleabbrev>
+<db:abstract>
+<db:para>A test class demonstrating showinternal functionality.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>InternalClass</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class contains a mix of regular and internal documentation. Regular members should always appear, while internal members should only appear when showinternal is enabled.</db:para>
+</db:section>
+<db:section xml:id="member-type-documentation">
+<db:title>Member Type Documentation</db:title>
+<db:section xml:id="PublicEnum-enum">
+<db:title>enum InternalClass::PublicEnum</db:title>
+<db:para>Regular public enum.</db:para>
+<db:para>This should always appear in documentation.</db:para>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Value</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="internalclass.xml">InternalClass</db:link></db:emphasis>::RegularValue</db:code></db:para>
+</db:td>
+<db:td><db:code>0</db:code></db:td>
+<db:td>
+<db:para>Regular enum value</db:para>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="internalclass.xml">InternalClass</db:link></db:emphasis>::AnotherValue</db:code></db:para>
+</db:td>
+<db:td><db:code>1</db:code></db:td>
+<db:td>
+<db:para>Another regular value</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="InternalClass">
+<db:title>InternalClass::InternalClass()</db:title>
+<db:para>Regular public constructor.</db:para>
+<db:para>This should always appear in documentation.</db:para>
+</db:section>
+<db:section xml:id="internalProtectedFunction">
+<db:title>[protected] void InternalClass::internalProtectedFunction()</db:title>
+<db:para>Internal protected function.</db:para>
+<db:para>This should only appear when showinternal is enabled.</db:para>
+</db:section>
+<db:section xml:id="internalPublicFunction">
+<db:title>void InternalClass::internalPublicFunction()</db:title>
+<db:para>Internal public function.</db:para>
+<db:para>This should only appear when showinternal is enabled.</db:para>
+</db:section>
+<db:section xml:id="protectedFunction">
+<db:title>[protected] void InternalClass::protectedFunction()</db:title>
+<db:para>Regular protected function.</db:para>
+<db:para>This should always appear in documentation.</db:para>
+</db:section>
+<db:section xml:id="publicFunction">
+<db:title>void InternalClass::publicFunction()</db:title>
+<db:para>Regular public function.</db:para>
+<db:para>This should always appear in documentation.</db:para>
+</db:section>
+</db:section>
+</db:article>

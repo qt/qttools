@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for showinternal configuration" version="" project="ShowInternal">
+    <namespace name="" status="active" access="public" module="showinternal">
+        <function name="internalGlobalFunction" href="showinternalmodule-showinternal-proxy.html#internalGlobalFunction" status="active" access="public" location="internalclass.h" documented="true" related="0" meta="plain" type="void" brief="Internal global function" signature="void internalGlobalFunction()"/>
+        <function name="regularGlobalFunction" href="showinternalmodule-showinternal-proxy.html#regularGlobalFunction" status="active" access="public" location="internalclass.h" documented="true" related="1" meta="plain" type="void" brief="Regular global function" signature="void regularGlobalFunction()"/>
+        <class name="InternalClass" href="internalclass.html" status="active" access="public" location="internalclass.h" documented="true" module="ShowInternalModule" brief="A test class demonstrating showinternal functionality">
+            <function name="InternalClass" fullname="InternalClass::InternalClass" href="internalclass.html#InternalClass" status="active" access="public" location="internalclass.h" documented="true" meta="constructor" brief="Regular public constructor" signature="InternalClass()"/>
+            <function name="internalPrivateFunction" fullname="InternalClass::internalPrivateFunction" href="internalclass.html#internalPrivateFunction" status="active" access="private" location="internalclass.h" documented="true" meta="plain" type="void" brief="Internal private function" signature="void internalPrivateFunction()"/>
+            <function name="internalProtectedFunction" fullname="InternalClass::internalProtectedFunction" href="internalclass.html#internalProtectedFunction" status="active" access="protected" location="internalclass.h" documented="true" meta="plain" type="void" brief="Internal protected function" signature="void internalProtectedFunction()"/>
+            <function name="internalPublicFunction" fullname="InternalClass::internalPublicFunction" href="internalclass.html#internalPublicFunction" status="active" access="public" location="internalclass.h" documented="true" meta="plain" type="void" brief="Internal public function" signature="void internalPublicFunction()"/>
+            <function name="protectedFunction" fullname="InternalClass::protectedFunction" href="internalclass.html#protectedFunction" status="active" access="protected" location="internalclass.h" documented="true" meta="plain" type="void" brief="Regular protected function" signature="void protectedFunction()"/>
+            <function name="publicFunction" fullname="InternalClass::publicFunction" href="internalclass.html#publicFunction" status="active" access="public" location="internalclass.h" documented="true" meta="plain" type="void" brief="Regular public function" signature="void publicFunction()"/>
+            <function name="regularPrivateFunction" fullname="InternalClass::regularPrivateFunction" href="internalclass.html#regularPrivateFunction" status="active" access="private" location="internalclass.h" documented="true" meta="plain" type="void" brief="Regular private function" signature="void regularPrivateFunction()"/>
+            <enum name="PublicEnum" fullname="InternalClass::PublicEnum" href="internalclass.html#PublicEnum-enum" status="active" access="public" location="internalclass.h" documented="true">
+                <value name="RegularValue" value="0"/>
+                <value name="AnotherValue" value="1"/>
+            </enum>
+            <variable name="internalPrivateVar" fullname="InternalClass::internalPrivateVar" href="internalclass.html#internalPrivateVar-var" status="active" access="private" location="internalclass.h" documented="true" type="int" static="false" brief="Internal private variable"/>
+            <variable name="regularPrivateVar" fullname="InternalClass::regularPrivateVar" href="internalclass.html#regularPrivateVar-var" status="active" access="private" location="internalclass.h" documented="true" type="int" static="false" brief="Regular private variable"/>
+        </class>
+        <class name="InternalOnlyClass" href="internalonlyclass.html" status="active" access="public" location="internalclass.h" documented="true" module="ShowInternalModule" brief="A completely internal class">
+            <function name="InternalOnlyClass" fullname="InternalOnlyClass::InternalOnlyClass" href="internalonlyclass.html#InternalOnlyClass" status="active" access="public" location="internalclass.h" documented="true" meta="constructor" brief="Constructor of internal class" signature="InternalOnlyClass()"/>
+            <function name="internalFunction" fullname="InternalOnlyClass::internalFunction" href="internalonlyclass.html#internalFunction" status="active" access="public" location="internalclass.h" documented="true" meta="plain" type="void" brief="Internal function in internal class" signature="void internalFunction()"/>
+        </class>
+        <module name="ShowInternalModule" href="showinternalmodule-module.html" status="active" location="internalclass.h" documented="true" seen="true" title="" brief="Test module for showinternal functionality"/>
+        <proxy name="ShowInternalModule" href="showinternalmodule-showinternal-proxy.html" status="active" access="public">
+            <function name="internalGlobalFunction" href="showinternalmodule-showinternal-proxy.html#internalGlobalFunction" status="active" access="public" location="internalclass.h" documented="true" related="0" meta="plain" type="void" brief="Internal global function" signature="void internalGlobalFunction()"/>
+            <function name="regularGlobalFunction" href="showinternalmodule-showinternal-proxy.html#regularGlobalFunction" status="active" access="public" location="internalclass.h" documented="true" related="1" meta="plain" type="void" brief="Regular global function" signature="void regularGlobalFunction()"/>
+        </proxy>
+    </namespace>
+</INDEX>

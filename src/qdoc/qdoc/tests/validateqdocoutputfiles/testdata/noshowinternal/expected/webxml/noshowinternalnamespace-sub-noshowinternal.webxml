@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <namespace name="NoShowInternalNamespace" href="noshowinternalnamespace-sub-noshowinternal.html" status="active" access="public" location="internalclass.h" documented="true" module="NoShowInternalModule" brief="A namespace that's visible">
+            <description>
+                <brief>A namespace that's visible.</brief>
+            </description>
+        </namespace>
+    </document>
+</WebXML>

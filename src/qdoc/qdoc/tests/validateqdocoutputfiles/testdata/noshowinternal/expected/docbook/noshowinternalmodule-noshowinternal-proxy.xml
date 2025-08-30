@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>NoShowInternalModule</db:title>
+<db:productname>NoShowInternal</db:productname>
+<db:titleabbrev>Test case for showinternal disabled (default behavior)</db:titleabbrev>
+<db:abstract>
+<db:para>Test case for showinternal disabled (default behavior).</db:para></db:abstract>
+</db:info>
+<db:section xml:id="function-documentation">
+<db:title>Function Documentation</db:title>
+<db:section xml:id="regularGlobalFunction">
+<db:title>void regularGlobalFunction()</db:title>
+<db:para>Regular global function.</db:para>
+<db:para>This should always appear in documentation.</db:para>
+</db:section>
+</db:section>
+</db:article>

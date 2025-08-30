@@ -13,6 +13,7 @@
 #include "enumnode.h"
 #include "functionnode.h"
 #include "helpprojectwriter.h"
+#include "inclusionfilter.h"
 #include "manifestwriter.h"
 #include "node.h"
 #include "propertynode.h"
@@ -2402,9 +2403,11 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
             out() << ".</p>\n";
         }
         openUnorderedList();
+        const InclusionPolicy policy = Config::instance().createInclusionPolicy();
         for (int j = 0; j < nodes.size(); j++) {
             Node *node = nodes[j];
-            if (node->access() == Access::Private || node->isInternal())
+            const NodeContext context = node->createContext();
+            if (!InclusionFilter::isIncluded(policy, context))
                 continue;
             if (node->isSharingComment() && node->sharedCommentNode()->isPropertyGroup())
                 continue;
@@ -2579,8 +2582,10 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative, CodeMarker *mark
 
     NodeMultiMap nmm;
     bool allInternal = true;
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
     for (auto *node : unsortedNodes) {
-        if (!node->isInternal() && !node->isDeprecated()) {
+        const NodeContext context = node->createContext();
+        if (InclusionFilter::isIncluded(policy, context) && !node->isDeprecated()) {
             allInternal = false;
             nmm.insert(node->fullName(relative), node);
         }

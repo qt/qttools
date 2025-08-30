@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for showinternal disabled (default behavior)" version="" project="NoShowInternal">
+    <namespace name="" status="active" access="public" module="noshowinternal">
+        <function name="regularGlobalFunction" href="noshowinternalmodule-noshowinternal-proxy.html#regularGlobalFunction" status="active" access="public" location="internalclass.h" documented="true" related="0" meta="plain" type="void" brief="Regular global function" signature="void regularGlobalFunction()"/>
+        <class name="InternalClass" href="internalclass.html" status="active" access="public" location="internalclass.h" documented="true" module="NoShowInternalModule" brief="A test class demonstrating showinternal functionality">
+            <function name="InternalClass" fullname="InternalClass::InternalClass" href="internalclass.html#InternalClass" status="active" access="public" location="internalclass.h" documented="true" meta="constructor" brief="Regular public constructor" signature="InternalClass()"/>
+            <function name="protectedFunction" fullname="InternalClass::protectedFunction" href="internalclass.html#protectedFunction" status="active" access="protected" location="internalclass.h" documented="true" meta="plain" type="void" brief="Regular protected function" signature="void protectedFunction()"/>
+            <function name="publicFunction" fullname="InternalClass::publicFunction" href="internalclass.html#publicFunction" status="active" access="public" location="internalclass.h" documented="true" meta="plain" type="void" brief="Regular public function" signature="void publicFunction()"/>
+            <function name="regularPrivateFunction" fullname="InternalClass::regularPrivateFunction" href="internalclass.html#regularPrivateFunction" status="active" access="private" location="internalclass.h" documented="true" meta="plain" type="void" brief="Regular private function" signature="void regularPrivateFunction()"/>
+            <enum name="PublicEnum" fullname="InternalClass::PublicEnum" href="internalclass.html#PublicEnum-enum" status="active" access="public" location="internalclass.h" documented="true">
+                <value name="RegularValue" value="0"/>
+                <value name="AnotherValue" value="1"/>
+            </enum>
+            <variable name="regularPrivateVar" fullname="InternalClass::regularPrivateVar" href="internalclass.html#regularPrivateVar-var" status="active" access="private" location="internalclass.h" documented="true" type="int" static="false" brief="Regular private variable"/>
+        </class>
+        <namespace name="NoShowInternalNamespace" href="noshowinternalnamespace-sub-noshowinternal.html" status="active" access="public" location="internalclass.h" documented="true" module="NoShowInternalModule" brief="A namespace that's visible"/>
+        <module name="NoShowInternalModule" href="noshowinternalmodule-module.html" status="active" location="internalclass.h" documented="true" seen="true" title="" brief="Test module for showinternal functionality"/>
+        <module name="ShowInternalModule" href="showinternalmodule-module.html" status="internal" seen="false" title=""/>
+        <proxy name="NoShowInternalModule" href="noshowinternalmodule-noshowinternal-proxy.html" status="active" access="public">
+            <function name="regularGlobalFunction" href="noshowinternalmodule-noshowinternal-proxy.html#regularGlobalFunction" status="active" access="public" location="internalclass.h" documented="true" related="0" meta="plain" type="void" brief="Regular global function" signature="void regularGlobalFunction()"/>
+        </proxy>
+    </namespace>
+</INDEX>
