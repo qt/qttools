@@ -1229,8 +1229,6 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
 
         const QList<Node *> &members = section.members();
         for (const auto &member : members) {
-            if (member->access() == Access::Private) // ### check necessary?
-                continue;
             if (!headerGenerated) {
                 if (!section.divClass().isEmpty())
                     out() << "<div class=\"" << section.divClass() << "\">\n";
@@ -1302,15 +1300,13 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
 
         const QList<Node *> &members = section.members();
         for (const auto &member : members) {
-            if (!member->isPrivate()) { // ### check necessary?
-                if (!member->isClassNode())
-                    generateDetailedMember(member, aggregate, marker);
-                else {
-                    out() << "<h3> class ";
-                    generateFullName(member, aggregate);
-                    out() << "</h3>";
-                    generateBrief(member, marker, aggregate);
-                }
+            if (!member->isClassNode()) {
+                generateDetailedMember(member, aggregate, marker);
+            } else {
+                out() << "<h3> class ";
+                generateFullName(member, aggregate);
+                out() << "</h3>";
+                generateBrief(member, marker, aggregate);
             }
         }
         if (!section.divClass().isEmpty())
@@ -2473,10 +2469,8 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
         out() << "<h2>" << protectEnc(section->title()) << "</h2>\n";
 
         const NodeVector &members = section->obsoleteMembers();
-        for (const auto &member : members) {
-            if (member->access() != Access::Private)
-                generateDetailedMember(member, aggregate, marker);
-        }
+        for (const auto &member : members)
+            generateDetailedMember(member, aggregate, marker);
     }
 
     generateFooter();
@@ -2990,8 +2984,6 @@ void HtmlGenerator::generateSection(const NodeVector &nv, const Node *relative, 
 
         int i = 0;
         for (const auto &member : nv) {
-            if (member->access() == Access::Private)
-                continue;
 
             if (alignNames) {
                 out() << "<tr><td class=\"memItemLeft rightAlign topAlign\"> ";
@@ -3046,8 +3038,6 @@ void HtmlGenerator::generateSectionList(const Section &section, const Node *rela
 
         int i = 0;
         for (const auto &member : members) {
-            if (member->access() == Access::Private)
-                continue;
 
             if (alignNames) {
                 out() << "<tr><td class=\"memItemLeft topAlign rightAlign\"> ";

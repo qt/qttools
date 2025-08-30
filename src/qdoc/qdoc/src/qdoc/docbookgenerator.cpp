@@ -3089,9 +3089,6 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
         startSection(section.title().toLower(), section.title());
 
         for (const Node *member : section.members()) {
-            if (member->access() == Access::Private) // ### check necessary?
-                continue;
-
             if (member->nodeType() != NodeType::Class) {
                 // This function starts its own section.
                 generateDetailedMember(member, aggregate);
@@ -4760,17 +4757,15 @@ void DocBookGenerator::generateProxyPage(Aggregate *aggregate)
 
         const QList<Node *> &members = section.members();
         for (const auto &member : members) {
-            if (!member->isPrivate()) { // ### check necessary?
-                if (!member->isClassNode()) {
-                    generateDetailedMember(member, aggregate);
-                } else {
-                    startSectionBegin();
-                    generateFullName(member, aggregate);
-                    startSectionEnd();
+            if (!member->isClassNode()) {
+                generateDetailedMember(member, aggregate);
+            } else {
+                startSectionBegin();
+                generateFullName(member, aggregate);
+                startSectionEnd();
 
-                    generateBrief(member);
-                    endSection();
-                }
+                generateBrief(member);
+                endSection();
             }
         }
 
