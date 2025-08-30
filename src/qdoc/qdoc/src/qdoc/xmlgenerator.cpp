@@ -319,6 +319,26 @@ QString XmlGenerator::refForNode(const Node *node)
 }
 
 /*!
+  Returns true if the given private \a node should be included in
+  documentation based on the current configuration settings.
+ */
+static bool shouldIncludePrivateNode(const Node *node)
+{
+    if (!node || !node->isPrivate())
+        return false;
+
+    if (node->isFunction()) {
+        return Config::instance().includePrivateFunction();
+    } else if (node->isClassNode() || node->isEnumType() || node->isTypedef()) {
+        return Config::instance().includePrivateType();
+    } else if (node->isVariable()) {
+        return Config::instance().includePrivateVariable();
+    }
+
+    return Config::instance().includePrivate();
+}
+
+/*!
   Construct the link string for the \a node and return it.
   The \a relative node is used to decide whether the link
   we are generating is in the same file as the target.
@@ -334,7 +354,7 @@ QString XmlGenerator::linkForNode(const Node *node, const Node *relative)
         return node->url();
     if (fileBase(node).isEmpty())
         return QString();
-    if (node->isPrivate())
+    if (node->isPrivate() && !shouldIncludePrivateNode(node))
         return QString();
 
     QString fn = fileName(node);
