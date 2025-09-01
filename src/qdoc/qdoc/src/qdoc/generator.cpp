@@ -644,6 +644,31 @@ const Atom *Generator::generateAtomList(const Atom *atom, const Node *relative, 
 }
 
 /*!
+  \internal
+
+  Returns true if QDoc should warn about the given private \a node being
+  undocumented. QDoc only warns about undocumented private members when the
+  documentation project enables private member documentation via
+  \l {includeprivate-variable}{includeprivate}.
+ */
+static bool shouldWarnAboutUndocumentedPrivateNode(const Node *node)
+{
+    if (!node->isPrivate())
+        return true;
+
+    if (node->isFunction()) {
+        return Config::instance().includePrivateFunction();
+    } else if (node->isClassNode() || node->isEnumType() || node->isTypedef()) {
+        return Config::instance().includePrivateType();
+    } else if (node->isVariable()) {
+        return Config::instance().includePrivateVariable();
+    }
+
+    // For other private node types, fall back to the global setting
+    return Config::instance().includePrivate();
+}
+
+/*!
   Generate the body of the documentation from the qdoc comment
   found with the entity represented by the \a node.
  */
@@ -697,13 +722,13 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 generateText(text, node, marker);
                 out() << "</p>";
             } else if (!node->isWrapper() && !node->isMarkedReimp()) {
-                if (!fn->isIgnored()) // undocumented functions added by Q_OBJECT
+                if (!fn->isIgnored() && shouldWarnAboutUndocumentedPrivateNode(node)) // undocumented functions added by Q_OBJECT
                     node->location().warning(QStringLiteral("No documentation for '%1'")
                                                      .arg(node->plainSignature()));
             }
         } else if (!node->isWrapper() && !node->isMarkedReimp()) {
             // Don't require documentation of things defined in Q_GADGET
-            if (node->name() != QLatin1String("QtGadgetHelper"))
+            if (node->name() != QLatin1String("QtGadgetHelper") && shouldWarnAboutUndocumentedPrivateNode(node))
                 node->location().warning(
                         QStringLiteral("No documentation for '%1'").arg(node->plainSignature()));
         }
