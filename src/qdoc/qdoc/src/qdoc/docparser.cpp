@@ -975,7 +975,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     }
                     break;
                 case CMD_TABLEOFCONTENTS:
-                    // Ignore defunct command \tableofcontents. TODO: Remove entirely
+                    location().report("\\%1 is deprecated and will be removed in a future version."_L1.arg(cmdName(cmd)));
                     if (isLeftBraceAhead())
                         getArgument();
                     break;

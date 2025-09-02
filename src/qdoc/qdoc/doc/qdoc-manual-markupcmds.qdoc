@@ -70,7 +70,6 @@
     \li \l {sub-command} {\\sub}
     \li \l {sup-command} {\\sup}
     \li \l {table-command} {\\table}
-    \li \l {tableofcontents-command} {\\tableofcontents}
     \li \l {target-command} {\\target}
     \li \qdoccmd tm
     \li \l {tt-command} {\\tt}
@@ -2413,15 +2412,6 @@
     \\notranslate does not style its argument in any way.
 
     This command was introduced in QDoc version 6.10.
-
-    \target tableofcontents-command
-    \section1 \\tableofcontents
-
-    The \\tableofcontents command has been disabled because QDoc
-    now generates a table of contents automatically.
-
-    The automatically generated table of contents appears in the upper
-    righthand corner of the page.
 
     \target brief-command
     \section1 \\brief

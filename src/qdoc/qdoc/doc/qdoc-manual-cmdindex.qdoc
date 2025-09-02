@@ -130,7 +130,6 @@
     \li \l {subtitle-command} {\\subtitle}
     \li \l {sup-command} {\\sup}
     \li \l {table-command} {\\table}
-    \li \l {tableofcontents-command} {\\tableofcontents}
     \li \l {target-command} {\\target}
     \li \l {threadsafe-command} {\\threadsafe}
     \li \l {title-command} {\\title}

@@ -1708,7 +1708,6 @@ pixmap property in the property editor.
             parsing the XML file.
     \endlist
 
-    \tableofcontents
     \section1 Compile Time Form Processing
 
     You create user interface components with \QD and use Qt's integrated build tools,
