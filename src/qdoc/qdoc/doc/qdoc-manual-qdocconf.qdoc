@@ -326,7 +326,8 @@
     depends = *
     \endcode
 
-    See also \l indexes, \l project, and \l url.
+    See also \l{indexes-variable}{indexes}, \l{project-variable}{project}, and
+    \l{url-variable}{url}.
 
     \target documentationinheaders-variable
     \section1 documentationinheaders (technical preview)
