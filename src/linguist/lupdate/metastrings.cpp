@@ -24,6 +24,8 @@ bool MetaStrings::parse(QString &string)
         string.remove(0, 2);
         m_msgid = string.simplified();
         m_msgid.detach();
+        m_error =
+                "Setting translation IDs using //= or #= is deprecated and will be removed in the upcoming versions.\n"_L1;
     } else if (*ptr == u'~' && ptr[1].isSpace()) {
         string.remove(0, 2);
         const QString trimmed = string.trimmed();

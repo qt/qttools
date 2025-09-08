@@ -15,5 +15,6 @@
 .*/lupdate/testdata/good/parsejs4/main.js:66: //% cannot be used with qsTr\(\). Ignoring
 .*/lupdate/testdata/good/parsejs4/main.js:68: //% cannot be used with QT_TR_NOOP\(\). Ignoring
 .*/lupdate/testdata/good/parsejs4/main.js:71: Discarding unconsumed meta data
+.*/lupdate/testdata/good/parsejs4/main.js:72: Setting translation IDs using //= or #= is deprecated and will be removed in the upcoming versions.
 .*/lupdate/testdata/good/parsejs4/main.js:73: Discarding unconsumed meta data
 .*/lupdate/testdata/good/parsejs4/main.js:75: Discarding unconsumed meta data

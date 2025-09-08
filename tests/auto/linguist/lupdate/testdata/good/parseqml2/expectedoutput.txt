@@ -15,5 +15,6 @@
 .*/lupdate/testdata/good/parseqml2/main.qml:65: //% cannot be used with qsTr\(\). Ignoring
 .*/lupdate/testdata/good/parseqml2/main.qml:67: //% cannot be used with QT_TR_NOOP\(\). Ignoring
 .*/lupdate/testdata/good/parseqml2/main.qml:70: Discarding unconsumed meta data
+.*/lupdate/testdata/good/parseqml2/main.qml:71: Setting translation IDs using //= or #= is deprecated and will be removed in the upcoming versions.
 .*/lupdate/testdata/good/parseqml2/main.qml:72: Discarding unconsumed meta data
 .*/lupdate/testdata/good/parseqml2/main.qml:74: Discarding unconsumed meta data
