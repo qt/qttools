@@ -1,5 +1,9 @@
+.*/lupdate/testdata/good/parsecpp/main.cpp:195: Setting translation IDs using //= or #= is deprecated and will be removed in the upcoming versions.
+.*/lupdate/testdata/good/parsecpp/main.cpp:202: Setting translation IDs using //= or #= is deprecated and will be removed in the upcoming versions.
+.*/lupdate/testdata/good/parsecpp/main.cpp:228: Setting translation IDs using //= or #= is deprecated and will be removed in the upcoming versions.
 .*/lupdate/testdata/good/parsecpp/main.cpp:620: tr\(\) cannot be called without context
 .*/lupdate/testdata/good/parsecpp/main.cpp:622: tr\(\) cannot be called without context
+.*/lupdate/testdata/good/parsecpp/main.cpp:737: Setting translation IDs using //= or #= is deprecated and will be removed in the upcoming versions.
 .*/lupdate/testdata/good/parsecpp/main.cpp:742: labels cannot be used with text-based translation. Ignoring
 .*/lupdate/testdata/good/parsecpp/main.cpp:757: Discarding unconsumed meta data
 Contradicting label for message with id id4
