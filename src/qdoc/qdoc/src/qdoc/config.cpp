@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "config.h"
+#include "inclusionpolicy.h"
 #include "utilities.h"
 
 #include <QtCore/qdir.h>
@@ -1474,6 +1475,18 @@ std::set<Config::HeaderFilePath> Config::getHeaderFiles() {
     }
 
     return headers;
+}
+
+InclusionPolicy Config::createInclusionPolicy() const
+{
+    InclusionPolicy policy;
+
+    policy.includePrivate = includePrivate();
+    policy.includePrivateFunction = includePrivateFunction();
+    policy.includePrivateType = includePrivateType();
+    policy.includePrivateVariable = includePrivateVariable();
+
+    return policy;
 }
 
 QT_END_NAMESPACE

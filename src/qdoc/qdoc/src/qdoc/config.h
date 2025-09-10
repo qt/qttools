@@ -19,6 +19,7 @@
 QT_BEGIN_NAMESPACE
 
 class Config;
+struct InclusionPolicy;
 
 /*
  Contains information about a location
@@ -209,6 +210,8 @@ public:
         }
     };
     std::set<HeaderFilePath> getHeaderFiles();
+
+    InclusionPolicy createInclusionPolicy() const;
 
 private:
     void processCommandLineOptions(const QStringList &args);
