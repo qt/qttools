@@ -59,6 +59,7 @@ qt_internal_add_tool(${target_name}
         src/qdoc/namespacenode.cpp
         src/qdoc/nativeenum.cpp
         src/qdoc/node.cpp
+        src/qdoc/nodecontext.h
         src/qdoc/openedlist.cpp
         src/qdoc/pagenode.cpp
         src/qdoc/parameters.cpp

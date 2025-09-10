@@ -9,6 +9,7 @@
 #include "enumnode.h"
 #include "functionnode.h"
 #include "generator.h"
+#include "nodecontext.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
 #include "qmlpropertynode.h"
@@ -109,6 +110,18 @@ bool Node::nodeSortKeyOrNameLessThan(const Node *n1, const Node *n2)
     }
     return nodeNameLessThan(n1, n2);
 }
+
+
+NodeContext Node::createContext() const
+{
+    NodeContext context;
+    context.type = nodeType();
+    context.isPrivate = isPrivate();
+    context.isPureVirtual = isPureVirtual();
+
+    return context;
+}
+
 
 /*!
     \internal

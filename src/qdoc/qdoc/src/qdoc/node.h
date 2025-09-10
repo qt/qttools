@@ -31,6 +31,7 @@ class EnumNode;
 class ExampleNode;
 class FunctionNode;
 class Node;
+struct NodeContext;
 class QDocDatabase;
 class QmlTypeNode;
 class PageNode;
@@ -119,6 +120,7 @@ public:
     [[nodiscard]] bool isProxyNode() const { return m_nodeType == NodeType::Proxy; }
     [[nodiscard]] bool isPublic() const { return m_access == Access::Public; }
     [[nodiscard]] bool isProtected() const { return m_access == Access::Protected; }
+    [[nodiscard]] virtual bool isPureVirtual() const { return false; }
     [[nodiscard]] bool isQmlBasicType() const { return m_nodeType == NodeType::QmlValueType; }
     [[nodiscard]] bool isQmlModule() const { return m_nodeType == NodeType::QmlModule; }
     [[nodiscard]] bool isQmlNode() const { return genus() == Genus::QML; }
@@ -280,6 +282,8 @@ public:
     static QString nodeTypeString(NodeType t);
     [[nodiscard]] static bool nodeNameLessThan(const Node *first, const Node *second);
     [[nodiscard]] static bool nodeSortKeyOrNameLessThan(const Node *n1, const Node *n2);
+
+    [[nodiscard]] NodeContext createContext() const;
 
 protected:
     Node(NodeType type, Aggregate *parent, QString name);

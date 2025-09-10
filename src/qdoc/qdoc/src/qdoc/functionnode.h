@@ -107,7 +107,7 @@ public:
     }
     [[nodiscard]] bool isNonvirtual() const { return (m_virtualness == NonVirtual); }
     [[nodiscard]] bool isVirtual() const { return (m_virtualness == NormalVirtual); }
-    [[nodiscard]] bool isPureVirtual() const { return (m_virtualness == PureVirtual); }
+    [[nodiscard]] bool isPureVirtual() const override { return (m_virtualness == PureVirtual); }
     [[nodiscard]] bool returnsBool() const { return (m_returnType.first == QLatin1String("bool")); }
 
     Parameters &parameters() { return m_parameters; }
