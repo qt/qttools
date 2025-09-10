@@ -25,21 +25,6 @@
 
 QT_BEGIN_NAMESPACE
 
-/*!
-    \internal
-    Returns true if the given private \a node should be included in
-    documentation based on the current configuration settings.
-*/
-static bool shouldIncludePrivateNode(const Node *node)
-{
-    Q_ASSERT(node->isPrivate());
-
-    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
-    const NodeContext context = node->createContext();
-
-    return InclusionFilter::shouldIncludePrivate(policy, context);
-}
-
 QList<Section> Sections::s_stdSummarySections {
     { "Namespaces",       "namespace",       "namespaces",       "", Section::Summary },
     { "Classes",          "class",           "classes",          "", Section::Summary },
@@ -237,7 +222,10 @@ void Section::insert(Node *node)
         }
     }
 
-    if (node->isInternal() || (node->isPrivate() && !shouldIncludePrivateNode(node))) {
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    const NodeContext context = node->createContext();
+
+    if (node->isInternal() || !InclusionFilter::isIncluded(policy, context)) {
         irrelevant = true;
     } else if (node->isFunction()) {
         auto *func = static_cast<FunctionNode *>(node);
@@ -282,7 +270,10 @@ void Section::insert(Node *node)
  */
 bool Section::insertReimplementedMember(Node *node)
 {
-    if ((!node->isPrivate() || shouldIncludePrivateNode(node)) && !node->isRelatedNonmember()) {
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    const NodeContext context = node->createContext();
+
+    if (InclusionFilter::isIncluded(policy, context) && !node->isRelatedNonmember()) {
         const auto *fn = static_cast<const FunctionNode *>(node);
         if (!fn->overridesThis().isEmpty()) {
             if (fn->parent() == m_aggregate) {
@@ -885,12 +876,15 @@ void Sections::buildStdCppClassRefPageSections()
     SectionVector &detailsSections = stdCppClassDetailsSections();
     Section &allMembers = allMembersSection();
 
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+
     for (auto it = m_aggregate->constBegin(); it != m_aggregate->constEnd(); ++it) {
         Node *n = *it;
-        if ((!n->isPrivate() || shouldIncludePrivateNode(n)) && !n->isProperty() && !n->isRelatedNonmember()
-            && !n->isSharedCommentNode())
+        const NodeContext context = n->createContext();
+        if (InclusionFilter::isIncluded(policy, context) && !n->isProperty()
+            && !n->isRelatedNonmember() && !n->isSharedCommentNode()) {
             allMembers.insert(n);
-
+        }
         distributeNodeInSummaryVector(summarySections, n);
         distributeNodeInDetailsVector(detailsSections, n);
     }
@@ -907,9 +901,11 @@ void Sections::buildStdCppClassRefPageSections()
         ClassNode *cn = stack.pop();
         for (auto it = cn->constBegin(); it != cn->constEnd(); ++it) {
             Node *n = *it;
-            if ((!n->isPrivate() || shouldIncludePrivateNode(n)) && !n->isProperty() && !n->isRelatedNonmember()
-                && !n->isSharedCommentNode())
+            const NodeContext context = n->createContext();
+            if (InclusionFilter::isIncluded(policy, context) && !n->isProperty()
+                && !n->isRelatedNonmember() && !n->isSharedCommentNode()) {
                 allMembers.insert(n);
+            }
         }
         pushBaseClasses(stack, cn);
     }

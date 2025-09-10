@@ -9,6 +9,7 @@
 #include "examplenode.h"
 #include "functionnode.h"
 #include "inclusionfilter.h"
+#include "inclusionpolicy.h"
 #include "node.h"
 #include "qdocdatabase.h"
 #include "typedefnode.h"
@@ -321,19 +322,6 @@ QString XmlGenerator::refForNode(const Node *node)
     return registerRef(ref);
 }
 
-/*!
-  Returns true if the given private \a node should be included in
-  documentation based on the current configuration settings.
- */
-static bool shouldIncludePrivateNode(const Node *node)
-{
-    Q_ASSERT(node && node->isPrivate());
-
-    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
-    const NodeContext context = node->createContext();
-
-    return InclusionFilter::shouldIncludePrivate(policy, context);
-}
 
 /*!
   Construct the link string for the \a node and return it.
@@ -351,7 +339,9 @@ QString XmlGenerator::linkForNode(const Node *node, const Node *relative)
         return node->url();
     if (fileBase(node).isEmpty())
         return QString();
-    if (node->isPrivate() && !shouldIncludePrivateNode(node))
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    const NodeContext context = node->createContext();
+    if (!InclusionFilter::isIncluded(policy, context))
         return QString();
 
     QString fn = fileName(node);

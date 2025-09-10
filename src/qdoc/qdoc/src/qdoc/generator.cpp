@@ -16,6 +16,7 @@
 #include "examplenode.h"
 #include "functionnode.h"
 #include "inclusionfilter.h"
+#include "inclusionpolicy.h"
 #include "inode.h"
 #include "node.h"
 #include "openedlist.h"
@@ -644,24 +645,6 @@ const Atom *Generator::generateAtomList(const Atom *atom, const Node *relative, 
     return nullptr;
 }
 
-/*!
-  \internal
-
-  Returns true if QDoc should warn about the given private \a node being
-  undocumented. QDoc only warns about undocumented private members when the
-  documentation project enables private member documentation via
-  \l {includeprivate-variable}{includeprivate}.
- */
-static bool shouldWarnAboutUndocumentedPrivateNode(const Node *node)
-{
-    if (!node->isPrivate())
-        return true;
-
-    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
-    const NodeContext context = node->createContext();
-
-    return InclusionFilter::shouldWarnAboutUndocumented(policy, context);
-}
 
 /*!
   Generate the body of the documentation from the qdoc comment
@@ -717,13 +700,17 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 generateText(text, node, marker);
                 out() << "</p>";
             } else if (!node->isWrapper() && !node->isMarkedReimp()) {
-                if (!fn->isIgnored() && shouldWarnAboutUndocumentedPrivateNode(node)) // undocumented functions added by Q_OBJECT
+                const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+                const NodeContext context = node->createContext();
+                if (!fn->isIgnored() && InclusionFilter::requiresDocumentation(policy, context)) // undocumented functions added by Q_OBJECT
                     node->location().warning(QStringLiteral("No documentation for '%1'")
                                                      .arg(node->plainSignature()));
             }
         } else if (!node->isWrapper() && !node->isMarkedReimp()) {
             // Don't require documentation of things defined in Q_GADGET
-            if (node->name() != QLatin1String("QtGadgetHelper") && shouldWarnAboutUndocumentedPrivateNode(node))
+            const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+            const NodeContext context = node->createContext();
+            if (node->name() != QLatin1String("QtGadgetHelper") && InclusionFilter::requiresDocumentation(policy, context))
                 node->location().warning(
                         QStringLiteral("No documentation for '%1'").arg(node->plainSignature()));
         }

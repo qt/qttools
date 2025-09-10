@@ -13,7 +13,7 @@ QT_BEGIN_NAMESPACE
 
 class InclusionFilter {
 public:
-    static bool shouldIncludePrivate(const InclusionPolicy& policy,
+    [[nodiscard]] static bool isIncluded(const InclusionPolicy& policy,
                                      const NodeContext& context) {
         if (!context.isPrivate)
             return true;
@@ -27,7 +27,7 @@ public:
         return (policyFlags & nodeFlags) != 0;
     }
 
-    static bool shouldWarnAboutUndocumented(const InclusionPolicy& policy,
+    [[nodiscard]] static bool requiresDocumentation(const InclusionPolicy& policy,
                                            const NodeContext& context) {
         if (!context.isPrivate)
             return true;  // Always warn about non-private undocumented
