@@ -51,6 +51,8 @@ qt_internal_add_tool(${target_name}
         src/qdoc/headernode.cpp
         src/qdoc/helpprojectwriter.cpp
         src/qdoc/htmlgenerator.cpp
+        src/qdoc/inclusionflags.h
+        src/qdoc/inclusionpolicy.h
         src/qdoc/location.cpp
         src/qdoc/main.cpp
         src/qdoc/manifestwriter.cpp
