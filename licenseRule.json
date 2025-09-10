@@ -74,17 +74,12 @@
             "": {
                 "comment": "",
                 "file type": "tools",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
             "tests/auto/linguist/lupdate/testdata/good/parsepython/main.py": {
                 "comment": "",
                 "file type": "test",
                 "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
-            },
-            "tests/auto/linguist/lconvert/data/makeplurals.pl": {
-                "comment": "",
-                "file type": "test",
-                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
             "(.*)(examples/|snippets/)": {
                 "comment": "Example takes precedence",
@@ -102,7 +97,7 @@
             "": {
                 "comment": "tools repository",
                 "file type": "tools",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
             "dist/": {
                 "comment": "Default",
@@ -112,72 +107,67 @@
             "src/designer/src/plugins/": {
                 "comment": "plugins for Qt Widgets Designer, but also Qt UI Tools",
                 "file type": "module and plugin",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
             "src/uiplugin/": {
                 "comment": "UiTools links UiPlugin",
                 "file type": "module and plugin",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
             "src/assistant/help/": {
                 "comment": "library",
                 "file type": "module and plugin",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
             "src/assistant/plugins/help/": {
                 "comment": "help engine plugin",
                 "file type": "module and plugin",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
             "src/assistant/qhelpgenerator/": {
                 "comment": "",
                 "file type": "tools",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
             "src/assistant/shared/": {
                 "comment": "used in library and tools",
                 "file type": "module and plugin",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
             "src/designer/src/lib/uilib/": {
                 "comment": "code used in src/uitools",
                 "file type": "module and plugin",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
             "src/designer/": {
                 "comment": "for a tool",
                 "file type": "tools",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
             "src/uilib/": {
                 "comment": "library",
                 "file type": "module and plugin",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
             "src/shared/": {
                 "comment": "used by some libraries",
                 "file type": "module and plugin",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
             "src/uitools/": {
                 "comment": "code for the Qt Ui Tools library",
                 "file type": "module and plugin",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"]
             },
             "src/qdoc/qdoc/src/qdoc/": {
                 "comment": "",
                 "file type": "tools",
-                "spdx": ["LicenseRef-Qt-Commercial"]
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
             "src/qdoc/catch/include/catch/catch.hpp": {
                 "comment": "src/qdoc/catch/LICENSE.CATCH.txt",
                 "file type": "module and plugin",
                 "spdx": ["BSL-1.0"]
-            },
-            "src/qdoc/catch_generators/tests/": {
-                "comment": "",
-                "file type": "test",
-                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
             "tests/": {
                 "comment": "",
