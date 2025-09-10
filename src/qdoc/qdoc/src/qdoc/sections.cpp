@@ -10,8 +10,11 @@
 #include "functionnode.h"
 #include "generator.h"
 #include "genustypes.h"
+#include "inclusionfilter.h"
+#include "inclusionpolicy.h"
 #include "utilities.h"
 #include "namespacenode.h"
+#include "node.h"
 #include "qmlpropertynode.h"
 #include "qmltypenode.h"
 #include "sharedcommentnode.h"
@@ -31,21 +34,10 @@ static bool shouldIncludePrivateNode(const Node *node)
 {
     Q_ASSERT(node->isPrivate());
 
-    if (node->isFunction()) {
-        // Special case: private pure virtual methods must always be documented
-        // because they require implementation by derived classes.
-        const auto *func = static_cast<const FunctionNode *>(node);
-        if (func->isPureVirtual())
-            return true;
-        return Config::instance().includePrivateFunction();
-    } else if (node->isClassNode() || node->isEnumType() || node->isTypedef()) {
-        return Config::instance().includePrivateType();
-    } else if (node->isVariable()) {
-        return Config::instance().includePrivateVariable();
-    }
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    const NodeContext context = node->createContext();
 
-    // For other node types, fall back to the global setting
-    return Config::instance().includePrivate();
+    return InclusionFilter::shouldIncludePrivate(policy, context);
 }
 
 QList<Section> Sections::s_stdSummarySections {

@@ -4,9 +4,12 @@
 
 #include "xmlgenerator.h"
 
+#include "config.h"
 #include "enumnode.h"
 #include "examplenode.h"
 #include "functionnode.h"
+#include "inclusionfilter.h"
+#include "node.h"
 #include "qdocdatabase.h"
 #include "typedefnode.h"
 
@@ -324,23 +327,12 @@ QString XmlGenerator::refForNode(const Node *node)
  */
 static bool shouldIncludePrivateNode(const Node *node)
 {
-    if (!node || !node->isPrivate())
-        return false;
+    Q_ASSERT(node && node->isPrivate());
 
-    if (node->isFunction()) {
-        // Special case: private pure virtual methods must always be documented
-        // because they require implementation by derived classes
-        const auto *func = static_cast<const FunctionNode *>(node);
-        if (func->isPureVirtual())
-            return true;
-        return Config::instance().includePrivateFunction();
-    } else if (node->isClassNode() || node->isEnumType() || node->isTypedef()) {
-        return Config::instance().includePrivateType();
-    } else if (node->isVariable()) {
-        return Config::instance().includePrivateVariable();
-    }
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    const NodeContext context = node->createContext();
 
-    return Config::instance().includePrivate();
+    return InclusionFilter::shouldIncludePrivate(policy, context);
 }
 
 /*!

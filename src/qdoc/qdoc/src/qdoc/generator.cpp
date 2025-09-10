@@ -15,6 +15,7 @@
 #include "enumnode.h"
 #include "examplenode.h"
 #include "functionnode.h"
+#include "inclusionfilter.h"
 #include "inode.h"
 #include "node.h"
 #include "openedlist.h"
@@ -656,16 +657,10 @@ static bool shouldWarnAboutUndocumentedPrivateNode(const Node *node)
     if (!node->isPrivate())
         return true;
 
-    if (node->isFunction()) {
-        return Config::instance().includePrivateFunction();
-    } else if (node->isClassNode() || node->isEnumType() || node->isTypedef()) {
-        return Config::instance().includePrivateType();
-    } else if (node->isVariable()) {
-        return Config::instance().includePrivateVariable();
-    }
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    const NodeContext context = node->createContext();
 
-    // For other private node types, fall back to the global setting
-    return Config::instance().includePrivate();
+    return InclusionFilter::shouldWarnAboutUndocumented(policy, context);
 }
 
 /*!
