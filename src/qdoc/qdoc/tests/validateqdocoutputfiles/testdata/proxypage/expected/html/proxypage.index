@@ -2,9 +2,13 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="ProxyPage Reference Documentation" version="" project="ProxyPage">
     <namespace name="" status="active" access="public" module="proxypage">
-        <typedef name="StdPair" href="stdpair-proxypage-proxy.html#StdPair-typedef" status="active" access="public" location="proxy.h" related="0" documented="true" aliasedtype="std::pair&lt;T1, T2&gt;"/>
+        <function name="globalFunc" href="exists-not-proxypage-proxy.html#globalFunc" status="active" access="public" location="proxy.h" documented="true" related="0" meta="plain" type="void" signature="void globalFunc()"/>
+        <typedef name="StdPair" href="stdpair-proxypage-proxy.html#StdPair-typedef" status="active" access="public" location="proxy.h" related="1" documented="true" aliasedtype="std::pair&lt;T1, T2&gt;"/>
         <proxy name="StdPair" href="stdpair-proxypage-proxy.html" status="active" access="public">
-            <typedef name="StdPair" href="stdpair-proxypage-proxy.html#StdPair-typedef" status="active" access="public" location="proxy.h" related="0" documented="true" aliasedtype="std::pair&lt;T1, T2&gt;"/>
+            <typedef name="StdPair" href="stdpair-proxypage-proxy.html#StdPair-typedef" status="active" access="public" location="proxy.h" related="1" documented="true" aliasedtype="std::pair&lt;T1, T2&gt;"/>
+        </proxy>
+        <proxy name="Exists::Not" href="exists-not-proxypage-proxy.html" status="active" access="public">
+            <function name="globalFunc" href="exists-not-proxypage-proxy.html#globalFunc" status="active" access="public" location="proxy.h" documented="true" related="0" meta="plain" type="void" signature="void globalFunc()"/>
         </proxy>
     </namespace>
 </INDEX>

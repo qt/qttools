@@ -9,3 +9,5 @@ namespace std {
 
 template <class T1, class T2>
 using StdPair = std::pair<T1, T2>;
+
+void globalFunc() {}

@@ -148,6 +148,14 @@ private:
         return nullptr;
     }
 
+    [[nodiscard]] Aggregate *findRelatesNode(const QStringList &path)
+    {
+        for (auto *tree : searchOrder())
+            if (auto *aggregate = tree->findRelatesNode(path))
+                return aggregate;
+        return nullptr;
+    }
+
     void clearSearchOrder() { m_searchOrder.clear(); }
     void newPrimaryTree(const QString &module);
     void setPrimaryTree(const QString &t);
@@ -247,6 +255,12 @@ public:
     const NodeMultiMap &getQmlTypeMap(const QString &key);
     const NodeMultiMap &getSinceMap(const QString &key);
 
+    [[nodiscard]] Aggregate *findRelatesNode(const QStringList &path)
+    {
+        return m_forest.findRelatesNode(path);
+    }
+
+
     /*******************************************************************
       Many of these will be either eliminated or replaced.
     ********************************************************************/
@@ -257,13 +271,6 @@ public:
         primaryTree()->insertTarget(name, title, type, node, priority);
     }
 
-    /*******************************************************************
-      The functions declared below are called for the current tree only.
-    ********************************************************************/
-    Aggregate *findRelatesNode(const QStringList &path)
-    {
-        return primaryTree()->findRelatesNode(path);
-    }
     /*******************************************************************/
 
     /*****************************************************************************

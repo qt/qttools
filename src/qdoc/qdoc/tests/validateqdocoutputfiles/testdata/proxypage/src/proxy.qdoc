@@ -7,3 +7,10 @@
     \typealias StdPair
     \relates StdPair
 */
+
+/*!
+    \fn void globalFunc()
+    \relates Exists::Not
+
+    //! Creates a proxy for Exists::Not, and reports it as missing.
+*/

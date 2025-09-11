@@ -292,7 +292,8 @@ void Aggregate::markUndocumentedChildrenInternal()
     the node's documentation using the \\relates command.
 
     If the target Aggregate is not found in the primary tree, creates a new
-    ProxyNode to use as the parent.
+    ProxyNode to use as the parent. If the target Aggregate is not found at all,
+    reports it.
 */
 void Aggregate::resolveRelates()
 {
@@ -311,6 +312,10 @@ void Aggregate::resolveRelates()
 
             auto *aggregate = database->findRelatesNode(relates_args[0].first.split("::"_L1));
             if (!aggregate)
+                Location().report("Failed to find \\relates target '%1' for %2"_L1
+                        .arg(relates_args[0].first, node->fullName()));
+
+            if (!aggregate || aggregate->isIndexNode())
                 aggregate = new ProxyNode(this, relates_args[0].first);
             else if (node->parent() == aggregate)
                 continue;
