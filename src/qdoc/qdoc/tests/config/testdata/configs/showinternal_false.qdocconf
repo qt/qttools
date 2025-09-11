@@ -1,0 +1,4 @@
+# Test config with showinternal set to false
+showinternal = false
+project = TestProject
+

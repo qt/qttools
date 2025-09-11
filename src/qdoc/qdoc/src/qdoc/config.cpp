@@ -439,6 +439,9 @@ void Config::load(const QString &fileName)
     m_exampleDirs = getCanonicalPathList(CONFIG_EXAMPLEDIRS);
     m_reportMissingAltTextForImages =
             m_configVars.value(CONFIG_REPORTMISSINGALTTEXTFORIMAGES).asBool();
+
+    if (!m_parser.isSet(m_parser.showInternalOption) && !qEnvironmentVariableIsSet("QDOC_SHOW_INTERNAL"))
+        m_showInternal = m_configVars.value(CONFIG_SHOWINTERNAL).asBool();
 }
 
 /*!

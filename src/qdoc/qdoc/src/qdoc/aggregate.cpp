@@ -243,10 +243,10 @@ static void warnAboutDocumentedChildInUndocumentedParent(const Node *aggregate, 
     Q_ASSERT(child);
     const auto *parent{child->parent()};
     if (parent && parent == aggregate && !child->isPrivate() && child->status() != Node::Internal
-            && !parent->isProxyNode() && !parent->isNamespace() &&!parent->isDontDocument()
+            && !parent->isProxyNode() && !parent->isNamespace() && !parent->isDontDocument()
             && !parent->hasDoc()) {
         const auto &config{Config::instance()};
-        if (!config.get(CONFIG_NOLINKERRORS).asBool() && !config.get(CONFIG_SHOWINTERNAL).asBool())
+        if (!config.get(CONFIG_NOLINKERRORS).asBool() && !config.showInternal())
             child->doc().location().warning(
                     "No output generated for %1 '%2' because '%3' is undocumented"_L1
                         .arg(child->nodeTypeString(),

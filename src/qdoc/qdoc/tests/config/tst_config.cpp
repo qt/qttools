@@ -22,6 +22,7 @@ private slots:
     void getExampleProjectFile();
     void expandVars();
     void sourceLink();
+    void showInternalPrecedence();
 
 private:
     Config &initConfig(const QStringList &args = QStringList(),
@@ -190,6 +191,68 @@ void::tst_Config::sourceLink()
     QCOMPARE(config.getSourceLink().enabled, false);
 }
 
+void::tst_Config::showInternalPrecedence()
+{
+    // Test 1: Config file sets showinternal=false, no command line option
+    {
+        auto &config = initConfig();
+        const auto docConfig = QFINDTESTDATA("/testdata/configs/showinternal_false.qdocconf");
+        if (!docConfig.isEmpty())
+            config.load(docConfig);
+
+        QCOMPARE(config.showInternal(), false);
+        QCOMPARE(config.get(CONFIG_SHOWINTERNAL).asBool(), false);
+    }
+
+    // Test 2: Config file sets showinternal=true, no command line option
+    {
+        auto &config = initConfig();
+        const auto docConfig = QFINDTESTDATA("/testdata/configs/showinternal_true.qdocconf");
+        if (!docConfig.isEmpty())
+            config.load(docConfig);
+
+        QCOMPARE(config.showInternal(), true);
+        QCOMPARE(config.get(CONFIG_SHOWINTERNAL).asBool(), true);
+    }
+
+    // Test 3: Config file sets showinternal=false, command line has -showinternal
+    {
+        const QStringList args = { "-showinternal" };
+        auto &config = initConfig(args);
+        const auto docConfig = QFINDTESTDATA("/testdata/configs/showinternal_false.qdocconf");
+        if (!docConfig.isEmpty())
+            config.load(docConfig);
+
+        // Command line should override config file
+        QCOMPARE(config.showInternal(), true);
+        // Config variable should still reflect what's in the file
+        QCOMPARE(config.get(CONFIG_SHOWINTERNAL).asBool(), false);
+    }
+
+    // Test 4: Config file sets showinternal=true, command line has -showinternal
+    {
+        const QStringList args = { "-showinternal" };
+        auto &config = initConfig(args);
+        const auto docConfig = QFINDTESTDATA("/testdata/configs/showinternal_true.qdocconf");
+        if (!docConfig.isEmpty())
+            config.load(docConfig);
+
+        // Both should be true
+        QCOMPARE(config.showInternal(), true);
+        QCOMPARE(config.get(CONFIG_SHOWINTERNAL).asBool(), true);
+    }
+
+    // Test 5: No config file, command line has -showinternal
+    {
+        const QStringList args = { "-showinternal" };
+        auto &config = initConfig(args);
+
+        QCOMPARE(config.showInternal(), true);
+        QCOMPARE(config.get(CONFIG_SHOWINTERNAL).asBool(), true);
+    }
+}
+
 QTEST_APPLESS_MAIN(tst_Config)
 
 #include "tst_config.moc"
+
