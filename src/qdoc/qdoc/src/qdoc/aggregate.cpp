@@ -80,6 +80,8 @@ Node *Aggregate::findChildNode(const QString &name, Genus genus, int findFlags) 
     } else {
         const NodeList &nodes = m_nonfunctionMap.values(name);
         for (auto *node : nodes) {
+            if (node->isInternal())
+                continue;
             if (hasCommonGenusType(genus, node->genus())) {
                 if (findFlags & TypesOnly) {
                     if (!node->isTypedef() && !node->isClassNode()
