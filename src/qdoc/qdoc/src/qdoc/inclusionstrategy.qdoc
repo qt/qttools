@@ -1,0 +1,222 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \headerfile inclusionflags.h
+    \title Inclusion Strategy Components
+    \inmodule QDoc
+    \brief Defines types for controlling documentation inclusion of private and internal API elements.
+
+    The inclusion strategy system provides a centralized way to determine which
+    documentation nodes should be included in generated output. It consists of
+    three main components that work together to implement inclusion decisions:
+
+    \list
+    \li \l{InclusionFlag} and \l{InclusionFlags} - Flags representing different types of private API
+    \li \l{InclusionPolicy} - Configuration-driven policy for what to include
+    \li \l{NodeContext} - Lightweight node state capture for policy evaluation
+    \endlist
+
+    This system replaces scattered inclusion checks throughout QDoc with a
+    unified approach, ensuring consistent behavior across all output generators.
+*/
+
+/*!
+    \enum InclusionFlag
+    \headerfile inclusionflags.h
+    \inmodule QDoc
+    \brief Flags for different categories of private API elements.
+
+    These flags represent different types of private API elements that can be
+    selectively included in documentation based on configuration settings.
+
+    \value Private
+           General private API flag. Set for any private member.
+
+    \value PrivateFunction
+           Private functions and methods. Corresponds to the
+           \c{includeprivate.functions} configuration option.
+
+    \value PrivateType
+           Private types including classes, enums, and typedefs. Corresponds to
+           the \c{includeprivate.types} configuration option.
+
+    \value PrivateVariable
+           Private member variables and properties. Corresponds to the
+           \c{includeprivate.variables} configuration option.
+
+    \sa InclusionFlags, InclusionPolicy
+*/
+
+/*!
+    \typedef InclusionFlags
+    \relates InclusionFlag
+    \headerfile inclusionflags.h
+    \inmodule QDoc
+
+    QFlags type for combining multiple InclusionFlag values.
+*/
+
+/*!
+    \struct InclusionPolicy
+    \headerfile inclusionpolicy.h
+    \inmodule QDoc
+    \brief Configuration-driven policy for including private API in documentation.
+
+    InclusionPolicy captures the current configuration settings for private API
+    documentation. It is constructed from QDoc's configuration variables and
+    provides a consistent interface for inclusion decisions.
+
+    The policy is typically created once per documentation run from the current
+    configuration and passed to InclusionFilter for making inclusion decisions.
+
+    \sa Config::createInclusionPolicy(), InclusionFilter
+*/
+
+/*!
+    \variable InclusionPolicy::includePrivate
+    \brief Whether to include any private API elements.
+
+    When true, private members may be included in documentation output.
+    This is the master switch for private API documentation, corresponding
+    to the \c{includeprivate} configuration variable.
+*/
+
+/*!
+    \variable InclusionPolicy::includePrivateFunction
+    \brief Whether to include private functions in documentation.
+
+    When true, private functions and methods are included in documentation
+    output. Corresponds to the \c{includeprivate.functions} configuration
+    variable. Takes precedence over the general includePrivate setting for
+    function nodes.
+*/
+
+/*!
+    \variable InclusionPolicy::includePrivateType
+    \brief Whether to include private types in documentation.
+
+    When true, private classes, enums, and typedefs are included in
+    documentation output. Corresponds to the \c{includeprivate.types}
+    configuration variable. Takes precedence over the general includePrivate
+    setting for type nodes.
+*/
+
+/*!
+    \variable InclusionPolicy::includePrivateVariable
+    \brief Whether to include private variables in documentation.
+
+    When true, private member variables and properties are included in
+    documentation output. Corresponds to the \c{includeprivate.variables}
+    configuration variable. Takes precedence over the general includePrivate
+    setting for variable nodes.
+*/
+
+/*!
+    \fn InclusionFlags InclusionPolicy::toFlags() const
+    \brief Converts the policy settings to flags for efficient comparison.
+
+    Returns an InclusionFlags value representing which categories of private
+    API should be included based on the current policy settings.
+*/
+
+/*!
+    \struct NodeContext
+    \headerfile nodecontext.h
+    \inmodule QDoc
+    \brief Lightweight capture of node state for inclusion decisions.
+
+    NodeContext is a value type that captures relevant node properties once,
+    avoiding repeated type checks and casts when evaluating inclusion rules.
+    It is created from a Node via Node::createContext() and used by
+    InclusionFilter to make inclusion decisions.
+
+    The context captures:
+    \list
+    \li The node's type (function, class, variable, etc.)
+    \li Whether the node has private access
+    \li Whether the node is a pure virtual function
+    \endlist
+
+    This approach eliminates redundant RTTI operations that were previously
+    performed at each inclusion check point.
+
+    \sa Node::createContext(), InclusionFilter
+*/
+
+/*!
+    \variable NodeContext::type
+    \brief The type of the documentation node.
+
+    Stores the NodeType enum value, indicating whether this is a function,
+    class, variable, or other type of documentation node.
+*/
+
+/*!
+    \variable NodeContext::isPrivate
+    \brief Whether the node has private access level.
+
+    True if the node represents a private member of a class or a non-public
+    API element.
+*/
+
+/*!
+    \variable NodeContext::isPureVirtual
+    \brief Whether the node is a pure virtual function.
+
+    Pure virtual functions require special handling as they must always be
+    documented when included, since derived classes must implement them.
+*/
+
+/*!
+    \fn InclusionFlags NodeContext::toFlags() const
+    \brief Converts node properties to flags for policy matching.
+
+    Returns an InclusionFlags value representing the categories this node
+    belongs to. For non-private nodes, returns an empty flag set. For
+    private nodes, returns flags indicating both that it's private and
+    what specific type of private element it is (function, type, or variable).
+*/
+
+/*!
+    \class InclusionFilter
+    \headerfile inclusionfilter.h
+    \inmodule QDoc
+    \brief Centralized logic for documentation inclusion decisions.
+
+    InclusionFilter provides static methods that implement the logic for
+    determining whether a documentation node should be included in output
+    or whether warnings should be generated for undocumented nodes.
+
+    All inclusion decisions flow through this class, ensuring consistent
+    behavior across different output generators and eliminating duplicate
+    logic that was previously scattered throughout QDoc.
+
+    \sa InclusionPolicy, NodeContext
+*/
+
+/*!
+    \fn bool InclusionFilter::isIncluded(const InclusionPolicy& policy, const NodeContext& context)
+    \brief Determines if a node should be included in documentation output.
+
+    Returns true if the node described by \a context should be included
+    in documentation according to the given \a policy.
+
+    The method handles several special cases:
+    \list
+    \li Non-private nodes are always included
+    \li Pure virtual functions are always included (even if private)
+    \li Private nodes are included based on policy flags
+    \endlist
+*/
+
+/*!
+    \fn bool InclusionFilter::requiresDocumentation(const InclusionPolicy& policy, const NodeContext& context)
+    \brief Determines if warnings should be generated for undocumented nodes.
+
+    Returns true if QDoc should warn about the node described by \a context
+    being undocumented, according to the given \a policy.
+
+    Generally follows the same rules as isIncluded(), but is used specifically
+    for determining when to generate warnings about missing documentation.
+*/
