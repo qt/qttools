@@ -5,6 +5,8 @@
 
 #include "config.h"
 #include "generator.h"
+#include "inclusionfilter.h"
+#include "inclusionpolicy.h"
 #include "node.h"
 #include "qdocdatabase.h"
 
@@ -132,7 +134,8 @@ void CodeParser::setLink(Node *node, Node::LinkType linkType, const QString &arg
  */
 bool CodeParser::isWorthWarningAbout(const Doc &doc)
 {
-    return (Config::instance().showInternal()
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    return (InclusionFilter::processInternalDocs(policy)
             || !doc.metaCommandsUsed().contains(QStringLiteral("internal")));
 }
 
