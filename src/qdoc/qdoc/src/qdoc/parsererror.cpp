@@ -5,6 +5,7 @@
 #include "node.h"
 #include "qdocdatabase.h"
 #include "config.h"
+#include "inclusionfilter.h"
 #include "utilities.h"
 
 #include <QtCore/qregularexpression.h>
@@ -83,7 +84,8 @@ bool isParentInternal(const QString &signature)
 */
 void ParserErrorHandler::operator()(const FnMatchError &e) const
 {
-    if (Config::instance().showInternal() || !isParentInternal(e.signature))
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    if (InclusionFilter::processInternalDocs(policy) || !isParentInternal(e.signature))
         e.location.warning("Failed to find function when parsing \\fn %1"_L1.arg(e.signature));
 }
 
