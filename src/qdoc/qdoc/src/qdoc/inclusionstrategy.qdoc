@@ -226,8 +226,9 @@
 
     The method handles several special cases:
     \list
-    \li Non-private nodes are always included
-    \li Pure virtual functions are always included (even if private)
+    \li Internal nodes are only included when showInternal policy is enabled
+    \li Non-private nodes are always included (unless internal and showInternal is false)
+    \li Pure virtual functions are always included (even if private, unless internal and showInternal is false)
     \li Private nodes are included based on policy flags
     \endlist
 */

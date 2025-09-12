@@ -15,6 +15,9 @@ class InclusionFilter {
 public:
     [[nodiscard]] static bool isIncluded(const InclusionPolicy& policy,
                                      const NodeContext& context) {
+        if (context.isInternal && !policy.showInternal)
+            return false;
+
         if (!context.isPrivate)
             return true;
 
@@ -29,6 +32,9 @@ public:
 
     [[nodiscard]] static bool requiresDocumentation(const InclusionPolicy& policy,
                                            const NodeContext& context) {
+        if (context.isInternal && !policy.showInternal)
+            return false;
+
         if (!context.isPrivate)
             return true;  // Always warn about non-private undocumented
 

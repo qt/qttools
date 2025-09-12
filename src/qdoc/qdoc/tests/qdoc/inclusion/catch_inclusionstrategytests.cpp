@@ -285,6 +285,92 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
 
         REQUIRE(InclusionFilter::isIncluded(policy, context) == true);
     }
+
+    SECTION("Internal node is excluded by default")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = false;
+        context.isInternal = true;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == false);
+    }
+
+    SECTION("Internal node is included when policy allows")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = false;
+        context.isInternal = true;
+
+        InclusionPolicy policy;
+        policy.showInternal = true;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == true);
+    }
+
+    SECTION("Internal and private node follows internal policy when internal disabled")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = true;
+        context.isInternal = true;
+
+        InclusionPolicy policy;
+        policy.includePrivate = true;
+        policy.includePrivateFunction = true;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == false);
+    }
+
+    SECTION("Internal and private node is included when both policies allow")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = true;
+        context.isInternal = true;
+
+        InclusionPolicy policy;
+        policy.includePrivate = true;
+        policy.includePrivateFunction = true;
+        policy.showInternal = true;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == true);
+    }
+
+    SECTION("Pure virtual internal function is still excluded when showInternal is false")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = true;
+        context.isInternal = true;
+        context.isPureVirtual = true;
+
+        InclusionPolicy policy;
+        policy.includePrivate = false;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == false);
+    }
+
+    SECTION("Pure virtual internal function is included when showInternal is true")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = true;
+        context.isInternal = true;
+        context.isPureVirtual = true;
+
+        InclusionPolicy policy;
+        policy.includePrivate = false;
+        policy.showInternal = true;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == true);
+    }
 }
 
 TEST_CASE("InclusionFilter::isReimplementedMemberVisible functionality", "[InclusionFilter]")
