@@ -15,6 +15,7 @@ qt_internal_add_test(tst_QDoc
     ${CMAKE_CURRENT_LIST_DIR}/boundaries/filesystem/catch_directorypath.cpp
     ${CMAKE_CURRENT_LIST_DIR}/filesystem/catch_fileresolver.cpp
     ${CMAKE_CURRENT_LIST_DIR}/node/catch_genustypes.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/inclusion/catch_inclusionstrategytests.cpp
 
     ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/boundaries/filesystem/filepath.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/boundaries/filesystem/directorypath.cpp
