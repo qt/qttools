@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Test Module</db:title>
+<db:productname>ReimplementedTest</db:productname>
+<db:titleabbrev>ReimplementedTest Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Module for testing reimplemented member visibility.</db:para>
+</db:abstract>
+</db:info>
+<db:para>Module for testing reimplemented member visibility.</db:para>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:variablelist role="classes">
+<db:varlistentry>
+<db:term><db:link xlink:href="basedevice.xml" xlink:role="class">BaseDevice</db:link></db:term>
+<db:listitem>
+<db:para>Base class demonstrating reimplemented member visibility.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="networkdevice.xml" xlink:role="class">NetworkDevice</db:link></db:term>
+<db:listitem>
+<db:para>Derived class that reimplements base class methods.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This module contains classes that demonstrate the reimplemented member visibility in QDoc when showinternal is disabled.</db:para>
+</db:section>
+</db:article>

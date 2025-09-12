@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>BaseDevice Class</db:title>
+<db:productname>ReimplementedTest</db:productname>
+<db:titleabbrev>ReimplementedTest Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Base class demonstrating reimplemented member visibility.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>BaseDevice</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherited By</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="networkdevice.xml" xlink:role="class">NetworkDevice</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class provides virtual methods that will be reimplemented in derived classes, with some marked as internal.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="BaseDevice">
+<db:title>BaseDevice::BaseDevice()</db:title>
+<db:para>Constructs a <db:link xlink:href="basedevice.xml">BaseDevice</db:link>.</db:para>
+</db:section>
+<db:section xml:id="dtor.BaseDevice">
+<db:title>[virtual noexcept] BaseDevice::~BaseDevice()</db:title>
+<db:para>Destroys the <db:link xlink:href="basedevice.xml">BaseDevice</db:link>.</db:para>
+</db:section>
+<db:section xml:id="regularVirtualFunction">
+<db:title>[virtual] void BaseDevice::regularVirtualFunction()</db:title>
+<db:para>Regular virtual function implementation.</db:para>
+</db:section>
+</db:section>
+</db:article>

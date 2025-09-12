@@ -1,0 +1,34 @@
+project = ReimplementedTest
+
+sourcedirs = src
+headerdirs = src
+
+# Module header (public API) - this will exclude _p.h files automatically
+moduleheader = ReimplementedTest
+
+# QDoc should process both public and private headers
+# The private headers (_p.h) will be processed but not included in module header
+# This mimics Qt's structure where private classes can be internal but their
+# public derived classes should show reimplemented functions
+
+documentationinheaders = yessir
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+locationinfo = false
+
+warninglimit = 0
+warninglimit.enabled = true
+

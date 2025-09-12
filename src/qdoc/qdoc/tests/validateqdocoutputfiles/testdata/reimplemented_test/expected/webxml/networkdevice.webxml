@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="NetworkDevice" href="networkdevice.html" status="active" access="public" location="networkdevice.h" documented="true" bases="BaseDevice" module="TestModule" brief="Derived class that reimplements base class methods">
+            <description>
+                <brief>Derived class that reimplements base class methods.</brief>
+                <para>This class demonstrates the reimplemented member visibility issue. Some reimplemented functions should appear in &quot;Reimplemented Functions&quot; sections even when the base class method is marked as internal.</para>
+            </description>
+            <function name="NetworkDevice" fullname="NetworkDevice::NetworkDevice" href="networkdevice.html#NetworkDevice" status="active" access="public" location="networkdevice.h" documented="true" meta="constructor" signature="NetworkDevice()">
+                <description>
+                    <para>Constructs a <link raw="NetworkDevice" href="networkdevice.html" type="class">NetworkDevice</link>.</para>
+                </description>
+            </function>
+            <function name="regularVirtualFunction" fullname="NetworkDevice::regularVirtualFunction" href="networkdevice.html#regularVirtualFunction" status="active" access="public" location="networkdevice.h" documented="true" meta="plain" virtual="virtual" override="true" type="void" signature="void regularVirtualFunction() override">
+                <description/>
+            </function>
+            <function name="~NetworkDevice" fullname="NetworkDevice::~NetworkDevice" href="networkdevice.html#dtor.NetworkDevice" status="active" access="public" location="networkdevice.h" documented="true" meta="destructor" virtual="virtual" override="true" noexcept="true" signature="~NetworkDevice() override">
+                <description>
+                    <para>Destroys the <link raw="NetworkDevice" href="networkdevice.html" type="class">NetworkDevice</link>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

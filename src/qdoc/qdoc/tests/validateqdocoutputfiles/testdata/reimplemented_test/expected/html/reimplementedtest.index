@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="ReimplementedTest Reference Documentation" version="" project="ReimplementedTest">
+    <namespace name="" status="active" access="public" module="reimplementedtest">
+        <class name="BaseDevice" href="basedevice.html" status="active" access="public" location="basedevice.h" documented="true" module="TestModule" brief="Base class demonstrating reimplemented member visibility">
+            <function name="BaseDevice" fullname="BaseDevice::BaseDevice" href="basedevice.html#BaseDevice" status="active" access="public" location="basedevice.h" documented="true" meta="constructor" signature="BaseDevice()"/>
+            <function name="regularVirtualFunction" fullname="BaseDevice::regularVirtualFunction" href="basedevice.html#regularVirtualFunction" status="active" access="public" location="basedevice.h" documented="true" meta="plain" virtual="virtual" type="void" signature="void regularVirtualFunction()"/>
+            <function name="~BaseDevice" fullname="BaseDevice::~BaseDevice" href="basedevice.html#dtor.BaseDevice" status="active" access="public" location="basedevice.h" documented="true" meta="destructor" virtual="virtual" noexcept="true" signature="~BaseDevice()"/>
+        </class>
+        <class name="NetworkDevice" href="networkdevice.html" status="active" access="public" location="networkdevice.h" documented="true" bases="BaseDevice" module="TestModule" brief="Derived class that reimplements base class methods">
+            <function name="NetworkDevice" fullname="NetworkDevice::NetworkDevice" href="networkdevice.html#NetworkDevice" status="active" access="public" location="networkdevice.h" documented="true" meta="constructor" signature="NetworkDevice()"/>
+            <function name="regularVirtualFunction" fullname="NetworkDevice::regularVirtualFunction" href="networkdevice.html#regularVirtualFunction" status="active" access="public" location="networkdevice.h" documented="true" meta="plain" virtual="virtual" override="true" type="void" signature="void regularVirtualFunction() override"/>
+            <function name="~NetworkDevice" fullname="NetworkDevice::~NetworkDevice" href="networkdevice.html#dtor.NetworkDevice" status="active" access="public" location="networkdevice.h" documented="true" meta="destructor" virtual="virtual" override="true" noexcept="true" signature="~NetworkDevice() override"/>
+        </class>
+        <module name="TestModule" href="testmodule-module.html" status="active" location="testmodule.qdoc" documented="true" seen="true" title="Test Module" brief="Module for testing reimplemented member visibility"/>
+    </namespace>
+</INDEX>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="BaseDevice" href="basedevice.html" status="active" access="public" location="basedevice.h" documented="true" module="TestModule" brief="Base class demonstrating reimplemented member visibility">
+            <description>
+                <brief>Base class demonstrating reimplemented member visibility.</brief>
+                <para>This class provides virtual methods that will be reimplemented in derived classes, with some marked as internal.</para>
+            </description>
+            <function name="BaseDevice" fullname="BaseDevice::BaseDevice" href="basedevice.html#BaseDevice" status="active" access="public" location="basedevice.h" documented="true" meta="constructor" signature="BaseDevice()">
+                <description>
+                    <para>Constructs a <link raw="BaseDevice" href="basedevice.html" type="class">BaseDevice</link>.</para>
+                </description>
+            </function>
+            <function name="regularVirtualFunction" fullname="BaseDevice::regularVirtualFunction" href="basedevice.html#regularVirtualFunction" status="active" access="public" location="basedevice.h" documented="true" meta="plain" virtual="virtual" type="void" signature="void regularVirtualFunction()">
+                <description>
+                    <para>Regular virtual function implementation.</para>
+                </description>
+            </function>
+            <function name="~BaseDevice" fullname="BaseDevice::~BaseDevice" href="basedevice.html#dtor.BaseDevice" status="active" access="public" location="basedevice.h" documented="true" meta="destructor" virtual="virtual" noexcept="true" signature="~BaseDevice()">
+                <description>
+                    <para>Destroys the <link raw="BaseDevice" href="basedevice.html" type="class">BaseDevice</link>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>
