@@ -145,11 +145,6 @@
 </db:section>
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
-<db:section xml:id="overload">
-<db:title>[protected] void Test::overload()</db:title>
-<db:bridgehead renderas="sect2" xml:id="overload-1">[protected, since Test 1.2] void Test::overload(bool <db:emphasis>b</db:emphasis>)</db:bridgehead>
-<db:para>Overloads that share a documentation comment, optionally taking a parameter <db:code role="parameter">b</db:code>.</db:para>
-</db:section>
 <db:section xml:id="funcPtr">
 <db:title>void (*)(bool) Test::funcPtr(bool <db:emphasis>b</db:emphasis>, const char *<db:emphasis>s</db:emphasis>)</db:title>
 <db:para>Returns a pointer to a function that takes a boolean. Uses <db:code role="parameter">b</db:code> and <db:code role="parameter">s</db:code>.</db:para>
@@ -192,6 +187,11 @@
 </db:para>
 </db:section>
 </db:section>
+<db:section xml:id="overload">
+<db:title>[protected] void Test::overload()</db:title>
+<db:bridgehead renderas="sect2" xml:id="overload-1">[protected, since Test 1.2] void Test::overload(bool <db:emphasis>b</db:emphasis>)</db:bridgehead>
+<db:para>Overloads that share a documentation comment, optionally taking a parameter <db:code role="parameter">b</db:code>.</db:para>
+</db:section>
 <db:section xml:id="someFunction">
 <db:title>int Test::someFunction(<db:emphasis>int</db:emphasis>, int <db:emphasis>v</db:emphasis> = 0)</db:title>
 <db:para>Function that takes a parameter <db:code role="parameter">v</db:code>. Also returns the value of <db:code role="parameter">v</db:code>.</db:para>
@@ -227,11 +227,6 @@
 <db:para><db:emphasis role="bold">The following members of class <db:link xlink:href="testqdoc-test.xml">Test</db:link> are deprecated.</db:emphasis> We strongly advise against using them in new code.</db:para>
 <db:section xml:id="obsolete-member-function-documentation">
 <db:title>Obsolete Member Function Documentation</db:title>
-<db:section xml:id="operator-2b-2b">
-<db:title>[deprecated] TestQDoc::Test &amp;Test::operator++()</db:title>
-<db:bridgehead renderas="sect2" xml:id="operator--">[deprecated] TestQDoc::Test &amp;Test::operator--()</db:bridgehead>
-<db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
-</db:section>
 <db:section xml:id="anotherObsoleteMember">
 <db:title>[deprecated] void Test::anotherObsoleteMember()</db:title>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
@@ -246,6 +241,11 @@
 <db:title>[deprecated] void Test::obsoleteMember()</db:title>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
+</db:section>
+<db:section xml:id="operator-2b-2b">
+<db:title>[deprecated] TestQDoc::Test &amp;Test::operator++()</db:title>
+<db:bridgehead renderas="sect2" xml:id="operator--">[deprecated] TestQDoc::Test &amp;Test::operator--()</db:bridgehead>
+<db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 </db:section>
 </db:section>
 </db:section>

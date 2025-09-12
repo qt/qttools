@@ -295,7 +295,7 @@ bool Section::insertReimplementedMember(Node *node)
  */
 void Section::reduce()
 {
-    // TODO:TEMPORARY:INTERMEDITATE: Section uses a series of maps
+    // TODO:TEMPORARY:INTERMEDIATE: Section uses a series of maps
     // to internally manage the categorization of the various members
     // of an aggregate. It further uses a secondary "flattened"
     // (usually vector) version that is later used by consumers of a
@@ -330,7 +330,14 @@ void Section::reduce()
     // should be more lightweight and more than offset the
     // multiple-calls.
     static auto node_less_than = [](const Node* left, const Node* right) {
-      return sortName(left) < sortName(right);
+        // For shared comment nodes, compare the names of the first child
+        // nodes instead of the names of the nodes themselves, which are
+        // usually empty.
+        if (left->isSharedCommentNode())
+            left = static_cast<const SharedCommentNode *>(left)->collective().first();
+        if (right->isSharedCommentNode())
+            right = static_cast<const SharedCommentNode *>(right)->collective().first();
+        return sortName(left) < sortName(right);
     };
 
     std::stable_sort(m_members.begin(), m_members.end(), node_less_than);

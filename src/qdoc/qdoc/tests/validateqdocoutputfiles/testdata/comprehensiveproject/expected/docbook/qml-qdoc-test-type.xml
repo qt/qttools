@@ -186,6 +186,10 @@
 </db:section>
 <db:section xml:id="method-documentation">
 <db:title>Method Documentation</db:title>
+<db:section xml:id="copy-method">
+<db:title>Type copy(<db:emphasis>a</db:emphasis>)</db:title>
+<db:para>Returns another Type based on <db:code its:translate="no" role="parameter">a</db:code>.</db:para>
+</db:section>
 <db:section xml:id="disable-method">
 <db:title>disable()</db:title>
 <db:methodsynopsis>
@@ -209,10 +213,6 @@
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Enables or disables this type.</db:para>
-</db:section>
-<db:section xml:id="copy-method">
-<db:title>Type copy(<db:emphasis>a</db:emphasis>)</db:title>
-<db:para>Returns another Type based on <db:code its:translate="no" role="parameter">a</db:code>.</db:para>
 </db:section>
 <db:section xml:id="futureDeprecated-method">
 <db:title>[until 6.3] futureDeprecated()</db:title>
