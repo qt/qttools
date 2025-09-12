@@ -3,7 +3,10 @@
 
 #include "aggregate.h"
 
+#include "config.h"
 #include "functionnode.h"
+#include "inclusionfilter.h"
+#include "inclusionpolicy.h"
 #include "parameters.h"
 #include "typedefnode.h"
 #include "qdocdatabase.h"
@@ -246,7 +249,8 @@ static void warnAboutDocumentedChildInUndocumentedParent(const Node *aggregate, 
             && !parent->isProxyNode() && !parent->isNamespace() && !parent->isDontDocument()
             && !parent->hasDoc()) {
         const auto &config{Config::instance()};
-        if (!config.get(CONFIG_NOLINKERRORS).asBool() && !config.showInternal())
+        const InclusionPolicy policy = config.createInclusionPolicy();
+        if (!config.get(CONFIG_NOLINKERRORS).asBool() && !InclusionFilter::processInternalDocs(policy))
             child->doc().location().warning(
                     "No output generated for %1 '%2' because '%3' is undocumented"_L1
                         .arg(child->nodeTypeString(),
