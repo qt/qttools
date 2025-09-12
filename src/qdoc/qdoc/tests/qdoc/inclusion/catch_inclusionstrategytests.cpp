@@ -178,6 +178,7 @@ TEST_CASE("InclusionPolicy basic functionality", "[InclusionPolicy]")
         REQUIRE(policy.includePrivateFunction == false);
         REQUIRE(policy.includePrivateType == false);
         REQUIRE(policy.includePrivateVariable == false);
+        REQUIRE(policy.showInternal == false);
     }
 
     SECTION("InclusionPolicy with custom values")
@@ -187,11 +188,47 @@ TEST_CASE("InclusionPolicy basic functionality", "[InclusionPolicy]")
         policy.includePrivateFunction = true;
         policy.includePrivateType = true;
         policy.includePrivateVariable = true;
+        policy.showInternal = true;
 
         REQUIRE(policy.includePrivate == true);
         REQUIRE(policy.includePrivateFunction == true);
         REQUIRE(policy.includePrivateType == true);
         REQUIRE(policy.includePrivateVariable == true);
+        REQUIRE(policy.showInternal == true);
+    }
+
+    SECTION("InclusionPolicy toFlags() with showInternal")
+    {
+        InclusionPolicy policy;
+        policy.showInternal = true;
+
+        auto flags = policy.toFlags();
+        REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
+        REQUIRE((flags & InclusionFlag::Private) != InclusionFlag::Private);
+    }
+
+    SECTION("InclusionPolicy toFlags() without showInternal")
+    {
+        InclusionPolicy policy;
+        policy.includePrivate = true;
+        policy.showInternal = false;
+
+        auto flags = policy.toFlags();
+        REQUIRE((flags & InclusionFlag::Private) == InclusionFlag::Private);
+        REQUIRE((flags & InclusionFlag::Internal) != InclusionFlag::Internal);
+    }
+
+    SECTION("InclusionPolicy toFlags() with both private and internal")
+    {
+        InclusionPolicy policy;
+        policy.includePrivate = true;
+        policy.includePrivateFunction = true;
+        policy.showInternal = true;
+
+        auto flags = policy.toFlags();
+        REQUIRE((flags & InclusionFlag::Private) == InclusionFlag::Private);
+        REQUIRE((flags & InclusionFlag::PrivateFunction) == InclusionFlag::PrivateFunction);
+        REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
     }
 }
 

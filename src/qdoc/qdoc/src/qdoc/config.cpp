@@ -1488,6 +1488,7 @@ InclusionPolicy Config::createInclusionPolicy() const
     policy.includePrivateFunction = includePrivateFunction();
     policy.includePrivateType = includePrivateType();
     policy.includePrivateVariable = includePrivateVariable();
+    policy.showInternal = showInternal();
 
     return policy;
 }

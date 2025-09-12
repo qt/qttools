@@ -16,6 +16,7 @@ struct InclusionPolicy
     bool includePrivateFunction = false;
     bool includePrivateType = false;
     bool includePrivateVariable = false;
+    bool showInternal = false;
 
     [[nodiscard]] InclusionFlags toFlags() const {
         InclusionFlags flags {};
@@ -27,6 +28,8 @@ struct InclusionPolicy
             flags |= InclusionFlag::PrivateType;
         if (includePrivateVariable)
             flags |= InclusionFlag::PrivateVariable;
+        if (showInternal)
+            flags |= InclusionFlag::Internal;
         return flags;
     }
 };

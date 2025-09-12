@@ -117,6 +117,15 @@
 */
 
 /*!
+    \variable InclusionPolicy::showInternal
+    \brief Whether to include internal API elements in documentation.
+
+    When true, API elements marked with \\internal comments are included in
+    documentation output. Corresponds to the \c{showinternal} configuration
+    variable and the \c{--show-internal} command line option.
+*/
+
+/*!
     \fn InclusionFlags InclusionPolicy::toFlags() const
     \brief Converts the policy settings to flags for efficient comparison.
 
