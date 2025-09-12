@@ -1,0 +1,25 @@
+project = InternalParameterWarnings
+description = Test case for suppressing parameter warnings in internal documentation
+
+outputformats = HTML
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+locationinfo = false
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+# Documentation is in headers
+documentationinheaders = indeed
+
+# showinternal is disabled by default (the test case)
+showinternal = false
+
+# zero warning policy - the test will fail if warnings are generated
+warninglimit = 0
+warninglimit.enabled = true
+

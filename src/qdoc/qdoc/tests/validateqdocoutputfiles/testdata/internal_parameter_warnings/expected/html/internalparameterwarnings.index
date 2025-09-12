@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for suppressing parameter warnings in internal documentation" version="" project="InternalParameterWarnings">
+    <namespace name="" status="active" access="public" module="internalparameterwarnings">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="InternalParameterModule" brief="Test class demonstrating internal parameter warning behavior">
+            <function name="correctFunction" fullname="TestClass::correctFunction" href="testclass.html#correctFunction" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" brief="Regular function with correct parameters" signature="void correctFunction(int correctParam)">
+                <parameter type="int" name="correctParam" default=""/>
+            </function>
+        </class>
+        <module name="InternalParameterModule" href="internalparametermodule-module.html" status="active" location="testclass.h" documented="true" seen="true" title="" brief="Test module for internal parameter warnings"/>
+    </namespace>
+</INDEX>

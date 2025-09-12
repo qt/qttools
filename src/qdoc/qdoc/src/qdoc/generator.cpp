@@ -7,6 +7,7 @@
 #include "aggregate.h"
 #include "classnode.h"
 #include "codemarker.h"
+#include "codeparser.h"
 #include "collectionnode.h"
 #include "comparisoncategory.h"
 #include "config.h"
@@ -792,7 +793,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                     }
                 }
                 for (const auto &name : documentedNames) {
-                    if (!declaredNames.contains(name)) {
+                    if (!declaredNames.contains(name) && CodeParser::isWorthWarningAbout(fn->doc())) {
                         QString best = nearestName(name, declaredNames);
                         QString details;
                         if (!best.isEmpty())

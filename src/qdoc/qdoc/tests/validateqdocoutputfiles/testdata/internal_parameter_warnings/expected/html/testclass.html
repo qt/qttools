@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- testclass.h -->
+  <meta name="description" content="Test class demonstrating internal parameter warning behavior.">
+  <title>TestClass Class | InternalParameterWarnings</title>
+</head>
+<body>
+<li>TestClass</li>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">TestClass Class</h1>
+<!-- $$$TestClass-brief -->
+<p>Test class demonstrating internal parameter warning behavior. <a href="#details">More...</a></p>
+<!-- @@@TestClass -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;TestClass&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="testclass-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#correctFunction" translate="no">correctFunction</a></b>(int <i>correctParam</i>)</td></tr>
+</table></div>
+<!-- $$$TestClass-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>This class contains functions with both regular and internal documentation to verify that parameter validation warnings are properly suppressed for internal documentation when showinternal is disabled.</p>
+</div>
+<!-- @@@TestClass -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$correctFunction[overload1]$$$correctFunctionint -->
+<h3 class="fn" translate="no" id="correctFunction"><span class="type">void</span> TestClass::<span class="name">correctFunction</span>(<span class="type">int</span> <i>correctParam</i>)</h3>
+<p>Regular function with correct parameters.</p>
+<p>This function takes <i translate="no">correctParam</i> as expected. This should not generate any warnings.</p>
+<!-- @@@correctFunction -->
+</div>
+</body>
+</html>
