@@ -9,6 +9,7 @@
 #include "enumnode.h"
 #include "functionnode.h"
 #include "generator.h"
+#include "inclusionfilter.h"
 #include "nodecontext.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
@@ -513,10 +514,12 @@ void Node::setStatus(Status t)
     // Set non-null, empty URL to nodes that are ignored as
     // link targets
     switch (t) {
-    case Internal:
-        if (Config::instance().showInternal())
+    case Internal: {
+        const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+        if (InclusionFilter::processInternalDocs(policy))
             break;
         Q_FALLTHROUGH();
+    }
     case DontDocument:
         m_url = QStringLiteral("");
         break;
