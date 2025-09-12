@@ -16,6 +16,8 @@
 #include "generator.h"
 #include "genustypes.h"
 #include "headernode.h"
+#include "inclusionfilter.h"
+#include "inclusionpolicy.h"
 #include "namespacenode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
@@ -476,7 +478,8 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         if (!node->isInternal())
             node->setStatus(Node::Preliminary);
     } else if (command == COMMAND_INTERNAL) {
-        if (!Config::instance().showInternal())
+        const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+        if (!InclusionFilter::processInternalDocs(policy))
             node->markInternal();
     } else if (command == COMMAND_REENTRANT) {
         node->setThreadSafeness(Node::Reentrant);
@@ -890,7 +893,8 @@ CppCodeParser::processTopicArgs(const UntiedDocumentation &untied)
         Node *node = nullptr;
         if (args.size() == 1) {
             if (topic == COMMAND_FN) {
-                if (Config::instance().showInternal() || !doc.isInternal()) {
+                const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+                if (InclusionFilter::processInternalDocs(policy) || !doc.isInternal()) {
                     auto result = fn_parser(doc.location(), args[0].first, args[0].second, untied.context);
                     if (auto *error = std::get_if<FnMatchError>(&result))
                         errors.emplace_back(*error);
@@ -914,7 +918,8 @@ CppCodeParser::processTopicArgs(const UntiedDocumentation &untied)
             for (const auto &arg : std::as_const(args)) {
                 node = nullptr;
                 if (topic == COMMAND_FN) {
-                    if (Config::instance().showInternal() || !doc.isInternal()) {
+                    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+                    if (InclusionFilter::processInternalDocs(policy) || !doc.isInternal()) {
                         auto result = fn_parser(doc.location(), arg.first, arg.second, untied.context);
                         if (auto *error = std::get_if<FnMatchError>(&result))
                             errors.emplace_back(*error);
