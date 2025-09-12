@@ -220,7 +220,6 @@ protected:
     bool m_inSectionHeading { false };
     bool m_inTableHeader { false };
     bool m_threeColumnEnumValueTable { true };
-    bool m_showInternal { false };
     bool m_quoting { false };
     int m_numTableRows { 0 };
     QString m_link {};

@@ -1920,11 +1920,12 @@ void Generator::initializeFormat()
 }
 
 /*!
-  Updates the generator's m_showInternal from the Config.
+  No-op base implementation. Subclasses may override to perform
+  generator-specific initialization.
  */
 void Generator::initializeGenerator()
 {
-    m_showInternal = Config::instance().showInternal();
+    // Default implementation does nothing
 }
 
 bool Generator::matchAhead(const Atom *atom, Atom::AtomType expectedAtomType)
