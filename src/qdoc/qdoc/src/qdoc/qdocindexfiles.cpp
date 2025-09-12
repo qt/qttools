@@ -17,6 +17,7 @@
 #include "generator.h"
 #include "genustypes.h"
 #include "headernode.h"
+#include "inclusionfilter.h"
 #include "location.h"
 #include "utilities.h"
 #include "propertynode.h"
@@ -1215,7 +1216,9 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
  */
 void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionNode *fn)
 {
-    if (fn->isInternal() && !Config::instance().showInternal())
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    const NodeContext context = fn->createContext();
+    if (!InclusionFilter::isPubliclyVisible(policy, context))
         return;
 
     const QString objName = fn->name();
@@ -1402,7 +1405,9 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
         node->isQmlModule() || node->isProxyNode())
         return;
 
-    if (node->isInternal() && !Config::instance().showInternal())
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    const NodeContext context = node->createContext();
+    if (!InclusionFilter::isPubliclyVisible(policy, context))
         return;
 
     if (generateIndexSection(writer, node, post)) {
