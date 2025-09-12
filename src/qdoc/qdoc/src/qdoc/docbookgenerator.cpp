@@ -1354,8 +1354,11 @@ void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeLis
         return;
 
     // Do nothing if all items are internal or obsolete.
-    if (std::all_of(nodeList.cbegin(), nodeList.cend(), [](const Node *n) {
-        return n->isInternal() || n->isDeprecated(); })) {
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    if (std::all_of(nodeList.cbegin(), nodeList.cend(), [&policy](const Node *n) {
+            const NodeContext context = n->createContext();
+            return !InclusionFilter::isIncluded(policy, context) || n->isDeprecated();
+        })) {
         return;
     }
 
@@ -2335,12 +2338,20 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
     QmlTypeNode::subclasses(qcn, subs);
 
     QmlTypeNode *base = qcn->qmlBaseNode();
-    while (base && base->isInternal()) {
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    while (base) {
+        const NodeContext context = base->createContext();
+        if (InclusionFilter::isIncluded(policy, context))
+            break;
         base = base->qmlBaseNode();
     }
 
     // Skip import statement for \internal collections
-    const bool generate_import_statement = !qcn->logicalModuleName().isEmpty() && (!collection || !collection->isInternal() || m_showInternal);
+    bool generate_import_statement = !qcn->logicalModuleName().isEmpty();
+    if (generate_import_statement && collection) {
+        const NodeContext context = collection->createContext();
+        generate_import_statement = InclusionFilter::isIncluded(policy, context);
+    }
     // Detect if anything is generated in this method. If not, exit early to avoid having an empty list.
     const bool generates_something = generate_import_statement || !qcn->since().isEmpty() || !subs.isEmpty() || base;
 
@@ -3516,8 +3527,13 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             generateSynopsisInfo("since", formatSince(qcn));
 
         QmlTypeNode *base = qcn->qmlBaseNode();
-        while (base && base->isInternal())
+        const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+        while (base) {
+            const NodeContext context = base->createContext();
+            if (InclusionFilter::isIncluded(policy, context))
+                break;
             base = base->qmlBaseNode();
+        }
 
         QStringList knownTypeNames{qcn->name()};
         if (base)
@@ -4667,7 +4683,9 @@ void DocBookGenerator::generateDocumentation(Node *node)
         return;
     if (node->isIndexNode())
         return;
-    if (node->isInternal() && !m_showInternal)
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    const NodeContext context = node->createContext();
+    if (!InclusionFilter::isIncluded(policy, context))
         return;
     if (node->isExternalPage())
         return;

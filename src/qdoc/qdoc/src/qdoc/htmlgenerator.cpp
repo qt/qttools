@@ -1896,8 +1896,12 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
 
     if (aggregate->isClassNode()) {
         auto *classe = dynamic_cast<ClassNode *>(aggregate);
-        if (classe && classe->isQmlNativeType() && !classe->isInternal())
-            addQmlNativeTypesToMap(requisites, &text, nativeTypeText, classe);
+        if (classe && classe->isQmlNativeType()) {
+            const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+            const NodeContext context = classe->createContext();
+            if (InclusionFilter::isIncluded(policy, context))
+                addQmlNativeTypesToMap(requisites, &text, nativeTypeText, classe);
+        }
 
         addInheritsToMap(requisites, &text, inheritsText, classe);
         addInheritedByToMap(requisites, &text, inheritedByText, classe);
@@ -2139,11 +2143,19 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     const CollectionNode *collection = qcn->logicalModule();
 
     // skip import statement of \internal collections
-    if (!qcn->logicalModuleName().isEmpty() && (!collection || !collection->isInternal() || m_showInternal)) {
-        QStringList parts = QStringList() << "import" << qcn->logicalModuleName() << qcn->logicalModuleVersion();
-        text.clear();
-        text << openCodeTag << parts.join(' ').trimmed() << closeCodeTag;
-        requisites.insert(importText, text);
+    if (!qcn->logicalModuleName().isEmpty()) {
+        bool generate_import = true;
+        if (collection) {
+            const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+            const NodeContext context = collection->createContext();
+            generate_import = InclusionFilter::isIncluded(policy, context);
+        }
+        if (generate_import) {
+            QStringList parts = QStringList() << "import" << qcn->logicalModuleName() << qcn->logicalModuleVersion();
+            text.clear();
+            text << openCodeTag << parts.join(' ').trimmed() << closeCodeTag;
+            requisites.insert(importText, text);
+        }
     } else if (!qcn->isQmlBasicType() && qcn->logicalModuleName().isEmpty()) {
         qcn->doc().location().warning(QStringLiteral("Could not resolve QML import statement for type '%1'").arg(qcn->name()),
                                       QStringLiteral("Maybe you forgot to use the '\\%1' command?").arg(COMMAND_INQMLMODULE));
@@ -2157,10 +2169,14 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     }
 
     // add the native type to the map
-    if (ClassNode *cn = qcn->classNode(); cn && cn->isQmlNativeType() && !cn->isInternal()) {
-        text.clear();
-        addNodeLink(text, cn);
-        requisites.insert(nativeTypeText, text);
+    if (ClassNode *cn = qcn->classNode(); cn && cn->isQmlNativeType()) {
+        const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+        const NodeContext context = cn->createContext();
+        if (InclusionFilter::isIncluded(policy, context)) {
+            text.clear();
+            addNodeLink(text, cn);
+            requisites.insert(nativeTypeText, text);
+        }
     }
 
     // add the inherits to the map
@@ -2169,7 +2185,11 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     QmlTypeNode::subclasses(qcn, subs);
     QStringList knownTypeNames{qcn->name()};
 
-    while (base && base->isInternal()) {
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    while (base) {
+        const NodeContext context = base->createContext();
+        if (InclusionFilter::isIncluded(policy, context))
+            break;
         base = base->qmlBaseNode();
     }
     if (base) {

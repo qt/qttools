@@ -287,9 +287,12 @@ QString Generator::fileBase(const Node *node) const
           For historical reasons, skip the module name qualifier for QML value types
           in order to avoid excess redirects in the online docs. TODO: re-assess
         */
-        if (!node->logicalModuleName().isEmpty() && !node->isQmlBasicType()
-            && (!node->logicalModule()->isInternal() || m_showInternal))
-            base.prepend("%1%2-"_L1.arg(node->logicalModuleName(), outputSuffix(node)));
+        if (!node->logicalModuleName().isEmpty() && !node->isQmlBasicType()) {
+            const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+            const NodeContext context = node->logicalModule()->createContext();
+            if (InclusionFilter::isIncluded(policy, context))
+                base.prepend("%1%2-"_L1.arg(node->logicalModuleName(), outputSuffix(node)));
+        }
 
     } else if (node->isProxyNode()) {
         base.append("-%1-proxy"_L1.arg(node->tree()->physicalModuleName()));
@@ -998,7 +1001,9 @@ void Generator::generateDocumentation(Node *node)
         return;
     if (node->isIndexNode())
         return;
-    if (node->isInternal() && !m_showInternal)
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    const NodeContext context = node->createContext();
+    if (!InclusionFilter::isIncluded(policy, context))
         return;
     if (node->isExternalPage())
         return;

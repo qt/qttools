@@ -7,7 +7,9 @@
 #include "collectionnode.h"
 #include "config.h"
 #include "helpprojectwriter.h"
+#include "inclusionfilter.h"
 #include "node.h"
+#include "nodecontext.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "quoter.h"
@@ -234,7 +236,9 @@ void WebXMLGenerator::generateDocumentation(Node *node)
     if (!node->url().isNull() || node->isExternalPage() || node->isIndexNode())
         return;
 
-    if (node->isInternal() && !m_showInternal)
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    const NodeContext context = node->createContext();
+    if (!InclusionFilter::isIncluded(policy, context))
         return;
 
     if (node->parent()) {

@@ -13,7 +13,9 @@
 #include "functionnode.h"
 #include "genustypes.h"
 #include "htmlgenerator.h"
+#include "inclusionfilter.h"
 #include "node.h"
+#include "nodecontext.h"
 #include "qdocdatabase.h"
 #include "typedefnode.h"
 
@@ -208,12 +210,10 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     // \group group_name itself is not documented.
     bool unseenGroup{node->isGroup() && !node->wasSeen()};
 
-    // Pure virtual functions must always be documented, even if private
-    // They are part of the class's public interface contract
-    if (((node->isPrivate() && !node->isPureVirtual()) ||
-         node->isInternal() || node->isDontDocument()) && !unseenGroup) {
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    const NodeContext context = node->createContext();
+    if ((!InclusionFilter::isIncluded(policy, context) || node->isDontDocument()) && !unseenGroup)
         return false;
-    }
 
     if (node->name().isEmpty())
         return true;
@@ -428,10 +428,10 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
             }
             if (child->isIndexNode())
                 continue;
-            // Pure virtual functions must always be documented, even if private
-            if (child->isPrivate() && !child->isPureVirtual())
-                continue;
-            if (child->isInternal())
+
+            const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+            const NodeContext context = child->createContext();
+            if (!InclusionFilter::isIncluded(policy, context))
                 continue;
 
             if (child->isTextPageNode()) {
