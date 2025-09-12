@@ -73,7 +73,7 @@ TEST_CASE("NodeContext correctly captures internal status", "[NodeContext]")
 
 TEST_CASE("NodeContext toFlags() behavior", "[NodeContext]")
 {
-    SECTION("Non-private node returns empty flags regardless of internal status")
+    SECTION("Non-private, non-internal node returns empty flags")
     {
         NodeContext context;
         context.type = NodeType::Function;
@@ -82,10 +82,18 @@ TEST_CASE("NodeContext toFlags() behavior", "[NodeContext]")
 
         auto flags = context.toFlags();
         REQUIRE(flags == InclusionFlags{});
+    }
 
+    SECTION("Non-private but internal node returns Internal flag")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = false;
         context.isInternal = true;
-        flags = context.toFlags();
-        REQUIRE(flags == InclusionFlags{});
+
+        auto flags = context.toFlags();
+        REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
+        REQUIRE((flags & InclusionFlag::Private) != InclusionFlag::Private);
     }
 
     SECTION("Private function node returns correct flags")
@@ -119,6 +127,45 @@ TEST_CASE("NodeContext toFlags() behavior", "[NodeContext]")
         auto flags = context.toFlags();
         REQUIRE((flags & InclusionFlag::Private) == InclusionFlag::Private);
         REQUIRE((flags & InclusionFlag::PrivateVariable) == InclusionFlag::PrivateVariable);
+    }
+
+    SECTION("Internal and private function node returns both flags")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = true;
+        context.isInternal = true;
+
+        auto flags = context.toFlags();
+        REQUIRE((flags & InclusionFlag::Private) == InclusionFlag::Private);
+        REQUIRE((flags & InclusionFlag::PrivateFunction) == InclusionFlag::PrivateFunction);
+        REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
+    }
+
+    SECTION("Internal and private class node returns both flags")
+    {
+        NodeContext context;
+        context.type = NodeType::Class;
+        context.isPrivate = true;
+        context.isInternal = true;
+
+        auto flags = context.toFlags();
+        REQUIRE((flags & InclusionFlag::Private) == InclusionFlag::Private);
+        REQUIRE((flags & InclusionFlag::PrivateType) == InclusionFlag::PrivateType);
+        REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
+    }
+
+    SECTION("Internal-only node returns only Internal flag")
+    {
+        NodeContext context;
+        context.type = NodeType::Class;
+        context.isPrivate = false;
+        context.isInternal = true;
+
+        auto flags = context.toFlags();
+        REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
+        REQUIRE((flags & InclusionFlag::Private) != InclusionFlag::Private);
+        REQUIRE((flags & InclusionFlag::PrivateType) != InclusionFlag::PrivateType);
     }
 }
 

@@ -19,25 +19,29 @@ struct NodeContext
     bool isPureVirtual {false};
 
     InclusionFlags toFlags() const {
-        if (!isPrivate)
-            return {};
+        InclusionFlags flags;
 
-        InclusionFlags flags = InclusionFlag::Private;
+        if (isInternal)
+            flags |= InclusionFlag::Internal;
 
-        switch (type) {
-        case NodeType::Function:
-            flags |= InclusionFlag::PrivateFunction;
-            break;
-        case NodeType::Class:
-        case NodeType::Enum:
-        case NodeType::Typedef:
-            flags |= InclusionFlag::PrivateType;
-            break;
-        case NodeType::Variable:
-            flags |= InclusionFlag::PrivateVariable;
-            break;
-        default:
-            break;
+        if (isPrivate) {
+            flags |= InclusionFlag::Private;
+
+            switch (type) {
+            case NodeType::Function:
+                flags |= InclusionFlag::PrivateFunction;
+                break;
+            case NodeType::Class:
+            case NodeType::Enum:
+            case NodeType::Typedef:
+                flags |= InclusionFlag::PrivateType;
+                break;
+            case NodeType::Variable:
+                flags |= InclusionFlag::PrivateVariable;
+                break;
+            default:
+                break;
+            }
         }
 
         return flags;

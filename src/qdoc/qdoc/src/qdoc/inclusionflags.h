@@ -14,6 +14,7 @@ enum class InclusionFlag : quint32 {
     PrivateFunction = 0x0002,
     PrivateType     = 0x0004,  // Classes, Enums, Typedefs
     PrivateVariable = 0x0008,
+    Internal        = 0x0010,
 };
 
 Q_DECLARE_FLAGS(InclusionFlags, InclusionFlag)

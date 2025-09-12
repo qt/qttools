@@ -45,6 +45,10 @@
            Private member variables and properties. Corresponds to the
            \c{includeprivate.variables} configuration option.
 
+    \value Internal
+           Internal API elements marked with \\internal. Corresponds to the
+           \c{showinternal} configuration option and command line flag.
+
     \sa InclusionFlags, InclusionPolicy
 */
 
