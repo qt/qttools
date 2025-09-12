@@ -15,6 +15,7 @@ struct NodeContext
 {
     NodeType type {NodeType::NoType};
     bool isPrivate {false};
+    bool isInternal {false};
     bool isPureVirtual {false};
 
     InclusionFlags toFlags() const {

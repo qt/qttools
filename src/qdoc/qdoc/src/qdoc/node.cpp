@@ -117,6 +117,7 @@ NodeContext Node::createContext() const
     NodeContext context;
     context.type = nodeType();
     context.isPrivate = isPrivate();
+    context.isInternal = isInternal();
     context.isPureVirtual = isPureVirtual();
 
     return context;

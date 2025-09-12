@@ -8,8 +8,86 @@
 #include <qdoc/nodecontext.h>
 #include <qdoc/inclusionfilter.h>
 
+TEST_CASE("NodeContext correctly captures internal status", "[NodeContext]")
+{
+    SECTION("Default NodeContext has isInternal false")
+    {
+        NodeContext context;
+        REQUIRE(context.isInternal == false);
+    }
+
+    SECTION("NodeContext can be set to internal")
+    {
+        NodeContext context;
+        context.isInternal = true;
+        REQUIRE(context.isInternal == true);
+    }
+
+    SECTION("NodeContext preserves all fields when internal is set")
+    {
+        NodeContext context;
+        context.type = NodeType::Class;
+        context.isPrivate = true;
+        context.isInternal = true;
+        context.isPureVirtual = false;
+
+        REQUIRE(context.type == NodeType::Class);
+        REQUIRE(context.isPrivate == true);
+        REQUIRE(context.isInternal == true);
+        REQUIRE(context.isPureVirtual == false);
+    }
+
+    SECTION("NodeContext with private but not internal")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = true;
+        context.isInternal = false;
+
+        REQUIRE(context.isPrivate == true);
+        REQUIRE(context.isInternal == false);
+    }
+
+    SECTION("NodeContext with internal but not private")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = false;
+        context.isInternal = true;
+
+        REQUIRE(context.isPrivate == false);
+        REQUIRE(context.isInternal == true);
+    }
+
+    SECTION("NodeContext with both private and internal")
+    {
+        NodeContext context;
+        context.type = NodeType::Class;
+        context.isPrivate = true;
+        context.isInternal = true;
+
+        REQUIRE(context.isPrivate == true);
+        REQUIRE(context.isInternal == true);
+    }
+}
+
 TEST_CASE("NodeContext toFlags() behavior", "[NodeContext]")
 {
+    SECTION("Non-private node returns empty flags regardless of internal status")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = false;
+        context.isInternal = false;
+
+        auto flags = context.toFlags();
+        REQUIRE(flags == InclusionFlags{});
+
+        context.isInternal = true;
+        flags = context.toFlags();
+        REQUIRE(flags == InclusionFlags{});
+    }
+
     SECTION("Private function node returns correct flags")
     {
         NodeContext context;
@@ -76,6 +154,7 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
     {
         NodeContext context;
         context.isPrivate = false;
+        context.isInternal = false;
 
         InclusionPolicy policy;
 
@@ -86,6 +165,7 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
     {
         NodeContext context;
         context.isPrivate = true;
+        context.isInternal = false;
 
         InclusionPolicy policy;
         policy.includePrivate = false;
@@ -98,6 +178,7 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
         NodeContext context;
         context.type = NodeType::Function;
         context.isPrivate = true;
+        context.isInternal = false;
 
         InclusionPolicy policy;
         policy.includePrivate = true;
@@ -112,6 +193,7 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
         context.type = NodeType::Function;
         context.isPrivate = true;
         context.isPureVirtual = true;
+        context.isInternal = false;
 
         InclusionPolicy policy;
         policy.includePrivate = false;
