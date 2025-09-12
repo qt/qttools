@@ -160,6 +160,14 @@ void tst_lrelease::idbased()
 
     QCOMPARE(qtTrId("test_id"), QString::fromLatin1("This is a test string."));
     QCOMPARE(qtTrId("untranslated_id"), QString::fromLatin1("This has no translation."));
+
+    // Test qTrId() alias - should work exactly the same as qtTrId()
+    QCOMPARE(qTrId("test_id"), QString::fromLatin1("This is a test string."));
+    QCOMPARE(qTrId("untranslated_id"), QString::fromLatin1("This has no translation."));
+
+    // Test that both functions return the same results
+    QCOMPARE(qTrId("test_id"), qtTrId("test_id"));
+    QCOMPARE(qTrId("untranslated_id"), qtTrId("untranslated_id"));
 }
 
 void tst_lrelease::markuntranslated()
