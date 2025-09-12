@@ -135,6 +135,7 @@
     \list
     \li The node's type (function, class, variable, etc.)
     \li Whether the node has private access
+    \li Whether the node is marked as internal
     \li Whether the node is a pure virtual function
     \endlist
 
@@ -158,6 +159,14 @@
 
     True if the node represents a private member of a class or a non-public
     API element.
+*/
+
+/*!
+    \variable NodeContext::isInternal
+    \brief Whether the node is marked as internal API.
+
+    True if the node is marked with \\internal documentation command,
+    indicating it's internal API not intended for public consumption.
 */
 
 /*!
