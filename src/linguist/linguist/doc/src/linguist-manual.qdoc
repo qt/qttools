@@ -51,6 +51,7 @@
             \list
                 \li \l{TS file format}
                 \li \l{Text ID based translations}
+                \li \l{Meta strings reference}
                 \li \l{CMake Commands in Qt6 LinguistTools}{CMake commands}
                 \li \l{Examples}
             \endlist
@@ -88,6 +89,7 @@
             \list
                 \li \l{TS file format}
                 \li \l{Text ID based translations}
+                \li \l{Meta strings reference}
                 \li \l{CMake Commands in Qt6 LinguistTools}{CMake commands}
                 \li \l{Examples}
             \endlist
@@ -1417,6 +1419,7 @@ Log}. When complete, you can check out the translated texts on the log. Upon cli
     \list
         \li \l{TS file format}
         \li \l{Text ID based translations}
+        \li \l{Meta strings reference}
         \li \l{CMake Commands in Qt6 LinguistTools}{CMake commands}
         \li \l{Examples}
     \endlist
@@ -1662,4 +1665,334 @@ Log}. When complete, you can check out the translated texts on the log. Upon cli
     ...
     \endcode
 
+*/
+
+/*!
+    \page linguist-meta-strings-reference.html
+    \title Meta strings reference
+    \ingroup internationalization
+
+    \previouspage Text ID based translations
+
+    \brief Reference guide for meta strings used in Qt's translation system.
+
+    Meta strings are special comments that provide additional information to
+    lupdate and \QL for translation processing. They use specific
+    prefixes to identify their purpose and can be used in C++, QML, and Python code.
+
+    \section1 Meta string syntax overview
+
+    Meta strings are special comments that use specific prefixes to provide lupdate
+    with additional information about translations:
+
+    \table
+      \header
+          \li Meta String
+          \li Purpose
+          \li Usage
+      \row
+          \li \c{//:}
+          \li Extra comment for translators
+          \li Provides context and guidance to help translators
+      \row
+          \li \c{//%}
+          \li Source text (engineering English)
+          \li Defines display text for ID-based translations during development
+      \row
+          \li \c{//@}
+          \li Label for grouping
+          \li Organizes ID-based translations into logical groups
+      \row
+          \li \c{//~}
+          \li Extra key-value metadata
+          \li Stores additional custom information about the translation
+      \row
+          \li \c{// TRANSLATOR}
+          \li Magic comment for context
+          \li Provides context information about the class or file
+    \endtable
+
+    \note The \c{//=} meta string for message ID mapping is deprecated and should not be used in new code.
+
+    \section1 Translator comments (//:)
+
+    Use \c{//:} comments to provide additional context and guidance to translators.
+    These comments appear in the \QL translation interface and help
+    translators understand the meaning and usage of the text.
+
+    \section2 C++ example
+    \code cpp
+    //: Button to navigate backwards in the application
+    tr("Back");
+
+    //: This is a file menu item that opens an existing document.
+    //: Keep translation short to fit in menu.
+    tr("Open");
+    \endcode
+
+    \section2 QML example
+    \code qml
+    Button {
+      //: Emergency stop button - must be clearly visible
+      text: qsTr("STOP")
+    }
+    \endcode
+
+    \section2 Python example
+    \code python
+    #: Button to navigate backwards in the application
+    self.tr("Back")
+
+    #: This is a file menu item that opens an existing document.
+    #: Keep translation short to fit in menu.
+    self.tr("Open")
+    \endcode
+
+    Multiple translator comments can be used for the same string and will be
+    concatenated with newlines in the TS file.
+
+    \section2 TS file format
+
+    Translator comments appear as \c{<extracomment>} elements in the TS file:
+
+    \code xml
+    <message>
+        <source>Back</source>
+        <extracomment>Button to navigate backwards in the application</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    \endcode
+
+    \section1 Source text (//%)
+
+    The \c{//%} meta string defines the \e{engineering English} text that appears
+    in the user interface during development when using ID-based translations.
+    This is essential for making the application usable before translations
+    are complete.
+
+    \section2 C++ example
+    \code cpp
+    //% "Save Document"
+    qtTrId("file.save");
+
+    //% "Found %n items"
+    qtTrId("search.results", count);
+    \endcode
+
+    \section2 QML example
+    \code qml
+    Text {
+      //% "Welcome to the application"
+      text: qsTrId("welcome.message")
+    }
+    \endcode
+
+    \section2 Important notes
+    \list
+      \li Include parameter placeholders (%1, %n) in the source text
+      \li The source text should be production-ready English
+      \li Without //% comments, the text ID itself appears in the UI
+    \endlist
+
+    \section2 TS file format
+
+    Source text appears as the \c{<source>} element:
+
+    \code xml
+    <message id="file.save">
+        <source>Save Document</source>
+        <translation type="unfinished"></translation>
+    </message>
+    \endcode
+
+    \section1 Labels (//@)
+
+    Use \c{//@} meta strings to organize ID-based translations into logical
+    groups or categories within \QL. This is particularly useful
+    for large projects with many translation strings.
+
+    \note The \c{//@} meta string is only intended for ID-based translations
+    (qtTrId/qsTrId) and should not be used with text-based translations (tr/qsTr).
+
+    \section2 C++ example
+    \code cpp
+    //% "New Document"
+    //@ FileOperations
+    qtTrId("file.new");
+
+    //% "Print Document"
+    //@ FileOperations
+    qtTrId("file.print");
+
+    //% "Connection failed"
+    //@ NetworkErrors
+    qtTrId("network.error.connection");
+    \endcode
+
+    \section2 QML example
+    \code qml
+    Button {
+      //% "Login"
+      //@ Authentication
+      text: qsTrId("auth.login")
+    }
+    \endcode
+
+    \note Labels are not applicable to Python translations since Python only supports
+    text-based translations (self.tr()) and not ID-based translations.
+
+    Strings with the same label appear grouped together in \QL,
+    making it easier for translators to work on related content.
+
+    \section2 TS file format
+
+    Labels appear as a \c{label} element:
+
+    \code xml
+    <message id="file.new" label="FileOperations">
+        <source>New Document</source>
+        <label>FileOperations</label>
+        <translation type="unfinished"></translation>
+    </message>
+    \endcode
+
+    \section1 Extra metadata (//~)
+
+    The \c{//~} meta string allows you to attach arbitrary key-value metadata
+    to translations. This can be used for custom processing or translator
+    guidance.
+
+    \section2 Syntax
+    \code
+    //~ key value
+    //~ key "quoted value with spaces"
+    \endcode
+
+    \section2 C++ example
+    \code cpp
+    //% "Error"
+    //: Critical system error dialog
+    //~ Severity High
+    //~ MaxLength "20"
+    //~ Context "Error dialogs"
+    qtTrId("system.error");
+    \endcode
+
+    \section2 QML example
+    \code qml
+    Text {
+      //% "Loading..."
+      //~ Context "Progress indicators"
+      //~ ShowDuration "true"
+      text: qsTrId("progress.loading")
+    }
+    \endcode
+
+    \section2 Python example
+    \code python
+    #~ Severity High
+    #~ Context "Error dialogs"
+    self.tr("Critical system error")
+    \endcode
+
+    \section2 TS file format
+
+    Extra metadata appears as \c{<extra-*>} elements in the TS file and can be
+    processed by custom tools or translation workflows.
+
+    \code xml
+    <message id="system.error">
+        <source>Error</source>
+        <comment>Critical system error dialog</comment>
+        <translation type="unfinished"></translation>
+        <extra-Severity>High</extra-Severity>
+        <extra-MaxLength>20</extra-MaxLength>
+        <extra-Context>Error dialogs</extra-Context>
+    </message>
+    \endcode
+
+    \section1 TRANSLATOR magic comments
+
+    \c{TRANSLATOR} comments provide context information about a class or
+    source file to help translators understand where translations are used.
+
+    \section2 C++ example
+    \snippet doc_src_linguist-manual.cpp 5
+
+    \section2 QML example
+    \code qml
+    // TRANSLATOR LoginDialog Login dialog for user authentication
+    Item {
+      Text {
+          text: qsTr("Username")
+      }
+    }
+    \endcode
+
+    \section2 Python example
+    \code python
+    # TRANSLATOR MainWindow
+    #
+    # Main application window containing the primary user interface.
+    # Keep button labels concise due to space constraints.
+    #
+    class MainWindow(QMainWindow):
+      def setupUi(self):
+          self.tr("File")  # translations for this context
+    \endcode
+
+    \section2 TS file format
+
+    TRANSLATOR comment appear as a \c{<message>} elements with empty source text
+    on the \c{<context>} element:
+
+    \code xml
+    <context>
+        <name>Main</name>
+        <message>
+            <source></source>
+            <comment>LoginDialog Login dialog for user authentication</comment>
+            <translation></translation>
+        </message>
+    </context>
+    \endcode
+
+    \section1 Combining meta strings
+
+    Meta strings can be combined to provide comprehensive translation metadata:
+
+    \section2 Complete C++ example
+    \code cpp
+    //: File dialog - confirm destructive action
+    //: This will permanently delete the selected files
+    //% "Delete Selected Files"
+    //@ FileOperations
+    //~ Severity High
+    //~ RequiresConfirmation "true"
+    qtTrId("file.delete.confirm");
+    \endcode
+
+    \section2 Complete QML example
+    \code qml
+    Text {
+      //: Shows current connection status to server
+      //: Updates automatically every few seconds
+      //% "Connected to server"
+      //@ NetworkStatus
+      //~ UpdateFrequency "5000ms"
+      //~ Color "green"
+      text: qsTrId("status.connected")
+    }
+    \endcode
+
+    \section1 Best practices
+
+    \list
+      \li Use translator comments (//:) generously to provide context
+      \li Always include source text (//%) for ID-based translations
+      \li Group related translations using labels (//@) in large projects
+      \li Place meta strings immediately before the translation function call
+      \li Keep translator comments clear and concise but informative
+      \li Use consistent naming for labels and extra metadata keys
+    \endlist
 */

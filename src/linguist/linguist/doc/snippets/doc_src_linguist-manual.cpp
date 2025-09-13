@@ -28,3 +28,15 @@ menuBar: MenuBar {
 }
 
 //! [4]
+//! [5]
+/*
+  TRANSLATOR MainWindow
+
+  This class contains the main application window interface.
+  All menu items and toolbar buttons are defined here.
+*/
+class MainWindow : public QMainWindow
+{
+  // ... translations for this context
+};
+//! [5]
