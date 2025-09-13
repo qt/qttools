@@ -242,3 +242,69 @@
     Generally follows the same rules as isIncluded(), but is used specifically
     for determining when to generate warnings about missing documentation.
 */
+
+/*!
+    \fn bool InclusionFilter::isPubliclyVisible(const InclusionPolicy& policy, const NodeContext& context)
+    \brief Determines if a node should be visible in public documentation.
+
+    Returns true if the node described by \a context should be considered
+    publicly visible according to the given \a policy. This method implements
+    the business rule: "Include everything except internal nodes when
+    showInternal is disabled."
+
+    This is primarily used by index file generation and cross-referencing
+    systems that need to include private members for completeness but should
+    respect the internal visibility policy.
+
+    Unlike isIncluded(), this method only checks internal status and ignores
+    private member inclusion policies, making it suitable for systems that
+    need to preserve private API information for cross-referencing while
+    still respecting internal API visibility rules.
+
+    \sa isIncluded(), processInternalDocs()
+*/
+
+/*!
+    \fn bool InclusionFilter::processInternalDocs(const InclusionPolicy& policy)
+    \brief Determines if internal documentation should be processed.
+
+    Returns true if the given \a policy indicates that internal documentation
+    should be processed. This method implements the business rule: "Process
+    internal documentation only when showInternal is enabled."
+
+    This method is used by parsers, warning systems, and other components
+    that need to make decisions based solely on the internal documentation
+    policy without requiring a specific node context.
+
+    \sa isPubliclyVisible(), isIncluded()
+*/
+
+/*!
+    \fn bool InclusionFilter::isReimplementedMemberVisible(const InclusionPolicy& policy, const NodeContext& context)
+    \brief Determines if a reimplemented member should appear in documentation.
+
+    Returns true if the reimplemented member described by \a context should be
+    documented according to the given \a policy. This method implements the
+    business rule: "Reimplemented members are documented based on their access
+    level in the derived class, not their internal status."
+
+    This is specifically used for populating "Reimplemented Functions" sections,
+    where the fact that a function overrides a base class method is architectural
+    information that should be visible regardless of whether the implementation
+    details are marked as internal.
+
+    Unlike isIncluded(), this method treats internal status as orthogonal to
+    reimplementation visibility - a public override of an internal base class
+    function should still appear in the reimplemented functions list.
+
+    The method handles several cases:
+    \list
+    \li Public and protected reimplemented members are always visible
+    \li Pure virtual reimplemented members are always visible (even if private)
+    \li Private reimplemented members follow private inclusion policies
+    \li Internal status is explicitly ignored for reimplemented member visibility
+    \endlist
+
+    \sa isIncluded(), isPubliclyVisible(), requiresDocumentation()
+*/
+

@@ -287,3 +287,173 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
     }
 }
 
+TEST_CASE("InclusionFilter::isReimplementedMemberVisible functionality", "[InclusionFilter]")
+{
+    SECTION("Public reimplemented member is always visible")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = false;
+        context.isInternal = false;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
+    }
+
+    SECTION("Public internal reimplemented member is visible despite internal status")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = false;
+        context.isInternal = true;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        // This is the key test - public reimplemented members should be visible
+        // even when marked internal and showInternal is false
+        REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
+    }
+
+    SECTION("Protected reimplemented member is always visible")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = false; // protected is considered non-private
+        context.isInternal = false;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
+    }
+
+    SECTION("Protected internal reimplemented member is visible despite internal status")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = false; // protected is considered non-private
+        context.isInternal = true;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
+    }
+
+    SECTION("Pure virtual private reimplemented member is always visible")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = true;
+        context.isInternal = false;
+        context.isPureVirtual = true;
+
+        InclusionPolicy policy;
+        policy.includePrivate = false;
+        policy.includePrivateFunction = false;
+
+        REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
+    }
+
+    SECTION("Pure virtual private internal reimplemented member is visible")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = true;
+        context.isInternal = true;
+        context.isPureVirtual = true;
+
+        InclusionPolicy policy;
+        policy.includePrivate = false;
+        policy.includePrivateFunction = false;
+        policy.showInternal = false;
+
+        // Pure virtual should override internal status for reimplemented members
+        REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
+    }
+
+    SECTION("Private reimplemented member follows private inclusion policy")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = true;
+        context.isInternal = false;
+        context.isPureVirtual = false;
+
+        InclusionPolicy policy;
+        policy.includePrivate = false;
+        policy.includePrivateFunction = false;
+
+        REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == false);
+    }
+
+    SECTION("Private reimplemented member included when private policy allows")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = true;
+        context.isInternal = false;
+        context.isPureVirtual = false;
+
+        InclusionPolicy policy;
+        policy.includePrivate = true;
+        policy.includePrivateFunction = true;
+
+        REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
+    }
+
+    SECTION("Private internal reimplemented member ignores internal status")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = true;
+        context.isInternal = true;
+        context.isPureVirtual = false;
+
+        InclusionPolicy policy;
+        policy.includePrivate = true;
+        policy.includePrivateFunction = true;
+        policy.showInternal = false; // This should be ignored
+
+        // Should follow private policy, not internal policy
+        REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
+    }
+
+    SECTION("Private internal reimplemented member excluded when private policy disallows")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = true;
+        context.isInternal = true;
+        context.isPureVirtual = false;
+
+        InclusionPolicy policy;
+        policy.includePrivate = false;
+        policy.includePrivateFunction = false;
+        policy.showInternal = true; // This should be ignored for reimplemented members
+
+        // Should follow private policy, not internal policy
+        REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == false);
+    }
+
+    SECTION("Private variable reimplemented member follows private variable policy")
+    {
+        NodeContext context;
+        context.type = NodeType::Variable;
+        context.isPrivate = true;
+        context.isInternal = true;
+        context.isPureVirtual = false;
+
+        InclusionPolicy policy;
+        policy.includePrivate = false;
+        policy.includePrivateFunction = true; // This doesn't apply to variables
+        policy.includePrivateVariable = true; // This does
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
+    }
+}
+

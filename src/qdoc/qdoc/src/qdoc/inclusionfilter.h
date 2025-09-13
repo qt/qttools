@@ -37,6 +37,34 @@ public:
 
         return (policyFlags & nodeFlags) != 0;
     }
+
+    [[nodiscard]] static bool isPubliclyVisible(const InclusionPolicy& policy,
+                                              const NodeContext& context) {
+        return !context.isInternal || policy.showInternal;
+    }
+
+    [[nodiscard]] static bool processInternalDocs(const InclusionPolicy& policy) {
+        return policy.showInternal;
+    }
+
+    [[nodiscard]] static bool isReimplementedMemberVisible(const InclusionPolicy& policy,
+                                                         const NodeContext& context) {
+        // Business rule: "Reimplemented members are visible based on their access level
+        // in the derived class, regardless of internal status"
+
+        if (!context.isPrivate)
+            return true;  // Public and protected always visible
+
+        if (context.isPureVirtual)
+            return true;  // Pure virtual always visible
+
+        // For private members, check inclusion policy but ignore internal status
+        // We create a non-internal context to bypass internal checks in isIncluded()
+        NodeContext nonInternalContext = context;
+        nonInternalContext.isInternal = false;
+
+        return isIncluded(policy, nonInternalContext);
+    }
 };
 
 QT_END_NAMESPACE
