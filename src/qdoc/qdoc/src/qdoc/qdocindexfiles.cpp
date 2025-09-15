@@ -548,7 +548,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         const QString access = attributes.value(QLatin1String("access")).toString();
         if (access == "protected")
             node->setAccess(Access::Protected);
-        else if ((access == "private") || (access == "internal"))
+        else if (access == "private")
             node->setAccess(Access::Private);
         else
             node->setAccess(Access::Public);
