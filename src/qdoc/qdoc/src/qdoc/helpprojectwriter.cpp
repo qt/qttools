@@ -208,8 +208,12 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     // \group group_name itself is not documented.
     bool unseenGroup{node->isGroup() && !node->wasSeen()};
 
-    if ((node->isPrivate() || node->isInternal() || node->isDontDocument()) && !unseenGroup)
+    // Pure virtual functions must always be documented, even if private
+    // They are part of the class's public interface contract
+    if (((node->isPrivate() && !node->isPureVirtual()) ||
+         node->isInternal() || node->isDontDocument()) && !unseenGroup) {
         return false;
+    }
 
     if (node->name().isEmpty())
         return true;
@@ -422,8 +426,14 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
                 childSet << child;
                 continue;
             }
-            if (child->isIndexNode() || child->isPrivate() || child->isInternal())
+            if (child->isIndexNode())
                 continue;
+            // Pure virtual functions must always be documented, even if private
+            if (child->isPrivate() && !child->isPureVirtual())
+                continue;
+            if (child->isInternal())
+                continue;
+
             if (child->isTextPageNode()) {
                 if (!childSet.contains(child))
                     childSet << child;
