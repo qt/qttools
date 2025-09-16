@@ -74,6 +74,7 @@ private:
 
     void emitMessage(MessageType type, const QString &message, const QString &details) const;
     [[nodiscard]] QString top() const;
+    [[nodiscard]] static QString warningLogHeader();
     static void initializeWarningLog(const Config &config);
     static void writeToWarningLog(MessageType type, const QString &formattedMessage);
 

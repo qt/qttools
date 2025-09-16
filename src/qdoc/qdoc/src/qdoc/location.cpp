@@ -325,6 +325,15 @@ void Location::initialize()
 }
 
 /*!
+    Creates the header for the warning log file.
+*/
+QString Location::warningLogHeader()
+{
+    const QStringList args = QCoreApplication::arguments();
+    return args.join(' '_L1);
+}
+
+/*!
   Initializes the warning log file, creates the output directory if needed, and
   adds the command-line arguments to QDoc to the top of the log file.
 
@@ -347,8 +356,7 @@ void Location::initializeWarningLog(const Config &config)
     if (s_warningLogFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
         s_warningLogStream = std::make_unique<QTextStream>(s_warningLogFile.get());
 
-        QStringList args = QCoreApplication::arguments();
-        *s_warningLogStream << args.join(' ') << Qt::endl;
+        *s_warningLogStream << warningLogHeader() << Qt::endl;
         *s_warningLogStream << Qt::endl;
     } else {
         Location().warning(QStringLiteral("Failed to open warning log file: %1").arg(logFilePath));
