@@ -301,6 +301,7 @@ struct ConfigStrings
     static QString LOCATIONINFO;
     static QString LOGPROGRESS;
     static QString LOGWARNINGS;
+    static QString LOGWARNINGSDISABLECLIARGS;
     static QString MACRO;
     static QString MANIFESTMETA;
     static QString MODULEHEADER;
@@ -387,6 +388,7 @@ struct ConfigStrings
 #define CONFIG_LOCATIONINFO ConfigStrings::LOCATIONINFO
 #define CONFIG_LOGPROGRESS ConfigStrings::LOGPROGRESS
 #define CONFIG_LOGWARNINGS ConfigStrings::LOGWARNINGS
+#define CONFIG_LOGWARNINGSDISABLECLIARGS ConfigStrings::LOGWARNINGSDISABLECLIARGS
 #define CONFIG_MACRO ConfigStrings::MACRO
 #define CONFIG_MANIFESTMETA ConfigStrings::MANIFESTMETA
 #define CONFIG_MODULEHEADER ConfigStrings::MODULEHEADER

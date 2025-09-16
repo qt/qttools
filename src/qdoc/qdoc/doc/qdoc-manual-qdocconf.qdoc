@@ -959,8 +959,10 @@
     When set to \c true, QDoc creates a log file named
     \c {<project>-qdoc-warnings.log} in the output directory and writes
     all warning messages to this file. Warnings are still also written
-    to stderr as usual. The log file includes the command-line arguments
-    used to invoke QDoc at the top for reproducibility.
+    to stderr as usual.
+
+    The log file includes a header with project information and, by default,
+    the command-line arguments used to invoke QDoc for reproducibility.
 
     Setting this to \c true enables warning logging:
 
@@ -973,6 +975,26 @@
     This feature is useful for large documentation sets or CI environments
     where warnings can be numerous and scroll by too quickly to be analyzed
     systematically.
+
+    The \c logwarnings variable was introduced in QDoc 6.11.
+
+    \section2 logwarnings.disablecliargs
+
+    The \c logwarnings.disablecliargs boolean sub-variable controls whether
+    CLI arguments are omitted from warning log file headers.
+
+    \badcode
+    logwarnings.disablecliargs = true
+    \endcode
+
+    When set to \c true, the command-line arguments are omitted from the log
+    file header, making the log files portable across different environments.
+    This is useful for test suites and CI systems where command-line arguments
+    contain environment-specific paths and temporary directories.
+
+    The default value is \c false.
+    The \c {logwarnings.disablecliargs} variable was introduced in QDoc 6.11.
+
 
     \target macro-variable
     \section1 macro

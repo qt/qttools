@@ -329,8 +329,31 @@ void Location::initialize()
 */
 QString Location::warningLogHeader()
 {
+    QStringList lines;
+
+    lines << "# QDoc Warning Log"_L1;
+    lines << "# Project: "_L1 + s_project;
+    lines << "#"_L1;
+
+    // Add command line arguments unless disabled
+    if (Config::instance().get(CONFIG_LOGWARNINGSDISABLECLIARGS).asBool())
+        return lines.join('\n'_L1);
+
     const QStringList args = QCoreApplication::arguments();
-    return args.join(' '_L1);
+    if (!args.isEmpty()) {
+        QStringList quotedArgs;
+        for (const QString &arg : args) {
+            // Quote arguments containing spaces
+            if (arg.contains(' '_L1))
+                quotedArgs << '"'_L1 + arg + '"'_L1;
+            else
+                quotedArgs << arg;
+        }
+        lines << "# Command: "_L1 + quotedArgs.join(QLatin1Char(' '));
+    }
+
+    lines << "#"_L1;
+    return lines.join('\n'_L1);
 }
 
 /*!
