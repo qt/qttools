@@ -1,0 +1,24 @@
+project = WarningLog
+description = Test case for relative path functionality in warning logs
+
+outputformats = HTML
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+# Test projectroot configuration for relative paths
+# Accept three warnings
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+warninglimit = 1
+warninglimit.enabled = true
+
+# Disable location info for reproducible output
+locationinfo = false
+

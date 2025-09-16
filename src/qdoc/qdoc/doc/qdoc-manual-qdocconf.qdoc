@@ -2068,12 +2068,23 @@
     projectroot = /path/to/project/root
     \endcode
 
-    When configured, this variable can be used by QDoc to make warning
-    log file paths relative to the specified directory, improving
-    portability across different build environments.
+    QDoc uses the following priority order to determine the project root:
 
-    For standalone QDoc usage, the \c projectroot variable provides
-    a way to specify the project's base directory:
+    \list 1
+        \li \c QDOC_PROJECT_ROOT environment variable
+        \li \c projectroot configuration variable
+        \li If neither is set, absolute paths are used
+    \endlist
+
+    When a project root is set, QDoc converts absolute file paths to relative
+    paths in warning log files. This makes logs portable across different
+    build environments.
+
+    Qt's build system automatically sets \c QDOC_PROJECT_ROOT, so you
+    typically don't need to set \c projectroot manually.
+
+    For standalone QDoc usage, setting \c projectroot enables portable
+    warning logs:
 
     \badcode
     projectroot = /home/user/myproject

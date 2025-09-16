@@ -75,6 +75,7 @@ private:
     void emitMessage(MessageType type, const QString &message, const QString &details) const;
     [[nodiscard]] QString top() const;
     [[nodiscard]] static QString warningLogHeader();
+    static QString formatPathForWarningLog(const QString &path);
     static void initializeWarningLog(const Config &config);
     static void writeToWarningLog(MessageType type, const QString &formattedMessage);
 
@@ -90,6 +91,7 @@ private:
     static int s_warningLimit;
     static QString s_programName;
     static QString s_project;
+    static QString s_projectRoot;
     static QRegularExpression *s_spuriousRegExp;
     static QSet<QString> s_reports;
     static std::unique_ptr<QFile> s_warningLogFile;

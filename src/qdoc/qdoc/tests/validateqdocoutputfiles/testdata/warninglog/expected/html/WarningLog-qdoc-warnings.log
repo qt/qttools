@@ -1,0 +1,7 @@
+# QDoc Warning Log
+# Project: WarningLog
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/testclass.cpp:17: (qdoc) warning: Undocumented parameter 'param' in TestClass::partiallyDocumented()

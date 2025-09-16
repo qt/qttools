@@ -23,6 +23,7 @@ int Location::s_warningCount = 0;
 int Location::s_warningLimit = -1;
 QString Location::s_programName;
 QString Location::s_project;
+QString Location::s_projectRoot;
 QSet<QString> Location::s_reports;
 QRegularExpression *Location::s_spuriousRegExp = nullptr;
 std::unique_ptr<QFile> Location::s_warningLogFile;
@@ -305,6 +306,18 @@ void Location::initialize()
     s_tabSize = config.get(CONFIG_TABSIZE).asInt();
     s_programName = config.programName();
     s_project = config.get(CONFIG_PROJECT).asString();
+
+    // Initialize project root for relative path calculation with priority:
+    // 1. QDOC_PROJECT_ROOT environment variable (highest priority)
+    // 2. projectroot configuration variable (fallback)
+    // 3. Leave empty if neither available (absolute paths)
+    QString qdocProjectRoot = qEnvironmentVariable("QDOC_PROJECT_ROOT");
+    if (qdocProjectRoot.isNull())
+        qdocProjectRoot = config.get(CONFIG_PROJECTROOT).asString();
+
+    if (!qdocProjectRoot.isEmpty() && QDir(qdocProjectRoot).exists())
+        s_projectRoot = QDir::cleanPath(qdocProjectRoot);
+
     if (!config.singleExec())
         s_warningCount = 0;
     if (qEnvironmentVariableIsSet("QDOC_ENABLE_WARNINGLIMIT")
@@ -329,31 +342,62 @@ void Location::initialize()
 */
 QString Location::warningLogHeader()
 {
+    const auto &config = Config::instance();
     QStringList lines;
 
     lines << "# QDoc Warning Log"_L1;
     lines << "# Project: "_L1 + s_project;
-    lines << "#"_L1;
 
     // Add command line arguments unless disabled
-    if (Config::instance().get(CONFIG_LOGWARNINGSDISABLECLIARGS).asBool())
-        return lines.join('\n'_L1);
-
-    const QStringList args = QCoreApplication::arguments();
-    if (!args.isEmpty()) {
-        QStringList quotedArgs;
-        for (const QString &arg : args) {
-            // Quote arguments containing spaces
-            if (arg.contains(' '_L1))
-                quotedArgs << '"'_L1 + arg + '"'_L1;
-            else
-                quotedArgs << arg;
+    if (!config.get(CONFIG_LOGWARNINGSDISABLECLIARGS).asBool()) {
+        const QStringList args = QCoreApplication::arguments();
+        if (!args.isEmpty()) {
+            QStringList quotedArgs;
+            for (const QString &arg : args) {
+                // Quote arguments containing spaces
+                if (arg.contains(QLatin1Char(' '))) {
+                    quotedArgs << '"'_L1 + arg + '"'_L1;
+                } else {
+                    quotedArgs << arg;
+                }
+            }
+            lines << "# Command: "_L1 + quotedArgs.join(QLatin1Char(' '));
         }
-        lines << "# Command: "_L1 + quotedArgs.join(QLatin1Char(' '));
+    }
+
+    if (!s_projectRoot.isEmpty()) {
+        // Indicate which method was used to determine project root
+        if (!qEnvironmentVariable("QDOC_PROJECT_ROOT").isNull()) {
+            lines << "# Root: QDOC_PROJECT_ROOT"_L1;
+        } else {
+            lines << "# Root: projectroot config"_L1;
+        }
+        lines << "# Path-Format: relative"_L1;
+    } else {
+        lines << "# Path-Format: absolute"_L1;
     }
 
     lines << "#"_L1;
     return lines.join('\n'_L1);
+}
+
+/*!
+  Formats a file path for the warning log, converting to relative path
+  if a project root is configured.
+ */
+QString Location::formatPathForWarningLog(const QString &path)
+{
+    if (s_projectRoot.isEmpty())
+        return path;
+
+    QDir projectDir(s_projectRoot);
+    QString relativePath = projectDir.relativeFilePath(path);
+
+    // Only use relative path if it doesn't go outside the project root
+    if (!relativePath.startsWith("../"_L1))
+        return relativePath;
+
+    return path;
 }
 
 /*!
@@ -473,7 +517,15 @@ void Location::emitMessage(MessageType type, const QString &message, const QStri
     fprintf(stderr, "%s\n", result.toLatin1().data());
     fflush(stderr);
 
-    writeToWarningLog(type, result);
+    // Create a version with relative paths for the warning log
+    QString logMessage = result;
+    if (type == Warning && !s_projectRoot.isEmpty()) {
+        // Replace the absolute path portion with a relative path for log file
+        QString locationString = toString();
+        QString formattedLocationString = formatPathForWarningLog(locationString);
+        logMessage.replace(locationString, formattedLocationString);
+    }
+    writeToWarningLog(type, logMessage);
 }
 
 /*!

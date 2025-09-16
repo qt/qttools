@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for relative path functionality in warning logs" version="" project="WarningLog">
+    <namespace name="" status="active" access="public" module="warninglog">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="RelativePathsTest" brief="A test class to verify relative path functionality in warning logs">
+            <function name="documentedFunction" fullname="TestClass::documentedFunction" href="testclass.html#documentedFunction" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" signature="void documentedFunction()"/>
+            <function name="partiallyDocumented" fullname="TestClass::partiallyDocumented" href="testclass.html#partiallyDocumented" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" brief="Constructor with missing parameter documentation" signature="void partiallyDocumented(int param)">
+                <parameter type="int" name="param" default=""/>
+            </function>
+        </class>
+        <module name="RelativePathsTest" href="relativepathstest-module.html" status="active" documented="true" seen="true" title="Relative Paths Test Module" brief="Test module for relative path functionality"/>
+    </namespace>
+</INDEX>
