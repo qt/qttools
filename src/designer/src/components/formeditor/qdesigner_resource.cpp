@@ -540,8 +540,11 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
     if (m_formWindow->useIdBasedTranslations())
         ui->setAttributeIdbasedtr(true);
 
-    if (core()->integration()->qtVersion() >= QVersionNumber(6, 10, 0))
-        ui->setAttributeLabel(m_formWindow->idBasedTranslationLabel());
+    if (core()->integration()->qtVersion() >= QVersionNumber(6, 10, 0)) {
+        const QString label = m_formWindow->idBasedTranslationLabel();
+        if (!label.isEmpty())
+            ui->setAttributeLabel(label);
+    }
 
     if (!m_formWindow->connectSlotsByName()) // Don't write out if true (default)
         ui->setAttributeConnectslotsbyname(false);
