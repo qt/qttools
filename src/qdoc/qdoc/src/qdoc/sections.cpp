@@ -465,6 +465,10 @@ Sections::Sections(const NodeMultiMap &nsmap) : m_aggregate(nullptr)
         case NodeType::Property:
             sections[SinceProperties].appendMember(node);
             break;
+        case NodeType::SharedComment:
+            if (node->isPropertyGroup())
+                sections[SinceQmlProperties].appendMember(node);
+            break;
         case NodeType::Variable:
             sections[SinceVariables].appendMember(node);
             break;

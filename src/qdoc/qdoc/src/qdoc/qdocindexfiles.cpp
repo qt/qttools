@@ -23,6 +23,7 @@
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "qmlpropertynode.h"
+#include "sharedcommentnode.h"
 #include "typedefnode.h"
 #include "variablenode.h"
 
@@ -44,6 +45,7 @@ enum QDocAttr {
 
 static Node *root_ = nullptr;
 static IndexSectionWriter *post_ = nullptr;
+static QHash<QString, SharedCommentNode *> sharedDocNodes_;
 
 /*!
   \class QDocIndexFiles
@@ -109,6 +111,8 @@ void QDocIndexFiles::readIndexes(const QStringList &indexFiles)
  */
 void QDocIndexFiles::readIndexFile(const QString &path)
 {
+    sharedDocNodes_.clear();
+
     QFile file(path);
     if (!file.open(QFile::ReadOnly)) {
         qWarning() << "Could not read index file" << path;
@@ -175,7 +179,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
 
     QString name = attributes.value(QLatin1String("name")).toString();
     QString href = attributes.value(QLatin1String("href")).toString();
-    Node *node;
+    Node *node{nullptr};
     Location location;
     Aggregate *parent = nullptr;
     bool hasReadChildren = false;
@@ -277,18 +281,44 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             location = Location(name);
         node = qmlTypeNode;
     } else if (parent && elementName == QLatin1String("qmlproperty")) {
-        QString type = attributes.value(QLatin1String("type")).toString();
-        bool attached = false;
-        if (attributes.value(QLatin1String("attached")) == QLatin1String("true"))
-            attached = true;
-        bool readonly = false;
-        if (attributes.value(QLatin1String("writable")) == QLatin1String("false"))
-            readonly = true;
-        auto *qmlPropertyNode = new QmlPropertyNode(parent, name, std::move(type), attached);
-        qmlPropertyNode->markReadOnly(readonly);
-        if (attributes.value(QLatin1String("required")) == QLatin1String("true"))
-            qmlPropertyNode->setRequired();
-        node = qmlPropertyNode;
+        // Find the associated property group, if defined.
+        QString propertyGroup = attributes.value("inpropertygroup").toString();
+
+        if (attributes.value("propertygroup") == "true") {
+            // A node representing a property group defines the name of the group.
+            propertyGroup = attributes.value("fullname").toString();
+        } else {
+            QString type = attributes.value(QLatin1String("type")).toString();
+            bool attached = false;
+            if (attributes.value(QLatin1String("attached")) == QLatin1String("true"))
+                attached = true;
+            bool readonly = false;
+            if (attributes.value(QLatin1String("writable")) == QLatin1String("false"))
+                readonly = true;
+            auto *qmlPropertyNode = new QmlPropertyNode(parent, name, std::move(type), attached);
+            qmlPropertyNode->markReadOnly(readonly);
+            if (attributes.value(QLatin1String("required")) == QLatin1String("true"))
+                qmlPropertyNode->setRequired();
+
+            node = qmlPropertyNode;
+        }
+
+        if (!propertyGroup.isEmpty()) {
+            // Handle the relevant property group by obtaining or creating a
+            // shared comment node.
+            SharedCommentNode *scn = sharedDocNodes_.value(propertyGroup);
+            if (!scn) {
+                scn = new SharedCommentNode(static_cast<QmlTypeNode *>(parent), 0, propertyGroup.split(".").last());
+                sharedDocNodes_[propertyGroup] = scn;
+            }
+            if (node) {
+                // Regular properties are appended to the shared comment node.
+                scn->append(node);
+            } else {
+                node = scn;
+                hasReadChildren = true;
+            }
+        }
     } else if (elementName == QLatin1String("group")) {
         auto *collectionNode = m_qdb->addGroup(name);
         collectionNode->setTitle(attributes.value(QLatin1String("title")).toString());
@@ -941,6 +971,11 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     }
 
     writer.writeAttribute("name", objName);
+
+    if (node->isPropertyGroup())
+        writer.writeAttribute("propertygroup", "true");
+    else if (node->isSharingComment() && node->sharedCommentNode()->isPropertyGroup())
+        writer.writeAttribute("inpropertygroup", node->sharedCommentNode()->fullDocumentName());
 
     // Write module and base type info for QML types
     if (!moduleNameAttr.isEmpty()) {
