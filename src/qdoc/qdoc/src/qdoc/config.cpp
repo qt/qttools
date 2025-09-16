@@ -69,6 +69,7 @@ QString ConfigStrings::OUTPUTPREFIXES = QStringLiteral("outputprefixes");
 QString ConfigStrings::OUTPUTSUFFIXES = QStringLiteral("outputsuffixes");
 QString ConfigStrings::PRODUCTNAME = QStringLiteral("productname");
 QString ConfigStrings::PROJECT = QStringLiteral("project");
+QString ConfigStrings::PROJECTROOT = QStringLiteral("projectroot");
 QString ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL =
         QStringLiteral("redirectdocumentationtodevnull");
 QString ConfigStrings::REPORTMISSINGALTTEXTFORIMAGES =

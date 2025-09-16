@@ -178,6 +178,7 @@
     \li \l {outputsuffixes-variable} {outputsuffixes}
     \li \l {productname-variable} {productname}
     \li \l {project-variable} {project}
+    \li \l {projectroot-variable} {projectroot}
     \li \l {sourcedirs-variable} {sourcedirs}
     \li \l {sources-variable} {sources}
     \li \l {sources.fileextensions-variable} {sources.fileextensions}
@@ -2056,6 +2057,31 @@
     name.
 
     See also \l depends, \l indexes, and \l description.
+
+    \target projectroot-variable
+    \section1 projectroot
+
+    The \c projectroot variable sets the project root directory for relative
+    path calculation in warning logs.
+
+    \badcode
+    projectroot = /path/to/project/root
+    \endcode
+
+    When configured, this variable can be used by QDoc to make warning
+    log file paths relative to the specified directory, improving
+    portability across different build environments.
+
+    For standalone QDoc usage, the \c projectroot variable provides
+    a way to specify the project's base directory:
+
+    \badcode
+    projectroot = /home/user/myproject
+    logwarnings = true
+    \endcode
+
+    The \c projectroot variable was introduced in QDoc 6.11.
+    See also \l logwarnings.
 
     \target url-variable
     \section1 url
