@@ -16,7 +16,7 @@ class Ollama : public TranslationProtocol
 public:
     Ollama();
     ~Ollama() override;
-    QList<Batch> makeBatches(const Messages &messages) const override;
+    QList<Batch> makeBatches(const Messages &messages, const QString &userContext) const override;
     QByteArray payload(const Batch &b) const override;
     QHash<QString, QString> extractTranslations(const QByteArray &response) const override;
     QStringList extractModels(const QByteArray &data) const override;

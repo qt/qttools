@@ -53,7 +53,7 @@ Ollama::Ollama()
     m_payloadBase->insert("format"_L1, "json"_L1);
 
     QJsonObject opts;
-    opts.insert("temperature"_L1, 0);
+    opts.insert("temperature"_L1, 0.05);
     m_payloadBase->insert("options"_L1, opts);
 
     m_systemMessage->insert("role"_L1, "system"_L1);
@@ -62,7 +62,7 @@ Ollama::Ollama()
 
 Ollama::~Ollama() = default;
 
-QList<Batch> Ollama::makeBatches(const Messages &messages) const
+QList<Batch> Ollama::makeBatches(const Messages &messages, const QString &userContext) const
 {
     QHash<QString, QList<const TranslatorMessage *>> groups;
 
@@ -78,6 +78,7 @@ QList<Batch> Ollama::makeBatches(const Messages &messages) const
             b.srcLang = messages.srcLang;
             b.tgtLang = messages.tgtLang;
             b.context = it.key();
+            b.userContext = userContext;
             b.items.reserve(it.value().size());
             while (msgIt != it.value().cend() && b.items.size() < s_maxBatchSize) {
                 Item item;
@@ -168,8 +169,12 @@ QString Ollama::makePrompt(const Batch &b) const
 {
     QStringList lines;
     lines.reserve(b.items.size() + 32);
-    lines << "Context: %1"_L1.arg(b.context);
-    lines << "Target: %1"_L1.arg(b.tgtLang);
+
+    if (!b.userContext.isEmpty())
+        lines << "Application Context: "_L1 + b.userContext;
+
+    lines << "Context: "_L1 + b.context;
+    lines << "Target: "_L1 + b.tgtLang;
     lines << "Items:"_L1;
     for (const Item &it : b.items) {
         QString line = "- source: '%1'"_L1.arg(it.msg->sourceText());
@@ -190,8 +195,12 @@ When given a list of items of the given 'Context', each may include:
 - source: the original text to translate
 - comment: an optional developer note for more context
 
+If "Application Context" is provided, use it to understand the domain and terminology
+appropriate for the application (e.g., medical, financial, gaming) to produce more
+accurate and contextually appropriate translations.
+
 Translate the items into the **target language** specified by the user,
-preserving keyboard accelerators (e.g. “&File”) and placeholders (e.g. “%1”).
+preserving keyboard accelerators (e.g. "&File") and placeholders (e.g. "%1").
 
 RESULT FORMAT (MUST FOLLOW):
 A single JSON object with one key, "Translations",

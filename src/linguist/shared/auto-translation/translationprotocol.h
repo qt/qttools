@@ -30,6 +30,7 @@ public:
     QString srcLang;
     QString tgtLang;
     QString context;
+    QString userContext;
     QList<Item> items;
     std::shared_ptr<std::atomic_int> counter;
 };
@@ -37,7 +38,8 @@ public:
 class TranslationProtocol
 {
 public:
-    virtual QList<Batch> makeBatches(const Messages &messages) const = 0;
+    virtual QList<Batch> makeBatches(const Messages &messages,
+                                     const QString &userContext = {}) const = 0;
     virtual QByteArray payload(const Batch &b) const = 0;
     virtual QHash<QString, QString> extractTranslations(const QByteArray &data) const = 0;
     virtual QStringList extractModels(const QByteArray &data) const = 0;

@@ -22,7 +22,7 @@ public:
     MachineTranslator();
     ~MachineTranslator();
 
-    void translate(const Messages &messages);
+    void translate(const Messages &messages, const QString &userContext = QString());
     void stop() noexcept { m_stopped = true; }
     void start() noexcept
     {

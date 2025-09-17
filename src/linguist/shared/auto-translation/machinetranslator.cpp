@@ -23,11 +23,11 @@ MachineTranslator::MachineTranslator()
 
 MachineTranslator::~MachineTranslator() = default;
 
-void MachineTranslator::translate(const Messages &messages)
+void MachineTranslator::translate(const Messages &messages, const QString &userContext)
 {
-    auto batches = m_translator->makeBatches(messages);
-    for (auto &b : batches)
-        translateBatch(std::move(b), 0);
+    auto batches = m_translator->makeBatches(messages, userContext);
+    for (auto &b : std::as_const(batches))
+        translateBatch(b, 0);
 }
 
 void MachineTranslator::setUrl(const QString &url)
