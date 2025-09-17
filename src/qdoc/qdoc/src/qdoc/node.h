@@ -163,7 +163,7 @@ public:
     } // means PageNode but not Aggregate
     [[nodiscard]] virtual bool isWrapper() const;
 
-    [[nodiscard]] QString plainName() const;
+    [[nodiscard]] virtual QString plainName() const;
     QString plainFullName(const Node *relative = nullptr) const;
     [[nodiscard]] QString plainSignature() const;
     QString fullName() const override { return fullName(nullptr); }

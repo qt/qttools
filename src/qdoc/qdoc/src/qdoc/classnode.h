@@ -55,6 +55,11 @@ public:
     [[nodiscard]] bool isQmlSingleton() const { return m_isQmlSingleton; }
     void setQmlSingleton(bool singleton = true) { m_isQmlSingleton = singleton; }
 
+    [[nodiscard]] bool isAnonymous() const { return m_anonymous; }
+    void setAnonymous(bool anonymous = true) { m_anonymous = anonymous; }
+
+    [[nodiscard]] QString plainName() const override;
+
 private:
     void promotePublicBases(const QList<RelatedClass> &bases);
 
@@ -65,6 +70,7 @@ private:
     bool m_abstract { false };
     bool m_wrapper { false };
     bool m_isQmlSingleton { false };
+    bool m_anonymous { false };
     QSet<QmlTypeNode *> m_nativeTypeForQml;
 };
 

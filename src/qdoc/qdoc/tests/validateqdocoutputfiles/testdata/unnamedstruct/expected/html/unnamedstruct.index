@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test for unnamed struct rendering" version="" project="UnnamedStruct">
+    <namespace name="" status="active" access="public" module="unnamedstruct">
+        <struct name="AxisAndAngle" href="axisandangle.html" status="active" access="public" location="templatestruct.h" documented="true" module="UnnamedStructModule">
+            <variable name="axis" fullname="AxisAndAngle::axis" href="axisandangle.html#axis-var" status="active" access="public" location="templatestruct.h" documented="true" type="struct AxisAndAngle&lt;AngleT&gt;::(unnamed struct)" static="false"/>
+        </struct>
+        <module name="UnnamedStructModule" href="unnamedstructmodule-module.html" status="active" location="templatestruct.h" documented="true" seen="true" title="Unnamed Struct Module"/>
+    </namespace>
+</INDEX>

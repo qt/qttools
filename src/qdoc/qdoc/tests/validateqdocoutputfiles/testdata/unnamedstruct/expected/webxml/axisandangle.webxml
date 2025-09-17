@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <struct name="AxisAndAngle" href="axisandangle.html" status="active" access="public" location="templatestruct.h" documented="true" module="UnnamedStructModule">
+            <description>
+                <para>Test struct similar to QQuaternion::AxisAndAngle to reproduce the bug.</para>
+            </description>
+            <variable name="axis" fullname="AxisAndAngle::axis" href="axisandangle.html#axis-var" status="active" access="public" location="templatestruct.h" documented="true" type="struct AxisAndAngle&lt;AngleT&gt;::(unnamed struct)" static="false">
+                <description>
+                    <para>The 3D axis that together with an angle corresponds to a quaternion.</para>
+                    <para>An unnamed struct containing members x, y, z.</para>
+                </description>
+            </variable>
+        </struct>
+    </document>
+</WebXML>

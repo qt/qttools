@@ -176,6 +176,25 @@ static std::string get_fully_qualified_type_name(clang::QualType type, const cla
 }
 
 /*
+ * Cleans up anonymous struct names in type strings by replacing
+ * file-path-based identifiers with clean display names.
+ * Only performs expensive cleaning when anonymous types are detected.
+ */
+static QString cleanAnonymousTypeName(const QString &typeName) {
+    if (!typeName.contains(QLatin1String("(unnamed "))) {
+        return typeName; // Fast path for most cases
+    }
+
+    // Only do expensive cleaning when needed
+    static const QRegularExpression pattern(
+        R"(\(unnamed (struct|union|class) at [^)]+\))"
+    );
+    QString cleaned = typeName;
+    cleaned.replace(pattern, QStringLiteral("(unnamed \\1)"));
+    return cleaned;
+}
+
+/*
  * Retrieves expression as written in the original source code.
  *
  * declaration_context should be the ASTContext of the declaration
@@ -1064,6 +1083,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         auto *classe = new ClassNode(type, semanticParent, className);
         classe->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
         classe->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
+        classe->setAnonymous(clang_Cursor_isAnonymous(cursor));
 
         if (detectQmlSingleton(cursor)) {
             classe->setQmlSingleton(true);
@@ -1220,10 +1240,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
 
         var->setAccess(access);
         var->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
-        var->setLeftType(QString::fromStdString(get_fully_qualified_type_name(
+        var->setLeftType(cleanAnonymousTypeName(QString::fromStdString(get_fully_qualified_type_name(
             value_declaration->getType(),
             value_declaration->getASTContext()
-        )));
+        ))));
         var->setStatic(kind == CXCursor_VarDecl && parent_->isClassNode());
 
         return CXChildVisit_Continue;
@@ -1339,10 +1359,10 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     else if (kind == CXCursor_Destructor)
         fn->setMetaness(FunctionNode::Dtor);
     else
-        fn->setReturnType(QString::fromStdString(get_fully_qualified_type_name(
+        fn->setReturnType(cleanAnonymousTypeName(QString::fromStdString(get_fully_qualified_type_name(
             function_declaration->getReturnType(),
             function_declaration->getASTContext()
-        )));
+        ))));
 
     const clang::CXXConstructorDecl* constructor_declaration = llvm::dyn_cast<const clang::CXXConstructorDecl>(function_declaration);
 
@@ -1397,16 +1417,16 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     for (clang::ParmVarDecl* const parameter_declaration : function_declaration->parameters()) {
         clang::QualType parameter_type = parameter_declaration->getOriginalType();
 
-        parameters.append(QString::fromStdString(get_fully_qualified_type_name(
+        parameters.append(cleanAnonymousTypeName(QString::fromStdString(get_fully_qualified_type_name(
             parameter_type,
             parameter_declaration->getASTContext()
-        )));
+        ))));
 
         if (!parameter_type.isCanonical())
-            parameters.last().setCanonicalType(QString::fromStdString(get_fully_qualified_type_name(
+            parameters.last().setCanonicalType(cleanAnonymousTypeName(QString::fromStdString(get_fully_qualified_type_name(
                 parameter_type.getCanonicalType(),
                 parameter_declaration->getASTContext()
-            )));
+            ))));
     }
 
     if (parameters.count() > 0) {

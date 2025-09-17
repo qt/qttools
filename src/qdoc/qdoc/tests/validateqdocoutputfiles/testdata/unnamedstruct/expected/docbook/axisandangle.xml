@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title></db:title>
+<db:productname>UnnamedStruct</db:productname>
+<db:titleabbrev>Test for unnamed struct rendering</db:titleabbrev>
+<db:abstract>
+<db:para>Test for unnamed struct rendering.</db:para></db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>AxisAndAngle</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>Test struct similar to QQuaternion::AxisAndAngle to reproduce the bug.</db:para>
+</db:section>
+<db:section xml:id="member-variable-documentation">
+<db:title>Member Variable Documentation</db:title>
+<db:section xml:id="axis-var">
+<db:title>struct AxisAndAngle&lt;AngleT&gt;::(unnamed struct) AxisAndAngle::axis</db:title>
+<db:para>The 3D axis that together with an angle corresponds to a quaternion.</db:para>
+<db:para>An unnamed struct containing members x, y, z.</db:para>
+</db:section>
+</db:section>
+</db:article>

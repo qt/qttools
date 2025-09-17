@@ -1,0 +1,22 @@
+project = UnnamedStruct
+description = Test for unnamed struct rendering
+
+headerdirs = ./src
+sourcedirs = ./src
+
+locationinfo = false
+warninglimit = 0
+warninglimit.enabled = true
+
+documentationinheaders = true
+
+outputformats             = WebXML HTML DocBook
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+

@@ -171,6 +171,12 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
             if (static_cast<const EnumNode *>(node)->isAnonymous())
                 extra << "anonymous";
             break;
+        case NodeType::Struct:
+        case NodeType::Union:
+        case NodeType::Class:
+            if (static_cast<const ClassNode *>(node)->isAnonymous())
+                extra << "anonymous";
+            break;
         case NodeType::Function: {
             const auto *func = static_cast<const FunctionNode *>(node);
             if (func->isStatic()) {

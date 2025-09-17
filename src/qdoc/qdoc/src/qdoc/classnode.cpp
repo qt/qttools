@@ -257,4 +257,25 @@ void ClassNode::resolvePropertyOverriddenFromPtrs(PropertyNode *pn)
     }
 }
 
+/*!
+  Returns the display name for this class node. For anonymous structs,
+  returns "(unnamed struct)" instead of the file-based unique identifier.
+*/
+QString ClassNode::plainName() const
+{
+    if (isAnonymous()) {
+        switch (nodeType()) {
+        case NodeType::Struct:
+            return QLatin1String("(unnamed struct)");
+        case NodeType::Union:
+            return QLatin1String("(unnamed union)");
+        case NodeType::Class:
+            return QLatin1String("(unnamed class)");
+        default:
+            break;
+        }
+    }
+    return Node::plainName();
+}
+
 QT_END_NAMESPACE
