@@ -369,6 +369,19 @@ QString Generator::fileName(const Node *node, const QString &extension) const
     if (!node->url().isEmpty())
         return node->url();
 
+    // Special case for simple page nodes (\page commands) with explicit
+    // non-.html extensions. Use the normalized fileBase() but preserve
+    // user specified extension
+    if (node->isTextPageNode() && !node->isCollectionNode() && extension.isNull()) {
+        QFileInfo originalName(node->name());
+        QString suffix = originalName.suffix();
+        if (!suffix.isEmpty() && suffix != "html") {
+            // User specified a non-.html extension - use normalized base + original extension
+            QString name = fileBase(node);
+            return name + QLatin1Char('.') + suffix;
+        }
+    }
+
     QString name = fileBase(node) + QLatin1Char('.');
     return name + (extension.isNull() ? fileExtension() : extension);
 }
