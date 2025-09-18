@@ -534,6 +534,20 @@
             <anchor>group.created-signal</anchor>
             <arglist>()</arglist>
         </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>configureWithType</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>configureWithType-method</anchor>
+            <arglist>(Type::SomeType typeParam)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>setType</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>setType-method</anchor>
+            <arglist>(Type.SomeType newType)</arglist>
+        </member>
     </compound>
     <compound kind="class">
         <name>Test.NoVer.TypeNoVersion</name>

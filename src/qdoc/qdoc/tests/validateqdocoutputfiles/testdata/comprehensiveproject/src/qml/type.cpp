@@ -105,6 +105,24 @@
 */
 
 /*!
+    \qmlmethod void Type::setType(Type.SomeType newType)
+
+    Sets the type to \a newType. This tests enum parameter linking
+    using dot notation.
+
+    \sa type
+*/
+
+/*!
+    \qmlmethod void Type::configureWithType(Type::SomeType typeParam)
+
+    Configures the type using \a typeParam. This tests enum parameter linking
+    using C++ namespace notation.
+
+    \sa type
+*/
+
+/*!
     \qmlsignal Type::completed(int status)
 
     This signal is emitted when the operation completed with \a status.

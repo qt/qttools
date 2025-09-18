@@ -137,6 +137,7 @@
             <keyword name="color" id="ProgressBar::color" ref="qml-uicomponents-progressbar.html#color-prop"/>
             <keyword name="completed" id="DocTest::completed" ref="qml-qdoc-test-doctest.html#completed-signal"/>
             <keyword name="completed" id="Type::completed" ref="qml-qdoc-test-type.html#completed-signal"/>
+            <keyword name="configureWithType" id="Type::configureWithType" ref="qml-qdoc-test-type.html#configureWithType-method"/>
             <keyword name="configured" id="Type::configured" ref="qml-qdoc-test-type.html#configured-signal"/>
             <keyword name="copy" id="Type::copy" ref="qml-qdoc-test-type.html#copy-method"/>
             <keyword name="current" id="TabWidget::current" ref="qml-uicomponents-tabwidget.html#current-prop"/>
@@ -197,6 +198,7 @@
             <keyword name="secondColor" id="ProgressBar::secondColor" ref="qml-uicomponents-progressbar.html#secondColor-prop"/>
             <keyword name="setBindableProp" id="TestDerived::setBindableProp" ref="testqdoc-testderived.html#bindableProp-prop"/>
             <keyword name="setBoolProp" id="TestDerived::setBoolProp" ref="testqdoc-testderived.html#boolProp-prop"/>
+            <keyword name="setType" id="Type::setType" ref="qml-qdoc-test-type.html#setType-method"/>
             <keyword name="someFunction" id="Test::someFunction" ref="testqdoc-test.html#someFunction"/>
             <keyword name="someFunctionDefaultArg" id="Test::someFunctionDefaultArg" ref="testqdoc-test.html#someFunctionDefaultArg"/>
             <keyword name="someProp" id="TestDerived::someProp" ref="testqdoc-testderived.html#someProp-prop"/>

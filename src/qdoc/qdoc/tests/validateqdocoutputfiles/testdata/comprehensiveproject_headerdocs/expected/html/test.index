@@ -220,6 +220,9 @@
             <function name="completed" fullname="QDoc.Test.Type.completed" href="qml-qdoc-test-type.html#completed-signal" status="active" access="public" location="type.qdoc" documented="true" meta="qmlsignal">
                 <parameter type="int" name="status" default=""/>
             </function>
+            <function name="configureWithType" fullname="QDoc.Test.Type.configureWithType" href="qml-qdoc-test-type.html#configureWithType-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod" type="void">
+                <parameter type="Type::SomeType" name="typeParam" default=""/>
+            </function>
             <function name="configured" fullname="QDoc.Test.Type.configured" href="qml-qdoc-test-type.html#configured-signal" status="active" access="public" location="type.qdoc" documented="true" meta="qmlsignal"/>
             <function name="copy" fullname="QDoc.Test.Type.copy" href="qml-qdoc-test-type.html#copy-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod" type="Type">
                 <parameter type="" name="a" default=""/>
@@ -229,6 +232,9 @@
             <function name="enable" fullname="QDoc.Test.Type.enable" href="qml-qdoc-test-type.html#enable-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod"/>
             <function name="futureDeprecated" fullname="QDoc.Test.Type.futureDeprecated" href="qml-qdoc-test-type.html#futureDeprecated-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod"/>
             <function name="group.created" fullname="QDoc.Test.Type.group.created" href="qml-qdoc-test-type.html#group.created-signal" status="active" access="public" location="type.qdoc" documented="true" meta="qmlsignal"/>
+            <function name="setType" fullname="QDoc.Test.Type.setType" href="qml-qdoc-test-type.html#setType-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod" type="void">
+                <parameter type="Type.SomeType" name="newType" default=""/>
+            </function>
             <qmlproperty name="fifth" fullname="QDoc.Test.Type.fifth" href="qml-qdoc-test-type.html#fifth-prop" status="active" access="public" location="type.qdoc" documented="true" type="int" attached="false" writable="true" brief="A group of properties sharing a documentation comment"/>
             <qmlproperty name="fourth" fullname="QDoc.Test.Type.fourth" href="qml-qdoc-test-type.html#fourth-prop" status="active" access="public" location="type.qdoc" documented="true" type="int" attached="false" writable="true" brief="A group of properties sharing a documentation comment"/>
             <qmlproperty name="group.first" fullname="QDoc.Test.Type.group.first" href="qml-qdoc-test-type.html#group.first-prop" status="active" access="public" location="type.qdoc" documented="true" type="int" attached="false" writable="true" brief="A property group"/>

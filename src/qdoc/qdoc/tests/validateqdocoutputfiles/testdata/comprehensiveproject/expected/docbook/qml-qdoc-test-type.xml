@@ -186,6 +186,18 @@
 </db:section>
 <db:section xml:id="method-documentation">
 <db:title>Method Documentation</db:title>
+<db:section xml:id="configureWithType-method">
+<db:title>void configureWithType(Type::SomeType <db:emphasis>typeParam</db:emphasis>)</db:title>
+<db:para>Configures the type using <db:code its:translate="no" role="parameter">typeParam</db:code>. This tests enum parameter linking using C++ namespace notation.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="qml-qdoc-test-type.xml#type-attached-prop">type</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
 <db:section xml:id="copy-method">
 <db:title>Type copy(<db:emphasis>a</db:emphasis>)</db:title>
 <db:para>Returns another Type based on <db:code its:translate="no" role="parameter">a</db:code>.</db:para>
@@ -219,6 +231,18 @@
 <db:para>This method is scheduled for deprecation in version 6.3.</db:para>
 <db:para>Use something else instead.</db:para>
 <db:para>This is a method that's marked for deprecation in a future version.</db:para>
+</db:section>
+<db:section xml:id="setType-method">
+<db:title>void setType(Type.SomeType <db:emphasis>newType</db:emphasis>)</db:title>
+<db:para>Sets the type to <db:code its:translate="no" role="parameter">newType</db:code>. This tests enum parameter linking using dot notation.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="qml-qdoc-test-type.xml#type-attached-prop">type</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
 </db:section>
 </db:section>
 <db:section xml:id="obsolete">
