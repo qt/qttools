@@ -150,14 +150,30 @@ struct TranslationRelatedStore
     clang::SourceLocation callLocation(const clang::SourceManager &sourceManager)
     {
         if (sourceLocation.isInvalid()) {
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(21,0,0))
+            auto sourceFile = sourceManager.getFileManager()
+                .getFileRef(lupdateLocationFile.toStdString());
+            if (sourceFile)
+                sourceLocation = sourceManager.translateFileLineCol(&sourceFile->getFileEntry(),
+                    lupdateLocationLine, locationCol);
+#elif (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(16,0,0))
+            auto sourceFile = sourceManager.getFileManager()
+                .getOptionalFileRef(lupdateLocationFile.toStdString());
+            if (sourceFile)
+                sourceLocation = sourceManager.translateFileLineCol(&sourceFile->getFileEntry(),
+                    lupdateLocationLine, locationCol);
+#else
             auto sourceFile = sourceManager.getFileManager()
                 .getFile(lupdateLocationFile.toStdString());
 #if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(10,0,0))
-            sourceLocation = sourceManager.translateFileLineCol(sourceFile.get(),
-                lupdateLocationLine, locationCol);
+            if (sourceFile)
+                sourceLocation = sourceManager.translateFileLineCol(sourceFile.get(),
+                    lupdateLocationLine, locationCol);
 #else
-            sourceLocation = sourceManager.translateFileLineCol(sourceFile, lupdateLocationLine,
-                locationCol);
+            if (sourceFile)
+                sourceLocation = sourceManager.translateFileLineCol(sourceFile, lupdateLocationLine,
+                    locationCol);
+#endif
 #endif
         }
         return sourceLocation;
