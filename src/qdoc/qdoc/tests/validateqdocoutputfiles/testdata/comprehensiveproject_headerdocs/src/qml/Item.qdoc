@@ -1,0 +1,5 @@
+/*!
+    \qmltype Item
+    \inqmlmodule QDoc.Test
+    \brief Represents an Item
+*/

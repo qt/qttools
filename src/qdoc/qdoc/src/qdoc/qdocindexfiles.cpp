@@ -986,6 +986,11 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     }
     if (!baseNameAttr.isEmpty() && !qmlFullBaseName.isEmpty())
         writer.writeAttribute(baseNameAttr, qmlFullBaseName);
+    else if (!baseNameAttr.isEmpty()) {
+        auto qmlBase = static_cast<QmlTypeNode *>(node)->qmlBaseName();
+        if (!qmlBase.isEmpty())
+            writer.writeAttribute(baseNameAttr, qmlBase);
+    }
 
     QString href;
     if (!node->isExternalPage()) {

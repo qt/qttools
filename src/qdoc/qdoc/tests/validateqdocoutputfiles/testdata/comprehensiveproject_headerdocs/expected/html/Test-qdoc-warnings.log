@@ -4,3 +4,4 @@
 # Path-Format: relative
 #
 
+src/qml/Item.qdoc:1: (qdoc) warning: '\brief' statement does not end with a full stop.

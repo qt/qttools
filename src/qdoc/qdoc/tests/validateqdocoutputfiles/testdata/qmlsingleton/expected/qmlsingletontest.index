@@ -18,7 +18,7 @@
         </qmlclass>
         <qmlclass name="MySingleton" href="qml-mysingleton.html" status="active" access="public" documented="true" title="MySingleton" fulltitle="MySingleton" subtitle="" singleton="true" brief="A QML singleton type using the QML_SINGLETON macro"/>
         <qmlclass name="MySingleton2" href="qml-mysingleton2.html" status="active" access="public" location="collisiontest.qdoc" since="QmlSingletonTest 1.0" documented="true" title="MySingleton2" fulltitle="MySingleton2" subtitle="" singleton="true" brief="A QML singleton type that tests name collision detection"/>
-        <qmlclass name="PragmaSingleton" href="qml-pragmasingleton.html" status="active" access="public" location="PragmaSingleton.qml" since="QmlSingletonTest 1.0" documented="true" title="PragmaSingleton" fulltitle="PragmaSingleton" subtitle="" singleton="true" brief="A QML singleton type using pragma singleton">
+        <qmlclass name="PragmaSingleton" qml-base-type="QtObject" href="qml-pragmasingleton.html" status="active" access="public" location="PragmaSingleton.qml" since="QmlSingletonTest 1.0" documented="true" title="PragmaSingleton" fulltitle="PragmaSingleton" subtitle="" singleton="true" brief="A QML singleton type using pragma singleton">
             <function name="getInfo" fullname="PragmaSingleton::getInfo" href="qml-pragmasingleton.html#getInfo-method" status="active" access="public" location="PragmaSingleton.qml" documented="true" meta="qmlmethod" type="string"/>
             <qmlproperty name="version" fullname="PragmaSingleton::version" href="qml-pragmasingleton.html#version-prop" status="active" access="public" location="PragmaSingleton.qml" documented="true" type="string" attached="false" writable="false"/>
         </qmlclass>
