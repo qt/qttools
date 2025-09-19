@@ -164,7 +164,6 @@
     \badcode
         HTML.postheader
         HTML.postpostheader
-        HTML.postheader
         HTML.footer
 
         HTML.headerstyles

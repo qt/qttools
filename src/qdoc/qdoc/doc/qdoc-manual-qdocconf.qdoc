@@ -48,7 +48,7 @@
     string, for example:
 
     \badcode
-    HTML.postheader = "<a href=\"index.html\">Home</a>"
+    HTML.postheader = "<ul class=\"breadcrumbs\">"
     \endcode
 
     If an entry spans many lines, use a backslash at the end of every
@@ -158,6 +158,7 @@
     \li \l {headers.fileextensions-variable} {headers.fileextensions}
     \li \l {HTML.footer-variable} {HTML.footer}
     \li \l {HTML.postheader-variable} {HTML.postheader}
+    \li \l {HTML.postpostheader-variable} {HTML.postpostheader}
     \li \l {HTML.style-variable} {HTML.style}
     \li \l {includepaths-variable} {includepaths}
     \li \l {includeprivate-variable} {includeprivate}
@@ -583,9 +584,6 @@
     additional images, you must specify them using the \c extraimages variable.
 
     The general syntax is \tt {\e{format}.extraimages = \e image}.
-
-    For a contextualized example, refer to the description of the
-    \l {HTML.postheader-variable}{HTML.postheader} variable.
 
     Example:
     \badcode
@@ -1887,25 +1885,37 @@
     generated HTML documentation's postheader.
 
     The header is rendered at the top of the generated documentation
-    page.
+    page, immediately after the opening \c {<body>} element.
 
     The variable's value is given as raw HTML enclosed by quotation
     marks. Note that if the value spans several lines, each line needs
     to be enclosed by quotation marks.
 
+    After rendering the content of \c HTML.postheader, QDoc outputs the
+    page's breadcrumb navigation as set of \c {<li>} elements. Therefore,
+    postheader must end with a valid parent element for \c {<li>}, such
+    as \c {<ul>}. The default value for \c HTML.postheader is
+
     \badcode
-     HTML.postheader = "<table border=\"0\"..." \
-                       ...
-                       "<img src=\"images/qt-logo.png\" \
-                       "align=\"right\" width=\"203\" height=\"32\""\
-                      "border=\"0\" />" \
-                       "</td></tr>" \
-                       "</table>"
+     HTML.postheader = "<ul class=\"breadcrumb\">\n"
     \endcode
 
-    The complete variable entry in \l qtgui.qdocconf provides the
-    standard header of the \l {http://doc.qt.io/qt-5/qtgui-index.html}
-    {Qt GUI Documentation}.
+    See also \qdocvar {HTML.postpostheader}.
+
+    \target HTML.postpostheader-variable
+    \section1 HTML.postpostheader
+
+    The \c HTML.postpostheader variable defines the content that
+    closes the HTML document's postheader and its enclosed list of
+    navigation breadcrumb items. Its value must include the
+    matching closing tag for the list element opened in
+    \qdocvar {HTML.postheader}.
+
+    The default value for \c HTML.postpostheader is
+
+    \badcode
+    HTML.postpostheader = "</ul>\n"
+    \endcode
 
     \target FORMAT.quotinginformation
     \section1 <FORMAT>.quotinginformation

@@ -139,9 +139,9 @@ void HtmlGenerator::initializeGenerator()
     }
 
     QString formatDot{HtmlGenerator::format() + Config::dot};
-    m_endHeader = config->get(formatDot + CONFIG_ENDHEADER).asString();
-    m_postHeader = config->get(formatDot + HTMLGENERATOR_POSTHEADER).asString();
-    m_postPostHeader = config->get(formatDot + HTMLGENERATOR_POSTPOSTHEADER).asString();
+    m_endHeader = config->get(formatDot + CONFIG_ENDHEADER).asString("</head>\n<body>\n"_L1);
+    m_postHeader = config->get(formatDot + HTMLGENERATOR_POSTHEADER).asString("<ul class=\"breadcrumb\">\n"_L1);
+    m_postPostHeader = config->get(formatDot + HTMLGENERATOR_POSTPOSTHEADER).asString("</ul>\n"_L1);
     m_prologue = config->get(formatDot + HTMLGENERATOR_PROLOGUE).asString();
 
     m_footer = config->get(formatDot + HTMLGENERATOR_FOOTER).asString();
@@ -153,11 +153,11 @@ void HtmlGenerator::initializeGenerator()
     m_project = config->get(CONFIG_PROJECT).asString();
     m_productName = config->get(CONFIG_PRODUCTNAME).asString();
     m_projectDescription = config->get(CONFIG_DESCRIPTION)
-            .asString(m_project + QLatin1String(" Reference Documentation"));
+            .asString(m_project + " Reference Documentation"_L1);
 
     m_projectUrl = config->get(CONFIG_URL).asString();
     tagFile_ = config->get(CONFIG_TAGFILE).asString();
-    naturalLanguage = config->get(CONFIG_NATURALLANGUAGE).asString(QLatin1String("en"));
+    naturalLanguage = config->get(CONFIG_NATURALLANGUAGE).asString("en"_L1);
 
     m_codeIndent = config->get(CONFIG_CODEINDENT).asInt();
     m_codePrefix = config->get(CONFIG_CODEPREFIX).asString();
@@ -199,14 +199,14 @@ void HtmlGenerator::initializeGenerator()
 
     m_cppclassestitle = config->get(CONFIG_NAVIGATION
                                     + Config::dot + CONFIG_CPPCLASSESTITLE)
-                                    .asString(QLatin1String("C++ Classes"));
+                                    .asString("C++ Classes"_L1);
 
     m_qmltypespage = config->get(CONFIG_NAVIGATION
                                  + Config::dot + CONFIG_QMLTYPESPAGE).asString();
 
     m_qmltypestitle = config->get(CONFIG_NAVIGATION
                                   + Config::dot + CONFIG_QMLTYPESTITLE)
-                                  .asString(QLatin1String("QML Types"));
+                                  .asString("QML Types"_L1);
 
     m_trademarkspage = config->get(CONFIG_NAVIGATION
                                    + Config::dot + CONFIG_TRADEMARKSPAGE).asString();
@@ -1749,10 +1749,7 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
     // Include style sheet and script links.
     out() << m_headerStyles;
     out() << m_headerScripts;
-    if (m_endHeader.isEmpty())
-        out() << "</head>\n<body>\n";
-    else
-        out() << m_endHeader;
+    out() << m_endHeader;
 
     out() << QString(m_postHeader).replace("\\" + COMMAND_VERSION, m_qdb->version());
     bool usingTable = m_postHeader.trimmed().endsWith(QLatin1String("<tr>"));
