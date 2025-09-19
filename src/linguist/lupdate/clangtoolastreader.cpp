@@ -734,9 +734,25 @@ void LupdateVisitor::processPreprocessorCalls()
                 || fileNameRealPath.str() == m_inputFile)
             continue;
 
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(21,0,0))
+        auto sourceFile = sourceMgr.getFileManager()
+            .getFileRef(fileNameRealPath);
+        if (!sourceFile)
+            continue;
+        auto sourceLocation = sourceMgr.translateFileLineCol(&sourceFile->getFileEntry(), 1, 1);
+#elif (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(16,0,0))
+        auto sourceFile = sourceMgr.getFileManager()
+            .getOptionalFileRef(fileNameRealPath);
+        if (!sourceFile)
+            continue;
+        auto sourceLocation = sourceMgr.translateFileLineCol(&sourceFile->getFileEntry(), 1, 1);
+#else
         auto sourceFile = sourceMgr.getFileManager()
             .getFile(fileNameRealPath);
+        if (!sourceFile)
+            continue;
         auto sourceLocation = sourceMgr.translateFileLineCol(sourceFile.get(), 1, 1);
+#endif
         const clang::FileID fileId = sourceMgr.getDecomposedLoc(sourceLocation).first;
         processIsolatedComments(fileId);
     }
