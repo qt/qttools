@@ -490,11 +490,10 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         while (reader.readNextStartElement()) {
             QXmlStreamAttributes childAttributes = reader.attributes();
             if (reader.name() == QLatin1String("parameter")) {
-                // Do not use the default value for the parameter; it is not
-                // required, and has been known to cause problems.
                 QString type = childAttributes.value(QLatin1String("type")).toString();
                 QString name = childAttributes.value(QLatin1String("name")).toString();
-                fn->parameters().append(type, name);
+                QString default_ = childAttributes.value(QLatin1String("default")).toString();
+                fn->parameters().append(type, name, default_);
             } else if (reader.name() == QLatin1String("keyword")) {
                 insertTarget(TargetRec::Keyword, childAttributes, fn);
             } else if (reader.name() == QLatin1String("target")) {
