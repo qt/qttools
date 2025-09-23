@@ -4,6 +4,8 @@
     <namespace name="" status="active" access="public" module="unnamedstruct">
         <struct name="AxisAndAngle" href="axisandangle.html" status="active" access="public" location="templatestruct.h" documented="true" module="UnnamedStructModule">
             <variable name="axis" fullname="AxisAndAngle::axis" href="axisandangle.html#axis-var" status="active" access="public" location="templatestruct.h" documented="true" type="struct AxisAndAngle&lt;AngleT&gt;::(unnamed struct)" static="false"/>
+            <variable name="rotationCache" fullname="AxisAndAngle::rotationCache" href="axisandangle.html#rotationCache-var" status="active" access="public" location="templatestruct.h" documented="true" type="struct AxisAndAngle&lt;AngleT&gt;::(unnamed struct)" static="false"/>
+            <variable name="transformationMatrix" fullname="AxisAndAngle::transformationMatrix" href="axisandangle.html#transformationMatrix-var" status="active" access="public" location="templatestruct.h" documented="true" type="union AxisAndAngle&lt;AngleT&gt;::(unnamed union)" static="false"/>
         </struct>
         <module name="UnnamedStructModule" href="unnamedstructmodule-module.html" status="active" location="templatestruct.h" documented="true" seen="true" title="Unnamed Struct Module"/>
     </namespace>

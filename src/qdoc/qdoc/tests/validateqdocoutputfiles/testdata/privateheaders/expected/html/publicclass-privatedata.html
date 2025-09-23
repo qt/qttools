@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- publicclass_p.h -->
+  <meta name="description" content="Private implementation class for PublicClass.">
+  <title>PublicClass::PrivateData Class | PrivateHeaders</title>
+</head>
+<body>
+<li>PrivateData</li>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#public-variables">Public Variables</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">PublicClass::PrivateData Class</h1>
+<span class="small-subtitle" translate="no">class <a href="publicclass.html" translate="no">PublicClass</a>::PrivateData</span>
+<!-- $$$PrivateData-brief -->
+<p>Private implementation class for <a href="publicclass.html" translate="no">PublicClass</a>. <a href="#details">More...</a></p>
+<!-- @@@PrivateData -->
+<ul>
+<li><a href="publicclass-privatedata-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="publicclass-privatedata.html#PrivateData" translate="no">PrivateData</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="publicclass-privatedata.html#internalHelper" translate="no">internalHelper</a></b>()</td></tr>
+</table></div>
+<h2 id="public-variables">Public Variables</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> union PublicClass::PrivateData::(unnamed union) </td><td class="memItemRight bottomAlign"><b><a href="publicclass-privatedata.html#addressData-var" translate="no">addressData</a></b></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> struct PublicClass::PrivateData::(unnamed struct) </td><td class="memItemRight bottomAlign"><b><a href="publicclass-privatedata.html#headerCache-var" translate="no">headerCache</a></b></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="publicclass-privatedata.html#internalData-var" translate="no">internalData</a></b></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="publicclass-privatedata.html#regularPrivateMember-var" translate="no">regularPrivateMember</a></b></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> struct PublicClass::PrivateData::(unnamed struct) </td><td class="memItemRight bottomAlign"><b><a href="publicclass-privatedata.html#requestMetadata-var" translate="no">requestMetadata</a></b></td></tr>
+</table></div>
+<!-- $$$PrivateData-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>This class is in a private header (_p.h) and contains internal implementation details. It should only appear in documentation when showinternal is enabled AND private headers are being processed.</p>
+</div>
+<!-- @@@PrivateData -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$PrivateData[overload1]$$$PrivateData -->
+<h3 class="fn" translate="no" id="PrivateData">PrivateData::<span class="name">PrivateData</span>()</h3>
+<p>Constructor for private data.</p>
+<p>This should only appear when showinternal is enabled.</p>
+<!-- @@@PrivateData -->
+<!-- $$$internalHelper[overload1]$$$internalHelper -->
+<h3 class="fn" translate="no" id="internalHelper"><span class="type">void</span> PrivateData::<span class="name">internalHelper</span>()</h3>
+<p>Internal helper function.</p>
+<p>This function handles internal implementation details.</p>
+<!-- @@@internalHelper -->
+</div>
+<div class="vars">
+<h2>Member Variable Documentation</h2>
+<!-- $$$addressData -->
+<h3 class="fn" translate="no" id="addressData-var"><span class="type">union</span> <span class="type">PublicClass::PrivateData::</span>(<span class="type">unnamed</span> <span class="type">union</span>) PrivateData::<span class="name">addressData</span></h3>
+<p>Network address data with complex anonymous union.</p>
+<p>Similar to qhostaddress_p.h pattern with nested anonymous types.</p>
+<!-- @@@addressData -->
+<!-- $$$headerCache -->
+<h3 class="fn" translate="no" id="headerCache-var"><span class="type">struct</span> <span class="type">PublicClass::PrivateData::</span>(<span class="type">unnamed</span> <span class="type">struct</span>) PrivateData::<span class="name">headerCache</span></h3>
+<p>Cached header data with anonymous struct pattern from Qt.</p>
+<p>Replicates the pattern from qnetworkrequest_p.h that causes anonymous type names with full file paths.</p>
+<!-- @@@headerCache -->
+<!-- $$$internalData -->
+<h3 class="fn" translate="no" id="internalData-var"><span class="type">int</span> PrivateData::<span class="name">internalData</span></h3>
+<p>Internal data member.</p>
+<p>Stores internal state for the public class.</p>
+<!-- @@@internalData -->
+<!-- $$$regularPrivateMember -->
+<h3 class="fn" translate="no" id="regularPrivateMember-var"><span class="type">bool</span> PrivateData::<span class="name">regularPrivateMember</span></h3>
+<p>Regular private member.</p>
+<p>This is a regular (non-internal) private member in a private header. It should appear when showinternal is enabled, regardless of the</p>
+<!-- @@@regularPrivateMember -->
+<!-- $$$requestMetadata -->
+<h3 class="fn" translate="no" id="requestMetadata-var"><span class="type">struct</span> <span class="type">PublicClass::PrivateData::</span>(<span class="type">unnamed</span> <span class="type">struct</span>) PrivateData::<span class="name">requestMetadata</span></h3>
+<p>Multiple nested anonymous structures for disambiguation.</p>
+<p>Creates complex anonymous type hierarchy to force Clang path naming.</p>
+<!-- @@@requestMetadata -->
+</div>
+</body>
+</html>

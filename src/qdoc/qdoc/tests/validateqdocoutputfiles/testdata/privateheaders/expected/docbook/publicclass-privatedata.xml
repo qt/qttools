@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>PublicClass::PrivateData Class</db:title>
+<db:productname>PrivateHeaders</db:productname>
+<db:titleabbrev>Test case for private header processing with showinternal</db:titleabbrev>
+<db:abstract>
+<db:para>Private implementation class for <db:link xlink:href="publicclass.xml">PublicClass</db:link>.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>PrivateData</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class is in a private header (_p.h) and contains internal implementation details. It should only appear in documentation when showinternal is enabled AND private headers are being processed.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="PrivateData">
+<db:title>PrivateData::PrivateData()</db:title>
+<db:para>Constructor for private data.</db:para>
+<db:para>This should only appear when showinternal is enabled.</db:para>
+</db:section>
+<db:section xml:id="internalHelper">
+<db:title>void PrivateData::internalHelper()</db:title>
+<db:para>Internal helper function.</db:para>
+<db:para>This function handles internal implementation details.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="member-variable-documentation">
+<db:title>Member Variable Documentation</db:title>
+<db:section xml:id="addressData-var">
+<db:title>union PublicClass::PrivateData::(unnamed union) PrivateData::addressData</db:title>
+<db:para>Network address data with complex anonymous union.</db:para>
+<db:para>Similar to qhostaddress_p.h pattern with nested anonymous types.</db:para>
+</db:section>
+<db:section xml:id="headerCache-var">
+<db:title>struct PublicClass::PrivateData::(unnamed struct) PrivateData::headerCache</db:title>
+<db:para>Cached header data with anonymous struct pattern from Qt.</db:para>
+<db:para>Replicates the pattern from qnetworkrequest_p.h that causes anonymous type names with full file paths.</db:para>
+</db:section>
+<db:section xml:id="internalData-var">
+<db:title>int PrivateData::internalData</db:title>
+<db:para>Internal data member.</db:para>
+<db:para>Stores internal state for the public class.</db:para>
+</db:section>
+<db:section xml:id="regularPrivateMember-var">
+<db:title>bool PrivateData::regularPrivateMember</db:title>
+<db:para>Regular private member.</db:para>
+<db:para>This is a regular (non-internal) private member in a private header. It should appear when showinternal is enabled, regardless of the</db:para>
+</db:section>
+<db:section xml:id="requestMetadata-var">
+<db:title>struct PublicClass::PrivateData::(unnamed struct) PrivateData::requestMetadata</db:title>
+<db:para>Multiple nested anonymous structures for disambiguation.</db:para>
+<db:para>Creates complex anonymous type hierarchy to force Clang path naming.</db:para>
+</db:section>
+</db:section>
+</db:article>

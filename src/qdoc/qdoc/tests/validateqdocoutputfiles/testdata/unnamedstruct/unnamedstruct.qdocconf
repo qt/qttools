@@ -20,3 +20,5 @@ HTML.outputsubdir = html
 DocBook.nosubdirs = true
 DocBook.outputsubdir = docbook
 
+tagfile = unnamedstruct.tags
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <struct name="(unnamed struct)" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)" href="publicclass-privatedata-unnamed-union-unnamed-struct.html" status="internal" access="public" location="publicclass_p.h">
+            <description/>
+            <variable name="ipv4Address" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)::ipv4Address" href="publicclass-privatedata-unnamed-union-unnamed-struct.html#ipv4Address-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                <description/>
+            </variable>
+            <variable name="port" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)::port" href="publicclass-privatedata-unnamed-union-unnamed-struct.html#port-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                <description/>
+            </variable>
+        </struct>
+    </document>
+</WebXML>

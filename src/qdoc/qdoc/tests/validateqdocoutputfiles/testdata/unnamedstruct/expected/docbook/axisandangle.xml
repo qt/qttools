@@ -17,7 +17,7 @@
 </db:variablelist>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
-<db:para>Test struct similar to QQuaternion::AxisAndAngle to reproduce the bug.</db:para>
+<db:para>Test struct similar to QQuaternion::AxisAndAngle to reproduce the bug. Contains multiple anonymous types to force Clang path-based naming.</db:para>
 </db:section>
 <db:section xml:id="member-variable-documentation">
 <db:title>Member Variable Documentation</db:title>
@@ -25,6 +25,14 @@
 <db:title>struct AxisAndAngle&lt;AngleT&gt;::(unnamed struct) AxisAndAngle::axis</db:title>
 <db:para>The 3D axis that together with an angle corresponds to a quaternion.</db:para>
 <db:para>An unnamed struct containing members x, y, z.</db:para>
+</db:section>
+<db:section xml:id="rotationCache-var">
+<db:title>struct AxisAndAngle&lt;AngleT&gt;::(unnamed struct) AxisAndAngle::rotationCache</db:title>
+<db:para>Cached rotation data with multiple anonymous types to trigger disambiguation.</db:para>
+</db:section>
+<db:section xml:id="transformationMatrix-var">
+<db:title>union AxisAndAngle&lt;AngleT&gt;::(unnamed union) AxisAndAngle::transformationMatrix</db:title>
+<db:para>Complex nested anonymous types similar to Qt's real patterns.</db:para>
 </db:section>
 </db:section>
 </db:article>

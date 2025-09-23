@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <union name="(unnamed union)" fullname="PublicClass::PrivateData::(unnamed union)" href="publicclass-privatedata-unnamed-union.html" status="internal" access="public" location="publicclass_p.h">
+            <description/>
+            <struct name="(unnamed struct)" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)" href="publicclass-privatedata-unnamed-union-unnamed-struct.html" status="internal" access="public" location="publicclass_p.h">
+                <description/>
+                <variable name="ipv4Address" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)::ipv4Address" href="publicclass-privatedata-unnamed-union-unnamed-struct.html#ipv4Address-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                    <description/>
+                </variable>
+                <variable name="port" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)::port" href="publicclass-privatedata-unnamed-union-unnamed-struct.html#port-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                    <description/>
+                </variable>
+            </struct>
+            <variable name="ipv4" fullname="PublicClass::PrivateData::(unnamed union)::ipv4" href="publicclass-privatedata-unnamed-union.html#ipv4-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+                <description/>
+            </variable>
+            <variable name="ipv6" fullname="PublicClass::PrivateData::(unnamed union)::ipv6" href="publicclass-privatedata-unnamed-union.html#ipv6-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+                <description/>
+            </variable>
+            <variable name="raw" fullname="PublicClass::PrivateData::(unnamed union)::raw" href="publicclass-privatedata-unnamed-union.html#raw-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+                <description/>
+            </variable>
+        </union>
+    </document>
+</WebXML>

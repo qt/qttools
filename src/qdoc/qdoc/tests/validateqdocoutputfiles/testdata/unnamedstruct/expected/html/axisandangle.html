@@ -28,11 +28,13 @@
 <h2 id="public-variables">Public Variables</h2>
 <div class="table"><table class="alignedsummary" translate="no">
 <tr><td class="memItemLeft rightAlign topAlign"> struct AxisAndAngle&lt;AngleT&gt;::(unnamed struct) </td><td class="memItemRight bottomAlign"><b><a href="axisandangle.html#axis-var" translate="no">axis</a></b></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> struct AxisAndAngle&lt;AngleT&gt;::(unnamed struct) </td><td class="memItemRight bottomAlign"><b><a href="axisandangle.html#rotationCache-var" translate="no">rotationCache</a></b></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> union AxisAndAngle&lt;AngleT&gt;::(unnamed union) </td><td class="memItemRight bottomAlign"><b><a href="axisandangle.html#transformationMatrix-var" translate="no">transformationMatrix</a></b></td></tr>
 </table></div>
 <!-- $$$AxisAndAngle-description -->
 <div class="descr">
 <h2 id="details">Detailed Description</h2>
-<p>Test struct similar to QQuaternion::AxisAndAngle to reproduce the bug.</p>
+<p>Test struct similar to QQuaternion::AxisAndAngle to reproduce the bug. Contains multiple anonymous types to force Clang path-based naming.</p>
 </div>
 <!-- @@@AxisAndAngle -->
 <div class="vars">
@@ -42,6 +44,14 @@
 <p>The 3D axis that together with an angle corresponds to a quaternion.</p>
 <p>An unnamed struct containing members x, y, z.</p>
 <!-- @@@axis -->
+<!-- $$$rotationCache -->
+<h3 class="fn" translate="no" id="rotationCache-var"><span class="type">struct</span> <span class="type"><a href="axisandangle.html" translate="no">AxisAndAngle</a></span>&lt;<span class="type">AngleT</span>&gt;<span class="type">::</span>(<span class="type">unnamed</span> <span class="type">struct</span>) AxisAndAngle::<span class="name">rotationCache</span></h3>
+<p>Cached rotation data with multiple anonymous types to trigger disambiguation.</p>
+<!-- @@@rotationCache -->
+<!-- $$$transformationMatrix -->
+<h3 class="fn" translate="no" id="transformationMatrix-var"><span class="type">union</span> <span class="type"><a href="axisandangle.html" translate="no">AxisAndAngle</a></span>&lt;<span class="type">AngleT</span>&gt;<span class="type">::</span>(<span class="type">unnamed</span> <span class="type">union</span>) AxisAndAngle::<span class="name">transformationMatrix</span></h3>
+<p>Complex nested anonymous types similar to Qt's real patterns.</p>
+<!-- @@@transformationMatrix -->
 </div>
 </body>
 </html>

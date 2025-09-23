@@ -184,16 +184,16 @@ static std::string get_fully_qualified_type_name(clang::QualType type, const cla
  * Only performs expensive cleaning when anonymous types are detected.
  */
 static QString cleanAnonymousTypeName(const QString &typeName) {
-    if (!typeName.contains(QLatin1String("(unnamed "))) {
+    if (!typeName.contains("(unnamed "_L1) && !typeName.contains("(anonymous "_L1)) {
         return typeName; // Fast path for most cases
     }
 
     // Only do expensive cleaning when needed
     static const QRegularExpression pattern(
-        R"(\(unnamed (struct|union|class) at [^)]+\))"
+        R"(\((unnamed|anonymous) (struct|union|class) at [^)]+\))"
     );
     QString cleaned = typeName;
-    cleaned.replace(pattern, QStringLiteral("(unnamed \\1)"));
+    cleaned.replace(pattern, "(\\1 \\2)"_L1);
     return cleaned;
 }
 
@@ -1067,7 +1067,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         if (findNodeForCursor(qdb_, cursor)) // Was already parsed, probably in another TU
             return CXChildVisit_Continue;
 
-        QString className = fromCXString(clang_getCursorSpelling(cursor));
+        QString className = cleanAnonymousTypeName(fromCXString(clang_getCursorSpelling(cursor)));
 
         Aggregate *semanticParent = getSemanticParent(cursor);
         if (semanticParent && semanticParent->findNonfunctionChild(className, &Node::isClassNode)) {

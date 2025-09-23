@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tagfile>
+    <compound kind="class">
+        <name>PrivateOnlyClass</name>
+        <filename>privateonlyclass.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>PrivateOnlyClass</name>
+            <anchorfile>privateonlyclass.html</anchorfile>
+            <anchor>PrivateOnlyClass</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>privateClassMethod</name>
+            <anchorfile>privateonlyclass.html</anchorfile>
+            <anchor>privateClassMethod</anchor>
+            <arglist>()</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>PublicClass</name>
+        <filename>publicclass.html</filename>
+        <class>PublicClass::PrivateData</class>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>PublicClass</name>
+            <anchorfile>publicclass.html</anchorfile>
+            <anchor>PublicClass</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>internalPublicFunction</name>
+            <anchorfile>publicclass.html</anchorfile>
+            <anchor>internalPublicFunction</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>publicFunction</name>
+            <anchorfile>publicclass.html</anchorfile>
+            <anchor>publicFunction</anchor>
+            <arglist>()</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>PublicClass::PrivateData</name>
+        <filename>publicclass-privatedata.html</filename>
+        <class>PublicClass::PrivateData::(unnamed struct)</class>
+        <class>PublicClass::PrivateData::(unnamed union)</class>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>PrivateData</name>
+            <anchorfile>publicclass-privatedata.html</anchorfile>
+            <anchor>PrivateData</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>internalHelper</name>
+            <anchorfile>publicclass-privatedata.html</anchorfile>
+            <anchor>internalHelper</anchor>
+            <arglist>()</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>PublicClass::PrivateData::(unnamed struct)</name>
+        <filename>publicclass-privatedata-unnamed-struct.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>PublicClass::PrivateData::(unnamed union)</name>
+        <filename>publicclass-privatedata-unnamed-union.html</filename>
+        <class>PublicClass::PrivateData::(unnamed union)::(unnamed struct)</class>
+    </compound>
+    <compound kind="class">
+        <name>PublicClass::PrivateData::(unnamed union)::(unnamed struct)</name>
+        <filename>publicclass-privatedata-unnamed-union-unnamed-struct.html</filename>
+    </compound>
+</tagfile>

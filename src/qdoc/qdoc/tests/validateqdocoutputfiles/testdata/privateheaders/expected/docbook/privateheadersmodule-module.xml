@@ -24,6 +24,12 @@
 <db:para>A public class that should always be documented.</db:para>
 </db:listitem>
 </db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="publicclass-privatedata.xml" xlink:role="class">PublicClass::PrivateData</db:link></db:term>
+<db:listitem>
+<db:para>Private implementation class for PublicClass.</db:para>
+</db:listitem>
+</db:varlistentry>
 </db:variablelist>
 </db:section>
 <db:section xml:id="details">

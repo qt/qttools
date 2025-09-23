@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <struct name="(unnamed struct)" fullname="PublicClass::PrivateData::(unnamed struct)" href="publicclass-privatedata-unnamed-struct.html" status="internal" access="public" location="publicclass_p.h">
+            <description/>
+            <variable name="cacheVersion" fullname="PublicClass::PrivateData::(unnamed struct)::cacheVersion" href="publicclass-privatedata-unnamed-struct.html#cacheVersion-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                <description/>
+            </variable>
+            <variable name="headersList" fullname="PublicClass::PrivateData::(unnamed struct)::headersList" href="publicclass-privatedata-unnamed-struct.html#headersList-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                <description/>
+            </variable>
+            <variable name="isCached" fullname="PublicClass::PrivateData::(unnamed struct)::isCached" href="publicclass-privatedata-unnamed-struct.html#isCached-var" status="internal" access="public" location="publicclass_p.h" type="bool" static="false">
+                <description/>
+            </variable>
+        </struct>
+    </document>
+</WebXML>

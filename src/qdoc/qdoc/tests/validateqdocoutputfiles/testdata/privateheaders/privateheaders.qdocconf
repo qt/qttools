@@ -32,3 +32,5 @@ projectroot = .
 logwarnings = true
 logwarnings.disablecliargs = true
 
+tagfile = privateheaders.tags
+

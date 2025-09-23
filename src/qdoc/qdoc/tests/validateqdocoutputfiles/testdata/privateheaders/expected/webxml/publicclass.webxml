@@ -24,7 +24,7 @@
                     <para>This should always appear in documentation.</para>
                 </description>
             </function>
-            <class name="PrivateData" fullname="PublicClass::PrivateData" href="publicclass-privatedata.html" status="active" access="private" location="publicclass_p.h" documented="true" module="PrivateHeadersModule" brief="Private implementation class for PublicClass">
+            <class name="PrivateData" fullname="PublicClass::PrivateData" href="publicclass-privatedata.html" status="active" access="public" location="publicclass_p.h" documented="true" module="PrivateHeadersModule" brief="Private implementation class for PublicClass">
                 <description>
                     <brief>Private implementation class for <link raw="PublicClass" href="publicclass.html" type="class">PublicClass</link>.</brief>
                     <para>This class is in a private header (_p.h) and contains internal implementation details. It should only appear in documentation when showinternal is enabled AND private headers are being processed.</para>
@@ -41,6 +41,51 @@
                         <para>This function handles internal implementation details.</para>
                     </description>
                 </function>
+                <struct name="(unnamed struct)" fullname="PublicClass::PrivateData::(unnamed struct)" href="publicclass-privatedata-unnamed-struct.html" status="internal" access="public" location="publicclass_p.h">
+                    <description/>
+                    <variable name="cacheVersion" fullname="PublicClass::PrivateData::(unnamed struct)::cacheVersion" href="publicclass-privatedata-unnamed-struct.html#cacheVersion-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                        <description/>
+                    </variable>
+                    <variable name="headersList" fullname="PublicClass::PrivateData::(unnamed struct)::headersList" href="publicclass-privatedata-unnamed-struct.html#headersList-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                        <description/>
+                    </variable>
+                    <variable name="isCached" fullname="PublicClass::PrivateData::(unnamed struct)::isCached" href="publicclass-privatedata-unnamed-struct.html#isCached-var" status="internal" access="public" location="publicclass_p.h" type="bool" static="false">
+                        <description/>
+                    </variable>
+                </struct>
+                <union name="(unnamed union)" fullname="PublicClass::PrivateData::(unnamed union)" href="publicclass-privatedata-unnamed-union.html" status="internal" access="public" location="publicclass_p.h">
+                    <description/>
+                    <struct name="(unnamed struct)" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)" href="publicclass-privatedata-unnamed-union-unnamed-struct.html" status="internal" access="public" location="publicclass_p.h">
+                        <description/>
+                        <variable name="ipv4Address" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)::ipv4Address" href="publicclass-privatedata-unnamed-union-unnamed-struct.html#ipv4Address-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                            <description/>
+                        </variable>
+                        <variable name="port" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)::port" href="publicclass-privatedata-unnamed-union-unnamed-struct.html#port-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                            <description/>
+                        </variable>
+                    </struct>
+                    <variable name="ipv4" fullname="PublicClass::PrivateData::(unnamed union)::ipv4" href="publicclass-privatedata-unnamed-union.html#ipv4-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+                        <description/>
+                    </variable>
+                    <variable name="ipv6" fullname="PublicClass::PrivateData::(unnamed union)::ipv6" href="publicclass-privatedata-unnamed-union.html#ipv6-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+                        <description/>
+                    </variable>
+                    <variable name="raw" fullname="PublicClass::PrivateData::(unnamed union)::raw" href="publicclass-privatedata-unnamed-union.html#raw-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+                        <description/>
+                    </variable>
+                </union>
+                <variable name="addressData" fullname="PublicClass::PrivateData::addressData" href="publicclass-privatedata.html#addressData-var" status="active" access="public" location="publicclass_p.h" documented="true" type="union PublicClass::PrivateData::(unnamed union)" static="false" brief="Network address data with complex anonymous union">
+                    <description>
+                        <brief>This variable holds Network address data with complex anonymous union..</brief>
+                        <para>Similar to qhostaddress_p.h pattern with nested anonymous types.</para>
+                    </description>
+                </variable>
+                <variable name="headerCache" fullname="PublicClass::PrivateData::headerCache" href="publicclass-privatedata.html#headerCache-var" status="active" access="public" location="publicclass_p.h" documented="true" type="struct PublicClass::PrivateData::(unnamed struct)" static="false" brief="Cached header data with anonymous struct pattern from Qt">
+                    <description>
+                        <brief>This variable holds Cached header data with anonymous struct pattern from Qt..</brief>
+                        <para>Replicates the pattern from qnetworkrequest_p.h that causes anonymous type names with full file paths.</para>
+                    </description>
+                </variable>
                 <variable name="internalData" fullname="PublicClass::PrivateData::internalData" href="publicclass-privatedata.html#internalData-var" status="active" access="public" location="publicclass_p.h" documented="true" type="int" static="false" brief="Internal data member">
                     <description>
                         <brief>This variable holds Internal data member..</brief>
@@ -53,8 +98,41 @@
                         <para>This is a regular (non-internal) private member in a private header. It should appear when showinternal is enabled, regardless of the</para>
                     </description>
                 </variable>
+                <variable name="requestMetadata" fullname="PublicClass::PrivateData::requestMetadata" href="publicclass-privatedata.html#requestMetadata-var" status="active" access="public" location="publicclass_p.h" documented="true" type="struct PublicClass::PrivateData::(unnamed struct)" static="false" brief="Multiple nested anonymous structures for disambiguation">
+                    <description>
+                        <brief>This variable holds Multiple nested anonymous structures for disambiguation..</brief>
+                        <para>Creates complex anonymous type hierarchy to force Clang path naming.</para>
+                    </description>
+                </variable>
             </class>
+            <struct name="TestStruct" fullname="PublicClass::TestStruct" href="publicclass-teststruct.html" status="active" access="private" location="publicclass.h" documented="true" brief="Struct with unnamed members for testing anonymous type cleaning">
+                <description>
+                    <brief>Struct with unnamed members for testing anonymous type cleaning.</brief>
+                    <para>This struct contains anonymous unions and structs to test type name cleaning in tag files and other output formats.</para>
+                </description>
+                <struct name="(anonymous struct)" fullname="PublicClass::TestStruct::(anonymous struct)" href="publicclass-teststruct-anonymous-struct.html" status="internal" access="public" location="publicclass.h">
+                    <description/>
+                    <variable name="structMemberX" fullname="PublicClass::TestStruct::(anonymous struct)::structMemberX" href="publicclass-teststruct-anonymous-struct.html#structMemberX-var" status="internal" access="public" location="publicclass.h" type="int" static="false">
+                        <description/>
+                    </variable>
+                    <variable name="structMemberY" fullname="PublicClass::TestStruct::(anonymous struct)::structMemberY" href="publicclass-teststruct-anonymous-struct.html#structMemberY-var" status="internal" access="public" location="publicclass.h" type="int" static="false">
+                        <description/>
+                    </variable>
+                </struct>
+                <union name="(anonymous union)" fullname="PublicClass::TestStruct::(anonymous union)" href="publicclass-teststruct-anonymous-union.html" status="internal" access="public" location="publicclass.h">
+                    <description/>
+                    <variable name="unionMemberFloat" fullname="PublicClass::TestStruct::(anonymous union)::unionMemberFloat" href="publicclass-teststruct-anonymous-union.html#unionMemberFloat-var" status="internal" access="public" location="publicclass.h" type="float" static="false">
+                        <description/>
+                    </variable>
+                    <variable name="unionMemberInt" fullname="PublicClass::TestStruct::(anonymous union)::unionMemberInt" href="publicclass-teststruct-anonymous-union.html#unionMemberInt-var" status="internal" access="public" location="publicclass.h" type="int" static="false">
+                        <description/>
+                    </variable>
+                </union>
+            </struct>
             <variable name="d" fullname="PublicClass::d" href="publicclass.html#d-var" status="internal" access="private" location="publicclass.h" type="PublicClass::PrivateData *" static="false">
+                <description/>
+            </variable>
+            <variable name="testStructInstance" fullname="PublicClass::testStructInstance" href="publicclass.html#testStructInstance-var" status="internal" access="private" location="publicclass.h" type="struct PublicClass::TestStruct" static="false">
                 <description/>
             </variable>
         </class>

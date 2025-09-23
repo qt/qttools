@@ -42,5 +42,22 @@ public:
 private:
     class PrivateData; // Forward declaration to private implementation
     PrivateData *d;
+
+    /*!
+        \brief Struct with unnamed members for testing anonymous type cleaning.
+
+        This struct contains anonymous unions and structs to test
+        type name cleaning in tag files and other output formats.
+    */
+    struct TestStruct {
+        union {
+            int unionMemberInt;
+            float unionMemberFloat;
+        };
+        struct {
+            int structMemberX;
+            int structMemberY;
+        };
+    } testStructInstance;
 };
 
