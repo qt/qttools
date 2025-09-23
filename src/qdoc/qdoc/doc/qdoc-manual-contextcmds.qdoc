@@ -745,7 +745,7 @@
 
     The \\overload command is for indicating that a function is a
     secondary overload of its name. The command must stand on its own
-    line. If the command is used to with a function that isn't an actual
+    line. If the command is used with a function that isn't an actual
     overload, it's considered a no-op.
 
     For a function name that is overloaded (except constructors), QDoc
