@@ -1521,8 +1521,8 @@ translations for the open TS file using a local LLM via Ollama.
 \l{https://github.com/jmorganca/ollama}{Ollama} and pull at least one model, for example:
 
  \list
+     \li \c{ollama pull gpt-oss:20b}
      \li \c{ollama pull 7shi/llama-translate:8b-q4_K_M}
-     \li \c{ollama pull granite3-dense:2b}
  \endlist
 
  Then start the Ollama server if not already started:
@@ -1552,9 +1552,9 @@ During translation, progress messages appear in the status bar and in the \uicon
 Log}. When complete, you can check out the translated texts on the log. Upon clicking on
 \uicontrol{Apply Translations}, AI-generated translations are inserted into the TS file.
 
-\note We suggest \e{7shi/llama-translate:8b-q4_K_M} as a balanced, general-purpose
-    model. Feel free to try other models to find the best combination
-    of speed, quality, and resource usage.
+\note We suggest using one of OpenAI’s open-weight models, e.g., \e{gpt-oss:20b} or other
+    LLMs trained for translation, e.g., \e{7shi/llama-translate:8b-q4_K_M}. Feel free to
+    try other models to find the best combination of speed, quality, and resource usage.
 */
 
 /*!

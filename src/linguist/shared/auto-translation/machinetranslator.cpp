@@ -19,6 +19,7 @@ MachineTranslator::MachineTranslator()
       m_translator(std::make_unique<Ollama>())
 {
     m_request->setHeader(QNetworkRequest::ContentTypeHeader, "application/json"_L1);
+    m_request->setTransferTimeout(5 * 60 * 1000);
 }
 
 MachineTranslator::~MachineTranslator() = default;
@@ -36,9 +37,34 @@ void MachineTranslator::setUrl(const QString &url)
     m_request->setUrl(m_translator->translationEndpoint());
 }
 
-void MachineTranslator::setTranslationModel(const QString &modelName)
+void MachineTranslator::activateTranslationModel(const QString &modelName)
 {
-    m_translator->setTranslationModel(modelName);
+    if (auto wakeupPayload = m_translator->stageModel(modelName)) {
+        // after several minutes of being idle, Ollama offloads the model
+        // and the rest API needs to be waken up. Trying to connect with
+        // Ollama for the first time after several minutes wakes up the
+        // server, but for some reason the server doesn't queue the
+        // connection request that was sent to it while it was not awake. As a result,
+        // the connection in QNetworkAccessManager is half broken and not working,
+        // without us knowing about it.
+        // Here we are using a new QNetworkAccessManager instance to send
+        // the first connection request and wake up the model. Then we delete the
+        // QNetworkAccessManager instance since it contains a broken connection
+        // and will try to use it for the next requests otherwise.
+
+        auto *tempManager = new QNetworkAccessManager(this);
+
+        QNetworkRequest wakeupRequest(m_translator->translationEndpoint());
+        wakeupRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json"_L1);
+        wakeupRequest.setTransferTimeout(30000);
+
+        QNetworkReply *reply = tempManager->post(wakeupRequest, *wakeupPayload);
+
+        connect(reply, &QNetworkReply::finished, this, [tempManager, reply]() {
+            reply->deleteLater();
+            tempManager->deleteLater();
+        });
+    }
 }
 
 void MachineTranslator::requestModels()
@@ -71,8 +97,25 @@ void MachineTranslator::translateBatch(Batch b, int tries)
 void MachineTranslator::translationReceived(QNetworkReply *reply, Batch b, int tries, int session)
 {
     reply->deleteLater();
-    if (m_stopped || session != m_session.load() || reply->error() != QNetworkReply::NoError)
+    if (m_stopped || session != m_session.load())
         return;
+
+    if (reply->error() != QNetworkReply::NoError) {
+        if (tries < s_maxTries
+            && (reply->error() == QNetworkReply::OperationCanceledError
+                || reply->error() == QNetworkReply::TimeoutError
+                || reply->error() == QNetworkReply::UnknownNetworkError)) {
+            translateBatch(std::move(b), tries + 1);
+            return;
+        }
+
+        QList<const TranslatorMessage *> failed;
+        for (const auto &i : std::as_const(b.items))
+            failed.append(i.msg);
+        emit translationFailed(std::move(failed));
+        return;
+    }
+
     const QByteArray response = reply->readAll();
     QList<Item> items = std::move(b.items);
     QHash<const TranslatorMessage *, QString> out;

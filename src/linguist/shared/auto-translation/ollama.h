@@ -6,6 +6,8 @@
 
 #include "translationprotocol.h"
 
+#include <QElapsedTimer>
+
 QT_BEGIN_NAMESPACE
 
 class QJsonObject;
@@ -18,10 +20,10 @@ public:
     ~Ollama() override;
     QList<Batch> makeBatches(const Messages &messages, const QString &userContext) const override;
     QByteArray payload(const Batch &b) const override;
-    QHash<QString, QString> extractTranslations(const QByteArray &response) const override;
+    QHash<QString, QString> extractTranslations(const QByteArray &response) override;
     QStringList extractModels(const QByteArray &data) const override;
 
-    void setTranslationModel(const QString &modelName) override;
+    std::optional<QByteArray> stageModel(const QString &modelName) override;
     void setUrl(const QString &url) override;
     QUrl translationEndpoint() const override;
     QUrl discoveryEndpoint() const override;
@@ -33,7 +35,10 @@ private:
     std::unique_ptr<QJsonObject> m_payloadBase;
     std::unique_ptr<QJsonObject> m_systemMessage;
     QString m_url;
+    std::atomic_bool m_useJsonFormat = true;
+    QElapsedTimer m_lastWakeupTimer;
     static constexpr int s_maxBatchSize = 20;
+    static constexpr int s_wakeUpTimeOut = 4 * 60 * 1000;
 };
 
 QT_END_NAMESPACE

@@ -211,7 +211,7 @@ void MachineTranslationDialog::translateSelection()
     messages.srcLang = QLocale::languageToString(dm->sourceLanguage());
     messages.tgtLang = QLocale::languageToString(dm->language());
     m_sentTexts += messages.items.size();
-    m_translator->setTranslationModel(model);
+    m_translator->activateTranslationModel(model);
     QString userContext = m_ui->contextEdit->toPlainText().trimmed();
     m_translator->translate(messages, std::move(userContext));
     logInfo(tr("Translation Started"));

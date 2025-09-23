@@ -41,9 +41,12 @@ public:
     virtual QList<Batch> makeBatches(const Messages &messages,
                                      const QString &userContext = {}) const = 0;
     virtual QByteArray payload(const Batch &b) const = 0;
-    virtual QHash<QString, QString> extractTranslations(const QByteArray &data) const = 0;
+    virtual QHash<QString, QString> extractTranslations(const QByteArray &data) = 0;
     virtual QStringList extractModels(const QByteArray &data) const = 0;
-    virtual void setTranslationModel(const QString &modelName) = 0;
+
+    // Stages the model for translation, optionally returning a wake-up payload
+    virtual std::optional<QByteArray> stageModel(const QString &modelName) = 0;
+
     virtual void setUrl(const QString &url) = 0;
     virtual QUrl translationEndpoint() const = 0;
     virtual QUrl discoveryEndpoint() const = 0;

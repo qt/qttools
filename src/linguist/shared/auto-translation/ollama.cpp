@@ -29,8 +29,14 @@ static std::optional<QJsonArray> recursiveFind(const QJsonValue &jval, const QSt
             if (const auto r = recursiveFind(element, key); r)
                 return r;
     } else if (jval.isString()) {
+        QString str = jval.toString();
+        const int startIdx = str.indexOf('{'_L1);
+        const int endIdx = str.lastIndexOf('}'_L1);
+        if (startIdx < 0 || endIdx < 0)
+            return {};
+        str.slice(startIdx, endIdx - startIdx + 1);
         QJsonParseError err;
-        auto inner = QJsonDocument::fromJson(jval.toString().toUtf8(), &err);
+        auto inner = QJsonDocument::fromJson(str.toUtf8(), &err);
         if (err.error != QJsonParseError::NoError || !inner.isObject())
             return {};
         const auto obj = inner.object();
@@ -50,7 +56,7 @@ Ollama::Ollama()
       m_systemMessage(std::make_unique<QJsonObject>())
 {
     m_payloadBase->insert("stream"_L1, false);
-    m_payloadBase->insert("format"_L1, "json"_L1);
+    m_payloadBase->insert("think"_L1, false);
 
     QJsonObject opts;
     opts.insert("temperature"_L1, 0.05);
@@ -93,17 +99,22 @@ QList<Batch> Ollama::makeBatches(const Messages &messages, const QString &userCo
     return out;
 }
 
-QHash<QString, QString> Ollama::extractTranslations(const QByteArray &response) const
+QHash<QString, QString> Ollama::extractTranslations(const QByteArray &response)
 {
     QJsonParseError err;
     QJsonDocument doc = QJsonDocument::fromJson(response, &err);
-    if (err.error != QJsonParseError::NoError)
+    if (err.error != QJsonParseError::NoError) {
+        m_useJsonFormat = false;
         return {};
+    }
 
     auto translations = recursiveFind(doc.object(), "Translations"_L1);
     QHash<QString, QString> out;
-    if (!translations)
+    if (!translations) {
+        m_useJsonFormat = false;
         return out;
+    }
+
     out.reserve(translations->size());
     for (const QJsonValue &v : std::as_const(*translations)) {
         if (v.isObject()) {
@@ -142,12 +153,30 @@ QByteArray Ollama::payload(const Batch &b) const
 
     QJsonObject req = *m_payloadBase;
     req.insert("messages"_L1, messages);
+
+    if (m_useJsonFormat)
+        req.insert("format"_L1, "json"_L1);
+
     return QJsonDocument(req).toJson();
 }
 
-void Ollama::setTranslationModel(const QString &modelName)
+std::optional<QByteArray> Ollama::stageModel(const QString &modelName)
 {
-    m_payloadBase->insert("model"_L1, modelName);
+    if (auto m = m_payloadBase->constFind("model"_L1);
+        m == m_payloadBase->constEnd() || *m != modelName) {
+        m_useJsonFormat = true;
+        m_payloadBase->insert("model"_L1, modelName);
+    }
+
+    std::optional<QByteArray> res;
+    if (!m_lastWakeupTimer.isValid() || m_lastWakeupTimer.hasExpired(s_wakeUpTimeOut)) {
+        m_lastWakeupTimer.start();
+        QJsonObject wakeup;
+        wakeup.insert("model"_L1, modelName);
+        res.emplace(QJsonDocument(wakeup).toJson());
+    }
+
+    return res;
 }
 
 void Ollama::setUrl(const QString &url)

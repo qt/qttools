@@ -30,7 +30,7 @@ public:
         m_stopped = false;
     }
     void setUrl(const QString &url);
-    void setTranslationModel(const QString &modelName);
+    void activateTranslationModel(const QString &modelName);
     void requestModels();
 
 signals:
