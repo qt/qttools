@@ -106,7 +106,7 @@
                     <para>I'm an alias, not a typedef.</para>
                 </description>
             </typedef>
-            <property name="bindableProp" fullname="TestQDoc::TestDerived::bindableProp" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" documented="true" bindable="true">
+            <property name="bindableProp" fullname="TestQDoc::TestDerived::bindableProp" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" documented="true" bindable="true" dataType="QString">
                 <getter name="bindableProp"/>
                 <setter name="setBindableProp"/>
                 <notifier name="bindablePropChanged"/>
@@ -117,7 +117,7 @@
                     </see-also>
                 </description>
             </property>
-            <property name="boolProp" fullname="TestQDoc::TestDerived::boolProp" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" documented="true">
+            <property name="boolProp" fullname="TestQDoc::TestDerived::boolProp" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" documented="true" dataType="bool">
                 <getter name="boolProp"/>
                 <setter name="setBoolProp"/>
                 <resetter name="resetBoolProp"/>
@@ -126,26 +126,26 @@
                     <para>A boolean property.</para>
                 </description>
             </property>
-            <property name="intProp" fullname="TestQDoc::TestDerived::intProp" href="testqdoc-testderived.html#intProp-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false">
+            <property name="intProp" fullname="TestQDoc::TestDerived::intProp" href="testqdoc-testderived.html#intProp-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false" constant="true" dataType="int*">
                 <getter name="getInt"/>
                 <description>
                     <para>An integer property.</para>
                 </description>
             </property>
-            <property name="name" fullname="TestQDoc::TestDerived::name" href="testqdoc-testderived.html#name-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false" brief="Name">
+            <property name="name" fullname="TestQDoc::TestDerived::name" href="testqdoc-testderived.html#name-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false" dataType="const QString*" brief="Name">
                 <getter name="name"/>
                 <description>
                     <brief>This property holds a name..</brief>
                 </description>
             </property>
-            <property name="secondBoolProp" fullname="TestQDoc::TestDerived::secondBoolProp" href="testqdoc-testderived.html#secondBoolProp-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false">
+            <property name="secondBoolProp" fullname="TestQDoc::TestDerived::secondBoolProp" href="testqdoc-testderived.html#secondBoolProp-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false" dataType="bool">
                 <getter name="secondBoolProp"/>
                 <notifier name="boolPropChanged"/>
                 <description>
                     <para>A property sharing a notifier signal with <link raw="boolProp" href="testqdoc-testderived.html#boolProp-prop" type="function">boolProp</link>.</para>
                 </description>
             </property>
-            <property name="someProp" fullname="TestQDoc::TestDerived::someProp" href="testqdoc-testderived.html#someProp-prop" status="active" access="public" location="testcpp.h" documented="true" bindable="true" writable="false">
+            <property name="someProp" fullname="TestQDoc::TestDerived::someProp" href="testqdoc-testderived.html#someProp-prop" status="active" access="public" location="testcpp.h" documented="true" bindable="true" writable="false" dataType="QString">
                 <getter name="someProp"/>
                 <description>
                     <para>Another property.</para>

@@ -255,7 +255,7 @@
 </db:itemizedlist>
 </db:section>
 <db:section xml:id="secondBoolProp-prop">
-<db:title its:translate="no">[read-only] secondBoolProp : const bool</db:title>
+<db:title its:translate="no">[read-only] secondBoolProp : bool</db:title>
 <db:fieldsynopsis>
 <db:modifier>(Qt property)</db:modifier>
 <db:type>bool</db:type>

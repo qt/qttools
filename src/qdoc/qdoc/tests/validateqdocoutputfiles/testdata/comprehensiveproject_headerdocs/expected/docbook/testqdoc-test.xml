@@ -92,7 +92,7 @@
 <db:section xml:id="property-documentation">
 <db:title>Property Documentation</db:title>
 <db:section xml:id="id-prop">
-<db:title its:translate="no">[read-only] id : const int</db:title>
+<db:title its:translate="no">[read-only] id : int</db:title>
 <db:fieldsynopsis>
 <db:modifier>(Qt property)</db:modifier>
 <db:type>int</db:type>

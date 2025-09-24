@@ -424,6 +424,10 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             propNode->setPropertyType(PropertyNode::PropertyType::BindableProperty);
 
         propNode->setWritable(attributes.value(QLatin1String("writable")) != QLatin1String("false"));
+        propNode->setDataType(attributes.value(QLatin1String("dataType")).toString());
+
+        if (attributes.value(QLatin1String("constant")) == QLatin1String("true"))
+            propNode->setConstant();
 
         if (!indexUrl.isEmpty())
             location = Location(indexUrl + QLatin1Char('/') + parent->name().toLower() + ".html");
@@ -1096,6 +1100,11 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
 
         if (!propertyNode->isWritable())
             writer.writeAttribute("writable", "false");
+
+        if (propertyNode->isConstant())
+            writer.writeAttribute("constant", "true");
+
+        writer.writeAttribute("dataType", propertyNode->dataType());
 
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);

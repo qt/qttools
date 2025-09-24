@@ -131,7 +131,7 @@
             <typedef name="Specialized" fullname="TestQDoc::Test::Specialized" href="testqdoc-test.html#Specialized-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="Struct&lt;int, T&gt;">
                 <description/>
             </typedef>
-            <property name="id" fullname="TestQDoc::Test::id" href="testqdoc-test.html#id-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false">
+            <property name="id" fullname="TestQDoc::Test::id" href="testqdoc-test.html#id-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false" dataType="int">
                 <description/>
             </property>
         </class>

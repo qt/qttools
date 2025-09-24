@@ -60,7 +60,7 @@
                     <see-also>setText()</see-also>
                 </description>
             </function>
-            <property name="checkable" fullname="TestAction::checkable" href="testaction.html#checkable-prop" status="active" access="public" location="testaction.h" documented="true" brief="Whether the action is checkable">
+            <property name="checkable" fullname="TestAction::checkable" href="testaction.html#checkable-prop" status="active" access="public" location="testaction.h" documented="true" dataType="bool" brief="Whether the action is checkable">
                 <getter name="isCheckable"/>
                 <setter name="setCheckable"/>
                 <notifier name="singlePropertySignal"/>
@@ -69,7 +69,7 @@
                     <para>This property determines if the action can be toggled.</para>
                 </description>
             </property>
-            <property name="enabled" fullname="TestAction::enabled" href="testaction.html#enabled-prop" status="active" access="public" location="testaction.h" documented="true" brief="Whether the action is enabled">
+            <property name="enabled" fullname="TestAction::enabled" href="testaction.html#enabled-prop" status="active" access="public" location="testaction.h" documented="true" dataType="bool" brief="Whether the action is enabled">
                 <getter name="isEnabled"/>
                 <setter name="setEnabled"/>
                 <notifier name="changed"/>
@@ -78,7 +78,7 @@
                     <para>This property determines if the action can be triggered.</para>
                 </description>
             </property>
-            <property name="text" fullname="TestAction::text" href="testaction.html#text-prop" status="active" access="public" location="testaction.h" documented="true" brief="The action's display text">
+            <property name="text" fullname="TestAction::text" href="testaction.html#text-prop" status="active" access="public" location="testaction.h" documented="true" dataType="QString" brief="The action's display text">
                 <getter name="text"/>
                 <setter name="setText"/>
                 <notifier name="changed"/>
@@ -87,7 +87,7 @@
                     <para>This property holds the text that is displayed for the action.</para>
                 </description>
             </property>
-            <property name="visible" fullname="TestAction::visible" href="testaction.html#visible-prop" status="active" access="public" location="testaction.h" documented="true" brief="Whether the action is visible">
+            <property name="visible" fullname="TestAction::visible" href="testaction.html#visible-prop" status="active" access="public" location="testaction.h" documented="true" dataType="bool" brief="Whether the action is visible">
                 <getter name="isVisible"/>
                 <setter name="setVisible"/>
                 <notifier name="changed"/>

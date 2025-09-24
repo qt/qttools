@@ -80,7 +80,7 @@ QString PropertyNode::qualifiedDataType() const
     if (m_propertyType != PropertyType::StandardProperty || m_type.startsWith(QLatin1String("const ")))
         return m_type;
 
-    if (setters().isEmpty() && resetters().isEmpty()) {
+    if (isConstant()) {
         if (m_type.contains(QLatin1Char('*')) || m_type.contains(QLatin1Char('&'))) {
             // 'QWidget *' becomes 'QWidget *' const
             return m_type + " const";
