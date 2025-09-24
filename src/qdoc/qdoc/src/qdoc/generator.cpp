@@ -1178,8 +1178,15 @@ void Generator::generateSince(const Node *node, CodeMarker *marker)
 {
     if (!node->since().isEmpty()) {
         Text text;
-        text << Atom::ParaLeft << "This " << typeString(node) << " was introduced in "
-             << formatSince(node) << "." << Atom::ParaRight;
+        if (node->isSharedCommentNode()) {
+            const auto &collective = static_cast<const SharedCommentNode *>(node)->collective();
+            QString typeStr = collective.size() > 1 ? typeString(collective.first()) + "s" : typeString(node);
+            text << Atom::ParaLeft << "These " << typeStr << " were introduced in "
+                 << formatSince(node) << "." << Atom::ParaRight;
+        } else {
+            text << Atom::ParaLeft << "This " << typeString(node) << " was introduced in "
+                 << formatSince(node) << "." << Atom::ParaRight;
+        }
         generateText(text, node, marker);
     }
 }
@@ -2249,6 +2256,8 @@ QString Generator::typeString(const Node *node)
     case NodeType::Module:
     case NodeType::QmlModule:
         return "module"_L1;
+    case NodeType::Variable:
+        return "variable"_L1;
     case NodeType::SharedComment: {
         const auto *shared = static_cast<const SharedCommentNode *>(node);
         if (shared->isPropertyGroup())

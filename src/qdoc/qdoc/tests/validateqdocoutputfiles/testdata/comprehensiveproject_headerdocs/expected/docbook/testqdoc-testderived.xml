@@ -73,7 +73,7 @@
 </db:typedefsynopsis>
 <db:para>I'm an alias, not a typedef.</db:para>
 </db:section>
-<db:section xml:id="anonymous-testcpp-h-274-enum">
+<db:section xml:id="anonymous-testcpp-h-291-enum">
 <db:title its:translate="no">[anonymous] enum</db:title>
 <db:enumsynopsis>
 <db:enumitem>
@@ -108,7 +108,7 @@
 </db:tr>
 </db:informaltable>
 </db:section>
-<db:section xml:id="anonymous-testcpp-h-280-enum">
+<db:section xml:id="anonymous-testcpp-h-297-enum">
 <db:title its:translate="no">[anonymous] enum</db:title>
 <db:enumsynopsis>
 <db:enumitem>

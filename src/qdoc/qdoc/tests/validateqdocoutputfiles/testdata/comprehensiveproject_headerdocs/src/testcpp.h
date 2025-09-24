@@ -23,6 +23,23 @@
 #define QDOCTEST_MACRO2(x) (x) < 0 ? 0 : (x)
 
 /*!
+    \variable QDOCTEST_GLOBAL_VARIABLE
+    \relates TestQDoc
+    \since Test 1.2
+    \brief A test variable for since documentation.
+*/
+extern int QDOCTEST_GLOBAL_VARIABLE;
+
+// Test conditional macro like Qt's nodiscard pattern
+#if !defined(QDOCTEST_CONDITIONAL_MACRO) && !defined(QDOCTEST_NO_CONDITIONAL_MACRO)
+#  define QDOCTEST_CONDITIONAL_MACRO
+#endif
+
+// Test macros for shared documentation
+#define QDOCTEST_SHARED_MACRO_A(x) ((x) + 1)
+#define QDOCTEST_SHARED_MACRO_B(x) ((x) - 1)
+
+/*!
     \namespace TestQDoc
     \inheaderfile TestCPP
     \inmodule TestCPP

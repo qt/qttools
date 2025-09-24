@@ -87,8 +87,12 @@
             <keyword name="OldType" id="QML.QDoc.Test1.OldType" ref="qml-qdoc-test-oldtype.html"/>
             <keyword name="ProgressBar" id="QML.ProgressBar" ref="qml-uicomponents-progressbar.html"/>
             <keyword name="ProgressBar" id="QML.UIComponents1.ProgressBar" ref="qml-uicomponents-progressbar.html"/>
+            <keyword name="QDOCTEST_CONDITIONAL_MACRO" id="QDOCTEST_CONDITIONAL_MACRO" ref="testqdoc.html#QDOCTEST_CONDITIONAL_MACRO"/>
+            <keyword name="QDOCTEST_GLOBAL_VARIABLE" id="QDOCTEST_GLOBAL_VARIABLE" ref="testqdoc.html#QDOCTEST_GLOBAL_VARIABLE-var"/>
             <keyword name="QDOCTEST_MACRO" id="QDOCTEST_MACRO" ref="testqdoc.html#QDOCTEST_MACRO"/>
             <keyword name="QDOCTEST_MACRO2" id="QDOCTEST_MACRO2" ref="testqdoc-test.html#QDOCTEST_MACRO2"/>
+            <keyword name="QDOCTEST_SHARED_MACRO_A" id="QDOCTEST_SHARED_MACRO_A" ref="testqdoc.html#QDOCTEST_SHARED_MACRO_A"/>
+            <keyword name="QDOCTEST_SHARED_MACRO_B" id="QDOCTEST_SHARED_MACRO_B" ref="testqdoc.html#QDOCTEST_SHARED_MACRO_B"/>
             <keyword name="QDoc Test C++ Classes" id="QDoc Test C++ Classes" ref="testcpp-module.html"/>
             <keyword name="QDoc.Test" id="QML.Test.QDoc" ref="qdoc-test-qmlmodule.html"/>
             <keyword name="QML Modules" id="QML Modules" ref="qmlmodules.html"/>
@@ -107,12 +111,12 @@
             <keyword name="TestDerived" id="TestQDoc::TestDerived" ref="testqdoc-testderived.html"/>
             <keyword name="TestDerived::DerivedType" id="TestDerived::DerivedType" ref="testqdoc-testderived.html#DerivedType-typedef"/>
             <keyword name="TestDerived::NotTypedef" id="TestDerived::NotTypedef" ref="testqdoc-testderived.html#NotTypedef-typedef"/>
-            <keyword name="TestDerived::Val1" id="TestDerived::Val1" ref="testqdoc-testderived.html#anonymous-testcpp-h-274-enum"/>
-            <keyword name="TestDerived::Val2" id="TestDerived::Val2" ref="testqdoc-testderived.html#anonymous-testcpp-h-274-enum"/>
-            <keyword name="TestDerived::Val3" id="TestDerived::Val3" ref="testqdoc-testderived.html#anonymous-testcpp-h-280-enum"/>
-            <keyword name="TestDerived::Val4" id="TestDerived::Val4" ref="testqdoc-testderived.html#anonymous-testcpp-h-280-enum"/>
-            <keyword name="TestDerived::anonymous-testcpp-h-274" id="TestDerived::anonymous-testcpp-h-274" ref="testqdoc-testderived.html#anonymous-testcpp-h-274-enum"/>
-            <keyword name="TestDerived::anonymous-testcpp-h-280" id="TestDerived::anonymous-testcpp-h-280" ref="testqdoc-testderived.html#anonymous-testcpp-h-280-enum"/>
+            <keyword name="TestDerived::Val1" id="TestDerived::Val1" ref="testqdoc-testderived.html#anonymous-testcpp-h-291-enum"/>
+            <keyword name="TestDerived::Val2" id="TestDerived::Val2" ref="testqdoc-testderived.html#anonymous-testcpp-h-291-enum"/>
+            <keyword name="TestDerived::Val3" id="TestDerived::Val3" ref="testqdoc-testderived.html#anonymous-testcpp-h-297-enum"/>
+            <keyword name="TestDerived::Val4" id="TestDerived::Val4" ref="testqdoc-testderived.html#anonymous-testcpp-h-297-enum"/>
+            <keyword name="TestDerived::anonymous-testcpp-h-291" id="TestDerived::anonymous-testcpp-h-291" ref="testqdoc-testderived.html#anonymous-testcpp-h-291-enum"/>
+            <keyword name="TestDerived::anonymous-testcpp-h-297" id="TestDerived::anonymous-testcpp-h-297" ref="testqdoc-testderived.html#anonymous-testcpp-h-297-enum"/>
             <keyword name="TestQDoc" id="TestQDoc" ref="testqdoc.html"/>
             <keyword name="TheType" id="QML.TheType" ref="qml-themodule-thetype.html"/>
             <keyword name="TheType" id="QML.TheModule.TheType" ref="qml-themodule-thetype.html"/>

@@ -58,8 +58,44 @@
 <db:para>Type alias that has its own reference.</db:para>
 </db:section>
 </db:section>
+<db:section xml:id="variable-documentation">
+<db:title>Variable Documentation</db:title>
+<db:section xml:id="QDOCTEST_GLOBAL_VARIABLE-var">
+<db:title its:translate="no">[since Test 1.2] int QDOCTEST_GLOBAL_VARIABLE</db:title>
+<db:fieldsynopsis>
+<db:type>int</db:type>
+<db:varname>QDOCTEST_GLOBAL_VARIABLE</db:varname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>This variable holds a test variable for since documentation.</db:para>
+<db:para>This variable was introduced in Test 1.2.</db:para>
+</db:section>
+</db:section>
 <db:section xml:id="macro-documentation">
 <db:title>Macro Documentation</db:title>
+<db:section xml:id="QDOCTEST_SHARED_MACRO_A">
+<db:title its:translate="no">[since Test 1.4] QDOCTEST_SHARED_MACRO_A(<db:emphasis>x</db:emphasis>)</db:title>
+<db:bridgehead renderas="sect2" xml:id="QDOCTEST_SHARED_MACRO_B" its:translate="no">[since Test 1.4] QDOCTEST_SHARED_MACRO_B(<db:emphasis>x</db:emphasis>)</db:bridgehead>
+<db:para>These macros perform simple arithmetic operations on <db:code its:translate="no" role="parameter">x</db:code>. <db:link xlink:href="testqdoc.xml#QDOCTEST_SHARED_MACRO_A">QDOCTEST_SHARED_MACRO_A</db:link> increments the value by 1. <db:link xlink:href="testqdoc.xml#QDOCTEST_SHARED_MACRO_B">QDOCTEST_SHARED_MACRO_B</db:link> decrements the value by 1.</db:para>
+<db:para>These macros share documentation to test plural form in <db:code>\since</db:code> text.</db:para>
+<db:para>These macros were introduced in Test 1.4.</db:para>
+</db:section>
+<db:section xml:id="QDOCTEST_CONDITIONAL_MACRO">
+<db:title its:translate="no">[since Test 1.3] QDOCTEST_CONDITIONAL_MACRO</db:title>
+<db:methodsynopsis>
+<db:methodname>QDOCTEST_CONDITIONAL_MACRO</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">macrowithoutparams</db:synopsisinfo>
+<db:synopsisinfo role="signature">QDOCTEST_CONDITIONAL_MACRO</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Test conditional macro documented separately from its definition. This replicates the Qt pattern where macros are defined in headers but documented in cpp files.</db:para>
+<db:para>This macro was introduced in Test 1.3.</db:para>
+</db:section>
 <db:section xml:id="QDOCTEST_MACRO">
 <db:title its:translate="no">[since Test 0.9] QDOCTEST_MACRO</db:title>
 <db:methodsynopsis>

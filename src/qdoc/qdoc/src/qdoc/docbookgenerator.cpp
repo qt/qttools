@@ -1743,7 +1743,13 @@ bool DocBookGenerator::generateSince(const Node *node)
     // From Generator::generateSince.
     if (!node->since().isEmpty()) {
         m_writer->writeStartElement(dbNamespace, "para");
-        m_writer->writeCharacters("This " + typeString(node) + " was introduced in ");
+        if (node->isSharedCommentNode()) {
+            const auto &collective = static_cast<const SharedCommentNode *>(node)->collective();
+            QString typeStr = collective.size() > 1 ? typeString(collective.first()) + "s" : typeString(node);
+            m_writer->writeCharacters("These " + typeStr + " were introduced in ");
+        } else {
+            m_writer->writeCharacters("This " + typeString(node) + " was introduced in ");
+        }
         m_writer->writeCharacters(formatSince(node) + ".");
         m_writer->writeEndElement(); // para
         newLine();

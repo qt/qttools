@@ -74,7 +74,7 @@
             <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" override="true" type="void" signature="void virtualFun() override">
                 <description/>
             </function>
-            <enum name="anonymous-testcpp-h-274" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-274" href="testqdoc-testderived.html#anonymous-testcpp-h-274-enum" status="active" access="public" location="testcpp.h" documented="true">
+            <enum name="anonymous-testcpp-h-291" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-291" href="testqdoc-testderived.html#anonymous-testcpp-h-291-enum" status="active" access="public" location="testcpp.h" documented="true">
                 <value name="Val1" value="0"/>
                 <value name="Val2" value="1"/>
                 <description>
@@ -88,7 +88,7 @@
                     </list>
                 </description>
             </enum>
-            <enum name="anonymous-testcpp-h-280" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-280" href="testqdoc-testderived.html#anonymous-testcpp-h-280-enum" status="active" access="public" location="testcpp.h" documented="true">
+            <enum name="anonymous-testcpp-h-297" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-297" href="testqdoc-testderived.html#anonymous-testcpp-h-297-enum" status="active" access="public" location="testcpp.h" documented="true">
                 <value name="Val3" value="0"/>
                 <value name="Val4" value="1"/>
                 <description>

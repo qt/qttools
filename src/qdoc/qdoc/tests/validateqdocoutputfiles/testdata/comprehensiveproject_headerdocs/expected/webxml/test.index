@@ -2,18 +2,32 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="A test project for QDoc build artifacts" version="6.2.11" project="Test">
     <namespace name="" status="active" access="public" module="test">
-        <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" location="testcpp.h" documented="true" related="0" since="Test 0.9" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
-        <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" location="testcpp.h" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
+        <function name="QDOCTEST_CONDITIONAL_MACRO" href="testqdoc.html#QDOCTEST_CONDITIONAL_MACRO" status="active" access="public" documented="true" related="0" since="Test 1.3" meta="macrowithoutparams" signature="QDOCTEST_CONDITIONAL_MACRO"/>
+        <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" location="testcpp.h" documented="true" related="1" since="Test 0.9" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
+        <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" location="testcpp.h" documented="true" related="2" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
             <parameter type="int &amp;" name="x" default=""/>
+        </function>
+        <function name="QDOCTEST_SHARED_MACRO_A" href="testqdoc.html#QDOCTEST_SHARED_MACRO_A" status="active" access="public" documented="true" related="3" since="Test 1.4" meta="macrowithparams" signature="QDOCTEST_SHARED_MACRO_A(x)">
+            <parameter type="" name="x" default=""/>
+        </function>
+        <function name="QDOCTEST_SHARED_MACRO_B" href="testqdoc.html#QDOCTEST_SHARED_MACRO_B" status="active" access="public" documented="true" related="4" since="Test 1.4" meta="macrowithparams" signature="QDOCTEST_SHARED_MACRO_B(x)">
+            <parameter type="" name="x" default=""/>
         </function>
         <namespace name="CrossModuleRef" href="crossmoduleref.html" status="active" access="public" location="testcpp.h" since="3.0" documented="true" module="TestCPP" brief="Namespace that has documented functions in multiple modules">
             <function name="documentMe" fullname="CrossModuleRef::documentMe" href="crossmoduleref.html#documentMe" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void documentMe()"/>
         </namespace>
         <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="A namespace">
             <contents name="usage" title="Usage" level="1"/>
-            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" location="testcpp.h" documented="true" related="0" since="Test 0.9" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
+            <function name="QDOCTEST_CONDITIONAL_MACRO" href="testqdoc.html#QDOCTEST_CONDITIONAL_MACRO" status="active" access="public" documented="true" related="0" since="Test 1.3" meta="macrowithoutparams" signature="QDOCTEST_CONDITIONAL_MACRO"/>
+            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" location="testcpp.h" documented="true" related="1" since="Test 0.9" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
+            <function name="QDOCTEST_SHARED_MACRO_A" href="testqdoc.html#QDOCTEST_SHARED_MACRO_A" status="active" access="public" documented="true" related="3" since="Test 1.4" meta="macrowithparams" signature="QDOCTEST_SHARED_MACRO_A(x)">
+                <parameter type="" name="x" default=""/>
+            </function>
+            <function name="QDOCTEST_SHARED_MACRO_B" href="testqdoc.html#QDOCTEST_SHARED_MACRO_B" status="active" access="public" documented="true" related="4" since="Test 1.4" meta="macrowithparams" signature="QDOCTEST_SHARED_MACRO_B(x)">
+                <parameter type="" name="x" default=""/>
+            </function>
             <class threadsafety="reentrant" name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="1.1" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
-                <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" location="testcpp.h" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
+                <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" location="testcpp.h" documented="true" related="2" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
                     <parameter type="int &amp;" name="x" default=""/>
                 </function>
                 <function name="Test" fullname="TestQDoc::Test::Test" href="testqdoc-test.html#Test" status="active" access="public" location="testcpp.h" documented="true" meta="constructor" signature="Test()"/>
@@ -36,7 +50,7 @@
                 <function name="operator=" fullname="TestQDoc::Test::operator=" href="testqdoc-test.html#operator-eq" status="active" access="public" location="testcpp.h" documented="true" meta="move-assign" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other)" groups="testgroup">
                     <parameter type="TestQDoc::Test &amp;&amp;" name="other" default=""/>
                 </function>
-                <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="2" meta="plain" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
+                <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="5" meta="plain" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
                     <parameter type="const TestQDoc::Test &amp;" name="lhs" default=""/>
                     <parameter type="const TestQDoc::Test &amp;" name="rhs" default=""/>
                 </function>
@@ -80,11 +94,11 @@
                 <function name="someValue" fullname="TestQDoc::TestDerived::someValue" href="testqdoc-testderived.html#someValue" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::TestDerived::NotTypedef" signature="TestQDoc::TestDerived::NotTypedef someValue()"/>
                 <function name="staticObsoleteMember" fullname="TestQDoc::TestDerived::staticObsoleteMember" href="testqdoc-testderived-obsolete.html#staticObsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" static="true" type="void" signature="void staticObsoleteMember()"/>
                 <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" override="true" type="void" signature="void virtualFun() override"/>
-                <enum name="anonymous-testcpp-h-274" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-274" href="testqdoc-testderived.html#anonymous-testcpp-h-274-enum" status="active" access="public" location="testcpp.h" documented="true">
+                <enum name="anonymous-testcpp-h-291" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-291" href="testqdoc-testderived.html#anonymous-testcpp-h-291-enum" status="active" access="public" location="testcpp.h" documented="true">
                     <value name="Val1" value="0"/>
                     <value name="Val2" value="1"/>
                 </enum>
-                <enum name="anonymous-testcpp-h-280" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-280" href="testqdoc-testderived.html#anonymous-testcpp-h-280-enum" status="active" access="public" location="testcpp.h" documented="true">
+                <enum name="anonymous-testcpp-h-297" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-297" href="testqdoc-testderived.html#anonymous-testcpp-h-297-enum" status="active" access="public" location="testcpp.h" documented="true">
                     <value name="Val3" value="0"/>
                     <value name="Val4" value="1"/>
                 </enum>
@@ -116,6 +130,7 @@
                 </property>
             </class>
             <class name="Vec" fullname="TestQDoc::Vec" href="testqdoc-vec.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Type alias that has its own reference"/>
+            <variable name="QDOCTEST_GLOBAL_VARIABLE" href="testqdoc.html#QDOCTEST_GLOBAL_VARIABLE-var" status="active" access="public" location="testcpp.h" related="6" since="Test 1.2" documented="true" type="int" static="false" brief="A test variable for since documentation"/>
         </namespace>
         <class name="DontLinkToMe" href="dontlinktome.html" status="ignored" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Class that does not generate documentation"/>
         <class name="SeenClass" href="seenclass.html" status="active" access="public" location="dont.h" since="2.0" documented="true" module="TestCPP" brief="A public but undocumented class"/>
@@ -146,6 +161,7 @@
         <page name="demos/hidden" href="test-demos-hidden-example.html" status="active" location="hidden.qdoc" documented="true" subtype="example" title="Hidden Demo" fulltitle="Hidden Demo" subtitle="" brief="Tagged 'broken', does not appear in examples-manifest.xml"/>
         <page name="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" href="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" status="active" location="classlists.qdoc" documented="true" subtype="externalpage" title="reentrant" fulltitle="reentrant" subtitle=""/>
         <page name="https://wiki.qt.io/QProperty" href="https://wiki.qt.io/QProperty" status="active" location="properties.qdoc" documented="true" subtype="externalpage" title="QProperty" fulltitle="QProperty" subtitle=""/>
+        <variable name="QDOCTEST_GLOBAL_VARIABLE" href="testqdoc.html#QDOCTEST_GLOBAL_VARIABLE-var" status="active" access="public" location="testcpp.h" related="6" since="Test 1.2" documented="true" type="int" static="false" brief="A test variable for since documentation"/>
         <qmlclass name="AbstractParent" qml-module-name="QDoc.Test" fullname="QDoc.Test.AbstractParent" href="qml-qdoc-test-abstractparent.html" status="active" access="public" abstract="true" location="parent.qdoc" since="1.1" documented="true" title="AbstractParent" fulltitle="AbstractParent" subtitle="" brief="Abstract base QML type">
             <function name="name" fullname="QDoc.Test.AbstractParent.name" href="qml-qdoc-test-abstractparent.html#name-method" status="active" access="public" location="parent.qdoc" documented="true" meta="qmlmethod" type="void"/>
             <function name="name" fullname="QDoc.Test.AbstractParent.name" href="qml-qdoc-test-abstractparent.html#name-method" status="active" access="public" location="parent.qdoc" documented="true" meta="qmlmethod" type="void">

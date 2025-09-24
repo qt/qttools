@@ -12,6 +12,7 @@
 <h3 id="toc">Contents</h3>
 <ul>
 <li class="level1"><a href="#classes">Classes</a></li>
+<li class="level1"><a href="#variables">Variables</a></li>
 <li class="level1"><a href="#macros">Macros</a></li>
 <li class="level1"><a href="#details">Detailed Description</a></li>
 <li class="level2"><a href="#usage">Usage</a></li>
@@ -35,9 +36,17 @@
 <tr><td class="memItemLeft rightAlign topAlign"> <code class="summary extra" translate="no">(since 2.0)</code> class </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html" translate="no">TestDerived</a></b></td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> <code class="summary extra" translate="no">(since 2.0)</code> class </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-vec.html" translate="no">Vec</a></b></td></tr>
 </table></div>
+<h2 id="variables">Variables</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> <code class="summary extra" translate="no">(since Test 1.2)</code> int </td><td class="memItemRight bottomAlign"><b><a href="testqdoc.html#QDOCTEST_GLOBAL_VARIABLE-var" translate="no">QDOCTEST_GLOBAL_VARIABLE</a></b></td></tr>
+</table></div>
 <h2 id="macros">Macros</h2>
 <div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> <code class="summary extra" translate="no">(since Test 1.4)</code> </td><td class="memItemRight bottomAlign"><b></b></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> <code class="summary extra" translate="no">(since Test 1.3)</code> </td><td class="memItemRight bottomAlign"><b><a href="testqdoc.html#QDOCTEST_CONDITIONAL_MACRO" translate="no">QDOCTEST_CONDITIONAL_MACRO</a></b></td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> <code class="summary extra" translate="no">(since Test 0.9)</code> </td><td class="memItemRight bottomAlign"><b><a href="testqdoc.html#QDOCTEST_MACRO" translate="no">QDOCTEST_MACRO</a></b></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> <code class="summary extra" translate="no">(since Test 1.4)</code> </td><td class="memItemRight bottomAlign"><b><a href="testqdoc.html#QDOCTEST_SHARED_MACRO_A" translate="no">QDOCTEST_SHARED_MACRO_A</a></b>(<i>x</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> <code class="summary extra" translate="no">(since Test 1.4)</code> </td><td class="memItemRight bottomAlign"><b><a href="testqdoc.html#QDOCTEST_SHARED_MACRO_B" translate="no">QDOCTEST_SHARED_MACRO_B</a></b>(<i>x</i>)</td></tr>
 </table></div>
 <!-- $$$TestQDoc-description -->
 <div class="descr">
@@ -58,8 +67,28 @@
 <p>Type alias that has its own reference. <a href="testqdoc-vec.html#details">More...</a></p>
 <!-- @@@Vec -->
 </div>
+<div class="vars">
+<h2>Variable Documentation</h2>
+<!-- $$$QDOCTEST_GLOBAL_VARIABLE -->
+<h3 class="fn" translate="no" id="QDOCTEST_GLOBAL_VARIABLE-var"><code class="details extra" translate="no">[since Test 1.2]</code> <span class="type">int</span> <span class="name">QDOCTEST_GLOBAL_VARIABLE</span></h3>
+<p>This variable holds a test variable for since documentation.</p>
+<p>This variable was introduced in Test 1.2.</p>
+<!-- @@@QDOCTEST_GLOBAL_VARIABLE -->
+</div>
 <div class="macros">
 <h2>Macro Documentation</h2>
+<!-- $$$ -->
+<div class="fngroup">
+<h3 class="fn fngroupitem" translate="no" id="QDOCTEST_SHARED_MACRO_A"><code class="details extra" translate="no">[since Test 1.4]</code> <span class="name">QDOCTEST_SHARED_MACRO_A</span>(<i>x</i>)</h3><h3 class="fn fngroupitem" translate="no" id="QDOCTEST_SHARED_MACRO_B"><code class="details extra" translate="no">[since Test 1.4]</code> <span class="name">QDOCTEST_SHARED_MACRO_B</span>(<i>x</i>)</h3></div>
+<p>These macros perform simple arithmetic operations on <i translate="no">x</i>. <a href="testqdoc.html#QDOCTEST_SHARED_MACRO_A" translate="no">QDOCTEST_SHARED_MACRO_A</a> increments the value by 1. <a href="testqdoc.html#QDOCTEST_SHARED_MACRO_B" translate="no">QDOCTEST_SHARED_MACRO_B</a> decrements the value by 1.</p>
+<p>These macros share documentation to test plural form in <code translate="no">\since</code> text.</p>
+<p>These macros were introduced in Test 1.4.</p>
+<!-- @@@ -->
+<!-- $$$QDOCTEST_CONDITIONAL_MACRO[overload1]$$$QDOCTEST_CONDITIONAL_MACRO -->
+<h3 class="fn" translate="no" id="QDOCTEST_CONDITIONAL_MACRO"><code class="details extra" translate="no">[since Test 1.3]</code> <span class="name">QDOCTEST_CONDITIONAL_MACRO</span></h3>
+<p>Test conditional macro documented separately from its definition. This replicates the Qt pattern where macros are defined in headers but documented in cpp files.</p>
+<p>This macro was introduced in Test 1.3.</p>
+<!-- @@@QDOCTEST_CONDITIONAL_MACRO -->
 <!-- $$$QDOCTEST_MACRO[overload1]$$$QDOCTEST_MACRO -->
 <h3 class="fn" translate="no" id="QDOCTEST_MACRO"><code class="details extra" translate="no">[since Test 0.9]</code> <span class="name">QDOCTEST_MACRO</span></h3>
 <p>This macro was introduced in Test 0.9.</p>

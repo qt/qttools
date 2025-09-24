@@ -10,14 +10,27 @@
                     <para>This namespace is for testing QDoc output.</para>
                 </section>
             </description>
-            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" location="testcpp.h" documented="true" related="0" since="Test 0.9" meta="macrowithoutparams" signature="QDOCTEST_MACRO">
+            <function name="QDOCTEST_CONDITIONAL_MACRO" href="testqdoc.html#QDOCTEST_CONDITIONAL_MACRO" status="active" access="public" documented="true" related="0" since="Test 1.3" meta="macrowithoutparams" signature="QDOCTEST_CONDITIONAL_MACRO">
+                <description>
+                    <para>Test conditional macro documented separately from its definition. This replicates the Qt pattern where macros are defined in headers but documented in cpp files.</para>
+                </description>
+            </function>
+            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" location="testcpp.h" documented="true" related="1" since="Test 0.9" meta="macrowithoutparams" signature="QDOCTEST_MACRO">
+                <description/>
+            </function>
+            <function name="QDOCTEST_SHARED_MACRO_A" href="testqdoc.html#QDOCTEST_SHARED_MACRO_A" status="active" access="public" documented="true" related="2" since="Test 1.4" meta="macrowithparams" signature="QDOCTEST_SHARED_MACRO_A(x)">
+                <parameter type="" name="x" default=""/>
+                <description/>
+            </function>
+            <function name="QDOCTEST_SHARED_MACRO_B" href="testqdoc.html#QDOCTEST_SHARED_MACRO_B" status="active" access="public" documented="true" related="3" since="Test 1.4" meta="macrowithparams" signature="QDOCTEST_SHARED_MACRO_B(x)">
+                <parameter type="" name="x" default=""/>
                 <description/>
             </function>
             <class threadsafety="reentrant" name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="1.1" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
                 <description>
                     <brief>A class in a namespace.</brief>
                 </description>
-                <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" location="testcpp.h" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
+                <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" location="testcpp.h" documented="true" related="4" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
                     <parameter type="int &amp;" name="x" default=""/>
                     <description>
                         <brief>A macro with argument <argument>x</argument>.</brief>
@@ -97,7 +110,7 @@
                         <para>The move assignment operator is deleted. <argument>other</argument> cannot be moved from.</para>
                     </description>
                 </function>
-                <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="2" meta="plain" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
+                <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="5" meta="plain" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
                     <parameter type="const TestQDoc::Test &amp;" name="lhs" default=""/>
                     <parameter type="const TestQDoc::Test &amp;" name="rhs" default=""/>
                     <description>
@@ -220,7 +233,7 @@
                 <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" override="true" type="void" signature="void virtualFun() override">
                     <description/>
                 </function>
-                <enum name="anonymous-testcpp-h-274" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-274" href="testqdoc-testderived.html#anonymous-testcpp-h-274-enum" status="active" access="public" location="testcpp.h" documented="true">
+                <enum name="anonymous-testcpp-h-291" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-291" href="testqdoc-testderived.html#anonymous-testcpp-h-291-enum" status="active" access="public" location="testcpp.h" documented="true">
                     <value name="Val1" value="0"/>
                     <value name="Val2" value="1"/>
                     <description>
@@ -234,7 +247,7 @@
                         </list>
                     </description>
                 </enum>
-                <enum name="anonymous-testcpp-h-280" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-280" href="testqdoc-testderived.html#anonymous-testcpp-h-280-enum" status="active" access="public" location="testcpp.h" documented="true">
+                <enum name="anonymous-testcpp-h-297" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-297" href="testqdoc-testderived.html#anonymous-testcpp-h-297-enum" status="active" access="public" location="testcpp.h" documented="true">
                     <value name="Val3" value="0"/>
                     <value name="Val4" value="1"/>
                     <description>
@@ -309,6 +322,11 @@
                     <brief>Type alias that has its own reference.</brief>
                 </description>
             </class>
+            <variable name="QDOCTEST_GLOBAL_VARIABLE" href="testqdoc.html#QDOCTEST_GLOBAL_VARIABLE-var" status="active" access="public" location="testcpp.h" related="6" since="Test 1.2" documented="true" type="int" static="false" brief="A test variable for since documentation">
+                <description>
+                    <brief>This variable holds A test variable for since documentation..</brief>
+                </description>
+            </variable>
         </namespace>
     </document>
 </WebXML>
