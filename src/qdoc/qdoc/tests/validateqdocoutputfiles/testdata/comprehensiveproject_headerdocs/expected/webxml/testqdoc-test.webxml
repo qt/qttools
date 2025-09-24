@@ -5,7 +5,7 @@
             <description>
                 <brief>A class in a namespace.</brief>
             </description>
-            <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" location="testcpp.h" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
+            <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" location="testcpp.h" documented="true" related="4" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
                 <parameter type="int &amp;" name="x" default=""/>
                 <description>
                     <brief>A macro with argument <argument>x</argument>.</brief>
@@ -85,7 +85,7 @@
                     <para>The move assignment operator is deleted. <argument>other</argument> cannot be moved from.</para>
                 </description>
             </function>
-            <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="2" meta="plain" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
+            <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="5" meta="plain" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
                 <parameter type="const TestQDoc::Test &amp;" name="lhs" default=""/>
                 <parameter type="const TestQDoc::Test &amp;" name="rhs" default=""/>
                 <description>

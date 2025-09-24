@@ -19,10 +19,31 @@
         <class>TestQDoc::Vec</class>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type></type>
+            <name>QDOCTEST_CONDITIONAL_MACRO</name>
+            <anchorfile>testqdoc.html</anchorfile>
+            <anchor>QDOCTEST_CONDITIONAL_MACRO</anchor>
+            <arglist>QDOCTEST_CONDITIONAL_MACRO</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
             <name>QDOCTEST_MACRO</name>
             <anchorfile>testqdoc.html</anchorfile>
             <anchor>QDOCTEST_MACRO</anchor>
             <arglist>QDOCTEST_MACRO</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>QDOCTEST_SHARED_MACRO_A</name>
+            <anchorfile>testqdoc.html</anchorfile>
+            <anchor>QDOCTEST_SHARED_MACRO_A</anchor>
+            <arglist>(x)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>QDOCTEST_SHARED_MACRO_B</name>
+            <anchorfile>testqdoc.html</anchorfile>
+            <anchor>QDOCTEST_SHARED_MACRO_B</anchor>
+            <arglist>(x)</arglist>
         </member>
     </compound>
     <compound kind="class">
@@ -190,37 +211,37 @@
         <filename>testqdoc-testderived.html</filename>
         <base>Test</base>
         <member kind="enumeration">
-            <name>anonymous-testcpp-h-274</name>
+            <name>anonymous-testcpp-h-291</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>anonymous-testcpp-h-274-enum</anchor>
+            <anchor>anonymous-testcpp-h-291-enum</anchor>
         </member>
         <member kind="enumvalue">
             <name>Val1</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>anonymous-testcpp-h-274-enum</anchor>
+            <anchor>anonymous-testcpp-h-291-enum</anchor>
             <arglist></arglist>
         </member>
         <member kind="enumvalue">
             <name>Val2</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>anonymous-testcpp-h-274-enum</anchor>
+            <anchor>anonymous-testcpp-h-291-enum</anchor>
             <arglist></arglist>
         </member>
         <member kind="enumeration">
-            <name>anonymous-testcpp-h-280</name>
+            <name>anonymous-testcpp-h-297</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>anonymous-testcpp-h-280-enum</anchor>
+            <anchor>anonymous-testcpp-h-297-enum</anchor>
         </member>
         <member kind="enumvalue">
             <name>Val3</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>anonymous-testcpp-h-280-enum</anchor>
+            <anchor>anonymous-testcpp-h-297-enum</anchor>
             <arglist></arglist>
         </member>
         <member kind="enumvalue">
             <name>Val4</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>anonymous-testcpp-h-280-enum</anchor>
+            <anchor>anonymous-testcpp-h-297-enum</anchor>
             <arglist></arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
