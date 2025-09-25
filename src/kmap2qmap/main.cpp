@@ -24,16 +24,16 @@ struct modifier_map_t {
 };
 
 static const struct modifier_map_t modifier_map[] = {
-    { "plain",   QEvdevKeyboardMap::ModPlain,   Qt::NoModifier },
-    { "shift",   QEvdevKeyboardMap::ModShift,   Qt::ShiftModifier },
-    { "altgr",   QEvdevKeyboardMap::ModAltGr,   Qt::AltModifier },
-    { "control", QEvdevKeyboardMap::ModControl, Qt::ControlModifier },
-    { "alt",     QEvdevKeyboardMap::ModAlt,     Qt::AltModifier },
-    { "meta",    QEvdevKeyboardMap::ModAlt,     Qt::AltModifier },
-    { "shiftl",  QEvdevKeyboardMap::ModShiftL,  Qt::ShiftModifier },
-    { "shiftr",  QEvdevKeyboardMap::ModShiftR,  Qt::ShiftModifier },
-    { "ctrll",   QEvdevKeyboardMap::ModCtrlL,   Qt::ControlModifier },
-    { "ctrlr",   QEvdevKeyboardMap::ModCtrlR,   Qt::ControlModifier },
+    { "plain",   QKeyboardMap::ModPlain,   Qt::NoModifier },
+    { "shift",   QKeyboardMap::ModShift,   Qt::ShiftModifier },
+    { "altgr",   QKeyboardMap::ModAltGr,   Qt::AltModifier },
+    { "control", QKeyboardMap::ModControl, Qt::ControlModifier },
+    { "alt",     QKeyboardMap::ModAlt,     Qt::AltModifier },
+    { "meta",    QKeyboardMap::ModAlt,     Qt::AltModifier },
+    { "shiftl",  QKeyboardMap::ModShiftL,  Qt::ShiftModifier },
+    { "shiftr",  QKeyboardMap::ModShiftR,  Qt::ShiftModifier },
+    { "ctrll",   QKeyboardMap::ModCtrlL,   Qt::ControlModifier },
+    { "ctrlr",   QKeyboardMap::ModCtrlR,   Qt::ControlModifier },
 };
 
 static const int modifier_map_size = sizeof(modifier_map)/sizeof(modifier_map_t);
@@ -262,24 +262,24 @@ static const struct symbol_map_t symbol_map[] = {
     { "VoiceDial"       , Qt::Key_VoiceDial },
     { "LastNumberRedial", Qt::Key_LastNumberRedial },
 
-    { "KP_0",        Qt::Key_0 | Qt::KeypadModifier },
-    { "KP_1",        Qt::Key_1 | Qt::KeypadModifier },
-    { "KP_2",        Qt::Key_2 | Qt::KeypadModifier },
-    { "KP_3",        Qt::Key_3 | Qt::KeypadModifier },
-    { "KP_4",        Qt::Key_4 | Qt::KeypadModifier },
-    { "KP_5",        Qt::Key_5 | Qt::KeypadModifier },
-    { "KP_6",        Qt::Key_6 | Qt::KeypadModifier },
-    { "KP_7",        Qt::Key_7 | Qt::KeypadModifier },
-    { "KP_8",        Qt::Key_8 | Qt::KeypadModifier },
-    { "KP_9",        Qt::Key_9 | Qt::KeypadModifier },
-    { "KP_Add",      Qt::Key_Plus | Qt::KeypadModifier },
-    { "KP_Subtract", Qt::Key_Minus | Qt::KeypadModifier },
-    { "KP_Multiply", Qt::Key_Asterisk | Qt::KeypadModifier },
-    { "KP_Divide",   Qt::Key_Slash | Qt::KeypadModifier },
-    { "KP_Enter",    Qt::Key_Enter | Qt::KeypadModifier },
-    { "KP_Comma",    Qt::Key_Comma | Qt::KeypadModifier },
-    { "KP_Period",   Qt::Key_Period | Qt::KeypadModifier },
-    { "KP_MinPlus",  Qt::Key_plusminus | Qt::KeypadModifier },
+    { "KP_0",        (Qt::Key_0 | Qt::KeypadModifier).toCombined() },
+    { "KP_1",        (Qt::Key_1 | Qt::KeypadModifier).toCombined() },
+    { "KP_2",        (Qt::Key_2 | Qt::KeypadModifier).toCombined() },
+    { "KP_3",        (Qt::Key_3 | Qt::KeypadModifier).toCombined() },
+    { "KP_4",        (Qt::Key_4 | Qt::KeypadModifier).toCombined() },
+    { "KP_5",        (Qt::Key_5 | Qt::KeypadModifier).toCombined() },
+    { "KP_6",        (Qt::Key_6 | Qt::KeypadModifier).toCombined() },
+    { "KP_7",        (Qt::Key_7 | Qt::KeypadModifier).toCombined() },
+    { "KP_8",        (Qt::Key_8 | Qt::KeypadModifier).toCombined() },
+    { "KP_9",        (Qt::Key_9 | Qt::KeypadModifier).toCombined() },
+    { "KP_Add",      (Qt::Key_Plus | Qt::KeypadModifier).toCombined() },
+    { "KP_Subtract", (Qt::Key_Minus | Qt::KeypadModifier).toCombined() },
+    { "KP_Multiply", (Qt::Key_Asterisk | Qt::KeypadModifier).toCombined() },
+    { "KP_Divide",   (Qt::Key_Slash | Qt::KeypadModifier).toCombined() },
+    { "KP_Enter",    (Qt::Key_Enter | Qt::KeypadModifier).toCombined() },
+    { "KP_Comma",    (Qt::Key_Comma | Qt::KeypadModifier).toCombined() },
+    { "KP_Period",   (Qt::Key_Period | Qt::KeypadModifier).toCombined() },
+    { "KP_MinPlus",  (Qt::Key_plusminus | Qt::KeypadModifier).toCombined() },
 
     { "dead_grave",      Qt::Key_Dead_Grave },
     { "dead_acute",      Qt::Key_Dead_Acute },
@@ -365,7 +365,7 @@ static const int symbol_synonyms_size = sizeof(symbol_synonyms)/sizeof(symbol_sy
 
 // makes the generated array in --header mode a bit more human readable
 QT_BEGIN_NAMESPACE
-namespace QEvdevKeyboardMap {
+namespace QKeyboardMap {
     static bool operator<(const Mapping &m1, const Mapping &m2)
     {
         return m1.keycode != m2.keycode ? m1.keycode < m2.keycode : m1.modifiers < m2.modifiers;
@@ -396,8 +396,8 @@ private:
 
 
 private:
-    QList<QEvdevKeyboardMap::Mapping> m_keymap;
-    QList<QEvdevKeyboardMap::Composing> m_keycompose;
+    QList<QKeyboardMap::Mapping> m_keymap;
+    QList<QKeyboardMap::Composing> m_keycompose;
 
     int m_warning_count;
 };
@@ -474,19 +474,19 @@ bool KeymapParser::generateHeader(QFile *f)
     ts << "#ifndef QEVDEVKEYBOARDHANDLER_DEFAULTMAP_H" << Qt::endl;
     ts << "#define QEVDEVKEYBOARDHANDLER_DEFAULTMAP_H" << Qt::endl << Qt::endl;
 
-    ts << "const QEvdevKeyboardMap::Mapping QEvdevKeyboardHandler::s_keymap_default[] = {" << Qt::endl;
+    ts << "const QKeyboardMap::Mapping QEvdevKeyboardHandler::s_keymap_default[] = {" << Qt::endl;
 
     for (int i = 0; i < m_keymap.size(); ++i) {
-        const QEvdevKeyboardMap::Mapping &m = m_keymap.at(i);
+        const QKeyboardMap::Mapping &m = m_keymap.at(i);
         ts << QString::asprintf("    { %3d, 0x%04x, 0x%08x, 0x%02x, 0x%02x, 0x%04x },\n", m.keycode, m.unicode, m.qtcode, m.modifiers, m.flags, m.special);
     }
 
     ts << "};" << Qt::endl << Qt::endl;
 
-    ts << "const QEvdevKeyboardMap::Composing QEvdevKeyboardHandler::s_keycompose_default[] = {" << Qt::endl;
+    ts << "const QKeyboardMap::Composing QEvdevKeyboardHandler::s_keycompose_default[] = {" << Qt::endl;
 
     for (int i = 0; i < m_keycompose.size(); ++i) {
-        const QEvdevKeyboardMap::Composing &c = m_keycompose.at(i);
+        const QKeyboardMap::Composing &c = m_keycompose.at(i);
         ts << QString::asprintf("    { 0x%04x, 0x%04x, 0x%04x },\n", c.first, c.second, c.result);
     }
     ts << "};" << Qt::endl << Qt::endl;
@@ -501,7 +501,7 @@ bool KeymapParser::generateQmap(QFile *f)
 {
     QDataStream ds(f);
 
-    ds << quint32(QEvdevKeyboardMap::FileMagic) << quint32(1 /* version */) << quint32(m_keymap.size()) << quint32(m_keycompose.size());
+    ds << quint32(QKeyboardMap::FileMagic) << quint32(1 /* version */) << quint32(m_keymap.size()) << quint32(m_keycompose.size());
 
     if (ds.status() != QDataStream::Ok)
         return false;
@@ -540,7 +540,7 @@ QList<QByteArray> KeymapParser::tokenize(const QByteArray &line)
         }
         else {
             separator = false;
-            token.append(c);
+            token.append(c.toLatin1());
         }
     }
     if (!token.isEmpty())
@@ -647,7 +647,7 @@ bool KeymapParser::parseKmap(QFile *f)
         }
         else if (tokens[0] == "compose") {
             if (tokens.count() == 5 && tokens[3] == "to") {
-                QEvdevKeyboardMap::Composing c = { 0xffff, 0xffff, 0xffff };
+                QKeyboardMap::Composing c = { 0xffff, 0xffff, 0xffff };
 
                 if (!parseCompose(tokens[1], codec, c.first))
                     parseWarning("could not parse first compose symbol");
@@ -716,27 +716,27 @@ bool KeymapParser::parseKmap(QFile *f)
 
                             // a single a-z|A-Z value results in a very flags mapping: see below
 
-                            updateMapping(keycode, QEvdevKeyboardMap::ModPlain, unicode, qtcode, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModPlain, unicode, qtcode, flags, 0);
 
-                            updateMapping(keycode, QEvdevKeyboardMap::ModShift, other_unicode, qtcode, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModShift, other_unicode, qtcode, flags, 0);
 
-                            updateMapping(keycode, QEvdevKeyboardMap::ModAltGr,                         unicode, qtcode, flags, 0);
-                            updateMapping(keycode, QEvdevKeyboardMap::ModAltGr | QEvdevKeyboardMap::ModShift, other_unicode, qtcode, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModAltGr,                         unicode, qtcode, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModAltGr | QKeyboardMap::ModShift, other_unicode, qtcode, flags, 0);
 
-                            updateMapping(keycode, QEvdevKeyboardMap::ModControl,                                                 lower_unicode, qtcode | Qt::ControlModifier, flags, 0);
-                            updateMapping(keycode, QEvdevKeyboardMap::ModControl | QEvdevKeyboardMap::ModShift,                         lower_unicode, qtcode | Qt::ControlModifier, flags, 0);
-                            updateMapping(keycode, QEvdevKeyboardMap::ModControl | QEvdevKeyboardMap::ModAltGr,                         lower_unicode, qtcode | Qt::ControlModifier, flags, 0);
-                            updateMapping(keycode, QEvdevKeyboardMap::ModControl | QEvdevKeyboardMap::ModAltGr | QEvdevKeyboardMap::ModShift, lower_unicode, qtcode | Qt::ControlModifier, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModControl,                                                 lower_unicode, qtcode | Qt::ControlModifier, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModControl | QKeyboardMap::ModShift,                         lower_unicode, qtcode | Qt::ControlModifier, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModControl | QKeyboardMap::ModAltGr,                         lower_unicode, qtcode | Qt::ControlModifier, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModControl | QKeyboardMap::ModAltGr | QKeyboardMap::ModShift, lower_unicode, qtcode | Qt::ControlModifier, flags, 0);
 
-                            updateMapping(keycode, QEvdevKeyboardMap::ModAlt,                                                 unicode, qtcode | Qt::AltModifier, flags, 0);
-                            updateMapping(keycode, QEvdevKeyboardMap::ModAlt | QEvdevKeyboardMap::ModShift,                         unicode, qtcode | Qt::AltModifier, flags, 0);
-                            updateMapping(keycode, QEvdevKeyboardMap::ModAlt | QEvdevKeyboardMap::ModAltGr,                         unicode, qtcode | Qt::AltModifier, flags, 0);
-                            updateMapping(keycode, QEvdevKeyboardMap::ModAlt | QEvdevKeyboardMap::ModAltGr | QEvdevKeyboardMap::ModShift, unicode, qtcode | Qt::AltModifier, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModAlt,                                                 unicode, qtcode | Qt::AltModifier, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModAlt | QKeyboardMap::ModShift,                         unicode, qtcode | Qt::AltModifier, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModAlt | QKeyboardMap::ModAltGr,                         unicode, qtcode | Qt::AltModifier, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModAlt | QKeyboardMap::ModAltGr | QKeyboardMap::ModShift, unicode, qtcode | Qt::AltModifier, flags, 0);
 
-                            updateMapping(keycode, QEvdevKeyboardMap::ModAlt | QEvdevKeyboardMap::ModControl,                                                 lower_unicode, qtcode | Qt::ControlModifier | Qt::AltModifier, flags, 0);
-                            updateMapping(keycode, QEvdevKeyboardMap::ModAlt | QEvdevKeyboardMap::ModControl | QEvdevKeyboardMap::ModShift,                         lower_unicode, qtcode | Qt::ControlModifier | Qt::AltModifier, flags, 0);
-                            updateMapping(keycode, QEvdevKeyboardMap::ModAlt | QEvdevKeyboardMap::ModControl | QEvdevKeyboardMap::ModAltGr,                         lower_unicode, qtcode | Qt::ControlModifier | Qt::AltModifier, flags, 0);
-                            updateMapping(keycode, QEvdevKeyboardMap::ModAlt | QEvdevKeyboardMap::ModControl | QEvdevKeyboardMap::ModAltGr | QEvdevKeyboardMap::ModShift, lower_unicode, qtcode | Qt::ControlModifier | Qt::AltModifier, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModAlt | QKeyboardMap::ModControl,                                                 lower_unicode, qtcode | Qt::ControlModifier | Qt::AltModifier, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModAlt | QKeyboardMap::ModControl | QKeyboardMap::ModShift,                         lower_unicode, qtcode | Qt::ControlModifier | Qt::AltModifier, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModAlt | QKeyboardMap::ModControl | QKeyboardMap::ModAltGr,                         lower_unicode, qtcode | Qt::ControlModifier | Qt::AltModifier, flags, 0);
+                            updateMapping(keycode, QKeyboardMap::ModAlt | QKeyboardMap::ModControl | QKeyboardMap::ModAltGr | QKeyboardMap::ModShift, lower_unicode, qtcode | Qt::ControlModifier | Qt::AltModifier, flags, 0);
                         }
                         else {
                             // a single value results in that mapping regardless of the modifier
@@ -744,7 +744,7 @@ bool KeymapParser::parseKmap(QFile *f)
                             //    updateMapping(keycode, quint8(mod), unicode, qtcode | toQtModifiers(mod), flags, special);
 
                             // we can save a lot of space in the qmap, since we do that anyway in the kbd handler:
-                            updateMapping(keycode, QEvdevKeyboardMap::ModPlain, unicode, qtcode, flags, special);
+                            updateMapping(keycode, QKeyboardMap::ModPlain, unicode, qtcode, flags, special);
                         }
                     }
                     else {
@@ -764,7 +764,7 @@ bool KeymapParser::parseKmap(QFile *f)
 void KeymapParser::updateMapping(quint16 keycode, quint8 modifiers, quint16 unicode, quint32 qtcode, quint8 flags, quint16 special)
 {
     for (int i = 0; i < m_keymap.size(); ++i) {
-        QEvdevKeyboardMap::Mapping &m = m_keymap[i];
+        QKeyboardMap::Mapping &m = m_keymap[i];
 
         if (m.keycode == keycode && m.modifiers == modifiers) {
             m.unicode = unicode;
@@ -774,7 +774,7 @@ void KeymapParser::updateMapping(quint16 keycode, quint8 modifiers, quint16 unic
             return;
         }
     }
-    QEvdevKeyboardMap::Mapping m = { keycode, unicode, qtcode, modifiers, flags, special };
+    QKeyboardMap::Mapping m = { keycode, unicode, qtcode, modifiers, flags, special };
     m_keymap << m;
 }
 
@@ -811,7 +811,7 @@ bool KeymapParser::parseCompose(const QByteArray &str, QStringDecoder &codec, qu
         unicode = '\'';
         return true;
     } else if (str.length() == 3 && str.startsWith('\'') && str.endsWith('\'')) {
-        QString temp = codec(str.constData() + 1, str.length() - 2);
+        QString temp = codec(QByteArrayView(str.constData() + 1, str.length() - 2));
         if (temp.length() != 1)
             return false;
         unicode = temp[0].unicode();
@@ -823,7 +823,7 @@ bool KeymapParser::parseCompose(const QByteArray &str, QStringDecoder &codec, qu
         char c[2];
         c[0] = char(code);
         c[1] = 0;
-        QString temp = codec(c, 2);
+        QString temp = codec(QByteArrayView(c, 2));
         if (temp.length() != 1)
             return false;
         unicode = temp[0].unicode();
@@ -834,8 +834,8 @@ bool KeymapParser::parseCompose(const QByteArray &str, QStringDecoder &codec, qu
 
 bool KeymapParser::parseSymbol(const QByteArray &str, quint16 &unicode, quint32 &qtcode, quint8 &flags, quint16 &special)
 {
-    flags = (str[0] == '+') ? QEvdevKeyboardMap::IsLetter : 0;
-    QByteArray sym = (flags & QEvdevKeyboardMap::IsLetter) ? str.right(str.length() - 1) : str;
+    flags = (str[0] == '+') ? QKeyboardMap::IsLetter : 0;
+    QByteArray sym = (flags & QKeyboardMap::IsLetter) ? str.right(str.length() - 1) : str;
 
     special = 0;
     qtcode = Qt::Key_unknown;
@@ -883,7 +883,7 @@ bool KeymapParser::parseSymbol(const QByteArray &str, quint16 &unicode, quint32 
             // check if symbol is a modifier
             if (parseModifier(sym, modcode)) {
                 special = modcode;
-                flags |= QEvdevKeyboardMap::IsModifier;
+                flags |= QKeyboardMap::IsModifier;
             }
 
             // map symbol to Qt key code
@@ -912,22 +912,22 @@ bool KeymapParser::parseSymbol(const QByteArray &str, quint16 &unicode, quint32 
                 quint16 sys = 0;
 
                 if (sym == "Decr_Console") {
-                    sys = QEvdevKeyboardMap::SystemConsolePrevious;
+                    sys = QKeyboardMap::SystemConsolePrevious;
                 } else if (sym == "Incr_Console") {
-                    sys = QEvdevKeyboardMap::SystemConsoleNext;
+                    sys = QKeyboardMap::SystemConsoleNext;
                 } else if (sym.startsWith("Console_")) {
                     int console = sym.mid(8).toInt() - 1;
-                    if (console >= 0 && console <= (QEvdevKeyboardMap::SystemConsoleLast - QEvdevKeyboardMap::SystemConsoleFirst)) {
-                        sys = QEvdevKeyboardMap::SystemConsoleFirst + console;
+                    if (console >= 0 && console <= (QKeyboardMap::SystemConsoleLast - QKeyboardMap::SystemConsoleFirst)) {
+                        sys = QKeyboardMap::SystemConsoleFirst + console;
                     }
                 } else if (sym == "Boot") {
-                    sys = QEvdevKeyboardMap::SystemReboot;
+                    sys = QKeyboardMap::SystemReboot;
                 } else if (sym == "QtZap") {
-                    sys = QEvdevKeyboardMap::SystemZap;
+                    sys = QKeyboardMap::SystemZap;
                 }
 
                 if (sys) {
-                    flags |= QEvdevKeyboardMap::IsSystem;
+                    flags |= QKeyboardMap::IsSystem;
                     special = sys;
                     qtcode = Qt::Key_Escape; // just a dummy
                 }
@@ -942,7 +942,7 @@ bool KeymapParser::parseSymbol(const QByteArray &str, quint16 &unicode, quint32 
 
             // flag dead keys
             if (qtcode >= Qt::Key_Dead_Grave && qtcode <= Qt::Key_Dead_Horn) {
-                flags = QEvdevKeyboardMap::IsDead;
+                flags = QKeyboardMap::IsDead;
 
                 for (int i = 0; i < symbol_dead_unicode_size; ++i) {
                     if (symbol_dead_unicode[i].dead == qtcode) {

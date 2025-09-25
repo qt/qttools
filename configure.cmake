@@ -64,6 +64,7 @@ qt_feature("distancefieldgenerator" PRIVATE
 qt_feature("kmap2qmap" PRIVATE
     LABEL "kmap2qmap"
     PURPOSE "kmap2qmap is a tool to generate keymaps for use on Embedded Linux. The source files have to be in standard Linux kmap format that is e.g. understood by the kernel's loadkeys command."
+    CONDITION TARGET Qt::InputSupportPrivate
 )
 qt_feature("linguist" PRIVATE
     LABEL "Qt Linguist"
@@ -109,7 +110,7 @@ qt_configure_add_summary_entry(ARGS "assistant")
 qt_configure_add_summary_entry(ARGS "clang")
 qt_configure_add_summary_entry(ARGS "designer")
 qt_configure_add_summary_entry(ARGS "distancefieldgenerator")
-#qt_configure_add_summary_entry(ARGS "kmap2qmap")
+qt_configure_add_summary_entry(ARGS "kmap2qmap")
 qt_configure_add_summary_entry(ARGS "linguist")
 qt_configure_add_summary_entry(ARGS "pixeltool")
 qt_configure_add_summary_entry(ARGS "qdbus")
