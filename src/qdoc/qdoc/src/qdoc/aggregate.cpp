@@ -359,16 +359,6 @@ void Aggregate::normalizeOverloads()
                 }
             }
 
-            if (primaryOverloads.size() > 1) {
-                const QString functionName = map_it.front()->name();
-                const QString message = "Multiple primary overload definitions for '%1': %2"_L1.arg(
-                        functionName, primaryOverloads.join(", "));
-                const QString description = "The primary overload will be determined "
-                                            "by lexicographic comparison "
-                                            "(alphabetical ordering of function signatures)."_L1;
-                map_it.front()->doc().location().warning(message, description);
-            }
-
             std::sort(map_it.begin(), map_it.end(),
                 [](const FunctionNode *f1, const FunctionNode *f2) -> bool {
                     if (f1->isInternal() != f2->isInternal())

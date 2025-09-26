@@ -127,3 +127,83 @@ void TestOverloads::primary(const char *message)
     // Implementation for primary function with const char* parameter
 }
 
+/*!
+    \since 6.11
+    \overload primary
+
+    Test function to validate QTBUG-140510: Functions marked with \\overload primary
+    should require parameter documentation just like non-overloaded functions,
+    since they serve as the main documentation for their function family.
+
+    This primary overload has a parameter \a param that is documented here,
+    demonstrating the correct practice for primary overload documentation.
+*/
+void TestOverloads::parameterWarningTest(int param)
+{
+    // Implementation for primary overload with documented parameter
+}
+
+/*!
+    \since 6.11
+    \overload parameterWarningTest()
+
+    This overload correctly does not generate undocumented parameter warnings
+    for its parameters, because regular overloads inherit their documentation
+    from the primary overload. The parameters are intentionally not documented
+    to test that the warning suppression works for regular overloads.
+*/
+void TestOverloads::parameterWarningTest(const char *message, int level)
+{
+    // Implementation for overload with undocumented parameters
+}
+
+/*!
+    \since 6.11
+    \overload parameterWarningTest()
+
+    Another overload that correctly does not generate parameter warnings.
+    Parameters are intentionally undocumented to test regular overload behavior.
+*/
+void TestOverloads::parameterWarningTest(const RegularExpression &pattern, bool enabled)
+{
+    // Implementation for overload with undocumented parameters
+}
+
+/*!
+    \since 6.11
+    \overload primary
+
+    Test function to validate QTBUG-140508: Primary overloads should not
+    display "This function overloads..." text. Instead, they should appear
+    as the main documentation entry.
+
+    This function demonstrates the intended behavior where the primary overload
+    contains the main documentation and does not show overload linking text.
+*/
+void TestOverloads::linkingTest()
+{
+    // Implementation for primary overload - no overload text should appear
+}
+
+/*!
+    \since 6.11
+    \overload linkingTest()
+
+    This overload should show "This function overloads linkingTest()."
+    and successfully link to the primary overload above.
+*/
+void TestOverloads::linkingTest(int value)
+{
+    // Implementation for overload that should link to primary
+}
+
+/*!
+    \since 6.11
+    \overload linkingTest()
+
+    Another overload that should link to the primary linkingTest() function.
+*/
+void TestOverloads::linkingTest(const char *message)
+{
+    // Implementation for overload that should link to primary
+}

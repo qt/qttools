@@ -1,0 +1,7 @@
+# QDoc Warning Log
+# Project: QDoc multiple overloads test
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/testoverloads.cpp:62: (qdoc) warning: Undocumented parameter 'messagePattern' in TestOverloads::failOnWarning()

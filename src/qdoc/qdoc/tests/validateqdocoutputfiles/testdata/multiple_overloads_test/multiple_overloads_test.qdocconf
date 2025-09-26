@@ -19,6 +19,10 @@ DocBook.nosubdirs = true
 WebXML.outputsubdir = webxml
 WebXML.nosubdirs = true
 
-warninglimit = 0
+# Test warning
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+warninglimit = 1
 warninglimit.enabled = true
 

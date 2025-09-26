@@ -1812,11 +1812,10 @@ void DocParser::cmd_overload()
     QString overloadArgument = isBlankLine() ? getMetaCommandArgument(cmd) : getRestOfLine();
 
     // Handle special case: \overload primary
-    // The "primary" flag is processed by the code parser, but we don't want it
-    // passed to the generator as a target function name
-    if (overloadArgument.trimmed() == "primary") {
-        overloadArgument.clear(); // Use empty argument for default behavior
-    }
+    // Keep the "primary" flag for the code parser, but mark it specially
+    // so generators know not to treat it as a target function name
+    if (overloadArgument.trimmed() == "primary")
+        overloadArgument = "__qdoc_primary_overload__"_L1;
 
     m_private->m_metaCommandMap[cmd].append(ArgPair(overloadArgument, QString()));
 }

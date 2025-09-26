@@ -799,8 +799,8 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                         if (fn->isActive() || fn->isPreliminary()) {
                             // Require no parameter documentation for overrides and overloads,
                             // and only require it for non-overloaded constructors.
-                            if (!fn->isMarkedReimp() && !fn->isOverload() &&
-                                !(fn->isSomeCtor() && fn->hasOverloads())) {
+                            if (!fn->isMarkedReimp() && !fn->isOverload()
+                                && !(fn->isSomeCtor() && fn->hasOverloads())) {
                                 fn->doc().location().warning(
                                         QStringLiteral("Undocumented parameter '%1' in %2")
                                                 .arg(name, node->plainFullName()));
@@ -1444,6 +1444,10 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
     {
         const auto *func = static_cast<const FunctionNode *>(node);
 
+        // Primary overloads should not display any overload note text
+        if (func->isPrimaryOverload())
+            return;
+
         if (func->isSignal() || func->isSlot()) {
             QString functionType = func->isSignal() ? "signal" : "slot";
             const QString &configKey = func->isSignal() ? "overloadedsignalstarget" : "overloadedslotstarget";
@@ -1473,9 +1477,8 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
                 // attempt to qualify it to improve link resolution
                 if (!target.contains("::")) {
                     const auto *parent = node->parent();
-                    if (parent && (parent->isClassNode() || parent->isNamespace())) {
+                    if (parent && (parent->isClassNode() || parent->isNamespace()))
                         target = parent->name() + "::" + target;
-                    }
                 }
                 text << "This function overloads " << Atom(Atom::AutoLink, target) << ".";
             }

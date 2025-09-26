@@ -4143,6 +4143,11 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
     }
     case OverloadNote: {
         const auto *func = static_cast<const FunctionNode *>(node);
+
+        // Primary overloads should not display any overload note text
+        if (func->isPrimaryOverload())
+            return;
+
         m_writer->writeStartElement(dbNamespace, "para");
 
         if (func->isSignal() || func->isSlot()) {
@@ -4202,11 +4207,10 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
                 const Node *linkNode = nullptr;
                 Atom linkAtom = Atom(Atom::AutoLink, target);
                 QString link = getAutoLink(&linkAtom, node, &linkNode);
-                if (!link.isEmpty() && linkNode) {
+                if (!link.isEmpty() && linkNode)
                     generateSimpleLink(link, target);
-                } else {
+                else
                     m_writer->writeCharacters(target);
-                }
                 m_writer->writeCharacters(".");
             }
         }

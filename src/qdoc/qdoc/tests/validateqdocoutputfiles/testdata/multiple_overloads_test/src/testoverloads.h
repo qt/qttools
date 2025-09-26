@@ -20,6 +20,16 @@ public:
     static void primary();
     static void primary(int value);
     static void primary(const char *message);
+
+    // Additional test cases for QTBUG-140510: parameter warning issue
+    static void parameterWarningTest(int param);
+    static void parameterWarningTest(const char *message, int level);
+    static void parameterWarningTest(const RegularExpression &pattern, bool enabled);
+
+    // Additional test cases for QTBUG-140508: documentation linking issue
+    static void linkingTest();
+    static void linkingTest(int value);
+    static void linkingTest(const char *message);
 };
 
 #endif // TESTOVERLOADS_H
