@@ -274,8 +274,8 @@ bool Section::insertReimplementedMember(Node *node)
     const InclusionPolicy policy = Config::instance().createInclusionPolicy();
     const NodeContext context = node->createContext();
 
-    // Use specialized visibility check for reimplemented members
-    if (InclusionFilter::isReimplementedMemberVisible(policy, context) && !node->isRelatedNonmember()) {
+    // Use specialized visibility check for documented reimplemented members
+    if (node->isInAPI() && InclusionFilter::isReimplementedMemberVisible(policy, context) && !node->isRelatedNonmember()) {
         const auto *fn = static_cast<const FunctionNode *>(node);
         if (!fn->overridesThis().isEmpty()) {
             if (fn->parent() == m_aggregate) {
