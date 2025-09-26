@@ -61,6 +61,7 @@ protected:
 private:
     void setExampleFileLists(ExampleNode *en);
     static void processComparesCommand(Node *node, const QString &arg, const Location &loc);
+    static void processOverloadCommand(Node *node, const Doc &doc);
     void processQmlNativeTypeCommand(Node *node, const QString &cmd,
                                      const QString &arg, const Location &loc);
     EnumNode *processQmlEnumTopic(const QStringList &enumItemNames, const Location &location,

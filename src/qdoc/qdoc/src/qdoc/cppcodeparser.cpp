@@ -360,45 +360,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
           flags and overload numbers will be resolved later
           in Aggregate::normalizeOverloads().
          */
-        if (node->isFunction()) {
-            auto *fn = static_cast<FunctionNode *>(node);
-
-            // Check if this is "\overload primary"
-            const auto &overloadArgs = doc.overloadList();
-            if (!overloadArgs.isEmpty()
-                && overloadArgs.first().first == "__qdoc_primary_overload__"_L1) {
-
-                // Check for existing primary overloads with the same name
-                if (fn->parent() && fn->parent()->isAggregate()) {
-                    auto *aggregate = static_cast<Aggregate *>(fn->parent());
-                    const auto &overloads = aggregate->functionMap().value(fn->name());
-
-                    auto existingPrimary = std::find_if(overloads.cbegin(), overloads.cend(),
-                        [fn](const FunctionNode *existing) {
-                            return existing != fn && existing->isPrimaryOverload();
-                        });
-
-                    if (existingPrimary != overloads.cend()) {
-                        const QString previousLocation = "%1:%2"_L1.arg(
-                            (*existingPrimary)->doc().location().fileName(),
-                            QString::number((*existingPrimary)->doc().location().lineNo()));
-                        doc.location().warning(
-                            QStringLiteral("Multiple primary overloads for '%1'. The previous primary is here: %2")
-                                .arg(fn->name(), previousLocation));
-                    }
-                }
-
-                fn->setPrimaryOverloadFlag();
-                // Primary overloads are still overloads, so set both flags
-                fn->setOverloadFlag();
-            } else {
-                fn->setOverloadFlag();
-            }
-        } else if (node->isSharedCommentNode()) {
-            static_cast<SharedCommentNode *>(node)->setOverloadFlags();
-        } else {
-            doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_OVERLOAD));
-        }
+        processOverloadCommand(node, doc);
     } else if (command == COMMAND_REIMP) {
         if (node->parent() && !node->parent()->isInternal()) {
             if (node->isFunction()) {
@@ -627,6 +589,54 @@ void CppCodeParser::processComparesCommand(Node *node, const QString &arg, const
     } else {
         loc.warning(u"Invalid argument to \\%1 command: `%2`"_s.arg(COMMAND_COMPARES, arg),
                     u"Valid arguments are `strong`, `weak`, `partial`, or `equality`."_s);
+    }
+}
+
+/*!
+    Processes the \\overload command for the given \a node and \a doc.
+    Handles both regular overloads and primary overloads (\\overload primary).
+    Issues warnings for multiple primary overloads with location references.
+*/
+void CppCodeParser::processOverloadCommand(Node *node, const Doc &doc)
+{
+    if (node->isFunction()) {
+        auto *fn = static_cast<FunctionNode *>(node);
+
+        // Check if this is "\overload primary"
+        const auto &overloadArgs = doc.overloadList();
+        if (!overloadArgs.isEmpty()
+            && overloadArgs.first().first == "__qdoc_primary_overload__"_L1) {
+
+            // Check for existing primary overloads with the same name
+            if (fn->parent() && fn->parent()->isAggregate()) {
+                auto *aggregate = static_cast<Aggregate *>(fn->parent());
+                const auto &overloads = aggregate->functionMap().value(fn->name());
+
+                auto existingPrimary = std::find_if(overloads.cbegin(), overloads.cend(),
+                    [fn](const FunctionNode *existing) {
+                        return existing != fn && existing->isPrimaryOverload();
+                    });
+
+                if (existingPrimary != overloads.cend()) {
+                    const QString previousLocation = "%1:%2"_L1.arg(
+                        (*existingPrimary)->doc().location().fileName(),
+                        QString::number((*existingPrimary)->doc().location().lineNo()));
+                    doc.location().warning(
+                        "Multiple primary overloads for '%1'. The previous primary is here: %2"_L1
+                            .arg(fn->name(), previousLocation));
+                }
+            }
+
+            fn->setPrimaryOverloadFlag();
+            // Primary overloads are still overloads, so set both flags
+            fn->setOverloadFlag();
+        } else {
+            fn->setOverloadFlag();
+        }
+    } else if (node->isSharedCommentNode()) {
+        static_cast<SharedCommentNode *>(node)->setOverloadFlags();
+    } else {
+        doc.location().warning("Ignored '\\%1'"_L1.arg(COMMAND_OVERLOAD));
     }
 }
 
