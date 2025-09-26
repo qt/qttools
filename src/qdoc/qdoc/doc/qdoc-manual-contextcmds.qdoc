@@ -795,77 +795,76 @@
     \target overload-command
     \section2 \\overload
 
-    The \\overload command is for indicating that a function is a
-    secondary overload of its name. The command must stand on its own
-    line. If the command is used with a function that isn't an actual
-    overload, it's considered a no-op.
+    Use the \e {\\overload} command to mark C++ function overloads. This command
+    must appear on its own line in the documentation comment.
 
-    For a function name that is overloaded (except constructors), QDoc
-    expects one primary version of the function, and all the others
-    marked with the \b {\\overload command}. The primary version
-    should be fully documented. Each overload can have whatever extra
-    documentation you want to add for just that overloaded version.
+    \section3 How it works
 
-    You can include the function name plus '()' as a parameter to
-    the \b{\\overload} command, which will include a standard
-    \e{This function overloads...}  line of text with a link
-    to the documentation for the primary version of the function.
+    When you have multiple C++ functions with the same name (overloads) that
+    perform similar work with different parameters, use \e {\\overload} to avoid
+    repetitive documentation. Functions without \e {\\overload} require complete
+    documentation. Functions with \e {\\overload} can focus on their specific
+    differences.
 
-    You can use either a fully qualified name (such as \c{QMenu::addAction()})
-    or an unqualified name (such as \c{addAction()}). When you use an
-    unqualified function name, QDoc automatically qualifies it by using the
-    parent class or namespace name. For example, \c{addAction()} becomes
-    \c{QMenu::addAction()} when used within the \c{QMenu} class documentation.
+    Functions marked with \e {\\overload} automatically suppress missing
+    parameter warnings, since they reference the documentation of the main
+    function.
 
-    For parameterless targets like \c{\\overload functionName()}, QDoc searches
-    for a link target in this order:
-    \list 1
-        \li The function explicitly marked with \c{\\overload primary}, if one
-            exists.
-        \li The parameterless overload of that function, if one exists.
-        \li The overload QDoc determines to be primary based on its sorting
-            rules.
-    \endlist
-
-    QDoc automatically determines the primary overload by prioritizing functions
-    that are: non-internal, then non-overload (no \c{\\overload} command), then
-    documented, then by lexicographic comparison (alphabetical ordering of
-    function signatures). To override this automatic selection and explicitly
-    designate which overload should be the primary target, use
-    \c{\\overload primary} on that function.
-
-    \note If multiple functions are marked with \c{\\overload primary}, QDoc
-    will issue a warning and determine the primary overload using lexicographic
-    comparison among the competing primary candidates.
+    \section3 Basic usage
 
     \badcode *
     /\1!
-        \overload addAction()
-
-        This convenience function creates a new action with an
-        \a icon and some \a text. The function adds the newly
-        created action to the menu's list of actions, and
-        returns it.
-
-        \sa QWidget::addAction()
+        \overload
+        Brief description of what makes this overload different.
     \1/
-    QAction *QMenu::addAction(const QIcon &icon, const QString &text)
-    {
-        QAction *ret = new QAction(icon, text, this);
-        addAction(ret);
-        return ret;
-    }
     \endcode
 
-    If you don't include the function name with the \b{\\overload}
-    command, then instead of the "This function overloads..." line
-    with the link to the documentation for the primary version, you
-    get the old standard line:
+    \section3 Linking to the primary function
 
-    \quotation
-        This is an overloaded member function, provided for
-        convenience.
-    \endquotation.
+    Add the function name to create a link to the primary function:
+
+    \badcode *
+    /\1!
+        \overload functionName()
+        Brief description of what makes this overload different.
+    \1/
+    \endcode
+
+    Use either qualified names (\c{ClassName::functionName()}) or unqualified
+    names (\c{functionName()}). QDoc automatically qualifies unqualified names
+    using the current class or namespace.
+
+    \note For historic reasons, a parameterless unqualified name like
+    \c {functionName()} serves as shorthand for linking to the primary overload,
+    not necessarily the parameterless overload. QDoc uses a search algorithm to
+    find the "best" overload to link to. To link to a specific parameterless
+    function, either designate it as the primary overload with
+    \c {\overload primary}, or use a fully qualified signature that explicitly
+    specifies the empty parameter list.
+
+    \section3 Designating a primary overload
+
+    By default, QDoc chooses the primary overload automatically. To explicitly
+    designate which overload serves as the primary, use:
+
+    \badcode *
+    /\1!
+        \overload primary
+        Main documentation for this function family.
+        Document all parameters here.
+    \1/
+    \endcode
+
+    Primary overloads:
+    \list
+        \li Contain the main function documentation.
+        \li Require complete parameter documentation.
+        \li Do not display "This function overloads..." text.
+        \li Serve as the link target for other overloads.
+    \endlist
+
+    Use \e {\\overload primary} when the most important overload differs from
+    QDoc's automatic selection, or when you need consistent linking behavior.
 
     \target reimp-command
     \section2 \\reimp
