@@ -202,7 +202,7 @@
                 <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" override="true" type="void" signature="void virtualFun() override">
                     <description/>
                 </function>
-                <enum name="anonymous" fullname="TestQDoc::TestDerived::anonymous" href="testqdoc-testderived.html#anonymous-enum" status="active" access="public" location="testcpp.h" documented="true">
+                <enum name="anonymous" fullname="TestQDoc::TestDerived::anonymous" href="testqdoc-testderived.html#anonymous-enum" status="active" access="public" location="testcpp.h" documented="true" anonymous="true">
                     <value name="Val1" value="0"/>
                     <value name="Val2" value="1"/>
                     <value name="Val3" value="0"/>

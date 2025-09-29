@@ -376,6 +376,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         else if (!indexUrl.isNull())
             location = Location(parent->name().toLower() + ".html");
 
+        if (attributes.value("anonymous") == "true")
+            enumNode->setAnonymous(true);
+
         while (reader.readNextStartElement()) {
             QXmlStreamAttributes childAttributes = reader.attributes();
             if (reader.name() == QLatin1String("value")) {
@@ -1132,6 +1135,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             writer.writeAttribute("scoped", "true");
         if (enumNode->flagsType())
             writer.writeAttribute("typedef", enumNode->flagsType()->fullDocumentName());
+        if (enumNode->isAnonymous())
+            writer.writeAttribute("anonymous", "true");
         const auto &items = enumNode->items();
         for (const auto &item : items) {
             writer.writeStartElement("value");
