@@ -11,8 +11,11 @@ documentationinheaders = true
 imagedirs = ./src/images
 
 # zero warning policy
-warninglimit = 20
+warninglimit = 0
 warninglimit.enabled = true
+logwarnings = true
+logwarnings.disablecliargs = true
+projectroot = .
 
 # don't write host system-specific paths to index files
 locationinfo = false

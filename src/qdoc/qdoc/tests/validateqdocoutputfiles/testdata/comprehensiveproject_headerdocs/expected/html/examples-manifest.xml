@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instructionals module="Test">
+    <examples>
+        <example docUrl="qthelp://org.qt-project.test.001/test/test-cmaketest-example.html" imageUrl="qthelp://org.qt-project.test.001/test/images/leonardo-da-vinci.png" isTest="true" name="CMake Example Project" projectPath="test/cmaketest/CMakeLists.txt">
+            <description><![CDATA[No description available]]></description>
+            <tags>test</tags>
+            <fileToOpen mainFile="true">test/cmaketest/main.cpp</fileToOpen>
+        </example>
+        <example docUrl="qthelp://org.qt-project.test.001/test/test-demos-demo-example.html" imageUrl="qthelp://org.qt-project.test.001/test/images/leonardo-da-vinci.png" isTest="true" name="Demo" projectPath="test/demos/demo/demo.pro">
+            <description><![CDATA[No description available]]></description>
+            <tags>test</tags>
+            <fileToOpen mainFile="true">test/demos/demo/demo.cpp</fileToOpen>
+        </example>
+        <example docUrl="qthelp://org.qt-project.test.001/test/test-componentset-example.html" isTest="true" name="QML Documentation Example" projectPath="tutorials/componentset/componentset.pro">
+            <description><![CDATA[Example for documenting QML types.]]></description>
+            <tags>application,sample,test</tags>
+            <fileToOpen mainFile="true">tutorials/componentset/componentset.qml</fileToOpen>
+            <meta>
+                <entry name="category">Application Example</entry>
+            </meta>
+        </example>
+    </examples>
+    <categories>
+        <category>Application Examples</category>
+        <category>Desktop</category>
+        <category>Mobile</category>
+        <category>Embedded</category>
+    </categories>
+</instructionals>
