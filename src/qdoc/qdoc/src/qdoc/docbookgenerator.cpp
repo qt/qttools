@@ -4504,7 +4504,7 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
     m_writer = startDocument(qcn);
 
     Generator::setQmlTypeContext(qcn);
-    QString title = qcn->fullTitle();
+    QString title = qcn->name();
     if (qcn->isQmlBasicType())
         title.append(" QML Value Type");
     else

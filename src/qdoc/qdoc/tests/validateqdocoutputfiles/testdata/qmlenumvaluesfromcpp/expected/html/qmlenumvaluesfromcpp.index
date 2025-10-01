@@ -13,7 +13,7 @@
                 <value name="Three" value="2"/>
             </enum>
         </class>
-        <qmlclass name="Type" qml-module-name="QmlModule" fullname="QmlModule.Type" href="qml-qmlmodule-type.html" status="active" access="public" location="qmltype.qdoc" documented="true" title="Type" fulltitle="Type" subtitle="">
+        <qmlclass name="Type" qml-module-name="QmlModule" fullname="QmlModule.Type" href="qml-qmlmodule-type.html" status="active" access="public" location="qmltype.qdoc" documented="true">
             <qmlenum name="different" fullname="QmlModule.Type.different" href="qml-qmlmodule-type.html#different-enum" status="active" access="public" location="qmltype.qdoc" documented="true">
                 <value name="And"/>
                 <value name="For"/>

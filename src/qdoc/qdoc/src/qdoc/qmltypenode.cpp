@@ -21,7 +21,6 @@ QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString &name, NodeType type)
     : Aggregate(type, parent, name)
 {
     Q_ASSERT(type == NodeType::QmlType || type == NodeType::QmlValueType);
-    setTitle(name);
 }
 
 /*!

@@ -1329,7 +1329,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
 {
     Generator::setQmlTypeContext(qcn);
     SubTitleSize subTitleSize = LargeSubTitle;
-    QString htmlTitle = qcn->fullTitle();
+    QString htmlTitle = qcn->name();
     if (qcn->isQmlBasicType())
         htmlTitle.append(" QML Value Type");
     else

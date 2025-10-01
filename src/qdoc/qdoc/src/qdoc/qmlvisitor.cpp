@@ -516,7 +516,6 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
         auto *qmlTypeNode = static_cast<QmlTypeNode *>(component);
         if (!component->doc().isEmpty())
             qmlTypeNode->setQmlBaseName(type);
-        qmlTypeNode->setTitle(m_name);
         qmlTypeNode->setImportList(m_importList);
         m_importList.clear();
         m_current = qmlTypeNode;

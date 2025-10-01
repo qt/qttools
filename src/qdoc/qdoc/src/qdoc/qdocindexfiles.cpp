@@ -260,7 +260,6 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
                            || elementName == QLatin1String("qmlbasictype")))) {
         auto *qmlTypeNode = new QmlTypeNode(parent, name,
                     elementName == QLatin1String("qmlclass") ? NodeType::QmlType : NodeType::QmlValueType);
-        qmlTypeNode->setTitle(attributes.value(QLatin1String("title")).toString());
         QString logicalModuleName = attributes.value(QLatin1String("qml-module-name")).toString();
         if (!logicalModuleName.isEmpty())
             m_qdb->addToQmlModule(logicalModuleName, qmlTypeNode);
@@ -1087,9 +1086,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     case NodeType::QmlValueType:
     case NodeType::QmlType: {
         const auto *qmlTypeNode = static_cast<const QmlTypeNode *>(node);
-        writer.writeAttribute("title", qmlTypeNode->title());
-        writer.writeAttribute("fulltitle", qmlTypeNode->fullTitle());
-        writer.writeAttribute("subtitle", qmlTypeNode->subtitle());
         if (qmlTypeNode->isSingleton())
             writer.writeAttribute("singleton", "true");
         if (!brief.isEmpty())
