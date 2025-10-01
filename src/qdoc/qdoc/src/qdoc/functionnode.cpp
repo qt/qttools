@@ -356,13 +356,7 @@ const PropertyNode *FunctionNode::primaryAssociatedProperty() const
 */
 bool FunctionNode::isDeprecated() const
 {
-    auto it = std::find_if_not(m_associatedProperties.begin(), m_associatedProperties.end(),
-                               [](const Node *p) -> bool { return p->isDeprecated(); });
-
-    if (!m_associatedProperties.isEmpty() && it == m_associatedProperties.end())
-        return true;
-
-    return Node::isDeprecated();
+    return status() == Node::Deprecated;
 }
 
 /*! \fn unsigned char FunctionNode::overloadNumber() const
@@ -512,4 +506,20 @@ QString FunctionNode::returnTypeString() const
         return m_returnType.second.value();
     return m_returnType.first;
 }
+
+/*!
+    Returns the status of the function, taking the status of any associated
+    properties into account.
+*/
+Node::Status FunctionNode::status() const
+{
+    auto it = std::find_if_not(m_associatedProperties.begin(), m_associatedProperties.end(),
+                               [](const Node *p) -> bool { return p->isDeprecated(); });
+
+    if (!m_associatedProperties.isEmpty() && it == m_associatedProperties.end())
+        return Node::Deprecated;
+    else
+        return Node::status();
+}
+
 QT_END_NAMESPACE

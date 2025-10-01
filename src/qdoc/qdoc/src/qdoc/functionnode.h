@@ -167,6 +167,8 @@ public:
 
     friend int compare(const FunctionNode *f1, const FunctionNode *f2);
 
+    [[nodiscard]] virtual Status status() const override;
+
 private:
     void addAssociatedProperty(PropertyNode *property);
 

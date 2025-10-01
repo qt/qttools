@@ -246,7 +246,7 @@ public:
     }
     [[nodiscard]] bool hasDoc() const;
     [[nodiscard]] bool hadDoc() const { return m_hadDoc; }
-    [[nodiscard]] Status status() const { return m_status; }
+    [[nodiscard]] virtual Status status() const { return m_status; }
     [[nodiscard]] ThreadSafeness threadSafeness() const;
     [[nodiscard]] ThreadSafeness inheritedThreadSafeness() const;
     [[nodiscard]] QString since() const { return m_since; }
