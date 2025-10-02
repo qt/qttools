@@ -271,7 +271,7 @@ void Aggregate::markUndocumentedChildrenInternal()
                 if (child->isFunction()) {
                     if (static_cast<FunctionNode *>(child)->hasAssociatedProperties())
                         continue;
-                } else if (child->isTypedef()) {
+                } else if (child->isTypedef() && child->isInAPI()) {
                     if (static_cast<TypedefNode *>(child)->hasAssociatedEnum())
                         continue;
                 }
