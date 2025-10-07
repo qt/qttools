@@ -2,6 +2,15 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="QmlImportAs Reference Documentation" version="" project="QmlImportAs">
     <namespace name="" status="active" access="public" module="qmlimportas">
+        <page name="import-as-test.html" href="import-as-test.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Import As Test" fulltitle="Import As Test" subtitle="" brief="Demonstrating import ... as ... statements">
+            <contents name="problem-description" title="Problem Description" level="1"/>
+            <contents name="comparison-with-non-aliased-qualified-types" title="Comparison with Non-Aliased Qualified Types" level="1"/>
+            <contents name="mixed-module-import-patterns" title="Mixed Module Import Patterns" level="1"/>
+            <contents name="multi-segment-qualified-names" title="Multi-Segment Qualified Names" level="1"/>
+            <contents name="test-cases" title="Test Cases" level="1"/>
+            <contents name="expected-behavior" title="Expected Behavior" level="2"/>
+            <contents name="manual-link-commands" title="Manual Link Commands" level="2"/>
+        </page>
         <qmlclass name="BaseType" qml-module-name="TestModule" qml-base-type="TestModule::Item" fullname="TestModule.BaseType" href="qml-testmodule-basetype.html" status="active" access="public" location="BaseType.qml" documented="true" title="BaseType" fulltitle="BaseType" subtitle="" brief="A basic QML type for testing imports">
             <function name="doSomething" fullname="TestModule.BaseType.doSomething" href="qml-testmodule-basetype.html#doSomething-method" status="active" access="public" location="BaseType.qml" documented="true" meta="qmlmethod" type="void"/>
             <qmlproperty name="title" fullname="TestModule.BaseType.title" href="qml-testmodule-basetype.html#title-prop" status="active" access="public" location="BaseType.qml" documented="true" type="string" attached="false" writable="true"/>
@@ -13,15 +22,6 @@
         <qmlclass name="DerivedType" qml-module-name="TestModule" qml-base-type="TestModule::BaseType" fullname="TestModule.DerivedType" href="qml-testmodule-derivedtype.html" status="active" access="public" location="DerivedType.qml" documented="true" title="DerivedType" fulltitle="DerivedType" subtitle="" brief="A derived type that uses import as syntax">
             <function name="callBase" fullname="TestModule.DerivedType.callBase" href="qml-testmodule-derivedtype.html#callBase-method" status="active" access="public" location="DerivedType.qml" documented="true" meta="qmlmethod" type="void"/>
         </qmlclass>
-        <page name="import-as-test.html" href="import-as-test.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Import As Test" fulltitle="Import As Test" subtitle="" brief="Demonstrating import ... as ... statements">
-            <contents name="problem-description" title="Problem Description" level="1"/>
-            <contents name="comparison-with-non-aliased-qualified-types" title="Comparison with Non-Aliased Qualified Types" level="1"/>
-            <contents name="mixed-module-import-patterns" title="Mixed Module Import Patterns" level="1"/>
-            <contents name="multi-segment-qualified-names" title="Multi-Segment Qualified Names" level="1"/>
-            <contents name="test-cases" title="Test Cases" level="1"/>
-            <contents name="expected-behavior" title="Expected Behavior" level="2"/>
-            <contents name="manual-link-commands" title="Manual Link Commands" level="2"/>
-        </page>
         <qmlclass name="Item" qml-module-name="TestModule" fullname="TestModule.Item" href="qml-testmodule-item.html" status="active" access="public" location="Item.qdoc" documented="true" title="Item" fulltitle="Item" subtitle=""/>
         <qmlmodule name="TestModule" qml-module-name="TestModule" qml-module-version="1.0" href="testmodule-qmlmodule.html" status="active" location="modules.qdoc" documented="true" seen="true" title="Test Module QML Types" brief="Test module for import as bug reproduction"/>
     </namespace>
