@@ -1,41 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tagfile>
-    <compound kind="class">
-        <name>QDoc.Test.AbstractParent</name>
-        <filename>qml-qdoc-test-abstractparent.html</filename>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type>void</type>
-            <name>name</name>
-            <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
-            <anchor>name-method</anchor>
-            <arglist>()</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type>void</type>
-            <name>name</name>
-            <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
-            <anchor>name-method</anchor>
-            <arglist>(Child child, name)</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type>void</type>
-            <name>rear</name>
-            <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
-            <anchor>rear-method</anchor>
-            <arglist>(Child child, var method)</arglist>
-        </member>
-    </compound>
-    <compound kind="class">
-        <name>QDoc.Test.Child</name>
-        <filename>qml-qdoc-test-child.html</filename>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type>void</type>
-            <name>name</name>
-            <anchorfile>qml-qdoc-test-child.html</anchorfile>
-            <anchor>name-method</anchor>
-            <arglist>(Child child, name)</arglist>
-        </member>
-    </compound>
     <compound kind="namespace">
         <name>CrossModuleRef</name>
         <filename>crossmoduleref.html</filename>
@@ -46,76 +10,6 @@
             <anchor>documentMe</anchor>
             <arglist>()</arglist>
         </member>
-    </compound>
-    <compound kind="class">
-        <name>QDoc.Test.DocTest</name>
-        <filename>qml-qdoc-test-doctest.html</filename>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>completed</name>
-            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
-            <anchor>completed-signal</anchor>
-            <arglist>()</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>fail</name>
-            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
-            <anchor>fail-method</anchor>
-            <arglist>(message)</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>fail_hard</name>
-            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
-            <anchor>fail_hard-method</anchor>
-            <arglist>(msg, option)</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>foo</name>
-            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
-            <anchor>foo-signal</anchor>
-            <arglist>(var bar)</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>itsHappening</name>
-            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
-            <anchor>itsHappening-signal</anchor>
-            <arglist>(bool really)</arglist>
-        </member>
-    </compound>
-    <compound kind="class">
-        <name>Test.NoVer.DocTest</name>
-        <filename>qml-test-nover-doctest.html</filename>
-    </compound>
-    <compound kind="class">
-        <name>QDoc.Test.OldType</name>
-        <filename>qml-qdoc-test-oldtype.html</filename>
-    </compound>
-    <compound kind="class">
-        <name>UIComponents.ProgressBar</name>
-        <filename>qml-uicomponents-progressbar.html</filename>
-    </compound>
-    <compound kind="class">
-        <name>SeenClass</name>
-        <filename>seenclass.html</filename>
-    </compound>
-    <compound kind="class">
-        <name>UIComponents.Switch</name>
-        <filename>qml-uicomponents-switch.html</filename>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>toggle</name>
-            <anchorfile>qml-uicomponents-switch.html</anchorfile>
-            <anchor>toggle-method</anchor>
-            <arglist>()</arglist>
-        </member>
-    </compound>
-    <compound kind="class">
-        <name>UIComponents.TabWidget</name>
-        <filename>qml-uicomponents-tabwidget.html</filename>
     </compound>
     <compound kind="namespace">
         <name>TestQDoc</name>
@@ -500,6 +394,112 @@
     <compound kind="class">
         <name>TestQDoc::Vec</name>
         <filename>testqdoc-vec.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>SeenClass</name>
+        <filename>seenclass.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>QDoc.Test.AbstractParent</name>
+        <filename>qml-qdoc-test-abstractparent.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>name</name>
+            <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
+            <anchor>name-method</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>name</name>
+            <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
+            <anchor>name-method</anchor>
+            <arglist>(Child child, name)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>rear</name>
+            <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
+            <anchor>rear-method</anchor>
+            <arglist>(Child child, var method)</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>QDoc.Test.Child</name>
+        <filename>qml-qdoc-test-child.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>name</name>
+            <anchorfile>qml-qdoc-test-child.html</anchorfile>
+            <anchor>name-method</anchor>
+            <arglist>(Child child, name)</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>QDoc.Test.DocTest</name>
+        <filename>qml-qdoc-test-doctest.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>completed</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>completed-signal</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>fail</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>fail-method</anchor>
+            <arglist>(message)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>fail_hard</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>fail_hard-method</anchor>
+            <arglist>(msg, option)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>foo</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>foo-signal</anchor>
+            <arglist>(var bar)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>itsHappening</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>itsHappening-signal</anchor>
+            <arglist>(bool really)</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>Test.NoVer.DocTest</name>
+        <filename>qml-test-nover-doctest.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>QDoc.Test.OldType</name>
+        <filename>qml-qdoc-test-oldtype.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>UIComponents.ProgressBar</name>
+        <filename>qml-uicomponents-progressbar.html</filename>
+    </compound>
+    <compound kind="class">
+        <name>UIComponents.Switch</name>
+        <filename>qml-uicomponents-switch.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>toggle</name>
+            <anchorfile>qml-uicomponents-switch.html</anchorfile>
+            <anchor>toggle-method</anchor>
+            <arglist>()</arglist>
+        </member>
+    </compound>
+    <compound kind="class">
+        <name>UIComponents.TabWidget</name>
+        <filename>qml-uicomponents-tabwidget.html</filename>
     </compound>
     <compound kind="class">
         <name>TheModule.TheType</name>

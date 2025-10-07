@@ -49,17 +49,64 @@ using namespace Qt::StringLiterals;
   \sa Aggregate, ClassNode, PropertyNode
  */
 
-/*!
-  Returns \c true if the node \a n1 is less than node \a n2. The
-  comparison is performed by comparing properties of the nodes
-  in order of increasing complexity.
- */
-bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
-{
+// Helper macro for comparing any a < b
 #define LT_RETURN_IF_NOT_EQUAL(a, b)                                                               \
     if ((a) != (b))                                                                                \
         return (a) < (b);
 
+// Helper macro for comparing strings a < b
+#define LT_RETURN_IF_NOT_EQUAL_QSTR(a, b)                                                          \
+    if ((a) != (b))                                                                                \
+        return QString::compare(a, b) < 0;
+
+/*!
+  Returns \c true if the node \a n1 is less than node \a n2. The
+  comparison is performed by comparing properties of the nodes
+  in order of increasing complexity.
+
+  String properties are compared in a locale- and platform-
+  independent manner.
+
+  Use for sorting lists of Nodes for output not intended for
+  human consumption, for example, ordering elements in an index
+  file.
+
+  \sa nodeNameLessThan()
+ */
+bool Node::nodeLessThan(const Node *n1, const Node *n2)
+{
+    if (n1->isFunction() && n2->isFunction()) {
+        const auto *f1 = static_cast<const FunctionNode *>(n1);
+        const auto *f2 = static_cast<const FunctionNode *>(n2);
+
+        LT_RETURN_IF_NOT_EQUAL(f1->isConst(), f2->isConst());
+        LT_RETURN_IF_NOT_EQUAL_QSTR(f1->signature(Node::SignatureReturnType),
+                                    f2->signature(Node::SignatureReturnType));
+    }
+
+    LT_RETURN_IF_NOT_EQUAL(n1->nodeType(), n2->nodeType());
+    LT_RETURN_IF_NOT_EQUAL_QSTR(n1->name(), n2->name());
+    LT_RETURN_IF_NOT_EQUAL_QSTR(n1->logicalModuleName(), n2->logicalModuleName());
+    LT_RETURN_IF_NOT_EQUAL(n1->access(), n2->access());
+    LT_RETURN_IF_NOT_EQUAL_QSTR(n1->location().filePath(), n2->location().filePath());
+    LT_RETURN_IF_NOT_EQUAL(n1->location().lineNo(), n2->location().lineNo());
+
+    return false;
+}
+
+/*!
+  Returns \c true if the node \a n1 is less than node \a n2. The
+  comparison is performed by comparing properties of the nodes
+  in order of increasing complexity.
+
+  Use for sorting lists of Nodes for output intended for human
+  consumption. Sorting by name/title takes precedence over other
+  properties.
+
+  \sa nodeLessThan()
+ */
+bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
+{
     if (n1->isPageNode() && n2->isPageNode()) {
         LT_RETURN_IF_NOT_EQUAL(n1->fullName(), n2->fullName());
         LT_RETURN_IF_NOT_EQUAL(n1->fullTitle(), n2->fullTitle());
@@ -82,7 +129,6 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 
     return false;
 }
-
 
 /*!
     Returns \c true if node \a n1 is less than node \a n2 when comparing

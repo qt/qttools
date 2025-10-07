@@ -7,21 +7,9 @@
             <parameter type="int &amp;" name="x" default=""/>
         </function>
         <function name="Q_INVOKABLE" href="testqdoc-test.html#Q_INVOKABLE" status="active" access="public" documented="true" related="2" meta="macrowithoutparams" signature="Q_INVOKABLE"/>
-        <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking" subtitle="">
-            <contents name="testqdoc" title="TestQDoc" level="1"/>
-            <contents name="someprop" title="someProp" level="1"/>
-        </page>
-        <class name="Bar" href="bar.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Another class template"/>
-        <struct name="Baz" href="baz.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Class template template"/>
         <namespace name="CrossModuleRef" href="crossmoduleref.html" status="active" access="public" location="testcpp.h" since="3.0" documented="true" module="TestCPP" brief="Namespace that has documented functions in multiple modules">
             <function name="documentMe" fullname="CrossModuleRef::documentMe" href="crossmoduleref.html#documentMe" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void documentMe()"/>
         </namespace>
-        <class name="DontLinkToMe" href="dontlinktome.html" status="ignored" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Class that does not generate documentation"/>
-        <class name="Foo" href="foo.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Class template"/>
-        <page name="obsolete-classes.html" href="obsolete-classes.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Obsolete Classes" fulltitle="Obsolete Classes" subtitle="">
-            <contents name="classes-with-obsolete-members" title="Classes with obsolete members" level="1"/>
-            <contents name="testqdoc" title="TestQDoc" level="2"/>
-        </page>
         <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="A namespace">
             <contents name="usage" title="Usage" level="1"/>
             <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
@@ -76,6 +64,18 @@
             </class>
             <class name="Vec" fullname="TestQDoc::Vec" href="testqdoc-vec.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Type alias that has its own reference"/>
         </namespace>
+        <class name="Bar" href="bar.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Another class template"/>
+        <class name="DontLinkToMe" href="dontlinktome.html" status="ignored" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Class that does not generate documentation"/>
+        <class name="Foo" href="foo.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Class template"/>
+        <struct name="Baz" href="baz.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Class template template"/>
+        <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking" subtitle="">
+            <contents name="testqdoc" title="TestQDoc" level="1"/>
+            <contents name="someprop" title="someProp" level="1"/>
+        </page>
+        <page name="obsolete-classes.html" href="obsolete-classes.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Obsolete Classes" fulltitle="Obsolete Classes" subtitle="">
+            <contents name="classes-with-obsolete-members" title="Classes with obsolete members" level="1"/>
+            <contents name="testqdoc" title="TestQDoc" level="2"/>
+        </page>
         <page name="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" href="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" status="active" location="classlists.qdoc" documented="true" subtype="externalpage" title="reentrant" fulltitle="reentrant" subtitle=""/>
         <group name="cpptypes" href="cpptypes.html" status="active" location="classlists.qdoc" documented="true" seen="true" title="Test C++ Types"/>
         <group name="testgroup" href="testgroup.html" status="internal" seen="false" title=""/>

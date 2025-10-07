@@ -6,20 +6,9 @@
         <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
             <parameter type="int &amp;" name="x" default=""/>
         </function>
-        <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking" subtitle="">
-            <contents name="testqdoc" title="TestQDoc" level="1"/>
-            <contents name="someprop" title="someProp" level="1"/>
-        </page>
         <namespace name="CrossModuleRef" href="crossmoduleref.html" status="active" access="public" location="testcpp.h" since="3.0" documented="true" module="TestCPP" brief="Namespace that has documented functions in multiple modules">
             <function name="documentMe" fullname="CrossModuleRef::documentMe" href="crossmoduleref.html#documentMe" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void documentMe()"/>
         </namespace>
-        <class name="DontLinkToMe" href="dontlinktome.html" status="ignored" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Class that does not generate documentation"/>
-        <page name="scoped-enum-linking.html" href="scoped-enum-linking.html" status="active" location="scopedenum.qdoc" documented="true" subtype="page" title="Enum Linking" fulltitle="Enum Linking" subtitle=""/>
-        <page name="whatsnew.html" href="whatsnew.html" status="active" location="scopedenum.qdoc" documented="true" subtype="page" title="New Classes and Functions" fulltitle="New Classes and Functions" subtitle="" brief="New classes documentation"/>
-        <page name="obsolete-classes.html" href="obsolete-classes.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Obsolete Classes" fulltitle="Obsolete Classes" subtitle="">
-            <contents name="classes-with-obsolete-members" title="Classes with obsolete members" level="1"/>
-            <contents name="testqdoc" title="TestQDoc" level="2"/>
-        </page>
         <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="A namespace">
             <contents name="usage" title="Usage" level="1"/>
             <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
@@ -80,6 +69,17 @@
                 <typedef name="NotTypedef" fullname="TestQDoc::TestDerived::NotTypedef" href="testqdoc-testderived.html#NotTypedef-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="int"/>
             </class>
         </namespace>
+        <class name="DontLinkToMe" href="dontlinktome.html" status="ignored" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Class that does not generate documentation"/>
+        <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking" subtitle="">
+            <contents name="testqdoc" title="TestQDoc" level="1"/>
+            <contents name="someprop" title="someProp" level="1"/>
+        </page>
+        <page name="obsolete-classes.html" href="obsolete-classes.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Obsolete Classes" fulltitle="Obsolete Classes" subtitle="">
+            <contents name="classes-with-obsolete-members" title="Classes with obsolete members" level="1"/>
+            <contents name="testqdoc" title="TestQDoc" level="2"/>
+        </page>
+        <page name="scoped-enum-linking.html" href="scoped-enum-linking.html" status="active" location="scopedenum.qdoc" documented="true" subtype="page" title="Enum Linking" fulltitle="Enum Linking" subtitle=""/>
+        <page name="whatsnew.html" href="whatsnew.html" status="active" location="scopedenum.qdoc" documented="true" subtype="page" title="New Classes and Functions" fulltitle="New Classes and Functions" subtitle="" brief="New classes documentation"/>
         <page name="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" href="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" status="active" location="classlists.qdoc" documented="true" subtype="externalpage" title="reentrant" fulltitle="reentrant" subtitle=""/>
         <group name="cpptypes" href="cpptypes.html" status="active" location="classlists.qdoc" documented="true" seen="true" title="Test C++ Types"/>
         <group name="testgroup" href="testgroup.html" status="internal" seen="false" title=""/>
