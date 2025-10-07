@@ -16,6 +16,8 @@ qt_internal_add_tool(${target_name}
         ../shared/translator.cpp ../shared/translator.h
         ../shared/translatormessage.cpp ../shared/translatormessage.h
         ../shared/ts.cpp
+    DEFINES
+        LINGUIST_CONSOLE_APPLICATION
     INCLUDE_DIRECTORIES
         ../shared
     LIBRARIES

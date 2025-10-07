@@ -3,7 +3,7 @@
 
 #include "validator.h"
 #include "translator.h"
-#if defined(QT_FEATURE_widgets)
+#ifndef LINGUIST_CONSOLE_APPLICATION
 #  include "phrase.h"
 #endif
 
@@ -146,7 +146,7 @@ Validator Validator::fromSource(const QString &source, const Checks &checks,
         v.m_leadingWhiteSpace.emplace(leadingWhitespace(source));
         v.m_trailingWhiteSpace.emplace(trailingWhitespace(source));
     }
-#if defined(QT_FEATURE_widgets)
+#ifndef LINGUIST_CONSOLE_APPLICATION
     if (checks.phraseMatch) {
         v.m_matchingPhraseTargets.emplace();
         QString fsource = friendlyString(source);
@@ -206,7 +206,7 @@ QMap<Validator::ErrorType, QString> Validator::validateTranslation(const QString
         && (*m_leadingWhiteSpace != leadingWhitespace(translation)
             || *m_trailingWhiteSpace != trailingWhitespace(translation)))
         errors.insert(SurroundingWhitespaceDiffers, translation);
-#if defined(QT_FEATURE_widgets)
+#ifndef LINGUIST_CONSOLE_APPLICATION
     if (m_matchingPhraseTargets) {
         const QString ftranslation = friendlyString(translation);
         for (auto itr = m_matchingPhraseTargets->cbegin(); itr != m_matchingPhraseTargets->cend();

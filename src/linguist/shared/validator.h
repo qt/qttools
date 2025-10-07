@@ -25,7 +25,7 @@ struct Validator
         bool punctuation = true;
         bool placeMarker = true;
         bool surroundingWhiteSpace = true;
-#if defined(QT_FEATURE_widgets)
+#ifndef LINGUIST_CONSOLE_APPLICATION
         bool phraseMatch = true;
 #endif
     };
@@ -58,7 +58,7 @@ private:
     std::optional<QString> m_trailingWhiteSpace;
     std::optional<Ending> m_ending;
     std::optional<QHash<int, int>> m_placeMarkerCounts;
-#if defined(QT_FEATURE_widgets)
+#ifndef LINGUIST_CONSOLE_APPLICATION
     std::optional<QHash<QString, QStringList>> m_matchingPhraseTargets;
 #endif
 };
