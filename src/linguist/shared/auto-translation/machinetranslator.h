@@ -47,7 +47,9 @@ private:
     void translateBatch(Batch b, int tries);
     void translationReceived(QNetworkReply *reply, Batch b, int tries, int session);
 
-    static constexpr int s_maxTries = 3;
+    // Allow up to 6 retries to accommodate JSON format fallback.
+    // Gives 2-3 attempts with JSON format, then some attempts without.
+    static constexpr int s_maxTries = 6;
 };
 
 QT_END_NAMESPACE

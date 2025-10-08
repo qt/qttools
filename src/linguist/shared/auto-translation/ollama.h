@@ -35,8 +35,9 @@ private:
     std::unique_ptr<QJsonObject> m_payloadBase;
     std::unique_ptr<QJsonObject> m_systemMessage;
     QString m_url;
-    std::atomic_bool m_useJsonFormat = true;
+    std::atomic_int m_useJsonFormat = s_maxJsonFormatTry;
     QElapsedTimer m_lastWakeupTimer;
+    static constexpr int s_maxJsonFormatTry = 3;
     static constexpr int s_maxBatchSize = 20;
     static constexpr int s_wakeUpTimeOut = 4 * 60 * 1000;
 };

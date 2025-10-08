@@ -104,16 +104,23 @@ QHash<QString, QString> Ollama::extractTranslations(const QByteArray &response)
     QJsonParseError err;
     QJsonDocument doc = QJsonDocument::fromJson(response, &err);
     if (err.error != QJsonParseError::NoError) {
-        m_useJsonFormat = false;
+        m_useJsonFormat--;
         return {};
     }
 
     auto translations = recursiveFind(doc.object(), "Translations"_L1);
     QHash<QString, QString> out;
     if (!translations) {
-        m_useJsonFormat = false;
+        m_useJsonFormat--;
         return out;
     }
+
+    // If we get a successful response by using json format, the model
+    // is a formatted model. So we want to prevent falling back to
+    // non formatted model (harmony) if there are occasional empty
+    // responses later.
+    if (m_useJsonFormat > 0)
+        m_useJsonFormat = std::numeric_limits<int>::max();
 
     out.reserve(translations->size());
     for (const QJsonValue &v : std::as_const(*translations)) {
@@ -154,7 +161,7 @@ QByteArray Ollama::payload(const Batch &b) const
     QJsonObject req = *m_payloadBase;
     req.insert("messages"_L1, messages);
 
-    if (m_useJsonFormat)
+    if (m_useJsonFormat > 0)
         req.insert("format"_L1, "json"_L1);
 
     return QJsonDocument(req).toJson();
@@ -164,7 +171,7 @@ std::optional<QByteArray> Ollama::stageModel(const QString &modelName)
 {
     if (auto m = m_payloadBase->constFind("model"_L1);
         m == m_payloadBase->constEnd() || *m != modelName) {
-        m_useJsonFormat = true;
+        m_useJsonFormat = s_maxJsonFormatTry;
         m_payloadBase->insert("model"_L1, modelName);
     }
 
