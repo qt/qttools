@@ -8,6 +8,8 @@
 
 #include <QString>
 #include <QObject>
+#include <QQueue>
+#include <QMutex>
 
 QT_BEGIN_NAMESPACE
 
@@ -44,12 +46,18 @@ private:
     std::unique_ptr<QNetworkRequest> m_request;
     std::unique_ptr<QNetworkAccessManager> m_manager;
     std::unique_ptr<TranslationProtocol> m_translator;
-    void translateBatch(Batch b, int tries);
-    void translationReceived(QNetworkReply *reply, Batch b, int tries, int session);
+    QQueue<Batch> m_pendingBatches;
+    int m_inFlightCount = 0;
+    QMutex m_queueMutex;
+
+    void translateBatch(Batch b);
+    void translationReceived(QNetworkReply *reply, Batch b, int session);
+    void processNextBatches();
 
     // Allow up to 6 retries to accommodate JSON format fallback.
     // Gives 2-3 attempts with JSON format, then some attempts without.
     static constexpr int s_maxTries = 6;
+    static constexpr int s_maxConcurrentBatches = 6;
 };
 
 QT_END_NAMESPACE

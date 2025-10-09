@@ -33,6 +33,7 @@ public:
     QString userContext;
     QList<Item> items;
     std::shared_ptr<std::atomic_int> counter;
+    int tries = 0;
 };
 
 class TranslationProtocol

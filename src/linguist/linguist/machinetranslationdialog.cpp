@@ -292,9 +292,7 @@ void MachineTranslationDialog::updateStatus()
             if (it.current()->translation().isEmpty())
                 count++;
 
-        m_ui->statusLabel->setText(tr("Translation status: %n item(s). For best results, "
-                                      "translate in Context / Label batches.",
-                                      0, count));
+        m_ui->statusLabel->setText(tr("Translation status: %n item(s).", 0, count));
     } else if (group >= 0) {
         const auto type = (filter == 1) ? TEXTBASED : IDBASED;
         int count = 0;

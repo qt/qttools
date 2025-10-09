@@ -26,9 +26,15 @@ MachineTranslator::~MachineTranslator() = default;
 
 void MachineTranslator::translate(const Messages &messages, const QString &userContext)
 {
+    QMutexLocker locker(&m_queueMutex);
+
+    m_pendingBatches.clear();
     auto batches = m_translator->makeBatches(messages, userContext);
-    for (auto &b : std::as_const(batches))
-        translateBatch(b, 0);
+
+    for (auto &b : batches)
+        m_pendingBatches.enqueue(std::move(b));
+
+    processNextBatches();
 }
 
 void MachineTranslator::setUrl(const QString &url)
@@ -82,65 +88,94 @@ void MachineTranslator::requestModels()
     });
 }
 
-void MachineTranslator::translateBatch(Batch b, int tries)
+void MachineTranslator::translateBatch(Batch b)
 {
+    Q_ASSERT_X(!m_queueMutex.tryLock(), Q_FUNC_INFO,
+               "The function requires m_queueMutex to be held.");
     if (m_stopped)
         return;
+    m_inFlightCount++;
     const QByteArray body = m_translator->payload(b);
     QNetworkReply *reply = m_manager->post(*m_request, body);
     connect(reply, &QNetworkReply::finished, this,
-            [this, reply, batch = std::move(b), session = m_session.load(), tries] {
-                translationReceived(reply, std::move(batch), tries, session);
+            [this, reply, batch = std::move(b), session = m_session.load()] {
+                translationReceived(reply, std::move(batch), session);
             });
 }
 
-void MachineTranslator::translationReceived(QNetworkReply *reply, Batch b, int tries, int session)
+void MachineTranslator::processNextBatches()
+{
+    Q_ASSERT_X(!m_queueMutex.tryLock(), Q_FUNC_INFO,
+               "The function requires m_queueMutex to be held.");
+    if (m_stopped || m_pendingBatches.isEmpty())
+        return;
+
+    const int batchesToSchedule =
+            qMin(s_maxConcurrentBatches - m_inFlightCount, m_pendingBatches.size());
+    for (int i = 0; i < batchesToSchedule; ++i) {
+        Batch batch = m_pendingBatches.dequeue();
+        translateBatch(std::move(batch));
+    }
+}
+
+void MachineTranslator::translationReceived(QNetworkReply *reply, Batch b, int session)
 {
     reply->deleteLater();
-    if (m_stopped || session != m_session.load())
+
+    if (m_stopped || session != m_session) {
+        QMutexLocker locker(&m_queueMutex);
+        m_inFlightCount--;
+        m_pendingBatches.clear();
         return;
+    }
+
+    bool shouldRetry = false;
 
     if (reply->error() != QNetworkReply::NoError) {
-        if (tries < s_maxTries
-            && (reply->error() == QNetworkReply::OperationCanceledError
+        const bool isRetriableError = reply->error() == QNetworkReply::OperationCanceledError
                 || reply->error() == QNetworkReply::TimeoutError
-                || reply->error() == QNetworkReply::UnknownNetworkError)) {
-            translateBatch(std::move(b), tries + 1);
-            return;
+                || reply->error() == QNetworkReply::UnknownNetworkError;
+        shouldRetry = b.tries < s_maxTries && isRetriableError;
+        if (!shouldRetry) {
+            QList<const TranslatorMessage *> failed;
+            for (const auto &i : std::as_const(b.items))
+                failed.append(i.msg);
+            emit translationFailed(std::move(failed));
         }
-
-        QList<const TranslatorMessage *> failed;
-        for (const auto &i : std::as_const(b.items))
-            failed.append(i.msg);
-        emit translationFailed(std::move(failed));
-        return;
-    }
-
-    const QByteArray response = reply->readAll();
-    QList<Item> items = std::move(b.items);
-    QHash<const TranslatorMessage *, QString> out;
-    const QHash<QString, QString> translations = m_translator->extractTranslations(response);
-    for (Item &i : items) {
-        if (i.msg->translation().isEmpty()) {
-            if (QString translation = translations[i.msg->sourceText()]; !translation.isEmpty())
-                out[i.msg] = std::move(translation);
-            else
-                b.items.append(std::move(i));
-        }
-    }
-
-    if (out.empty() && tries == s_maxTries) {
-        QList<const TranslatorMessage *> failed;
-        for (const auto &i : std::as_const(b.items))
-            failed.append(i.msg);
-        emit translationFailed(std::move(failed));
-    } else if (out.empty() && tries < s_maxTries) {
-        translateBatch(std::move(b), tries + 1);
     } else {
-        emit batchTranslated(std::move(out));
-        if (!b.items.empty())
-            translateBatch(std::move(b), tries);
+        const QByteArray response = reply->readAll();
+        QList<Item> items = std::move(b.items);
+        QHash<const TranslatorMessage *, QString> out;
+        const QHash<QString, QString> translations = m_translator->extractTranslations(response);
+
+        for (Item &i : items) {
+            if (i.msg->translation().isEmpty()) {
+                if (QString translation = translations[i.msg->sourceText()]; !translation.isEmpty())
+                    out[i.msg] = std::move(translation);
+                else
+                    b.items.append(std::move(i));
+            }
+        }
+
+        const bool nonTranslatedItems = !b.items.empty();
+        shouldRetry = nonTranslatedItems && b.tries < s_maxTries;
+        if (nonTranslatedItems && !shouldRetry) {
+            QList<const TranslatorMessage *> failed;
+            for (const auto &i : std::as_const(b.items))
+                failed.append(i.msg);
+            emit translationFailed(std::move(failed));
+        }
+        if (!out.empty())
+            emit batchTranslated(std::move(out));
     }
+
+    QMutexLocker locker(&m_queueMutex);
+    m_inFlightCount--;
+    if (shouldRetry) {
+        b.tries++;
+        m_pendingBatches.prepend(std::move(b)); // Front of queue for priority
+    }
+    processNextBatches();
 }
 
 QT_END_NAMESPACE
