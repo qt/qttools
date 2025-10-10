@@ -7,6 +7,7 @@
 #include "lupdate.h"
 
 #include <QtCore/QSet>
+#include <QtCore/QStack>
 
 #include <iostream>
 
@@ -79,19 +80,63 @@ struct IncludeCycle {
     QSet<const ParseResults *> results;
 };
 
-typedef QHash<QString, IncludeCycle *> IncludeCycleHash;
+struct CppParserState
+{
+    NamespaceList namespaces;
+    QStack<qsizetype> namespaceDepths;
+    NamespaceList functionContext;
+    QString functionContextUnresolved;
+    QString pendingContext;
+
+    bool operator==(const CppParserState &other) const
+    {
+        return namespaces == other.namespaces
+            && namespaceDepths == other.namespaceDepths
+            && functionContext == other.functionContext
+            && functionContextUnresolved == other.functionContextUnresolved
+            && pendingContext == other.pendingContext;
+    }
+};
+
+size_t qHash(const CppParserState &s, size_t seed);
+
+struct ResultsCacheKey
+{
+    const QString cleanFile;
+    const CppParserState parserState;
+
+    ResultsCacheKey(const QString &filePath)
+        : cleanFile(filePath)
+    {
+    }
+
+    ResultsCacheKey(const QString &filePath, const CppParserState &state)
+        : cleanFile(filePath),
+          parserState(state)
+    {
+    }
+
+    bool operator==(const ResultsCacheKey &other) const
+    {
+        return cleanFile == other.cleanFile
+            && parserState == other.parserState;
+    }
+};
+
+size_t qHash(const ResultsCacheKey &key, size_t seed);
+
+typedef QHash<ResultsCacheKey, IncludeCycle *> IncludeCycleHash;
 typedef QHash<QString, const Translator *> TranslatorHash;
 
 class CppFiles {
-
 public:
-    static QSet<const ParseResults *> getResults(const QString &cleanFile);
-    static void setResults(const QString &cleanFile, const ParseResults *results);
+    static QSet<const ParseResults *> getResults(const ResultsCacheKey &key);
+    static void setResults(const ResultsCacheKey &key, const ParseResults *results);
     static const Translator *getTranslator(const QString &cleanFile);
     static void setTranslator(const QString &cleanFile, const Translator *results);
     static bool isBlacklisted(const QString &cleanFile);
     static void setBlacklisted(const QString &cleanFile);
-    static void addIncludeCycle(const QSet<QString> &fileNames);
+    static void addIncludeCycle(const QSet<QString> &fileNames, const CppParserState &parserState);
 
 private:
     static IncludeCycleHash &includeCycles();

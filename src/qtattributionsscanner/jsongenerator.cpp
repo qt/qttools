@@ -31,6 +31,9 @@ static QJsonObject generate(Package package)
     obj.insert(u"Version"_s, package.version);
     obj.insert(u"DownloadLocation"_s, package.downloadLocation);
 
+    obj.insert(u"CPE"_s, QJsonArray::fromStringList(package.cpeList));
+    obj.insert(u"PURL"_s, QJsonArray::fromStringList(package.purlList));
+
     obj.insert(u"License"_s, package.license);
     obj.insert(u"LicenseId"_s, package.licenseId);
     if (package.licenseFiles.isEmpty())

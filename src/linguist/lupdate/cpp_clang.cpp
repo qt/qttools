@@ -402,7 +402,7 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
 {
     FileSignificanceCheck::create();
     auto cleanup = qScopeGuard(FileSignificanceCheck::destroy);
-    FileSignificanceCheck::the()->setExclusionPatterns(cd.m_excludes);
+    FileSignificanceCheck::the()->setExclusionRegExes(cd.m_excludes);
     if (cd.m_rootDirs.size() > 0)
         FileSignificanceCheck::the()->setRootDirectories(cd.m_rootDirs);
     else

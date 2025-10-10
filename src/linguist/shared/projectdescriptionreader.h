@@ -4,8 +4,10 @@
 #ifndef PROJECTDESCRIPTIONREADER_H
 #define PROJECTDESCRIPTIONREADER_H
 
+#include <QtCore/qregularexpression.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qstringlist.h>
+#include <QtCore/qvector.h>
 
 #include <optional>
 #include <vector>
@@ -19,7 +21,7 @@ struct Project
     QString filePath;
     QString compileCommands;
     QString codec;
-    QStringList excluded;
+    QVector<QRegularExpression> excluded;
     QStringList includePaths;
     QStringList sources;
     Projects subProjects;

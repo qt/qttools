@@ -18,6 +18,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QLibraryInfo>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QTranslator>
@@ -461,6 +462,21 @@ static bool readFileContent(const QString &filePath, QString *content, QString *
         return false;
     *content = QString::fromLocal8Bit(ba);
     return true;
+}
+
+static void removeExcludedSources(Projects &projects)
+{
+    for (Project &project : projects) {
+        for (const QRegularExpression &rx : project.excluded) {
+            for (auto it = project.sources.begin(); it != project.sources.end(); ) {
+                if (rx.match(*it).hasMatch())
+                    it = project.sources.erase(it);
+                else
+                    ++it;
+            }
+        }
+        removeExcludedSources(project.subProjects);
+    }
 }
 
 static QStringList getResources(const QString &resourceFile)
@@ -1070,6 +1086,7 @@ int main(int argc, char **argv)
                      .arg(projectDescriptionFile));
             return 1;
         }
+        removeExcludedSources(projectDescription);
         for (Project &project : projectDescription)
             expandQrcFiles(project);
     }

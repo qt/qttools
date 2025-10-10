@@ -212,6 +212,31 @@ static bool autoDetectLicenseFiles(Package &p)
     return success;
 }
 
+// Tries to interpret a json value either as a string or an array of strings, and assigns the
+// result to outList. Returns true on success, false on failure. On failure, it also conditionally
+// prints an error.
+static bool handleStringOrStringArrayJsonKey(QStringList &outList, const QString &key,
+                                      QJsonValueConstRef jsonValue, const QString &filePath,
+                                      LogLevel logLevel)
+{
+    if (jsonValue.isArray()) {
+        auto maybeStringList = toStringList(jsonValue);
+        if (maybeStringList)
+            outList = maybeStringList.value();
+    } else if (jsonValue.isString()) {
+        outList.append(jsonValue.toString());
+    } else {
+        if (logLevel != SilentLog) {
+            std::cerr << qPrintable(tr("File %1: Expected JSON array of strings or "
+                                       "string as value of %2.").arg(
+                                        QDir::toNativeSeparators(filePath), key))
+                      << std::endl;
+        }
+        return false;
+    }
+    return true;
+}
+
 // Transforms a JSON object into a Package object
 static std::optional<Package> readPackage(const QJsonObject &object, const QString &filePath,
                                           Checks checks, LogLevel logLevel)
@@ -226,7 +251,7 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
 
         if (!iter.value().isString() && key != "QtParts"_L1 && key != "SecurityCritical"_L1
             && key != "Files"_L1 && key != "LicenseFiles"_L1 && key != "Comment"_L1
-            && key != "Copyright"_L1) {
+            && key != "Copyright"_L1 && key != "CPE"_L1 && key != "PURL"_L1) {
             if (logLevel != SilentLog)
                 std::cerr << qPrintable(tr("File %1: Expected JSON string as value of %2.").arg(
                                             QDir::toNativeSeparators(filePath), key)) << std::endl;
@@ -299,12 +324,24 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
                 p.copyright = value;
             } else {
                 if (logLevel != SilentLog) {
-                    std::cerr << qPrintable(tr("File %1: Expected JSON array of string or"
+                    std::cerr << qPrintable(tr("File %1: Expected JSON array of strings or "
                                                "string as value of %2.").arg(
                                                 QDir::toNativeSeparators(filePath), key)) << std::endl;
                     validPackage = false;
                     continue;
                 }
+            }
+        } else if (key == "CPE"_L1) {
+            const QJsonValueConstRef jsonValue = iter.value();
+            if (!handleStringOrStringArrayJsonKey(p.cpeList, key, jsonValue, filePath, logLevel)) {
+                validPackage = false;
+                continue;
+            }
+        } else if (key == "PURL"_L1) {
+            const QJsonValueConstRef jsonValue = iter.value();
+            if (!handleStringOrStringArrayJsonKey(p.purlList, key, jsonValue, filePath, logLevel)) {
+                validPackage = false;
+                continue;
             }
         } else if (key == "CopyrightFile"_L1) {
             p.copyrightFile = QDir(directory).absoluteFilePath(value);

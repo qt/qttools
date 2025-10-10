@@ -6,6 +6,7 @@
 #include "lupdate.h"
 
 #include <QtCore/qhash.h>
+#include <QtCore/qlist.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qtextstream.h>
 #include <QtCore/qstack.h>
@@ -53,8 +54,15 @@ static int yyParenDepth;
 static int yyLineNo;
 static int yyCurLineNo;
 
-static QByteArray extraComment;
-static QByteArray id;
+struct ExtraComment
+{
+    QByteArray extraComment;
+    int lineNo;
+};
+
+static QList<ExtraComment> extraComments;
+
+static QList<ExtraComment> ids;
 
 QHash<QByteArray, Token> tokens = {
     {"None", Tok_None},
@@ -302,10 +310,10 @@ static Token getToken(StringType stringType = StringType::NoString)
         case '#':
             switch (getChar()) {
             case ':':
-                extraComment = readLine().trimmed();
+                extraComments.append({readLine().trimmed(), yyCurLineNo});
                 break;
             case '=':
-                id = readLine().trimmed();
+                ids.append({readLine().trimmed(), yyCurLineNo});
                 break;
             case EOF:
                 return Tok_Eof;
@@ -583,16 +591,24 @@ static bool parseTranslate(QByteArray *text, QByteArray *context, QByteArray *co
     return false;
 }
 
-static inline void setMessageParameters(TranslatorMessage *message)
+static void setMessageParameters(TranslatorMessage *message,
+                                 int lineNo)
 {
-    if (!extraComment.isEmpty()) {
+    // PYSIDE-2863: parseTranslate() can read past the message
+    // and capture extraComments intended for the next message.
+    // Use only extraComments for the current message.
+    QByteArray extraComment;
+    while (!extraComments.isEmpty() && extraComments.constFirst().lineNo <= lineNo) {
+        if (!extraComment.isEmpty())
+            extraComment += ' ';
+        extraComment += extraComments.takeFirst().extraComment;
+    }
+
+    if (!extraComment.isEmpty())
         message->setExtraComment(QString::fromUtf8(extraComment));
-        extraComment.clear();
-    }
-    if (!id.isEmpty()) {
-        message->setId(QString::fromUtf8(id));
-        id.clear();
-    }
+
+    while (!ids.isEmpty() && ids.constFirst().lineNo <= lineNo)
+        message->setId(QString::fromUtf8(ids.takeFirst().extraComment));
 }
 
 static void parse(Translator &tor, ConversionData &cd,
@@ -635,9 +651,10 @@ static void parse(Translator &tor, ConversionData &cd,
                 yyTok = getToken();
                 break;
             case Tok_tr:
-            case Tok_trUtf8:
+            case Tok_trUtf8: {
                 utf8 = true;
                 yyTok = getToken();
+                const int lineNo = yyCurLineNo;
                 if (match(Tok_LeftParen) && matchString(&text)) {
                     comment.clear();
                     bool plural = false;
@@ -670,13 +687,15 @@ static void parse(Translator &tor, ConversionData &cd,
                                                   QString::fromUtf8(comment),
                                                   {}, yyFileName, yyLineNo,
                                                   {}, TranslatorMessage::Unfinished, plural);
-                        setMessageParameters(&message);
+                        setMessageParameters(&message, lineNo);
                         tor.extend(message, cd);
                     }
                 }
+            }
                 break;
             case Tok_translate: {
                 bool plural{};
+                const int lineNo = yyCurLineNo;
                 if (parseTranslate(&text, &context, &comment, &utf8, &plural)
                     && !text.isEmpty()) {
                         TranslatorMessage message(QString::fromUtf8(context),
@@ -684,7 +703,7 @@ static void parse(Translator &tor, ConversionData &cd,
                                                   QString::fromUtf8(comment),
                                                   {}, yyFileName, yyLineNo,
                                                   {}, TranslatorMessage::Unfinished, plural);
-                        setMessageParameters(&message);
+                        setMessageParameters(&message, lineNo);
                         tor.extend(message, cd);
                     }
                 }

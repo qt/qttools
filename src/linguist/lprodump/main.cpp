@@ -149,7 +149,7 @@ static QStringList getSources(const char *var, const char *vvar, const QStringLi
 }
 
 static QStringList getSources(const ProFileEvaluator &visitor, const QString &projectDir,
-                              const QStringList &excludes, QMakeVfs *vfs)
+                              QMakeVfs *vfs)
 {
     QStringList baseVPaths;
     baseVPaths += visitor.absolutePathValues(QLatin1String("VPATH"), projectDir);
@@ -201,18 +201,6 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
 
     sourceFiles.removeDuplicates();
     sourceFiles.sort();
-
-    for (const QString &ex : excludes) {
-        // TODO: take advantage of the file list being sorted
-        QRegularExpression rx(QRegularExpression::wildcardToRegularExpression(ex));
-        for (auto it = sourceFiles.begin(); it != sourceFiles.end(); ) {
-            if (rx.match(*it).hasMatch())
-                it = sourceFiles.erase(it);
-            else
-                ++it;
-        }
-    }
-
     return sourceFiles;
 }
 
@@ -281,11 +269,10 @@ static QJsonObject processProject(const QString &proFile, const QStringList &tra
         if (!subResults.isEmpty())
             setValue(result, "subProjects", subResults);
     } else {
-        const QStringList excludes = getExcludes(visitor, proPath);
-        const QStringList sourceFiles = getSources(visitor, proPath, excludes, vfs);
+        const QStringList sourceFiles = getSources(visitor, proPath, vfs);
         setValue(result, "includePaths",
                  visitor.absolutePathValues(QLatin1String("INCLUDEPATH"), proPath));
-        setValue(result, "excluded", excludes);
+        setValue(result, "excluded", getExcludes(visitor, proPath));
         setValue(result, "sources", sourceFiles);
     }
     return result;
