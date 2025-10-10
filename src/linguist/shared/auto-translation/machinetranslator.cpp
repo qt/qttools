@@ -4,6 +4,7 @@
 #include "machinetranslator.h"
 #include "ollama.h"
 #include "translatormessage.h"
+#include "simtexth.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -146,15 +147,40 @@ void MachineTranslator::translationReceived(QNetworkReply *reply, Batch b, int s
         const QByteArray response = reply->readAll();
         QList<Item> items = std::move(b.items);
         QHash<const TranslatorMessage *, QString> out;
-        const QHash<QString, QString> translations = m_translator->extractTranslations(response);
+        QHash<QString, QString> translations = m_translator->extractTranslations(response);
 
+        // First pass: exact matches
+        QList<Item> nonMatched;
         for (Item &i : items) {
             if (i.msg->translation().isEmpty()) {
-                if (QString translation = translations[i.msg->sourceText()]; !translation.isEmpty())
-                    out[i.msg] = std::move(translation);
-                else
-                    b.items.append(std::move(i));
+                if (auto translation = translations.find(i.msg->sourceText());
+                    translation != translations.end()) {
+                    out[i.msg] = *translation;
+                    translations.erase(translation);
+                } else {
+                    nonMatched.append(std::move(i));
+                }
             }
+        }
+
+        // Second pass: fuzzy matching for non-matched items with unused translations
+        constexpr int similarityThreshold = 200;
+        for (Item &i : nonMatched) {
+            StringSimilarityMatcher matcher(i.msg->sourceText());
+            QString bestMatch;
+            int bestScore = 0;
+            for (auto it = translations.cbegin(); it != translations.cend(); ++it) {
+                const int score = matcher.getSimilarityScore(it.key());
+                if (score >= similarityThreshold && score > bestScore) {
+                    bestScore = score;
+                    bestMatch = it.key();
+                }
+            }
+
+            if (!bestMatch.isEmpty())
+                out[i.msg] = translations.take(bestMatch);
+            else
+                b.items.append(std::move(i));
         }
 
         const bool nonTranslatedItems = !b.items.empty();
