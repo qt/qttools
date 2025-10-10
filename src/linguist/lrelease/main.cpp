@@ -192,7 +192,7 @@ int main(int argc, char **argv)
             cd.m_saveMode = SaveStripped;
             continue;
         } else if (!strcmp(arg, "-idbased")) {
-            printOut("The flag -idbased is depreciated and not required anymore."
+            printOut("The flag -idbased is deprecated and not required anymore."
                      "It will be removed in a future version"_L1);
             continue;
         } else if (!strcmp(arg, "-nocompress")) {
