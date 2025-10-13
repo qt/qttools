@@ -240,15 +240,21 @@ void MachineTranslationDialog::onFilterChanged(int id)
     if (modelId < 0)
         return;
 
+    QStringList groups;
     if (id == 1) {
         for (int i = 0; i < m_dataModel->model(modelId)->contextCount(); i++)
-            m_ui->groupComboBox->addItem(
-                    m_dataModel->model(modelId)->groupItem(i, TEXTBASED)->group());
+            groups.append(m_dataModel->model(modelId)->groupItem(i, TEXTBASED)->group());
     } else if (id == 2) {
         for (int i = 0; i < m_dataModel->model(modelId)->labelCount(); i++)
-            m_ui->groupComboBox->addItem(
-                    m_dataModel->model(modelId)->groupItem(i, IDBASED)->group());
+            groups.append(m_dataModel->model(modelId)->groupItem(i, IDBASED)->group());
     }
+
+    // Sort case-insensitively to match Context/Label view behavior
+    std::sort(groups.begin(), groups.end(), [](const QString &a, const QString &b) {
+        return a.compare(b, Qt::CaseInsensitive) < 0;
+    });
+
+    m_ui->groupComboBox->addItems(groups);
     m_ui->groupComboBox->setCurrentIndex(0);
 }
 
