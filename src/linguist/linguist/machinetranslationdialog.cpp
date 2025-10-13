@@ -6,7 +6,9 @@
 
 #include "messagemodel.h"
 #include "auto-translation/machinetranslator.h"
+#include "globals.h"
 
+#include <QtCore/qsettings.h>
 #include <QtWidgets/qmessagebox.h>
 
 using namespace Qt::Literals::StringLiterals;
@@ -48,9 +50,22 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
             &MachineTranslationDialog::connectToOllama);
     connect(m_translator.get(), &MachineTranslator::modelsReceived, this,
             [this](const QStringList &models) {
+                QSettings config;
+                QString savedModel = config.value(settingPath(selectedModelSettingsKey)).toString();
                 m_ui->modelComboBox->clear();
                 m_ui->modelComboBox->addItems(models);
+
+                // Restore saved selection if found
+                if (!savedModel.isEmpty()) {
+                    int index = m_ui->modelComboBox->findText(savedModel);
+                    if (index >= 0)
+                        m_ui->modelComboBox->setCurrentIndex(index);
+                }
             });
+    connect(m_ui->modelComboBox, &QComboBox::currentTextChanged, this, [](const QString &text) {
+        if (!text.isEmpty())
+            QSettings().setValue(settingPath(selectedModelSettingsKey), text);
+    });
     connect(this, &QDialog::finished, m_translator.get(), &MachineTranslator::stop);
     connect(m_ui->filterComboBox, &QComboBox::currentIndexChanged, this,
             &MachineTranslationDialog::onFilterChanged);

@@ -27,6 +27,8 @@ public:
 
     void setDataModel(MultiDataModel *dm);
 
+    static constexpr const char *selectedModelSettingsKey = "MachineTranslation/SelectedModel";
+
 private:
     void refresh(bool init);
     void logProgress(const QList<QStringList> &table);
