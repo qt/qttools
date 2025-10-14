@@ -29,11 +29,12 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
         m_ui->filterComboBox->setCurrentIndex(0);
         updateStatus();
     });
+    connect(m_ui->groupListWidget, &QListWidget::itemSelectionChanged, this,
+            [this] { updateStatus(); });
     connect(m_translator.get(), &MachineTranslator::batchTranslated, this,
             &MachineTranslationDialog::onBatchTranslated);
     connect(m_translator.get(), &MachineTranslator::translationFailed, this,
             &MachineTranslationDialog::onTranslationFailed);
-    connect(m_ui->groupComboBox, &QComboBox::currentIndexChanged, this, [this] { updateStatus(); });
     connect(m_ui->doneButton, &QPushButton::clicked, this, [this] {
         if (discardTranslations())
             accept();
@@ -132,6 +133,7 @@ void MachineTranslationDialog::logProgress(const QList<QStringList> &table)
         m_ui->stopButton->setEnabled(false);
         m_ui->applyButton->setEnabled(true);
         m_ui->progressBar->setVisible(false);
+        m_ui->groupListWidget->clearSelection();
     } else {
         m_ui->translateButton->setEnabled(false);
         m_ui->stopButton->setEnabled(true);
@@ -170,6 +172,7 @@ void MachineTranslationDialog::stop()
     m_ui->translateButton->setEnabled(true);
     refresh(false);
     logError(tr("Translation Stopped."));
+    m_ui->groupListWidget->clearSelection();
 }
 
 void MachineTranslationDialog::translateSelection()
@@ -211,15 +214,24 @@ void MachineTranslationDialog::translateSelection()
             }
         }
     } else {
+        const QList<QListWidgetItem *> selectedItems = m_ui->groupListWidget->selectedItems();
+
+        if (selectedItems.isEmpty()) {
+            logError(tr("Please select at least one context/label to translate."));
+            return;
+        }
+
         QMutexLocker lock(&m_mutex);
         const auto type = (filter == 1) ? TEXTBASED : IDBASED;
-        const int modelGroup = m_ui->groupComboBox->currentData().toInt();
-        GroupItem *g = dm->groupItem(modelGroup, type);
-        for (int i = 0; i < g->messageCount(); i++) {
-            const TranslatorMessage *tm = &g->messageItem(i)->message();
-            if (tm->translation().isEmpty()) {
-                messages.items.append(tm);
-                m_ongoingTranslations[tm] = MultiDataIndex{ type, id, modelGroup, i };
+        for (QListWidgetItem *item : selectedItems) {
+            const int groupIdx = item->data(Qt::UserRole).toInt();
+            const GroupItem *g = dm->groupItem(groupIdx, type);
+            for (int i = 0; i < g->messageCount(); i++) {
+                const TranslatorMessage *tm = &g->messageItem(i)->message();
+                if (tm->translation().isEmpty()) {
+                    messages.items.append(tm);
+                    m_ongoingTranslations[tm] = MultiDataIndex{ type, id, groupIdx, i };
+                }
             }
         }
     }
@@ -249,8 +261,8 @@ void MachineTranslationDialog::onBatchTranslated(
 void MachineTranslationDialog::onFilterChanged(int id)
 {
     m_ui->groupLabel->setEnabled(id != 0);
-    m_ui->groupComboBox->setEnabled(id != 0);
-    m_ui->groupComboBox->clear();
+    m_ui->groupListWidget->setEnabled(id != 0);
+    m_ui->groupListWidget->clear();
     int modelId = m_ui->filesComboBox->currentIndex();
     if (modelId < 0)
         return;
@@ -271,10 +283,11 @@ void MachineTranslationDialog::onFilterChanged(int id)
                   return a.first.compare(b.first, Qt::CaseInsensitive) < 0;
               });
 
-    for (const auto &[groupName, originalIndex] : groupsWithIndices) {
-        m_ui->groupComboBox->addItem(groupName, originalIndex);
+    for (const auto &group : groupsWithIndices) {
+        QListWidgetItem *item = new QListWidgetItem(group.first);
+        item->setData(Qt::UserRole, group.second);
+        m_ui->groupListWidget->addItem(item);
     }
-    m_ui->groupComboBox->setCurrentIndex(0);
 }
 
 void MachineTranslationDialog::applyTranslations()
@@ -305,8 +318,12 @@ void MachineTranslationDialog::updateStatus()
 {
     const int model = m_ui->filesComboBox->currentIndex();
     const int filter = m_ui->filterComboBox->currentIndex();
-    const QVariant selectedData = m_ui->groupComboBox->currentData();
-    if (model < 0 || filter < 0 || (filter > 0 && !selectedData.isValid())) {
+
+    QList<QListWidgetItem *> selectedItems;
+    if (filter > 0)
+        selectedItems = m_ui->groupListWidget->selectedItems();
+
+    if (model < 0 || filter < 0 || (filter > 0 && selectedItems.isEmpty())) {
         m_ui->statusLabel->setText(tr("Translation status: -"));
     } else if (filter == 0) {
         int count = 0;
@@ -318,15 +335,19 @@ void MachineTranslationDialog::updateStatus()
                 count++;
 
         m_ui->statusLabel->setText(tr("Translation status: %n item(s).", 0, count));
-    } else if (selectedData.isValid()) {
+    } else if (!selectedItems.isEmpty()) {
         const auto type = (filter == 1) ? TEXTBASED : IDBASED;
-        const int modelGroup = selectedData.toInt();
         int count = 0;
-        GroupItem *g = m_dataModel->model(model)->groupItem(modelGroup, type);
-        for (int i = 0; i < g->messageCount(); i++)
-            if (g->messageItem(i)->message().translation().isEmpty())
-                count++;
-        m_ui->statusLabel->setText(tr("Translation status: %n item(s).", 0, count));
+        for (QListWidgetItem *item : std::as_const(selectedItems)) {
+            const int groupIdx = item->data(Qt::UserRole).toInt();
+            const GroupItem *g = m_dataModel->model(model)->groupItem(groupIdx, type);
+            for (int i = 0; i < g->messageCount(); i++)
+                if (g->messageItem(i)->message().translation().isEmpty())
+                    count++;
+        }
+        m_ui->statusLabel->setText(
+                tr("Translation status: %n item(s) in %1 selected group(s).", 0, count)
+                        .arg(selectedItems.size()));
     }
 }
 
