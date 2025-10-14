@@ -242,7 +242,7 @@
             <function name="configureWithType" fullname="QDoc.Test.Type.configureWithType" href="qml-qdoc-test-type.html#configureWithType-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod" type="void">
                 <parameter type="Type::SomeType" name="typeParam" default=""/>
             </function>
-            <function name="configured" fullname="QDoc.Test.Type.configured" href="qml-qdoc-test-type.html#configured-signal" status="active" access="public" location="type.qdoc" documented="true" meta="qmlsignal"/>
+            <function name="configured" fullname="QDoc.Test.Type.configured" href="qml-qdoc-test-type.html#configured-signal" status="active" access="public" location="type.qdoc" documented="true" meta="qmlsignal" attached="true"/>
             <function name="copy" fullname="QDoc.Test.Type.copy" href="qml-qdoc-test-type.html#copy-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod" type="Type">
                 <parameter type="" name="a" default=""/>
             </function>

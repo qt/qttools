@@ -1347,6 +1347,9 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
             writer.writeAttribute("associated-property",
                                   associatedProperties.join(QLatin1Char(',')));
         }
+    } else {
+        if (fn->isAttached())
+            writer.writeAttribute("attached", "true");
     }
 
     const auto &return_type = fn->returnType();
