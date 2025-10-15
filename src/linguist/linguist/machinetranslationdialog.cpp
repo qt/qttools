@@ -175,7 +175,6 @@ void MachineTranslationDialog::translateSelection()
     refresh(false);
 
     const int filter = m_ui->filterComboBox->currentIndex();
-    const int group = m_ui->groupComboBox->currentIndex();
     const DataModel *dm = m_dataModel->model(id);
     Messages messages;
     if (filter == 0) {
@@ -199,12 +198,13 @@ void MachineTranslationDialog::translateSelection()
     } else {
         QMutexLocker lock(&m_mutex);
         const auto type = (filter == 1) ? TEXTBASED : IDBASED;
-        GroupItem *g = dm->groupItem(group, type);
+        const int modelGroup = m_ui->groupComboBox->currentData().toInt();
+        GroupItem *g = dm->groupItem(modelGroup, type);
         for (int i = 0; i < g->messageCount(); i++) {
             const TranslatorMessage *tm = &g->messageItem(i)->message();
             if (tm->translation().isEmpty()) {
                 messages.items.append(tm);
-                m_ongoingTranslations[tm] = MultiDataIndex{ type, id, group, i };
+                m_ongoingTranslations[tm] = MultiDataIndex{ type, id, modelGroup, i };
             }
         }
     }
@@ -240,21 +240,25 @@ void MachineTranslationDialog::onFilterChanged(int id)
     if (modelId < 0)
         return;
 
-    QStringList groups;
+    QList<QPair<QString, int>> groupsWithIndices;
     if (id == 1) {
         for (int i = 0; i < m_dataModel->model(modelId)->contextCount(); i++)
-            groups.append(m_dataModel->model(modelId)->groupItem(i, TEXTBASED)->group());
+            groupsWithIndices.append(
+                    { m_dataModel->model(modelId)->groupItem(i, TEXTBASED)->group(), i });
     } else if (id == 2) {
         for (int i = 0; i < m_dataModel->model(modelId)->labelCount(); i++)
-            groups.append(m_dataModel->model(modelId)->groupItem(i, IDBASED)->group());
+            groupsWithIndices.append(
+                    { m_dataModel->model(modelId)->groupItem(i, IDBASED)->group(), i });
     }
 
-    // Sort case-insensitively to match Context/Label view behavior
-    std::sort(groups.begin(), groups.end(), [](const QString &a, const QString &b) {
-        return a.compare(b, Qt::CaseInsensitive) < 0;
-    });
+    std::sort(groupsWithIndices.begin(), groupsWithIndices.end(),
+              [](const QPair<QString, int> &a, const QPair<QString, int> &b) {
+                  return a.first.compare(b.first, Qt::CaseInsensitive) < 0;
+              });
 
-    m_ui->groupComboBox->addItems(groups);
+    for (const auto &[groupName, originalIndex] : groupsWithIndices) {
+        m_ui->groupComboBox->addItem(groupName, originalIndex);
+    }
     m_ui->groupComboBox->setCurrentIndex(0);
 }
 
@@ -286,8 +290,8 @@ void MachineTranslationDialog::updateStatus()
 {
     const int model = m_ui->filesComboBox->currentIndex();
     const int filter = m_ui->filterComboBox->currentIndex();
-    const int group = m_ui->groupComboBox->currentIndex();
-    if (model < 0 || filter < 0 || (filter > 0 && group < 0)) {
+    const QVariant selectedData = m_ui->groupComboBox->currentData();
+    if (model < 0 || filter < 0 || (filter > 0 && !selectedData.isValid())) {
         m_ui->statusLabel->setText(tr("Translation status: -"));
     } else if (filter == 0) {
         int count = 0;
@@ -299,10 +303,11 @@ void MachineTranslationDialog::updateStatus()
                 count++;
 
         m_ui->statusLabel->setText(tr("Translation status: %n item(s).", 0, count));
-    } else if (group >= 0) {
+    } else if (selectedData.isValid()) {
         const auto type = (filter == 1) ? TEXTBASED : IDBASED;
+        const int modelGroup = selectedData.toInt();
         int count = 0;
-        GroupItem *g = m_dataModel->model(model)->groupItem(group, type);
+        GroupItem *g = m_dataModel->model(model)->groupItem(modelGroup, type);
         for (int i = 0; i < g->messageCount(); i++)
             if (g->messageItem(i)->message().translation().isEmpty())
                 count++;
