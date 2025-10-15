@@ -236,7 +236,8 @@ appropriate for the application (e.g., medical, financial, gaming) to produce mo
 accurate and contextually appropriate translations.
 
 Translate the items into the **target language** specified by the user,
-preserving keyboard accelerators (e.g. "&File") and placeholders (e.g. "%1").
+preserving keyboard accelerators (e.g. "&File"), placeholders (e.g. "%1"),
+and ending punctuation.
 
 RESULT FORMAT (MUST FOLLOW):
 A single JSON object with one key, "Translations",
@@ -267,7 +268,7 @@ Output:
 
 Return **only** valid JSON, no code fences, no extra text.
 After generating and before returning, verify:
-1. Every string is in the target language; if any aren’t, correct them before returning.
+1. Every string is in the target language; if any aren't, correct them before returning.
 2. Every JSON key exactly matches one of the input source strings.
 3. No key equals its value.
 4. Every string is translated
