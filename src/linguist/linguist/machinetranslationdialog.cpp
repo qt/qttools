@@ -21,6 +21,14 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
       m_translator(std::make_unique<MachineTranslator>())
 {
     m_ui->setupUi(this);
+
+    connect(m_ui->toolBox, &QToolBox::currentChanged, this, [this](int index) {
+        for (int i = 0; i < m_ui->toolBox->count(); ++i) {
+            const QString baseText = m_ui->toolBox->itemText(i).mid(2);
+            m_ui->toolBox->setItemText(i, (i == index ? "- "_L1 : "+ "_L1) + baseText);
+        }
+    });
+
     m_ui->statusLabel->setWordWrap(true);
     m_ui->statusLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     connect(m_ui->translateButton, &QPushButton::clicked, this,
@@ -81,6 +89,7 @@ void MachineTranslationDialog::setDataModel(MultiDataModel *dm)
 void MachineTranslationDialog::refresh(bool init)
 {
     if (init) {
+        m_ui->toolBox->setCurrentIndex(0);
         m_ui->filesComboBox->clear();
         m_ui->filesComboBox->addItems(m_dataModel->srcFileNames());
         m_ui->filesComboBox->setCurrentIndex(0);
@@ -133,7 +142,6 @@ void MachineTranslationDialog::logProgress(const QList<QStringList> &table)
         m_ui->stopButton->setEnabled(false);
         m_ui->applyButton->setEnabled(true);
         m_ui->progressBar->setVisible(false);
-        m_ui->groupListWidget->clearSelection();
     } else {
         m_ui->translateButton->setEnabled(false);
         m_ui->stopButton->setEnabled(true);
@@ -172,11 +180,11 @@ void MachineTranslationDialog::stop()
     m_ui->translateButton->setEnabled(true);
     refresh(false);
     logError(tr("Translation Stopped."));
-    m_ui->groupListWidget->clearSelection();
 }
 
 void MachineTranslationDialog::translateSelection()
 {
+    m_ui->toolBox->setCurrentIndex(2);
     const QString model = m_ui->modelComboBox->currentText();
     const int id = m_ui->filesComboBox->currentIndex();
     if (model.isEmpty()) {
@@ -324,7 +332,7 @@ void MachineTranslationDialog::updateStatus()
         selectedItems = m_ui->groupListWidget->selectedItems();
 
     if (model < 0 || filter < 0 || (filter > 0 && selectedItems.isEmpty())) {
-        m_ui->statusLabel->setText(tr("Translation status: -"));
+        m_ui->selectionLabel->setText(tr("Selection status: -"));
     } else if (filter == 0) {
         int count = 0;
         for (DataModelIterator it(IDBASED, m_dataModel->model(model)); it.isValid(); ++it)
@@ -334,7 +342,7 @@ void MachineTranslationDialog::updateStatus()
             if (it.current()->translation().isEmpty())
                 count++;
 
-        m_ui->statusLabel->setText(tr("Translation status: %n item(s).", 0, count));
+        m_ui->selectionLabel->setText(tr("Selected %n item(s).", 0, count));
     } else if (!selectedItems.isEmpty()) {
         const auto type = (filter == 1) ? TEXTBASED : IDBASED;
         int count = 0;
@@ -345,9 +353,8 @@ void MachineTranslationDialog::updateStatus()
                 if (g->messageItem(i)->message().translation().isEmpty())
                     count++;
         }
-        m_ui->statusLabel->setText(
-                tr("Translation status: %n item(s) in %1 selected group(s).", 0, count)
-                        .arg(selectedItems.size()));
+        m_ui->selectionLabel->setText(
+                tr("Selected %n item(s) in %1 group(s).", 0, count).arg(selectedItems.size()));
     }
 }
 
