@@ -38,6 +38,14 @@ void MachineTranslator::translate(const Messages &messages, const QString &userC
     processNextBatches();
 }
 
+void MachineTranslator::start() noexcept
+{
+    QMutexLocker locker(&m_queueMutex);
+    m_pendingBatches.clear();
+    m_session++;
+    m_stopped = false;
+}
+
 void MachineTranslator::setUrl(const QString &url)
 {
     m_translator->setUrl(url);
@@ -126,7 +134,7 @@ void MachineTranslator::translationReceived(QNetworkReply *reply, Batch b, int s
     if (m_stopped || session != m_session) {
         QMutexLocker locker(&m_queueMutex);
         m_inFlightCount--;
-        m_pendingBatches.clear();
+        processNextBatches();
         return;
     }
 

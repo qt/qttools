@@ -26,11 +26,7 @@ public:
 
     void translate(const Messages &messages, const QString &userContext = QString());
     void stop() noexcept { m_stopped = true; }
-    void start() noexcept
-    {
-        m_session++;
-        m_stopped = false;
-    }
+    void start() noexcept;
     void setUrl(const QString &url);
     void activateTranslationModel(const QString &modelName);
     void requestModels();
