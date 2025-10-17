@@ -2209,52 +2209,55 @@ QString Generator::typeString(const Node *node)
 {
     switch (node->nodeType()) {
     case NodeType::Namespace:
-        return "namespace";
+        return "namespace"_L1;
     case NodeType::Class:
-        return "class";
+        return "class"_L1;
     case NodeType::Struct:
-        return "struct";
+        return "struct"_L1;
     case NodeType::Union:
-        return "union";
+        return "union"_L1;
     case NodeType::QmlType:
     case NodeType::QmlValueType:
-        return "type";
+        return "type"_L1;
     case NodeType::Page:
-        return "documentation";
+        return "documentation"_L1;
     case NodeType::Enum:
-        return "enum";
+        return "enum"_L1;
     case NodeType::Typedef:
     case NodeType::TypeAlias:
-        return "typedef";
+        return "typedef"_L1;
     case NodeType::Function: {
         const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
         case FunctionNode::QmlSignal:
-            return "signal";
+            return "signal"_L1;
         case FunctionNode::QmlSignalHandler:
-            return "signal handler";
+            return "signal handler"_L1;
         case FunctionNode::QmlMethod:
-            return "method";
+            return "method"_L1;
         case FunctionNode::MacroWithParams:
         case FunctionNode::MacroWithoutParams:
-            return "macro";
+            return "macro"_L1;
         default:
             break;
         }
-        return "function";
+        return "function"_L1;
     }
     case NodeType::Property:
     case NodeType::QmlProperty:
-        return "property";
+        return "property"_L1;
     case NodeType::Module:
     case NodeType::QmlModule:
-        return "module";
+        return "module"_L1;
     case NodeType::SharedComment: {
-        const auto &collective = static_cast<const SharedCommentNode *>(node)->collective();
+        const auto *shared = static_cast<const SharedCommentNode *>(node);
+        if (shared->isPropertyGroup())
+            return "property group"_L1;
+        const auto &collective = shared->collective();
         return collective.first()->nodeTypeString();
     }
     default:
-        return "documentation";
+        return "documentation"_L1;
     }
 }
 
