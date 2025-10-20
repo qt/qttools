@@ -18,6 +18,7 @@ public:
 
     bool recognizeCode(const QString &code) override;
     bool recognizeExtension(const QString &ext) override;
+    bool recognizeFileName(const QString & /*name*/) override { return false; }
     bool recognizeLanguage(const QString &language) override;
     [[nodiscard]] Atom::AtomType atomType() const override;
     QString markedUpCode(const QString &code, const Node *relative,

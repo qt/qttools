@@ -12,6 +12,7 @@
 #include "qmlpropertynode.h"
 #include "utilities.h"
 
+#include <QtCore/qfileinfo.h>
 #include <QtCore/qobjectdefs.h>
 
 QT_BEGIN_NAMESPACE
@@ -91,6 +92,12 @@ CodeMarker *CodeMarker::markerForCode(const QString &code)
     return defaultMarker;
 }
 
+/*!
+    Returns the appropriate code marker for the content in the file with the
+    given \a fileName, which is typically the whole file path.
+    This is achieved by first checking the file extension, then checking the
+    file name.
+*/
 CodeMarker *CodeMarker::markerForFileName(const QString &fileName)
 {
     CodeMarker *defaultMarker = markerForLanguage(s_defaultLang);
@@ -105,6 +112,12 @@ CodeMarker *CodeMarker::markerForFileName(const QString &fileName)
         }
         --dot;
     }
+    // Fall back on checking the whole file name.
+    QString name = QFileInfo(fileName).fileName();
+    for (const auto &marker : std::as_const(s_markers)) {
+        if (marker->recognizeFileName(name))
+            return marker;
+    }
     return defaultMarker;
 }
 
@@ -115,6 +128,11 @@ CodeMarker *CodeMarker::markerForLanguage(const QString &lang)
             return marker;
     }
     return nullptr;
+}
+
+bool CodeMarker::recognizeFileName(const QString &name)
+{
+    return (name == "qmldir"_L1);
 }
 
 /*!
