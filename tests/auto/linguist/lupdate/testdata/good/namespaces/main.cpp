@@ -261,4 +261,166 @@ class Cl2 : public QObject
     void func() { tr("context after variable template"); }
 };
 
+// Direct match in parent namespace must win over using directive match
+namespace EdgeTest1 {
+namespace Inner {
+    class Tr : public QObject { Q_OBJECT };
+}
+namespace Outer {
+    class Tr : public QObject { Q_OBJECT };
+
+    namespace Deep {
+        using namespace EdgeTest1::Inner;
+
+        void test()
+        {
+            Tr::tr("direct parent wins over using");
+        }
+    }
+}
+}
+
+// Reusing same using directive for each segment in qualified name
+namespace EdgeTest3 {
+namespace Level1 {
+    namespace Level2 {
+        namespace Level3 {
+            class Test : public QObject { Q_OBJECT };
+        }
+    }
+}
+namespace Container {
+    using namespace EdgeTest3::Level1;
+
+    void test()
+    {
+        Level2::Level3::Test::tr("reuse using per segment");
+    }
+}
+}
+
+// Multiple using directives with same target
+namespace EdgeTest4 {
+namespace Target {
+    class Tr : public QObject { Q_OBJECT };
+}
+namespace Middle1 {
+    using namespace EdgeTest4::Target;
+}
+namespace Middle2 {
+    using namespace EdgeTest4::Target;
+}
+namespace Container {
+    using namespace EdgeTest4::Middle1;
+    using namespace EdgeTest4::Middle2;
+
+    void test()
+    {
+        Tr::tr("prevent duplicate visits");
+    }
+}
+}
+
+// Direct child in current namespace beats using directive in same namespace
+namespace EdgeTest5 {
+namespace External {
+    class Tr : public QObject { Q_OBJECT };
+}
+namespace MySpace {
+    using namespace EdgeTest5::External;
+    class Tr : public QObject { Q_OBJECT };
+
+    void test()
+    {
+        Tr::tr("direct child beats using");
+    }
+}
+}
+
+// Test visitedUsings sharing across loop iterations
+// Same using directive at different namespace levels
+namespace EdgeTest6 {
+namespace Target {
+    class Tr : public QObject { Q_OBJECT };
+}
+namespace Parent {
+    using namespace EdgeTest6::Target;
+
+    namespace Child {
+        using namespace EdgeTest6::Target;
+
+        void test()
+        {
+            Tr::tr("same using at different levels");
+        }
+    }
+}
+}
+
+// Different paths to same namespace via using directives
+namespace EdgeTest7 {
+namespace Common {
+    class Tr : public QObject { Q_OBJECT };
+}
+namespace PathA {
+    using namespace EdgeTest7::Common;
+}
+namespace PathB {
+    using namespace EdgeTest7::Common;
+}
+namespace Container {
+    using namespace EdgeTest7::PathA;
+
+    namespace Inner {
+        using namespace EdgeTest7::PathB;
+
+        void test()
+        {
+            Tr::tr("different paths to same namespace");
+        }
+    }
+}
+}
+
+// Using directive at inner level shouldn't block outer level direct match
+namespace EdgeTest8 {
+namespace Decoy {
+    class Tr : public QObject { Q_OBJECT };
+}
+namespace Outer {
+    class Tr : public QObject { Q_OBJECT };
+
+    namespace Inner {
+        using namespace EdgeTest8::Decoy;
+
+        void test()
+        {
+            Tr::tr("inner using shouldn't block outer direct");
+        }
+    }
+}
+}
+
+// Nested using directives with shared visitedUsings
+namespace EdgeTest9 {
+namespace Level1 {
+    class Tr : public QObject { Q_OBJECT };
+}
+namespace Level2 {
+    using namespace EdgeTest9::Level1;
+}
+namespace Level3 {
+    using namespace EdgeTest9::Level2;
+
+    namespace Level4 {
+        using namespace EdgeTest9::Level1;
+
+        void test()
+        {
+            Tr::tr("nested using with shared visited");
+        }
+    }
+}
+}
+
 //#include "main.moc"

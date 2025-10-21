@@ -11,6 +11,7 @@
 #include <QtCore/QRegularExpression>
 
 #include <iostream>
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
@@ -180,7 +181,8 @@ private:
     bool qualifyOneCallbackOwn(const Namespace *ns, void *context) const;
     bool qualifyOneCallbackUsing(const Namespace *ns, void *context) const;
     bool qualifyOne(const NamespaceList &namespaces, int nsCnt, const HashString &segment,
-                    NamespaceList *resolved, QSet<HashStringList> *visitedUsings) const;
+                    NamespaceList *resolved, QSet<HashStringList> *visitedUsings,
+                    bool *foundViaUsing = nullptr) const;
     bool qualifyOne(const NamespaceList &namespaces, int nsCnt, const HashString &segment,
                     NamespaceList *resolved) const;
     bool fullyQualify(const NamespaceList &namespaces, int nsCnt,
@@ -1117,14 +1119,24 @@ bool CppParser::qualifyOneCallbackUsing(const Namespace *ns, void *context) cons
 }
 
 bool CppParser::qualifyOne(const NamespaceList &namespaces, int nsCnt, const HashString &segment,
-                           NamespaceList *resolved, QSet<HashStringList> *visitedUsings) const
+                           NamespaceList *resolved, QSet<HashStringList> *visitedUsings,
+                           bool *foundViaUsing) const
 {
     QualifyOneData data(namespaces, nsCnt, segment, resolved, visitedUsings);
 
-    if (visitNamespace(namespaces, nsCnt, &CppParser::qualifyOneCallbackOwn, &data))
+    if (visitNamespace(namespaces, nsCnt, &CppParser::qualifyOneCallbackOwn, &data)) {
+        if (foundViaUsing)
+            *foundViaUsing = false;
         return true;
+    }
 
-    return visitNamespace(namespaces, nsCnt, &CppParser::qualifyOneCallbackUsing, &data);
+    if (visitNamespace(namespaces, nsCnt, &CppParser::qualifyOneCallbackUsing, &data)) {
+        if (foundViaUsing)
+            *foundViaUsing = true;
+        return true;
+    }
+
+    return false;
 }
 
 bool CppParser::qualifyOne(const NamespaceList &namespaces, int nsCnt, const HashString &segment,
@@ -1171,19 +1183,34 @@ bool CppParser::fullyQualify(const NamespaceList &namespaces, int nsCnt,
         nsIdx--;
     }
 
+    QSet<HashStringList> visitedUsings;
+    std::optional<NamespaceList> candidate;
+
     do {
-        if (qualifyOne(namespaces, nsIdx + 1, segments[initSegIdx], resolved)) {
-            int segIdx = initSegIdx;
-            while (++segIdx < segments.size()) {
-                if (!qualifyOne(*resolved, resolved->size(), segments[segIdx], resolved)) {
-                    if (unresolved)
-                        *unresolved = segments.mid(segIdx);
-                    return false;
-                }
+        bool viaUsing = false;
+        if (qualifyOne(namespaces, nsIdx + 1, segments[initSegIdx], resolved, &visitedUsings,
+                       &viaUsing)) {
+            if (!viaUsing) {
+                candidate.emplace(*resolved);
+                break;
+            } else if (!candidate) {
+                candidate.emplace(*resolved);
             }
-            return true;
         }
     } while (!isDeclaration && --nsIdx >= 0);
+
+    if (candidate) {
+        *resolved = *candidate;
+        int segIdx = initSegIdx;
+        while (++segIdx < segments.size()) {
+            if (!qualifyOne(*resolved, resolved->size(), segments[segIdx], resolved)) {
+                if (unresolved)
+                    *unresolved = segments.mid(segIdx);
+                return false;
+            }
+        }
+        return true;
+    }
     resolved->clear();
     *resolved << HashString(QString());
     if (unresolved)
@@ -1232,7 +1259,7 @@ void CppParser::enterNamespace(NamespaceList *namespaces, const HashString &name
         ns = modifyNamespace(namespaces, false);
 
     const Namespace *cns = &results->rootNamespace;
-    for (int i = 0; i < namespaces->size(); ++i) {
+    for (int i = 1; i < namespaces->size(); ++i) {
         ns->usings << cns->usings;
         if (!(cns = cns->children.value(namespaces->at(i))))
             break;
