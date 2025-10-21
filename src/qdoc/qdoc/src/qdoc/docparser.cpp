@@ -399,8 +399,20 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     enterPara(Atom::CaptionLeft, Atom::CaptionRight);
                     break;
                 case CMD_CODE:
+                    // Only allow arguments on the same line as the command.
+                    if (isLeftBracketAhead(0)) {
+                        p1 = getBracketedArgument();
+                        marker = CodeMarker::markerForLanguage(p1);
+                        if (!marker)
+                            location().warning(QStringLiteral("Unrecognized markup language '%1'").arg(p1));
+                    } else {
+                        p1 = ""_L1;
+                        marker = nullptr;
+                    }
                     leavePara();
-                    appendAtom(Atom(Atom::Code, getCode(CMD_CODE, nullptr, getMetaCommandArgument(cmdStr))));
+                    // Store the code language in the atom, if specified, for
+                    // the HTML and DocBook generators to use.
+                    appendAtom(Atom(Atom::Code, getCode(CMD_CODE, marker, getMetaCommandArgument(cmdStr)), p1.toLower()));
                     break;
                 case CMD_QML:
                     leavePara();
@@ -2671,7 +2683,7 @@ bool DocParser::isLeftBraceAhead()
     return numEndl < 2 && i < m_inputLength && m_input[i] == '{';
 }
 
-bool DocParser::isLeftBracketAhead()
+bool DocParser::isLeftBracketAhead(int maxNewlines)
 {
     int numEndl = 0;
     qsizetype i = m_position;
@@ -2682,7 +2694,7 @@ bool DocParser::isLeftBracketAhead()
             numEndl++;
         ++i;
     }
-    return numEndl < 2 && i < m_inputLength && m_input[i] == '[';
+    return numEndl <= maxNewlines && i < m_inputLength && m_input[i] == '[';
 }
 
 /*!

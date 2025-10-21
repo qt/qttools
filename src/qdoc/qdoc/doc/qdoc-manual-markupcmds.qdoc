@@ -761,7 +761,7 @@
     {quotefromfile-command} {\\quotefromfile} or \l
     {quotefile-command} {\\quotefile} command.
 
-       \code \\endcode *
+       \code [text] \\endcode *
        /*!
            \code
                #include <QApplication>
@@ -794,6 +794,27 @@
     explicitly mark the code snippet as QML, use the \l {qml-command}
     {\\qml} command instead.
 
+    From version 6.11, a language can be specified as an optional
+    argument on the same line as the \\code command.
+    When specified, the language overrides the default language and any
+    other language-specific behavior described above. QDoc also defines
+    the \c text language so that blocks of code can be displayed
+    without any markup or highlighting.
+
+    For example:
+
+    \code [text] \\endcode
+    \code [text]
+        # This is an example of unmarked code.
+        implement MyModule;
+        include "sys.m";
+        sys: Sys;
+    \1
+    \endcode
+
+    This can be useful when quoting a language that QDoc does not have
+    a marker for.
+
     \section2 Code snippet parameters
 
     Since QDoc version 5.12, \\code command accepts also optional
@@ -801,11 +822,12 @@
     strings into the code snippet. To inject a string to a specific
     location in the snippet, add a backslash followed by a digit (1..8).
     The digits correspond with the order of the argument list, where
-    arguments are separated by spaces.
+    arguments are separated by spaces and follow any optional language
+    argument.
 
     For example:
 
-    \badcode 1 2 * endcode
+    \code [text] 1 2 * endcode
     /\3!
         \code * hello
         /\\1 \\2 \\1/

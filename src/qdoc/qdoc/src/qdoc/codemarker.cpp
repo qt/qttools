@@ -135,6 +135,11 @@ bool CodeMarker::recognizeFileName(const QString &name)
     return (name == "qmldir"_L1);
 }
 
+bool CodeMarker::recognizeLanguage(const QString &language)
+{
+    return (language == "text"_L1);
+}
+
 /*!
     Returns a string representing the \a node status, set using \preliminary, \since,
     and \deprecated commands.

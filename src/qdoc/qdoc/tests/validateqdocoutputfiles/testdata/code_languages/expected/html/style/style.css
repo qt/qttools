@@ -1,0 +1,12 @@
+.comment {
+  font-style: italic
+}
+
+.type {
+  font-weight: bold
+}
+
+.name {
+  color: white;
+  background-color: black
+}

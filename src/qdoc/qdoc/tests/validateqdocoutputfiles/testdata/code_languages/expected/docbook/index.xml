@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Code Languages</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>CodeLanguages Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>CodeLanguages Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:para>Code is marked up as C++ by default:</db:para>
+<db:programlisting language="cpp">// Some C++ code:
+QWidget *widget = getWidget();
+</db:programlisting>
+<db:para>Code can be explicitly marked up as C++ with the <db:code>Cpp</db:code> language:</db:para>
+<db:programlisting language="cpp">// Some C++ code:
+QWidget *widget = getWidget();
+</db:programlisting>
+<db:para>QML code can be requested with the <db:code>QML</db:code> language:</db:para>
+<db:programlisting language="qml">// Some QML code:
+Item {
+    id: my_item
+}
+</db:programlisting>
+<db:para>Plain text is shown if the <db:code>text</db:code> language is used:</db:para>
+<db:programlisting language="text">// Some C++ code:
+QWidget *widget = getWidget();
+
+// Some QML code:
+Item {
+    id: my_item
+}
+</db:programlisting>
+</db:article>

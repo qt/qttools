@@ -94,7 +94,7 @@ private:
     bool isAutoLinkString(const QString &word, qsizetype &curPos);
     bool isBlankLine();
     bool isLeftBraceAhead();
-    bool isLeftBracketAhead();
+    bool isLeftBracketAhead(int maxNewlines = 1);
     void skipSpacesOnLine();
     void skipSpacesOrOneEndl();
     void skipAllSpaces();

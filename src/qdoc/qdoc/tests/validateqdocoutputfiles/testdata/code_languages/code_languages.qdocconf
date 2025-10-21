@@ -1,0 +1,27 @@
+project = CodeLanguages
+productname = Qt
+
+locationinfo = false
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+HTML.stylesheets = style.css
+HTML.headerstyles = \
+    "<link rel=\"stylesheet\" type=\"text/css\" href=\"style/style.css\" />\n"
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+headers.fileextensions  = "*.h *.hpp"
+sources.fileextensions  = "*.cpp *.qml *.qdoc"
+
+headerdirs  = ./src
+sourcedirs  = ./src
+
+warninglimit = 0
+warninglimit.enabled = true

@@ -281,7 +281,11 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
         break;
     case Atom::Code:
         m_writer->writeStartElement(dbNamespace, "programlisting");
-        m_writer->writeAttribute("language", "cpp");
+        // Recover an additional string containing the code language, if present.
+        if (atom->strings().count() == 2)
+            m_writer->writeAttribute("language", atom->string(1));
+        else
+            m_writer->writeAttribute("language", "cpp");
         if (m_useITS)
             m_writer->writeAttribute(itsNamespace, "translate", "no");
         m_writer->writeCharacters(plainCode(removeCodeMarkers(atom->string())));

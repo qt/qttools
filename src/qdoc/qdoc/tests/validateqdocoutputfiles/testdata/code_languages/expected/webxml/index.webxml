@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="index.html" href="index.html" status="active" location="index.qdoc" documented="true" subtype="page" title="Code Languages" fulltitle="Code Languages" subtitle="">
+            <description>
+                <para>Code is marked up as C++ by default:</para>
+                <code>// Some C++ code:
+QWidget *widget = getWidget();</code>
+                <para>Code can be explicitly marked up as C++ with the <teletype type="highlighted">Cpp</teletype> language:</para>
+                <code>// Some C++ code:
+QWidget *widget = getWidget();</code>
+                <para>QML code can be requested with the <teletype type="highlighted">QML</teletype> language:</para>
+                <code>// Some QML code:
+Item {
+    id: my_item
+}</code>
+                <para>Plain text is shown if the <teletype type="highlighted">text</teletype> language is used:</para>
+                <code>// Some C++ code:
+QWidget *widget = getWidget();
+
+// Some QML code:
+Item {
+    id: my_item
+}</code>
+            </description>
+        </page>
+    </document>
+</WebXML>
