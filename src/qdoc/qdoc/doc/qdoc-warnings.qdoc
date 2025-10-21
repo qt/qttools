@@ -967,4 +967,18 @@
 
     The type name declared as the base type for a QML type was not found, or
     it was not declared with the \qdoccmd{inherits} command.
+
+    \section1 Unrecognized markup language
+
+    This warning occurs when a programming language is specified for a \\code
+    command that QDoc does not recognize. For example, this QML code block has
+    been given the invalid "QL" language:
+
+    \code [text] \\endcode
+        \\code [QL]
+        Item {
+            id: my_item
+        }
+        \1
+    \endcode
 */

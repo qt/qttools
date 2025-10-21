@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- index.qdoc -->
+  <title>Code Languages | Qt</title>
+<link rel="stylesheet" type="text/css" href="style/style.css" />
+</head>
+<body>
+<ul class="breadcrumb">
+</ul>
+<h1 class="title">Code Languages</h1>
+<!-- $$$index.html-description -->
+<div class="descr" id="details">
+<p>Code is marked up as C++ by default:</p>
+<pre class="cpp" translate="no"><span class="comment">// Some C++ code:</span>
+<span class="type">QWidget</span> <span class="operator">*</span>widget <span class="operator">=</span> getWidget();</pre>
+<p>Code can be explicitly marked up as C++ with the <code translate="no">Cpp</code> language:</p>
+<pre class="cpp" translate="no"><span class="comment">// Some C++ code:</span>
+<span class="type">QWidget</span> <span class="operator">*</span>widget <span class="operator">=</span> getWidget();</pre>
+<p>QML code can be requested with the <code translate="no">QML</code> language:</p>
+<pre class="qml" translate="no"><span class="comment">// Some QML code:</span>
+<span class="type">Item</span> {
+    <span class="name">id</span>: <span class="name">my_item</span>
+}</pre>
+<p>Plain text is shown if the <code translate="no">text</code> language is used:</p>
+<pre class="text" translate="no">// Some C++ code:
+QWidget *widget = getWidget();
+
+// Some QML code:
+Item {
+    id: my_item
+}</pre>
+</div>
+<!-- @@@index.html -->
+</body>
+</html>

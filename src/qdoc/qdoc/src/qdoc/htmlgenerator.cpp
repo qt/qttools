@@ -379,8 +379,13 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
               << "</pre>\n";
         break;
     case Atom::Code:
-        out() << "<pre class=\"cpp\" translate=\"no\">"
-              << trimmedTrailing(highlightedCode(indent(m_codeIndent, atom->string()), relative),
+        // Recover an additional string containing the code language, if present.
+        if (atom->strings().count() == 2)
+            out() << "<pre class=\"" << atom->string(1) << "\" translate=\"no\">";
+        else
+            out() << "<pre class=\"cpp\" translate=\"no\">";
+
+        out() << trimmedTrailing(highlightedCode(indent(m_codeIndent, atom->string()), relative),
                                  m_codePrefix, m_codeSuffix)
               << "</pre>\n";
         break;

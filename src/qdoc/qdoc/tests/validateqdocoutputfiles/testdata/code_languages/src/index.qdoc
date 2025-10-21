@@ -1,0 +1,39 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page index.html
+    \inmodule CodeLanguages
+    \title Code Languages
+
+    Code is marked up as C++ by default:
+    \code
+    // Some C++ code:
+    QWidget *widget = getWidget();
+    \endcode
+
+    Code can be explicitly marked up as C++ with the \c Cpp language:
+    \code [Cpp]
+    // Some C++ code:
+    QWidget *widget = getWidget();
+    \endcode
+
+    QML code can be requested with the \c QML language:
+    \code [QML]
+    // Some QML code:
+    Item {
+        id: my_item
+    }
+    \endcode
+
+    Plain text is shown if the \c text language is used:
+    \code [text]
+    // Some C++ code:
+    QWidget *widget = getWidget();
+
+    // Some QML code:
+    Item {
+        id: my_item
+    }
+    \endcode
+*/
