@@ -481,28 +481,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
     // repeating the code.
 
     // TODO: [generator-insufficient-structural-abstraction]
-    case Atom::Image: {
-        auto maybe_resolved_file{file_resolver.resolve(atom->string())};
-        if (!maybe_resolved_file) {
-            // TODO: [uncentralized-admonition][failed-resolve-file]
-            relative->location().warning(QStringLiteral("Missing image: %1").arg(atom->string()));
-        } else {
-            ResolvedFile file{*maybe_resolved_file};
-            QString file_name{QFileInfo{file.get_path()}.fileName()};
-
-            // TODO: [uncentralized-output-directory-structure]
-            Config::copyFile(relative->doc().location(), file.get_path(), file_name, outputDir() + QLatin1String("/images"));
-
-            writer.writeStartElement("image");
-            // TODO: [uncentralized-output-directory-structure]
-            writer.writeAttribute("href", "images/" + file_name);
-            writer.writeEndElement();
-            // TODO: [uncentralized-output-directory-structure]
-            setImageFileName(relative, "images/" + file_name);
-        }
-        break;
-    }
-    // TODO: [generator-insufficient-structural-abstraction]
+    case Atom::Image:
     case Atom::InlineImage: {
         auto maybe_resolved_file{file_resolver.resolve(atom->string())};
         if (!maybe_resolved_file) {
@@ -515,7 +494,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
             // TODO: [uncentralized-output-directory-structure]
             Config::copyFile(relative->doc().location(), file.get_path(), file_name, outputDir() + QLatin1String("/images"));
 
-            writer.writeStartElement("inlineimage");
+            writer.writeStartElement(atom->typeString().toLower());
             // TODO: [uncentralized-output-directory-structure]
             writer.writeAttribute("href", "images/" + file_name);
             writer.writeEndElement();
