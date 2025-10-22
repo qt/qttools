@@ -138,11 +138,59 @@
     </message>
 </context>
 <context>
+    <name>MyNS::TestClass2</name>
+    <message>
+        <location filename="main.cpp" line="294"/>
+        <source>test2: nested return type</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <location filename="main.cpp" line="128"/>
         <source>task 161186</source>
         <comment>QObject</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TestClass1_Widget</name>
+    <message>
+        <location filename="main.cpp" line="280"/>
+        <source>test1: basic return type</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TestClass3</name>
+    <message>
+        <location filename="main.cpp" line="307"/>
+        <source>test3: trailing return type</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TestClass4</name>
+    <message>
+        <location filename="main.cpp" line="321"/>
+        <source>test4: template return type</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TestClass5</name>
+    <message>
+        <location filename="main.cpp" line="334"/>
+        <source>test5: const reference return</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TestClass6</name>
+    <message>
+        <location filename="main.cpp" line="348"/>
+        <source>test6: operator overload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
