@@ -263,4 +263,90 @@ int main(int /*argc*/, char ** /*argv*/) {
     return 0;
 }
 
+
+// QTBUG-140636: Return type vs method qualification disambiguation
+// Types from <external_types.h> use angle brackets, so lupdate looks for them in the
+// configured paths (and not the relative locations), and if not found, they are not qualified.
+// Without the fix, these produce: "Qualifying with unknown namespace/class ::Namespace"
+#include <external_types.h>
+
+// Basic namespaced return type
+class TestClass1_Widget : public QObject {
+    Q_OBJECT
+};
+
+Tasking::GroupItem testFunction1()
+{
+    TestClass1_Widget::tr("test1: basic return type");
+}
+
+// Deeply nested return type
+namespace MyNS {
+class TestClass2 : public QObject {
+    Q_OBJECT
+public:
+    External::Deeply::Nested::Type method();
+};
+}
+
+External::Deeply::Nested::Type MyNS::TestClass2::method()
+{
+    tr("test2: nested return type");
+    return {};
+}
+
+// Trailing return type syntax
+class TestClass3 : public QObject {
+    Q_OBJECT
+public:
+    auto method() -> UndefinedNS::RetType;
+};
+
+auto TestClass3::method() -> UndefinedNS::RetType
+{
+    tr("test3: trailing return type");
+    return {};
+}
+
+// Template return type
+#include <vector>
+class TestClass4 : public QObject {
+    Q_OBJECT
+public:
+    std::vector<ThirdParty::Item> getItems();
+};
+
+std::vector<ThirdParty::Item> TestClass4::getItems()
+{
+    tr("test4: template return type");
+    return {};
+}
+
+// Const reference return
+class TestClass5 : public QObject {
+    Q_OBJECT
+public:
+    const LibraryNS::Data& getData() const noexcept;
+};
+
+const LibraryNS::Data& TestClass5::getData() const noexcept
+{
+    tr("test5: const reference return");
+    static LibraryNS::Data d;
+    return d;
+}
+
+// Operator overload return type
+class TestClass6 : public QObject {
+    Q_OBJECT
+public:
+    OperatorNS::Type operator<<(const OperatorNS::Type& t);
+};
+
+OperatorNS::Type TestClass6::operator<<(const OperatorNS::Type& t)
+{
+    tr("test6: operator overload");
+    return t;
+}
+
 //#include "main.moc"
