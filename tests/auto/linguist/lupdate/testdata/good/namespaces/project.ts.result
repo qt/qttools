@@ -26,6 +26,14 @@
     </message>
 </context>
 <context>
+    <name>Alpha::Beta::Alpha::Widget</name>
+    <message>
+        <location filename="main.cpp" line="472"/>
+        <source>complex nesting different names</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Cl2</name>
     <message>
         <location filename="main.cpp" line="261"/>
@@ -48,6 +56,79 @@
     <message>
         <location filename="main.cpp" line="105"/>
         <source>outestmost class</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CombinedTest1::ExternalLib::Tr</name>
+    <message>
+        <location filename="main.cpp" line="484"/>
+        <source>external lib tr</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CombinedTest1::MyApp::MyApp</name>
+    <message>
+        <location filename="main.cpp" line="498"/>
+        <source>combined test: direct class wins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="506"/>
+        <source>combined test: qualified same name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CombinedTest2::Level::Level::Helper</name>
+    <message>
+        <location filename="main.cpp" line="519"/>
+        <source>helper in Level::Level</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="541"/>
+        <source>helper via using in nested</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CombinedTest2::Level::Level::Level::Level</name>
+    <message>
+        <location filename="main.cpp" line="531"/>
+        <source>deeply nested same name with using</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="538"/>
+        <source>qualified deeply nested</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CombinedTest3::Container::Data</name>
+    <message>
+        <location filename="main.cpp" line="554"/>
+        <source>data in original container</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="579"/>
+        <source>data via using directive</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CombinedTest3::Outer::Container::Item</name>
+    <message>
+        <location filename="main.cpp" line="569"/>
+        <source>item in local container</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="576"/>
+        <source>qualified local item</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -139,6 +220,19 @@
     </message>
 </context>
 <context>
+    <name>NsA::NsA::NsA::MyClass</name>
+    <message>
+        <location filename="main.cpp" line="451"/>
+        <source>nested same-name ns, different class 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="455"/>
+        <source>nested same-name ns, different class 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Outer::Class</name>
     <message>
         <location filename="main.cpp" line="106"/>
@@ -203,6 +297,14 @@
     <message>
         <location filename="main.cpp" line="135"/>
         <source>Bla</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Test::Test</name>
+    <message>
+        <location filename="main.cpp" line="435"/>
+        <source>class same name as namespace</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

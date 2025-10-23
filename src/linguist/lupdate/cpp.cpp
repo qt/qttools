@@ -181,10 +181,10 @@ private:
     bool qualifyOneCallbackOwn(const Namespace *ns, void *context) const;
     bool qualifyOneCallbackUsing(const Namespace *ns, void *context) const;
     bool qualifyOne(const NamespaceList &namespaces, int nsCnt, const HashString &segment,
-                    NamespaceList *resolved, QSet<HashStringList> *visitedUsings,
-                    bool *foundViaUsing = nullptr) const;
+                    NamespaceList *resolved, Namespace const **resolvedNamespace,
+                    QSet<HashStringList> *visitedUsings, bool *foundViaUsing = nullptr) const;
     bool qualifyOne(const NamespaceList &namespaces, int nsCnt, const HashString &segment,
-                    NamespaceList *resolved) const;
+                    NamespaceList *resolved, Namespace const **resolvedNamespace) const;
     bool fullyQualify(const NamespaceList &namespaces, int nsCnt,
                       const NamespaceList &segments, bool isDeclaration,
                       NamespaceList *resolved, NamespaceList *unresolved) const;
@@ -1067,8 +1067,13 @@ bool CppParser::visitNamespace(const NamespaceList &namespaces, int nsCount,
 
 struct QualifyOneData {
     QualifyOneData(const NamespaceList &ns, int nsc, const HashString &seg, NamespaceList *rslvd,
-                   QSet<HashStringList> *visited)
-        : namespaces(ns), nsCount(nsc), segment(seg), resolved(rslvd), visitedUsings(visited)
+                   QSet<HashStringList> *visited, Namespace const **resolvedNs)
+        : namespaces(ns),
+          nsCount(nsc),
+          segment(seg),
+          resolved(rslvd),
+          visitedUsings(visited),
+          resolvedNamespace(resolvedNs)
     {}
 
     const NamespaceList &namespaces;
@@ -1076,14 +1081,16 @@ struct QualifyOneData {
     const HashString &segment;
     NamespaceList *resolved;
     QSet<HashStringList> *visitedUsings;
+    Namespace const **resolvedNamespace;
 };
 
 bool CppParser::qualifyOneCallbackOwn(const Namespace *ns, void *context) const
 {
     QualifyOneData *data = (QualifyOneData *)context;
-    if (ns->children.contains(data->segment)) {
+    if (auto rns = ns->children.constFind(data->segment); rns != ns->children.cend()) {
         *data->resolved = data->namespaces.mid(0, data->nsCount);
         *data->resolved << data->segment;
+        *data->resolvedNamespace = *rns;
         return true;
     }
     auto nsai = ns->aliases.constFind(data->segment);
@@ -1100,6 +1107,7 @@ bool CppParser::qualifyOneCallbackOwn(const Namespace *ns, void *context) const
             nslIn = nslOut;
         }
         *data->resolved = nsl;
+        *data->resolvedNamespace = ns;
         return true;
     }
     return false;
@@ -1112,17 +1120,17 @@ bool CppParser::qualifyOneCallbackUsing(const Namespace *ns, void *context) cons
         if (!data->visitedUsings->contains(use)) {
             data->visitedUsings->insert(use);
             if (qualifyOne(use.value(), use.value().size(), data->segment, data->resolved,
-                           data->visitedUsings))
+                           data->resolvedNamespace, data->visitedUsings))
                 return true;
         }
     return false;
 }
 
 bool CppParser::qualifyOne(const NamespaceList &namespaces, int nsCnt, const HashString &segment,
-                           NamespaceList *resolved, QSet<HashStringList> *visitedUsings,
-                           bool *foundViaUsing) const
+                           NamespaceList *resolved, Namespace const **resolvedNamespace,
+                           QSet<HashStringList> *visitedUsings, bool *foundViaUsing) const
 {
-    QualifyOneData data(namespaces, nsCnt, segment, resolved, visitedUsings);
+    QualifyOneData data(namespaces, nsCnt, segment, resolved, visitedUsings, resolvedNamespace);
 
     if (visitNamespace(namespaces, nsCnt, &CppParser::qualifyOneCallbackOwn, &data)) {
         if (foundViaUsing)
@@ -1140,11 +1148,11 @@ bool CppParser::qualifyOne(const NamespaceList &namespaces, int nsCnt, const Has
 }
 
 bool CppParser::qualifyOne(const NamespaceList &namespaces, int nsCnt, const HashString &segment,
-                           NamespaceList *resolved) const
+                           NamespaceList *resolved, Namespace const **resolvedNamespace) const
 {
     QSet<HashStringList> visitedUsings;
 
-    return qualifyOne(namespaces, nsCnt, segment, resolved, &visitedUsings);
+    return qualifyOne(namespaces, nsCnt, segment, resolved, resolvedNamespace, &visitedUsings);
 }
 
 bool CppParser::fullyQualify(const NamespaceList &namespaces, int nsCnt,
@@ -1168,53 +1176,97 @@ bool CppParser::fullyQualify(const NamespaceList &namespaces, int nsCnt,
         nsIdx = nsCnt - 1;
     }
 
+    // Check if the identifier to resolve shares a common suffix
+    // with the current namespace path. This handles cases like:
+    //   - Current scope: ["", "Outer", "Test"]
+    //   - Trying to resolve: ["Outer", "Test"]
+
     auto matchSeg = segments.crbegin();
     auto matchNs = namespaces.crbegin();
 
     if (matchSeg->value() != matchNs->value())
         matchSeg++;
 
+    int matchingSuffixLength = 0;
     while (matchSeg != segments.crend()
            && matchNs != namespaces.crend()
            && matchSeg->value() == matchNs->value()) {
 
         matchSeg++;
         matchNs++;
-        nsIdx--;
+        matchingSuffixLength++;
     }
 
-    QSet<HashStringList> visitedUsings;
-    std::optional<NamespaceList> candidate;
+    // The main loop to resolve the segments in the current namespace.
+    // There are three possible outcomes:
+    //      1. resolution of the segments into a class that has tr
+    //         functions (hasTrFunction) if available (trCandidate).
+    //      2. resolution of the segments into a namespace/class without a
+    //         tr function -> in this case, if we're in a handleTr (or
+    //         similar) function, the caller issues a warning (noTrCandidate).
+    //      3. the segments cannot be resolved in the current namespace -> in
+    //         this case, we calculate the non-resolved part (unresolvedCandidate)
 
+    bool viaUsing = false;
+    std::optional<NamespaceList> trCandidate;
+    std::optional<NamespaceList> noTrCandidate;
+    std::optional<NamespaceList> unresolvedCandidate;
     do {
-        bool viaUsing = false;
-        if (qualifyOne(namespaces, nsIdx + 1, segments[initSegIdx], resolved, &visitedUsings,
-                       &viaUsing)) {
-            if (!viaUsing) {
-                candidate.emplace(*resolved);
-                break;
-            } else if (!candidate) {
-                candidate.emplace(*resolved);
-            }
-        }
-    } while (!isDeclaration && --nsIdx >= 0);
-
-    if (candidate) {
-        *resolved = *candidate;
+        Namespace const *resolvedNs = nullptr;
         int segIdx = initSegIdx;
-        while (++segIdx < segments.size()) {
-            if (!qualifyOne(*resolved, resolved->size(), segments[segIdx], resolved)) {
-                if (unresolved)
-                    *unresolved = segments.mid(segIdx);
-                return false;
+        int resolveSize = nsIdx + 1;
+        *resolved = namespaces;
+        do {
+            QSet<HashStringList> visitedUsings;
+            if (!qualifyOne(*resolved, resolveSize, segments[segIdx], resolved, &resolvedNs,
+                            &visitedUsings, &viaUsing))
+                break; // could not resolve
+
+            segIdx++;
+            resolveSize = resolved->size();
+        } while (segIdx < segments.size());
+
+        if (segIdx == segments.size()) { // resolved
+            if (resolvedNs && resolvedNs->classDef && resolvedNs->classDef->hasTrFunctions) {
+                if (!viaUsing)
+                    return true;
+                else if (!trCandidate)
+                    trCandidate.emplace(*resolved);
+            } else if (resolvedNs) {
+                if (!viaUsing)
+                    noTrCandidate.emplace(*resolved);
+                else if (!noTrCandidate)
+                    noTrCandidate.emplace(*resolved);
             }
+        } else if (!unresolvedCandidate) { // unresolved
+            unresolvedCandidate.emplace(segments.mid(segIdx));
         }
+
+        // For declarations: limit search to suffix-matched depths
+        // For usages: search all parent levels (standard C++ lookup)
+    } while ((!isDeclaration || matchingSuffixLength-- > 0) && --nsIdx >= 0);
+
+    // Depending on the case, after the loop, we might have only one of the
+    // outcome candidates, or 2 or 3 (all possbile outcome candidates).
+    // We prioritize the candidates as follows:
+    // 1. if a class with tr commands is found (trCandidate), we take it
+    //    as the result.
+    // 2. otherwise, if any class/namespace without tr commands is
+    //    found (noTrCandidate), take it as the result.
+    // 3. Finally, if none of the above candidates are found, we return the
+    //    unresolved part (unresolvedCandidate).
+
+    if (trCandidate) { // resolved class with tr functions gets priority
+        *resolved = *trCandidate;
         return true;
+    } else if (noTrCandidate) { // the non-tr resolved namespace/class
+        *resolved = *noTrCandidate;
+        return true;
+    } else if (unresolvedCandidate && unresolved) {
+        *unresolved = *unresolvedCandidate;
     }
+
     resolved->clear();
-    *resolved << HashString(QString());
-    if (unresolved)
-        *unresolved = segments.mid(initSegIdx);
     return false;
 }
 
