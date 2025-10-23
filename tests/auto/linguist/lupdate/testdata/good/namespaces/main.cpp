@@ -423,4 +423,163 @@ namespace Level3 {
 }
 }
 
+// QTBUG-140550: Class with same name as enclosing namespace
+namespace Test {
+class Test : public QObject {
+    Q_OBJECT
+public:
+    Test();
+};
+
+Test::Test() {
+    tr("class same name as namespace");
+}
+} // namespace Test
+
+// QTBUG-140550: Nested namespaces with same name, class with different name
+namespace NsA {
+namespace NsA {
+namespace NsA {
+class MyClass : public QObject {
+    Q_OBJECT
+public:
+    void func1();
+    void func2();
+};
+
+void MyClass::func1() {
+    tr("nested same-name ns, different class 1");
+}
+
+void NsA::MyClass::func2() {
+    tr("nested same-name ns, different class 2");
+}
+} // namespace NsA
+} // namespace NsA
+} // namespace NsA
+
+// QTBUG-140550: Complex nesting - namespace A inside namespace B inside namespace A
+namespace Alpha {
+namespace Beta {
+namespace Alpha {
+class Widget : public QObject {
+    Q_OBJECT
+public:
+    void method();
+};
+
+void Widget::method() {
+    tr("complex nesting different names");
+}
+} // namespace Alpha
+} // namespace Beta
+} // namespace Alpha
+
+// Combined bug test: Same-named class with using directive (QTBUG-140548 + QTBUG-140550)
+namespace CombinedTest1 {
+namespace ExternalLib {
+    class Tr : public QObject {
+        Q_OBJECT
+    public:
+        void externalFunc() { tr("external lib tr"); }
+    };
+}
+
+namespace MyApp {
+    using namespace CombinedTest1::ExternalLib;
+
+    // Same name as enclosing namespace AND there's a using directive
+    class MyApp : public QObject {
+        Q_OBJECT
+    public:
+        void myFunc()
+        {
+            // Should resolve to MyApp::MyApp (the class), not ExternalLib::Tr
+            tr("combined test: direct class wins");
+        }
+    };
+
+    namespace Inner {
+        void testFunc()
+        {
+            // Qualified call - should prefer the class with same parent namespace
+            MyApp::tr("combined test: qualified same name");
+        }
+    }
+}
+}
+
+// Deeply nested same-name namespaces with using directive
+namespace CombinedTest2 {
+namespace Level {
+    namespace Level {
+        class Helper : public QObject {
+            Q_OBJECT
+        public:
+            void helperMethod() { tr("helper in Level::Level"); }
+        };
+
+        namespace Level {
+            using namespace CombinedTest2::Level::Level;
+
+            class Level : public QObject {
+                Q_OBJECT
+            public:
+                void method()
+                {
+                    // Should resolve to Level::Level::Level::Level (the class)
+                    tr("deeply nested same name with using");
+                }
+            };
+
+            void freeFunc()
+            {
+                // Should prefer the local class
+                Level::tr("qualified deeply nested");
+
+                // Should find Helper via using directive
+                Helper::tr("helper via using in nested");
+            }
+        }
+    }
+}
+}
+
+// Using directive shadowing local namespace
+namespace CombinedTest3 {
+namespace Container {
+    class Data : public QObject {
+        Q_OBJECT
+    public:
+        void process() { tr("data in original container"); }
+    };
+}
+
+namespace Outer {
+    using namespace CombinedTest3::Container;
+
+    namespace Container {
+        // Local namespace named Container, but there's also a using directive
+        class Item : public QObject {
+            Q_OBJECT
+        public:
+            void method()
+            {
+                // Should find Item in local Outer::Container
+                tr("item in local container");
+            }
+        };
+
+        void testFunc()
+        {
+            // Should resolve to local namespace
+            Item::tr("qualified local item");
+
+            // Should still find Data via using directive
+            Data::tr("data via using directive");
+        }
+    }
+}
+}
+
 //#include "main.moc"
