@@ -73,6 +73,7 @@ public:
     static void initialize();
     static const QString &outputDir() { return s_outDir; }
     static const QString &outputSubdir() { return s_outSubdir; }
+    static const QString &imagesOutputDir() { return s_imagesOutDir; }
     static void terminate();
     static const QStringList &outputFileNames() { return s_outFileNames; }
     static bool noLinkErrors() { return s_noLinkErrors; }
@@ -196,6 +197,7 @@ private:
     static QList<Generator *> s_generators;
     static QString s_project;
     static QString s_outDir;
+    static QString s_imagesOutDir;
     static QString s_outSubdir;
     static QStringList s_outFileNames;
     static QSet<QString> s_outputFormats;

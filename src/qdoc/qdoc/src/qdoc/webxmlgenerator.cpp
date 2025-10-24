@@ -492,14 +492,16 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
             QString file_name{QFileInfo{file.get_path()}.fileName()};
 
             // TODO: [uncentralized-output-directory-structure]
-            Config::copyFile(relative->doc().location(), file.get_path(), file_name, outputDir() + QLatin1String("/images"));
+            Config::copyFile(relative->doc().location(), file.get_path(), file_name,
+                             "%1/%2"_L1.arg(outputDir(), imagesOutputDir()));
 
             writer.writeStartElement(atom->typeString().toLower());
+            const auto &imgPath = "%1/%2"_L1.arg(imagesOutputDir(), file_name);
             // TODO: [uncentralized-output-directory-structure]
-            writer.writeAttribute("href", "images/" + file_name);
+            writer.writeAttribute("href", imgPath);
             writer.writeEndElement();
             // TODO: [uncentralized-output-directory-structure]
-            setImageFileName(relative, "images/" + file_name);
+            setImageFileName(relative, imgPath);
         }
         break;
     }

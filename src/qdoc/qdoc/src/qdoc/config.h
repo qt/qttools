@@ -290,6 +290,7 @@ struct ConfigStrings
     static QString IGNORESINCE;
     static QString IGNOREWORDS;
     static QString IMAGEDIRS;
+    static QString IMAGESOUTPUTDIR;
     static QString IMAGES;
     static QString INCLUDEPATHS;
     static QString INCLUDEPRIVATE;
@@ -379,6 +380,7 @@ struct ConfigStrings
 #define CONFIG_IGNORETOKENS ConfigStrings::IGNORETOKENS
 #define CONFIG_IGNOREWORDS ConfigStrings::IGNOREWORDS
 #define CONFIG_IMAGEDIRS ConfigStrings::IMAGEDIRS
+#define CONFIG_IMAGESOUTPUTDIR ConfigStrings::IMAGESOUTPUTDIR
 #define CONFIG_INCLUDEPATHS ConfigStrings::INCLUDEPATHS
 #define CONFIG_INCLUDEPRIVATE ConfigStrings::INCLUDEPRIVATE
 #define CONFIG_INCLUSIVE ConfigStrings::INCLUSIVE

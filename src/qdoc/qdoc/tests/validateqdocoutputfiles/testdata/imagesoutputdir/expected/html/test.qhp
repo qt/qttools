@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+    <namespace>org.qt-project.test.001</namespace>
+    <virtualFolder>test</virtualFolder>
+    <metaData name="version" value=""/>
+    <filterSection>
+        <toc>
+            <section ref="index.html" title="Images">
+                <section ref="" title="">
+                    <section ref="index.html" title="Images"/>
+                </section>
+            </section>
+        </toc>
+        <keywords>
+            <keyword name="Images" id="Images" ref="index.html"/>
+        </keywords>
+        <files>
+            <file>images/Test/dot.svg</file>
+            <file>index.html</file>
+        </files>
+    </filterSection>
+</QtHelpProject>

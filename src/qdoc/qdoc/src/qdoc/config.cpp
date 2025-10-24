@@ -46,6 +46,7 @@ QString ConfigStrings::IGNORESINCE = QStringLiteral("ignoresince");
 QString ConfigStrings::IGNORETOKENS = QStringLiteral("ignoretokens");
 QString ConfigStrings::IGNOREWORDS = QStringLiteral("ignorewords");
 QString ConfigStrings::IMAGEDIRS = QStringLiteral("imagedirs");
+QString ConfigStrings::IMAGESOUTPUTDIR = QStringLiteral("imagesoutputdir");
 QString ConfigStrings::INCLUDEPATHS = QStringLiteral("includepaths");
 QString ConfigStrings::INCLUDEPRIVATE = QStringLiteral("includeprivate");
 QString ConfigStrings::INCLUSIVE = QStringLiteral("inclusive");

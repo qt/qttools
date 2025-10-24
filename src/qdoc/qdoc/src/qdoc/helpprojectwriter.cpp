@@ -388,10 +388,8 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     const Atom *atom = node->doc().body().firstAtom();
     while (atom) {
         if (atom->type() == Atom::Image || atom->type() == Atom::InlineImage) {
-            // Images are all placed within a single directory regardless of
-            // whether the source images are in a nested directory structure.
-            QStringList pieces = atom->string().split(QLatin1Char('/'));
-            project.m_files.insert("images/" + pieces.last());
+            QStringList pieces = atom->string().split('/'_L1);
+            project.m_files.insert("%1/%2"_L1.arg(m_gen->imagesOutputDir(), pieces.last()));
         }
         atom = atom->next();
     }

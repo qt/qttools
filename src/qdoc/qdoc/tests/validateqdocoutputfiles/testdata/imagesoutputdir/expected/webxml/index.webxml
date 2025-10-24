@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="index.html" href="index.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Images" fulltitle="Images" subtitle="">
+            <description>
+                <image href="images/Test/dot.svg"/>
+            </description>
+        </page>
+    </document>
+</WebXML>

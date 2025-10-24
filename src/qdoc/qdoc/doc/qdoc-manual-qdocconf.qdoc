@@ -165,6 +165,7 @@
     \li \l {ignorewords-variable} {ignorewords}
     \li \l {ignoresince-variable} {ignoresince}
     \li \l {imagedirs-variable} {imagedirs}
+    \li \l {imagesoutputdir-variable} {imagesoutputdir}
     \li \l {indexes-variable} {indexes}
     \li \l {language-variable} {language}
     \li \l {locationinfo-variable} {locationinfo}
@@ -904,6 +905,32 @@
     \badcode
         $QTDIR/examples/calculator-example.png
     \endcode
+
+    \target imagesoutputdir-variable
+    \section1 imagesoutputdir
+
+    The \c imagesoutputdir variable controls the name of the subdirectory,
+    under the output directory, that QDoc uses to store images.
+
+    The default value for \c imagesoutputdir is \e images.
+
+    Image files passed as an argument to \qdoccmd {image} and
+    \qdoccmd {inlineimage} commands are copied to this directory.
+
+    Setting a custom output directory for images is useful for multi-module
+    documentation builds where multiple documentation projects are configured
+    to use a shared output directory. For example, with the following (shared)
+    configuration:
+
+    \badcode
+    imagesoutputdir = images/${project}
+    \endcode
+
+    Each documentation project in the build uses
+    \c {<outputdir>/images/<project name>} to store images, thus avoiding
+    identically-named image files overwriting each other.
+
+    This variable was introduced to QDoc with Qt 6.11.
 
     \target language-variable
     \section1 language

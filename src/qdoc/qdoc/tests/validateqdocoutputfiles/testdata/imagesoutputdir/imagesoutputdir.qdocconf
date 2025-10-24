@@ -1,0 +1,26 @@
+project = Test
+moduleheader =
+
+sourcedirs               = ./src
+imagedirs                = ./src/images
+
+imagesoutputdir          = images/$project
+
+outputformats             = HTML DocBook WebXML
+
+locationinfo = false
+warninglimit.enabled = true
+warninglimit = 0
+
+{HTML.nosubdirs,DocBook.nosubdirs,WebXML.nosubdirs} = true
+HTML.outputsubdir       = html
+DocBook.outputsubdir    = docbook
+WebXML.outputsubdir     = webxml
+
+# Configure .qhp generation
+qhp.projects            = Test
+qhp.Test.file           = test.qhp
+qhp.Test.namespace      = org.qt-project.test.001
+qhp.Test.virtualFolder  = test
+qhp.Test.indexTitle     = Images
+qhp.Test.indexRoot      =

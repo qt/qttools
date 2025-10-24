@@ -52,6 +52,7 @@ QMap<QString, QMap<QString, QString>> Generator::s_fmtLeftMaps;
 QMap<QString, QMap<QString, QString>> Generator::s_fmtRightMaps;
 QList<Generator *> Generator::s_generators;
 QString Generator::s_outDir;
+QString Generator::s_imagesOutDir;
 QString Generator::s_outSubdir;
 QStringList Generator::s_outFileNames;
 QSet<QString> Generator::s_trademarks;
@@ -1934,9 +1935,11 @@ void Generator::initializeFormat()
     if (config.preparing())
         return;
 
-    const QLatin1String imagesDir("images");
-    if (!outputDir.exists(imagesDir) && !outputDir.mkdir(imagesDir))
-        Location().fatal(QStringLiteral("Cannot create images directory '%1'").arg(outputDir.filePath(imagesDir)));
+    const auto imagesDir = config.get(CONFIG_IMAGESOUTPUTDIR).asString(u"images"_s);
+    if (!outputDir.exists(imagesDir) && !outputDir.mkpath(imagesDir))
+        Location().fatal("Cannot create images directory '%1'"_L1
+                .arg(QDir::cleanPath(outputDir.filePath(imagesDir))));
+    s_imagesOutDir = imagesDir;
 
     copyTemplateFiles(format() + Config::dot + CONFIG_STYLESHEETS, "style");
     copyTemplateFiles(format() + Config::dot + CONFIG_SCRIPTS, "scripts");
@@ -2241,6 +2244,7 @@ void Generator::terminate()
     s_fmtLeftMaps.clear();
     s_fmtRightMaps.clear();
     s_outDir.clear();
+    s_imagesOutDir.clear();
 }
 
 void Generator::terminateGenerator() {}

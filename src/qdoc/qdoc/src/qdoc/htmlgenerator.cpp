@@ -660,10 +660,12 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
             // made at the API boundary.
 
             // TODO: [uncentralized-output-directory-structure]
-            Config::copyFile(relative->doc().location(), file.get_path(), file_name, outputDir() + QLatin1String("/images"));
+            Config::copyFile(relative->doc().location(), file.get_path(), file_name,
+                             "%1/%2"_L1.arg(outputDir(), imagesOutputDir()));
 
+            const auto &imgPath = "%1/%2"_L1.arg(imagesOutputDir(), file_name);
             // TODO: [uncentralized-output-directory-structure]
-            out() << "<img src=\"" << "images/" + protectEnc(file_name) << '"';
+            out() << "<img src=\"%1\""_L1.arg(protectEnc(imgPath));
 
             const QString altAndTitleText = protectEnc(text);
             out() << " alt=\"" << altAndTitleText;
@@ -672,8 +674,8 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
             out() << "\" />";
 
             // TODO: [uncentralized-output-directory-structure]
-            m_helpProjectWriter->addExtraFile("images/" + file_name);
-            setImageFileName(relative, "images/" + file_name);
+            m_helpProjectWriter->addExtraFile(imgPath);
+            setImageFileName(relative, imgPath);
         }
 
         if (atom->type() == Atom::Image)

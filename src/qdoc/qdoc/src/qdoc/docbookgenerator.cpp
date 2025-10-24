@@ -615,7 +615,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
             QString file_name{QFileInfo{file.get_path()}.fileName()};
 
             // TODO: [uncentralized-output-directory-structure]
-            Config::copyFile(relative->doc().location(), file.get_path(), file_name, outputDir() + QLatin1String("/images"));
+            Config::copyFile(relative->doc().location(), file.get_path(), file_name,
+                             "%1/%2"_L1.arg(outputDir(), imagesOutputDir()));
 
             if (atom->next() && !atom->next()->string().isEmpty()
                 && atom->next()->type() == Atom::ImageText) {
@@ -626,14 +627,15 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
             m_writer->writeStartElement(dbNamespace, "imageobject");
             newLine();
             m_writer->writeEmptyElement(dbNamespace, "imagedata");
+            const auto &imgPath = "%1/%2"_L1.arg(imagesOutputDir(), file_name);
             // TODO: [uncentralized-output-directory-structure]
-            m_writer->writeAttribute("fileref", "images/" + file_name);
+            m_writer->writeAttribute("fileref", imgPath);
             newLine();
             m_writer->writeEndElement(); // imageobject
             newLine();
 
             // TODO: [uncentralized-output-directory-structure]
-            setImageFileName(relative, "images/" + file_name);
+            setImageFileName(relative, imgPath);
         }
 
         m_writer->writeEndElement(); // [inline]mediaobject
