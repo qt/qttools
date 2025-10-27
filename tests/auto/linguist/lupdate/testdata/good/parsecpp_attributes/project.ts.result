@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1">
+<context>
+    <name>AttributeNamespace2::AttributeTest22</name>
+    <message>
+        <location filename="main.cpp" line="213"/>
+        <source>AttributeTest22: attributed class in attributed namespace</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeNamespace::AttributeTest21</name>
+    <message>
+        <location filename="main.cpp" line="203"/>
+        <source>AttributeTest21: namespace attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest1</name>
+    <message>
+        <location filename="main.cpp" line="15"/>
+        <source>AttributeTest1: basic attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest10</name>
+    <message>
+        <location filename="main.cpp" line="95"/>
+        <source>AttributeTest10: raw string with complex content</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest11</name>
+    <message>
+        <location filename="main.cpp" line="106"/>
+        <source>AttributeTest11: maximum complexity</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest12</name>
+    <message>
+        <location filename="main.cpp" line="118"/>
+        <source>AttributeTest12: namespace attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest13</name>
+    <message>
+        <location filename="main.cpp" line="126"/>
+        <source>AttributeTest13: function argument</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest14</name>
+    <message>
+        <location filename="main.cpp" line="134"/>
+        <source>AttributeTest14: multiline attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest15</name>
+    <message>
+        <location filename="main.cpp" line="144"/>
+        <source>AttributeTest15: multiline with nested syntax</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest16</name>
+    <message>
+        <location filename="main.cpp" line="152"/>
+        <source>AttributeTest16: three consecutive attributes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest17</name>
+    <message>
+        <location filename="main.cpp" line="160"/>
+        <source>AttributeTest17: escape sequences</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest18</name>
+    <message>
+        <location filename="main.cpp" line="168"/>
+        <source>AttributeTest18: backslash escapes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest19</name>
+    <message>
+        <location filename="main.cpp" line="181"/>
+        <source>AttributeTest19: template with attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest2</name>
+    <message>
+        <location filename="main.cpp" line="23"/>
+        <source>AttributeTest2: multiple attributes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest20</name>
+    <message>
+        <location filename="main.cpp" line="190"/>
+        <source>AttributeTest20: template multiple params</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest23</name>
+    <message>
+        <location filename="main.cpp" line="226"/>
+        <source>AttributeTest23: function attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest24</name>
+    <message>
+        <location filename="main.cpp" line="236"/>
+        <source>AttributeTest24: multiple function attributes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest25</name>
+    <message>
+        <location filename="main.cpp" line="247"/>
+        <source>AttributeTest25: function attributes with args</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest26</name>
+    <message>
+        <location filename="main.cpp" line="260"/>
+        <source>AttributeTest26: deprecated constructor</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest27</name>
+    <message>
+        <location filename="main.cpp" line="270"/>
+        <source>AttributeTest27: constructor with initializer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest28</name>
+    <message>
+        <location filename="main.cpp" line="285"/>
+        <source>AttributeTest28: operator with attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest29</name>
+    <message>
+        <location filename="main.cpp" line="297"/>
+        <source>AttributeTest29: conversion operator</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest3</name>
+    <message>
+        <location filename="main.cpp" line="31"/>
+        <source>AttributeTest3: string argument</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest30</name>
+    <message>
+        <location filename="main.cpp" line="313"/>
+        <source>AttributeTest30: static function attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest31</name>
+    <message>
+        <location filename="main.cpp" line="324"/>
+        <source>AttributeTest31: virtual function attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest4</name>
+    <message>
+        <location filename="main.cpp" line="43"/>
+        <source>AttributeTest4: brackets in string</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest5</name>
+    <message>
+        <location filename="main.cpp" line="51"/>
+        <source>AttributeTest5: nested brackets in string</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest6</name>
+    <message>
+        <location filename="main.cpp" line="59"/>
+        <source>AttributeTest6: double brackets in string</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest7</name>
+    <message>
+        <location filename="main.cpp" line="67"/>
+        <source>AttributeTest7: single bracket character</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest8</name>
+    <message>
+        <location filename="main.cpp" line="75"/>
+        <source>AttributeTest8: escaped quotes with brackets</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AttributeTest9</name>
+    <message>
+        <location filename="main.cpp" line="87"/>
+        <source>AttributeTest9: raw string literal</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>OriginalBugTest</name>
+    <message>
+        <location filename="main.cpp" line="338"/>
+        <source>OriginalBugTest: the reported bug</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+</TS>

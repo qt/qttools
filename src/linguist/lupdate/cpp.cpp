@@ -120,6 +120,7 @@ private:
         Tok_Equals,
         Tok_LeftBracket,
         Tok_RightBracket,
+        Tok_Attribute,
         Tok_LeftAngleBracket,
         Tok_RightAngleBracket,
         Tok_QuestionMark,
@@ -884,10 +885,45 @@ CppParser::TokenType CppParser::getToken()
                 yyCh = getChar();
                 return Tok_RightParen;
             case '[':
+                yyCh = getChar();
+                if (yyCh == '[') {
+                    // C++11 attribute: [[...]]
+                    yyCh = getChar();
+                    int depth = 1;
+                    bool inString = false;
+                    bool inChar = false;
+                    bool escaped = false;
+
+                    // Need to handle nested brackets, strings, and character literals
+                    while (depth > 0 && yyCh != EOF) {
+                        if (escaped) {
+                            escaped = false;
+                        } else if (yyCh == '\\') {
+                            escaped = true;
+                        } else if (yyCh == '"' && !inChar) {
+                            inString = !inString;
+                        } else if (yyCh == '\'' && !inString) {
+                            inChar = !inChar;
+                        } else if (!inString && !inChar) {
+                            if (yyCh == '[')
+                                depth++;
+                            else if (yyCh == ']')
+                                depth--;
+                        }
+                        yyCh = getChar();
+                    }
+
+                    if (yyCh == EOF || yyCh != ']') {
+                        yyMsg(yyCurLineNo) << "Unterminated C++ attribute (missing ']]')\n";
+                        return Tok_LeftBracket;
+                    }
+
+                    yyCh = getChar();
+                    return Tok_Attribute;
+                }
                 if (yyBracketDepth == 0)
                     yyBracketLineNo = yyCurLineNo;
                 yyBracketDepth++;
-                yyCh = getChar();
                 return Tok_LeftBracket;
             case ']':
                 if (yyBracketDepth == 0)
@@ -1878,6 +1914,8 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                         // which case 'QMessageBox' is the class name, not 'Q_EXPORT', by
                         // abandoning any qualification collected so far.
                         quali.clear();
+                    } else if (yyTok == Tok_Attribute) {
+                        yyTok = getToken();
                     } else {
                         break;
                     }
@@ -1938,6 +1976,9 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             break;
         case Tok_namespace:
             yyTok = getToken();
+            // Skip C++11 attributes on namespace
+            while (yyTok == Tok_Attribute)
+                yyTok = getToken();
             if (yyTok == Tok_Ident) {
                 QString text = yyWord;
                 text.detach();
