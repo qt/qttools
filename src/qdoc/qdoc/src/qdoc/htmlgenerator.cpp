@@ -237,6 +237,9 @@ QString HtmlGenerator::format()
  */
 void HtmlGenerator::generateDocs()
 {
+    if (s_redirectDocumentationToDevNull)
+        return;
+
     Node *qflags = m_qdb->findClassNode(QStringList("QFlags"_L1));
     if (qflags)
         m_qflagsHref = linkForNode(qflags, nullptr);

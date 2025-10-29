@@ -1908,6 +1908,8 @@ void Generator::initializeFormat()
 
     if (s_outputFormats.isEmpty())
         return;
+    if (s_redirectDocumentationToDevNull)
+        return;
 
     s_outDir = config.getOutputDir(format());
     if (s_outDir.isEmpty()) {
