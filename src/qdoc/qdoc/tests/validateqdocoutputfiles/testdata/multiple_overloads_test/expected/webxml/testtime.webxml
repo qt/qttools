@@ -9,15 +9,15 @@
             <function name="toString" fullname="TestTime::toString" href="testtime.html#toString" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" type="void" signature="void toString() const">
                 <description/>
             </function>
-            <function name="toString" fullname="TestTime::toString" href="testtime.html#toString-1" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" overload="true" overload-number="1" type="void" signature="void toString(int format) const">
-                <parameter type="int" name="format" default=""/>
-                <description/>
-            </function>
-            <function name="toString" fullname="TestTime::toString" href="testtime.html#toString-2" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" overload="true" overload-number="2" type="void" signature="void toString(const char *formatString) const">
+            <function name="toString" fullname="TestTime::toString" href="testtime.html#toString-1" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" overload="true" overload-number="1" type="void" signature="void toString(const char *formatString) const">
                 <parameter type="const char *" name="formatString" default=""/>
                 <description>
                     <para>Returns the time as a string using the specified <argument>formatString</argument>.</para>
                 </description>
+            </function>
+            <function name="toString" fullname="TestTime::toString" href="testtime.html#toString-2" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" overload="true" overload-number="2" type="void" signature="void toString(int format) const">
+                <parameter type="int" name="format" default=""/>
+                <description/>
             </function>
         </class>
     </document>

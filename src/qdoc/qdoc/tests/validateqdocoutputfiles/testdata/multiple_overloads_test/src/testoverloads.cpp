@@ -322,3 +322,47 @@ void TestDateTime::toString(const char *formatString) const
 {
 }
 
+/*!
+    \class TestPositionDependent
+    \inmodule TestQDocOverloadCommand
+    \brief Test class to verify position-dependent primary overload behavior.
+
+    This class tests that when using shared comment nodes with \\overload primary,
+    the FIRST \\fn command becomes the primary overload, regardless of how the
+    functions would naturally sort by signature.
+*/
+
+/*!
+    \overload primary
+    \fn void TestPositionDependent::convert(int value, bool flag) const
+    \fn void TestPositionDependent::convert() const
+
+    Converts data. The \a value and \a flag parameters control the conversion.
+
+    NOTE: The \\fn commands are intentionally in reverse sort order.
+    The first \\fn has 2 parameters, the second has 0.
+    By natural sorting, convert() would come first (fewer parameters).
+    But with position-dependent behavior, convert(int, bool) should be the primary
+    because it's the FIRST \\fn command in this shared comment block.
+*/
+void TestPositionDependent::convert(int value, bool flag) const
+{
+}
+
+void TestPositionDependent::convert() const
+{
+}
+
+/*!
+    \overload convert()
+
+    Converts the specified \a text.
+
+    This overload should link to the PRIMARY convert function, which is
+    convert(int, bool) because it was the FIRST \\fn in the shared comment block,
+    NOT convert() even though convert() would sort first by signature.
+*/
+void TestPositionDependent::convert(const char *text) const
+{
+}
+

@@ -156,6 +156,36 @@ FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters
     if (map_it == m_functionMap.end())
         return nullptr;
 
+    // If parameters is empty (e.g., from \overload command), don't try exact matching.
+    // Instead, find the best available function based on isPrimaryOverload flag.
+    if (parameters.isEmpty()) {
+        FunctionNode *fallback = nullptr;
+        FunctionNode *lastResort = nullptr;
+
+        for (auto *fn : *map_it) {
+            // Primary overload takes highest priority - return immediately
+            if (fn->isPrimaryOverload() && !fn->isInternal())
+                return fn;
+
+            // Remember first non-deprecated, non-internal as fallback
+            if (!fallback && !fn->isInternal() && !fn->isDeprecated())
+                fallback = fn;
+
+            // Remember first non-internal as last resort
+            if (!lastResort && !fn->isInternal())
+                lastResort = fn;
+        }
+
+        if (fallback)
+            return fallback;
+
+        if (lastResort)
+            return lastResort;
+
+        return nullptr;
+    }
+
+    // Try exact parameter match
     auto match_it = std::find_if((*map_it).begin(), (*map_it).end(),
         [&parameters](const FunctionNode *fn) {
             if (fn->isInternal())
@@ -168,32 +198,7 @@ FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters
             return true;
         });
 
-    if (match_it != (*map_it).end())
-        return *match_it;
-
-    // If no exact match was found and parameters are empty (e.g., from \overload command),
-    // try to find the best available function to link to.
-    if (parameters.isEmpty()) {
-        // First, try to find a non-deprecated, non-internal function
-        auto best_it = std::find_if((*map_it).begin(), (*map_it).end(),
-            [](const FunctionNode *fn) {
-                return !fn->isInternal() && !fn->isDeprecated();
-            });
-
-        if (best_it != (*map_it).end())
-            return *best_it;
-
-        // If no non-deprecated function found, fall back to any non-internal function
-        auto fallback_it = std::find_if((*map_it).begin(), (*map_it).end(),
-            [](const FunctionNode *fn) {
-                return !fn->isInternal();
-            });
-
-        if (fallback_it != (*map_it).end())
-            return *fallback_it;
-    }
-
-    return nullptr;
+    return (match_it != (*map_it).end()) ? *match_it : nullptr;
 }
 
 /*!

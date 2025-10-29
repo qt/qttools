@@ -602,6 +602,11 @@ void CppCodeParser::processOverloadCommand(Node *node, const Doc &doc)
     if (node->isFunction()) {
         auto *fn = static_cast<FunctionNode *>(node);
 
+        // If this function is part of a SharedCommentNode, skip processing here.
+        // The SharedCommentNode will handle \overload primary position-dependently.
+        if (fn->sharedCommentNode())
+            return;
+
         // Check if this is "\overload primary"
         const auto &overloadArgs = doc.overloadList();
         if (!overloadArgs.isEmpty()
@@ -968,8 +973,12 @@ CppCodeParser::processTopicArgs(const UntiedDocumentation &untied)
                     }
                 }
             }
-            for (auto *scn : sharedCommentNodes)
-                scn->sort();
+            for (auto *scn : sharedCommentNodes) {
+                // Don't sort function nodes - preserve the order from \fn commands
+                // for position-dependent \overload primary behavior
+                if (!scn->collective().isEmpty() && !scn->collective().first()->isFunction())
+                    scn->sort();
+            }
         }
     }
     return std::make_pair(tied, errors);
@@ -1007,8 +1016,8 @@ static void checkModuleInclusion(Node *n)
 void CppCodeParser::processMetaCommands(const std::vector<TiedDocumentation> &tied)
 {
     for (auto [doc, node] : tied) {
-        processMetaCommands(doc, node);
         node->setDoc(doc);
+        processMetaCommands(doc, node);
         checkModuleInclusion(node);
         if (node->isAggregate()) {
             auto *aggregate = static_cast<Aggregate *>(node);

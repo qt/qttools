@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- testoverloads.cpp -->
+  <meta name="description" content="Test class to verify position-dependent primary overload behavior.">
+  <title>TestPositionDependent Class | Qt</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li>TestPositionDependent</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">TestPositionDependent Class</h1>
+<!-- $$$TestPositionDependent-brief -->
+<p>Test class to verify position-dependent primary overload behavior. <a href="#details">More...</a></p>
+<!-- @@@TestPositionDependent -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;TestPositionDependent&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="testpositiondependent-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testpositiondependent.html#convert" translate="no">convert</a></b>(int <i>value</i>, bool <i>flag</i>) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testpositiondependent.html#convert-1" translate="no">convert</a></b>() const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testpositiondependent.html#convert-2" translate="no">convert</a></b>(const char *<i>text</i>) const</td></tr>
+</table></div>
+<!-- $$$TestPositionDependent-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>This class tests that when using shared comment nodes with \overload primary, the FIRST \fn command becomes the primary overload, regardless of how the functions would naturally sort by signature.</p>
+</div>
+<!-- @@@TestPositionDependent -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$ -->
+<div class="fngroup">
+<h3 class="fn fngroupitem" translate="no" id="convert"><span class="type">void</span> TestPositionDependent::<span class="name">convert</span>(<span class="type">int</span> <i>value</i>, <span class="type">bool</span> <i>flag</i>) const</h3><h3 class="fn fngroupitem" translate="no" id="convert-1"><span class="type">void</span> TestPositionDependent::<span class="name">convert</span>() const</h3></div>
+<p>Converts data. The <i translate="no">value</i> and <i translate="no">flag</i> parameters control the conversion.</p>
+<p>NOTE: The \fn commands are intentionally in reverse sort order. The first \fn has 2 parameters, the second has 0. By natural sorting, <a href="testpositiondependent.html#convert" translate="no">convert</a>() would come first (fewer parameters). But with position-dependent behavior, convert(int, bool) should be the primary because it's the FIRST \fn command in this shared comment block.</p>
+<!-- @@@ -->
+<!-- $$$convert$$$convertconstchar* -->
+<h3 class="fn" translate="no" id="convert-2"><span class="type">void</span> TestPositionDependent::<span class="name">convert</span>(const <span class="type">char</span> *<i>text</i>) const</h3>
+<p>Converts the specified <i translate="no">text</i>.</p>
+<p>This overload should link to the PRIMARY convert function, which is convert(int, bool) because it was the FIRST \fn in the shared comment block, NOT convert() even though convert() would sort first by signature.</p>
+<div class="admonition auto"><p>This function overloads <a href="testpositiondependent.html#convert" translate="no">TestPositionDependent::convert</a>().</p>
+</div><!-- @@@convert -->
+</div>
+</body>
+</html>

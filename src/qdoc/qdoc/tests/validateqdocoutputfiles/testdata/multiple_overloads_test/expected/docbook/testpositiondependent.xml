@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TestPositionDependent Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>QDoc multiple overloads test Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Test class to verify position-dependent primary overload behavior.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TestPositionDependent</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class tests that when using shared comment nodes with \overload primary, the FIRST \fn command becomes the primary overload, regardless of how the functions would naturally sort by signature.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="convert">
+<db:title>void TestPositionDependent::convert(int <db:emphasis>value</db:emphasis>, bool <db:emphasis>flag</db:emphasis>) const</db:title>
+<db:bridgehead renderas="sect2" xml:id="convert-1">void TestPositionDependent::convert() const</db:bridgehead>
+<db:para>Converts data. The <db:code role="parameter">value</db:code> and <db:code role="parameter">flag</db:code> parameters control the conversion.</db:para>
+<db:para>NOTE: The \fn commands are intentionally in reverse sort order. The first \fn has 2 parameters, the second has 0. By natural sorting, <db:link xlink:href="testpositiondependent.xml#convert">convert</db:link>() would come first (fewer parameters). But with position-dependent behavior, convert(int, bool) should be the primary because it's the FIRST \fn command in this shared comment block.</db:para>
+</db:section>
+<db:section xml:id="convert-2">
+<db:title>void TestPositionDependent::convert(const char *<db:emphasis>text</db:emphasis>) const</db:title>
+<db:para>Converts the specified <db:code role="parameter">text</db:code>.</db:para>
+<db:para>This overload should link to the PRIMARY convert function, which is convert(int, bool) because it was the FIRST \fn in the shared comment block, NOT <db:link xlink:href="testpositiondependent.xml#convert">convert</db:link>() even though <db:link xlink:href="testpositiondependent.xml#convert">convert</db:link>() would sort first by signature.</db:para>
+<db:para>This function overloads <db:link xlink:href="testpositiondependent.xml#convert">TestPositionDependent::convert()</db:link>.</db:para>
+</db:section>
+</db:section>
+</db:article>

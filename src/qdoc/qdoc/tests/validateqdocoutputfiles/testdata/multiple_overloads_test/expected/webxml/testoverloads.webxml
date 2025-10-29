@@ -7,7 +7,7 @@
                 <para>This test case demonstrates various scenarios for the \overload command:</para>
                 <list type="ordered" start="1">
                     <item>
-                        <para>Original issue: Using \overload with unqualified function names (e.g., \overload <link raw="failOnWarning()" href="testoverloads.html#failOnWarning-1" type="function">failOnWarning()</link>) creates dead links when there are multiple overloads and QDoc cannot determine which overload should be the primary target.</para>
+                        <para>Original issue: Using \overload with unqualified function names (e.g., \overload <link raw="failOnWarning()" href="testoverloads.html#failOnWarning" type="function">failOnWarning()</link>) creates dead links when there are multiple overloads and QDoc cannot determine which overload should be the primary target.</para>
                     </item>
                     <item>
                         <para>Solution: The \overload primary command allows explicitly designating which overload should be the primary target for unqualified \overload references.</para>
@@ -16,7 +16,7 @@
                         <para>Corner case: Functions named &quot;primary&quot; to test whether the function name conflicts with the &quot;primary&quot; keyword in \overload commands.</para>
                     </item>
                 </list>
-                <para>The <link raw="failOnWarning()" href="testoverloads.html#failOnWarning-1" type="function">failOnWarning()</link> functions demonstrate the original problem and its solution, while the <link raw="primary()" href="testoverloads.html#primary" type="function">primary()</link> functions test the corner case where a function happens to be named &quot;primary&quot;.</para>
+                <para>The <link raw="failOnWarning()" href="testoverloads.html#failOnWarning" type="function">failOnWarning()</link> functions demonstrate the original problem and its solution, while the <link raw="primary()" href="testoverloads.html#primary" type="function">primary()</link> functions test the corner case where a function happens to be named &quot;primary&quot;.</para>
             </description>
             <function name="failOnWarning" fullname="TestOverloads::failOnWarning" href="testoverloads.html#failOnWarning" status="active" access="public" location="testoverloads.h" documented="true" since="6.11" meta="plain" static="true" type="void" signature="void failOnWarning(const RegularExpression &amp;messagePattern)">
                 <parameter type="const RegularExpression &amp;" name="messagePattern" default=""/>

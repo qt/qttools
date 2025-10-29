@@ -56,5 +56,16 @@ public:
     void toString(const char *formatString) const;
 };
 
+// Test case to verify position-dependent primary overload behavior
+// The \fn commands will be listed in reverse sort order to prove
+// that the FIRST \fn becomes the primary, not the one that sorts first
+class TestPositionDependent
+{
+public:
+    void convert(int value, bool flag) const;
+    void convert() const;
+    void convert(const char *text) const;
+};
+
 #endif // TESTOVERLOADS_H
 

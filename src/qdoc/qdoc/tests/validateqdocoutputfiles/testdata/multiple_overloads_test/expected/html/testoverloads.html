@@ -49,11 +49,11 @@
 <div class="descr">
 <h2 id="details">Detailed Description</h2>
 <p>This test case demonstrates various scenarios for the \overload command:</p>
-<ol class="1" type="1"><li>Original issue: Using \overload with unqualified function names (e.g., \overload <a href="testoverloads.html#failOnWarning-1" translate="no">failOnWarning</a>()) creates dead links when there are multiple overloads and QDoc cannot determine which overload should be the primary target.</li>
+<ol class="1" type="1"><li>Original issue: Using \overload with unqualified function names (e.g., \overload <a href="testoverloads.html#failOnWarning" translate="no">failOnWarning</a>()) creates dead links when there are multiple overloads and QDoc cannot determine which overload should be the primary target.</li>
 <li>Solution: The \overload primary command allows explicitly designating which overload should be the primary target for unqualified \overload references.</li>
 <li>Corner case: Functions named &quot;primary&quot; to test whether the function name conflicts with the &quot;primary&quot; keyword in \overload commands.</li>
 </ol>
-<p>The <a href="testoverloads.html#failOnWarning-1" translate="no">failOnWarning</a>() functions demonstrate the original problem and its solution, while the <a href="testoverloads.html#primary" translate="no">primary</a>() functions test the corner case where a function happens to be named &quot;primary&quot;.</p>
+<p>The <a href="testoverloads.html#failOnWarning" translate="no">failOnWarning</a>() functions demonstrate the original problem and its solution, while the <a href="testoverloads.html#primary" translate="no">primary</a>() functions test the corner case where a function happens to be named &quot;primary&quot;.</p>
 </div>
 <!-- @@@TestOverloads -->
 <div class="func">
@@ -68,13 +68,13 @@
 <h3 class="fn" translate="no" id="failOnWarning-1"><code class="details extra" translate="no">[static, since 6.11]</code> <span class="type">void</span> TestOverloads::<span class="name">failOnWarning</span>()</h3>
 <p>This should link to the primary failOnWarning function, but creates dead links when there are multiple overloads and no clear primary function.</p>
 <p>Issue: QDoc cannot resolve which of the three failOnWarning overloads this should link to.</p>
-<div class="admonition auto"><p>This function overloads TestOverloads::failOnWarning().</p>
+<div class="admonition auto"><p>This function overloads <a href="testoverloads.html#failOnWarning" translate="no">TestOverloads::failOnWarning</a>().</p>
 </div><p>This function was introduced in Qt 6.11.</p>
 <!-- @@@failOnWarning -->
 <!-- $$$failOnWarning$$$failOnWarningconstchar* -->
 <h3 class="fn" translate="no" id="failOnWarning-2"><code class="details extra" translate="no">[static, since 6.11]</code> <span class="type">void</span> TestOverloads::<span class="name">failOnWarning</span>(const <span class="type">char</span> *<i>message</i>)</h3>
 <p>Another overload using the same unqualified \overload target. This also creates dead links for the same reason as above.</p>
-<div class="admonition auto"><p>This function overloads <a href="testoverloads.html#failOnWarning-1" translate="no">TestOverloads::failOnWarning</a>().</p>
+<div class="admonition auto"><p>This function overloads <a href="testoverloads.html#failOnWarning" translate="no">TestOverloads::failOnWarning</a>().</p>
 </div><p>This function was introduced in Qt 6.11.</p>
 <!-- @@@failOnWarning -->
 <!-- $$$linkingTest[overload1]$$$linkingTest -->

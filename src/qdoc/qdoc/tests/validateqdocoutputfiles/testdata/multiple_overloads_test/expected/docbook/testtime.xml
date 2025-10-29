@@ -24,11 +24,11 @@
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="toString">
 <db:title>void TestTime::toString() const</db:title>
-<db:bridgehead renderas="sect2" xml:id="toString-1">void TestTime::toString(int <db:emphasis>format</db:emphasis>) const</db:bridgehead>
+<db:bridgehead renderas="sect2" xml:id="toString-2">void TestTime::toString(int <db:emphasis>format</db:emphasis>) const</db:bridgehead>
 <db:para>Returns the time as a string. The <db:code role="parameter">format</db:code> parameter determines the format of the result string.</db:para>
 <db:para>This uses shared comment nodes (multiple \fn commands) just like Eddy's qtbase change, which triggers the bug.</db:para>
 </db:section>
-<db:section xml:id="toString-2">
+<db:section xml:id="toString-1">
 <db:title>void TestTime::toString(const char *<db:emphasis>formatString</db:emphasis>) const</db:title>
 <db:para>Returns the time as a string using the specified <db:code role="parameter">formatString</db:code>.</db:para>
 <db:para>This function overloads <db:link xlink:href="testtime.xml#toString">TestTime::toString()</db:link>.</db:para>

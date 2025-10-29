@@ -202,24 +202,24 @@
 <db:title>Type copy(<db:emphasis>a</db:emphasis>)</db:title>
 <db:para>Returns another Type based on <db:code its:translate="no" role="parameter">a</db:code>.</db:para>
 </db:section>
-<db:section xml:id="disable-method">
-<db:title>disable()</db:title>
+<db:section xml:id="enable-method">
+<db:title>enable()</db:title>
 <db:methodsynopsis>
-<db:type></db:type>
-<db:methodname>disable</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">qmlmethod</db:synopsisinfo>
-<db:synopsisinfo role="signature">disable()</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
-<db:bridgehead renderas="sect2">enable()</db:bridgehead><db:methodsynopsis>
 <db:type></db:type>
 <db:methodname>enable</db:methodname>
 <db:void/>
 <db:synopsisinfo role="meta">qmlmethod</db:synopsisinfo>
 <db:synopsisinfo role="signature">enable()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:bridgehead renderas="sect2">disable()</db:bridgehead><db:methodsynopsis>
+<db:type></db:type>
+<db:methodname>disable</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">qmlmethod</db:synopsisinfo>
+<db:synopsisinfo role="signature">disable()</db:synopsisinfo>
 <db:synopsisinfo role="access">public</db:synopsisinfo>
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>

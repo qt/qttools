@@ -9,6 +9,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 SharedCommentNode::SharedCommentNode(QmlTypeNode *parent, int count, QString &group)
     : Node(NodeType::SharedComment, parent, group)
 {
@@ -18,12 +20,29 @@ SharedCommentNode::SharedCommentNode(QmlTypeNode *parent, int count, QString &gr
 /*!
   Searches the shared comment node's member nodes for function
   nodes. Each function node's overload flag is set.
+
+  If the shared comment is marked with \\overload primary, only the
+  first function in the collective is marked as the primary overload.
  */
 void SharedCommentNode::setOverloadFlags()
 {
+    // Check if this is \overload primary
+    const auto &overloadArgs = doc().overloadList();
+    bool isPrimaryOverload = !overloadArgs.isEmpty()
+        && overloadArgs.first().first == "__qdoc_primary_overload__"_L1;
+
+    size_t functionIndex = 0;
     for (auto *node : m_collective) {
-        if (node->isFunction())
-            static_cast<FunctionNode *>(node)->setOverloadFlag();
+        if (node->isFunction()) {
+            auto *fn = static_cast<FunctionNode *>(node);
+
+            // Only the FIRST function in a shared comment gets the primary flag
+            if (isPrimaryOverload && functionIndex == 0)
+                fn->setPrimaryOverloadFlag();
+
+            fn->setOverloadFlag();
+            ++functionIndex;
+        }
     }
 }
 

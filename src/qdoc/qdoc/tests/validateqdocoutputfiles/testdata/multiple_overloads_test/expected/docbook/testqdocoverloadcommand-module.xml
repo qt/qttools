@@ -31,6 +31,12 @@
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
+<db:term><db:link xlink:href="testpositiondependent.xml" xlink:role="class">TestPositionDependent</db:link></db:term>
+<db:listitem>
+<db:para>Test class to verify position-dependent primary overload behavior.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
 <db:term><db:link xlink:href="testtime.xml" xlink:role="class">TestTime</db:link></db:term>
 <db:listitem>
 <db:para>Test class simulating QTime.</db:para>
