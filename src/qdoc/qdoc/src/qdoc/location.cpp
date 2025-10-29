@@ -94,6 +94,37 @@ Location &Location::operator=(const Location &other)
 }
 
 /*!
+    Returns \c true if this instance points to the
+    same location as \a other.
+
+    Two locations are considered equal if both the
+    filePath() and lineNo() are equal, regardless of
+    stack depth.
+ */
+bool Location::operator==(const Location &other) const
+{
+    if (&other == this)
+        return true;
+
+    if (lineNo() != other.lineNo())
+        return false;
+
+    if (filePath() != other.filePath())
+        return false;
+
+    return true;
+}
+
+/*!
+    Returns \c true if this instance does not point to the
+    same location as \a other.
+ */
+bool Location::operator!=(const Location &other) const
+{
+    return !(*this == other);
+}
+
+/*!
   If the file position on top of the stack has a line number
   less than 1, set its line number to 1 and its column number
   to 1. Otherwise, do nothing.

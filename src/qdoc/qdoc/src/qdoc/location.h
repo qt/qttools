@@ -25,6 +25,8 @@ public:
     ~Location() { delete m_stk; }
 
     Location &operator=(const Location &other);
+    bool operator==(const Location &other) const;
+    bool operator!=(const Location &other) const;
 
     void start();
     void advance(QChar ch);

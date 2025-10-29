@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TestTime Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>QDoc multiple overloads test Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Test class simulating QTime.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TestTime</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class tests whether QDoc incorrectly reports &quot;Multiple primary overloads&quot; when different classes have methods with the same name, using shared comment nodes.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="toString">
+<db:title>void TestTime::toString() const</db:title>
+<db:bridgehead renderas="sect2" xml:id="toString-1">void TestTime::toString(int <db:emphasis>format</db:emphasis>) const</db:bridgehead>
+<db:para>Returns the time as a string. The <db:code role="parameter">format</db:code> parameter determines the format of the result string.</db:para>
+<db:para>This uses shared comment nodes (multiple \fn commands) just like Eddy's qtbase change, which triggers the bug.</db:para>
+</db:section>
+<db:section xml:id="toString-2">
+<db:title>void TestTime::toString(const char *<db:emphasis>formatString</db:emphasis>) const</db:title>
+<db:para>Returns the time as a string using the specified <db:code role="parameter">formatString</db:code>.</db:para>
+<db:para>This function overloads <db:link xlink:href="testtime.xml#toString">TestTime::toString()</db:link>.</db:para>
+</db:section>
+</db:section>
+</db:article>

@@ -32,5 +32,29 @@ public:
     static void linkingTest(const char *message);
 };
 
+class TestDate
+{
+public:
+    void toString() const;
+    void toString(int format) const;
+    void toString(const char *formatString) const;
+};
+
+class TestTime
+{
+public:
+    void toString() const;
+    void toString(int format) const;
+    void toString(const char *formatString) const;
+};
+
+class TestDateTime
+{
+public:
+    void toString() const;
+    void toString(int format) const;
+    void toString(const char *formatString) const;
+};
+
 #endif // TESTOVERLOADS_H
 

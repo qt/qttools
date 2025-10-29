@@ -207,3 +207,118 @@ void TestOverloads::linkingTest(const char *message)
 {
     // Implementation for overload that should link to primary
 }
+
+// Test case for multiple classes with same-named methods each marked as \overload primary
+// This should NOT generate warnings about "Multiple primary overloads"
+
+/*!
+    \class TestDate
+    \inmodule TestQDocOverloadCommand
+    \brief Test class simulating QDate.
+
+    This class tests whether QDoc incorrectly reports "Multiple primary overloads"
+    when different classes have methods with the same name, using shared comment nodes.
+*/
+
+/*!
+    \overload primary
+    \fn void TestDate::toString() const
+    \fn void TestDate::toString(int format) const
+
+    Returns the date as a string. The \a format parameter determines the format
+    of the result string.
+
+    This uses shared comment nodes (multiple \\fn commands) just like Eddy's
+    qtbase change, which triggers the bug.
+*/
+void TestDate::toString() const
+{
+}
+
+void TestDate::toString(int format) const
+{
+}
+
+/*!
+    \overload toString()
+
+    Returns the date as a string using the specified \a formatString.
+*/
+void TestDate::toString(const char *formatString) const
+{
+}
+
+/*!
+    \class TestTime
+    \inmodule TestQDocOverloadCommand
+    \brief Test class simulating QTime.
+
+    This class tests whether QDoc incorrectly reports "Multiple primary overloads"
+    when different classes have methods with the same name, using shared comment nodes.
+*/
+
+/*!
+    \overload primary
+    \fn void TestTime::toString() const
+    \fn void TestTime::toString(int format) const
+
+    Returns the time as a string. The \a format parameter determines the format
+    of the result string.
+
+    This uses shared comment nodes (multiple \\fn commands) just like Eddy's
+    qtbase change, which triggers the bug.
+*/
+void TestTime::toString() const
+{
+}
+
+void TestTime::toString(int format) const
+{
+}
+
+/*!
+    \overload toString()
+
+    Returns the time as a string using the specified \a formatString.
+*/
+void TestTime::toString(const char *formatString) const
+{
+}
+
+/*!
+    \class TestDateTime
+    \inmodule TestQDocOverloadCommand
+    \brief Test class simulating QDateTime.
+
+    This class tests whether QDoc incorrectly reports "Multiple primary overloads"
+    when different classes have methods with the same name, using shared comment nodes.
+*/
+
+/*!
+    \overload primary
+    \fn void TestDateTime::toString() const
+    \fn void TestDateTime::toString(int format) const
+
+    Returns the datetime as a string. The \a format parameter determines the format
+    of the result string.
+
+    This uses shared comment nodes (multiple \\fn commands) just like Eddy's
+    qtbase change, which triggers the bug.
+*/
+void TestDateTime::toString() const
+{
+}
+
+void TestDateTime::toString(int format) const
+{
+}
+
+/*!
+    \overload toString()
+
+    Returns the datetime as a string using the specified \a formatString.
+*/
+void TestDateTime::toString(const char *formatString) const
+{
+}
+

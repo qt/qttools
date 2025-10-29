@@ -607,25 +607,10 @@ void CppCodeParser::processOverloadCommand(Node *node, const Doc &doc)
         if (!overloadArgs.isEmpty()
             && overloadArgs.first().first == "__qdoc_primary_overload__"_L1) {
 
-            // Check for existing primary overloads with the same name
-            if (fn->parent() && fn->parent()->isAggregate()) {
-                auto *aggregate = static_cast<Aggregate *>(fn->parent());
-                const auto &overloads = aggregate->functionMap().value(fn->name());
-
-                auto existingPrimary = std::find_if(overloads.cbegin(), overloads.cend(),
-                    [fn](const FunctionNode *existing) {
-                        return existing != fn && existing->isPrimaryOverload();
-                    });
-
-                if (existingPrimary != overloads.cend()) {
-                    const QString previousLocation = "%1:%2"_L1.arg(
-                        (*existingPrimary)->doc().location().fileName(),
-                        QString::number((*existingPrimary)->doc().location().lineNo()));
-                    doc.location().warning(
-                        "Multiple primary overloads for '%1'. The previous primary is here: %2"_L1
-                            .arg(fn->name(), previousLocation));
-                }
-            }
+            // Note: We don't check for duplicate primary overloads here because
+            // Doc locations may not be fully initialized yet, especially for
+            // shared comment nodes with multiple \fn commands.
+            // The check is done later in Aggregate::normalizeOverloads().
 
             fn->setPrimaryOverloadFlag();
             // Primary overloads are still overloads, so set both flags

@@ -13,9 +13,27 @@
 <db:title>Classes</db:title>
 <db:variablelist role="classes">
 <db:varlistentry>
+<db:term><db:link xlink:href="testdate.xml" xlink:role="class">TestDate</db:link></db:term>
+<db:listitem>
+<db:para>Test class simulating QDate.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="testdatetime.xml" xlink:role="class">TestDateTime</db:link></db:term>
+<db:listitem>
+<db:para>Test class simulating QDateTime.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
 <db:term><db:link xlink:href="testoverloads.xml" xlink:role="class">TestOverloads</db:link></db:term>
 <db:listitem>
 <db:para>Demonstrates multiple overloads and the \overload primary feature.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="testtime.xml" xlink:role="class">TestTime</db:link></db:term>
+<db:listitem>
+<db:para>Test class simulating QTime.</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

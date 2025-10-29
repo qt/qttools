@@ -348,15 +348,25 @@ void Aggregate::normalizeOverloads()
             map_it.front()->setOverloadNumber(0);
         } else if (map_it.size() > 1) {
             // Check for multiple primary overloads before sorting
-            QStringList primaryOverloads;
+            std::vector<const FunctionNode*> primaryOverloads;
             for (const auto *fn : map_it) {
-                if (fn->isPrimaryOverload()) {
-                    const auto &location = "%1:%2"_L1.arg(
-                        fn->doc().location().fileName(),
-                        QString::number(fn->doc().location().lineNo()));
-                    primaryOverloads.append("%1 (%2)"_L1.arg(fn->signature(Node::SignaturePlain),
-                                                             location));
+                if (!fn->isPrimaryOverload())
+                    continue;
+
+                // Check if we already have a primary from a different location
+                const auto *currentLocation = &(fn->doc().location());
+                for (const auto *existingPrimary : primaryOverloads) {
+                    const auto *existingLocation = &(existingPrimary->doc().location());
+
+                    if (*currentLocation != *existingLocation) {
+                        fn->doc().location().warning(
+                            "Multiple primary overloads for '%1'. The previous primary is here: %2"_L1
+                                .arg(fn->name(), existingPrimary->doc().location().toString()));
+                        break;
+                    }
                 }
+
+                primaryOverloads.push_back(fn);
             }
 
             std::sort(map_it.begin(), map_it.end(),
