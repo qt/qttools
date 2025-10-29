@@ -204,7 +204,6 @@ private:
     static QHash<QString, QString> s_outputSuffixes;
     static bool s_noLinkErrors;
     static bool s_autolinkErrors;
-    static bool s_redirectDocumentationToDevNull;
     static bool s_useOutputSubdirs;
     static QmlTypeNode *s_qmlTypeContext;
 
@@ -212,6 +211,7 @@ private:
     static void copyTemplateFiles(const QString &configVar, const QString &subDir);
 
 protected:
+    static bool s_redirectDocumentationToDevNull;
     FileResolver& file_resolver;
 
     QDocDatabase *m_qdb { nullptr };
