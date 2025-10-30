@@ -1235,13 +1235,13 @@ CollectionNode *Tree::addToQmlModule(const QString &name, Node *node)
 }
 
 /*!
-  If the QML type map does not contain \a key, insert node
-  \a n with the specified \a key.
+  Inserts QML type node \a n with the specified \a key into the type map.
+  Since the map is a QMultiMap, multiple types with the same name can coexist
+  (e.g., Shape from different modules).
  */
 void Tree::insertQmlType(const QString &key, QmlTypeNode *n)
 {
-    if (!m_qmlTypeMap.contains(key))
-        m_qmlTypeMap.insert(key, n);
+    m_qmlTypeMap.insert(key, n);
 }
 
 /*!

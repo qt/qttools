@@ -1,0 +1,36 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule QtQuick.Shapes
+    \title Qt Quick Shapes QML Types
+    \brief Provides QML types for drawing shapes.
+*/
+
+/*!
+    \qmltype Shape
+    \inqmlmodule QtQuick.Shapes
+    \brief Base type for shapes in Qt Quick.
+
+    The Shape type provides a base for creating vector-based shapes
+    in Qt Quick applications.
+*/
+
+/*!
+    \qmltype Rectangle
+    \inqmlmodule QtQuick.Shapes
+    \inherits Shape
+    \brief A rectangular shape.
+
+    Rectangle is a shape that can be drawn with specific dimensions.
+*/
+
+/*!
+    \qmltype Circle
+    \inqmlmodule QtQuick.Shapes
+    \inherits Shape
+    \brief A circular shape.
+
+    Circle is a shape that can be drawn with a specific radius.
+*/
+

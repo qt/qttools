@@ -1,0 +1,35 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule Qt.labs.particles
+    \title Qt Labs Particles QML Types
+    \brief Provides QML types for particle effects.
+*/
+
+/*!
+    \qmltype Shape
+    \inqmlmodule Qt.labs.particles
+    \brief Defines the shape of a particle emitter.
+
+    The Shape type is used to define the geometric shape from which
+    particles are emitted in a particle system.
+*/
+
+/*!
+    \qmltype Emitter
+    \inqmlmodule Qt.labs.particles
+    \brief Emits particles.
+
+    The Emitter type uses a Shape to define where particles originate.
+*/
+
+/*!
+    \qmltype ParticleSystem
+    \inqmlmodule Qt.labs.particles
+    \inherits Shape
+    \brief A complete particle system.
+
+    ParticleSystem inherits from Shape to define the emission area.
+*/
+

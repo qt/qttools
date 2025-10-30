@@ -1,0 +1,23 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \page index.html
+    \title Name Collision Test
+
+    This test demonstrates QML type name collision handling.
+
+    Two different modules define types named "Shape":
+    \list
+    \li QtQuick.Shapes provides a Shape type for vector graphics
+    \li Qt.labs.particles provides a Shape type for particle emission
+    \endlist
+
+    Both types should appear in the documentation and maintain
+    correct "Inherited by" relationships.
+
+    \section1 All QML Types
+
+    \generatelist qmltypes
+*/
+

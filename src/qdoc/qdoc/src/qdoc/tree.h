@@ -50,7 +50,7 @@ public:
 
 typedef QMultiMap<QString, TargetRec *> TargetMap;
 typedef QMultiMap<QString, PageNode *> PageNodeMultiMap;
-typedef QMap<QString, QmlTypeNode *> QmlTypeMap;
+typedef QMultiMap<QString, QmlTypeNode *> QmlTypeMap;
 typedef QMultiMap<QString, const ExampleNode *> ExampleNodeMap;
 
 class Tree
