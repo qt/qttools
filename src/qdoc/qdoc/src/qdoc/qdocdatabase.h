@@ -138,10 +138,10 @@ private:
         return nullptr;
     }
 
-    QmlTypeNode *lookupQmlType(const QString &name)
+    QmlTypeNode *lookupQmlType(const QString &name, const Node *relative = nullptr)
     {
         for (const auto *tree : searchOrder()) {
-            QmlTypeNode *qcn = tree->lookupQmlType(name);
+            QmlTypeNode *qcn = tree->lookupQmlType(name, relative);
             if (qcn)
                 return qcn;
         }
@@ -206,12 +206,12 @@ public:
     void addExampleNode(ExampleNode *n) { primaryTree()->addExampleNode(n); }
     ExampleNodeMap &exampleNodeMap() { return primaryTree()->exampleNodeMap(); }
 
-    QmlTypeNode *findQmlType(const QString &name)
+    QmlTypeNode *findQmlType(const QString &name, const Node *relative = nullptr)
     {
-        return m_forest.lookupQmlType(name);
+        return m_forest.lookupQmlType(name, relative);
     }
-    QmlTypeNode *findQmlType(const QString &qmid, const QString &name);
-    QmlTypeNode *findQmlType(const ImportRec &import, const QString &name);
+    QmlTypeNode *findQmlType(const QString &qmid, const QString &name, const Node *relative = nullptr);
+    QmlTypeNode *findQmlType(const ImportRec &import, const QString &name, const Node *relative = nullptr);
     QmlTypeNode *findQmlTypeInPrimaryTree(const QString &qmid, const QString &name);
 
     static NodeMultiMap &obsoleteClasses() { return s_obsoleteClasses; }

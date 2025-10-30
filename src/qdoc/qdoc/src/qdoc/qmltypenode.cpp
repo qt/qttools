@@ -126,19 +126,28 @@ void QmlTypeNode::resolveInheritance(NodeMap &previousSearches)
         return;
 
     auto *base = static_cast<QmlTypeNode *>(previousSearches.value(m_qmlBaseName));
-    if (!previousSearches.contains(m_qmlBaseName)) {
+
+    // If the cached base is from a different module, we need to search again
+    // to respect module context for disambiguation
+    bool needsSearch = !previousSearches.contains(m_qmlBaseName);
+    if (!needsSearch && base && logicalModule() && base->logicalModule() != logicalModule())
+        needsSearch = true;
+
+    if (needsSearch) {
         for (const auto &imp : std::as_const(m_importList)) {
-            base = QDocDatabase::qdocDB()->findQmlType(imp, m_qmlBaseName);
+            base = QDocDatabase::qdocDB()->findQmlType(imp, m_qmlBaseName, this);
             if (base)
                 break;
         }
         if (!base) {
             if (m_qmlBaseName.contains(':'))
-                base = QDocDatabase::qdocDB()->findQmlType(m_qmlBaseName);
+                base = QDocDatabase::qdocDB()->findQmlType(m_qmlBaseName, this);
             else
-                base = QDocDatabase::qdocDB()->findQmlType(QString(), m_qmlBaseName);
+                base = QDocDatabase::qdocDB()->findQmlType(QString(), m_qmlBaseName, this);
         }
-        previousSearches.insert(m_qmlBaseName, base);
+        // Only cache if we don't have a module (to avoid polluting cache with module-specific results)
+        if (!logicalModule())
+            previousSearches.insert(m_qmlBaseName, base);
     }
 
     if (base) {

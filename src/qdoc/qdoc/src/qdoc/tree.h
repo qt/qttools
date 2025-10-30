@@ -150,10 +150,7 @@ private: // The rest of the class is private.
     CollectionNode *addToModule(const QString &name, Node *node);
     CollectionNode *addToQmlModule(const QString &name, Node *node);
 
-    [[nodiscard]] QmlTypeNode *lookupQmlType(const QString &name) const
-    {
-        return m_qmlTypeMap.value(name);
-    }
+    [[nodiscard]] QmlTypeNode *lookupQmlType(const QString &name, const Node *relative = nullptr) const;
     void insertQmlType(const QString &key, QmlTypeNode *n);
     void addExampleNode(ExampleNode *n) { m_exampleNodeMap.insert(n->title(), n); }
     ExampleNodeMap &exampleNodeMap() { return m_exampleNodeMap; }

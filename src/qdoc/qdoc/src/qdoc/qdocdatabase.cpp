@@ -636,13 +636,18 @@ void QDocDatabase::initializeDB()
   If the QML module id is empty, looks up the QML type by
   \a name only.
  */
-QmlTypeNode *QDocDatabase::findQmlType(const QString &qmid, const QString &name)
+QmlTypeNode *QDocDatabase::findQmlType(const QString &qmid, const QString &name, const Node *relative)
 {
     if (!qmid.isEmpty()) {
-        if (auto *qcn = m_forest.lookupQmlType(qmid + u"::"_s + name); qcn)
+        if (auto *qcn = m_forest.lookupQmlType(qmid + u"::"_s + name, relative); qcn)
             return qcn;
     }
 
+    // Try unqualified lookup first (uses context-aware disambiguation)
+    if (auto *qcn = m_forest.lookupQmlType(name, relative); qcn)
+        return qcn;
+
+    // Fallback to path-based search
     QStringList path(name);
     return static_cast<QmlTypeNode *>(m_forest.findNodeByNameAndType(path, &Node::isQmlType));
 }
@@ -652,7 +657,7 @@ QmlTypeNode *QDocDatabase::findQmlType(const QString &qmid, const QString &name)
   constructed from the strings in the import \a record and the
   QML type \a name. Returns \c nullptr if no type was not found.
  */
-QmlTypeNode *QDocDatabase::findQmlType(const ImportRec &record, const QString &name)
+QmlTypeNode *QDocDatabase::findQmlType(const ImportRec &record, const QString &name, const Node *relative)
 {
     if (record.isEmpty())
         return nullptr;
@@ -669,7 +674,7 @@ QmlTypeNode *QDocDatabase::findQmlType(const ImportRec &record, const QString &n
     }
 
     const QString qmName = record.m_importUri.isEmpty() ? record.m_moduleName : record.m_importUri;
-    return m_forest.lookupQmlType(qmName + u"::"_s + type);
+    return m_forest.lookupQmlType(qmName + u"::"_s + type, relative);
 }
 
 /*!

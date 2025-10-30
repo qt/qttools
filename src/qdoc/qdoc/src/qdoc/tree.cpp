@@ -534,7 +534,7 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
     int path_idx = 0;
     if ((genus == Genus::QML || genus == Genus::DontCare)
         && path.size() >= 2 && !path[0].isEmpty()) {
-        if (auto *qcn = lookupQmlType(path.sliced(0, 2).join(QLatin1String("::"))); qcn) {
+        if (auto *qcn = lookupQmlType(path.sliced(0, 2).join(QLatin1String("::")), start); qcn) {
             current = qcn;
             // No further elements in the path, return the type
             if (path.size() == 2)
@@ -689,7 +689,7 @@ const Node *Tree::findNode(const QStringList &path, const Node *start, int flags
         */
         if (((genus == Genus::QML) || (genus == Genus::DontCare)) && (path.size() >= 2)
             && !path[0].isEmpty()) {
-            QmlTypeNode *qcn = lookupQmlType(QString(path[0] + "::" + path[1]));
+            QmlTypeNode *qcn = lookupQmlType(QString(path[0] + "::" + path[1]), start);
             if (qcn != nullptr) {
                 node = qcn;
                 if (path.size() == 2)
@@ -1249,6 +1249,8 @@ CollectionNode *Tree::addToQmlModule(const QString &name, Node *node)
             QString key = qmid[i] + "::" + node->name();
             insertQmlType(key, n);
         }
+        // Also insert with unqualified name for context-aware disambiguation
+        insertQmlType(node->name(), n);
     }
     return cn;
 }
@@ -1261,6 +1263,37 @@ CollectionNode *Tree::addToQmlModule(const QString &name, Node *node)
 void Tree::insertQmlType(const QString &key, QmlTypeNode *n)
 {
     m_qmlTypeMap.insert(key, n);
+}
+
+/*!
+  Looks up and returns the QML type node identified by \a name. When multiple
+  types with the same name exist (e.g., Shape from different modules), prefers
+  the type from the same module as \a relative if provided. Returns the first
+  match if no module relationship exists, or nullptr if not found.
+ */
+QmlTypeNode *Tree::lookupQmlType(const QString &name, const Node *relative) const
+{
+    auto values = m_qmlTypeMap.values(name);
+    if (values.isEmpty())
+        return nullptr;
+
+    // If no context or only one match, return first result
+    if (!relative || values.size() == 1)
+        return values.first();
+
+    // Prefer types from the same module as the relative context
+    if (relative->isQmlType()) {
+        const auto *relativeQmlType = static_cast<const QmlTypeNode *>(relative);
+        const CollectionNode *relativeModule = relativeQmlType->logicalModule();
+
+        for (auto *candidate : values) {
+            if (candidate->logicalModule() == relativeModule)
+                return candidate;
+        }
+    }
+
+    // Fallback to first match
+    return values.first();
 }
 
 /*!
@@ -1280,7 +1313,7 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &path, const Parame
 {
     if (path.size() == 3 && !path[0].isEmpty()
         && ((genus == Genus::QML) || (genus == Genus::DontCare))) {
-        QmlTypeNode *qcn = lookupQmlType(QString(path[0] + "::" + path[1]));
+        QmlTypeNode *qcn = lookupQmlType(QString(path[0] + "::" + path[1]), relative);
         if (qcn == nullptr) {
             QStringList p(path[1]);
             Node *n = findNodeByNameAndType(p, &Node::isQmlType);
