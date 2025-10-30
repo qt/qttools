@@ -1,0 +1,10 @@
+project = QmlInheritedLink
+locationinfo = false
+warninglimit = 0
+warninglimit.enabled = true
+
+sourcedirs = src
+headerdirs = src
+
+sources.fileextensions = "*.cpp *.qdoc *.qml"
+headers.fileextensions = "*.h"

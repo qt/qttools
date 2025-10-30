@@ -1,0 +1,50 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule TestModule
+    \title Test QML Types
+    \brief Test module for QML inherited member link resolution.
+*/
+
+/*!
+    \qmltype BaseItem
+    \inqmlmodule TestModule
+    \brief A base QML type with properties.
+
+    BaseItem provides common properties for derived types.
+*/
+
+/*!
+    \qmlproperty string BaseItem::name
+    \brief The name property of the item.
+
+    This property holds the name identifier for the item.
+*/
+
+/*!
+    \qmlproperty int BaseItem::width
+    \brief The width of the item.
+
+    This property defines the width in pixels.
+*/
+
+/*!
+    \qmltype DerivedButton
+    \inqmlmodule TestModule
+    \inherits BaseItem
+    \brief A button derived from BaseItem.
+
+    DerivedButton inherits the \l name and \l width properties from BaseItem.
+    These links should resolve to BaseItem's properties, not to unrelated
+    global targets.
+
+    The \l name property can be set to identify this button.
+*/
+
+/*!
+    \qmlproperty bool DerivedButton::pressed
+    \brief Whether the button is currently pressed.
+
+    This property is specific to DerivedButton.
+*/

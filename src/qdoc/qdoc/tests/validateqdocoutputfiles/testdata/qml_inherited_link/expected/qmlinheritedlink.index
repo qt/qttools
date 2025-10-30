@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QmlInheritedLink Reference Documentation" version="" project="QmlInheritedLink">
+    <namespace name="" status="active" access="public" module="qmlinheritedlink">
+        <page name="qml-naming-reference.html" href="qml-naming-reference.html" status="active" location="reference.qdoc" documented="true" subtype="page" title="QML Naming Reference" fulltitle="QML Naming Reference" subtitle="">
+            <contents name="name-properties" title="Name Properties" level="1"/>
+            <contents name="name" title="name" level="2"/>
+            <contents name="width" title="width" level="2"/>
+        </page>
+        <qmlclass name="BaseItem" qml-module-name="TestModule" fullname="TestModule.BaseItem" href="qml-testmodule-baseitem.html" status="active" access="public" location="types.qdoc" documented="true" title="BaseItem" fulltitle="BaseItem" subtitle="" brief="A base QML type with properties">
+            <qmlproperty name="name" fullname="TestModule.BaseItem.name" href="qml-testmodule-baseitem.html#name-prop" status="active" access="public" location="types.qdoc" documented="true" type="string" attached="false" writable="true" brief="Property of the item"/>
+            <qmlproperty name="width" fullname="TestModule.BaseItem.width" href="qml-testmodule-baseitem.html#width-prop" status="active" access="public" location="types.qdoc" documented="true" type="int" attached="false" writable="true" brief="Of the item"/>
+        </qmlclass>
+        <qmlclass name="DerivedButton" qml-module-name="TestModule" qml-base-type="TestModule::BaseItem" fullname="TestModule.DerivedButton" href="qml-testmodule-derivedbutton.html" status="active" access="public" location="types.qdoc" documented="true" title="DerivedButton" fulltitle="DerivedButton" subtitle="" brief="A button derived from BaseItem">
+            <qmlproperty name="pressed" fullname="TestModule.DerivedButton.pressed" href="qml-testmodule-derivedbutton.html#pressed-prop" status="active" access="public" location="types.qdoc" documented="true" type="bool" attached="false" writable="true" brief="Whether the button is currently pressed"/>
+        </qmlclass>
+        <qmlmodule name="TestModule" qml-module-name="TestModule" href="testmodule-qmlmodule.html" status="active" location="types.qdoc" documented="true" seen="true" title="Test QML Types" brief="Test module for QML inherited member link resolution"/>
+    </namespace>
+</INDEX>

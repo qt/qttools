@@ -1,0 +1,22 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \page qml-naming-reference.html
+    \title QML Naming Reference
+    \inqmlmodule TestModule
+
+    This page documents QML naming conventions.
+
+    \section1 Name Properties
+
+    \section2 name
+
+    The name property is a common pattern in QML types for identification.
+    This section title creates a potential collision with BaseItem::name property.
+
+    \section2 width
+
+    The width property is commonly used for sizing elements.
+    This section title creates a potential collision with BaseItem::width property.
+*/

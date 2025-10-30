@@ -497,13 +497,14 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
     }
 
     /*
-      For C++ class contexts, prioritize hierarchical search (including base classes)
-      over global target maps. This allows inherited members to take precedence over
-      unrelated global targets such as section titles in other documentation pages.
-      See QTBUG-72107.
+      For C++ class and QML type contexts, prioritize hierarchical search (including
+      base classes/types) over global target maps. This allows inherited members to
+      take precedence over unrelated global targets such as section titles in other
+      documentation pages. See QTBUG-72107 and QTBUG-141606.
     */
-    const bool prioritizeHierarchy = start && start->isClassNode()
-                                     && (genus == Genus::CPP || genus == Genus::DontCare);
+    const bool prioritizeHierarchy = start &&
+                                     ((start->isClassNode() && (genus == Genus::CPP || genus == Genus::DontCare)) ||
+                                      (start->isQmlType() && (genus == Genus::QML || genus == Genus::DontCare)));
 
     const TargetRec *result = nullptr;
     if (!prioritizeHierarchy) {
@@ -647,6 +648,16 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
             }
         }
     }
+    if (((genus == Genus::QML) || (genus == Genus::DontCare)) && node->isQmlType()
+        && (flags & SearchBaseClasses)) {
+        const QmlTypeNode *qtn = static_cast<const QmlTypeNode *>(node);
+        while (qtn && qtn->qmlBaseNode()) {
+            qtn = qtn->qmlBaseNode();
+            const Node *t = matchPathAndTarget(path, idx, target, qtn, flags, genus, ref);
+            if (t && !t->isPrivate() && !t->isInternal())
+                return t;
+        }
+    }
     return nullptr;
 }
 
@@ -715,6 +726,14 @@ const Node *Tree::findNode(const QStringList &path, const Node *start, int flags
                             return enumNode;
                     if (next)
                         break;
+                }
+            }
+            if (!next && ((genus == Genus::QML) || (genus == Genus::DontCare))
+                && node->isQmlType() && (flags & SearchBaseClasses)) {
+                const QmlTypeNode *qtn = static_cast<const QmlTypeNode *>(node);
+                while (qtn && qtn->qmlBaseNode() && !next) {
+                    qtn = qtn->qmlBaseNode();
+                    next = qtn->findChildNode(path.at(i), genus, tmpFlags);
                 }
             }
             node = next;
