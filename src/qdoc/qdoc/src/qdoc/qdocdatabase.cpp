@@ -915,6 +915,7 @@ void QDocDatabase::resolveStuff()
         primaryTree()->markDontDocumentNodes();
         primaryTree()->removePrivateAndInternalBases(primaryTreeRoot());
         primaryTree()->resolveProperties();
+        primaryTree()->validatePropertyDocumentation(primaryTreeRoot());
         primaryTreeRoot()->markUndocumentedChildrenInternal();
         primaryTreeRoot()->resolveQmlInheritance();
         primaryTree()->resolveTargets(primaryTreeRoot());

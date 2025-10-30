@@ -5,10 +5,13 @@
 
 #include "classnode.h"
 #include "collectionnode.h"
+#include "config.h"
 #include "doc.h"
 #include "enumnode.h"
 #include "functionnode.h"
 #include "htmlgenerator.h"
+#include "inclusionfilter.h"
+#include "inclusionpolicy.h"
 #include "location.h"
 #include "node.h"
 #include "qdocdatabase.h"
@@ -16,6 +19,8 @@
 #include "typedefnode.h"
 
 QT_BEGIN_NAMESPACE
+
+using namespace Qt::StringLiterals;
 
 /*!
   \class Tree
@@ -289,6 +294,48 @@ void Tree::resolveProperties()
     }
 
     m_unresolvedPropertyMap.clear();
+}
+
+/*!
+    Validates that all properties in the documentation tree that require
+    documentation according to the inclusion policy have documentation.
+    Generates warnings for undocumented properties.
+
+    This method recursively traverses the tree starting from \a aggregate,
+    checking each PropertyNode for documentation. Properties without
+    documentation that require it according to the inclusion policy will
+    generate a warning.
+
+    \sa InclusionFilter::requiresDocumentation()
+ */
+void Tree::validatePropertyDocumentation(const Aggregate *aggregate) const
+{
+    const auto &config = Config::instance();
+    const InclusionPolicy policy = config.createInclusionPolicy();
+    validatePropertyDocumentation(aggregate, policy);
+}
+
+/*!
+    \internal
+    \overload
+
+    Private helper that takes \a policy by const reference to avoid
+    recreating it on each recursive call while traversing \a aggregate.
+ */
+void Tree::validatePropertyDocumentation(const Aggregate *aggregate, const InclusionPolicy &policy) const
+{
+    for (auto it = aggregate->constBegin(); it != aggregate->constEnd(); ++it) {
+        Node *node = *it;
+
+        if (node->isProperty() && !node->hasDoc() && !node->isWrapper()) {
+            const NodeContext context = node->createContext();
+            if (InclusionFilter::requiresDocumentation(policy, context))
+                node->location().warning(u"Undocumented property '%1'"_s.arg(node->plainFullName()));
+        }
+
+        if (node->isAggregate())
+            validatePropertyDocumentation(static_cast<Aggregate *>(node), policy);
+    }
 }
 
 /*!

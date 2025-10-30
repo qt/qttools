@@ -268,6 +268,20 @@
       \qmlproperty int MyWidget::count
       \endcode
 
+    \section1 Undocumented property '<name>'
+
+    This warning indicates that a C++ class has a Q_PROPERTY declaration that lacks
+    documentation. Properties are part of a class's public API and require
+    documentation using the \c \property command to describe their purpose,
+    valid values, and behavior.
+
+    \note If you see both "Cannot find '<ClassName::propertyName>' specified with
+    '\\property'" and "Undocumented property '<ClassName::propertyName>'" warnings
+    together, the \c \property command exists but cannot match the property in code.
+    Dual warnings indicate mismatched property documentation: the \c \property command
+    can't find its target, and the PropertyNode has no attached documentation. Check
+    that the fully qualified name matches exactly, including namespace and class scope.
+
     \section1 QML property documented multiple times: <identifier>
 
     QDoc uses this warning when it finds two QDoc comments that document

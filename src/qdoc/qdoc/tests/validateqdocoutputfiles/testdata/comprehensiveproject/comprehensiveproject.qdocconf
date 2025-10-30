@@ -12,9 +12,12 @@ headers.fileextensions = "*.h"
 # images
 imagedirs = ./src/images
 
-# zero warning policy
-warninglimit = 0
+# warning policy
+warninglimit = 2
 warninglimit.enabled = true
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
 
 # don't write host system-specific paths to index files
 locationinfo = false
@@ -62,7 +65,6 @@ macro.QDocTestVer       = "1.1"
 
 navigation.qmltypespage     = "QDoc.Test QML Module"
 navigation.qmltypestitle    = "Types"
-warninglimit += 1
 
 manifestmeta.examplecategories = "Application Examples" \
                                  "Desktop" \

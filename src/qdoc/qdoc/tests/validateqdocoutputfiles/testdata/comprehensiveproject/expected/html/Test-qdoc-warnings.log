@@ -1,0 +1,8 @@
+# QDoc Warning Log
+# Project: Test
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/testcpp.cpp:112: (qdoc) warning: Cannot find 'Test::id' specified with '\property' in any header file
+src/testcpp.h:19: (qdoc) warning: Undocumented property 'TestQDoc::Test::id'

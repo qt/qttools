@@ -21,6 +21,7 @@ QT_BEGIN_NAMESPACE
 class CollectionNode;
 class FunctionNode;
 class QDocDatabase;
+struct InclusionPolicy;
 
 struct TargetRec
 {
@@ -121,6 +122,7 @@ private: // The rest of the class is private.
     void resolveCppToQmlLinks();
     void resolveSince(Aggregate &aggregate);
     void resolveEnumValueSince(EnumNode &en);
+    void validatePropertyDocumentation(const Aggregate *aggregate) const;
     void removePrivateAndInternalBases(NamespaceNode *rootNode);
     NamespaceNode *root() { return &m_root; }
     [[nodiscard]] const NamespaceNode *root() const { return &m_root; }
@@ -160,6 +162,8 @@ private: // The rest of the class is private.
     FunctionNode *findMacroNode(const QString &t, const Aggregate *parent = nullptr);
 
 private:
+    void validatePropertyDocumentation(const Aggregate *aggregate, const InclusionPolicy &policy) const;
+
     QString m_camelCaseModuleName {};
     QString m_physicalModuleName {};
     QString m_indexFileName {};
