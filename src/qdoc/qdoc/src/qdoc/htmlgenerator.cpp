@@ -3461,7 +3461,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
             out() << R"(<h3 class="fn fngroupitem" translate="no" id=")" << nodeRef << "\">";
             generateSynopsis(sharedNode, relative, marker, Section::Details);
             generateSourceLink(sharedNode);
-            out() << "</h3>";
+            out() << "</h3>\n";
         }
         if (collective.size() > 1)
             out() << "</div>";
