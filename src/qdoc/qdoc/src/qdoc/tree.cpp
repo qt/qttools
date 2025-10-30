@@ -496,18 +496,30 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
         }
     }
 
-    const TargetRec *result = findUnambiguousTarget(path.join(QLatin1String("::")), genus);
-    if (result) {
-        ref = result->m_ref;
-        if (node = set_ref_from_target(result->m_node); node) {
-            // Delay returning references to section titles as we
-            // may find a better match below
-            if (result->m_type != TargetRec::Contents) {
-                if (targetType)
-                    *targetType = result->m_type;
-                return node;
+    /*
+      For C++ class contexts, prioritize hierarchical search (including base classes)
+      over global target maps. This allows inherited members to take precedence over
+      unrelated global targets such as section titles in other documentation pages.
+      See QTBUG-72107.
+    */
+    const bool prioritizeHierarchy = start && start->isClassNode()
+                                     && (genus == Genus::CPP || genus == Genus::DontCare);
+
+    const TargetRec *result = nullptr;
+    if (!prioritizeHierarchy) {
+        result = findUnambiguousTarget(path.join(QLatin1String("::")), genus);
+        if (result) {
+            ref = result->m_ref;
+            if (node = set_ref_from_target(result->m_node); node) {
+                // Delay returning references to section titles as we
+                // may find a better match below
+                if (result->m_type != TargetRec::Contents) {
+                    if (targetType)
+                        *targetType = result->m_type;
+                    return node;
+                }
+                ref.clear();
             }
-            ref.clear();
         }
     }
 
@@ -539,6 +551,19 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
         }
         current = current->parent();
         path_idx = 0;
+    }
+
+    // If we prioritized hierarchy but found nothing, try global targets as fallback
+    if (prioritizeHierarchy) {
+        result = findUnambiguousTarget(path.join(QLatin1String("::")), genus);
+        if (result) {
+            ref = result->m_ref;
+            if (node = set_ref_from_target(result->m_node); node) {
+                if (targetType)
+                    *targetType = result->m_type;
+                return node;
+            }
+        }
     }
 
     if (node && result) {

@@ -1,0 +1,18 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \page stylereference.html
+    \title Style Reference
+    \inmodule TestModule
+
+    This page documents various style properties.
+
+    \section1 Common Properties
+
+    \section2 color
+
+    The color property defines the foreground color of an element.
+    This section title creates a potential collision with Widget::color property.
+*/
+

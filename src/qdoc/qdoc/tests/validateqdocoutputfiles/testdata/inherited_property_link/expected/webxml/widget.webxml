@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Widget" href="widget.html" status="active" access="public" location="widget.h" documented="true" module="TestModule" brief="Base widget class">
+            <description>
+                <brief>Base widget class.</brief>
+            </description>
+            <function name="getColor" fullname="Widget::getColor" href="widget.html#getColor" status="active" access="public" location="widget.h" documented="true" meta="plain" const="true" type="int" brief="Returns the widget color" signature="int getColor() const">
+                <description>
+                    <brief>Returns the widget color.</brief>
+                </description>
+            </function>
+            <function name="setColor" fullname="Widget::setColor" href="widget.html#setColor" status="active" access="public" location="widget.h" documented="true" meta="plain" type="void" brief="Sets the widget color to c" signature="void setColor(int c)">
+                <parameter type="int" name="c" default=""/>
+                <description>
+                    <brief>Sets the widget color to <argument>c</argument>.</brief>
+                </description>
+            </function>
+            <variable name="color" fullname="Widget::color" href="widget.html#color-var" status="active" access="public" location="widget.h" documented="true" type="int" static="false" brief="Of the widget">
+                <description>
+                    <brief>This variable holds The color of the widget..</brief>
+                </description>
+            </variable>
+        </class>
+    </document>
+</WebXML>

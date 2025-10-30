@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="stylereference.html" href="stylereference.html" status="active" location="stylereference.qdoc" documented="true" subtype="page" title="Style Reference" fulltitle="Style Reference" subtitle="">
+            <contents name="common-properties" title="Common Properties" level="1"/>
+            <contents name="color" title="color" level="2"/>
+            <description>
+                <para>This page documents various style properties.</para>
+                <section id="common-properties">
+                    <heading level="1">Common Properties</heading>
+                </section>
+                <section id="color">
+                    <heading level="2">color</heading>
+                    <para>The color property defines the foreground color of an element. This section title creates a potential collision with <link raw="Widget::color" href="widget.html#color-var" type="variable">Widget::color</link> property.</para>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>

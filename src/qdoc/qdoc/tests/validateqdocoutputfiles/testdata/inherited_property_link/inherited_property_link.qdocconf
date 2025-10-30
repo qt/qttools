@@ -1,0 +1,24 @@
+project = InheritedPropertyLink
+locationinfo = false
+warninglimit = 0
+warninglimit.enabled = true
+
+sourcedirs = src
+headerdirs = src
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+macro.begincomment = "\\c{/*}"
+macro.endcomment = "\\c{*/}"
+
+outputformats             = WebXML HTML DocBook
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+

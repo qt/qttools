@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Button" href="button.html" status="active" access="public" location="widget.h" documented="true" bases="Widget" module="TestModule" brief="A button widget">
+            <description>
+                <brief>A button widget.</brief>
+                <para>The Button class inherits the <link raw="color" href="widget.html#color-var" type="variable">color</link> variable from Widget. This link should resolve to <link raw="Widget::color" href="widget.html#color-var" type="variable">Widget::color</link>, not to the &quot;color&quot; section in the style reference page.</para>
+            </description>
+            <function name="click" fullname="Button::click" href="button.html#click" status="active" access="public" location="widget.h" documented="true" meta="plain" type="void" brief="Simulates a button click" signature="void click()">
+                <description>
+                    <brief>Simulates a button click.</brief>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

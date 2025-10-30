@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Widget Class</db:title>
+<db:productname>InheritedPropertyLink</db:productname>
+<db:titleabbrev>InheritedPropertyLink Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Base widget class.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>Widget</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherited By</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="button.xml" xlink:role="class">Button</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="getColor">
+<db:title>int Widget::getColor() const</db:title>
+<db:para>Returns the widget color.</db:para>
+</db:section>
+<db:section xml:id="setColor">
+<db:title>void Widget::setColor(int <db:emphasis>c</db:emphasis>)</db:title>
+<db:para>Sets the widget color to <db:code role="parameter">c</db:code>.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="member-variable-documentation">
+<db:title>Member Variable Documentation</db:title>
+<db:section xml:id="color-var">
+<db:title>int Widget::color</db:title>
+<db:para>This variable holds the color of the widget.</db:para>
+</db:section>
+</db:section>
+</db:article>

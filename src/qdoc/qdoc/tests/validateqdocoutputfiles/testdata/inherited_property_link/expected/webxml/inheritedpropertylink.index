@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="InheritedPropertyLink Reference Documentation" version="" project="InheritedPropertyLink">
+    <namespace name="" status="active" access="public" module="inheritedpropertylink">
+        <class name="Button" href="button.html" status="active" access="public" location="widget.h" documented="true" bases="Widget" module="TestModule" brief="A button widget">
+            <function name="click" fullname="Button::click" href="button.html#click" status="active" access="public" location="widget.h" documented="true" meta="plain" type="void" brief="Simulates a button click" signature="void click()"/>
+        </class>
+        <class name="Widget" href="widget.html" status="active" access="public" location="widget.h" documented="true" module="TestModule" brief="Base widget class">
+            <function name="getColor" fullname="Widget::getColor" href="widget.html#getColor" status="active" access="public" location="widget.h" documented="true" meta="plain" const="true" type="int" brief="Returns the widget color" signature="int getColor() const"/>
+            <function name="setColor" fullname="Widget::setColor" href="widget.html#setColor" status="active" access="public" location="widget.h" documented="true" meta="plain" type="void" brief="Sets the widget color to c" signature="void setColor(int c)">
+                <parameter type="int" name="c" default=""/>
+            </function>
+            <variable name="color" fullname="Widget::color" href="widget.html#color-var" status="active" access="public" location="widget.h" documented="true" type="int" static="false" brief="Of the widget"/>
+        </class>
+        <page name="stylereference.html" href="stylereference.html" status="active" location="stylereference.qdoc" documented="true" subtype="page" title="Style Reference" fulltitle="Style Reference" subtitle="">
+            <contents name="common-properties" title="Common Properties" level="1"/>
+            <contents name="color" title="color" level="2"/>
+        </page>
+        <module name="TestModule" href="testmodule-module.html" status="active" documented="true" seen="true" title="Test Module"/>
+    </namespace>
+</INDEX>
