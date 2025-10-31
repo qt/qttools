@@ -47,11 +47,18 @@ void QmlTypeNode::addInheritedBy(const Node *base, Node *sub)
 /*!
   Loads the list \a subs with the nodes of all the subclasses of \a base.
  */
-void QmlTypeNode::subclasses(const Node *base, NodeList &subs)
+void QmlTypeNode::subclasses(const Node *base, NodeList &subs, bool recurse)
 {
-    subs.clear();
     if (s_inheritedBy.count(base) > 0) {
-        subs = s_inheritedBy.values(base);
+        if (recurse) {
+            for (auto *sub : s_inheritedBy.values(base)) {
+                if (!subs.contains(sub)) {
+                    subs.append(sub);
+                    QmlTypeNode::subclasses(sub, subs, recurse);
+                }
+            }
+        } else
+            subs = s_inheritedBy.values(base);
     }
 }
 

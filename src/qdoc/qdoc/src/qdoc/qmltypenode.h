@@ -48,7 +48,7 @@ public:
     void resolveInheritance(NodeMap &previousSearches);
     void checkInheritance();
     static void addInheritedBy(const Node *base, Node *sub);
-    static void subclasses(const Node *base, NodeList &subs);
+    static void subclasses(const Node *base, NodeList &subs, bool recurse = false);
     static void terminate();
     bool inherits(Aggregate *type);
 

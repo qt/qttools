@@ -944,6 +944,8 @@ void QDocDatabase::resolveBaseClasses()
     Tree *t = m_forest.firstTree();
     while (t) {
         t->resolveBaseClasses(t->root());
+        if (t != primaryTree())
+            t->root()->resolveQmlInheritance();
         t = m_forest.nextTree();
     }
 }

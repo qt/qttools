@@ -2184,7 +2184,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     // add the inherits to the map
     QmlTypeNode *base = qcn->qmlBaseNode();
     NodeList subs;
-    QmlTypeNode::subclasses(qcn, subs);
+    QmlTypeNode::subclasses(qcn, subs, true);
     QStringList knownTypeNames{qcn->name()};
 
     const InclusionPolicy policy = Config::instance().createInclusionPolicy();
