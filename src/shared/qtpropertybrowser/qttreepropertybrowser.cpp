@@ -13,7 +13,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
-#include <QtWidgets/QItemDelegate>
+#include <QtWidgets/QStyledItemDelegate>
 #include <QtWidgets/QStyle>
 #include <QtWidgets/QTreeWidget>
 
@@ -186,11 +186,11 @@ void QtPropertyEditorView::mousePressEvent(QMouseEvent *event)
 }
 
 // ------------ QtPropertyEditorDelegate
-class QtPropertyEditorDelegate : public QItemDelegate
+class QtPropertyEditorDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    using QItemDelegate::QItemDelegate;
+    using QStyledItemDelegate::QStyledItemDelegate;
 
     void setEditorPrivate(QtTreePropertyBrowserPrivate *editorPrivate)
         { m_editorPrivate = editorPrivate; }
@@ -334,7 +334,7 @@ void QtPropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewIt
     if (c.isValid())
         painter->fillRect(option.rect, c);
     opt.state &= ~QStyle::State_HasFocus;
-    QItemDelegate::paint(painter, opt, index);
+    QStyledItemDelegate::paint(painter, opt, index);
 
     opt.palette.setCurrentColorGroup(QPalette::Active);
     QColor color = static_cast<QRgb>(QApplication::style()->styleHint(QStyle::SH_Table_GridLineColor, &opt));
@@ -350,7 +350,7 @@ void QtPropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewIt
 QSize QtPropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option,
             const QModelIndex &index) const
 {
-    return QItemDelegate::sizeHint(option, index) + QSize(3, 4);
+    return QStyledItemDelegate::sizeHint(option, index) + QSize(3, 4);
 }
 
 bool QtPropertyEditorDelegate::eventFilter(QObject *object, QEvent *event)
@@ -360,7 +360,7 @@ bool QtPropertyEditorDelegate::eventFilter(QObject *object, QEvent *event)
         if (fe->reason() == Qt::ActiveWindowFocusReason)
             return false;
     }
-    return QItemDelegate::eventFilter(object, event);
+    return QStyledItemDelegate::eventFilter(object, event);
 }
 
 //  -------- QtTreePropertyBrowserPrivate implementation
