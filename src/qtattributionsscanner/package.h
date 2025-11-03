@@ -37,6 +37,7 @@ struct Package {
     QStringList purlList; // List of PURL values. Optional.
 
     QString packageComment; // Further comments about the package. Optional.
+    QString filePath; // Path of the file this information was extracted from.
 };
 
 #endif // PACKAGE_H

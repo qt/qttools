@@ -24,9 +24,16 @@ static void missingPropertyWarning(const QString &filePath, const QString &prope
                                 QDir::toNativeSeparators(filePath), property)) << std::endl;
 }
 
-static bool validatePackage(Package &p, const QString &filePath, Checks checks, LogLevel logLevel)
+static bool validatePackage(Package &p, Checks checks, LogLevel logLevel)
 {
+    const auto &filePath = p.filePath;
     bool validPackage = true;
+
+    if (filePath.isEmpty()) {
+        std::cerr << qPrintable(tr("The origin file of package '%1' was not recorded.")
+            .arg(p.id));
+        return false;
+    }
 
     if (p.qtParts.isEmpty())
         p.qtParts << u"libs"_s;
@@ -256,6 +263,7 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
     Package p;
     bool validPackage = true;
     const QString directory = QFileInfo(filePath).absolutePath();
+    p.filePath = QFileInfo(filePath).absoluteFilePath();
     p.path = directory;
 
     for (auto iter = object.constBegin(); iter != object.constEnd(); ++iter) {
@@ -423,7 +431,7 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         p.licenseFilesContents << QString::fromUtf8(file.readAll()).trimmed();
     }
 
-    if (!validatePackage(p, filePath, checks, logLevel) || !validPackage)
+    if (!validatePackage(p, checks, logLevel) || !validPackage)
         return std::nullopt;
 
     return p;
@@ -473,6 +481,7 @@ static Package parseChromiumFile(QFile &file, const QString &filePath, LogLevel 
             : fields["Name"_L1];
     QString version = fields[u"Version"_s];
 
+    p.filePath = QFileInfo(filePath).absoluteFilePath();
     p.id =  u"chromium-"_s + shortName.toLower().replace(QChar::Space, u"-"_s);
     p.name = fields[u"Name"_s];
     if (version != QLatin1Char('0')) // "0" : not applicable
@@ -500,7 +509,7 @@ static Package parseChromiumFile(QFile &file, const QString &filePath, LogLevel 
     }
 
     // let's ignore warnings regarding Chromium files for now
-    Q_UNUSED(validatePackage(p, filePath, {}, logLevel));
+    Q_UNUSED(validatePackage(p, {}, logLevel));
 
     return p;
 }
