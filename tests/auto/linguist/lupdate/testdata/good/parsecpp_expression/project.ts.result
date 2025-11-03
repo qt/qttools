@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1">
+<context>
+    <name>Context</name>
+    <message numerus="yes">
+        <location filename="main.cpp" line="53"/>
+        <source>Single parens around identifier</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="54"/>
+        <source>Double parens</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="55"/>
+        <source>Triple parens</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="56"/>
+        <source>Many nested parens</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="57"/>
+        <source>Parens around number</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="58"/>
+        <source>Parens around expression</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="59"/>
+        <source>Parens around complex expr</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="60"/>
+        <source>Parens with operators</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="61"/>
+        <source>Nested parens with operators</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="62"/>
+        <source>Empty parens case</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="66"/>
+        <source>Simple scope resolution</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="67"/>
+        <source>Nested namespace scope</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="69"/>
+        <source>Scope with static member</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="71"/>
+        <source>Global scope</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="72"/>
+        <source>Long scope chain</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="77"/>
+        <source>Parens around scope resolution</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="78"/>
+        <source>Double parens around scope</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="80"/>
+        <source>Scope in paren expr</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="84"/>
+        <source>Simple template</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="85"/>
+        <source>Template with scope</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="86"/>
+        <source>Double template</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="88"/>
+        <source>Nested template</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="90"/>
+        <source>Template with parens</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="94"/>
+        <source>static_cast with scope resolution</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="96"/>
+        <source>static_cast in parens</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="98"/>
+        <source>reinterpret_cast</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="100"/>
+        <source>const_cast</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="101"/>
+        <source>C-style cast</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="102"/>
+        <source>Functional cast</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="106"/>
+        <source>Triple combo</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="108"/>
+        <source>Nested cast with scope</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="110"/>
+        <source>Template with multi-scope</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="112"/>
+        <source>Parens around cast with template</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="114"/>
+        <source>Double nested template</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="116"/>
+        <source>Mixed angle and scope</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="122"/>
+        <source>Arrow operator</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="123"/>
+        <source>Arrow with scope</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="125"/>
+        <source>Parens around arrow</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="129"/>
+        <source>Greater than</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="130"/>
+        <source>Less than</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="131"/>
+        <source>Greater or equal</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="132"/>
+        <source>Less or equal</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="133"/>
+        <source>Equal</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="134"/>
+        <source>Not equal</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="138"/>
+        <source>Array subscript</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="139"/>
+        <source>Array with expression 1</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="140"/>
+        <source>Array with expression 2</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="144"/>
+        <source>Dot operator</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="145"/>
+        <source>Dot member access</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="149"/>
+        <source>Dereference</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="150"/>
+        <source>Address of</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="151"/>
+        <source>Logical not</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="152"/>
+        <source>Bitwise not</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="153"/>
+        <source>Unary minus</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="154"/>
+        <source>Unary plus</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="158"/>
+        <source>Division</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="159"/>
+        <source>Modulo</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="160"/>
+        <source>Bitwise AND</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="161"/>
+        <source>Bitwise OR</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="162"/>
+        <source>Bitwise XOR</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="163"/>
+        <source>Bitwise right shift</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="167"/>
+        <source>Logical AND</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="168"/>
+        <source>Logical OR</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="172"/>
+        <source>Ternary operator</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="173"/>
+        <source>Bitwise left shift</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+</context>
+</TS>
