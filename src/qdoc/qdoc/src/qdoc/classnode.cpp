@@ -7,8 +7,13 @@
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
+#include "utilities.h"
+
+#include <QtCore/qlatin1stringview.h>
 
 QT_BEGIN_NAMESPACE
+
+using namespace Qt::StringLiterals;
 
 /*!
   \class ClassNode
@@ -171,6 +176,137 @@ bool ClassNode::docMustBeGenerated() const
 }
 
 /*!
+  \brief Detects circular relationships in class hierarchies.
+
+  Traverses the hierarchy in the specified \a direction (Base or Derived),
+  checking only private/internal nodes to detect cycles that could cause
+  infinite loops during base/derived class promotion.
+
+  If \a cyclePath is provided, it will be filled with the names of
+  classes forming the cycle (e.g., ["A", "B", "C", "A"]).
+
+  Returns true if a cycle is detected.
+
+  \sa detectCycleRecursive().
+ */
+bool ClassNode::hasCircularRelationship(HierarchyDirection direction,
+                                        QStringList *cyclePath) const
+{
+    QMap<const ClassNode*, Color> colors;
+    QList<const ClassNode*> path;
+
+    bool cycleFound = detectCycleRecursive(direction, colors, path);
+
+    if (cycleFound && cyclePath) {
+        cyclePath->clear();
+
+        if (!path.isEmpty()) {
+            const ClassNode *repeatedNode = path.last();
+            auto first = path.indexOf(repeatedNode);
+            if (first != -1 && first < path.size() - 1)
+                path = path.mid(first);
+        }
+
+        for (const ClassNode *node : path)
+            cyclePath->append(node->name());
+    }
+
+    return cycleFound;
+}
+
+/*!
+  Recursive helper for cycle detection using three-color DFS.
+
+  Colors represent node states:
+  \list
+      \li White: Unvisited.
+      \li Gray: Currently being processed (on recursion stack).
+      \li Black: Fully processed (all descendants explored).
+  \endlist
+
+  Returns true if a cycle is detected. The \a path list will contain
+  the nodes that form the cycle.
+
+  \sa hasCircularRelationship().
+*/
+bool ClassNode::detectCycleRecursive(HierarchyDirection direction,
+                                     QMap<const ClassNode*, Color> &colors,
+                                     QList<const ClassNode*> &path) const
+{
+    colors[this] = Color::Gray;
+    path.append(this);
+
+    const QList<RelatedClass> &related = (direction == HierarchyDirection::Base)
+                                          ? baseClasses()
+                                          : derivedClasses();
+
+    for (const auto &relatedClass : related) {
+        const ClassNode *rc = relatedClass.m_node;
+        if (rc == nullptr)
+            rc = QDocDatabase::qdocDB()->findClassNode(relatedClass.m_path);
+
+        if (rc != nullptr && (rc->isPrivate() || rc->isInternal() || rc->isDontDocument())) {
+            if (rc == this) {
+                qCDebug(lcQdoc) << "Skipping self-reference (CRTP-like) in" << this->name();
+                continue;
+            }
+
+            Color rcColor = colors.value(rc, Color::White);
+
+            if (rcColor == Color::Gray) {
+                path.append(rc);
+                return true;
+            }
+
+            if (rcColor == Color::White) {
+                if (rc->detectCycleRecursive(direction, colors, path))
+                    return true;
+            }
+        }
+    }
+
+    colors[this] = Color::Black;
+    path.removeLast();
+
+    return false;
+}
+
+/*!
+  Checks if this class has circular inheritance by traversing its
+  base class hierarchy. Returns true if a cycle is detected.
+
+  If \a cyclePath is provided, it will be filled with the names of
+  classes forming the cycle (e.g., ["A", "B", "C", "A"]).
+
+  This method is used to detect problematic inheritance patterns
+  before performing operations like base class promotion that could
+  infinite loop on circular hierarchies.
+
+  \sa hasCircularDerivedClasses(), hasCircularRelationship().
+ */
+bool ClassNode::hasCircularInheritance(QStringList *cyclePath) const
+{
+    return hasCircularRelationship(HierarchyDirection::Base, cyclePath);
+}
+
+/*!
+  Checks if this class has circular derived class relationships by
+  traversing its derived class hierarchy. Returns true if a cycle is detected.
+
+  If \a cyclePath is provided, it will be filled with the names of
+  classes forming the cycle.
+
+  This is similar to hasCircularInheritance() but checks the derived
+  direction instead of the base direction.
+
+  \sa hasCircularInheritance(), hasCircularRelationship.
+ */
+bool ClassNode::hasCircularDerivedClasses(QStringList *cyclePath) const
+{
+    return hasCircularRelationship(HierarchyDirection::Derived, cyclePath);
+}
+
+/*!
   A base class of this class node was private or internal.
   That node's list of \a bases is traversed in this function.
   Each of its public base classes is promoted to be a base
@@ -218,7 +354,11 @@ void ClassNode::removePrivateAndInternalBases()
             RelatedClass rc = m_bases.at(i);
             m_bases.removeAt(i);
             m_ignoredBases.append(rc);
-            promotePublicBases(bc->baseClasses());
+            QStringList cyclePath;
+            if (bc->hasCircularInheritance(&cyclePath))
+                bc->location().warning("Circular inheritance detected: %1"_L1.arg(cyclePath.join(" -> ")));
+            else
+                promotePublicBases(bc->baseClasses());
         } else {
             ++i;
         }
@@ -229,10 +369,23 @@ void ClassNode::removePrivateAndInternalBases()
     while (i < m_derived.size()) {
         ClassNode *dc = m_derived.at(i).m_node;
         if (dc != nullptr && (dc->isPrivate() || dc->isInternal() || dc->isDontDocument())) {
-            m_derived.removeAt(i);
-            const QList<RelatedClass> &dd = dc->derivedClasses();
-            for (qsizetype j = dd.size() - 1; j >= 0; --j)
-                m_derived.insert(i, dd.at(j));
+            QStringList derivedCyclePath;
+            if (dc->hasCircularDerivedClasses(&derivedCyclePath)) {
+                dc->location().warning(QStringLiteral("Circular derived class relationship detected: %1").arg(derivedCyclePath.join(" -> ")));
+                m_derived.removeAt(i);
+            } else {
+                m_derived.removeAt(i);
+                const QList<RelatedClass> &dd = dc->derivedClasses();
+                for (qsizetype j = dd.size() - 1; j >= 0; --j) {
+                    // Skip CRTP self-references to avoid infinite loops
+                    if (dd.at(j).m_node != dc) {
+                        m_derived.insert(i, dd.at(j));
+                    } else {
+                        qCDebug(lcQdoc) << "Skipping CRTP self-reference in derived class promotion for"
+                                        << dc->name();
+                    }
+                }
+            }
         } else {
             ++i;
         }

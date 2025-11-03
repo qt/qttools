@@ -9,6 +9,7 @@
 
 #include <QtCore/qglobal.h>
 #include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
 #include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
@@ -52,6 +53,20 @@ public:
     void insertQmlNativeType(QmlTypeNode *qmlTypeNode) { m_nativeTypeForQml << qmlTypeNode; }
     bool isQmlNativeType() { return !m_nativeTypeForQml.empty(); }
     const QSet<QmlTypeNode *> &qmlNativeTypes() { return m_nativeTypeForQml; }
+
+    enum class HierarchyDirection { Base, Derived };
+
+    [[nodiscard]] bool hasCircularInheritance(QStringList *cyclePath = nullptr) const;
+    [[nodiscard]] bool hasCircularDerivedClasses(QStringList *cyclePath = nullptr) const;
+
+private:
+    enum class Color { White, Gray, Black };
+
+    [[nodiscard]] bool hasCircularRelationship(HierarchyDirection direction,
+                                               QStringList *cyclePath) const;
+    [[nodiscard]] bool detectCycleRecursive(HierarchyDirection direction,
+                                            QMap<const ClassNode*, Color> &colors,
+                                            QList<const ClassNode*> &path) const;
 
 private:
     void promotePublicBases(const QList<RelatedClass> &bases);
