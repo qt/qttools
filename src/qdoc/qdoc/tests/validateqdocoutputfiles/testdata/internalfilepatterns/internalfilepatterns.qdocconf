@@ -1,0 +1,28 @@
+project = InternalFilePatterns
+description = Tests file pattern matching for internal status
+
+locationinfo = false
+
+headerdirs = ./src
+sourcedirs = ./src
+
+outputformats             = WebXML HTML DocBook
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+# Log warnings to file for verification
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+
+# Enable pattern matching for internal files
+# Tests both filename patterns (*_p.h) and directory patterns (.*/internal/.*\.h)
+# The regex pattern matches any .h file in any internal/ directory at any depth
+internalfilepatterns = *_p.h .*/internal/.*\.h
+

@@ -192,6 +192,16 @@ public:
         QSet<QString> excluded_files;
     };
     const ExcludedPaths& getExcludedPaths();
+    [[nodiscard]] QSet<QString> getInternalFilePatterns() const;
+
+    struct InternalFilePatterns {
+        QSet<QString> exactMatches;                 // Patterns without wildcards
+        QList<QRegularExpression> globPatterns;     // Glob patterns (match filename only)
+        QList<QRegularExpression> regexPatterns;    // Regex patterns (match full path)
+    };
+    const InternalFilePatterns& getInternalFilePatternsCompiled();
+    static bool matchesInternalFilePattern(const QString &filePath,
+                                          const InternalFilePatterns &patterns) noexcept;
 
     struct SourceLink {
         QString baseUrl;
@@ -229,6 +239,7 @@ private:
     QString m_previousCurrentDir {};
     std::optional<ExcludedPaths> m_excludedPaths{};
     std::optional<SourceLink> m_sourceLink{};
+    std::optional<InternalFilePatterns> m_internalFilePatterns{};
 
     bool m_showInternal { false };
     static bool m_debug;
@@ -294,6 +305,7 @@ struct ConfigStrings
     static QString IMAGES;
     static QString INCLUDEPATHS;
     static QString INCLUDEPRIVATE;
+    static QString INTERNALFILEPATTERNS;
     static QString INCLUSIVE;
     static QString INDEXES;
     static QString LANDINGPAGE;
@@ -383,6 +395,7 @@ struct ConfigStrings
 #define CONFIG_IMAGESOUTPUTDIR ConfigStrings::IMAGESOUTPUTDIR
 #define CONFIG_INCLUDEPATHS ConfigStrings::INCLUDEPATHS
 #define CONFIG_INCLUDEPRIVATE ConfigStrings::INCLUDEPRIVATE
+#define CONFIG_INTERNALFILEPATTERNS ConfigStrings::INTERNALFILEPATTERNS
 #define CONFIG_INCLUSIVE ConfigStrings::INCLUSIVE
 #define CONFIG_INDEXES ConfigStrings::INDEXES
 #define CONFIG_LANDINGPAGE ConfigStrings::LANDINGPAGE

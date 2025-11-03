@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Tests file pattern matching for internal status" version="" project="InternalFilePatterns">
+    <namespace name="" status="active" access="public" module="internalfilepatterns">
+        <class name="PublicClass" href="publicclass.html" status="active" access="public" location="publicclass.h" documented="true" module="InternalFilePatterns" brief="A public class for testing"/>
+        <module name="InternalFilePatterns" href="internalfilepatterns-module.html" status="internal" seen="false" title=""/>
+        <module name="TestModule" href="testmodule-module.html" status="active" documented="true" seen="true" title="Test Module" brief="A test module for internal file patterns"/>
+    </namespace>
+</INDEX>

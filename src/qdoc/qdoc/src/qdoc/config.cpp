@@ -7,12 +7,16 @@
 
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qlatin1stringview.h>
 #include <QtCore/qtemporaryfile.h>
 #include <QtCore/qtextstream.h>
 #include <QtCore/qvariant.h>
 #include <QtCore/qregularexpression.h>
 
 QT_BEGIN_NAMESPACE
+
+using namespace Qt::StringLiterals;
 
 QString ConfigStrings::AUTOLINKERRORS = QStringLiteral("autolinkerrors");
 QString ConfigStrings::BUILDVERSION = QStringLiteral("buildversion");
@@ -49,6 +53,7 @@ QString ConfigStrings::IMAGEDIRS = QStringLiteral("imagedirs");
 QString ConfigStrings::IMAGESOUTPUTDIR = QStringLiteral("imagesoutputdir");
 QString ConfigStrings::INCLUDEPATHS = QStringLiteral("includepaths");
 QString ConfigStrings::INCLUDEPRIVATE = QStringLiteral("includeprivate");
+QString ConfigStrings::INTERNALFILEPATTERNS = QStringLiteral("internalfilepatterns");
 QString ConfigStrings::INCLUSIVE = QStringLiteral("inclusive");
 QString ConfigStrings::INDEXES = QStringLiteral("indexes");
 QString ConfigStrings::LANDINGPAGE = QStringLiteral("landingpage");
@@ -366,6 +371,7 @@ void Config::clear()
     m_includeFilesMap.clear();
     m_excludedPaths.reset();
     m_sourceLink.reset();
+    m_internalFilePatterns.reset();
 }
 
 /*!
@@ -1437,6 +1443,111 @@ const Config::ExcludedPaths& Config::getExcludedPaths() {
     m_excludedPaths.emplace(ExcludedPaths{std::move(excludedDirs), std::move(excludedFiles)});
 
     return *m_excludedPaths;
+}
+
+/*!
+    Returns the set of file patterns that identify internal implementation files.
+    Classes declared in files matching these patterns will have their nodes marked
+    as internal, excluding them and their members from documentation requirements
+    when showInternal is false.
+
+    \sa isFileExcluded()
+*/
+QSet<QString> Config::getInternalFilePatterns() const
+{
+    const QStringList patterns = get(CONFIG_INTERNALFILEPATTERNS).asStringList();
+    return QSet<QString>(patterns.cbegin(), patterns.cend());
+}
+
+/*!
+    Returns a reference to the pre-compiled internal file patterns structure.
+    This method caches the compiled patterns for efficient reuse across multiple
+    file checks. The patterns are compiled once when first accessed and remain
+    valid until the configuration is cleared or reloaded.
+
+    The returned structure separates patterns into:
+    - exactMatches: Patterns without wildcards for direct string matching.
+    - regexPatterns: Pre-compiled regular expressions for regular expression
+      patterns.
+
+    \sa matchesInternalFilePattern(), clear()
+*/
+const Config::InternalFilePatterns& Config::getInternalFilePatternsCompiled()
+{
+    if (m_internalFilePatterns)
+        return *m_internalFilePatterns;
+
+    InternalFilePatterns compiled;
+    const QStringList patterns = get(CONFIG_INTERNALFILEPATTERNS).asStringList();
+
+    for (const QString &pattern : patterns) {
+        static const QRegularExpression regexMetaChars(
+                uR"(\.\*|\.\+|\.\{|\\[\.\*\?]|[\^\$\[\]{}()|+])"_s);
+        bool isRawRegex = regexMetaChars.match(pattern).hasMatch();
+
+        if (isRawRegex) {
+            QRegularExpression re(pattern);
+            if (!re.isValid()) {
+                qWarning() << "Invalid regex pattern in internalfilepatterns:" << pattern
+                          << "-" << re.errorString();
+                continue;
+            }
+            re.optimize();
+            compiled.regexPatterns.append(re);
+        } else if (pattern.contains(u'*') || pattern.contains(u'?')) {
+            QString regexPattern = QRegularExpression::wildcardToRegularExpression(pattern);
+            QRegularExpression re(regexPattern);
+            re.optimize();
+            compiled.globPatterns.append(re);
+        } else {
+            compiled.exactMatches.insert(pattern);
+        }
+    }
+
+    m_internalFilePatterns.emplace(std::move(compiled));
+    return *m_internalFilePatterns;
+}
+
+/*!
+    Returns true if the given \a filePath matches any pattern in the
+    \a patterns structure. This is an optimized version that uses pre-compiled
+    regular expressions.
+
+    The function first checks for exact matches (patterns without wildcards),
+    which compare against the full normalized path. Then it checks glob patterns
+    against the filename only, and finally regex patterns against the full path.
+
+    Path normalization is handled internally: all backslashes are converted to
+    forward slashes to ensure cross-platform consistency, as patterns are
+    expected to use forward slashes.
+
+    \sa getInternalFilePatternsCompiled()
+*/
+bool Config::matchesInternalFilePattern(const QString &filePath,
+                                       const InternalFilePatterns &patterns) noexcept
+{
+    if (patterns.exactMatches.isEmpty() && patterns.globPatterns.isEmpty()
+        && patterns.regexPatterns.isEmpty())
+        return false;
+
+    QString norm = filePath;
+    norm.replace(QChar('\\'), QChar('/'));
+
+    if (patterns.exactMatches.contains(norm))
+        return true;
+
+    const QString fileName = QFileInfo(norm).fileName();
+    for (const QRegularExpression &re : patterns.globPatterns) {
+        if (re.match(fileName).hasMatch())
+            return true;
+    }
+
+    for (const QRegularExpression &re : patterns.regexPatterns) {
+        if (re.match(norm).hasMatch())
+            return true;
+    }
+
+    return false;
 }
 
 /*!

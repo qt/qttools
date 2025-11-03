@@ -20,6 +20,7 @@
 #include "utilities.h"
 
 #include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
 #include <QtCore/qelapsedtimer.h>
 #include <QtCore/qfile.h>
 #include <QtCore/qregularexpression.h>
@@ -772,8 +773,10 @@ static void setOverridesForFunction(FunctionNode *fn, CXCursor cursor)
 class ClangVisitor
 {
 public:
-    ClangVisitor(QDocDatabase *qdb, const std::set<Config::HeaderFilePath> &allHeaders)
-        : qdb_(qdb), parent_(qdb->primaryTreeRoot())
+    ClangVisitor(QDocDatabase *qdb, const std::set<Config::HeaderFilePath> &allHeaders,
+                 const Config::InternalFilePatterns& internalFilePatterns)
+        : qdb_(qdb), parent_(qdb->primaryTreeRoot()),
+          internalFilePatterns_(internalFilePatterns)
     {
         std::transform(allHeaders.cbegin(), allHeaders.cend(), std::inserter(allHeaders_, allHeaders_.begin()),
                        [](const auto& header_file_path) -> const QString& { return header_file_path.filename; });
@@ -851,6 +854,7 @@ private:
     Aggregate *parent_;
     std::set<QString> allHeaders_;
     QHash<CXFile, bool> isInterestingCache_; // doing a canonicalFilePath is slow, so keep a cache.
+    const Config::InternalFilePatterns& internalFilePatterns_;
 
     /*!
         Returns true if the symbol should be ignored for the documentation.
@@ -1085,7 +1089,16 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
 
         auto *classe = new ClassNode(type, semanticParent, className);
         classe->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
-        classe->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
+
+        auto location = fromCXSourceLocation(clang_getCursorLocation(cursor));
+        classe->setLocation(location);
+
+        if (!internalFilePatterns_.exactMatches.isEmpty() || !internalFilePatterns_.globPatterns.isEmpty()
+            || !internalFilePatterns_.regexPatterns.isEmpty()) {
+            if (Config::matchesInternalFilePattern(location.filePath(), internalFilePatterns_))
+                classe->setStatus(Node::Internal);
+        }
+
         classe->setAnonymous(clang_Cursor_isAnonymous(cursor));
 
         if (detectQmlSingleton(cursor)) {
@@ -1585,6 +1598,7 @@ ClangCodeParser::ClangCodeParser(
     m_pch{pch}
 {
     m_allHeaders = config.getHeaderFiles();
+    m_internalFilePatterns = config.getInternalFilePatternsCompiled();
 }
 
 static const char *defaultArgs_[] = {
@@ -1810,7 +1824,8 @@ std::optional<PCHFile> buildPCH(
     // Visit the header now, as token from pre-compiled header won't be visited
     // later
     CXCursor cur = clang_getTranslationUnitCursor(tu);
-    ClangVisitor visitor(qdb, all_headers);
+    auto &config = Config::instance();
+    ClangVisitor visitor(qdb, all_headers, config.getInternalFilePatternsCompiled());
     visitor.visitChildren(cur);
     qCDebug(lcQdoc) << "PCH built and visited for" << module_header;
 
@@ -1866,7 +1881,7 @@ ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
     ParsedCppFileIR parse_result{};
 
     CXCursor tuCur = clang_getTranslationUnitCursor(tu);
-    ClangVisitor visitor(m_qdb, m_allHeaders);
+    ClangVisitor visitor(m_qdb, m_allHeaders, m_internalFilePatterns);
     visitor.visitChildren(tuCur);
 
     CXToken *tokens;
@@ -2048,7 +2063,8 @@ std::variant<Node*, FnMatchError> FnCommandParser::operator()(const Location &lo
           the diagnostics if they stop us finding the node.
          */
         CXCursor cur = clang_getTranslationUnitCursor(tu);
-        ClangVisitor visitor(m_qdb, m_allHeaders);
+        auto &config = Config::instance();
+        ClangVisitor visitor(m_qdb, m_allHeaders, config.getInternalFilePatternsCompiled());
         bool ignoreSignature = false;
         visitor.visitFnArg(cur, &fnNode, ignoreSignature);
 

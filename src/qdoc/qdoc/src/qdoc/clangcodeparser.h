@@ -89,6 +89,7 @@ private:
     QStringList m_namespaceScope {};
     QByteArray s_fn;
     std::optional<std::reference_wrapper<const PCHFile>> m_pch;
+    Config::InternalFilePatterns m_internalFilePatterns{};
 };
 
 QT_END_NAMESPACE

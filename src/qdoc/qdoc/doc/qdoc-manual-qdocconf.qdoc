@@ -798,6 +798,79 @@
 
     QDoc introduced \c includeprivate in Qt 6.11.
 
+    \target internalfilepatterns-variable
+    \section1 internalfilepatterns
+
+    The \c internalfilepatterns variable specifies file path patterns that
+    identify internal implementation files. \b{Classes} declared in files
+    matching these patterns are automatically marked as Internal, along with all
+    their members (properties, functions, enums, nested types). Free functions,
+    enums, and typedefs at file scope are not affected by this setting.
+
+    When showinternal is \c false (the default), these entities are excluded
+    from documentation validation. When \c showinternal is \c true, they are
+    included in the documentation but retain their Internal status, allowing
+    generators to style them differently (such as adding visual indicators for
+    internal APIs).
+
+    This is useful for private implementation headers that contain classes not
+    part of the documented public interface. In Qt, this includes private
+    headers ending with \c {_p.h}.
+
+    \section2 Pattern Syntax
+    The patterns support two syntaxes:
+
+    \list
+    \li \b{Shell-style glob patterns}: Simple wildcards where \c{*} matches any
+        characters and \c{?} matches exactly one character. \b{Glob patterns are
+        matched against the filename only}, not the full path, making them ideal
+        for patterns such as \c{*_p.h}.
+    \li \b{Regular expressions}: For path-based matching, use regex syntax. Any
+        pattern containing regex metacharacters (\c{^$[]{}()|+\\.}) is treated
+        as a regular expression and matched against the full normalized file
+        path.
+    \endlist
+
+    Patterns are matched with forward slashes (\c{/}) as directory separators.
+    QDoc normalizes path separators internally, so always use \c{/} in patterns
+    regardless of platform.
+
+    When a class is marked as Internal due to its file location, the Internal
+    status automatically propagates to all its members through the node
+    hierarchy.
+
+    \b{Example - Qt Convention (glob):}
+    \badcode
+        internalfilepatterns = *_p.h
+    \endcode
+    Matches any file ending with \c{_p.h} at any directory depth.
+
+    \b{Example - Multiple Filename Patterns (glob):}
+    \badcode
+        internalfilepatterns = *_p.h *_impl.h *_pch.h
+    \endcode
+    Matches files ending with \c{_p.h}, \c{_impl.h}, or \c{_pch.h}.
+
+    \note Glob patterns will \b{not} work for directory matching, as globs only
+          see the filename. For directory-based patterns, use regex instead.
+
+    \b{Example - Directory-Based Match (regex):}
+    \badcode *
+        internalfilepatterns = .\1/internal/.\1\.h
+    \endcode
+    Matches any \c{.h} file in any \c{internal} directory at any depth.
+
+    \b{Example - Multiple Patterns:}
+    \badcode *
+        internalfilepatterns = *_p.h .\1/private/.\1\.h
+    \endcode
+    Combines glob patterns for simple cases with regex for complex paths.
+
+    QDoc introduced \c internalfilepatterns in Qt 6.11.
+
+    \b{See also:} \l{excludedirs-variable}{excludedirs} and
+                  \l{excludefiles-variable}{excludefiles}.
+
     \target ignorewords-variable
     \section1 ignorewords
 

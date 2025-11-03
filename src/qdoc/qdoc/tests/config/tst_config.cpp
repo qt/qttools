@@ -23,6 +23,10 @@ private slots:
     void expandVars();
     void sourceLink();
     void showInternalPrecedence();
+    void internalFilePatterns();
+    void internalFilePatternsMatching();
+    void internalFilePatternsPathMatching();
+    void internalFilePatternsWildcards();
 
 private:
     Config &initConfig(const QStringList &args = QStringList(),
@@ -250,6 +254,102 @@ void::tst_Config::showInternalPrecedence()
         QCOMPARE(config.showInternal(), true);
         QCOMPARE(config.get(CONFIG_SHOWINTERNAL).asBool(), true);
     }
+}
+
+void tst_Config::internalFilePatterns()
+{
+    auto &config = initConfig("/testdata/configs/internalpatterns.qdocconf");
+
+    const QStringList expected = {"*_p.h", "*_p_p.h"};
+    const QSet<QString> expectedSet(expected.cbegin(), expected.cend());
+
+    QCOMPARE(config.getInternalFilePatterns(), expectedSet);
+}
+
+void tst_Config::internalFilePatternsMatching()
+{
+    auto &config = initConfig("/testdata/configs/internalpatterns.qdocconf");
+    const Config::InternalFilePatterns &patterns = config.getInternalFilePatternsCompiled();
+
+    // Should match - testing path/filename matching
+    QVERIFY(Config::matchesInternalFilePattern("myclass_p.h", patterns));
+    QVERIFY(Config::matchesInternalFilePattern("foo_p_p.h", patterns));
+
+    // Should not match
+    QVERIFY(!Config::matchesInternalFilePattern("myclass.h", patterns));
+    QVERIFY(!Config::matchesInternalFilePattern("public.h", patterns));
+}
+
+void tst_Config::internalFilePatternsPathMatching()
+{
+    // Create a config with path-based patterns
+    initConfig();
+    Config::InternalFilePatterns patterns;
+
+    // Add a pattern that includes directory structure using regex
+    // Regex patterns match against the full path
+    QRegularExpression re(R"(.*/internal/.*\.h)");
+    re.optimize();
+    patterns.regexPatterns.append(re);
+
+    // Should match - patterns with 'internal' directory followed by .h file
+    QVERIFY(Config::matchesInternalFilePattern("foo/internal/widget.h", patterns));
+    QVERIFY(Config::matchesInternalFilePattern("src/internal/helper.h", patterns));
+    QVERIFY(Config::matchesInternalFilePattern("/absolute/path/internal/file.h", patterns));
+
+    // Should match - Windows-style backslash paths (testing normalization)
+    // First verify that forward slash version works
+    QVERIFY(Config::matchesInternalFilePattern("src/internal/helper.h", patterns));
+
+    // Now test backslash versions
+    QVERIFY(Config::matchesInternalFilePattern(R"(src\internal\helper.h)", patterns));
+    QVERIFY(Config::matchesInternalFilePattern(R"(C:\project\internal\widget.h)", patterns));
+    QVERIFY(Config::matchesInternalFilePattern(R"(foo\bar\internal\file.h)", patterns));
+
+    // Should not match - 'internal' not in path or wrong position
+    QVERIFY(!Config::matchesInternalFilePattern("foo/public/widget.h", patterns));
+    QVERIFY(!Config::matchesInternalFilePattern("internal.h", patterns));
+    QVERIFY(!Config::matchesInternalFilePattern("internal/widget.cpp", patterns)); // .cpp not .h
+    QVERIFY(!Config::matchesInternalFilePattern("foo/internal_dir/widget.h", patterns)); // not exact 'internal'
+    QVERIFY(!Config::matchesInternalFilePattern(R"(src\public\file.h)", patterns)); // Windows path, but 'public' not 'internal'
+}
+
+void tst_Config::internalFilePatternsWildcards()
+{
+    initConfig();
+    Config::InternalFilePatterns patterns;
+
+    // Test single character wildcard '?'
+    QRegularExpression re1(QRegularExpression::wildcardToRegularExpression("test?.h"));
+    re1.optimize();
+    patterns.globPatterns.append(re1);
+
+    // Test multi-pattern matching
+    QRegularExpression re2(QRegularExpression::wildcardToRegularExpression("*_impl.h"));
+    re2.optimize();
+    patterns.globPatterns.append(re2);
+
+    // Add exact match for comparison
+    patterns.exactMatches.insert("exact.h");
+
+    // Test '?' wildcard - matches single character (glob patterns match filename only)
+    QVERIFY(Config::matchesInternalFilePattern("test1.h", patterns));
+    QVERIFY(Config::matchesInternalFilePattern("testX.h", patterns));
+    QVERIFY(Config::matchesInternalFilePattern("/path/to/test1.h", patterns)); // glob matches filename
+    QVERIFY(Config::matchesInternalFilePattern("/path/to/testX.h", patterns));
+    QVERIFY(!Config::matchesInternalFilePattern("test.h", patterns));
+    QVERIFY(!Config::matchesInternalFilePattern("test12.h", patterns));
+
+    // Test '*' wildcard - matches multiple characters (glob patterns match filename only)
+    QVERIFY(Config::matchesInternalFilePattern("widget_impl.h", patterns));
+    QVERIFY(Config::matchesInternalFilePattern("foo_impl.h", patterns));
+    QVERIFY(Config::matchesInternalFilePattern("/some/path/widget_impl.h", patterns)); // glob matches filename
+    QVERIFY(!Config::matchesInternalFilePattern("widget.h", patterns));
+
+    // Test exact match (exact matches check full path)
+    QVERIFY(Config::matchesInternalFilePattern("exact.h", patterns));
+    QVERIFY(!Config::matchesInternalFilePattern("exact_x.h", patterns));
+    QVERIFY(!Config::matchesInternalFilePattern("/path/exact.h", patterns)); // exact match requires full path match
 }
 
 QTEST_APPLESS_MAIN(tst_Config)
