@@ -149,7 +149,7 @@ private:
     bool matchString(QString *s);
     bool matchEncoding();
     bool matchStringOrNull(QString *s);
-    bool matchExpression();
+    bool skipExpression();
 
     void recordMessage(int line, const QString &context, const QString &text,
                        const QString &comment, const QString &extracomment, const QString &msgid,
@@ -1577,55 +1577,30 @@ bool CppParser::matchStringOrNull(QString *s)
 }
 
 /*
- * match any expression that can return a number, which can be
- * 1. Literal number (e.g. '11')
- * 2. simple identifier (e.g. 'm_count')
- * 3. simple function call (e.g. 'size()' )
- * 4. function call on an object (e.g. 'list.size()')
- * 5. function call on an object (e.g. 'list->size()')
- *
- * Other cases:
- * size(2,4)
- * list().size()
- * list(a,b).size(2,4)
- * etc...
- */
-bool CppParser::matchExpression()
+* Skip over a C++ expression by consuming tokens until reaching an unmatched
+* closing parenthesis. This is used to skip expression arguments in translate
+* calls without needing to parse or validate the expression structure.
+*
+* The function handles any valid C++ expression, including complex ones with
+* nested parentheses, operators, casts, templates, and other constructs.
+*
+* Returns true if the expression was successfully skipped, false if EOF or
+* a cancellation token was encountered before finding the end.
+*/
+bool CppParser::skipExpression()
 {
     if (match(Tok_Null) || match(Tok_Integer))
         return true;
 
     int parenlevel = 0;
-    int angleBracketLevel = 0;
-    while (match(Tok_Ident) || parenlevel > 0) {
-        if (yyTok == Tok_RightParen) {
-            if (parenlevel == 0) break;
+    while (parenlevel >= 0) {
+        yyTok = getToken();
+        if (yyTok == Tok_RightParen)
             --parenlevel;
-            yyTok = getToken();
-        } else if (yyTok == Tok_LeftParen) {
-            yyTok = getToken();
-            if (yyTok == Tok_RightParen) {
-                yyTok = getToken();
-            } else {
-                ++parenlevel;
-            }
-        } else if (yyTok == Tok_LeftAngleBracket) {
-            angleBracketLevel++;
-            yyTok = getToken();
-        } else if (yyTok == Tok_RightAngleBracket) {
-            angleBracketLevel--;
-            yyTok = getToken();
-            if (yyTok == Tok_LeftParen) {
-                parenlevel++;
-            }
-            yyTok = getToken();
-        } else if (yyTok == Tok_Ident) {
-            continue;
-        } else if (yyTok == Tok_Arrow) {
-            yyTok = getToken();
-        } else if ((parenlevel == 0 && angleBracketLevel == 0) || yyTok == Tok_Cancel) {
+        else if (yyTok == Tok_LeftParen)
+            ++parenlevel;
+        else if (yyTok == Tok_Cancel || yyTok == Tok_Eof)
             return false;
-        }
     }
     return true;
 }
@@ -1779,7 +1754,7 @@ void CppParser::handleTranslate(bool plural)
                         } else {
                             // This can be a QTranslator::translate("context",
                             // "source", "comment", n) plural translation
-                            if (matchExpression() && yyTok == Tok_RightParen) {
+                            if (skipExpression() && yyTok == Tok_RightParen) {
                                 plural = true;
                             } else {
                                 return;
