@@ -24,7 +24,7 @@ static void missingPropertyWarning(const QString &filePath, const QString &prope
                                 QDir::toNativeSeparators(filePath), property)) << std::endl;
 }
 
-static bool validatePackage(Package &p, Checks checks, LogLevel logLevel)
+bool validatePackage(Package &p, Checks checks, LogLevel logLevel)
 {
     const auto &filePath = p.filePath;
     bool validPackage = true;
@@ -258,7 +258,7 @@ static bool handleStringOrStringArrayJsonKey(QStringList &outList, const QString
 
 // Transforms a JSON object into a Package object
 static std::optional<Package> readPackage(const QJsonObject &object, const QString &filePath,
-                                          Checks checks, LogLevel logLevel)
+                                          LogLevel logLevel)
 {
     Package p;
     bool validPackage = true;
@@ -431,7 +431,7 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         p.licenseFilesContents << QString::fromUtf8(file.readAll()).trimmed();
     }
 
-    if (!validatePackage(p, checks, logLevel) || !validPackage)
+    if (!validPackage)
         return std::nullopt;
 
     return p;
@@ -537,7 +537,7 @@ static CursorPosition mapFromOffset(const QByteArray &content, int offset)
     return CursorPosition();
 }
 
-std::optional<QList<Package>> readFile(const QString &filePath, Checks checks, LogLevel logLevel)
+std::optional<QList<Package>> readFile(const QString &filePath, LogLevel logLevel)
 {
     QList<Package> packages;
     bool errorsFound = false;
@@ -573,7 +573,7 @@ std::optional<QList<Package>> readFile(const QString &filePath, Checks checks, L
 
         if (document.isObject()) {
             std::optional<Package> p =
-                    readPackage(document.object(), file.fileName(), checks, logLevel);
+                    readPackage(document.object(), file.fileName(), logLevel);
             if (p) {
                 packages << *p;
             } else {
@@ -585,7 +585,7 @@ std::optional<QList<Package>> readFile(const QString &filePath, Checks checks, L
                 QJsonValue value = array.at(i);
                 if (value.isObject()) {
                     std::optional<Package> p =
-                            readPackage(value.toObject(), file.fileName(), checks, logLevel);
+                            readPackage(value.toObject(), file.fileName(), logLevel);
                     if (p) {
                         packages << *p;
                     } else {
@@ -626,7 +626,7 @@ std::optional<QList<Package>> readFile(const QString &filePath, Checks checks, L
 }
 
 std::optional<QList<Package>> scanDirectory(const QString &directory, InputFormats inputFormats,
-                                            Checks checks, LogLevel logLevel)
+                                            LogLevel logLevel)
 {
     QDir dir(directory);
     QList<Package> packages;
@@ -647,13 +647,13 @@ std::optional<QList<Package>> scanDirectory(const QString &directory, InputForma
     for (const QFileInfo &info : entries) {
         if (info.isDir()) {
             std::optional<QList<Package>> ps =
-                    scanDirectory(info.filePath(), inputFormats, checks, logLevel);
+                    scanDirectory(info.filePath(), inputFormats, logLevel);
             if (!ps)
                 errorsFound = true;
             else
                 packages += *ps;
         } else {
-            std::optional p = readFile(info.filePath(), checks, logLevel);
+            std::optional p = readFile(info.filePath(), logLevel);
             if (!p)
                 errorsFound = true;
             else

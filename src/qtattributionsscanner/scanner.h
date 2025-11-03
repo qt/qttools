@@ -25,9 +25,10 @@ enum class Check { Paths = 0x1, All = Paths };
 Q_DECLARE_FLAGS(Checks, Check)
 Q_DECLARE_OPERATORS_FOR_FLAGS(Checks)
 
-std::optional<QList<Package>> readFile(const QString &filePath, Checks checks, LogLevel logLevel);
+std::optional<QList<Package>> readFile(const QString &filePath, LogLevel logLevel);
 std::optional<QList<Package>> scanDirectory(const QString &directory, InputFormats inputFormats,
-                                            Checks checks, LogLevel logLevel);
+                                            LogLevel logLevel);
+bool validatePackage(Package &p, Checks checks, LogLevel logLevel);
 }
 
 #endif // SCANNER_H

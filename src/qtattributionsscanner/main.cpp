@@ -109,12 +109,12 @@ int main(int argc, char *argv[])
                 std::cerr << qPrintable(tr("Recursively scanning %1 for attribution files...").arg(
                                             QDir::toNativeSeparators(path))) << std::endl;
             std::optional<QList<Package>> p
-                    = Scanner::scanDirectory(path, formats, checks, logLevel);
+                    = Scanner::scanDirectory(path, formats, logLevel);
             if (!p)
                 return 1;
             packages.append(*p);
         } else if (pathInfo.isFile()) {
-            std::optional<QList<Package>> p = Scanner::readFile(path, checks, logLevel);
+            std::optional<QList<Package>> p = Scanner::readFile(path, logLevel);
             if (!p)
                 return 1;
             packages.append(*p);
@@ -135,6 +135,16 @@ int main(int argc, char *argv[])
                                       [&filter](const Package &p) { return !filter(p); }),
                        packages.end());
     }
+
+    // Perform the validations and checks
+    bool checksFailed = false;
+    for (auto &package : packages) {
+        if (!validatePackage(package, checks, logLevel))
+            checksFailed = true;
+    }
+
+    if (checksFailed)
+        return 1;
 
     if (logLevel == VerboseLog)
         std::cerr << qPrintable(tr("%1 packages found.").arg(packages.size())) << std::endl;
