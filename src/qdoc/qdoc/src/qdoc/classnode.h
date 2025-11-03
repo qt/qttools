@@ -16,9 +16,12 @@ QT_BEGIN_NAMESPACE
 class FunctionNode;
 class PropertyNode;
 class QmlTypeNode;
+class Tree;
 
 class ClassNode : public Aggregate
 {
+    friend class Tree;
+
 public:
     ClassNode(NodeType type, Aggregate *parent, const QString &name) : Aggregate(type, parent, name)
     {
@@ -35,11 +38,9 @@ public:
     void removePrivateAndInternalBases();
     void resolvePropertyOverriddenFromPtrs(PropertyNode *pn);
 
-    QList<RelatedClass> &baseClasses() { return m_bases; }
-    QList<RelatedClass> &derivedClasses() { return m_derived; }
-    QList<RelatedClass> &ignoredBaseClasses() { return m_ignoredBases; }
-
     [[nodiscard]] const QList<RelatedClass> &baseClasses() const { return m_bases; }
+    [[nodiscard]] const QList<RelatedClass> &derivedClasses() const { return m_derived; }
+    [[nodiscard]] const QList<RelatedClass> &ignoredBaseClasses() const { return m_ignoredBases; }
 
     [[nodiscard]] bool isAbstract() const override { return m_abstract; }
     void setAbstract(bool b) override { m_abstract = b; }
@@ -54,6 +55,8 @@ public:
 
 private:
     void promotePublicBases(const QList<RelatedClass> &bases);
+
+    QList<RelatedClass> &baseClasses_mutable() { return m_bases; }
 
 private:
     QList<RelatedClass> m_bases {};

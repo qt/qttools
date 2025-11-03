@@ -188,7 +188,7 @@ void Tree::resolveBaseClasses(Aggregate *n)
     for (auto it = n->constBegin(); it != n->constEnd(); ++it) {
         if ((*it)->isClassNode()) {
             auto *cn = static_cast<ClassNode *>(*it);
-            QList<RelatedClass> &bases = cn->baseClasses();
+            QList<RelatedClass> &bases = cn->baseClasses_mutable();
             for (auto &base : bases) {
                 if (base.m_node == nullptr) {
                     Node *n = m_qdb->findClassNode(base.m_path);
