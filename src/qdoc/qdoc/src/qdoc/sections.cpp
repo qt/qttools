@@ -22,6 +22,7 @@
 #include "variablenode.h"
 
 #include <QtCore/qobjectdefs.h>
+#include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -907,19 +908,23 @@ void Sections::buildStdCppClassRefPageSections()
     }
 
     QStack<ClassNode *> stack;
+    QSet<ClassNode *> visited;
     auto *cn = static_cast<ClassNode *>(m_aggregate);
+
     pushBaseClasses(stack, cn);
     while (!stack.isEmpty()) {
-        ClassNode *cn = stack.pop();
-        for (auto it = cn->constBegin(); it != cn->constEnd(); ++it) {
-            Node *n = *it;
+        ClassNode *cur = stack.pop();
+        if (visited.contains(cur))
+            continue;
+        visited.insert(cur);
+        for (Node *n : cur->childNodes()) {
             const NodeContext context = n->createContext();
             if (InclusionFilter::isIncluded(policy, context) && !n->isProperty()
                 && !n->isRelatedNonmember() && !n->isSharedCommentNode()) {
                 allMembers.insert(n);
             }
         }
-        pushBaseClasses(stack, cn);
+        pushBaseClasses(stack, cur);
     }
     reduce(summarySections);
     reduce(detailsSections);

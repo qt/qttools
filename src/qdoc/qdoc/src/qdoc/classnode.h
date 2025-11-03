@@ -9,6 +9,7 @@
 
 #include <QtCore/qglobal.h>
 #include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
 #include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
@@ -59,7 +60,20 @@ public:
     [[nodiscard]] bool isAnonymous() const { return m_anonymous; }
     void setAnonymous(bool anonymous = true) { m_anonymous = anonymous; }
 
+    enum class HierarchyDirection { Base, Derived };
+
     [[nodiscard]] QString plainName() const override;
+    [[nodiscard]] bool hasCircularInheritance(QStringList *cyclePath = nullptr) const;
+    [[nodiscard]] bool hasCircularDerivedClasses(QStringList *cyclePath = nullptr) const;
+
+private:
+    enum class Color { White, Gray, Black };
+
+    [[nodiscard]] bool hasCircularRelationship(HierarchyDirection direction,
+                                               QStringList *cyclePath) const;
+    [[nodiscard]] bool detectCycleRecursive(HierarchyDirection direction,
+                                            QMap<const ClassNode*, Color> &colors,
+                                            QList<const ClassNode*> &path) const;
 
 private:
     void promotePublicBases(const QList<RelatedClass> &bases);
