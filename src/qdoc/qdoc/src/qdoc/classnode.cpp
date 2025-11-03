@@ -169,7 +169,7 @@ bool ClassNode::docMustBeGenerated() const
 {
     if (!hasDoc() || isPrivate() || isInternal() || isDontDocument())
         return false;
-    if (declLocation().fileName().endsWith(QLatin1String("_p.h")) && !hasDoc())
+    if (declLocation().fileName().endsWith("_p.h"_L1) && !hasDoc())
         return false;
 
     return true;
@@ -419,11 +419,11 @@ QString ClassNode::plainName() const
     if (isAnonymous()) {
         switch (nodeType()) {
         case NodeType::Struct:
-            return QLatin1String("(unnamed struct)");
+            return "(unnamed struct)"_L1;
         case NodeType::Union:
-            return QLatin1String("(unnamed union)");
+            return "(unnamed union)"_L1;
         case NodeType::Class:
-            return QLatin1String("(unnamed class)");
+            return "(unnamed class)"_L1;
         default:
             break;
         }
