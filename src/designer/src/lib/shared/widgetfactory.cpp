@@ -490,7 +490,9 @@ QLayout *WidgetFactory::createUnmanagedLayout(QWidget *parentWidget, int type)
 }
 
 
-/*!  Creates a layout on the widget \a widget of the type \a type
+/*!
+  \internal
+  Creates a layout on the widget \a widget of the type \a type
   which can be \c HBox, \c VBox or \c Grid.
 */
 
@@ -554,7 +556,9 @@ QLayout *WidgetFactory::createLayout(QWidget *widget, QLayout *parentLayout, int
     return layout;
 }
 
-/*!  Returns the widget into which children should be inserted when \a
+/*!
+  \internal
+  Returns the widget into which children should be inserted when \a
   w is a container known to designer.
 
   Usually, it is \a w itself, but there are exceptions (for example, a
@@ -571,7 +575,9 @@ QWidget* WidgetFactory::containerOfWidget(QWidget *w) const
     return w;
 }
 
-/*!  Returns the actual designer widget of the container \a w. This is
+/*!
+  \internal
+  Returns the actual designer widget of the container \a w. This is
   normally \a w itself, but it might be a parent or grand parent of \a w
   (for example, when working with a tabwidget and \a w is the container which
   contains and layouts children, but the actual widget known to

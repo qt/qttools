@@ -21,6 +21,7 @@ using namespace Qt::StringLiterals;
 
 namespace qdesigner_internal {
 /*!
+  \internal
   \overload
 */
 LayoutInfo::Type LayoutInfo::layoutType(const QDesignerFormEditorInterface *core, const QLayout *layout)
@@ -61,6 +62,7 @@ QString LayoutInfo::layoutName(Type t)
 }
 
 /*!
+  \internal
   \overload
 */
 LayoutInfo::Type LayoutInfo::layoutType(const QDesignerFormEditorInterface *core, const QWidget *w)
