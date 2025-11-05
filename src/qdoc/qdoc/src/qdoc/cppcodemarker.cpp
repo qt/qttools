@@ -306,9 +306,14 @@ QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *r
             && !enumValue.startsWith("%1."_L1.arg(nativeEnum->prefix())))
         return "%1<@op>.</@op>%2"_L1.arg(nativeEnum->prefix(), enumValue);
 
-    if (!relative->isEnumType()) {
-        return enumValue;
+    // Respect existing prefixes in \value arguments of \qmlenum topic
+    if (relative->isEnumType(Genus::QML)
+            && enumValue.section(' ', 0, 0).contains('.'_L1)) {
+        return "<@op>%1</@op>"_L1.arg(enumValue);
     }
+
+    if (!relative->isEnumType())
+        return enumValue;
 
     QStringList parts;
     while (!node->isHeader() && node->parent()) {

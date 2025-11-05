@@ -71,6 +71,23 @@
             <arglist></arglist>
         </member>
         <member kind="enumeration">
+            <name>even_more</name>
+            <anchorfile>qml-qmlmodule-type.html</anchorfile>
+            <anchor>even_more-enum</anchor>
+        </member>
+        <member kind="enumvalue">
+            <name>Foo.Have</name>
+            <anchorfile>qml-qmlmodule-type.html</anchorfile>
+            <anchor>even_more-enum</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="enumvalue">
+            <name>Foo.Prefix</name>
+            <anchorfile>qml-qmlmodule-type.html</anchorfile>
+            <anchor>even_more-enum</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="enumeration">
             <name>more_values</name>
             <anchorfile>qml-qmlmodule-type.html</anchorfile>
             <anchor>more_values-enum</anchor>

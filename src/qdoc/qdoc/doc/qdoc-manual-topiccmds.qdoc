@@ -739,7 +739,23 @@
     \endcode
 
     This generates documentation for an enumeration \e Channel, with three
-    enumerators: \e {Color.R}, \e {Color.G}, and \e {Color.B}.
+    enumerators: \e {Color.R}, \e {Color.G}, and \e {Color.B}. By default,
+    the parent QML type name is used as a prefix for the enumerators.
+
+    If the first argument to the qdoccmd{value} command already includes a
+    prefix, it is used as is:
+
+    \badcode
+        \value Channel.R
+               Red color channel
+        \value Channel.G
+               Green color channel
+        \value Channel.B
+               Blue color channel
+    \endcode
+
+    Here, the enumerators are listed as \e {Channel.R}, \e {Channel.G}, and
+    \e {Channel.B}.
 
     Alternatively, it's possible to replicate the enumerators' documentation
     from an existing C++ \qdoccmd {enum} topic, by using the

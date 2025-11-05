@@ -30,8 +30,11 @@
             <keyword name="Type" id="QML.QmlModule.Type" ref="qml-qmlmodule-type.html"/>
             <keyword name="Type::And" id="Type::And" ref="qml-qmlmodule-type.html#different-enum"/>
             <keyword name="Type::Completely" id="Type::Completely" ref="qml-qmlmodule-type.html#different-enum"/>
+            <keyword name="Type::Foo.Have" id="Type::Foo.Have" ref="qml-qmlmodule-type.html#even_more-enum"/>
+            <keyword name="Type::Foo.Prefix" id="Type::Foo.Prefix" ref="qml-qmlmodule-type.html#even_more-enum"/>
             <keyword name="Type::For" id="Type::For" ref="qml-qmlmodule-type.html#different-enum"/>
             <keyword name="Type::different" id="Type::different" ref="qml-qmlmodule-type.html#different-enum"/>
+            <keyword name="Type::even_more" id="Type::even_more" ref="qml-qmlmodule-type.html#even_more-enum"/>
             <keyword name="Type::more_values" id="Type::more_values" ref="qml-qmlmodule-type.html#more_values-enum"/>
             <keyword name="something" id="Type::something" ref="qml-qmlmodule-type.html#something-prop"/>
             <keyword name="values" id="Type::values" ref="qml-qmlmodule-type.html#values-prop"/>
