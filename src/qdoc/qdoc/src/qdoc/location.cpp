@@ -535,9 +535,9 @@ void Location::emitMessage(MessageType type, const QString &message, const QStri
         }
     } else {
         if (type == Error)
-            result.prepend(QStringLiteral(": (qdoc) error: "));
+            result.prepend(": [%1] (qdoc) error: "_L1.arg(s_project));
         else if (type == Warning) {
-            result.prepend(QStringLiteral(": (qdoc) warning: "));
+            result.prepend(": [%1] (qdoc) warning: "_L1.arg(s_project));
             ++s_warningCount;
         }
     }

@@ -4,4 +4,4 @@
 # Path-Format: relative
 #
 
-src/testoverloads.cpp:62: (qdoc) warning: Undocumented parameter 'messagePattern' in TestOverloads::failOnWarning()
+src/testoverloads.cpp:62: [QDoc multiple overloads test] (qdoc) warning: Undocumented parameter 'messagePattern' in TestOverloads::failOnWarning()

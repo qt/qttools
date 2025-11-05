@@ -4,4 +4,4 @@
 # Path-Format: relative
 #
 
-src/testclass.cpp:17: (qdoc) warning: Undocumented parameter 'param' in TestClass::partiallyDocumented()
+src/testclass.cpp:17: [WarningLog] (qdoc) warning: Undocumented parameter 'param' in TestClass::partiallyDocumented()
