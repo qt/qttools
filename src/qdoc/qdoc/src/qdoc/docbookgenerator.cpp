@@ -3961,7 +3961,9 @@ void DocBookGenerator::generateEnumValue(const QString &enumValue, const Node *r
         return;
     }
 
-    if (!relative->isEnumType()) {
+    // Respect existing prefixes in \value arguments of \qmlenum topic
+    if (!relative->isEnumType() || (relative->isEnumType(Genus::QML)
+            && enumValue.section(' ', 0, 0).contains('.'_L1))) {
         m_writer->writeCharacters(enumValue);
         return;
     }

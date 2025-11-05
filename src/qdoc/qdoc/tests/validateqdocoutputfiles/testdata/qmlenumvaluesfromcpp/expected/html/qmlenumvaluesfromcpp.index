@@ -19,6 +19,10 @@
                 <value name="For"/>
                 <value name="Completely" since="0.9"/>
             </qmlenum>
+            <qmlenum name="even_more" fullname="QmlModule.Type.even_more" href="qml-qmlmodule-type.html#even_more-enum" status="active" access="public" location="qmltype.qdoc" documented="true">
+                <value name="Foo.Have"/>
+                <value name="Foo.Prefix" since="0.1"/>
+            </qmlenum>
             <qmlenum name="more_values" fullname="QmlModule.Type.more_values" href="qml-qmlmodule-type.html#more_values-enum" status="active" access="public" location="qmltype.qdoc" documented="true"/>
             <qmlproperty name="something" fullname="QmlModule.Type.something" href="qml-qmlmodule-type.html#something-prop" status="active" access="public" location="qmltype.qdoc" documented="true" type="enumeration" attached="false" writable="true"/>
             <qmlproperty name="values" fullname="QmlModule.Type.values" href="qml-qmlmodule-type.html#values-prop" status="active" access="public" location="qmltype.qdoc" documented="true" type="enumeration" attached="false" writable="true"/>

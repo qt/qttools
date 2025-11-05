@@ -37,3 +37,11 @@
     //! Attempt linking to \qmlenum enumerator
     \sa {Type::And}{Type.And}
 */
+
+/*!
+    \qmlenum Type::even_more
+
+    //! Values already have a prefix 'Foo.'
+    \value Foo.Have
+    \value [since 0.1] Foo.Prefix Already
+*/

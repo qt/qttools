@@ -73,6 +73,44 @@
 </db:tr>
 </db:informaltable>
 </db:section>
+<db:section xml:id="even_more-enum">
+<db:title><db:enumsynopsis>
+<db:enumname>even_more</db:enumname>
+<db:enumitem>
+<db:enumidentifier>Foo.Have</db:enumidentifier>
+<db:enumvalue></db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>Foo.Prefix</db:enumidentifier>
+<db:enumvalue></db:enumvalue>
+</db:enumitem>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:enumsynopsis>
+</db:title>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para its:translate="no">Foo.Have</db:para>
+</db:td>
+<db:td/>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para its:translate="no">Foo.Prefix (since Qt 0.1)</db:para>
+</db:td>
+<db:td>
+<db:para>Already</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
 <db:section xml:id="more_values-enum">
 <db:title><db:enumsynopsis>
 <db:enumname>more_values</db:enumname>
