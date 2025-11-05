@@ -21,9 +21,11 @@
 
     \table
     \row
-        \li \inlineimage front-publishing.png
-        \li \inlineimage front-ui.png
-        \li \inlineimage front-coding.png
+        \li \inlineimage front-publishing.png {Icon showing an publishing action}
+        \li \inlineimage front-ui.png {UI illustration showing Start buttons,
+                         toggle controls, and a circular selector on a dark
+                         screen}
+        \li \inlineimage front-coding.png {Illustration showing a code}
     \row
         \li \l{Release managers}
         \li \l{Translators}
@@ -104,7 +106,7 @@
     \previouspage Qt Linguist Manual
     \nextpage Creating translation files
 
-    \image front-publishing.png
+    \image front-publishing.png {Icon showing an publishing action}
 
     Release managers use \c lupdate to generate a set of translation source (TS)
     files from the application source files (QML and C++) and pass them to
@@ -886,7 +888,8 @@ lcheck translations/myapp_de.ts
 
     \title Translators
 
-    \image front-ui.png
+    \image front-ui.png {UI illustration showing Start buttons, toggle,
+           controls, and a circular selector on a dark screen}
 
     \QL is a tool for translating strings in Qt applications. Once you have
     installed Qt, you can start \QL in the same way as any other application on
@@ -1024,7 +1027,7 @@ lcheck translations/myapp_de.ts
             \uicontrol {Translator comment} field.
 
         \li To accept the translation, press \key {Ctrl+Enter}, select
-            \inlineimage linguist-doneandnext.png
+            \inlineimage linguist-doneandnext.png {Icon}
             , or click the icon to the left of the selected source string in the
             string list.
 
@@ -1033,9 +1036,9 @@ lcheck translations/myapp_de.ts
     \endlist
 
     Repeat this process until all strings in the string list are marked with
-    \inlineimage linguist-check-on.png
+    \inlineimage linguist-check-on.png {Check icon}
     (\uicontrol {Accepted/Correct}) or
-    \inlineimage linguist-check-warning.png
+    \inlineimage linguist-check-warning.png {Check warning icon}
     (\uicontrol {Accepted/Warnings}). Then select the next context and continue.
 
     To view the number of words and characters in the source text and in the
@@ -1054,10 +1057,10 @@ lcheck translations/myapp_de.ts
     \section1 Moving between translatable strings
 
     To move to the next unfinished translation, select
-    \inlineimage nextunfinished.png
+    \inlineimage nextunfinished.png {Icon}
     (\uicontrol {Next Unfinished}) or press \key{Ctrl+J}.
 
-    To move to the next source text, select \inlineimage next.png
+    To move to the next source text, select \inlineimage next.png {next icon}
     , press \key{Ctrl+Shift+J}, or select \uicontrol Translation >
     \uicontrol Next.
 
@@ -1187,7 +1190,8 @@ lcheck translations/myapp_de.ts
     translations for the current locale automatically. For more information, see
     \l{Enable Translation}.
 
-    \image linguist-translationfilesettings.png
+    \image linguist-translationfilesettings.png {Screenshot showing Qt Linguist
+           settings window with source language POSIX and target language German}
 */
 
 /*!
@@ -1226,26 +1230,26 @@ lcheck translations/myapp_de.ts
 
     \row
     \li Accepted/Correct
-    \li \inlineimage linguist-check-on.png
+    \li \inlineimage linguist-check-on.png {Check icon}
     \li All strings in the group have been translated, and all the
         translations passed the \l{Validating Translations}{validation tests}.
 
     \row
     \li Accepted/Warnings
-    \li \inlineimage linguist-check-warning.png
+    \li \inlineimage linguist-check-warning.png {Check warning icon}
     \li All strings in the group have been translated or marked as translated,
         but at least one translation failed the validation tests.
         In the \uicontrol Strings view, you can see which string failed the test.
 
     \row
     \li Not Accepted
-    \li \inlineimage linguist-check-off.png
+    \li \inlineimage linguist-check-off.png {check off icon}
     \li At least one string in the group has not been translated or is not
         marked as translated.
 
     \row
     \li Obsolete
-    \li \inlineimage linguist-check-obsolete.png
+    \li \inlineimage linguist-check-obsolete.png {check obsolete icon}
     \li None of the translated strings appears in the group any more. This
         usually means the context or label no longer exists in the application.
     \endtable
@@ -1287,7 +1291,7 @@ lcheck translations/myapp_de.ts
 
     \row
     \li Accepted/Correct
-    \li \inlineimage linguist-check-on.png
+    \li \inlineimage linguist-check-on.png {Check icon}
     \li The source string has a translation (possibly empty). You accepted
         the translation, and it passes all the \l{Validating Translations}
         {validation tests}. Click the icon to revoke acceptance of the
@@ -1298,7 +1302,7 @@ lcheck translations/myapp_de.ts
 
     \row
     \li Accepted/Warnings
-    \li \inlineimage linguist-check-warning.png
+    \li \inlineimage linguist-check-warning.png {Check warning icon}
     \li You accepted the translation, but it does not pass all the validation
         tests. The \uicontrol Warnings view shows where it failed. If you click
         the icon to revoke acceptance of the translation, the state becomes
@@ -1306,7 +1310,7 @@ lcheck translations/myapp_de.ts
 
     \row
     \li Not Accepted
-    \li \inlineimage linguist-check-off.png
+    \li \inlineimage linguist-check-off.png {check off icon}
     \li The string has a translation that passes all the validation tests, but
         you have not yet accepted the translation. Click the icon or press
         \key{Ctrl+Enter} to accept the translation. The state becomes
@@ -1314,13 +1318,13 @@ lcheck translations/myapp_de.ts
 
     \row
     \li No Translation
-    \li \inlineimage linguist-check-empty.png
+    \li \inlineimage linguist-check-empty.png {check empty icon}
     \li The string does not have a translation. If you click the icon to accept
         the empty translation, the state becomes \uicontrol {Accepted/Correct}.
 
     \row
     \li Validation Failures
-    \li \inlineimage linguist-danger.png
+    \li \inlineimage linguist-danger.png {danger icon}
     \li The string has a translation, but the translation does not pass all the
         validation tests. The \uicontrol Warnings view shows the validation test
         failures. Click on the icon or press \key{Ctrl+Enter} to
@@ -1331,7 +1335,7 @@ lcheck translations/myapp_de.ts
 
     \row
     \li Obsolete
-    \li \inlineimage linguist-check-obsolete.png
+    \li \inlineimage linguist-check-obsolete.png {check obsolete icon}
     \li The string is obsolete. It is no longer used in the context.
         See \l{Using lupdate} for instructions on how to remove obsolete
         messages from the file.
@@ -1390,7 +1394,8 @@ lcheck translations/myapp_de.ts
 
     \section1 Batch translation
 
-    \image linguist-batchtranslation.png
+    \image linguist-batchtranslation.png {Screenshot showing Qt Linguist batch
+           translation window with options and phrase book selection}
 
     Use the batch translation feature to automatically translate source
     texts that are also in a phrase book. To configure which phrase books to use
@@ -1406,7 +1411,8 @@ lcheck translations/myapp_de.ts
 
     To create a new phrase book, select \uicontrol Phrases > \uicontrol {New Phrase Book}.
 
-    \image linguist-phrasebookdialog.png
+    \image linguist-phrasebookdialog.png {Screenshot of Qt Linguist phrase book editor
+           showing source phrases with German translations}
 
     To open a phrase book, select \uicontrol Phrases > \uicontrol {Open Phrase Book}, and
     then select the Qt phrase book file (.qph) to open.
@@ -1534,7 +1540,8 @@ translations for the open TS file using a local LLM via Ollama.
  In Linguist, choose \uicontrol{Translation > AI Translation}
 to open the AI Translation dialog:
 
- \image linguist-ai-translation-dialog.webp
+ \image linguist-ai-translation-dialog.webp {Screenshot of Qt Linguist AI translation window
+        showing server settings and completed translations}
 
  The dialog provides:
 
@@ -1564,7 +1571,7 @@ Log}. When complete, you can check out the translated texts on the log. Upon cli
     \previouspage AI translation
     \nextpage TS File Format
 
-    \image front-coding.png
+    \image front-coding.png {Illustration showing a code}
 
     Design your application so that it can be adapted to various languages and
     regions without engineering changes.

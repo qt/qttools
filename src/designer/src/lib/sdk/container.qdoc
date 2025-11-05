@@ -7,7 +7,9 @@
     a custom multi-page container in \QD's workspace.
     \inmodule QtDesigner
 
-    \image containerextension-example.webp
+    \image containerextension-example.webp {Screenshot of \QD UI
+           editor showing  option to insert page before current page to
+           an object}
 
     QDesignerContainerExtension provide an interface for creating
     custom container extensions. A container extension consists of a

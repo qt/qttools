@@ -7,7 +7,7 @@
     \title Qt Assistant Examples
     \brief Using Qt Assistant as a help viewer for  Qt applications.
 
-    \image assistant-examples.png
+    \image assistant-examples.png {Screenshot of Simple Text Viewer Example}
 
     Qt Assistant provides support for interactive help and enables you to
     display customer documentation to users of your Qt applications.

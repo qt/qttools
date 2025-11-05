@@ -26,10 +26,12 @@
     languages and locales.
 
     The English version of the application:
-    \image linguist-localizedclock_switchlang_en.webp
+    \image linguist-localizedclock_switchlang_en.webp {Screenshot of a digital
+           clock in English}
 
     The German version after changing the language at runtime:
-    \image linguist-localizedclock_switchlang_de.webp
+    \image linguist-localizedclock_switchlang_de.webp {Screenshot of a digital
+           clock in German}
 
 
     \section1 Implementation

@@ -32,7 +32,8 @@
     format as it is common in Germany.
 
     The screenshot shows the en_US version:
-    \image linguist-localizedclock_en_US.webp
+    \image linguist-localizedclock_en_US.webp {Screenshot of digital clock
+           in English (US)}
 
     \section2 Internationalization
 
@@ -58,13 +59,15 @@
     different than the en_US version above, while the same English plural
     translation is loaded in both cases.
 
-    \image linguist-localizedclock_en_GB.webp
+    \image linguist-localizedclock_en_GB.webp {Screenshot of digital clock
+           in English (UK)}
 
     Here is the screenshot of the de_DE version, which similar to GB has a
     different date format than US. Notice that the German translation for
     regular and plural forms is loaded accordingly.
 
-    \image linguist-localizedclock_de_DE.webp
+    \image linguist-localizedclock_de_DE.webp {Screenshot of digital clock
+           in German}
 
     \section1 Implementation
 

@@ -32,7 +32,8 @@
     \l{Getting To Know Qt Widgets Designer} document. For a quick tutorial on how to
     use \QD, refer to \l{A Quick Start to Qt Widgets Designer}.
 
-    \image designer-multiple-screenshot.png
+    \image designer-multiple-screenshot.png {Illustration showing three screenshots
+           of the \QD editor on different operating systems}
 
     \section1 Table of Contents
 
@@ -74,7 +75,8 @@
 
     \title Getting to Know Qt Widgets Designer
 
-    \image designer-screenshot.png
+    \image designer-screenshot.png {Screenshot showing the UI of the \QD
+           editor}
 
     \section1 Launching Designer
 
@@ -107,7 +109,9 @@
     \target MainWindow
     \table
         \row
-            \li \inlineimage designer-main-window.png
+            \li \inlineimage designer-main-window.png {Screenshot of the
+                             \QD showing all components that can be
+                             added to the window}
             \li \b{Qt Widgets Designer's Main Window}
 
         The menu bar provides all the standard actions for managing forms,
@@ -131,7 +135,8 @@
     \target WidgetBox
     \table
         \row
-            \li \inlineimage designer-widget-box.png
+            \li \inlineimage designer-widget-box.png {Screenshot showing all
+                             widget components for \QD}
             \li \b{Qt Widgets Designer's Widget Box}
 
         The widget box provides a selection of standard Qt widgets, layouts,
@@ -188,7 +193,9 @@
     using a grid. The coordinates on the screenshot show the position of each
     widget within the grid.
 
-    \image addressbook-tutorial-part3-labeled-layout.png
+    \image addressbook-tutorial-part3-labeled-layout.png {Screenshot of an
+           address book application highlighting all widget components and
+           their position}
 
     \note Inside the grid, the QPushButton objects are actually nested. The
     buttons on the right are first placed in a QVBoxLayout; the buttons at the
@@ -223,8 +230,10 @@
             \li  A Dialog in English
             \li  A Dialog in French
         \row
-            \li  \image designer-english-dialog.png
-            \li  \image designer-french-dialog.png
+            \li  \image designer-english-dialog.png {Screenshot showing an
+                        address book example in English}
+            \li  \image designer-french-dialog.png {Screenshot showing an
+                        address book example in French}
     \endtable
 
     The process of laying out widgets consists of creating the layout hierarchy
@@ -250,7 +259,8 @@
         \li  Preview the form
     \endlist
 
-    \image rgbController-screenshot.png
+    \image rgbController-screenshot.png {Screenshot showing an RGB controller
+           with sliders to change the red, green, and blue value}
 
     Suppose you would like to design a small widget (see screenshot above) that
     contains the controls needed to manipulate Red, Green and Blue (RGB) values
@@ -259,7 +269,8 @@
 
     \table
     \row
-    \li \inlineimage designer-choosing-form.png
+    \li \inlineimage designer-choosing-form.png {Screenshot showing a form of a
+                     list with all components to add to the window}
     \li \b{Choosing a Form}
 
     You start by choosing \gui Widget from the \gui{New Form} dialog.
@@ -268,7 +279,8 @@
 
     \table
     \row
-    \li  \inlineimage rgbController-arrangement.png
+    \li  \inlineimage rgbController-arrangement.png {Screenshot showing the
+                      arrangement of the rgb controller components}
     \li  \b{Placing Widgets on a Form}
 
     Drag three labels, three spin boxes and three vertical sliders on to your
@@ -284,8 +296,12 @@
 
     \table
         \row
-            \li \inlineimage rgbController-form-gridLayout.png
-            \li \inlineimage rgbController-selectForLayout.png
+            \li \inlineimage rgbController-form-gridLayout.png {Screenshot
+                             showing the arrangement of the rgb controller
+                             components with one component being selected}
+            \li \inlineimage rgbController-selectForLayout.png {Screenshot
+                             showing the option to Lay Out in a Grid in the
+                             \QD editor}
     \endtable
 
 
@@ -301,14 +317,16 @@
     Alternatively, you could also select \gui{Lay Out in a Grid} -- you will
     still see the same arrangement (shown below).
 
-    \image rgbController-final-layout.png
+    \image rgbController-final-layout.png {Screenshot showing the result of the
+           final layout}
 
     \note Main layouts cannot be seen on the form. To check if you have a main
     layout installed, try resizing your form; your widgets should resize
     accordingly. Alternatively, you can take a look at \QD's
     \gui{Object Inspector}. If your top level widget does not have a layout,
     you will see the broken layout icon next to it,
-    \inlineimage rgbController-no-toplevel-layout.png
+    \inlineimage rgbController-no-toplevel-layout.png {Screenshot showing the
+                 option for no toplevel layout}
     .
 
     When you click on the slider and drag it to a certain value, you want the
@@ -325,7 +343,9 @@
 
     \table
         \row
-            \li \inlineimage rgbController-signalsAndSlots.png
+            \li \inlineimage rgbController-signalsAndSlots.png {Screenshot of the
+                             rgb controller showing the signal connection between
+                             the slider and spinbox}
             \li \b{Connecting Signals to Slots}
 
         Click on the slider and drag the cursor towards the spin box. The
@@ -333,7 +353,9 @@
         correct signal and slot and click \gui OK.
     \endtable
 
-    \image rgbController-configure-connection1.png
+    \image rgbController-configure-connection1.png {Screenshot showing the
+           configuration to connect the spinbox with the slider, so the spinbox
+           value changes the slider}
 
     Repeat the step (in reverse order), clicking on the spin box and dragging
     the cursor towards the slider, to connect the spin box's
@@ -343,7 +365,9 @@
     You can use the screenshot below as a guide to selecting the correct signal
     and slot.
 
-    \image rgbController-configure-connection2.png
+    \image rgbController-configure-connection2.png {Screenshot showing the
+           configuration to connect the slider with the spinbox, so the slider
+           changes the spinbox value}
 
     Now that you have successfully connected the objects for the "RED"
     component of the RGB Controller, do the same for the "GREEN" and "BLUE"
@@ -354,7 +378,9 @@
 
     \table
         \row
-            \li \inlineimage rgbController-property-editing.png
+            \li \inlineimage rgbController-property-editing.png {Screenshot
+                             showing option to change minimum and maximum
+                             value that can be entered in the spinbox}
             \li \b{Setting Widget Properties}
 
         Click on the first spin box. Within the \gui{Property Editor}, you will
@@ -392,27 +418,27 @@
     \table
         \header \li  \li  \b{Editing Modes}
         \row
-            \li  \inlineimage designer-widget-tool.png
+            \li  \inlineimage designer-widget-tool.png {Designer widget tool icon}
             \li  In \l{Qt Widgets Designer's Widget Editing Mode}{Edit} mode, we can
                 change the appearance of the form, add layouts, and edit the
                 properties of each widget. To switch to this mode, press
                 \key{F3}. This is \QD's default mode.
 
         \row
-            \li  \inlineimage designer-connection-tool.png
+            \li  \inlineimage designer-connection-tool.png {\QD connection tool icon}
             \li  In \l{Qt Widgets Designer's Signals and Slots Editing Mode}
                 {Signals and Slots} mode, we can connect widgets together using
                 Qt's signals and slots mechanism. To switch to this mode, press
                 \key{F4}.
 
         \row
-            \li  \inlineimage designer-buddy-tool.png
+            \li  \inlineimage designer-buddy-tool.png {\QD buddy tool icon}
             \li  In \l{Qt Widgets Designer's Buddy Editing Mode}{Buddy Editing Mode},
                 buddy widgets can be assigned to label widgets to help them
                 handle keyboard focus correctly.
 
         \row
-            \li  \inlineimage designer-tab-order-tool.png
+            \li  \inlineimage designer-tab-order-tool.png {\QD tab order tool icon}
             \li  In \l{Qt Widgets Designer's Tab Order Editing Mode}
                 {Tab Order Editing Mode}, we can set the order in which widgets
                 receive the keyboard focus.
@@ -428,7 +454,8 @@
 
     \title Qt Widgets Designer's Widget Editing Mode
 
-    \image designer-editing-mode.png
+    \image designer-editing-mode.png {Screenshot showing the \QD editing
+           mode, to change size or position of a component in a layout}
 
     In the Widget Editing Mode, objects can be dragged from the main window's
     widget box to a form, edited, resized, dragged around on the form, and even
@@ -474,7 +501,8 @@
     \target SelectingObjects
     \table
         \row
-            \li  \inlineimage designer-selecting-widget.png
+            \li  \inlineimage designer-selecting-widget.png {Screenshot showing
+                              a widget that is selected in \QD editor mode}
             \li  \b{Selecting Objects}
 
         Objects on the form are selected by clicking on them with the left
@@ -543,7 +571,9 @@
     \target DragAndDrop
     \table
         \row
-            \li \inlineimage designer-dragging-onto-form.png
+            \li \inlineimage designer-dragging-onto-form.png {Screenshot showing
+                             widgets in the ui editor that can be moved freely
+                             by using drag and drop}
             \li \b{Drag and Drop}
 
         \QD makes extensive use of the drag and drop facilities provided by Qt.
@@ -575,7 +605,9 @@
     \target EditingProperties
     \table
         \row
-            \li \inlineimage designer-property-editor.png
+            \li \inlineimage designer-property-editor.png {Screenshot showing
+                             the property editor of a widget with options to
+                             freely change the widget as desired}
             \li \b{Editing Properties}
 
         The property editor uses standard Qt input widgets to manage the
@@ -619,21 +651,23 @@
     widgets and to forms themselves. Since Qt 4.4, dynamic properties are added
     and removed via the property editor's toolbar, shown below.
 
-    \image designer-property-editor-toolbar.png
+    \image designer-property-editor-toolbar.png {Screenshot showing the property
+           editor toolbar for a widget}
 
     To add a dynamic property, click on the \gui Add button
-    \inlineimage designer-property-editor-add-dynamic.png
+    \inlineimage designer-property-editor-add-dynamic.png {Add button}
     . To remove it, click on the \gui Remove button
-    \inlineimage designer-property-editor-remove-dynamic.png
+    \inlineimage designer-property-editor-remove-dynamic.png {Remove button}
      instead. You can also sort the properties alphabetically and change the
     color groups by clickinig on the \gui Configure button
-    \inlineimage designer-property-editor-configure.png
+    \inlineimage designer-property-editor-configure.png {Configure button}
     .
 
     \section2 The Object Inspector
     \table
         \row
-            \li  \inlineimage designer-object-inspector.png
+            \li  \inlineimage designer-object-inspector.png {Screenshot showing
+                              an object tree of all widgets in the layout}
             \li  \b{The Object Inspector}
 
         The \gui{Object Inspector} displays a hierarchical list of all the
@@ -695,7 +729,8 @@
 
     \table
         \row
-            \li  \inlineimage designer-set-layout.png
+            \li  \inlineimage designer-set-layout.png {Screenshot showing buttons
+                              to change the layout type}
             \li  \b{Applying a Layout}
 
         To apply a layout, you can select your choice of layout from the
@@ -712,7 +747,8 @@
     main form, container widget, or page of a container widget in the
     Property Editor.
 
-    \image designer-set-layout2.png
+    \image designer-set-layout2.png {Screenshot showing another option
+           to change layout type by right clicking in the editor}
 
 
     \section1 Layout Objects
@@ -743,7 +779,8 @@
     blue cursor is displayed in the layout as an object is dragged over
     it to indicate where the object will be added.
 
-     \image designer-layout-inserting.png
+     \image designer-layout-inserting.png {Screenshot showing how to move
+            widgets in a layout with drag and drop}
      \caption Inserting Objects into a Layout
 
     \section1 Layout Types
@@ -776,7 +813,8 @@
     etc. The QFormLayout class adheres to various platform look and feel
     guidelines and supports wrapping for long rows.
 
-    \image designer-form-layout.png
+    \image designer-form-layout.png {Screenshot showing a layout example with
+           two labels and on each label a text field on the side}
 
     The UI file above results in the previews shown below.
 
@@ -786,9 +824,13 @@
             \li  \macos
             \li  Cleanlooks
         \row
-            \li  \inlineimage designer-form-layout-windowsXP.png
-            \li  \inlineimage designer-form-layout-macintosh.png
-            \li  \inlineimage designer-form-layout-cleanlooks.png
+            \li  \inlineimage designer-form-layout-windowsXP.png {Screenshot
+                              showing the layout preview on Windows XP}
+            \li  \inlineimage designer-form-layout-macintosh.png {Screenshot
+                              showing the layout preview on \macos}
+            \li  \inlineimage designer-form-layout-cleanlooks.png {Screenshot
+                              showing the layout preview with clean looks on
+                              Windows XP}
     \endtable
 
 
@@ -799,7 +841,8 @@
     vertically in the same way as normal layouts, but also allow the user to
     adjust the amount of space allocated to each object.
 
-    \image designer-splitter-layout.png
+    \image designer-splitter-layout.png {Screenshot showing to change layout
+           to "Lay Out Vertically in Splitter"}
 
     Although QSplitter is a container widget, \QD treats splitter objects as
     layouts that are applied to existing widgets. To place a group of widgets
@@ -870,7 +913,9 @@
     feature can be activated by opening the \gui Form menu and selecting
     \gui Preview, or by pressing \key{Ctrl+R} when in the form.
 
-    \image designer-dialog-preview.png
+    \image designer-dialog-preview.png {Screenshot showing a preview of a layout
+           to create an image with options to change name, width, height, and
+           color depth}
 
     The preview shows exactly what the final component will look like when used
     in an application.
@@ -885,25 +930,35 @@
 
     You will see the dialog shown below:
 
-    \image designer-preview-style.png
+    \image designer-preview-style.png {Screenshot of preferences dialog showing
+           options for interface mode, font settings, print and preview
+           configuration, additional template paths, and grid visibility
+           and snapping}
 
     The \gui{Print/Preview Configuration} checkbox must be checked to activate
     previews of skins. You can select the styles provided from the \gui{Style}
     drop-down box.
 
-    \image designer-preview-style-selection.png
+    \image designer-preview-style-selection.png {Screenshot of \QD print
+           and preview configuration section showing a dropdown menu for selecting
+           interface styles, including Default, Windows, WindowsXP etc.}
 
     Alternatively, you can preview custom style sheet created with Qt Style
     Sheets. The figure below shows an example of Qt Style Sheet syntax and the
     corresponding output.
 
-    \image designer-preview-stylesheet.png
+    \image designer-preview-stylesheet.png {Screenshot of \QD dialogs
+           showing the Edit Style Sheet window with QLineEdit CSS properties
+           and the Create Image dialog for defining image name, size, and color
+           depth}
 
     Another option would be to preview your form with device skins. A list of
     generic device skins are available in \QD, however, you may also use
     other QVFB skins with the \gui{Browse...} option.
 
-    \image designer-preview-deviceskin-selection.png
+    \image designer-preview-deviceskin-selection.png {Screenshot of \QD
+           print and preview configuration showing a dropdown menu for selecting
+           device skins}
 
 
     \section1 Viewing the Form's Code
@@ -911,13 +966,15 @@
     Since Qt 4.4, it is possible to view code generated by the User Interface
     Compiler (uic) for the \QD form.
 
-    \image designer-form-viewcode.png
+    \image designer-form-viewcode.png {Screenshot showing option to view
+           the layout in code under the drop down menu of "Forms"}
 
     Select \gui{View Code...} from the \gui{Form} menu and a dialog with the
     generated code will be displayed. The screenshot below is an example of
     code generated by the \c{uic}.
 
-    \image designer-code-viewer.png
+    \image designer-code-viewer.png {Screenshot showing a code of "Form" in a
+           code viewer}
 
     \section1 Saving and Printing the Form
 
@@ -925,7 +982,7 @@
 
     \table
     \row
-    \li \inlineimage designer-file-menu.png
+    \li \inlineimage designer-file-menu.png {Screenshot showing file menu options}
     \li \b{Saving Forms}
 
     To save a form as an image, choose the \gui{Save Image...} option. The file
@@ -947,7 +1004,8 @@
 
     \title Qt Widgets Designer's Signals and Slots Editing Mode
 
-    \image designer-connection-mode.png
+    \image designer-connection-mode.png {Screenshot of \QD connection mode
+           showing the connection of signals between two widgets}
 
     In \QD's signals and slots editing mode, you can connect objects in a form
     together using Qt's signals and slots mechanism. Both widgets and layouts
@@ -975,7 +1033,8 @@
     \target HighlightedObjects
     \table
         \row
-            \li  \inlineimage designer-connection-highlight.png
+            \li  \inlineimage designer-connection-highlight.png {Screenshot
+                              showing a widget of a layout that is highlighted}
             \li  \b{Highlighted Objects}
 
         When the cursor is over an object that can be used in a connection, the
@@ -995,7 +1054,10 @@
     \target MakingAConnection
     \table
         \row
-            \li  \inlineimage designer-connection-making.png
+            \li  \inlineimage designer-connection-making.png {Screenshot showin
+                              how to connect one widget to another by pressing
+                              left click to the desired widget that should be
+                              connected to}
             \li  \b{Making a Connection}
 
         The connection path will change its shape as the cursor moves around
@@ -1008,7 +1070,8 @@
     from the source object and slots from the destination object that you can
     use.
 
-    \image designer-connection-dialog.png
+    \image designer-connection-dialog.png {Screenshot of window listing signals
+           that can be emitted between two selected widgets}
 
     To complete the connection, select a signal from the source object and a
     slot from the destination object, then click \key OK. Click \key Cancel if
@@ -1026,7 +1089,9 @@
     \target ConnectingToTheForm
     \table
         \row
-            \li  \inlineimage designer-connection-to-form.png
+            \li  \inlineimage designer-connection-to-form.png {Screenshot showing
+                              an arrow coming from a widget following the cursor
+                              to choose a widget that receives the signals}
             \li  \b{Connecting to a Form}
 
         To connect an object to the form itself, simply position the cursor
@@ -1046,7 +1111,12 @@
     \target ConnectionEditor
     \table
         \row
-            \li  \inlineimage designer-connection-editor.png
+            \li  \inlineimage designer-connection-editor.png {Screenshot of Qt
+                              Designer Signal and Slot editor showing connections
+                              between an okButton and a cancelButton where the
+                              okButton and cancelbutton send a "clicked()" signal.
+                              The okButton triggers the "accept()" function and
+                              the cancelButton "reject()"}
             \li  \b{The Signal/Slot Editor}
 
         The signal and slot used in a connection can be changed after it has
@@ -1059,7 +1129,9 @@
     \target DeletingConnections
     \table
         \row
-            \li  \inlineimage designer-connection-editing.png
+            \li  \inlineimage designer-connection-editing.png {Screenshot
+                              showing connection edit mode to change the
+                              signals between two widgets}
             \li  \b{Deleting Connections}
 
         The whole connection can be selected by clicking on any of its path
@@ -1077,7 +1149,8 @@
 
     \title Qt Widgets Designer's Buddy Editing Mode
 
-    \image designer-buddy-mode.png
+    \image designer-buddy-mode.png {Screenshot of buddy mode showing which widget
+           are bindet together}
 
     One of the most useful basic features of Qt is the support for buddy
     widgets. A buddy widget accepts the input focus on behalf of a QLabel when
@@ -1098,7 +1171,9 @@
     \target MakingBuddies
     \table
         \row
-            \li  \inlineimage designer-buddy-making.png
+            \li  \inlineimage designer-buddy-making.png {Screenshot showing how to
+                              bind widgets by pressing on one widget and move the
+                              cursor to the other widget that should be bindet to}
             \li  \b{Making Buddies}
 
         To define a buddy widget for a label, click on the label, drag the
@@ -1130,7 +1205,9 @@
 
     \title Qt Widgets Designer's Tab Order Editing Mode
 
-    \image designer-tab-order-mode.png
+    \image designer-tab-order-mode.png {Screenshot showing the order of the
+           layout highlighting in which order the sections of the application
+           should be used}
 
     Many users expect to be able to navigate between widgets and controls
     using only the keyboard. Qt lets the user navigate between input widgets
@@ -1184,7 +1261,9 @@
     input widgets, providing paged and tabbed layouts, or just acting as
     decorative containers for other objects.
 
-    \image designer-widget-morph.png
+    \image designer-widget-morph.png {Screenshot showing the "Morph into" options
+           for a button. It shows option to morph into QCheckbox, QRadioButton,
+           QToolButton, and QCommandLinkButton}
 
     \QD provides visual feedback to help you place objects inside your
     containers. When you drag an object from the widget box (or elsewhere) on
@@ -1208,7 +1287,8 @@
 
     \table
         \row
-            \li  \inlineimage designer-containers-frame.png
+            \li  \inlineimage designer-containers-frame.png {Screenshot showing
+                              a frame that is selected}
             \li  \b Frames
 
         Frames are used to enclose and group widgets, as well as to provide
@@ -1220,7 +1300,9 @@
         in more detail in the QFrame class description.
 
         \row
-            \li  \inlineimage designer-containers-groupbox.png
+            \li  \inlineimage designer-containers-groupbox.png {Screenshot
+                              showing a group box, including multiple widgets,
+                              that is selected}
             \li  \b{Group Boxes}
 
         Group boxes are usually used to group together collections of
@@ -1233,7 +1315,9 @@
         group box, click inside it and apply the layout as usual.
 
         \row
-            \li  \inlineimage designer-containers-stackedwidget.png
+            \li  \inlineimage designer-containers-stackedwidget.png {Screenshot
+                              showing group box containing widgets that are
+                              stacked on on of each other}
             \li  \b{Stacked Widgets}
 
         Stacked widgets are collections of widgets in which only the topmost
@@ -1249,7 +1333,8 @@
         you to add and remove pages.
 
         \row
-            \li  \inlineimage designer-containers-tabwidget.png
+            \li  \inlineimage designer-containers-tabwidget.png {Screenshot showing
+                              a tab widget in a container}
             \li  \b{Tab Widgets}
 
         Tab widgets allow the developer to split up the contents of a widget
@@ -1276,7 +1361,8 @@
         \endlist
 
         \row
-            \li  \inlineimage designer-containers-toolbox.png
+            \li  \inlineimage designer-containers-toolbox.png {Screensshot showing
+                              a toolbox in a container}
             \li  \b{ToolBox Widgets}
 
         Toolbox widgets provide a series of pages or compartments in a toolbox.
@@ -1292,7 +1378,8 @@
         context menu.
 
         \row
-            \li  \inlineimage designer-containers-dockwidget.png
+            \li  \inlineimage designer-containers-dockwidget.png {Screenshot
+                              showing a dock widget in a container}
             \li  \b{Dock Widgets}
 
         Dock widgets are floating panels, often containing input widgets and
@@ -1354,11 +1441,14 @@
 
     \target CreatingAMenu
     \div {class="float-left"}
-    \inlineimage designer-creating-menu1.png
-    \inlineimage designer-creating-menu2.png
+    \inlineimage designer-creating-menu1.png {Screenshot showing cursor hovering over a
+                 button to create a menu on the window}
+    \inlineimage designer-creating-menu2.png {Screenshot showing cursor clicking on the
+                 button to create a menu on the window}
     \br
-    \inlineimage designer-creating-menu3.png
-    \inlineimage designer-creating-menu4.png
+    \inlineimage designer-creating-menu3.png {Screenshot showing a text field that
+                 results when clicking the button to name the menu}
+    \inlineimage designer-creating-menu4.png {Screenshot showing the newly created menu}
     \enddiv
 
     \section2 Creating a Menu
@@ -1387,11 +1477,19 @@
 
     \target CreatingAMenuEntry
     \div {class="float-right"}
-    \inlineimage designer-creating-menu-entry1.png
-    \inlineimage designer-creating-menu-entry2.png
+    \inlineimage designer-creating-menu-entry1.png {Screenshot of cursor
+                 clicking on the new menu showing a dropdown menu with
+                 button to create options or separators to the dropdown
+                 menu}
+    \inlineimage designer-creating-menu-entry2.png {Screenshot of cursor
+                 clicking on button to add option to the dropdown menu by
+                 writing a name in the textfield}
     \br
-    \inlineimage designer-creating-menu-entry3.png
-    \inlineimage designer-creating-menu-entry4.png
+    \inlineimage designer-creating-menu-entry3.png {Screenshot showing the
+                 newly created button on the dropdown menu}
+    \inlineimage designer-creating-menu-entry4.png {Screehsot of cursor
+                 clicking the button showing an option to create another
+                 button that pops up after clicking}
     \enddiv
 
     \section2 Creating a Menu Entry
@@ -1424,7 +1522,8 @@
     \section1 Toolbars
 
     \div {class="float-left"}
-    \inlineimage designer-creating-toolbar.png
+    \inlineimage designer-creating-toolbar.png {Screenshot showing option to
+                 add a tool bar by right clicking on the ui editor}
     \enddiv
 
     \section2 Creating and Removing a Toolbar
@@ -1448,8 +1547,10 @@
     they can be moved between menus and toolbars.
 
     \div {class="float-right"}
-    \inlineimage designer-adding-toolbar-action.png
-    \inlineimage designer-removing-toolbar-action.png
+    \inlineimage designer-adding-toolbar-action.png {Screenshot showing cursor
+                 adding a toolbar with drag and drop}
+    \inlineimage designer-removing-toolbar-action.png {Screenshot showing option
+                 to remove toolbar by right clicking on it}
     \enddiv
 
     To share an action between a menu and a toolbar, drag its icon from the
@@ -1470,7 +1571,8 @@
 
     \target TheActionEditor
     \div {class="float-left"}
-    \inlineimage designer-action-editor.png
+    \inlineimage designer-action-editor.png {Screenshot of action editor
+                 listing all actions of a toolbar}
     \enddiv
 
     \section2 The Action Editor
@@ -1508,8 +1610,10 @@
 
     \target AddingAnAction
     \div {class="float-right"}
-    \inlineimage designer-adding-menu-action.png
-    \inlineimage designer-adding-toolbar-action.png
+    \inlineimage designer-adding-menu-action.png {Screenshot showing cursor
+                 adding a toolbar with drag and drop}
+    \inlineimage designer-adding-toolbar-action.png {Screenshot showing option
+                 to remove toolbar by right clicking on it}
     \enddiv
 
     \section2 Adding an Action
@@ -1534,7 +1638,8 @@
     \target AddingADockWidget
 
     \div {class="float-left"}
-    \inlineimage designer-adding-dockwidget.png
+    \inlineimage designer-adding-dockwidget.png {Screenshot showing how to add a
+                 dock widget by using drag and drop}
     \enddiv
 
     \section2 Adding a Dock Widget
@@ -1566,7 +1671,8 @@
 
     \title Editing Resources with Qt Widgets Designer
 
-    \image designer-resources-editing.png
+    \image designer-resources-editing.png {Screenshot of Edit Resources
+           dialog showing a resource file containing two image entries}
 
     \QD fully supports the \l{The Qt Resource System}{Qt Resource System},
     enabling resources to be specified together with forms as they are
@@ -1583,27 +1689,30 @@
     \target ResourceFiles
     \table
         \row
-            \li  \inlineimage designer-resource-browser.png
+            \li  \inlineimage designer-resource-browser.png {Screenshot of the
+                              "Resource Browser" window showing the resource
+                              root directory}
             \li  \b{Resource Files}
 
         Within the resource browser, you can open existing resource files or
         create new ones. Click the \gui{Edit Resources} button
-        \inlineimage designer-edit-resources-button.png
+        \inlineimage designer-edit-resources-button.png {Edit button}
          to edit your resources. To reload resources, click on the \gui Reload
         button
-        \inlineimage designer-reload-resources-button.png
+        \inlineimage designer-reload-resources-button.png {Reload resources
+                     button}
         .
     \endtable
 
 
     Once a resource file is loaded, you can create or remove entries in it
     using the given \gui{Add Files}
-    \inlineimage designer-add-resource-entry-button.png
+    \inlineimage designer-add-resource-entry-button.png {Add resource entry button}
     and \gui{Remove Files}
-    \inlineimage designer-remove-resource-entry-button.png
+    \inlineimage designer-remove-resource-entry-button.png {Remove resource entry button}
      buttons, and specify resources (e.g., images) using the \gui{Add Files}
     button
-    \inlineimage designer-add-files-button.png
+    \inlineimage designer-add-files-button.png {Add files button}
     . Note that these resources must reside within the current resource file's
     directory or one of its subdirectories.
 
@@ -1611,19 +1720,23 @@
     \target EditResource
     \table
         \row
-            \li  \inlineimage designer-edit-resource.png
+            \li  \inlineimage designer-edit-resource.png {Screenshot of Edit Resources
+                              dialog showing a resource file with a single prefix entry
+                              labeled newPrefix}
             \li  \b{Editing Resource Files}
 
         Press the
-        \inlineimage designer-add-resource-entry-button.png
+        \inlineimage designer-add-resource-entry-button.png {Add resource entry
+                     button}
          button to add a new resource entry to the file. Then use the
         \gui{Add Files} button
-        \inlineimage designer-add-files-button.png
+        \inlineimage designer-add-files-button.png {Add files button}
          to specify the resource.
 
         You can remove resources by selecting the corresponding entry in the
         resource editor, and pressing the
-        \inlineimage designer-remove-resource-entry-button.png
+        \inlineimage designer-remove-resource-entry-button.png {Remove resource entry
+                     button}
          button.
     \endtable
 
@@ -1637,7 +1750,10 @@
     \target UsingResources
     \table
         \row
-            \li  \inlineimage designer-resources-using.png
+            \li  \inlineimage designer-resources-using.png {Screenshot of property
+                              editor showing the icon property with different states,
+                              Normal Off, Normal On and Disabled Off and the option
+                              to choose an image resource}
             \li  \b{Using Resources}
 
         When changing properties with values that may be defined within a
@@ -1646,7 +1762,9 @@
         way.
 
         \row
-            \li  \inlineimage designer-resource-selector.png
+            \li  \inlineimage designer-resource-selector.png {Screenshot of "Select
+                              Resource" window showing an option to choose which
+                              image should be used as a resource}
             \li  \b{Selecting a Resource}
 
         You can open the resource selector by clicking \gui{Choose Resource...}
@@ -1676,14 +1794,18 @@ pixmap property in the property editor.
     \target UsingStylesheets
     \table
         \row
-            \li \inlineimage designer-stylesheet-options.png
+            \li \inlineimage designer-stylesheet-options.png {Screenshot of form editor
+                             showing a label and line editor with the option
+                             highlighted to change stylesheet from the
+           context menu}
             \b{Setting a Stylesheet}
 
             The stylesheet editor can be accessed by right-clicking a widget
             and selecting \gui{Change styleSheet...}
 
         \row
-            \li \inlineimage designer-stylesheet-usage.png
+            \li \inlineimage designer-stylesheet-usage.png {Screenshot showing the
+                             preview of used stylesheet}
     \endtable
 
 */
@@ -1751,7 +1873,8 @@ pixmap property in the property editor.
 
     The \c{calculatorform.ui} file designed with \QD is shown below:
 
-    \image directapproach-calculatorform.png
+    \image directapproach-calculatorform.png {Screenshot of form editor showing a
+           calculator layout}
 
     When using \c CMake to build the executable, a \c{CMakeLists.txt}
     file is required:
@@ -2274,7 +2397,9 @@ pixmap property in the property editor.
 
     \title Customizing Qt Widgets Designer Forms
 
-    \image designer-form-settings.png
+    \image designer-form-settings.png {Screenshot of form settings window showing
+           options to change author, edit layout default and function, include
+           hints, and add pixmap function}
 
     When saving a form in \QD, it is stored as a UI file. Several form
     settings, for example the grid settings or the margin and spacing for the
@@ -2300,7 +2425,9 @@ pixmap property in the property editor.
     \target LayoutFunction
     \table
     \row
-    \li \inlineimage designer-form-layoutfunction.png
+    \li \inlineimage designer-form-layoutfunction.png {Screenshot showing the
+                     option to enable or disable layout function and to edit
+                     margin and spacing of layout function}
     \li \b{Layout Function}
 
     The default layout properties will be replaced by the corresponding
@@ -2362,7 +2489,9 @@ pixmap property in the property editor.
 
     \section2 Promoting Widgets
 
-    \image designer-promoting-widgets.png
+    \image designer-promoting-widgets.png {Screenshot of the Promoted Widgets window
+           showing options to add a custom widget class by specifying a base class,
+           promoted class name, and header file}
 
     If some forms must be designed, but certain custom widgets are unavailble
     to the designer, we can substitute similar widgets to represent the missing
@@ -2814,7 +2943,10 @@ pixmap property in the property editor.
 
     \table
         \row
-            \li  \inlineimage designer-manual-taskmenuextension.png
+            \li  \inlineimage designer-manual-taskmenuextension.png {Screenshot
+                              of designer editor canvas showing a simple custom
+                              widget with a context menu open, highlighting the
+                              “Edit State" option}
             \li  \b{QDesignerTaskMenuExtension}
 
         QDesignerTaskMenuExtension is useful for custom widgets. It provides an
@@ -2825,7 +2957,9 @@ pixmap property in the property editor.
         illustrates how to use this class.
 
         \row
-            \li  \inlineimage designer-manual-containerextension.png
+            \li  \inlineimage designer-manual-containerextension.png {Screenshot
+                              of designer editor showing a container and an open
+                              context menu}
             \li  \b{QDesignerContainerExtension}
 
         QDesignerContainerExtension is necessary when implementing a custom
@@ -2841,14 +2975,18 @@ pixmap property in the property editor.
 
     \table
         \row
-            \li  \inlineimage designer-manual-membersheetextension.png
+            \li  \inlineimage designer-manual-membersheetextension.png {Screenshot
+                              of "Configure Connecttion" showing which functions
+                              should the connected widgets send to each other}
             \li  \b{QDesignerMemberSheetExtension}
 
         The QDesignerMemberSheetExtension class allows you to manipulate a
         widget's member functions displayed when connecting signals and slots.
 
         \row
-            \li  \inlineimage designer-manual-propertysheetextension.png
+            \li  \inlineimage designer-manual-propertysheetextension.png {Screenshot
+                              of "Property Editor" showing the properties, and
+                              settings used for an object}
             \li  \b{QDesignerPropertySheetExtension,
                 QDesignerDynamicPropertySheetExtension}
 
@@ -2909,7 +3047,8 @@ pixmap property in the property editor.
     extension for the selected widget. This factory will then make an instance
     of the extension.
 
-    \image qtdesignerextensions.png
+    \image qtdesignerextensions.png {Diagram showing relation between
+           \QD components}
 
 
     \section2 Creating an Extension Factory

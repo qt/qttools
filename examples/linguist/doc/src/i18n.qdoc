@@ -16,5 +16,6 @@
     demonstrates how to detect the system language settings and show the UI in the appropriate
     languages.
 
-    \image linguist-i18n.png
+    \image linguist-i18n.png {Screenshot showing three menu layouts in German, Italian and
+           Norwegian}
 */

@@ -11,7 +11,7 @@
     \brief Understanding the Qt Linguist \e contexts concept and using two
     or more languages.
 
-    \image linguist-arrowpad_en.png
+    \image linguist-arrowpad_en.png {Screenshot of Arrow Pad in English}
 
     We will use two translations, French and Dutch, although there is no
     effective limit on the number of possible translations that can be used
@@ -82,7 +82,7 @@
     We call \c ArrowPad::tr() for each button's label since the labels are
     user-visible text.
 
-    \image linguist-arrowpad_en.png
+    \image linguist-arrowpad_en.png {Screenshot of Arrow Pad in English}
 
     \snippet arrowpad/mainwindow.h 0
     \snippet arrowpad/mainwindow.h 1
@@ -199,12 +199,12 @@
 
     When you run the program, you should now see the French version:
 
-    \image linguist-arrowpad_fr.png
+    \image linguist-arrowpad_fr.png {Screenshot of Arrow Pad in French}
 
     Try the same with Dutch (use \c LANG=nl in Unix). Now the Dutch
     version should appear:
 
-    \image linguist-arrowpad_nl.png
+    \image linguist-arrowpad_nl.png {Screenshot of Arrow Pad in Dutch}
 
     \section1 Exercises
 

@@ -30,7 +30,8 @@
     manipulate a widget's properties which is displayed in \QD's
     property editor.
 
-    \image qtdesignerextensions.png
+    \image qtdesignerextensions.png {Diagram showing relation between
+           \QD components}
 
     In \QD the extensions are not created until they are required. For
     that reason, when implementing extensions, you must also subclass
@@ -56,7 +57,8 @@
     property editor, widget box and object inspector which you can
     view in its workspace.
 
-    \image qtdesignerscreenshot.png
+    \image qtdesignerscreenshot.png {Screenshot showing the UI of the
+           \QD editor}
 
     \QD also has an object that works behind the scene; it contains
     the logic that integrates all of \QD's components into a coherent

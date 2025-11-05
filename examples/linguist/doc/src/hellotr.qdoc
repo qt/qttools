@@ -12,7 +12,8 @@
 
     The screenshot shows the English version.
 
-    \image linguist-hellotr_en.png
+    \image linguist-hellotr_en.png {Screenshot of Hello world! print
+           in English}
 
     See the \l{Qt Linguist Manual} for more information about
     translating Qt application.
@@ -60,7 +61,8 @@
     Since we haven't made the translation file \c hellotr_la.qm, the source text
     is shown when we run the application:
 
-    \image linguist-hellotr_en.png
+    \image linguist-hellotr_en.png {Screenshot of Hello world! print
+           in English}
 
     \section1 Creating a Latin Message File
 
@@ -167,5 +169,5 @@
     program again. This time the button will be labelled "Orbis, te
     saluto!".
 
-    \image linguist-hellotr_la.png
+    \image linguist-hellotr_la.png {Screenshot of Hello world print in Latin}
 */

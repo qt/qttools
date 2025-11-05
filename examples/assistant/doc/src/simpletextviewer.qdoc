@@ -9,7 +9,8 @@
 
     \brief Using \QA as a customized help viewer for your application.
 
-    \image simpletextviewer-example.png
+    \image simpletextviewer-example.png {Screenshot of Simple Text Viewer
+           Example UI.}
 
     This example shows how to use \QA as a customized help viewer in
     a custom application. This is done in two stages. Firstly,
@@ -350,7 +351,8 @@
 
     \section1 MainWindow Class
 
-    \image simpletextviewer-mainwindow.png
+    \image simpletextviewer-mainwindow.png {Screenshot of text viewer showing
+           the help menu on the tab bar}
 
     The \c MainWindow class provides the main application window with
     two menus: the \gui File menu lets the user open and view an
@@ -389,7 +391,9 @@
 
     \section1 FindFileDialog Class
 
-    \image simpletextviewer-findfiledialog.png
+    \image simpletextviewer-findfiledialog.png {Screenshot of find file
+           dialog showing options to enter file name, and in which
+           directory it should search}
 
     The Simple Text Viewer application provides a find file dialog
     allowing the user to search for files using wildcard matching. The

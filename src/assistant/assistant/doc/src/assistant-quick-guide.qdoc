@@ -27,14 +27,16 @@
     The selected topic in the selected document is displayed in the
     \b Documentation window (2).
 
-    \image assistant-assistant.png
+    \image assistant-assistant.png {Screenshot of the \QA window with
+           options to choose documentation of every category}
 
     Click the \gui Previous and \gui Next toolbar buttons (3) to navigate within
     the topics you have visited.
 
     \section1 Managing Bookmarks
 
-    \image assistant-bookmarks.png
+    \image assistant-bookmarks.png {Screenshot showing the bookmark menu of the
+           \QA to save documentation}
 
     To bookmark topics of particular interest, select \gui Bookmarks >
     \gui {Add Bookmark} (or press \key{Ctrl+B}). A bookmark for the
@@ -50,7 +52,8 @@
 
     \section1 Searching for Keywords
 
-    \image assistant-index.png
+    \image assistant-index.png {Screenshot of the \QA index menu to search
+           for keywords}
 
     To perform an index search, click the \gui{Index} tab on the sidebar
     (or press \key{Alt+I}). In the \gui{Look For} field, enter the search term.
@@ -63,7 +66,8 @@
 
     \section1 Using Free Text Search
 
-    \image assistant-search.png
+    \image assistant-search.png {Screenshot of the \QA search menu to
+           browse through documentation}
 
     \QA also provides full text searching for finding specific words in the
     documentation. To activate the full text search, either press \key(Alt+S)
@@ -80,7 +84,8 @@
     \title Using Qt Assistant
     \previouspage Qt Assistant Quick Guide
 
-    \image assistant-dockwidgets.png
+    \image assistant-dockwidgets.png {Screenshot of Qt Assistant showing widgets
+           for documentation}
 
     You can read documentation in the \gui Documentation window. To open a topic
     in a new tab, right click it in the \gui Contents window to open a context
@@ -102,7 +107,8 @@
     the documentation or the application itself, select \gui Edit >
     \gui Preferences > \gui Fonts.
 
-    \image assistant-preferences-fonts.png
+    \image assistant-preferences-fonts.png {Screenshot showing the preference menu
+           of the \QA to change font settings}
 
     To temporarily increase or decrease the font size in the \gui Documentation
     window, select \gui View > \gui {Zoom in} or \gui {Zoom out}. To reset the
@@ -138,7 +144,8 @@
 
     \section1 Full Text Searching
 
-    \img assistant-search.png
+    \img assistant-search.png {Screenshot of the \QA search menu to
+           browse through documentation}
 
     \QA provides a powerful full text search engine. You can search for certain
     words or text in the \gui Search window. Enter the text you want to look for
@@ -196,7 +203,8 @@
     To create and remove documentation filters, select \gui Edit >
     \gui Preferences > \gui Filters.
 
-    \image assistant-preferences-filters.png
+    \image assistant-preferences-filters.png {Screenshot showing the preference menu
+           of the \QA to filter which categories should be shown}
 
     To add a new filter, click \gui Add,
     specify a filter name, and click \gui OK. Then select the filter attributes
@@ -213,7 +221,8 @@
     To install and remove compressed help files, select \gui Edit >
     \gui Preferences > \gui Documentation.
 
-    \image assistant-preferences-documentation.png
+    \image assistant-preferences-documentation.png {Screenshot showing the preference menu
+           of the \QA to add or remove to the documentation list}
 
     Click the \gui{Install} button and
     choose the path of the compressed help file (*.qch) you would like to install.

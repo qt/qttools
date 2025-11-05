@@ -10,7 +10,8 @@
 
     \brief Creating a user interface from a \QD form at run-time.
 
-    \image calculatorbuilder-example.webp
+    \image calculatorbuilder-example.webp {Screenshot showing a calculator
+           application that adds two numbers and outputs the sum}
 
     We use the form created in the \l{calculatorform}{Calculator Form}
     example to show that the same user interface can be generated when the

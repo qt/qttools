@@ -14,7 +14,8 @@
     printer settings. It comes in two versions: English and
     Portuguese.
 
-    \image linguist-trollprint_10_en.png
+    \image linguist-trollprint_10_en.png {Screenshot showing the Troll Print
+           example UI in English}
 
     We've included a translation file, \c trollprint_pt.ts, which contains some
     Portuguese translations for this example.
@@ -90,7 +91,8 @@
     example again. Now you should see the Portuguese edition (Troll
     Imprimir 1.0):
 
-    \image linguist-trollprint_10_pt_bad.png
+    \image linguist-trollprint_10_pt_bad.png {Screenshot showing the troll
+           print UI in Portuguese}
 
     Whilst the translation has appeared correctly, it is in fact wrong. In
     good Portuguese, the second occurrence of "Enabled" should be
@@ -142,7 +144,8 @@
     to obtain an up-to-date binary \c trollprint_pt.qm file, and run Troll Print
     (or rather Troll Imprimir).
 
-    \image linguist-trollprint_10_pt_good.png
+    \image linguist-trollprint_10_pt_good.png {Screenshot showing the troll print
+           in portuguese}
 
     The second argument to \c tr() calls, called "comments" in \e {Qt
     Linguist}, distinguish between identical source texts that occur in
@@ -215,7 +218,8 @@
     Save and quit, then run \c lrelease. The Portuguese version
     should look like this:
 
-    \image linguist-trollprint_11_pt.png
+    \image linguist-trollprint_11_pt.png {Screenshot showing the troll print
+           in portuguese}
 
     Choose \uicontrol{Ajuda|Sobre} (\uicontrol{Help|About}) to see the about box.
 
@@ -225,5 +229,6 @@
 
     Now set \c LANG=en to get the original English version:
 
-    \image linguist-trollprint_11_en.png
+    \image linguist-trollprint_11_en.png {Screenshot showing the troll print
+           in english}
 */

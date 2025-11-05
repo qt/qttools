@@ -14,7 +14,9 @@
     plugin for \QD using the
     QDesignerContainerExtension class.
 
-    \image containerextension-example.webp
+    \image containerextension-example.webp {Screenshot of \QD UI
+           editor showing  option to insert page before current page to
+           an object}
 
     To provide a custom widget that can be used with \QD, we need to
     supply a self-contained implementation. In this example we use a

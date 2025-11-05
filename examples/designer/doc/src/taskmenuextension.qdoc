@@ -16,7 +16,8 @@
     the QDesignerTaskMenuExtension class to provide custom task menu
     entries associated with the plugin.
 
-    \image taskmenuextension-example.webp
+    \image taskmenuextension-example.webp {Screenshot of a custom "Edit State..."
+           action in a context menu of \QD.}
 
     To provide a custom widget that can be used with \QD, we need to
     supply a self-contained implementation. In this example we use a
@@ -276,7 +277,8 @@
 
     \section1 TicTacToeTaskMenu Class Definition
 
-    \image taskmenuextension-menu.webp
+    \image taskmenuextension-menu.webp {Screenshot showing all options
+           to change a widget in the UI editor}
 
     The \c TicTacToeTaskMenu class inherits QDesignerTaskMenuExtension
     which allows you to add custom entries (in the form of QActions)
@@ -325,7 +327,8 @@
 
     \section1 TicTacToeDialog Class Definition
 
-    \image taskmenuextension-dialog.webp
+    \image taskmenuextension-dialog.webp {Screenshot showing the edit
+           state mode of a widget}
 
     The \c TicTacToeDialog class inherits QDialog. The dialog lets the
     user modify the state of the currently selected Tic-Tac-Toe

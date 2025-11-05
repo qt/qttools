@@ -10,7 +10,8 @@
 
     \brief Creating a custom widget plugin for \QD.
 
-    \image customwidgetplugin-example.webp
+    \image customwidgetplugin-example.webp {Screenshot of an analog clock widget in
+           the \QD}
 
     In this example, the custom widget used is based on the
     \l{widgets/analogclock}{Analog Clock example}, and does not provide any custom
