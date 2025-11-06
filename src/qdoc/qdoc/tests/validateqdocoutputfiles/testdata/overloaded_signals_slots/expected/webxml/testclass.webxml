@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="OverloadedSignalsSlots" brief="Test class for overloaded signals and slots">
+            <description>
+                <brief>Test class for overloaded signals and slots.</brief>
+            </description>
+            <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" meta="constructor" signature="TestClass()">
+                <description>
+                    <para>Constructs a <link raw="TestClass" href="testclass.html" type="class">TestClass</link>.</para>
+                </description>
+            </function>
+            <function name="dataChanged" fullname="TestClass::dataChanged" href="testclass.html#dataChanged" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" signature="void dataChanged(int value)">
+                <parameter type="int" name="value" default=""/>
+                <description>
+                    <para>This method takes an integer <argument>value</argument>. (Tests overload note for methods that aren't signals/slots)</para>
+                </description>
+            </function>
+            <function name="dataChanged" fullname="TestClass::dataChanged" href="testclass.html#dataChanged-1" status="active" access="public" location="testclass.h" documented="true" meta="plain" overload="true" overload-number="1" type="void" signature="void dataChanged(const String &amp;value)">
+                <parameter type="const String &amp;" name="value" default=""/>
+                <description>
+                    <para>This method takes a string <argument>value</argument>.</para>
+                </description>
+            </function>
+            <function name="process" fullname="TestClass::process" href="testclass.html#process" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" signature="void process(int value)">
+                <parameter type="int" name="value" default=""/>
+                <description>
+                    <para>Processes an integer <argument>value</argument>. (Tests overload note for methods that aren't signals/slots)</para>
+                </description>
+            </function>
+            <function name="process" fullname="TestClass::process" href="testclass.html#process-1" status="active" access="public" location="testclass.h" documented="true" meta="plain" overload="true" overload-number="1" type="void" signature="void process(const String &amp;value)">
+                <parameter type="const String &amp;" name="value" default=""/>
+                <description>
+                    <para>Processes a string <argument>value</argument>.</para>
+                </description>
+            </function>
+            <function name="regularFunction" fullname="TestClass::regularFunction" href="testclass.html#regularFunction" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" signature="void regularFunction(int value)">
+                <parameter type="int" name="value" default=""/>
+                <description>
+                    <para>Regular function that takes an integer <argument>value</argument>.</para>
+                </description>
+            </function>
+            <function name="regularFunction" fullname="TestClass::regularFunction" href="testclass.html#regularFunction-1" status="active" access="public" location="testclass.h" documented="true" meta="plain" overload="true" overload-number="1" type="void" signature="void regularFunction(const String &amp;value)">
+                <parameter type="const String &amp;" name="value" default=""/>
+                <description>
+                    <para>Regular function that takes a string <argument>value</argument>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

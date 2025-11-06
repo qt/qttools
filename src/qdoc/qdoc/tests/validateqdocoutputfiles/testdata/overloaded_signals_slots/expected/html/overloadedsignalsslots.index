@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test for overloaded signals and slots using overload command" version="1.0" project="OverloadedSignalsSlots">
+    <namespace name="" status="active" access="public" module="overloadedsignalsslots">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="OverloadedSignalsSlots" brief="Test class for overloaded signals and slots">
+            <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" meta="constructor" signature="TestClass()"/>
+            <function name="dataChanged" fullname="TestClass::dataChanged" href="testclass.html#dataChanged" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" signature="void dataChanged(int value)">
+                <parameter type="int" name="value" default=""/>
+            </function>
+            <function name="dataChanged" fullname="TestClass::dataChanged" href="testclass.html#dataChanged-1" status="active" access="public" location="testclass.h" documented="true" meta="plain" overload="true" overload-number="1" type="void" signature="void dataChanged(const String &amp;value)">
+                <parameter type="const String &amp;" name="value" default=""/>
+            </function>
+            <function name="process" fullname="TestClass::process" href="testclass.html#process" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" signature="void process(int value)">
+                <parameter type="int" name="value" default=""/>
+            </function>
+            <function name="process" fullname="TestClass::process" href="testclass.html#process-1" status="active" access="public" location="testclass.h" documented="true" meta="plain" overload="true" overload-number="1" type="void" signature="void process(const String &amp;value)">
+                <parameter type="const String &amp;" name="value" default=""/>
+            </function>
+            <function name="regularFunction" fullname="TestClass::regularFunction" href="testclass.html#regularFunction" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" signature="void regularFunction(int value)">
+                <parameter type="int" name="value" default=""/>
+            </function>
+            <function name="regularFunction" fullname="TestClass::regularFunction" href="testclass.html#regularFunction-1" status="active" access="public" location="testclass.h" documented="true" meta="plain" overload="true" overload-number="1" type="void" signature="void regularFunction(const String &amp;value)">
+                <parameter type="const String &amp;" name="value" default=""/>
+            </function>
+        </class>
+        <module name="OverloadedSignalsSlots" href="overloadedsignalsslots-module.html" status="active" documented="true" seen="true" title="Overloaded Signals Slots Test Module" brief="Test module for overloaded signals and slots"/>
+    </namespace>
+</INDEX>
