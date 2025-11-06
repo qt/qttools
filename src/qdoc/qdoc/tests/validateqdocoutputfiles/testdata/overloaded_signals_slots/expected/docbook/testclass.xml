@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TestClass Class</db:title>
+<db:productname>OverloadedSignalsSlots</db:productname>
+<db:titleabbrev>Test for overloaded signals and slots using overload command</db:titleabbrev>
+<db:abstract>
+<db:para>Test class for overloaded signals and slots.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TestClass</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="TestClass">
+<db:title>TestClass::TestClass()</db:title>
+<db:para>Constructs a <db:link xlink:href="testclass.xml">TestClass</db:link>.</db:para>
+</db:section>
+<db:section xml:id="dataChanged">
+<db:title>void TestClass::dataChanged(int <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>This method takes an integer <db:code role="parameter">value</db:code>. (Tests overload note for methods that aren't signals/slots)</db:para>
+</db:section>
+<db:section xml:id="dataChanged-1">
+<db:title>void TestClass::dataChanged(const String &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>This method takes a string <db:code role="parameter">value</db:code>.</db:para>
+<db:para>This is an overloaded function.</db:para>
+</db:section>
+<db:section xml:id="process">
+<db:title>void TestClass::process(int <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Processes an integer <db:code role="parameter">value</db:code>. (Tests overload note for methods that aren't signals/slots)</db:para>
+</db:section>
+<db:section xml:id="process-1">
+<db:title>void TestClass::process(const String &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Processes a string <db:code role="parameter">value</db:code>.</db:para>
+<db:para>This is an overloaded function.</db:para>
+</db:section>
+<db:section xml:id="regularFunction">
+<db:title>void TestClass::regularFunction(int <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Regular function that takes an integer <db:code role="parameter">value</db:code>.</db:para>
+</db:section>
+<db:section xml:id="regularFunction-1">
+<db:title>void TestClass::regularFunction(const String &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Regular function that takes a string <db:code role="parameter">value</db:code>.</db:para>
+<db:para>This is an overloaded function.</db:para>
+</db:section>
+</db:section>
+</db:article>

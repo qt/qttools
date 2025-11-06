@@ -2708,7 +2708,8 @@ void DocBookGenerator::generateBody(const Node *node)
                 generateAddendum(node, Invokable, nullptr, AdmonitionPrefix::Note);
             if (fn->hasAssociatedProperties())
                 generateAddendum(node, AssociatedProperties, nullptr, AdmonitionPrefix::Note);
-            if (fn->hasOverloads() && fn->doc().hasOverloadCommand())
+            if (fn->hasOverloads() && fn->doc().hasOverloadCommand()
+                && !fn->isSignal() && !fn->isSlot())
                 generateAddendum(node, OverloadNote, nullptr, AdmonitionPrefix::None);
         }
 

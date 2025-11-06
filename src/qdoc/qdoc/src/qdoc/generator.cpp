@@ -718,7 +718,8 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 generateAddendum(node, Invokable, marker);
             if (fn->hasAssociatedProperties())
                 generateAddendum(node, AssociatedProperties, marker);
-            if (fn->hasOverloads() && fn->doc().hasOverloadCommand())
+            if (fn->hasOverloads() && fn->doc().hasOverloadCommand()
+                && !fn->isSignal() && !fn->isSlot())
                 generateAddendum(node, OverloadNote, marker, AdmonitionPrefix::None);
         }
 

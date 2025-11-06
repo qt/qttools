@@ -1,0 +1,23 @@
+project = OverloadedSignalsSlots
+description = Test for overloaded signals and slots using overload command
+version = 1.0
+
+locationinfo = false
+
+headerdirs = ./src
+sourcedirs = ./src
+
+outputformats       = WebXML HTML DocBook
+WebXML.nosubdirs    = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+locationinfo = false
+warninglimit = 0
+warninglimit.enabled = true
+
