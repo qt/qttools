@@ -820,12 +820,12 @@
 
     \table
         \header
-            \li  Windows XP
+            \li  Windows
             \li  \macos
             \li  Cleanlooks
         \row
-            \li  \inlineimage designer-form-layout-windowsXP.png {Screenshot
-                              showing the layout preview on Windows XP}
+            \li  \inlineimage designer-form-layout-windows.webp {Screenshot
+                              showing the layout preview on Windows}
             \li  \inlineimage designer-form-layout-macintosh.png {Screenshot
                               showing the layout preview on \macos}
             \li  \inlineimage designer-form-layout-cleanlooks.png {Screenshot
