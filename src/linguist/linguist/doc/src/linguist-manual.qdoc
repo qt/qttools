@@ -1746,11 +1746,6 @@ Log}. When complete, you can check out the translated texts on the log. Upon cli
     translation:
 
     \list
-    \li \l{hellotr}{Hello tr()} is a C++ application that demonstrates the
-    creation of a \l QTranslator object. It also shows the simplest use of
-    the \c tr() function to mark user-visible source text for
-    translation.
-
     \li \l{arrowpad}{Arrow Pad} is a C++ application that demonstrates how to
     make the application load translations depending on the current locale.
     It also shows the use of the two-argument form of \c tr() which provides
