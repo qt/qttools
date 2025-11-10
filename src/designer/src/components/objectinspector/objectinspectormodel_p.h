@@ -56,10 +56,10 @@ namespace qdesigner_internal {
         explicit ObjectData(QObject *parent, QObject *object, const ModelRecursionContext &ctx);
         ObjectData();
 
-        inline Type     type()       const { return m_type; }
-        inline QObject *object()     const { return m_object; }
-        inline QObject *parent()     const { return m_parent; }
-        inline QString  objectName() const { return m_objectName; }
+        Type     type()       const { return m_type; }
+        QObject *object()     const { return m_object; }
+        QObject *parent()     const { return m_parent; }
+        QString  objectName() const { return m_objectName; }
 
         bool equals(const ObjectData & me) const;
 

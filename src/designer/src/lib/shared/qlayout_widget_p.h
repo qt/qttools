@@ -159,7 +159,7 @@ protected:
 public:
     ~QLayoutSupport() override;
 
-    inline QDesignerFormWindowInterface *formWindow() const   { return m_formWindow; }
+    QDesignerFormWindowInterface *formWindow() const   { return m_formWindow; }
 
     // DecorationExtension V2
     LayoutHelper* helper() const                              { return m_helper; }
@@ -250,7 +250,7 @@ public:
     int layoutBottomMargin() const;
     void setLayoutBottomMargin(int layoutMargin);
 
-    inline QDesignerFormWindowInterface *formWindow() const    { return m_formWindow; }
+    QDesignerFormWindowInterface *formWindow() const { return m_formWindow; }
 
 protected:
     bool event(QEvent *e) override;

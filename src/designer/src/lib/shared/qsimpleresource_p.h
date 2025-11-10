@@ -42,8 +42,7 @@ public:
     QBrush setupBrush(DomBrush *brush);
     DomBrush *saveBrush(const QBrush &brush);
 
-    inline QDesignerFormEditorInterface *core() const
-    { return m_core; }
+    QDesignerFormEditorInterface *core() const { return m_core; }
 
     // Query extensions for additional data
     static void addExtensionDataToDOM(QAbstractFormBuilder *afb,

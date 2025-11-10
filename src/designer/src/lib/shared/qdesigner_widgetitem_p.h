@@ -49,7 +49,7 @@ public:
 
     const QLayout *containingLayout() const;
 
-    inline QWidget *constWidget() const { return const_cast<QDesignerWidgetItem*>(this)->widget(); }
+    QWidget *constWidget() const { return const_cast<QDesignerWidgetItem*>(this)->widget(); }
 
     QSize minimumSize() const override;
     QSize sizeHint()    const override;

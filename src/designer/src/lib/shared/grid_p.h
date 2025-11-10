@@ -39,19 +39,19 @@ public:
     void addToVariantMap(QVariantMap& vm, bool forceKeys = false) const;
     QVariantMap toVariantMap(bool forceKeys = false) const;
 
-    inline bool visible() const   { return m_visible; }
+    bool visible() const          { return m_visible; }
     void setVisible(bool visible) { m_visible = visible; }
 
-    inline bool snapX() const     { return m_snapX; }
+    bool snapX() const            { return m_snapX; }
     void setSnapX(bool snap)      { m_snapX = snap; }
 
-    inline bool snapY() const     { return m_snapY; }
+    bool snapY() const            { return m_snapY; }
     void setSnapY(bool snap)      { m_snapY = snap; }
 
-    inline int deltaX() const     { return m_deltaX; }
+    int deltaX() const            { return m_deltaX; }
     void setDeltaX(int dx)        { m_deltaX = dx; }
 
-    inline int deltaY() const     { return m_deltaY; }
+    int deltaY() const            { return m_deltaY; }
     void setDeltaY(int dy)        { m_deltaY = dy; }
 
     void paint(QWidget *widget, QPaintEvent *e) const;

@@ -20,8 +20,7 @@ public:
     explicit StringListEditorButton(const QStringList &stringList, QWidget *parent = nullptr);
     ~StringListEditorButton() override;
 
-    inline QStringList stringList() const
-    { return m_stringList; }
+    QStringList stringList() const { return m_stringList; }
 
 signals:
     void stringListChanged(const QStringList &stringList);

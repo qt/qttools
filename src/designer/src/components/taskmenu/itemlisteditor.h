@@ -30,8 +30,8 @@ class BoolBlocker
 public:
     Q_DISABLE_COPY_MOVE(BoolBlocker);
 
-    inline explicit BoolBlocker(bool &b) noexcept : block(b), reset(b) { block = true; }
-    inline ~BoolBlocker() noexcept { block = reset; }
+    explicit BoolBlocker(bool &b) noexcept : block(b), reset(b) { block = true; }
+    ~BoolBlocker() noexcept { block = reset; }
 private:
     bool &block;
     bool reset;

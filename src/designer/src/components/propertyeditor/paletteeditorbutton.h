@@ -23,8 +23,7 @@ public:
     ~PaletteEditorButton() override;
 
     void setSuperPalette(const QPalette &palette);
-    inline QPalette palette() const
-    { return m_palette; }
+    QPalette palette() const { return m_palette; }
 
 signals:
     void paletteChanged(const QPalette &palette);

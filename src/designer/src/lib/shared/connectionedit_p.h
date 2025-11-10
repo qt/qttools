@@ -131,7 +131,7 @@ public:
     ConnectionEdit(QWidget *parent, QDesignerFormWindowInterface *form);
     ~ConnectionEdit() override;
 
-    inline const QPointer<QWidget> &background() const { return m_bg_widget; }
+    const QPointer<QWidget> &background() const { return m_bg_widget; }
 
     void setSelected(Connection *con, bool sel);
     bool selected(const Connection *con) const;

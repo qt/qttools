@@ -92,7 +92,7 @@ static inline DomProperty *currentIndexProperty(const QList<DomProperty*> &prope
 class QFriendlyLayout: public QLayout
 {
 public:
-    inline QFriendlyLayout() { Q_ASSERT(0); }
+    QFriendlyLayout() { Q_ASSERT(0); }
 
 #ifdef QFORMINTERNAL_NAMESPACE
     friend class QFormInternal::QAbstractFormBuilder;

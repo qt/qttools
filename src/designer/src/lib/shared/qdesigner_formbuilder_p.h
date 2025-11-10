@@ -48,8 +48,7 @@ public:
     virtual QWidget *createWidget(DomWidget *ui_widget, QWidget *parentWidget = nullptr)
     { return QFormBuilder::create(ui_widget, parentWidget); }
 
-    inline QDesignerFormEditorInterface *core() const
-    { return m_core; }
+    QDesignerFormEditorInterface *core() const { return m_core; }
 
     QString systemStyle() const;
 

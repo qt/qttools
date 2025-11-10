@@ -275,11 +275,9 @@ public:
 
     void init(const QWidgetList &newTabOrder);
 
-    inline QWidgetList oldTabOrder() const
-    { return m_oldTabOrder; }
+    QWidgetList oldTabOrder() const { return m_oldTabOrder; }
 
-    inline QWidgetList newTabOrder() const
-    { return m_newTabOrder; }
+    QWidgetList newTabOrder() const { return m_newTabOrder; }
 
     void redo() override;
     void undo() override;
@@ -343,7 +341,7 @@ public:
     explicit LayoutCommand(QDesignerFormWindowInterface *formWindow);
     ~LayoutCommand() override;
 
-    inline QWidgetList widgets() const { return m_widgets; }
+    QWidgetList widgets() const { return m_widgets; }
 
     void init(QWidget *parentWidget, const QWidgetList &widgets, LayoutInfo::Type layoutType,
               QWidget *layoutBase = nullptr,
@@ -369,7 +367,7 @@ public:
     explicit BreakLayoutCommand(QDesignerFormWindowInterface *formWindow);
     ~BreakLayoutCommand() override;
 
-    inline QWidgetList widgets() const { return m_widgets; }
+    QWidgetList widgets() const { return m_widgets; }
 
     void init(const QWidgetList &widgets, QWidget *layoutBase,
               // Reparent/Hide instances of QLayoutWidget.

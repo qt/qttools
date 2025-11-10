@@ -43,8 +43,8 @@ public:
 
     QString sender() const;
     QString receiver() const;
-    inline QString signal() const { return m_signal; }
-    inline QString slot() const { return m_slot; }
+    QString signal() const { return m_signal; }
+    QString slot() const { return m_slot; }
 
     DomConnection *toUi() const;
 
