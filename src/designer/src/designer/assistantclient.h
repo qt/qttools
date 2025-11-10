@@ -16,7 +16,7 @@ class AssistantClient : public QObject
 
 public:
     AssistantClient();
-    ~AssistantClient();
+    ~AssistantClient() override;
 
     bool showPage(const QString &path, QString *errorMessage);
     bool activateIdentifier(const QString &identifier, QString *errorMessage);

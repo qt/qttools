@@ -28,7 +28,7 @@ class QtGradientDialog : public QDialog
     Q_PROPERTY(bool detailsButtonVisible READ isDetailsButtonVisible WRITE setDetailsButtonVisible)
 public:
     QtGradientDialog(QWidget *parent = 0);
-    ~QtGradientDialog();
+    ~QtGradientDialog() override;
 
     void setGradient(const QGradient &gradient);
     QGradient gradient() const;

@@ -40,7 +40,7 @@ class QDESIGNER_SHARED_EXPORT QTabWidgetEventFilter : public QObject
     Q_OBJECT
 public:
     explicit QTabWidgetEventFilter(QTabWidget *parent);
-    ~QTabWidgetEventFilter();
+    ~QTabWidgetEventFilter() override;
 
     // Install helper on QTabWidget
     static void install(QTabWidget *tabWidget);

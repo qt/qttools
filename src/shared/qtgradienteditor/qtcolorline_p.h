@@ -46,7 +46,7 @@ public:
     QSize sizeHint() const override;
 
     QtColorLine(QWidget *parent = 0);
-    ~QtColorLine();
+    ~QtColorLine() override;
 
     QColor color() const;
 

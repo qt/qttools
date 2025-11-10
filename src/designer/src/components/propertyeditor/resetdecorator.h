@@ -52,7 +52,7 @@ class ResetDecorator : public QObject
     Q_OBJECT
 public:
     explicit ResetDecorator(const QDesignerFormEditorInterface *core, QObject *parent = nullptr);
-    ~ResetDecorator();
+    ~ResetDecorator() override;
 
     void connectPropertyManager(QtAbstractPropertyManager *manager);
     QWidget *editor(QWidget *subEditor, bool resettable, QtAbstractPropertyManager *manager, QtProperty *property,

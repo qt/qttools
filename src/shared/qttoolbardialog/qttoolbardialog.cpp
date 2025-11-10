@@ -26,7 +26,7 @@ class QtFullToolBarManager : public QObject
     Q_OBJECT
 public:
     QtFullToolBarManager(QObject *parent);
-    ~QtFullToolBarManager();
+    ~QtFullToolBarManager() override;
 
     void setMainWindow(QMainWindow *mainWindow);
     QMainWindow *mainWindow() const;

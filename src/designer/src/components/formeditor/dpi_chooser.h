@@ -33,7 +33,7 @@ class DPI_Chooser : public QWidget {
 
 public:
     explicit DPI_Chooser(QWidget *parent = nullptr);
-    ~DPI_Chooser();
+    ~DPI_Chooser() override;
 
     void getDPI(int *dpiX, int *dpiY) const;
     void setDPI(int dpiX, int dpiY);

@@ -43,7 +43,7 @@ class AbstractItemEditor: public QWidget
 
 public:
     explicit AbstractItemEditor(QDesignerFormWindowInterface *form, QWidget *parent);
-    ~AbstractItemEditor();
+    ~AbstractItemEditor() override;
 
     DesignerIconCache *iconCache() const { return m_iconCache; }
 

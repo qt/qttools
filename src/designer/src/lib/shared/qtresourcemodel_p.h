@@ -60,7 +60,7 @@ class QDESIGNER_SHARED_EXPORT QtResourceModel : public QObject // one instance p
     Q_OBJECT
 public:
     QtResourceModel(QObject *parent = nullptr);
-    ~QtResourceModel();
+    ~QtResourceModel() override;
 
     QStringList loadedQrcFiles() const;
     bool isModified(const QString &path) const; // only for paths which are on loadedQrcFiles() list

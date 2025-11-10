@@ -40,7 +40,7 @@ class DeviceProfileDialog : public QDialog
     Q_OBJECT
 public:
     explicit DeviceProfileDialog(QDesignerDialogGuiInterface *dlgGui, QWidget *parent = nullptr);
-    ~DeviceProfileDialog();
+    ~DeviceProfileDialog() override;
 
     DeviceProfile deviceProfile() const;
     void setDeviceProfile(const DeviceProfile &s);

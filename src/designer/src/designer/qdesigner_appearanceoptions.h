@@ -47,7 +47,7 @@ class QDesignerAppearanceOptionsWidget : public QWidget
     Q_OBJECT
 public:
     explicit QDesignerAppearanceOptionsWidget(QWidget *parent = nullptr);
-    ~QDesignerAppearanceOptionsWidget();
+    ~QDesignerAppearanceOptionsWidget() override;
 
     AppearanceOptions appearanceOptions() const;
     void setAppearanceOptions(const AppearanceOptions &ao);

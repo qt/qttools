@@ -23,7 +23,7 @@ class ItemViewPropertySheet: public QDesignerPropertySheet
 public:
     explicit ItemViewPropertySheet(QTreeView *treeViewObject, QObject *parent = nullptr);
     explicit ItemViewPropertySheet(QTableView *tableViewObject, QObject *parent = nullptr);
-    ~ItemViewPropertySheet();
+    ~ItemViewPropertySheet() override;
 
     QHash<QString,QString> propertyNameMap() const;
 

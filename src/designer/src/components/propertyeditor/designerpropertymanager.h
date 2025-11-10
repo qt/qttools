@@ -74,7 +74,7 @@ public:
     enum ValueChangedResult { NoMatch, Unchanged, Changed };
 
     explicit DesignerPropertyManager(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
-    ~DesignerPropertyManager();
+    ~DesignerPropertyManager() override;
 
     QStringList attributes(int propertyType) const override;
     int attributeType(int propertyType, const QString &attribute) const override;
@@ -205,7 +205,7 @@ class DesignerEditorFactory : public QtVariantEditorFactory
     Q_OBJECT
 public:
     explicit DesignerEditorFactory(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
-    ~DesignerEditorFactory();
+    ~DesignerEditorFactory() override;
     void setSpacing(int spacing);
     void setFormWindowBase(FormWindowBase *fwb);
 signals:

@@ -30,7 +30,7 @@ class TemplateOptionsWidget : public QWidget
 public:
     explicit TemplateOptionsWidget(QDesignerFormEditorInterface *core,
                                               QWidget *parent = nullptr);
-    ~TemplateOptionsWidget();
+    ~TemplateOptionsWidget() override;
 
 
     QStringList templatePaths() const;

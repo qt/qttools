@@ -35,7 +35,7 @@ public:
     using CategoryList = QDesignerWidgetBoxInterface::CategoryList;
 
     explicit WidgetBoxTreeWidget(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
-    ~WidgetBoxTreeWidget();
+    ~WidgetBoxTreeWidget() override;
 
     int categoryCount() const;
     Category category(int cat_idx) const;

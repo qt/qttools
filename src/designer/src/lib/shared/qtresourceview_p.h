@@ -31,7 +31,7 @@ class QDESIGNER_SHARED_EXPORT QtResourceView : public QWidget
     Q_OBJECT
 public:
     explicit QtResourceView(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
-    ~QtResourceView();
+    ~QtResourceView() override;
 
     void setDragEnabled(bool dragEnabled);
     bool dragEnabled() const;

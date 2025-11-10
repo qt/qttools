@@ -16,7 +16,7 @@ class StringListEditor : public QDialog, private Ui::Dialog
 {
     Q_OBJECT
 public:
-    ~StringListEditor();
+    ~StringListEditor() override;
     void setStringList(const QStringList &stringList);
     QStringList stringList() const;
 

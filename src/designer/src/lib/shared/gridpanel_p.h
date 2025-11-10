@@ -34,7 +34,7 @@ class  QDESIGNER_SHARED_EXPORT GridPanel : public QWidget
     Q_OBJECT
 public:
     GridPanel(QWidget *parent = nullptr);
-    ~GridPanel();
+    ~GridPanel() override;
 
     void setTitle(const QString &title);
 

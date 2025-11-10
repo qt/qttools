@@ -44,7 +44,7 @@ public:
     };
 
     explicit SelectSignalDialog(QWidget *parent = nullptr);
-    ~SelectSignalDialog();
+    ~SelectSignalDialog() override;
 
     Method selectedMethod() const;
 

@@ -48,7 +48,7 @@ public:
     };
 
     StyleSheetEditorDialog(QDesignerFormEditorInterface *core, QWidget *parent, Mode mode = ModePerForm);
-    ~StyleSheetEditorDialog();
+    ~StyleSheetEditorDialog() override;
     QString text() const;
     void setText(const QString &t);
 

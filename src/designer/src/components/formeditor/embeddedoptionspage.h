@@ -23,7 +23,7 @@ class EmbeddedOptionsControl : public QWidget {
     Q_OBJECT
 public:
     explicit EmbeddedOptionsControl(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
-    ~EmbeddedOptionsControl();
+    ~EmbeddedOptionsControl() override;
 
     bool isDirty() const;
 

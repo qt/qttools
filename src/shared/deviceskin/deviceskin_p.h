@@ -81,7 +81,7 @@ class DeviceSkin : public QWidget
     Q_OBJECT
 public:
     explicit DeviceSkin(const DeviceSkinParameters &parameters,  QWidget *p );
-    ~DeviceSkin( );
+    ~DeviceSkin() override;
 
     QWidget *view() const { return m_view; }
     void setView( QWidget *v );

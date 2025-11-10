@@ -36,7 +36,7 @@ class QT_PROPERTYEDITOR_EXPORT NewDynamicPropertyDialog: public QDialog
     Q_OBJECT
 public:
     explicit NewDynamicPropertyDialog(QDesignerDialogGuiInterface *dialogGui, QWidget *parent = nullptr);
-    ~NewDynamicPropertyDialog();
+    ~NewDynamicPropertyDialog() override;
 
     void setReservedNames(const QStringList &names);
     void setPropertyType(int  t);

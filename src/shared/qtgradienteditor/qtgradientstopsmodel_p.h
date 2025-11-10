@@ -47,7 +47,7 @@ public:
     using PositionStopMap = QMap<qreal, QtGradientStop *>;
 
     QtGradientStopsModel(QObject *parent = 0);
-    ~QtGradientStopsModel();
+    ~QtGradientStopsModel() override;
 
     PositionStopMap stops() const;
     QtGradientStop *at(qreal pos) const;

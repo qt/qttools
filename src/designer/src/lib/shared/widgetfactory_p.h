@@ -45,7 +45,7 @@ class QDESIGNER_SHARED_EXPORT WidgetFactory: public QDesignerWidgetFactoryInterf
     Q_OBJECT
 public:
     explicit WidgetFactory(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
-    ~WidgetFactory();
+    ~WidgetFactory() override;
 
     QWidget* containerOfWidget(QWidget *widget) const override;
     QWidget* widgetOfContainer(QWidget *widget) const override;
