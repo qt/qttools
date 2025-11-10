@@ -13,6 +13,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <utility>
 
 using namespace Qt::Literals::StringLiterals;
 
@@ -549,7 +550,7 @@ void Location::emitMessage(MessageType type, const QString &message, const QStri
     fflush(stderr);
 
     // Create a version with relative paths for the warning log
-    QString logMessage = result;
+    QString logMessage = std::move(result);
     if (type == Warning && !s_projectRoot.isEmpty()) {
         // Replace the absolute path portion with a relative path for log file
         QString locationString = toString();
