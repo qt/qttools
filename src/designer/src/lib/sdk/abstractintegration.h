@@ -51,7 +51,7 @@ public:
     Q_DECLARE_FLAGS(Feature, FeatureFlag)
 
     explicit QDesignerIntegrationInterface(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
-    virtual ~QDesignerIntegrationInterface();
+    ~QDesignerIntegrationInterface() override;
 
     QDesignerFormEditorInterface *core() const;
 
@@ -113,7 +113,7 @@ class QDESIGNER_SDK_EXPORT QDesignerIntegration: public QDesignerIntegrationInte
     Q_OBJECT
 public:
     explicit QDesignerIntegration(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
-    virtual ~QDesignerIntegration();
+    ~QDesignerIntegration() override;
 
     QString headerSuffix() const override;
     void setHeaderSuffix(const QString &headerSuffix) override;
@@ -122,12 +122,12 @@ public:
     void setHeaderLowercase(bool headerLowerCase) override;
 
     Feature features() const override;
-    virtual void setFeatures(Feature f) override;
+    void setFeatures(Feature f) override;
 
     ResourceFileWatcherBehaviour resourceFileWatcherBehaviour() const override;
     void setResourceFileWatcherBehaviour(ResourceFileWatcherBehaviour behaviour) override;
 
-    virtual QWidget *containerWindow(QWidget *widget) const override;
+    QWidget *containerWindow(QWidget *widget) const override;
 
     // Load plugins into widget database and factory.
     static void initializePlugins(QDesignerFormEditorInterface *formEditor);

@@ -25,7 +25,7 @@ class QDESIGNER_SDK_EXPORT QDesignerFormWindowManagerInterface: public QObject
     Q_OBJECT
 public:
     explicit QDesignerFormWindowManagerInterface(QObject *parent = nullptr);
-    virtual ~QDesignerFormWindowManagerInterface();
+    ~QDesignerFormWindowManagerInterface() override;
 
     enum Action
     {

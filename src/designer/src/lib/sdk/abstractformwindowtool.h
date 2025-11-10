@@ -21,7 +21,7 @@ class QDESIGNER_SDK_EXPORT QDesignerFormWindowToolInterface: public QObject
     Q_OBJECT
 public:
     explicit QDesignerFormWindowToolInterface(QObject *parent = nullptr);
-    virtual ~QDesignerFormWindowToolInterface();
+    ~QDesignerFormWindowToolInterface() override;
 
     virtual QDesignerFormEditorInterface *core() const = 0;
     virtual QDesignerFormWindowInterface *formWindow() const = 0;

@@ -17,7 +17,7 @@ class QDESIGNER_SDK_EXPORT QDesignerNewFormWidgetInterface : public QWidget
     Q_OBJECT
 public:
     explicit QDesignerNewFormWidgetInterface(QWidget *parent = nullptr);
-    virtual ~QDesignerNewFormWidgetInterface();
+    ~QDesignerNewFormWidgetInterface() override;
 
     virtual bool hasCurrentTemplate() const = 0;
     virtual QString currentTemplate(QString *errorMessage = nullptr) = 0;

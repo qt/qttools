@@ -77,7 +77,7 @@ public:
     using CategoryList = QList<Category>;
 
     explicit QDesignerWidgetBoxInterface(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
-    virtual ~QDesignerWidgetBoxInterface();
+    ~QDesignerWidgetBoxInterface() override;
 
     virtual int categoryCount() const = 0;
     virtual Category category(int cat_idx) const = 0;

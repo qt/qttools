@@ -18,7 +18,7 @@ class QDESIGNER_SDK_EXPORT QDesignerObjectInspectorInterface: public QWidget
     Q_OBJECT
 public:
     explicit QDesignerObjectInspectorInterface(QWidget *parent, Qt::WindowFlags flags = {});
-    virtual ~QDesignerObjectInspectorInterface();
+    ~QDesignerObjectInspectorInterface() override;
 
     virtual QDesignerFormEditorInterface *core() const;
 
