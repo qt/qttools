@@ -286,30 +286,32 @@ FormWindow::FormWindow(FormEditor *core, QWidget *parent, Qt::WindowFlags flags)
 
     core->formWindowManager()->addFormWindow(this);
 
-    setDirty(false);
+    this->FormWindow::setDirty(false);
     setAcceptDrops(true);
 }
 
 FormWindow::~FormWindow()
 {
-    Q_ASSERT(core() != nullptr);
-    Q_ASSERT(core()->metaDataBase() != nullptr);
-    Q_ASSERT(core()->formWindowManager() != nullptr);
+    auto *core = this->FormWindow::core();
+    Q_ASSERT(core != nullptr);
+    Q_ASSERT(core->metaDataBase() != nullptr);
+    auto *fwm = core->formWindowManager();
+    Q_ASSERT(fwm != nullptr);
 
-    core()->formWindowManager()->removeFormWindow(this);
-    core()->metaDataBase()->remove(this);
+    core->formWindowManager()->removeFormWindow(this);
+    core->metaDataBase()->remove(this);
 
     const QWidgetList &l = widgets();
     for (QWidget *w : l)
-        core()->metaDataBase()->remove(w);
+        core->metaDataBase()->remove(w);
 
     m_widgetStack = nullptr;
     m_rubberBand = nullptr;
     if (resourceSet())
-        core()->resourceModel()->removeResourceSet(resourceSet());
+        core->resourceModel()->removeResourceSet(resourceSet());
     delete m_selection;
 
-    if (auto *manager = qobject_cast<FormWindowManager*>(core()->formWindowManager()))
+    if (auto *manager = qobject_cast<FormWindowManager*>(fwm))
         manager->undoGroup()->removeStack(&m_undoStack);
     m_undoStack.disconnect();
 }
@@ -366,7 +368,8 @@ void FormWindow::setCursorToAll(const QCursor &c, QWidget *start)
 
 void FormWindow::init()
 {
-    if (auto *manager = qobject_cast<FormWindowManager*> (core()->formWindowManager()))
+    auto *core = this->FormWindow::core();
+    if (auto *manager = qobject_cast<FormWindowManager*>(core->formWindowManager()))
         manager->undoGroup()->addStack(&m_undoStack);
 
     m_blockSelectionChanged = false;
@@ -406,7 +409,7 @@ void FormWindow::init()
     connect(this, &QDesignerFormWindowInterface::changed,
             this, &FormWindow::checkSelection);
 
-    core()->metaDataBase()->add(this);
+    core->metaDataBase()->add(this);
 
     initializeCoreTools();
 
@@ -2563,7 +2566,7 @@ bool FormWindow::handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *ev
 void FormWindow::initializeCoreTools()
 {
     m_widgetEditor = new WidgetEditorTool(this);
-    registerTool(m_widgetEditor);
+    this->FormWindow::registerTool(m_widgetEditor);
 }
 
 void FormWindow::checkSelection()
