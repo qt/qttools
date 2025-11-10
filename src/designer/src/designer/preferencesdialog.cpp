@@ -25,7 +25,7 @@ PreferencesDialog::PreferencesDialog(QDesignerFormEditorInterface *core, QWidget
     for (QDesignerOptionsPageInterface *optionsPage : std::as_const(m_optionsPages)) {
         QWidget *page = optionsPage->createPage(this);
         m_ui->m_optionTabWidget->addTab(page, optionsPage->name());
-        if (QDesignerAppearanceOptionsWidget *appearanceWidget = qobject_cast<QDesignerAppearanceOptionsWidget *>(page))
+        if (auto *appearanceWidget = qobject_cast<QDesignerAppearanceOptionsWidget *>(page))
             connect(appearanceWidget, &QDesignerAppearanceOptionsWidget::uiModeChanged,
                     this, &PreferencesDialog::slotUiModeChanged);
     }

@@ -299,7 +299,7 @@ bool QDesigner::event(QEvent *ev)
         eaten = true;
         break;
     case QEvent::Close: {
-        QCloseEvent *closeEvent = static_cast<QCloseEvent *>(ev);
+        auto *closeEvent = static_cast<QCloseEvent *>(ev);
         closeEvent->setAccepted(m_workbench->handleClose());
         if (closeEvent->isAccepted()) {
             // We're going down, make sure that we don't get our settings saved twice.

@@ -122,7 +122,7 @@ QVariant TranslatingTextBuilder::loadText(const DomProperty *text) const
 QVariant TranslatingTextBuilder::toNativeValue(const QVariant &value) const
 {
     if (value.canConvert<QUiTranslatableStringValue>()) {
-        QUiTranslatableStringValue tsv = qvariant_cast<QUiTranslatableStringValue>(value);
+        auto tsv = qvariant_cast<QUiTranslatableStringValue>(value);
         if (!m_trEnabled)
             return QString::fromUtf8(tsv.value().constData());
         return QVariant::fromValue(tsv.translate(m_className, m_idBased));
@@ -157,7 +157,7 @@ static void recursiveReTranslate(QTreeWidgetItem *item, const QByteArray &class_
         for (unsigned j = 0; irs[j].shadowRole >= 0; j++) {
             QVariant v = item->data(i, irs[j].shadowRole);
             if (v.isValid()) {
-                QUiTranslatableStringValue tsv = qvariant_cast<QUiTranslatableStringValue>(v);
+                auto tsv = qvariant_cast<QUiTranslatableStringValue>(v);
                 item->setData(i, irs[j].realRole, tsv.translate(class_name, idBased));
             }
         }
@@ -177,7 +177,7 @@ static void reTranslateWidgetItem(T *item, const QByteArray &class_name, bool id
     for (unsigned j = 0; irs[j].shadowRole >= 0; j++) {
         QVariant v = item->data(irs[j].shadowRole);
         if (v.isValid()) {
-            QUiTranslatableStringValue tsv = qvariant_cast<QUiTranslatableStringValue>(v);
+            auto tsv = qvariant_cast<QUiTranslatableStringValue>(v);
             item->setData(irs[j].realRole, tsv.translate(class_name, idBased));
         }
     }
@@ -219,14 +219,14 @@ public:
             for (const QByteArray &prop : dynamicPropertyNames) {
                 if (prop.startsWith(PROP_GENERIC_PREFIX)) {
                     const QByteArray propName = prop.mid(sizeof(PROP_GENERIC_PREFIX) - 1);
-                    const QUiTranslatableStringValue tsv =
+                    const auto tsv =
                                 qvariant_cast<QUiTranslatableStringValue>(o->property(prop));
                     o->setProperty(propName, tsv.translate(m_className, m_idBased));
                 }
             }
             if (0) {
 #if QT_CONFIG(tabwidget)
-            } else if (QTabWidget *tabw = qobject_cast<QTabWidget*>(o)) {
+            } else if (auto *tabw = qobject_cast<QTabWidget*>(o)) {
                 const int cnt = tabw->count();
                 for (int i = 0; i < cnt; ++i) {
                     RETRANSLATE_SUBWIDGET_PROP(tabw, setTabText, PROP_TABPAGETEXT);
@@ -239,13 +239,13 @@ public:
                 }
 #endif
 #if QT_CONFIG(listwidget)
-            } else if (QListWidget *listw = qobject_cast<QListWidget*>(o)) {
+            } else if (auto *listw = qobject_cast<QListWidget*>(o)) {
                 const int cnt = listw->count();
                 for (int i = 0; i < cnt; ++i)
                     reTranslateWidgetItem(listw->item(i), m_className, m_idBased);
 #endif
 #if QT_CONFIG(treewidget)
-            } else if (QTreeWidget *treew = qobject_cast<QTreeWidget*>(o)) {
+            } else if (auto *treew = qobject_cast<QTreeWidget*>(o)) {
                 if (QTreeWidgetItem *item = treew->headerItem())
                     recursiveReTranslate(item, m_className, m_idBased);
                 const int cnt = treew->topLevelItemCount();
@@ -255,7 +255,7 @@ public:
                 }
 #endif
 #if QT_CONFIG(tablewidget)
-            } else if (QTableWidget *tablew = qobject_cast<QTableWidget*>(o)) {
+            } else if (auto *tablew = qobject_cast<QTableWidget*>(o)) {
                 const int row_cnt = tablew->rowCount();
                 const int col_cnt = tablew->columnCount();
                 for (int j = 0; j < col_cnt; ++j)
@@ -267,20 +267,20 @@ public:
                 }
 #endif
 #if QT_CONFIG(combobox)
-            } else if (QComboBox *combow = qobject_cast<QComboBox*>(o)) {
+            } else if (auto *combow = qobject_cast<QComboBox*>(o)) {
                 if (!QFormBuilderExtra::isQFontComboBox(combow)) {
                     const int cnt = combow->count();
                     for (int i = 0; i < cnt; ++i) {
                         const QVariant v = combow->itemData(i, Qt::DisplayPropertyRole);
                         if (v.isValid()) {
-                            QUiTranslatableStringValue tsv = qvariant_cast<QUiTranslatableStringValue>(v);
+                            auto tsv = qvariant_cast<QUiTranslatableStringValue>(v);
                             combow->setItemText(i, tsv.translate(m_className, m_idBased));
                         }
                     }
                 }
 #endif
 #if QT_CONFIG(toolbox)
-            } else if (QToolBox *toolw = qobject_cast<QToolBox*>(o)) {
+            } else if (auto *toolw = qobject_cast<QToolBox*>(o)) {
                 const int cnt = toolw->count();
                 for (int i = 0; i < cnt; ++i) {
                     RETRANSLATE_SUBWIDGET_PROP(toolw, setItemText, PROP_TOOLITEMTEXT);
@@ -508,7 +508,7 @@ bool FormBuilderPrivate::addItem(DomWidget *ui_widget, QWidget *widget, QWidget 
 
     if (0) {
 #if QT_CONFIG(tabwidget)
-    } else if (QTabWidget *tabWidget = qobject_cast<QTabWidget*>(parentWidget)) {
+    } else if (auto *tabWidget = qobject_cast<QTabWidget*>(parentWidget)) {
         const DomPropertyHash attributes = propertyMap(ui_widget->elementAttribute());
         const int i = tabWidget->count() - 1;
         TRANSLATE_SUBWIDGET_PROP(tabWidget, QFormBuilderStrings::titleAttribute,
@@ -523,7 +523,7 @@ bool FormBuilderPrivate::addItem(DomWidget *ui_widget, QWidget *widget, QWidget 
 # endif
 #endif
 #if QT_CONFIG(toolbox)
-    } else if (QToolBox *toolBox = qobject_cast<QToolBox*>(parentWidget)) {
+    } else if (auto *toolBox = qobject_cast<QToolBox*>(parentWidget)) {
         const DomPropertyHash attributes = propertyMap(ui_widget->elementAttribute());
         const int i = toolBox->count() - 1;
         TRANSLATE_SUBWIDGET_PROP(toolBox, QFormBuilderStrings::labelAttribute,

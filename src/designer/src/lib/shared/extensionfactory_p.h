@@ -72,7 +72,7 @@ QObject *ExtensionFactory<ExtensionInterface, Object, Extension>::createExtensio
 template <class ExtensionInterface, class Object, class Extension>
 void ExtensionFactory<ExtensionInterface, Object, Extension>::registerExtension(QExtensionManager *mgr, const QString &iid)
 {
-    ExtensionFactory *factory = new ExtensionFactory(iid, mgr);
+    auto *factory = new ExtensionFactory(iid, mgr);
     mgr->registerExtensions(factory, iid);
 }
 }  // namespace qdesigner_internal

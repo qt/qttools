@@ -211,7 +211,7 @@ void AppFontModel::add(const QString &fontFile, int id)
 {
     const QFileInfo inf(fontFile);
     // Root item with base name
-    QStandardItem *fileItem = new QStandardItem(inf.completeBaseName());
+    auto *fileItem = new QStandardItem(inf.completeBaseName());
     const QString fullPath = inf.absoluteFilePath();
     fileItem->setData(fullPath, FileNameRole);
     fileItem->setToolTip(fullPath);
@@ -221,7 +221,7 @@ void AppFontModel::add(const QString &fontFile, int id)
     appendRow(fileItem);
     const QStringList families = QFontDatabase::applicationFontFamilies(id);
     for (const auto &fam : families) {
-        QStandardItem *familyItem = new QStandardItem(fam);
+        auto *familyItem = new QStandardItem(fam);
         familyItem->setToolTip(fullPath);
         familyItem->setFont(QFont(fam));
         familyItem->setFlags(Qt::ItemIsEnabled);
@@ -265,13 +265,13 @@ AppFontWidget::AppFontWidget(QWidget *parent) :
                                                                  "editdelete.png"_L1));
     connect(m_removeAllButton, &QAbstractButton::clicked, this, &AppFontWidget::slotRemoveAll);
 
-    QHBoxLayout *hLayout = new QHBoxLayout;
+    auto *hLayout = new QHBoxLayout;
     hLayout->addWidget(m_addButton);
     hLayout->addWidget(m_removeButton);
     hLayout->addWidget(m_removeAllButton);
     hLayout->addItem(new QSpacerItem(0, 0,QSizePolicy::MinimumExpanding));
 
-    QVBoxLayout *vLayout = new QVBoxLayout;
+    auto *vLayout = new QVBoxLayout;
     vLayout->addWidget(m_view);
     vLayout->addLayout(hLayout);
     setLayout(vLayout);
@@ -372,13 +372,12 @@ AppFontDialog::AppFontDialog(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose, true);
     setWindowTitle(tr("Additional Fonts"));
     setModal(false);
-    QVBoxLayout *vl = new  QVBoxLayout;
+    auto *vl = new  QVBoxLayout(this);
     vl->addWidget(m_appFontWidget);
 
-    QDialogButtonBox *bb = new QDialogButtonBox(QDialogButtonBox::Close);
+    auto *bb = new QDialogButtonBox(QDialogButtonBox::Close);
     QDialog::connect(bb, &QDialogButtonBox::rejected, this, &AppFontDialog::reject);
     vl->addWidget(bb);
-    setLayout(vl);
 }
 
 QT_END_NAMESPACE

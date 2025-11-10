@@ -537,9 +537,8 @@ inline bool isCentralWidget(QDesignerFormWindowInterface *fw, QWidget *widget)
         return true;
 
     // ### generalize for other containers
-    if (QMainWindow *mw = qobject_cast<QMainWindow*>(fw->mainContainer())) {
+    if (auto *mw = qobject_cast<QMainWindow*>(fw->mainContainer()))
         return mw->centralWidget() == widget;
-    }
 
     return false;
 }

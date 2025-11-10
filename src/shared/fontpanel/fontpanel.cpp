@@ -25,7 +25,7 @@ FontPanel::FontPanel(QWidget *parentWidget) :
 {
     setTitle(tr("Font"));
 
-    QFormLayout *formLayout = new QFormLayout(this);
+    auto *formLayout = new QFormLayout(this);
     // writing systems
     m_writingSystemComboBox->setEditable(false);
 

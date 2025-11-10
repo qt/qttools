@@ -207,8 +207,8 @@ QLayout *QFormBuilder::createLayout(const QString &layoutName, QObject *parent, 
 {
     QLayout *l = nullptr;
 
-    QWidget *parentWidget = qobject_cast<QWidget*>(parent);
-    QLayout *parentLayout = qobject_cast<QLayout*>(parent);
+    auto *parentWidget = qobject_cast<QWidget*>(parent);
+    auto *parentLayout = qobject_cast<QLayout*>(parent);
 
     Q_ASSERT(parentWidget || parentLayout);
 
@@ -400,12 +400,12 @@ void QFormBuilder::setPluginPath(const QStringList &pluginPaths)
 static void insertPlugins(QObject *o, QMap<QString, QDesignerCustomWidgetInterface*> *customWidgets)
 {
     // step 1) try with a normal plugin
-    if (QDesignerCustomWidgetInterface *iface = qobject_cast<QDesignerCustomWidgetInterface *>(o)) {
+    if (auto *iface = qobject_cast<QDesignerCustomWidgetInterface *>(o)) {
         customWidgets->insert(iface->name(), iface);
         return;
     }
     // step 2) try with a collection of plugins
-    if (QDesignerCustomWidgetCollectionInterface *c = qobject_cast<QDesignerCustomWidgetCollectionInterface *>(o)) {
+    if (auto *c = qobject_cast<QDesignerCustomWidgetCollectionInterface *>(o)) {
         const auto &collectionCustomWidgets = c->customWidgets();
         for (QDesignerCustomWidgetInterface *iface : collectionCustomWidgets)
             customWidgets->insert(iface->name(), iface);

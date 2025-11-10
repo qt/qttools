@@ -133,9 +133,9 @@ VersionDialog::VersionDialog(QWidget *parent)
             )
 {
     setWindowFlag(Qt::MSWindowsFixedSizeDialogHint, true);
-    QGridLayout *layout = new QGridLayout(this);
-    VersionLabel *label = new VersionLabel(this);
-    QLabel *lbl = new QLabel(this);
+    auto *layout = new QGridLayout(this);
+    auto *label = new VersionLabel(this);
+    auto *lbl = new QLabel(this);
     QString version = tr("<h3>%1</h3><br/><br/>Version %2");
     version = version.arg(tr("Qt Widgets Designer")).arg(QLatin1StringView(QT_VERSION_STR));
     version.append(tr("<br/>Qt Widgets Designer is a graphical user interface designer for Qt applications.<br/>"));
@@ -146,7 +146,7 @@ VersionDialog::VersionDialog(QWidget *parent)
     lbl->setWordWrap(true);
     lbl->setOpenExternalLinks(true);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, this);
+    auto *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, this);
     connect(buttonBox , &QDialogButtonBox::rejected, this, &QDialog::reject);
     connect(label, &VersionLabel::triggered, this, &QDialog::accept);
     layout->addWidget(label, 0, 0, 1, 1);

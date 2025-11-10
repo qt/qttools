@@ -45,7 +45,7 @@ NewForm::NewForm(QDesignerWorkbench *workbench, QWidget *parentWidget, const QSt
     setWindowTitle(tr("New Form"));
     QDesignerSettings settings(m_workbench->core());
 
-    QVBoxLayout *vBoxLayout = new QVBoxLayout;
+    auto *vBoxLayout = new QVBoxLayout(this);
 
     connect(m_newFormWidget, &QDesignerNewFormWidgetInterface::templateActivated,
             this, &NewForm::slotTemplateActivated);
@@ -53,7 +53,7 @@ NewForm::NewForm(QDesignerWorkbench *workbench, QWidget *parentWidget, const QSt
             this, &NewForm::slotCurrentTemplateChanged);
     vBoxLayout->addWidget(m_newFormWidget);
 
-    QFrame *horizontalLine = new QFrame;
+    auto *horizontalLine = new QFrame;
     horizontalLine->setFrameShape(QFrame::HLine);
     horizontalLine->setFrameShadow(QFrame::Sunken);
     vBoxLayout->addWidget(horizontalLine);
@@ -63,7 +63,6 @@ NewForm::NewForm(QDesignerWorkbench *workbench, QWidget *parentWidget, const QSt
 
     m_buttonBox = createButtonBox();
     vBoxLayout->addWidget(m_buttonBox);
-    setLayout(vBoxLayout);
 
     resize(500, 400);
     slotCurrentTemplateChanged(m_newFormWidget->hasCurrentTemplate());
@@ -72,7 +71,7 @@ NewForm::NewForm(QDesignerWorkbench *workbench, QWidget *parentWidget, const QSt
 QDialogButtonBox *NewForm::createButtonBox()
 {
     // Dialog buttons with 'recent files'
-    QDialogButtonBox *buttonBox = new QDialogButtonBox;
+    auto *buttonBox = new QDialogButtonBox;
     buttonBox->addButton(QApplication::translate("NewForm", "&Close", nullptr),
                          QDialogButtonBox::RejectRole);
     buttonBox->addButton(m_createButton, QDialogButtonBox::AcceptRole);
@@ -80,10 +79,10 @@ QDialogButtonBox *NewForm::createButtonBox()
                          QDialogButtonBox::ActionRole);
     buttonBox->addButton(m_recentButton, QDialogButtonBox::ActionRole);
     QDesignerActions *da = m_workbench->actionManager();
-    QMenu *recentFilesMenu = new QMenu(tr("&Recent Forms"), m_recentButton);
+    auto *recentFilesMenu = new QMenu(tr("&Recent Forms"), m_recentButton);
     // Pop the "Recent Files" stuff in here.
     const auto recentActions = da->recentFilesActions()->actions();
-    for (auto action : recentActions) {
+    for (auto *action : recentActions) {
         recentFilesMenu->addAction(action);
         connect(action, &QAction::triggered, this, &NewForm::recentFileChosen);
     }
@@ -100,7 +99,7 @@ NewForm::~NewForm()
 
 void NewForm::recentFileChosen()
 {
-    QAction *action = qobject_cast<QAction *>(sender());
+    auto *action = qobject_cast<QAction *>(sender());
     if (action && action->objectName() != "__qt_action_clear_menu_"_L1)
         close();
 }

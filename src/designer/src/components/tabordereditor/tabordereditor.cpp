@@ -316,7 +316,7 @@ void TabOrderEditor::mousePressEvent(QMouseEvent *e)
     if (m_current_index == m_tab_order_list.size())
         m_current_index = 0;
 
-    TabOrderCommand *cmd = new TabOrderCommand(formWindow());
+    auto *cmd = new TabOrderCommand(formWindow());
     cmd->init(m_tab_order_list);
     formWindow()->commandHistory()->push(cmd);
 }
@@ -387,7 +387,7 @@ void TabOrderEditor::showTabOrderDialog()
         return;
 
     m_tab_order_list = newOrder;
-    TabOrderCommand *cmd = new TabOrderCommand(formWindow());
+    auto *cmd = new TabOrderCommand(formWindow());
     cmd->init(m_tab_order_list);
     formWindow()->commandHistory()->push(cmd);
     update();

@@ -47,7 +47,7 @@ QDesignerFormWindow::QDesignerFormWindow(QDesignerFormWindowInterface *editor, Q
         m_editor = core->formWindowManager()->createFormWindow(this);
     }
 
-    QVBoxLayout *l = new QVBoxLayout(this);
+    auto *l = new QVBoxLayout(this);
     l->setContentsMargins(QMargins());
     l->addWidget(m_editor);
 
@@ -79,7 +79,7 @@ void QDesignerFormWindow::changeEvent(QEvent *e)
             m_action->setIcon(windowIcon());
             break;
     case QEvent::WindowStateChange: {
-        const  QWindowStateChangeEvent *wsce =  static_cast<const QWindowStateChangeEvent *>(e);
+        const auto *wsce =  static_cast<const QWindowStateChangeEvent *>(e);
         const bool wasMinimized = Qt::WindowMinimized & wsce->oldState();
         const bool isMinimizedNow = isMinimized();
         if (wasMinimized != isMinimizedNow )

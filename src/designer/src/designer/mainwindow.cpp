@@ -48,7 +48,7 @@ static void addActionsToToolBar(const ActionList &actions, QToolBar *t)
 static QToolBar *createToolBar(const QString &title, const QString &objectName,
                                const ActionList &actions)
 {
-    QToolBar *rc =  new QToolBar;
+    auto *rc = new QToolBar;
     rc->setObjectName(objectName);
     rc->setWindowTitle(title);
     addActionsToToolBar(actions, rc);
@@ -151,7 +151,7 @@ bool DockedMdiArea::event(QEvent *event)
     // dropped.
     switch (event->type()) {
     case QEvent::DragEnter: {
-        QDragEnterEvent *e = static_cast<QDragEnterEvent*>(event);
+        auto *e = static_cast<QDragEnterEvent*>(event);
         if (!uiFiles(e->mimeData()).isEmpty()) {
             e->acceptProposedAction();
             return true;
@@ -159,7 +159,7 @@ bool DockedMdiArea::event(QEvent *event)
     }
         break;
     case QEvent::Drop: {
-        QDropEvent *e = static_cast<QDropEvent*>(event);
+        auto *e = static_cast<QDropEvent*>(event);
         const QStringList files = uiFiles(e->mimeData());
         for (const auto &f : files)
             emit fileDropped(f);
@@ -280,7 +280,7 @@ DockedMainWindow::DockedMainWindow(QDesignerWorkbench *wb,
     const QList<QToolBar *> toolbars = createToolBars(wb->actionManager(), false);
     for (QToolBar *tb : toolbars)
         addToolBar(tb);
-    DockedMdiArea *dma = new DockedMdiArea(wb->actionManager()->uiExtension());
+    auto *dma = new DockedMdiArea(wb->actionManager()->uiExtension());
     connect(dma, &DockedMdiArea::fileDropped,
             this, &DockedMainWindow::fileDropped);
     connect(dma, &QMdiArea::subWindowActivated,
@@ -302,7 +302,7 @@ void DockedMainWindow::slotSubWindowActivated(QMdiSubWindow* subWindow)
 {
     if (subWindow) {
         QWidget *widget = subWindow->widget();
-        if (QDesignerFormWindow *fw = qobject_cast<QDesignerFormWindow*>(widget)) {
+        if (auto *fw = qobject_cast<QDesignerFormWindow*>(widget)) {
             emit formWindowActivated(fw);
             mdiArea()->setActiveSubWindow(subWindow);
         }
@@ -331,7 +331,7 @@ DockedMainWindow::DockWidgetList DockedMainWindow::addToolWindows(const Designer
 {
     DockWidgetList rc;
     for (QDesignerToolWindow *tw : tls) {
-        QDockWidget *dockWidget = new QDockWidget;
+        auto *dockWidget = new QDockWidget;
         dockWidget->setObjectName(tw->objectName() + "_dock"_L1);
         dockWidget->setWindowTitle(tw->windowTitle());
         addDockWidget(tw->dockWidgetAreaHint(), dockWidget);

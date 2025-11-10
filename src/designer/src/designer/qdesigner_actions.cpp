@@ -91,14 +91,16 @@ const char *QDesignerActions::defaultToolbarPropertyName = "__qt_defaultToolBarA
 #  define NONMODAL_PREVIEW
 //#endif
 
-static QAction *createSeparator(QObject *parent) {
-    QAction * rc = new QAction(parent);
+static QAction *createSeparator(QObject *parent)
+{
+    auto *rc = new QAction(parent);
     rc->setSeparator(true);
     return rc;
 }
 
-static QActionGroup *createActionGroup(QObject *parent, bool exclusive = false) {
-    QActionGroup * rc = new QActionGroup(parent);
+static QActionGroup *createActionGroup(QObject *parent, bool exclusive = false)
+{
+    auto *rc = new QActionGroup(parent);
     rc->setExclusive(exclusive);
     return rc;
 }
@@ -127,7 +129,7 @@ static QByteArray formWindowContents(const QDesignerFormWindowInterface *fw,
 {
     QString contents = alternativeDir.has_value()
         ? fixResourceFileBackupPath(fw, alternativeDir.value()) : fw->contents();
-    if (auto *fwb = qobject_cast<const qdesigner_internal::FormWindowBase *>(fw)) {
+    if (const auto *fwb = qobject_cast<const qdesigner_internal::FormWindowBase *>(fw)) {
         if (fwb->lineTerminatorMode() == qdesigner_internal::FormWindowBase::CRLFLineTerminator)
             contents.replace(u'\n', "\r\n"_L1);
     }
@@ -136,8 +138,8 @@ static QByteArray formWindowContents(const QDesignerFormWindowInterface *fw,
 
 QFileDialog *createSaveAsDialog(QWidget *parent, const QString &dir, const QString &extension)
 {
-    auto result = new QFileDialog(parent, QDesignerActions::tr("Save Form As"),
-                                  dir, fileDialogFilters(extension));
+    auto *result = new QFileDialog(parent, QDesignerActions::tr("Save Form As"),
+                                   dir, fileDialogFilters(extension));
     result->setAcceptMode(QFileDialog::AcceptSave);
     result->setDefaultSuffix(extension);
     return result;
@@ -187,7 +189,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_appFontAction(new QAction(tr("Additional Fonts..."), this))
 {
     Q_ASSERT(m_core != nullptr);
-    qdesigner_internal::QDesignerFormWindowManager *ifwm = qobject_cast<qdesigner_internal::QDesignerFormWindowManager *>(m_core->formWindowManager());
+    auto *ifwm = qobject_cast<qdesigner_internal::QDesignerFormWindowManager *>(m_core->formWindowManager());
     Q_ASSERT(ifwm);
     m_previewManager = ifwm->previewManager();
     m_previewFormAction = ifwm->action(QDesignerFormWindowManagerInterface::DefaultPreviewAction);
@@ -436,14 +438,14 @@ QActionGroup *QDesignerActions::createHelpActions()
     QActionGroup *helpActions = createActionGroup(this);
 
 #ifndef QT_JAMBI_BUILD
-    QAction *mainHelpAction = new QAction(tr("Qt Widgets Designer &Help"), this);
+    auto *mainHelpAction = new QAction(tr("Qt Widgets Designer &Help"), this);
     mainHelpAction->setObjectName(u"__qt_designer_help_action"_s);
     connect(mainHelpAction, &QAction::triggered, this, &QDesignerActions::showDesignerHelp);
     mainHelpAction->setShortcut(Qt::CTRL | Qt::Key_Question);
     helpActions->addAction(mainHelpAction);
 
     helpActions->addAction(createSeparator(this));
-    QAction *widgetHelp = new QAction(tr("Current Widget Help"), this);
+    auto *widgetHelp = new QAction(tr("Current Widget Help"), this);
     widgetHelp->setObjectName(u"__qt_current_widget_help_action"_s);
     widgetHelp->setShortcut(Qt::Key_F1);
     connect(widgetHelp, &QAction::triggered, this, &QDesignerActions::showWidgetSpecificHelp);
@@ -452,20 +454,20 @@ QActionGroup *QDesignerActions::createHelpActions()
 #endif
 
     helpActions->addAction(createSeparator(this));
-    QAction *aboutPluginsAction = new QAction(tr("About Plugins"), this);
+    auto *aboutPluginsAction = new QAction(tr("About Plugins"), this);
     aboutPluginsAction->setObjectName(u"__qt_about_plugins_action"_s);
     aboutPluginsAction->setMenuRole(QAction::ApplicationSpecificRole);
     connect(aboutPluginsAction, &QAction::triggered,
             m_core->formWindowManager(), &QDesignerFormWindowManagerInterface::showPluginDialog);
     helpActions->addAction(aboutPluginsAction);
 
-    QAction *aboutDesignerAction = new QAction(tr("About Qt Widgets Designer"), this);
+    auto *aboutDesignerAction = new QAction(tr("About Qt Widgets Designer"), this);
     aboutDesignerAction->setMenuRole(QAction::AboutRole);
     aboutDesignerAction->setObjectName(u"__qt_about_designer_action"_s);
     connect(aboutDesignerAction, &QAction::triggered, this, &QDesignerActions::aboutDesigner);
     helpActions->addAction(aboutDesignerAction);
 
-    QAction *aboutQtAction = new QAction(tr("About Qt"), this);
+    auto *aboutQtAction = new QAction(tr("About Qt"), this);
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
     aboutQtAction->setObjectName(u"__qt_about_qt_action"_s);
     connect(aboutQtAction, &QAction::triggered, qApp, &QApplication::aboutQt);
@@ -492,19 +494,19 @@ QString QDesignerActions::uiExtension() const
 QAction *QDesignerActions::createRecentFilesMenu()
 {
     m_recentMenu.reset(new QMenu);
-    QAction *act;
+
     // Need to insert this into the QAction.
     for (int i = 0; i < MaxRecentFiles; ++i) {
-        act = new QAction(this);
-        act->setVisible(false);
-        connect(act, &QAction::triggered, this, &QDesignerActions::openRecentForm);
-        m_recentFilesActions->addAction(act);
-        m_recentMenu->addAction(act);
+        auto *recentAct = new QAction(this);
+        recentAct->setVisible(false);
+        connect(recentAct, &QAction::triggered, this, &QDesignerActions::openRecentForm);
+        m_recentFilesActions->addAction(recentAct);
+        m_recentMenu->addAction(recentAct);
     }
     updateRecentFileActions();
     m_recentMenu->addSeparator();
-    act = new QAction(QIcon::fromTheme(QIcon::ThemeIcon::EditClear),
-                      tr("Clear &Menu"), this);
+    auto *act = new QAction(QIcon::fromTheme(QIcon::ThemeIcon::EditClear),
+                            tr("Clear &Menu"), this);
     act->setObjectName(u"__qt_action_clear_menu_"_s);
     connect(act, &QAction::triggered, this, &QDesignerActions::clearRecentFiles);
     m_recentFilesActions->addAction(act);
@@ -570,7 +572,7 @@ void QDesignerActions::createForm()
 void QDesignerActions::showNewFormDialog(const QString &fileName)
 {
     closePreview();
-    NewForm *dlg = new NewForm(workbench(), workbench()->core()->topLevel(), fileName);
+    auto *dlg = new NewForm(workbench(), workbench()->core()->topLevel(), fileName);
 
     dlg->setAttribute(Qt::WA_DeleteOnClose);
     dlg->setAttribute(Qt::WA_ShowModal);
@@ -690,7 +692,7 @@ void QDesignerActions::closeForm()
 
     if (QDesignerFormWindowInterface *fw = core()->formWindowManager()->activeFormWindow())
         if (QWidget *parent = fw->parentWidget()) {
-            if (QMdiSubWindow *mdiSubWindow = qobject_cast<QMdiSubWindow *>(parent->parentWidget())) {
+            if (auto *mdiSubWindow = qobject_cast<QMdiSubWindow *>(parent->parentWidget())) {
                 mdiSubWindow->close();
             } else {
                 parent->close();
@@ -922,7 +924,7 @@ void QDesignerActions::updateRecentFileActions()
 
 void QDesignerActions::openRecentForm()
 {
-    if (const QAction *action = qobject_cast<const QAction *>(sender())) {
+    if (const auto *action = qobject_cast<const QAction *>(sender())) {
         if (!readInForm(action->iconText()))
             updateRecentFileActions(); // File doesn't exist, remove it from settings
     }

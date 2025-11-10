@@ -38,7 +38,7 @@ quint16 QDesignerServer::serverPort() const
 
 void QDesignerServer::sendOpenRequest(int port, const QStringList &files)
 {
-    QTcpSocket *sSocket = new QTcpSocket();
+    auto *sSocket = new QTcpSocket();
     sSocket->connectToHost(QHostAddress::LocalHost, port);
     if(sSocket->waitForConnected(3000))
     {

@@ -559,7 +559,7 @@ QToolBar *QtFullToolBarManager::createToolBar(const QString &toolBarName)
 {
     if (!mainWindow())
         return nullptr;
-    QToolBar *toolBar = new QToolBar(toolBarName, mainWindow());
+    auto *toolBar = new QToolBar(toolBarName, mainWindow());
     int i = 1;
     const QString prefix = "_Custom_Toolbar_%1"_L1;
     QString name = prefix.arg(i);
@@ -981,14 +981,14 @@ ToolBarItem *QtToolBarDialogPrivate::createItem(QToolBar *toolBar)
 {
     if (!toolBar)
         return nullptr;
-    ToolBarItem *item = new ToolBarItem(toolBar, toolBar->windowTitle());
+    auto *item = new ToolBarItem(toolBar, toolBar->windowTitle());
     allToolBarItems.insert(item);
     return item;
 }
 
 ToolBarItem *QtToolBarDialogPrivate::createItem(const QString &toolBarName)
 {
-    ToolBarItem *item = new ToolBarItem(toolBarName);
+    auto *item = new ToolBarItem(toolBarName);
     allToolBarItems.insert(item);
     return item;
 }
@@ -1038,7 +1038,7 @@ void QtToolBarDialogPrivate::fillNew()
     if (!toolBarManager)
         return;
 
-    QTreeWidgetItem *item = new QTreeWidgetItem(ui.actionTree);
+    auto *item = new QTreeWidgetItem(ui.actionTree);
     item->setText(0, separatorText);
     ui.actionTree->setCurrentItem(item);
     currentAction = item;
@@ -1046,7 +1046,7 @@ void QtToolBarDialogPrivate::fillNew()
     itemToAction.insert(item, 0);
     const QStringList categories = toolBarManager->categories();
     for (const QString &category : categories) {
-        QTreeWidgetItem *categoryItem = new QTreeWidgetItem(ui.actionTree);
+        auto *categoryItem = new QTreeWidgetItem(ui.actionTree);
         categoryItem->setText(0, category);
         const auto actions = toolBarManager->categoryActions(category);
         for (QAction *action : actions) {
@@ -1072,8 +1072,7 @@ void QtToolBarDialogPrivate::fillNew()
         QToolBar *toolBar = it.key();
         ToolBarItem *tbItem = createItem(toolBar);
         toolBarItems.insert(toolBar, tbItem);
-        QListWidgetItem *item = new QListWidgetItem(toolBar->windowTitle(),
-                ui.toolBarList);
+        auto *item = new QListWidgetItem(toolBar->windowTitle(), ui.toolBarList);
         toolBarToItem.insert(tbItem, item);
         itemToToolBar.insert(item, tbItem);
         const auto actions = it.value();
@@ -1146,7 +1145,7 @@ void QtToolBarDialogPrivate::newClicked()
     ToolBarItem *item = createItem(toolBarName);
     currentState.insert(item, QList<QAction *>());
     createdItems.insert(item);
-    QListWidgetItem *i = new QListWidgetItem(toolBarName, ui.toolBarList);
+    auto *i = new QListWidgetItem(toolBarName, ui.toolBarList);
     i->setFlags(i->flags() | Qt::ItemIsEditable);
     ui.toolBarList->setCurrentItem(i);
     itemToToolBar.insert(i, item);
@@ -1457,7 +1456,7 @@ void QtToolBarDialogPrivate::currentToolBarChanged(QListWidgetItem *current)
         QString actionName = separatorText;
         if (action)
             actionName = action->text();
-        QListWidgetItem *item = new QListWidgetItem(actionName, ui.currentToolBarList);
+        auto *item = new QListWidgetItem(actionName, ui.currentToolBarList);
         if (action) {
             item->setIcon(action->icon());
             item->setTextAlignment(Qt::Alignment(Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic));

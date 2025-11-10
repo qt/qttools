@@ -229,7 +229,7 @@ QObject *QDesignerPropertySheetFactory<Object, PropertySheet>::createPropertyShe
 template <class Object, class PropertySheet>
 void QDesignerPropertySheetFactory<Object, PropertySheet>::registerExtension(QExtensionManager *mgr)
 {
-    QDesignerPropertySheetFactory *factory = new QDesignerPropertySheetFactory(mgr);
+    auto *factory = new QDesignerPropertySheetFactory(mgr);
     mgr->registerExtensions(factory, Q_TYPEID(QDesignerPropertySheetExtension));
     mgr->registerExtensions(factory, Q_TYPEID(QDesignerDynamicPropertySheetExtension));
 }
