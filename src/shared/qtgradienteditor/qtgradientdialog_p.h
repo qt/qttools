@@ -27,7 +27,7 @@ class QtGradientDialog : public QDialog
     Q_PROPERTY(bool detailsVisible READ detailsVisible WRITE setDetailsVisible)
     Q_PROPERTY(bool detailsButtonVisible READ isDetailsButtonVisible WRITE setDetailsButtonVisible)
 public:
-    QtGradientDialog(QWidget *parent = 0);
+    explicit QtGradientDialog(QWidget *parent = nullptr);
     ~QtGradientDialog() override;
 
     void setGradient(const QGradient &gradient);
@@ -45,8 +45,10 @@ public:
     QColor::Spec spec() const;
     void setSpec(QColor::Spec spec);
 
-    static QGradient getGradient(bool *ok, const QGradient &initial, QWidget *parent = 0, const QString &caption = QString());
-    static QGradient getGradient(bool *ok, QWidget *parent = 0, const QString &caption = QString());
+    static QGradient getGradient(bool *ok, const QGradient &initial, QWidget *parent = nullptr,
+                                 const QString &caption = QString());
+    static QGradient getGradient(bool *ok, QWidget *parent = nullptr,
+                                 const QString &caption = QString());
 
 private:
     QScopedPointer<class QtGradientDialogPrivate> d_ptr;

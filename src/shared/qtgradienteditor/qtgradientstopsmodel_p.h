@@ -35,7 +35,7 @@ private:
     void setColor(QColor color);
     void setPosition(qreal position);
     friend class QtGradientStopsModel;
-    QtGradientStop(QtGradientStopsModel *model = 0);
+    explicit QtGradientStop(QtGradientStopsModel *model = nullptr);
     ~QtGradientStop();
     QScopedPointer<class QtGradientStopPrivate> d_ptr;
 };
@@ -46,7 +46,7 @@ class QtGradientStopsModel : public QObject
 public:
     using PositionStopMap = QMap<qreal, QtGradientStop *>;
 
-    QtGradientStopsModel(QObject *parent = 0);
+    explicit QtGradientStopsModel(QObject *parent = nullptr);
     ~QtGradientStopsModel() override;
 
     PositionStopMap stops() const;

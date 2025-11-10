@@ -2577,7 +2577,6 @@ void ChangeListContentsCommand::undo()
 AddActionCommand::AddActionCommand(QDesignerFormWindowInterface *formWindow) :
     QDesignerFormWindowCommand(QApplication::translate("Command", "Add action"), formWindow)
 {
-    m_action = nullptr;
 }
 
 void AddActionCommand::init(QAction *action)
@@ -2601,8 +2600,7 @@ void AddActionCommand::undo()
 // ---- RemoveActionCommand ----
 
 RemoveActionCommand::RemoveActionCommand(QDesignerFormWindowInterface *formWindow) :
-    QDesignerFormWindowCommand(QApplication::translate("Command", "Remove action"), formWindow),
-    m_action(0)
+    QDesignerFormWindowCommand(QApplication::translate("Command", "Remove action"), formWindow)
 {
 }
 

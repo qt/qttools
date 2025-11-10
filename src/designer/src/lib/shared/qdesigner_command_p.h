@@ -986,7 +986,7 @@ public:
     void redo() override;
     void undo() override;
 private:
-    QAction *m_action;
+    QAction *m_action = nullptr;
 };
 
 // Note: This command must be executed within a macro since it
@@ -1010,7 +1010,7 @@ public:
     using ActionData = QList<ActionDataItem>;
 
 private:
-    QAction *m_action;
+    QAction *m_action = nullptr;
 
     ActionData m_actionData;
 };

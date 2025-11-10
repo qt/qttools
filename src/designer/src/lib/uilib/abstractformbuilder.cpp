@@ -621,7 +621,7 @@ QLayout *QAbstractFormBuilder::create(DomLayout *ui_layout, QLayout *parentLayou
     QLayout *layout = createLayout(ui_layout->attributeClass(), p, ui_layout->hasAttributeName() ? ui_layout->attributeName() : QString());
 
     if (layout == nullptr)
-        return 0;
+        return nullptr;
 
     if (tracking && layout->parent() == nullptr) {
         QBoxLayout *box = qobject_cast<QBoxLayout*>(parentWidget->layout());

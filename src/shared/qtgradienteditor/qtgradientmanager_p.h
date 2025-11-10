@@ -32,7 +32,7 @@ class QtGradientManager : public QObject
 {
     Q_OBJECT
 public:
-    QtGradientManager(QObject *parent = 0);
+    explicit QtGradientManager(QObject *parent = nullptr);
 
     QMap<QString, QGradient> gradients() const;
 

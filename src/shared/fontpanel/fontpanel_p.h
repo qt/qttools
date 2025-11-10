@@ -30,7 +30,7 @@ class FontPanel: public QGroupBox
 {
     Q_OBJECT
 public:
-    FontPanel(QWidget *parentWidget = 0);
+    explicit FontPanel(QWidget *parentWidget = nullptr);
 
     QFont selectedFont() const;
     void setSelectedFont(const QFont &);
@@ -61,7 +61,7 @@ private:
     QFontComboBox* m_familyComboBox;
     QComboBox *m_styleComboBox;
     QComboBox *m_pointSizeComboBox;
-    QTimer *m_previewFontUpdateTimer;
+    QTimer *m_previewFontUpdateTimer = nullptr;
 };
 
 QT_END_NAMESPACE
