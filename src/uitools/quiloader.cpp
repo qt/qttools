@@ -43,6 +43,8 @@
 #include <QtCore/qdir.h>
 #include <QtCore/qlibraryinfo.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 using widget_map = QMap<QString, bool>;
@@ -191,15 +193,6 @@ static void reTranslateTableItem(QTableWidgetItem *item, const QByteArray &class
 }
 #endif
 
-#define RETRANSLATE_SUBWIDGET_PROP(mainWidget, setter, propName) \
-    do { \
-        QVariant v = mainWidget->widget(i)->property(propName); \
-        if (v.isValid()) { \
-            QUiTranslatableStringValue tsv = qvariant_cast<QUiTranslatableStringValue>(v); \
-            mainWidget->setter(i, tsv.translate(m_className, m_idBased)); \
-        } \
-    } while (0)
-
 class TranslationWatcher: public QObject
 {
     Q_OBJECT
@@ -229,12 +222,12 @@ public:
             } else if (auto *tabw = qobject_cast<QTabWidget*>(o)) {
                 const int cnt = tabw->count();
                 for (int i = 0; i < cnt; ++i) {
-                    RETRANSLATE_SUBWIDGET_PROP(tabw, setTabText, PROP_TABPAGETEXT);
+                    retranslateSubwidgetProperty(tabw, &QTabWidget::setTabText, i, PROP_TABPAGETEXT);
 #if QT_CONFIG(tooltip)
-                    RETRANSLATE_SUBWIDGET_PROP(tabw, setTabToolTip, PROP_TABPAGETOOLTIP);
+                    retranslateSubwidgetProperty(tabw, &QTabWidget::setTabToolTip, i, PROP_TABPAGETOOLTIP);
 # endif
 #if QT_CONFIG(whatsthis)
-                    RETRANSLATE_SUBWIDGET_PROP(tabw, setTabWhatsThis, PROP_TABPAGEWHATSTHIS);
+                    retranslateSubwidgetProperty(tabw, &QTabWidget::setTabWhatsThis, i, PROP_TABPAGEWHATSTHIS);
 # endif
                 }
 #endif
@@ -283,15 +276,28 @@ public:
             } else if (auto *toolw = qobject_cast<QToolBox*>(o)) {
                 const int cnt = toolw->count();
                 for (int i = 0; i < cnt; ++i) {
-                    RETRANSLATE_SUBWIDGET_PROP(toolw, setItemText, PROP_TOOLITEMTEXT);
+                    retranslateSubwidgetProperty(toolw, &QToolBox::setItemText, i, PROP_TOOLITEMTEXT);
 #if QT_CONFIG(tooltip)
-                    RETRANSLATE_SUBWIDGET_PROP(toolw, setItemToolTip, PROP_TOOLITEMTOOLTIP);
+                    retranslateSubwidgetProperty(toolw, &QToolBox::setItemToolTip, i, PROP_TOOLITEMTOOLTIP);
 # endif
                 }
 #endif
             }
         }
         return false;
+    }
+
+    template <class Widget>
+    void retranslateSubwidgetProperty(Widget *mainWidget,
+                                      void (Widget::*setter)(int, const QString &),
+                                      int i,
+                                      const char *propName) const
+    {
+        QVariant v = mainWidget->widget(i)->property(propName);
+        if (v.isValid()) {
+            const auto tsv = qvariant_cast<QUiTranslatableStringValue>(v);
+            (mainWidget->*setter)(i, tsv.translate(m_className, m_idBased));
+        }
     }
 
 private:
@@ -378,6 +384,14 @@ public:
     QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) override;
     bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
 
+    template <class Widget>
+    void translateSubwidgetProperty(const QList<DomProperty*> &attributes,
+                                    Widget *mainWidget,
+                                    const QString &attribute,
+                                    int i,
+                                    void (Widget::*setter)(int, const QString &),
+                                    const char *propName) const;
+
 private:
     QByteArray m_class;
     TranslationWatcher *m_trwatch = nullptr;
@@ -402,6 +416,35 @@ static QString convertTranslatable(const DomProperty *p, const QByteArray &class
     if (strVal->value().isEmpty() && strVal->qualifier().isEmpty())
         return {};
     return strVal->translate(className, idBased);
+}
+
+static DomProperty *attributeByName(const QList<DomProperty*> &attributes,
+                                    const QString &attribute)
+{
+    auto pred = [&attribute](const DomProperty *prop) {
+        return prop->attributeName() == attribute;
+    };
+    auto it = std::find_if(attributes.cbegin(), attributes.cend(), pred);
+    return it != attributes.cend() ? *it : nullptr;
+}
+
+template <class Widget>
+void FormBuilderPrivate::translateSubwidgetProperty(const QList<DomProperty*> &attributes,
+                                                    Widget *mainWidget,
+                                                    const QString &attribute,
+                                                    int i,
+                                                    void (Widget::*setter)(int, const QString &),
+                                                    const char *propName) const
+{
+    if (const auto *p = attributeByName(attributes, attribute)) {
+        QUiTranslatableStringValue strVal;
+        const QString text = convertTranslatable(p, m_class, m_idBased, &strVal);
+        if (!text.isEmpty()) {
+            if (dynamicTr)
+                mainWidget->widget(i)->setProperty(propName, QVariant::fromValue(strVal));
+            (mainWidget->*setter)(i, text);
+        }
+    }
 }
 
 void FormBuilderPrivate::applyProperties(QObject *o, const QList<DomProperty*> &properties)
@@ -480,19 +523,6 @@ QWidget *FormBuilderPrivate::create(DomWidget *ui_widget, QWidget *parentWidget)
     return w;
 }
 
-#define TRANSLATE_SUBWIDGET_PROP(mainWidget, attribute, setter, propName) \
-    do { \
-        if (const auto *p = attributes.value(attribute)) { \
-            QUiTranslatableStringValue strVal; \
-            const QString text = convertTranslatable(p, m_class, m_idBased, &strVal); \
-            if (!text.isEmpty()) { \
-                if (dynamicTr) \
-                    mainWidget->widget(i)->setProperty(propName, QVariant::fromValue(strVal)); \
-                mainWidget->setter(i, text); \
-            } \
-        } \
-    } while (0)
-
 bool FormBuilderPrivate::addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget)
 {
     if (parentWidget == nullptr)
@@ -509,28 +539,31 @@ bool FormBuilderPrivate::addItem(DomWidget *ui_widget, QWidget *widget, QWidget 
     if (0) {
 #if QT_CONFIG(tabwidget)
     } else if (auto *tabWidget = qobject_cast<QTabWidget*>(parentWidget)) {
-        const DomPropertyHash attributes = propertyMap(ui_widget->elementAttribute());
         const int i = tabWidget->count() - 1;
-        TRANSLATE_SUBWIDGET_PROP(tabWidget, QFormBuilderStrings::titleAttribute,
-                                 setTabText, PROP_TABPAGETEXT);
+        translateSubwidgetProperty(ui_widget->elementAttribute(), tabWidget,
+                                   QFormBuilderStrings::titleAttribute,
+                                   i, &QTabWidget::setTabText, PROP_TABPAGETEXT);
 #if QT_CONFIG(tooltip)
-        TRANSLATE_SUBWIDGET_PROP(tabWidget, QFormBuilderStrings::toolTipAttribute,
-                                 setTabToolTip, PROP_TABPAGETOOLTIP);
+        translateSubwidgetProperty(ui_widget->elementAttribute(), tabWidget,
+                                   QFormBuilderStrings::toolTipAttribute,
+                                   i, &QTabWidget::setTabToolTip, PROP_TABPAGETOOLTIP);
 # endif
 #if QT_CONFIG(whatsthis)
-        TRANSLATE_SUBWIDGET_PROP(tabWidget, QFormBuilderStrings::whatsThisAttribute,
-                                 setTabWhatsThis, PROP_TABPAGEWHATSTHIS);
+        translateSubwidgetProperty(ui_widget->elementAttribute(), tabWidget,
+                                   QFormBuilderStrings::whatsThisAttribute,
+                                   i, &QTabWidget::setTabWhatsThis, PROP_TABPAGEWHATSTHIS);
 # endif
 #endif
 #if QT_CONFIG(toolbox)
     } else if (auto *toolBox = qobject_cast<QToolBox*>(parentWidget)) {
-        const DomPropertyHash attributes = propertyMap(ui_widget->elementAttribute());
         const int i = toolBox->count() - 1;
-        TRANSLATE_SUBWIDGET_PROP(toolBox, QFormBuilderStrings::labelAttribute,
-                                 setItemText, PROP_TOOLITEMTEXT);
+        translateSubwidgetProperty(ui_widget->elementAttribute(), toolBox,
+                                   QFormBuilderStrings::labelAttribute,
+                                   i, &QToolBox::setItemText, PROP_TOOLITEMTEXT);
 #if QT_CONFIG(tooltip)
-        TRANSLATE_SUBWIDGET_PROP(toolBox, QFormBuilderStrings::toolTipAttribute,
-                                 setItemToolTip, PROP_TOOLITEMTOOLTIP);
+        translateSubwidgetProperty(ui_widget->elementAttribute(), toolBox,
+                                   QFormBuilderStrings::toolTipAttribute,
+                                   i, &QToolBox::setItemToolTip, PROP_TOOLITEMTOOLTIP);
 # endif
 #endif
     }
