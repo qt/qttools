@@ -65,7 +65,7 @@
                 <xsl:value-of select="$cap-name"/>
             </xsl:for-each>
             <xsl:text> };&endl;</xsl:text>
-            <xsl:text>    inline Kind kind() const { return m_kind; }&endl;&endl;</xsl:text>
+            <xsl:text>    Kind kind() const { return m_kind; }&endl;&endl;</xsl:text>
         </xsl:if>
 
         <xsl:for-each select="$node/xs:element[not(@use) or (@use!='deprecated')]">
@@ -99,7 +99,7 @@
                 </xsl:call-template>
             </xsl:variable>
 
-            <xsl:text>    inline </xsl:text>
+            <xsl:text>    </xsl:text>
             <xsl:value-of select="$return-cpp-type"/>
             <xsl:text>element</xsl:text>
             <xsl:value-of select="$cap-name"/>
@@ -122,7 +122,7 @@
             <xsl:text>a);&endl;</xsl:text>
 
             <xsl:if test="not($isChoice) and not(@maxOccurs='unbounded')">
-                <xsl:text>    inline bool hasElement</xsl:text>
+                <xsl:text>    bool hasElement</xsl:text>
                 <xsl:value-of select="$cap-name"/>
                 <xsl:text>() const { return m_children &amp; </xsl:text>
                 <xsl:value-of select="$cap-name"/>
@@ -269,13 +269,13 @@
                 </xsl:call-template>
             </xsl:variable>
 
-            <xsl:text>    inline bool hasAttribute</xsl:text>
+            <xsl:text>    bool hasAttribute</xsl:text>
             <xsl:value-of select="$cap-name"/>
             <xsl:text>() const { return m_has_attr_</xsl:text>
             <xsl:value-of select="$camel-case-name"/>
             <xsl:text>; }&endl;</xsl:text>
 
-            <xsl:text>    inline </xsl:text>
+            <xsl:text>    </xsl:text>
             <xsl:value-of select="$cpp-return-type"/>
             <xsl:text>attribute</xsl:text>
             <xsl:value-of select="$cap-name"/>
@@ -283,7 +283,7 @@
             <xsl:value-of select="$camel-case-name"/>
             <xsl:text>; }&endl;</xsl:text>
 
-            <xsl:text>    inline void setAttribute</xsl:text>
+            <xsl:text>    void setAttribute</xsl:text>
             <xsl:value-of select="$cap-name"/>
             <xsl:text>(</xsl:text>
             <xsl:value-of select="$cpp-argument-type"/>
@@ -293,7 +293,7 @@
             <xsl:value-of select="$camel-case-name"/>
             <xsl:text> = true; }&endl;</xsl:text>
 
-            <xsl:text>    inline void clearAttribute</xsl:text>
+            <xsl:text>    void clearAttribute</xsl:text>
             <xsl:value-of select="$cap-name"/>
             <xsl:text>() { m_has_attr_</xsl:text>
             <xsl:value-of select="$camel-case-name"/>
@@ -325,8 +325,8 @@
         <xsl:text>    void write(QXmlStreamWriter &amp;writer, const QString &amp;tagName = QString()) const;&endl;&endl;</xsl:text>
 
         <xsl:if test="$hasText">
-            <xsl:text>    inline QString text() const { return m_text; }&endl;</xsl:text>
-            <xsl:text>    inline void setText(const QString &amp;s) { m_text = s; }&endl;&endl;</xsl:text>
+            <xsl:text>    QString text() const { return m_text; }&endl;</xsl:text>
+            <xsl:text>    void setText(const QString &amp;s) { m_text = s; }&endl;&endl;</xsl:text>
         </xsl:if>
 
         <xsl:call-template name="attribute-accessors">
