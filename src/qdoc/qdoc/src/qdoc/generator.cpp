@@ -40,6 +40,7 @@
 #endif
 
 #include <string>
+#include <utility>
 
 using namespace std::literals::string_literals;
 
@@ -1949,11 +1950,11 @@ void Generator::initializeFormat()
     if (config.preparing())
         return;
 
-    const auto imagesDir = config.get(CONFIG_IMAGESOUTPUTDIR).asString(u"images"_s);
+    auto imagesDir = config.get(CONFIG_IMAGESOUTPUTDIR).asString(u"images"_s);
     if (!outputDir.exists(imagesDir) && !outputDir.mkpath(imagesDir))
         Location().fatal("Cannot create images directory '%1'"_L1
                 .arg(QDir::cleanPath(outputDir.filePath(imagesDir))));
-    s_imagesOutDir = imagesDir;
+    s_imagesOutDir = std::move(imagesDir);
 
     copyTemplateFiles(format() + Config::dot + CONFIG_STYLESHEETS, "style");
     copyTemplateFiles(format() + Config::dot + CONFIG_SCRIPTS, "scripts");
