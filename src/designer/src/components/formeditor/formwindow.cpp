@@ -1483,11 +1483,11 @@ QVariant ArrowKeyPropertyCommand::mergeValue(const QVariant &newMergeValue)
 {
     // Merge move operations of the same arrow key
     if (!newMergeValue.canConvert<ArrowKeyOperation>())
-        return QVariant();
+        return {};
     auto mergedOperation = qvariant_cast<ArrowKeyOperation>(newValue());
     const auto newMergeOperation = qvariant_cast<ArrowKeyOperation>(newMergeValue);
     if (mergedOperation.resize != newMergeOperation.resize || mergedOperation.arrowKey != newMergeOperation.arrowKey)
-        return QVariant();
+        return {};
     mergedOperation.distance += newMergeOperation.distance;
     return QVariant::fromValue(mergedOperation);
 }
@@ -2509,7 +2509,7 @@ void FormWindow::highlightWidget(QWidget *widget, const QPoint &pos, HighlightMo
 QWidgetList FormWindow::widgets(QWidget *widget) const
 {
     if (widget->children().isEmpty())
-        return QWidgetList();
+        return {};
     QWidgetList rc;
     for (QObject *o : widget->children()) {
         if (o->isWidgetType()) {

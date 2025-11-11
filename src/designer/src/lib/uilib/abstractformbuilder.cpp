@@ -2231,7 +2231,7 @@ static QString buttonGroupName(const DomWidget *ui_widget)
 {
     const auto &attributes = ui_widget->elementAttribute();
     if (attributes.isEmpty())
-        return QString();
+        return {};
     const QString buttonGroupProperty = buttonGroupPropertyC;
     for (const DomProperty *p : attributes) {
         if (p->attributeName() == buttonGroupProperty)

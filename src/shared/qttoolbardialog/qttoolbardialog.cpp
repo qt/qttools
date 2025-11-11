@@ -590,7 +590,7 @@ QList<QAction *> QtFullToolBarManager::actions(QToolBar *toolBar) const
 {
     if (d_ptr->toolBars.contains(toolBar))
         return d_ptr->toolBars.value(toolBar);
-    return QList<QAction *>();
+    return {};
 }
 
 void QtFullToolBarManager::setToolBars(const QHash<QToolBar *, QList<QAction *>> &actions)

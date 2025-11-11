@@ -104,7 +104,7 @@ QVariant TranslatingTextBuilder::loadText(const DomProperty *text) const
 {
     const DomString *str = text->elementString();
     if (!str)
-        return QVariant();
+        return {};
     if (str->hasAttributeNotr()) {
         const QString notr = str->attributeNotr();
         if (notr == QStringLiteral("true") || notr == QStringLiteral("yes"))
@@ -388,19 +388,19 @@ static QString convertTranslatable(const DomProperty *p, const QByteArray &class
                                    bool idBased, QUiTranslatableStringValue *strVal)
 {
     if (p->kind() != DomProperty::String)
-        return QString();
+        return {};
     const DomString *dom_str = p->elementString();
     if (!dom_str)
-        return QString();
+        return {};
     if (dom_str->hasAttributeNotr()) {
         const QString notr = dom_str->attributeNotr();
         if (notr == QStringLiteral("yes") || notr == QStringLiteral("true"))
-            return QString();
+            return {};
     }
     strVal->setValue(dom_str->text().toUtf8());
     strVal->setQualifier(idBased ? dom_str->attributeId().toUtf8() : dom_str->attributeComment().toUtf8());
     if (strVal->value().isEmpty() && strVal->qualifier().isEmpty())
-        return QString();
+        return {};
     return strVal->translate(className, idBased);
 }
 

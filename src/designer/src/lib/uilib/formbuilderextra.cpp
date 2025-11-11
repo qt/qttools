@@ -230,7 +230,7 @@ QString QFormBuilderExtra::customWidgetBaseClass(const QString &className) const
     const auto it = m_customWidgetDataHash.constFind(className);
     if (it != m_customWidgetDataHash.constEnd())
         return it.value().baseClass;
-    return QString();
+    return {};
 }
 
 QString QFormBuilderExtra::customWidgetAddPageMethod(const QString &className) const
@@ -238,7 +238,7 @@ QString QFormBuilderExtra::customWidgetAddPageMethod(const QString &className) c
     const auto it = m_customWidgetDataHash.constFind(className);
     if (it != m_customWidgetDataHash.constEnd())
         return it.value().addPageMethod;
-    return QString();
+    return {};
 }
 
 bool QFormBuilderExtra::isCustomWidgetContainer(const QString &className) const
@@ -317,7 +317,7 @@ template <class Layout>
 inline QString perCellPropertyToString(const Layout *l, int count, int (Layout::*getter)(int) const)
 {
     if (count == 0)
-        return QString();
+        return {};
     QString rc;
     {
         QTextStream str(&rc);

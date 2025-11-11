@@ -19,7 +19,7 @@ QVariant QTextBuilder::loadText(const DomProperty *property) const
 {
     if (property->kind() == DomProperty::String)
         return property->elementString()->text();
-    return QVariant();
+    return {};
 }
 
 QVariant QTextBuilder::toNativeValue(const QVariant &value) const

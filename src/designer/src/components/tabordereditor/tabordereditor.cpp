@@ -97,7 +97,7 @@ void TabOrderEditor::showEvent(QShowEvent *e)
 QRect TabOrderEditor::indicatorRect(int index) const
 {
     if (index < 0 || index >= m_tab_order_list.size())
-        return QRect();
+        return {};
 
     const QWidget *w = m_tab_order_list.at(index);
     const QString text = QString::number(index + 1);
