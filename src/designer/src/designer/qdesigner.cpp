@@ -195,7 +195,7 @@ static inline QDesigner::ParseArgumentsResult
         parser.process(QCoreApplication::arguments()); // exits
     options->server = parser.isSet(serverOption);
     if (parser.isSet(clientOption)) {
-        bool ok;
+        bool ok = false;
         options->clientPort = parser.value(clientOption).toUShort(&ok);
         if (!ok) {
             *errorMessage = u"Non-numeric argument specified for -client"_s;
@@ -291,7 +291,7 @@ bool QDesigner::isServerOrClientEnabled() const
 
 bool QDesigner::event(QEvent *ev)
 {
-    bool eaten;
+    bool eaten = false;
     switch (ev->type()) {
     case QEvent::FileOpen:
         m_workbench->readInForm(static_cast<QFileOpenEvent *>(ev)->file());
@@ -305,7 +305,7 @@ bool QDesigner::event(QEvent *ev)
             // We're going down, make sure that we don't get our settings saved twice.
             if (m_mainWindow)
                 m_mainWindow->setCloseEventPolicy(MainWindowBase::AcceptCloseEvents);
-            eaten = QApplication::event(ev);
+            QApplication::event(ev);
         }
         eaten = true;
         break;

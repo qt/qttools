@@ -620,7 +620,7 @@ bool FormWindow::handleMousePressEvent(QWidget * widget, QWidget *managedWidget,
 // We can drag widget in managed layouts except splitter.
 static bool canDragWidgetInLayout(const QDesignerFormEditorInterface *core, QWidget *w)
 {
-    bool managed;
+    bool managed = false;
     const LayoutInfo::Type type = LayoutInfo::laidoutWidgetType(core ,w, &managed);
     if (!managed)
         return false;
@@ -1781,8 +1781,8 @@ void FormWindow::paste(PasteMode pasteMode)
     // QDesignerResource manages the widgets it creates (creating havoc if one remains unused)
     DomUI *ui = nullptr;
     do {
-        int widgetCount;
-        int actionCount;
+        int widgetCount = 0;
+        int actionCount = 0;
         ui = domUIFromClipboard(&widgetCount, &actionCount);
         if (!ui)
             break;

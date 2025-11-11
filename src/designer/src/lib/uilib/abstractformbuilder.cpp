@@ -1598,24 +1598,23 @@ static void storeItemProps(QAbstractFormBuilder *abstractFormBuilder, const T *i
     static const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
     auto * const formBuilder = static_cast<FriendlyFB *>(abstractFormBuilder);
 
-    DomProperty *p;
-
-    for (const QFormBuilderStrings::TextRoleNName &it : strings.itemTextRoles)
-        if ((p = formBuilder->saveText(it.second, item->data(it.first.second))))
+    for (const QFormBuilderStrings::TextRoleNName &it : strings.itemTextRoles) {
+        if (DomProperty *p = formBuilder->saveText(it.second, item->data(it.first.second)))
             properties->append(p);
+    }
 
     const auto *mo = &QAbstractFormBuilderGadget::staticMetaObject;
     for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles) {
         const QVariant v = item->data(it.first);
         const bool isModified = v.isValid()
             && (it.first != Qt::TextAlignmentRole || v.toUInt() != uint(defaultAlign));
-        if (isModified &&
-            (p = variantToDomProperty(abstractFormBuilder, mo, it.second, v))) {
-            properties->append(p);
+        if (isModified) {
+            if (DomProperty *p = variantToDomProperty(abstractFormBuilder, mo, it.second, v))
+                properties->append(p);
         }
     }
 
-    if ((p = formBuilder->saveResource(item->data(Qt::DecorationPropertyRole))))
+    if (DomProperty *p = formBuilder->saveResource(item->data(Qt::DecorationPropertyRole)))
         properties->append(p);
 }
 
@@ -1634,24 +1633,23 @@ static void loadItemProps(QAbstractFormBuilder *abstractFormBuilder, T *item,
     static const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
     auto *const formBuilder = static_cast<FriendlyFB *>(abstractFormBuilder);
 
-    DomProperty *p;
-    QVariant v;
-
     for (const QFormBuilderStrings::TextRoleNName &it : strings.itemTextRoles)
-        if ((p = properties.value(it.second))) {
-            v = formBuilder->textBuilder()->loadText(p);
+        if (DomProperty *p = properties.value(it.second)) {
+            const QVariant v = formBuilder->textBuilder()->loadText(p);
             QVariant nativeValue = formBuilder->textBuilder()->toNativeValue(v);
             item->setData(it.first.first, qvariant_cast<QString>(nativeValue));
             item->setData(it.first.second, v);
         }
 
-    for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles)
-        if ((p = properties.value(it.second)) &&
-            (v = formBuilder->toVariant(&QAbstractFormBuilderGadget::staticMetaObject, p)).isValid())
-            item->setData(it.first, v);
+    for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles) {
+        if (DomProperty *p = properties.value(it.second)) {
+            if (const QVariant v = formBuilder->toVariant(&QAbstractFormBuilderGadget::staticMetaObject, p); v.isValid())
+                item->setData(it.first, v);
+        }
+    }
 
-    if ((p = properties.value(strings.iconAttribute))) {
-        v = formBuilder->resourceBuilder()->loadResource(formBuilder->workingDirectory(), p);
+    if (DomProperty *p = properties.value(strings.iconAttribute)) {
+        const QVariant v = formBuilder->resourceBuilder()->loadResource(formBuilder->workingDirectory(), p);
         QVariant nativeValue = formBuilder->resourceBuilder()->toNativeValue(v);
         item->setIcon(qvariant_cast<QIcon>(nativeValue));
         item->setData(Qt::DecorationPropertyRole, v);
@@ -1679,8 +1677,7 @@ void QAbstractFormBuilder::saveTreeWidgetExtraInfo(QTreeWidget *treeWidget, DomW
     Q_UNUSED(ui_parentWidget);
 
     QList<DomColumn *> columns;
-    DomProperty *p;
-    QVariant v;
+
     const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
     // save the header
     for (int c = 0; c<treeWidget->columnCount(); ++c) {
@@ -1689,7 +1686,7 @@ void QAbstractFormBuilder::saveTreeWidgetExtraInfo(QTreeWidget *treeWidget, DomW
         QList<DomProperty*> properties;
 
         for (const QFormBuilderStrings::TextRoleNName &it : strings.itemTextRoles) {
-            p = saveText(it.second, treeWidget->headerItem()->data(c, it.first.second));
+            DomProperty *p = saveText(it.second, treeWidget->headerItem()->data(c, it.first.second));
             // Prevent uic 4.4.X from crashing if it cannot find a column text
             if (!p && it.first.first == Qt::EditRole && it.second == "text"_L1) {
                 auto *defaultHeader = new DomString;
@@ -1703,12 +1700,14 @@ void QAbstractFormBuilder::saveTreeWidgetExtraInfo(QTreeWidget *treeWidget, DomW
                 properties.append(p);
         }
 
-        for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles)
-            if ((v = treeWidget->headerItem()->data(c, it.first)).isValid() &&
-                (p = variantToDomProperty(this, &QAbstractFormBuilderGadget::staticMetaObject, it.second, v)))
-                properties.append(p);
+        for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles) {
+            if (const QVariant v = treeWidget->headerItem()->data(c, it.first); v.isValid()) {
+                if (DomProperty *p = variantToDomProperty(this, &QAbstractFormBuilderGadget::staticMetaObject, it.second, v))
+                    properties.append(p);
+            }
+        }
 
-        if ((p = saveResource(treeWidget->headerItem()->data(c, Qt::DecorationPropertyRole))))
+        if (DomProperty *p = saveResource(treeWidget->headerItem()->data(c, Qt::DecorationPropertyRole)))
             properties.append(p);
 
         column->setElementProperty(properties);
@@ -1732,16 +1731,19 @@ void QAbstractFormBuilder::saveTreeWidgetExtraInfo(QTreeWidget *treeWidget, DomW
 
         QList<DomProperty*> properties;
         for (int c = 0; c < treeWidget->columnCount(); c++) {
-            for (const QFormBuilderStrings::TextRoleNName &it : strings.itemTextRoles)
-                if ((p = saveText(it.second, item->data(c, it.first.second))))
+            for (const QFormBuilderStrings::TextRoleNName &it : strings.itemTextRoles) {
+                if (DomProperty *p = saveText(it.second, item->data(c, it.first.second)))
                     properties.append(p);
+            }
 
-            for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles)
-                if ((v = item->data(c, it.first)).isValid() &&
-                    (p = variantToDomProperty(this, &QAbstractFormBuilderGadget::staticMetaObject, it.second, v)))
-                    properties.append(p);
+            for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles) {
+                if (const QVariant v = item->data(c, it.first); v.isValid()) {
+                    if (DomProperty *p = variantToDomProperty(this, &QAbstractFormBuilderGadget::staticMetaObject, it.second, v))
+                        properties.append(p);
+                }
+            }
 
-            if ((p = saveResource(item->data(c, Qt::DecorationPropertyRole))))
+            if (DomProperty *p = saveResource(item->data(c, Qt::DecorationPropertyRole)))
                 properties.append(p);
         }
         storeItemFlags(item, &properties);
@@ -2055,24 +2057,24 @@ void QAbstractFormBuilder::loadTreeWidgetExtraInfo(DomWidget *ui_widget, QTreeWi
         const DomColumn *c = columns.at(i);
         const DomPropertyHash properties = propertyMap(c->elementProperty());
 
-        DomProperty *p;
-        QVariant v;
+        for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles) {
+            if (DomProperty *p = properties.value(it.second)) {
+                if (const QVariant v = toVariant(&QAbstractFormBuilderGadget::staticMetaObject, p); v.isValid())
+                    treeWidget->headerItem()->setData(i, it.first, v);
+            }
+        }
 
-        for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles)
-            if ((p = properties.value(it.second)) &&
-                (v = toVariant(&QAbstractFormBuilderGadget::staticMetaObject, p)).isValid())
-                treeWidget->headerItem()->setData(i, it.first, v);
-
-        for (const QFormBuilderStrings::TextRoleNName &it : strings.itemTextRoles)
-            if ((p = properties.value(it.second))) {
-                v = textBuilder()->loadText(p);
+        for (const QFormBuilderStrings::TextRoleNName &it : strings.itemTextRoles) {
+            if (DomProperty *p = properties.value(it.second)) {
+                const QVariant v = textBuilder()->loadText(p);
                 QVariant nativeValue = textBuilder()->toNativeValue(v);
                 treeWidget->headerItem()->setData(i, it.first.first, qvariant_cast<QString>(nativeValue));
                 treeWidget->headerItem()->setData(i, it.first.second, v);
             }
+        }
 
-        if ((p = properties.value(QFormBuilderStrings::iconAttribute))) {
-            v = resourceBuilder()->loadResource(workingDirectory(), p);
+        if (DomProperty *p = properties.value(QFormBuilderStrings::iconAttribute)) {
+            const QVariant v = resourceBuilder()->loadResource(workingDirectory(), p);
             QVariant nativeValue = resourceBuilder()->toNativeValue(v);
             treeWidget->headerItem()->setIcon(i, qvariant_cast<QIcon>(nativeValue));
             treeWidget->headerItem()->setData(i, Qt::DecorationPropertyRole, v);
@@ -2118,10 +2120,9 @@ void QAbstractFormBuilder::loadTreeWidgetExtraInfo(DomWidget *ui_widget, QTreeWi
                         currentItem->setData(col, Qt::DecorationPropertyRole, v);
                     }
                 } else {
-                    QVariant v;
                     int role = strings.treeItemRoleHash.value(property->attributeName(), (Qt::ItemDataRole)-1);
                     if (role >= 0) {
-                        if ((v = toVariant(&QAbstractFormBuilderGadget::staticMetaObject, property)).isValid())
+                        if (const QVariant v = toVariant(&QAbstractFormBuilderGadget::staticMetaObject, property); v.isValid())
                             currentItem->setData(col, role, v);
                     } else {
                         std::pair<Qt::ItemDataRole, Qt::ItemDataRole> rolePair =

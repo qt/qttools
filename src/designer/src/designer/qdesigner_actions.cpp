@@ -675,12 +675,7 @@ void QDesignerActions::saveAllForms()
 
 bool QDesignerActions::saveForm(QDesignerFormWindowInterface *fw)
 {
-    bool ret;
-    if (fw->fileName().isEmpty())
-        ret = saveFormAs(fw);
-    else
-        ret =  writeOutForm(fw, fw->fileName());
-    return ret;
+    return fw->fileName().isEmpty() ? saveFormAs(fw) : writeOutForm(fw, fw->fileName());
 }
 
 void QDesignerActions::closeForm()

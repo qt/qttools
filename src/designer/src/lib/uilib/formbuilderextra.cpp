@@ -355,7 +355,7 @@ inline bool parsePerCellProperty(Layout *l, int count, void (Layout::*setter)(in
     }
     // Apply all values contained in list
     const int ac = qMin(count, list.size());
-    bool ok;
+    bool ok = false;
     int i = 0;
     for ( ; i < ac; i++) {
         const int value = list.at(i).toInt(&ok);

@@ -236,17 +236,17 @@ void QtFullToolBarManagerPrivate::saveState(QDataStream &stream) const
 
 bool QtFullToolBarManagerPrivate::restoreState(QDataStream &stream) const
 {
-    uchar tmarker;
+    uchar tmarker = 0;
     stream >> tmarker;
     if (tmarker != ToolBarMarker)
         return false;
 
-    int toolBars;
+    int toolBars = 0;
     stream >> toolBars;
     for (int i = 0; i < toolBars; i++) {
         QString objectName;
         stream >> objectName;
-        int actionCount;
+        int actionCount = 0;
         stream >> actionCount;
         QList<QAction *> actions;
         for (int j = 0; j < actionCount; j++) {
@@ -269,7 +269,7 @@ bool QtFullToolBarManagerPrivate::restoreState(QDataStream &stream) const
 
 
 
-    uchar ctmarker;
+    uchar ctmarker = 0;
     stream >> ctmarker;
     if (ctmarker != CustomToolBarMarker)
         return false;
@@ -280,7 +280,7 @@ bool QtFullToolBarManagerPrivate::restoreState(QDataStream &stream) const
     for (int i = 0; i < toolBars; i++) {
         QString objectName;
         QString toolBarName;
-        int actionCount;
+        int actionCount = 0;
         stream >> objectName;
         stream >> toolBarName;
         stream >> actionCount;
@@ -691,7 +691,7 @@ bool QtFullToolBarManager::restoreState(const QByteArray &state, int version)
 {
     QByteArray sd = state;
     QDataStream stream(&sd, QIODevice::ReadOnly);
-    int marker, v;
+    int marker = 0, v = 0;
     stream >> marker;
     stream >> v;
     if (marker != QtFullToolBarManagerPrivate::VersionMarker || v != version)

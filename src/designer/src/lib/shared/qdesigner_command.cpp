@@ -379,8 +379,8 @@ void DeleteWidgetCommand::init(QWidget *widget, unsigned flags)
     m_flags = flags;
     m_layoutType = LayoutInfo::NoLayout;
     m_splitterIndex = -1;
-    bool isManaged; // Check for a managed layout
-    QLayout *layout;
+    bool isManaged = false; // Check for a managed layout
+    QLayout *layout = nullptr;
     m_layoutType = LayoutInfo::laidoutWidgetType(formWindow()->core(), m_widget, &isManaged, &layout);
     if (!isManaged)
         m_layoutType = LayoutInfo::NoLayout;
@@ -775,7 +775,7 @@ void BreakLayoutCommand::init(const QWidgetList &widgets, QWidget *layoutBase, b
     const QDesignerFormEditorInterface *core = formWindow()->core();
     m_widgets = widgets;
     m_layoutBase = core->widgetFactory()->containerOfWidget(layoutBase);
-    QLayout *layoutToBeBroken;
+    QLayout *layoutToBeBroken = nullptr;
     const LayoutInfo::Type layoutType = LayoutInfo::managedLayoutType(core, m_layoutBase, &layoutToBeBroken);
     m_layout = Layout::createLayout(widgets, m_layoutBase, formWindow(), layoutBase, layoutType);
     m_layout->setReparentLayoutWidget(reparentLayoutWidget);
@@ -866,7 +866,7 @@ bool SimplifyLayoutCommand::canSimplify(QDesignerFormEditorInterface *core, cons
 {
     if (!w)
         return false;
-    QLayout *layout;
+    QLayout *layout = nullptr;
     const LayoutInfo::Type type = LayoutInfo::managedLayoutType(core, w, &layout);
     if (layoutType)
         *layoutType = type;
@@ -898,7 +898,7 @@ bool SimplifyLayoutCommand::init(QWidget *layoutBase)
 {
     QDesignerFormEditorInterface *core = formWindow()->core();
     m_layoutSimplified = false;
-    int type;
+    int type = 0;
     if (canSimplify(core, layoutBase, &type)) {
         m_layoutBase = layoutBase;
         m_layoutHelper = LayoutHelper::createLayoutHelper(type);
@@ -1777,8 +1777,8 @@ void ChangeFormLayoutItemRoleCommand::doOperation(Operation op)
     QFormLayout *fl = ChangeFormLayoutItemRoleCommand::managedFormLayoutOf(formWindow()->core(), m_widget);
     const int index = fl->indexOf(m_widget);
     Q_ASSERT(index != -1);
-     int row;
-    QFormLayout::ItemRole role;
+    int row = 0;
+    QFormLayout::ItemRole role = QFormLayout::LabelRole;
     fl->getItemPosition (index, &row, &role);
     Q_ASSERT(index != -1);
     QLayoutItem *item = fl->takeAt(index);
@@ -1808,7 +1808,7 @@ unsigned ChangeFormLayoutItemRoleCommand::possibleOperations(QDesignerFormEditor
     const int index = fl->indexOf(w);
     if (index == -1)
         return 0;
-    int row, col, colspan;
+    int row = 0, col = 0, colspan = 0;
     getFormLayoutItemPosition(fl, index, &row, &col, nullptr, &colspan);
     // Spanning item?
     if (colspan > 1)
@@ -1850,7 +1850,7 @@ void ChangeLayoutItemGeometry::init(QWidget *widget, int row, int column, int ro
     const int itemIndex = grid->indexOf(m_widget);
     Q_ASSERT(itemIndex != -1);
 
-    int current_row, current_column, current_rowspan, current_colspan;
+    int current_row = 0, current_column = 0, current_rowspan = 0, current_colspan = 0;
     grid->getItemPosition(itemIndex, &current_row, &current_column, &current_rowspan, &current_colspan);
 
     m_oldInfo.setRect(current_column, current_row, current_colspan, current_rowspan);
@@ -1936,7 +1936,7 @@ void ContainerWidgetCommand::removePage()
 void ContainerWidgetCommand::addPage()
 {
     if (QDesignerContainerExtension *c = containerExtension()) {
-        int newCurrentIndex;
+        int newCurrentIndex = 0;
         if (m_index >= 0) {
             c->insertWidget(m_index, m_widget);
             newCurrentIndex = m_index;

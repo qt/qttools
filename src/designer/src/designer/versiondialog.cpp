@@ -52,9 +52,6 @@ VersionLabel::VersionLabel(QWidget *parent)
     hitPoints.append(QPoint(56, 87));
     hitPoints.append(QPoint(82, 55));
     hitPoints.append(QPoint(58, 56));
-
-    secondStage = false;
-    m_pushed = false;
 }
 
 void VersionLabel::mousePressEvent(QMouseEvent *me)
