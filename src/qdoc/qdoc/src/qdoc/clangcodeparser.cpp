@@ -770,33 +770,6 @@ static void setOverridesForFunction(FunctionNode *fn, CXCursor cursor)
     clang_disposeOverriddenCursors(overridden);
 }
 
-namespace {
-/*!
-    \internal
-
-    Convenience function. Returns a cleaned, normalized file path for consistent
-    string comparison across platforms, with native separators converted to
-    forward slashes.
-*/
-QString normalizePath(const QString &path)
-{
-    return QDir::cleanPath(QDir::fromNativeSeparators(path));
-}
-
-/*!
-    \internal
-
-    Convenience function. Returns the canonical path if available, normalized
-    for consistent comparison, or an empty string if the file doesn't exist or
-    can't be canonicalized.
-*/
-QString canonicalOrEmpty(const QString &path)
-{
-    const QString canonical = QFileInfo(path).canonicalFilePath();
-    return canonical.isEmpty() ? QString() : normalizePath(canonical);
-}
-} // anonymous namespace
-
 class ClangVisitor
 {
 public:
@@ -805,15 +778,8 @@ public:
         : qdb_(qdb), parent_(qdb->primaryTreeRoot()),
           internalFilePatterns_(internalFilePatterns)
     {
-        for (const auto &header_file_path : allHeaders) {
-            const QString fullPath = QDir(header_file_path.path).filePath(header_file_path.filename);
-            const QString canonical = canonicalOrEmpty(fullPath);
-
-            if (!canonical.isEmpty())
-                allHeaders_.insert(canonical);
-
-            allHeaders_.insert(normalizePath(fullPath));
-        }
+        std::transform(allHeaders.cbegin(), allHeaders.cend(), std::inserter(allHeaders_, allHeaders_.begin()),
+                       [](const auto& header_file_path) -> const QString& { return header_file_path.filename; });
     }
 
     QDocDatabase *qdocDB() { return qdb_; }
@@ -832,17 +798,9 @@ public:
             if (it != isInterestingCache_.end()) {
                 isInteresting = *it;
             } else {
-                const QString clangFileName = fromCXString(clang_getFileName(file));
-                const QString canonical = canonicalOrEmpty(clangFileName);
-
-                if (!canonical.isEmpty())
-                    isInteresting = allHeaders_.find(canonical) != allHeaders_.end();
-
-                if (!isInteresting) {
-                    const QString normalized = normalizePath(clangFileName);
-                    isInteresting = allHeaders_.find(normalized) != allHeaders_.end();
-                }
-
+                QFileInfo fi(fromCXString(clang_getFileName(file)));
+                // Match by file name in case of PCH/installed headers
+                isInteresting = allHeaders_.find(fi.fileName()) != allHeaders_.end();
                 isInterestingCache_[file] = isInteresting;
             }
             if (isInteresting) {
