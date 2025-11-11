@@ -792,7 +792,7 @@ QString normalizePath(const QString &path)
 */
 QString canonicalOrEmpty(const QString &path)
 {
-    const QString &canonical = QFileInfo(path).canonicalFilePath();
+    const QString canonical = QFileInfo(path).canonicalFilePath();
     return canonical.isEmpty() ? QString() : normalizePath(canonical);
 }
 } // anonymous namespace
@@ -806,11 +806,11 @@ public:
           internalFilePatterns_(internalFilePatterns)
     {
         for (const auto &header_file_path : allHeaders) {
-            const QString &fullPath = QDir(header_file_path.path).filePath(header_file_path.filename);
-            const QString &canonical = canonicalOrEmpty(fullPath);
+            const QString fullPath = QDir(header_file_path.path).filePath(header_file_path.filename);
+            const QString canonical = canonicalOrEmpty(fullPath);
 
             if (!canonical.isEmpty())
-                    allHeaders_.insert(std::move(canonical));
+                allHeaders_.insert(canonical);
 
             allHeaders_.insert(normalizePath(fullPath));
         }
