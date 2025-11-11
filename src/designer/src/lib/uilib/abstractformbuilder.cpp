@@ -65,7 +65,7 @@
 #include <QtCore/qvariant.h>
 #include <QtCore/qxmlstream.h>
 
-#include <limits.h>
+#include <climits>
 
 #include <algorithm>
 #include <iterator>

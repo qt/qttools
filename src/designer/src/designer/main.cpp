@@ -5,8 +5,6 @@
 #include <QtCore/qlibraryinfo.h>
 #include <QtCore/qdir.h>
 
-#include <stdlib.h>
-
 QT_USE_NAMESPACE
 
 int main(int argc, char *argv[])

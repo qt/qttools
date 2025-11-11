@@ -16,7 +16,6 @@
 
 #include <pluginmanager_p.h>
 #include <qdesigner_formbuilder_p.h>
-#include <qdesigner_utils_p.h>
 #include <iconloader_p.h>
 #include <previewmanager_p.h>
 #include <codedialog_p.h>
@@ -78,7 +77,7 @@
 #include <QtXml/qdom.h>
 
 #include <algorithm>
-
+#include <memory>
 #include <optional>
 
 QT_BEGIN_NAMESPACE
@@ -493,7 +492,7 @@ QString QDesignerActions::uiExtension() const
 
 QAction *QDesignerActions::createRecentFilesMenu()
 {
-    m_recentMenu.reset(new QMenu);
+    m_recentMenu = std::make_unique<QMenu>();
 
     // Need to insert this into the QAction.
     for (int i = 0; i < MaxRecentFiles; ++i) {
@@ -755,40 +754,39 @@ bool QDesignerActions::readInForm(const QString &fileName)
             addRecentFile(fn);
             m_openDirectory = QFileInfo(fn).absolutePath();
             return true;
-        } else {
-            // prompt to reload
-            QMessageBox box(QMessageBox::Warning, tr("Read error"),
-                            tr("%1\nDo you want to update the file location or generate a new form?").arg(errorMessage),
-                            QMessageBox::Cancel, core()->topLevel());
+        }
 
-            QPushButton *updateButton = box.addButton(tr("&Update"), QMessageBox::ActionRole);
-            QPushButton *newButton    = box.addButton(tr("&New Form"), QMessageBox::ActionRole);
-            box.exec();
-            if (box.clickedButton() == box.button(QMessageBox::Cancel))
+        // prompt to reload
+        QMessageBox box(QMessageBox::Warning, tr("Read error"),
+                        tr("%1\nDo you want to update the file location or generate a new form?").arg(errorMessage),
+                        QMessageBox::Cancel, core()->topLevel());
+
+        QPushButton *updateButton = box.addButton(tr("&Update"), QMessageBox::ActionRole);
+        QPushButton *newButton    = box.addButton(tr("&New Form"), QMessageBox::ActionRole);
+        box.exec();
+        if (box.clickedButton() == box.button(QMessageBox::Cancel))
+            return false;
+
+        if (box.clickedButton() == updateButton) {
+            fn = QFileDialog::getOpenFileName(core()->topLevel(),
+                                              tr("Open Form"), m_openDirectory,
+                                              fileDialogFilters(uiExtension()), nullptr);
+
+            if (fn.isEmpty())
                 return false;
-
-            if (box.clickedButton() == updateButton) {
-                const QString extension = uiExtension();
-                fn = QFileDialog::getOpenFileName(core()->topLevel(),
-                                                  tr("Open Form"), m_openDirectory,
-                                                  fileDialogFilters(extension), nullptr);
-
-                if (fn.isEmpty())
-                    return false;
-            } else if (box.clickedButton() == newButton) {
-                // If the file does not exist, but its directory, is valid, open the template with the editor file name set to it.
-                // (called from command line).
-                QString newFormFileName;
-                const  QFileInfo fInfo(fn);
-                if (!fInfo.exists()) {
-                    // Normalize file name
-                    const QString directory = fInfo.absolutePath();
-                    if (QDir(directory).exists())
-                        newFormFileName = directory + u'/' + fInfo.fileName();
-                }
-                showNewFormDialog(newFormFileName);
-                return false;
+        } else if (box.clickedButton() == newButton) {
+            // If the file does not exist, but its directory, is valid, open the template with the editor file name set to it.
+            // (called from command line).
+            QString newFormFileName;
+            const  QFileInfo fInfo(fn);
+            if (!fInfo.exists()) {
+                // Normalize file name
+                const QString directory = fInfo.absolutePath();
+                if (QDir(directory).exists())
+                    newFormFileName = directory + u'/' + fInfo.fileName();
             }
+            showNewFormDialog(newFormFileName);
+            return false;
         }
     } while (true);
     return true;

@@ -46,6 +46,8 @@
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qformlayout.h>
 
+#include <algorithm>
+
 Q_DECLARE_METATYPE(QWidgetList)
 
 QT_BEGIN_NAMESPACE
@@ -2322,12 +2324,10 @@ bool TableWidgetContents::nonEmpty(const QTableWidgetItem *item, int headerColum
         return true;
     }
 
-    for (int i : itemRoles) {
-        if (i != Qt::DisplayPropertyRole && item->data(i).isValid())
-            return true;
-    }
-
-    return false;
+    auto pred = [item](int i) {
+        return i != Qt::DisplayPropertyRole && item->data(i).isValid();
+    };
+    return std::any_of(std::begin(itemRoles), std::end(itemRoles), pred);
 }
 
 void TableWidgetContents::insertHeaderItem(const QTableWidgetItem *item, int i, ListContents *header, bool editor)

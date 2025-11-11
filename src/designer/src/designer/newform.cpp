@@ -26,7 +26,6 @@
 #include <QtCore/qdir.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qdebug.h>
-#include <QtCore/qdir.h>
 #include <QtCore/qtemporaryfile.h>
 
 QT_BEGIN_NAMESPACE

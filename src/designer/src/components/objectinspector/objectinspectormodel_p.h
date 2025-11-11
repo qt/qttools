@@ -107,7 +107,7 @@ namespace qdesigner_internal {
         enum UpdateResult { NoForm, Rebuilt, Updated };
         UpdateResult update(QDesignerFormWindowInterface *fw);
 
-        const QModelIndexList indexesOf(QObject *o) const { return m_objectIndexMultiMap.values(o); }
+        QModelIndexList indexesOf(QObject *o) const { return m_objectIndexMultiMap.values(o); }
         QObject *objectAt(const QModelIndex &index) const;
 
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;

@@ -45,7 +45,7 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef QMap<QString, bool> widget_map;
+using widget_map = QMap<QString, bool>;
 Q_GLOBAL_STATIC(widget_map, g_widgets)
 
 class QUiLoader;

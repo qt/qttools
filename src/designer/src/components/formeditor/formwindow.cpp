@@ -2171,12 +2171,10 @@ bool FormWindow::hasInsertedChildren(QWidget *widget) const // ### move
 
     const QWidgetList l = widgets(widget);
 
-    for (QWidget *child : l) {
-        if (isManaged(child) && !LayoutInfo::isWidgetLaidout(core(), child) && child->isVisibleTo(const_cast<FormWindow*>(this)))
-            return true;
-    }
-
-    return false;
+    auto pred = [this](QWidget *child) {
+        return isManaged(child) && !LayoutInfo::isWidgetLaidout(core(), child) && child->isVisibleTo(this);
+    };
+    return std::any_of(l.cbegin(), l.cend(), pred);
 }
 
 // "Select Ancestor" sub menu code

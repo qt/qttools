@@ -90,10 +90,10 @@ QVariant QResourceBuilder::loadResource(const QDir &workingDirectory, const DomP
                 if (flags & SelectedOn)
                     icon.addFile(QFileInfo(workingDirectory, dpi->elementSelectedOn()->text()).absoluteFilePath(), QSize(), QIcon::Selected, QIcon::On);
                 return QVariant::fromValue(icon);
-            } else { // 4.3 legacy
-                const QIcon icon(QFileInfo(workingDirectory, dpi->text()).absoluteFilePath());
-                return QVariant::fromValue(icon);
             }
+            // 4.3 legacy
+            const QIcon icon(QFileInfo(workingDirectory, dpi->text()).absoluteFilePath());
+            return QVariant::fromValue(icon);
         }
             break;
         default:

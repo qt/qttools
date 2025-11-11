@@ -12,8 +12,8 @@
 // We mean it.
 //
 
-#ifndef _SIGNALSLOTDIALOG_H
-#define _SIGNALSLOTDIALOG_H
+#ifndef SIGNALSLOTDIALOG_H
+#define SIGNALSLOTDIALOG_H
 
 #include "shared_global_p.h"
 #include <QtCore/qstringlist.h>

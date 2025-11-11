@@ -22,7 +22,7 @@
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qversionnumber.h>
 
-#include <limits.h>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

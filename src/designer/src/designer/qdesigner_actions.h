@@ -94,7 +94,7 @@ private slots:
     void saveAllForms();
     void saveFormAsTemplate();
     void notImplementedYet();
-    void shutdown();
+    static void shutdown();
     void editWidgetsSlot();
     void openRecentForm();
     void clearRecentFiles();

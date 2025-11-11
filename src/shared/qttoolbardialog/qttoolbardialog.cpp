@@ -388,9 +388,7 @@ QtFullToolBarManager::QtFullToolBarManager(QObject *parent)
     d_ptr->q_ptr = this;
 }
 
-QtFullToolBarManager::~QtFullToolBarManager()
-{
-}
+QtFullToolBarManager::~QtFullToolBarManager() = default;
 
 void QtFullToolBarManager::setMainWindow(QMainWindow *mainWindow)
 {
@@ -488,9 +486,7 @@ QSet<QAction *> QtFullToolBarManager::actions() const
 
 bool QtFullToolBarManager::isWidgetAction(QAction *action) const
 {
-    if (d_ptr->widgetActions.contains(action))
-        return true;
-    return false;
+    return d_ptr->widgetActions.contains(action);
 }
 
 void QtFullToolBarManager::addDefaultToolBar(QToolBar *toolBar, const QString &category)
@@ -757,9 +753,7 @@ QtToolBarManager::QtToolBarManager(QObject *parent)
 /*!
     Destroys the toolbar manager.
 */
-QtToolBarManager::~QtToolBarManager()
-{
-}
+QtToolBarManager::~QtToolBarManager() = default;
 
 /*!
     Sets the main window upon which the toolbar manager operates, to
