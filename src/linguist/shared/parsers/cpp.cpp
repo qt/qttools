@@ -1726,7 +1726,7 @@ void CppParser::handleTr(QString &prefix, bool plural)
       gotctx:
         const int endOffset = yyInPtr - (const ushort *)yyInStr.unicode() - 1;
         recordMessage(line, context, text, comment, m_metaStrings.extracomment(),
-                    m_metaStrings.msgid(), m_metaStrings.label(), m_metaStrings.extra(),
+                    m_metaStrings.msgid(), QString(), m_metaStrings.extra(),
                     plural, startOffset, endOffset);
     }
     m_metaStrings.clear();
@@ -1783,7 +1783,7 @@ void CppParser::handleTranslate(int prefixSize, bool plural)
         const int endOffset = yyInPtr - (const ushort *)yyInStr.unicode() - 1;
 
         recordMessage(line, context, text, comment, m_metaStrings.extracomment(),
-                      m_metaStrings.msgid(), m_metaStrings.label(), m_metaStrings.extra(),
+                      m_metaStrings.msgid(), QString(), m_metaStrings.extra(),
                       plural, startOffset, endOffset);
     }
     m_metaStrings.clear();
@@ -2085,6 +2085,10 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     namespaceDepths.push(namespaces.size());
                 }
                 enterNamespace(&namespaces, fct);
+
+                // Mark this namespace as a class
+                Namespace *ns = modifyNamespace(&namespaces);
+                ns->isClass = true;
 
                 functionContext = namespaces;
                 functionContextUnresolved.clear(); // Pointless
@@ -2429,6 +2433,25 @@ void CppParser::processComment()
     if (!m_metaStrings.parse(yyWord)) {
         yyMsg() << m_metaStrings.popError().toStdString();
         return;
+    }
+
+    if (!m_metaStrings.label().isEmpty()) {
+        // If pendingContext is set, it may contain aliases that need resolution
+        NamespaceList contextForLabels = functionContext;
+        if (!pendingContext.isEmpty())
+            fullyQualify(namespaces, pendingContext, true, &contextForLabels, nullptr);
+
+        QString context = stringifyNamespace(contextForLabels);
+        QString className;
+
+        // Extract class name if the current context is a class
+        if (const Namespace *ns = findNamespace(contextForLabels); ns && ns->isClass) {
+            int idx = context.lastIndexOf("::"_L1);
+            className = idx >= 0 ? context.mid(idx + 2) : context;
+        }
+
+        if (!m_metaStrings.resolveLabel(yyFileName, context, className))
+            yyMsg() << m_metaStrings.popError().toStdString();
     }
 
     if (m_metaStrings.magicComment()) {

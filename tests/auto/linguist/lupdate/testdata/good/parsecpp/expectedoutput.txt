@@ -4,7 +4,13 @@
 .*/lupdate/testdata/good/parsecpp/main.cpp:228: Setting translation IDs using //= or #= is deprecated and will be removed in the upcoming versions.
 .*/lupdate/testdata/good/parsecpp/main.cpp:620: tr\(\) cannot be called without context
 .*/lupdate/testdata/good/parsecpp/main.cpp:622: tr\(\) cannot be called without context
-.*/lupdate/testdata/good/parsecpp/main.cpp:738: labels cannot be used with text-based translation. Ignoring
-.*/lupdate/testdata/good/parsecpp/main.cpp:753: Discarding unconsumed meta data
+.*/lupdate/testdata/good/parsecpp/main.cpp:737: Setting translation IDs using //= or #= is deprecated and will be removed in the upcoming versions.
+.*/lupdate/testdata/good/parsecpp/main.cpp:739: labels cannot be used with text-based translation. Ignoring
+.*/lupdate/testdata/good/parsecpp/main.cpp:742: labels cannot be used with text-based translation. Ignoring
+.*/lupdate/testdata/good/parsecpp/main.cpp:757: Discarding unconsumed meta data
+.*/lupdate/testdata/good/parsecpp/main.cpp:833: Label placeholder <context> used, but no context available. Using <unnamed>.
+.*/lupdate/testdata/good/parsecpp/main.cpp:837: Label placeholder <class> used, but no class available. Using <unnamed>.
+.*/lupdate/testdata/good/parsecpp/main.cpp:851: labels cannot be used with text-based translation. Ignoring
+.*/lupdate/testdata/good/parsecpp/main.cpp:911: Label placeholder <class> used, but no class available. Using <unnamed>.
 Contradicting label for message with id id4
 lupdate warning: Message with id 'yet_another_id' has no source.

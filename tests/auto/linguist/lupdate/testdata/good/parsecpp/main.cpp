@@ -734,8 +734,12 @@ class TestMetaStrings : QObject
     Q_OBJECT
     void func()
     {
+        //= id1
+        //@ label1
+        tr("msg with id1, invalid usage of label in text-based");
+
         //@ label2
-        tr("invalid usage of label because of missing id");
+        tr("invalid usage of label in text-based");
 
         //@ label3
         //% "propagating label"
@@ -773,3 +777,170 @@ void SaveItemsDialog::adjustButtonWidths()
 
 //% "Testing qTrId alias function"
 QString test_alias = qTrId("qtrid_alias_test");
+
+// ============================================================================
+// AUTO LABELS TESTS
+// ============================================================================
+
+// Auto labels testing
+namespace FileOps {
+class FileManager : QObject
+{
+    Q_OBJECT
+    void testAutoLabels()
+    {
+        //% "Open file"
+        //@ <context>
+        qtTrId("autolabel.context");
+
+        //% "Save file"
+        //@ <class>
+        qtTrId("autolabel.class");
+
+        //% "Export"
+        //@ <file>
+        qtTrId("autolabel.file");
+
+        //% "Close file"
+        //@ FileOperations
+        qtTrId("autolabel.literal");
+    }
+};
+} // namespace FileOps
+
+// Test <context> with nested namespace
+namespace App {
+namespace UI {
+class DialogManager : QObject
+{
+    Q_OBJECT
+    void show()
+    {
+        //% "Show dialog"
+        //@ <context>
+        qtTrId("autolabel.nested");
+
+        //% "Hide dialog"
+        //@ <class>
+        qtTrId("autolabel.nested.class");
+    }
+};
+} // namespace UI
+} // namespace App
+
+// Test auto labels with qtTrId at global scope (empty context)
+//% "Global message"
+//@ <context>
+QString global_autolabel = qtTrId("autolabel.global");
+
+//% "Global class label"
+//@ <class>
+QString global_class_autolabel = qtTrId("autolabel.global.class");
+
+//% "Global file label"
+//@ <file>
+QString global_file_autolabel = qtTrId("autolabel.global.file");
+
+// Test that auto labels are ignored for text-based tr() (should generate warning)
+class WarningTest : QObject
+{
+    Q_OBJECT
+    void test()
+    {
+        //@ <context>
+        tr("This should warn");
+    }
+};
+
+// Test flexible placeholder combinations
+namespace FlexLabels {
+class Combiner : QObject
+{
+    Q_OBJECT
+    void testCombinations()
+    {
+        //% "Test file:class combination"
+        //@ <file>:<class>
+        qtTrId("file_class");
+
+        //% "Test complex pattern"
+        //@ module_<file>_<class>_v1
+        qtTrId("complex");
+
+        //% "Test file:context combination"
+        //@ <file>_<context>-label
+        qtTrId("file_context");
+    }
+};
+} // namespace FlexLabels
+
+namespace Level1 {
+namespace Level2 {
+namespace Level3 {
+namespace Level4 {
+class DeepClass : QObject
+{
+    Q_OBJECT
+    void deepMethod()
+    {
+        //% "Deep nested context"
+        //@ <context>
+        qtTrId("deep.nested.context");
+
+        //% "Deep class only"
+        //@ <class>
+        qtTrId("deep.nested.class");
+    }
+};
+} // namespace Level4
+} // namespace Level3
+} // namespace Level2
+} // namespace Level1
+
+// Test static variables at namespace level (empty context)
+namespace StaticTests {
+//% "Static at namespace level"
+//@ <context>
+static QString staticGlobal = qtTrId("static.namespace.context");
+
+//% "Static with file:context combo"
+//@ <file>:<context>
+static QString staticCombo = qtTrId("static.namespace.combo");
+
+//% "Static with file:class combo"
+//@ <file>:<class>
+static QString staticComboClass = qtTrId("static.noclass");
+} // namespace StaticTests
+
+// Test namespace alias
+namespace VeryLongNamespaceName {
+class AliasedClass : QObject
+{
+    Q_OBJECT
+    void method();
+};
+} // namespace VeryLongNamespaceName
+namespace Short = VeryLongNamespaceName;
+
+void Short::AliasedClass::method()
+{
+    //% "Namespace alias"
+    //@ <context>
+    qtTrId("alias.context");
+}
+
+// Test lambda expressions
+namespace Lambdas {
+class LambdaTest : QObject
+{
+    Q_OBJECT
+    void testLambdas()
+    {
+        auto lambda = [this]() {
+            //% "Lambda with capture"
+            //@ <context>-lambda
+            return qtTrId("lambda.capture");
+        };
+    }
+};
+} // namespace Lambdas

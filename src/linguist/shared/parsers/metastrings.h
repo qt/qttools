@@ -21,6 +21,8 @@ public:
     };
 
     bool parse(QString &string);
+    bool resolveLabel(const QString &filename, const QString &context,
+                      const QString &className = QString());
 
     void clear();
 

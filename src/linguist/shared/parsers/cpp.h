@@ -39,13 +39,13 @@ typedef QList<HashString> NamespaceList;
 
 struct Namespace {
 
-    Namespace() : parent(nullptr), classDef(this), hasTrFunctions(false), complained(false) { }
+    Namespace() : classDef(this) { }
     ~Namespace()
     {
         qDeleteAll(children);
     }
 
-    Namespace *parent;
+    Namespace *parent = nullptr;
     QHash<HashString, Namespace *> children;
     QHash<HashString, NamespaceList> aliases;
     QList<HashStringList> usings;
@@ -65,8 +65,9 @@ struct Namespace {
 
     QString trQualification;
 
-    bool hasTrFunctions;
-    bool complained; // ... that tr functions are missing.
+    bool hasTrFunctions = false;
+    bool complained = false; // ... that tr functions are missing.
+    bool isClass = false; // True if this represents a class, false for namespace
 };
 
 struct ParseResults {

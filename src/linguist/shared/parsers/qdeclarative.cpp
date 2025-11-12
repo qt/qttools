@@ -355,6 +355,9 @@ void FindTrCalls::processComment(const SourceLocation &loc)
         return;
     }
 
+    if (!m_metaStrings.resolveLabel(m_fileName, m_component))
+        yyMsg(loc.startLine) << m_metaStrings.popError().toStdString();
+
     if (m_metaStrings.magicComment()) {
         auto [context, comment] = *m_metaStrings.magicComment();
         TranslatorMessage msg(transcode(context), QString(), transcode(comment), QString(),

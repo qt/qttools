@@ -1911,8 +1911,89 @@ Log}. When complete, you can check out the translated texts on the log. Upon cli
     Any item without a \e label appears under \c{<unnamed label>}.
     \note Label names have no effect on lookup or uniqueness: IDs remain globally
     unique and can still be loaded via \c{qtTrId("msgid")} without referencing a
-    label. The label tag is used only to improve the translator’s navigation
+    label. The label tag is used only to improve the translator's navigation
     and does not change runtime behavior.
+
+    \section3 Automatic Label Generation
+
+    Instead of manually specifying label names, you can use placeholders
+    to automatically generate labels based on the code structure:
+
+    \list
+    \li \c{//@ <context>} - Automatically uses the full context (namespace::class)
+    \li \c{//@ <class>} - Automatically uses only the class name (without namespaces)
+    \li \c{//@ <file>} - Automatically uses the source filename
+    \endlist
+
+    \section4 Combining Placeholders
+
+    Placeholders can be combined with custom text to create more descriptive labels:
+
+    \list
+    \li \c{//@ <file>:<class>} - Combines filename and class: \c{filehandler.cpp:FileHandler}
+    \li \c{//@ <context>_customSuffix} - Adds suffix: \c{MyApp::FileHandler_customSuffix}
+    \li \c{//@ module_<file>_<class>-label} - Custom prefix and suffix: \c{module_filehandler.cpp_FileHandler-label}
+    \li \c{//@ <context>:<file>} - Context with file: \c{MyApp::FileHandler:filehandler.cpp}
+    \endlist
+
+    For example, in C++:
+    \code cpp
+    namespace MyApp {
+    class FileHandler : QObject {
+        Q_OBJECT
+        void open() {
+            //% "Open file"
+            //@ <context>
+            qtTrId("msg.open"); // Label: MyApp::FileHandler
+
+            //% "Save file"
+            //@ <class>
+            qtTrId("msg.save"); // Label: FileHandler
+
+            //% "Export"
+            //@ <file>
+            qtTrId("msg.export"); // Label: filehandler.cpp
+        }
+    };
+    }
+    \endcode
+
+    Or in QML:
+    \code qml
+    Item {
+        id: myComponent
+        Component.onCompleted: {
+            //% "Loading"
+            //@ <context>
+            qsTrId("msg.loading") // Label: <component-name>
+
+            //% "Ready"
+            //@ <file>
+            qsTrId("msg.ready") // Label: main.qml
+
+            //% "Initialized"
+            //@ <file>:<context>-state
+            qsTrId("msg.init") // Label: main.qml:<component-name>-state
+        }
+    }
+    \endcode
+
+    Auto labels are particularly useful in large projects where manually
+    managing label names across many files can be tedious. They ensure
+    consistent grouping based on code structure and give hints to translators
+    about where the translation will be used.
+
+    \note When using \c{<class>} in C++ code outside any classes, a warning
+    will be issued and \c{<unnamed>} will be used in the generated label.
+
+    \note Using \c{<class>} in QML will generate a
+    warning and \c{<unnamed>} will be used, since QML
+    components are not classes. Use \c{<context>} instead to get the
+    component name, or \c{<file>} to get the QML filename.
+
+    \note Auto labels only work with ID-based translations (\c qtTrId, \c qsTrId).
+    Using auto labels with text-based translations (\c tr, \c qsTr) will generate
+    a warning and the label will be ignored.
 
     \section1 CMake configuration
 
@@ -2130,6 +2211,9 @@ Log}. When complete, you can check out the translated texts on the log. Upon cli
 
     Strings with the same label appear grouped together in \QL,
     making it easier for translators to work on related content.
+
+    For automatic label generation using placeholders like \c{<context>}, \c{<class>},
+    \c{<file>}, and their combinations, see \l{Automatic Label Generation}.
 
     \section2 TS file format
 

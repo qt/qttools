@@ -51,6 +51,36 @@
         <label>label4</label>
         <translation type="unfinished"></translation>
     </message>
+    <message id="qml.autolabel.context">
+        <location filename="main.qml" line="135"/>
+        <source>QML context auto label</source>
+        <label>main</label>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="qml.autolabel.file">
+        <location filename="main.qml" line="139"/>
+        <source>QML file auto label</source>
+        <label>main.qml</label>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="qml.flex.file_context">
+        <location filename="main.qml" line="154"/>
+        <source>QML file:context combination</source>
+        <label>main.qml:main</label>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="qml.flex.complex">
+        <location filename="main.qml" line="160"/>
+        <source>QML complex pattern</source>
+        <label>module_main.qml_main_v1</label>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="qml.flex.special">
+        <location filename="main.qml" line="166"/>
+        <source>QML special chars</source>
+        <label>main.qml_main-label</label>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>BarContext</name>
@@ -103,6 +133,14 @@
         <source>This string also has meta-data</source>
         <translation type="unfinished"></translation>
         <extra-loc-layout_id>foo_dialog</extra-loc-layout_id>
+    </message>
+</context>
+<context>
+    <name>ExplicitContext</name>
+    <message>
+        <location filename="main.qml" line="143"/>
+        <source>Auto label with explicit context</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -339,6 +377,11 @@
     <message>
         <location filename="main.qml" line="115"/>
         <source>invalid usage of label because of missing id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.qml" line="147"/>
+        <source>This should warn in QML</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -3,8 +3,15 @@
 
 #include "metastrings.h"
 
+#include <QFileInfo>
+
 namespace {
 using namespace Qt::Literals::StringLiterals;
+
+static constexpr QLatin1StringView PlaceholderClass = "<class>"_L1;
+static constexpr QLatin1StringView PlaceholderContext = "<context>"_L1;
+static constexpr QLatin1StringView PlaceholderFile = "<file>"_L1;
+static constexpr QLatin1StringView UnnamedPlaceholder = "<unnamed>"_L1;
 
 static constexpr QLatin1String CppMagicComment = "TRANSLATOR"_L1;
 } // namespace
@@ -87,6 +94,35 @@ bool MetaStrings::parse(QString &string)
             m_magicComment.emplace(MagicComment{ std::move(context), std::move(comment) });
         }
     }
+
+    return m_error.isEmpty();
+}
+
+bool MetaStrings::resolveLabel(const QString &filename, const QString &context,
+                               const QString &className)
+{
+    if (m_label.contains(PlaceholderClass)) {
+        QString classStr = className;
+        if (classStr.isEmpty()) {
+            classStr = UnnamedPlaceholder;
+            m_error =
+                    "Label placeholder <class> used, but no class available. Using <unnamed>.\n"_L1;
+        }
+        m_label.replace(PlaceholderClass, classStr);
+    }
+
+    if (m_label.contains(PlaceholderContext)) {
+        QString contextStr = context;
+        if (contextStr.isEmpty()) {
+            contextStr = UnnamedPlaceholder;
+            m_error +=
+                    "Label placeholder <context> used, but no context available. Using <unnamed>.\n"_L1;
+        }
+        m_label.replace(PlaceholderContext, contextStr);
+    }
+
+    if (m_label.contains(PlaceholderFile))
+        m_label.replace(PlaceholderFile, QFileInfo(filename).fileName());
 
     return m_error.isEmpty();
 }
