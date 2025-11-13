@@ -62,6 +62,7 @@ qt_internal_add_tool(${target_name}
         src/qdoc/node.cpp
         src/qdoc/nodecontext.h
         src/qdoc/openedlist.cpp
+        src/qdoc/outputdirectory.cpp
         src/qdoc/pagenode.cpp
         src/qdoc/parameters.cpp
         src/qdoc/parsererror.cpp
