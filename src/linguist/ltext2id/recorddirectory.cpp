@@ -17,17 +17,17 @@ void RecordDirectory::recordMessage(const TranslatorMessage &msg)
                     msg.endOffset(),  msg.isPlural(),   !msg.extra(meta_id_key).isEmpty() };
     if (const auto it = m_messages.find(mi); it != m_messages.end())
         mi.id = it->id;
-    else if (const QString id = msg.id(); id.isEmpty()) {
+    else if (QString id = msg.id(); id.isEmpty()) {
         mi.id = calculateId(msg);
         m_messages.emplace(mi);
     } else // this is only the case in verification
-        mi.id = id;
+        mi.id = std::move(id);
     for (const TranslatorMessage::Reference &ref : msg.allReferences()) {
         auto ref_mi = std::make_shared<MessageItem>(mi);
         ref_mi->lineNo = ref.lineNumber();
         ref_mi->startOffset = ref.startOffset();
         ref_mi->endOffset = ref.endOffset();
-        m_msgLocations[ref.fileName()].insert(ref_mi);
+        m_msgLocations[ref.fileName()].insert(std::move(ref_mi));
     }
 }
 
@@ -68,14 +68,14 @@ bool RecordDirectory::containsFile(const QString &filename) const noexcept
 
 QString RecordDirectory::calculateId(const TranslatorMessage &msg) const
 {
-    if (const QString metaId = msg.extra(meta_id_key); !metaId.isEmpty())
-        return metaId;
+    QString id = msg.extra(meta_id_key);
+    if (!id.isEmpty())
+        return id;
 
     const QString &source = msg.sourceText();
     int words = 0;
     int index = 0;
 
-    QString id;
     while (index < source.size()) {
         QChar c = source[index];
         bool word = false;

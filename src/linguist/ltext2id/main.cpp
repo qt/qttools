@@ -117,10 +117,9 @@ int main(int argc, char *argv[])
     }
 
     ConversionData cd;
-    QMultiHash<QString, QString> cIncludes = Utils::getIncludeOptions(rootInfo, cSources);
     Translator tor;
     cd.m_projectRoots = { std::move(projectRoot) };
-    cd.m_allCSources = cIncludes;
+    cd.m_allCSources = Utils::getIncludeOptions(rootInfo, cSources);
     cd.m_sourceIsUtf16 = utf16;
     processSources(tor, sources, cd);
 
