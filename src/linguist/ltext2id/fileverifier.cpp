@@ -68,7 +68,8 @@ void FileVerifier::verifySources(const QStringList &sources, ConversionData &cd)
         const auto &verifyMessages = verifyRecords.messageLocations()[filename];
         auto transformedItr = verifyMessages.cbegin();
         for (const std::shared_ptr<MessageItem> &original : messages) {
-            if (m_records.isNonSupported(filename, original->lineNo)) {
+            if (m_records.isNonSupported(filename, original->lineNo)
+                && transformedItr != verifyMessages.cend()) {
                 transformedItr++;
                 continue;
             }
