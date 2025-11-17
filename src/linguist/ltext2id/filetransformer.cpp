@@ -328,8 +328,8 @@ void FileTransformer::transformSources()
                         codePiece.remove(idMetaStringRegex(msg->id));
                         addedLines--;
                     }
-                    newCode += std::move(codePiece);
-                    newCode += std::move(fnId);
+                    newCode += codePiece;
+                    newCode += fnId;
 
                     addedLines += fnId.count('\n');
                     m_records.recordAddedLines(filename, msg->lineNo, addedLines);
