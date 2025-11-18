@@ -21,6 +21,7 @@
 #include "inode.h"
 #include "node.h"
 #include "openedlist.h"
+#include "outputdirectory.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
@@ -929,7 +930,6 @@ void Generator::generateLinkToExample(const ExampleNode *en, CodeMarker *marker,
 
 void Generator::addImageToCopy(const ExampleNode *en, const ResolvedFile& resolved_file)
 {
-    QDir dirInfo;
     // TODO: [uncentralized-output-directory-structure]
     const QString prefix("/images/used-in-examples");
 
@@ -939,12 +939,21 @@ void Generator::addImageToCopy(const ExampleNode *en, const ResolvedFile& resolv
     // would actually store the file itself.
     s_outFileNames << prefix.mid(1) + "/" + resolved_file.get_query();
 
+    const OutputDirectory outDir =
+            OutputDirectory::ensure(s_outDir, en->location());
+    const OutputDirectory imagesUsedInExamplesDir =
+            outDir.ensureSubdir(prefix.mid(1), en->location());
 
-    // TODO: [uncentralized-output-directory-structure]
-    QString imgOutDir = s_outDir + prefix + "/" + QFileInfo{resolved_file.get_query()}.path();
-    if (!dirInfo.mkpath(imgOutDir))
-        en->location().fatal(QStringLiteral("Cannot create output directory '%1'").arg(imgOutDir));
-    Config::copyFile(en->location(), resolved_file.get_path(), QFileInfo{resolved_file.get_query()}.fileName(), imgOutDir);
+    const QFileInfo fi{resolved_file.get_query()};
+    const QString relativePath = fi.path();
+    // QFileInfo::path() can return "." for files with no directory component
+    const bool hasSubdir = !relativePath.isEmpty() && relativePath != "."_L1;
+    const OutputDirectory imgOutDir =
+            hasSubdir ? imagesUsedInExamplesDir.ensureSubdir(relativePath, en->location())
+                      : imagesUsedInExamplesDir;
+
+    const QString fileName = fi.fileName();
+    Config::copyFile(en->location(), resolved_file.get_path(), fileName, imgOutDir.path());
 }
 
 // TODO: [multi-purpose-function-with-flag][generate-file-list]
@@ -1884,26 +1893,24 @@ void Generator::copyTemplateFiles(const QString &configVar, const QString &subDi
     QStringList files = config.getCanonicalPathList(configVar, Config::Validate);
     const auto &loc = config.get(configVar).location();
     if (!files.isEmpty()) {
-        QDir dirInfo;
         // TODO: [uncentralized-output-directory-structure]
-        // As with other places in the generation pass, the details of
-        // where something is saved in the output directory are spread
-        // to whichever part of the generation does the saving.
-        // It is hence complex to build a model of how an output
-        // directory looks like, as the knowledge has no specific
-        // entry point or chain-path that can be followed in full.
-        // Each of those operations should be centralized in a system
-        // that uniquely knows what the format of the output-directory
-        // is and how to perform operations on it.
-        // Later, move this operation to that centralized system.
-        QString templateDir = s_outDir + QLatin1Char('/') + subDir;
-        if (!dirInfo.exists(templateDir) && !dirInfo.mkdir(templateDir)) {
-            // TODO: [uncentralized-admonition]
-            loc.fatal(QStringLiteral("Cannot create %1 directory '%2'").arg(subDir, templateDir));
-        } else {
-            for (const auto &file : files) {
-                if (!file.isEmpty())
-                    Config::copyFile(loc, file, file, templateDir);
+        // OutputDirectory provides the centralized system for managing output
+        // directory structure in Generator base class methods. However, the
+        // format-specific generators (HtmlGenerator, DocBookGenerator,
+        // WebXMLGenerator) still manually construct image paths using string
+        // concatenation and direct Config::copyFile() calls. These should be
+        // refactored to use OutputDirectory for consistency and security.
+
+        const OutputDirectory outDir =
+                OutputDirectory::ensure(s_outDir, loc);
+
+        const OutputDirectory templateDir =
+                outDir.ensureSubdir(subDir, loc);
+
+        for (const auto &file : files) {
+            if (!file.isEmpty()) {
+                const QFileInfo fi(file);
+                Config::copyFile(loc, fi.absoluteFilePath(), fi.fileName(), templateDir.path());
             }
         }
     }
@@ -1935,15 +1942,14 @@ void Generator::initializeFormat()
         s_outSubdir = s_outDir.mid(s_outDir.lastIndexOf('/') + 1);
     }
 
-    QDir outputDir(s_outDir);
-    if (outputDir.exists()) {
-        if (!config.generating() && Generator::useOutputSubdirs()) {
-            if (!outputDir.isEmpty())
-                Location().error(QStringLiteral("Output directory '%1' exists but is not empty")
-                                .arg(s_outDir));
-        }
-    } else if (!outputDir.mkpath(QStringLiteral("."))) {
-        Location().fatal(QStringLiteral("Cannot create output directory '%1'").arg(s_outDir));
+    // Ensure output directory exists before proceeding
+    const OutputDirectory outputDir =
+            OutputDirectory::ensure(s_outDir, Location());
+
+    // Check if the directory is empty when required
+    if (!config.generating() && Generator::useOutputSubdirs()) {
+        if (!outputDir.toQDir().isEmpty())
+            Location().error("Output directory '%1' exists but is not empty"_L1.arg(s_outDir));
     }
 
     // Output directory exists, which is enough for prepare phase.
