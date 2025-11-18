@@ -5,6 +5,8 @@
 #include "config.h"
 #include "examplenode.h"
 #include "generator.h"
+#include "location.h"
+#include "outputdirectory.h"
 #include "qdocdatabase.h"
 
 #include <QtCore/qmap.h>
@@ -12,6 +14,8 @@
 #include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
+
+using namespace Qt::StringLiterals;
 
 /*!
     \internal
@@ -272,10 +276,15 @@ void ManifestWriter::generateExampleManifestFile()
     if (exampleNodeMap.isEmpty())
         return;
 
+    const OutputDirectory outputDir =
+            OutputDirectory::ensure(m_outputDirectory, Location());
+
     const QString outputFileName = "examples-manifest.xml";
-    QFile outputFile(m_outputDirectory + QLatin1Char('/') + outputFileName);
-    if (!outputFile.open(QFile::WriteOnly | QFile::Text))
+    QFile outputFile(outputDir.absoluteFilePath(outputFileName));
+    if (!outputFile.open(QFile::WriteOnly | QFile::Text)) {
+        Location().error(u"Cannot open '%1' for writing"_s.arg(outputFile.fileName()));
         return;
+    }
 
     QXmlStreamWriter writer(&outputFile);
     writer.setAutoFormatting(true);

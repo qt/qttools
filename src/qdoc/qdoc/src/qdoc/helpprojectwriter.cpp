@@ -14,8 +14,10 @@
 #include "genustypes.h"
 #include "htmlgenerator.h"
 #include "inclusionfilter.h"
+#include "location.h"
 #include "node.h"
 #include "nodecontext.h"
+#include "outputdirectory.h"
 #include "qdocdatabase.h"
 #include "typedefnode.h"
 
@@ -564,9 +566,14 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     project.m_files.clear();
     project.m_keywords.clear();
 
-    QFile file(m_outputDir + QDir::separator() + project.m_fileName);
-    if (!file.open(QFile::WriteOnly))
+    const OutputDirectory outputDir =
+            OutputDirectory::ensure(m_outputDir, Location());
+
+    QFile file(outputDir.absoluteFilePath(project.m_fileName));
+    if (!file.open(QFile::WriteOnly)) {
+        Location().error(u"Cannot open '%1' for writing"_s.arg(file.fileName()));
         return;
+    }
 
     QXmlStreamWriter writer(&file);
     writer.setAutoFormatting(true);

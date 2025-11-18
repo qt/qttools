@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instructionals module="IllformattedDocumentation">
+    <examples>
+        <example docUrl="qthelp:////illformatteddocumentation-someexample-example.html" name="QDoc: some example">
+            <description><![CDATA[No description available]]></description>
+            <tags>illformatteddocumentation</tags>
+        </example>
+    </examples>
+</instructionals>

@@ -17,6 +17,7 @@ qt_internal_add_test(tst_config
 
         ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/config.cpp
         ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/location.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/outputdirectory.cpp
         ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/qdoccommandlineparser.cpp
         ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/utilities.cpp
     INCLUDE_DIRECTORIES

@@ -4,6 +4,7 @@
 #include "location.h"
 
 #include "config.h"
+#include "outputdirectory.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>
@@ -444,12 +445,10 @@ void Location::initializeWarningLog(const Config &config)
     const QString logFileName = s_project + "-qdoc-warnings.log";
     const QString &outputDir = config.getOutputDir();
 
-    QDir dir(outputDir);
-    if (!dir.exists()) {
-        dir.mkpath(".");
-    }
+    const OutputDirectory dir =
+            OutputDirectory::ensure(outputDir, Location());
 
-    const QString &logFilePath = dir.filePath(logFileName);
+    const QString &logFilePath = dir.absoluteFilePath(logFileName);
 
     s_warningLogFile = std::make_unique<QFile>(logFilePath);
     if (s_warningLogFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
