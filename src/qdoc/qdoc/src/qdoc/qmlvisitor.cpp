@@ -514,7 +514,8 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
         auto component = applyDocumentation(definition->firstSourceLocation(), nullptr);
         Q_ASSERT(component);
         auto *qmlTypeNode = static_cast<QmlTypeNode *>(component);
-        if (!component->doc().isEmpty())
+        // Set base type name unless one was already provided with \inherits
+        if (!component->doc().isEmpty() && qmlTypeNode->qmlBaseName().isEmpty())
             qmlTypeNode->setQmlBaseName(type);
         qmlTypeNode->setImportList(m_importList);
         m_importList.clear();
