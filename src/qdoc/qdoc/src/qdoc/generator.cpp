@@ -1957,9 +1957,9 @@ void Generator::initializeFormat()
         return;
 
     auto imagesDir = config.get(CONFIG_IMAGESOUTPUTDIR).asString(u"images"_s);
-    if (!outputDir.exists(imagesDir) && !outputDir.mkpath(imagesDir))
-        Location().fatal("Cannot create images directory '%1'"_L1
-                .arg(QDir::cleanPath(outputDir.filePath(imagesDir))));
+    // Ensure images subdirectory exists
+    [[maybe_unused]] const OutputDirectory imagesOutputDir =
+            outputDir.ensureSubdir(imagesDir, Location());
     s_imagesOutDir = std::move(imagesDir);
 
     copyTemplateFiles(format() + Config::dot + CONFIG_STYLESHEETS, "style");
