@@ -706,11 +706,13 @@
     The \\inherits command is for documenting that one QML type
     inherits some other QML type. It must be included in the
     inheriting element's \l{qmltype-command}{\\qmltype} comment.
-    The argument is the name of the inherited QML type.
+    The argument is the name of the inherited QML type,
+    optionally qualified with a QML module name.
 
     \badcode *
     /\1!
         \qmltype PauseAnimation
+        \inqmlmodule QtQuick
         \nativetype QDeclarativePauseAnimation
         \ingroup qml-animation-transition
         \since 4.7
@@ -739,6 +741,11 @@
     \quotation
         Inherits \l [QML] Animation
     \endquotation
+
+    When documenting a QML types directly in a .qml file, the \\inherits command
+    is normally not required as QDoc can detect the base type from QML syntax.
+    If present, an \\inherits command will override this automatic base type
+    detection.
 
     \target overload-command
     \section2 \\overload
