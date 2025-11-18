@@ -22,6 +22,9 @@ qt_internal_add_tool(${target_name}
         ../shared/qmakevfs.cpp ../shared/qmakevfs.h
         ../shared/qrcreader.cpp ../shared/qrcreader.h
         main.cpp
+    NO_UNITY_BUILD_SOURCES
+        ../shared/qmakeevaluator.cpp
+        ../shared/parsers/qmakeparser.cpp
     DEFINES
         PROEVALUATOR_CUMULATIVE
         PROEVALUATOR_DEBUG
