@@ -7,6 +7,12 @@ if(NOT QT_BUILD_STANDALONE_TESTS AND NOT QT_BUILDING_QT)
     find_package(Qt6BuildInternals REQUIRED COMPONENTS STANDALONE_TEST)
 endif()
 
+if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../../../cmake")
+    find_package(nlohmann_json REQUIRED)
+    find_package(Inja REQUIRED)
+endif()
+
 qt_internal_add_test(tst_QDoc
     SOURCES
         main.cpp
@@ -31,5 +37,12 @@ qt_internal_add_test(tst_QDoc
 qt_internal_extend_target(tst_QDoc
     CONDITION QT_QDOC_ENABLE_TEMPLATE_GENERATOR
     SOURCES
+        injabridge/catch_injabridge.cpp
         templategenerator/catch_templategenerator.cpp
+        ../../src/qdoc/injabridge.cpp
+    LIBRARIES
+        Inja::inja
+        nlohmann_json::nlohmann_json
+    DEFINES
+        QDOC_TEMPLATE_GENERATOR_ENABLED
 )
