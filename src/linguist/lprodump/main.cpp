@@ -3,7 +3,7 @@
 
 #include <profileevaluator.h>
 #include <profileutils.h>
-#include <parsers/qmakeparser.h>
+#include <qmakeparser.h>
 #include <qmakevfs.h>
 #include <qrcreader.h>
 

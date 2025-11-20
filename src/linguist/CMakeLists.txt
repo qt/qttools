@@ -8,6 +8,9 @@ qt_exclude_tool_directories_from_default_target(
 if(NOT QT_FEATURE_linguist)
     return()
 endif()
+
+add_subdirectory(shared/qmake-parser)
+
 add_subdirectory(lconvert)
 add_subdirectory(lcheck)
 add_subdirectory(lprodump)
