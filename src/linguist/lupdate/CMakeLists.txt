@@ -14,10 +14,10 @@ qt_internal_add_tool(${target_name}
         ../shared/numerus.cpp
         ../shared/po.cpp
         ../shared/projectdescriptionreader.cpp ../shared/projectdescriptionreader.h
+        ../shared/projsongenerator.cpp ../shared/projsongenerator.h
         ../shared/qm.cpp
         ../shared/qph.cpp
         ../shared/qrcreader.cpp ../shared/qrcreader.h
-        ../shared/runqttool.cpp ../shared/runqttool.h
         ../shared/simtexth.cpp ../shared/simtexth.h
         ../shared/translator.cpp ../shared/translator.h
         ../shared/translatormessage.cpp ../shared/translatormessage.h
@@ -39,7 +39,7 @@ qt_internal_add_tool(${target_name}
     INCLUDE_DIRECTORIES
         ../shared
     LIBRARIES
-        Qt::CorePrivate
+        QMakeParserCumulative
         Qt::Tools
 )
 

@@ -113,7 +113,7 @@ public:
     {
         Projects result;
         result.reserve(rawProjects.size());
-        for (const QJsonValue rawProject : rawProjects) {
+        for (const QJsonValue &rawProject : rawProjects) {
             Project project = convertProject(rawProject);
             if (!m_errorString.isEmpty())
                 break;
@@ -221,7 +221,7 @@ private:
         QStringList result;
         const QJsonArray a = v.toArray();
         result.reserve(a.count());
-        for (const QJsonValue v : a) {
+        for (const QJsonValue &v : a) {
             if (!v.isString()) {
                 m_errorString = FMT::tr("Unexpected type %1 in string array in key %2.")
                         .arg(jsonTypeName(v.type()), key);
@@ -235,7 +235,9 @@ private:
     QString &m_errorString;
 };
 
-Projects readProjectDescription(const QString &filePath, QString *errorString)
+QT_BEGIN_NAMESPACE
+
+Projects projectDescriptionFromFile(const QString &filePath, QString *errorString)
 {
     const QJsonArray rawProjects = readRawProjectDescription(filePath, errorString);
     if (!errorString->isEmpty())
@@ -246,3 +248,18 @@ Projects readProjectDescription(const QString &filePath, QString *errorString)
         return {};
     return result;
 }
+
+Projects projectDescriptionFromJson(const QJsonArray &rawProjects, QString *errorString)
+{
+    errorString->clear();
+    Validator validator(errorString);
+    if (!validator.isValidProjectDescription(rawProjects))
+        return {};
+    ProjectConverter converter(errorString);
+    Projects result = converter.convertProjects(rawProjects);
+    if (!errorString->isEmpty())
+        return {};
+    return result;
+}
+
+QT_END_NAMESPACE

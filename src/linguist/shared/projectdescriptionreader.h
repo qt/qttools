@@ -4,6 +4,7 @@
 #ifndef PROJECTDESCRIPTIONREADER_H
 #define PROJECTDESCRIPTIONREADER_H
 
+#include <QtCore/qjsonarray.h>
 #include <QtCore/qregularexpression.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qstringlist.h>
@@ -11,6 +12,8 @@
 
 #include <optional>
 #include <vector>
+
+QT_BEGIN_NAMESPACE
 
 struct Project;
 
@@ -27,6 +30,9 @@ struct Project
     std::optional<QStringList> translations;
 };
 
-Projects readProjectDescription(const QString &filePath, QString *errorString);
+Projects projectDescriptionFromFile(const QString &filePath, QString *errorString);
+Projects projectDescriptionFromJson(const QJsonArray &rawProjects, QString *errorString);
+
+QT_END_NAMESPACE
 
 #endif // PROJECTDESCRIPTIONREADER_H
