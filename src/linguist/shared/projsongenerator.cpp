@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "projsongenerator.h"
+#include "projectdescriptionreader.h"
 
 #include "qmake-parser/profileevaluator.h"
 #include "qmake-parser/qmakeparser.h"
@@ -319,4 +320,25 @@ std::optional<QJsonArray> generateProjectDescription(const QStringList &proFiles
     return result;
 }
 
+Projects generateProjects(const QStringList &proFiles, const QStringList &translationsVariables,
+                          const QHash<QString, QString> &outDirMap, int proDebug, bool verbose,
+                          QString *errorString)
+{
+    errorString->clear();
+
+    std::optional<QJsonArray> jsonResults = generateProjectDescription(proFiles, translationsVariables, outDirMap,
+                                                        proDebug, verbose);
+    if (!jsonResults) {
+        *errorString = "Failed to generate project description from .pro files"_L1;
+        return {};
+    }
+
+    Projects projects = projectDescriptionFromJson(*jsonResults, errorString);
+    if (!errorString->isEmpty())
+        return {};
+
+    return projects;
+}
+
 QT_END_NAMESPACE
+

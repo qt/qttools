@@ -9,12 +9,21 @@
 #include <QtCore/qstringlist.h>
 #include <QtCore/qhash.h>
 
+#include <vector>
+
 QT_BEGIN_NAMESPACE
+
+struct Project;
+typedef std::vector<Project> Projects;
 
 std::optional<QJsonArray> generateProjectDescription(const QStringList &proFiles,
                                                      const QStringList &translationsVariables,
                                                      const QHash<QString, QString> &outDirMap,
                                                      int proDebug, bool verbose);
+
+Projects generateProjects(const QStringList &proFiles, const QStringList &translationsVariables,
+                          const QHash<QString, QString> &outDirMap, int proDebug, bool verbose,
+                          QString *errorString);
 
 QT_END_NAMESPACE
 

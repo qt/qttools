@@ -5,6 +5,7 @@
 
 #include <profileutils.h>
 #include <projectdescriptionreader.h>
+#include <projsongenerator.h>
 #include <runqttool.h>
 
 #ifndef QT_BOOTSTRAPPED
@@ -255,19 +256,34 @@ int main(int argc, char **argv)
     }
 
     QString errorString;
-    if (!extractProFiles(&inputFiles).isEmpty()) {
-        runInternalQtTool("lrelease-pro"_L1, app.arguments().mid(1));
-        return 0;
-    }
+    Projects projectDescription;
+    const QStringList proFiles = extractProFiles(&inputFiles);
 
-    if (!projectDescriptionFile.isEmpty()) {
+    if (!proFiles.isEmpty()) {
+        QStringList translationsVariables = { u"TRANSLATIONS"_s, u"EXTRA_TRANSLATIONS"_s };
+        QHash<QString, QString> outDirMap;
+        QString outDir = QDir::currentPath();
+        for (const QString &proFile : std::as_const(proFiles))
+            outDirMap[proFile] = outDir;
+
+        projectDescription =
+                generateProjects(proFiles, translationsVariables, outDirMap, 0, true, &errorString);
+        if (!errorString.isEmpty()) {
+            printErr("lrelease error: %1\n"_L1.arg(errorString));
+            return 1;
+        }
+        if (projectDescription.empty()) {
+            printErr(u"lrelease error: No projects found in .pro files\n"_s);
+            return 1;
+        }
+        inputFiles = translationsFromProjects(projectDescription);
+    } else if (!projectDescriptionFile.isEmpty()) {
         if (!inputFiles.isEmpty()) {
             printErr(QLatin1String(
                     "lrelease error: Do not specify TS files if -project is given.\n"));
             return 1;
         }
-        Projects projectDescription =
-                projectDescriptionFromFile(projectDescriptionFile, &errorString);
+        projectDescription = projectDescriptionFromFile(projectDescriptionFile, &errorString);
         if (!errorString.isEmpty()) {
             printErr("lrelease error: %1\n"_L1.arg(errorString));
             return 1;
