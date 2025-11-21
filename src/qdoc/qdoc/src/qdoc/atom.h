@@ -159,7 +159,8 @@ public:
     [[nodiscard]] virtual bool isLinkAtom() const { return false; }
     virtual Genus genus() { return Genus::DontCare; }
     virtual Tree *domain() { return nullptr; }
-    virtual void resolveSquareBracketParams() {}
+    virtual void resolveSquareBracketParams(const QString &) {}
+    virtual int flags() const { return 0; }
 
 protected:
     Atom *m_next = nullptr;
@@ -178,24 +179,22 @@ public:
     [[nodiscard]] bool isLinkAtom() const override { return true; }
     Genus genus() override
     {
-        resolveSquareBracketParams();
         return m_genus;
     }
     Tree *domain() override
     {
-        resolveSquareBracketParams();
         return m_domain;
     }
-    void resolveSquareBracketParams() override;
+    void resolveSquareBracketParams(const QString &text) override;
+    virtual int flags() const override;
 
 public:
     Location location;
 
 protected:
-    bool m_resolved {};
     Genus m_genus {};
     Tree *m_domain {};
-    QString m_squareBracketParams {};
+    QStringList m_squareBracketParams {};
 };
 
 #define ATOM_FORMATTING_BOLD "bold"

@@ -40,6 +40,7 @@
 </ul>
 <h2 id="properties">Properties</h2>
 <ul>
+<li class="fn" translate="no"><b><a href="qml-qdoc-test-type.html#duplicate-prop" translate="no">duplicate</a></b> : int</li>
 <li class="fn" translate="no"><b><a href="qml-qdoc-test-type.html#fifth-prop" translate="no">fifth</a></b> : int</li>
 <li class="fn" translate="no"><b><a href="qml-qdoc-test-type.html#fourth-prop" translate="no">fourth</a></b> : int</li>
 <li class="fn" translate="no"><b><a href="qml-qdoc-test-type.html#group-prop" translate="no">group</a></b><ul>
@@ -53,6 +54,7 @@
 </ul>
 <h2 id="attached-properties">Attached Properties</h2>
 <ul>
+<li class="fn" translate="no"><b><a href="qml-qdoc-test-type.html#duplicate-attached-prop" translate="no">duplicate</a></b> : int</li>
 <li class="fn" translate="no"><b><a href="qml-qdoc-test-type.html#type-attached-prop" translate="no">type</a></b> : enumeration</li>
 </ul>
 <h2 id="signals">Signals</h2>
@@ -75,8 +77,14 @@
 </ul>
 <!-- $$$Type-description -->
 <h2 id="details">Detailed Description</h2>
+<p>Test links to a <a href="qml-qdoc-test-type.html#duplicate-prop" translate="no">property</a> and a <a href="qml-qdoc-test-type.html#duplicate-attached-prop" translate="no">attached property</a> with the same name.</p>
 <!-- @@@Type -->
 <h2>Property Documentation</h2>
+<!-- $$$duplicate -->
+<h3 class="fn qml-member qml-property" translate="no" id="duplicate-prop"><span class="name">duplicate</span> : <span class="type"><a href="qml-int.html" translate="no">int</a></span></h3>
+<p>A read-only property with a corresponding attached property.</p>
+<p>This is shadowed by the attached <a href="qml-qdoc-test-type.html#duplicate-attached-prop" translate="no">duplicate</a> property.</p>
+<!-- @@@duplicate -->
 <!-- $$$ -->
 <div class="fngroup">
 <h3 class="fn qml-member qml-property fngroupitem" translate="no" id="fifth-prop"><span class="name">fifth</span> : <span class="type"><a href="qml-int.html" translate="no">int</a></span></h3>
@@ -102,6 +110,11 @@
 <p>Name of the Test.</p>
 <!-- @@@name -->
 <h2>Attached Property Documentation</h2>
+<!-- $$$duplicate -->
+<h3 class="fn qml-member qml-property" translate="no" id="duplicate-attached-prop"><span class="name">Type.duplicate</span> : <span class="type"><a href="qml-int.html" translate="no">int</a></span></h3>
+<p>A read-only, attached property with a corresponding property.</p>
+<p>This shadows the regular <a href="qml-qdoc-test-type.html#duplicate-prop" translate="no">duplicate</a> property.</p>
+<!-- @@@duplicate -->
 <!-- $$$type -->
 <h3 class="fn qml-member qml-property" translate="no" id="type-attached-prop"><span class="name">Type.type</span> : <span class="type">enumeration</span> <code class="details extra" translate="no">[default: Type.NoType]</code></h3>
 <div class="table"><table class="valuelist"><tr valign="top" class="odd"><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>

@@ -1568,13 +1568,11 @@
 
     \section2 Fixing Ambiguous Links
 
-    Because of the modularization of Qt beginning with Qt 5.0, The
-    possibility that QDoc will have to deal with ambiguous links has
-    increased. An ambiguous link is one that has a matching target in
-    more than one Qt module, for example, the same section title can appear in
-    more than one Qt module, or the name of a C++ class in one module
-    can also be the name of a QML type in another module. A real
-    example in Qt5 is the name Qt itself. Qt is the name of both a C++
+    An ambiguous link is one that has a matching target in more than one Qt
+    module or documentation set. For example, the same section title can appear
+    in more than one Qt module, or the name of a C++ class in one module
+    can also be the name of a QML type in another module.
+    A real example in Qt is the name Qt itself: it is the name of both a C++
     namespace in QtCore and a QML type in QtQml.
 
     Suppose we want to link to the \l {Qt} {Qt C++ namespace}.  At the
@@ -1609,27 +1607,30 @@
 
     A link command with square bracket argument has the following syntax:
     \list
-    \c {\l [QML|CPP|DOC|QtModuleName] {link target} {link text}}
+    \c {\l [QML|CPP|DOC|attached|QtModuleName] {link target} {link text}}
     \endlist
 
     The \e {square bracket} argument is only allowed in the \c {\l
     (link)} command. The example above shows how \c QML is used as the
     \e {square brackets} argument to force QDoc to match a QML target.
     Most often, this will be a QML type, but it can also be a QML
-    member function of property.
+    member function or property. Additionally, some QML types contain
+    properties and attached properties with the same name. Attached
+    properties can be selected with an \c attached argument.
+    If \c attached is omitted, regular properties will be linked to
+    in preference to attached properties with duplicate names.
 
     In the example, QDoc didn't need a \e {square bracket} argument to
     find the Qt C++ namespace page, because that one was the first
     matching target QDoc found anyway. However, to force QDoc to find
     a C++ target when a matching QML target gets in the way, \c CPP
-    can be used as the \e {square bracket} argument. For example:
+    can be used as the \e {square bracket} argument. For example, the
+    following link will force QDoc to ignore the Qt QML type and continue
+    searching until it matches the Qt C++ namespace.
 
     \list
         \li \c {\l [CPP] {Qt} {Qt C++ namespace}}
     \endlist
-
-    ...will force QDoc to ignore the Qt QML type and continue
-    searching until it matches the Qt C++ namespace.
 
     If the link target is neither a C++ nor a QML entity, \c {DOC} can
     be used as the \e {square bracket} argument to prevent QDoc from

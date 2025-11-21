@@ -149,6 +149,9 @@
                 <function name="boolPropChanged" fullname="TestQDoc::TestDerived::boolPropChanged" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="signal" associated-property="boolProp,secondBoolProp" type="void" signature="void boolPropChanged()">
                     <description/>
                 </function>
+                <function name="duplicate" fullname="TestQDoc::TestDerived::duplicate" href="testqdoc-testderived.html#duplicate-prop" status="active" access="public" location="testcpp.h" meta="plain" associated-property="duplicate" type="int" signature="int duplicate()">
+                    <description/>
+                </function>
                 <function name="emitSomething" fullname="TestQDoc::TestDerived::emitSomething" href="testqdoc-testderived.html#emitSomething" status="active" access="public" location="testcpp.h" documented="true" meta="signal" type="void" signature="void emitSomething()">
                     <description>
                         <para>Emitted when things happen.</para>
@@ -253,6 +256,10 @@
                     <description>
                         <para>A boolean property.</para>
                     </description>
+                </property>
+                <property name="duplicate" fullname="TestQDoc::TestDerived::duplicate" href="testqdoc-testderived.html#duplicate-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false" dataType="int">
+                    <getter name="duplicate"/>
+                    <description/>
                 </property>
                 <property name="intProp" fullname="TestQDoc::TestDerived::intProp" href="testqdoc-testderived.html#intProp-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false" constant="true" dataType="int*">
                     <getter name="getInt"/>

@@ -37,9 +37,23 @@
 </db:variablelist>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
+<db:para>Test links to a <db:link xlink:href="qml-qdoc-test-type.xml#duplicate-prop">property</db:link> and a <db:link xlink:href="qml-qdoc-test-type.xml#duplicate-attached-prop">attached property</db:link> with the same name.</db:para>
 </db:section>
 <db:section xml:id="property-documentation">
 <db:title>Property Documentation</db:title>
+<db:section xml:id="duplicate-prop">
+<db:title>duplicate : int</db:title>
+<db:fieldsynopsis>
+<db:type>int</db:type>
+<db:varname>duplicate</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>A read-only property with a corresponding attached property.</db:para>
+<db:para>This is shadowed by the attached <db:link xlink:href="qml-qdoc-test-type.xml#duplicate-attached-prop">duplicate</db:link> property.</db:para>
+</db:section>
 <db:section xml:id="fifth-prop">
 <db:title>fifth : int</db:title>
 <db:fieldsynopsis>
@@ -120,6 +134,20 @@
 </db:section>
 <db:section xml:id="attached-property-documentation">
 <db:title>Attached Property Documentation</db:title>
+<db:section xml:id="duplicate-attached-prop">
+<db:title>Type.duplicate : int</db:title>
+<db:fieldsynopsis>
+<db:type>int</db:type>
+<db:varname>Type.duplicate</db:varname>
+<db:modifier>attached</db:modifier>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>A read-only, attached property with a corresponding property.</db:para>
+<db:para>This shadows the regular <db:link xlink:href="qml-qdoc-test-type.xml#duplicate-prop">duplicate</db:link> property.</db:para>
+</db:section>
 <db:section xml:id="type-attached-prop">
 <db:title>[default: Type.NoType] Type.type : enumeration</db:title>
 <db:fieldsynopsis>

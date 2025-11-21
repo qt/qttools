@@ -645,7 +645,7 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
  */
 const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QString &target,
                                      const Node *node, int flags, Genus genus,
-                                     QString &ref) const
+                                     QString &ref, int duplicates) const
 {
     /*
       If the path has been matched, then if there is a target,
@@ -660,7 +660,23 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
         }
         if (node->isFunction() && node->name() == node->parent()->name())
             node = node->parent();
-        return node;
+
+        // If attached properties are requested, only match attached properties.
+        if (flags & QmlAttachedProperties) {
+            if (node->isAttached())
+                return node;
+            else
+                return nullptr;
+        }
+        // Match regular properties if attached properties are not specified.
+        // Match attached properties if they do not shadow regular properties.
+        if (node->isQmlProperty()) {
+            if (!node->isAttached() || duplicates == 0)
+                return node;
+            else
+                return nullptr;
+        } else
+            return node;
     }
 
     QString name = path.at(idx);
@@ -670,7 +686,7 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
         for (const auto *child : std::as_const(nodes)) {
             if (genus != Genus::DontCare && !(hasCommonGenusType(genus, child->genus())))
                 continue;
-            const Node *t = matchPathAndTarget(path, idx + 1, target, child, flags, genus, ref);
+            const Node *t = matchPathAndTarget(path, idx + 1, target, child, flags, genus, ref, nodes.count() - 1);
             if (t && !t->isPrivate() && !t->isInternal())
                 return t;
         }

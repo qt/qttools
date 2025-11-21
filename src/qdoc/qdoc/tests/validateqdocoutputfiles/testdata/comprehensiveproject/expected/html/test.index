@@ -56,6 +56,7 @@
                 <function name="bindablePropChanged" fullname="TestQDoc::TestDerived::bindablePropChanged" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" meta="signal" associated-property="bindableProp" type="void" signature="void bindablePropChanged()"/>
                 <function name="boolProp" fullname="TestQDoc::TestDerived::boolProp" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="plain" associated-property="boolProp" type="bool" signature="bool boolProp()"/>
                 <function name="boolPropChanged" fullname="TestQDoc::TestDerived::boolPropChanged" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="signal" associated-property="boolProp,secondBoolProp" type="void" signature="void boolPropChanged()"/>
+                <function name="duplicate" fullname="TestQDoc::TestDerived::duplicate" href="testqdoc-testderived.html#duplicate-prop" status="active" access="public" location="testcpp.h" meta="plain" associated-property="duplicate" type="int" signature="int duplicate()"/>
                 <function name="emitSomething" fullname="TestQDoc::TestDerived::emitSomething" href="testqdoc-testderived.html#emitSomething" status="active" access="public" location="testcpp.h" documented="true" meta="signal" type="void" signature="void emitSomething()"/>
                 <function name="getInt" fullname="TestQDoc::TestDerived::getInt" href="testqdoc-testderived.html#intProp-prop" status="active" access="public" location="testcpp.h" meta="plain" associated-property="intProp" type="int *" signature="int * getInt()"/>
                 <function name="id" fullname="TestQDoc::TestDerived::id" href="testqdoc-testderived.html#id" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" override="true" type="int" signature="int id() override"/>
@@ -91,6 +92,9 @@
                     <setter name="setBoolProp"/>
                     <resetter name="resetBoolProp"/>
                     <notifier name="boolPropChanged"/>
+                </property>
+                <property name="duplicate" fullname="TestQDoc::TestDerived::duplicate" href="testqdoc-testderived.html#duplicate-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false" dataType="int">
+                    <getter name="duplicate"/>
                 </property>
                 <property name="intProp" fullname="TestQDoc::TestDerived::intProp" href="testqdoc-testderived.html#intProp-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false" constant="true" dataType="int*">
                     <getter name="getInt"/>
@@ -234,6 +238,8 @@
             <function name="setType" fullname="QDoc.Test.Type.setType" href="qml-qdoc-test-type.html#setType-method" status="active" access="public" documented="true" meta="qmlmethod" type="void">
                 <parameter type="Type.SomeType" name="newType" default=""/>
             </function>
+            <qmlproperty name="duplicate" fullname="QDoc.Test.Type.duplicate" href="qml-qdoc-test-type.html#duplicate-prop" status="active" access="public" documented="true" type="int" attached="false" writable="true" brief="A read-only property with a corresponding attached property"/>
+            <qmlproperty name="duplicate" fullname="QDoc.Test.Type.duplicate" href="qml-qdoc-test-type.html#duplicate-attached-prop" status="active" access="public" documented="true" type="int" attached="true" writable="true" brief="A read-only, attached property with a corresponding property"/>
             <qmlproperty name="fifth" fullname="QDoc.Test.Type.fifth" href="qml-qdoc-test-type.html#fifth-prop" status="active" access="public" documented="true" type="int" attached="false" writable="true" brief="A group of properties sharing a documentation comment"/>
             <qmlproperty name="fourth" fullname="QDoc.Test.Type.fourth" href="qml-qdoc-test-type.html#fourth-prop" status="active" access="public" documented="true" type="int" attached="false" writable="true" brief="A group of properties sharing a documentation comment"/>
             <qmlproperty name="group.first" inpropertygroup="QDoc.Test.Type.group" fullname="QDoc.Test.Type.group.first" href="qml-qdoc-test-type.html#group.first-prop" status="active" access="public" documented="true" type="int" attached="false" writable="true" brief="A property group"/>

@@ -235,6 +235,13 @@
             <anchor>intProp-prop</anchor>
             <arglist>()</arglist>
         </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>int</type>
+            <name>duplicate</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>duplicate-prop</anchor>
+            <arglist>()</arglist>
+        </member>
         <member kind="function" protection="public" virtualness="virtual" static="no">
             <type>virtual int</type>
             <name>id</name>
@@ -334,6 +341,12 @@
             <name>boolProp</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
             <anchor>boolProp-prop</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="property" type="int">
+            <name>duplicate</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>duplicate-prop</anchor>
             <arglist></arglist>
         </member>
         <member kind="property" type="int*">

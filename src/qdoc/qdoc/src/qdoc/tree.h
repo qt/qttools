@@ -95,7 +95,7 @@ private: // The rest of the class is private.
                                   TargetRec::TargetType *targetType = nullptr) const;
     const Node *matchPathAndTarget(const QStringList &path, int idx, const QString &target,
                                    const Node *node, int flags, Genus genus,
-                                   QString &ref) const;
+                                   QString &ref, int duplicates = 0) const;
 
     const Node *findNode(const QStringList &path, const Node *relative, int flags,
                          Genus genus) const;

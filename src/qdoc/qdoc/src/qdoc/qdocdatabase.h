@@ -28,7 +28,8 @@ enum FindFlag {
     SearchBaseClasses = 0x1,
     SearchEnumValues = 0x2,
     TypesOnly = 0x4,
-    IgnoreModules = 0x8
+    IgnoreModules = 0x8,
+    QmlAttachedProperties = 0x10
 };
 
 class QDocForest
@@ -102,7 +103,7 @@ private:
     const FunctionNode *findFunctionNode(const QStringList &path, const Parameters &parameters,
                                          const Node *relative, Genus genus);
     const Node *findNodeForTarget(QStringList &targetPath, const Node *relative, Genus genus,
-                                  QString &ref);
+                                  QString &ref, int findFlags = 0);
 
     const Node *findTypeNode(const QStringList &path, const Node *relative, Genus genus)
     {
@@ -313,9 +314,9 @@ public:
 
 private:
     const Node *findNodeForTarget(QStringList &targetPath, const Node *relative, Genus genus,
-                                  QString &ref)
+                                  QString &ref, int findFlags = 0)
     {
-        return m_forest.findNodeForTarget(targetPath, relative, genus, ref);
+        return m_forest.findNodeForTarget(targetPath, relative, genus, ref, findFlags);
     }
     const FunctionNode *findFunctionNode(const QStringList &path, const Parameters &parameters,
                                          const Node *relative, Genus genus)

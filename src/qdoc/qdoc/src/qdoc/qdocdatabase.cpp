@@ -270,9 +270,9 @@ void QDocForest::newPrimaryTree(const QString &module)
   title as a fallback if no higher-priority targets are found.
  */
 const Node *QDocForest::findNodeForTarget(QStringList &targetPath, const Node *relative,
-                                          Genus genus, QString &ref)
+                                          Genus genus, QString &ref, int findFlags)
 {
-    int flags = SearchBaseClasses | SearchEnumValues;
+    int flags = SearchBaseClasses | SearchEnumValues | findFlags;
 
     QString entity = targetPath.takeFirst();
     QStringList entityPath = entity.split("::");
@@ -1539,7 +1539,7 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
                     return node;
                 }
             }
-            return findNodeForTarget(targetPath, relative, genus, ref);
+            return findNodeForTarget(targetPath, relative, genus, ref, atom->flags());
         }
     }
 

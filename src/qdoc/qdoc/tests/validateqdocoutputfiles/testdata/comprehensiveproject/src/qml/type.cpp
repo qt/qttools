@@ -33,6 +33,9 @@
     \inqmlmodule QDoc.Test
     \brief A QML type documented in a .cpp file.
     \meta status { <Work In Progress> }
+
+    Test links to a \l{duplicate}{property} and a
+    \l[attached]{duplicate}{attached property} with the same name.
 */
 
 /*!
@@ -68,6 +71,24 @@
            Nothing
     \value Type.SomeType
            Something
+*/
+
+/*!
+    \property TestQDoc::TestDerived::duplicate
+*/
+
+/*!
+    \qmlproperty int Type::duplicate
+    \brief A read-only property with a corresponding attached property.
+
+    This is shadowed by the attached \l[attached]{duplicate} property.
+*/
+
+/*!
+    \qmlattachedproperty int Type::duplicate
+    \brief A read-only, attached property with a corresponding property.
+
+    This shadows the regular \l{duplicate} property.
 */
 
 /*!

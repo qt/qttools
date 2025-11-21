@@ -94,6 +94,7 @@ class TestDerived : public Test {
     Q_PROPERTY(const QString *name READ name)
     QDOC_PROPERTY(bool boolProp READ boolProp WRITE setBoolProp NOTIFY boolPropChanged RESET resetBoolProp REVISION 1)
     QDOC_PROPERTY(bool secondBoolProp READ secondBoolProp NOTIFY boolPropChanged)
+    Q_PROPERTY(int duplicate READ duplicate)
 #endif
 
 public:
@@ -113,6 +114,7 @@ public:
     bool boolProp();
     bool secondBoolProp() { return boolProp(); }
     const QString *name() const;
+    int duplicate() { return 0; }
 
     Q_INVOKABLE void invokeMe() const {}
     int id() override;
