@@ -11,6 +11,7 @@ qt_internal_add_tool(${target_name}
     TOOLS_TARGET Linguist
     INSTALL_DIR "${INSTALL_LIBEXECDIR}"
     SOURCES
+        ../shared/projsongenerator.cpp ../shared/projsongenerator.h
         ../shared/qrcreader.cpp ../shared/qrcreader.h
         main.cpp
     DEFINES

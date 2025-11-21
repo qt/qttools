@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include <profileutils.h>
+#include <projsongenerator.h>
 #include <runqttool.h>
 
 #include <QtCore/qcoreapplication.h>
@@ -74,9 +75,13 @@ int main(int argc, char **argv)
 
     QStringList args = app.arguments();
     QStringList lupdateOptions;
-    QStringList lprodumpOptions;
-    bool hasProFiles = false;
     bool keepProjectDescription = false;
+
+    QStringList proFiles;
+    QString outDir = QDir::currentPath();
+    QHash<QString, QString> outDirMap;
+    int proDebug = 0;
+    bool verbose = true;
 
     for (int i = 1; i < args.size(); ++i) {
         QString arg = args.at(i);
@@ -87,9 +92,9 @@ int main(int argc, char **argv)
             keepProjectDescription = true;
         } else if (arg == "-silent"_L1) {
             lupdateOptions << arg;
-            lprodumpOptions << arg;
+            verbose = false;
         } else if (arg == "-pro-debug"_L1) {
-            lprodumpOptions << arg;
+            proDebug++;
         } else if (arg == "-version"_L1) {
             printOut(QStringLiteral("lupdate-pro version %1\n").arg(QLatin1String(QT_VERSION_STR)));
             return 0;
@@ -99,29 +104,51 @@ int main(int argc, char **argv)
                 printErr(u"The -pro option should be followed by a filename of .pro file.\n"_s);
                 return 1;
             }
-            lprodumpOptions << arg << args[i];
-            hasProFiles = true;
+            QString file = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
+            proFiles += file;
+            outDirMap[file] = outDir;
         } else if (arg == "-pro-out"_L1) {
             ++i;
             if (i == argc) {
                 printErr(u"The -pro-out option should be followed by a directory name.\n"_s);
                 return 1;
             }
-            lprodumpOptions << arg << args[i];
+            outDir = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
         } else if (isProOrPriFile(arg)) {
-            lprodumpOptions << arg;
-            hasProFiles = true;
+            QString cleanFile = QDir::cleanPath(QFileInfo(arg).absoluteFilePath());
+            proFiles << cleanFile;
+            outDirMap[cleanFile] = outDir;
         } else {
             lupdateOptions << arg;
         }
     } // for args
 
-    if (!hasProFiles) {
+    if (proFiles.isEmpty()) {
         printErr(u"lupdate-pro: No .pro/.pri files given.\n"_s);
         return 1;
     }
 
-    std::unique_ptr<QTemporaryFile> projectDescription = createProjectDescription(lprodumpOptions);
+    bool ok = false;
+    QStringList translationsVariables = { "TRANSLATIONS"_L1 };
+    QJsonArray results = generateProjectDescription(proFiles, translationsVariables, outDirMap,
+                                                    proDebug, verbose, &ok);
+    if (!ok) {
+        printErr(u"lupdate-pro: Failed to generate project description\n"_s);
+        return 1;
+    }
+
+    std::unique_ptr<QTemporaryFile> projectDescription(
+            new QTemporaryFile(QStringLiteral("XXXXXX.json")));
+    if (!projectDescription->open()) {
+        printErr(u"lupdate-pro: Cannot create temporary file\n"_s);
+        return 1;
+    }
+
+    const QByteArray output = QJsonDocument(results).toJson(QJsonDocument::Compact);
+    projectDescription->write(output);
+    projectDescription->write("\n");
+    projectDescription->close();
+
     if (keepProjectDescription)
         projectDescription->setAutoRemove(false);
     lupdateOptions << QStringLiteral("-project") << projectDescription->fileName();

@@ -2,11 +2,15 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include <profileutils.h>
+#include <projsongenerator.h>
 #include <runqttool.h>
 
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qfileinfo.h>
 #include <QtCore/qlibraryinfo.h>
+#include <QtCore/qtemporaryfile.h>
 #include <QtCore/qtranslator.h>
 
 #include <iostream>
@@ -64,16 +68,16 @@ int main(int argc, char **argv)
 
     bool keepProjectDescription = false;
     QStringList inputFiles;
-    QStringList lprodumpOptions;
     QStringList lreleaseOptions;
+
+    bool verbose = true;
 
     for (int i = 1; i < argc; ++i) {
         if (!strcmp(argv[i], "-keep")) {
             keepProjectDescription = true;
         } else if (!strcmp(argv[i], "-silent")) {
-            const QString arg = QString::fromLocal8Bit(argv[i]);
-            lprodumpOptions << arg;
-            lreleaseOptions << arg;
+            lreleaseOptions << QString::fromLocal8Bit(argv[i]);
+            verbose = false;
         } else if (!strcmp(argv[i], "-version")) {
             printOut(QStringLiteral("lrelease-pro version %1\n")
                      .arg(QLatin1String(QT_VERSION_STR)));
@@ -93,9 +97,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    lprodumpOptions << QStringLiteral("-translations-variables")
-                    << QStringLiteral("TRANSLATIONS,EXTRA_TRANSLATIONS");
-
     const QStringList proFiles = extractProFiles(&inputFiles);
     if (proFiles.isEmpty()) {
         printErr(u"lrelease-pro: No .pro/.pri files given.\n"_s);
@@ -108,8 +109,37 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    lprodumpOptions << proFiles;
-    std::unique_ptr<QTemporaryFile> projectDescription = createProjectDescription(lprodumpOptions);
+    QStringList translationsVariables = { "TRANSLATIONS"_L1, "EXTRA_TRANSLATIONS"_L1 };
+    QString outDir = QDir::currentPath();
+    QHash<QString, QString> outDirMap;
+
+    QStringList cleanProFiles;
+    for (const QString &proFile : proFiles) {
+        QString cleanFile = QDir::cleanPath(QFileInfo(proFile).absoluteFilePath());
+        cleanProFiles << cleanFile;
+        outDirMap[cleanFile] = outDir;
+    }
+
+    bool ok = false;
+    QJsonArray results = generateProjectDescription(cleanProFiles, translationsVariables, outDirMap,
+                                                    0, verbose, &ok);
+    if (!ok) {
+        printErr(u"lrelease-pro: Failed to generate project description\n"_s);
+        return 1;
+    }
+
+    std::unique_ptr<QTemporaryFile> projectDescription(
+            new QTemporaryFile(QStringLiteral("XXXXXX.json")));
+    if (!projectDescription->open()) {
+        printErr(u"lrelease-pro: Cannot create temporary file\n"_s);
+        return 1;
+    }
+
+    const QByteArray output = QJsonDocument(results).toJson(QJsonDocument::Compact);
+    projectDescription->write(output);
+    projectDescription->write("\n");
+    projectDescription->close();
+
     if (keepProjectDescription)
         projectDescription->setAutoRemove(false);
     lreleaseOptions << QStringLiteral("-project") << projectDescription->fileName();

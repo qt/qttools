@@ -11,6 +11,8 @@ qt_internal_add_tool(${target_name}
     TOOLS_TARGET Linguist
     INSTALL_DIR "${INSTALL_LIBEXECDIR}"
     SOURCES
+        ../shared/projsongenerator.cpp ../shared/projsongenerator.h
+        ../shared/qrcreader.cpp ../shared/qrcreader.h
         ../shared/runqttool.cpp ../shared/runqttool.h
         main.cpp
     DEFINES
@@ -18,5 +20,7 @@ qt_internal_add_tool(${target_name}
         QT_NO_CAST_TO_ASCII
     INCLUDE_DIRECTORIES
         ../shared
+    LIBRARIES
+        QMakeParserCumulative
 )
 qt_internal_return_unless_building_tools()
