@@ -882,7 +882,7 @@ int main(int argc, char **argv)
             return 1;
         }
         if (projectDescription.empty()) {
-            printErr("lupdate error: Failed to read generated project description\n"_L1);
+            printErr("lupdate error: No projects found in .pro files\n"_L1);
             return 1;
         }
         removeExcludedSources(projectDescription);
