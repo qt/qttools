@@ -4,6 +4,7 @@
 
 #include <profileutils.h>
 #include <projectdescriptionreader.h>
+#include <projsongenerator.h>
 #include <parsers/trparser.h>
 #include <translator.h>
 #include <runqttool.h>
@@ -859,14 +860,36 @@ int main(int argc, char **argv)
     }
 
     QString errorString;
-    if (!proFiles.isEmpty()) {
-        runInternalQtTool(u"lupdate-pro"_s, app.arguments().mid(1));
-        return 0;
-    }
-
     Projects projectDescription;
-    if (!projectDescriptionFile.isEmpty()) {
-        projectDescription = readProjectDescription(projectDescriptionFile, &errorString);
+
+    if (!proFiles.isEmpty()) {
+        QStringList translationsVariables = { u"TRANSLATIONS"_s };
+        QHash<QString, QString> outDirMap;
+        QString outDir = QDir::currentPath();
+        for (const QString &proFile : std::as_const(proFiles))
+            outDirMap[proFile] = outDir;
+
+        std::optional<QJsonArray> results = generateProjectDescription(
+                proFiles, translationsVariables, outDirMap, 0, false);
+        if (!results) {
+            printErr("lupdate error: Failed to generate project description from .pro files\n"_L1);
+            return 1;
+        }
+
+        projectDescription = projectDescriptionFromJson(*results, &errorString);
+        if (!errorString.isEmpty()) {
+            printErr("lupdate error: %1\n"_L1.arg(errorString));
+            return 1;
+        }
+        if (projectDescription.empty()) {
+            printErr("lupdate error: Failed to read generated project description\n"_L1);
+            return 1;
+        }
+        removeExcludedSources(projectDescription);
+        for (Project &project : projectDescription)
+            expandQrcFiles(project);
+    } else if (!projectDescriptionFile.isEmpty()) {
+        projectDescription = projectDescriptionFromFile(projectDescriptionFile, &errorString);
         if (!errorString.isEmpty()) {
             printErr(QStringLiteral("lupdate error: %1\n").arg(errorString));
             return 1;

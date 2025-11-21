@@ -266,7 +266,8 @@ int main(int argc, char **argv)
                     "lrelease error: Do not specify TS files if -project is given.\n"));
             return 1;
         }
-        Projects projectDescription = readProjectDescription(projectDescriptionFile, &errorString);
+        Projects projectDescription =
+                projectDescriptionFromFile(projectDescriptionFile, &errorString);
         if (!errorString.isEmpty()) {
             printErr("lrelease error: %1\n"_L1.arg(errorString));
             return 1;

@@ -132,13 +132,12 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    bool ok = false;
-    QJsonArray results = generateProjectDescription(proFiles, translationsVariables, outDirMap,
-                                                    proDebug, verbose, &ok);
-    if (!ok)
+    std::optional<QJsonArray> results = generateProjectDescription(proFiles, translationsVariables,
+                                                                   outDirMap, proDebug, verbose);
+    if (!results)
         return 1;
 
-    const QByteArray output = QJsonDocument(results).toJson(QJsonDocument::Compact);
+    const QByteArray output = QJsonDocument(*results).toJson(QJsonDocument::Compact);
     if (outputFilePath.isEmpty()) {
         puts(output.constData());
     } else {

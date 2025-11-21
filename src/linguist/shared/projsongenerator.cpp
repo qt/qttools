@@ -290,14 +290,11 @@ static QJsonArray processProjects(bool topLevel, const QStringList &proFiles,
 
 QT_BEGIN_NAMESPACE
 
-QJsonArray generateProjectDescription(const QStringList &proFiles,
-                                      const QStringList &translationsVariables,
-                                      const QHash<QString, QString> &outDirMap, int proDebug,
-                                      bool verbose, bool *ok)
+std::optional<QJsonArray> generateProjectDescription(const QStringList &proFiles,
+                                                     const QStringList &translationsVariables,
+                                                     const QHash<QString, QString> &outDirMap,
+                                                     int proDebug, bool verbose)
 {
-    if (ok)
-        *ok = false;
-
     bool fail = false;
     ProFileGlobals option;
     option.qmake_abslocation = QString::fromLocal8Bit(qgetenv("QMAKE"));
@@ -313,12 +310,13 @@ QJsonArray generateProjectDescription(const QStringList &proFiles,
     evalHandler.verbose = verbose;
     QMakeParser parser(0, &vfs, &evalHandler);
 
-    QJsonArray results = processProjects(true, proFiles, translationsVariables, outDirMap, &option,
-                                         &vfs, &parser, &evalHandler, &fail);
-    if (!fail && ok)
-        *ok = true;
+    QJsonArray json = processProjects(true, proFiles, translationsVariables, outDirMap, &option,
+                                      &vfs, &parser, &evalHandler, &fail);
+    std::optional<QJsonArray> result;
+    if (!fail)
+        result.emplace(std::move(json));
 
-    return results;
+    return result;
 }
 
 QT_END_NAMESPACE

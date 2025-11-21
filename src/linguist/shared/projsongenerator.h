@@ -11,10 +11,10 @@
 
 QT_BEGIN_NAMESPACE
 
-QJsonArray generateProjectDescription(const QStringList &proFiles,
-                                      const QStringList &translationsVariables,
-                                      const QHash<QString, QString> &outDirMap, int proDebug,
-                                      bool verbose, bool *ok = nullptr);
+std::optional<QJsonArray> generateProjectDescription(const QStringList &proFiles,
+                                                     const QStringList &translationsVariables,
+                                                     const QHash<QString, QString> &outDirMap,
+                                                     int proDebug, bool verbose);
 
 QT_END_NAMESPACE
 

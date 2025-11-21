@@ -120,10 +120,9 @@ int main(int argc, char **argv)
         outDirMap[cleanFile] = outDir;
     }
 
-    bool ok = false;
-    QJsonArray results = generateProjectDescription(cleanProFiles, translationsVariables, outDirMap,
-                                                    0, verbose, &ok);
-    if (!ok) {
+    std::optional<QJsonArray> results =
+            generateProjectDescription(cleanProFiles, translationsVariables, outDirMap, 0, verbose);
+    if (!results) {
         printErr(u"lrelease-pro: Failed to generate project description\n"_s);
         return 1;
     }
@@ -135,7 +134,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    const QByteArray output = QJsonDocument(results).toJson(QJsonDocument::Compact);
+    const QByteArray output = QJsonDocument(*results).toJson(QJsonDocument::Compact);
     projectDescription->write(output);
     projectDescription->write("\n");
     projectDescription->close();
