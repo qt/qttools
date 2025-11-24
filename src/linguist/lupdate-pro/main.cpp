@@ -3,7 +3,9 @@
 
 #include <linguistproject/profileutils.h>
 #include <linguistproject/projsongenerator.h>
-#include <runqttool.h>
+#include <linguistproject/projectdescriptionreader.h>
+#include <linguistproject/projectprocessor.h>
+#include <trlib/trparser.h>
 
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qdebug.h>
@@ -32,8 +34,7 @@ static void printErr(const QString & out)
 
 static void printUsage()
 {
-    printOut(
-        uR"(Usage:
+    printOut(uR"(Usage:
 lupdate-pro [options] [project-file]... [-ts ts-files...]
 lupdate-pro is part of Qt's Linguist tool chain. It extracts project
 information from qmake projects and passes it to lupdate.
@@ -47,6 +48,8 @@ Options:
     -pro <filename>
            Name of a .pro file. Useful for files with .pro file syntax but
            different file suffix. Projects are recursed into and merged.
+    -dump-json <file>
+           Only generate the project description json file.
     -pro-out <directory>
            Virtual output directory for processing subsequent .pro files.
     -pro-debug
@@ -74,8 +77,7 @@ int main(int argc, char **argv)
 #endif
 
     QStringList args = app.arguments();
-    QStringList lupdateOptions;
-    bool keepProjectDescription = false;
+    std::optional<QString> dumpJsonFile;
 
     QStringList proFiles;
     QString outDir = QDir::currentPath();
@@ -83,16 +85,30 @@ int main(int argc, char **argv)
     int proDebug = 0;
     bool verbose = true;
 
+    QStringList tsFileNames;
+    QStringList alienFiles;
+    QString sourceLanguage;
+    QString targetLanguage;
+    UpdateOptions options = Verbose | // verbose is on by default starting with Qt 4.2
+            HeuristicSameText | HeuristicSimilarText;
+
     for (int i = 1; i < args.size(); ++i) {
         QString arg = args.at(i);
         if (arg == "-help"_L1 || arg == "--help"_L1 || arg == "-h"_L1) {
             printUsage();
             return 0;
-        } else if (arg == "-keep"_L1) {
-            keepProjectDescription = true;
+        } else if (arg == "-dump-json"_L1) {
+            ++i;
+            if (i == argc) {
+                printErr(u"The -dump-json option should be followed by a file name.\n"_s);
+                return 1;
+            }
+            dumpJsonFile.emplace(QFileInfo(args[i]).absoluteFilePath());
         } else if (arg == "-silent"_L1) {
-            lupdateOptions << arg;
             verbose = false;
+            options &= ~Verbose;
+        } else if (arg == "-verbose"_L1) {
+            options |= Verbose;
         } else if (arg == "-pro-debug"_L1) {
             proDebug++;
         } else if (arg == "-version"_L1) {
@@ -114,12 +130,43 @@ int main(int argc, char **argv)
                 return 1;
             }
             outDir = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
+        } else if (arg == "-ts"_L1) {
+            ++i;
+            while (i < args.size() && !args.at(i).startsWith('-'_L1)) {
+                tsFileNames << args.at(i);
+                ++i;
+            }
+            --i;
+        } else if (arg == "-target-language"_L1) {
+            ++i;
+            if (i < args.size())
+                targetLanguage = args.at(i);
+        } else if (arg == "-source-language"_L1) {
+            ++i;
+            if (i < args.size())
+                sourceLanguage = args.at(i);
+        } else if (arg == "-no-obsolete"_L1 || arg == "-noobsolete"_L1) {
+            options |= NoObsolete;
+        } else if (arg == "-plural-only"_L1) {
+            options |= PluralOnly;
+        } else if (arg == "-no-sort"_L1 || arg == "-nosort"_L1) {
+            options |= NoSort;
+        } else if (arg == "-locations"_L1) {
+            ++i;
+            if (i < args.size()) {
+                if (args.at(i) == "none"_L1)
+                    options |= NoLocations;
+                else if (args.at(i) == "relative"_L1)
+                    options |= RelativeLocations;
+                else if (args.at(i) == "absolute"_L1)
+                    options |= AbsoluteLocations;
+            }
+        } else if (arg == "-no-ui-lines"_L1) {
+            options |= NoUiLines;
         } else if (isProOrPriFile(arg)) {
             QString cleanFile = QDir::cleanPath(QFileInfo(arg).absoluteFilePath());
             proFiles << cleanFile;
             outDirMap[cleanFile] = outDir;
-        } else {
-            lupdateOptions << arg;
         }
     } // for args
 
@@ -136,22 +183,31 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    std::unique_ptr<QTemporaryFile> projectDescription(
-            new QTemporaryFile(QStringLiteral("XXXXXX.json")));
-    if (!projectDescription->open()) {
-        printErr(u"lupdate-pro: Cannot create temporary file\n"_s);
+    if (dumpJsonFile) {
+        QFile projectDescriptionFile(*dumpJsonFile);
+        if (!projectDescriptionFile.open(QIODevice::WriteOnly))
+            return 1;
+
+        const QByteArray output = QJsonDocument(*results).toJson(QJsonDocument::Compact);
+        projectDescriptionFile.write(output);
+        projectDescriptionFile.write("\n");
+        projectDescriptionFile.close();
+        printOut("Project description saved to: %1\n"_L1.arg(projectDescriptionFile.fileName()));
+        return 0;
+    }
+
+    QString errorString;
+    Projects projectDescription = projectDescriptionFromJson(*results, &errorString);
+    if (!errorString.isEmpty()) {
+        printErr("lupdate-pro error: %1\n"_L1.arg(errorString));
+        return 1;
+    }
+    if (projectDescription.empty()) {
+        printErr("lupdate-pro error: No projects found in project description\n"_L1);
         return 1;
     }
 
-    const QByteArray output = QJsonDocument(*results).toJson(QJsonDocument::Compact);
-    projectDescription->write(output);
-    projectDescription->write("\n");
-    projectDescription->close();
-
-    if (keepProjectDescription)
-        projectDescription->setAutoRemove(false);
-    lupdateOptions << QStringLiteral("-project") << projectDescription->fileName();
-
-    runQtTool(QStringLiteral("lupdate"), lupdateOptions);
-    return 0;
+    bool ok = processProjectDescription(projectDescription, tsFileNames, alienFiles, sourceLanguage,
+                              targetLanguage, options);
+    return ok ? 0 : 1;
 }
