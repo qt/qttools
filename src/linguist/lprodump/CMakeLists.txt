@@ -11,9 +11,6 @@ qt_internal_add_tool(${target_name}
     TOOLS_TARGET Linguist
     INSTALL_DIR "${INSTALL_LIBEXECDIR}"
     SOURCES
-        ../shared/projectdescriptionreader.cpp ../shared/projectdescriptionreader.h
-        ../shared/projsongenerator.cpp ../shared/projsongenerator.h
-        ../shared/qrcreader.cpp ../shared/qrcreader.h
         main.cpp
     DEFINES
         QT_NO_CAST_FROM_ASCII
@@ -21,8 +18,7 @@ qt_internal_add_tool(${target_name}
     INCLUDE_DIRECTORIES
         ../shared
     LIBRARIES
-
-        QMakeParserCumulative
+        LinguistProject
 )
 
 qt_internal_return_unless_building_tools()

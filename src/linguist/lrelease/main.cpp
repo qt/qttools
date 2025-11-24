@@ -3,9 +3,9 @@
 
 #include "translator.h"
 
-#include <profileutils.h>
-#include <projectdescriptionreader.h>
-#include <projsongenerator.h>
+#include <linguistproject/profileutils.h>
+#include <linguistproject/projectdescriptionreader.h>
+#include <linguistproject/projsongenerator.h>
 #include <runqttool.h>
 
 #ifndef QT_BOOTSTRAPPED

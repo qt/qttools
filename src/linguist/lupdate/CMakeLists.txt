@@ -12,11 +12,8 @@ qt_internal_add_tool(${target_name}
     EXTRA_CMAKE_FILES "${CMAKE_CURRENT_LIST_DIR}/../GenerateLUpdateProject.cmake"
     SOURCES
         ../shared/po.cpp
-        ../shared/projectdescriptionreader.cpp ../shared/projectdescriptionreader.h
-        ../shared/projsongenerator.cpp ../shared/projsongenerator.h
         ../shared/qm.cpp
         ../shared/qph.cpp
-        ../shared/qrcreader.cpp ../shared/qrcreader.h
         ../shared/ts.cpp
         ../shared/xliff.cpp
         main.cpp
@@ -27,6 +24,6 @@ qt_internal_add_tool(${target_name}
         ../shared
     LIBRARIES
         TrLib
-        QMakeParserCumulative
+        LinguistProject
         Qt::Tools
 )

@@ -10,6 +10,8 @@
 
 using namespace Qt::Literals::StringLiterals;
 
+QT_BEGIN_NAMESPACE
+
 bool isSupportedExtension(const QString &ext)
 {
     return ext == "qml"_L1 || ext == "js"_L1 || ext == "qs"_L1 || ext == "ui"_L1 || ext == "jui"_L1;
@@ -69,3 +71,5 @@ ReadQrcResult readQrcFile(const QString &resourceFile, const QString &content)
     }
     return result;
 }
+
+QT_END_NAMESPACE
