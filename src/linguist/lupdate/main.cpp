@@ -5,7 +5,7 @@
 #include <profileutils.h>
 #include <projectdescriptionreader.h>
 #include <projsongenerator.h>
-#include <parsers/trparser.h>
+#include <trlib/trparser.h>
 #include <translator.h>
 #include <runqttool.h>
 #include <qrcreader.h>

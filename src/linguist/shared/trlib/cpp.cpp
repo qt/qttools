@@ -4,8 +4,8 @@
 #include "cpp.h"
 
 #include <translator.h>
-#include <parsers/metastrings.h>
-#include <parsers/trparser.h>
+#include "metastrings.h"
+#include "trparser.h"
 
 #include <QtCore/QBitArray>
 #include <QtCore/QTextStream>

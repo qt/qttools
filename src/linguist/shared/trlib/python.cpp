@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include <translator.h>
-#include <parsers/trparser.h>
-#include <parsers/metastrings.h>
+#include "trparser.h"
+#include "metastrings.h"
 
 #include <QtCore/qhash.h>
 #include <QtCore/qlist.h>

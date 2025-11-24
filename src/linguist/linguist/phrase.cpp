@@ -3,7 +3,7 @@
 
 #include "phrase.h"
 #include "translator.h"
-#include "parsers/xmlparser.h"
+#include "xmlparser.h"
 
 #include <QApplication>
 #include <QFile>

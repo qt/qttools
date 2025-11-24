@@ -14,36 +14,13 @@ qt_internal_add_tool(${target_name}
         utils.h utils.cpp
         filetransformer.h filetransformer.cpp
         fileverifier.h fileverifier.cpp
-        ../shared/parsers/trparser.cpp ../shared/parsers/trparser.h
-        ../shared/translator.cpp ../shared/translator.h
-        ../shared/translatormessage.cpp ../shared/translatormessage.h
-        ../shared/parsers/xmlparser.cpp ../shared/parsers/xmlparser.h
-        ../shared/numerus.cpp
+        ../shared/xmlparser.cpp ../shared/xmlparser.h
         ../shared/ts.cpp
-        ../shared/parsers/cpp.cpp ../shared/parsers/cpp.h
-        ../shared/parsers/metastrings.h
-        ../shared/parsers/metastrings.cpp
-        ../shared/parsers/java.cpp
-        ../shared/parsers/python.cpp
-        ../shared/parsers/ui.cpp
         recorddirectory.h recorddirectory.cpp
     INCLUDE_DIRECTORIES
         ../shared
     LIBRARIES
+        TrLib
         Qt::CorePrivate
         Qt::Tools
-)
-
-qt_internal_return_unless_building_tools()
-
-qt_internal_extend_target(${target_name} CONDITION TARGET Qt::QmlPrivate
-    SOURCES
-        ../shared/parsers/qdeclarative.cpp
-    LIBRARIES
-        Qt::QmlPrivate
-)
-
-qt_internal_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlPrivate
-    DEFINES
-        QT_NO_QML
 )
