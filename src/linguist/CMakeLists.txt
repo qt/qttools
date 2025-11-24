@@ -11,6 +11,7 @@ endif()
 
 add_subdirectory(shared/qmake-parser)
 add_subdirectory(shared/trlib)
+add_subdirectory(shared/linguistproject)
 
 add_subdirectory(lconvert)
 add_subdirectory(lcheck)

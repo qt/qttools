@@ -7,6 +7,8 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qstringlist.h>
 
+QT_BEGIN_NAMESPACE
+
 class ReadQrcResult
 {
 public:
@@ -20,5 +22,7 @@ public:
 ReadQrcResult readQrcFile(const QString &resourceFile, const QString &content);
 
 bool isSupportedExtension(const QString &ext);
+
+QT_END_NAMESPACE
 
 #endif // QRCREADER_H

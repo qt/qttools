@@ -4,7 +4,7 @@
 #include "runqttool.h"
 #include "fmt.h"
 
-#include "profileutils.h"
+#include <linguistproject/profileutils.h>
 
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qdir.h>
