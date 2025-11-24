@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "translator.h"
-#include "parsers/xmlparser.h"
+#include "xmlparser.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QMap>

@@ -10,6 +10,7 @@ if(NOT QT_FEATURE_linguist)
 endif()
 
 add_subdirectory(shared/qmake-parser)
+add_subdirectory(shared/trlib)
 
 add_subdirectory(lconvert)
 add_subdirectory(lcheck)

@@ -35,7 +35,7 @@ qt_internal_add_app(linguist
         ../shared/auto-translation/openaicompatible.h
         ../shared/auto-translation/machinetranslator.cpp
         ../shared/auto-translation/machinetranslator.h
-        ../shared/parsers/xmlparser.cpp ../shared/parsers/xmlparser.h
+        ../shared/xmlparser.cpp ../shared/xmlparser.h
         batchtranslation.ui
         batchtranslationdialog.cpp batchtranslationdialog.h
         errorsview.cpp errorsview.h

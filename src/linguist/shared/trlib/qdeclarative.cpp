@@ -3,8 +3,8 @@
 
 
 #include <translator.h>
-#include <parsers/metastrings.h>
-#include <parsers/trparser.h>
+#include "metastrings.h"
+#include "trparser.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>

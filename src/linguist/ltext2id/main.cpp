@@ -5,8 +5,8 @@
 #include "fileverifier.h"
 #include "utils.h"
 #include "recorddirectory.h"
-#include "translator.h"
-#include "parsers/trparser.h"
+#include <translator.h>
+#include <trlib/trparser.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QCommandLineParser>
