@@ -20,6 +20,7 @@
 #include <QtDesigner/abstractformwindow.h>
 
 #include <QtCore/qcompare.h>
+#include <QtCore/qmap.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qvariant.h>
 #include <QtCore/qshareddata.h>

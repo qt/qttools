@@ -4,8 +4,14 @@
 #ifndef VALIDATOR_H
 #define VALIDATOR_H
 
-#include <QString>
+#include <QHash>
 #include <QLocale>
+#include <QMap>
+#include <QString>
+
+#ifndef LINGUIST_CONSOLE_APPLICATION
+#  include <optional>
+#endif
 
 QT_BEGIN_NAMESPACE
 

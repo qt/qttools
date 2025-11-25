@@ -19,8 +19,12 @@
 #include "qhelplink.h"
 
 #include <QtCore/qdatetime.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
 #include <QtCore/qobject.h>
 #include <QtCore/qstringlist.h>
+
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 

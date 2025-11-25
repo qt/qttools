@@ -9,6 +9,7 @@
 #include <QtCore/QDate>
 #include <QtCore/QHash>
 #include <QtCore/QLocale>
+#include <QtCore/QMap>
 #include <QtCore/QRegularExpression>
 
 #if defined(Q_CC_MSVC)

@@ -4,10 +4,13 @@
 #ifndef RECORDDIRECTORY_H
 #define RECORDDIRECTORY_H
 
-#include <QString>
+#include <QHash>
+#include <QMap>
 #include <QSet>
+#include <QString>
 
 #include <map>
+#include <memory>
 #include <unordered_set>
 #include <set>
 

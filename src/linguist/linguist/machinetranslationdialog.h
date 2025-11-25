@@ -5,7 +5,12 @@
 #define MACHINETRANSLATIONDIALOG_H
 
 #include <QDialog>
+#include <QHash>
+#include <QList>
 #include <QMutex>
+
+#include <memory>
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 

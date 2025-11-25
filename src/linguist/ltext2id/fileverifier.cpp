@@ -8,6 +8,7 @@
 #include "parsers/trparser.h"
 
 #include <QFileInfo>
+#include <QMap>
 
 using namespace Qt::StringLiterals;
 using namespace Utils;

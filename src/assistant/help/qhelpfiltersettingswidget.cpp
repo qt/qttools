@@ -6,6 +6,7 @@
 #include "qhelpfiltersettingswidget.h"
 #include "ui_qhelpfiltersettingswidget.h"
 
+#include <QtCore/qmap.h>
 #include <QtCore/qversionnumber.h>
 #include <QtHelp/qhelpfilterdata.h>
 #include <QtHelp/qhelpfilterengine.h>

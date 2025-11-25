@@ -3,6 +3,7 @@
 
 #include <QCoreApplication>
 #include <QCommandLineParser>
+#include <QMap>
 #include <QString>
 
 #include "translator.h"

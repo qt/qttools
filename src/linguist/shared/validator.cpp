@@ -7,6 +7,8 @@
 #  include "phrase.h"
 #endif
 
+#include <QMap>
+
 QT_USE_NAMESPACE
 
 using namespace Qt::Literals::StringLiterals;

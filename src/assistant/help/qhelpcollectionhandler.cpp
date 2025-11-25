@@ -11,7 +11,7 @@
 #include <QtCore/qdatetime.h>
 #include <QtCore/qdir.h>
 #include <QtCore/qfileinfo.h>
-#include <QtCore/qmap.h>
+#include <QtCore/qset.h>
 #include <QtCore/qtimer.h>
 #include <QtCore/qversionnumber.h>
 #include <QtSql/qsqldriver.h>
