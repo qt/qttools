@@ -11,7 +11,9 @@ qt_internal_add_tool(${target_name}
     TOOLS_TARGET Linguist
     INSTALL_DIR "${INSTALL_LIBEXECDIR}"
     SOURCES
-        ../shared/runqttool.cpp ../shared/runqttool.h
+        ../shared/qm.cpp
+        ../shared/ts.cpp
+        ../shared/releasehelper.cpp ../shared/releasehelper.h
         main.cpp
     DEFINES
         QT_NO_CAST_FROM_ASCII

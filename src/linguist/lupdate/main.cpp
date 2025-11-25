@@ -8,7 +8,6 @@
 #include <linguistproject/projectprocessor.h>
 #include <trlib/trparser.h>
 #include <translator.h>
-#include <runqttool.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>

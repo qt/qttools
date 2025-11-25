@@ -3,7 +3,9 @@
 
 #include <linguistproject/profileutils.h>
 #include <linguistproject/projsongenerator.h>
-#include <runqttool.h>
+#include <linguistproject/projectdescriptionreader.h>
+#include <releasehelper.h>
+#include <translator.h>
 
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qdebug.h>
@@ -41,7 +43,8 @@ passed to lrelease.
 
 Options:
     -help  Display this information and exit
-    -keep  Keep the temporary project dump around
+    -dump-json <file>
+           Only generate the project description json file.
     -silent
            Do not explain what is being done
     -version
@@ -66,29 +69,49 @@ int main(int argc, char **argv)
 #endif // Q_OS_WIN32
 #endif // QT_BOOTSTRAPPED
 
-    bool keepProjectDescription = false;
+    std::optional<QString> dumpJsonFile;
     QStringList inputFiles;
-    QStringList lreleaseOptions;
 
-    bool verbose = true;
+    bool removeIdentical = false;
+    bool failOnUnfinished = false;
+    QString markUntranslated;
+    ConversionData cd;
 
     for (int i = 1; i < argc; ++i) {
-        if (!strcmp(argv[i], "-keep")) {
-            keepProjectDescription = true;
-        } else if (!strcmp(argv[i], "-silent")) {
-            lreleaseOptions << QString::fromLocal8Bit(argv[i]);
-            verbose = false;
-        } else if (!strcmp(argv[i], "-version")) {
+        QString arg = QString::fromLocal8Bit(argv[i]);
+        if (arg == "-silent"_L1) {
+            cd.m_verbose = false;
+        } else if (arg == "-verbose"_L1) {
+            cd.m_verbose = true;
+        } else if (arg == "-version"_L1) {
             printOut(QStringLiteral("lrelease-pro version %1\n")
                      .arg(QLatin1String(QT_VERSION_STR)));
             return 0;
-        } else if (!strcmp(argv[i], "-help")) {
+        } else if (arg == "-help"_L1) {
             printUsage();
             return 0;
-        } else if (strlen(argv[i]) > 0 && argv[i][0] == '-') {
-            lreleaseOptions << QString::fromLocal8Bit(argv[i]);
-        } else {
-            inputFiles << QString::fromLocal8Bit(argv[i]);
+        } else if (arg == "-dump-json"_L1) {
+            ++i;
+            if (i == argc) {
+                printErr(u"The -dump-json option should be followed by a file name.\n"_s);
+                return 1;
+            }
+            dumpJsonFile.emplace(QFileInfo(QLatin1String(argv[i])).absoluteFilePath());
+        } else if (arg == "-removeidentical"_L1) {
+            removeIdentical = true;
+        } else if (arg == "-fail-on-unfinished"_L1) {
+            failOnUnfinished = true;
+        } else if (arg == "-nounfinished"_L1) {
+            cd.m_ignoreUnfinished = true;
+        } else if (arg == "-markuntranslated"_L1) {
+            ++i;
+            if (i < argc)
+                markUntranslated = QString::fromLocal8Bit(argv[i]);
+        } else if (arg == "-idbased"_L1) {
+            printOut("The flag -idbased is deprecated and not required anymore."
+                     "It will be removed in a future version\n"_L1);
+        } else if (!arg.startsWith(u'-')) {
+            inputFiles << arg;
         }
     }
 
@@ -121,28 +144,50 @@ int main(int argc, char **argv)
     }
 
     std::optional<QJsonArray> results =
-            generateProjectDescription(cleanProFiles, translationsVariables, outDirMap, 0, verbose);
+            generateProjectDescription(cleanProFiles, translationsVariables, outDirMap, 0, cd.m_verbose);
     if (!results) {
         printErr(u"lrelease-pro: Failed to generate project description\n"_s);
         return 1;
     }
 
-    std::unique_ptr<QTemporaryFile> projectDescription(
-            new QTemporaryFile(QStringLiteral("XXXXXX.json")));
-    if (!projectDescription->open()) {
-        printErr(u"lrelease-pro: Cannot create temporary file\n"_s);
+    if (dumpJsonFile) {
+        QFile projectDescriptionFile(*dumpJsonFile);
+        if (!projectDescriptionFile.open(QIODevice::WriteOnly))
+            return 1;
+
+        const QByteArray output = QJsonDocument(*results).toJson(QJsonDocument::Compact);
+        projectDescriptionFile.write(output);
+        projectDescriptionFile.write("\n");
+        projectDescriptionFile.close();
+        printOut("Project description saved to: %1\n"_L1.arg(projectDescriptionFile.fileName()));
+        return 0;
+    }
+
+    QString errorString;
+    Projects projects = projectDescriptionFromJson(*results, &errorString);
+    if (!errorString.isEmpty()) {
+        printErr(QStringLiteral("lrelease-pro error: %1\n").arg(errorString));
+        return 1;
+    }
+    if (projects.empty()) {
+        printErr(u"lrelease-pro error: No projects found in project description\n"_s);
         return 1;
     }
 
-    const QByteArray output = QJsonDocument(*results).toJson(QJsonDocument::Compact);
-    projectDescription->write(output);
-    projectDescription->write("\n");
-    projectDescription->close();
+    QStringList tsFiles = translationsFromProjects(projects);
+    if (tsFiles.isEmpty()) {
+        printErr(u"lrelease-pro error: no TS files specified.\n"_s);
+        return 1;
+    }
 
-    if (keepProjectDescription)
-        projectDescription->setAutoRemove(false);
-    lreleaseOptions << QStringLiteral("-project") << projectDescription->fileName();
+    if (!markUntranslated.isEmpty())
+        cd.m_unTrPrefix = markUntranslated;
 
-    runQtTool(QStringLiteral("lrelease"), lreleaseOptions);
-    return 0;
+    bool fail = false;
+    for (const QString &tsFile : std::as_const(tsFiles)) {
+        if (!releaseTsFile(tsFile, cd, removeIdentical, failOnUnfinished))
+            fail = true;
+    }
+
+    return fail ? 1 : 0;
 }
