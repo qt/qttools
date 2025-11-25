@@ -19,6 +19,7 @@ qt_internal_add_tool(${target_name}
         ../shared/ts.cpp
         ../shared/xliff.cpp
         ../shared/xmlparser.cpp ../shared/xmlparser.h
+        ../shared/releasehelper.cpp ../shared/releasehelper.h
         main.cpp
     DEFINES
         QT_NO_CAST_FROM_ASCII
