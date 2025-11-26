@@ -169,6 +169,43 @@ int trFunctionByDefaultName(const QString &trFunctionName)
     return -1;
 }
 
+static void printErr(const QString &out)
+{
+    std::cerr << qPrintable(out);
+}
+
+bool parseTrFunctionAliasString(const QString &aliasString)
+{
+    for (const QString &pair : aliasString.split(u',', Qt::SkipEmptyParts)) {
+        const int equalSign = pair.indexOf(u'=');
+        if (equalSign < 0) {
+            printErr("tr-function mapping '%1' in -tr-function-alias is missing the '='.\n"_L1.arg(
+                    pair));
+            return false;
+        }
+        const bool plusEqual = equalSign > 0 && pair[equalSign - 1] == u'+';
+        const int trFunctionEnd = plusEqual ? equalSign - 1 : equalSign;
+        const QString trFunctionName = pair.left(trFunctionEnd).trimmed();
+        const QString alias = pair.mid(equalSign + 1).trimmed();
+        const int trFunction = trFunctionByDefaultName(trFunctionName);
+        if (trFunction < 0) {
+            printErr("Unknown tr-function '%1' in -tr-function-alias option.\n"
+                     "Available tr-functions are: %2\n"_L1.arg(trFunctionName,
+                                                               availableFunctions().join(u',')));
+            return false;
+        }
+        if (alias.isEmpty()) {
+            printErr("Empty alias for tr-function '%1' in -tr-function-alias option.\n"_L1.arg(
+                    trFunctionName));
+            return false;
+        }
+        trFunctionAliasManager.modifyAlias(trFunction, alias,
+                                           plusEqual ? TrFunctionAliasManager::AddAlias
+                                                     : TrFunctionAliasManager::SetAlias);
+    }
+    return true;
+}
+
 TrFunctionAliasManager::TrFunctionAliasManager() : m_trFunctionAliases()
 {
     for (int i = 0; i < NumTrFunctions; ++i)

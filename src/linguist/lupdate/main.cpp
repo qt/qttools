@@ -149,37 +149,6 @@ static void printUsage()
                             "\n             "_L1)));
 }
 
-static bool handleTrFunctionAliases(const QString &arg)
-{
-    for (const QString &pair : arg.split(u',', Qt::SkipEmptyParts)) {
-        const int equalSign = pair.indexOf(u'=');
-        if (equalSign < 0) {
-            printErr(QStringLiteral("tr-function mapping '%1' in -tr-function-alias is missing the '='.\n").arg(pair));
-            return false;
-        }
-        const bool plusEqual = equalSign > 0 && pair[equalSign - 1] == u'+';
-        const int trFunctionEnd = plusEqual ? equalSign-1 : equalSign;
-        const QString trFunctionName = pair.left(trFunctionEnd).trimmed();
-        const QString alias = pair.mid(equalSign+1).trimmed();
-        const int trFunction = trFunctionByDefaultName(trFunctionName);
-        if (trFunction < 0) {
-            printErr(QStringLiteral("Unknown tr-function '%1' in -tr-function-alias option.\n"
-                                    "Available tr-functions are: %2")
-                             .arg(trFunctionName, availableFunctions().join(u',')));
-            return false;
-        }
-        if (alias.isEmpty()) {
-            printErr(QStringLiteral("Empty alias for tr-function '%1' in -tr-function-alias option.\n")
-                     .arg(trFunctionName));
-            return false;
-        }
-        trFunctionAliasManager.modifyAlias(trFunction, alias,
-                                           plusEqual ? TrFunctionAliasManager::AddAlias : TrFunctionAliasManager::SetAlias);
-    }
-    return true;
-}
-
-
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
@@ -351,10 +320,12 @@ int main(int argc, char **argv)
                 printErr(u"The -tr-function-alias option should be followed by a list of function=alias mappings.\n"_s);
                 return 1;
             }
-            if (!handleTrFunctionAliases(args[i]))
+            if (!parseTrFunctionAliasString(args[i]))
                 return 1;
             continue;
         } else if (arg == "-pro"_L1) {
+            printErr(u"lupdate warning: The -pro option is deprecated. "
+                     u"Please use the lupdate-pro tool instead.\n"_s);
             ++i;
             if (i == argc) {
                 printErr(u"The -pro option should be followed by a filename of .pro file.\n"_s);
@@ -450,6 +421,8 @@ int main(int argc, char **argv)
                     return 1;
                 }
                 if (isProOrPriFile(file)) {
+                    printErr(u"lupdate warning: Passing .pro/.pri files to lupdate is deprecated. "
+                             u"Please use the lupdate-pro tool instead.\n"_s);
                     QString cleanFile = QDir::cleanPath(fi.absoluteFilePath());
                     proFiles << cleanFile;
                 } else if (fi.isDir()) {

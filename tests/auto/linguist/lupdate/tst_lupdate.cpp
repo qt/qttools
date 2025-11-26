@@ -41,6 +41,7 @@ private slots:
 
 private:
     QString m_cmdLupdate;
+    QString m_cmdLupdatePro;
     QString m_basePath;
     QElapsedTimer m_timer;
     qint64 m_maxElapsed = -1;
@@ -55,6 +56,8 @@ tst_lupdate::tst_lupdate()
     m_timer.start();
     QString binPath = QLibraryInfo::path(QLibraryInfo::BinariesPath);
     m_cmdLupdate = binPath + "/lupdate"_L1;
+    QString libExecPath = QLibraryInfo::path(QLibraryInfo::LibraryExecutablesPath);
+    m_cmdLupdatePro = libExecPath + "/lupdate-pro"_L1;
     m_basePath = QFINDTESTDATA("testdata/");
 }
 
@@ -328,11 +331,18 @@ void tst_lupdate::good()
 
     lupdateArguments.prepend("-silent"_L1);
 
+    QString command;
+    if (lupdateArguments.contains("project.pro"_L1)
+        || lupdateArguments.contains("subdir1/subdir1.pro"_L1))
+        command = m_cmdLupdatePro;
+    else
+        command = m_cmdLupdate;
+
     QProcess proc;
     proc.setWorkingDirectory(workDir);
     proc.setProcessChannelMode(QProcess::MergedChannels);
     const auto startTime = m_timer.elapsed();
-    proc.start(m_cmdLupdate, lupdateArguments, QIODevice::ReadWrite | QIODevice::Text);
+    proc.start(command, lupdateArguments, QIODevice::ReadWrite | QIODevice::Text);
     QVERIFY2(proc.waitForStarted(), msgStartFailed(proc).constData());
     if (!proc.waitForFinished(TIMEOUT)) {
         const auto message = msgTimeout(proc);
