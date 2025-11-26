@@ -163,6 +163,15 @@ int main(int argc, char **argv)
             }
         } else if (arg == "-no-ui-lines"_L1) {
             options |= NoUiLines;
+        } else if (arg == "-tr-function-alias"_L1) {
+            ++i;
+            if (i == argc) {
+                printErr(u"The -tr-function-alias option should be "
+                         "followed by a list of function=alias mappings.\n"_s);
+                return 1;
+            }
+            if (!parseTrFunctionAliasString(args[i]))
+                return 1;
         } else if (isProOrPriFile(arg)) {
             QString cleanFile = QDir::cleanPath(QFileInfo(arg).absoluteFilePath());
             proFiles << cleanFile;

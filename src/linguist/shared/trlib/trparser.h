@@ -77,6 +77,7 @@ QString transcode(const QString &str);
 
 int trFunctionByDefaultName(const QString &trFunctionName);
 QStringList availableFunctions();
+bool parseTrFunctionAliasString(const QString &aliasString);
 
 class TrFunctionAliasManager
 {
