@@ -307,8 +307,8 @@
     \row
         \li \c {-project <filename>}
         \li Name of a file containing the project's description in JSON format.
-            You can use the \c lprodump tool to generate the file from a .pro
-            file.
+            You can use \c{lupdate-pro -dump-json <file>} to generate the
+            file from a .pro file.
     \row
         \li \c {-pro <filename>}
         \li Name of a .pro file. Useful for files with the .pro file syntax but
@@ -534,7 +534,7 @@
     \row
         \li \c {-project <filename>}
         \li Name of a file containing the project's description in JSON format.
-            You can use the \c lprodump tool to generate the file from a .pro
+            You can use \c{lupdate-pro -dump-json} to generate the file from a .pro
             file.
     \row
         \li \c {-silent}

@@ -58,7 +58,7 @@ Options:
            prefixed with the given string instead
     -project <filename>
            Name of a file containing the project's description in JSON format.
-           Such a file may be generated from a .pro file using the lprodump tool.
+           Such a file may be generated from a .pro file using lupdate-pro -dump-json.
     -silent
            Do not explain what is being done
     -verbose

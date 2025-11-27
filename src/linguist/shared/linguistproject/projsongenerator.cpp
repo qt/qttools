@@ -289,12 +289,9 @@ static QJsonArray processProjects(bool topLevel, const QStringList &proFiles,
     return result;
 }
 
-QT_BEGIN_NAMESPACE
-
-std::optional<QJsonArray> generateProjectDescription(const QStringList &proFiles,
-                                                     const QStringList &translationsVariables,
-                                                     const QHash<QString, QString> &outDirMap,
-                                                     int proDebug, bool verbose)
+static std::optional<QJsonArray>
+generateProjectDescription(const QStringList &proFiles, const QStringList &translationsVariables,
+                           const QHash<QString, QString> &outDirMap, int proDebug, bool verbose)
 {
     bool fail = false;
     ProFileGlobals option;
@@ -320,9 +317,11 @@ std::optional<QJsonArray> generateProjectDescription(const QStringList &proFiles
     return result;
 }
 
+QT_BEGIN_NAMESPACE
+
 Projects generateProjects(const QStringList &proFiles, const QStringList &translationsVariables,
                           const QHash<QString, QString> &outDirMap, int proDebug, bool verbose,
-                          QString *errorString)
+                          QString *errorString, QJsonArray *resultJson)
 {
     errorString->clear();
 
@@ -332,6 +331,9 @@ Projects generateProjects(const QStringList &proFiles, const QStringList &transl
         *errorString = "Failed to generate project description from .pro files"_L1;
         return {};
     }
+
+    if (resultJson)
+        *resultJson = *jsonResults;
 
     Projects projects = projectDescriptionFromJson(*jsonResults, errorString);
     if (!errorString->isEmpty())

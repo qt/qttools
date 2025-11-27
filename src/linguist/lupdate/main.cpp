@@ -117,7 +117,7 @@ static void printUsage()
             "           Disable the named merge heuristic. Can be specified multiple times.\n"
             "    -project <filename>\n"
             "           Name of a file containing the project's description in JSON format.\n"
-            "           Such a file may be generated from a .pro file using the lprodump tool.\n"
+            "           Such a file may be generated from a .pro file using lupdate-pro -dump-json.\n"
             "    -pro <filename>\n"
             "           Name of a .pro file. Useful for files with .pro file syntax but\n"
             "           different file suffix. Projects are recursed into and merged.\n"
@@ -508,14 +508,10 @@ int main(int argc, char **argv)
         for (const QString &proFile : std::as_const(proFiles))
             outDirMap[proFile] = outDir;
 
-        std::optional<QJsonArray> results = generateProjectDescription(
-                proFiles, translationsVariables, outDirMap, 0, false);
-        if (!results) {
-            printErr("lupdate error: Failed to generate project description from .pro files\n"_L1);
-            return 1;
-        }
-
-        projectDescription = projectDescriptionFromJson(*results, &errorString);
+        QString errorString;
+        QJsonArray results;
+        projectDescription = generateProjects(proFiles, translationsVariables, outDirMap,
+                                                       0, false, &errorString, &results);
         if (!errorString.isEmpty()) {
             printErr("lupdate error: %1\n"_L1.arg(errorString));
             return 1;
