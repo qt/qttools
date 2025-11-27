@@ -185,19 +185,17 @@ int main(int argc, char **argv)
     }
 
     QStringList translationsVariables = { "TRANSLATIONS"_L1 };
-    std::optional<QJsonArray> results = generateProjectDescription(proFiles, translationsVariables,
-                                                                   outDirMap, proDebug, verbose);
-    if (!results) {
-        printErr(u"lupdate-pro: Failed to generate project description\n"_s);
-        return 1;
-    }
+    QString errorString;
+    QJsonArray results;
+    Projects projectDescription = generateProjects(proFiles, translationsVariables, outDirMap,
+                                                   proDebug, verbose, &errorString, &results);
 
     if (dumpJsonFile) {
         QFile projectDescriptionFile(*dumpJsonFile);
         if (!projectDescriptionFile.open(QIODevice::WriteOnly))
             return 1;
 
-        const QByteArray output = QJsonDocument(*results).toJson(QJsonDocument::Compact);
+        const QByteArray output = QJsonDocument(results).toJson(QJsonDocument::Compact);
         projectDescriptionFile.write(output);
         projectDescriptionFile.write("\n");
         projectDescriptionFile.close();
@@ -205,8 +203,6 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    QString errorString;
-    Projects projectDescription = projectDescriptionFromJson(*results, &errorString);
     if (!errorString.isEmpty()) {
         printErr("lupdate-pro error: %1\n"_L1.arg(errorString));
         return 1;

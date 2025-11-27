@@ -15,7 +15,6 @@ add_subdirectory(shared/linguistproject)
 
 add_subdirectory(lconvert)
 add_subdirectory(lcheck)
-add_subdirectory(lprodump)
 add_subdirectory(lrelease)
 add_subdirectory(lrelease-pro)
 add_subdirectory(lupdate)

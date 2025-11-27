@@ -16,14 +16,9 @@ QT_BEGIN_NAMESPACE
 struct Project;
 typedef std::vector<Project> Projects;
 
-std::optional<QJsonArray> generateProjectDescription(const QStringList &proFiles,
-                                                     const QStringList &translationsVariables,
-                                                     const QHash<QString, QString> &outDirMap,
-                                                     int proDebug, bool verbose);
-
 Projects generateProjects(const QStringList &proFiles, const QStringList &translationsVariables,
                           const QHash<QString, QString> &outDirMap, int proDebug, bool verbose,
-                          QString *errorString);
+                          QString *errorString, QJsonArray *resultJson = nullptr);
 
 QT_END_NAMESPACE
 

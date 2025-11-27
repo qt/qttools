@@ -133,19 +133,17 @@ int main(int argc, char **argv)
         outDirMap[cleanFile] = outDir;
     }
 
-    std::optional<QJsonArray> results =
-            generateProjectDescription(cleanProFiles, translationsVariables, outDirMap, 0, cd.m_verbose);
-    if (!results) {
-        printErr(u"lrelease-pro: Failed to generate project description\n"_s);
-        return 1;
-    }
+    QString errorString;
+    QJsonArray results;
+    Projects projects = generateProjects(cleanProFiles, translationsVariables, outDirMap, 0,
+                                         cd.m_verbose, &errorString, &results);
 
     if (dumpJsonFile) {
         QFile projectDescriptionFile(*dumpJsonFile);
         if (!projectDescriptionFile.open(QIODevice::WriteOnly))
             return 1;
 
-        const QByteArray output = QJsonDocument(*results).toJson(QJsonDocument::Compact);
+        const QByteArray output = QJsonDocument(results).toJson(QJsonDocument::Compact);
         projectDescriptionFile.write(output);
         projectDescriptionFile.write("\n");
         projectDescriptionFile.close();
@@ -153,8 +151,6 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    QString errorString;
-    Projects projects = projectDescriptionFromJson(*results, &errorString);
     if (!errorString.isEmpty()) {
         printErr(QStringLiteral("lrelease-pro error: %1\n").arg(errorString));
         return 1;
