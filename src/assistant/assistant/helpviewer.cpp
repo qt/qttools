@@ -10,6 +10,8 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QStringBuilder>
 #include <QtCore/QTemporaryFile>
+#include <QtCore/QXmlStreamReader>
+#include <QtCore/QXmlStreamWriter>
 
 #include <QtGui/QDesktopServices>
 #if QT_CONFIG(clipboard)
@@ -104,6 +106,42 @@ static void setPaletteFromApp(QWidget *widget)
     widget->setPalette(appPalette);
 }
 
+static QByteArray addDarkThemeToSvg(const QByteArray &data)
+{
+    // Parse the SVG file and attach an attribute to the svg element.
+    QXmlStreamReader reader(data);
+
+    // Assume that the first element is the svg element.
+    if (reader.readNextStartElement()) {
+        if (reader.name() == "svg") {
+            // The character offset refers to the character after the
+            // element start.
+            qint64 rest = reader.characterOffset();
+
+            // Write the svg element to a new byte array, adding an attribute
+            // if the theme is dark.
+            QByteArray newData;
+            QXmlStreamWriter writer(&newData);
+
+            writer.writeStartDocument();
+            writer.writeStartElement("svg");
+            writer.writeAttributes(reader.attributes());
+            writer.writeAttribute("class", "dark");
+
+            // Ensure that the opening tag for the svg element is closed.
+            writer.writeCharacters("");
+
+            // Return the new document start and the rest of the original,
+            // discarding the processing instructions before the svg element.
+            return newData + data.mid(rest);
+        }
+    }
+
+    // The entire file was read without finding an svg element, or an error
+    // occurred, so just return the original data.
+    return data;
+}
+
 static QByteArray getData(const QUrl &url, QWidget *widget)
 {
     // This is a hack for Qt documentation,
@@ -132,8 +170,13 @@ static QByteArray getData(const QUrl &url, QWidget *widget)
         actualUrl.setPath(path);
     }
 
-    if (actualUrl.isValid())
-        return HelpEngineWrapper::instance().fileData(actualUrl);
+    if (actualUrl.isValid()) {
+        const QByteArray data = HelpEngineWrapper::instance().fileData(actualUrl);
+        if (isDarkTheme() && path.endsWith(".svg"))
+            return addDarkThemeToSvg(data);
+        else
+            return data;
+    }
 
     const bool isAbout = (actualUrl.toString() == "about:blank"_L1);
     return isAbout ? HelpViewerImpl::AboutBlank.toUtf8()
