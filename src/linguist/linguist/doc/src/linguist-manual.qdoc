@@ -36,6 +36,8 @@
                 \li \l {Creating translation files}
                 \li \l {Using lupdate}
                 \li \l {Using lrelease}
+                \li \l {Using lupdate-pro}
+                \li \l {Using lrelease-pro}
                 \li \l {Using lconvert}
                 \li \l {Using lcheck}
                 \li \l {Using ltext2id}
@@ -77,6 +79,8 @@
                 \li \l {Creating translation files}
                 \li \l {Using lupdate}
                 \li \l {Using lrelease}
+                \li \l {Using lupdate-pro}
+                \li \l {Using lrelease-pro}
             \endlist
         \li \l{Translators}
             \list
@@ -445,7 +449,7 @@
     \target lrelease
 
     \previouspage Using lupdate
-    \nextpage Using lconvert
+    \nextpage Using lupdate-pro
 
     \title Using lrelease
 
@@ -571,10 +575,228 @@
 */
 
 /*!
+    \page linguist-lupdate-pro.html
+    \target lupdate-pro
+
+    \previouspage Using lrelease
+    \nextpage Using lrelease-pro
+
+    \title Using lupdate-pro
+
+    The \c lupdate-pro command line tool extracts translatable strings from
+    qmake projects (.pro files) and updates TS files. It is specifically
+    designed for qmake-based projects, while \c lupdate works with source
+    files and JSON description files and is build-system agnostic.
+
+    Use \c lupdate-pro when you have a qmake project and want to extract
+    translations based on the project structure defined in your .pro file.
+
+    \section1 lupdate-pro syntax
+
+    \badcode
+    lupdate-pro [options] [project-file]... [-ts ts-files...]
+    \endcode
+
+    Where:
+
+    \list
+        \li \c options means one or several \l {lupdate-pro options}.
+        \li \c project-file is a .pro file to process.
+        \li \c ts-files are the TS files to generate or update.
+    \endlist
+
+    To view the latest help, enter:
+
+    \badcode
+    lupdate-pro -help
+    \endcode
+
+    \section2 lupdate-pro options
+
+    \table
+    \header
+        \li Option
+        \li Action
+    \row
+        \li \c {-help}
+        \li Display up-to-date help information and exit.
+    \row
+        \li \c {-dump-json <file>}
+        \li Generate a JSON project description file without processing
+            translations. This file can be passed to \c lupdate or \c lrelease
+            using the \c {-project} option.
+    \row
+        \li \c {-silent}
+        \li Do not explain what is being done.
+    \row
+        \li \c {-pro <filename>}
+        \li Name of a .pro file. Useful for files with .pro file syntax but
+            different file suffix. Projects are recursed into and merged.
+    \row
+        \li \c {-pro-out <directory>}
+        \li Virtual output directory for processing subsequent .pro files.
+    \row
+        \li \c {-pro-debug}
+        \li Trace processing .pro files. Specify twice for more verbosity.
+    \row
+        \li \c {-ts <ts-file>...}
+        \li Specify the output TS files. This overrides \c TRANSLATIONS.
+    \row
+        \li \c {-no-obsolete}
+        \li Drop all obsolete and vanished strings.
+    \row
+        \li \c {-pluralonly}
+        \li Only include plural form messages.
+    \row
+        \li \c {-no-sort}
+        \li Do not sort contexts in TS files.
+    \row
+        \li \c {-locations {absolute|relative|none}}
+        \li Specify or override the way to save source code references in TS
+            files.
+    \row
+        \li \c {-no-ui-lines}
+        \li Do not record line numbers in references to UI files.
+    \row
+        \li \c {-source-language <language>[_<region>]}
+        \li Specify the language of the source strings for new files.
+    \row
+        \li \c {-target-language <language>[_<region>]}
+        \li Specify the language of the translations for new files.
+    \row
+        \li \c {-tr-function-alias <function>{+=,=}<alias>}
+        \li Recognize \c <alias> as an alternative spelling of \c <function>.
+    \row
+        \li \c {-version}
+        \li Display the version of \c lupdate-pro and exit.
+    \endtable
+
+    \section1 Examples
+
+    \section2 Update translations from a qmake project
+
+    \badcode
+    lupdate-pro myproject.pro
+    \endcode
+
+    \section2 Generate JSON project description
+
+    Generate a JSON file describing the project structure for use with
+    \c lupdate or \c lrelease:
+
+    \badcode
+    lupdate-pro myproject.pro -dump-json project.json
+    \endcode
+
+    Then use the generated JSON file with \c lupdate:
+
+    \badcode
+    lupdate -project project.json
+    \endcode
+
+    This two-step workflow is useful when you need to customize the project
+    description or integrate with other tools.
+*/
+
+/*!
+    \page linguist-lrelease-pro.html
+    \target lrelease-pro
+
+    \previouspage Using lupdate-pro
+    \nextpage Using lconvert
+
+    \title Using lrelease-pro
+
+    The \c lrelease-pro command line tool generates QM files from qmake
+    projects (.pro files). It reads the \c TRANSLATIONS variable from the
+    project file and generates the corresponding QM files.
+
+    Use \c lrelease-pro when you have a qmake project and want to generate
+    QM files based on the translations defined in your .pro file.
+
+    \section1 lrelease-pro syntax
+
+    \badcode
+    lrelease-pro [options] [project-file]...
+    \endcode
+
+    Where:
+
+    \list
+        \li \c options means one or several \l {lrelease-pro options}.
+        \li \c project-file is a .pro file to process.
+    \endlist
+
+    To view the latest help, enter:
+
+    \badcode
+    lrelease-pro -help
+    \endcode
+
+    \section2 lrelease-pro options
+
+    \table
+    \header
+        \li Option
+        \li Action
+    \row
+        \li \c {-help}
+        \li Display up-to-date help information and exit.
+    \row
+        \li \c {-dump-json <file>}
+        \li Generate a JSON project description file without generating
+            QM files. This file can be passed to \c lrelease using the
+            \c {-project} option.
+    \row
+        \li \c {-silent}
+        \li Do not explain what is being done.
+    \row
+        \li \c {-removeidentical}
+        \li If the translated text is the same as the source text, exclude the
+            message.
+    \row
+        \li \c {-fail-on-unfinished}
+        \li Generate an error if unfinished translations are found.
+    \row
+        \li \c {-nounfinished}
+        \li Do not include unfinished translations.
+    \row
+        \li \c {-markuntranslated <prefix>}
+        \li If a message has no real translation, use the source text
+            prefixed with the given string instead.
+    \row
+        \li \c {-version}
+        \li Display the version of \c lrelease-pro and exit.
+    \endtable
+
+    \section1 Examples
+
+    \section2 Generate QM files from a qmake project
+
+    \badcode
+    lrelease-pro myproject.pro
+    \endcode
+
+    \section2 Generate JSON project description
+
+    Generate a JSON file describing the project's translations:
+
+    \badcode
+    lrelease-pro myproject.pro -dump-json project.json
+    \endcode
+
+    Then use the generated JSON file with \c lrelease:
+
+    \badcode
+    lrelease -project project.json
+    \endcode
+*/
+
+/*!
     \page linguist-lconvert.html
     \target lconvert
 
-    \previouspage Using lrelease
+    \previouspage Using lrelease-pro
     \nextpage Using lcheck
 
     \title Using lconvert
