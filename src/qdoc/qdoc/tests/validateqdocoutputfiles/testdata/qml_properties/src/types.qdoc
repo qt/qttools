@@ -1,0 +1,40 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule TestModule
+    \title Test QML Types
+    \brief Test module for QML properties.
+*/
+
+/*!
+    \qmltype BaseItem
+    \inqmlmodule TestModule
+    \brief A base QML type with properties.
+
+    BaseItem provides common properties for derived types.
+*/
+
+/*!
+    \qmlproperty string BaseItem::name
+    \brief The name property of the item.
+    \since 1.0
+
+    This property holds the name identifier for the item.
+*/
+
+/*!
+    \qmlproperty int BaseItem::size.width
+    \qmlproperty int BaseItem::size.height
+    \brief The size of the item.
+    \since 1.1
+*/
+
+/*!
+    \qmlpropertygroup BaseItem::values
+    \qmlproperty int BaseItem::values.integer
+    \qmlproperty float BaseItem::values.floating
+    \qmlproperty bool BaseItem::values.boolean
+    \brief A collection of values.
+    \since 1.2
+*/

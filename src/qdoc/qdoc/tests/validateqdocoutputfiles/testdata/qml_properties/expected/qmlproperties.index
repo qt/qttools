@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QmlProperties Reference Documentation" version="" project="QmlProperties">
+    <namespace name="" status="active" access="public" module="qmlproperties">
+        <qmlclass name="BaseItem" qml-module-name="TestModule" fullname="TestModule.BaseItem" href="qml-testmodule-baseitem.html" status="active" access="public" location="types.qdoc" documented="true" brief="A base QML type with properties">
+            <qmlproperty name="name" fullname="TestModule.BaseItem.name" href="qml-testmodule-baseitem.html#name-prop" status="active" access="public" location="types.qdoc" since="1.0" documented="true" type="string" attached="false" writable="true" brief="Property of the item"/>
+            <qmlproperty name="size.height" inpropertygroup="TestModule.BaseItem.size" fullname="TestModule.BaseItem.size.height" href="qml-testmodule-baseitem.html#size.height-prop" status="active" access="public" location="types.qdoc" since="1.1" documented="true" type="int" attached="false" writable="true" brief="Size of the item"/>
+            <qmlproperty name="size.width" inpropertygroup="TestModule.BaseItem.size" fullname="TestModule.BaseItem.size.width" href="qml-testmodule-baseitem.html#size.width-prop" status="active" access="public" location="types.qdoc" since="1.1" documented="true" type="int" attached="false" writable="true" brief="Size of the item"/>
+            <qmlproperty name="values.boolean" inpropertygroup="TestModule.BaseItem.values" fullname="TestModule.BaseItem.values.boolean" href="qml-testmodule-baseitem.html#values.boolean-prop" status="active" access="public" location="types.qdoc" since="1.2" documented="true" type="bool" attached="false" writable="true" brief="A collection of values"/>
+            <qmlproperty name="values.floating" inpropertygroup="TestModule.BaseItem.values" fullname="TestModule.BaseItem.values.floating" href="qml-testmodule-baseitem.html#values.floating-prop" status="active" access="public" location="types.qdoc" since="1.2" documented="true" type="float" attached="false" writable="true" brief="A collection of values"/>
+            <qmlproperty name="values.integer" inpropertygroup="TestModule.BaseItem.values" fullname="TestModule.BaseItem.values.integer" href="qml-testmodule-baseitem.html#values.integer-prop" status="active" access="public" location="types.qdoc" since="1.2" documented="true" type="int" attached="false" writable="true" brief="A collection of values"/>
+            <qmlproperty name="size" propertygroup="true" fullname="TestModule.BaseItem.size" href="qml-testmodule-baseitem.html#size-prop" status="active" access="public" location="types.qdoc" since="1.1" documented="true"/>
+            <qmlproperty name="values" propertygroup="true" fullname="TestModule.BaseItem.values" href="qml-testmodule-baseitem.html#values-prop" status="active" access="public" location="types.qdoc" since="1.2" documented="true"/>
+        </qmlclass>
+        <qmlmodule name="TestModule" qml-module-name="TestModule" href="testmodule-qmlmodule.html" status="active" location="types.qdoc" documented="true" seen="true" title="Test QML Types" brief="Test module for QML properties"/>
+    </namespace>
+</INDEX>

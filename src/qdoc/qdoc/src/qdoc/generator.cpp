@@ -1243,7 +1243,7 @@ void Generator::generateSince(const Node *node, CodeMarker *marker)
         Text text;
         if (node->isSharedCommentNode()) {
             const auto &collective = static_cast<const SharedCommentNode *>(node)->collective();
-            QString typeStr = collective.size() > 1 ? typeString(collective.first()) + "s" : typeString(node);
+            QString typeStr = typeString(collective.first(), collective.size() > 1);
             text << Atom::ParaLeft << "These " << typeStr << " were introduced in "
                  << formatSince(node) << "." << Atom::ParaRight;
         } else {
@@ -2286,56 +2286,56 @@ QString Generator::trimmedTrailing(const QString &string, const QString &prefix,
     return trimmed;
 }
 
-QString Generator::typeString(const Node *node)
+QString Generator::typeString(const Node *node, bool plural)
 {
     switch (node->nodeType()) {
     case NodeType::Namespace:
-        return "namespace"_L1;
+        return plural ? "namespaces"_L1 : "namespace"_L1;
     case NodeType::Class:
-        return "class"_L1;
+        return plural ? "classes"_L1 : "class"_L1;
     case NodeType::Struct:
-        return "struct"_L1;
+        return plural ? "structs"_L1 : "struct"_L1;
     case NodeType::Union:
-        return "union"_L1;
+        return plural ? "unions"_L1 : "union"_L1;
     case NodeType::QmlType:
     case NodeType::QmlValueType:
-        return "type"_L1;
+        return plural ? "types"_L1 : "type"_L1;
     case NodeType::Page:
         return "documentation"_L1;
     case NodeType::Enum:
-        return "enum"_L1;
+        return plural ? "enums"_L1 : "enum"_L1;
     case NodeType::Typedef:
     case NodeType::TypeAlias:
-        return "typedef"_L1;
+        return plural ? "typedefs"_L1 : "typedef"_L1;
     case NodeType::Function: {
         const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
         case FunctionNode::QmlSignal:
-            return "signal"_L1;
+            return plural ? "signals"_L1 : "signal"_L1;
         case FunctionNode::QmlSignalHandler:
-            return "signal handler"_L1;
+            return plural ? "signal handlers"_L1 : "signal handler"_L1;
         case FunctionNode::QmlMethod:
-            return "method"_L1;
+            return plural ? "methods"_L1 : "method"_L1;
         case FunctionNode::MacroWithParams:
         case FunctionNode::MacroWithoutParams:
-            return "macro"_L1;
+            return plural ? "macros"_L1 : "macro"_L1;
         default:
             break;
         }
-        return "function"_L1;
+        return plural ? "functions"_L1 : "function"_L1;
     }
     case NodeType::Property:
     case NodeType::QmlProperty:
-        return "property"_L1;
+        return plural ? "properties"_L1 : "property"_L1;
     case NodeType::Module:
     case NodeType::QmlModule:
-        return "module"_L1;
+        return plural ? "modules"_L1 : "module"_L1;
     case NodeType::Variable:
-        return "variable"_L1;
+        return plural ? "variables"_L1 : "variable"_L1;
     case NodeType::SharedComment: {
         const auto *shared = static_cast<const SharedCommentNode *>(node);
         if (shared->isPropertyGroup())
-            return "property group"_L1;
+            return plural ? "property groups"_L1 : "property group"_L1;
         const auto &collective = shared->collective();
         return collective.first()->nodeTypeString();
     }
