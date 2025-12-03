@@ -33,14 +33,19 @@ public:
     void setDataModel(MultiDataModel *dm);
 
     static constexpr const char *selectedModelSettingsKey = "MachineTranslation/SelectedModel";
+    static constexpr const char *selectedApiTypeSettingsKey = "MachineTranslation/ApiType";
 
 private:
+    enum class ConnectionState { NotConnected, Connecting, Connected, Failed, Modified };
+
     void refresh(bool init);
     void logProgress(const QList<QStringList> &table);
     void logInfo(const QString &info);
     void logError(const QString &error);
     bool discardTranslations();
     void updateStatus();
+    void setConnectionState(ConnectionState state);
+    void updateConnectionIndicator();
 
     MultiDataModel *m_dataModel;
     QHash<const TranslatorMessage *, MultiDataIndex> m_ongoingTranslations;
@@ -50,6 +55,8 @@ private:
     std::unique_ptr<MachineTranslator> m_translator;
     int m_failedTranslations = 0;
     int m_sentTexts = 0;
+    ConnectionState m_connectionState = ConnectionState::NotConnected;
+    QString m_lastConnectedUrl;
 
 private slots:
     void stop();
@@ -58,7 +65,10 @@ private slots:
     void onFilterChanged(int id);
     void applyTranslations();
     void onTranslationFailed(QList<const TranslatorMessage *>);
-    void connectToOllama();
+    void connectToServer();
+    void onApiTypeChanged(int index);
+    void onServerUrlChanged();
+    void onModelsReceived(const QStringList &models);
     void updateToolBoxTexts();
 };
 

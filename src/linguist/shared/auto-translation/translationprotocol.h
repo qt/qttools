@@ -51,6 +51,11 @@ public:
     virtual void setUrl(const QString &url) = 0;
     virtual QUrl translationEndpoint() const = 0;
     virtual QUrl discoveryEndpoint() const = 0;
+
+    // Called when a request fails (e.g., HTTP 400), allowing the protocol
+    // to adjust its behavior (e.g., fallback to different JSON format)
+    virtual void onRequestRejected() { }
+
     virtual ~TranslationProtocol() = default;
 };
 

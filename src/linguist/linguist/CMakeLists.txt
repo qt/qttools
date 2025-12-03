@@ -27,8 +27,12 @@ qt_internal_add_app(linguist
         ../shared/ts.cpp
         ../shared/xliff.cpp
         ../shared/auto-translation/translationprotocol.h
+        ../shared/auto-translation/translationutils.cpp
+        ../shared/auto-translation/translationutils.h
         ../shared/auto-translation/ollama.cpp
         ../shared/auto-translation/ollama.h
+        ../shared/auto-translation/openaicompatible.cpp
+        ../shared/auto-translation/openaicompatible.h
         ../shared/auto-translation/machinetranslator.cpp
         ../shared/auto-translation/machinetranslator.h
         ../shared/parsers/xmlparser.cpp ../shared/parsers/xmlparser.h
