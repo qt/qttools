@@ -1,23 +1,21 @@
 // Copyright (C) 2025 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#ifndef OLLAMA_H
-#define OLLAMA_H
+#ifndef OPENAICOMPATIBLE_H
+#define OPENAICOMPATIBLE_H
 
 #include "translationprotocol.h"
-
-#include <QElapsedTimer>
 
 QT_BEGIN_NAMESPACE
 
 class QJsonObject;
 class QJsonArray;
 
-class Ollama : public TranslationProtocol
+class OpenAICompatible : public TranslationProtocol
 {
 public:
-    Ollama();
-    ~Ollama() override;
+    OpenAICompatible();
+    ~OpenAICompatible() override;
     QList<Batch> makeBatches(const Messages &messages, const QString &userContext) const override;
     QByteArray payload(const Batch &b) const override;
     QHash<QString, QString> extractTranslations(const QByteArray &response) override;
@@ -30,18 +28,25 @@ public:
     void onRequestRejected() override;
 
 private:
+    // JSON format stages for fallback mechanism:
+    // JsonObject: llama.cpp style {"type": "json_object"}
+    // JsonSchema: LM Studio style {"type": "json_schema", "json_schema": {...}}
+    // None: No response_format (for thinking models or unsupported servers)
+    enum class JsonFormatStage { JsonObject, JsonSchema, None };
+
     QString makePrompt(const Batch &b) const;
+    void decrementFormatCounter();
 
     std::unique_ptr<QJsonObject> m_payloadBase;
     std::unique_ptr<QJsonObject> m_systemMessage;
     QString m_url;
-    std::atomic_int m_useJsonFormat = s_maxJsonFormatTry;
-    QElapsedTimer m_lastWakeupTimer;
-    static constexpr int s_maxJsonFormatTry = 3;
+    JsonFormatStage m_formatStage = JsonFormatStage::JsonObject;
+    std::atomic_int m_formatTryCounter = s_maxFormatTries;
+    bool m_formatLocked = false;
+    static constexpr int s_maxFormatTries = 3;
     static constexpr int s_maxBatchSize = 20;
-    static constexpr int s_wakeUpTimeOut = 4 * 60 * 1000;
 };
 
 QT_END_NAMESPACE
 
-#endif // OLLAMA_H
+#endif // OPENAICOMPATIBLE_H

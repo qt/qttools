@@ -17,12 +17,16 @@ class QNetworkRequest;
 class QNetworkAccessManager;
 class QNetworkReply;
 
+enum class TranslationApiType { Ollama, OpenAICompatible };
+
 class MachineTranslator : public QObject
 {
     Q_OBJECT
 public:
     MachineTranslator();
     ~MachineTranslator();
+
+    void setApiType(TranslationApiType type);
 
     void translate(const Messages &messages, const QString &userContext = QString());
     void stop() noexcept { m_stopped = true; }
@@ -50,9 +54,9 @@ private:
     void translationReceived(QNetworkReply *reply, Batch b, int session);
     void processNextBatches();
 
-    // Allow up to 6 retries to accommodate JSON format fallback.
-    // Gives 2-3 attempts with JSON format, then some attempts without.
-    static constexpr int s_maxTries = 6;
+    // Allow up to 10 retries to accommodate three-stage JSON format fallback
+    // (JsonObject -> JsonSchema -> None), with 3 tries per stage.
+    static constexpr int s_maxTries = 10;
     static constexpr int s_maxConcurrentBatches = 6;
 };
 

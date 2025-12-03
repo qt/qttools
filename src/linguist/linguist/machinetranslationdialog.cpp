@@ -15,6 +15,32 @@
 
 using namespace Qt::Literals::StringLiterals;
 
+namespace {
+
+struct ApiTypeInfo
+{
+    TranslationApiType type;
+    const QLatin1String displayName;
+    const QLatin1String defaultUrl;
+};
+
+// Central registry of all supported API types and their metadata
+constexpr ApiTypeInfo s_apiTypes[] = {
+    { TranslationApiType::Ollama, "Ollama"_L1, "http://localhost:11434"_L1 },
+    { TranslationApiType::OpenAICompatible, "OpenAI Compatible"_L1, "http://localhost:8080"_L1 },
+};
+
+const ApiTypeInfo *findApiTypeInfo(TranslationApiType type)
+{
+    for (const auto &info : s_apiTypes) {
+        if (info.type == type)
+            return &info;
+    }
+    return nullptr;
+}
+
+} // namespace
+
 QT_BEGIN_NAMESPACE
 
 static constexpr std::array<const char *, 3> toolBoxTexts {
@@ -60,21 +86,9 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
 
     connect(m_ui->stopButton, &QToolButton::clicked, this, &MachineTranslationDialog::stop);
     connect(m_ui->connectButton, &QPushButton::clicked, this,
-            &MachineTranslationDialog::connectToOllama);
+            &MachineTranslationDialog::connectToServer);
     connect(m_translator.get(), &MachineTranslator::modelsReceived, this,
-            [this](const QStringList &models) {
-                QSettings config;
-                QString savedModel = config.value(settingPath(selectedModelSettingsKey)).toString();
-                m_ui->modelComboBox->clear();
-                m_ui->modelComboBox->addItems(models);
-
-                // Restore saved selection if found
-                if (!savedModel.isEmpty()) {
-                    int index = m_ui->modelComboBox->findText(savedModel);
-                    if (index >= 0)
-                        m_ui->modelComboBox->setCurrentIndex(index);
-                }
-            });
+            &MachineTranslationDialog::onModelsReceived);
     connect(m_ui->modelComboBox, &QComboBox::currentTextChanged, this, [](const QString &text) {
         if (!text.isEmpty())
             QSettings().setValue(settingPath(selectedModelSettingsKey), text);
@@ -82,6 +96,31 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
     connect(this, &QDialog::finished, m_translator.get(), &MachineTranslator::stop);
     connect(m_ui->filterComboBox, &QComboBox::currentIndexChanged, this,
             &MachineTranslationDialog::onFilterChanged);
+    connect(m_ui->serverText, &QLineEdit::textChanged, this,
+            &MachineTranslationDialog::onServerUrlChanged);
+    connect(m_ui->apiTypeComboBox, &QComboBox::currentIndexChanged, this,
+            &MachineTranslationDialog::onApiTypeChanged);
+
+    setConnectionState(ConnectionState::NotConnected);
+
+    // Populate API type combo box from registry
+    m_ui->apiTypeComboBox->clear();
+    for (const auto &info : s_apiTypes) {
+        m_ui->apiTypeComboBox->addItem(QString::fromLatin1(info.displayName),
+                                       QVariant::fromValue(info.type));
+    }
+
+    // Restore saved API type selection
+    QSettings config;
+    const int savedApiType = config.value(settingPath(selectedApiTypeSettingsKey),
+                                          static_cast<int>(TranslationApiType::Ollama))
+                                     .toInt();
+    for (int i = 0; i < m_ui->apiTypeComboBox->count(); ++i) {
+        if (m_ui->apiTypeComboBox->itemData(i).toInt() == savedApiType) {
+            m_ui->apiTypeComboBox->setCurrentIndex(i);
+            break;
+        }
+    }
 }
 
 void MachineTranslationDialog::updateToolBoxTexts()
@@ -112,7 +151,7 @@ void MachineTranslationDialog::refresh(bool init)
         m_ui->translationLog->setText(tr("Translation Log"));
         m_ui->translateButton->setEnabled(true);
         m_ui->stopButton->setEnabled(false);
-        connectToOllama();
+        connectToServer();
     }
     m_sentTexts = 0;
     m_failedTranslations = 0;
@@ -204,8 +243,8 @@ void MachineTranslationDialog::translateSelection()
     const QString model = m_ui->modelComboBox->currentText();
     const int id = m_ui->filesComboBox->currentIndex();
     if (model.isEmpty()) {
-        logError(tr("Please verify the service URL is valid, "
-                    "then select a translation model."));
+        logError(tr("Please verify the service URL is valid "
+                    "and a translation model is selected."));
         return;
     }
     if (id < 0) {
@@ -375,12 +414,103 @@ void MachineTranslationDialog::updateStatus()
     }
 }
 
-void MachineTranslationDialog::connectToOllama()
+void MachineTranslationDialog::connectToServer()
 {
-    if (m_ui->serverText->text().isEmpty())
+    if (m_ui->serverText->text().isEmpty()) {
+        setConnectionState(ConnectionState::NotConnected);
         return;
+    }
+    setConnectionState(ConnectionState::Connecting);
     m_translator->setUrl(m_ui->serverText->text());
     m_translator->requestModels();
+}
+
+void MachineTranslationDialog::onApiTypeChanged(int index)
+{
+    const QVariant data = m_ui->apiTypeComboBox->itemData(index);
+    if (!data.isValid())
+        return;
+
+    const auto apiType = static_cast<TranslationApiType>(data.toInt());
+    const ApiTypeInfo *info = findApiTypeInfo(apiType);
+    if (!info)
+        return;
+
+    QSettings config;
+    config.setValue(settingPath(selectedApiTypeSettingsKey), static_cast<int>(apiType));
+
+    m_translator->setApiType(apiType);
+    m_ui->serverText->setText(QString::fromLatin1(info->defaultUrl));
+    m_ui->modelComboBox->clear();
+    connectToServer();
+}
+
+void MachineTranslationDialog::onServerUrlChanged()
+{
+    if (m_connectionState == ConnectionState::Connected
+        && m_ui->serverText->text() != m_lastConnectedUrl) {
+        setConnectionState(ConnectionState::Modified);
+    }
+}
+
+void MachineTranslationDialog::onModelsReceived(const QStringList &models)
+{
+    if (models.isEmpty()) {
+        setConnectionState(ConnectionState::Failed);
+    } else {
+        m_lastConnectedUrl = m_ui->serverText->text();
+        setConnectionState(ConnectionState::Connected);
+
+        QSettings config;
+        QString savedModel = config.value(settingPath(selectedModelSettingsKey)).toString();
+        m_ui->modelComboBox->clear();
+        m_ui->modelComboBox->addItems(models);
+
+        // Restore saved selection if found
+        if (!savedModel.isEmpty()) {
+            int index = m_ui->modelComboBox->findText(savedModel);
+            if (index >= 0)
+                m_ui->modelComboBox->setCurrentIndex(index);
+        }
+    }
+}
+
+void MachineTranslationDialog::setConnectionState(ConnectionState state)
+{
+    m_connectionState = state;
+    updateConnectionIndicator();
+}
+
+void MachineTranslationDialog::updateConnectionIndicator()
+{
+    QString statusText;
+    QString styleSheet;
+
+    switch (m_connectionState) {
+    case ConnectionState::NotConnected:
+        statusText = tr("Not connected - click Connect to fetch models");
+        styleSheet = "QLabel { color: gray; }"_L1;
+        break;
+    case ConnectionState::Connecting:
+        statusText = tr("Connecting...");
+        styleSheet = "QLabel { color: orange; }"_L1;
+        break;
+    case ConnectionState::Connected:
+        statusText = tr("Connected");
+        styleSheet = "QLabel { color: green;}"_L1;
+        break;
+    case ConnectionState::Failed:
+        statusText = tr("Connection failed - verify server URL and click Connect");
+        styleSheet = "QLabel { color: red; }"_L1;
+        break;
+    case ConnectionState::Modified:
+        statusText = tr("URL modified - click Connect to apply");
+        styleSheet = "QLabel { color: orange; }"_L1;
+        break;
+    }
+
+    m_ui->connectionStatusLabel->setText(statusText);
+    m_ui->connectionStatusLabel->setStyleSheet(styleSheet);
 }
 
 MachineTranslationDialog::~MachineTranslationDialog() = default;

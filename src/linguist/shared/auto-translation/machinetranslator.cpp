@@ -3,6 +3,7 @@
 
 #include "machinetranslator.h"
 #include "ollama.h"
+#include "openaicompatible.h"
 #include "translatormessage.h"
 #include "simtexth.h"
 
@@ -16,11 +17,22 @@ QT_BEGIN_NAMESPACE
 
 MachineTranslator::MachineTranslator()
     : m_request(std::make_unique<QNetworkRequest>()),
-      m_manager(std::make_unique<QNetworkAccessManager>()),
-      m_translator(std::make_unique<Ollama>())
+      m_manager(std::make_unique<QNetworkAccessManager>())
 {
     m_request->setHeader(QNetworkRequest::ContentTypeHeader, "application/json"_L1);
     m_request->setTransferTimeout(5 * 60 * 1000);
+}
+
+void MachineTranslator::setApiType(TranslationApiType type)
+{
+    switch (type) {
+    case TranslationApiType::Ollama:
+        m_translator = std::make_unique<Ollama>();
+        break;
+    case TranslationApiType::OpenAICompatible:
+        m_translator = std::make_unique<OpenAICompatible>();
+        break;
+    }
 }
 
 MachineTranslator::~MachineTranslator() = default;
@@ -141,9 +153,15 @@ void MachineTranslator::translationReceived(QNetworkReply *reply, Batch b, int s
     bool shouldRetry = false;
 
     if (reply->error() != QNetworkReply::NoError) {
-        const bool isRetriableError = reply->error() == QNetworkReply::OperationCanceledError
-                || reply->error() == QNetworkReply::TimeoutError
-                || reply->error() == QNetworkReply::UnknownNetworkError;
+        const auto error = reply->error();
+
+        if (error == QNetworkReply::ProtocolInvalidOperationError)
+            m_translator->onRequestRejected();
+
+        const bool isRetriableError = error == QNetworkReply::OperationCanceledError
+                || error == QNetworkReply::TimeoutError
+                || error == QNetworkReply::UnknownNetworkError
+                || error == QNetworkReply::ProtocolInvalidOperationError;
         shouldRetry = b.tries < s_maxTries && isRetriableError;
         if (!shouldRetry) {
             QList<const TranslatorMessage *> failed;
