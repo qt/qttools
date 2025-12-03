@@ -1655,25 +1655,62 @@ Inspect the in-place source annotations marked with
 
  \title AI translation
 
- The AI Translation feature lets you automatically generate
-translations for the open TS file using a local LLM via Ollama.
+ The AI Translation feature lets you automatically generate translations for the
+ open TS file using large language models (LLMs). You can use either a local LLM
+ server (such as \l{https://ollama.com}{Ollama},
+ \l{https://lmstudio.ai}{LM Studio}, or
+ \l{https://github.com/ggml-org/llama.cpp}{llama.cpp}) or cloud-based APIs that
+ support the OpenAI-compatible REST protocol (such as OpenAI, Groq, or Anthropic).
 
- To use AI Translation you must first install
-\l{https://github.com/jmorganca/ollama}{Ollama} and pull at least one model, for example:
+ \section1 Setting up a local LLM server
+
+ To use AI Translation with a local server, install one of the following and
+ download at least one model:
 
  \list
-     \li \c{ollama pull gpt-oss:20b}
-     \li \c{ollama pull 7shi/llama-translate:8b-q4_K_M}
+     \li \l{https://ollama.com}{Ollama} - Easy to use, manages models automatically
+     \li \l{https://lmstudio.ai}{LM Studio} - GUI application with model browser
+     \li \l{https://github.com/ggml-org/llama.cpp}{llama.cpp} - Lightweight,
+         runs GGUF models directly
  \endlist
 
- Then start the Ollama server if not already started:
+ For Ollama, pull a model using the command line:
 
  \code
+ ollama pull qwen3:14b
  ollama serve
  \endcode
 
- In Linguist, choose \uicontrol{Translation > AI Translation}
-to open the AI Translation dialog:
+ For LM Studio, download models through the application's interface and start
+ the local server:
+
+ \code
+ lms server start
+ \endcode
+
+ For llama.cpp, you can either use one of the built-in model presets:
+
+ \code
+ llama-server --fim-qwen-7b-default
+ \endcode
+
+ Or download a GGUF model file and start the server manually:
+
+ \code
+ llama-server -m model.gguf --port 8080
+ \endcode
+
+ \section1 Using cloud APIs
+
+ To use cloud-based translation services, select \e{OpenAI Compatible} as the
+ API type, enter the provider's API endpoint URL, and provide your API key.
+ The API key field accepts authentication tokens for services like OpenAI,
+ Anthropic, Groq, and other OpenAI-compatible providers.
+
+ \section1 Using the AI Translation dialog
+
+ In Linguist, choose \uicontrol{Tools > AI Translation} to open the
+ AI Translation dialog:
 
  \image linguist-ai-translation-dialog.webp {Screenshot of Qt Linguist AI translation window
         showing server settings and completed translations}
@@ -1681,22 +1718,79 @@ to open the AI Translation dialog:
  The dialog provides:
 
  \list
-     \li \uicontrol {Ollama Server}: the REST endpoint where Ollama listens
-                    (default \c http://127.0.0.1:11434).
-     \li \uicontrol Model: drop-down of locally installed models.
+     \li \uicontrol {API Type}: choose between \e{Ollama} for local Ollama servers
+         or \e{OpenAI Compatible} for LM Studio, llama.cpp, or cloud APIs.
+     \li \uicontrol {Server URL}: the REST endpoint where the server listens
+         (default \c http://localhost:11434 for Ollama,
+         \c http://localhost:8080 for OpenAI Compatible).
+     \li \uicontrol {API Key}: authentication key for cloud APIs (optional for
+         local servers).
+     \li \uicontrol Model: drop-down list of available models.
+     \li \uicontrol Context: optional application context to improve translation
+         accuracy (e.g., "medical software", "video game", "financial application").
      \li \uicontrol File: the TS file to translate.
-     \li \uicontrol Filter (optional): limit to strings in a specific group (context or label).
-     \li \uicontrol Translate button: start the AI translation.
-     \li \uicontrol {Apply Translations} button: apply the translated items into the TS file.
+     \li \uicontrol Filter: limit translation to specific groups (contexts or labels).
+     \li \uicontrol Translate: start the AI translation.
+     \li \uicontrol {Apply Translations}: apply the translated items into the TS file.
  \endlist
 
-During translation, progress messages appear in the status bar and in the \uicontrol {Translation
-Log}. When complete, you can check out the translated texts on the log. Upon clicking on
-\uicontrol{Apply Translations}, AI-generated translations are inserted into the TS file.
+ During translation, progress messages appear in the \uicontrol{Translation Log}.
+ When complete, review the translated texts in the log. Click
+ \uicontrol{Apply Translations} to insert the AI-generated translations into
+ the TS file.
 
-\note We suggest using one of OpenAI’s open-weight models, e.g., \e{gpt-oss:20b} or other
-    LLMs trained for translation, e.g., \e{7shi/llama-translate:8b-q4_K_M}. Feel free to
-    try other models to find the best combination of speed, quality, and resource usage.
+ \section1 Recommended models
+
+ The following models are recommended for translation tasks, balancing quality,
+ speed, and resource usage. These models can be found on:
+
+ \list
+     \li \l{https://ollama.com/library}{Ollama} - search by model name
+         (e.g., \c{ollama pull qwen3:14b})
+     \li \l{https://lmstudio.ai}{LM Studio} - search in the model browser
+     \li \l{https://huggingface.co}{Hugging Face} - download GGUF files for llama.cpp
+ \endlist
+
+ \table
+ \header
+     \li Model
+     \li Size
+     \li Notes
+ \row
+     \li Mistral Small 24B
+     \li 14 GB
+     \li High translation quality with strong multilingual support.
+         Requires >16 GB VRAM for optimal performance.
+ \row
+     \li Qwen3 14B
+     \li 9 GB
+     \li Balance of quality and resource usage. Supports 100+ languages.
+ \row
+     \li Qwen3 30B
+     \li 19 GB
+     \li High-quality translations. Uses MoE architecture for efficient inference.
+ \row
+     \li Qwen2.5 14B
+     \li 9 GB
+     \li Strong multilingual support for 29+ languages including CJK languages.
+ \row
+     \li Gemma 3 12B
+     \li 8 GB
+     \li Supports 140+ languages. Good for resource-constrained systems.
+ \row
+     \li 7shi/llama-translate 8B
+     \li 5 GB
+     \li Specialized translation model for English, French, Chinese, and Japanese.
+         Lightweight option for limited hardware. Available on Ollama only.
+ \endtable
+
+ For systems with limited resources, smaller variants like Qwen3 8B (5 GB) or
+ Qwen2.5 7B (5 GB) provide reasonable translation quality while requiring
+ less memory.
+
+ \note Translation quality varies by language pair and model. Test different
+ models to find the best combination of speed, quality, and resource usage for
+ your specific translation needs.
 */
 
 /*!
