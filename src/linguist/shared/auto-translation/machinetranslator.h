@@ -32,6 +32,7 @@ public:
     void stop() noexcept { m_stopped = true; }
     void start() noexcept;
     void setUrl(const QString &url);
+    void setApiKey(const QString &apiKey);
     void activateTranslationModel(const QString &modelName);
     void requestModels();
 

@@ -64,6 +64,14 @@ void MachineTranslator::setUrl(const QString &url)
     m_request->setUrl(m_translator->translationEndpoint());
 }
 
+void MachineTranslator::setApiKey(const QString &apiKey)
+{
+    if (!apiKey.isEmpty())
+        m_request->setRawHeader("Authorization", "Bearer " + apiKey.toUtf8());
+    else
+        m_request->setRawHeader("Authorization", QByteArray());
+}
+
 void MachineTranslator::activateTranslationModel(const QString &modelName)
 {
     if (auto wakeupPayload = m_translator->stageModel(modelName)) {

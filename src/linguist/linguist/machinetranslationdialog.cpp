@@ -22,12 +22,14 @@ struct ApiTypeInfo
     TranslationApiType type;
     const QLatin1String displayName;
     const QLatin1String defaultUrl;
+    bool showApiKeyField;
 };
 
 // Central registry of all supported API types and their metadata
 constexpr ApiTypeInfo s_apiTypes[] = {
-    { TranslationApiType::Ollama, "Ollama"_L1, "http://localhost:11434"_L1 },
-    { TranslationApiType::OpenAICompatible, "OpenAI Compatible"_L1, "http://localhost:8080"_L1 },
+    { TranslationApiType::Ollama, "Ollama"_L1, "http://localhost:11434"_L1, false },
+    { TranslationApiType::OpenAICompatible, "OpenAI Compatible"_L1, "http://localhost:8080"_L1,
+      true },
 };
 
 const ApiTypeInfo *findApiTypeInfo(TranslationApiType type)
@@ -98,6 +100,10 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
             &MachineTranslationDialog::onFilterChanged);
     connect(m_ui->serverText, &QLineEdit::textChanged, this,
             &MachineTranslationDialog::onServerUrlChanged);
+    connect(m_ui->apiKeyEdit, &QLineEdit::textChanged, this, [this] {
+        if (m_connectionState == ConnectionState::Connected)
+            setConnectionState(ConnectionState::Modified);
+    });
     connect(m_ui->apiTypeComboBox, &QComboBox::currentIndexChanged, this,
             &MachineTranslationDialog::onApiTypeChanged);
 
@@ -422,6 +428,7 @@ void MachineTranslationDialog::connectToServer()
     }
     setConnectionState(ConnectionState::Connecting);
     m_translator->setUrl(m_ui->serverText->text());
+    m_translator->setApiKey(m_ui->apiKeyEdit->text());
     m_translator->requestModels();
 }
 
@@ -442,6 +449,11 @@ void MachineTranslationDialog::onApiTypeChanged(int index)
     m_translator->setApiType(apiType);
     m_ui->serverText->setText(QString::fromLatin1(info->defaultUrl));
     m_ui->modelComboBox->clear();
+
+    // Show/hide API key field based on API type
+    m_ui->apiKeyLabel->setVisible(info->showApiKeyField);
+    m_ui->apiKeyEdit->setVisible(info->showApiKeyField);
+
     connectToServer();
 }
 
