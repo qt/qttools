@@ -25,6 +25,7 @@
 <!-- $$$PrivateData-brief -->
 <p>Private implementation class for <a href="publicclass.html" translate="no">PublicClass</a>. <a href="#details">More...</a></p>
 <!-- @@@PrivateData -->
+<p><b>Part of developer documentation for internal use.</b></p>
 <ul>
 <li><a href="publicclass-privatedata-members.html">List of all members, including inherited members</a></li>
 </ul>
@@ -50,12 +51,12 @@
 <div class="func">
 <h2>Member Function Documentation</h2>
 <!-- $$$PrivateData[overload1]$$$PrivateData -->
-<h3 class="fn" translate="no" id="PrivateData">PrivateData::<span class="name">PrivateData</span>()</h3>
+<h3 class="fn internal" translate="no" id="PrivateData">PrivateData::<span class="name">PrivateData</span>()</h3>
 <p>Constructor for private data.</p>
 <p>This should only appear when showinternal is enabled.</p>
 <!-- @@@PrivateData -->
 <!-- $$$internalHelper[overload1]$$$internalHelper -->
-<h3 class="fn" translate="no" id="internalHelper"><span class="type">void</span> PrivateData::<span class="name">internalHelper</span>()</h3>
+<h3 class="fn internal" translate="no" id="internalHelper"><span class="type">void</span> PrivateData::<span class="name">internalHelper</span>()</h3>
 <p>Internal helper function.</p>
 <p>This function handles internal implementation details.</p>
 <!-- @@@internalHelper -->
@@ -63,27 +64,27 @@
 <div class="vars">
 <h2>Member Variable Documentation</h2>
 <!-- $$$addressData -->
-<h3 class="fn" translate="no" id="addressData-var"><span class="type">union</span> <span class="type">PublicClass::PrivateData::</span>(<span class="type">unnamed</span> <span class="type">union</span>) PrivateData::<span class="name">addressData</span></h3>
+<h3 class="fn internal" translate="no" id="addressData-var"><span class="type">union</span> <span class="type">PublicClass::PrivateData::</span>(<span class="type">unnamed</span> <span class="type">union</span>) PrivateData::<span class="name">addressData</span></h3>
 <p>Network address data with complex anonymous union.</p>
 <p>Similar to qhostaddress_p.h pattern with nested anonymous types.</p>
 <!-- @@@addressData -->
 <!-- $$$headerCache -->
-<h3 class="fn" translate="no" id="headerCache-var"><span class="type">struct</span> <span class="type">PublicClass::PrivateData::</span>(<span class="type">unnamed</span> <span class="type">struct</span>) PrivateData::<span class="name">headerCache</span></h3>
+<h3 class="fn internal" translate="no" id="headerCache-var"><span class="type">struct</span> <span class="type">PublicClass::PrivateData::</span>(<span class="type">unnamed</span> <span class="type">struct</span>) PrivateData::<span class="name">headerCache</span></h3>
 <p>Cached header data with anonymous struct pattern from Qt.</p>
 <p>Replicates the pattern from qnetworkrequest_p.h that causes anonymous type names with full file paths.</p>
 <!-- @@@headerCache -->
 <!-- $$$internalData -->
-<h3 class="fn" translate="no" id="internalData-var"><span class="type">int</span> PrivateData::<span class="name">internalData</span></h3>
+<h3 class="fn internal" translate="no" id="internalData-var"><span class="type">int</span> PrivateData::<span class="name">internalData</span></h3>
 <p>Internal data member.</p>
 <p>Stores internal state for the public class.</p>
 <!-- @@@internalData -->
 <!-- $$$regularPrivateMember -->
-<h3 class="fn" translate="no" id="regularPrivateMember-var"><span class="type">bool</span> PrivateData::<span class="name">regularPrivateMember</span></h3>
+<h3 class="fn internal" translate="no" id="regularPrivateMember-var"><span class="type">bool</span> PrivateData::<span class="name">regularPrivateMember</span></h3>
 <p>Regular private member.</p>
 <p>This is a regular (non-internal) private member in a private header. It should appear when showinternal is enabled, regardless of the</p>
 <!-- @@@regularPrivateMember -->
 <!-- $$$requestMetadata -->
-<h3 class="fn" translate="no" id="requestMetadata-var"><span class="type">struct</span> <span class="type">PublicClass::PrivateData::</span>(<span class="type">unnamed</span> <span class="type">struct</span>) PrivateData::<span class="name">requestMetadata</span></h3>
+<h3 class="fn internal" translate="no" id="requestMetadata-var"><span class="type">struct</span> <span class="type">PublicClass::PrivateData::</span>(<span class="type">unnamed</span> <span class="type">struct</span>) PrivateData::<span class="name">requestMetadata</span></h3>
 <p>Multiple nested anonymous structures for disambiguation.</p>
 <p>Creates complex anonymous type hierarchy to force Clang path naming.</p>
 <!-- @@@requestMetadata -->

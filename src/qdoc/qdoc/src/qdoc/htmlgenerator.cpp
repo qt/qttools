@@ -44,6 +44,9 @@ bool HtmlGenerator::s_inUnorderedList { false };
 
 static const Atom openCodeTag {Atom::FormattingLeft, ATOM_FORMATTING_TELETYPE};
 static const Atom closeCodeTag {Atom::FormattingRight, ATOM_FORMATTING_TELETYPE};
+// Template for <h3> API item headings
+static const auto headingStart = "<h3 class=\"%1\" translate=\"no\" id=\"%2\">"_L1;
+static const auto headingEnd = "</h3>\n"_L1;
 
 HtmlGenerator::HtmlGenerator(FileResolver& file_resolver) : XmlGenerator(file_resolver) {}
 
@@ -58,6 +61,19 @@ static void addLink(const QString &linkTarget, QStringView nestedStuff, QString 
     } else {
         *res += nestedStuff;
     }
+}
+
+/*!
+    Extends the `class` HTML attribute generated for \a node.
+    Returns \a classSet string extended with `internal` for
+    nodes marked internal.
+*/
+static QString getClassAttr(const Node *node, const QString &classSet)
+{
+    auto result{classSet};
+    if (node->isInternal())
+        result += " internal"_L1;
+    return result;
 }
 
 /*!
@@ -1256,7 +1272,10 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
             if (!member->isClassNode())
                 generateDetailedMember(member, aggregate, marker);
             else {
-                out() << "<h3> class ";
+                out() << "<h3";
+                if (const auto &attrs = getClassAttr(member, ""_L1); !attrs.isEmpty())
+                    out() << " class=\"%1\""_L1.arg(attrs);
+                out() << "> class ";
                 generateFullName(member, aggregate);
                 out() << "</h3>";
                 generateBrief(member, marker, aggregate);
@@ -1321,7 +1340,10 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
             if (!member->isClassNode()) {
                 generateDetailedMember(member, aggregate, marker);
             } else {
-                out() << "<h3> class ";
+                out() << "<h3";
+                if (const auto &attrs = getClassAttr(member, ""_L1); !attrs.isEmpty())
+                    out() << " class=\"%1\""_L1.arg(attrs);
+                out() << "> class ";
                 generateFullName(member, aggregate);
                 out() << "</h3>";
                 generateBrief(member, marker, aggregate);
@@ -3508,29 +3530,28 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
         if (collective.size() > 1)
             out() << "<div class=\"fngroup\">\n";
         for (const auto *sharedNode : collective) {
-            nodeRef = refForNode(sharedNode);
-            out() << R"(<h3 class="fn fngroupitem" translate="no" id=")" << nodeRef << "\">";
+            out() << headingStart.arg(getClassAttr(sharedNode, "fn fngroupitem"_L1),
+                                      refForNode(sharedNode));
             generateSynopsis(sharedNode, relative, marker, Section::Details);
             generateSourceLink(sharedNode);
-            out() << "</h3>\n";
+            out() << headingEnd;
         }
         if (collective.size() > 1)
             out() << "</div>";
         out() << '\n';
     } else {
-        nodeRef = refForNode(node);
         if (node->isEnumType(Genus::CPP) && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
-            out() << R"(<h3 class="flags" id=")" << nodeRef << "\">";
+            out() << headingStart.arg(getClassAttr(node, "flags"_L1), refForNode(node));
             generateSynopsis(etn, relative, marker, Section::Details);
             out() << "<br/>";
             generateSynopsis(etn->flagsType(), relative, marker, Section::Details);
             generateSourceLink(node);
-            out() << "</h3>\n";
+            out() << headingEnd;
         } else {
-            out() << R"(<h3 class="fn" translate="no" id=")" << nodeRef << "\">";
+            out() << headingStart.arg(getClassAttr(node, "fn"_L1), refForNode(node));
             generateSynopsis(node, relative, marker, Section::Details);
             generateSourceLink(node);
-            out() << "</h3>" << '\n';
+            out() << headingEnd;
         }
     }
 
@@ -3667,11 +3688,10 @@ void HtmlGenerator::generateQmlSummary(const NodeVector &members, const Node *re
 */
 void HtmlGenerator::emitGroupHeader(const SharedCommentNode *scn)
 {
-    const QString id = refForNode(scn);
-    out() << R"(<h3 class="fn qml-member qml-property-group" translate="no" id=")"
-          << id << R"(">)"
+    out() << headingStart.arg(getClassAttr(scn, "fn qml-member qml-property-group"_L1),
+                              refForNode(scn))
           << "<b>" << scn->name() << " group</b>"
-          << "</h3>\n";
+          << headingEnd;
 }
 
 /*!
@@ -3684,21 +3704,19 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
     generateExtractionMark(node, MemberMark);
 
     auto generateQmlProperty = [&](Node *n, bool isGroupItem = false) {
-        const QString nodeRef = refForNode(n);
         const auto cssClasses = isGroupItem ? "fn qml-member qml-property fngroupitem"_L1 : "fn qml-member qml-property"_L1;
-        out() << R"(<h3 class=")"_L1 << cssClasses << R"(" translate="no" id=")"_L1 << nodeRef << "\">"_L1;
+        out() << headingStart.arg(getClassAttr(n, cssClasses), refForNode(n));
         generateQmlItem(n, relative, marker, false);
         generateSourceLink(n);
-        out() << "</h3>\n"_L1;
+        out() << headingEnd;
     };
 
     auto generateQmlMethod = [&](Node *n, bool isGroupItem = false) {
-        const QString nodeRef = refForNode(n);
         const auto cssClasses = isGroupItem ? "fn qml-member qml-method fngroupitem"_L1 : "fn qml-member qml-method"_L1;
-        out() << R"(<h3 class=")"_L1 << cssClasses << R"(" translate="no" id=")"_L1 << nodeRef << "\">"_L1;
+        out() << headingStart.arg(getClassAttr(n, cssClasses), refForNode(n));
         generateSynopsis(n, relative, marker, Section::Details, false);
         generateSourceLink(n);
-        out() << "</h3>\n"_L1;
+        out() << headingEnd;
     };
 
     if (node->isSharedCommentNode()) {
