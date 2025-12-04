@@ -2728,7 +2728,7 @@
     Use the \\cmaketargetitem command to override the \e {item} part of the
     CMake \c{target_link_libraries} information that's added to classes and
     namespaces. The command must be used in conjunction with the
-    \l{module-command}{\\module} and \l{cmakecomponent}{\\cmakecomponent}}
+    \l{module-command}{\\module} and \l{cmakecomponent}{\\cmakecomponent}
     commands. For example:
 
     \badcode *
@@ -2798,7 +2798,7 @@
     Use the \\qtcmaketargetitem command to override the \e {item} part of the
     CMake \c{target_link_libraries} information that's added to classes and
     namespaces. The command must be used in conjunction with the
-    \l{module-command}{\\module} and \l{qtcmakepackage}{\\qtcmakepackage}}
+    \l{module-command}{\\module} and \l{qtcmakepackage}{\\qtcmakepackage}
     commands.
 
     \e{See also} \l{module-command}{\\module} and
