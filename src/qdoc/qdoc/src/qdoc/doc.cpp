@@ -275,24 +275,40 @@ bool Doc::hasTargets() const
 
 const QList<Atom *> &Doc::tableOfContents() const
 {
+    if (m_priv == nullptr) {
+        static const QList<Atom *> empty;
+        return empty;
+    }
     m_priv->constructExtra();
     return m_priv->extra->m_tableOfContents;
 }
 
 const QList<int> &Doc::tableOfContentsLevels() const
 {
+    if (m_priv == nullptr) {
+        static const QList<int> empty;
+        return empty;
+    }
     m_priv->constructExtra();
     return m_priv->extra->m_tableOfContentsLevels;
 }
 
 const QList<Atom *> &Doc::keywords() const
 {
+    if (m_priv == nullptr) {
+        static const QList<Atom *> empty;
+        return empty;
+    }
     m_priv->constructExtra();
     return m_priv->extra->m_keywords;
 }
 
 const QList<Atom *> &Doc::targets() const
 {
+    if (m_priv == nullptr) {
+        static const QList<Atom *> empty;
+        return empty;
+    }
     m_priv->constructExtra();
     return m_priv->extra->m_targets;
 }

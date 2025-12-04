@@ -258,6 +258,8 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     }
 
     auto appendDocKeywords = [&](const Node *n) {
+        if (n->doc().isEmpty())
+            return;
         for (const auto *kw : n->doc().keywords()) {
                 if (!kw->string().isEmpty()) {
                     QStringList ref_parts = m_gen->fullDocumentLocation(n).split('#'_L1);
@@ -660,6 +662,8 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                                 writer.writeEndElement(); // section
 
                             const Node *page = m_qdb->findNodeForTarget(atom->string(), nullptr);
+                            if (page == nullptr)
+                                break;
                             writer.writeStartElement("section");
                             QString indexPath = m_gen->fullDocumentLocation(page);
                             writer.writeAttribute("ref", indexPath);
@@ -682,8 +686,8 @@ void HelpProjectWriter::generateProject(HelpProject &project)
         } else {
 
             writer.writeStartElement("section");
-            QString indexPath = m_gen->fullDocumentLocation(
-                    m_qdb->findNodeForTarget(subproject.m_indexTitle, nullptr));
+            const Node *indexNode = m_qdb->findNodeForTarget(subproject.m_indexTitle, nullptr);
+            QString indexPath = m_gen->fullDocumentLocation(indexNode);
             if (indexPath.isEmpty() && !subproject.m_indexTitle.isEmpty())
                 Config::instance().location().warning(
                         "Failed to find %1.indexTitle '%2'"_L1.arg(subproject.m_prefix, subproject.m_indexTitle));
