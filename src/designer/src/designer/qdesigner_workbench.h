@@ -86,6 +86,7 @@ public slots:
     void removeFormWindow(QDesignerFormWindow *formWindow);
     void bringAllToFront();
     void toggleFormMinimizationState();
+    void requestActivate();
 
 private slots:
     void switchToNeutralMode();
