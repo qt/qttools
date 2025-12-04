@@ -10,6 +10,15 @@ if (MINGW)
     set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY _qt_skip_separate_debug_info ON)
 endif()
 
+# Template generator support (experimental)
+option(QT_QDOC_ENABLE_TEMPLATE_GENERATOR "Enable experimental template-based generator" OFF)
+
+if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../cmake")
+    find_package(nlohmann_json REQUIRED)
+    find_package(Inja REQUIRED)
+endif()
+
 
 #####################################################################
 ## qdoc Tool:
@@ -110,6 +119,18 @@ qt_internal_add_tool(${target_name}
         # A re-export of (LLVM|CLANG)_VERSION_MAJOR done in WrapLibClang.cmake
         LIBCLANG_VERSION_MAJOR=${QT_LIB_CLANG_VERSION_MAJOR}
 )
+
+# Template generator dependencies
+if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
+    qt_internal_extend_target(${target_name}
+        LIBRARIES
+            Inja::inja
+            nlohmann_json::nlohmann_json
+        DEFINES
+            QDOC_TEMPLATE_GENERATOR_ENABLED
+    )
+endif()
+
 qt_internal_return_unless_building_tools()
 
 # If libclangTooling.a is not built with -fPIE enabled we cannot link it to qdoc.
