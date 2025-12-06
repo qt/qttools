@@ -54,7 +54,7 @@
     \snippet calculatorbuilder/main.cpp 1
 
     By including the user interface in the example's resources, we ensure
-    that it will be present when the example is run. The \l{QUiLoader::}{QUiLoader().load()}
+    that it will be present when the example is run. The \l{QUiLoader::load()}
     function takes the user interface description contained in the file
     and constructs the form widget as a child widget of the \c{CalculatorForm}.
 
