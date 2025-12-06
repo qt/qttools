@@ -34,7 +34,7 @@ imagedirs               = images
 # Add thumbnails for YouTube links
 {HTML.extraimages,DocBook.extraimages,qhp.QtDoc.extraFiles} += images/xNIz78IPBu0.jpg
 
-depends                 += qtdoc qtqml qtquick qtcore qtgui qmake qtcmake
+depends                 += qtdoc qtqml qtquick qtcore qtgui qtwidgets qmake qtcmake
 
 navigation.landingpage = "Qt Linguist Manual"
 navigation.toctitles = \
