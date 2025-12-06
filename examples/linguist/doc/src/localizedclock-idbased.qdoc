@@ -219,7 +219,7 @@
     time zone.
     Below is an explanation of the relevant pieces of code:
 
-    \b{Define the window and set its title using \l qsTrId()
+    \b{Define the window and set its title using \l{Qt::}{qsTrId()}
     for ID-based translation.} The text
     for the source language is specified using the meta string
     notation \c {//%} (see \l {Text ID-based translations}).
@@ -239,8 +239,8 @@
     title: qsTrId("Main-Digital-Clock")
     \endqml
 
-    \b{Show the number of seconds using \l qsTrId() with plural support.}
-    Again here the text in the source language is specified using
+    \b{Show the number of seconds using \l{Qt::}{qsTrId()} with plural
+    support.} Again here the text in the source language is specified using
     the \c{//%} meta string.
     The plural form is enabled by using the special notation "%n"
     in the source text in the meta string (see \l{Handle Plural Forms}).
@@ -265,9 +265,9 @@
     text: qsTrId("timezone") + TimeZoneManager.timeZone;
     \endqml
 
-    \b{A Button to open the \l {Time Zone Dialog}.} The text on the
-    button is specified using \l qsTrId() for ID-based translation.
-    In this case, the source text is not defined by meta
+    \b{A Button to open the \l{Time Zone Dialog}.} The text on the
+    button is specified using \l{Qt::}{qsTrId()} for ID-based
+    translation. In this case, the source text is not defined by meta
     strings anymore since this is a reuse of the ID "timezonelabel",
     which was previously used in the dialog.ui document
     (see \l{Time Zone Dialog}). In ID-based translation, it
