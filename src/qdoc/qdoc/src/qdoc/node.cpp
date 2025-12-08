@@ -132,6 +132,18 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
     return false;
 }
 
+bool Node::nodeNameOverloadLessThan(const Node *n1, const Node *n2)
+{
+    if (n1->isFunction() && n2->isFunction()) {
+        const auto *f1 = static_cast<const FunctionNode *>(n1);
+        const auto *f2 = static_cast<const FunctionNode *>(n2);
+
+        LT_RETURN_IF_NOT_EQUAL(f1->overloadNumber(), f2->overloadNumber());
+    }
+
+    return nodeNameLessThan(n1, n2);
+}
+
 /*!
     Returns \c true if node \a n1 is less than node \a n2 when comparing
     the sort keys, defined with

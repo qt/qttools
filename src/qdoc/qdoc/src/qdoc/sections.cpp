@@ -670,8 +670,10 @@ void Sections::buildStdRefPageSections()
  */
 void Sections::distributeNodeInSummaryVector(SectionVector &sv, Node *n)
 {
-    if (n->isSharedCommentNode())
+    if (n->isSharedCommentNode()) {
+        static_cast<SharedCommentNode *>(n)->sort();
         return;
+    }
     if (n->isFunction()) {
         auto *fn = static_cast<FunctionNode *>(n);
         if (fn->isRelatedNonmember()) {

@@ -37,7 +37,7 @@ public:
         node->setSharedCommentNode(this);
         setGenus(node->genus());
     }
-    void sort() { std::sort(m_collective.begin(), m_collective.end(), Node::nodeNameLessThan); }
+    void sort() { std::sort(m_collective.begin(), m_collective.end(), Node::nodeNameOverloadLessThan); }
     [[nodiscard]] const QList<Node *> &collective() const { return m_collective; }
     void setOverloadFlags();
     void setRelatedNonmember(bool value) override;

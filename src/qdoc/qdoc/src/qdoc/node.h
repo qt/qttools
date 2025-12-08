@@ -279,6 +279,7 @@ public:
     static QString nodeTypeString(NodeType t);
     [[nodiscard]] static bool nodeLessThan(const Node *first, const Node *second);
     [[nodiscard]] static bool nodeNameLessThan(const Node *first, const Node *second);
+    [[nodiscard]] static bool nodeNameOverloadLessThan(const Node *first, const Node *second);
     [[nodiscard]] static bool nodeSortKeyOrNameLessThan(const Node *n1, const Node *n2);
 
     [[nodiscard]] NodeContext createContext() const;
