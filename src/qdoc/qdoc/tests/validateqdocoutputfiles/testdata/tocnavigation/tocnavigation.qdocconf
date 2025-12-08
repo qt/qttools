@@ -24,6 +24,19 @@ DocBook.nosubdirs         = true
 DocBook.outputsubdir      = docbook
 DocBook.usedocbookextensions = true
 
+# qhp
+qhp.projects = OutputFromQDocFiles
+qhp.OutputFromQDocFiles.file           = outputfromqdocfiles.qhp
+qhp.OutputFromQDocFiles.namespace      = org.qt-project.output.001
+qhp.OutputFromQDocFiles.virtualFolder  = output
+qhp.OutputFromQDocFiles.indexTitle     = TOC
+qhp.OutputFromQDocFiles.indexRoot      =
+
+qhp.OutputFromQDocFiles.subprojects    = manual
+qhp.OutputFromQDocFiles.subprojects.manual.title       = Manual
+qhp.OutputFromQDocFiles.subprojects.manual.indexTitle  = TOC
+qhp.OutputFromQDocFiles.subprojects.manual.type        = manual
+
 # images
 imagedirs = ./src/images
 
