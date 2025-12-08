@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+    <namespace>org.qt-project.output.001</namespace>
+    <virtualFolder>output</virtualFolder>
+    <metaData name="version" value=""/>
+    <filterSection>
+        <toc>
+            <section ref="toc-test.html" title="TOC">
+                <section ref="qdoctests-qdocfileoutput.html" title="QDoc Testing">
+                    <section ref="qdoctests-qdocfileoutput-exhaustive.html" title="Exhaustive testing of QDoc commands"/>
+                    <section ref="" title="QDoc Linking Test">
+                        <section ref="" title="Link targets"/>
+                    </section>
+                    <section ref="crash.html" title="Random page"/>
+                    <section ref="toc.html" title="Table of Contents"/>
+                    <section ref="a.html" title="Page A"/>
+                    <section ref="c.html" title="Page C"/>
+                </section>
+                <section ref="group2.html" title="Group2">
+                    <section ref="e.html" title="Page E"/>
+                    <section ref="d.html" title="Page D"/>
+                </section>
+            </section>
+        </toc>
+        <keywords>
+            <keyword name="Document Navigation" id="Document Navigation" ref="qdoctests-qdocmanuallikefileoutput.html"/>
+            <keyword name="Exhaustive testing of QDoc commands" id="Exhaustive testing of QDoc commands" ref="qdoctests-qdocfileoutput-exhaustive.html"/>
+            <keyword name="Group2" id="Group2" ref="group2.html"/>
+            <keyword name="Page A" id="Page A" ref="a.html"/>
+            <keyword name="Page C" id="Page C" ref="c.html"/>
+            <keyword name="Page D" id="Page D" ref="d.html"/>
+            <keyword name="Page E" id="Page E" ref="e.html"/>
+            <keyword name="QDoc Linking Test" id="QDoc Linking Test" ref="qdoctests-qdocfileoutput-linking.html"/>
+            <keyword name="TOC" id="TOC" ref="toc-test.html"/>
+            <keyword name="Table of Contents" id="Table of Contents" ref="toc.html"/>
+            <keyword name="Testing QDoc output from .qdoc files" id="Testing QDoc output from .qdoc files" ref="qdoctests-qdocfileoutput.html"/>
+            <keyword name="Testing QDoc's link command" id="Testing QDoc's link command" ref="qdoctests-qdocfileoutput-linking.html"/>
+        </keywords>
+        <files>
+            <file>a.html</file>
+            <file>c.html</file>
+            <file>crash.html</file>
+            <file>d.html</file>
+            <file>e.html</file>
+            <file>group2.html</file>
+            <file>images/01.png</file>
+            <file>images/leonardo-da-vinci.png</file>
+            <file>qdoctests-qdocfileoutput-exhaustive.html</file>
+            <file>qdoctests-qdocfileoutput-linking.html</file>
+            <file>qdoctests-qdocfileoutput.html</file>
+            <file>qdoctests-qdocmanuallikefileoutput.html</file>
+            <file>toc-test.html</file>
+            <file>toc.html</file>
+        </files>
+    </filterSection>
+</QtHelpProject>

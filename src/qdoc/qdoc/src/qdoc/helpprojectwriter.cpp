@@ -653,6 +653,33 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                             sectionStack.top() += 1;
                         }
                         break;
+                    case Atom::AnnotatedList:
+                    case Atom::GeneratedList:
+                        if (const auto *cn = m_qdb->getCollectionNode(atom->string(), NodeType::Group)) {
+                            const auto sortOrder{Generator::sortOrder(atom->strings().last())};
+                            NodeList members{cn->members()};
+                            // Drop non-page nodes and index nodes so that we do not go outside of
+                            // this documentation set.
+                            members.erase(std::remove_if(members.begin(), members.end(),
+                                    [](const Node *n) {
+                                        return n->isIndexNode() || !n->isPageNode() || n->isExternalPage();
+                                    }), members.end());
+                            if (members.isEmpty())
+                                break;
+
+                            if (sortOrder == Qt::DescendingOrder)
+                                std::sort(members.rbegin(), members.rend(), Node::nodeSortKeyOrNameLessThan);
+                            else
+                                std::sort(members.begin(), members.end(), Node::nodeSortKeyOrNameLessThan);
+
+                            for (const auto *m : members) {
+                                writer.writeStartElement("section");
+                                writer.writeAttribute("ref", m_gen->fullDocumentLocation(m));
+                                writer.writeAttribute("title", m->title());
+                                writer.writeEndElement();
+                            }
+                        }
+                        break;
                     default:;
                     }
 

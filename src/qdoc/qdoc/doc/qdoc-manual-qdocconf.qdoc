@@ -1726,13 +1726,40 @@
     \badcode
     qhp.QtCreator.subprojects = manual
     qhp.QtCreator.subprojects.manual.title = Qt Creator Manual
-    qhp.QtCreator.subprojects.manual.indexTitle = Qt Creator Manual
+    qhp.QtCreator.subprojects.manual.indexTitle = All topics
     qhp.QtCreator.subprojects.manual.type = manual
     \endcode
 
-    In this example, the page entitled "Qt Creator Manual" contains a nested
+    In this example, the page entitled "All topics" contains a nested
     list of links to pages in the documentation which is duplicated in
     Qt Assistant's Contents tab.
+
+    An example of such a list structure:
+
+    \badcode *
+    /\1!
+        \page qtcreator-toc.html
+        \title All topics
+
+        \list
+            \li \l {Installation}
+            \li \l {Getting started}
+            \list
+                \li \l {Configuring Qt Creator}
+                \li \l {Building and running an example}
+            \endlist
+            \li \l {Overview}
+            \li \l {Tutorials}
+                \generatelist tutorials
+            ...
+        \endlist
+    \1/
+    \endcode
+
+    Above, the \e {Getting started} topic has two pages as sub-topics.
+    The \e {Tutorials} topic is a \qdoccmd {group} page, and a \qdoccmd
+    {generatelist} command is used for listing individual tutorial pages
+    (members of \c tutorials group) as its sub-topics.
 */
 
 /*!
