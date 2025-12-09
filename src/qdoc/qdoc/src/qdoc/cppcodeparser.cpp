@@ -464,9 +464,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         if (!node->isInternal())
             node->setStatus(Node::Preliminary);
     } else if (command == COMMAND_INTERNAL) {
-        const InclusionPolicy policy = Config::instance().createInclusionPolicy();
-        if (!InclusionFilter::processInternalDocs(policy))
-            node->markInternal();
+        node->markInternal();
     } else if (command == COMMAND_REENTRANT) {
         node->setThreadSafeness(Node::Reentrant);
     } else if (command == COMMAND_SINCE) {

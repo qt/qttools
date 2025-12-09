@@ -34,7 +34,6 @@ public:
         m_subtitle = subtitle;
         return true;
     }
-    [[nodiscard]] bool hasDocumentedChildren() const;
 
 private:
     QString m_title {};

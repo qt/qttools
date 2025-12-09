@@ -896,6 +896,19 @@ void Node::setLocation(const Location &t)
 }
 
 /*!
+    Returns \c true if this node is considered to be
+    part of the API as per the InclusionPolicy retrieved
+    from configuration.
+*/
+bool Node::isInAPI() const
+{
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    bool inPolicy = InclusionFilter::isIncluded(policy, this->createContext());
+
+    return inPolicy && !isDontDocument() && hasDoc();
+}
+
+/*!
   Returns \c true if this node is documented, or it represents
   a documented node read from the index ('had doc'), or this
   node is sharing a non-empty doc with other nodes.

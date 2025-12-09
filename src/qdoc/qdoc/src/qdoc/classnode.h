@@ -48,7 +48,7 @@ public:
     PropertyNode *findPropertyNode(const QString &name);
     FunctionNode *findOverriddenFunction(const FunctionNode *fn);
     PropertyNode *findOverriddenProperty(const FunctionNode *fn);
-    [[nodiscard]] bool docMustBeGenerated() const override;
+    [[nodiscard]] bool docMustBeGenerated() const override { return isInAPI(); }
 
     void insertQmlNativeType(QmlTypeNode *qmlTypeNode) { m_nativeTypeForQml << qmlTypeNode; }
     bool isQmlNativeType() { return !m_nativeTypeForQml.empty(); }

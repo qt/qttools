@@ -29,7 +29,6 @@ public:
     void includeChild(Node *child);
     void setWhereDocumented(const QString &t) { m_whereDocumented = t; }
     [[nodiscard]] bool isDocumentedHere() const;
-    [[nodiscard]] bool hasDocumentedChildren() const;
     void reportDocumentedChildrenInUndocumentedNamespace() const;
     [[nodiscard]] bool docMustBeGenerated() const override;
     void setDocNode(NamespaceNode *ns) { m_docNode = ns; }

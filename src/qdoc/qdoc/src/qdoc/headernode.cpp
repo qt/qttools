@@ -20,22 +20,15 @@ QT_BEGIN_NAMESPACE
 }
 
 /*!
-  Returns true if this header file node is not private and
-  contains at least one public child node with documentation.
- */
+    Returns \c true if QDoc must generate documentation for this
+    header file node; that is, it matches the inclusion policy
+    and is documented, OR has children that match that same criteria.
+*/
 bool HeaderNode::docMustBeGenerated() const
 {
     if (isInAPI())
         return true;
-    return hasDocumentedChildren();
-}
 
-/*!
-  Returns true if this header file node contains at least one
-  child that has documentation and is not private or internal.
- */
-bool HeaderNode::hasDocumentedChildren() const
-{
     return std::any_of(m_children.cbegin(), m_children.cend(),
                        [](Node *child) { return child->isInAPI(); });
 }

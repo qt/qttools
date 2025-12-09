@@ -4,3 +4,4 @@
 # Path-Format: relative
 #
 
+src/publicclass.h:46: [PrivateHeaders] (qdoc) warning: Documentation for struct 'TestStruct' has no \inmodule command; using project name by default: PrivateHeaders
