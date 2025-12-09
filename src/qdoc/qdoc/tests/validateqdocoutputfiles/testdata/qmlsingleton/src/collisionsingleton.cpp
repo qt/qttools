@@ -5,10 +5,11 @@
 
 /*!
     \class MySingleton2
+    \inmodule TestModule
     \brief A C++ class with QML_SINGLETON to test name collision handling.
 
     This class has QML_SINGLETON and should be marked as singleton when
-    properly linked via \nativetype.
+    properly linked via \\nativetype.
 */
 
 MySingleton2::MySingleton2(QObject *parent)
@@ -22,7 +23,14 @@ QString MySingleton2::getCollisionMessage() const
 }
 
 /*!
+    \namespace TestNamespace
+    \inmodule TestModule
+    \brief Test namespace.
+*/
+
+/*!
     \class TestNamespace::MySingleton2
+    \inmodule TestModule
     \brief A different C++ class with same QML name but no QML_SINGLETON.
 
     This class should NOT be marked as singleton, even though it has the

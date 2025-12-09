@@ -2,33 +2,33 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="QDoc test case for QML singleton documentation" version="" project="QmlSingletonTest">
     <namespace name="" status="active" access="public" module="qmlsingletontest">
-        <namespace name="TestNamespace" href="testnamespace-sub-qmlsingletontest.html" status="active" access="public" location="collisionsingleton.h">
-            <class name="MySingleton2" fullname="TestNamespace::MySingleton2" href="testnamespace-mysingleton2.html" status="active" access="public" location="collisionsingleton.h" documented="true" bases="QObject" module="QmlSingletonTest" brief="A different C++ class with same QML name but no QML_SINGLETON"/>
+        <namespace name="TestNamespace" href="testnamespace.html" status="active" access="public" location="collisionsingleton.h" documented="true" module="TestModule" brief="Test namespace">
+            <class name="MySingleton2" fullname="TestNamespace::MySingleton2" href="testnamespace-mysingleton2.html" status="active" access="public" location="collisionsingleton.h" documented="true" bases="QObject" module="TestModule" brief="A different C++ class with same QML name but no QML_SINGLETON"/>
         </namespace>
+        <class name="GhostSingleton" href="ghostsingleton.html" status="active" access="public" location="ghostsingleton.h" documented="true" bases="QObject" module="TestModule" brief="A C++ class with QML_SINGLETON but no \qmltype documentation"/>
         <class name="MySingleton" href="mysingleton.html" status="active" access="public" location="singleton.h" documented="true" bases="QObject" module="TestModule" brief="A C++ class for a QML singleton type">
             <function name="MySingleton" fullname="MySingleton::MySingleton" href="mysingleton.html#MySingleton" status="active" access="public" location="singleton.h" documented="true" meta="constructor" explicit="true" signature="MySingleton(QObject *parent)">
                 <parameter type="QObject *" name="parent" default="nullptr"/>
             </function>
             <function name="getMessage" fullname="MySingleton::getMessage" href="mysingleton.html#getMessage" status="active" access="public" location="singleton.h" documented="true" meta="plain" const="true" type="QString" signature="QString getMessage() const"/>
         </class>
-        <class name="MySingleton2" href="mysingleton2.html" status="active" access="public" location="collisionsingleton.h" documented="true" bases="QObject" module="QmlSingletonTest" brief="A C++ class with QML_SINGLETON to test name collision handling"/>
-        <qmlclass name="ExplicitSingleton" href="qml-explicitsingleton.html" status="active" access="public" location="explicitsingleton.qdoc" since="QmlSingletonTest 1.0" documented="true" singleton="true" brief="A QML singleton type using explicit \qmlsingletontype command">
-            <function name="doSomething" fullname="ExplicitSingleton::doSomething" href="qml-explicitsingleton.html#doSomething-method" status="active" access="public" location="explicitsingleton.qdoc" documented="true" meta="qmlmethod" type="void"/>
-            <qmlproperty name="enabled" fullname="ExplicitSingleton::enabled" href="qml-explicitsingleton.html#enabled-prop" status="active" access="public" location="explicitsingleton.qdoc" documented="true" type="bool" attached="false" writable="false"/>
+        <class name="MySingleton2" href="mysingleton2.html" status="active" access="public" location="collisionsingleton.h" documented="true" bases="QObject" module="TestModule" brief="A C++ class with QML_SINGLETON to test name collision handling"/>
+        <qmlclass name="ExplicitSingleton" qml-module-name="QmlSingletonTest" fullname="QmlSingletonTest.ExplicitSingleton" href="qml-qmlsingletontest-explicitsingleton.html" status="active" access="public" location="explicitsingleton.qdoc" since="QmlSingletonTest 1.0" documented="true" singleton="true" brief="A QML singleton type using explicit \qmlsingletontype command">
+            <function name="doSomething" fullname="QmlSingletonTest.ExplicitSingleton.doSomething" href="qml-qmlsingletontest-explicitsingleton.html#doSomething-method" status="active" access="public" location="explicitsingleton.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <qmlproperty name="enabled" fullname="QmlSingletonTest.ExplicitSingleton.enabled" href="qml-qmlsingletontest-explicitsingleton.html#enabled-prop" status="active" access="public" location="explicitsingleton.qdoc" documented="true" type="bool" attached="false" writable="false"/>
         </qmlclass>
-        <qmlclass name="MySingleton" href="qml-mysingleton.html" status="active" access="public" documented="true" singleton="true" brief="A QML singleton type using the QML_SINGLETON macro"/>
-        <qmlclass name="MySingleton2" href="qml-mysingleton2.html" status="active" access="public" location="collisiontest.qdoc" since="QmlSingletonTest 1.0" documented="true" singleton="true" brief="A QML singleton type that tests name collision detection"/>
-        <qmlclass name="PragmaSingleton" qml-base-type="QtObject" href="qml-pragmasingleton.html" status="active" access="public" location="PragmaSingleton.qml" since="QmlSingletonTest 1.0" documented="true" singleton="true" brief="A QML singleton type using pragma singleton">
-            <function name="getInfo" fullname="PragmaSingleton::getInfo" href="qml-pragmasingleton.html#getInfo-method" status="active" access="public" location="PragmaSingleton.qml" documented="true" meta="qmlmethod" type="string"/>
-            <qmlproperty name="version" fullname="PragmaSingleton::version" href="qml-pragmasingleton.html#version-prop" status="active" access="public" location="PragmaSingleton.qml" documented="true" type="string" attached="false" writable="false"/>
+        <qmlclass name="MySingleton" qml-module-name="Test" fullname="Test.MySingleton" href="qml-test-mysingleton.html" status="active" access="public" documented="true" singleton="true" brief="A QML singleton type using the QML_SINGLETON macro"/>
+        <qmlclass name="MySingleton2" qml-module-name="Test" fullname="Test.MySingleton2" href="qml-test-mysingleton2.html" status="active" access="public" location="collisiontest.qdoc" since="QmlSingletonTest 1.0" documented="true" singleton="true" brief="A QML singleton type that tests name collision detection"/>
+        <qmlclass name="PragmaSingleton" qml-module-name="QmlSingletonTest" qml-base-type="QtObject" fullname="QmlSingletonTest.PragmaSingleton" href="qml-qmlsingletontest-pragmasingleton.html" status="active" access="public" location="PragmaSingleton.qml" since="QmlSingletonTest 1.0" documented="true" singleton="true" brief="A QML singleton type using pragma singleton">
+            <function name="getInfo" fullname="QmlSingletonTest.PragmaSingleton.getInfo" href="qml-qmlsingletontest-pragmasingleton.html#getInfo-method" status="active" access="public" location="PragmaSingleton.qml" documented="true" meta="qmlmethod" type="string"/>
+            <qmlproperty name="version" fullname="QmlSingletonTest.PragmaSingleton.version" href="qml-qmlsingletontest-pragmasingleton.html#version-prop" status="active" access="public" location="PragmaSingleton.qml" documented="true" type="string" attached="false" writable="false"/>
         </qmlclass>
-        <qmlclass name="RegularType" href="qml-regulartype.html" status="active" access="public" location="regulartype.qdoc" since="QmlSingletonTest 1.0" documented="true" brief="A regular QML type for comparison">
-            <function name="performAction" fullname="RegularType::performAction" href="qml-regulartype.html#performAction-method" status="active" access="public" location="regulartype.qdoc" documented="true" meta="qmlmethod" type="void"/>
-            <qmlproperty name="name" fullname="RegularType::name" href="qml-regulartype.html#name-prop" status="active" access="public" location="regulartype.qdoc" documented="true" type="string" attached="false" writable="true"/>
+        <qmlclass name="RegularType" qml-module-name="QmlSingletonTest" fullname="QmlSingletonTest.RegularType" href="qml-qmlsingletontest-regulartype.html" status="active" access="public" location="regulartype.qdoc" since="QmlSingletonTest 1.0" documented="true" brief="A regular QML type for comparison">
+            <function name="performAction" fullname="QmlSingletonTest.RegularType.performAction" href="qml-qmlsingletontest-regulartype.html#performAction-method" status="active" access="public" location="regulartype.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <qmlproperty name="name" fullname="QmlSingletonTest.RegularType.name" href="qml-qmlsingletontest-regulartype.html#name-prop" status="active" access="public" location="regulartype.qdoc" documented="true" type="string" attached="false" writable="true"/>
         </qmlclass>
-        <module name="QmlSingletonTest" href="qmlsingletontest-module.html" status="internal" seen="false" title=""/>
         <module name="TestModule" href="testmodule-module.html" status="active" documented="true" seen="true" title="" brief="Just another test module"/>
-        <qmlmodule name="QmlSingletonTest" href="qmlsingletontest-qmlmodule.html" status="internal" seen="false" title=""/>
-        <qmlmodule name="Test" href="test-qmlmodule.html" status="internal" seen="false" title=""/>
+        <qmlmodule name="QmlSingletonTest" qml-module-name="QmlSingletonTest" qml-module-version="1.0" href="qmlsingletontest-qmlmodule.html" status="active" location="qmlsingletontest-module.qdoc" documented="true" seen="true" title="" brief="Test module for QML singleton documentation"/>
+        <qmlmodule name="Test" qml-module-name="Test" href="test-qmlmodule.html" status="active" location="qmlsingletontest-module.qdoc" documented="true" seen="true" title=""/>
     </namespace>
 </INDEX>
