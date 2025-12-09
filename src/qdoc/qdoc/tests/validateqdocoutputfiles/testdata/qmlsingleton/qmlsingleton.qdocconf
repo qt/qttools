@@ -1,5 +1,6 @@
 locationinfo = false
 warninglimit.enabled = true
+warninglimit = 0
 
 project = QmlSingletonTest
 description = QDoc test case for QML singleton documentation

@@ -21,7 +21,7 @@
 */
 
 /*!
-    Constructor for MySingleton.
+    Constructor for MySingleton using \a parent.
 */
 MySingleton::MySingleton(QObject *parent)
     : QObject(parent), m_message("Hello from singleton!")

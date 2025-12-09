@@ -6,11 +6,6 @@ pragma singleton
 import QtQuick 2.0
 
 /*!
-    \qmlmodule QmlSingletonTest 1.0
-    \brief Test module for QML singleton documentation.
-*/
-
-/*!
     \qmltype PragmaSingleton
     \inqmlmodule QmlSingletonTest
     \since QmlSingletonTest 1.0

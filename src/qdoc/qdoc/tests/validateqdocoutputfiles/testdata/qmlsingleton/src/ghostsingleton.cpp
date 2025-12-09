@@ -5,7 +5,8 @@
 
 /*!
     \class GhostSingleton
-    \brief A C++ class with QML_SINGLETON but no \qmltype documentation.
+    \inmodule TestModule
+    \brief A C++ class with QML_SINGLETON but no \\qmltype documentation.
 
     This class should NOT generate any QML documentation pages or index entries.
     It exists purely to test that QML_SINGLETON detection doesn't create "ghost"
