@@ -93,39 +93,36 @@ TEST_CASE("NodeContext toFlags() behavior", "[NodeContext]")
 
         auto flags = context.toFlags();
         REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
-        REQUIRE((flags & InclusionFlag::Private) != InclusionFlag::Private);
+        REQUIRE((flags & InclusionFlag::PrivateFunction) != InclusionFlag::PrivateFunction);
     }
 
-    SECTION("Private function node returns correct flags")
+    SECTION("Private function node returns correct flag")
     {
         NodeContext context;
         context.type = NodeType::Function;
         context.isPrivate = true;
 
         auto flags = context.toFlags();
-        REQUIRE((flags & InclusionFlag::Private) == InclusionFlag::Private);
         REQUIRE((flags & InclusionFlag::PrivateFunction) == InclusionFlag::PrivateFunction);
     }
 
-    SECTION("Private class node returns correct flags")
+    SECTION("Private class node returns correct flag")
     {
         NodeContext context;
         context.type = NodeType::Class;
         context.isPrivate = true;
 
         auto flags = context.toFlags();
-        REQUIRE((flags & InclusionFlag::Private) == InclusionFlag::Private);
         REQUIRE((flags & InclusionFlag::PrivateType) == InclusionFlag::PrivateType);
     }
 
-    SECTION("Private variable node returns correct flags")
+    SECTION("Private variable node returns correct flag")
     {
         NodeContext context;
         context.type = NodeType::Variable;
         context.isPrivate = true;
 
         auto flags = context.toFlags();
-        REQUIRE((flags & InclusionFlag::Private) == InclusionFlag::Private);
         REQUIRE((flags & InclusionFlag::PrivateVariable) == InclusionFlag::PrivateVariable);
     }
 
@@ -137,7 +134,6 @@ TEST_CASE("NodeContext toFlags() behavior", "[NodeContext]")
         context.isInternal = true;
 
         auto flags = context.toFlags();
-        REQUIRE((flags & InclusionFlag::Private) == InclusionFlag::Private);
         REQUIRE((flags & InclusionFlag::PrivateFunction) == InclusionFlag::PrivateFunction);
         REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
     }
@@ -150,7 +146,6 @@ TEST_CASE("NodeContext toFlags() behavior", "[NodeContext]")
         context.isInternal = true;
 
         auto flags = context.toFlags();
-        REQUIRE((flags & InclusionFlag::Private) == InclusionFlag::Private);
         REQUIRE((flags & InclusionFlag::PrivateType) == InclusionFlag::PrivateType);
         REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
     }
@@ -164,7 +159,6 @@ TEST_CASE("NodeContext toFlags() behavior", "[NodeContext]")
 
         auto flags = context.toFlags();
         REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
-        REQUIRE((flags & InclusionFlag::Private) != InclusionFlag::Private);
         REQUIRE((flags & InclusionFlag::PrivateType) != InclusionFlag::PrivateType);
     }
 }
@@ -174,7 +168,6 @@ TEST_CASE("InclusionPolicy basic functionality", "[InclusionPolicy]")
     SECTION("Default InclusionPolicy")
     {
         InclusionPolicy policy;
-        REQUIRE(policy.includePrivate == false);
         REQUIRE(policy.includePrivateFunction == false);
         REQUIRE(policy.includePrivateType == false);
         REQUIRE(policy.includePrivateVariable == false);
@@ -184,13 +177,11 @@ TEST_CASE("InclusionPolicy basic functionality", "[InclusionPolicy]")
     SECTION("InclusionPolicy with custom values")
     {
         InclusionPolicy policy;
-        policy.includePrivate = true;
         policy.includePrivateFunction = true;
         policy.includePrivateType = true;
         policy.includePrivateVariable = true;
         policy.showInternal = true;
 
-        REQUIRE(policy.includePrivate == true);
         REQUIRE(policy.includePrivateFunction == true);
         REQUIRE(policy.includePrivateType == true);
         REQUIRE(policy.includePrivateVariable == true);
@@ -204,29 +195,24 @@ TEST_CASE("InclusionPolicy basic functionality", "[InclusionPolicy]")
 
         auto flags = policy.toFlags();
         REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
-        REQUIRE((flags & InclusionFlag::Private) != InclusionFlag::Private);
     }
 
     SECTION("InclusionPolicy toFlags() without showInternal")
     {
         InclusionPolicy policy;
-        policy.includePrivate = true;
         policy.showInternal = false;
 
         auto flags = policy.toFlags();
-        REQUIRE((flags & InclusionFlag::Private) == InclusionFlag::Private);
         REQUIRE((flags & InclusionFlag::Internal) != InclusionFlag::Internal);
     }
 
     SECTION("InclusionPolicy toFlags() with both private and internal")
     {
         InclusionPolicy policy;
-        policy.includePrivate = true;
         policy.includePrivateFunction = true;
         policy.showInternal = true;
 
         auto flags = policy.toFlags();
-        REQUIRE((flags & InclusionFlag::Private) == InclusionFlag::Private);
         REQUIRE((flags & InclusionFlag::PrivateFunction) == InclusionFlag::PrivateFunction);
         REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
     }
@@ -248,11 +234,11 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
     SECTION("Private node is excluded by default")
     {
         NodeContext context;
+        context.type = NodeType::Function;
         context.isPrivate = true;
         context.isInternal = false;
 
         InclusionPolicy policy;
-        policy.includePrivate = false;
 
         REQUIRE(InclusionFilter::isIncluded(policy, context) == false);
     }
@@ -265,7 +251,6 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
         context.isInternal = false;
 
         InclusionPolicy policy;
-        policy.includePrivate = true;
         policy.includePrivateFunction = true;
 
         REQUIRE(InclusionFilter::isIncluded(policy, context) == true);
@@ -280,7 +265,6 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
         context.isInternal = false;
 
         InclusionPolicy policy;
-        policy.includePrivate = false;
         policy.includePrivateFunction = false;
 
         REQUIRE(InclusionFilter::isIncluded(policy, context) == true);
@@ -320,7 +304,6 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
         context.isInternal = true;
 
         InclusionPolicy policy;
-        policy.includePrivate = true;
         policy.includePrivateFunction = true;
         policy.showInternal = false;
 
@@ -335,7 +318,6 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
         context.isInternal = true;
 
         InclusionPolicy policy;
-        policy.includePrivate = true;
         policy.includePrivateFunction = true;
         policy.showInternal = true;
 
@@ -351,7 +333,6 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
         context.isPureVirtual = true;
 
         InclusionPolicy policy;
-        policy.includePrivate = false;
         policy.showInternal = false;
 
         REQUIRE(InclusionFilter::isIncluded(policy, context) == false);
@@ -366,7 +347,7 @@ TEST_CASE("InclusionFilter basic functionality", "[InclusionFilter]")
         context.isPureVirtual = true;
 
         InclusionPolicy policy;
-        policy.includePrivate = false;
+        policy.includePrivateFunction = false;
         policy.showInternal = true;
 
         REQUIRE(InclusionFilter::isIncluded(policy, context) == true);
@@ -438,7 +419,6 @@ TEST_CASE("InclusionFilter::isReimplementedMemberVisible functionality", "[Inclu
         context.isPureVirtual = true;
 
         InclusionPolicy policy;
-        policy.includePrivate = false;
         policy.includePrivateFunction = false;
 
         REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
@@ -453,7 +433,6 @@ TEST_CASE("InclusionFilter::isReimplementedMemberVisible functionality", "[Inclu
         context.isPureVirtual = true;
 
         InclusionPolicy policy;
-        policy.includePrivate = false;
         policy.includePrivateFunction = false;
         policy.showInternal = false;
 
@@ -470,7 +449,6 @@ TEST_CASE("InclusionFilter::isReimplementedMemberVisible functionality", "[Inclu
         context.isPureVirtual = false;
 
         InclusionPolicy policy;
-        policy.includePrivate = false;
         policy.includePrivateFunction = false;
 
         REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == false);
@@ -485,7 +463,6 @@ TEST_CASE("InclusionFilter::isReimplementedMemberVisible functionality", "[Inclu
         context.isPureVirtual = false;
 
         InclusionPolicy policy;
-        policy.includePrivate = true;
         policy.includePrivateFunction = true;
 
         REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
@@ -500,7 +477,6 @@ TEST_CASE("InclusionFilter::isReimplementedMemberVisible functionality", "[Inclu
         context.isPureVirtual = false;
 
         InclusionPolicy policy;
-        policy.includePrivate = true;
         policy.includePrivateFunction = true;
         policy.showInternal = false; // This should be ignored
 
@@ -517,7 +493,6 @@ TEST_CASE("InclusionFilter::isReimplementedMemberVisible functionality", "[Inclu
         context.isPureVirtual = false;
 
         InclusionPolicy policy;
-        policy.includePrivate = false;
         policy.includePrivateFunction = false;
         policy.showInternal = true; // This should be ignored for reimplemented members
 
@@ -534,7 +509,6 @@ TEST_CASE("InclusionFilter::isReimplementedMemberVisible functionality", "[Inclu
         context.isPureVirtual = false;
 
         InclusionPolicy policy;
-        policy.includePrivate = false;
         policy.includePrivateFunction = true; // This doesn't apply to variables
         policy.includePrivateVariable = true; // This does
         policy.showInternal = false;
