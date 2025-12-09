@@ -30,20 +30,20 @@
     These flags represent different types of private API elements that can be
     selectively included in documentation based on configuration settings.
 
-    \value Private
-           General private API flag. Set for any private member.
-
     \value PrivateFunction
            Private functions and methods. Corresponds to the
-           \c{includeprivate.functions} configuration option.
+           \c{includeprivate.functions} configuration option, or if unset,
+           to the general \c{includeprivate} option.
 
     \value PrivateType
            Private types including classes, enums, and typedefs. Corresponds to
-           the \c{includeprivate.types} configuration option.
+           the \c{includeprivate.types} configuration option, or if unset,
+           to the general \c{includeprivate} option.
 
     \value PrivateVariable
            Private member variables and properties. Corresponds to the
-           \c{includeprivate.variables} configuration option.
+           \c{includeprivate.variables} configuration option, or if unset,
+           to the general \c{includeprivate} option.
 
     \value Internal
            Internal API elements marked with \\internal. Corresponds to the
@@ -75,15 +75,6 @@
     configuration and passed to InclusionFilter for making inclusion decisions.
 
     \sa Config::createInclusionPolicy(), InclusionFilter
-*/
-
-/*!
-    \variable InclusionPolicy::includePrivate
-    \brief Whether to include any private API elements.
-
-    When true, private members may be included in documentation output.
-    This is the master switch for private API documentation, corresponding
-    to the \c{includeprivate} configuration variable.
 */
 
 /*!
@@ -196,8 +187,8 @@
 
     Returns an InclusionFlags value representing the categories this node
     belongs to. For non-private nodes, returns an empty flag set. For
-    private nodes, returns flags indicating both that it's private and
-    what specific type of private element it is (function, type, or variable).
+    private nodes, returns flags indicating what specific type of
+    private element it is (function, type, or variable).
 */
 
 /*!

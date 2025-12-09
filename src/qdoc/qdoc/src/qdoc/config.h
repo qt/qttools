@@ -466,17 +466,20 @@ inline bool Config::includePrivate() const
 
 inline bool Config::includePrivateFunction() const
 {
-    return m_configVars.value(CONFIG_INCLUDEPRIVATE + ".functions").asBool() || includePrivate();
+    const auto val{m_configVars.value(CONFIG_INCLUDEPRIVATE + ".functions")};
+    return val.asString().isNull() ? includePrivate() : val.asBool();
 }
 
 inline bool Config::includePrivateType() const
 {
-    return m_configVars.value(CONFIG_INCLUDEPRIVATE + ".types").asBool() || includePrivate();
+    const auto val{m_configVars.value(CONFIG_INCLUDEPRIVATE + ".types")};
+    return val.asString().isNull() ? includePrivate() : val.asBool();
 }
 
 inline bool Config::includePrivateVariable() const
 {
-    return m_configVars.value(CONFIG_INCLUDEPRIVATE + ".variables").asBool() || includePrivate();
+    const auto val{m_configVars.value(CONFIG_INCLUDEPRIVATE + ".variables")};
+    return val.asString().isNull() ? includePrivate() : val.asBool();
 }
 
 QT_END_NAMESPACE

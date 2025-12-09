@@ -25,8 +25,6 @@ struct NodeContext
             flags |= InclusionFlag::Internal;
 
         if (isPrivate) {
-            flags |= InclusionFlag::Private;
-
             switch (type) {
             case NodeType::Function:
                 flags |= InclusionFlag::PrivateFunction;

@@ -12,7 +12,6 @@ QT_BEGIN_NAMESPACE
 
 struct InclusionPolicy
 {
-    bool includePrivate = false;
     bool includePrivateFunction = false;
     bool includePrivateType = false;
     bool includePrivateVariable = false;
@@ -20,8 +19,6 @@ struct InclusionPolicy
 
     [[nodiscard]] InclusionFlags toFlags() const {
         InclusionFlags flags {};
-        if (includePrivate)
-            flags |= InclusionFlag::Private;
         if (includePrivateFunction)
             flags |= InclusionFlag::PrivateFunction;
         if (includePrivateType)

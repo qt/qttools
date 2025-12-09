@@ -1598,7 +1598,6 @@ InclusionPolicy Config::createInclusionPolicy() const
 {
     InclusionPolicy policy;
 
-    policy.includePrivate = includePrivate();
     policy.includePrivateFunction = includePrivateFunction();
     policy.includePrivateType = includePrivateType();
     policy.includePrivateVariable = includePrivateVariable();
