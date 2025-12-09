@@ -4763,7 +4763,7 @@ void DocBookGenerator::generateDocumentation(Node *node)
     if (node->isAggregate()) {
         auto *aggregate = static_cast<Aggregate *>(node);
         for (auto c : aggregate->childNodes()) {
-            if (node->isPageNode() && !node->isPrivate())
+            if (node->isPageNode())
                 generateDocumentation(c);
         }
     }

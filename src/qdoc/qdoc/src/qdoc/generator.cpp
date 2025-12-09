@@ -1109,7 +1109,7 @@ void Generator::generateDocumentation(Node *node)
         auto *aggregate = static_cast<Aggregate *>(node);
         const NodeList &children = aggregate->childNodes();
         for (auto *child : children) {
-            if (child->isPageNode() && !child->isPrivate()) {
+            if (child->isPageNode()) {
                 generateDocumentation(child);
             } else if (!node->parent() && child->isInAPI() && !child->isRelatedNonmember()) {
                 // Warn if there are documented non-page-generating nodes in the root namespace

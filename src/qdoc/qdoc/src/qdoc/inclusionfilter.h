@@ -27,7 +27,7 @@ public:
         InclusionFlags policyFlags = policy.toFlags();
         InclusionFlags nodeFlags = context.toFlags();
 
-        return (policyFlags & nodeFlags) != 0;
+        return (policyFlags & nodeFlags) == nodeFlags;
     }
 
     [[nodiscard]] static bool requiresDocumentation(const InclusionPolicy& policy,

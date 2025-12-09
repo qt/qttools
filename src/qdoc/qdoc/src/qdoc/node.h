@@ -240,10 +240,7 @@ public:
         return (m_defLocation.isEmpty() ? m_declLocation : m_defLocation);
     }
     [[nodiscard]] const Doc &doc() const { return m_doc; }
-    [[nodiscard]] virtual bool isInAPI() const
-    {
-        return !isPrivate() && !isInternal() && !isDontDocument() && hasDoc();
-    }
+    [[nodiscard]] virtual bool isInAPI() const;
     [[nodiscard]] bool hasDoc() const;
     [[nodiscard]] bool hadDoc() const { return m_hadDoc; }
     [[nodiscard]] virtual Status status() const { return m_status; }

@@ -29,6 +29,8 @@ documentationinheaders = indeed
 showinternal = true
 includeprivate = $showinternal
 
+warninglimit += 1   # Documentation for struct 'TestStruct' has no \inmodule command
+
 projectroot = .
 logwarnings = true
 logwarnings.disablecliargs = true

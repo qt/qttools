@@ -12,19 +12,19 @@
                     <para>This should always appear in documentation.</para>
                 </description>
             </function>
-            <function name="internalPrivateFunction" fullname="InternalClass::internalPrivateFunction" href="internalclass.html#internalPrivateFunction" status="active" access="private" location="internalclass.h" documented="true" meta="plain" type="void" brief="Internal private function" signature="void internalPrivateFunction()">
+            <function name="internalPrivateFunction" fullname="InternalClass::internalPrivateFunction" href="internalclass.html#internalPrivateFunction" status="internal" access="private" location="internalclass.h" documented="true" meta="plain" type="void" brief="Internal private function" signature="void internalPrivateFunction()">
                 <description>
                     <brief>Internal private function.</brief>
                     <para>This should only appear when BOTH showinternal AND includeprivate are enabled.</para>
                 </description>
             </function>
-            <function name="internalProtectedFunction" fullname="InternalClass::internalProtectedFunction" href="internalclass.html#internalProtectedFunction" status="active" access="protected" location="internalclass.h" documented="true" meta="plain" type="void" brief="Internal protected function" signature="void internalProtectedFunction()">
+            <function name="internalProtectedFunction" fullname="InternalClass::internalProtectedFunction" href="internalclass.html#internalProtectedFunction" status="internal" access="protected" location="internalclass.h" documented="true" meta="plain" type="void" brief="Internal protected function" signature="void internalProtectedFunction()">
                 <description>
                     <brief>Internal protected function.</brief>
                     <para>This should only appear when showinternal is enabled.</para>
                 </description>
             </function>
-            <function name="internalPublicFunction" fullname="InternalClass::internalPublicFunction" href="internalclass.html#internalPublicFunction" status="active" access="public" location="internalclass.h" documented="true" meta="plain" type="void" brief="Internal public function" signature="void internalPublicFunction()">
+            <function name="internalPublicFunction" fullname="InternalClass::internalPublicFunction" href="internalclass.html#internalPublicFunction" status="internal" access="public" location="internalclass.h" documented="true" meta="plain" type="void" brief="Internal public function" signature="void internalPublicFunction()">
                 <description>
                     <brief>Internal public function.</brief>
                     <para>This should only appear when showinternal is enabled.</para>
@@ -68,7 +68,7 @@
                     </list>
                 </description>
             </enum>
-            <variable name="internalPrivateVar" fullname="InternalClass::internalPrivateVar" href="internalclass.html#internalPrivateVar-var" status="active" access="private" location="internalclass.h" documented="true" type="int" static="false" brief="Internal private variable">
+            <variable name="internalPrivateVar" fullname="InternalClass::internalPrivateVar" href="internalclass.html#internalPrivateVar-var" status="internal" access="private" location="internalclass.h" documented="true" type="int" static="false" brief="Internal private variable">
                 <description>
                     <brief>This variable holds Internal private variable..</brief>
                     <para>Should require both showinternal and includeprivate.</para>
