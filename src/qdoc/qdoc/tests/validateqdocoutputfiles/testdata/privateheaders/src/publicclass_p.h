@@ -5,6 +5,13 @@
 
 /*!
     \internal
+    \headerfile publicclass_p.h
+    \inmodule PrivateHeadersModule
+    \title Private header
+*/
+
+/*!
+    \internal
     \class PublicClass::PrivateData
     \inmodule PrivateHeadersModule
     \brief Private implementation class for PublicClass.
@@ -143,7 +150,7 @@ public:
 /*!
     \internal
     \brief Internal global function in private header.
-    \relates PrivateHeadersModule
+    \relates publicclass_p.h
 
     This function exists only in the private header and should only
     appear when showinternal is enabled and private headers are processed.

@@ -27,6 +27,7 @@ documentationinheaders = indeed
 
 # Enable internal documentation
 showinternal = true
+includeprivate = $showinternal
 
 projectroot = .
 logwarnings = true
