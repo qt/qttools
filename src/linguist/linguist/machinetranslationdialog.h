@@ -59,6 +59,7 @@ private slots:
     void applyTranslations();
     void onTranslationFailed(QList<const TranslatorMessage *>);
     void connectToOllama();
+    void updateToolBoxTexts();
 };
 
 QT_END_NAMESPACE

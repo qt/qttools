@@ -11,9 +11,17 @@
 #include <QtCore/qsettings.h>
 #include <QtWidgets/qmessagebox.h>
 
+#include <array>
+
 using namespace Qt::Literals::StringLiterals;
 
 QT_BEGIN_NAMESPACE
+
+static constexpr std::array<const char *, 3> toolBoxTexts {
+    QT_TRANSLATE_NOOP("MachineTranslationDialog", "Configuration"),
+    QT_TRANSLATE_NOOP("MachineTranslationDialog", "Selection"),
+    QT_TRANSLATE_NOOP("MachineTranslationDialog", "Progress")
+};
 
 MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
     : QDialog(parent),
@@ -22,12 +30,8 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
 {
     m_ui->setupUi(this);
 
-    connect(m_ui->toolBox, &QToolBox::currentChanged, this, [this](int index) {
-        for (int i = 0; i < m_ui->toolBox->count(); ++i) {
-            const QString baseText = m_ui->toolBox->itemText(i).mid(2);
-            m_ui->toolBox->setItemText(i, (i == index ? "- "_L1 : "+ "_L1) + baseText);
-        }
-    });
+    updateToolBoxTexts();
+    connect(m_ui->toolBox, &QToolBox::currentChanged, this, &MachineTranslationDialog::updateToolBoxTexts);
 
     m_ui->statusLabel->setWordWrap(true);
     m_ui->statusLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
@@ -78,6 +82,18 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
     connect(this, &QDialog::finished, m_translator.get(), &MachineTranslator::stop);
     connect(m_ui->filterComboBox, &QComboBox::currentIndexChanged, this,
             &MachineTranslationDialog::onFilterChanged);
+}
+
+void MachineTranslationDialog::updateToolBoxTexts()
+{
+    const int count = m_ui->toolBox->count();
+    Q_ASSERT(unsigned(count) == toolBoxTexts.size());
+    const int index = m_ui->toolBox->currentIndex();
+
+    for (int i = 0; i < count; ++i) {
+        const QString baseText = MachineTranslationDialog::tr(toolBoxTexts[i]);
+        m_ui->toolBox->setItemText(i, (i == index ? "- "_L1 : "+ "_L1) + baseText);
+    }
 }
 
 void MachineTranslationDialog::setDataModel(MultiDataModel *dm)
@@ -167,7 +183,7 @@ bool MachineTranslationDialog::discardTranslations()
     return (m_receivedTranslations.empty()
             || QMessageBox::warning(
                        this, tr("Qt Linguist"),
-                       tr("The already %n translated item(s) will be discarded. Continue?", 0,
+                       tr("%n translated item(s) will be discarded. Continue?", 0,
                           m_receivedTranslations.size()),
                        QMessageBox::Yes | QMessageBox::No)
                     == QMessageBox::Yes);
@@ -332,6 +348,7 @@ void MachineTranslationDialog::updateStatus()
         selectedItems = m_ui->groupListWidget->selectedItems();
 
     if (model < 0 || filter < 0 || (filter > 0 && selectedItems.isEmpty())) {
+        //: No selected items
         m_ui->selectionLabel->setText(tr("Selection status: -"));
     } else if (filter == 0) {
         int count = 0;
