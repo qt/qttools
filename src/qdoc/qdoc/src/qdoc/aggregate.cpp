@@ -245,6 +245,10 @@ FunctionNode *Aggregate::findFunctionChild(const FunctionNode *clone)
     in cases where the aggregate is documented outside the current project and was
     not loaded from index. With \c {-showinternal} set, the warning is not required as
     internal nodes generate output.
+
+    The warning is also skipped if the file path of the \a child declaration matches with
+    \e internalfilepatterns configuration variable. In this case, the child node is not
+    considered part of the public API.
 */
 static void warnAboutDocumentedChildInUndocumentedParent(const Node *aggregate, const Node *child)
 {
@@ -253,14 +257,24 @@ static void warnAboutDocumentedChildInUndocumentedParent(const Node *aggregate, 
     if (parent && parent == aggregate && !child->isPrivate() && child->status() != Node::Internal
             && !parent->isProxyNode() && !parent->isNamespace() && !parent->isDontDocument()
             && !parent->hasDoc()) {
-        const auto &config{Config::instance()};
-        const InclusionPolicy policy = config.createInclusionPolicy();
-        if (!config.get(CONFIG_NOLINKERRORS).asBool() && !InclusionFilter::processInternalDocs(policy))
-            child->doc().location().warning(
-                    "No output generated for %1 '%2' because '%3' is undocumented"_L1
-                        .arg(child->nodeTypeString(),
-                             child->plainFullName(),
-                             child->parent()->name()));
+        auto &config{Config::instance()};
+        if (config.get(CONFIG_NOLINKERRORS).asBool())
+            return;
+
+        if (InclusionFilter::processInternalDocs(config.createInclusionPolicy()))
+            return;
+
+        if (child->genus() == Genus::CPP && !child->declLocation().isEmpty())
+            if (Config::matchesInternalFilePattern(
+                    child->declLocation().filePath(),
+                    config.getInternalFilePatternsCompiled()))
+            return;
+
+        child->doc().location().warning(
+                "No output generated for %1 '%2' because '%3' is undocumented"_L1
+                    .arg(child->nodeTypeString(),
+                         child->plainFullName(),
+                         child->parent()->name()));
     }
 }
 
