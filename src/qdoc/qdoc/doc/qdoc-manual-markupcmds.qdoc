@@ -1458,6 +1458,18 @@
                 need to add the topic title:
                 \l {QDoc Commands}.
 
+                Since the \c # character is used for the purpose of linking
+                within documents it cannot be used verbatim when linking to
+                titles that contain it. Instead, it must be escaped using a
+                backslash:
+
+                \badcode
+                    \l {Using Qt with C\\#}
+                \endcode
+
+                Two backslashes are used because QDoc will process the text
+                before it is supplied to the link command.
+
             \li an anchor defined with a \l {target-command}{\\target} command:
                 \badcode
                     \target assertions

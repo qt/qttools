@@ -1478,7 +1478,7 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
     const Node *node = nullptr;
 
     Atom *atom = const_cast<Atom *>(a);
-    QStringList targetPath = atom->string().split(QLatin1Char('#'));
+    QStringList targetPath = Utilities::pathAndFragment(atom->string());
     QString first = targetPath.first().trimmed();
 
     Tree *domain = nullptr;

@@ -110,3 +110,40 @@
 
     This should be linkable.
 */
+
+/*!
+    \page csharp-test.html
+    \title C# Title Test
+*/
+
+/*!
+    \page section-link-targets.html
+    \title Section Link Targets
+
+    \section1 C# section target
+
+    This section provides a target for a section link.
+
+    \section1 Another \csharp section target
+
+    This section provides a target for a section link using a macro to
+    provide the "\sharp" character.
+*/
+
+/*!
+    \page link-test.html
+    \title Test Links to Titles and Sections
+
+    \list
+    \li \l {C\\# Title Test}
+    \li \l {C\\# section target}
+    \li \l {Another C\\# section target}
+    \li \l {C\sharp Title Test}
+    \li \l {C\sharp section target}
+    \li \l {Another C\sharp section target}
+    \li \l {Section Link Targets#C\\# section target}
+    \li \l {Section Link Targets#C\sharp section target}
+    \li \l {c-title-test}
+    \li \l {csharp-test.html}
+    \endlist
+*/

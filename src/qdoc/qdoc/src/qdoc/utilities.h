@@ -32,6 +32,7 @@ QString asAsciiPrintable(const QString &name);
 QString protect(const QString &string);
 QStringList getInternalIncludePaths(const QString &compiler);
 bool isGeneratedFile(const QString &path);
+QStringList pathAndFragment(const QString &linkText);
 
 static constexpr QLatin1StringView samp = "&amp;"_L1;
 static constexpr QLatin1StringView slt = "&lt;"_L1;

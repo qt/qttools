@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="link-test.html" href="link-test.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="Test Links to Titles and Sections" fulltitle="Test Links to Titles and Sections" subtitle="">
+            <description>
+                <list type="bullet">
+                    <item>
+                        <para>
+                            <link raw="C\# Title Test" href="csharp-test.html" type="page" page="C# Title Test">C# Title Test</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="C\# section target" href="section-link-targets.html#c-section-target" type="page" page="Section Link Targets">C# section target</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="Another C\# section target" href="section-link-targets.html#another-c-section-target" type="page" page="Section Link Targets">Another C# section target</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="C\# Title Test" href="csharp-test.html" type="page" page="C# Title Test">C# Title Test</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="C\# section target" href="section-link-targets.html#c-section-target" type="page" page="Section Link Targets">C# section target</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="Another C\# section target" href="section-link-targets.html#another-c-section-target" type="page" page="Section Link Targets">Another C# section target</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="Section Link Targets#C\# section target" href="section-link-targets.html#c-section-target" type="page" page="Section Link Targets">Section Link Targets#C# section target</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="Section Link Targets#C\# section target" href="section-link-targets.html#c-section-target" type="page" page="Section Link Targets">Section Link Targets#C# section target</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="c-title-test" href="csharp-test.html" type="page" page="C# Title Test">c-title-test</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="csharp-test.html" href="csharp-test.html" type="page" page="C# Title Test">csharp-test.html</link></para>
+                    </item>
+                </list>
+            </description>
+        </page>
+    </document>
+</WebXML>

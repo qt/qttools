@@ -329,6 +329,41 @@ bool isGeneratedFile(const QString &path)
            fileName.startsWith("ui_");
 }
 
+/*!
+    Returns a string list containing the path and fragment components of the
+    given \a linkText. Fragments begin with a "#" character, following HTML
+    conventions.
+
+    Links with only a path or only a fragment will result in lists of one
+    element. A link with both path and fragment will result in a list of two
+    elements. Additional fragments are discarded.
+
+    Escaped "#" characters ("\\#") are interpreted differently to regular "#"
+    characters. These can be used to represent "#" characters in titles, but
+    not in fragments.
+*/
+QStringList pathAndFragment(const QString &linkText)
+{
+    QStringList pieces = linkText.split("\\#"_L1);
+    QStringList result;
+    QString next;
+
+    for (auto &piece : pieces) {
+        QStringList fragmentPieces = piece.split('#');
+        next += fragmentPieces.takeFirst();
+        if (!fragmentPieces.isEmpty()) {
+            result.append(next);
+            next = fragmentPieces.first();
+        }
+        if (result.count() == 2)
+            break;
+    }
+    if (!next.isEmpty() && result.count() < 2)
+        result.append(next);
+
+    return result;
+}
+
 } // namespace Utilities
 
 QT_END_NAMESPACE

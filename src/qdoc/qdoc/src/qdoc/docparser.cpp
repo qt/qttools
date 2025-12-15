@@ -245,12 +245,19 @@ bool DocParser::s_quoting = false;
 FileResolver *DocParser::file_resolver{ nullptr };
 static void processComparesWithCommand(DocPrivate *priv, const Location &location);
 
+/*!
+    Returns a cleaned version of the given \a link text. This replaces escaped
+    hash characters (\\#) with hash characters (#) and removes the URL scheme
+    prefix, if present.
+*/
 static QString cleanLink(const QString &link)
 {
     qsizetype colonPos = link.indexOf(':');
+    QString cleaned{link};
+    cleaned.replace("\\#"_L1, "#"_L1);
     if ((colonPos == -1) || (!link.startsWith("file:") && !link.startsWith("mailto:")))
-        return link;
-    return link.mid(colonPos + 1).simplified();
+        return cleaned;
+    return cleaned.mid(colonPos + 1).simplified();
 }
 
 void DocParser::initialize(const Config &config, FileResolver &file_resolver)

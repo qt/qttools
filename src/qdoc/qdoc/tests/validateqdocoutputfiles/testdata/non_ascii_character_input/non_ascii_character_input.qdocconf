@@ -29,3 +29,8 @@ locationinfo = false
 # outputsubdir '.' matches the root of expected_output/
 HTML.nosubdirs = true
 HTML.outputsubdir = .
+
+# To obtain the string "\#" we need to double escape the backslash:
+macro.sharp = "\\\\#"
+# This could also be written as "C\#" or "C\\#":
+macro.csharp = "C#"

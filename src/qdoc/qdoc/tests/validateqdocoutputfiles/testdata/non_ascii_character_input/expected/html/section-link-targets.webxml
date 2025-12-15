@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="section-link-targets.html" href="section-link-targets.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="Section Link Targets" fulltitle="Section Link Targets" subtitle="">
+            <contents name="c-section-target" title="C# section target" level="1"/>
+            <contents name="another-c-section-target" title="Another C# section target" level="1"/>
+            <description>
+                <section id="c-section-target">
+                    <heading level="1">C# section target</heading>
+                    <para>This section provides a target for a section link.</para>
+                </section>
+                <section id="another-c-section-target">
+                    <heading level="1">Another C# section target</heading>
+                    <para>This section provides a target for a section link using a macro to provide the &quot;\#&quot; character.</para>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>
