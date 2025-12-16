@@ -475,11 +475,6 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         node->setWrapper();
     } else if (command == COMMAND_THREADSAFE) {
         node->setThreadSafeness(Node::ThreadSafe);
-    } else if (command == COMMAND_TITLE) {
-        if (!node->setTitle(arg))
-            doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_TITLE));
-        else if (node->isExample())
-            database->addExampleNode(static_cast<ExampleNode *>(node));
     } else if (command == COMMAND_SUBTITLE) {
         if (!node->setSubtitle(arg))
             doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_SUBTITLE));
@@ -666,6 +661,14 @@ void CppCodeParser::processMetaCommands(const Doc &doc, Node *node)
                 processMetaCommand(doc, command, arg, node);
             });
         }
+    }
+
+    // Apply a title (stripped of formatting) to the Node if set
+    if (!doc.title().isEmpty()) {
+        if (!node->setTitle(doc.title().toString()))
+            doc.location().warning(QStringLiteral("Ignored '\\title'"));
+        if (node->isExample())
+            QDocDatabase::qdocDB()->addExampleNode(static_cast<ExampleNode *>(node));
     }
 }
 

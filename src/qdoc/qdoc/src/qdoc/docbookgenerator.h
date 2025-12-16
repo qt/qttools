@@ -45,7 +45,11 @@ protected:
 
     void generateList(const Node *relative, const QString &selector,
                       Qt::SortOrder sortOrder = Qt::AscendingOrder);
-    void generateHeader(const QString &title, const QString &subtitle, const Node *node);
+    void generateHeader(const Text &title, const QString &subtitle, const Node *node);
+    void generateHeader(const QString &title, const QString &subtitle, const Node *node)
+    {
+        generateHeader(Text() << title, subtitle, node);
+    }
     void closeTextSections();
     void generateFooter();
     void generateDocBookSynopsis(const Node *node);

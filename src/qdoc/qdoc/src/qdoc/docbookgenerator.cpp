@@ -1775,7 +1775,7 @@ bool DocBookGenerator::generateSince(const Node *node)
     Generate the DocBook header for the file, including the abstract.
     Equivalent to calling generateTitle and generateBrief in HTML.
 */
-void DocBookGenerator::generateHeader(const QString &title, const QString &subTitle,
+void DocBookGenerator::generateHeader(const Text &title, const QString &subTitle,
                                       const Node *node)
 {
     refMap.clear();
@@ -1786,7 +1786,7 @@ void DocBookGenerator::generateHeader(const QString &title, const QString &subTi
     m_writer->writeStartElement(dbNamespace, "title");
     if (isApiGenus(node->genus()) && m_useITS)
         m_writer->writeAttribute(itsNamespace, "translate", "no");
-    m_writer->writeCharacters(title);
+    generateText(title, node);
     m_writer->writeEndElement(); // title
     newLine();
 
@@ -2907,7 +2907,7 @@ void DocBookGenerator::generateExampleFilePage(const Node *node, ResolvedFile re
     // Store current (active) writer
     QXmlStreamWriter *currentWriter = m_writer;
     m_writer = startDocument(en, resolved_file.get_query());
-    generateHeader(en->fullTitle(), en->subtitle(), en);
+    generateHeader(en->doc().title(), en->subtitle(), en);
 
     Text text;
     Quoter quoter;
@@ -3064,6 +3064,7 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
     const auto aggregate = static_cast<const Aggregate *>(node);
 
     QString title;
+    Text titleText;
     QString subtitleText;
     const QString typeWord{aggregate->typeWord(true)};
     if (aggregate->isNamespace()) {
@@ -3076,14 +3077,19 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
                                              aggregate->plainFullName());
         title = "%1 %2"_L1.arg(aggregate->plainFullName(), typeWord);
     } else if (aggregate->isHeader()) {
-        title =  aggregate->fullTitle();
+        title = aggregate->fullTitle();
+        if (!aggregate->doc().title().isEmpty())
+            titleText << aggregate->name() << " - "_L1 << aggregate->doc().title();
     }
 
     // Start producing the DocBook file.
     m_writer = startDocument(node);
 
     // Info container.
-    generateHeader(title, subtitleText, aggregate);
+    if (!titleText.isEmpty())
+        generateHeader(titleText, subtitleText, aggregate);
+    else
+        generateHeader(title, subtitleText, aggregate);
 
     generateRequisites(aggregate);
     generateStatus(aggregate);
@@ -4485,7 +4491,7 @@ void DocBookGenerator::generatePageNode(PageNode *pn)
     Q_ASSERT(m_writer == nullptr);
     m_writer = startDocument(pn);
 
-    generateHeader(pn->fullTitle(), pn->subtitle(), pn);
+    generateHeader(pn->doc().title(), pn->subtitle(), pn);
     generateBody(pn);
     generateAlsoList(pn);
     generateFooter();
@@ -4825,7 +4831,7 @@ void DocBookGenerator::generateCollectionNode(CollectionNode *cn)
     m_writer = startDocument(cn);
 
     // Info container.
-    generateHeader(cn->fullTitle(), cn->subtitle(), cn);
+    generateHeader(cn->doc().title(), cn->subtitle(), cn);
 
     // Element synopsis.
     generateDocBookSynopsis(cn);

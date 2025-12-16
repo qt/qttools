@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title>I like <db:phrase its:translate="no">turtles</db:phrase></db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>formatted titles Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>formatted titles Reference Documentation.</db:para></db:abstract>
+</db:info>
+</db:article>

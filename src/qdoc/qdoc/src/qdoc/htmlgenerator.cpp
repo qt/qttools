@@ -279,7 +279,7 @@ void HtmlGenerator::generateExampleFilePage(const Node *en, ResolvedFile resolve
 
     beginSubPage(en, linkForExampleFile(resolved_file.get_query()));
     generateHeader(fullTitle, en, marker);
-    generateTitle(fullTitle, Text() << en->subtitle(), subTitleSize, en, marker);
+    generateTitle(en->doc().title(), Text() << en->subtitle(), subTitleSize, en, marker);
 
     Text text;
     Quoter quoter;
@@ -1084,6 +1084,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
 {
     QString title;
     QString fullTitle;
+    Text titleText;
     NamespaceNode *ns = nullptr;
     SectionVector *summarySections = nullptr;
     SectionVector *detailsSections = nullptr;
@@ -1104,6 +1105,8 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         detailsSections = &sections.stdCppClassDetailsSections();
     } else if (aggregate->isHeader()) {
         title = fullTitle = aggregate->fullTitle();
+        if (!aggregate->doc().title().isEmpty())
+            titleText << aggregate->name() << " - "_L1 << aggregate->doc().title();
         summarySections = &sections.stdSummarySections();
         detailsSections = &sections.stdDetailsSections();
     }
@@ -1123,7 +1126,10 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
 
     generateHeader(title, aggregate, marker);
     generateTableOfContents(aggregate, marker, summarySections);
-    generateTitle(title, subtitleText, SmallSubTitle, aggregate, marker);
+    if (!titleText.isEmpty())
+        generateTitle(titleText, subtitleText, SmallSubTitle, aggregate, marker);
+    else
+        generateTitle(title, subtitleText, SmallSubTitle, aggregate, marker);
     if (ns && !ns->hasDoc() && ns->docNode()) {
         NamespaceNode *fullNamespace = ns->docNode();
         Text brief;
@@ -1415,10 +1421,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
  */
 void HtmlGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 {
-    SubTitleSize subTitleSize = LargeSubTitle;
-    QString fullTitle = pn->fullTitle();
-
-    generateHeader(fullTitle, pn, marker);
+    generateHeader(pn->fullTitle(), pn, marker);
     /*
       Generate the TOC for the new doc format.
       Don't generate a TOC for the home page.
@@ -1426,7 +1429,7 @@ void HtmlGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
     if ((pn->name() != QLatin1String("index.html")))
         generateTableOfContents(pn, marker, nullptr);
 
-    generateTitle(fullTitle, Text() << pn->subtitle(), subTitleSize, pn, marker);
+    generateTitle(pn->doc().title(), Text() << pn->subtitle(), LargeSubTitle, pn, marker);
     if (pn->isExample()) {
         generateBrief(pn, marker, nullptr, false);
     }
@@ -1449,12 +1452,11 @@ void HtmlGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marker)
 {
     SubTitleSize subTitleSize = LargeSubTitle;
-    QString fullTitle = cn->fullTitle();
     QString ref;
 
-    generateHeader(fullTitle, cn, marker);
+    generateHeader(cn->fullTitle(), cn, marker);
     generateTableOfContents(cn, marker, nullptr);
-    generateTitle(fullTitle, Text() << cn->subtitle(), subTitleSize, cn, marker);
+    generateTitle(cn->doc().title(), Text() << cn->subtitle(), subTitleSize, cn, marker);
 
     // Generate brief for C++ modules, status for all modules.
     if (cn->genus() != Genus::DOC && cn->genus() != Genus::DontCare) {
@@ -1832,7 +1834,7 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
         out() << "<p class=\"naviNextPrevious headerNavi\">\n" << m_navigationLinks << "</p>\n";
 }
 
-void HtmlGenerator::generateTitle(const QString &title, const Text &subtitle,
+void HtmlGenerator::generateTitle(const Text &title, const Text &subtitle,
                                   SubTitleSize subTitleSize, const Node *relative,
                                   CodeMarker *marker)
 {
@@ -1841,8 +1843,11 @@ void HtmlGenerator::generateTitle(const QString &title, const Text &subtitle,
     if (isApiGenus(relative->genus()))
         attribute = R"( translate="no")";
 
-    if (!title.isEmpty())
-        out() << "<h1 class=\"title\"" << attribute << ">" << protectEnc(title) << "</h1>\n";
+    if (!title.isEmpty()) {
+        out() << "<h1 class=\"title\"" << attribute << ">";
+        generateText(title, relative, marker);
+        out() << "</h1>\n";
+    }
     if (!subtitle.isEmpty()) {
         out() << "<span";
         if (subTitleSize == SmallSubTitle)
