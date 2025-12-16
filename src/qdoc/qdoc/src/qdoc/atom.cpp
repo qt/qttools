@@ -201,6 +201,8 @@ static const struct
              { "TableOfContentsLeft", Atom::TableOfContentsLeft },
              { "TableOfContentsRight", Atom::TableOfContentsRight },
              { "Target", Atom::Target },
+             { "TitleLeft", Atom::TitleLeft },
+             { "TitleRight", Atom::TitleRight },
              { "UnhandledFormat", Atom::UnhandledFormat },
              { "WarningLeft", Atom::WarningLeft },
              { "WarningRight", Atom::WarningRight },

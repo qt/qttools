@@ -59,6 +59,7 @@ public:
     Location m_end_loc {};
     QString m_src {};
     Text m_text {};
+    Text m_title {};
     QSet<QString> m_params {};
     QList<Text> m_alsoList {};
     QStringList m_enumItemList {};

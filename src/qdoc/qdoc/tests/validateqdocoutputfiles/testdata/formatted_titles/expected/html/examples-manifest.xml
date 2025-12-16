@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instructionals module="formatted titles">
+    <examples>
+        <example docUrl="qthelp:////formatted-titles-demo-example.html" name="Demonstrates Fancy titles" projectPath="demo/CMakeLists.txt">
+            <description><![CDATA[No description available]]></description>
+            <tags>formatted titles</tags>
+        </example>
+    </examples>
+</instructionals>

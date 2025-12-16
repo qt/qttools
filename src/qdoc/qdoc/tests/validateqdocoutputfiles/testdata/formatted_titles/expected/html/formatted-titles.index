@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="formatted titles Reference Documentation" version="" project="formatted titles">
+    <namespace name="" status="active" access="public" module="formatted titles">
+        <page name="page.html" href="page.html" status="active" location="test.qdoc" documented="true" subtype="page" title="I like turtles" fulltitle="I like turtles" subtitle=""/>
+        <page name="demo" href="formatted-titles-demo-example.html" status="active" location="test.qdoc" documented="true" subtype="example" title="Demonstrates Fancy titles" fulltitle="Demonstrates Fancy titles" subtitle=""/>
+        <module name="Module" href="module-module.html" status="active" location="test.qdoc" documented="true" seen="true" title="Module C++ classes"/>
+    </namespace>
+</INDEX>

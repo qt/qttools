@@ -539,14 +539,17 @@
     \1/
     \endcode
 
+    \warning Avoid using en dash in section and page titles. Linking to a title
+    may fail if it contains special characters such as an en dash.
+
     See also \l {emdash-sequence}{\-\-- (em dash)}.
 
     \target emdash-sequence
     \section1 -\-- (em dash)
 
-    QDoc renders triple hyphens as an en dash. QDoc markup commands
+    QDoc renders triple hyphens as an em dash. QDoc markup commands
     designed to make their input appear verbatim---such as the \\c
-    command---won't replace the triple hyphens with an en dash character.
+    command---won't replace the triple hyphens with an em dash character.
     For example:
 
     \badcode *
@@ -571,6 +574,9 @@
 
     \note The escaped control sequence in this example is for the en dash.
           This avoids a hyphen followed by an en dash in the output.
+
+    \warning Avoid using em dash in section and page titles. Linking to a title
+    may fail if it contains special characters such as an em dash.
 
     See also \l {endash-sequence}{\-- (en dash)}.
 */

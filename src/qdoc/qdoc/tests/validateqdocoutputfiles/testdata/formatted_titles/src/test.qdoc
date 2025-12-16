@@ -1,0 +1,16 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \page page.html
+    \title I like \notranslate turtles
+*/
+
+/*!
+    \module Module
+    \title \notranslate Module \e C++ classes
+*/
+
+/*! \example demo
+    \title Demonstrates \notranslate Fancy titles
+*/

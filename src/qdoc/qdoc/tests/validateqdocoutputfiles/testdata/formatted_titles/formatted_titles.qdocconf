@@ -1,0 +1,16 @@
+project = formatted titles
+productname = Qt
+
+locationinfo = false
+
+outputformats                       = HTML DocBook
+{HTML.nosubdirs,DocBook.nosubdirs}  = true
+HTML.outputsubdir                   = html
+DocBook.outputsubdir                = docbook
+DocBook.its                         = true
+
+{headerdirs,sourcedirs}  = ./src
+exampledirs              = ./src/examples
+
+warninglimit = 0
+warninglimit.enabled = true

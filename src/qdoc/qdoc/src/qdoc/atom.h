@@ -102,6 +102,8 @@ public:
         TableOfContentsLeft,
         TableOfContentsRight,
         Target,
+        TitleLeft,
+        TitleRight,
         UnhandledFormat,
         WarningLeft,
         WarningRight,

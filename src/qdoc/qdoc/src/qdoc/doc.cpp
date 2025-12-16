@@ -118,6 +118,12 @@ const Text &Doc::body() const
     return m_priv == nullptr ? dummy : m_priv->m_text;
 }
 
+const Text &Doc::title() const
+{
+    static const Text dummy;
+    return m_priv == nullptr ? dummy : m_priv->m_title;
+}
+
 Text Doc::briefText(bool inclusive) const
 {
     return body().subText(Atom::BriefLeft, Atom::BriefRight, nullptr, inclusive);

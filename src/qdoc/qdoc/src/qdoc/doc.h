@@ -52,6 +52,7 @@ public:
     [[nodiscard]] bool isEmpty() const;
     [[nodiscard]] const QString &source() const;
     [[nodiscard]] const Text &body() const;
+    [[nodiscard]] const Text &title() const;
     [[nodiscard]] Text briefText(bool inclusive = false) const;
     [[nodiscard]] Text trimmedBriefText(const QString &className) const;
     [[nodiscard]] Text legaleseText() const;

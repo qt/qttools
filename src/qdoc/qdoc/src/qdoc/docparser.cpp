@@ -111,6 +111,7 @@ enum {
     CMD_TABLE,
     CMD_TABLEOFCONTENTS,
     CMD_TARGET,
+    CMD_TITLE,
     CMD_TM,
     CMD_TOC,
     CMD_TOCENTRY,
@@ -221,6 +222,7 @@ static struct
              { "table", CMD_TABLE },
              { "tableofcontents", CMD_TABLEOFCONTENTS },
              { "target", CMD_TARGET },
+             { "title", CMD_TITLE },
              { "tm", CMD_TM, true },
              { "toc", CMD_TOC },
              { "tocentry", CMD_TOCENTRY },
@@ -986,8 +988,12 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     }
                     insertTarget(getRestOfLine());
                     break;
+                case CMD_TITLE:
+                    leavePara();
+                    enterPara(Atom::TitleLeft, Atom::TitleRight);
+                    break;
                 case CMD_TM:
-                     // Ignore command while parsing \section<N> argument
+                     // Ignore command while parsing \section<N> or \title argument
                     if (m_paragraphState != InSingleLineParagraph)
                         startFormat(ATOM_FORMATTING_TRADEMARK, cmd);
                     break;
@@ -1967,7 +1973,7 @@ void DocParser::enterPara(Atom::AtomType leftType, Atom::AtomType rightType, con
     m_pendingParagraphLeftType = leftType;
     m_pendingParagraphRightType = rightType;
     m_pendingParagraphString = string;
-    if (leftType == Atom::SectionHeadingLeft) {
+    if (leftType == Atom::SectionHeadingLeft || leftType == Atom::TitleLeft) {
         m_paragraphState = InSingleLineParagraph;
     } else {
         m_paragraphState = InMultiLineParagraph;
@@ -1992,7 +1998,13 @@ void DocParser::leavePara()
             && m_private->m_text.lastAtom()->string().endsWith(QLatin1Char(' '))) {
             m_private->m_text.lastAtom()->chopString();
         }
-        appendAtom(Atom(m_pendingParagraphRightType, m_pendingParagraphString));
+        if (m_pendingParagraphRightType == Atom::TitleRight) {
+            // Extract title
+            m_private->m_title = m_private->m_text.splitAtFirst(Atom::TitleLeft);
+            m_private->m_title.stripFirstAtom();
+        } else {
+            appendAtom(Atom(m_pendingParagraphRightType, m_pendingParagraphString));
+        }
     }
     m_paragraphState = OutsideParagraph;
     m_indexStartedParagraph = false;
