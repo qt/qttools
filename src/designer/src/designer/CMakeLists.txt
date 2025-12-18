@@ -153,6 +153,13 @@ if(APPLE)
     set_source_files_properties(uifile.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
     target_sources(designer PRIVATE uifile.icns)
     # special case end
+
+    # Bundle the entitlements file in the installed bundle Resources subdirectory, so that the
+    # post-CI signing process uses it to ensure 3rd party widget plugins can also be loaded.
+    target_sources(designer PRIVATE Designer.entitlements)
+    set_source_files_properties(Designer.entitlements PROPERTIES
+        MACOSX_PACKAGE_LOCATION Resources
+    )
 endif()
 
 # FILETYPES.files = "uifile.icns"
