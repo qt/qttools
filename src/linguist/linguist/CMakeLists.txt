@@ -41,7 +41,6 @@ qt_internal_add_app(linguist
         errorsview.cpp errorsview.h
         finddialog.cpp finddialog.h finddialog.ui
         uiformpreviewview.cpp uiformpreviewview.h
-        qmlformpreviewview.h qmlformpreviewview.cpp
         globals.cpp globals.h
         main.cpp
         mainwindow.cpp mainwindow.h mainwindow.ui
@@ -73,8 +72,7 @@ qt_internal_add_app(linguist
         Qt::GuiPrivate
         Qt::UiToolsPrivate
         Qt::Widgets
-        Qt::QuickWidgets
-        Qt::QuickLayouts
+        Qt::Network
 )
 
 qt_internal_extend_target(linguist CONDITION QT_FEATURE_printsupport
@@ -82,6 +80,14 @@ qt_internal_extend_target(linguist CONDITION QT_FEATURE_printsupport
         printout.cpp printout.h
     LIBRARIES
         Qt::PrintSupport
+)
+
+qt_internal_extend_target(linguist CONDITION QT_BUILDING_QT
+    SOURCES
+        qmlformpreviewview.h qmlformpreviewview.cpp
+    LIBRARIES
+        Qt::QuickWidgets
+        Qt::QuickLayouts
 )
 
 if(QT_BUILDING_QT)
