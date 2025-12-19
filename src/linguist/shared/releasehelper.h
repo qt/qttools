@@ -25,6 +25,9 @@ bool releaseTsFile(const QString &tsFileName, ConversionData &cd, bool removeIde
 QStringList translationsFromProject(const Project &project, bool topLevel);
 QStringList translationsFromProjects(const Projects &projects, bool topLevel = true);
 
+void printOut(const QString &out);
+void printErr(const QString &out);
+
 QT_END_NAMESPACE
 
 #endif // RELEASEHELPER_H

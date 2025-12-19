@@ -12,17 +12,17 @@
 
 using namespace Qt::StringLiterals;
 
-static void printOut(const QString &out)
+QT_BEGIN_NAMESPACE
+
+void printOut(const QString &out)
 {
     std::cout << qPrintable(out);
 }
 
-static void printErr(const QString &out)
+void printErr(const QString &out)
 {
     std::cerr << qPrintable(out);
 }
-
-QT_BEGIN_NAMESPACE
 
 bool loadTsFile(Translator &tor, const QString &tsFileName)
 {

@@ -25,18 +25,6 @@ QT_USE_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static void printOut(const QString & out)
-{
-    QTextStream stream(stdout);
-    stream << out;
-}
-
-static void printErr(const QString & out)
-{
-    QTextStream stream(stderr);
-    stream << out;
-}
-
 static void printUsage()
 {
     printOut(uR"(Usage:

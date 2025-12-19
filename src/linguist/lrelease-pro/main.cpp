@@ -21,16 +21,6 @@ QT_USE_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static void printOut(const QString &out)
-{
-    std::cout << qPrintable(out);
-}
-
-static void printErr(const QString &out)
-{
-    std::cerr << qPrintable(out);
-}
-
 static void printUsage()
 {
     printOut(uR"(
