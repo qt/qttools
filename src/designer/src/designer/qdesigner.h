@@ -28,6 +28,8 @@ struct Options;
 
 struct Options
 {
+    enum class HelpMode : quint8 { Assistant, Web, Python };
+
     QStringList files;
     QString resourceDir{QLibraryInfo::path(QLibraryInfo::TranslationsPath)};
     QStringList pluginPaths;
@@ -35,6 +37,7 @@ struct Options
     bool server{false};
     quint16 clientPort{0};
     bool enableInternalDynamicProperties{false};
+    HelpMode helpMode{HelpMode::Assistant};
 };
 
 class QDesigner: public QApplication

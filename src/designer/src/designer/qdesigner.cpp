@@ -147,6 +147,10 @@ static inline QDesigner::ParseArgumentsResult
                                           u"Client mode"_s,
                                           u"port"_s);
     parser.addOption(clientOption);
+    const QCommandLineOption webHelpOption(u"web-help"_s, u"Use the Web documentation"_s);
+    parser.addOption(webHelpOption);
+    const QCommandLineOption pythonHelpOption(u"python-help"_s, u"Use the Python documentation"_s);
+    parser.addOption(pythonHelpOption);
     const QCommandLineOption resourceDirOption(u"resourcedir"_s,
                                           u"Resource directory"_s,
                                           u"directory"_s);
@@ -187,6 +191,10 @@ static inline QDesigner::ParseArgumentsResult
             return QDesigner::ParseArgumentsError;
         }
     }
+    if (parser.isSet(webHelpOption))
+        options->helpMode = Options::HelpMode::Web;
+    else if (parser.isSet(pythonHelpOption))
+        options->helpMode = Options::HelpMode::Python;
     if (parser.isSet(resourceDirOption))
         options->resourceDir = parser.value(resourceDirOption);
     const auto pluginPathValues = parser.values(pluginPathsOption);
