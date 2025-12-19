@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "qdesigner_actions.h"
+#include "assistantclient.h"
 #include "designer_enums.h"
 #include <qdesigner_utils_p.h>
 #include "qdesigner.h"
@@ -143,11 +144,25 @@ QFileDialog *createSaveAsDialog(QWidget *parent, const QString &dir, const QStri
     return result;
 }
 
+static std::unique_ptr<HelpClient> createHelpClient(const Options &options)
+{
+    switch (options.helpMode) {
+    case Options::HelpMode::Web:
+        return std::make_unique<WebHelpClient>();
+    case Options::HelpMode::Python:
+        return std::make_unique<PythonWebHelpClient>();
+    case Options::HelpMode::Assistant:
+        break;
+    }
+    return std::make_unique<AssistantClient>();
+}
+
 QDesignerActions::QDesignerActions(const Options &options, QDesignerWorkbench *workbench)
     : QObject(workbench),
       m_workbench(workbench),
       m_core(workbench->core()),
       m_settings(workbench->core()),
+      m_helpClient(createHelpClient(options)),
       m_backupTimer(new QTimer(this)),
       m_fileActions(createActionGroup(this)),
       m_recentFilesActions(createActionGroup(this)),
@@ -186,7 +201,6 @@ QDesignerActions::QDesignerActions(const Options &options, QDesignerWorkbench *w
       m_preferencesAction(new QAction(tr("Preferences..."), this)),
       m_appFontAction(new QAction(tr("Additional Fonts..."), this))
 {
-    Q_UNUSED(options)
     Q_ASSERT(m_core != nullptr);
     auto *ifwm = qobject_cast<qdesigner_internal::QDesignerFormWindowManager *>(m_core->formWindowManager());
     Q_ASSERT(ifwm);
@@ -964,22 +978,18 @@ QAction *QDesignerActions::minimizeAction() const
 
 void QDesignerActions::showDesignerHelp()
 {
-    QString url = m_assistantClient.designerManualUrl();
-    url += "qtdesigner-manual.html"_L1;
-    showHelp(url);
+    showHelp(m_helpClient->designerManualUrl() +  "qtdesigner-manual.html"_L1);
 }
 
 void QDesignerActions::helpRequested(const QString &manual, const QString &document)
 {
-    QString url = m_assistantClient.documentUrl(manual);
-    url += document;
-    showHelp(url);
+    showHelp(m_helpClient->documentUrl(manual) + document);
 }
 
 void QDesignerActions::showHelp(const QString &url)
 {
     QString errorMessage;
-    if (!m_assistantClient.showPage(url, &errorMessage))
+    if (!m_helpClient->showPage(url, &errorMessage))
         QMessageBox::warning(core()->topLevel(), tr("Assistant"), errorMessage);
 }
 
@@ -1010,7 +1020,7 @@ void QDesignerActions::showWidgetSpecificHelp()
     }
 
     QString errorMessage;
-    const bool rc = m_assistantClient.activateIdentifier(helpId, &errorMessage);
+    const bool rc = m_helpClient->activateIdentifier(helpId, &errorMessage);
     if (!rc)
         QMessageBox::warning(core()->topLevel(), tr("Assistant"), errorMessage);
 }

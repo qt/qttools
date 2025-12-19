@@ -26,6 +26,34 @@ public:
     QString designerManualUrl() const;
 };
 
+class WebHelpClient : public HelpClient
+{
+public:
+    Q_DISABLE_COPY_MOVE(WebHelpClient)
+    WebHelpClient() noexcept = default;
+    ~WebHelpClient() override = default;
+
+    bool showPage(const QString &path, QString *errorMessage) override;
+    bool activateIdentifier(const QString &identifier, QString *errorMessage) override;
+    QString documentUrl(const QString &module) const override;
+
+private:
+    QString webPage(const QString &identifier);
+};
+
+class PythonWebHelpClient : public WebHelpClient
+{
+public:
+    Q_DISABLE_COPY_MOVE(PythonWebHelpClient)
+    PythonWebHelpClient() noexcept = default;
+    ~PythonWebHelpClient() override = default;
+
+    bool activateIdentifier(const QString &identifier, QString *errorMessage) override;
+
+private:
+    QString webPage(const QString &identifier);
+};
+
 QT_END_NAMESPACE
 
 #endif // HELPCLIENT_H
