@@ -52,6 +52,7 @@
                 \li \l {Reusing translations}
                 \li \l {Validating translations}
                 \li \l {Translating multiple languages simultaneously}
+                \li \l {AI translation}
             \endlist
         \li
             \list
@@ -92,6 +93,7 @@
                 \li \l {Reusing translations}
                 \li \l {Validating translations}
                 \li \l {Translating multiple languages simultaneously}
+                \li \l {AI translation}
             \endlist
         \li \l{Developers}
             \list
@@ -1934,10 +1936,7 @@ Inspect the in-place source annotations marked with
  In Linguist, choose \uicontrol{Tools > AI Translation} to open the
  AI Translation dialog:
 
- \image linguist-ai-translation-dialog.webp {Screenshot of Qt Linguist AI translation window
-        showing server settings and completed translations}
-
- The dialog provides:
+ The \c Configuration part of the dialog provides:
 
  \list
      \li \uicontrol {API Type}: choose between \e{Ollama} for local Ollama servers
@@ -1950,11 +1949,26 @@ Inspect the in-place source annotations marked with
      \li \uicontrol Model: drop-down list of available models.
      \li \uicontrol Context: optional application context to improve translation
          accuracy (e.g., "medical software", "video game", "financial application").
+ \endlist
+
+ \image translationDialog1.webp {Screenshot of Qt Linguist AI translation dialog - Configuration}
+
+ The \c Selection part of the dialog provides:
+ \list
      \li \uicontrol File: the TS file to translate.
      \li \uicontrol Filter: limit translation to specific groups (contexts or labels).
      \li \uicontrol Translate: start the AI translation.
+ \endlist
+
+ \image translationDialog2.webp {Screenshot of Qt Linguist AI translation dialog - Selection}
+
+ The \c Progress part of the dialog provides:
+ \list
+     \li A stop button to stop the translation progress
      \li \uicontrol {Apply Translations}: apply the translated items into the TS file.
  \endlist
+
+ \image translationDialog3.webp {Screenshot of Qt Linguist AI translation dialog - Progress}
 
  During translation, progress messages appear in the \uicontrol{Translation Log}.
  When complete, review the translated texts in the log. Click
