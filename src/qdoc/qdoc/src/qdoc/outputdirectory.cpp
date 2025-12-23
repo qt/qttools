@@ -101,7 +101,7 @@ OutputDirectory OutputDirectory::ensure(QStringView path, const Location &locati
     if (!dir.exists() && !dir.mkpath("."_L1))
         location.fatal(u"Cannot create output directory '%1'"_s.arg(cleanPath));
 
-    return OutputDirectory(cleanPath);
+    return OutputDirectory(std::move(cleanPath));
 }
 
 /*!
