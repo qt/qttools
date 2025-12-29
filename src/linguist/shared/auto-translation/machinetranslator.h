@@ -40,6 +40,7 @@ signals:
     void batchTranslated(QHash<const TranslatorMessage *, QString> translations);
     void translationFailed(QList<const TranslatorMessage *>);
     void modelsReceived(QStringList models);
+    void debugLog(const QByteArray &message, bool fromLlm);
 
 private:
     std::atomic_bool m_stopped = false;

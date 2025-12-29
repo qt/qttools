@@ -125,6 +125,7 @@ void MachineTranslator::translateBatch(Batch b)
         return;
     m_inFlightCount++;
     const QByteArray body = m_translator->payload(b);
+    emit debugLog(body, false);
     QNetworkReply *reply = m_manager->post(*m_request, body);
     connect(reply, &QNetworkReply::finished, this,
             [this, reply, batch = std::move(b), session = m_session.load()] {
@@ -159,6 +160,8 @@ void MachineTranslator::translationReceived(QNetworkReply *reply, Batch b, int s
     }
 
     bool shouldRetry = false;
+    const QByteArray response = reply->readAll();
+    emit debugLog(response, true);
 
     if (reply->error() != QNetworkReply::NoError) {
         const auto error = reply->error();
@@ -178,7 +181,6 @@ void MachineTranslator::translationReceived(QNetworkReply *reply, Batch b, int s
             emit translationFailed(std::move(failed));
         }
     } else {
-        const QByteArray response = reply->readAll();
         QList<Item> items = std::move(b.items);
         QHash<const TranslatorMessage *, QString> out;
         QHash<QString, QString> translations = m_translator->extractTranslations(response);

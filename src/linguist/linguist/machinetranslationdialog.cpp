@@ -86,7 +86,7 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
     connect(m_ui->applyButton, &QPushButton::clicked, this,
             &MachineTranslationDialog::applyTranslations);
 
-    connect(m_ui->stopButton, &QToolButton::clicked, this, &MachineTranslationDialog::stop);
+    connect(m_ui->stopButton, &QPushButton::clicked, this, &MachineTranslationDialog::stop);
     connect(m_ui->connectButton, &QPushButton::clicked, this,
             &MachineTranslationDialog::connectToServer);
     connect(m_translator.get(), &MachineTranslator::modelsReceived, this,
@@ -106,6 +106,14 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
     });
     connect(m_ui->apiTypeComboBox, &QComboBox::currentIndexChanged, this,
             &MachineTranslationDialog::onApiTypeChanged);
+    connect(m_ui->logButton, &QPushButton::clicked, this, [this] {
+        if (m_ui->logButton->isChecked())
+            connect(m_translator.get(), &MachineTranslator::debugLog, this,
+                    &MachineTranslationDialog::onNewDebugMessage);
+        else
+            disconnect(m_translator.get(), &MachineTranslator::debugLog, this,
+                       &MachineTranslationDialog::onNewDebugMessage);
+    });
 
     setConnectionState(ConnectionState::NotConnected);
 
@@ -325,6 +333,15 @@ void MachineTranslationDialog::onBatchTranslated(
     }
     logInfo(tr("Translation Batch:"));
     logProgress(log);
+}
+
+void MachineTranslationDialog::onNewDebugMessage(const QByteArray &message, bool fromLlm)
+{
+    const QString from = fromLlm ? "LLM:"_L1 : "Qt Linguist:"_L1;
+    QString log = "<p style=\"color:red; font-weight:bold; margin:0;\">%1</p>"
+                  "<p style=\"color:yellow; font-weight:normal; font-size:small; margin:0;\">%2</p>"
+                  "<hr/>"_L1.arg(from, QString::fromUtf8(message).toHtmlEscaped());
+    m_ui->translationLog->append(log);
 }
 
 void MachineTranslationDialog::onFilterChanged(int id)
