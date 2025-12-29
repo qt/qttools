@@ -69,11 +69,10 @@ QHash<QString, QString> Ollama::extractTranslations(const QByteArray &response)
         return {};
     }
 
-    auto translations = findJsonArray(doc.object(), "Translations"_L1);
-    QHash<QString, QString> out;
-    if (!translations) {
+    auto translations = extractKeyValuePairs(doc.object(), "Translations"_L1);
+    if (translations.isEmpty()) {
         m_useJsonFormat--;
-        return out;
+        return translations;
     }
 
     // If we get a successful response by using json format, the model
@@ -83,16 +82,7 @@ QHash<QString, QString> Ollama::extractTranslations(const QByteArray &response)
     if (m_useJsonFormat > 0)
         m_useJsonFormat = std::numeric_limits<int>::max();
 
-    out.reserve(translations->size());
-    for (const QJsonValue &v : std::as_const(*translations)) {
-        if (v.isObject()) {
-            const QJsonObject obj = v.toObject();
-            const QString key = obj.keys().first();
-            if (QJsonValue val = obj.value(key); val.isString())
-                out[key] = val.toString();
-        }
-    }
-    return out;
+    return translations;
 }
 
 QStringList Ollama::extractModels(const QByteArray &response) const

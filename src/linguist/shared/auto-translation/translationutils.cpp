@@ -3,14 +3,15 @@
 
 #include "translationutils.h"
 
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#include <optional>
+
 using namespace Qt::Literals::StringLiterals;
 
-QT_BEGIN_NAMESPACE
-
-std::optional<QJsonArray> findJsonArray(const QJsonValue &jval, const QString &key)
+static std::optional<QJsonArray> findJsonArray(const QJsonValue &jval, const QString &key)
 {
     if (jval.isObject()) {
         const QJsonObject obj = jval.toObject();
@@ -46,6 +47,28 @@ std::optional<QJsonArray> findJsonArray(const QJsonValue &jval, const QString &k
         }
     }
     return {};
+}
+
+QT_BEGIN_NAMESPACE
+
+QHash<QString, QString> extractKeyValuePairs(const QJsonValue &jval, const QString &arrayKey)
+{
+    auto array = findJsonArray(jval, arrayKey);
+    if (!array)
+        return {};
+
+    QHash<QString, QString> out;
+    out.reserve(array->size());
+    for (const QJsonValue &v : std::as_const(*array)) {
+        if (v.isObject()) {
+            const QJsonObject obj = v.toObject();
+            for (auto it = obj.constBegin(); it != obj.constEnd(); ++it) {
+                if (it.value().isString())
+                    out[it.key()] = it.value().toString();
+            }
+        }
+    }
+    return out;
 }
 
 QString translationSystemPrompt()

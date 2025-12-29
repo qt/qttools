@@ -88,27 +88,17 @@ QHash<QString, QString> OpenAICompatible::extractTranslations(const QByteArray &
         contentValue = content;
     }
 
-    auto translations = findJsonArray(contentValue, "Translations"_L1);
-    QHash<QString, QString> out;
-    if (!translations) {
+    auto translations = extractKeyValuePairs(contentValue, "Translations"_L1);
+    if (translations.isEmpty()) {
         decrementFormatCounter();
-        return out;
+        return translations;
     }
 
     // Lock in the current format stage once we get a successful response.
     // This prevents unnecessary fallback attempts due to occasional empty responses.
     m_formatLocked = true;
 
-    out.reserve(translations->size());
-    for (const QJsonValue &v : std::as_const(*translations)) {
-        if (v.isObject()) {
-            const QJsonObject obj = v.toObject();
-            const QString key = obj.keys().first();
-            if (QJsonValue val = obj.value(key); val.isString())
-                out[key] = val.toString();
-        }
-    }
-    return out;
+    return translations;
 }
 
 QStringList OpenAICompatible::extractModels(const QByteArray &response) const

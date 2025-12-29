@@ -4,15 +4,18 @@
 #ifndef TRANSLATIONUTILS_H
 #define TRANSLATIONUTILS_H
 
-#include <QJsonArray>
+#include <QHash>
+#include <QJsonValue>
 #include <QString>
-
-#include <optional>
 
 QT_BEGIN_NAMESPACE
 
-// Recursively searches for a JSON array with the given key in the JSON value.
-std::optional<QJsonArray> findJsonArray(const QJsonValue &jval, const QString &key);
+// Extracts key-value pairs from a JSON structure by finding an array with the given key.
+// Recursively searches the JSON value for the array, then extracts all string key-value
+// pairs from objects in that array. Handles both formats:
+// 1. Array of single-key objects: [{"k1":"v1"},{"k2":"v2"}]
+// 2. Array with multi-key object: [{"k1":"v1","k2":"v2"}]
+QHash<QString, QString> extractKeyValuePairs(const QJsonValue &jval, const QString &arrayKey);
 
 // Returns the system prompt used for translation requests.
 QString translationSystemPrompt();
