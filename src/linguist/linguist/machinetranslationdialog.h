@@ -62,6 +62,7 @@ private slots:
     void stop();
     void translateSelection();
     void onBatchTranslated(QHash<const TranslatorMessage *, QString> translations);
+    void onNewDebugMessage(const QByteArray &message, bool fromLlm);
     void onFilterChanged(int id);
     void applyTranslations();
     void onTranslationFailed(QList<const TranslatorMessage *>);
