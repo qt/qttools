@@ -56,8 +56,7 @@ tst_lupdate::tst_lupdate()
     m_timer.start();
     QString binPath = QLibraryInfo::path(QLibraryInfo::BinariesPath);
     m_cmdLupdate = binPath + "/lupdate"_L1;
-    QString libExecPath = QLibraryInfo::path(QLibraryInfo::LibraryExecutablesPath);
-    m_cmdLupdatePro = libExecPath + "/lupdate-pro"_L1;
+    m_cmdLupdatePro = binPath + "/lupdate-pro"_L1;
     m_basePath = QFINDTESTDATA("testdata/");
 }
 
