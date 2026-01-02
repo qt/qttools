@@ -114,6 +114,8 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
             disconnect(m_translator.get(), &MachineTranslator::debugLog, this,
                        &MachineTranslationDialog::onNewDebugMessage);
     });
+    connect(m_ui->nextButton, &QPushButton::clicked, this,
+            [this] { m_ui->toolBox->setCurrentIndex(1); });
 
     setConnectionState(ConnectionState::NotConnected);
 
