@@ -5,6 +5,8 @@
 
 #include <utility>
 
+using namespace Qt::StringLiterals;
+
 class tst_validateQdocOutputFiles : public QObject
 {
     Q_OBJECT
@@ -23,7 +25,7 @@ private:
     const QString m_testDataDirectory = QFINDTESTDATA("testdata");
     QString m_qdocBinary{};
     QString m_extraParams{};
-    QScopedPointer<QTemporaryDir> m_outputDir{};
+    QTemporaryDir m_outputDir;
 };
 
 static constexpr QLatin1StringView ASAN_OPTIONS_ENVVAR{"ASAN_OPTIONS"};
@@ -70,10 +72,10 @@ void tst_validateQdocOutputFiles::initTestCase()
 
 void tst_validateQdocOutputFiles::init()
 {
-    m_outputDir.reset(new QTemporaryDir());
-    if (!m_outputDir->isValid()) {
+    m_outputDir = {};
+    if (!m_outputDir.isValid()) {
         const QString errorMessage =
-                "Couldn't create temporary directory: " + m_outputDir->errorString();
+                "Couldn't create temporary directory: "_L1 + m_outputDir.errorString();
         QFAIL(qPrintable(errorMessage));
     }
 }
@@ -163,7 +165,7 @@ void tst_validateQdocOutputFiles::qdocProjects()
     QFETCH(const QString, expectedPath);
     QFETCH(const QString, extraArgs);
 
-    QString actualPath{m_outputDir->path()};
+    QString actualPath{m_outputDir.path()};
     if (regenerate) {
         actualPath = expectedPath;
         QDir pathToRemove{expectedPath};
