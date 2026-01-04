@@ -57,7 +57,7 @@ QString WebXMLGenerator::fileExtension() const
 qsizetype WebXMLGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker)
 {
     if (m_supplement && currentWriter)
-        addAtomElements(*currentWriter.data(), atom, relative, marker);
+        addAtomElements(*currentWriter, atom, relative, marker);
     return 0;
 }
 
@@ -84,14 +84,14 @@ void WebXMLGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker 
 void WebXMLGenerator::generatePageNode(PageNode *pn, CodeMarker * /* marker */)
 {
     QByteArray data;
-    currentWriter.reset(new QXmlStreamWriter(&data));
+    currentWriter.emplace(&data);
     currentWriter->setAutoFormatting(true);
     beginSubPage(pn, Generator::fileName(pn, "webxml"));
     currentWriter->writeStartDocument();
     currentWriter->writeStartElement("WebXML");
     currentWriter->writeStartElement("document");
 
-    generateIndexSections(*currentWriter.data(), pn);
+    generateIndexSections(*currentWriter, pn);
 
     currentWriter->writeEndElement(); // document
     currentWriter->writeEndElement(); // WebXML

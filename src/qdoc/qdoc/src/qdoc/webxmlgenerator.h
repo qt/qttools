@@ -8,8 +8,9 @@
 #include "htmlgenerator.h"
 #include "qdocindexfiles.h"
 
-#include <QtCore/qscopedpointer.h>
 #include <QtCore/qxmlstream.h>
+
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
@@ -51,7 +52,7 @@ private:
 
     bool m_hasQuotingInformation { false };
     QString quoteCommand {};
-    QScopedPointer<QXmlStreamWriter> currentWriter {};
+    std::optional<QXmlStreamWriter> currentWriter;
     bool m_supplement { false };
 };
 
