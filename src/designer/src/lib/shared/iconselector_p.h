@@ -21,7 +21,7 @@
 #include <QtWidgets/qwidget.h>
 #include <QtWidgets/qdialog.h>
 
-#include <QtCore/qscopedpointer.h>
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 
@@ -55,7 +55,7 @@ public:
     QString currentPath() const;
 
 private:
-    QScopedPointer<class LanguageResourceDialogPrivate> d_ptr;
+    std::unique_ptr<class LanguageResourceDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE(LanguageResourceDialog)
     Q_DISABLE_COPY_MOVE(LanguageResourceDialog)
 
@@ -86,7 +86,7 @@ public:
 signals:
     void iconChanged(const PropertySheetIconValue &icon);
 private:
-    QScopedPointer<class IconSelectorPrivate> d_ptr;
+    std::unique_ptr<class IconSelectorPrivate> d_ptr;
     Q_DECLARE_PRIVATE(IconSelector)
     Q_DISABLE_COPY_MOVE(IconSelector)
 };
@@ -110,7 +110,7 @@ public slots:
     void reset();
 
 private:
-    QScopedPointer<IconThemeEditorPrivate> d;
+    std::unique_ptr<IconThemeEditorPrivate> d;
 };
 
 // IconThemeEnumEditor: Let's the user input theme icon enum values
@@ -135,7 +135,7 @@ public slots:
     void reset();
 
 private:
-    QScopedPointer<IconThemeEditorPrivate> d;
+    std::unique_ptr<IconThemeEditorPrivate> d;
 };
 
 } // namespace qdesigner_internal

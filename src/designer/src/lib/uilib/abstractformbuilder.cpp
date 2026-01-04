@@ -69,6 +69,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <memory>
 
 Q_DECLARE_METATYPE(QWidgetList)
 
@@ -163,10 +164,10 @@ QAbstractFormBuilder::~QAbstractFormBuilder() = default;
 */
 QWidget *QAbstractFormBuilder::load(QIODevice *dev, QWidget *parentWidget)
 {
-    QScopedPointer<DomUI> ui(d->readUi(dev));
-    if (ui.isNull())
+    std::unique_ptr<DomUI> ui(d->readUi(dev));
+    if (!ui)
         return nullptr;
-    QWidget *widget = create(ui.data(), parentWidget);
+    QWidget *widget = create(ui.get(), parentWidget);
     if (!widget && d->m_errorString.isEmpty())
         d->m_errorString = QFormBuilderExtra::msgInvalidUiFile();
     return widget;

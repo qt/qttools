@@ -73,6 +73,8 @@
 #include <QtCore/qlist.h>
 #include <QtCore/qxmlstream.h>
 
+#include <memory>
+
 Q_DECLARE_METATYPE(QWidget*)
 
 QT_BEGIN_NAMESPACE
@@ -2095,8 +2097,8 @@ bool FormWindow::handleContextMenu(QWidget *, QWidget *managedWidget, QContextMe
 bool FormWindow::setContents(QIODevice *dev, QString *errorMessageIn /* = 0 */)
 {
     QDesignerResource r(this);
-    QScopedPointer<DomUI> ui(r.readUi(dev));
-    if (ui.isNull()) {
+    std::unique_ptr<DomUI> ui(r.readUi(dev));
+    if (!ui) {
         if (errorMessageIn)
             *errorMessageIn = r.errorString();
         return false;
@@ -2113,7 +2115,7 @@ bool FormWindow::setContents(QIODevice *dev, QString *errorMessageIn /* = 0 */)
     m_undoStack.clear();
     emit changed();
 
-    QWidget *w = r.loadUi(ui.data(), formContainer());
+    QWidget *w = r.loadUi(ui.get(), formContainer());
     if (w) {
         setMainContainer(w);
         emit changed();

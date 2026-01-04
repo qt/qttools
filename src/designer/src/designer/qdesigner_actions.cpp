@@ -73,7 +73,6 @@
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qsavefile.h>
-#include <QtCore/qscopedpointer.h>
 #include <QtXml/qdom.h>
 
 #include <algorithm>
@@ -627,7 +626,7 @@ bool QDesignerActions::saveFormAs(QDesignerFormWindowInterface *fw)
         dir += extension;
     }
 
-    QScopedPointer<QFileDialog> saveAsDialog(createSaveAsDialog(fw, dir, extension));
+    std::unique_ptr<QFileDialog> saveAsDialog(createSaveAsDialog(fw, dir, extension));
     if (saveAsDialog->exec() != QDialog::Accepted)
         return false;
 
@@ -825,7 +824,8 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
         if (box.clickedButton() == cancelButton)
             return false;
         if (box.clickedButton() == switchButton) {
-            QScopedPointer<QFileDialog> saveAsDialog(createSaveAsDialog(fw, QDir::currentPath(), uiExtension()));
+            std::unique_ptr<QFileDialog> saveAsDialog(
+                createSaveAsDialog(fw, QDir::currentPath(), uiExtension()));
             if (saveAsDialog->exec() != QDialog::Accepted)
                 return false;
 

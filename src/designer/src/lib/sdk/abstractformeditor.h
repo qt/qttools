@@ -9,6 +9,8 @@
 #include <QtCore/qobject.h>
 #include <QtCore/qpointer.h>
 
+#include <memory>
+
 QT_BEGIN_NAMESPACE
 
 class QDesignerWidgetBoxInterface;
@@ -92,7 +94,7 @@ protected:
     void setExtensionManager(QExtensionManager *extensionManager);
 
 private:
-    QScopedPointer<QDesignerFormEditorInterfacePrivate> d;
+    std::unique_ptr<QDesignerFormEditorInterfacePrivate> d;
 };
 
 QT_END_NAMESPACE
