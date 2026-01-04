@@ -23,13 +23,14 @@
 #include <QtCore/qxmlstream.h>
 
 #include <QtCore/qcoreapplication.h>
-#include <QtCore/qscopedpointer.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qset.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qtextstream.h>
 #include <QtCore/qcoreapplication.h>
+
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 
@@ -559,8 +560,8 @@ static QString xmlFromWidgetBox(const QDesignerFormEditorInterface *core, const 
     const bool found = QDesignerWidgetBox::findWidget(core->widgetBox(), className, QString(), &widget);
     if (!found)
         return QString();
-    QScopedPointer<DomUI> domUI(QDesignerWidgetBox::xmlToUi(className, widget.domXml(), false));
-    if (domUI.isNull())
+    std::unique_ptr<DomUI> domUI(QDesignerWidgetBox::xmlToUi(className, widget.domXml(), false));
+    if (!domUI)
         return QString();
     domUI->setAttributeVersion(u"4.0"_s);
     DomWidget *domWidget = domUI->elementWidget();
@@ -657,7 +658,7 @@ QString WidgetDataBase::formTemplate(const QDesignerFormEditorInterface *core, c
 // Set a fixed size on a XML template
 QString WidgetDataBase::scaleFormTemplate(const QString &xml, const QSize &size, bool fixed)
 {
-    QScopedPointer<DomUI> domUI(QDesignerWidgetBox::xmlToUi(u"Form"_s, xml, false));
+    std::unique_ptr<DomUI> domUI(QDesignerWidgetBox::xmlToUi(u"Form"_s, xml, false));
     if (!domUI)
         return QString();
     DomWidget *domWidget = domUI->elementWidget();

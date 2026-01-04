@@ -15,8 +15,9 @@
 #ifndef QTRESOURCEEDITOR_H
 #define QTRESOURCEEDITOR_H
 
-#include <QtCore/qscopedpointer.h>
 #include <QtWidgets/qdialog.h>
+
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 
@@ -46,7 +47,7 @@ private:
     QtResourceEditorDialog(QDesignerFormEditorInterface *core, QDesignerDialogGuiInterface *dlgGui, QWidget *parent = nullptr);
     ~QtResourceEditorDialog() override;
 
-    QScopedPointer<class QtResourceEditorDialogPrivate> d_ptr;
+    std::unique_ptr<class QtResourceEditorDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtResourceEditorDialog)
     Q_DISABLE_COPY_MOVE(QtResourceEditorDialog)
 };

@@ -82,6 +82,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <memory>
 
 Q_DECLARE_METATYPE(QWidgetList)
 
@@ -634,8 +635,8 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
 
 QWidget *QDesignerResource::load(QIODevice *dev, QWidget *parentWidget)
 {
-    QScopedPointer<DomUI> ui(readUi(dev));
-    return ui.isNull() ? nullptr : loadUi(ui.data(), parentWidget);
+    std::unique_ptr<DomUI> ui(readUi(dev));
+    return ui ? loadUi(ui.get(), parentWidget) : nullptr;
 }
 
 QWidget *QDesignerResource::loadUi(DomUI *ui, QWidget *parentWidget)

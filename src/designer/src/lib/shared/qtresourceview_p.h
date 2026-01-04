@@ -19,6 +19,8 @@
 #include <QtWidgets/qwidget.h>
 #include <QtWidgets/qdialog.h>
 
+#include <memory>
+
 QT_BEGIN_NAMESPACE
 
 class QtResourceModel;
@@ -63,7 +65,7 @@ protected:
     bool event(QEvent *event) override;
 
 private:
-    QScopedPointer<class QtResourceViewPrivate> d_ptr;
+    std::unique_ptr<class QtResourceViewPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtResourceView)
     Q_DISABLE_COPY_MOVE(QtResourceView)
 };
@@ -82,7 +84,7 @@ public:
     void setResourceEditingEnabled(bool enable);
 
 private:
-    QScopedPointer<class QtResourceViewDialogPrivate> d_ptr;
+    std::unique_ptr<class QtResourceViewDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtResourceViewDialog)
     Q_DISABLE_COPY_MOVE(QtResourceViewDialog)
 };

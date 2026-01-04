@@ -7,10 +7,11 @@
 #include <QtDesigner/sdk_global.h>
 
 #include <QtCore/qobject.h>
-#include <QtCore/qscopedpointer.h>
 #include <QtCore/qstringlist.h>
 #include <QtCore/qflags.h>
 #include <QtCore/qversionnumber.h>
+
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 
@@ -105,7 +106,7 @@ public Q_SLOTS:
     virtual void updateCustomWidgetPlugins() = 0;
 
 private:
-    QScopedPointer<QDesignerIntegrationInterfacePrivate> d;
+    std::unique_ptr<QDesignerIntegrationInterfacePrivate> d;
 };
 
 class QDESIGNER_SDK_EXPORT QDesignerIntegration: public QDesignerIntegrationInterface
@@ -150,7 +151,7 @@ public:
     void updateCustomWidgetPlugins() override;
 
 private:
-    QScopedPointer<qdesigner_internal::QDesignerIntegrationPrivate> d;
+    std::unique_ptr<qdesigner_internal::QDesignerIntegrationPrivate> d;
 };
 
 QT_END_NAMESPACE

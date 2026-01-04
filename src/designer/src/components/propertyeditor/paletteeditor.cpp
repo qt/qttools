@@ -35,6 +35,8 @@
 #include <QtCore/qsavefile.h>
 #include <QtCore/qxmlstream.h>
 
+#include <memory>
+
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
@@ -287,7 +289,7 @@ static bool savePalette(const QString &fileName, const QPalette &pal, QString *e
         return false;
     }
     {
-        QScopedPointer<DomPalette> domPalette(QFormBuilderExtra::savePalette(pal));
+        std::unique_ptr<DomPalette> domPalette(QFormBuilderExtra::savePalette(pal));
         QXmlStreamWriter writer(&file);
         writer.setAutoFormatting(true);
         writer.setAutoFormattingIndent(1);
@@ -334,13 +336,13 @@ static bool loadPalette(const QString &fileName, QPalette *pal, QString *errorMe
         *errorMessage = msgCannotReadPalette(fileName, reader, why);
         return false;
     }
-    QScopedPointer<DomPalette> domPalette(new DomPalette);
+    auto domPalette = std::make_unique<DomPalette>();
     domPalette->read(reader);
     if (reader.hasError()) {
         *errorMessage = msgCannotReadPalette(fileName, reader);
         return false;
     }
-    *pal = QFormBuilderExtra::loadPalette(domPalette.data());
+    *pal = QFormBuilderExtra::loadPalette(domPalette.get());
     return true;
 }
 

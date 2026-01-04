@@ -8,7 +8,6 @@
 #include <QtDesigner/abstractformwindow.h>
 
 #include <QtCore/qobject.h>
-#include <QtCore/qscopedpointer.h>
 
 QT_BEGIN_NAMESPACE
 
