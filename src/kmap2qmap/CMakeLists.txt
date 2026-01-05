@@ -8,7 +8,7 @@
 qt_internal_add_app(kmap2qmap
     SOURCES
         main.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::InputSupportPrivate
 )
 set_target_properties(kmap2qmap PROPERTIES
