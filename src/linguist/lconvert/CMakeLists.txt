@@ -9,6 +9,7 @@ qt_get_tool_target_name(target_name lconvert)
 qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Translation File Converter"
     TOOLS_TARGET Linguist
+    USER_FACING
     SOURCES
         ../shared/numerus.cpp
         ../shared/po.cpp
