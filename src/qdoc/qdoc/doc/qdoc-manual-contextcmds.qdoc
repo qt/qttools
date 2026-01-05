@@ -432,9 +432,8 @@
     \target deprecated-command
     \section1 \\deprecated
 
-    The \\deprecated command is for indicating that a function is being
-    deprecated, and that it should no longer be used in new code. There
-    is no guarantee for how long it will remain in the library.
+    The \\deprecated command is for indicating that the associated element
+    is deprecated, and that it should no longer be used in new code.
 
     The \\deprecated command takes two optional arguments:
     \list
@@ -443,10 +442,9 @@
             replacement.
     \endlist
 
-    When generating the reference documentation for a class, QDoc will
-    create and link to a separate page documenting its deprecated
-    functions. It is good practice to suggest an equivalent function
-    as an alternative.
+    When generating the reference documentation for a class, QDoc
+    creates and links to a separate page that documents deprecated members.
+    It's good practice to suggest an equivalent alternative.
 
     \badcode *
     /\1!
@@ -458,8 +456,8 @@
     \target internal-command
     \section1 \\internal
 
-    The \\internal command indicates that the referenced
-    function is not part of the public interface.
+    The \\internal command indicates that the documented element
+    is not part of the public interface.
 
     The command must stand on its own line.
 
@@ -519,14 +517,14 @@
     \target preliminary-command
     \section1 \\preliminary
 
-    The \\preliminary command is for indicating that a referenced
-    function is still under development.
+    The \\preliminary command is for indicating that the documented
+    element is still under development.
 
     The command must stand on its own line.
 
     The \\preliminary command expands to a notification in the
-    function documentation, and marks the function as preliminary when
-    it appears in lists.
+    documentation, and marks the element as preliminary when it appears
+    in lists.
 
     \badcode *
     /\1!

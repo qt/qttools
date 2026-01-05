@@ -352,7 +352,7 @@
         \l{Topic Commands}{topic commands}.
 
         \li Give the topic a context - QDoc can associate certain topics to other
-        pages such as associating deprecated functions when the documentation is
+        pages such as associating deprecated elements when the documentation is
         marked with \l{deprecated-command}{\\deprecated}.
 
         \li Mark sections of the document with
