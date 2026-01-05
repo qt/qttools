@@ -65,6 +65,8 @@ void RemoteControl::handleCommandString(const QString &cmdString)
             handleShowOrHideCommand(arg, true);
          else if (cmd == "hide"_L1)
             handleShowOrHideCommand(arg, false);
+         else if (cmd == "quit"_L1)
+            handleQuitCommand();
          else if (cmd == "setsource"_L1)
             handleSetSourceCommand(arg);
          else if (cmd == "synccontents"_L1)
@@ -116,6 +118,11 @@ void RemoteControl::handleShowOrHideCommand(const QString &arg, bool show)
         m_mainWindow->setBookmarksVisible(show);
     else if (arg.toLower() == "search"_L1)
         m_mainWindow->setSearchVisible(show);
+}
+
+void RemoteControl::handleQuitCommand()
+{
+    QCoreApplication::quit();
 }
 
 void RemoteControl::handleSetSourceCommand(const QString &arg)
