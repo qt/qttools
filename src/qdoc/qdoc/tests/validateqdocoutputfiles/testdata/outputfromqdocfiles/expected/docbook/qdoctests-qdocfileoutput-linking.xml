@@ -14,6 +14,6 @@
 <db:anchor xml:id="link-test-target"/>
 <db:section xml:id="link-targets">
 <db:title>Link targets</db:title>
-<db:para>Valid parameters for the link command (<db:code>\l</db:code>) are page and section titles, targets defined with \target or \keyword commands, and API reference keywords (types, methods, namespaces, and so on).</db:para>
+<db:para>Valid parameters for the link command (<db:code>\l</db:code>) are page and section titles, targets defined with <db:phrase>\target</db:phrase> or <db:phrase>\keyword</db:phrase> commands, and API reference keywords (types, methods, namespaces, and so on).</db:para>
 </db:section>
 </db:article>

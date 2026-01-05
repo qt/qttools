@@ -48,8 +48,10 @@
                     <target name="previouspage-command"/>
                 </section>
                 <section id="previouspage">
-                    <heading level="2">\previouspage</heading>
-                    <para>The \previouspage command...</para>
+                    <heading level="2">
+                        <teletype>\previouspage</teletype>
+                    </heading>
+                    <para>The <teletype>\previouspage</teletype> command...</para>
                 </section>
             </description>
         </page>

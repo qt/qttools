@@ -66,6 +66,7 @@ private:
     void appendAtom(const LinkAtom&);
     void appendChar(QChar ch);
     void appendWord(const QString &word);
+    void appendEscapedIdentifier();
     void appendToCode(const QString &code);
     void appendToCode(const QString &code, Atom::AtomType defaultType);
     void enterPara(Atom::AtomType leftType = Atom::ParaLeft,

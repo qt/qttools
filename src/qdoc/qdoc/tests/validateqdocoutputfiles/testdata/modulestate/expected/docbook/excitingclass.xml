@@ -26,7 +26,7 @@
 <db:para>There's a lot to say about <db:link xlink:href="excitingclass.xml">ExcitingClass</db:link>. Let's dive into the details!</db:para>
 <db:section xml:id="what-makes-excitingclass-more-exciting-than-boringclass">
 <db:title>What makes ExcitingClass more exciting than BoringClass?</db:title>
-<db:para>Well, for one, it has a \section1 heading in it's documentation! How exciting is that?!</db:para>
+<db:para>Well, for one, it has a <db:phrase>\section1</db:phrase> heading in it's documentation! How exciting is that?!</db:para>
 </db:section>
 </db:section>
 </db:article>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test automatic notranslate marking for command references" version="" project="AutoNotranslateCommands">
+    <namespace name="" status="active" access="public" module="autonotranslatecommands">
+        <page name="auto-notranslate-test.html" href="auto-notranslate-test.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Auto Notranslate Test" fulltitle="Auto Notranslate Test" subtitle="">
+            <contents name="formatting-commands" title="Formatting Commands" level="1"/>
+            <contents name="topic-commands" title="Topic Commands" level="1"/>
+            <contents name="meta-commands" title="Meta Commands" level="1"/>
+            <contents name="qml-commands" title="QML Commands" level="1"/>
+            <contents name="escaped-backslash" title="Escaped Backslash" level="1"/>
+            <contents name="explicit-formatting-still-works" title="Explicit Formatting Still Works" level="1"/>
+        </page>
+    </namespace>
+</INDEX>

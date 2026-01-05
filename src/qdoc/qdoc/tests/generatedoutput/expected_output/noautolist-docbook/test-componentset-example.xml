@@ -14,20 +14,20 @@
 <db:para>The generated documentation is available in the <db:link xlink:href="uicomponents-qmlmodule.xml">UI Components</db:link> module.</db:para>
 <db:section xml:id="qml-class">
 <db:title>QML Class</db:title>
-<db:para>The QML types use the \qmltype to document the type. In addition, they have the \inmodule command in order for QDoc to associate them to the <db:code>UIComponents</db:code> module.</db:para>
-<db:para>QDoc uses the \brief command to place a basic description when listing the types.</db:para>
+<db:para>The QML types use the <db:phrase>\qmltype</db:phrase> to document the type. In addition, they have the <db:phrase>\inmodule</db:phrase> command in order for QDoc to associate them to the <db:code>UIComponents</db:code> module.</db:para>
+<db:para>QDoc uses the <db:phrase>\brief</db:phrase> command to place a basic description when listing the types.</db:para>
 </db:section>
 <db:section xml:id="properties-signals-handlers-and-methods">
 <db:title>Properties, Signals, Handlers, and Methods</db:title>
 <db:para>The types have their properties, signals, handlers, and methods defined in their respective QML files. QDoc associates the properties and methods to the types, therefore, you only need to place the documentation above the property, method, or signal.</db:para>
-<db:para>To document the type of a <db:emphasis>property alias</db:emphasis>, you must use the \qmlproperty command to specify the data type.</db:para>
+<db:para>To document the type of a <db:emphasis>property alias</db:emphasis>, you must use the <db:phrase>\qmlproperty</db:phrase> command to specify the data type.</db:para>
 <db:programlisting language="cpp">\qmlproperty int anAliasedProperty
 An aliased property of type int.
 </db:programlisting>
 <db:section xml:id="internal-documentation">
 <db:title>Internal Documentation</db:title>
-<db:para>You may declare that a documentation is for internal use by placing the \internal command after the beginning QDoc comment <db:code>/*</db:code>. QDoc will prevent the internal documentation from appearing in the public API.</db:para>
-<db:para>If you wish to omit certain parts of the documentation, you may use the \omit and \endomit command.</db:para>
+<db:para>You may declare that a documentation is for internal use by placing the <db:phrase>\internal</db:phrase> command after the beginning QDoc comment <db:code>/*</db:code>. QDoc will prevent the internal documentation from appearing in the public API.</db:para>
+<db:para>If you wish to omit certain parts of the documentation, you may use the <db:phrase>\omit</db:phrase> and <db:phrase>\endomit</db:phrase> command.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="qml-types-with-c-implementation">

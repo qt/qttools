@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- test.qdoc -->
+  <title>Auto Notranslate Test | AutoNotranslateCommands</title>
+</head>
+<body>
+<ul class="breadcrumb">
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#formatting-commands">Formatting Commands</a></li>
+<li class="level1"><a href="#topic-commands">Topic Commands</a></li>
+<li class="level1"><a href="#meta-commands">Meta Commands</a></li>
+<li class="level1"><a href="#qml-commands">QML Commands</a></li>
+<li class="level1"><a href="#escaped-backslash">Escaped Backslash</a></li>
+<li class="level1"><a href="#explicit-formatting-still-works">Explicit Formatting Still Works</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title">Auto Notranslate Test</h1>
+<!-- $$$auto-notranslate-test.html-description -->
+<div class="descr" id="details">
+<p>This page tests automatic notranslate marking for command references.</p>
+<h2 id="formatting-commands">Formatting Commands</h2>
+<p>The <span translate="no">\section1</span> command creates a first-level section.</p>
+<p>Use <span translate="no">\brief</span> to provide a brief description for documented elements.</p>
+<p>The <span translate="no">\c</span> command formats text in a monospace font.</p>
+<p>Commands like <span translate="no">\list</span>, <span translate="no">\li</span>, and <span translate="no">\endlist</span> work together to create lists.</p>
+<h2 id="topic-commands">Topic Commands</h2>
+<p>Topic commands like <span translate="no">\fn</span>, <span translate="no">\class</span>, and <span translate="no">\page</span> define what is being documented.</p>
+<p>The <span translate="no">\property</span> command documents a C++ property.</p>
+<p>Use <span translate="no">\namespace</span> to document a namespace.</p>
+<h2 id="meta-commands">Meta Commands</h2>
+<p>Meta commands like <span translate="no">\since</span> and <span translate="no">\deprecated</span> provide additional metadata.</p>
+<p>The <span translate="no">\internal</span> command marks documentation as internal.</p>
+<p>Use <span translate="no">\inmodule</span> to specify which module an element belongs to.</p>
+<h2 id="qml-commands">QML Commands</h2>
+<p>QML-specific commands like <span translate="no">\qmltype</span>, <span translate="no">\qmlproperty</span>, and <span translate="no">\qmlmethod</span> are used to document QML types.</p>
+<h2 id="escaped-backslash">Escaped Backslash</h2>
+<p>A literal backslash in QDoc is written as \\ and outputs as a backslash. Note that bare escaped backslashes are not wrapped in notranslate.</p>
+<h2 id="explicit-formatting-still-works">Explicit Formatting Still Works</h2>
+<p>Using <code translate="no">\\section1</code> with explicit <span translate="no">\c</span> formatting should still work.</p>
+<p>Using <span translate="no">custom text</span> with explicit <span translate="no">\notranslate</span> also works.</p>
+</div>
+<!-- @@@auto-notranslate-test.html -->
+</body>
+</html>

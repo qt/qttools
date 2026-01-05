@@ -83,11 +83,11 @@
 </db:section>
 <db:section xml:id="inlineFunction">
 <db:title>void Test::inlineFunction()</db:title>
-<db:para>An inline function, documented using the \fn QDoc command.</db:para>
+<db:para>An inline function, documented using the <db:phrase>\fn</db:phrase> QDoc command.</db:para>
 </db:section>
 <db:section xml:id="methodWithEmDashInItsDocs">
 <db:title>void Test::methodWithEmDashInItsDocs()</db:title>
-<db:para>This method has em dashes in its documentation—as you'll find represented by <db:code>---</db:code> in the sources—here and there. The important bit to note is that when passed e.g. to the \c command, the three hyphens are processed as input to the command and not replaced by an em dash.</db:para>
+<db:para>This method has em dashes in its documentation—as you'll find represented by <db:code>---</db:code> in the sources—here and there. The important bit to note is that when passed e.g. to the <db:phrase>\c</db:phrase> command, the three hyphens are processed as input to the command and not replaced by an em dash.</db:para>
 <db:para>-----------------------------------------------------------------------</db:para>
 <db:para>People can still add a bunch of dashes, though, without QDoc replacing them all with a series of em dashes.</db:para>
 <db:para>—You can also start a new paragraph with an em dash, if you want to.</db:para>
@@ -102,13 +102,13 @@
 </db:section>
 <db:section xml:id="methodWithEnDashInItsDocs">
 <db:title>void Test::methodWithEnDashInItsDocs()</db:title>
-<db:para>This method has en dashes in its documentation – as you'll find represented by <db:code>--</db:code> in the sources – here and there. The important bit to note is that when passed e.g. to the \c command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</db:para>
+<db:para>This method has en dashes in its documentation – as you'll find represented by <db:code>--</db:code> in the sources – here and there. The important bit to note is that when passed e.g. to the <db:phrase>\c</db:phrase> command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</db:para>
 <db:programlisting language="cpp">for (int i = 42; i &gt; 0; --i)
     // Do something cool during countdown.
 </db:programlisting>
 <db:para>...as it would be silly if this would output –i instead of <db:code>--i</db:code>.</db:para>
 <db:para>-----------------------------------------------------------------------</db:para>
-<db:para>It still allows people to add a bunch of dashes, though, without replacing them all with a series of en dashes. Of course, they might want to use the \hr command instead, like this:</db:para>
+<db:para>It still allows people to add a bunch of dashes, though, without replacing them all with a series of en dashes. Of course, they might want to use the <db:phrase>\hr</db:phrase> command instead, like this:</db:para>
 <db:para>– You can also start a new paragraph with an en dash, if you want to.</db:para>
 <db:section>
 <db:title>See Also</db:title>

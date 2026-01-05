@@ -7,7 +7,7 @@
 <db:abstract>
 <db:para>LineComment Reference Documentation.</db:para></db:abstract>
 </db:info>
-<db:para>QDoc's \sa command doesn't respect QDoc's line comments.</db:para>
+<db:para>QDoc's <db:phrase>\sa</db:phrase> command doesn't respect QDoc's line comments.</db:para>
 <db:section>
 <db:title>See Also</db:title>
 <db:para><db:emphasis>See also </db:emphasis>

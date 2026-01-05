@@ -5,7 +5,7 @@
 <db:productname>Qt</db:productname>
 <db:titleabbrev>TableAfterValue Reference Documentation</db:titleabbrev>
 <db:abstract>
-<db:para>Test that the \table command can follow a \value command.</db:para>
+<db:para>Test that the <db:phrase>\table</db:phrase> command can follow a <db:phrase>\value</db:phrase> command.</db:para>
 </db:abstract>
 </db:info>
 <db:variablelist>
@@ -20,7 +20,7 @@
 <db:title>Detailed Description</db:title>
 <db:section xml:id="background-for-this-test-content">
 <db:title>Background for this test content</db:title>
-<db:para>According to QTBUG-115720, whenever a \value is followed by \table, the contents of the two commands end up being merged. This is likely surprising. The bug report suggests a workaround, which is adding \br between \value and \table.</db:para>
+<db:para>According to QTBUG-115720, whenever a <db:phrase>\value</db:phrase> is followed by <db:phrase>\table</db:phrase>, the contents of the two commands end up being merged. This is likely surprising. The bug report suggests a workaround, which is adding <db:phrase>\br</db:phrase> between <db:phrase>\value</db:phrase> and <db:phrase>\table</db:phrase>.</db:para>
 </db:section>
 <db:section>
 <db:title>See Also</db:title>
@@ -51,7 +51,7 @@
 <db:informaltable style="generic">
 <db:tr valign="top">
 <db:td>
-<db:para>This table shouldn't be mangled by the previous \value command.</db:para>
+<db:para>This table shouldn't be mangled by the previous <db:phrase>\value</db:phrase> command.</db:para>
 </db:td>
 </db:tr>
 </db:informaltable>

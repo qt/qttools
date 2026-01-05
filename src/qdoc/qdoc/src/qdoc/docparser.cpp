@@ -348,11 +348,15 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
             m_endPosition = m_position;
             if (cmdStr.isEmpty()) {
                 if (m_position < m_inputLength) {
-                    enterPara();
-                    if (m_input.at(m_position).isSpace()) {
+                    QChar nextCh = m_input.at(m_position);
+                    if (nextCh == '\\') {
+                        appendEscapedIdentifier();
+                    } else if (nextCh.isSpace()) {
+                        enterPara();
                         skipAllSpaces();
                         appendChar(QLatin1Char(' '));
                     } else {
+                        enterPara();
                         appendChar(m_input.at(m_position++));
                     }
                 }
@@ -1940,6 +1944,44 @@ void DocParser::appendWord(const QString &word)
         appendAtom(Atom(Atom::String, word));
     } else
         m_private->m_text.lastAtom()->concatenateString(word);
+}
+
+/*!
+    Handles escaped backslash sequences (\\) that may be followed by an identifier.
+
+    When a double backslash is followed by alphanumeric characters (such as \\section1),
+    the backslash and identifier are wrapped in notranslate formatting to preserve
+    them verbatim in the output.
+
+    When a double backslash is not followed by an identifier, a literal backslash
+    is appended.
+
+    \note Skips \\r in CRLF sequences to prevent spurious whitespace in the output.
+*/
+void DocParser::appendEscapedIdentifier()
+{
+    Q_ASSERT(m_position < m_inputLength);
+    Q_ASSERT(m_input.at(m_position) == '\\');
+
+    ++m_position;
+
+    QString identifier;
+    while (m_position < m_inputLength && m_input.at(m_position).isLetterOrNumber()) {
+        identifier += m_input.at(m_position);
+        ++m_position;
+    }
+
+    enterPara();
+    if (!identifier.isEmpty()) {
+        appendAtom(Atom(Atom::FormattingLeft, ATOM_FORMATTING_NOTRANSLATE));
+        appendAtom(Atom(Atom::String, '\\' + identifier));
+        appendAtom(Atom(Atom::FormattingRight, ATOM_FORMATTING_NOTRANSLATE));
+
+        if (m_position + 1 < m_inputLength && m_input.at(m_position) == '\r' && m_input.at(m_position + 1) == '\n')
+            ++m_position;
+    } else {
+        appendChar(QLatin1Char('\\'));
+    }
 }
 
 void DocParser::appendToCode(const QString &markedCode)

@@ -4,7 +4,7 @@
         <class name="TestPositionDependent" href="testpositiondependent.html" status="active" access="public" location="testoverloads.h" documented="true" module="TestQDocOverloadCommand" brief="Test class to verify position-dependent primary overload behavior">
             <description>
                 <brief>Test class to verify position-dependent primary overload behavior.</brief>
-                <para>This class tests that when using shared comment nodes with \overload primary, the FIRST \fn command becomes the primary overload, regardless of how the functions would naturally sort by signature.</para>
+                <para>This class tests that when using shared comment nodes with <teletype>\overload</teletype> primary, the FIRST <teletype>\fn</teletype> command becomes the primary overload, regardless of how the functions would naturally sort by signature.</para>
             </description>
             <function name="convert" fullname="TestPositionDependent::convert" href="testpositiondependent.html#convert" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" type="void" signature="void convert(int value, bool flag) const">
                 <parameter type="int" name="value" default=""/>
@@ -18,7 +18,7 @@
                 <parameter type="const char *" name="text" default=""/>
                 <description>
                     <para>Converts the specified <argument>text</argument>.</para>
-                    <para>This overload should link to the PRIMARY convert function, which is convert(int, bool) because it was the FIRST \fn in the shared comment block, NOT <link raw="convert()" href="testpositiondependent.html#convert" type="function">convert()</link> even though <link raw="convert()" href="testpositiondependent.html#convert" type="function">convert()</link> would sort first by signature.</para>
+                    <para>This overload should link to the PRIMARY convert function, which is convert(int, bool) because it was the FIRST <teletype>\fn</teletype> in the shared comment block, NOT <link raw="convert()" href="testpositiondependent.html#convert" type="function">convert()</link> even though <link raw="convert()" href="testpositiondependent.html#convert" type="function">convert()</link> would sort first by signature.</para>
                 </description>
             </function>
         </class>

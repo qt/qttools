@@ -5,7 +5,7 @@
 <db:productname>Qt</db:productname>
 <db:titleabbrev>QDoc multiple overloads test Reference Documentation</db:titleabbrev>
 <db:abstract>
-<db:para>Demonstrates multiple overloads and the \overload primary feature.</db:para>
+<db:para>Demonstrates multiple overloads and the <db:phrase>\overload</db:phrase> primary feature.</db:para>
 </db:abstract>
 </db:info>
 <db:variablelist>
@@ -18,16 +18,16 @@
 </db:variablelist>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
-<db:para>This test case demonstrates various scenarios for the \overload command:</db:para>
+<db:para>This test case demonstrates various scenarios for the <db:phrase>\overload</db:phrase> command:</db:para>
 <db:orderedlist numeration="arabic">
 <db:listitem>
-<db:para>Original issue: Using \overload with unqualified function names (e.g., \overload <db:link xlink:href="testoverloads.xml#failOnWarning">failOnWarning</db:link>()) creates dead links when there are multiple overloads and QDoc cannot determine which overload should be the primary target.</db:para>
+<db:para>Original issue: Using <db:phrase>\overload</db:phrase> with unqualified function names (e.g., <db:phrase>\overload</db:phrase> <db:link xlink:href="testoverloads.xml#failOnWarning">failOnWarning</db:link>()) creates dead links when there are multiple overloads and QDoc cannot determine which overload should be the primary target.</db:para>
 </db:listitem>
 <db:listitem>
-<db:para>Solution: The \overload primary command allows explicitly designating which overload should be the primary target for unqualified \overload references.</db:para>
+<db:para>Solution: The <db:phrase>\overload</db:phrase> primary command allows explicitly designating which overload should be the primary target for unqualified <db:phrase>\overload</db:phrase> references.</db:para>
 </db:listitem>
 <db:listitem>
-<db:para>Corner case: Functions named &quot;primary&quot; to test whether the function name conflicts with the &quot;primary&quot; keyword in \overload commands.</db:para>
+<db:para>Corner case: Functions named &quot;primary&quot; to test whether the function name conflicts with the &quot;primary&quot; keyword in <db:phrase>\overload</db:phrase> commands.</db:para>
 </db:listitem>
 </db:orderedlist>
 <db:para>The <db:link xlink:href="testoverloads.xml#failOnWarning">failOnWarning</db:link>() functions demonstrate the original problem and its solution, while the <db:link xlink:href="testoverloads.xml#primary">primary</db:link>() functions test the corner case where a function happens to be named &quot;primary&quot;.</db:para>
@@ -36,8 +36,8 @@
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="failOnWarning">
 <db:title>[static, since 6.11] void TestOverloads::failOnWarning(const RegularExpression &amp;<db:emphasis>messagePattern</db:emphasis>)</db:title>
-<db:para>Appends a test failure to the test log for each warning that matches \a messagePattern.</db:para>
-<db:para>This is explicitly marked as the primary overload with \overload primary. Other overloads should now link to this function when using unqualified \overload commands.</db:para>
+<db:para>Appends a test failure to the test log for each warning that matches <db:phrase>\a</db:phrase> messagePattern.</db:para>
+<db:para>This is explicitly marked as the primary overload with <db:phrase>\overload</db:phrase> primary. Other overloads should now link to this function when using unqualified <db:phrase>\overload</db:phrase> commands.</db:para>
 <db:para>This function was introduced in Qt 6.11.</db:para>
 </db:section>
 <db:section xml:id="failOnWarning-1">
@@ -49,7 +49,7 @@
 </db:section>
 <db:section xml:id="failOnWarning-2">
 <db:title>[static, since 6.11] void TestOverloads::failOnWarning(const char *<db:emphasis>message</db:emphasis>)</db:title>
-<db:para>Another overload using the same unqualified \overload target. This also creates dead links for the same reason as above.</db:para>
+<db:para>Another overload using the same unqualified <db:phrase>\overload</db:phrase> target. This also creates dead links for the same reason as above.</db:para>
 <db:para>This function overloads <db:link xlink:href="testoverloads.xml#failOnWarning">TestOverloads::failOnWarning()</db:link>.</db:para>
 <db:para>This function was introduced in Qt 6.11.</db:para>
 </db:section>
@@ -73,7 +73,7 @@
 </db:section>
 <db:section xml:id="parameterWarningTest">
 <db:title>[static, since 6.11] void TestOverloads::parameterWarningTest(int <db:emphasis>param</db:emphasis>)</db:title>
-<db:para>Test function to validate QTBUG-140510: Functions marked with \overload primary should require parameter documentation just like non-overloaded functions, since they serve as the main documentation for their function family.</db:para>
+<db:para>Test function to validate QTBUG-140510: Functions marked with <db:phrase>\overload</db:phrase> primary should require parameter documentation just like non-overloaded functions, since they serve as the main documentation for their function family.</db:para>
 <db:para>This primary overload has a parameter <db:code role="parameter">param</db:code> that is documented here, demonstrating the correct practice for primary overload documentation.</db:para>
 <db:para>This function was introduced in Qt 6.11.</db:para>
 </db:section>
@@ -91,23 +91,23 @@
 </db:section>
 <db:section xml:id="primary">
 <db:title>[static] void TestOverloads::primary()</db:title>
-<db:para>Corner case test: This function is named &quot;primary&quot; and is marked as the primary overload. This tests whether the word &quot;primary&quot; as a function name conflicts with the &quot;primary&quot; keyword in the \overload command.</db:para>
-<db:para>This should work correctly because the &quot;primary&quot; keyword is parsed in the context of the \overload command, not as a function name reference.</db:para>
+<db:para>Corner case test: This function is named &quot;primary&quot; and is marked as the primary overload. This tests whether the word &quot;primary&quot; as a function name conflicts with the &quot;primary&quot; keyword in the <db:phrase>\overload</db:phrase> command.</db:para>
+<db:para>This should work correctly because the &quot;primary&quot; keyword is parsed in the context of the <db:phrase>\overload</db:phrase> command, not as a function name reference.</db:para>
 </db:section>
 <db:section xml:id="primary-1">
 <db:title>[static] void TestOverloads::primary(const char *<db:emphasis>message</db:emphasis>)</db:title>
-<db:para>Another overload of the function named &quot;primary&quot;. This should also link to the parameterless <db:link xlink:href="testoverloads.xml#primary">primary</db:link>() function, testing that multiple overloads of a function named &quot;primary&quot; work correctly with the \overload system.</db:para>
+<db:para>Another overload of the function named &quot;primary&quot;. This should also link to the parameterless <db:link xlink:href="testoverloads.xml#primary">primary</db:link>() function, testing that multiple overloads of a function named &quot;primary&quot; work correctly with the <db:phrase>\overload</db:phrase> system.</db:para>
 <db:para>This function overloads <db:link xlink:href="testoverloads.xml#primary">TestOverloads::primary()</db:link>.</db:para>
 </db:section>
 <db:section xml:id="primary-2">
 <db:title>[static] void TestOverloads::primary(int <db:emphasis>value</db:emphasis>)</db:title>
-<db:para>Corner case test: This should link to the <db:link xlink:href="testoverloads.xml#primary">primary</db:link>() function above, demonstrating that \overload <db:link xlink:href="testoverloads.xml#primary">primary</db:link>() correctly references the function named &quot;primary&quot; rather than being confused with the &quot;primary&quot; keyword.</db:para>
+<db:para>Corner case test: This should link to the <db:link xlink:href="testoverloads.xml#primary">primary</db:link>() function above, demonstrating that <db:phrase>\overload</db:phrase> <db:link xlink:href="testoverloads.xml#primary">primary</db:link>() correctly references the function named &quot;primary&quot; rather than being confused with the &quot;primary&quot; keyword.</db:para>
 <db:para>This tests the scenario where a function name happens to be &quot;primary&quot;.</db:para>
 <db:para>This function overloads <db:link xlink:href="testoverloads.xml#primary">TestOverloads::primary()</db:link>.</db:para>
 </db:section>
 <db:section xml:id="testFullyQualified">
 <db:title>[static] void TestOverloads::testFullyQualified()</db:title>
-<db:para>This uses a fully qualified \overload target to demonstrate the current workaround mentioned in the bug report. This should generate a working link.</db:para>
+<db:para>This uses a fully qualified <db:phrase>\overload</db:phrase> target to demonstrate the current workaround mentioned in the bug report. This should generate a working link.</db:para>
 </db:section>
 </db:section>
 </db:article>

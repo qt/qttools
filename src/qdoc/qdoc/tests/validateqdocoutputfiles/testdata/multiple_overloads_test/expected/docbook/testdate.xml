@@ -26,7 +26,7 @@
 <db:title>void TestDate::toString() const</db:title>
 <db:bridgehead renderas="sect2" xml:id="toString-2">void TestDate::toString(int <db:emphasis>format</db:emphasis>) const</db:bridgehead>
 <db:para>Returns the date as a string. The <db:code role="parameter">format</db:code> parameter determines the format of the result string.</db:para>
-<db:para>This uses shared comment nodes (multiple \fn commands) just like Eddy's qtbase change, which triggers the bug.</db:para>
+<db:para>This uses shared comment nodes (multiple <db:phrase>\fn</db:phrase> commands) just like Eddy's qtbase change, which triggers the bug.</db:para>
 </db:section>
 <db:section xml:id="toString-1">
 <db:title>void TestDate::toString(const char *<db:emphasis>formatString</db:emphasis>) const</db:title>

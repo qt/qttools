@@ -14,20 +14,20 @@
                 <para>The generated documentation is available in the <link raw="UI Components" href="uicomponents-qmlmodule.html" type="">UI Components</link> module.</para>
                 <section id="qml-class">
                     <heading level="1">QML Class</heading>
-                    <para>The QML types use the \qmltype to document the type. In addition, they have the \inmodule command in order for QDoc to associate them to the <teletype type="highlighted">UIComponents</teletype> module.</para>
-                    <para>QDoc uses the \brief command to place a basic description when listing the types.</para>
+                    <para>The QML types use the <teletype>\qmltype</teletype> to document the type. In addition, they have the <teletype>\inmodule</teletype> command in order for QDoc to associate them to the <teletype type="highlighted">UIComponents</teletype> module.</para>
+                    <para>QDoc uses the <teletype>\brief</teletype> command to place a basic description when listing the types.</para>
                 </section>
                 <section id="properties-signals-handlers-and-methods">
                     <heading level="1">Properties, Signals, Handlers, and Methods</heading>
                     <para>The types have their properties, signals, handlers, and methods defined in their respective QML files. QDoc associates the properties and methods to the types, therefore, you only need to place the documentation above the property, method, or signal.</para>
-                    <para>To document the type of a <italic>property alias</italic>, you must use the \qmlproperty command to specify the data type.</para>
+                    <para>To document the type of a <italic>property alias</italic>, you must use the <teletype>\qmlproperty</teletype> command to specify the data type.</para>
                     <code>\qmlproperty int anAliasedProperty
 An aliased property of type int.</code>
                 </section>
                 <section id="internal-documentation">
                     <heading level="2">Internal Documentation</heading>
-                    <para>You may declare that a documentation is for internal use by placing the \internal command after the beginning QDoc comment <teletype type="highlighted">/*</teletype>. QDoc will prevent the internal documentation from appearing in the public API.</para>
-                    <para>If you wish to omit certain parts of the documentation, you may use the \omit and \endomit command.</para>
+                    <para>You may declare that a documentation is for internal use by placing the <teletype>\internal</teletype> command after the beginning QDoc comment <teletype type="highlighted">/*</teletype>. QDoc will prevent the internal documentation from appearing in the public API.</para>
+                    <para>If you wish to omit certain parts of the documentation, you may use the <teletype>\omit</teletype> and <teletype>\endomit</teletype> command.</para>
                 </section>
                 <section id="qml-types-with-c-implementation">
                     <heading level="1">QML Types with C++ Implementation</heading>
