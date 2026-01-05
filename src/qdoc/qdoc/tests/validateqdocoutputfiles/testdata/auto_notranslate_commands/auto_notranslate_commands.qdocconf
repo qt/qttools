@@ -1,0 +1,17 @@
+project = AutoNotranslateCommands
+description = "Test automatic notranslate marking for command references"
+
+sources.fileextensions = "*.qdoc"
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
+
+outputformats = HTML
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+sourcedirs = ./src

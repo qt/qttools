@@ -21,7 +21,7 @@
 <div class="sidebar-content" id="sidebar-content"></div></div>
 <h1 class="title" translate="no">TestOverloads Class</h1>
 <!-- $$$TestOverloads-brief -->
-<p>Demonstrates multiple overloads and the \overload primary feature. <a href="#details">More...</a></p>
+<p>Demonstrates multiple overloads and the <span translate="no">\overload</span> primary feature. <a href="#details">More...</a></p>
 <!-- @@@TestOverloads -->
 <div class="table"><table class="alignedsummary requisites" translate="no">
 <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;TestOverloads&gt;</code></td></tr>
@@ -48,10 +48,10 @@
 <!-- $$$TestOverloads-description -->
 <div class="descr">
 <h2 id="details">Detailed Description</h2>
-<p>This test case demonstrates various scenarios for the \overload command:</p>
-<ol class="1" type="1"><li>Original issue: Using \overload with unqualified function names (e.g., \overload <a href="testoverloads.html#failOnWarning" translate="no">failOnWarning</a>()) creates dead links when there are multiple overloads and QDoc cannot determine which overload should be the primary target.</li>
-<li>Solution: The \overload primary command allows explicitly designating which overload should be the primary target for unqualified \overload references.</li>
-<li>Corner case: Functions named &quot;primary&quot; to test whether the function name conflicts with the &quot;primary&quot; keyword in \overload commands.</li>
+<p>This test case demonstrates various scenarios for the <span translate="no">\overload</span> command:</p>
+<ol class="1" type="1"><li>Original issue: Using <span translate="no">\overload</span> with unqualified function names (e.g., <span translate="no">\overload</span> <a href="testoverloads.html#failOnWarning" translate="no">failOnWarning</a>()) creates dead links when there are multiple overloads and QDoc cannot determine which overload should be the primary target.</li>
+<li>Solution: The <span translate="no">\overload</span> primary command allows explicitly designating which overload should be the primary target for unqualified <span translate="no">\overload</span> references.</li>
+<li>Corner case: Functions named &quot;primary&quot; to test whether the function name conflicts with the &quot;primary&quot; keyword in <span translate="no">\overload</span> commands.</li>
 </ol>
 <p>The <a href="testoverloads.html#failOnWarning" translate="no">failOnWarning</a>() functions demonstrate the original problem and its solution, while the <a href="testoverloads.html#primary" translate="no">primary</a>() functions test the corner case where a function happens to be named &quot;primary&quot;.</p>
 </div>
@@ -60,8 +60,8 @@
 <h2>Member Function Documentation</h2>
 <!-- $$$failOnWarning[overload1]$$$failOnWarningconstRegularExpression& -->
 <h3 class="fn" translate="no" id="failOnWarning"><code class="details extra" translate="no">[static, since 6.11]</code> <span class="type">void</span> TestOverloads::<span class="name">failOnWarning</span>(const <span class="type">RegularExpression</span> &amp;<i>messagePattern</i>)</h3>
-<p>Appends a test failure to the test log for each warning that matches \a messagePattern.</p>
-<p>This is explicitly marked as the primary overload with \overload primary. Other overloads should now link to this function when using unqualified \overload commands.</p>
+<p>Appends a test failure to the test log for each warning that matches <span translate="no">\a</span> messagePattern.</p>
+<p>This is explicitly marked as the primary overload with <span translate="no">\overload</span> primary. Other overloads should now link to this function when using unqualified <span translate="no">\overload</span> commands.</p>
 <p>This function was introduced in Qt 6.11.</p>
 <!-- @@@failOnWarning -->
 <!-- $$$failOnWarning$$$failOnWarning -->
@@ -73,7 +73,7 @@
 <!-- @@@failOnWarning -->
 <!-- $$$failOnWarning$$$failOnWarningconstchar* -->
 <h3 class="fn" translate="no" id="failOnWarning-2"><code class="details extra" translate="no">[static, since 6.11]</code> <span class="type">void</span> TestOverloads::<span class="name">failOnWarning</span>(const <span class="type">char</span> *<i>message</i>)</h3>
-<p>Another overload using the same unqualified \overload target. This also creates dead links for the same reason as above.</p>
+<p>Another overload using the same unqualified <span translate="no">\overload</span> target. This also creates dead links for the same reason as above.</p>
 <div class="admonition auto"><p>This function overloads <a href="testoverloads.html#failOnWarning" translate="no">TestOverloads::failOnWarning</a>().</p>
 </div><p>This function was introduced in Qt 6.11.</p>
 <!-- @@@failOnWarning -->
@@ -97,7 +97,7 @@
 <!-- @@@linkingTest -->
 <!-- $$$parameterWarningTest[overload1]$$$parameterWarningTestint -->
 <h3 class="fn" translate="no" id="parameterWarningTest"><code class="details extra" translate="no">[static, since 6.11]</code> <span class="type">void</span> TestOverloads::<span class="name">parameterWarningTest</span>(<span class="type">int</span> <i>param</i>)</h3>
-<p>Test function to validate QTBUG-140510: Functions marked with \overload primary should require parameter documentation just like non-overloaded functions, since they serve as the main documentation for their function family.</p>
+<p>Test function to validate QTBUG-140510: Functions marked with <span translate="no">\overload</span> primary should require parameter documentation just like non-overloaded functions, since they serve as the main documentation for their function family.</p>
 <p>This primary overload has a parameter <i translate="no">param</i> that is documented here, demonstrating the correct practice for primary overload documentation.</p>
 <p>This function was introduced in Qt 6.11.</p>
 <!-- @@@parameterWarningTest -->
@@ -115,23 +115,23 @@
 <!-- @@@parameterWarningTest -->
 <!-- $$$primary[overload1]$$$primary -->
 <h3 class="fn" translate="no" id="primary"><code class="details extra" translate="no">[static]</code> <span class="type">void</span> TestOverloads::<span class="name">primary</span>()</h3>
-<p>Corner case test: This function is named &quot;primary&quot; and is marked as the primary overload. This tests whether the word &quot;primary&quot; as a function name conflicts with the &quot;primary&quot; keyword in the \overload command.</p>
-<p>This should work correctly because the &quot;primary&quot; keyword is parsed in the context of the \overload command, not as a function name reference.</p>
+<p>Corner case test: This function is named &quot;primary&quot; and is marked as the primary overload. This tests whether the word &quot;primary&quot; as a function name conflicts with the &quot;primary&quot; keyword in the <span translate="no">\overload</span> command.</p>
+<p>This should work correctly because the &quot;primary&quot; keyword is parsed in the context of the <span translate="no">\overload</span> command, not as a function name reference.</p>
 <!-- @@@primary -->
 <!-- $$$primary$$$primaryconstchar* -->
 <h3 class="fn" translate="no" id="primary-1"><code class="details extra" translate="no">[static]</code> <span class="type">void</span> TestOverloads::<span class="name">primary</span>(const <span class="type">char</span> *<i>message</i>)</h3>
-<p>Another overload of the function named &quot;primary&quot;. This should also link to the parameterless primary() function, testing that multiple overloads of a function named &quot;primary&quot; work correctly with the \overload system.</p>
+<p>Another overload of the function named &quot;primary&quot;. This should also link to the parameterless primary() function, testing that multiple overloads of a function named &quot;primary&quot; work correctly with the <span translate="no">\overload</span> system.</p>
 <div class="admonition auto"><p>This function overloads <a href="testoverloads.html#primary" translate="no">TestOverloads::primary</a>().</p>
 </div><!-- @@@primary -->
 <!-- $$$primary$$$primaryint -->
 <h3 class="fn" translate="no" id="primary-2"><code class="details extra" translate="no">[static]</code> <span class="type">void</span> TestOverloads::<span class="name">primary</span>(<span class="type">int</span> <i>value</i>)</h3>
-<p>Corner case test: This should link to the primary() function above, demonstrating that \overload primary() correctly references the function named &quot;primary&quot; rather than being confused with the &quot;primary&quot; keyword.</p>
+<p>Corner case test: This should link to the primary() function above, demonstrating that <span translate="no">\overload</span> primary() correctly references the function named &quot;primary&quot; rather than being confused with the &quot;primary&quot; keyword.</p>
 <p>This tests the scenario where a function name happens to be &quot;primary&quot;.</p>
 <div class="admonition auto"><p>This function overloads <a href="testoverloads.html#primary" translate="no">TestOverloads::primary</a>().</p>
 </div><!-- @@@primary -->
 <!-- $$$testFullyQualified[overload1]$$$testFullyQualified -->
 <h3 class="fn" translate="no" id="testFullyQualified"><code class="details extra" translate="no">[static]</code> <span class="type">void</span> TestOverloads::<span class="name">testFullyQualified</span>()</h3>
-<p>This uses a fully qualified \overload target to demonstrate the current workaround mentioned in the bug report. This should generate a working link.</p>
+<p>This uses a fully qualified <span translate="no">\overload</span> target to demonstrate the current workaround mentioned in the bug report. This should generate a working link.</p>
 <!-- @@@testFullyQualified -->
 </div>
 </body>

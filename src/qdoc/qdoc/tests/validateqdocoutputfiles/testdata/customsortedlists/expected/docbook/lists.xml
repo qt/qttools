@@ -8,7 +8,7 @@
 <db:para>CustomSortedLists Reference Documentation.</db:para></db:abstract>
 </db:info>
 <db:section xml:id="generatelist">
-<db:title>\generatelist</db:title>
+<db:title><db:phrase>\generatelist</db:phrase></db:title>
 <db:itemizedlist role="list">
 <db:listitem>
 <db:para><db:link xlink:href="d.xml" xlink:role="page">First!</db:link></db:para>
@@ -42,7 +42,7 @@
 </db:section>
 </db:section>
 <db:section xml:id="annotatedlist">
-<db:title>\annotatedlist</db:title>
+<db:title><db:phrase>\annotatedlist</db:phrase></db:title>
 <db:variablelist role="list">
 <db:varlistentry>
 <db:term><db:link xlink:href="d.xml" xlink:role="page">First!</db:link></db:term>

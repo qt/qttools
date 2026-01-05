@@ -12,7 +12,7 @@
                 <target name="link-test-target"/>
                 <section id="link-targets">
                     <heading level="1">Link targets</heading>
-                    <para>Valid parameters for the link command (<teletype type="highlighted">\l</teletype>) are page and section titles, targets defined with \target or \keyword commands, and API reference keywords (types, methods, namespaces, and so on).</para>
+                    <para>Valid parameters for the link command (<teletype type="highlighted">\l</teletype>) are page and section titles, targets defined with <teletype>\target</teletype> or <teletype>\keyword</teletype> commands, and API reference keywords (types, methods, namespaces, and so on).</para>
                 </section>
             </description>
         </page>

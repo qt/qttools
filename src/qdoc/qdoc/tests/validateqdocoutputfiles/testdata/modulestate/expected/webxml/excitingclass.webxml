@@ -7,7 +7,7 @@
                 <para>There's a lot to say about <link raw="ExcitingClass" href="excitingclass.html" type="class">ExcitingClass</link>. Let's dive into the details!</para>
                 <section id="what-makes-excitingclass-more-exciting-than-boringclass">
                     <heading level="1">What makes ExcitingClass more exciting than BoringClass?</heading>
-                    <para>Well, for one, it has a \section1 heading in it's documentation! How exciting is that?!</para>
+                    <para>Well, for one, it has a <teletype>\section1</teletype> heading in it's documentation! How exciting is that?!</para>
                 </section>
             </description>
         </class>

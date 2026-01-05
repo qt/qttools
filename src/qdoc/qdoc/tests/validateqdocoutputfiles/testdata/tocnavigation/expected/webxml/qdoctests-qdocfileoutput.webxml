@@ -71,11 +71,13 @@
                         </item>
                         <item>
                             <para>
-                                <link raw="link-test-target" href="qdoctests-qdocfileoutput-linking.html#link-targets" type="page" page="Testing QDoc's link command">Linking using a \target string</link></para>
+                                <link raw="link-test-target" href="qdoctests-qdocfileoutput-linking.html#link-targets" type="page" page="Testing QDoc's link command">Linking using a <teletype>\target</teletype>
+                                </link> string</para>
                         </item>
                         <item>
                             <para>
-                                <link raw="QDoc Linking Test" href="qdoctests-qdocfileoutput-linking.html" type="page" page="Testing QDoc's link command">Linking using a \keyword string</link></para>
+                                <link raw="QDoc Linking Test" href="qdoctests-qdocfileoutput-linking.html" type="page" page="Testing QDoc's link command">Linking using a <teletype>\keyword</teletype>
+                                </link> string</para>
                         </item>
                     </list>
                 </section>

@@ -38,7 +38,7 @@
 <!-- $$$TestPositionDependent-description -->
 <div class="descr">
 <h2 id="details">Detailed Description</h2>
-<p>This class tests that when using shared comment nodes with \overload primary, the FIRST \fn command becomes the primary overload, regardless of how the functions would naturally sort by signature.</p>
+<p>This class tests that when using shared comment nodes with <span translate="no">\overload</span> primary, the FIRST <span translate="no">\fn</span> command becomes the primary overload, regardless of how the functions would naturally sort by signature.</p>
 </div>
 <!-- @@@TestPositionDependent -->
 <div class="func">
@@ -49,12 +49,12 @@
 <h3 class="fn fngroupitem" translate="no" id="convert-1"><span class="type">void</span> TestPositionDependent::<span class="name">convert</span>() const</h3>
 </div>
 <p>Converts data. The <i translate="no">value</i> and <i translate="no">flag</i> parameters control the conversion.</p>
-<p>NOTE: The \fn commands are intentionally in reverse sort order. The first \fn has 2 parameters, the second has 0. By natural sorting, <a href="testpositiondependent.html#convert" translate="no">convert</a>() would come first (fewer parameters). But with position-dependent behavior, convert(int, bool) should be the primary because it's the FIRST \fn command in this shared comment block.</p>
+<p>NOTE: The <span translate="no">\fn</span> commands are intentionally in reverse sort order. The first <span translate="no">\fn</span> has 2 parameters, the second has 0. By natural sorting, <a href="testpositiondependent.html#convert" translate="no">convert</a>() would come first (fewer parameters). But with position-dependent behavior, convert(int, bool) should be the primary because it's the FIRST <span translate="no">\fn</span> command in this shared comment block.</p>
 <!-- @@@ -->
 <!-- $$$convert$$$convertconstchar* -->
 <h3 class="fn" translate="no" id="convert-2"><span class="type">void</span> TestPositionDependent::<span class="name">convert</span>(const <span class="type">char</span> *<i>text</i>) const</h3>
 <p>Converts the specified <i translate="no">text</i>.</p>
-<p>This overload should link to the PRIMARY convert function, which is convert(int, bool) because it was the FIRST \fn in the shared comment block, NOT convert() even though convert() would sort first by signature.</p>
+<p>This overload should link to the PRIMARY convert function, which is convert(int, bool) because it was the FIRST <span translate="no">\fn</span> in the shared comment block, NOT convert() even though convert() would sort first by signature.</p>
 <div class="admonition auto"><p>This function overloads <a href="testpositiondependent.html#convert" translate="no">TestPositionDependent::convert</a>().</p>
 </div><!-- @@@convert -->
 </div>

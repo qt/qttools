@@ -4,7 +4,7 @@
         <page name="some-attribution-2.html" href="some-attribution-2.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Attribution-2 (duplicate)" fulltitle="Attribution-2 (duplicate)" subtitle="" brief="Public Domain">
             <description>
                 <brief>Public Domain</brief>
-                <para>Duplicated attribution page without \attribution.</para>
+                <para>Duplicated attribution page without <teletype>\attribution</teletype>.</para>
             </description>
         </page>
     </document>

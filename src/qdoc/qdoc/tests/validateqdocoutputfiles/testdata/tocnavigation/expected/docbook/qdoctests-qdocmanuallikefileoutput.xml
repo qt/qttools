@@ -20,8 +20,8 @@
 <db:title>Commands</db:title>
 <db:anchor xml:id="previouspage-command"/>
 <db:section xml:id="previouspage">
-<db:title>\previouspage</db:title>
-<db:para>The \previouspage command...</db:para>
+<db:title><db:phrase>\previouspage</db:phrase></db:title>
+<db:para>The <db:phrase>\previouspage</db:phrase> command...</db:para>
 </db:section>
 </db:section>
 </db:article>

@@ -5,7 +5,7 @@
             <contents name="further-details" title="Further details" level="1"/>
             <description>
                 <brief>Test that line comments don't break documentation.</brief>
-                <para>The purpose of this test data is to provide a regression mechanism as part of QDoc's end-to-end test, tst_generatedOutput, for an issue (QTBUG-105754) that was reported against QDoc's \sa command. The issue, as experienced by the reporter of the bug, is that if the \sa command is followed by a line comment, QDoc generates a series of &quot;Missing comma in \sa&quot; warnings.</para>
+                <para>The purpose of this test data is to provide a regression mechanism as part of QDoc's end-to-end test, tst_generatedOutput, for an issue (QTBUG-105754) that was reported against QDoc's <teletype>\sa</teletype> command. The issue, as experienced by the reporter of the bug, is that if the <teletype>\sa</teletype> command is followed by a line comment, QDoc generates a series of &quot;Missing comma in <teletype>\sa</teletype>&quot; warnings.</para>
                 <section id="further-details">
                     <heading level="1">Further details</heading>
                     <para>The bug report is at <link raw="https://bugreports.qt.io/browse/QTBUG-105754" href="https://bugreports.qt.io/browse/QTBUG-105754" type="external">https://bugreports.qt.io/browse/QTBUG-105754</link>.</para>
