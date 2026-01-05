@@ -9,6 +9,7 @@ qt_get_tool_target_name(target_name lcheck)
 qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Tool To Perform Batch Validation on a TS File"
     TOOLS_TARGET Linguist
+    USER_FACING
     SOURCES
         main.cpp
         ../shared/numerus.cpp

@@ -9,6 +9,7 @@ qt_get_tool_target_name(target_name lrelease)
 qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Translation File Compiler"
     TOOLS_TARGET Linguist
+    USER_FACING
     SOURCES
         ../shared/numerus.cpp
         ../shared/po.cpp
