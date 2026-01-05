@@ -6,8 +6,9 @@
 
 #include <QCoreApplication>
 #include <QProcess>
-#include <QScopedPointer>
 #include <QString>
+
+#include <memory>
 
 class Assistant
 {
@@ -22,7 +23,7 @@ private:
     void showError(const QString &message);
     void finished(int exitCode, QProcess::ExitStatus status);
 
-    QScopedPointer<QProcess> m_process;
+    std::unique_ptr<QProcess> m_process;
 };
 
 #endif

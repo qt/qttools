@@ -6,6 +6,8 @@
 
 #include <QtWidgets/QWidget>
 
+#include <memory>
+
 QT_BEGIN_NAMESPACE
 
 class HelpDocSettings;
@@ -26,7 +28,7 @@ Q_SIGNALS:
     void docSettingsChanged(const HelpDocSettings &settings);
 
 private:
-    QScopedPointer<class HelpDocSettingsWidgetPrivate> d_ptr;
+    std::unique_ptr<class HelpDocSettingsWidgetPrivate> d_ptr;
     Q_DECLARE_PRIVATE(HelpDocSettingsWidget)
     Q_DISABLE_COPY_MOVE(HelpDocSettingsWidget)
 };

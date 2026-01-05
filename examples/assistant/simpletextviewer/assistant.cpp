@@ -15,8 +15,8 @@ using namespace Qt::StringLiterals;
 //! [0]
 Assistant::~Assistant()
 {
-    if (!m_process.isNull() && m_process->state() == QProcess::Running) {
-        QObject::disconnect(m_process.data(), &QProcess::finished, nullptr, nullptr);
+    if (m_process && m_process->state() == QProcess::Running) {
+        QObject::disconnect(m_process.get(), &QProcess::finished, nullptr, nullptr);
         m_process->terminate();
         m_process->waitForFinished(3000);
     }
@@ -56,10 +56,10 @@ static QString documentationDirectory()
 //! [2]
 bool Assistant::startAssistant()
 {
-    if (m_process.isNull()) {
-        m_process.reset(new QProcess);
-        QObject::connect(m_process.data(), &QProcess::finished,
-                         m_process.data(), [this](int exitCode, QProcess::ExitStatus status) {
+    if (!m_process) {
+        m_process = std::make_unique<QProcess>();
+        QObject::connect(m_process.get(), &QProcess::finished,
+                         m_process.get(), [this](int exitCode, QProcess::ExitStatus status) {
             finished(exitCode, status);
         });
     }
