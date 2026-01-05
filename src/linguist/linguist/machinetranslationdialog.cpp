@@ -500,7 +500,7 @@ void MachineTranslationDialog::updateConnectionIndicator()
 
     switch (m_connectionState) {
     case ConnectionState::NotConnected:
-        statusText = tr("Not connected - click Connect to fetch models");
+        statusText = tr("Not connected - click \"Connect\" to fetch models");
         styleSheet = "QLabel { color: gray; }"_L1;
         break;
     case ConnectionState::Connecting:
@@ -512,11 +512,11 @@ void MachineTranslationDialog::updateConnectionIndicator()
         styleSheet = "QLabel { color: green;}"_L1;
         break;
     case ConnectionState::Failed:
-        statusText = tr("Connection failed - verify server URL and click Connect");
+        statusText = tr("Connection failed - verify server URL and click \"Connect\"");
         styleSheet = "QLabel { color: red; }"_L1;
         break;
     case ConnectionState::Modified:
-        statusText = tr("URL modified - click Connect to apply");
+        statusText = tr("URL modified - click \"Connect\" to apply");
         styleSheet = "QLabel { color: orange; }"_L1;
         break;
     }
