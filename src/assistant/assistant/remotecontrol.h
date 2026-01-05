@@ -29,6 +29,7 @@ private:
     void splitInputString(const QString &input, QString &cmd, QString &arg);
     void handleDebugCommand(const QString &arg);
     void handleShowOrHideCommand(const QString &arg, bool show);
+    static void handleQuitCommand();
     void handleSetSourceCommand(const QString &arg);
     void handleSyncContentsCommand();
     void handleActivateKeywordCommand(const QString &arg);

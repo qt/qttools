@@ -24,8 +24,11 @@ AssistantClient::AssistantClient() = default;
 AssistantClient::~AssistantClient()
 {
     if (isRunning()) {
-        m_process->terminate();
-        m_process->waitForFinished();
+        QString errorMessage;
+        if (!sendCommand("quit"_L1, &errorMessage) || !m_process->waitForFinished(1000)) {
+            m_process->terminate();
+            m_process->waitForFinished();
+        }
     }
     delete m_process;
 }
