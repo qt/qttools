@@ -17,7 +17,7 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-enum { debugAssistantClient = 0 };
+constexpr bool debugAssistantClient = false;
 
 AssistantClient::AssistantClient() = default;
 
@@ -45,15 +45,9 @@ bool AssistantClient::activateIdentifier(const QString &identifier, QString *err
     return sendCommand(cmd, errorMessage);
 }
 
-bool AssistantClient::activateKeyword(const QString &keyword, QString *errorMessage)
-{
-    const QString cmd = "ActivateKeyword "_L1 + keyword;
-    return sendCommand(cmd, errorMessage);
-}
-
 bool AssistantClient::sendCommand(const QString &cmd, QString *errorMessage)
 {
-    if (debugAssistantClient)
+    if constexpr (debugAssistantClient)
         qDebug() << "sendCommand " << cmd;
     if (!ensureRunning(errorMessage))
         return false;
@@ -110,7 +104,7 @@ bool AssistantClient::ensureRunning(QString *errorMessage)
 
     if (!m_process) {
         m_process = new QProcess;
-        QObject::connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+        QObject::connect(m_process, &QProcess::finished,
                          this, &AssistantClient::processTerminated);
         QObject::connect(m_process, &QProcess::readyReadStandardError,
                          this, &AssistantClient::readyReadStandardError);
@@ -121,7 +115,7 @@ bool AssistantClient::ensureRunning(QString *errorMessage)
         *errorMessage = QCoreApplication::translate("AssistantClient", "The binary '%1' does not exist.").arg(app);
         return false;
     }
-    if (debugAssistantClient)
+    if constexpr (debugAssistantClient)
         qDebug() << "Running " << app;
     // run
     QStringList args{u"-enableRemoteControl"_s};
@@ -133,10 +127,9 @@ bool AssistantClient::ensureRunning(QString *errorMessage)
     return true;
 }
 
-QString AssistantClient::documentUrl(const QString &module, int qtVersion)
+QString AssistantClient::documentUrl(const QString &module) const
 {
-    if (qtVersion == 0)
-        qtVersion = QT_VERSION;
+    const int qtVersion = QT_VERSION;
     QString rc;
     QTextStream(&rc) << "qthelp://org.qt-project." << module << '.'
                      << (qtVersion >> 16) << ((qtVersion >> 8) & 0xFF) << (qtVersion & 0xFF)
@@ -144,14 +137,9 @@ QString AssistantClient::documentUrl(const QString &module, int qtVersion)
     return rc;
 }
 
-QString AssistantClient::designerManualUrl(int qtVersion)
+QString AssistantClient::designerManualUrl() const
 {
-    return documentUrl(u"qtdesigner"_s, qtVersion);
-}
-
-QString AssistantClient::qtReferenceManualUrl(int qtVersion)
-{
-    return documentUrl(u"qtdoc"_s, qtVersion);
+    return documentUrl(u"qtdesigner"_s);
 }
 
 QT_END_NAMESPACE
