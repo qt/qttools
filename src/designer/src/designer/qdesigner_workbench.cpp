@@ -142,8 +142,8 @@ static inline QMenu *addMenu(QMenuBar *mb, const QString &title, const ActionLis
 
 // -------- QDesignerWorkbench
 
-QDesignerWorkbench::QDesignerWorkbench(const QStringList &pluginPaths)  :
-    m_core(QDesignerComponents::createFormEditorWithPluginPaths(pluginPaths, this)),
+QDesignerWorkbench::QDesignerWorkbench(const Options &options)  :
+    m_core(QDesignerComponents::createFormEditorWithPluginPaths(options.pluginPaths, this)),
     m_windowActions(new QActionGroup(this)),
     m_globalMenuBar(new QMenuBar)
 {
@@ -153,7 +153,7 @@ QDesignerWorkbench::QDesignerWorkbench(const QStringList &pluginPaths)  :
 
     initializeCorePlugins();
     QDesignerComponents::initializePlugins(core());
-    m_actionManager = new QDesignerActions(this); // accesses plugin components
+    m_actionManager = new QDesignerActions(options, this); // accesses plugin components
 
     m_windowActions->setExclusive(true);
     connect(m_windowActions, &QActionGroup::triggered,

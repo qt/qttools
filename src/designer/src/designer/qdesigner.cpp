@@ -19,7 +19,6 @@
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
-#include <QtCore/qlibraryinfo.h>
 #include <QtCore/qlocale.h>
 #include <QtCore/qtextstream.h>
 #include <QtCore/qtimer.h>
@@ -28,12 +27,9 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qcommandlineparser.h>
 #include <QtCore/qcommandlineoption.h>
-#include <QtCore/qversionnumber.h>
 #include <QtCore/qvariant.h>
 
 #include <QtDesigner/QDesignerComponents>
-
-#include <optional>
 
 QT_BEGIN_NAMESPACE
 
@@ -137,17 +133,6 @@ static void showHelp(QCommandLineParser &parser, const QString &errorMessage = Q
     box.exec();
 }
 
-struct Options
-{
-    QStringList files;
-    QString resourceDir{QLibraryInfo::path(QLibraryInfo::TranslationsPath)};
-    QStringList pluginPaths;
-    std::optional<QVersionNumber> qtVersion;
-    bool server{false};
-    quint16 clientPort{0};
-    bool enableInternalDynamicProperties{false};
-};
-
 static inline QDesigner::ParseArgumentsResult
     parseDesignerCommandLineArguments(QCommandLineParser &parser, Options *options,
                                       QString *errorMessage)
@@ -245,7 +230,7 @@ QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
             installTranslator(qtTranslator.release());
     }
 
-    m_workbench = new QDesignerWorkbench(options.pluginPaths);
+    m_workbench = new QDesignerWorkbench(options);
 
     emit initialized();
     previousMessageHandler = qInstallMessageHandler(designerMessageHandler); // Warn when loading faulty forms
