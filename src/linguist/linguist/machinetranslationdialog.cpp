@@ -6,6 +6,7 @@
 
 #include "messagemodel.h"
 #include "auto-translation/machinetranslator.h"
+#include "auto-translation/translationsettings.h"
 #include "globals.h"
 
 #include <QtCore/qsettings.h>
@@ -137,6 +138,29 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
             break;
         }
     }
+
+    // Advanced settings
+    loadAdvancedSettings();
+    validateAdvancedSettings();
+
+    connect(m_ui->advancedSettingsToggle, &QPushButton::toggled, this,
+            &MachineTranslationDialog::toggleAdvancedSettings);
+    connect(m_ui->applySettingsButton, &QPushButton::clicked, this,
+            &MachineTranslationDialog::saveAdvancedSettings);
+    connect(m_ui->resetSettingsButton, &QPushButton::clicked, this,
+            &MachineTranslationDialog::resetAdvancedSettings);
+
+    // Validate when relevant settings change
+    connect(m_ui->maxRetriesSpinBox, &QSpinBox::valueChanged, this,
+            &MachineTranslationDialog::validateAdvancedSettings);
+    connect(m_ui->maxJsonFormatTriesSpinBox, &QSpinBox::valueChanged, this,
+            &MachineTranslationDialog::validateAdvancedSettings);
+
+    // Collapse advanced settings when leaving Configuration tab or closing dialog
+    connect(m_ui->toolBox, &QToolBox::currentChanged, this,
+            [this](int) { m_ui->advancedSettingsToggle->setChecked(false); });
+    connect(this, &QDialog::finished, this,
+            [this] { m_ui->advancedSettingsToggle->setChecked(false); });
 }
 
 void MachineTranslationDialog::updateToolBoxTexts()
@@ -565,6 +589,69 @@ void MachineTranslationDialog::updateConnectionIndicator()
 
     m_ui->connectionStatusLabel->setText(statusText);
     m_ui->connectionStatusLabel->setStyleSheet(styleSheet);
+}
+
+void MachineTranslationDialog::toggleAdvancedSettings(bool checked)
+{
+    m_ui->advancedSettingsWidget->setVisible(checked);
+    m_ui->advancedSettingsToggle->setText(checked ? tr("Advanced Settings \xe2\x96\xbc")
+                                                  : tr("Advanced Settings \xe2\x96\xb6"));
+    if (checked) {
+        loadAdvancedSettings();
+        validateAdvancedSettings();
+    }
+}
+
+void MachineTranslationDialog::loadAdvancedSettings()
+{
+    m_ui->maxRetriesSpinBox->setValue(TranslationSettings::maxRetries());
+    m_ui->maxConcurrentBatchesSpinBox->setValue(TranslationSettings::maxConcurrentBatches());
+    m_ui->transferTimeoutSpinBox->setValue(TranslationSettings::transferTimeoutMs() / 1000);
+    m_ui->maxBatchSizeSpinBox->setValue(TranslationSettings::maxBatchSize());
+    m_ui->temperatureSpinBox->setValue(TranslationSettings::temperature());
+    m_ui->maxJsonFormatTriesSpinBox->setValue(TranslationSettings::maxJsonFormatTries());
+    m_ui->ollamaWakeUpTimeoutSpinBox->setValue(TranslationSettings::ollamaWakeUpTimeoutMs() / 1000);
+}
+
+void MachineTranslationDialog::saveAdvancedSettings()
+{
+    TranslationSettings::setMaxRetries(m_ui->maxRetriesSpinBox->value());
+    TranslationSettings::setMaxConcurrentBatches(m_ui->maxConcurrentBatchesSpinBox->value());
+    TranslationSettings::setTransferTimeoutMs(m_ui->transferTimeoutSpinBox->value() * 1000);
+    TranslationSettings::setMaxBatchSize(m_ui->maxBatchSizeSpinBox->value());
+    TranslationSettings::setTemperature(m_ui->temperatureSpinBox->value());
+    TranslationSettings::setMaxJsonFormatTries(m_ui->maxJsonFormatTriesSpinBox->value());
+    TranslationSettings::setOllamaWakeUpTimeoutMs(m_ui->ollamaWakeUpTimeoutSpinBox->value() * 1000);
+}
+
+void MachineTranslationDialog::resetAdvancedSettings()
+{
+    TranslationSettings::resetToDefaults();
+    loadAdvancedSettings();
+    validateAdvancedSettings();
+}
+
+void MachineTranslationDialog::validateAdvancedSettings()
+{
+    const int maxRetries = m_ui->maxRetriesSpinBox->value();
+    const int maxJsonFormatTries = m_ui->maxJsonFormatTriesSpinBox->value();
+
+    QStringList warnings;
+
+    // Warn if JSON format tries is too low
+    if (maxJsonFormatTries < 3) {
+        warnings << tr("\xe2\x9a\xa0 Max JSON Format Tries: Low value may cause premature format "
+                       "fallback on transient failures");
+    }
+
+    // Warn if max retries doesn't cover all format stages
+    // 3 format stages: JsonObject, JsonSchema, None
+    if (maxRetries < maxJsonFormatTries * 3) {
+        warnings << tr("\xe2\x9a\xa0 Max Retries: Should be at least 3\xc3\x97 Max JSON Format "
+                       "Tries for full fallback coverage");
+    }
+
+    m_ui->settingsWarningLabel->setText(warnings.join(u'\n'));
 }
 
 MachineTranslationDialog::~MachineTranslationDialog() = default;

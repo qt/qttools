@@ -48,7 +48,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
-           <layout class="QGridLayout" name="configLayout" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" columnstretch="0,0" rowminimumheight="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+           <layout class="QGridLayout" name="configLayout" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" columnstretch="0,0" rowminimumheight="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
             <item row="2" column="0">
              <spacer name="verticalSpacer_5">
               <property name="orientation">
@@ -129,9 +129,225 @@
                <string>Optional: Provide additional context about your application (e.g., medical software, game, financial app) for more accurate translations...</string>
               </property>
              </widget>
+         </item>
+         <item row="14" column="0" colspan="2">
+            <widget class="QWidget" name="advancedSettingsWidget" native="true">
+              <property name="visible">
+               <bool>false</bool>
+              </property>
+              <layout class="QGridLayout" name="advancedSettingsLayout">
+               <item row="0" column="0">
+                <widget class="QLabel" name="maxRetriesLabel">
+                 <property name="toolTip">
+                  <string>Maximum number of retry attempts for failed translation requests</string>
+                 </property>
+                 <property name="text">
+                  <string>Max Retries</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>maxRetriesSpinBox</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QSpinBox" name="maxRetriesSpinBox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>100</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="maxConcurrentBatchesLabel">
+                 <property name="toolTip">
+                  <string>Maximum number of translation batches to process in parallel</string>
+                 </property>
+                 <property name="text">
+                  <string>Max Concurrent Batches</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>maxConcurrentBatchesSpinBox</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QSpinBox" name="maxConcurrentBatchesSpinBox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>20</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="transferTimeoutLabel">
+                 <property name="toolTip">
+                  <string>Timeout for network requests in seconds</string>
+                 </property>
+                 <property name="text">
+                  <string>Transfer Timeout (seconds)</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>transferTimeoutSpinBox</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QSpinBox" name="transferTimeoutSpinBox">
+                 <property name="minimum">
+                  <number>10</number>
+                 </property>
+                 <property name="maximum">
+                  <number>3600</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="maxBatchSizeLabel">
+                 <property name="toolTip">
+                  <string>Maximum number of source texts to include in each translation batch</string>
+                 </property>
+                 <property name="text">
+                  <string>Max Batch Size</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>maxBatchSizeSpinBox</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QSpinBox" name="maxBatchSizeSpinBox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>100</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="temperatureLabel">
+                 <property name="toolTip">
+                  <string>LLM temperature (lower = more deterministic, higher = more creative)</string>
+                 </property>
+                 <property name="text">
+                  <string>Temperature</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>temperatureSpinBox</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QDoubleSpinBox" name="temperatureSpinBox">
+                 <property name="maximum">
+                  <double>2.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.050000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="maxJsonFormatTriesLabel">
+                 <property name="toolTip">
+                  <string>Number of attempts per JSON response format before falling back</string>
+                 </property>
+                 <property name="text">
+                  <string>Max JSON Format Tries</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>maxJsonFormatTriesSpinBox</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QSpinBox" name="maxJsonFormatTriesSpinBox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>20</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="ollamaWakeUpTimeoutLabel">
+                 <property name="toolTip">
+                  <string>Timeout for waking up an idle Ollama server in seconds</string>
+                 </property>
+                 <property name="text">
+                  <string>Ollama Wake-up Timeout (seconds)</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>ollamaWakeUpTimeoutSpinBox</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QSpinBox" name="ollamaWakeUpTimeoutSpinBox">
+                 <property name="minimum">
+                  <number>30</number>
+                 </property>
+                 <property name="maximum">
+                  <number>600</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0" colspan="2">
+                <widget class="QLabel" name="settingsWarningLabel">
+                 <property name="styleSheet">
+                  <string>color: #b58900;</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0" alignment="Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignVCenter">
+                <widget class="QPushButton" name="applySettingsButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Fixed"/>
+                 </property>
+                 <property name="text">
+                  <string>Apply</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="1">
+                <widget class="QPushButton" name="resetSettingsButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Fixed"/>
+                 </property>
+                 <property name="text">
+                  <string>Reset to Defaults</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
             </item>
-            <item row="14" column="1">
+            <item row="15" column="0" alignment="Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignVCenter">
+             <widget class="QPushButton" name="advancedSettingsToggle">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed"/>
+              </property>
+              <property name="text">
+               <string>Advanced Settings ▶</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="1">
              <widget class="QPushButton" name="nextButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed"/>
+              </property>
               <property name="text">
                <string>Next</string>
               </property>
