@@ -1,0 +1,12 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \group group3
+    \title Group 3
+*/
+/*!
+    \page group3-member.html
+    \title Group 3 member
+    \ingroup group3
+*/

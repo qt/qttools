@@ -5,6 +5,9 @@
     \page toc-test.html
     \title TOC
 
+    //! QTBUG-143171 - test for a \\generatelist command outside the \\list structure
+    \generatelist group3
+
     \list
         \li \l {Testing \PROD output from .qdoc files}{\PROD Testing}
         \list

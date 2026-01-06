@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <group name="group3" href="group3.html" status="active" location="group3.qdoc" documented="true" seen="true" title="Group 3">
+            <description>
+                <table width="100%">
+                    <row>
+                        <item>
+                            <para>
+                                <link raw="Group 3 member" href="group3-member.html" type="page" page="Group 3 member"/>
+                            </para>
+                        </item>
+                        <item>
+                            <para></para>
+                        </item>
+                    </row>
+                </table>
+            </description>
+        </group>
+    </document>
+</WebXML>

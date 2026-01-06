@@ -3,6 +3,7 @@
     <document>
         <page name="toc-test.html" href="toc-test.html" status="active" location="toc.qdoc" documented="true" subtype="page" title="TOC" fulltitle="TOC" subtitle="">
             <description>
+                <generatedlist contents="group3"/>
                 <list type="bullet">
                     <item>
                         <para>

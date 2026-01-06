@@ -1760,8 +1760,10 @@ void QDocDatabase::updateNavigation()
                             // their nav. parent.
                             for (auto *m : members) {
                                 auto *page = static_cast<PageNode *>(m);
-                                prev.first->setLink(Node::NextLink, page->title(), page->fullName());
-                                page->setLink(Node::PreviousLink, prev.first->title(), prev.second);
+                                if (prev.first) {
+                                    prev.first->setLink(Node::NextLink, page->title(), page->fullName());
+                                    page->setLink(Node::PreviousLink, prev.first->title(), prev.second);
+                                }
                                 prev = { page, page->fullName() };
                             }
                         }
