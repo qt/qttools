@@ -5,6 +5,7 @@
 #define MACHINETRANSLATOR_H
 
 #include "translationprotocol.h"
+#include "translationsettings.h"
 
 #include <QString>
 #include <QObject>
@@ -55,11 +56,6 @@ private:
     void translateBatch(Batch b);
     void translationReceived(QNetworkReply *reply, Batch b, int session);
     void processNextBatches();
-
-    // Allow up to 10 retries to accommodate three-stage JSON format fallback
-    // (JsonObject -> JsonSchema -> None), with 3 tries per stage.
-    static constexpr int s_maxTries = 10;
-    static constexpr int s_maxConcurrentBatches = 6;
 };
 
 QT_END_NAMESPACE

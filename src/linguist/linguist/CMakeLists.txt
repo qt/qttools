@@ -27,6 +27,8 @@ qt_internal_add_app(linguist
         ../shared/ts.cpp
         ../shared/xliff.cpp
         ../shared/auto-translation/translationprotocol.h
+        ../shared/auto-translation/translationsettings.cpp
+        ../shared/auto-translation/translationsettings.h
         ../shared/auto-translation/translationutils.cpp
         ../shared/auto-translation/translationutils.h
         ../shared/auto-translation/ollama.cpp

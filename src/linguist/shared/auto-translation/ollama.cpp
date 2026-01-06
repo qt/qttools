@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "ollama.h"
+#include "translationsettings.h"
 #include "translationutils.h"
 #include "translatormessage.h"
 
@@ -14,13 +15,14 @@ QT_BEGIN_NAMESPACE
 
 Ollama::Ollama()
     : m_payloadBase(std::make_unique<QJsonObject>()),
-      m_systemMessage(std::make_unique<QJsonObject>())
+      m_systemMessage(std::make_unique<QJsonObject>()),
+      m_useJsonFormat(TranslationSettings::maxJsonFormatTries())
 {
     m_payloadBase->insert("stream"_L1, false);
     m_payloadBase->insert("think"_L1, false);
 
     QJsonObject opts;
-    opts.insert("temperature"_L1, 0.05);
+    opts.insert("temperature"_L1, TranslationSettings::temperature());
     m_payloadBase->insert("options"_L1, opts);
 
     m_systemMessage->insert("role"_L1, "system"_L1);
@@ -36,6 +38,7 @@ QList<Batch> Ollama::makeBatches(const Messages &messages, const QString &userCo
     for (const auto &item : messages.items)
         groups[item->context() + item->label()].append(item);
 
+    const int maxBatchSize = TranslationSettings::maxBatchSize();
     QList<Batch> out;
     out.reserve(groups.size());
     for (auto it = groups.cbegin(); it != groups.cend(); ++it) {
@@ -47,7 +50,7 @@ QList<Batch> Ollama::makeBatches(const Messages &messages, const QString &userCo
             b.context = it.key();
             b.userContext = userContext;
             b.items.reserve(it.value().size());
-            while (msgIt != it.value().cend() && b.items.size() < s_maxBatchSize) {
+            while (msgIt != it.value().cend() && b.items.size() < maxBatchSize) {
                 Item item;
                 item.msg = *msgIt;
                 item.translation = item.msg->translation();
@@ -122,12 +125,13 @@ std::optional<QByteArray> Ollama::stageModel(const QString &modelName)
 {
     if (auto m = m_payloadBase->constFind("model"_L1);
         m == m_payloadBase->constEnd() || *m != modelName) {
-        m_useJsonFormat = s_maxJsonFormatTry;
+        m_useJsonFormat = TranslationSettings::maxJsonFormatTries();
         m_payloadBase->insert("model"_L1, modelName);
     }
 
     std::optional<QByteArray> res;
-    if (!m_lastWakeupTimer.isValid() || m_lastWakeupTimer.hasExpired(s_wakeUpTimeOut)) {
+    if (!m_lastWakeupTimer.isValid()
+        || m_lastWakeupTimer.hasExpired(TranslationSettings::ollamaWakeUpTimeoutMs())) {
         m_lastWakeupTimer.start();
         QJsonObject wakeup;
         wakeup.insert("model"_L1, modelName);
