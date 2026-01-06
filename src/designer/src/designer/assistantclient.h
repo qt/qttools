@@ -20,15 +20,12 @@ public:
 
     bool showPage(const QString &path, QString *errorMessage);
     bool activateIdentifier(const QString &identifier, QString *errorMessage);
-    bool activateKeyword(const QString &keyword, QString *errorMessage);
 
     bool isRunning() const;
 
-    static QString documentUrl(const QString &prefix, int qtVersion = 0);
+    QString documentUrl(const QString &prefix) const;
     // Root of the Qt Widgets Designer documentation
-    static QString designerManualUrl(int qtVersion = 0);
-    // Root of the Qt Reference documentation
-    static QString qtReferenceManualUrl(int qtVersion = 0);
+    QString designerManualUrl() const;
 
 private slots:
     void readyReadStandardError();

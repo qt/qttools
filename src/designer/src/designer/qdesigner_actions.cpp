@@ -963,14 +963,14 @@ QAction *QDesignerActions::minimizeAction() const
 
 void QDesignerActions::showDesignerHelp()
 {
-    QString url = AssistantClient::designerManualUrl();
+    QString url = m_assistantClient.designerManualUrl();
     url += "qtdesigner-manual.html"_L1;
     showHelp(url);
 }
 
 void QDesignerActions::helpRequested(const QString &manual, const QString &document)
 {
-    QString url = AssistantClient::documentUrl(manual);
+    QString url = m_assistantClient.documentUrl(manual);
     url += document;
     showHelp(url);
 }
