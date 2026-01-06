@@ -5,6 +5,7 @@
 #define OPENAICOMPATIBLE_H
 
 #include "translationprotocol.h"
+#include "translationsettings.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -41,10 +42,8 @@ private:
     std::unique_ptr<QJsonObject> m_systemMessage;
     QString m_url;
     JsonFormatStage m_formatStage = JsonFormatStage::JsonObject;
-    std::atomic_int m_formatTryCounter = s_maxFormatTries;
+    std::atomic_int m_formatTryCounter;
     bool m_formatLocked = false;
-    static constexpr int s_maxFormatTries = 3;
-    static constexpr int s_maxBatchSize = 20;
 };
 
 QT_END_NAMESPACE

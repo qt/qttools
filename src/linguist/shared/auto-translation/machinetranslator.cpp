@@ -5,6 +5,7 @@
 #include "ollama.h"
 #include "openaicompatible.h"
 #include "translatormessage.h"
+#include "translationsettings.h"
 #include "simtexth.h"
 
 #include <QNetworkRequest>
@@ -20,7 +21,7 @@ MachineTranslator::MachineTranslator()
       m_manager(std::make_unique<QNetworkAccessManager>())
 {
     m_request->setHeader(QNetworkRequest::ContentTypeHeader, "application/json"_L1);
-    m_request->setTransferTimeout(5 * 60 * 1000);
+    m_request->setTransferTimeout(TranslationSettings::transferTimeoutMs());
 }
 
 void MachineTranslator::setApiType(TranslationApiType type)
@@ -140,8 +141,8 @@ void MachineTranslator::processNextBatches()
     if (m_stopped || m_pendingBatches.isEmpty())
         return;
 
-    const int batchesToSchedule =
-            qMin(s_maxConcurrentBatches - m_inFlightCount, m_pendingBatches.size());
+    const int maxConcurrent = TranslationSettings::maxConcurrentBatches();
+    const int batchesToSchedule = qMin(maxConcurrent - m_inFlightCount, m_pendingBatches.size());
     for (int i = 0; i < batchesToSchedule; ++i) {
         Batch batch = m_pendingBatches.dequeue();
         translateBatch(std::move(batch));
@@ -162,6 +163,7 @@ void MachineTranslator::translationReceived(QNetworkReply *reply, Batch b, int s
     bool shouldRetry = false;
     const QByteArray response = reply->readAll();
     emit debugLog(response, true);
+    const int maxRetries = TranslationSettings::maxRetries();
 
     if (reply->error() != QNetworkReply::NoError) {
         const auto error = reply->error();
@@ -173,7 +175,7 @@ void MachineTranslator::translationReceived(QNetworkReply *reply, Batch b, int s
                 || error == QNetworkReply::TimeoutError
                 || error == QNetworkReply::UnknownNetworkError
                 || error == QNetworkReply::ProtocolInvalidOperationError;
-        shouldRetry = b.tries < s_maxTries && isRetriableError;
+        shouldRetry = b.tries < maxRetries && isRetriableError;
         if (!shouldRetry) {
             QList<const TranslatorMessage *> failed;
             for (const auto &i : std::as_const(b.items))
@@ -220,7 +222,7 @@ void MachineTranslator::translationReceived(QNetworkReply *reply, Batch b, int s
         }
 
         const bool nonTranslatedItems = !b.items.empty();
-        shouldRetry = nonTranslatedItems && b.tries < s_maxTries;
+        shouldRetry = nonTranslatedItems && b.tries < maxRetries;
         if (nonTranslatedItems && !shouldRetry) {
             QList<const TranslatorMessage *> failed;
             for (const auto &i : std::as_const(b.items))

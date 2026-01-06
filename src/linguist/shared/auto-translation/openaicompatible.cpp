@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "openaicompatible.h"
+#include "translationsettings.h"
 #include "translationutils.h"
 #include "translatormessage.h"
 
@@ -14,10 +15,11 @@ QT_BEGIN_NAMESPACE
 
 OpenAICompatible::OpenAICompatible()
     : m_payloadBase(std::make_unique<QJsonObject>()),
-      m_systemMessage(std::make_unique<QJsonObject>())
+      m_systemMessage(std::make_unique<QJsonObject>()),
+      m_formatTryCounter(TranslationSettings::maxJsonFormatTries())
 {
     m_payloadBase->insert("stream"_L1, false);
-    m_payloadBase->insert("temperature"_L1, 0.05);
+    m_payloadBase->insert("temperature"_L1, TranslationSettings::temperature());
 
     m_systemMessage->insert("role"_L1, "system"_L1);
     m_systemMessage->insert("content"_L1, translationSystemPrompt());
@@ -33,6 +35,7 @@ QList<Batch> OpenAICompatible::makeBatches(const Messages &messages,
     for (const auto &item : messages.items)
         groups[item->context() + item->label()].append(item);
 
+    const int maxBatchSize = TranslationSettings::maxBatchSize();
     QList<Batch> out;
     out.reserve(groups.size());
     for (auto it = groups.cbegin(); it != groups.cend(); ++it) {
@@ -44,7 +47,7 @@ QList<Batch> OpenAICompatible::makeBatches(const Messages &messages,
             b.context = it.key();
             b.userContext = userContext;
             b.items.reserve(it.value().size());
-            while (msgIt != it.value().cend() && b.items.size() < s_maxBatchSize) {
+            while (msgIt != it.value().cend() && b.items.size() < maxBatchSize) {
                 Item item;
                 item.msg = *msgIt;
                 item.translation = item.msg->translation();
@@ -175,7 +178,7 @@ std::optional<QByteArray> OpenAICompatible::stageModel(const QString &modelName)
         m == m_payloadBase->constEnd() || *m != modelName) {
         // Reset format fallback state for new model
         m_formatStage = JsonFormatStage::JsonObject;
-        m_formatTryCounter = s_maxFormatTries;
+        m_formatTryCounter = TranslationSettings::maxJsonFormatTries();
         m_formatLocked = false;
         m_payloadBase->insert("model"_L1, modelName);
     }
@@ -212,14 +215,15 @@ void OpenAICompatible::decrementFormatCounter()
 
     if (--m_formatTryCounter <= 0) {
         // Move to next format stage
+        const int maxTries = TranslationSettings::maxJsonFormatTries();
         switch (m_formatStage) {
         case JsonFormatStage::JsonObject:
             m_formatStage = JsonFormatStage::JsonSchema;
-            m_formatTryCounter = s_maxFormatTries;
+            m_formatTryCounter = maxTries;
             break;
         case JsonFormatStage::JsonSchema:
             m_formatStage = JsonFormatStage::None;
-            m_formatTryCounter = s_maxFormatTries;
+            m_formatTryCounter = maxTries;
             break;
         case JsonFormatStage::None:
             // Already at the last stage, nothing more to try
