@@ -33,11 +33,13 @@ namespace qdesigner_internal {
     enum class UicLanguage;
 }
 
+struct Options;
+
 class QDesignerActions: public QObject
 {
     Q_OBJECT
 public:
-    explicit QDesignerActions(QDesignerWorkbench *mainWindow);
+    explicit QDesignerActions(const Options &options, QDesignerWorkbench *mainWindow);
     ~QDesignerActions() override;
 
     QDesignerWorkbench *workbench() const;

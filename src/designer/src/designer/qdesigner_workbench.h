@@ -37,12 +37,14 @@ class QDesignerFormWindowInterface;
 class QDesignerFormWindowManagerInterface;
 class QDesignerIntegration;
 
+struct Options;
+
 class QDesignerWorkbench: public QObject
 {
     Q_OBJECT
 
 public:
-    explicit QDesignerWorkbench(const QStringList &pluginPaths);
+    explicit QDesignerWorkbench(const Options &options);
     ~QDesignerWorkbench() override;
 
     UIMode mode() const;

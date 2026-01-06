@@ -143,7 +143,7 @@ QFileDialog *createSaveAsDialog(QWidget *parent, const QString &dir, const QStri
     return result;
 }
 
-QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
+QDesignerActions::QDesignerActions(const Options &options, QDesignerWorkbench *workbench)
     : QObject(workbench),
       m_workbench(workbench),
       m_core(workbench->core()),
@@ -186,6 +186,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_preferencesAction(new QAction(tr("Preferences..."), this)),
       m_appFontAction(new QAction(tr("Additional Fonts..."), this))
 {
+    Q_UNUSED(options)
     Q_ASSERT(m_core != nullptr);
     auto *ifwm = qobject_cast<qdesigner_internal::QDesignerFormWindowManager *>(m_core->formWindowManager());
     Q_ASSERT(ifwm);
