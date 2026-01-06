@@ -7,6 +7,7 @@
         <page name="crash.html" href="crash.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="" fulltitle="" subtitle=""/>
         <page name="d.html" href="d.html" status="active" location="group.qdoc" documented="true" groups="group2" subtype="page" title="Page D" fulltitle="Page D" subtitle=""/>
         <page name="e.html" href="e.html" status="active" location="group.qdoc" documented="true" groups="group2" subtype="page" title="Page E" fulltitle="Page E" subtitle=""/>
+        <page name="group3-member.html" href="group3-member.html" status="active" location="group3.qdoc" documented="true" groups="group3" subtype="page" title="Group 3 member" fulltitle="Group 3 member" subtitle=""/>
         <page name="page.html" href="page.html" status="active" location="toc.qdoc" documented="true" subtype="page" title="Page" fulltitle="Page" subtitle=""/>
         <page name="qdoctests-qdocfileoutput-exhaustive.html" href="qdoctests-qdocfileoutput-exhaustive.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Exhaustive testing of QDoc commands" fulltitle="Exhaustive testing of QDoc commands" subtitle="" brief="This page is a dumping ground for QDoc commands under test">
             <contents name="this-is-a-section1" title="This is a section1" level="1"/>
@@ -39,5 +40,6 @@
         <page name="https://what.ever" href="https://what.ever" status="active" location="toc.qdoc" documented="true" subtype="externalpage" title="External" fulltitle="External" subtitle=""/>
         <group name="group" href="group.html" status="internal" seen="false" title=""/>
         <group name="group2" href="group2.html" status="active" location="group.qdoc" documented="true" seen="true" title="Group2"/>
+        <group name="group3" href="group3.html" status="active" location="group3.qdoc" documented="true" seen="true" title="Group 3"/>
     </namespace>
 </INDEX>

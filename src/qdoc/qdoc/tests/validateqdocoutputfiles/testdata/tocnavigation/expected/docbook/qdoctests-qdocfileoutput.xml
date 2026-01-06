@@ -5,6 +5,7 @@
 <db:productname>Qt</db:productname>
 <db:edition>OutputFromQDocFiles - A test project for QDoc build artifacts</db:edition>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="group3-member.xml" xlink:type="arc" xlink:arcrole="prev" xlink:title="Group 3 member"/></db:extendedlink>
 <db:extendedlink xlink:type="extended"><db:link xlink:to="qdoctests-qdocfileoutput-exhaustive.xml" xlink:type="arc" xlink:arcrole="next" xlink:title="Exhaustive testing of QDoc commands"/></db:extendedlink>
 <db:abstract>
 <db:para>This is a simple page for testing purposes only.</db:para>

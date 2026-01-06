@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="group3-member.html" href="group3-member.html" status="active" location="group3.qdoc" documented="true" groups="group3" subtype="page" title="Group 3 member" fulltitle="Group 3 member" subtitle="">
+            <description>
+                <relation href="qdoctests-qdocfileoutput.html" type="page" meta="next" description="Testing QDoc output from .qdoc files"/>
+            </description>
+        </page>
+    </document>
+</WebXML>

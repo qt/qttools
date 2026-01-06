@@ -6,6 +6,7 @@
     <filterSection>
         <toc>
             <section ref="toc-test.html" title="TOC">
+                <section ref="group3-member.html" title="Group 3 member"/>
                 <section ref="qdoctests-qdocfileoutput.html" title="QDoc Testing">
                     <section ref="qdoctests-qdocfileoutput-exhaustive.html" title="Exhaustive testing of QDoc commands"/>
                     <section ref="crash.html" title="Random page"/>
@@ -24,6 +25,8 @@
         <keywords>
             <keyword name="Document Navigation" id="Document Navigation" ref="qdoctests-qdocmanuallikefileoutput.html"/>
             <keyword name="Exhaustive testing of QDoc commands" id="Exhaustive testing of QDoc commands" ref="qdoctests-qdocfileoutput-exhaustive.html"/>
+            <keyword name="Group 3" id="Group 3" ref="group3.html"/>
+            <keyword name="Group 3 member" id="Group 3 member" ref="group3-member.html"/>
             <keyword name="Group2" id="Group2" ref="group2.html"/>
             <keyword name="Page" id="Page" ref="page.html"/>
             <keyword name="Page A" id="Page A" ref="a.html"/>
@@ -43,6 +46,8 @@
             <file>d.html</file>
             <file>e.html</file>
             <file>group2.html</file>
+            <file>group3-member.html</file>
+            <file>group3.html</file>
             <file>images/01.png</file>
             <file>images/leonardo-da-vinci.png</file>
             <file>page.html</file>
