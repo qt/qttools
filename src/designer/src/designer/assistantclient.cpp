@@ -104,10 +104,10 @@ bool AssistantClient::ensureRunning(QString *errorMessage)
 
     if (!m_process) {
         m_process = new QProcess;
-        QObject::connect(m_process, &QProcess::finished,
-                         this, &AssistantClient::processTerminated);
-        QObject::connect(m_process, &QProcess::readyReadStandardError,
-                         this, &AssistantClient::readyReadStandardError);
+        auto exitHandler = [this](int exitCode, QProcess::ExitStatus exitStatus) { this->processTerminated(exitCode, exitStatus); };
+        QObject::connect(m_process, &QProcess::finished, m_process, exitHandler);
+        auto readHandler = [this]() { this->readyReadStandardError(); };
+        QObject::connect(m_process, &QProcess::readyReadStandardError, m_process, readHandler);
     }
 
     const QString app = binary();
@@ -135,11 +135,6 @@ QString AssistantClient::documentUrl(const QString &module) const
                      << (qtVersion >> 16) << ((qtVersion >> 8) & 0xFF) << (qtVersion & 0xFF)
                      << '/' << module << '/';
     return rc;
-}
-
-QString AssistantClient::designerManualUrl() const
-{
-    return documentUrl(u"qtdesigner"_s);
 }
 
 QT_END_NAMESPACE

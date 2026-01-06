@@ -13,6 +13,7 @@ qt_internal_add_app(designer
         appfontdialog.cpp appfontdialog.h
         assistantclient.cpp assistantclient.h
         designer_enums.h
+        helpclient.cpp helpclient.h
         main.cpp
         mainwindow.cpp mainwindow.h
         newform.cpp newform.h

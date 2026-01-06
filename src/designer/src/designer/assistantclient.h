@@ -4,35 +4,32 @@
 #ifndef ASSISTANTCLIENT_H
 #define ASSISTANTCLIENT_H
 
+#include "helpclient.h"
+
 #include <QtCore/qprocess.h>
 
 QT_BEGIN_NAMESPACE
 
 class QString;
 
-class AssistantClient : public QObject
+class AssistantClient : public HelpClient
 {
-    Q_OBJECT
-
 public:
+    Q_DISABLE_COPY_MOVE(AssistantClient)
+
     AssistantClient();
     ~AssistantClient() override;
 
-    bool showPage(const QString &path, QString *errorMessage);
-    bool activateIdentifier(const QString &identifier, QString *errorMessage);
+    bool showPage(const QString &path, QString *errorMessage) override;
+    bool activateIdentifier(const QString &identifier, QString *errorMessage) override;
+    QString documentUrl(const QString &module) const override;
 
     bool isRunning() const;
 
-    QString documentUrl(const QString &prefix) const;
-    // Root of the Qt Widgets Designer documentation
-    QString designerManualUrl() const;
-
-private slots:
-    void readyReadStandardError();
-    void processTerminated(int exitCode, QProcess::ExitStatus exitStatus);
-
 private:
     static QString binary();
+    void readyReadStandardError();
+    void processTerminated(int exitCode, QProcess::ExitStatus exitStatus);
     bool sendCommand(const QString &cmd, QString *errorMessage);
     bool ensureRunning(QString *errorMessage);
 
