@@ -71,6 +71,11 @@ private slots:
     void onServerUrlChanged();
     void onModelsReceived(const QStringList &models);
     void updateToolBoxTexts();
+    void toggleAdvancedSettings(bool checked);
+    void loadAdvancedSettings();
+    void saveAdvancedSettings();
+    void resetAdvancedSettings();
+    void validateAdvancedSettings();
 };
 
 QT_END_NAMESPACE
