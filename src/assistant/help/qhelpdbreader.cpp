@@ -329,7 +329,7 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
     table.contentsItems = idToContentsItem.values();
 
     if (optimized) {
-        for (int attributeId : usedAttributeIds)
+        for (int attributeId : std::as_const(usedAttributeIds))
             table.usedFilterAttributes.append(attributeIds.value(attributeId));
     }
     return table;

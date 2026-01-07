@@ -363,7 +363,8 @@ static void highlightAction(QAction *a, bool on)
             a->setProperty(FONT_BACKUP_PROP, QVariant());
         }
     }
-    for (QObject *o : a->associatedObjects()) {
+    const auto &associatedObjects = a->associatedObjects();
+    for (QObject *o : associatedObjects) {
         if (QWidget *w = qobject_cast<QWidget *>(o))
             highlightWidget(w, on);
     }

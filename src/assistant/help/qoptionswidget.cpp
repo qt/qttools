@@ -96,7 +96,7 @@ void QOptionsWidget::setOptions(const QStringList &validOptions, const QStringLi
     for (const QString &option : validSelectedOptions)
         appendItem(option, true, true);
 
-    for (const QString &option : m_invalidOptions)
+    for (const QString &option : std::as_const(m_invalidOptions))
         appendItem(option, false, true);
 
     if ((validSelectedOptions.size() + m_invalidOptions.size()) && validUnselectedOptions.size())
@@ -133,7 +133,7 @@ void QOptionsWidget::setInvalidOptionText(const QString &text)
     m_invalidOptionText = text;
 
     // update GUI
-    for (const QString &option : m_invalidOptions)
+    for (const QString &option : std::as_const(m_invalidOptions))
         m_optionToItem.value(option)->setText(optionText(option, false));
 }
 

@@ -294,7 +294,7 @@ QAbstractButton *FormMultiWidget::makeButton(const QIcon &icon)
 {
     QAbstractButton *btn = new QToolButton(this);
     btn->setIcon(icon);
-    btn->setFixedSize(icon.availableSizes().first() /* + something */);
+    btn->setFixedSize(icon.availableSizes().constFirst() /* + something */);
     btn->setFocusPolicy(Qt::NoFocus);
 #ifndef QT_NO_STYLE_STYLESHEET
     btn->setStyleSheet("border: none; background: transparent;"_L1);

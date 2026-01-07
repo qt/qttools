@@ -119,7 +119,7 @@ HelpDocSettingsWidget::HelpDocSettingsWidget(QWidget *parent)
     connect(d->m_ui.registeredDocsFilterLineEdit, &QLineEdit::textChanged, this,
             [this](const QString &) {
         Q_D(HelpDocSettingsWidget);
-        for (const auto item : d->m_namespaceToItem)
+        for (const auto item : std::as_const(d->m_namespaceToItem))
             d->applyDocListFilter(item);
     });
     connect(d->m_ui.registeredDocsListWidget, &QListWidget::itemSelectionChanged, this,
@@ -141,7 +141,8 @@ void HelpDocSettingsWidget::setDocSettings(const HelpDocSettings &settings)
     d->m_namespaceToItem.clear();
     d->m_itemToNamespace.clear();
 
-    for (const QString &namespaceName : d->m_settings.namespaces()) {
+    const auto &namespaces = d->m_settings.namespaces();
+    for (const QString &namespaceName : namespaces) {
         QListWidgetItem *item = new QListWidgetItem(namespaceName);
         d->m_namespaceToItem.insert(namespaceName, item);
         d->m_itemToNamespace.insert(item, namespaceName);

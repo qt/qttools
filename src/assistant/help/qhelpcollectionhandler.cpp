@@ -634,7 +634,8 @@ bool QHelpCollectionHandler::setFilterData(const QString &filterName,
     QVariantList versionList;
     QVariantList filterIdList;
 
-    for (const QString &component : filterData.components()) {
+    const auto &components = filterData.components();
+    for (const QString &component : components) {
         componentList.append(component);
         filterIdList.append(filterId);
     }
@@ -646,7 +647,8 @@ bool QHelpCollectionHandler::setFilterData(const QString &filterName,
         return false;
 
     filterIdList.clear();
-    for (const QVersionNumber &version : filterData.versions()) {
+    const auto &versions = filterData.versions();
+    for (const QVersionNumber &version : versions) {
         versionList.append(version.isNull() ? QString() : version.toString());
         filterIdList.append(filterId);
     }
@@ -860,7 +862,8 @@ bool QHelpCollectionHandler::registerDocumentation(const QString &fileName)
 
     registerVersion(reader.version(), nsId);
     registerFilterAttributes(reader.filterAttributeSets(), nsId); // qset, what happens when removing documentation?
-    for (const QString &filterName : reader.customFilters())
+    const auto &customFilters = reader.customFilters();
+    for (const QString &filterName : customFilters)
         addCustomFilter(filterName, reader.filterAttributes(filterName));
 
     if (!registerIndexTable(reader.indexTable(), nsId, vfId, registeredDocumentation(ns).fileName))
@@ -1129,7 +1132,7 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
 
     const QString originalVersion = namespaceVersion(fileInfo.namespaceName);
 
-    for (const QString &ns : namespaceList) {
+    for (const QString &ns : std::as_const(namespaceList)) {
         const QString nsVersion = namespaceVersion(ns);
         if (originalVersion == nsVersion)
             return ns;
@@ -1184,7 +1187,7 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
 
     const QString originalVersion = namespaceVersion(fileInfo.namespaceName);
 
-    for (const QString &ns : namespaceList) {
+    for (const QString &ns : std::as_const(namespaceList)) {
         const QString nsVersion = namespaceVersion(ns);
         if (originalVersion == nsVersion)
             return ns;

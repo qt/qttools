@@ -690,7 +690,8 @@ HelpEngineWrapperPrivate::HelpEngineWrapperPrivate(const QString &collectionFile
 void HelpEngineWrapperPrivate::initFileSystemWatchers()
 {
     TRACE_OBJ
-    for (const QString &ns : m_helpEngine->registeredDocumentations())
+    const auto &docs = m_helpEngine->registeredDocumentations();
+    for (const QString &ns : docs)
         m_qchWatcher->addPath(m_helpEngine->documentationFileName(ns));
 
     connect(m_qchWatcher, &QFileSystemWatcher::fileChanged, this,
@@ -725,7 +726,8 @@ void HelpEngineWrapperPrivate::qchFileChanged(const QString &fileName,
      * may not exist anymore or contain a different namespace.
      */
     QString ns;
-    for (const QString &curNs : m_helpEngine->registeredDocumentations()) {
+    const auto &docs = m_helpEngine->registeredDocumentations();
+    for (const QString &curNs : docs) {
         if (m_helpEngine->documentationFileName(curNs) == fileName) {
             ns = curNs;
             break;

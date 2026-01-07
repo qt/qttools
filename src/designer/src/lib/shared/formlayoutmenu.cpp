@@ -356,7 +356,7 @@ QStringList FormLayoutRowDialog::fieldWidgetClasses(QDesignerFormEditorInterface
         }
         // Compile final list, taking each base class and append custom widgets
         // based on it.
-        for (const auto &baseClass : baseClasses) {
+        for (const auto &baseClass : std::as_const(baseClasses)) {
             rc.append(baseClass);
             rc += customClassMap.values(baseClass);
         }
