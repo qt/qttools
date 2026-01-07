@@ -127,7 +127,7 @@ bool synchronizeDocs(QHelpEngineCore &collection,
             if (!cachedCollection.registerDocumentation(docFile)) {
                 cmd.showMessage(QCoreApplication::translate("Assistant",
                                     "Error registering documentation file '%1': %2").
-                                arg(docFile).arg(cachedCollection.error()), true);
+                                arg(docFile, cachedCollection.error()), true);
                 return false;
             }
         }
@@ -183,7 +183,7 @@ bool registerDocumentation(QHelpEngineCore &collection, CmdLineParser &cmd,
     if (!collection.registerDocumentation(cmd.helpFile())) {
         cmd.showMessage(QCoreApplication::translate("Assistant",
                      "Could not register documentation file\n%1\n\nReason:\n%2")
-                     .arg(cmd.helpFile()).arg(collection.error()), true);
+                     .arg(cmd.helpFile(), collection.error()), true);
         return false;
     }
     if (printSuccess)
@@ -202,7 +202,7 @@ bool unregisterDocumentation(QHelpEngineCore &collection,
         cmd.showMessage(QCoreApplication::translate("Assistant",
                              "Could not unregister documentation"
                              " file\n%1\n\nReason:\n%2").
-                        arg(cmd.helpFile()).arg(collection.error()), true);
+                        arg(cmd.helpFile(), collection.error()), true);
         return false;
     }
     updateLastPagesOnUnregister(collection, namespaceName);
@@ -253,7 +253,7 @@ static ExitStatus preliminarySetup(CmdLineParser *cmd)
         if (!collection->setupData()) {
             cmd->showMessage(QCoreApplication::translate("Assistant",
                              "Error reading collection file '%1': %2.")
-                            .arg(collectionFile).arg(collection->error()), true);
+                            .arg(collectionFile, collection->error()), true);
             return ExitFailure;
         }
     }
@@ -264,15 +264,14 @@ static ExitStatus preliminarySetup(CmdLineParser *cmd)
             && !collection->copyCollectionFile(cachedCollectionFile)) {
         cmd->showMessage(QCoreApplication::translate("Assistant",
                          "Error creating collection file '%1': %2.")
-                        .arg(cachedCollectionFile).arg(collection->error()), true);
+                        .arg(cachedCollectionFile, collection->error()), true);
         return ExitFailure;
     }
     QHelpEngineCore cachedCollection(cachedCollectionFile);
     if (!cachedCollection.setupData()) {
         cmd->showMessage(QCoreApplication::translate("Assistant",
                          "Error reading collection file '%1': %2.")
-                        .arg(cachedCollectionFile)
-                        .arg(cachedCollection.error()), true);
+                        .arg(cachedCollectionFile, cachedCollection.error()), true);
         return ExitFailure;
     }
 
