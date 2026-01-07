@@ -1777,8 +1777,11 @@
       \li \c {\l {capturing parentheses}}
     \endlist
 
-    \note The brackets in the link example are required because the
-    target name contains spaces.
+    Above, the target name is enclosed in brackets because it contains
+    spaces.
+
+    \note The \\target command does not support \qdocvar macro expansion
+    in its argument.
 
     \section2 \\target in a \\table
     When you use the \\target command in a table, make sure that the
@@ -1865,6 +1868,9 @@
     \endcode
 
     If the keyword text contains spaces, the brackets are required.
+
+    \note The \\keyword command does not support \qdocvar macro expansion
+    in its argument.
 
     See also \l {l-command} {\\l (link)}, \l {sa-command} {\\sa (see
     also)} and \l {target-command} {\\target}.
