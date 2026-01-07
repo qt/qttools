@@ -30,4 +30,8 @@ Item {
     id: my_item
 }
 </db:programlisting>
+<db:para>The case of the specified language is not important:</db:para>
+<db:programlisting language="cpp">// Some C++ code:
+QWidget *widget = getWidget();
+</db:programlisting>
 </db:article>

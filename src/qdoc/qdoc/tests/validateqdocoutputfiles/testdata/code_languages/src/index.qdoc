@@ -36,4 +36,10 @@
         id: my_item
     }
     \endcode
+
+    The case of the specified language is not important:
+    \code [CPP]
+    // Some C++ code:
+    QWidget *widget = getWidget();
+    \endcode
 */

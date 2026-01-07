@@ -22,6 +22,9 @@ QWidget *widget = getWidget();
 Item {
     id: my_item
 }</code>
+                <para>The case of the specified language is not important:</para>
+                <code>// Some C++ code:
+QWidget *widget = getWidget();</code>
             </description>
         </page>
     </document>

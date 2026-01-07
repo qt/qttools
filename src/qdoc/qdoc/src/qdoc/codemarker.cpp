@@ -124,7 +124,7 @@ CodeMarker *CodeMarker::markerForFileName(const QString &fileName)
 CodeMarker *CodeMarker::markerForLanguage(const QString &lang)
 {
     for (const auto &marker : std::as_const(s_markers)) {
-        if (marker->recognizeLanguage(lang))
+        if (marker->recognizeLanguage(lang.toLower()))
             return marker;
     }
     return nullptr;
