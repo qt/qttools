@@ -1222,8 +1222,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     if (m_indexStartedParagraph)
                         skipAllSpaces();
                 } else if (*format == ATOM_FORMATTING_LINK) {
-                    // hack for C++ to support links like
-                    // \l{QString::}{count()}
+                    // Support links like \l{QString::}{count()} for C++
+                    // and \l{Item::}{children} for QML.
                     if (currentLinkAtom && currentLinkAtom->string().endsWith("::")) {
                         QString suffix =
                                 Text::subText(currentLinkAtom, m_private->m_text.lastAtom())
@@ -1910,7 +1910,8 @@ void DocParser::parseAlso()
             if (isLeftBraceAhead()) {
                 str = getArgument();
 
-                // hack for C++ to support links like \l{QString::}{count()}
+                // Support links like \l{QString::}{count()} for C++
+                // and \l{Item::}{children} for QML.
                 if (target.endsWith("::"))
                     target += str;
             } else {

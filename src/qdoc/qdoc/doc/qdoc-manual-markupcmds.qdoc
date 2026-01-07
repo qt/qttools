@@ -1612,6 +1612,12 @@
                 \li \c {\l <QtGlobal>} - The subject of a \l {headerfile-command}
                 {\\headerfile} command.
 
+                \li \c {\l QWidget::geometry} - The signature of a property
+                defined for a QObject subclass.
+
+                \li \c {\l Item.height} - The signature of a property defined for
+                a QML type.
+
             \endlist
 
             If you only want the function name to appear in the link, you

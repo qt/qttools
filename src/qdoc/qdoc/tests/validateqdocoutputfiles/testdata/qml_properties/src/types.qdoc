@@ -5,6 +5,86 @@
     \qmlmodule TestModule
     \title Test QML Types
     \brief Test module for QML properties.
+
+    \section1 Links to properties
+
+    QML syntax, using the module name:
+
+    \list
+    \li \l{TestModule.BaseItem.name}
+    \li \l{TestModule::}{BaseItem.name}
+    \li \l{TestModule.BaseItem::}{name}
+    \li \l{TestModule.BaseItem.size.width}
+    \li \l{TestModule::}{BaseItem.size.width}
+    \li \l{TestModule.BaseItem::}{size.width}
+    \li \l{TestModule.BaseItem.size::}{width}
+    \li \l{TestModule.BaseItem.size.height}
+    \li \l{TestModule::}{BaseItem.size.height}
+    \li \l{TestModule.BaseItem::}{size.height}
+    \li \l{TestModule.BaseItem.size::}{height}
+    \li \l{TestModule.BaseItem.values}
+    \li \l{TestModule::}{BaseItem.values}
+    \li \l{TestModule.BaseItem::}{values}
+    \li \l{TestModule.BaseItem.values.integer}
+    \li \l{TestModule::}{BaseItem.values.integer}
+    \li \l{TestModule.BaseItem::}{values.integer}
+    \li \l{TestModule.BaseItem.values::}{integer}
+    \li \l{TestModule.BaseItem.values.floating}
+    \li \l{TestModule::}{BaseItem.values.floating}
+    \li \l{TestModule.BaseItem::}{values.floating}
+    \li \l{TestModule.BaseItem.values::}{floating}
+    \li \l{TestModule.BaseItem.values.boolean}
+    \li \l{TestModule::}{BaseItem.values.boolean}
+    \li \l{TestModule.BaseItem::}{values.boolean}
+    \li \l{TestModule.BaseItem.values::}{boolean}
+    \endlist
+
+    QML syntax, without the module name:
+
+    \list
+    \li \l{BaseItem.name}
+    \li \l{BaseItem::}{name}
+    \li \l{BaseItem.size.width}
+    \li \l{BaseItem::}{size.width}
+    \li \l{BaseItem.size::}{width}
+    \li \l{BaseItem.size.height}
+    \li \l{BaseItem::}{size.height}
+    \li \l{BaseItem.size::}{height}
+    \li \l{BaseItem.values}
+    \li \l{BaseItem::}{values}
+    \li \l{BaseItem.values.integer}
+    \li \l{BaseItem::}{values.integer}
+    \li \l{BaseItem.values::}{integer}
+    \li \l{BaseItem.values.floating}
+    \li \l{BaseItem::}{values.floating}
+    \li \l{BaseItem.values::}{floating}
+    \li \l{BaseItem.values.boolean}
+    \li \l{BaseItem::}{values.boolean}
+    \li \l{BaseItem.values::}{boolean}
+    \endlist
+
+    Links without braces in the source text:
+
+    \list
+    \li \l TestModule.BaseItem.name
+    \li \l TestModule.BaseItem.size.width
+    \li \l TestModule.BaseItem.size.height
+    \li \l TestModule.BaseItem.values
+    \li \l TestModule.BaseItem.values.integer
+    \li \l TestModule.BaseItem.values.floating
+    \li \l TestModule.BaseItem.values.boolean
+    \li \l BaseItem.name
+    \li \l BaseItem.size.width
+    \li \l BaseItem.size.height
+    \li \l BaseItem.values
+    \li \l BaseItem.values.integer
+    \li \l BaseItem.values.floating
+    \li \l BaseItem.values.boolean
+    \endlist
+
+    \section1 Types
+
+    A list of types is automatically included below.
 */
 
 /*!

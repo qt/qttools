@@ -1053,11 +1053,11 @@
     A QML type is associated with a module by adding the
     \l{inqmlmodule-command}{\\inqmlmodule} command to the comment-block that
     documents the type. You can link to any member of a QML module using the
-    module name and two colons (\c{::}) prefix.
+    module name and a dot (\c{.}) prefix.
 
     \badcode *
     /\1!
-        A link to the TabWidget of the UI Component is \l {UIComponent::TabWidget}.
+        A link to the TabWidget of the UI Component is \l {UIComponent.TabWidget}.
     \1/
     \endcode
 
@@ -1097,7 +1097,8 @@
     in a table at the top of the QML type reference page.
 
     When linking to QML types, the QML module identifier may appear in
-    the link target. For example:
+    the link target with a prefix of two colons (\c{::}) prefix, as with
+    C++ code. For example:
 
     \badcode
     \l {ClickableComponents::}{ClickableButton}

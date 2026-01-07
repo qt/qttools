@@ -10,6 +10,7 @@
 #include "genustypes.h"
 #include "qdocindexfiles.h"
 #include "qdoclogging.h"
+#include "qmlpropertynode.h"
 #include "qmltypenode.h"
 #include "tree.h"
 #include "utilities.h"
@@ -1670,6 +1671,73 @@ void QDocDatabase::mergeCollections(CollectionNode *c)
 }
 
 /*!
+    Returns the node to a piece of QML API documentation that corresponds to
+    the given \a path, or \c nullptr if the path cannot be resolved.
+    The \a relative node specifies where the link or reference was used.
+
+    This doesn't handle the use of fragments to refer to elements in the
+    target documentation.
+*/
+const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative)
+{
+    // Since path contains a dot, assume that it is either a QML module
+    // in its own right or a QML path. Break the path where path separators
+    // for C++ or QML occur.
+    QStringList pieces;
+    for (auto piece : path.split("."_L1)) {
+        for (auto inner : piece.split("::"_L1)) {
+            pieces.append(inner);
+        }
+    }
+
+    // Try to resolve a leading QML module name.
+    QString modName{""};
+    QString tryName{""};
+    const Node *modNode{nullptr};
+    int i;
+
+    for (i = 0; i < pieces.count(); i++) {
+        tryName += pieces.at(i);
+        const Node *node = findNodeByNameAndType(QStringList(tryName), &Node::isQmlModule);
+
+        if (node) {
+            modName = tryName;
+            modNode = node;
+        } else
+            break;
+
+        tryName += "."_L1;
+    }
+
+    // No more pieces to check, so return what we have.
+    if (i == pieces.count())
+        return modNode;
+
+    QmlTypeNode *qtn{nullptr};
+
+    if (modNode) {
+        pieces = pieces.mid(i);
+        qtn = findQmlType(modName, pieces.takeFirst(), relative);
+    } else
+        qtn = findQmlType(pieces.takeFirst(), relative);
+
+    // Return a null pointer or the leaf node.
+    if (!qtn || pieces.isEmpty())
+        return qtn;
+
+    auto propertyName = pieces.join("."_L1);
+    QmlPropertyNode *qmlProperty = qtn->hasQmlProperty(propertyName);
+
+    if (qmlProperty)
+        return qmlProperty;
+
+    // Fall back on a general search for a member with the name.
+    // This will intentionally fail for functions if there is a dot
+    // in the name.
+    return qtn->findChildNode(propertyName, Genus::QML);
+}
+
+/*!
   Searches for the node that matches the path in \a atom and the
   specified \a genus. The \a relative node is used if the first
   leg of the path is empty, i.e. if the path begins with '#'.
@@ -1694,6 +1762,11 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
             domain = atomDomain;
         if (atom->genus() != Genus::DontCare)
             genus = atom->genus();
+
+        if (!first.contains("://"_L1) && !first.contains(" "_L1) && !first.endsWith(".html"_L1) && first.contains("."_L1)) {
+            const Node *found = findQmlNode(first, relative);
+            if (found) return found;
+        }
     }
 
     if (first.isEmpty())
