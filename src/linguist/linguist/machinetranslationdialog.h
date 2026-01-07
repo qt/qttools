@@ -41,6 +41,7 @@ private:
     void refresh(bool init);
     void logProgress(const QList<QStringList> &table);
     void logInfo(const QString &info);
+    void logWarning(const QString &warning);
     void logError(const QString &error);
     bool discardTranslations();
     void updateStatus();
@@ -49,7 +50,7 @@ private:
 
     MultiDataModel *m_dataModel;
     QHash<const TranslatorMessage *, MultiDataIndex> m_ongoingTranslations;
-    QList<std::pair<MultiDataIndex, QString>> m_receivedTranslations;
+    QList<std::pair<MultiDataIndex, QStringList>> m_receivedTranslations;
     QMutex m_mutex;
     std::unique_ptr<Ui::MachineTranslationDialog> m_ui;
     std::unique_ptr<MachineTranslator> m_translator;
@@ -61,7 +62,7 @@ private:
 private slots:
     void stop();
     void translateSelection();
-    void onBatchTranslated(QHash<const TranslatorMessage *, QString> translations);
+    void onBatchTranslated(QHash<const TranslatorMessage *, QStringList> translations);
     void onNewDebugMessage(const QByteArray &message, bool fromLlm);
     void onFilterChanged(int id);
     void applyTranslations();

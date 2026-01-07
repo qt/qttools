@@ -414,6 +414,7 @@ public:
 
     // Per message
     void setTranslation(const MultiDataIndex &index, const QString &translation);
+    void setTranslations(const MultiDataIndex &index, const QStringList &translations);
     void setFinished(const MultiDataIndex &index, bool finished);
     void setDanger(const MultiDataIndex &index, bool danger);
 

@@ -20,7 +20,8 @@ public:
     ~Ollama() override;
     QList<Batch> makeBatches(const Messages &messages, const QString &userContext) const override;
     QByteArray payload(const Batch &b) const override;
-    QHash<QString, QString> extractTranslations(const QByteArray &response) override;
+    QHash<QString, QStringList> extractTranslations(const QByteArray &response,
+                                                    bool plural) override;
     QStringList extractModels(const QByteArray &data) const override;
 
     std::optional<QByteArray> stageModel(const QString &modelName) override;
@@ -33,7 +34,6 @@ private:
     QString makePrompt(const Batch &b) const;
 
     std::unique_ptr<QJsonObject> m_payloadBase;
-    std::unique_ptr<QJsonObject> m_systemMessage;
     QString m_url;
     std::atomic_int m_useJsonFormat;
     QElapsedTimer m_lastWakeupTimer;

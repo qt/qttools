@@ -184,8 +184,9 @@ void MachineTranslator::translationReceived(QNetworkReply *reply, Batch b, int s
         }
     } else {
         QList<Item> items = std::move(b.items);
-        QHash<const TranslatorMessage *, QString> out;
-        QHash<QString, QString> translations = m_translator->extractTranslations(response);
+        QHash<const TranslatorMessage *, QStringList> out;
+        QHash<QString, QStringList> translations =
+                m_translator->extractTranslations(response, b.pluralFormsCount > 1);
 
         // First pass: exact matches
         QList<Item> nonMatched;

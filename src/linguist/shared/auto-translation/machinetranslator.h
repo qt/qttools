@@ -37,7 +37,7 @@ public:
     void requestModels();
 
 signals:
-    void batchTranslated(QHash<const TranslatorMessage *, QString> translations);
+    void batchTranslated(QHash<const TranslatorMessage *, QStringList> translations);
     void translationFailed(QList<const TranslatorMessage *>);
     void modelsReceived(QStringList models);
     void debugLog(const QByteArray &message, bool fromLlm);
