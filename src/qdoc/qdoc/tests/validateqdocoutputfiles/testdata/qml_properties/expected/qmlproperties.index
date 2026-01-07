@@ -12,6 +12,9 @@
             <qmlproperty name="size" propertygroup="true" fullname="TestModule.BaseItem.size" href="qml-testmodule-baseitem.html#size-prop" status="active" access="public" location="types.qdoc" since="1.1" documented="true"/>
             <qmlproperty name="values" propertygroup="true" fullname="TestModule.BaseItem.values" href="qml-testmodule-baseitem.html#values-prop" status="active" access="public" location="types.qdoc" since="1.2" documented="true"/>
         </qmlclass>
-        <qmlmodule name="TestModule" qml-module-name="TestModule" href="testmodule-qmlmodule.html" status="active" location="types.qdoc" documented="true" seen="true" title="Test QML Types" brief="Test module for QML properties"/>
+        <qmlmodule name="TestModule" qml-module-name="TestModule" href="testmodule-qmlmodule.html" status="active" location="types.qdoc" documented="true" seen="true" title="Test QML Types" brief="Test module for QML properties">
+            <contents name="links-to-properties" title="Links to properties" level="1"/>
+            <contents name="types" title="Types" level="1"/>
+        </qmlmodule>
     </namespace>
 </INDEX>

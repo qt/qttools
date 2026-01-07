@@ -243,6 +243,8 @@ public:
     static NodeMultiMapMap &newEnumValueMaps() { return s_newEnumValueMaps; }
     static NodeMultiMapMap &newSinceMaps() { return s_newSinceMaps; }
 
+    const Node *findQmlNode(const QString &path, const Node *relative);
+
 private:
     void findAllClasses(Aggregate *node) { node->findAllClasses(); }
     void findAllFunctions(Aggregate *node) { node->findAllFunctions(m_functionIndex); }

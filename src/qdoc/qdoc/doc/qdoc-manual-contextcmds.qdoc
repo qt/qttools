@@ -329,7 +329,7 @@
     \endcode
 
     See how QDoc renders this property on the reference page for the
-    \l {QtQuick::State::changes}{State} type.
+    \l {QtQuick.State.changes}{State} type.
 
     \target qmlenumeratorsfrom-command
     \section1 \\qmlenumeratorsfrom
