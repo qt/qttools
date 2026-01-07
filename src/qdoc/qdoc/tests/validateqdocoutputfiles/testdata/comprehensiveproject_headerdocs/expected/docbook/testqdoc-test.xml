@@ -299,6 +299,21 @@
 </db:methodsynopsis>
 <db:para>Function that must be reimplemented.</db:para>
 </db:section>
+<db:section xml:id="operator-bool">
+<db:title its:translate="no">[explicit] Test::operator bool() const</db:title>
+<db:methodsynopsis>
+<db:modifier>const</db:modifier>
+<db:type></db:type>
+<db:methodname>operator bool</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">operator bool() const</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Conversion operator.</db:para>
+</db:section>
 <db:section xml:id="operator-eq">
 <db:title its:translate="no">[<db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Deleted_functions">delete</db:link>] TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
 <db:methodsynopsis>

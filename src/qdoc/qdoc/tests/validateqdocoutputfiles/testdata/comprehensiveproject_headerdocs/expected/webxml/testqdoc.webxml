@@ -98,6 +98,11 @@
                         <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>
                     </description>
                 </function>
+                <function name="operator bool" fullname="TestQDoc::Test::operator bool" href="testqdoc-test.html#operator-bool" status="active" access="public" location="testcpp.h" documented="true" meta="plain" const="true" explicit="true" signature="operator bool() const">
+                    <description>
+                        <para>Conversion operator.</para>
+                    </description>
+                </function>
                 <function name="operator++" fullname="TestQDoc::Test::operator++" href="testqdoc-test-obsolete.html#operator-2b-2b" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator++()">
                     <description/>
                 </function>
@@ -238,7 +243,7 @@
                 <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" override="true" type="void" signature="void virtualFun() override">
                     <description/>
                 </function>
-                <enum name="anonymous-testcpp-h-295" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-295" href="testqdoc-testderived.html#anonymous-testcpp-h-295-enum" status="active" access="public" location="testcpp.h" documented="true" anonymous="true">
+                <enum name="anonymous-testcpp-h-300" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-300" href="testqdoc-testderived.html#anonymous-testcpp-h-300-enum" status="active" access="public" location="testcpp.h" documented="true" anonymous="true">
                     <value name="Val1" value="0"/>
                     <value name="Val2" value="1"/>
                     <description>
@@ -252,7 +257,7 @@
                         </list>
                     </description>
                 </enum>
-                <enum name="anonymous-testcpp-h-301" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-301" href="testqdoc-testderived.html#anonymous-testcpp-h-301-enum" status="active" access="public" location="testcpp.h" documented="true" anonymous="true">
+                <enum name="anonymous-testcpp-h-306" fullname="TestQDoc::TestDerived::anonymous-testcpp-h-306" href="testqdoc-testderived.html#anonymous-testcpp-h-306-enum" status="active" access="public" location="testcpp.h" documented="true" anonymous="true">
                     <value name="Val3" value="0"/>
                     <value name="Val4" value="1"/>
                     <description>

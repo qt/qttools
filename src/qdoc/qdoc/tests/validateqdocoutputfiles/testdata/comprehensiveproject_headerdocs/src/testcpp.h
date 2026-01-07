@@ -205,6 +205,11 @@ using Specialized = Struct<int, T>;
     Test &operator++() { return *this; }
     Test &operator--() { return *this; }
 
+/*!
+    Conversion operator.
+*/
+    explicit operator bool() const { return true; }
+
     void anotherFunc() {};
 
 /*!
