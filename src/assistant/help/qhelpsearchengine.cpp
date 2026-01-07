@@ -223,7 +223,8 @@ int QHelpSearchEngine::searchResultCount() const
 QList<QHelpSearchEngine::SearchHit> QHelpSearchEngine::hits(int start, int end) const
 {
     QList<QHelpSearchEngine::SearchHit> hits;
-    for (const QHelpSearchResult &result : searchResults(start, end))
+    const auto &results = searchResults(start, end);
+    for (const QHelpSearchResult &result : results)
         hits.append(qMakePair(result.url().toString(), result.title()));
     return hits;
 }

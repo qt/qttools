@@ -392,7 +392,7 @@ void MachineTranslationDialog::onTranslationFailed(QList<const TranslatorMessage
 
     QMutexLocker lock(&m_mutex);
     m_failedTranslations += failed.size();
-    for (const TranslatorMessage *m : failed) {
+    for (const TranslatorMessage *m : std::as_const(failed)) {
         log << QStringList{ m->sourceText().simplified() };
         m_ongoingTranslations.remove(m);
     }

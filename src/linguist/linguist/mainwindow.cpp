@@ -2856,7 +2856,8 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
         if (!e->mimeData()->hasFormat("text/uri-list"_L1))
             return false;
         QStringList urls;
-        for (const QUrl &url : e->mimeData()->urls())
+        const auto &qurls = e->mimeData()->urls();
+        for (const QUrl &url : qurls)
             if (!url.toLocalFile().isEmpty())
                 urls << url.toLocalFile();
         if (!urls.isEmpty())

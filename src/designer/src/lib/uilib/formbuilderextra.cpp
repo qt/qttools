@@ -191,7 +191,7 @@ bool QFormBuilderExtra::applyBuddy(const QString &buddyName, BuddyMode applyMode
         return false;
     }
 
-    for (auto *w : widgets) {
+    for (auto *w : std::as_const(widgets)) {
         if (applyMode == BuddyApplyAll || !w->isHidden()) {
             label->setBuddy(w);
             return true;

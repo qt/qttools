@@ -557,7 +557,8 @@ void DataModel::updateStatistics()
             stats.obsoleteMsg++;
         } else if (mi->isFinished()) {
             bool hasDanger = false;
-            for (const QString &trnsl : mi->translations()) {
+            const auto &translations = mi->translations();
+            for (const QString &trnsl : translations) {
                 doCharCounting(trnsl, stats.wordsFinished, stats.charsFinished, stats.charsSpacesFinished);
                 hasDanger |= mi->danger();
             }
@@ -567,7 +568,8 @@ void DataModel::updateStatistics()
                 stats.translatedMsgNoDanger++;
         } else if (mi->isUnfinished()) {
             bool hasDanger = false;
-            for (const QString &trnsl : mi->translations()) {
+            const auto &translations = mi->translations();
+            for (const QString &trnsl : translations) {
                 doCharCounting(trnsl, stats.wordsUnfinished, stats.charsUnfinished, stats.charsSpacesUnfinished);
                 hasDanger |= mi->danger();
             }
