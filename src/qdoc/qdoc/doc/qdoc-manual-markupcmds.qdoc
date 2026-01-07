@@ -795,7 +795,7 @@
     {\\qml} command instead.
 
     From version 6.11, a language can be specified as an optional
-    argument on the same line as the \\code command.
+    case-insensitive argument on the same line as the \\code command.
     When specified, the language overrides the default language and any
     other language-specific behavior described above. QDoc also defines
     the \c text language so that blocks of code can be displayed

@@ -43,11 +43,11 @@ bool CppCodeMarker::recognizeExtension(const QString &extension)
 }
 
 /*!
-  Returns \c true if \a lang is either "C" or "Cpp".
+  Returns \c true if \a lang is either "c" or "cpp".
  */
 bool CppCodeMarker::recognizeLanguage(const QString &lang)
 {
-    return lang == QLatin1String("C") || lang == QLatin1String("Cpp");
+    return lang == QLatin1String("c") || lang == QLatin1String("cpp");
 }
 
 /*!

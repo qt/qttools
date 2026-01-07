@@ -54,7 +54,7 @@ bool QmlCodeMarker::recognizeExtension(const QString &ext)
  */
 bool QmlCodeMarker::recognizeLanguage(const QString &language)
 {
-    return language == "QML";
+    return language == "qml";
 }
 
 /*!
