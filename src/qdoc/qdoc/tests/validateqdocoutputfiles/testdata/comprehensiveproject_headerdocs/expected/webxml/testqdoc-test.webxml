@@ -73,6 +73,11 @@
                     <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>
                 </description>
             </function>
+            <function name="operator bool" fullname="TestQDoc::Test::operator bool" href="testqdoc-test.html#operator-bool" status="active" access="public" location="testcpp.h" documented="true" meta="plain" const="true" explicit="true" signature="operator bool() const">
+                <description>
+                    <para>Conversion operator.</para>
+                </description>
+            </function>
             <function name="operator++" fullname="TestQDoc::Test::operator++" href="testqdoc-test-obsolete.html#operator-2b-2b" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator++()">
                 <description/>
             </function>

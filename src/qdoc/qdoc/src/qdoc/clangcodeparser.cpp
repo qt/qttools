@@ -1380,7 +1380,7 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
         fn->setMetaness(FunctionNode::Ctor);
     else if (kind == CXCursor_Destructor)
         fn->setMetaness(FunctionNode::Dtor);
-    else
+    else if (kind != CXCursor_ConversionFunction)
         fn->setReturnType(cleanAnonymousTypeName(QString::fromStdString(get_fully_qualified_type_name(
             function_declaration->getReturnType(),
             function_declaration->getASTContext()
