@@ -250,6 +250,12 @@ void MachineTranslationDialog::logInfo(const QString &info)
     m_ui->translationLog->append(info);
 }
 
+void MachineTranslationDialog::logWarning(const QString &warning)
+{
+    m_ui->translationLog->append(
+            "<span style=\"color:orange;\">%1</span>"_L1.arg(warning.toHtmlEscaped()));
+}
+
 void MachineTranslationDialog::logError(const QString &error)
 {
     m_ui->translationLog->append("<hr/>"_L1);
@@ -340,6 +346,7 @@ void MachineTranslationDialog::translateSelection()
     }
     messages.srcLang = QLocale::languageToString(dm->sourceLanguage());
     messages.tgtLang = QLocale::languageToString(dm->language());
+    messages.pluralFormsCount = dm->numerusForms().size();
     m_sentTexts += messages.items.size();
     m_translator->activateTranslationModel(model);
     m_translator->translate(messages, m_ui->contextEdit->toPlainText().trimmed());
@@ -348,17 +355,33 @@ void MachineTranslationDialog::translateSelection()
 }
 
 void MachineTranslationDialog::onBatchTranslated(
-        QHash<const TranslatorMessage *, QString> translations)
+        QHash<const TranslatorMessage *, QStringList> translations)
 {
     QList<QStringList> log;
+    QList<QString> warnings;
     log.reserve(translations.size());
     QMutexLocker lock(&m_mutex);
-    for (const auto &[msg, translation] : translations.asKeyValueRange()) {
-        log.append({ msg->sourceText().simplified(), translation.simplified() });
-        m_receivedTranslations.append(std::make_pair(m_ongoingTranslations.take(msg), translation));
+
+    const int id = m_ui->filesComboBox->currentIndex();
+    const int expectedForms = m_dataModel->model(id)->numerusForms().size();
+
+    for (const auto &[msg, translationList] : translations.asKeyValueRange()) {
+        const QString displayTranslation = translationList.size() == 1
+                ? translationList.first().simplified()
+                : translationList.join(" | "_L1);
+        log.append({ msg->sourceText().simplified(), displayTranslation });
+        if (msg->isPlural() && translationList.size() != expectedForms)
+            warnings.append(tr("Plural count expected %1, got %2 for \"%3\".")
+                                    .arg(expectedForms)
+                                    .arg(translationList.size())
+                                    .arg(msg->sourceText()));
+        m_receivedTranslations.append(
+                std::make_pair(m_ongoingTranslations.take(msg), translationList));
     }
     logInfo(tr("Translation Batch:"));
     logProgress(log);
+    for (const QString &warning : std::as_const(warnings))
+        logWarning(warning);
 }
 
 void MachineTranslationDialog::onNewDebugMessage(const QByteArray &message, bool fromLlm)
@@ -405,8 +428,8 @@ void MachineTranslationDialog::onFilterChanged(int id)
 void MachineTranslationDialog::applyTranslations()
 {
     QMutexLocker lock(&m_mutex);
-    for (const auto &[item, translation] : std::as_const(m_receivedTranslations))
-        m_dataModel->setTranslation(item, translation);
+    for (const auto &[item, translations] : std::as_const(m_receivedTranslations))
+        m_dataModel->setTranslations(item, translations);
     refresh(false);
     logInfo(tr("Translations Applied."));
 }

@@ -15,14 +15,10 @@ QT_BEGIN_NAMESPACE
 
 OpenAICompatible::OpenAICompatible()
     : m_payloadBase(std::make_unique<QJsonObject>()),
-      m_systemMessage(std::make_unique<QJsonObject>()),
       m_formatTryCounter(TranslationSettings::maxJsonFormatTries())
 {
     m_payloadBase->insert("stream"_L1, false);
     m_payloadBase->insert("temperature"_L1, TranslationSettings::temperature());
-
-    m_systemMessage->insert("role"_L1, "system"_L1);
-    m_systemMessage->insert("content"_L1, translationSystemPrompt());
 }
 
 OpenAICompatible::~OpenAICompatible() = default;
@@ -30,37 +26,53 @@ OpenAICompatible::~OpenAICompatible() = default;
 QList<Batch> OpenAICompatible::makeBatches(const Messages &messages,
                                            const QString &userContext) const
 {
-    QHash<QString, QList<const TranslatorMessage *>> groups;
+    QHash<QString, QList<const TranslatorMessage *>> nonPluralGroups;
+    QHash<QString, QList<const TranslatorMessage *>> pluralGroups;
 
-    for (const auto &item : messages.items)
-        groups[item->context() + item->label()].append(item);
+    for (const auto &item : messages.items) {
+        const QString key = item->context() + item->label();
+        if (item->isPlural())
+            pluralGroups[key].append(item);
+        else
+            nonPluralGroups[key].append(item);
+    }
 
     const int maxBatchSize = TranslationSettings::maxBatchSize();
     QList<Batch> out;
-    out.reserve(groups.size());
-    for (auto it = groups.cbegin(); it != groups.cend(); ++it) {
-        auto msgIt = it.value().cbegin();
-        while (msgIt != it.value().cend()) {
-            Batch b;
-            b.srcLang = messages.srcLang;
-            b.tgtLang = messages.tgtLang;
-            b.context = it.key();
-            b.userContext = userContext;
-            b.items.reserve(it.value().size());
-            while (msgIt != it.value().cend() && b.items.size() < maxBatchSize) {
-                Item item;
-                item.msg = *msgIt;
-                item.translation = item.msg->translation();
-                b.items.append(std::move(item));
-                msgIt++;
+    out.reserve(nonPluralGroups.size() + pluralGroups.size());
+
+    auto createBatches = [&](const QHash<QString, QList<const TranslatorMessage *>> &groups,
+                             int pluralFormsCount) {
+        for (auto it = groups.cbegin(); it != groups.cend(); ++it) {
+            auto msgIt = it.value().cbegin();
+            while (msgIt != it.value().cend()) {
+                Batch b;
+                b.srcLang = messages.srcLang;
+                b.tgtLang = messages.tgtLang;
+                b.context = it.key();
+                b.userContext = userContext;
+                b.pluralFormsCount = pluralFormsCount;
+                b.items.reserve(it.value().size());
+                while (msgIt != it.value().cend() && b.items.size() < maxBatchSize) {
+                    Item item;
+                    item.msg = *msgIt;
+                    item.translation = item.msg->translation();
+                    b.items.append(std::move(item));
+                    msgIt++;
+                }
+                out.append(std::move(b));
             }
-            out.append(std::move(b));
         }
-    }
+    };
+
+    createBatches(nonPluralGroups, 1);
+    createBatches(pluralGroups, messages.pluralFormsCount);
+
     return out;
 }
 
-QHash<QString, QString> OpenAICompatible::extractTranslations(const QByteArray &response)
+QHash<QString, QStringList> OpenAICompatible::extractTranslations(const QByteArray &response,
+                                                                  bool plural)
 {
     QJsonParseError err;
     QJsonDocument doc = QJsonDocument::fromJson(response, &err);
@@ -91,7 +103,15 @@ QHash<QString, QString> OpenAICompatible::extractTranslations(const QByteArray &
         contentValue = content;
     }
 
-    auto translations = extractKeyValuePairs(contentValue, "Translations"_L1);
+    QHash<QString, QStringList> translations;
+    if (plural) {
+        translations = extractPluralTranslations(contentValue, "Plurals"_L1);
+    } else {
+        auto singleTranslations = extractKeyValuePairs(contentValue, "Translations"_L1);
+        for (auto it = singleTranslations.cbegin(); it != singleTranslations.cend(); ++it)
+            translations[it.key()] << it.value();
+    }
+
     if (translations.isEmpty()) {
         decrementFormatCounter();
         return translations;
@@ -122,12 +142,18 @@ QStringList OpenAICompatible::extractModels(const QByteArray &response) const
 
 QByteArray OpenAICompatible::payload(const Batch &b) const
 {
+    QJsonObject systemMessage;
+    systemMessage.insert("role"_L1, "system"_L1);
+    const bool plural = b.pluralFormsCount > 1;
+    systemMessage.insert("content"_L1,
+                         plural ? pluralTranslationSystemPrompt() : translationSystemPrompt());
+
     QJsonObject userMessage;
     userMessage.insert("role"_L1, "user"_L1);
     userMessage.insert("content"_L1, makePrompt(b));
 
     QJsonArray messages;
-    messages.append(*m_systemMessage);
+    messages.append(systemMessage);
     messages.append(userMessage);
 
     QJsonObject req = *m_payloadBase;
@@ -242,6 +268,8 @@ QString OpenAICompatible::makePrompt(const Batch &b) const
 
     lines << "Context: "_L1 + b.context;
     lines << "Target: "_L1 + b.tgtLang;
+    if (b.pluralFormsCount > 1)
+        lines << "Plural forms: "_L1 + QString::number(b.pluralFormsCount);
     lines << "Items:"_L1;
     for (const Item &it : b.items) {
         QString line = "- source: '%1'"_L1.arg(it.msg->sourceText());

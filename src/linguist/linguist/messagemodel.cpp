@@ -1201,6 +1201,16 @@ void MultiDataModel::setTranslation(const MultiDataIndex &index, const QString &
     emit translationChanged(index);
 }
 
+void MultiDataModel::setTranslations(const MultiDataIndex &index, const QStringList &translations)
+{
+    MessageItem *m = messageItem(index);
+    if (translations == m->translations())
+        return;
+    m->setTranslations(translations);
+    setModified(index.model(), true);
+    emit translationChanged(index);
+}
+
 void MultiDataModel::setFinished(const MultiDataIndex &index, bool finished)
 {
     MultiGroupItem *mgi = multiGroupItem(index);

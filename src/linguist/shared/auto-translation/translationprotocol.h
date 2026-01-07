@@ -16,6 +16,7 @@ struct Messages
     QList<const TranslatorMessage *> items;
     QString srcLang;
     QString tgtLang;
+    int pluralFormsCount = 1;
 };
 
 struct Item
@@ -34,6 +35,7 @@ public:
     QList<Item> items;
     std::shared_ptr<std::atomic_int> counter;
     int tries = 0;
+    int pluralFormsCount = 1;
 };
 
 class TranslationProtocol
@@ -42,7 +44,8 @@ public:
     virtual QList<Batch> makeBatches(const Messages &messages,
                                      const QString &userContext = {}) const = 0;
     virtual QByteArray payload(const Batch &b) const = 0;
-    virtual QHash<QString, QString> extractTranslations(const QByteArray &data) = 0;
+    virtual QHash<QString, QStringList> extractTranslations(const QByteArray &data,
+                                                            bool plural) = 0;
     virtual QStringList extractModels(const QByteArray &data) const = 0;
 
     // Stages the model for translation, optionally returning a wake-up payload
