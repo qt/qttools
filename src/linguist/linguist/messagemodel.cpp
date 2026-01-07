@@ -467,7 +467,7 @@ bool DataModel::release(const QString &fileName, bool verbose, bool ignoreUnfini
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly)) {
         QMessageBox::warning(parent, QObject::tr("Qt Linguist"),
-            tr("Cannot create '%2': %1").arg(file.errorString()).arg(fileName));
+            tr("Cannot create '%2': %1").arg(file.errorString(), fileName));
         return false;
     }
     Translator tor;

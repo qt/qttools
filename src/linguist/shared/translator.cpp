@@ -345,7 +345,7 @@ bool Translator::save(const QString &filename, ConversionData &cd, const QString
         }
     }
 
-    cd.appendError(QString("Unknown format %1 for file %2"_L1).arg(format).arg(filename));
+    cd.appendError(QString("Unknown format %1 for file %2"_L1).arg(format, filename));
     return false;
 }
 
