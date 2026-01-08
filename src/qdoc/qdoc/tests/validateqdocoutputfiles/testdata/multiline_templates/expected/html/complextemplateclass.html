@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- complextemplates.h -->
+  <meta name="description" content="A class with functions that have complex template signatures.">
+  <title>ComplexTemplateClass Class | Qt 1.0</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li><a href="multilinetemplates-module.html" translate="no">MultilineTemplates</a></li>
+<li>ComplexTemplateClass</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">ComplexTemplateClass Class</h1>
+<!-- $$$ComplexTemplateClass-brief -->
+<p>A class with functions that have complex template signatures. <a href="#details">More...</a></p>
+<!-- @@@ComplexTemplateClass -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;ComplexTemplateClass&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="complextemplateclass-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="complextemplateclass.html#complexDefaults" translate="no">complexDefaults</a></b>(SetupHandler <i>setup</i> = SetupHandler(), DoneHandler <i>done</i> = DoneHandler())</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="complextemplateclass.html#fourParamsWithDefault" translate="no">fourParamsWithDefault</a></b>(First <i>a</i>, Second <i>b</i>, Third <i>c</i>, Fourth <i>d</i> = Fourth())</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="complextemplateclass.html#threeParams" translate="no">threeParams</a></b>(T <i>t</i>, U <i>u</i>, V <i>v</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> Result </td><td class="memItemRight bottomAlign"><b><a href="complextemplateclass.html#transformFiltered" translate="no">transformFiltered</a></b>(Input <i>input</i>, Pred <i>pred</i>)</td></tr>
+</table></div>
+<!-- $$$ComplexTemplateClass-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>This class tests QDoc's ability to render template signatures with many parameters in a readable multi-line format.</p>
+</div>
+<!-- @@@ComplexTemplateClass -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$complexDefaults[overload1]$$$complexDefaultsSetupHandlerDoneHandler -->
+<h3 class="fn" translate="no" id="complexDefaults">template &lt;<br/>
+    typename SetupHandler = ComplexTemplateClass,<br/>
+    typename DoneHandler = ComplexTemplateClass,<br/>
+    typename ErrorHandler = ComplexTemplateClass<br/>
+&gt;<br/>
+<span class="type">void</span> ComplexTemplateClass::<span class="name">complexDefaults</span>(<span class="type">SetupHandler</span> <i>setup</i> = SetupHandler(), <span class="type">DoneHandler</span> <i>done</i> = DoneHandler())</h3>
+<p>Configures <i translate="no">setup</i> and <i translate="no">done</i> handlers.</p>
+<p>This has template parameters with very long default type names.</p>
+<!-- @@@complexDefaults -->
+<!-- $$$fourParamsWithDefault[overload1]$$$fourParamsWithDefaultFirstSecondThirdFourth -->
+<h3 class="fn" translate="no" id="fourParamsWithDefault">template &lt;<br/>
+    typename First,<br/>
+    typename Second,<br/>
+    typename Third,<br/>
+    typename Fourth = int<br/>
+&gt;<br/>
+<span class="type">void</span> ComplexTemplateClass::<span class="name">fourParamsWithDefault</span>(<span class="type">First</span> <i>a</i>, <span class="type">Second</span> <i>b</i>, <span class="type">Third</span> <i>c</i>, <span class="type">Fourth</span> <i>d</i> = Fourth())</h3>
+<p>Processes values <i translate="no">a</i>, <i translate="no">b</i>, <i translate="no">c</i>, and <i translate="no">d</i>.</p>
+<p>Complex default values make single-line rendering unreadable.</p>
+<!-- @@@fourParamsWithDefault -->
+<!-- $$$threeParams[overload1]$$$threeParamsTUV -->
+<h3 class="fn" translate="no" id="threeParams">template &lt;<br/>
+    typename T,<br/>
+    typename U,<br/>
+    typename V<br/>
+&gt;<br/>
+<span class="type">void</span> ComplexTemplateClass::<span class="name">threeParams</span>(<span class="type">T</span> <i>t</i>, <span class="type">U</span> <i>u</i>, <span class="type">V</span> <i>v</i>)</h3>
+<p>Processes values <i translate="no">t</i>, <i translate="no">u</i>, and <i translate="no">v</i>.</p>
+<p>This should trigger multi-line rendering since it has more than two template parameters.</p>
+<!-- @@@threeParams -->
+<!-- $$$transformFiltered[overload1]$$$transformFilteredInputPred -->
+<h3 class="fn" translate="no" id="transformFiltered">template &lt;<br/>
+    typename Input,<br/>
+    typename Pred,<br/>
+    typename Result<br/>
+&gt; requires (sizeof(Input) &gt; 0)<br/>
+<span class="type">Result</span> ComplexTemplateClass::<span class="name">transformFiltered</span>(<span class="type">Input</span> <i>input</i>, <span class="type">Pred</span> <i>pred</i>)</h3>
+<p>Transforms <i translate="no">input</i> using <i translate="no">pred</i> to filter and returns Result.</p>
+<p>Tests multi-line template rendering combined with a requires clause. The requires clause should appear after the closing '&gt;' on the same line.</p>
+<!-- @@@transformFiltered -->
+</div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test for multi-line template signature rendering" version="1.0" project="MultilineTemplates">
+    <namespace name="" status="active" access="public" module="multilinetemplates">
+        <class name="ComplexTemplateClass" href="complextemplateclass.html" status="active" access="public" location="complextemplates.h" documented="true" module="MultilineTemplates" brief="A class with functions that have complex template signatures">
+            <function name="complexDefaults" fullname="ComplexTemplateClass::complexDefaults" href="complextemplateclass.html#complexDefaults" status="active" access="public" location="complextemplates.h" documented="true" meta="plain" type="void" signature="void complexDefaults(SetupHandler setup, DoneHandler done)">
+                <parameter type="SetupHandler" name="setup" default="SetupHandler()"/>
+                <parameter type="DoneHandler" name="done" default="DoneHandler()"/>
+            </function>
+            <function name="fourParamsWithDefault" fullname="ComplexTemplateClass::fourParamsWithDefault" href="complextemplateclass.html#fourParamsWithDefault" status="active" access="public" location="complextemplates.h" documented="true" meta="plain" type="void" signature="void fourParamsWithDefault(First a, Second b, Third c, Fourth d)">
+                <parameter type="First" name="a" default=""/>
+                <parameter type="Second" name="b" default=""/>
+                <parameter type="Third" name="c" default=""/>
+                <parameter type="Fourth" name="d" default="Fourth()"/>
+            </function>
+            <function name="threeParams" fullname="ComplexTemplateClass::threeParams" href="complextemplateclass.html#threeParams" status="active" access="public" location="complextemplates.h" documented="true" meta="plain" type="void" signature="void threeParams(T t, U u, V v)">
+                <parameter type="T" name="t" default=""/>
+                <parameter type="U" name="u" default=""/>
+                <parameter type="V" name="v" default=""/>
+            </function>
+            <function name="transformFiltered" fullname="ComplexTemplateClass::transformFiltered" href="complextemplateclass.html#transformFiltered" status="active" access="public" location="complextemplates.h" documented="true" meta="plain" type="Result" signature="Result transformFiltered(Input input, Pred pred)">
+                <parameter type="Input" name="input" default=""/>
+                <parameter type="Pred" name="pred" default=""/>
+            </function>
+        </class>
+        <class name="SimpleTemplateClass" href="simpletemplateclass.html" status="active" access="public" location="complextemplates.h" documented="true" module="MultilineTemplates" brief="A class with simple template signatures for comparison">
+            <function name="oneParam" fullname="SimpleTemplateClass::oneParam" href="simpletemplateclass.html#oneParam" status="active" access="public" location="complextemplates.h" documented="true" meta="plain" type="void" signature="void oneParam(T value)">
+                <parameter type="T" name="value" default=""/>
+            </function>
+            <function name="twoParams" fullname="SimpleTemplateClass::twoParams" href="simpletemplateclass.html#twoParams" status="active" access="public" location="complextemplates.h" documented="true" meta="plain" type="void" signature="void twoParams(T first, U second)">
+                <parameter type="T" name="first" default=""/>
+                <parameter type="U" name="second" default=""/>
+            </function>
+        </class>
+        <module name="MultilineTemplates" href="multilinetemplates-module.html" status="active" location="complextemplates.h" documented="true" seen="true" title="Multiline Templates Test Module" brief="A module for testing multi-line template signature rendering"/>
+    </namespace>
+</INDEX>
