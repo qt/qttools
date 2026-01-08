@@ -61,6 +61,8 @@ qt_internal_add_app(linguist
         translationsettings.ui
         translationsettingsdialog.cpp translationsettingsdialog.h
         machinetranslationdialog.h machinetranslationdialog.cpp machinetranslationdialog.ui
+    NO_UNITY_BUILD_SOURCES
+        ../shared/auto-translation/translationsettings.cpp
     DEFINES
         QFORMINTERNAL_NAMESPACE
         QT_KEYWORDS
