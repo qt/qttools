@@ -4,9 +4,9 @@
 #ifndef TRANSLATIONUTILS_H
 #define TRANSLATIONUTILS_H
 
-#include <QHash>
-#include <QJsonValue>
-#include <QString>
+#include <QtCore/qhash.h>
+#include <QtCore/qjsonvalue.h>
+#include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 

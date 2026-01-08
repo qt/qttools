@@ -3,9 +3,8 @@
 
 #include "translationsettings.h"
 
-#include <QSettings>
-#include <QString>
-
+#include <QtCore/qsettings.h>
+#include <QtCore/qstring.h>
 
 namespace {
 

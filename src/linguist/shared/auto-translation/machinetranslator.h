@@ -5,12 +5,11 @@
 #define MACHINETRANSLATOR_H
 
 #include "translationprotocol.h"
-#include "translationsettings.h"
 
-#include <QString>
-#include <QObject>
-#include <QQueue>
-#include <QMutex>
+#include <QtCore/qmutex.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qqueue.h>
+#include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 

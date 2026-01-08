@@ -4,10 +4,10 @@
 #ifndef MACHINETRANSLATIONDIALOG_H
 #define MACHINETRANSLATIONDIALOG_H
 
-#include <QDialog>
-#include <QHash>
-#include <QList>
-#include <QMutex>
+#include <QtCore/qhash.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmutex.h>
+#include <QtWidgets/qdialog.h>
 
 #include <memory>
 #include <utility>
