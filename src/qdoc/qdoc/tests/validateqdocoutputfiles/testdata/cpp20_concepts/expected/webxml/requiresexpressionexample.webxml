@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="RequiresExpressionExample" href="requiresexpressionexample.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A class demonstrating requires-expressions for ad-hoc constraints">
+            <description>
+                <brief>A class demonstrating requires-expressions for ad-hoc constraints.</brief>
+                <para>Requires-expressions use the nested <teletype type="highlighted">requires requires(...) { ... }</teletype> syntax to define constraints inline without defining a named concept.</para>
+            </description>
+            <function name="getSize" fullname="RequiresExpressionExample::getSize" href="requiresexpressionexample.html#getSize" status="active" access="public" location="concepts.h" documented="true" meta="plain" type="int" signature="int getSize(const T &amp;container)">
+                <parameter type="const T &amp;" name="container" default=""/>
+                <description>
+                    <para>Gets the size of <argument>container</argument> using a simple requires-expression.</para>
+                    <para>Demonstrates a requires-expression that checks for a <teletype type="highlighted">size()</teletype> member function.</para>
+                </description>
+            </function>
+            <function name="iterate" fullname="RequiresExpressionExample::iterate" href="requiresexpressionexample.html#iterate" status="active" access="public" location="concepts.h" documented="true" meta="plain" type="void" signature="void iterate(T &amp;container)">
+                <parameter type="T &amp;" name="container" default=""/>
+                <description>
+                    <para>Iterates over <argument>container</argument> using a requires-expression.</para>
+                    <para>The requires-expression checks that the type has <teletype type="highlighted">begin()</teletype> and <teletype type="highlighted">end()</teletype> member functions, making it iterable.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="TrailingRequiresExample" href="trailingrequiresexample.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A class demonstrating functions with trailing requires clauses">
+            <description>
+                <brief>A class demonstrating functions with trailing requires clauses.</brief>
+                <para>Trailing requires clauses appear after the function declaration, rather than after the template parameter list.</para>
+            </description>
+            <function name="combine" fullname="TrailingRequiresExample::combine" href="trailingrequiresexample.html#combine" status="active" access="public" location="concepts.h" documented="true" meta="plain" trailing_requires="(sizeof(T) &lt;= 4)" type="T" signature="T combine(T a, T b) requires (sizeof(T) &lt;= 4)">
+                <parameter type="T" name="a" default=""/>
+                <parameter type="T" name="b" default=""/>
+                <description>
+                    <para>Combines <argument>a</argument> and <argument>b</argument> with both template-head and trailing requires.</para>
+                    <para>This demonstrates a function with requires clauses in both positions, which is rare but valid C++20 syntax. Both constraints must be satisfied.</para>
+                </description>
+            </function>
+            <function name="process" fullname="TrailingRequiresExample::process" href="trailingrequiresexample.html#process" status="active" access="public" location="concepts.h" documented="true" meta="plain" trailing_requires="detail::is_integral&lt;T&gt;::value" type="T" signature="T process(T value) requires detail::is_integral&lt;T&gt;::value">
+                <parameter type="T" name="value" default=""/>
+                <description>
+                    <para>Processes <argument>value</argument> with a trailing requires clause.</para>
+                    <para>The trailing requires clause appears after the function signature, which is an alternative syntax to placing it after the template parameter list.</para>
+                </description>
+            </function>
+            <function name="transform" fullname="TrailingRequiresExample::transform" href="trailingrequiresexample.html#transform" status="active" access="public" location="concepts.h" documented="true" meta="plain" trailing_requires="detail::is_floating&lt;T&gt;::value" type="double" signature="double transform(T input) requires detail::is_floating&lt;T&gt;::value">
+                <parameter type="T" name="input" default=""/>
+                <description>
+                    <para>Transforms <argument>input</argument> using trailing constraint.</para>
+                    <para>This demonstrates that trailing requires clauses work with any constraint expression.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

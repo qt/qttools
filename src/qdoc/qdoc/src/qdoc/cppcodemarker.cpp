@@ -148,6 +148,8 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
                 synopsis.append(" &");
             else if (func->isRefRef())
                 synopsis.append(" &&");
+            if (const auto &req = func->trailingRequiresClause(); req && !req->isEmpty())
+                synopsis.append(" requires " + protect(*req));
         }
         break;
     case NodeType::Enum:

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- concepts.h -->
+  <meta name="description" content="A class demonstrating functions with requires clauses.">
+  <title>ConceptExample Class | Qt 1.0</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li><a href="cpp20concepts-module.html" translate="no">Cpp20Concepts</a></li>
+<li>ConceptExample</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">ConceptExample Class</h1>
+<!-- $$$ConceptExample-brief -->
+<p>A class demonstrating functions with requires clauses. <a href="#details">More...</a></p>
+<!-- @@@ConceptExample -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;ConceptExample&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="conceptexample-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> T </td><td class="memItemRight bottomAlign"><b><a href="conceptexample.html#addIntegrals" translate="no">addIntegrals</a></b>(T <i>a</i>, T <i>b</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> T </td><td class="memItemRight bottomAlign"><b><a href="conceptexample.html#multiplyFloats" translate="no">multiplyFloats</a></b>(T <i>a</i>, T <i>b</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> double </td><td class="memItemRight bottomAlign"><b><a href="conceptexample.html#toDouble" translate="no">toDouble</a></b>(T <i>value</i>)</td></tr>
+</table></div>
+<!-- $$$ConceptExample-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+</div>
+<!-- @@@ConceptExample -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$addIntegrals[overload1]$$$addIntegralsTT -->
+<h3 class="fn" translate="no" id="addIntegrals">template &lt;typename T&gt; requires detail::is_integral&lt;T&gt;::value <span class="type">T</span> ConceptExample::<span class="name">addIntegrals</span>(<span class="type">T</span> <i>a</i>, <span class="type">T</span> <i>b</i>)</h3>
+<p>Adds two integral values <i translate="no">a</i> and <i translate="no">b</i>.</p>
+<p>This function template uses a requires clause to constrain the template parameter T to integral types only.</p>
+<!-- @@@addIntegrals -->
+<!-- $$$multiplyFloats[overload1]$$$multiplyFloatsTT -->
+<h3 class="fn" translate="no" id="multiplyFloats">template &lt;typename T&gt; requires detail::is_floating&lt;T&gt;::value <span class="type">T</span> ConceptExample::<span class="name">multiplyFloats</span>(<span class="type">T</span> <i>a</i>, <span class="type">T</span> <i>b</i>)</h3>
+<p>Multiplies two floating-point values <i translate="no">a</i> and <i translate="no">b</i>.</p>
+<p>Uses a requires clause with floating-point constraint.</p>
+<!-- @@@multiplyFloats -->
+<!-- $$$toDouble[overload1]$$$toDoubleT -->
+<h3 class="fn" translate="no" id="toDouble">template &lt;typename T&gt; requires (detail::is_integral&lt;T&gt;::value || detail::is_floating&lt;T&gt;::value) <span class="type">double</span> ConceptExample::<span class="name">toDouble</span>(<span class="type">T</span> <i>value</i>)</h3>
+<p>Converts <i translate="no">value</i> to double using compound constraint.</p>
+<p>Uses a requires clause with multiple constraints combined using logical operators.</p>
+<!-- @@@toDouble -->
+</div>
+</body>
+</html>

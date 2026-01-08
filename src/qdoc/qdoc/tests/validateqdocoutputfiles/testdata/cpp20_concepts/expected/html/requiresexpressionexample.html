@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- concepts.h -->
+  <meta name="description" content="A class demonstrating requires-expressions for ad-hoc constraints.">
+  <title>RequiresExpressionExample Class | Qt 1.0</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li><a href="cpp20concepts-module.html" translate="no">Cpp20Concepts</a></li>
+<li>RequiresExpressionExample</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">RequiresExpressionExample Class</h1>
+<!-- $$$RequiresExpressionExample-brief -->
+<p>A class demonstrating requires-expressions for ad-hoc constraints. <a href="#details">More...</a></p>
+<!-- @@@RequiresExpressionExample -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;RequiresExpressionExample&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="requiresexpressionexample-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="requiresexpressionexample.html#getSize" translate="no">getSize</a></b>(const T &amp;<i>container</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="requiresexpressionexample.html#iterate" translate="no">iterate</a></b>(T &amp;<i>container</i>)</td></tr>
+</table></div>
+<!-- $$$RequiresExpressionExample-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>Requires-expressions use the nested <code translate="no">requires requires(...) { ... }</code> syntax to define constraints inline without defining a named concept.</p>
+</div>
+<!-- @@@RequiresExpressionExample -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$getSize[overload1]$$$getSizeconstT& -->
+<h3 class="fn" translate="no" id="getSize">template &lt;typename T&gt; requires requires(T t) { t.size(); } <span class="type">int</span> RequiresExpressionExample::<span class="name">getSize</span>(const <span class="type">T</span> &amp;<i>container</i>)</h3>
+<p>Gets the size of <i translate="no">container</i> using a simple requires-expression.</p>
+<p>Demonstrates a requires-expression that checks for a <code translate="no">size()</code> member function.</p>
+<!-- @@@getSize -->
+<!-- $$$iterate[overload1]$$$iterateT& -->
+<h3 class="fn" translate="no" id="iterate">template &lt;typename T&gt; requires requires(T t) { t.begin(); t.end(); } <span class="type">void</span> RequiresExpressionExample::<span class="name">iterate</span>(<span class="type">T</span> &amp;<i>container</i>)</h3>
+<p>Iterates over <i translate="no">container</i> using a requires-expression.</p>
+<p>The requires-expression checks that the type has <code translate="no">begin()</code> and <code translate="no">end()</code> member functions, making it iterable.</p>
+<!-- @@@iterate -->
+</div>
+</body>
+</html>

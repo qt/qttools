@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="ConceptExample" href="conceptexample.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A class demonstrating functions with requires clauses">
+            <description>
+                <brief>A class demonstrating functions with requires clauses.</brief>
+            </description>
+            <function name="addIntegrals" fullname="ConceptExample::addIntegrals" href="conceptexample.html#addIntegrals" status="active" access="public" location="concepts.h" documented="true" meta="plain" type="T" signature="T addIntegrals(T a, T b)">
+                <parameter type="T" name="a" default=""/>
+                <parameter type="T" name="b" default=""/>
+                <description>
+                    <para>Adds two integral values <argument>a</argument> and <argument>b</argument>.</para>
+                    <para>This function template uses a requires clause to constrain the template parameter T to integral types only.</para>
+                </description>
+            </function>
+            <function name="multiplyFloats" fullname="ConceptExample::multiplyFloats" href="conceptexample.html#multiplyFloats" status="active" access="public" location="concepts.h" documented="true" meta="plain" type="T" signature="T multiplyFloats(T a, T b)">
+                <parameter type="T" name="a" default=""/>
+                <parameter type="T" name="b" default=""/>
+                <description>
+                    <para>Multiplies two floating-point values <argument>a</argument> and <argument>b</argument>.</para>
+                    <para>Uses a requires clause with floating-point constraint.</para>
+                </description>
+            </function>
+            <function name="toDouble" fullname="ConceptExample::toDouble" href="conceptexample.html#toDouble" status="active" access="public" location="concepts.h" documented="true" meta="plain" type="double" signature="double toDouble(T value)">
+                <parameter type="T" name="value" default=""/>
+                <description>
+                    <para>Converts <argument>value</argument> to double using compound constraint.</para>
+                    <para>Uses a requires clause with multiple constraints combined using logical operators.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

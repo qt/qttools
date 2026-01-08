@@ -3400,6 +3400,8 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             signature += " = 0";
         else if (functionNode->isDefault())
             signature += " = default";
+        if (const auto &req = functionNode->trailingRequiresClause(); req && !req->isEmpty())
+            signature += " requires " + *req;
         generateSynopsisInfo("signature", signature);
     }
 
@@ -3834,6 +3836,11 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
     case NodeType::Function: {
         const auto func = (const FunctionNode *)node;
 
+        if (style == Section::Details) {
+            if (auto templateDecl = func->templateDecl())
+                m_writer->writeCharacters(templateDecl->to_qstring() + " ");
+        }
+
         // First, the part coming before the name.
         if (style == Section::Summary || style == Section::Accessors) {
             if (!func->isNonvirtual())
@@ -3887,6 +3894,8 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
                 synopsis += QStringLiteral(" &");
             else if (func->isRefRef())
                 synopsis += QStringLiteral(" &&");
+            if (const auto &req = func->trailingRequiresClause(); req && !req->isEmpty())
+                synopsis += " requires " + *req;
             m_writer->writeCharacters(synopsis);
         }
     } break;

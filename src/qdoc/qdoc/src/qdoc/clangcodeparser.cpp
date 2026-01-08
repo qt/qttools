@@ -430,6 +430,12 @@ static RelaxedTemplateDeclaration get_template_declaration(const clang::Template
         });
     }
 
+    if (const clang::Expr* requires_clause = template_parameters->getRequiresClause()) {
+        template_declaration_ir.requires_clause =
+            QString::fromStdString(get_expression_as_string(
+                requires_clause, template_declaration->getASTContext())).simplified().toStdString();
+    }
+
     return template_declaration_ir;
 }
 
@@ -1415,6 +1421,26 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
                 fn->markNoexcept(QString::fromStdString(exception_specification_spelling));
         }
     }
+
+    // Extract trailing requires clause.
+    // From Clang 21 we get an AssociatedConstraint struct (upstream commit 49fd0bf35d2e).
+    // Earlier Clang versions return Expr*.
+#if LIBCLANG_VERSION_MAJOR >= 21
+    if (const auto trailing_requires = function_declaration->getTrailingRequiresClause();
+        trailing_requires.ConstraintExpr) {
+        QString requires_str = QString::fromStdString(
+            get_expression_as_string(trailing_requires.ConstraintExpr,
+                                     function_declaration->getASTContext()));
+        fn->setTrailingRequiresClause(requires_str.simplified());
+    }
+#else
+    if (const clang::Expr *trailing_requires = function_declaration->getTrailingRequiresClause()) {
+        QString requires_str = QString::fromStdString(
+            get_expression_as_string(trailing_requires,
+                                     function_declaration->getASTContext()));
+        fn->setTrailingRequiresClause(requires_str.simplified());
+    }
+#endif
 
     CXRefQualifierKind refQualKind = clang_Type_getCXXRefQualifier(funcType);
     if (refQualKind == CXRefQualifier_LValue)

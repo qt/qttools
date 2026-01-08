@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test for C++20 concepts and requires clauses" version="1.0" project="Cpp20Concepts">
+    <namespace name="" status="active" access="public" module="cpp20concepts">
+        <class name="ConceptExample" href="conceptexample.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A class demonstrating functions with requires clauses">
+            <function name="addIntegrals" fullname="ConceptExample::addIntegrals" href="conceptexample.html#addIntegrals" status="active" access="public" location="concepts.h" documented="true" meta="plain" type="T" signature="T addIntegrals(T a, T b)">
+                <parameter type="T" name="a" default=""/>
+                <parameter type="T" name="b" default=""/>
+            </function>
+            <function name="multiplyFloats" fullname="ConceptExample::multiplyFloats" href="conceptexample.html#multiplyFloats" status="active" access="public" location="concepts.h" documented="true" meta="plain" type="T" signature="T multiplyFloats(T a, T b)">
+                <parameter type="T" name="a" default=""/>
+                <parameter type="T" name="b" default=""/>
+            </function>
+            <function name="toDouble" fullname="ConceptExample::toDouble" href="conceptexample.html#toDouble" status="active" access="public" location="concepts.h" documented="true" meta="plain" type="double" signature="double toDouble(T value)">
+                <parameter type="T" name="value" default=""/>
+            </function>
+        </class>
+        <class name="ConstrainedContainer" href="constrainedcontainer.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A container template with a requires clause on the class itself">
+            <function name="ConstrainedContainer" fullname="ConstrainedContainer::ConstrainedContainer" href="constrainedcontainer.html#ConstrainedContainer" status="active" access="public" location="concepts.h" documented="true" meta="constructor" explicit="true" signature="ConstrainedContainer(int size)">
+                <parameter type="int" name="size" default=""/>
+            </function>
+            <function name="size" fullname="ConstrainedContainer::size" href="constrainedcontainer.html#size" status="active" access="public" location="concepts.h" documented="true" meta="plain" const="true" type="int" signature="int size() const"/>
+        </class>
+        <class name="RequiresExpressionExample" href="requiresexpressionexample.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A class demonstrating requires-expressions for ad-hoc constraints">
+            <function name="getSize" fullname="RequiresExpressionExample::getSize" href="requiresexpressionexample.html#getSize" status="active" access="public" location="concepts.h" documented="true" meta="plain" type="int" signature="int getSize(const T &amp;container)">
+                <parameter type="const T &amp;" name="container" default=""/>
+            </function>
+            <function name="iterate" fullname="RequiresExpressionExample::iterate" href="requiresexpressionexample.html#iterate" status="active" access="public" location="concepts.h" documented="true" meta="plain" type="void" signature="void iterate(T &amp;container)">
+                <parameter type="T &amp;" name="container" default=""/>
+            </function>
+        </class>
+        <class name="TrailingRequiresExample" href="trailingrequiresexample.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A class demonstrating functions with trailing requires clauses">
+            <function name="combine" fullname="TrailingRequiresExample::combine" href="trailingrequiresexample.html#combine" status="active" access="public" location="concepts.h" documented="true" meta="plain" trailing_requires="(sizeof(T) &lt;= 4)" type="T" signature="T combine(T a, T b) requires (sizeof(T) &lt;= 4)">
+                <parameter type="T" name="a" default=""/>
+                <parameter type="T" name="b" default=""/>
+            </function>
+            <function name="process" fullname="TrailingRequiresExample::process" href="trailingrequiresexample.html#process" status="active" access="public" location="concepts.h" documented="true" meta="plain" trailing_requires="detail::is_integral&lt;T&gt;::value" type="T" signature="T process(T value) requires detail::is_integral&lt;T&gt;::value">
+                <parameter type="T" name="value" default=""/>
+            </function>
+            <function name="transform" fullname="TrailingRequiresExample::transform" href="trailingrequiresexample.html#transform" status="active" access="public" location="concepts.h" documented="true" meta="plain" trailing_requires="detail::is_floating&lt;T&gt;::value" type="double" signature="double transform(T input) requires detail::is_floating&lt;T&gt;::value">
+                <parameter type="T" name="input" default=""/>
+            </function>
+        </class>
+        <module name="Cpp20Concepts" href="cpp20concepts-module.html" status="active" location="concepts.h" documented="true" seen="true" title="C++20 Concepts Test Module" brief="A module for testing C++20 concepts documentation"/>
+    </namespace>
+</INDEX>

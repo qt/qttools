@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>ConceptExample Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Test for C++20 concepts and requires clauses</db:titleabbrev>
+<db:abstract>
+<db:para>A class demonstrating functions with requires clauses.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>ConceptExample</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="addIntegrals">
+<db:title>template &lt;typename T&gt; requires detail::is_integral&lt;T&gt;::value T ConceptExample::addIntegrals(T <db:emphasis>a</db:emphasis>, T <db:emphasis>b</db:emphasis>)</db:title>
+<db:para>Adds two integral values <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
+<db:para>This function template uses a requires clause to constrain the template parameter T to integral types only.</db:para>
+</db:section>
+<db:section xml:id="multiplyFloats">
+<db:title>template &lt;typename T&gt; requires detail::is_floating&lt;T&gt;::value T ConceptExample::multiplyFloats(T <db:emphasis>a</db:emphasis>, T <db:emphasis>b</db:emphasis>)</db:title>
+<db:para>Multiplies two floating-point values <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
+<db:para>Uses a requires clause with floating-point constraint.</db:para>
+</db:section>
+<db:section xml:id="toDouble">
+<db:title>template &lt;typename T&gt; requires (detail::is_integral&lt;T&gt;::value || detail::is_floating&lt;T&gt;::value) double ConceptExample::toDouble(T <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Converts <db:code role="parameter">value</db:code> to double using compound constraint.</db:para>
+<db:para>Uses a requires clause with multiple constraints combined using logical operators.</db:para>
+</db:section>
+</db:section>
+</db:article>

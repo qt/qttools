@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TrailingRequiresExample Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Test for C++20 concepts and requires clauses</db:titleabbrev>
+<db:abstract>
+<db:para>A class demonstrating functions with trailing requires clauses.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TrailingRequiresExample</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>Trailing requires clauses appear after the function declaration, rather than after the template parameter list.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="combine">
+<db:title>template &lt;typename T&gt; requires detail::is_integral&lt;T&gt;::value T TrailingRequiresExample::combine(T <db:emphasis>a</db:emphasis>, T <db:emphasis>b</db:emphasis>) requires (sizeof(T) &lt;= 4)</db:title>
+<db:para>Combines <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code> with both template-head and trailing requires.</db:para>
+<db:para>This demonstrates a function with requires clauses in both positions, which is rare but valid C++20 syntax. Both constraints must be satisfied.</db:para>
+</db:section>
+<db:section xml:id="process">
+<db:title>template &lt;typename T&gt; T TrailingRequiresExample::process(T <db:emphasis>value</db:emphasis>) requires detail::is_integral&lt;T&gt;::value</db:title>
+<db:para>Processes <db:code role="parameter">value</db:code> with a trailing requires clause.</db:para>
+<db:para>The trailing requires clause appears after the function signature, which is an alternative syntax to placing it after the template parameter list.</db:para>
+</db:section>
+<db:section xml:id="transform">
+<db:title>template &lt;typename T&gt; double TrailingRequiresExample::transform(T <db:emphasis>input</db:emphasis>) requires detail::is_floating&lt;T&gt;::value</db:title>
+<db:para>Transforms <db:code role="parameter">input</db:code> using trailing constraint.</db:para>
+<db:para>This demonstrates that trailing requires clauses work with any constraint expression.</db:para>
+</db:section>
+</db:section>
+</db:article>

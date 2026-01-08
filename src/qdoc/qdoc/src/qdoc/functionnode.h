@@ -87,6 +87,14 @@ public:
     void markNoexcept(QString expression = "") { m_noexcept = expression; }
     const std::optional<QString>& getNoexcept() const { return m_noexcept; }
 
+    void setTrailingRequiresClause(const QString &clause) {
+        if (clause.isEmpty())
+            m_trailingRequiresClause.reset();
+        else
+            m_trailingRequiresClause = clause;
+    }
+    const std::optional<QString>& trailingRequiresClause() const { return m_trailingRequiresClause; }
+
     [[nodiscard]] bool isCppFunction() const { return m_metaness == Plain; } // Is this correct?
     [[nodiscard]] bool isSignal() const { return (m_metaness == Signal); }
     [[nodiscard]] bool isSlot() const { return (m_metaness == Slot); }
@@ -191,6 +199,7 @@ private:
     bool m_constexpr;
 
     std::optional<QString> m_noexcept;
+    std::optional<QString> m_trailingRequiresClause;
 
     Metaness m_metaness {};
     Virtualness m_virtualness{ NonVirtual };

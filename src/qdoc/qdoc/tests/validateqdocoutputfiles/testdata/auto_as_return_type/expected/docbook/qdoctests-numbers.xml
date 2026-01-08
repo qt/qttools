@@ -22,7 +22,7 @@
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="add">
-<db:title>T Numbers::add(T <db:emphasis>a</db:emphasis>, T <db:emphasis>b</db:emphasis>)</db:title>
+<db:title>template &lt;typename T&gt; T Numbers::add(T <db:emphasis>a</db:emphasis>, T <db:emphasis>b</db:emphasis>)</db:title>
 <db:para>Adds two numbers of the same underlying type.</db:para>
 <db:para>Returns a value containing the sum of <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
 </db:section>
@@ -32,7 +32,7 @@
 <db:para>Returns an integer containing the sum of <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
 </db:section>
 <db:section xml:id="adder">
-<db:title>auto Numbers::adder(ThisIsMyReallyLongAndComplicatedTemplateName <db:emphasis>a</db:emphasis>, int <db:emphasis>b</db:emphasis>)</db:title>
+<db:title>template &lt;typename ThisIsMyReallyLongAndComplicatedTemplateName&gt; auto Numbers::adder(ThisIsMyReallyLongAndComplicatedTemplateName <db:emphasis>a</db:emphasis>, int <db:emphasis>b</db:emphasis>)</db:title>
 <db:para>Adds two numbers of the same underlying type.</db:para>
 <db:para>Returns a value containing the sum of <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
 </db:section>

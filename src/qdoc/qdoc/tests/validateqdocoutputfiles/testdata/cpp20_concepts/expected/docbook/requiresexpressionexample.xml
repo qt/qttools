@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>RequiresExpressionExample Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Test for C++20 concepts and requires clauses</db:titleabbrev>
+<db:abstract>
+<db:para>A class demonstrating requires-expressions for ad-hoc constraints.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>RequiresExpressionExample</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>Requires-expressions use the nested <db:code>requires requires(...) { ... }</db:code> syntax to define constraints inline without defining a named concept.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="getSize">
+<db:title>template &lt;typename T&gt; requires requires(T t) { t.size(); } int RequiresExpressionExample::getSize(const T &amp;<db:emphasis>container</db:emphasis>)</db:title>
+<db:para>Gets the size of <db:code role="parameter">container</db:code> using a simple requires-expression.</db:para>
+<db:para>Demonstrates a requires-expression that checks for a <db:code>size()</db:code> member function.</db:para>
+</db:section>
+<db:section xml:id="iterate">
+<db:title>template &lt;typename T&gt; requires requires(T t) { t.begin(); t.end(); } void RequiresExpressionExample::iterate(T &amp;<db:emphasis>container</db:emphasis>)</db:title>
+<db:para>Iterates over <db:code role="parameter">container</db:code> using a requires-expression.</db:para>
+<db:para>The requires-expression checks that the type has <db:code>begin()</db:code> and <db:code>end()</db:code> member functions, making it iterable.</db:para>
+</db:section>
+</db:section>
+</db:article>

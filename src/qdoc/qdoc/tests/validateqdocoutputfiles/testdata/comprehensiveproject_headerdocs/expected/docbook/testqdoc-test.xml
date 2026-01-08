@@ -140,7 +140,7 @@
 <db:para>Returns a pointer to a function that takes a boolean. Uses <db:code its:translate="no" role="parameter">b</db:code> and <db:code its:translate="no" role="parameter">s</db:code>.</db:para>
 </db:section>
 <db:section xml:id="funcTemplate">
-<db:title its:translate="no">[protected] void Test::funcTemplate(T1 <db:emphasis>a</db:emphasis>, T2 <db:emphasis>b</db:emphasis>)</db:title>
+<db:title its:translate="no">[protected] template &lt;typename T1, typename T2&gt; void Test::funcTemplate(T1 <db:emphasis>a</db:emphasis>, T2 <db:emphasis>b</db:emphasis>)</db:title>
 <db:methodsynopsis>
 <db:void/>
 <db:methodname>funcTemplate</db:methodname>
