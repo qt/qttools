@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test for empty link target configuration" version="1.0" project="OverloadedEmptyTargets">
+    <namespace name="" status="active" access="public" module="overloadedemptytargets">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" bases="QObject" module="OverloadedEmptyTargets" brief="Test class for empty link target configuration">
+            <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" meta="constructor" explicit="true" signature="TestClass(QObject *parent)">
+                <parameter type="QObject *" name="parent" default="nullptr"/>
+            </function>
+            <function name="setValue" fullname="TestClass::setValue" href="testclass.html#setValue" status="active" access="public" location="testclass.h" documented="true" meta="slot" type="void" signature="void setValue(double value)">
+                <parameter type="double" name="value" default=""/>
+            </function>
+            <function name="setValue" fullname="TestClass::setValue" href="testclass.html#setValue-1" status="active" access="public" location="testclass.h" documented="true" meta="slot" overload="true" overload-number="1" type="void" signature="void setValue(int value)">
+                <parameter type="int" name="value" default=""/>
+            </function>
+            <function name="valueChanged" fullname="TestClass::valueChanged" href="testclass.html#valueChanged" status="active" access="public" location="testclass.h" documented="true" meta="signal" type="void" signature="void valueChanged(double value)">
+                <parameter type="double" name="value" default=""/>
+            </function>
+            <function name="valueChanged" fullname="TestClass::valueChanged" href="testclass.html#valueChanged-1" status="active" access="public" location="testclass.h" documented="true" meta="signal" overload="true" overload-number="1" type="void" signature="void valueChanged(int value)">
+                <parameter type="int" name="value" default=""/>
+            </function>
+        </class>
+        <module name="OverloadedEmptyTargets" href="overloadedemptytargets-module.html" status="active" documented="true" seen="true" title="Overloaded Empty Targets Test Module" brief="Test module for empty link target configuration"/>
+    </namespace>
+</INDEX>

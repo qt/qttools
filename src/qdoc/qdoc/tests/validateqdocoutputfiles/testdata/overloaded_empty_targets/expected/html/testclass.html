@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- testclass.cpp -->
+  <meta name="description" content="Test class for empty link target configuration.">
+  <title>TestClass Class | OverloadedEmptyTargets 1.0</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li><a href="overloadedemptytargets-module.html" translate="no">OverloadedEmptyTargets</a></li>
+<li>TestClass</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#public-slots">Public Slots</a></li>
+<li class="level1"><a href="#signals">Signals</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">TestClass Class</h1>
+<!-- $$$TestClass-brief -->
+<p>Test class for empty link target configuration. <a href="#details">More...</a></p>
+<!-- @@@TestClass -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;TestClass&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="testclass-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#TestClass" translate="no">TestClass</a></b>(QObject *<i>parent</i> = nullptr)</td></tr>
+</table></div>
+<h2 id="public-slots">Public Slots</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#setValue" translate="no">setValue</a></b>(double <i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#setValue-1" translate="no">setValue</a></b>(int <i>value</i>)</td></tr>
+</table></div>
+<h2 id="signals">Signals</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#valueChanged" translate="no">valueChanged</a></b>(double <i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#valueChanged-1" translate="no">valueChanged</a></b>(int <i>value</i>)</td></tr>
+</table></div>
+<!-- $$$TestClass-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>This class tests that QDoc handles empty overloadedsignalstarget and overloadedslotstarget configuration values without crashing.</p>
+</div>
+<!-- @@@TestClass -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$TestClass[overload1]$$$TestClassQObject* -->
+<h3 class="fn" translate="no" id="TestClass"><code class="details extra" translate="no">[explicit]</code> TestClass::<span class="name">TestClass</span>(<span class="type">QObject</span> *<i>parent</i> = nullptr)</h3>
+<p>Constructs a TestClass with the given <i translate="no">parent</i>.</p>
+<!-- @@@TestClass -->
+<!-- $$$setValue[overload1]$$$setValuedouble -->
+<h3 class="fn" translate="no" id="setValue"><code class="details extra" translate="no">[slot]</code> <span class="type">void</span> TestClass::<span class="name">setValue</span>(<span class="type">double</span> <i>value</i>)</h3>
+<p>Sets the double <i translate="no">value</i>.</p>
+<div class="admonition note"><p><b>Note: </b>This slot is overloaded. To connect to this slot:
+
+<pre class="cpp" translate="no">// Connect using qOverload:
+connect(sender, &SenderClass::signal,
+        testClass, qOverload<double>(&TestClass::setValue));
+
+// Or using a lambda as wrapper:
+connect(sender, &SenderClass::signal,
+        testClass, [receiver = testClass](double value) { receiver->setValue(value); });</pre>
+
+</p>
+</div><!-- @@@setValue -->
+<!-- $$$setValue$$$setValueint -->
+<h3 class="fn" translate="no" id="setValue-1"><code class="details extra" translate="no">[slot]</code> <span class="type">void</span> TestClass::<span class="name">setValue</span>(<span class="type">int</span> <i>value</i>)</h3>
+<p>Sets the integer <i translate="no">value</i>.</p>
+<div class="admonition note"><p><b>Note: </b>This slot is overloaded. To connect to this slot:
+
+<pre class="cpp" translate="no">// Connect using qOverload:
+connect(sender, &SenderClass::signal,
+        testClass, qOverload<int>(&TestClass::setValue));
+
+// Or using a lambda as wrapper:
+connect(sender, &SenderClass::signal,
+        testClass, [receiver = testClass](int value) { receiver->setValue(value); });</pre>
+
+</p>
+</div><!-- @@@setValue -->
+<!-- $$$valueChanged[overload1]$$$valueChangeddouble -->
+<h3 class="fn" translate="no" id="valueChanged"><code class="details extra" translate="no">[signal]</code> <span class="type">void</span> TestClass::<span class="name">valueChanged</span>(<span class="type">double</span> <i>value</i>)</h3>
+<p>Signal emitted when a double <i translate="no">value</i> changes.</p>
+<div class="admonition note"><p><b>Note: </b>This signal is overloaded. To connect to this signal:
+
+<pre class="cpp" translate="no">// Connect using qOverload:
+connect(testClass, qOverload<double>(&TestClass::valueChanged),
+        receiver, &ReceiverClass::slot);
+
+// Or using a lambda:
+connect(testClass, qOverload<double>(&TestClass::valueChanged),
+        this, [](double value) { /* handle valueChanged */ });</pre>
+
+</p>
+</div><!-- @@@valueChanged -->
+<!-- $$$valueChanged$$$valueChangedint -->
+<h3 class="fn" translate="no" id="valueChanged-1"><code class="details extra" translate="no">[signal]</code> <span class="type">void</span> TestClass::<span class="name">valueChanged</span>(<span class="type">int</span> <i>value</i>)</h3>
+<p>Signal emitted when an integer <i translate="no">value</i> changes.</p>
+<div class="admonition note"><p><b>Note: </b>This signal is overloaded. To connect to this signal:
+
+<pre class="cpp" translate="no">// Connect using qOverload:
+connect(testClass, qOverload<int>(&TestClass::valueChanged),
+        receiver, &ReceiverClass::slot);
+
+// Or using a lambda:
+connect(testClass, qOverload<int>(&TestClass::valueChanged),
+        this, [](int value) { /* handle valueChanged */ });</pre>
+
+</p>
+</div><!-- @@@valueChanged -->
+</div>
+</body>
+</html>

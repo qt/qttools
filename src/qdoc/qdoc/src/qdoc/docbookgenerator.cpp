@@ -4197,11 +4197,20 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
                 m_writer->writeCharacters(snippet);
                 m_writer->writeEndElement(); // programlisting
                 newLine();
+                // A new para element is needed here because the caller closes it.
+                // When linkTarget is empty, this creates an empty para, which is
+                // harmless but slightly verbose.
                 m_writer->writeStartElement(dbNamespace, "para");
+                if (!linkTarget.isEmpty()) {
+                    m_writer->writeCharacters("For more examples and approaches, see ");
+                    writeDocBookLink(linkTarget, "connecting to overloaded " + functionType + "s");
+                    m_writer->writeCharacters(".");
+                }
+            } else if (!linkTarget.isEmpty()) {
+                m_writer->writeCharacters("For more examples and approaches, see ");
+                writeDocBookLink(linkTarget, "connecting to overloaded " + functionType + "s");
+                m_writer->writeCharacters(".");
             }
-
-            m_writer->writeCharacters("For more examples and approaches, see ");
-            writeDocBookLink(linkTarget, "connecting to overloaded " + functionType + "s");
         } else {
             // Original behavior for regular overloaded functions
             const auto &args = node->doc().overloadList();

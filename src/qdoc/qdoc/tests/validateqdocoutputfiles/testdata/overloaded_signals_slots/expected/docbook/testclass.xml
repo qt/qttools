@@ -3,7 +3,7 @@
 <db:info>
 <db:title>TestClass Class</db:title>
 <db:productname>OverloadedSignalsSlots</db:productname>
-<db:titleabbrev>Test for overloaded signals and slots using overload command</db:titleabbrev>
+<db:titleabbrev>Test for overloaded signals and slots documentation</db:titleabbrev>
 <db:abstract>
 <db:para>Test class for overloaded signals and slots.</db:para>
 </db:abstract>
@@ -15,42 +15,82 @@
 <db:para>TestClass</db:para>
 </db:listitem>
 </db:varlistentry>
+<db:varlistentry>
+<db:term>Inherits</db:term>
+<db:listitem>
+<db:para/>
+</db:listitem>
+</db:varlistentry>
 </db:variablelist>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
+<db:para>This class tests QDoc's generation of connection snippets for overloaded signals and slots.</db:para>
 </db:section>
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="TestClass">
-<db:title>TestClass::TestClass()</db:title>
-<db:para>Constructs a <db:link xlink:href="testclass.xml">TestClass</db:link>.</db:para>
+<db:title>[explicit] TestClass::TestClass(QObject *<db:emphasis>parent</db:emphasis> = nullptr)</db:title>
+<db:para>Constructs a <db:link xlink:href="testclass.xml">TestClass</db:link> with the given <db:code role="parameter">parent</db:code>.</db:para>
 </db:section>
 <db:section xml:id="dataChanged">
-<db:title>void TestClass::dataChanged(int <db:emphasis>value</db:emphasis>)</db:title>
-<db:para>This method takes an integer <db:code role="parameter">value</db:code>. (Tests overload note for methods that aren't signals/slots)</db:para>
+<db:title>[signal] void TestClass::dataChanged(const QString &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>This signal is emitted when a string <db:code role="parameter">value</db:code> changes.</db:para>
+<db:note>
+<db:para>This signal is overloaded. To connect to this signal:</db:para>
+<db:programlisting>// Connect using qOverload:
+connect(testClass, qOverload&lt;const QString &amp;&gt;(&amp;TestClass::dataChanged),
+        receiver, &amp;ReceiverClass::slot);
+
+// Or using a lambda:
+connect(testClass, qOverload&lt;const QString &amp;&gt;(&amp;TestClass::dataChanged),
+        this, [](const QString &amp;value) { /* handle dataChanged */ });</db:programlisting>
+<db:para>For more examples and approaches, see <db:link db:linkend="https://example.org/connecting-overloaded-signals">connecting to overloaded signals</db:link>.</db:para>
+</db:note>
 </db:section>
 <db:section xml:id="dataChanged-1">
-<db:title>void TestClass::dataChanged(const String &amp;<db:emphasis>value</db:emphasis>)</db:title>
-<db:para>This method takes a string <db:code role="parameter">value</db:code>.</db:para>
-<db:para>This is an overloaded function.</db:para>
+<db:title>[signal] void TestClass::dataChanged(int <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>This signal is emitted when an integer <db:code role="parameter">value</db:code> changes.</db:para>
+<db:note>
+<db:para>This signal is overloaded. To connect to this signal:</db:para>
+<db:programlisting>// Connect using qOverload:
+connect(testClass, qOverload&lt;int&gt;(&amp;TestClass::dataChanged),
+        receiver, &amp;ReceiverClass::slot);
+
+// Or using a lambda:
+connect(testClass, qOverload&lt;int&gt;(&amp;TestClass::dataChanged),
+        this, [](int value) { /* handle dataChanged */ });</db:programlisting>
+<db:para>For more examples and approaches, see <db:link db:linkend="https://example.org/connecting-overloaded-signals">connecting to overloaded signals</db:link>.</db:para>
+</db:note>
 </db:section>
 <db:section xml:id="process">
-<db:title>void TestClass::process(int <db:emphasis>value</db:emphasis>)</db:title>
-<db:para>Processes an integer <db:code role="parameter">value</db:code>. (Tests overload note for methods that aren't signals/slots)</db:para>
+<db:title>[slot] void TestClass::process(const QString &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Processes a string <db:code role="parameter">value</db:code>.</db:para>
+<db:note>
+<db:para>This slot is overloaded. To connect to this slot:</db:para>
+<db:programlisting>// Connect using qOverload:
+connect(sender, &amp;SenderClass::signal,
+        testClass, qOverload&lt;const QString &amp;&gt;(&amp;TestClass::process));
+
+// Or using a lambda as wrapper:
+connect(sender, &amp;SenderClass::signal,
+        testClass, [receiver = testClass](const QString &amp;value) { receiver-&gt;process(value); });</db:programlisting>
+<db:para>For more examples and approaches, see <db:link db:linkend="https://example.org/connecting-overloaded-slots">connecting to overloaded slots</db:link>.</db:para>
+</db:note>
 </db:section>
 <db:section xml:id="process-1">
-<db:title>void TestClass::process(const String &amp;<db:emphasis>value</db:emphasis>)</db:title>
-<db:para>Processes a string <db:code role="parameter">value</db:code>.</db:para>
-<db:para>This is an overloaded function.</db:para>
-</db:section>
-<db:section xml:id="regularFunction">
-<db:title>void TestClass::regularFunction(int <db:emphasis>value</db:emphasis>)</db:title>
-<db:para>Regular function that takes an integer <db:code role="parameter">value</db:code>.</db:para>
-</db:section>
-<db:section xml:id="regularFunction-1">
-<db:title>void TestClass::regularFunction(const String &amp;<db:emphasis>value</db:emphasis>)</db:title>
-<db:para>Regular function that takes a string <db:code role="parameter">value</db:code>.</db:para>
-<db:para>This is an overloaded function.</db:para>
+<db:title>[slot] void TestClass::process(int <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Processes an integer <db:code role="parameter">value</db:code>.</db:para>
+<db:note>
+<db:para>This slot is overloaded. To connect to this slot:</db:para>
+<db:programlisting>// Connect using qOverload:
+connect(sender, &amp;SenderClass::signal,
+        testClass, qOverload&lt;int&gt;(&amp;TestClass::process));
+
+// Or using a lambda as wrapper:
+connect(sender, &amp;SenderClass::signal,
+        testClass, [receiver = testClass](int value) { receiver-&gt;process(value); });</db:programlisting>
+<db:para>For more examples and approaches, see <db:link db:linkend="https://example.org/connecting-overloaded-slots">connecting to overloaded slots</db:link>.</db:para>
+</db:note>
 </db:section>
 </db:section>
 </db:article>
