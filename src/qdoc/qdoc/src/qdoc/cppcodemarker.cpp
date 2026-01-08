@@ -22,6 +22,10 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
+// Template declarations with more than this many parameters
+// are rendered in multi-line format for improved readability.
+constexpr std::size_t MultilineTemplateParamThreshold = 2;
+
 /*!
   Returns \c true.
  */
@@ -98,8 +102,12 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
         func = (const FunctionNode *)node;
         if (style == Section::Details) {
             auto templateDecl = node->templateDecl();
-            if (templateDecl)
-                synopsis = protect((*templateDecl).to_qstring()) + QLatin1Char(' ');
+            if (templateDecl) {
+                if (templateDecl->parameters.size() > MultilineTemplateParamThreshold)
+                    synopsis = protect((*templateDecl).to_qstring_multiline()) + QLatin1Char('\n');
+                else
+                    synopsis = protect((*templateDecl).to_qstring()) + QLatin1Char(' ');
+            }
         }
         if (style != Section::AllMembers && !func->returnType().isEmpty())
             synopsis += typified(func->returnTypeString(), true);
@@ -191,8 +199,12 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
     case NodeType::TypeAlias:
         if (style == Section::Details) {
             auto templateDecl = node->templateDecl();
-            if (templateDecl)
-                synopsis += protect((*templateDecl).to_qstring()) + QLatin1Char(' ');
+            if (templateDecl) {
+                if (templateDecl->parameters.size() > MultilineTemplateParamThreshold)
+                    synopsis += protect((*templateDecl).to_qstring_multiline()) + QLatin1Char('\n');
+                else
+                    synopsis += protect((*templateDecl).to_qstring()) + QLatin1Char(' ');
+            }
         }
         synopsis += name;
         break;

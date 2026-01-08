@@ -1,0 +1,17 @@
+project = MultilineTemplates
+productname = Qt
+description = Test for multi-line template signature rendering
+version = 1.0
+
+locationinfo = false
+
+{headerdirs,sourcedirs} = ./src
+documentationinheaders = true
+headers.fileextensions = "*.h"
+
+outputformats = HTML
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+warninglimit = 0
+warninglimit.enabled = true

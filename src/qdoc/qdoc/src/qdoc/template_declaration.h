@@ -427,6 +427,50 @@ struct RelaxedTemplateDeclaration : TemplateDeclarationStorage
             result += " requires " + *requires_clause;
         return QString::fromStdString(result);
     }
+
+    /*
+     * Returns a multi-line representation of the template declaration,
+     * suitable for rendering complex templates with many parameters.
+     *
+     * The format places each parameter on its own line with consistent
+     * indentation:
+     *
+     *   template <
+     *       typename T,
+     *       typename U = SomeLongType
+     *   >
+     *
+     * This format works well with variable-width fonts since indentation
+     * uses a fixed number of spaces rather than alignment.
+     *
+     * If a requires clause is present, it appears after the closing '>':
+     *
+     *   template <
+     *       typename T
+     *   > requires std::integral<T>
+     */
+    inline QString to_qstring_multiline() const {
+        if (parameters.empty()) {
+            QString result = QStringLiteral("template <>");
+            if (requires_clause && !requires_clause->empty())
+                result += QStringLiteral(" requires ") + QString::fromStdString(*requires_clause);
+            return result;
+        }
+
+        QString result = QStringLiteral("template <\n");
+        for (std::size_t i = 0; i < parameters.size(); ++i) {
+            result += QStringLiteral("    ") + QString::fromStdString(parameters[i].to_std_string());
+            if (i + 1 < parameters.size())
+                result += QLatin1Char(',');
+            result += QLatin1Char('\n');
+        }
+        result += QLatin1Char('>');
+
+        if (requires_clause && !requires_clause->empty())
+            result += QStringLiteral(" requires ") + QString::fromStdString(*requires_clause);
+
+        return result;
+    }
 };
 
 /*
