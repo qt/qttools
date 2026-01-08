@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- concepts.h -->
+  <meta name="description" content="A class demonstrating functions with trailing requires clauses.">
+  <title>TrailingRequiresExample Class | Qt 1.0</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li><a href="cpp20concepts-module.html" translate="no">Cpp20Concepts</a></li>
+<li>TrailingRequiresExample</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">TrailingRequiresExample Class</h1>
+<!-- $$$TrailingRequiresExample-brief -->
+<p>A class demonstrating functions with trailing requires clauses. <a href="#details">More...</a></p>
+<!-- @@@TrailingRequiresExample -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;TrailingRequiresExample&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="trailingrequiresexample-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> T </td><td class="memItemRight bottomAlign"><b><a href="trailingrequiresexample.html#combine" translate="no">combine</a></b>(T <i>a</i>, T <i>b</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> T </td><td class="memItemRight bottomAlign"><b><a href="trailingrequiresexample.html#process" translate="no">process</a></b>(T <i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> double </td><td class="memItemRight bottomAlign"><b><a href="trailingrequiresexample.html#transform" translate="no">transform</a></b>(T <i>input</i>)</td></tr>
+</table></div>
+<!-- $$$TrailingRequiresExample-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>Trailing requires clauses appear after the function declaration, rather than after the template parameter list.</p>
+</div>
+<!-- @@@TrailingRequiresExample -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$combine[overload1]$$$combineTT -->
+<h3 class="fn" translate="no" id="combine">template &lt;typename T&gt; requires detail::is_integral&lt;T&gt;::value <span class="type">T</span> TrailingRequiresExample::<span class="name">combine</span>(<span class="type">T</span> <i>a</i>, <span class="type">T</span> <i>b</i>) requires (sizeof(T) &lt;= 4)</h3>
+<p>Combines <i translate="no">a</i> and <i translate="no">b</i> with both template-head and trailing requires.</p>
+<p>This demonstrates a function with requires clauses in both positions, which is rare but valid C++20 syntax. Both constraints must be satisfied.</p>
+<!-- @@@combine -->
+<!-- $$$process[overload1]$$$processT -->
+<h3 class="fn" translate="no" id="process">template &lt;typename T&gt; <span class="type">T</span> TrailingRequiresExample::<span class="name">process</span>(<span class="type">T</span> <i>value</i>) requires detail::is_integral&lt;T&gt;::value</h3>
+<p>Processes <i translate="no">value</i> with a trailing requires clause.</p>
+<p>The trailing requires clause appears after the function signature, which is an alternative syntax to placing it after the template parameter list.</p>
+<!-- @@@process -->
+<!-- $$$transform[overload1]$$$transformT -->
+<h3 class="fn" translate="no" id="transform">template &lt;typename T&gt; <span class="type">double</span> TrailingRequiresExample::<span class="name">transform</span>(<span class="type">T</span> <i>input</i>) requires detail::is_floating&lt;T&gt;::value</h3>
+<p>Transforms <i translate="no">input</i> using trailing constraint.</p>
+<p>This demonstrates that trailing requires clauses work with any constraint expression.</p>
+<!-- @@@transform -->
+</div>
+</body>
+</html>

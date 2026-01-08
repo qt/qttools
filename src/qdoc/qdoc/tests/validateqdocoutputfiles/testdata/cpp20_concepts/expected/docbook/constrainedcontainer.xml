@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>ConstrainedContainer Class</db:title>
+<db:subtitle>template &lt;typename T&gt; requires detail::is_integral&lt;T&gt;::value class ConstrainedContainer</db:subtitle>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Test for C++20 concepts and requires clauses</db:titleabbrev>
+<db:abstract>
+<db:para>A container template with a requires clause on the class itself.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>ConstrainedContainer</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="ConstrainedContainer">
+<db:title>[explicit] ConstrainedContainer::ConstrainedContainer(int <db:emphasis>size</db:emphasis>)</db:title>
+<db:para>Constructs a container with the given <db:code role="parameter">size</db:code>.</db:para>
+</db:section>
+<db:section xml:id="size">
+<db:title>int ConstrainedContainer::size() const</db:title>
+<db:para>Returns the size of the container.</db:para>
+</db:section>
+</db:section>
+</db:article>

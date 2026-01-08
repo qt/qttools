@@ -405,10 +405,28 @@ struct RelaxedTemplateParameter
  * parameters, the type is intended to be used for data that is
  * already validated and known to be correct, such as data that is
  * extracted from Clang.
+ *
+ * The optional requires_clause field holds a C++20 requires clause
+ * constraint expression, if present. For example, for a template
+ * declared as `template<typename T> requires std::integral<T>`, the
+ * requires_clause is \e {std::integral<T>}.
+ *
+ * Note: The inherited to_std_string() method does not include requires_clause
+ * because it is used for internal comparisons (such as template declaration
+ * substitutability) where the constraint is not relevant. Use to_qstring() or
+ * to_qstring_multiline() for user-facing output that should include requires
+ * clauses.
  */
 struct RelaxedTemplateDeclaration : TemplateDeclarationStorage
 {
-    inline QString to_qstring() const { return QString::fromStdString(to_std_string()); }
+    std::optional<std::string> requires_clause;
+
+    inline QString to_qstring() const {
+        std::string result = to_std_string();
+        if (requires_clause && !requires_clause->empty())
+            result += " requires " + *requires_clause;
+        return QString::fromStdString(result);
+    }
 };
 
 /*

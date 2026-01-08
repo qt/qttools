@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="ConstrainedContainer" href="constrainedcontainer.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A container template with a requires clause on the class itself">
+            <description>
+                <brief>A container template with a requires clause on the class itself.</brief>
+            </description>
+            <function name="ConstrainedContainer" fullname="ConstrainedContainer::ConstrainedContainer" href="constrainedcontainer.html#ConstrainedContainer" status="active" access="public" location="concepts.h" documented="true" meta="constructor" explicit="true" signature="ConstrainedContainer(int size)">
+                <parameter type="int" name="size" default=""/>
+                <description>
+                    <para>Constructs a container with the given <argument>size</argument>.</para>
+                </description>
+            </function>
+            <function name="size" fullname="ConstrainedContainer::size" href="constrainedcontainer.html#size" status="active" access="public" location="concepts.h" documented="true" meta="plain" const="true" type="int" signature="int size() const">
+                <description>
+                    <para>Returns the size of the container.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

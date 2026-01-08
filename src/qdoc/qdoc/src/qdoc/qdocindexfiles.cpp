@@ -499,6 +499,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
                 fn->markNoexcept(attributes.value("noexcept_expression").toString());
             }
 
+            if (attributes.hasAttribute(QLatin1String("trailing_requires")))
+                fn->setTrailingRequiresClause(attributes.value(QLatin1String("trailing_requires")).toString());
+
             qsizetype refness = attributes.value(QLatin1String("refness")).toUInt();
             if (refness == 1)
                 fn->setRef(true);
@@ -1324,6 +1327,9 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
             if (!(*noexcept_info).isEmpty()) writer.writeAttribute("noexcept_expression", *noexcept_info);
         }
 
+        if (auto trailing_requires = fn->trailingRequiresClause(); trailing_requires && !trailing_requires->isEmpty())
+            writer.writeAttribute("trailing_requires", *trailing_requires);
+
         /*
           This ensures that for functions that have overloads,
           the first function written is the one that is not an
@@ -1403,8 +1409,8 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
 
     'const' is already part of FunctionNode::signature(), which forms the basis
     for the signature returned by this method. The method adds, where
-    applicable, the C++ keywords "final", "override", or "= 0", to the
-    signature carried by the FunctionNode itself.
+    applicable, the C++ keywords "final", "override", "= 0", or trailing
+    requires clauses to the signature carried by the FunctionNode itself.
  */
 QString QDocIndexFiles::appendAttributesToSignature(const FunctionNode *fn) const noexcept
 {
@@ -1416,6 +1422,8 @@ QString QDocIndexFiles::appendAttributesToSignature(const FunctionNode *fn) cons
         signature += " override";
     if (fn->isPureVirtual())
         signature += " = 0";
+    if (const auto &req = fn->trailingRequiresClause(); req && !req->isEmpty())
+        signature += " requires " + *req;
 
     return signature;
 }

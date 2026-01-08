@@ -1,0 +1,24 @@
+project = Cpp20Concepts
+productname = Qt
+description = Test for C++20 concepts and requires clauses
+version = 1.0
+
+locationinfo = false
+
+{headerdirs,sourcedirs} = ./src
+documentationinheaders = true
+headers.fileextensions = "*.h"
+
+outputformats       = WebXML HTML DocBook
+WebXML.nosubdirs    = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+warninglimit = 0
+warninglimit.enabled = true
+
