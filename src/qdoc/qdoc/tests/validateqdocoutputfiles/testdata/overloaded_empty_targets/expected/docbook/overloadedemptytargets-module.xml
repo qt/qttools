@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
 <db:info>
-<db:title>Overloaded Signals Slots Test Module</db:title>
-<db:productname>OverloadedSignalsSlots</db:productname>
-<db:titleabbrev>Test for overloaded signals and slots documentation</db:titleabbrev>
+<db:title>Overloaded Empty Targets Test Module</db:title>
+<db:productname>OverloadedEmptyTargets</db:productname>
+<db:titleabbrev>Test for empty link target configuration</db:titleabbrev>
 <db:abstract>
-<db:para>Test module for overloaded signals and slots.</db:para>
+<db:para>Test module for empty link target configuration.</db:para>
 </db:abstract>
 </db:info>
-<db:para>Test module for overloaded signals and slots.</db:para>
+<db:para>Test module for empty link target configuration.</db:para>
 <db:section xml:id="classes">
 <db:title>Classes</db:title>
 <db:variablelist role="classes">
 <db:varlistentry>
 <db:term><db:link xlink:href="testclass.xml" xlink:role="class">TestClass</db:link></db:term>
 <db:listitem>
-<db:para>Test class for overloaded signals and slots.</db:para>
+<db:para>Test class for empty link target configuration.</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

@@ -1,0 +1,24 @@
+project = OverloadedEmptyTargets
+description = Test for empty link target configuration
+version = 1.0
+
+headerdirs = ./src
+sourcedirs = ./src
+includepaths = -I./src
+
+outputformats       = HTML DocBook WebXML
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+locationinfo = false
+
+# Test explicitly empty link targets
+overloadedsignalstarget =
+overloadedslotstarget =
+
+warninglimit = 0
+warninglimit.enabled = true
+

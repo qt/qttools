@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TestClass Class</db:title>
+<db:productname>OverloadedEmptyTargets</db:productname>
+<db:titleabbrev>Test for empty link target configuration</db:titleabbrev>
+<db:abstract>
+<db:para>Test class for empty link target configuration.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TestClass</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherits</db:term>
+<db:listitem>
+<db:para/>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class tests that QDoc handles empty overloadedsignalstarget and overloadedslotstarget configuration values without crashing.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="TestClass">
+<db:title>[explicit] TestClass::TestClass(QObject *<db:emphasis>parent</db:emphasis> = nullptr)</db:title>
+<db:para>Constructs a <db:link xlink:href="testclass.xml">TestClass</db:link> with the given <db:code role="parameter">parent</db:code>.</db:para>
+</db:section>
+<db:section xml:id="setValue">
+<db:title>[slot] void TestClass::setValue(double <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Sets the double <db:code role="parameter">value</db:code>.</db:para>
+<db:note>
+<db:para>This slot is overloaded. To connect to this slot:</db:para>
+<db:programlisting>// Connect using qOverload:
+connect(sender, &amp;SenderClass::signal,
+        testClass, qOverload&lt;double&gt;(&amp;TestClass::setValue));
+
+// Or using a lambda as wrapper:
+connect(sender, &amp;SenderClass::signal,
+        testClass, [receiver = testClass](double value) { receiver-&gt;setValue(value); });</db:programlisting>
+<db:para/>
+</db:note>
+</db:section>
+<db:section xml:id="setValue-1">
+<db:title>[slot] void TestClass::setValue(int <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Sets the integer <db:code role="parameter">value</db:code>.</db:para>
+<db:note>
+<db:para>This slot is overloaded. To connect to this slot:</db:para>
+<db:programlisting>// Connect using qOverload:
+connect(sender, &amp;SenderClass::signal,
+        testClass, qOverload&lt;int&gt;(&amp;TestClass::setValue));
+
+// Or using a lambda as wrapper:
+connect(sender, &amp;SenderClass::signal,
+        testClass, [receiver = testClass](int value) { receiver-&gt;setValue(value); });</db:programlisting>
+<db:para/>
+</db:note>
+</db:section>
+<db:section xml:id="valueChanged">
+<db:title>[signal] void TestClass::valueChanged(double <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Signal emitted when a double <db:code role="parameter">value</db:code> changes.</db:para>
+<db:note>
+<db:para>This signal is overloaded. To connect to this signal:</db:para>
+<db:programlisting>// Connect using qOverload:
+connect(testClass, qOverload&lt;double&gt;(&amp;TestClass::valueChanged),
+        receiver, &amp;ReceiverClass::slot);
+
+// Or using a lambda:
+connect(testClass, qOverload&lt;double&gt;(&amp;TestClass::valueChanged),
+        this, [](double value) { /* handle valueChanged */ });</db:programlisting>
+<db:para/>
+</db:note>
+</db:section>
+<db:section xml:id="valueChanged-1">
+<db:title>[signal] void TestClass::valueChanged(int <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Signal emitted when an integer <db:code role="parameter">value</db:code> changes.</db:para>
+<db:note>
+<db:para>This signal is overloaded. To connect to this signal:</db:para>
+<db:programlisting>// Connect using qOverload:
+connect(testClass, qOverload&lt;int&gt;(&amp;TestClass::valueChanged),
+        receiver, &amp;ReceiverClass::slot);
+
+// Or using a lambda:
+connect(testClass, qOverload&lt;int&gt;(&amp;TestClass::valueChanged),
+        this, [](int value) { /* handle valueChanged */ });</db:programlisting>
+<db:para/>
+</db:note>
+</db:section>
+</db:section>
+</db:article>
