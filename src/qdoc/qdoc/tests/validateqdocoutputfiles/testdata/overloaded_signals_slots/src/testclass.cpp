@@ -7,6 +7,9 @@
     \class TestClass
     \inmodule OverloadedSignalsSlots
     \brief Test class for overloaded signals and slots.
+
+    This class tests QDoc's generation of connection snippets for
+    overloaded signals and slots.
 */
 
 /*!
@@ -16,49 +19,31 @@
 */
 
 /*!
-    \fn TestClass::TestClass()
+    \fn TestClass::TestClass(QObject *parent)
 
-    Constructs a TestClass.
-*/
-
-/*!
-    \fn void TestClass::regularFunction(int value)
-
-    Regular function that takes an integer \a value.
-*/
-
-/*!
-    \fn void TestClass::regularFunction(const String &value)
-    \overload
-
-    Regular function that takes a string \a value.
+    Constructs a TestClass with the given \a parent.
 */
 
 /*!
     \fn void TestClass::dataChanged(int value)
 
-    This method takes an integer \a value.
-    (Tests overload note for methods that aren't signals/slots)
+    This signal is emitted when an integer \a value changes.
 */
 
 /*!
-    \fn void TestClass::dataChanged(const String &value)
-    \overload
+    \fn void TestClass::dataChanged(const QString &value)
 
-    This method takes a string \a value.
+    This signal is emitted when a string \a value changes.
 */
 
 /*!
     \fn void TestClass::process(int value)
 
     Processes an integer \a value.
-    (Tests overload note for methods that aren't signals/slots)
 */
 
 /*!
-    \fn void TestClass::process(const String &value)
-    \overload
+    \fn void TestClass::process(const QString &value)
 
     Processes a string \a value.
 */
-

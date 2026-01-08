@@ -524,6 +524,32 @@ QString Parameters::generateTypeAndNameList() const
 }
 
 /*!
+  Construct a list of just the parameter names (without types)
+  and return it. Used for generating code snippets where only
+  argument names are needed. If a parameter has no name, a
+  synthetic name (arg1, arg2, etc.) is generated.
+*/
+QString Parameters::generateNameList() const
+{
+    const int n = count();
+    if (n == 0)
+        return {};
+
+    QString out;
+
+    for (int i = 0; i < n; ++i) {
+        if (i != 0)
+            out += ", ";
+        const QString &name = m_parameters.at(i).name();
+        if (name.isEmpty())
+            out += QString("arg%1").arg(i + 1);
+        else
+            out += name;
+    }
+    return out;
+}
+
+/*!
   Returns true if \a parameters contains the same parameter
   signature as this.
  */

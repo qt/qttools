@@ -14,6 +14,8 @@
 <h3 id="toc">Contents</h3>
 <ul>
 <li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#public-slots">Public Slots</a></li>
+<li class="level1"><a href="#signals">Signals</a></li>
 <li class="level1"><a href="#details">Detailed Description</a></li>
 </ul>
 </div>
@@ -30,52 +32,90 @@
 </ul>
 <h2 id="public-functions">Public Functions</h2>
 <div class="table"><table class="alignedsummary" translate="no">
-<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#TestClass" translate="no">TestClass</a></b>()</td></tr>
-<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#dataChanged" translate="no">dataChanged</a></b>(int <i>value</i>)</td></tr>
-<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#dataChanged-1" translate="no">dataChanged</a></b>(const String &amp;<i>value</i>)</td></tr>
-<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#process" translate="no">process</a></b>(int <i>value</i>)</td></tr>
-<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#process-1" translate="no">process</a></b>(const String &amp;<i>value</i>)</td></tr>
-<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#regularFunction" translate="no">regularFunction</a></b>(int <i>value</i>)</td></tr>
-<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#regularFunction-1" translate="no">regularFunction</a></b>(const String &amp;<i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#TestClass" translate="no">TestClass</a></b>(QObject *<i>parent</i> = nullptr)</td></tr>
+</table></div>
+<h2 id="public-slots">Public Slots</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#process" translate="no">process</a></b>(const QString &amp;<i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#process-1" translate="no">process</a></b>(int <i>value</i>)</td></tr>
+</table></div>
+<h2 id="signals">Signals</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#dataChanged" translate="no">dataChanged</a></b>(const QString &amp;<i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#dataChanged-1" translate="no">dataChanged</a></b>(int <i>value</i>)</td></tr>
 </table></div>
 <!-- $$$TestClass-description -->
 <div class="descr">
 <h2 id="details">Detailed Description</h2>
+<p>This class tests QDoc's generation of connection snippets for overloaded signals and slots.</p>
 </div>
 <!-- @@@TestClass -->
 <div class="func">
 <h2>Member Function Documentation</h2>
-<!-- $$$TestClass[overload1]$$$TestClass -->
-<h3 class="fn" translate="no" id="TestClass">TestClass::<span class="name">TestClass</span>()</h3>
-<p>Constructs a TestClass.</p>
+<!-- $$$TestClass[overload1]$$$TestClassQObject* -->
+<h3 class="fn" translate="no" id="TestClass"><code class="details extra" translate="no">[explicit]</code> TestClass::<span class="name">TestClass</span>(<span class="type">QObject</span> *<i>parent</i> = nullptr)</h3>
+<p>Constructs a TestClass with the given <i translate="no">parent</i>.</p>
 <!-- @@@TestClass -->
-<!-- $$$dataChanged[overload1]$$$dataChangedint -->
-<h3 class="fn" translate="no" id="dataChanged"><span class="type">void</span> TestClass::<span class="name">dataChanged</span>(<span class="type">int</span> <i>value</i>)</h3>
-<p>This method takes an integer <i translate="no">value</i>. (Tests overload note for methods that aren't signals/slots)</p>
-<!-- @@@dataChanged -->
-<!-- $$$dataChanged$$$dataChangedconstString& -->
-<h3 class="fn" translate="no" id="dataChanged-1"><span class="type">void</span> TestClass::<span class="name">dataChanged</span>(const <span class="type">String</span> &amp;<i>value</i>)</h3>
-<p>This method takes a string <i translate="no">value</i>.</p>
-<div class="admonition auto"><p>This is an overloaded function.</p>
+<!-- $$$dataChanged[overload1]$$$dataChangedconstQString& -->
+<h3 class="fn" translate="no" id="dataChanged"><code class="details extra" translate="no">[signal]</code> <span class="type">void</span> TestClass::<span class="name">dataChanged</span>(const <span class="type">QString</span> &amp;<i>value</i>)</h3>
+<p>This signal is emitted when a string <i translate="no">value</i> changes.</p>
+<div class="admonition note"><p><b>Note: </b>This signal is overloaded. To connect to this signal:
+
+<pre class="cpp" translate="no">// Connect using qOverload:
+connect(testClass, qOverload<const QString &>(&TestClass::dataChanged),
+        receiver, &ReceiverClass::slot);
+
+// Or using a lambda:
+connect(testClass, qOverload<const QString &>(&TestClass::dataChanged),
+        this, [](const QString &value) { /* handle dataChanged */ });</pre>
+
+For more examples and approaches, see <a href="https://example.org/connecting-overloaded-signals">connecting to overloaded signals</a>.</p>
 </div><!-- @@@dataChanged -->
-<!-- $$$process[overload1]$$$processint -->
-<h3 class="fn" translate="no" id="process"><span class="type">void</span> TestClass::<span class="name">process</span>(<span class="type">int</span> <i>value</i>)</h3>
-<p>Processes an integer <i translate="no">value</i>. (Tests overload note for methods that aren't signals/slots)</p>
-<!-- @@@process -->
-<!-- $$$process$$$processconstString& -->
-<h3 class="fn" translate="no" id="process-1"><span class="type">void</span> TestClass::<span class="name">process</span>(const <span class="type">String</span> &amp;<i>value</i>)</h3>
+<!-- $$$dataChanged$$$dataChangedint -->
+<h3 class="fn" translate="no" id="dataChanged-1"><code class="details extra" translate="no">[signal]</code> <span class="type">void</span> TestClass::<span class="name">dataChanged</span>(<span class="type">int</span> <i>value</i>)</h3>
+<p>This signal is emitted when an integer <i translate="no">value</i> changes.</p>
+<div class="admonition note"><p><b>Note: </b>This signal is overloaded. To connect to this signal:
+
+<pre class="cpp" translate="no">// Connect using qOverload:
+connect(testClass, qOverload<int>(&TestClass::dataChanged),
+        receiver, &ReceiverClass::slot);
+
+// Or using a lambda:
+connect(testClass, qOverload<int>(&TestClass::dataChanged),
+        this, [](int value) { /* handle dataChanged */ });</pre>
+
+For more examples and approaches, see <a href="https://example.org/connecting-overloaded-signals">connecting to overloaded signals</a>.</p>
+</div><!-- @@@dataChanged -->
+<!-- $$$process[overload1]$$$processconstQString& -->
+<h3 class="fn" translate="no" id="process"><code class="details extra" translate="no">[slot]</code> <span class="type">void</span> TestClass::<span class="name">process</span>(const <span class="type">QString</span> &amp;<i>value</i>)</h3>
 <p>Processes a string <i translate="no">value</i>.</p>
-<div class="admonition auto"><p>This is an overloaded function.</p>
+<div class="admonition note"><p><b>Note: </b>This slot is overloaded. To connect to this slot:
+
+<pre class="cpp" translate="no">// Connect using qOverload:
+connect(sender, &SenderClass::signal,
+        testClass, qOverload<const QString &>(&TestClass::process));
+
+// Or using a lambda as wrapper:
+connect(sender, &SenderClass::signal,
+        testClass, [receiver = testClass](const QString &value) { receiver->process(value); });</pre>
+
+For more examples and approaches, see <a href="https://example.org/connecting-overloaded-slots">connecting to overloaded slots</a>.</p>
 </div><!-- @@@process -->
-<!-- $$$regularFunction[overload1]$$$regularFunctionint -->
-<h3 class="fn" translate="no" id="regularFunction"><span class="type">void</span> TestClass::<span class="name">regularFunction</span>(<span class="type">int</span> <i>value</i>)</h3>
-<p>Regular function that takes an integer <i translate="no">value</i>.</p>
-<!-- @@@regularFunction -->
-<!-- $$$regularFunction$$$regularFunctionconstString& -->
-<h3 class="fn" translate="no" id="regularFunction-1"><span class="type">void</span> TestClass::<span class="name">regularFunction</span>(const <span class="type">String</span> &amp;<i>value</i>)</h3>
-<p>Regular function that takes a string <i translate="no">value</i>.</p>
-<div class="admonition auto"><p>This is an overloaded function.</p>
-</div><!-- @@@regularFunction -->
+<!-- $$$process$$$processint -->
+<h3 class="fn" translate="no" id="process-1"><code class="details extra" translate="no">[slot]</code> <span class="type">void</span> TestClass::<span class="name">process</span>(<span class="type">int</span> <i>value</i>)</h3>
+<p>Processes an integer <i translate="no">value</i>.</p>
+<div class="admonition note"><p><b>Note: </b>This slot is overloaded. To connect to this slot:
+
+<pre class="cpp" translate="no">// Connect using qOverload:
+connect(sender, &SenderClass::signal,
+        testClass, qOverload<int>(&TestClass::process));
+
+// Or using a lambda as wrapper:
+connect(sender, &SenderClass::signal,
+        testClass, [receiver = testClass](int value) { receiver->process(value); });</pre>
+
+For more examples and approaches, see <a href="https://example.org/connecting-overloaded-slots">connecting to overloaded slots</a>.</p>
+</div><!-- @@@process -->
 </div>
 </body>
 </html>
