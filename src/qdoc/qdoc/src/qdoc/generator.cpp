@@ -1479,11 +1479,13 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
                      << Atom(Atom::Code, snippet) << "\n";
             }
 
-            text << "For more examples and approaches, see "
-                 << Atom(Atom::Link, linkTarget)
-                 << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                 << "connecting to overloaded " << functionType << "s"
-                 << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << ".";
+            if (!linkTarget.isEmpty()) {
+                text << "For more examples and approaches, see "
+                     << Atom(Atom::Link, linkTarget)
+                     << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+                     << "connecting to overloaded " << functionType << "s"
+                     << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << ".";
+            }
         } else {
             const auto &args = node->doc().overloadList();
             if (args.first().first.isEmpty()) {
@@ -2442,8 +2444,12 @@ void Generator::addNodeLink(Text &text, const INode *node, const QString &linkTe
 }
 
 /*!
-  Generates a contextual code snippet for connecting to an overloaded signal or slot.
-  Returns an empty string if the function is not a signal or slot.
+  Generates a contextual code snippet for connecting to an overloaded signal or
+  slot. Returns an empty string if the function is not a signal or slot.
+
+  For signals, the snippet shows the signal in the second argument position of
+  connect(). For slots, the snippet shows the slot in the fourth argument
+  position (receiver side).
 */
 QString Generator::generateOverloadSnippet(const FunctionNode *func)
 {
@@ -2452,19 +2458,32 @@ QString Generator::generateOverloadSnippet(const FunctionNode *func)
 
     QString className = func->parent()->name();
     QString functionName = func->name();
-    QString parameters = func->parameters().generateTypeList();
-
+    QString typeList = func->parameters().generateTypeList();
+    QString typeAndNameList = func->parameters().generateTypeAndNameList();
+    QString nameList = func->parameters().generateNameList();
     QString objectName = generateObjectName(className);
 
-    QString snippet = QString(
-        "// Connect using qOverload:\n"
-        "connect(%1, qOverload<%2>(&%3::%4),\n"
-        "        receiver, &ReceiverClass::slot);\n\n"
-        "// Or using a lambda:\n"
-        "connect(%1, qOverload<%2>(&%3::%4),\n"
-        "        this, [](%5) { /* handle %4 */ });")
-        .arg(objectName, parameters, className, functionName,
-             func->parameters().generateTypeAndNameList());
+    QString snippet;
+
+    if (func->isSignal()) {
+        snippet = QString(
+            "// Connect using qOverload:\n"
+            "connect(%1, qOverload<%2>(&%3::%4),\n"
+            "        receiver, &ReceiverClass::slot);\n\n"
+            "// Or using a lambda:\n"
+            "connect(%1, qOverload<%2>(&%3::%4),\n"
+            "        this, [](%5) { /* handle %4 */ });")
+            .arg(objectName, typeList, className, functionName, typeAndNameList);
+    } else {
+        snippet = QString(
+            "// Connect using qOverload:\n"
+            "connect(sender, &SenderClass::signal,\n"
+            "        %1, qOverload<%2>(&%3::%4));\n\n"
+            "// Or using a lambda as wrapper:\n"
+            "connect(sender, &SenderClass::signal,\n"
+            "        %1, [receiver = %1](%5) { receiver->%4(%6); });")
+            .arg(objectName, typeList, className, functionName, typeAndNameList, nameList);
+    }
 
     return snippet;
 }

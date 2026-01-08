@@ -86,6 +86,7 @@ public:
     [[nodiscard]] QSet<QString> getNames() const;
     [[nodiscard]] QString generateTypeList() const;
     [[nodiscard]] QString generateTypeAndNameList() const;
+    [[nodiscard]] QString generateNameList() const;
     [[nodiscard]] bool match(const Parameters &parameters) const;
 
 private:
