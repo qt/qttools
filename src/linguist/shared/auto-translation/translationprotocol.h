@@ -4,7 +4,7 @@
 #ifndef TRANSLATIONPROTOCOL_H
 #define TRANSLATIONPROTOCOL_H
 
-#include <QList>
+#include <QtCore/qlist.h>
 
 QT_BEGIN_NAMESPACE
 

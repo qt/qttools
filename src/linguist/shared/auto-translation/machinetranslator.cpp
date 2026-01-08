@@ -8,9 +8,9 @@
 #include "translationsettings.h"
 #include "simtexth.h"
 
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QNetworkAccessManager>
+#include <QtNetwork/qnetworkaccessmanager.h>
+#include <QtNetwork/qnetworkreply.h>
+#include <QtNetwork/qnetworkrequest.h>
 
 using namespace Qt::Literals::StringLiterals;
 

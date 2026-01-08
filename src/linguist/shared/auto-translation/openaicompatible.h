@@ -5,7 +5,6 @@
 #define OPENAICOMPATIBLE_H
 
 #include "translationprotocol.h"
-#include "translationsettings.h"
 
 QT_BEGIN_NAMESPACE
 

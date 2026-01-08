@@ -6,8 +6,8 @@
 #include "translationutils.h"
 #include "translatormessage.h"
 
-#include <QJsonObject>
-#include <QJsonArray>
+#include <QtCore/qjsonarray.h>
+#include <QtCore/qjsonobject.h>
 
 using namespace Qt::Literals::StringLiterals;
 
