@@ -5,7 +5,7 @@
 #include "qtgradientstopscontroller_p.h"
 #include "ui_qtgradienteditor.h"
 
-#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/qbuttongroup.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qtgradientwidget_p.h"
-#include <QtCore/QMap>
-#include <QtGui/QImage>
-#include <QtGui/QPainter>
-#include <QtWidgets/QScrollBar>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QRegion>
+#include <QtCore/qmap.h>
+#include <QtGui/qimage.h>
+#include <QtGui/qpainter.h>
+#include <QtWidgets/qscrollbar.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qregion.h>
 
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES

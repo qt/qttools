@@ -15,7 +15,7 @@
 #ifndef QTGRADIENTEDITOR_H
 #define QTGRADIENTEDITOR_H
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 

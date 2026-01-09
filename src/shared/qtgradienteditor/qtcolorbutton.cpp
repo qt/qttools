@@ -2,12 +2,15 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qtcolorbutton_p.h"
-#include <QtWidgets/QColorDialog>
-#include <QtGui/QPainter>
-#include <QtCore/QMimeData>
-#include <QtGui/QDragEnterEvent>
-#include <QtGui/QDrag>
-#include <QtWidgets/QApplication>
+
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qcolordialog.h>
+
+#include <QtGui/qdrag.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qpainter.h>
+
+#include <QtCore/qmimedata.h>
 
 QT_BEGIN_NAMESPACE
 

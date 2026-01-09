@@ -15,7 +15,7 @@
 #ifndef QTGRADIENTWIDGET_H
 #define QTGRADIENTWIDGET_H
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 

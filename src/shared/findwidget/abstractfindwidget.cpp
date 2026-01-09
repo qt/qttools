@@ -17,21 +17,21 @@
 
 #include "abstractfindwidget_p.h"
 
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QToolButton>
+#include <QtWidgets/qcheckbox.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qlayout.h>
+#include <QtWidgets/qlayoutitem.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qtoolbutton.h>
 
-#include <QtGui/QAction>
-#include <QtGui/QKeyEvent>
-#include <QtGui/QShortcut>
+#include <QtGui/qaction.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qshortcut.h>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QEvent>
-#include <QtCore/QFile>
-#include <QtCore/QTimer>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qcoreevent.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qtimer.h>
 
 QT_BEGIN_NAMESPACE
 

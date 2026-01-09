@@ -15,8 +15,8 @@
 #ifndef QTGRADIENTSTOPSMODEL_H
 #define QTGRADIENTSTOPSMODEL_H
 
-#include <QtCore/QObject>
-#include <QtCore/QMap>
+#include <QtCore/qmap.h>
+#include <QtCore/qobject.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -15,13 +15,13 @@
 #ifndef SKIN_H
 #define SKIN_H
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 
-#include <QtGui/QPixmap>
-#include <QtGui/QPolygon>
-#include <QtGui/QRegion>
+#include <QtGui/qpixmap.h>
+#include <QtGui/qpolygon.h>
+#include <QtGui/qregion.h>
 
-#include <QtCore/QList>
+#include <QtCore/qlist.h>
 
 QT_BEGIN_NAMESPACE
 

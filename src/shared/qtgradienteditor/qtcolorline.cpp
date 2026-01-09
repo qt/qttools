@@ -4,10 +4,11 @@
 #include "qtcolorline_p.h"
 #include "qdrawutil.h"
 
-#include <QtGui/QPainter>
-#include <QtGui/QPaintEvent>
-#include <QtWidgets/QStyleOption>
-#include <QtGui/QRegion>
+#include <QtWidgets/qstyleoption.h>
+
+#include <QtGui/qevent.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qregion.h>
 
 QT_BEGIN_NAMESPACE
 

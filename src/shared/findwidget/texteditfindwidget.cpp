@@ -22,9 +22,10 @@
 
 #include "texteditfindwidget_p.h"
 
-#include <QtWidgets/QCheckBox>
-#include <QtGui/QTextCursor>
-#include <QtWidgets/QTextEdit>
+#include <QtWidgets/qcheckbox.h>
+#include <QtWidgets/qtextedit.h>
+
+#include <QtGui/qtextcursor.h>
 
 QT_BEGIN_NAMESPACE
 
