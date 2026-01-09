@@ -18,6 +18,7 @@
 #include <QtWidgets/qwidget.h>
 
 #include <QtGui/qicon.h>
+#include <QtGui/qiconengine.h>
 
 #include <QtCore/qmap.h>
 #include <QtCore/qstringlist.h>
@@ -56,15 +57,17 @@ private:
 class QtPropertyBrowserUtils
 {
 public:
-    static QPixmap brushValuePixmap(const QBrush &b);
+    static QPixmap brushValuePixmap(const QBrush &b, const QSize &size, qreal devicePixelRatio);
     static QIcon brushValueIcon(const QBrush &b);
     static QString colorValueText(QColor c);
-    static QPixmap fontValuePixmap(const QFont &f);
+    static QPixmap fontValuePixmap(const QFont &f, const QSize &size, qreal devicePixelRatio);
     static QIcon fontValueIcon(const QFont &f);
     static QString fontValueText(const QFont &f);
     static QString dateFormat();
     static QString timeFormat();
     static QString dateTimeFormat();
+
+    static constexpr QSize itemViewIconSize{18, 18};
 };
 
 class QtBoolEdit : public QWidget {
@@ -92,6 +95,23 @@ protected:
 private:
     QCheckBox *m_checkBox;
     bool m_textVisible;
+};
+
+class QtPropertyIconEngine : public QIconEngine
+{
+public:
+    Q_DISABLE_COPY_MOVE(QtPropertyIconEngine)
+
+    QPixmap scaledPixmap(const QSize &size, QIcon::Mode mode, QIcon::State state,
+                         qreal scale) override;
+
+    static QPixmap createEmptyPixmap(const QSize &size, qreal scale);
+
+    // Convenience for the editor widget to create pixmaps
+    QPixmap drawPixmap(const QSize &size, qreal devicePixelRatio);
+
+protected:
+    QtPropertyIconEngine();
 };
 
 QT_END_NAMESPACE

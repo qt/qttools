@@ -2078,6 +2078,8 @@ Q_SIGNALS:
     void valueChanged(const QColor &value);
 
 private:
+    void updateColor();
+
     QColor m_color;
     QLabel *m_pixmapLabel;
     QLabel *m_label;
@@ -2105,17 +2107,25 @@ QtColorEditWidget::QtColorEditWidget(QWidget *parent) :
     m_button->installEventFilter(this);
     connect(m_button, &QAbstractButton::clicked, this, &QtColorEditWidget::buttonClicked);
     lt->addWidget(m_button);
-    m_pixmapLabel->setPixmap(QtPropertyBrowserUtils::brushValuePixmap(QBrush(m_color)));
-    m_label->setText(QtPropertyBrowserUtils::colorValueText(m_color));
+    updateColor();
 }
 
 void QtColorEditWidget::setValue(QColor c)
 {
     if (m_color != c) {
         m_color = c;
-        m_pixmapLabel->setPixmap(QtPropertyBrowserUtils::brushValuePixmap(QBrush(c)));
-        m_label->setText(QtPropertyBrowserUtils::colorValueText(c));
+        updateColor();
     }
+}
+
+void QtColorEditWidget::updateColor()
+{
+    const auto pm =
+        QtPropertyBrowserUtils::brushValuePixmap(QBrush(m_color),
+                                                 QtPropertyBrowserUtils::itemViewIconSize,
+                                                 devicePixelRatioF());
+    m_pixmapLabel->setPixmap(pm);
+    m_label->setText(QtPropertyBrowserUtils::colorValueText(m_color));
 }
 
 void QtColorEditWidget::buttonClicked()
@@ -2277,6 +2287,8 @@ Q_SIGNALS:
     void valueChanged(const QFont &value);
 
 private:
+    void updateFont();
+
     QFont m_font;
     QLabel *m_pixmapLabel;
     QLabel *m_label;
@@ -2304,7 +2316,14 @@ QtFontEditWidget::QtFontEditWidget(QWidget *parent) :
     m_button->installEventFilter(this);
     connect(m_button, &QAbstractButton::clicked, this, &QtFontEditWidget::buttonClicked);
     lt->addWidget(m_button);
-    m_pixmapLabel->setPixmap(QtPropertyBrowserUtils::fontValuePixmap(m_font));
+    updateFont();
+}
+
+void QtFontEditWidget::updateFont()
+{
+    const auto pm = QtPropertyBrowserUtils::fontValuePixmap(
+            m_font, QtPropertyBrowserUtils::itemViewIconSize, devicePixelRatioF());
+    m_pixmapLabel->setPixmap(pm);
     m_label->setText(QtPropertyBrowserUtils::fontValueText(m_font));
 }
 
@@ -2312,8 +2331,7 @@ void QtFontEditWidget::setValue(const QFont &f)
 {
     if (m_font != f) {
         m_font = f;
-        m_pixmapLabel->setPixmap(QtPropertyBrowserUtils::fontValuePixmap(f));
-        m_label->setText(QtPropertyBrowserUtils::fontValueText(f));
+        updateFont();
     }
 }
 
