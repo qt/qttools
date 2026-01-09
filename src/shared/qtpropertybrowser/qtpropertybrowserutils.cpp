@@ -2,14 +2,17 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qtpropertybrowserutils_p.h"
-#include <QtWidgets/QApplication>
-#include <QtGui/QPainter>
-#include <QtWidgets/QHBoxLayout>
-#include <QtGui/QMouseEvent>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QMenu>
-#include <QtCore/QLocale>
+
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qcheckbox.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qmenu.h>
+
+#include <QtGui/qevent.h>
+#include <QtGui/qpainter.h>
+
+#include <QtCore/qlocale.h>
 
 QT_BEGIN_NAMESPACE
 

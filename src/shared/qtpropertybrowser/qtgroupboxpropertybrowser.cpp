@@ -3,10 +3,11 @@
 
 #include "qtgroupboxpropertybrowser_p.h"
 
-#include <QtCore/QHash>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QGroupBox>
-#include <QtWidgets/QLabel>
+#include <QtWidgets/qgridlayout.h>
+#include <QtWidgets/qgroupbox.h>
+#include <QtWidgets/qlabel.h>
+
+#include <QtCore/qhash.h>
 
 QT_BEGIN_NAMESPACE
 
