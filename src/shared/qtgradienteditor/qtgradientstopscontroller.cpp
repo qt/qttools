@@ -5,7 +5,7 @@
 #include "ui_qtgradienteditor.h"
 #include "qtgradientstopsmodel_p.h"
 
-#include <QtCore/QTimer>
+#include <QtCore/qtimer.h>
 
 QT_BEGIN_NAMESPACE
 

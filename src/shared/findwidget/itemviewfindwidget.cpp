@@ -26,10 +26,11 @@
 
 #include "itemviewfindwidget_p.h"
 
-#include <QtWidgets/QAbstractItemView>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QTreeView>
-#include <QtCore/QRegularExpression>
+#include <QtWidgets/qabstractitemview.h>
+#include <QtWidgets/qcheckbox.h>
+#include <QtWidgets/qtreeview.h>
+
+#include <QtCore/qregularexpression.h>
 
 #include <algorithm>
 

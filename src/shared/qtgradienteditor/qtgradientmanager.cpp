@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qtgradientmanager_p.h"
-#include <QtGui/QPixmap>
-#include <QtCore/QMetaEnum>
+
+#include <QtGui/qpixmap.h>
+
+#include <QtCore/qmetaobject.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -15,8 +15,8 @@
 #ifndef GRADIENTVIEWDIALOG_H
 #define GRADIENTVIEWDIALOG_H
 
-#include <QtWidgets/QWidget>
-#include <QtCore/QMap>
+#include <QtWidgets/qwidget.h>
+#include <QtCore/qmap.h>
 #include "ui_qtgradientviewdialog.h"
 
 QT_BEGIN_NAMESPACE

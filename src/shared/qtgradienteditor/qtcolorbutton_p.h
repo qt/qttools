@@ -15,7 +15,7 @@
 #ifndef QTCOLORBUTTON_H
 #define QTCOLORBUTTON_H
 
-#include <QtWidgets/QToolButton>
+#include <QtWidgets/qtoolbutton.h>
 
 QT_BEGIN_NAMESPACE
 

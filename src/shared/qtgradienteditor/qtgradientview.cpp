@@ -6,11 +6,12 @@
 #include "qtgradientdialog_p.h"
 #include "qtgradientutils_p.h"
 
-#include <QtWidgets/QMessageBox>
+#include <QtWidgets/qlistwidget.h>
+#include <QtWidgets/qmessagebox.h>
 
-#include <QtGui/QAction>
-#include <QtGui/QClipboard>
-#include <QtGui/QPainter>
+#include <QtGui/qaction.h>
+#include <QtGui/qclipboard.h>
+#include <QtGui/qpainter.h>
 
 QT_BEGIN_NAMESPACE
 

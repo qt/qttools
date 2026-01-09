@@ -3,26 +3,28 @@
 
 #include "deviceskin_p.h"
 
+#include <QtWidgets/qapplication.h>
+
+#include <QtGui/qbitmap.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qimage.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qpixmap.h>
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qfileinfo.h>
 #include <QtCore/qnamespace.h>
-#include <QtWidgets/QApplication>
-#include <QtGui/QBitmap>
-#include <QtGui/QPixmap>
-#include <QtGui/QPainter>
-#include <QtCore/QTextStream>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
-#include <QtGui/QImage>
-#include <QtCore/QTimer>
-#include <QtCore/QDir>
-#include <QtCore/QRegularExpression>
-#include <QtGui/QMouseEvent>
-#include <QtCore/QDebug>
+#include <QtCore/qregularexpression.h>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qtimer.h>
 
 #ifdef TEST_SKIN
-#  include <QtWidgets/QMainWindow>
-#  include <QtWidgets/QDialog>
-#  include <QtWidgets/QDialogButtonBox>
-#  include <QtWidgets/QHBoxLayout>
+#  include <QtWidgets/qmainwindow.h>
+#  include <QtWidgets/qboxlayout.h>
+#  include <QtWidgets/qdialog.h>
+#  include <QtWidgets/qdialogbuttonbox.h>
 #endif
 
 QT_BEGIN_NAMESPACE

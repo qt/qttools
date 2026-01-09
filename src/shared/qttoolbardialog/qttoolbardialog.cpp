@@ -4,14 +4,16 @@
 #include "qttoolbardialog_p.h"
 #include "ui_qttoolbardialog.h"
 
-#include <QtCore/QMap>
-#include <QtCore/QHash>
-#include <QtCore/QSet>
-#include <QtGui/QAction>
-#include <QtGui/QtEvents>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QToolBar>
+#include <QtWidgets/qmainwindow.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qtoolbar.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qevent.h>
+
+#include <QtCore/qmap.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qset.h>
 
 #include <algorithm>
 

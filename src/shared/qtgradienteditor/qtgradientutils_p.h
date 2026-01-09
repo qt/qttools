@@ -15,8 +15,7 @@
 #ifndef GRADIENTUTILS_H
 #define GRADIENTUTILS_H
 
-#include <QtGui/QGradient>
-#include <QtGui/QPainter>
+#include <QtGui/qbrush.h>
 
 QT_BEGIN_NAMESPACE
 

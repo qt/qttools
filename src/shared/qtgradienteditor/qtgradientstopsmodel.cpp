@@ -3,8 +3,9 @@
 
 #include "qtgradientstopsmodel_p.h"
 
-#include <QtGui/QColor>
-#include <QtCore/QHash>
+#include <QtGui/qcolor.h>
+
+#include <QtCore/qhash.h>
 
 QT_BEGIN_NAMESPACE
 

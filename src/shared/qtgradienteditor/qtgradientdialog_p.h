@@ -15,7 +15,7 @@
 #ifndef QTGRADIENTDIALOG_H
 #define QTGRADIENTDIALOG_H
 
-#include <QtWidgets/QDialog>
+#include <QtWidgets/qdialog.h>
 
 QT_BEGIN_NAMESPACE
 

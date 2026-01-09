@@ -15,7 +15,7 @@
 #ifndef QTCOLORLINE_H
 #define QTCOLORLINE_H
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 

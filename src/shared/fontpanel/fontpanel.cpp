@@ -3,13 +3,14 @@
 
 #include "fontpanel_p.h"
 
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QFormLayout>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QFontComboBox>
-#include <QtCore/QTimer>
-#include <QtWidgets/QLineEdit>
+#include <QtWidgets/qcombobox.h>
+#include <QtWidgets/qfontcombobox.h>
+#include <QtWidgets/qformlayout.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qlayoutitem.h>
+#include <QtWidgets/qlineedit.h>
+
+#include <QtCore/qtimer.h>
 
 QT_BEGIN_NAMESPACE
 

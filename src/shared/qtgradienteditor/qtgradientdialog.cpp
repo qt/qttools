@@ -3,7 +3,8 @@
 
 #include "qtgradientdialog_p.h"
 #include "ui_qtgradientdialog.h"
-#include <QtWidgets/QPushButton>
+
+#include <QtWidgets/qpushbutton.h>
 
 QT_BEGIN_NAMESPACE
 

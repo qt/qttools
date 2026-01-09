@@ -3,11 +3,13 @@
 
 #include "qtgradientutils_p.h"
 #include "qtgradientmanager_p.h"
-#include <QtGui/QLinearGradient>
-#include <QtGui/QRadialGradient>
-#include <QtGui/QConicalGradient>
-#include <QtXml/QDomDocument>
-#include <QtCore/QDebug>
+
+#include <QtGui/qbrush.h>
+#include <QtGui/qpainter.h>
+
+#include <QtXml/qdom.h>
+
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 
