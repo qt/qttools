@@ -16,8 +16,10 @@
 #define QTVARIANTPROPERTY_H
 
 #include "qtpropertybrowser_p.h"
-#include <QtCore/QVariant>
-#include <QtGui/QIcon>
+
+#include <QtGui/qicon.h>
+
+#include <QtCore/qvariant.h>
 
 QT_BEGIN_NAMESPACE
 

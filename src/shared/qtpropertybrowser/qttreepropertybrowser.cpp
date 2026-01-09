@@ -3,19 +3,21 @@
 
 #include "qttreepropertybrowser_p.h"
 
-#include <QtCore/QOperatingSystemVersion>
-#include <QtCore/QHash>
-#include <QtGui/QFocusEvent>
-#include <QtGui/QIcon>
-#include <QtGui/QPainter>
-#include <QtGui/QPalette>
-#include <QtGui/QStyleHints>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QStyledItemDelegate>
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qstyleditemdelegate.h>
+#include <QtWidgets/qtreewidget.h>
+
+#include <QtGui/qevent.h>
+#include <QtGui/qicon.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qpalette.h>
+#include <QtGui/qstylehints.h>
+
+#include <QtCore/qhash.h>
+#include <QtCore/qoperatingsystemversion.h>
 
 QT_BEGIN_NAMESPACE
 

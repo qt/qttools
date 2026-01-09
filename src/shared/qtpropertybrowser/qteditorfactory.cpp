@@ -4,29 +4,27 @@
 #include "qteditorfactory_p.h"
 #include "qtpropertybrowserutils_p.h"
 
-#include <QtCore/QHash>
-#include <QtCore/QRegularExpression>
-#include <QtGui/QKeyEvent>
-#include <QtGui/QRegularExpressionValidator>
-#include <QtWidgets/QAbstractItemView>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QBoxLayout>
-#include <QtWidgets/QColorDialog>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QDateTimeEdit>
-#include <QtWidgets/QFontDialog>
-#include <QtWidgets/QKeySequenceEdit>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QScrollBar>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QSpinBox>
-#include <QtWidgets/QToolButton>
+#include <QtWidgets/qabstractitemview.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qcolordialog.h>
+#include <QtWidgets/qcombobox.h>
+#include <QtWidgets/qdatetimeedit.h>
+#include <QtWidgets/qfontdialog.h>
+#include <QtWidgets/qkeysequenceedit.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qlayoutitem.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qscrollbar.h>
+#include <QtWidgets/qspinbox.h>
+#include <QtWidgets/qtoolbutton.h>
 
-#if defined(Q_CC_MSVC)
-#    pragma warning(disable: 4786) /* MS VS 6: truncating debug info after 255 characters */
-#endif
+#include <QtGui/qevent.h>
+#include <QtGui/qvalidator.h>
+
+#include <QtCore/qhash.h>
+#include <QtCore/qregularexpression.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -15,10 +15,12 @@
 #ifndef QTPROPERTYBROWSERUTILS_H
 #define QTPROPERTYBROWSERUTILS_H
 
-#include <QtCore/QMap>
-#include <QtGui/QIcon>
-#include <QtWidgets/QWidget>
-#include <QtCore/QStringList>
+#include <QtWidgets/qwidget.h>
+
+#include <QtGui/qicon.h>
+
+#include <QtCore/qmap.h>
+#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 

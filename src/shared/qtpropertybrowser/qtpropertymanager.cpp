@@ -4,20 +4,22 @@
 #include "qtpropertymanager_p.h"
 #include "qtpropertybrowserutils_p.h"
 
-#include <QtCore/QDateTime>
-#include <QtCore/QHash>
-#include <QtCore/QLocale>
-#include <QtCore/QMap>
-#include <QtCore/QMetaEnum>
-#include <QtCore/QRegularExpression>
-#include <QtCore/QTimer>
-#include <QtGui/QFontDatabase>
-#include <QtGui/QIcon>
-#include <QtGui/QPainter>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QStyleOption>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qstyleoption.h>
+
+#include <QtGui/qfontdatabase.h>
+#include <QtGui/qicon.h>
+#include <QtGui/qpainter.h>
+
+#include <QtCore/qdatetime.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qlocale.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qmetaobject.h>
+#include <QtCore/qregularexpression.h>
+#include <QtCore/qtimer.h>
 
 #include <limits>
 #include <limits.h>
@@ -25,10 +27,6 @@
 
 #include <algorithm>
 #include <utility>
-
-#if defined(Q_CC_MSVC)
-#    pragma warning(disable: 4786) /* MS VS 6: truncating debug info after 255 characters */
-#endif
 
 QT_BEGIN_NAMESPACE
 

@@ -2,12 +2,10 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qtpropertybrowser_p.h"
-#include <QtCore/QHash>
-#include <QtGui/QIcon>
 
-#if defined(Q_CC_MSVC)
-#    pragma warning(disable: 4786) /* MS VS 6: truncating debug info after 255 characters */
-#endif
+#include <QtGui/qicon.h>
+
+#include <QtCore/qhash.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -3,10 +3,11 @@
 
 #include "qtbuttonpropertybrowser_p.h"
 
-#include <QtCore/QHash>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QToolButton>
+#include <QtWidgets/qgridlayout.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qtoolbutton.h>
+
+#include <QtCore/qhash.h>
 
 QT_BEGIN_NAMESPACE
 

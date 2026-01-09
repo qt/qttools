@@ -5,16 +5,12 @@
 #include "qtpropertymanager_p.h"
 #include "qteditorfactory_p.h"
 
-#include <QtCore/QVariant>
-#include <QtCore/QDate>
-#include <QtCore/QHash>
-#include <QtCore/QLocale>
-#include <QtCore/QMap>
-#include <QtCore/QRegularExpression>
-
-#if defined(Q_CC_MSVC)
-#    pragma warning(disable: 4786) /* MS VS 6: truncating debug info after 255 characters */
-#endif
+#include <QtCore/qdatetime.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qlocale.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qregularexpression.h>
+#include <QtCore/qvariant.h>
 
 QT_BEGIN_NAMESPACE
 
