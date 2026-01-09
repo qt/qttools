@@ -3,6 +3,7 @@
 
 #include "resetdecorator.h"
 #include "qtpropertybrowser_p.h"
+#include "qtpropertybrowserutils_p.h"
 
 #include <qdesigner_utils_p.h>
 #include <iconloader_p.h>
@@ -87,7 +88,7 @@ void ResetWidget::setValueText(const QString &text)
 
 void ResetWidget::setValueIcon(const QIcon &icon)
 {
-    QPixmap pix = icon.pixmap(QSize(16, 16));
+    QPixmap pix = icon.pixmap(QtPropertyBrowserUtils::itemViewIconSize, devicePixelRatioF());
     if (m_iconLabel) {
         m_iconLabel->setVisible(!pix.isNull());
         m_iconLabel->setPixmap(pix);

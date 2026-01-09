@@ -11,6 +11,7 @@
 
 #include <QtGui/qevent.h>
 #include <QtGui/qpainter.h>
+#include <QtGui/qpainterstateguard.h>
 
 #include <QtCore/qlocale.h>
 
@@ -137,29 +138,48 @@ QtCursorDatabase *QtCursorDatabase::instance()
     return cursorDatabase();
 }
 
-QPixmap QtPropertyBrowserUtils::brushValuePixmap(const QBrush &b)
+class QtPropertyBrushValueIconEngine : public QtPropertyIconEngine
 {
-    QImage img(16, 16, QImage::Format_ARGB32_Premultiplied);
-    img.fill(0);
+public:
+    Q_DISABLE_COPY_MOVE(QtPropertyBrushValueIconEngine)
 
-    QPainter painter(&img);
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
-    painter.fillRect(0, 0, img.width(), img.height(), b);
-    QColor color = b.color();
-    if (color.alpha() != 255) { // indicate alpha by an inset
-        QBrush  opaqueBrush = b;
-        color.setAlpha(255);
-        opaqueBrush.setColor(color);
-        painter.fillRect(img.width() / 4, img.height() / 4,
-                         img.width() / 2, img.height() / 2, opaqueBrush);
+    explicit QtPropertyBrushValueIconEngine(const QBrush &b) : m_brush(b) { }
+
+    QIconEngine *clone() const override
+    {
+        return new QtPropertyBrushValueIconEngine(m_brush);
     }
-    painter.end();
-    return QPixmap::fromImage(img);
+
+    void paint(QPainter *painter, const QRect &rect, QIcon::Mode, QIcon::State) override
+    {
+        QPainterStateGuard psg(painter);
+        painter->setCompositionMode(QPainter::CompositionMode_Source);
+        painter->fillRect(rect, m_brush);
+        QColor color = m_brush.color();
+        if (color.alpha() != 255) { // indicate alpha by an inset
+            QBrush opaqueBrush = m_brush;
+            color.setAlpha(255);
+            opaqueBrush.setColor(color);
+            const QPoint offset{rect.width() / 4, rect.height() / 4};
+            const QRect inset{rect.topLeft() + offset, rect.size() / 2};
+            painter->fillRect(inset, opaqueBrush);
+        }
+    }
+
+private:
+    QBrush m_brush;
+};
+
+QPixmap QtPropertyBrowserUtils::brushValuePixmap(const QBrush &b, const QSize &size,
+                                                 qreal devicePixelRatio)
+{
+    QtPropertyBrushValueIconEngine engine(b);
+    return engine.drawPixmap(size, devicePixelRatio);
 }
 
 QIcon QtPropertyBrowserUtils::brushValueIcon(const QBrush &b)
 {
-    return QIcon(brushValuePixmap(b));
+    return QIcon(new QtPropertyBrushValueIconEngine(b));
 }
 
 QString QtPropertyBrowserUtils::colorValueText(QColor c)
@@ -168,25 +188,44 @@ QString QtPropertyBrowserUtils::colorValueText(QColor c)
            .arg(c.red()).arg(c.green()).arg(c.blue()).arg(c.alpha());
 }
 
-QPixmap QtPropertyBrowserUtils::fontValuePixmap(const QFont &font)
+class QtPropertyFontValueIconEngine : public QtPropertyIconEngine
 {
-    QFont f = font;
-    QImage img(16, 16, QImage::Format_ARGB32_Premultiplied);
-    img.fill(0);
-    QPainter p(&img);
-    p.setRenderHint(QPainter::TextAntialiasing, true);
-    p.setRenderHint(QPainter::Antialiasing, true);
-    f.setPointSize(13);
-    p.setFont(f);
-    QTextOption t;
-    t.setAlignment(Qt::AlignCenter);
-    p.drawText(QRect(0, 0, 16, 16), QString(QLatin1Char('A')), t);
-    return QPixmap::fromImage(img);
+public:
+    Q_DISABLE_COPY_MOVE(QtPropertyFontValueIconEngine)
+
+    explicit QtPropertyFontValueIconEngine(const QFont &f) : m_font(f) { }
+
+    QIconEngine *clone() const override
+    {
+        return new QtPropertyFontValueIconEngine(m_font);
+    }
+
+    void paint(QPainter *painter, const QRect &rect, QIcon::Mode, QIcon::State) override
+    {
+        QPainterStateGuard psg(painter);
+        const auto maxDimension = qMax(rect.width(), rect.height());
+        m_font.setPointSize(maxDimension - 3);
+        painter->setPen(QPen(Qt::black));
+        painter->setFont(m_font);
+        painter->setRenderHint(QPainter::TextAntialiasing, true);
+        painter->setRenderHint(QPainter::Antialiasing, true);
+        painter->drawText(rect, QString(u'A'), QTextOption(Qt::AlignCenter));
+    }
+
+private:
+    QFont m_font;
+};
+
+QPixmap QtPropertyBrowserUtils::fontValuePixmap(const QFont &font, const QSize &size,
+                                                qreal devicePixelRatio)
+{
+    QtPropertyFontValueIconEngine engine(font);
+    return engine.drawPixmap(size, devicePixelRatio);
 }
 
 QIcon QtPropertyBrowserUtils::fontValueIcon(const QFont &f)
 {
-    return QIcon(fontValuePixmap(f));
+    return QIcon(new QtPropertyFontValueIconEngine(f));
 }
 
 QString QtPropertyBrowserUtils::fontValueText(const QFont &f)
@@ -285,6 +324,33 @@ void QtBoolEdit::mousePressEvent(QMouseEvent *event)
     } else {
         QWidget::mousePressEvent(event);
     }
+}
+
+QPixmap QtPropertyIconEngine::createEmptyPixmap(const QSize &size, qreal devicePixelRatio)
+{
+    QPixmap result(size * devicePixelRatio);
+    result.fill(Qt::transparent);
+    result.setDevicePixelRatio(devicePixelRatio);
+    return result;
+}
+
+QtPropertyIconEngine::QtPropertyIconEngine() = default;
+
+// ### FIXME Qt 7: Remove? (reimplemented in Qt 6 since the default
+// cannot be trusted to handle fractional dpr).
+QPixmap QtPropertyIconEngine::scaledPixmap(const QSize &size, QIcon::Mode mode, QIcon::State state,
+                                         qreal scale)
+{
+    QPixmap result = createEmptyPixmap(size, scale);
+    QPainter painter(&result);
+    paint(&painter, QRect(0, 0, size.width(), size.height()), mode, state);
+    painter.end();
+    return result;
+}
+
+QPixmap QtPropertyIconEngine::drawPixmap(const QSize &size, qreal devicePixelRatio)
+{
+    return scaledPixmap(size, QIcon::Mode::Normal, QIcon::State::On, devicePixelRatio);
 }
 
 QT_END_NAMESPACE

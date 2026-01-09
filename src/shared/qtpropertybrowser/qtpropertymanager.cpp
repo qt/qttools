@@ -1356,34 +1356,45 @@ void QtStringPropertyManager::uninitializeProperty(QtProperty *property)
 
 // QtBoolPropertyManager
 //     Return an icon containing a check box indicator
-static QIcon drawCheckBox(bool value)
+class QCheckBoxIconEngine : public QtPropertyIconEngine
 {
-    QStyleOptionButton opt;
-    opt.state |= value ? QStyle::State_On : QStyle::State_Off;
-    opt.state |= QStyle::State_Enabled;
-    const QStyle *style = QApplication::style();
-    // Figure out size of an indicator and make sure it is not scaled down in a list view item
-    // by making the pixmap as big as a list view icon and centering the indicator in it.
-    // (if it is smaller, it can't be helped)
-    const int indicatorWidth = style->pixelMetric(QStyle::PM_IndicatorWidth, &opt);
-    const int indicatorHeight = style->pixelMetric(QStyle::PM_IndicatorHeight, &opt);
-    const int listViewIconSize = indicatorWidth;
-    const int pixmapWidth = indicatorWidth;
-    const int pixmapHeight = qMax(indicatorHeight, listViewIconSize);
+public:
+    Q_DISABLE_COPY_MOVE(QCheckBoxIconEngine)
 
-    opt.rect = QRect(0, 0, indicatorWidth, indicatorHeight);
-    QPixmap pixmap = QPixmap(pixmapWidth, pixmapHeight);
-    pixmap.fill(Qt::transparent);
+    explicit QCheckBoxIconEngine(bool checked) : m_checked(checked) { }
+
+    QIconEngine *clone() const override { return new QCheckBoxIconEngine(m_checked); }
+
+    void paint(QPainter *painter, const QRect &rect, QIcon::Mode, QIcon::State) override
     {
-        // Center?
-        const int xoff = (pixmapWidth  > indicatorWidth)  ? (pixmapWidth  - indicatorWidth)  / 2 : 0;
-        const int yoff = (pixmapHeight > indicatorHeight) ? (pixmapHeight - indicatorHeight) / 2 : 0;
-        QPainter painter(&pixmap);
-        painter.translate(xoff, yoff);
-        style->drawPrimitive(QStyle::PE_IndicatorCheckBox, &opt, &painter);
+        QStyleOptionButton opt;
+        opt.state.setFlag(m_checked ? QStyle::State_On : QStyle::State_Off);
+        opt.state.setFlag(QStyle::State_Enabled);
+
+        // Figure out size of an indicator and make sure it is not scaled down in a list view item
+        // by making the pixmap as big as a list view icon and centering the indicator in it.
+        // (if it is smaller, it can't be helped)
+        const QStyle *style = QApplication::style();
+        const int indicatorWidth = style->pixelMetric(QStyle::PM_IndicatorWidth, &opt);
+        const int indicatorHeight = style->pixelMetric(QStyle::PM_IndicatorHeight, &opt);
+        opt.rect = rect;
+        if (opt.rect.width() > indicatorWidth) {
+            const int xOff = opt.rect.width() - indicatorWidth;
+            opt.rect.setX(opt.rect.x() + xOff / 2);
+            opt.rect.setWidth(indicatorWidth);
+        }
+        if (opt.rect.height() > indicatorHeight) {
+            const int yOff = opt.rect.height() - indicatorHeight;
+            opt.rect.setY(opt.rect.y() + yOff / 2);
+            opt.rect.setHeight(indicatorHeight);
+        }
+
+        style->drawPrimitive(QStyle::PE_IndicatorCheckBox, &opt, painter);
     }
-    return QIcon(pixmap);
-}
+
+private:
+    bool m_checked;
+};
 
 class QtBoolPropertyManagerPrivate
 {
@@ -1398,8 +1409,8 @@ public:
 };
 
 QtBoolPropertyManagerPrivate::QtBoolPropertyManagerPrivate() :
-    m_checkedIcon(drawCheckBox(true)),
-    m_uncheckedIcon(drawCheckBox(false))
+    m_checkedIcon(new QCheckBoxIconEngine(true)),
+    m_uncheckedIcon(new QCheckBoxIconEngine(false))
 {
 }
 

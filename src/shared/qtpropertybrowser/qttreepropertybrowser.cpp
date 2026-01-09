@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qttreepropertybrowser_p.h"
+#include "qtpropertybrowserutils_p.h"
 
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qboxlayout.h>
@@ -402,7 +403,7 @@ void QtTreePropertyBrowserPrivate::init(QWidget *parent)
     layout->setContentsMargins(QMargins());
     m_treeWidget = new QtPropertyEditorView(parent);
     m_treeWidget->setEditorPrivate(this);
-    m_treeWidget->setIconSize(QSize(18, 18));
+    m_treeWidget->setIconSize(QtPropertyBrowserUtils::itemViewIconSize);
     layout->addWidget(m_treeWidget);
 
     m_treeWidget->setColumnCount(2);
