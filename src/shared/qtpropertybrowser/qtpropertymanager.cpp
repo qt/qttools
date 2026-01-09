@@ -22,8 +22,6 @@
 #include <QtCore/qtimer.h>
 
 #include <limits>
-#include <limits.h>
-#include <float.h>
 
 #include <algorithm>
 #include <utility>
@@ -576,8 +574,8 @@ public:
     struct Data
     {
         int val{0};
-        int minVal{-INT_MAX};
-        int maxVal{INT_MAX};
+        int minVal{std::numeric_limits<int>::min()};
+        int maxVal{std::numeric_limits<int>::max()};
         int singleStep{1};
         int minimumValue() const { return minVal; }
         int maximumValue() const { return maxVal; }
@@ -851,8 +849,8 @@ public:
     struct Data
     {
         double val{0};
-        double minVal{-DBL_MAX};
-        double maxVal{DBL_MAX};
+        double minVal{std::numeric_limits<double>::min()};
+        double maxVal{std::numeric_limits<double>::max()};
         double singleStep{1};
         int decimals{2};
         double minimumValue() const { return minVal; }
@@ -2957,7 +2955,7 @@ public:
     {
         QSize val{0, 0};
         QSize minVal{0, 0};
-        QSize maxVal{INT_MAX, INT_MAX};
+        QSize maxVal{std::numeric_limits<int>::max(), std::numeric_limits<int>::max()};
         QSize minimumValue() const { return minVal; }
         QSize maximumValue() const { return maxVal; }
         void setMinimumValue(QSize newMinVal) { setSizeMinimumData(this, newMinVal); }
@@ -3763,12 +3761,14 @@ void QtRectPropertyManagerPrivate::setConstraint(QtProperty *property,
                                                  QRect constraint, QRect val)
 {
     const bool isNull = constraint.isNull();
-    const int left   = isNull ? INT_MIN : constraint.left();
-    const int right  = isNull ? INT_MAX : constraint.left() + constraint.width();
-    const int top    = isNull ? INT_MIN : constraint.top();
-    const int bottom = isNull ? INT_MAX : constraint.top() + constraint.height();
-    const int width  = isNull ? INT_MAX : constraint.width();
-    const int height = isNull ? INT_MAX : constraint.height();
+    const int left   = isNull ? std::numeric_limits<int>::min() : constraint.left();
+    const int right  = isNull
+            ? std::numeric_limits<int>::max() : constraint.left() + constraint.width();
+    const int top    = isNull ? std::numeric_limits<int>::min() : constraint.top();
+    const int bottom = isNull
+            ? std::numeric_limits<int>::max() : constraint.top() + constraint.height();
+    const int width  = isNull ? std::numeric_limits<int>::max() : constraint.width();
+    const int height = isNull ? std::numeric_limits<int>::max() : constraint.height();
 
     m_intPropertyManager->setRange(m_propertyToX[property], left, right);
     m_intPropertyManager->setRange(m_propertyToY[property], top, bottom);
@@ -4169,12 +4169,14 @@ void QtRectFPropertyManagerPrivate::setConstraint(QtProperty *property,
             const QRectF &constraint, const QRectF &val)
 {
     const bool isNull = constraint.isNull();
-    const float left   = isNull ? FLT_MIN : constraint.left();
-    const float right  = isNull ? FLT_MAX : constraint.left() + constraint.width();
-    const float top    = isNull ? FLT_MIN : constraint.top();
-    const float bottom = isNull ? FLT_MAX : constraint.top() + constraint.height();
-    const float width  = isNull ? FLT_MAX : constraint.width();
-    const float height = isNull ? FLT_MAX : constraint.height();
+    const float left   = isNull ? std::numeric_limits<float>::min() : constraint.left();
+    const float right  = isNull
+            ? std::numeric_limits<float>::max() : constraint.left() + constraint.width();
+    const float top    = isNull ? std::numeric_limits<float>::min() : constraint.top();
+    const float bottom = isNull
+            ? std::numeric_limits<float>::max() : constraint.top() + constraint.height();
+    const float width  = isNull ? std::numeric_limits<float>::max() : constraint.width();
+    const float height = isNull ? std::numeric_limits<float>::max() : constraint.height();
 
     m_doublePropertyManager->setRange(m_propertyToX[property], left, right);
     m_doublePropertyManager->setRange(m_propertyToY[property], top, bottom);
