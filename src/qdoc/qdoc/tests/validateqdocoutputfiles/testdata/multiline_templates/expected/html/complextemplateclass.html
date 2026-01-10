@@ -46,43 +46,43 @@
 <div class="func">
 <h2>Member Function Documentation</h2>
 <!-- $$$complexDefaults[overload1]$$$complexDefaultsSetupHandlerDoneHandler -->
-<h3 class="fn" translate="no" id="complexDefaults">template &lt;<br/>
-    typename SetupHandler = ComplexTemplateClass,<br/>
-    typename DoneHandler = ComplexTemplateClass,<br/>
-    typename ErrorHandler = ComplexTemplateClass<br/>
-&gt;<br/>
-<span class="type">void</span> ComplexTemplateClass::<span class="name">complexDefaults</span>(<span class="type">SetupHandler</span> <i>setup</i> = SetupHandler(), <span class="type">DoneHandler</span> <i>done</i> = DoneHandler())</h3>
+<h3 class="fn" translate="no" id="complexDefaults"><span class="template-block">template &lt;
+    typename SetupHandler = ComplexTemplateClass,
+    typename DoneHandler = ComplexTemplateClass,
+    typename ErrorHandler = ComplexTemplateClass
+&gt;
+</span><span class="type">void</span> ComplexTemplateClass::<span class="name">complexDefaults</span>(<span class="type">SetupHandler</span> <i>setup</i> = SetupHandler(), <span class="type">DoneHandler</span> <i>done</i> = DoneHandler())</h3>
 <p>Configures <i translate="no">setup</i> and <i translate="no">done</i> handlers.</p>
 <p>This has template parameters with very long default type names.</p>
 <!-- @@@complexDefaults -->
 <!-- $$$fourParamsWithDefault[overload1]$$$fourParamsWithDefaultFirstSecondThirdFourth -->
-<h3 class="fn" translate="no" id="fourParamsWithDefault">template &lt;<br/>
-    typename First,<br/>
-    typename Second,<br/>
-    typename Third,<br/>
-    typename Fourth = int<br/>
-&gt;<br/>
-<span class="type">void</span> ComplexTemplateClass::<span class="name">fourParamsWithDefault</span>(<span class="type">First</span> <i>a</i>, <span class="type">Second</span> <i>b</i>, <span class="type">Third</span> <i>c</i>, <span class="type">Fourth</span> <i>d</i> = Fourth())</h3>
+<h3 class="fn" translate="no" id="fourParamsWithDefault"><span class="template-block">template &lt;
+    typename First,
+    typename Second,
+    typename Third,
+    typename Fourth = int
+&gt;
+</span><span class="type">void</span> ComplexTemplateClass::<span class="name">fourParamsWithDefault</span>(<span class="type">First</span> <i>a</i>, <span class="type">Second</span> <i>b</i>, <span class="type">Third</span> <i>c</i>, <span class="type">Fourth</span> <i>d</i> = Fourth())</h3>
 <p>Processes values <i translate="no">a</i>, <i translate="no">b</i>, <i translate="no">c</i>, and <i translate="no">d</i>.</p>
 <p>Complex default values make single-line rendering unreadable.</p>
 <!-- @@@fourParamsWithDefault -->
 <!-- $$$threeParams[overload1]$$$threeParamsTUV -->
-<h3 class="fn" translate="no" id="threeParams">template &lt;<br/>
-    typename T,<br/>
-    typename U,<br/>
-    typename V<br/>
-&gt;<br/>
-<span class="type">void</span> ComplexTemplateClass::<span class="name">threeParams</span>(<span class="type">T</span> <i>t</i>, <span class="type">U</span> <i>u</i>, <span class="type">V</span> <i>v</i>)</h3>
+<h3 class="fn" translate="no" id="threeParams"><span class="template-block">template &lt;
+    typename T,
+    typename U,
+    typename V
+&gt;
+</span><span class="type">void</span> ComplexTemplateClass::<span class="name">threeParams</span>(<span class="type">T</span> <i>t</i>, <span class="type">U</span> <i>u</i>, <span class="type">V</span> <i>v</i>)</h3>
 <p>Processes values <i translate="no">t</i>, <i translate="no">u</i>, and <i translate="no">v</i>.</p>
 <p>This should trigger multi-line rendering since it has more than two template parameters.</p>
 <!-- @@@threeParams -->
 <!-- $$$transformFiltered[overload1]$$$transformFilteredInputPred -->
-<h3 class="fn" translate="no" id="transformFiltered">template &lt;<br/>
-    typename Input,<br/>
-    typename Pred,<br/>
-    typename Result<br/>
-&gt; requires (sizeof(Input) &gt; 0)<br/>
-<span class="type">Result</span> ComplexTemplateClass::<span class="name">transformFiltered</span>(<span class="type">Input</span> <i>input</i>, <span class="type">Pred</span> <i>pred</i>)</h3>
+<h3 class="fn" translate="no" id="transformFiltered"><span class="template-block">template &lt;
+    typename Input,
+    typename Pred,
+    typename Result
+&gt; requires (sizeof(Input) &gt; 0)
+</span><span class="type">Result</span> ComplexTemplateClass::<span class="name">transformFiltered</span>(<span class="type">Input</span> <i>input</i>, <span class="type">Pred</span> <i>pred</i>)</h3>
 <p>Transforms <i translate="no">input</i> using <i translate="no">pred</i> to filter and returns Result.</p>
 <p>Tests multi-line template rendering combined with a requires clause. The requires clause should appear after the closing '&gt;' on the same line.</p>
 <!-- @@@transformFiltered -->

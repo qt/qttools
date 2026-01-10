@@ -27,7 +27,12 @@
 <db:para>A templated method under a templated class with a defaulted non type template parameter.</db:para>
 </db:section>
 <db:section xml:id="templated_method_with_defaulted_template_template_parameter">
-<db:title>template &lt;typename U, int size, template &lt;typename, int &gt; typename Container = std::array&gt; void TemplatedClass::templated_method_with_defaulted_template_template_parameter(<db:emphasis>Container&lt;U, size&gt;</db:emphasis>)</db:title>
+<db:title>template &lt;
+    typename U,
+    int size,
+    template &lt;typename, int &gt; typename Container = std::array
+&gt;
+void TemplatedClass::templated_method_with_defaulted_template_template_parameter(<db:emphasis>Container&lt;U, size&gt;</db:emphasis>)</db:title>
 <db:para>A templated method under a templated class with a defaulted template template parameter.</db:para>
 </db:section>
 <db:section xml:id="templated_method_with_defaulted_type_template_parameter">

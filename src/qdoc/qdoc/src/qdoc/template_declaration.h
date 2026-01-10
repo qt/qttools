@@ -4,6 +4,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cstddef>
 #include <cstdint>
 #include <functional>
 #include <numeric>
@@ -12,6 +13,12 @@
 #include <vector>
 
 #include <QString>
+
+namespace QDoc {
+// Template declarations with more than this many parameters
+// are rendered in multi-line format for improved readability.
+constexpr std::size_t MultilineTemplateParamThreshold = 2;
+} // namespace QDoc
 
 /*
  * Represents a general declaration that has a form that can be

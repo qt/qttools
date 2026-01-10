@@ -6,6 +6,8 @@
 
 #include "codemarker.h"
 
+struct RelaxedTemplateDeclaration;
+
 QT_BEGIN_NAMESPACE
 
 class CppCodeMarker : public CodeMarker
@@ -28,6 +30,7 @@ public:
 
 private:
     QString addMarkUp(const QString &protectedCode, const Node *relative, const Location &location);
+    static QString formatTemplateDecl(const RelaxedTemplateDeclaration *templateDecl);
 };
 
 QT_END_NAMESPACE
