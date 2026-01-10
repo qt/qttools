@@ -3250,72 +3250,72 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
         }
     }
 
-    // replace all
-    // "<@comment>" -> "<span class=\"comment\">";
-    // "<@preprocessor>" -> "<span class=\"preprocessor\">";
-    // "<@string>" -> "<span class=\"string\">";
-    // "<@char>" -> "<span class=\"char\">";
-    // "<@number>" -> "<span class=\"number\">";
-    // "<@op>" -> "<span class=\"operator\">";
-    // "<@type>" -> "<span class=\"type\">";
-    // "<@name>" -> "<span class=\"name\">";
-    // "<@keyword>" -> "<span class=\"keyword\">";
-    // "</@(?:comment|preprocessor|string|char|number|op|type|name|keyword)>" -> "</span>"
+    // Replace code marker tags with HTML spans:
+    //   "<@tag>" -> "<span ...>"
+    //   "</@tag>" -> "</span>"
     src = html;
     html = QString();
     html.reserve(src.size());
-    static const QLatin1String spanTags[] = {
-        QLatin1String("comment>"),      QLatin1String("<span class=\"comment\">"),
-        QLatin1String("preprocessor>"), QLatin1String("<span class=\"preprocessor\">"),
-        QLatin1String("string>"),       QLatin1String("<span class=\"string\">"),
-        QLatin1String("char>"),         QLatin1String("<span class=\"char\">"),
-        QLatin1String("number>"),       QLatin1String("<span class=\"number\">"),
-        QLatin1String("op>"),           QLatin1String("<span class=\"operator\">"),
-        QLatin1String("type>"),         QLatin1String("<span class=\"type\">"),
-        QLatin1String("name>"),         QLatin1String("<span class=\"name\">"),
-        QLatin1String("keyword>"),      QLatin1String("<span class=\"keyword\">")
+
+    struct SpanTag {
+        QLatin1StringView tag;
+        QLatin1StringView span;
     };
-    int nTags = 9;
-    // Update the upper bound of k in the following code to match the length
-    // of the above array.
-    for (int i = 0, n = src.size(); i < n;) {
-        if (src.at(i) == QLatin1Char('<')) {
-            if (src.at(i + 1) == QLatin1Char('@')) {
+    static constexpr SpanTag spanTags[] = {
+        {"comment>"_L1,        "<span class=\"comment\">"_L1},
+        {"preprocessor>"_L1,   "<span class=\"preprocessor\">"_L1},
+        {"string>"_L1,         "<span class=\"string\">"_L1},
+        {"char>"_L1,           "<span class=\"char\">"_L1},
+        {"number>"_L1,         "<span class=\"number\">"_L1},
+        {"op>"_L1,             "<span class=\"operator\">"_L1},
+        {"type>"_L1,           "<span class=\"type\">"_L1},
+        {"name>"_L1,           "<span class=\"name\">"_L1},
+        {"keyword>"_L1,        "<span class=\"keyword\">"_L1},
+    };
+
+    qsizetype i = 0;
+    const qsizetype n = src.size();
+    const QStringView sv(src);
+    while (i < n) {
+        if (sv.at(i) == '<'_L1) {
+            if (i + 1 < n && sv.at(i + 1) == '@'_L1) {
                 i += 2;
                 bool handled = false;
-                for (int k = 0; k != nTags; ++k) {
-                    const QLatin1String &tag = spanTags[2 * k];
-                    if (i + tag.size() <= src.size() && tag == QStringView(src).mid(i, tag.size())) {
-                        html += spanTags[2 * k + 1];
-                        i += tag.size();
+                for (const auto &st : spanTags) {
+                    if (i + st.tag.size() <= n
+                            && st.tag == sv.sliced(i, st.tag.size())) {
+                        html += st.span;
+                        i += st.tag.size();
                         handled = true;
                         break;
                     }
                 }
                 if (!handled) {
                     // drop 'our' unknown tags (the ones still containing '@')
-                    while (i < n && src.at(i) != QLatin1Char('>'))
+                    while (i < n && sv.at(i) != '>'_L1)
                         ++i;
-                    ++i;
+                    if (i < n)
+                        ++i;
                 }
                 continue;
-            } else if (src.at(i + 1) == QLatin1Char('/') && src.at(i + 2) == QLatin1Char('@')) {
+            } else if (i + 2 < n && sv.at(i + 1) == '/'_L1 && sv.at(i + 2) == '@'_L1) {
                 i += 3;
                 bool handled = false;
-                for (int k = 0; k != nTags; ++k) {
-                    const QLatin1String &tag = spanTags[2 * k];
-                    if (i + tag.size() <= src.size() && tag == QStringView(src).mid(i, tag.size())) {
-                        html += QLatin1String("</span>");
-                        i += tag.size();
+                for (const auto &st : spanTags) {
+                    if (i + st.tag.size() <= n
+                            && st.tag == sv.sliced(i, st.tag.size())) {
+                        html += "</span>"_L1;
+                        i += st.tag.size();
                         handled = true;
                         break;
                     }
                 }
                 if (!handled) {
                     // drop 'our' unknown tags (the ones still containing '@')
-                    while (i < n && src.at(i) != QLatin1Char('>'))
+                    while (i < n && sv.at(i) != '>'_L1)
                         ++i;
-                    ++i;
+                    if (i < n)
+                        ++i;
                 }
                 continue;
             }
