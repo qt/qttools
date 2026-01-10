@@ -24,6 +24,7 @@
 #include "qdocdatabase.h"
 #include "qmlpropertynode.h"
 #include "sharedcommentnode.h"
+#include "template_declaration.h"
 #include "typedefnode.h"
 #include "utilities.h"
 #include "variablenode.h"
@@ -3837,8 +3838,12 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
         const auto func = (const FunctionNode *)node;
 
         if (style == Section::Details) {
-            if (auto templateDecl = func->templateDecl())
-                m_writer->writeCharacters(templateDecl->to_qstring() + " ");
+            if (auto templateDecl = func->templateDecl()) {
+                if (templateDecl->parameters.size() > QDoc::MultilineTemplateParamThreshold)
+                    m_writer->writeCharacters(templateDecl->to_qstring_multiline() + QLatin1Char('\n'));
+                else
+                    m_writer->writeCharacters(templateDecl->to_qstring() + QLatin1Char(' '));
+            }
         }
 
         // First, the part coming before the name.
@@ -3945,9 +3950,12 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
     } break;
     case NodeType::TypeAlias: {
         if (style == Section::Details) {
-            auto templateDecl = node->templateDecl();
-            if (templateDecl)
-                m_writer->writeCharacters((*templateDecl).to_qstring() + QLatin1Char(' '));
+            if (auto templateDecl = node->templateDecl()) {
+                if (templateDecl->parameters.size() > QDoc::MultilineTemplateParamThreshold)
+                    m_writer->writeCharacters(templateDecl->to_qstring_multiline() + QLatin1Char('\n'));
+                else
+                    m_writer->writeCharacters(templateDecl->to_qstring() + QLatin1Char(' '));
+            }
         }
         m_writer->writeCharacters(namePrefix);
         generateSynopsisName(node, relative, generateNameLink);

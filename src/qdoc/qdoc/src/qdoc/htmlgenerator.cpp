@@ -3153,9 +3153,6 @@ void HtmlGenerator::generateSynopsis(const Node *node, const Node *relative, Cod
     QString marked = marker->markedUpSynopsis(node, relative, style);
     marked.replace("@param>", "i>");
 
-    if (style == Section::Details && marked.contains("template "_L1) && marked.contains('\n'))
-        marked.replace(QLatin1Char('\n'), QLatin1String("<br/>\n"));
-
     if (style == Section::Summary) {
         marked.remove("<@name>");
         marked.remove("</@name>");
@@ -3271,6 +3268,7 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
         {"type>"_L1,           "<span class=\"type\">"_L1},
         {"name>"_L1,           "<span class=\"name\">"_L1},
         {"keyword>"_L1,        "<span class=\"keyword\">"_L1},
+        {"template-block>"_L1, "<span class=\"template-block\">"_L1},
     };
 
     qsizetype i = 0;
