@@ -23,7 +23,7 @@
 <db:title>Function Documentation</db:title>
 <db:section xml:id="templated_function_with_defaulted_non_type_template_parameter">
 <db:title>template &lt;char Category = 'A'&gt; void templated_function_with_defaulted_non_type_template_parameter()</db:title>
-<db:para>A templated function with a defaulted non type template parameter.</db:para>
+<db:para>A templated function with a defaulted non-type template parameter <db:code role="parameter">Category</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_defaulted_template_template_parameter">
 <db:title>template &lt;
@@ -32,7 +32,7 @@
     template &lt;typename, int &gt; typename Container = std::array
 &gt;
 void templated_function_with_defaulted_template_template_parameter(<db:emphasis>Container&lt;T, size&gt;</db:emphasis>)</db:title>
-<db:para>A templated function with a defaulted template template parameter.</db:para>
+<db:para>A templated function with a defaulted template-template parameter <db:code role="parameter">Container</db:code> and non-type parameter <db:code role="parameter">size</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_defaulted_type_template_parameter">
 <db:title>template &lt;typename T = char&gt; void templated_function_with_defaulted_type_template_parameter(<db:emphasis>T</db:emphasis>)</db:title>
@@ -40,23 +40,23 @@ void templated_function_with_defaulted_template_template_parameter(<db:emphasis>
 </db:section>
 <db:section xml:id="templated_function_with_non_type_template_parameter">
 <db:title>template &lt;char Category&gt; void templated_function_with_non_type_template_parameter()</db:title>
-<db:para>A templated function with a non-defaulted non type template parameter.</db:para>
+<db:para>A templated function with a non-defaulted non-type template parameter <db:code role="parameter">Category</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_non_type_template_parameter_pack">
 <db:title>template &lt;unsigned int... Weights&gt; void templated_function_with_non_type_template_parameter_pack()</db:title>
-<db:para>A templated function with a non type template parameter pack.</db:para>
+<db:para>A templated function with a non-type template parameter pack <db:code role="parameter">Weights</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_placeholder_non_type_template_parameter">
 <db:title>template &lt;auto Iterator&gt; void templated_function_with_placeholder_non_type_template_parameter()</db:title>
-<db:para>A templated function with a placeholder non type template parameter.</db:para>
+<db:para>A templated function with a placeholder non-type template parameter <db:code role="parameter">Iterator</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_template_template_parameter">
 <db:title>template &lt;typename T, template &lt;typename&gt; typename K&gt; void templated_function_with_template_template_parameter(<db:emphasis>K&lt;T&gt;</db:emphasis>)</db:title>
-<db:para>A templated function with a non-defaulted template template parameter.</db:para>
+<db:para>A templated function with a non-defaulted template-template parameter <db:code role="parameter">K</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_template_template_parameter_pack">
 <db:title>template &lt;typename T, template &lt;typename&gt; typename... Container&gt; void templated_function_with_template_template_parameter_pack(<db:emphasis>Container&lt;T&gt;...</db:emphasis>)</db:title>
-<db:para>A templated function with a template template parameter pack.</db:para>
+<db:para>A templated function with a template-template parameter pack <db:code role="parameter">Container</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_type_template_parameter">
 <db:title>template &lt;typename T&gt; void templated_function_with_type_template_parameter(<db:emphasis>T</db:emphasis>)</db:title>

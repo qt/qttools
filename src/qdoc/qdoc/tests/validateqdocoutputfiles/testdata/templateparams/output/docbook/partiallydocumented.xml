@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>PartiallyDocumented Class</db:title>
+<db:subtitle>template &lt;typename T, typename U&gt; class PartiallyDocumented</db:subtitle>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>templateparams Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A template class missing documentation for U.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>PartiallyDocumented</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para><db:code role="parameter">T</db:code> is the first type parameter.</db:para>
+</db:section>
+</db:article>

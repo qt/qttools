@@ -4,6 +4,8 @@
         <class name="Foo" href="foo.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Class template">
             <description>
                 <brief>Class template.</brief>
+                <para>
+                    <argument>T</argument> is the value type.</para>
             </description>
         </class>
     </document>

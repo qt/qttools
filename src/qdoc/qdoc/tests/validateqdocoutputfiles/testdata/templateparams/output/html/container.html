@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- templateparams.cpp -->
+  <meta name="description" content="A container with key-value pairs.">
+  <title>Container Class | Qt</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li><a href="testmodule-module.html" translate="no">TestModule</a></li>
+<li>Container</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">Container Class</h1>
+<span class="small-subtitle" translate="no">template &lt;typename Key, typename Value&gt; class Container</span>
+<!-- $$$Container-brief -->
+<p>A container with key-value pairs. <a href="#details">More...</a></p>
+<!-- @@@Container -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;Container&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="container-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="container.html#insert" translate="no">insert</a></b>(Key <i>k</i>, Value <i>v</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="container.html#merge" translate="no">merge</a></b>(Other <i>source</i>)</td></tr>
+</table></div>
+<!-- $$$Container-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p><i translate="no">Key</i> is the type used for keys. <i translate="no">Value</i> is the type used for values.</p>
+</div>
+<!-- @@@Container -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$insert[overload1]$$$insertKeyValue -->
+<h3 class="fn" translate="no" id="insert"><span class="type">void</span> Container::<span class="name">insert</span>(<span class="type">Key</span> <i>k</i>, <span class="type">Value</span> <i>v</i>)</h3>
+<p>Inserts key <i translate="no">k</i> with value <i translate="no">v</i> into the container. The types <i translate="no">Key</i> and <i translate="no">Value</i> are inherited from the class template.</p>
+<!-- @@@insert -->
+<!-- $$$merge[overload1]$$$mergeOther -->
+<h3 class="fn" translate="no" id="merge">template &lt;typename Other&gt; <span class="type">void</span> Container::<span class="name">merge</span>(<span class="type">Other</span> <i>source</i>)</h3>
+<p>Merges <i translate="no">source</i> into this container. The <i translate="no">Other</i> type must be compatible with this container's <i translate="no">Key</i> and <i translate="no">Value</i> types.</p>
+<!-- @@@merge -->
+</div>
+</body>
+</html>

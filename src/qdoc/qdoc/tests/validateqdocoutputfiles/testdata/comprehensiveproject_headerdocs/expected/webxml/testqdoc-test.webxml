@@ -121,6 +121,8 @@
             <struct name="Struct" fullname="TestQDoc::Test::Struct" href="testqdoc-test-struct.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="Templated struct">
                 <description>
                     <brief>Templated struct.</brief>
+                    <para>
+                        <argument>D</argument> is the first type parameter, <argument>T</argument> is the second.</para>
                 </description>
             </struct>
             <typedef name="SomeType" fullname="TestQDoc::Test::SomeType" href="testqdoc-test.html#SomeType-typedef" status="active" access="public" location="testcpp.h" documented="true">
@@ -129,7 +131,10 @@
                 </description>
             </typedef>
             <typedef name="Specialized" fullname="TestQDoc::Test::Specialized" href="testqdoc-test.html#Specialized-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="Struct&lt;int, T&gt;">
-                <description/>
+                <description>
+                    <para>
+                        <argument>T</argument> is the specialization type.</para>
+                </description>
             </typedef>
             <property name="id" fullname="TestQDoc::Test::id" href="testqdoc-test.html#id-prop" status="active" access="public" location="testcpp.h" documented="true" writable="false" dataType="int">
                 <description/>

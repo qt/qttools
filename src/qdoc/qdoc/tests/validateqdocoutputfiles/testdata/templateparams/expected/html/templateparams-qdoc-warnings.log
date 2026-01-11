@@ -1,0 +1,9 @@
+# QDoc Warning Log
+# Project: templateparams
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/templateparams.cpp:28: [templateparams] (qdoc) warning: Undocumented template parameter 'U' in PartiallyDocumented
+src/templateparams.cpp:66: [templateparams] (qdoc) warning: Undocumented template parameter 'T' in WrongParamDocumented
+src/templateparams.cpp:66: [templateparams] (qdoc) warning: No such template parameter 'U' in WrongParamDocumented

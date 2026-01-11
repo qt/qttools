@@ -11,6 +11,7 @@
 <db:title>Type Documentation</db:title>
 <db:section xml:id="StdPair-typedef">
 <db:title>[alias] template &lt;typename T1, typename T2&gt; StdPair</db:title>
+<db:para><db:code role="parameter">T1</db:code> is the first type, <db:code role="parameter">T2</db:code> is the second type.</db:para>
 </db:section>
 </db:section>
 </db:article>

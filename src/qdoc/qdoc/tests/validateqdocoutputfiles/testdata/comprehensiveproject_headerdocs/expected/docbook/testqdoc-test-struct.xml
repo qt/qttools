@@ -31,5 +31,6 @@
 </db:variablelist>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
+<db:para><db:code its:translate="no" role="parameter">D</db:code> is the first type parameter, <db:code its:translate="no" role="parameter">T</db:code> is the second.</db:para>
 </db:section>
 </db:article>

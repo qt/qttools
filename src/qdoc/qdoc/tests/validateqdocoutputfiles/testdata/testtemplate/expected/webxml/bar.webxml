@@ -4,6 +4,8 @@
         <class name="Bar" href="bar.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Another class template">
             <description>
                 <brief>Another class template.</brief>
+                <para>
+                    <argument>T</argument> is the first type, <argument>D</argument> is the second type.</para>
             </description>
         </class>
     </document>

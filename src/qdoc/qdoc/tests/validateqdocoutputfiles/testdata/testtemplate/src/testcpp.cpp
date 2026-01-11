@@ -336,6 +336,8 @@ TestDerived::NotTypedef TestDerived::someValue()
     \struct TestQDoc::Test::Struct
     \inmodule TestCPP
     \brief Templated struct.
+
+    \a D is the first type parameter, \a T is the second.
 \else
     \nothing
 \endif
@@ -344,6 +346,8 @@ TestDerived::NotTypedef TestDerived::someValue()
 /*!
 \if defined(test_template)
     \typealias TestQDoc::Test::Specialized
+
+    \a T is the specialization type.
 \else
     \nothing
 \endif
@@ -354,6 +358,8 @@ TestDerived::NotTypedef TestDerived::someValue()
     \class TestQDoc::Vec
     \inmodule TestCPP
     \brief Type alias that has its own reference.
+
+    \a T is the element type.
 \else
     \nothing
 \endif

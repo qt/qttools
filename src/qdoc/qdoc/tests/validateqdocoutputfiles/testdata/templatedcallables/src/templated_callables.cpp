@@ -16,6 +16,7 @@
  * \inmodule TestQDoc
  *
  * Containing record for the tested methods.
+ * \a T is the class template parameter.
  */
 
 /*!
@@ -60,90 +61,101 @@
 /*!
  * \fn template<typename T> template <int Size> void TemplatedClass<T>::templated_method_with_non_type_template_parameter()
  *
- *  A templated method under a templated class with a non-defaulted non type template parameter.
+ *  A templated method under a templated class with a non-defaulted non-type
+ *  template parameter \a Size.
  */
 
 /*!
  * \fn template<char Category> void templated_function_with_non_type_template_parameter()
  * \relates <templated_callables.h>
  *
- *  A templated function with a non-defaulted non type template parameter.
+ *  A templated function with a non-defaulted non-type template parameter
+ *  \a Category.
  */
 
 /*!
  * \fn template<typename T> template <int Size = 10> void TemplatedClass<T>::templated_method_with_defaulted_non_type_template_parameter()
  *
- *  A templated method under a templated class with a defaulted non type template parameter.
+ *  A templated method under a templated class with a defaulted non-type
+ *  template parameter \a Size.
  */
 
 /*!
  * \fn template<char Category = 'A'> void templated_function_with_defaulted_non_type_template_parameter()
  * \relates <templated_callables.h>
  *
- *  A templated function with a defaulted non type template parameter.
+ *  A templated function with a defaulted non-type template parameter
+ *  \a Category.
  */
 
 /*!
  * \fn template<typename T> template <int... Dimensions> void TemplatedClass<T>::templated_method_with_non_type_template_parameter_pack()
  *
- *  A templated method under a templated class with a non type template parameter pack.
+ *  A templated method under a templated class with a non-type template
+ *  parameter pack \a Dimensions.
  */
 
 /*!
  * \fn template<unsigned... Weights> void templated_function_with_non_type_template_parameter_pack()
  * \relates <templated_callables.h>
  *
- *  A templated function with a non type template parameter pack.
+ *  A templated function with a non-type template parameter pack \a Weights.
  */
 
 /*!
  * \fn template<typename T> template <auto Predicate> void TemplatedClass<T>::templated_method_with_placeholder_non_type_template_parameter()
  *
- *  A templated method under a templated class with a placeholder non type template parameter.
+ *  A templated method under a templated class with a placeholder non-type
+ *  template parameter \a Predicate.
  */
 
 /*!
  * \fn template<auto Iterator> void templated_function_with_placeholder_non_type_template_parameter()
  * \relates <templated_callables.h>
  *
- *  A templated function with a placeholder non type template parameter.
+ *  A templated function with a placeholder non-type template parameter
+ *  \a Iterator.
  */
 
 /*!
  * \fn template<typename T> template <typename U, template <typename> typename X> void TemplatedClass<T>::templated_method_with_template_template_parameter(X<U>)
  *
- *  A templated method under a templated class with a non-defaulted template template parameter.
+ *  A templated method under a templated class with a non-defaulted
+ *  template-template parameter \a X.
  */
 
 /*!
  * \fn template <typename T, template <typename> typename K> void templated_function_with_template_template_parameter(K<T>)
  * \relates <templated_callables.h>
  *
- *  A templated function with a non-defaulted template template parameter.
+ *  A templated function with a non-defaulted template-template parameter \a K.
  */
 
 /*!
  * \fn template<typename T> template <typename U, int size, template <typename, int> typename Container = std::array> void TemplatedClass<T>::templated_method_with_defaulted_template_template_parameter(Container<U, size>)
  *
- *  A templated method under a templated class with a defaulted template template parameter.
+ *  A templated method under a templated class with a defaulted
+ *  template-template parameter \a Container and non-type parameter \a size.
  */
 
 /*!
  * \fn template <typename T, int size, template <typename, int> typename Container = std::array> void templated_function_with_defaulted_template_template_parameter(Container<T, size>)
  * \relates <templated_callables.h>
  *
- *  A templated function with a defaulted template template parameter.
+ *  A templated function with a defaulted template-template parameter
+ *  \a Container and non-type parameter \a size.
  */
 
 /*!
  * \fn template<typename T> template <typename U, template <typename> typename... Container> void TemplatedClass<T>::templated_method_with_template_template_parameter_pack(Container<U>...)
  *
- *  A templated method under a templated class with a template template parameter pack.
+ *  A templated method under a templated class with a template-template
+ *  parameter pack \a Container.
  */
 
 /*!
  * \fn template <typename T, template <typename> typename... Container> void templated_function_with_template_template_parameter_pack(Container<T>...)
  * \relates <templated_callables.h>
  *
- *  A templated function with a template template parameter pack.
+ *  A templated function with a template-template parameter pack \a Container.
  */

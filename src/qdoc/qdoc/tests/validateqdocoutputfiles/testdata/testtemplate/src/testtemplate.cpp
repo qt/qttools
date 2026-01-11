@@ -7,12 +7,16 @@
     \class Foo
     \inmodule TestCPP
     \brief Class template.
+
+    \a T is the value type.
 */
 
 /*!
     \class Bar
     \inmodule TestCPP
     \brief Another class template.
+
+    \a T is the first type, \a D is the second type.
 */
 
 /*!
@@ -20,4 +24,24 @@
     \class Baz
     \inmodule TestCPP
     \brief Class template template.
+
+    \a X is the template-template parameter, \a Y is the type used with it.
+*/
+
+/*!
+    \class Outer
+    \inmodule TestCPP
+    \brief Outer class template for testing nested template parameter visibility.
+
+    \a T is the outer element type.
+*/
+
+/*!
+    \class Outer::Inner
+    \inmodule TestCPP
+    \brief Nested class template inside Outer.
+
+    Inner can reference outer type \a T without requiring redundant documentation.
+
+    \a U is the inner element type.
 */

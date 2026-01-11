@@ -17,6 +17,8 @@
 
     Test struct similar to QQuaternion::AxisAndAngle to reproduce the bug.
     Contains multiple anonymous types to force Clang path-based naming.
+
+    \a AngleT is the type used for angle values.
 */
 template <typename AngleT>
 struct AxisAndAngle

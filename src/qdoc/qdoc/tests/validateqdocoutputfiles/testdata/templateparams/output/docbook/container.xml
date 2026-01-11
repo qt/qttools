@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Container Class</db:title>
+<db:subtitle>template &lt;typename Key, typename Value&gt; class Container</db:subtitle>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>templateparams Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A container with key-value pairs.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>Container</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para><db:code role="parameter">Key</db:code> is the type used for keys. <db:code role="parameter">Value</db:code> is the type used for values.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="insert">
+<db:title>void Container::insert(Key <db:emphasis>k</db:emphasis>, Value <db:emphasis>v</db:emphasis>)</db:title>
+<db:para>Inserts key <db:code role="parameter">k</db:code> with value <db:code role="parameter">v</db:code> into the container. The types <db:code role="parameter">Key</db:code> and <db:code role="parameter">Value</db:code> are inherited from the class template.</db:para>
+</db:section>
+<db:section xml:id="merge">
+<db:title>template &lt;typename Other&gt; void Container::merge(Other <db:emphasis>source</db:emphasis>)</db:title>
+<db:para>Merges <db:code role="parameter">source</db:code> into this container. The <db:code role="parameter">Other</db:code> type must be compatible with this container's <db:code role="parameter">Key</db:code> and <db:code role="parameter">Value</db:code> types.</db:para>
+</db:section>
+</db:section>
+</db:article>

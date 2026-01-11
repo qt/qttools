@@ -4,6 +4,8 @@
         <class name="ConstrainedContainer" href="constrainedcontainer.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A container template with a requires clause on the class itself">
             <description>
                 <brief>A container template with a requires clause on the class itself.</brief>
+                <para>
+                    <argument>T</argument> must be an integral type.</para>
             </description>
             <function name="ConstrainedContainer" fullname="ConstrainedContainer::ConstrainedContainer" href="constrainedcontainer.html#ConstrainedContainer" status="active" access="public" location="concepts.h" documented="true" meta="constructor" explicit="true" signature="ConstrainedContainer(int size)">
                 <parameter type="int" name="size" default=""/>

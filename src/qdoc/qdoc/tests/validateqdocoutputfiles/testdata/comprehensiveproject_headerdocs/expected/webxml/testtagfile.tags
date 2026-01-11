@@ -211,37 +211,37 @@
         <filename>testqdoc-testderived.html</filename>
         <base>Test</base>
         <member kind="enumeration">
-            <name>anonymous-testcpp-h-291</name>
+            <name>anonymous-testcpp-h-295</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>anonymous-testcpp-h-291-enum</anchor>
+            <anchor>anonymous-testcpp-h-295-enum</anchor>
         </member>
         <member kind="enumvalue">
             <name>Val1</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>anonymous-testcpp-h-291-enum</anchor>
+            <anchor>anonymous-testcpp-h-295-enum</anchor>
             <arglist></arglist>
         </member>
         <member kind="enumvalue">
             <name>Val2</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>anonymous-testcpp-h-291-enum</anchor>
+            <anchor>anonymous-testcpp-h-295-enum</anchor>
             <arglist></arglist>
         </member>
         <member kind="enumeration">
-            <name>anonymous-testcpp-h-297</name>
+            <name>anonymous-testcpp-h-301</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>anonymous-testcpp-h-297-enum</anchor>
+            <anchor>anonymous-testcpp-h-301-enum</anchor>
         </member>
         <member kind="enumvalue">
             <name>Val3</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>anonymous-testcpp-h-297-enum</anchor>
+            <anchor>anonymous-testcpp-h-301-enum</anchor>
             <arglist></arglist>
         </member>
         <member kind="enumvalue">
             <name>Val4</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>anonymous-testcpp-h-297-enum</anchor>
+            <anchor>anonymous-testcpp-h-301-enum</anchor>
             <arglist></arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">

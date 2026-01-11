@@ -76,6 +76,53 @@ static QLatin1String lt("&lt;");
 static QLatin1String quot("&quot;");
 
 /*!
+    Returns the set of template parameter names inherited from the parent
+    scope chain of \a node. This includes template parameters from enclosing
+    class templates, which are visible but not required to be documented
+    in nested classes or member functions.
+*/
+static QSet<QString> inheritedTemplateParamNames(const Node *node)
+{
+    QSet<QString> names;
+    for (const Node *p = node->parent(); p; p = p->parent()) {
+        if (p->templateDecl())
+            names.unite(p->templateDecl()->parameterNames());
+    }
+    return names;
+}
+
+/*!
+    \enum ValidationContext
+    Selects warning message wording based on documentation context.
+
+    \value FunctionDoc Warns "No such parameter" (function docs may reference
+           both function parameters and template parameters).
+    \value TemplateDoc Warns "No such template parameter" (template class/alias
+           docs reference only template parameters).
+*/
+enum class ValidationContext { FunctionDoc, TemplateDoc };
+
+/*!
+    Warns about documented parameter names in \a node that don't exist in
+    \a allowedNames. Uses \a context to select appropriate wording.
+*/
+static void warnAboutUnknownDocumentedParams(const Node *node,
+                                             const QSet<QString> &documentedNames,
+                                             const QSet<QString> &allowedNames,
+                                             ValidationContext context)
+{
+    for (const auto &name : documentedNames) {
+        if (!allowedNames.contains(name) && CodeParser::isWorthWarningAbout(node->doc())) {
+            const auto message = (context == ValidationContext::TemplateDoc)
+                    ? "No such template parameter '%1' in %2"_L1
+                    : "No such parameter '%1' in %2"_L1;
+            node->doc().location().warning(message.arg(name, node->plainFullName()),
+                                           suggestName(name, allowedNames));
+        }
+    }
+}
+
+/*!
   Constructs the generator base class. Prepends the newly
   constructed generator to the list of output generators.
   Sets a pointer to the QDoc database singleton, which is
@@ -813,31 +860,52 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 }
             }
         } else if (fn) {
-            const QSet<QString> declaredNames = fn->parameters().getNames();
+            // Build name environment with visibility vs. responsibility distinction:
+            // - requiredNames: names that must be documented (function params + API-significant template params)
+            // - allowedNames: all names that can be referenced (includes type template params + inherited)
+            //
+            // For functions, type template parameters (typename T) are not required because
+            // they typically serve to type function parameters - documenting the function
+            // parameter implicitly covers the template parameter's role. Only non-type and
+            // template-template parameters are required as they carry independent meaning.
+            const QSet<QString> requiredFunctionParams = fn->parameters().getNames();
+            const QSet<QString> requiredTemplateParams = fn->templateDecl()
+                    ? fn->templateDecl()->requiredParameterNamesForFunctions()
+                    : QSet<QString>{};
+            const QSet<QString> requiredNames = requiredFunctionParams + requiredTemplateParams;
+
+            // All template parameters (including type params and inherited from parent chain)
+            // are allowed to be referenced without "no such parameter" warnings
+            const QSet<QString> ownTemplateParams = fn->templateDecl()
+                    ? fn->templateDecl()->parameterNames()
+                    : QSet<QString>{};
+            const QSet<QString> allowedNames = requiredNames + ownTemplateParams
+                    + inheritedTemplateParamNames(fn);
+
             const QSet<QString> documentedNames = fn->doc().parameterNames();
-            if (declaredNames != documentedNames) {
-                for (const auto &name : declaredNames) {
-                    if (!documentedNames.contains(name)) {
-                        if (fn->isActive() || fn->isPreliminary()) {
-                            // Require no parameter documentation for overrides and overloads,
-                            // and only require it for non-overloaded constructors.
-                            if (!fn->isMarkedReimp() && !fn->isOverload()
-                                && !(fn->isSomeCtor() && fn->hasOverloads())) {
-                                fn->doc().location().warning(
-                                        QStringLiteral("Undocumented parameter '%1' in %2")
-                                                .arg(name, node->plainFullName()));
-                            }
+
+            // Warn about missing required parameters
+            for (const auto &name : requiredNames) {
+                if (!documentedNames.contains(name)) {
+                    if (fn->isActive() || fn->isPreliminary()) {
+                        // Require no parameter documentation for overrides and overloads,
+                        // and only require it for non-overloaded constructors.
+                        if (!fn->isMarkedReimp() && !fn->isOverload()
+                            && !(fn->isSomeCtor() && fn->hasOverloads())) {
+                            // Use appropriate wording based on parameter type
+                            const bool isTemplateParam = requiredTemplateParams.contains(name);
+                            fn->doc().location().warning(
+                                    "Undocumented %1 '%2' in %3"_L1
+                                            .arg(isTemplateParam ? "template parameter"_L1
+                                                                 : "parameter"_L1,
+                                                 name, node->plainFullName()));
                         }
                     }
                 }
-                for (const auto &name : documentedNames) {
-                    if (!declaredNames.contains(name) && CodeParser::isWorthWarningAbout(fn->doc())) {
-                        fn->doc().location().warning(QStringLiteral("No such parameter '%1' in %2")
-                                                             .arg(name, fn->plainFullName()),
-                                                     suggestName(name, declaredNames));
-                    }
-                }
             }
+
+            warnAboutUnknownDocumentedParams(fn, documentedNames, allowedNames,
+                                             ValidationContext::FunctionDoc);
             /*
               This return value check should be implemented
               for all functions with a return type.
@@ -853,6 +921,27 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
         } else if (node->isQmlProperty()) {
             if (auto *qpn = static_cast<const QmlPropertyNode *>(node); !qpn->validateDataType())
                 qpn->doc().location().warning("Invalid QML property type: %1"_L1.arg(qpn->dataType()));
+        } else if (node->templateDecl()) {
+            // Template classes, type aliases, and other non-function template declarations
+            // Use the same visibility vs. responsibility model as functions:
+            // - requiredNames: template params declared on this node (must be documented)
+            // - allowedNames: required + inherited from parent chain (can be referenced)
+            const QSet<QString> requiredNames = node->templateDecl()->parameterNames();
+            const QSet<QString> allowedNames = requiredNames + inheritedTemplateParamNames(node);
+            const QSet<QString> documentedNames = node->doc().parameterNames();
+
+            if (node->isActive() || node->isPreliminary()) {
+                for (const auto &name : requiredNames) {
+                    if (!documentedNames.contains(name) && CodeParser::isWorthWarningAbout(node->doc())) {
+                        node->doc().location().warning(
+                                "Undocumented template parameter '%1' in %2"_L1
+                                        .arg(name, node->plainFullName()));
+                    }
+                }
+            }
+
+            warnAboutUnknownDocumentedParams(node, documentedNames, allowedNames,
+                                             ValidationContext::TemplateDoc);
         }
     }
     generateEnumValuesForQmlReference(node, marker);

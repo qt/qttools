@@ -26,3 +26,18 @@ struct Baz
     X<Y> z;
     Baz() : z() {}
 };
+
+// Test case: nested template inside class template
+// Inner should be able to reference outer's T without requiring it to be documented
+template<typename T>
+class Outer
+{
+public:
+    template<typename U>
+    class Inner
+    {
+    public:
+        T outer_value;
+        U inner_value;
+    };
+};

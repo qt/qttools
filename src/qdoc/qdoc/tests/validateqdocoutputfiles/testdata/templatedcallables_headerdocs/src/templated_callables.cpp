@@ -16,4 +16,5 @@
  * \inmodule TestQDoc
  *
  * Containing record for the tested methods.
+ * \a T is the class template parameter.
  */

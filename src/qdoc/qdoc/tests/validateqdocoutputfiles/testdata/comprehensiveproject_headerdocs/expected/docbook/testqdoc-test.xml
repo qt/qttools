@@ -87,6 +87,7 @@
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:typedefsynopsis>
+<db:para><db:code its:translate="no" role="parameter">T</db:code> is the specialization type.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="property-documentation">

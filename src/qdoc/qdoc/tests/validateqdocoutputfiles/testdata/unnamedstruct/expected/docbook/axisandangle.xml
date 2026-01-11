@@ -18,6 +18,7 @@
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
 <db:para>Test struct similar to QQuaternion::AxisAndAngle to reproduce the bug. Contains multiple anonymous types to force Clang path-based naming.</db:para>
+<db:para><db:code role="parameter">AngleT</db:code> is the type used for angle values.</db:para>
 </db:section>
 <db:section xml:id="member-variable-documentation">
 <db:title>Member Variable Documentation</db:title>

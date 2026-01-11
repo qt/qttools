@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Test Module</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>templateparams Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test module for template parameter documentation.</db:para>
+</db:abstract>
+</db:info>
+<db:para>A test module for template parameter documentation.</db:para>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:variablelist role="classes">
+<db:varlistentry>
+<db:term><db:link xlink:href="container.xml" xlink:role="class">Container</db:link></db:term>
+<db:listitem>
+<db:para>A container with key-value pairs.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="fullydocumented.xml" xlink:role="class">FullyDocumented</db:link></db:term>
+<db:listitem>
+<db:para>A template class with all parameters documented.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="partiallydocumented.xml" xlink:role="class">PartiallyDocumented</db:link></db:term>
+<db:listitem>
+<db:para>A template class missing documentation for U.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="wrongparamdocumented.xml" xlink:role="class">WrongParamDocumented</db:link></db:term>
+<db:listitem>
+<db:para>A template class with a typo in the documented parameter name.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+</db:article>

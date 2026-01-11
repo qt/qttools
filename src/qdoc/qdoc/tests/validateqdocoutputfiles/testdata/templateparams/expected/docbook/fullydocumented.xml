@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>FullyDocumented Class</db:title>
+<db:subtitle>template &lt;typename T, typename Allocator&gt; class FullyDocumented</db:subtitle>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>templateparams Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A template class with all parameters documented.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>FullyDocumented</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para><db:code role="parameter">T</db:code> is the element type stored in the container. <db:code role="parameter">Allocator</db:code> is the allocator type used for memory management.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="add">
+<db:title>void FullyDocumented::add(T <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Adds <db:code role="parameter">value</db:code> to the container. The type <db:code role="parameter">T</db:code> determines how the value is stored.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="related-non-members">
+<db:title>Related Non-Members</db:title>
+<db:section xml:id="templateFunc">
+<db:title>template &lt;typename T&gt; void templateFunc(T <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>A template function that takes <db:code role="parameter">value</db:code> of type <db:code role="parameter">T</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

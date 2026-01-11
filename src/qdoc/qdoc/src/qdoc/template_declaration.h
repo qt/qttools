@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include <QSet>
 #include <QString>
 
 namespace QDoc {
@@ -477,6 +478,53 @@ struct RelaxedTemplateDeclaration : TemplateDeclarationStorage
             result += QStringLiteral(" requires ") + QString::fromStdString(*requires_clause);
 
         return result;
+    }
+
+    /*!
+     * Returns the set of all declared template parameter names.
+     *
+     * This extracts the name from each template parameter's valued_declaration.
+     * Parameters without names (such as unnamed template parameters) are not
+     * included in the returned set.
+     *
+     * This is useful for documentation validation, allowing QDoc to verify
+     * that template parameters can be referenced using the \\a command.
+     */
+    [[nodiscard]] inline QSet<QString> parameterNames() const
+    {
+        QSet<QString> names;
+        for (const auto &param : parameters) {
+            if (!param.valued_declaration.name.empty())
+                names.insert(QString::fromStdString(param.valued_declaration.name));
+        }
+        return names;
+    }
+
+    /*!
+     * Returns the set of template parameter names that are API-significant
+     * and should be documented for functions.
+     *
+     * This includes only non-type template parameters (such as \c{int Size})
+     * and template-template parameters, which carry meaning that isn't
+     * implied by function parameter types.
+     *
+     * Type template parameters (such as \c{typename T}) are excluded because
+     * they typically serve to type function parameters, and documenting the
+     * function parameter implicitly covers the template parameter's role.
+     *
+     * For class template parameters, use parameterNames() instead, as all
+     * template parameters are part of the class's primary API surface.
+     */
+    [[nodiscard]] inline QSet<QString> requiredParameterNamesForFunctions() const
+    {
+        QSet<QString> names;
+        for (const auto &param : parameters) {
+            if (param.kind != RelaxedTemplateParameter::Kind::TypeTemplateParameter
+                && !param.valued_declaration.name.empty()) {
+                names.insert(QString::fromStdString(param.valued_declaration.name));
+            }
+        }
+        return names;
     }
 };
 

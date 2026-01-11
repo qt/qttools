@@ -4,6 +4,8 @@
         <struct name="AxisAndAngle" href="axisandangle.html" status="active" access="public" location="templatestruct.h" documented="true" module="UnnamedStructModule">
             <description>
                 <para>Test struct similar to QQuaternion::AxisAndAngle to reproduce the bug. Contains multiple anonymous types to force Clang path-based naming.</para>
+                <para>
+                    <argument>AngleT</argument> is the type used for angle values.</para>
             </description>
             <variable name="axis" fullname="AxisAndAngle::axis" href="axisandangle.html#axis-var" status="active" access="public" location="templatestruct.h" documented="true" type="struct AxisAndAngle&lt;AngleT&gt;::(unnamed struct)" static="false">
                 <description>

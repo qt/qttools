@@ -19,6 +19,7 @@
 </db:variablelist>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
+<db:para><db:code role="parameter">T</db:code> must be an integral type.</db:para>
 </db:section>
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>

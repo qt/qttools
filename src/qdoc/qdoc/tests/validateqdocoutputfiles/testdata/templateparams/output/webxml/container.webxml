@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Container" href="container.html" status="active" access="public" location="templateparams.h" documented="true" module="TestModule" brief="A container with key-value pairs">
+            <description>
+                <brief>A container with key-value pairs.</brief>
+                <para>
+                    <argument>Key</argument> is the type used for keys. <argument>Value</argument> is the type used for values.</para>
+            </description>
+            <function name="insert" fullname="Container::insert" href="container.html#insert" status="active" access="public" location="templateparams.h" documented="true" meta="plain" type="void" signature="void insert(Key k, Value v)">
+                <parameter type="Key" name="k" default=""/>
+                <parameter type="Value" name="v" default=""/>
+                <description>
+                    <para>Inserts key <argument>k</argument> with value <argument>v</argument> into the container. The types <argument>Key</argument> and <argument>Value</argument> are inherited from the class template.</para>
+                </description>
+            </function>
+            <function name="merge" fullname="Container::merge" href="container.html#merge" status="active" access="public" location="templateparams.h" documented="true" meta="plain" type="void" signature="void merge(Other source)">
+                <parameter type="Other" name="source" default=""/>
+                <description>
+                    <para>Merges <argument>source</argument> into this container. The <argument>Other</argument> type must be compatible with this container's <argument>Key</argument> and <argument>Value</argument> types.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

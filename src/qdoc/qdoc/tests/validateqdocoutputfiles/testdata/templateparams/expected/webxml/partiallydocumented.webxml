@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="PartiallyDocumented" href="partiallydocumented.html" status="active" access="public" location="templateparams.h" documented="true" module="TestModule" brief="A template class missing documentation for U">
+            <description>
+                <brief>A template class missing documentation for U.</brief>
+                <para>
+                    <argument>T</argument> is the first type parameter.</para>
+            </description>
+        </class>
+    </document>
+</WebXML>

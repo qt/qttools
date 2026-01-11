@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>WrongParamDocumented Class</db:title>
+<db:subtitle>template &lt;typename T&gt; class WrongParamDocumented</db:subtitle>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>templateparams Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A template class with a typo in the documented parameter name.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>WrongParamDocumented</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para><db:code role="parameter">U</db:code> is documented but the actual parameter is T.</db:para>
+</db:section>
+</db:article>

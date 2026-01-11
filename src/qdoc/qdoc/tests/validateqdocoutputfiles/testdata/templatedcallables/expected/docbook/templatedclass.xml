@@ -18,13 +18,13 @@
 </db:variablelist>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
-<db:para>Containing record for the tested methods.</db:para>
+<db:para>Containing record for the tested methods. <db:code role="parameter">T</db:code> is the class template parameter.</db:para>
 </db:section>
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="templated_method_with_defaulted_non_type_template_parameter">
 <db:title>template &lt;int Size = 10&gt; void TemplatedClass::templated_method_with_defaulted_non_type_template_parameter()</db:title>
-<db:para>A templated method under a templated class with a defaulted non type template parameter.</db:para>
+<db:para>A templated method under a templated class with a defaulted non-type template parameter <db:code role="parameter">Size</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_method_with_defaulted_template_template_parameter">
 <db:title>template &lt;
@@ -33,7 +33,7 @@
     template &lt;typename, int &gt; typename Container = std::array
 &gt;
 void TemplatedClass::templated_method_with_defaulted_template_template_parameter(<db:emphasis>Container&lt;U, size&gt;</db:emphasis>)</db:title>
-<db:para>A templated method under a templated class with a defaulted template template parameter.</db:para>
+<db:para>A templated method under a templated class with a defaulted template-template parameter <db:code role="parameter">Container</db:code> and non-type parameter <db:code role="parameter">size</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_method_with_defaulted_type_template_parameter">
 <db:title>template &lt;typename U = bool&gt; void TemplatedClass::templated_method_with_defaulted_type_template_parameter(<db:emphasis>U</db:emphasis>)</db:title>
@@ -41,23 +41,23 @@ void TemplatedClass::templated_method_with_defaulted_template_template_parameter
 </db:section>
 <db:section xml:id="templated_method_with_non_type_template_parameter">
 <db:title>template &lt;int Size&gt; void TemplatedClass::templated_method_with_non_type_template_parameter()</db:title>
-<db:para>A templated method under a templated class with a non-defaulted non type template parameter.</db:para>
+<db:para>A templated method under a templated class with a non-defaulted non-type template parameter <db:code role="parameter">Size</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_method_with_non_type_template_parameter_pack">
 <db:title>template &lt;int... Dimensions&gt; void TemplatedClass::templated_method_with_non_type_template_parameter_pack()</db:title>
-<db:para>A templated method under a templated class with a non type template parameter pack.</db:para>
+<db:para>A templated method under a templated class with a non-type template parameter pack <db:code role="parameter">Dimensions</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_method_with_placeholder_non_type_template_parameter">
 <db:title>template &lt;auto Predicate&gt; void TemplatedClass::templated_method_with_placeholder_non_type_template_parameter()</db:title>
-<db:para>A templated method under a templated class with a placeholder non type template parameter.</db:para>
+<db:para>A templated method under a templated class with a placeholder non-type template parameter <db:code role="parameter">Predicate</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_method_with_template_template_parameter">
 <db:title>template &lt;typename U, template &lt;typename&gt; typename X&gt; void TemplatedClass::templated_method_with_template_template_parameter(<db:emphasis>X&lt;U&gt;</db:emphasis>)</db:title>
-<db:para>A templated method under a templated class with a non-defaulted template template parameter.</db:para>
+<db:para>A templated method under a templated class with a non-defaulted template-template parameter <db:code role="parameter">X</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_method_with_template_template_parameter_pack">
 <db:title>template &lt;typename U, template &lt;typename&gt; typename... Container&gt; void TemplatedClass::templated_method_with_template_template_parameter_pack(<db:emphasis>Container&lt;U&gt;...</db:emphasis>)</db:title>
-<db:para>A templated method under a templated class with a template template parameter pack.</db:para>
+<db:para>A templated method under a templated class with a template-template parameter pack <db:code role="parameter">Container</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_method_with_type_template_parameter">
 <db:title>template &lt;typename U&gt; void TemplatedClass::templated_method_with_type_template_parameter(<db:emphasis>U</db:emphasis>)</db:title>

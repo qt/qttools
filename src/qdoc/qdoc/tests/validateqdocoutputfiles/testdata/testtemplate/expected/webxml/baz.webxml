@@ -4,6 +4,8 @@
         <struct name="Baz" href="baz.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Class template template">
             <description>
                 <brief>Class template template.</brief>
+                <para>
+                    <argument>X</argument> is the template-template parameter, <argument>Y</argument> is the type used with it.</para>
             </description>
         </struct>
     </document>

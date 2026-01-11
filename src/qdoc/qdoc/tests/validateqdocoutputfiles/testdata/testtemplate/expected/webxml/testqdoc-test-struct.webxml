@@ -4,6 +4,8 @@
         <struct name="Struct" fullname="TestQDoc::Test::Struct" href="testqdoc-test-struct.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Templated struct">
             <description>
                 <brief>Templated struct.</brief>
+                <para>
+                    <argument>D</argument> is the first type parameter, <argument>T</argument> is the second.</para>
             </description>
         </struct>
     </document>

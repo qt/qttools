@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="FullyDocumented" href="fullydocumented.html" status="active" access="public" location="templateparams.h" documented="true" module="TestModule" brief="A template class with all parameters documented">
+            <description>
+                <brief>A template class with all parameters documented.</brief>
+                <para>
+                    <argument>T</argument> is the element type stored in the container. <argument>Allocator</argument> is the allocator type used for memory management.</para>
+            </description>
+            <function name="add" fullname="FullyDocumented::add" href="fullydocumented.html#add" status="active" access="public" location="templateparams.h" documented="true" meta="plain" type="void" signature="void add(T value)">
+                <parameter type="T" name="value" default=""/>
+                <description>
+                    <para>Adds <argument>value</argument> to the container. The type <argument>T</argument> determines how the value is stored.</para>
+                </description>
+            </function>
+            <function name="templateFunc" href="fullydocumented.html#templateFunc" status="active" access="public" location="templateparams.h" documented="true" related="0" meta="plain" type="void" signature="void templateFunc(T value)">
+                <parameter type="T" name="value" default=""/>
+                <description>
+                    <para>A template function that takes <argument>value</argument> of type <argument>T</argument>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

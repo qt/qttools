@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Outer" href="outer.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Template for testing nested template parameter visibility">
+            <description>
+                <brief>Outer class template for testing nested template parameter visibility.</brief>
+                <para>
+                    <argument>T</argument> is the outer element type.</para>
+            </description>
+            <class name="Inner" fullname="Outer::Inner" href="outer-inner.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Nested class template inside Outer">
+                <description>
+                    <brief>Nested class template inside Outer.</brief>
+                    <para>Inner can reference outer type <argument>T</argument> without requiring redundant documentation.</para>
+                    <para>
+                        <argument>U</argument> is the inner element type.</para>
+                </description>
+            </class>
+        </class>
+    </document>
+</WebXML>

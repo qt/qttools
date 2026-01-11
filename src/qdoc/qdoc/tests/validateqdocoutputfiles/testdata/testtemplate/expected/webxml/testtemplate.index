@@ -67,6 +67,9 @@
         <class name="Bar" href="bar.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Another class template"/>
         <class name="DontLinkToMe" href="dontlinktome.html" status="ignored" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Class that does not generate documentation"/>
         <class name="Foo" href="foo.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Class template"/>
+        <class name="Outer" href="outer.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Template for testing nested template parameter visibility">
+            <class name="Inner" fullname="Outer::Inner" href="outer-inner.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Nested class template inside Outer"/>
+        </class>
         <struct name="Baz" href="baz.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Class template template"/>
         <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking" subtitle="">
             <contents name="testqdoc" title="TestQDoc" level="1"/>

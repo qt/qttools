@@ -59,6 +59,8 @@ public:
     \class ConstrainedContainer
     \inmodule Cpp20Concepts
     \brief A container template with a requires clause on the class itself.
+
+    \a T must be an integral type.
 */
 template<typename T> requires detail::is_integral<T>::value
 class ConstrainedContainer

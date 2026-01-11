@@ -68,10 +68,14 @@ public:
     \struct TestQDoc::Test::Struct
     \inmodule TestCPP
     \brief Templated struct.
+
+    \a D is the first type parameter, \a T is the second.
 */
 
 /*!
     \typealias TestQDoc::Test::Specialized
+
+    \a T is the specialization type.
 */
 template<typename D, typename T> struct Struct {};
 template<typename T>
@@ -396,6 +400,8 @@ public Q_SLOTS:
     \class TestQDoc::Vec
     \inmodule TestCPP
     \brief Type alias that has its own reference.
+
+    \a T is the element type.
 */
 template <typename T>
 struct BaseVec {};

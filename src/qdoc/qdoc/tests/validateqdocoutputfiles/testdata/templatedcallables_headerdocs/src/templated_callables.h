@@ -30,43 +30,50 @@ public:
     void templated_method_with_type_template_parameter_pack(Ts...);
 
     /*!
-    A templated method under a templated class with a non-defaulted non type template parameter.
+    A templated method under a templated class with a non-defaulted non-type
+    template parameter \a Size.
     */
     template <int Size>
     void templated_method_with_non_type_template_parameter();
 
     /*!
-    A templated method under a templated class with a defaulted non type template parameter.
+    A templated method under a templated class with a defaulted non-type
+    template parameter \a Size.
     */
     template <int Size = 10>
     void templated_method_with_defaulted_non_type_template_parameter();
 
     /*!
-    A templated method under a templated class with a non type template parameter pack.
+    A templated method under a templated class with a non-type template
+    parameter pack \a Dimensions.
     */
     template <int... Dimensions>
     void templated_method_with_non_type_template_parameter_pack();
 
     /*!
-    A templated method under a templated class with a placeholder non type template parameter.
+    A templated method under a templated class with a placeholder non-type
+    template parameter \a Predicate.
     */
     template <auto Predicate>
     void templated_method_with_placeholder_non_type_template_parameter();
 
     /*!
-    A templated method under a templated class with a non-defaulted template template parameter.
+    A templated method under a templated class with a non-defaulted
+    template-template parameter \a X.
     */
     template <typename U, template <typename> typename X>
     void templated_method_with_template_template_parameter(X<U>);
 
     /*!
-    A templated method under a templated class with a defaulted template template parameter.
+    A templated method under a templated class with a defaulted
+    template-template parameter \a Container and non-type parameter \a size.
     */
     template <typename U, int size, template <typename, int> typename Container = std::array>
     void templated_method_with_defaulted_template_template_parameter(Container<U, size>);
 
     /*!
-    A templated method under a templated class with a template template parameter pack.
+    A templated method under a templated class with a template-template
+    parameter pack \a Container.
     */
     template <typename U, template <typename> typename... Container>
     void templated_method_with_template_template_parameter_pack(Container<U>...);
@@ -95,49 +102,53 @@ void templated_function_with_type_template_parameter_pack(Ts...);
 
 /*!
 \relates <templated_callables.h>
-A templated function with a non-defaulted non type template parameter.
+A templated function with a non-defaulted non-type template parameter
+\a Category.
 */
 template <char Category>
 void templated_function_with_non_type_template_parameter();
 
 /*!
 \relates <templated_callables.h>
-A templated function with a defaulted non type template parameter.
+A templated function with a defaulted non-type template parameter
+\a Category.
 */
 template <char Category = 'A'>
 void templated_function_with_defaulted_non_type_template_parameter();
 
 /*!
 \relates <templated_callables.h>
-A templated function with a non type template parameter pack.
+A templated function with a non-type template parameter pack \a Weights.
 */
 template <unsigned... Weights>
 void templated_function_with_non_type_template_parameter_pack();
 
 /*!
 \relates <templated_callables.h>
-A templated function with a placeholder non type template parameter.
+A templated function with a placeholder non-type template parameter
+\a Iterator.
 */
 template <auto Iterator>
 void templated_function_with_placeholder_non_type_template_parameter();
 
 /*!
 \relates <templated_callables.h>
-A templated function with a non-defaulted template template parameter.
+A templated function with a non-defaulted template-template parameter \a K.
 */
 template <typename T, template <typename> typename K>
 void templated_function_with_template_template_parameter(K<T>);
 
 /*!
 \relates <templated_callables.h>
-A templated function with a defaulted template template parameter.
+A templated function with a defaulted template-template parameter
+\a Container and non-type parameter \a size.
 */
 template <typename T, int size, template <typename, int> typename Container = std::array>
 void templated_function_with_defaulted_template_template_parameter(Container<T, size>);
 
 /*!
 \relates <templated_callables.h>
-A templated function with a template template parameter pack.
+A templated function with a template-template parameter pack \a Container.
 */
 template <typename T, template <typename> typename... Container>
 void templated_function_with_template_template_parameter_pack(Container<T>...);

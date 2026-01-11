@@ -69,6 +69,7 @@
 </db:section>
 <db:section xml:id="Specialized-typedef">
 <db:title>[alias] template &lt;typename T&gt; Test::Specialized</db:title>
+<db:para><db:code role="parameter">T</db:code> is the specialization type.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="member-function-documentation">
