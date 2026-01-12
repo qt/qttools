@@ -51,6 +51,7 @@ namespace qdesigner_internal {
         };
 
         explicit TextPropertyEditor(QWidget *parent = nullptr, EmbeddingMode embeddingMode = EmbeddingNone, TextPropertyValidationMode validationMode = ValidationMultiLine);
+        ~TextPropertyEditor() override;
 
         TextPropertyValidationMode textPropertyValidationMode() const { return m_validationMode; }
         void setTextPropertyValidationMode(TextPropertyValidationMode vm);
