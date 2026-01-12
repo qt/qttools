@@ -405,7 +405,7 @@
             <item row="4" column="0">
              <widget class="QLineEdit" name="serverText">
               <property name="text">
-               <string>http://localhost:11434</string>
+               <string notr="true">http://localhost:11434</string>
               </property>
              </widget>
             </item>
