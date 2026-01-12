@@ -103,6 +103,7 @@ set(qdoc_sources
 if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     list(APPEND qdoc_sources
         src/qdoc/injabridge.cpp
+        src/qdoc/ir/documentir.cpp
         src/qdoc/templategenerator.cpp
     )
 endif()

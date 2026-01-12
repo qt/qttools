@@ -39,7 +39,9 @@ qt_internal_extend_target(tst_QDoc
     SOURCES
         injabridge/catch_injabridge.cpp
         templategenerator/catch_templategenerator.cpp
+        documentir/catch_documentir.cpp
         ../../src/qdoc/injabridge.cpp
+        ../../src/qdoc/ir/documentir.cpp
     LIBRARIES
         Inja::inja
         nlohmann_json::nlohmann_json

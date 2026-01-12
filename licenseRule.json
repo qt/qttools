@@ -28,6 +28,11 @@
                    "comment": "",
                    "file type": "test",
                    "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
+                  },
+            "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/.*/expected/": {
+                   "comment": "",
+                   "file type": "test",
+                   "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
                   }
        }
     },
@@ -58,6 +63,11 @@
                 "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
             },
             "src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/(?!REUSE.toml)": {
+                "comment": "",
+                "file type": "test",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
+            },
+            "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/(?!REUSE.toml)": {
                 "comment": "",
                 "file type": "test",
                 "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]

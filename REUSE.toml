@@ -159,6 +159,15 @@ comment = ["reuse ignore or have trouble reading some of those webxml or html fi
 SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
 SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only"
 
-
-
-
+[[annotations]]
+path = ["src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.html",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.cpp",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.h",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.qml",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.qdoc",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.qdocconf"]
+precedence = "override"
+comment = ["files in this directory are for file generation within testing",
+           "Licensing for those files is test licensing"]
+SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only"

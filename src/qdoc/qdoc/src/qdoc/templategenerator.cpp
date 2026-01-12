@@ -7,15 +7,21 @@
 #include "codemarker.h"
 #include "collectionnode.h"
 #include "config.h"
+#include "injabridge.h"
+#include "ir/documentir.h"
 #include "node.h"
 #include "pagenode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
 
+#include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
+#include <QtCore/qloggingcategory.h>
 #include <QtCore/qtextstream.h>
 
 QT_BEGIN_NAMESPACE
+
+Q_LOGGING_CATEGORY(lcQDocTemplateGenerator, "qt.qdoc.templategenerator")
 
 using namespace Qt::Literals;
 
@@ -44,6 +50,43 @@ void TemplateGenerator::initializeGenerator()
     Generator::initializeGenerator();
 
     const Config &config = Config::instance();
+    QString templateDirConfig = config.get(u"template.templatedir"_s).asString();
+
+    if (templateDirConfig.isEmpty()) {
+        m_templateDir.clear();
+    } else if (QDir::isAbsolutePath(templateDirConfig)) {
+        m_templateDir = templateDirConfig;
+    } else {
+        // Relative path: resolve relative to output directory
+        QString outDir = outputDir();
+        if (!outDir.isEmpty())
+            m_templateDir = outDir + "/"_L1 + templateDirConfig;
+        else
+            m_templateDir = templateDirConfig;
+    }
+
+    bool foundTemplates = false;
+    if (!m_templateDir.isEmpty()) {
+        QDir templateDir(m_templateDir);
+        if (templateDir.exists() && !templateDir.entryList(QDir::Files).isEmpty()) {
+            foundTemplates = true;
+            qCInfo(lcQDocTemplateGenerator) << "Using template directory:" << m_templateDir;
+        } else if (!templateDir.exists()) {
+            qCInfo(lcQDocTemplateGenerator)
+                    << "Configured template directory does not exist:" << m_templateDir
+                    << "- will use embedded templates";
+        } else {
+            qCInfo(lcQDocTemplateGenerator)
+                    << "Configured template directory is empty:" << m_templateDir
+                    << "- will use embedded templates";
+        }
+    } else {
+        qCInfo(lcQDocTemplateGenerator)
+                << "No external template directory configured - will use embedded templates";
+    }
+
+    if (!foundTemplates)
+        m_templateDir.clear();
 }
 
 void TemplateGenerator::terminateGenerator()
@@ -101,10 +144,41 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 {
     Q_UNUSED(marker);
 
-    out() << "<!-- TemplateGenerator: Page for "
-          << pn->name() << " -->\n";
-    out() << "<h1>" << pn->fullTitle() << "</h1>\n";
-    out() << "<p>Template-based output (IR integration pending)</p>\n";
+    DocumentIR ir;
+    ir.title = pn->title();
+    ir.fullTitle = pn->fullTitle();
+    ir.url = pn->url();
+    ir.brief = pn->doc().trimmedBriefText(pn->name()).toString();
+
+    // TODO: Process atoms in later commits
+    ir.contentJson["text"_L1] = "Content rendering from atoms will be implemented in upcoming commits."_L1;
+
+    QString templateContent;
+
+    if (!m_templateDir.isEmpty()) {
+        QString templatePath = m_templateDir + "/page.html"_L1;
+        QFile templateFile(templatePath);
+
+        if (templateFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            templateContent = QString::fromUtf8(templateFile.readAll());
+            templateFile.close();
+        }
+    }
+
+    if (templateContent.isEmpty()) {
+        QFile resourceFile(":/qdoc/templates/page.html"_L1);
+        if (resourceFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            templateContent = QString::fromUtf8(resourceFile.readAll());
+            resourceFile.close();
+        }
+    }
+
+    if (templateContent.isEmpty())
+        qFatal("TemplateGenerator: No template file found. "
+               "Ensure 'page.html' exists in the configured template directory or in resources.");
+
+    QString rendered = InjaBridge::render(templateContent, ir.toJson());
+    out() << rendered;
 }
 
 void TemplateGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marker)
