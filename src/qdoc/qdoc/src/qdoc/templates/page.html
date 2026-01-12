@@ -1,0 +1,28 @@
+<!--
+Copyright (C) 2025 The Qt Company Ltd.
+SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ fullTitle }}</h1>
+    {% if brief %}
+    <p class="brief">{{ brief }}</p>
+    {% endif %}
+
+    {% if content %}
+    <div class="content">
+        {{ content.text }}
+    </div>
+    {% endif %}
+
+    <footer>
+        <p>Built with QDoc's template engine.</p>
+    </footer>
+</body>
+</html>

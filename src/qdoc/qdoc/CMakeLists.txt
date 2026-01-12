@@ -138,6 +138,24 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     )
 endif()
 
+# Embedded templates
+if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/page.html"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/page.html"
+    )
+
+    set(qdoc_template_files
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/page.html"
+    )
+
+    qt_internal_add_resource(${target_name} "qdoc_templates"
+        PREFIX
+            "/qdoc"
+        FILES
+            ${qdoc_template_files}
+    )
+endif()
+
 qt_internal_return_unless_building_tools()
 
 # If libclangTooling.a is not built with -fPIE enabled we cannot link it to qdoc.
