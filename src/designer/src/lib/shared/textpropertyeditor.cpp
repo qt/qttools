@@ -205,6 +205,13 @@ namespace qdesigner_internal {
         setTextPropertyValidationMode(validationMode);
     }
 
+    TextPropertyEditor::~TextPropertyEditor()
+    {
+        // QTBUG-143311: Slots may be triggered after deletion in conjunction
+        // with deferred delete when switching between inline editors in different forms.
+        m_lineEdit->disconnect(this);
+    }
+
     void TextPropertyEditor::setTextPropertyValidationMode(TextPropertyValidationMode vm) {
         m_validationMode = vm;
         m_lineEdit->setWantNewLine(multiLine(m_validationMode));
