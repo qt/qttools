@@ -20,7 +20,7 @@ public:
 
     void initializeGenerator() override;
     void terminateGenerator() override;
-    QString format() override;
+    QString format() const override;
     void generateDocs() override;
 
 protected:

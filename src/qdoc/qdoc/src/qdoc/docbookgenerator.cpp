@@ -163,7 +163,7 @@ void DocBookGenerator::initializeGenerator()
     m_useITS = m_config->get(format() + Config::dot + "its").asBool();
 }
 
-QString DocBookGenerator::format()
+QString DocBookGenerator::format() const
 {
     return "DocBook";
 }

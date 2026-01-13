@@ -94,7 +94,7 @@ void TemplateGenerator::terminateGenerator()
     Generator::terminateGenerator();
 }
 
-QString TemplateGenerator::format()
+QString TemplateGenerator::format() const
 {
     return "template"_L1;
 }

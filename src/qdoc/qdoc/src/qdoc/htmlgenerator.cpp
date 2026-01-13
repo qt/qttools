@@ -222,7 +222,7 @@ void HtmlGenerator::terminateGenerator()
     Generator::terminateGenerator();
 }
 
-QString HtmlGenerator::format()
+QString HtmlGenerator::format() const
 {
     return "HTML";
 }

@@ -28,7 +28,7 @@ public:
 
     void initializeGenerator() override;
     void terminateGenerator() override;
-    QString format() override;
+    QString format() const override;
     void generateDocs() override;
 
     QString protectEnc(const QString &string);
