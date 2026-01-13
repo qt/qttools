@@ -34,6 +34,12 @@ Item {
 <p>The case of the specified language is not important:</p>
 <pre class="cpp" translate="no"><span class="comment">// Some C++ code:</span>
 <span class="type">QWidget</span> <span class="operator">*</span>widget <span class="operator">=</span> getWidget();</pre>
+<p>Languages that QDoc does not handle are accepted but not processed if the language was declared in the <code translate="no">languages</code> configuration variable:</p>
+<pre class="python" translate="no">def fn():
+    pass</pre>
+<p>A warning will be generated if the language is unknown and not listed in the <code translate="no">languages</code> configuration variable:</p>
+<pre class="basic" translate="no"><span class="number">10</span> PRINT <span class="string">&quot;Hello world!&quot;</span>
+<span class="number">20</span> GOTO <span class="number">10</span></pre>
 </div>
 <!-- @@@index.html -->
 </body>

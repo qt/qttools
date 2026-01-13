@@ -34,4 +34,12 @@ Item {
 <db:programlisting language="cpp">// Some C++ code:
 QWidget *widget = getWidget();
 </db:programlisting>
+<db:para>Languages that QDoc does not handle are accepted but not processed if the language was declared in the <db:code>languages</db:code> configuration variable:</db:para>
+<db:programlisting language="python">def fn():
+    pass
+</db:programlisting>
+<db:para>A warning will be generated if the language is unknown and not listed in the <db:code>languages</db:code> configuration variable:</db:para>
+<db:programlisting language="basic">10 PRINT &quot;Hello world!&quot;
+20 GOTO 10
+</db:programlisting>
 </db:article>

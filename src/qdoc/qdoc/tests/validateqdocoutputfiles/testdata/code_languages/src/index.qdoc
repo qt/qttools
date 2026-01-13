@@ -42,4 +42,19 @@
     // Some C++ code:
     QWidget *widget = getWidget();
     \endcode
+
+    Languages that QDoc does not handle are accepted but not processed
+    if the language was declared in the \c languages configuration
+    variable:
+    \code [Python]
+    def fn():
+        pass
+    \endcode
+
+    A warning will be generated if the language is unknown and not listed
+    in the \c languages configuration variable:
+    \code [BASIC]
+    10 PRINT "Hello world!"
+    20 GOTO 10
+    \endcode
 */

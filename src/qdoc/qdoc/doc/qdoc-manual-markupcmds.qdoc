@@ -815,6 +815,12 @@
     This can be useful when quoting a language that QDoc does not have
     a marker for.
 
+    Alternatively, you can specify a language for a block of code that
+    QDoc doesn't recognize by including the language in the list held
+    by the \l {codelanguages-variable}{codelanguages} configuration
+    variable. This enables metadata to be included in generated HTML
+    that can be used by other tools to syntax highlight the code.
+
     \section2 Code snippet parameters
 
     Since QDoc version 5.12, \\code command accepts also optional
