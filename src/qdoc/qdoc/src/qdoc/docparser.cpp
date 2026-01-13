@@ -242,6 +242,7 @@ static struct
              { nullptr, 0 } };
 
 int DocParser::s_tabSize;
+QStringList DocParser::s_allowedLanguages;
 QStringList DocParser::s_ignoreWords;
 bool DocParser::s_quoting = false;
 FileResolver *DocParser::file_resolver{ nullptr };
@@ -258,6 +259,7 @@ static QString cleanLink(const QString &link)
 void DocParser::initialize(const Config &config, FileResolver &file_resolver)
 {
     s_tabSize = config.get(CONFIG_TABSIZE).asInt();
+    s_allowedLanguages = config.get(CONFIG_CODELANGUAGES).asStringList();
     s_ignoreWords = config.get(CONFIG_IGNOREWORDS).asStringList();
 
     int i = 0;
@@ -403,7 +405,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     if (isLeftBracketAhead(0)) {
                         p1 = getBracketedArgument();
                         marker = CodeMarker::markerForLanguage(p1);
-                        if (!marker)
+                        // Suppress warning for explicitly allowed languages.
+                        if (!marker && !s_allowedLanguages.contains(p1, Qt::CaseInsensitive))
                             location().warning(QStringLiteral("Unrecognized markup language '%1'").arg(p1));
                     } else {
                         p1 = ""_L1;

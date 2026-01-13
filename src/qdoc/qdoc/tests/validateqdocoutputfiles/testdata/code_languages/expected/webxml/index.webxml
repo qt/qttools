@@ -25,6 +25,12 @@ Item {
                 <para>The case of the specified language is not important:</para>
                 <code>// Some C++ code:
 QWidget *widget = getWidget();</code>
+                <para>Languages that QDoc does not handle are accepted but not processed if the language was declared in the <teletype type="highlighted">languages</teletype> configuration variable:</para>
+                <code>def fn():
+    pass</code>
+                <para>A warning will be generated if the language is unknown and not listed in the <teletype type="highlighted">languages</teletype> configuration variable:</para>
+                <code>10 PRINT &quot;Hello world!&quot;
+20 GOTO 10</code>
             </description>
         </page>
     </document>

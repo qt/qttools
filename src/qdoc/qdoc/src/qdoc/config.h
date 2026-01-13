@@ -272,6 +272,7 @@ struct ConfigStrings
     static QString AUTOLINKERRORS;
     static QString BUILDVERSION;
     static QString CODEINDENT;
+    static QString CODELANGUAGES;
     static QString CODEPREFIX;
     static QString CODESUFFIX;
     static QString CPPCLASSESPAGE;
@@ -363,6 +364,7 @@ struct ConfigStrings
 #define CONFIG_AUTOLINKERRORS ConfigStrings::AUTOLINKERRORS
 #define CONFIG_BUILDVERSION ConfigStrings::BUILDVERSION
 #define CONFIG_CODEINDENT ConfigStrings::CODEINDENT
+#define CONFIG_CODELANGUAGES ConfigStrings::CODELANGUAGES
 #define CONFIG_CODEPREFIX ConfigStrings::CODEPREFIX
 #define CONFIG_CODESUFFIX ConfigStrings::CODESUFFIX
 #define CONFIG_CPPCLASSESPAGE ConfigStrings::CPPCLASSESPAGE

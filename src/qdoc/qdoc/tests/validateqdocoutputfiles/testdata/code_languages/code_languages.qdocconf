@@ -23,5 +23,12 @@ sources.fileextensions  = "*.cpp *.qml *.qdoc"
 headerdirs  = ./src
 sourcedirs  = ./src
 
-warninglimit = 0
+codelanguages = Python
+
+# Accept a single warning about the BASIC language:
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+warninglimit = 1
 warninglimit.enabled = true
+locationinfo = false

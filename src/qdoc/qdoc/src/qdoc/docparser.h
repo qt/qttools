@@ -40,6 +40,7 @@ public:
     static QString dedent(int level, const QString &str);
 
     static int s_tabSize;
+    static QStringList s_allowedLanguages;
     static QStringList s_ignoreWords;
     static bool s_quoting;
 
