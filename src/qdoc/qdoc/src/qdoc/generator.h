@@ -58,7 +58,7 @@ public:
     virtual ~Generator();
 
     virtual bool canHandleFormat(const QString &format) { return format == this->format(); }
-    virtual QString format() = 0;
+    virtual QString format() const = 0;
     virtual void generateDocs();
     virtual void initializeGenerator();
     virtual void initializeFormat();

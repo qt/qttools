@@ -35,7 +35,7 @@ void WebXMLGenerator::terminateGenerator()
     HtmlGenerator::terminateGenerator();
 }
 
-QString WebXMLGenerator::format()
+QString WebXMLGenerator::format() const
 {
     return "WebXML";
 }

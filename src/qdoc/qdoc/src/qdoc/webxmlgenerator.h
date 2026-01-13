@@ -22,7 +22,7 @@ public:
 
     void initializeGenerator() override;
     void terminateGenerator() override;
-    QString format() override;
+    QString format() const override;
     // from IndexSectionWriter
     void append(QXmlStreamWriter &writer, Node *node) override;
 

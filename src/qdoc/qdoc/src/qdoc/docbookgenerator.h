@@ -25,7 +25,7 @@ public:
     explicit DocBookGenerator(FileResolver& file_resolver);
 
     void initializeGenerator() override;
-    QString format() override;
+    QString format() const override;
 
 protected:
     [[nodiscard]] QString fileExtension() const override;
