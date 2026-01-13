@@ -21,6 +21,7 @@ using namespace Qt::StringLiterals;
 QString ConfigStrings::AUTOLINKERRORS = QStringLiteral("autolinkerrors");
 QString ConfigStrings::BUILDVERSION = QStringLiteral("buildversion");
 QString ConfigStrings::CODEINDENT = QStringLiteral("codeindent");
+QString ConfigStrings::CODELANGUAGES = QStringLiteral("codelanguages");
 QString ConfigStrings::CODEPREFIX = QStringLiteral("codeprefix");
 QString ConfigStrings::CODESUFFIX = QStringLiteral("codesuffix");
 QString ConfigStrings::CPPCLASSESPAGE = QStringLiteral("cppclassespage");
@@ -385,6 +386,7 @@ void Config::reset()
 
     // Default values
     setStringList(CONFIG_CODEINDENT, QStringList("0"));
+    setStringList(CONFIG_CODELANGUAGES, QStringList());
     setStringList(CONFIG_FALSEHOODS, QStringList("0"));
     setStringList(CONFIG_HEADERS + dot + CONFIG_FILEEXTENSIONS, QStringList("*.ch *.h *.h++ *.hh *.hpp *.hxx"));
     setStringList(CONFIG_SOURCES + dot + CONFIG_FILEEXTENSIONS, QStringList("*.c++ *.cc *.cpp *.cxx *.mm *.qml *.qdoc"));

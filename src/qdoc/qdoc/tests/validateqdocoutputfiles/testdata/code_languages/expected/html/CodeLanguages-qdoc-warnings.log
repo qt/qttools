@@ -1,0 +1,7 @@
+# QDoc Warning Log
+# Project: CodeLanguages
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/index.qdoc:56: [CodeLanguages] (qdoc) warning: Unrecognized markup language 'BASIC'

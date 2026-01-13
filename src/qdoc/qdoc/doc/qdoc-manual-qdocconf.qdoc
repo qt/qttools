@@ -238,6 +238,30 @@
     to adjust the appearance of certain types of HTML elements, this
     level of indentation is not always required.
 
+    \target codelanguages-variable
+    \section1 codelanguages
+
+    The \c codelanguages variable specifies a list of source code languages
+    not recognized by QDoc that can be used within \\code ... \\endcode
+    blocks. This enables blocks of code to be written in languages that
+    QDoc cannot parse, and HTML to be generated that can be highlighted
+    or processed by other tools.
+
+    \code [text]
+    codelanguages = Python Rust Java Swift "C#"
+    \endcode
+
+    Since QDoc can handle C++ (Cpp), QML and text, these languages do
+    not need to be specified in this list. Language names containing
+    special characters, such as C#, need to be quoted with double quotes
+    when included in this list.
+
+    The \c codelanguages variable was introduced in QDoc 6.12 to enable
+    online Qt documentation to use syntax highlighting for a subset of
+    the \l{languages supported by highlight.js}.
+
+    See also \l {code-command}{\\code}.
+
     \target codeprefix-variable
     \target codesuffix-variable
     \section1 codeprefix, codesuffix
@@ -1026,7 +1050,7 @@
     language = QML
     \endcode
 
-    See also \l {code-command}[\\code}.
+    See also \l {code-command}{\\code}.
 
     \target locationinfo-variable
     \section1 locationinfo
@@ -2522,4 +2546,9 @@
     \title qtgui.qdocconf
 
     \quotefile files/qtgui.qdocconf
+*/
+
+/*!
+    \externalpage https://highlightjs.readthedocs.io/en/latest/supported-languages.html
+    \title languages supported by highlight.js
 */
