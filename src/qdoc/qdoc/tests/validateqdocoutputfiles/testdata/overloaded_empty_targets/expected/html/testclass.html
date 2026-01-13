@@ -63,13 +63,13 @@
 <p>Sets the double <i translate="no">value</i>.</p>
 <div class="admonition note"><p><b>Note: </b>This slot is overloaded. To connect to this slot:
 
-<pre class="cpp" translate="no">// Connect using qOverload:
+<pre class="cpp" translate="no"><code class="cpp">// Connect using qOverload:
 connect(sender, &SenderClass::signal,
         testClass, qOverload<double>(&TestClass::setValue));
 
 // Or using a lambda as wrapper:
 connect(sender, &SenderClass::signal,
-        testClass, [receiver = testClass](double value) { receiver->setValue(value); });</pre>
+        testClass, [receiver = testClass](double value) { receiver->setValue(value); });</code></pre>
 
 </p>
 </div><!-- @@@setValue -->
@@ -78,13 +78,13 @@ connect(sender, &SenderClass::signal,
 <p>Sets the integer <i translate="no">value</i>.</p>
 <div class="admonition note"><p><b>Note: </b>This slot is overloaded. To connect to this slot:
 
-<pre class="cpp" translate="no">// Connect using qOverload:
+<pre class="cpp" translate="no"><code class="cpp">// Connect using qOverload:
 connect(sender, &SenderClass::signal,
         testClass, qOverload<int>(&TestClass::setValue));
 
 // Or using a lambda as wrapper:
 connect(sender, &SenderClass::signal,
-        testClass, [receiver = testClass](int value) { receiver->setValue(value); });</pre>
+        testClass, [receiver = testClass](int value) { receiver->setValue(value); });</code></pre>
 
 </p>
 </div><!-- @@@setValue -->
@@ -93,13 +93,13 @@ connect(sender, &SenderClass::signal,
 <p>Signal emitted when a double <i translate="no">value</i> changes.</p>
 <div class="admonition note"><p><b>Note: </b>This signal is overloaded. To connect to this signal:
 
-<pre class="cpp" translate="no">// Connect using qOverload:
+<pre class="cpp" translate="no"><code class="cpp">// Connect using qOverload:
 connect(testClass, qOverload<double>(&TestClass::valueChanged),
         receiver, &ReceiverClass::slot);
 
 // Or using a lambda:
 connect(testClass, qOverload<double>(&TestClass::valueChanged),
-        this, [](double value) { /* handle valueChanged */ });</pre>
+        this, [](double value) { /* handle valueChanged */ });</code></pre>
 
 </p>
 </div><!-- @@@valueChanged -->
@@ -108,13 +108,13 @@ connect(testClass, qOverload<double>(&TestClass::valueChanged),
 <p>Signal emitted when an integer <i translate="no">value</i> changes.</p>
 <div class="admonition note"><p><b>Note: </b>This signal is overloaded. To connect to this signal:
 
-<pre class="cpp" translate="no">// Connect using qOverload:
+<pre class="cpp" translate="no"><code class="cpp">// Connect using qOverload:
 connect(testClass, qOverload<int>(&TestClass::valueChanged),
         receiver, &ReceiverClass::slot);
 
 // Or using a lambda:
 connect(testClass, qOverload<int>(&TestClass::valueChanged),
-        this, [](int value) { /* handle valueChanged */ });</pre>
+        this, [](int value) { /* handle valueChanged */ });</code></pre>
 
 </p>
 </div><!-- @@@valueChanged -->

@@ -36,8 +36,8 @@
 <h4 id="properties-signals-handlers-and-methods">Properties, Signals, Handlers, and Methods</h4>
 <p>The types have their properties, signals, handlers, and methods defined in their respective QML files. QDoc associates the properties and methods to the types, therefore, you only need to place the documentation above the property, method, or signal.</p>
 <p>To document the type of a <i>property alias</i>, you must use the <span translate="no">\qmlproperty</span> command to specify the data type.</p>
-<pre class="cpp" translate="no">\qmlproperty <span class="type">int</span> anAliasedProperty
-An aliased property of type <span class="type">int</span><span class="operator">.</span></pre>
+<pre class="cpp" translate="no"><code class="cpp">\qmlproperty <span class="type">int</span> anAliasedProperty
+An aliased property of type <span class="type">int</span><span class="operator">.</span></code></pre>
 <h5 id="internal-documentation">Internal Documentation</h5>
 <p>You may declare that a documentation is for internal use by placing the <span translate="no">\internal</span> command after the beginning QDoc comment <code translate="no">/*</code>. QDoc will prevent the internal documentation from appearing in the public API.</p>
 <p>If you wish to omit certain parts of the documentation, you may use the <span translate="no">\omit</span> and <span translate="no">\endomit</span> command.</p>

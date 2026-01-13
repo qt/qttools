@@ -40,7 +40,7 @@
 <!-- $$$DeepNestedType-description -->
 <h2 id="details">Detailed Description</h2>
 <p>This type tests QDoc's ability to handle qualified type names with multiple segments like <code translate="no">X.Level1.Level2.Leaf</code>.</p>
-<pre class="qml" translate="no">import TestModule.SubModule.Deep as X
+<pre class="qml" translate="no"><code class="qml">import TestModule.SubModule.Deep as X
 
 <span class="type"><a href="qml-testmodule-deepnestedtype.html" translate="no">DeepNestedType</a></span> {
     <span class="comment">// This should properly link X.Level1.Level2.Leaf as a complete type name</span>
@@ -52,7 +52,7 @@
     <span class="comment">// Test property bindings with multi-segment names</span>
     <span class="name">Layout.alignment</span>: <span class="name">Qt</span>.<span class="name">AlignCenter</span>
     <span class="name">anchors.margins.left</span>: <span class="number">10</span>
-}</pre>
+}</code></pre>
 <p>The key test case is <code translate="no">X.Level1.Level2.Leaf</code> which has 4 segments:</p>
 <ul>
 <li><code translate="no">X</code> - Module alias</li>

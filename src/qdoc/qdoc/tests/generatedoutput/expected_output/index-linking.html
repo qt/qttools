@@ -25,14 +25,14 @@
 <li>Property in a group: <a href="https://doc.qt.io/QmlPropertyGroups/qml-qdoc-test-parent.html#group.c-prop" translate="no">QDoc.Test::Parent::group.c</a>.</li>
 </ol>
 <h2 id="auto-linking-to-types-in-code-snippets">Auto-linking to types in code snippets</h2>
-<pre class="qml" translate="no">import QtQuick
+<pre class="qml" translate="no"><code class="qml">import QtQuick
 
 <span class="type"><a href="https://doc.qt.io/QmlPropertyGroups/qml-uicomponents-progressbar.html" translate="no">ProgressBar</a></span> {
     <span class="comment">// Linking to int value type</span>
     property <span class="type"><a href="https://doc.qt.io/QmlPropertyGroups/qml-int.html" translate="no">int</a></span> <span class="name">progress</span>: <span class="number">0</span>
-}</pre>
-<pre class="cpp" translate="no"><span class="comment">// 'int' should not link anywhere in C++ code</span>
-<span class="type">int</span> main() { <span class="type">int</span> x{<span class="number">0</span>}; <span class="keyword">return</span> x; }</pre>
+}</code></pre>
+<pre class="cpp" translate="no"><code class="cpp"><span class="comment">// 'int' should not link anywhere in C++ code</span>
+<span class="type">int</span> main() { <span class="type">int</span> x{<span class="number">0</span>}; <span class="keyword">return</span> x; }</code></pre>
 </div>
 <!-- @@@index-linking.html -->
 </body>

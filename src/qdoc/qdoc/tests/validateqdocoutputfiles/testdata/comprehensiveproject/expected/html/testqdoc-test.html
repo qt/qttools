@@ -114,8 +114,8 @@
 <!-- $$$methodWithEnDashInItsDocs[overload1]$$$methodWithEnDashInItsDocs -->
 <h3 class="fn" translate="no" id="methodWithEnDashInItsDocs"><span class="type">void</span> Test::<span class="name">methodWithEnDashInItsDocs</span>()<a class="srclink" href="http://localhost/src/qdoc/qdoc/tests/validateqdocoutputfiles/testdata/comprehensiveproject/src/testcpp.h?v=1.0#L53" title="View declaration of this function">(source)</a></h3>
 <p>This method has en dashes in its documentation &ndash; as you'll find represented by <code translate="no">--</code> in the sources &ndash; here and there. The important bit to note is that when passed e.g. to the <span translate="no">\c</span> command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</p>
-<pre class="cpp" translate="no"><span class="keyword">for</span> (<span class="type">int</span> i <span class="operator">=</span> <span class="number">42</span>; i <span class="operator">&gt;</span> <span class="number">0</span>; <span class="operator">-</span><span class="operator">-</span>i)
-    <span class="comment">// Do something cool during countdown.</span></pre>
+<pre class="cpp" translate="no"><code class="cpp"><span class="keyword">for</span> (<span class="type">int</span> i <span class="operator">=</span> <span class="number">42</span>; i <span class="operator">&gt;</span> <span class="number">0</span>; <span class="operator">-</span><span class="operator">-</span>i)
+    <span class="comment">// Do something cool during countdown.</span></code></pre>
 <p>...as it would be silly if this would output &ndash;i instead of <code translate="no">--i</code>.</p>
 <p>-----------------------------------------------------------------------</p>
 <p>It still allows people to add a bunch of dashes, though, without replacing them all with a series of en dashes. Of course, they might want to use the <span translate="no">\hr</span> command instead, like this:</p>

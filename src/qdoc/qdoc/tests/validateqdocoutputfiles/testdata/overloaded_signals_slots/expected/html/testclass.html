@@ -63,13 +63,13 @@
 <p>This signal is emitted when a string <i translate="no">value</i> changes.</p>
 <div class="admonition note"><p><b>Note: </b>This signal is overloaded. To connect to this signal:
 
-<pre class="cpp" translate="no">// Connect using qOverload:
+<pre class="cpp" translate="no"><code class="cpp">// Connect using qOverload:
 connect(testClass, qOverload<const QString &>(&TestClass::dataChanged),
         receiver, &ReceiverClass::slot);
 
 // Or using a lambda:
 connect(testClass, qOverload<const QString &>(&TestClass::dataChanged),
-        this, [](const QString &value) { /* handle dataChanged */ });</pre>
+        this, [](const QString &value) { /* handle dataChanged */ });</code></pre>
 
 For more examples and approaches, see <a href="https://example.org/connecting-overloaded-signals">connecting to overloaded signals</a>.</p>
 </div><!-- @@@dataChanged -->
@@ -78,13 +78,13 @@ For more examples and approaches, see <a href="https://example.org/connecting-ov
 <p>This signal is emitted when an integer <i translate="no">value</i> changes.</p>
 <div class="admonition note"><p><b>Note: </b>This signal is overloaded. To connect to this signal:
 
-<pre class="cpp" translate="no">// Connect using qOverload:
+<pre class="cpp" translate="no"><code class="cpp">// Connect using qOverload:
 connect(testClass, qOverload<int>(&TestClass::dataChanged),
         receiver, &ReceiverClass::slot);
 
 // Or using a lambda:
 connect(testClass, qOverload<int>(&TestClass::dataChanged),
-        this, [](int value) { /* handle dataChanged */ });</pre>
+        this, [](int value) { /* handle dataChanged */ });</code></pre>
 
 For more examples and approaches, see <a href="https://example.org/connecting-overloaded-signals">connecting to overloaded signals</a>.</p>
 </div><!-- @@@dataChanged -->
@@ -93,13 +93,13 @@ For more examples and approaches, see <a href="https://example.org/connecting-ov
 <p>Processes a string <i translate="no">value</i>.</p>
 <div class="admonition note"><p><b>Note: </b>This slot is overloaded. To connect to this slot:
 
-<pre class="cpp" translate="no">// Connect using qOverload:
+<pre class="cpp" translate="no"><code class="cpp">// Connect using qOverload:
 connect(sender, &SenderClass::signal,
         testClass, qOverload<const QString &>(&TestClass::process));
 
 // Or using a lambda as wrapper:
 connect(sender, &SenderClass::signal,
-        testClass, [receiver = testClass](const QString &value) { receiver->process(value); });</pre>
+        testClass, [receiver = testClass](const QString &value) { receiver->process(value); });</code></pre>
 
 For more examples and approaches, see <a href="https://example.org/connecting-overloaded-slots">connecting to overloaded slots</a>.</p>
 </div><!-- @@@process -->
@@ -108,13 +108,13 @@ For more examples and approaches, see <a href="https://example.org/connecting-ov
 <p>Processes an integer <i translate="no">value</i>.</p>
 <div class="admonition note"><p><b>Note: </b>This slot is overloaded. To connect to this slot:
 
-<pre class="cpp" translate="no">// Connect using qOverload:
+<pre class="cpp" translate="no"><code class="cpp">// Connect using qOverload:
 connect(sender, &SenderClass::signal,
         testClass, qOverload<int>(&TestClass::process));
 
 // Or using a lambda as wrapper:
 connect(sender, &SenderClass::signal,
-        testClass, [receiver = testClass](int value) { receiver->process(value); });</pre>
+        testClass, [receiver = testClass](int value) { receiver->process(value); });</code></pre>
 
 For more examples and approaches, see <a href="https://example.org/connecting-overloaded-slots">connecting to overloaded slots</a>.</p>
 </div><!-- @@@process -->

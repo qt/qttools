@@ -372,28 +372,28 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         }
         break;
     case Atom::Qml:
-        out() << "<pre class=\"qml\" translate=\"no\">"
+        out() << "<pre class=\"qml\" translate=\"no\"><code class=\"qml\">"
               << trimmedTrailing(highlightedCode(indent(m_codeIndent, atom->string()), relative,
                                                  false, Genus::QML),
                                  m_codePrefix, m_codeSuffix)
-              << "</pre>\n";
+              << "</code></pre>\n";
         break;
     case Atom::Code:
         // Recover an additional string containing the code language, if present.
         if (atom->strings().count() == 2)
-            out() << "<pre class=\"" << atom->string(1) << "\" translate=\"no\">";
+            out() << "<pre class=\"" << atom->string(1) << "\" translate=\"no\"><code class=\"" << atom->string(1) << "\">";
         else
-            out() << "<pre class=\"cpp\" translate=\"no\">";
+            out() << "<pre class=\"cpp\" translate=\"no\"><code class=\"cpp\">";
 
         out() << trimmedTrailing(highlightedCode(indent(m_codeIndent, atom->string()), relative),
                                  m_codePrefix, m_codeSuffix)
-              << "</pre>\n";
+              << "</code></pre>\n";
         break;
     case Atom::CodeBad:
-        out() << "<pre class=\"cpp plain\" translate=\"no\">"
+        out() << "<pre class=\"cpp plain\" translate=\"no\"><code class=\"text\">"
               << trimmedTrailing(protectEnc(plainCode(indent(m_codeIndent, atom->string()))),
                                  m_codePrefix, m_codeSuffix)
-              << "</pre>\n";
+              << "</code></pre>\n";
         break;
     case Atom::DetailsLeft:
         out() << "<details>\n";
