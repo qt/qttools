@@ -96,6 +96,11 @@
                 "file type": "test",
                 "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
             },
+            "tests/auto/cmake/linguist/xcodebuild_wrapper.sh": {
+                "comment": "Test utility script for QTBUG-138855",
+                "file type": "test",
+                "spdx": ["BSD-3-Clause"]
+            },
             "(.*)(examples/|snippets/)": {
                 "comment": "Example takes precedence",
                 "file type": "examples and snippets",

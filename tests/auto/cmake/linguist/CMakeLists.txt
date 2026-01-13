@@ -80,17 +80,22 @@ if(NOT CMAKE_CROSSCOMPILING)
     _qt_internal_test_expect_pass(test_i18n_subdir2 BINARY app1)
 
     if(APPLE)
+        # QTBUG-138855: Xcode tests are flaky due to spurious xcodebuild failures
+        # during CMake's compiler detection phase. Use a wrapper script that
+        # replaces xcodebuild and retries on the known spurious failure pattern.
+        set(_xcode_wrapper "${CMAKE_CURRENT_SOURCE_DIR}/xcodebuild_wrapper.sh")
+
         _qt_internal_test_expect_pass(test_i18n_subdir
             TESTNAME test_i18n_subdir_xcode
             GENERATOR Xcode
-            MAKE_PROGRAM xcodebuild
+            MAKE_PROGRAM "${_xcode_wrapper}"
             BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/test_i18n_subdir_xcode"
         )
 
         _qt_internal_test_expect_pass(test_i18n_subdir2
             TESTNAME test_i18n_subdir2_xcode
             GENERATOR Xcode
-            MAKE_PROGRAM xcodebuild
+            MAKE_PROGRAM "${_xcode_wrapper}"
             BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/test_i18n_subdir2_xcode")
     endif()
 endif()
