@@ -21,10 +21,12 @@ qt_internal_add_test(tst_QDoc
         filesystem/catch_fileresolver.cpp
         node/catch_genustypes.cpp
         inclusion/catch_inclusionstrategytests.cpp
+        outputproducerregistry/catch_outputproducerregistry.cpp
         ../../src/qdoc/boundaries/filesystem/filepath.cpp
         ../../src/qdoc/boundaries/filesystem/directorypath.cpp
         ../../src/qdoc/boundaries/filesystem/resolvedfile.cpp
         ../../src/qdoc/filesystem/fileresolver.cpp
+        ../../src/qdoc/outputproducerregistry.cpp
         ../../src/qdoc/genustypes.h
     INCLUDE_DIRECTORIES
         ../../src/

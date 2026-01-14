@@ -68,6 +68,7 @@ set(qdoc_sources
     src/qdoc/nodecontext.h
     src/qdoc/openedlist.cpp
     src/qdoc/outputdirectory.cpp
+    src/qdoc/outputproducerregistry.cpp
     src/qdoc/pagenode.cpp
     src/qdoc/parameters.cpp
     src/qdoc/parsererror.cpp
