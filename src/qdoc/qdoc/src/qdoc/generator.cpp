@@ -22,6 +22,7 @@
 #include "node.h"
 #include "openedlist.h"
 #include "outputdirectory.h"
+#include "outputproducerregistry.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
@@ -1805,6 +1806,7 @@ void Generator::initialize()
     for (auto &g : s_generators) {
         if (s_outputFormats.contains(g->format())) {
             s_currentGenerator = g;
+            OutputProducerRegistry::instance().registerProducer(g);
             g->initializeGenerator();
         }
     }
@@ -2227,8 +2229,10 @@ void Generator::generateEnumValuesForQmlReference(const Node *node, CodeMarker *
 void Generator::terminate()
 {
     for (const auto &generator : std::as_const(s_generators)) {
-        if (s_outputFormats.contains(generator->format()))
+        if (s_outputFormats.contains(generator->format())) {
+            OutputProducerRegistry::instance().unregisterProducer(generator);
             generator->terminateGenerator();
+        }
     }
 
     // REMARK: Generators currently, due to recent changes and the
