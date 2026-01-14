@@ -4,6 +4,7 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
+#include "ioutputproducer.h"
 #include "text.h"
 #include "utilities.h"
 #include "filesystem/fileresolver.h"
@@ -34,7 +35,7 @@ struct RelatedClass;
 
 typedef QMultiMap<QString, Node *> NodeMultiMap;
 
-class Generator
+class Generator : public IOutputProducer
 {
 public:
     enum ListType { Generic, Obsolete };
@@ -57,8 +58,12 @@ public:
     Generator(FileResolver& file_resolver);
     virtual ~Generator();
 
+    void prepare() override { initializeGenerator(); }
+    void produce() override { generateDocs(); }
+    void finalize() override { terminateGenerator(); }
+
     virtual bool canHandleFormat(const QString &format) { return format == this->format(); }
-    virtual QString format() const = 0;
+    [[nodiscard]] QString format() const override = 0;
     virtual void generateDocs();
     virtual void initializeGenerator();
     virtual void initializeFormat();
