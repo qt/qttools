@@ -15,6 +15,8 @@
 
 #include <QtCore/qlocale.h>
 
+#include <utility>
+
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
@@ -26,48 +28,64 @@ static void clearCursorDatabase()
     QtCursorDatabase::instance()->clear();
 }
 
+using ShapeNames = QHash<Qt::CursorShape, const char *>;
+
+static const ShapeNames &shapeNames()
+{
+    static const ShapeNames result =
+            {{Qt::ArrowCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Arrow")},
+              {Qt::UpArrowCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Up Arrow")},
+              {Qt::CrossCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Cross")},
+              {Qt::WaitCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Wait")},
+              {Qt::IBeamCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "IBeam")},
+              {Qt::SizeVerCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Size Vertical")},
+              {Qt::SizeHorCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Size Horizontal")},
+              {Qt::SizeFDiagCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Size Backslash")},
+              {Qt::SizeBDiagCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Size Slash")},
+              {Qt::SizeAllCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Size All")},
+              {Qt::BlankCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Blank")},
+              {Qt::SplitVCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Split Vertical")},
+              {Qt::SplitHCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Split Horizontal")},
+              {Qt::PointingHandCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Pointing Hand")},
+              {Qt::ForbiddenCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Forbidden")},
+              {Qt::OpenHandCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Open Hand")},
+              {Qt::ClosedHandCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Closed Hand")},
+              {Qt::WhatsThisCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "What's This")},
+              {Qt::BusyCursor, QT_TRANSLATE_NOOP("QtCursorDatabase", "Busy")}};
+    return result;
+}
+
+using CursorResource = std::pair<Qt::CursorShape, QLatin1StringView>;
+
+static constexpr CursorResource cursorResources[] = {
+    {Qt::ArrowCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-arrow.png"_L1},
+    {Qt::UpArrowCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-uparrow.png"_L1},
+    {Qt::CrossCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-cross.png"_L1},
+    {Qt::WaitCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-wait.png"_L1},
+    {Qt::IBeamCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-ibeam.png"_L1},
+    {Qt::SizeVerCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-sizev.png"_L1},
+    {Qt::SizeHorCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-sizeh.png"_L1},
+    {Qt::SizeFDiagCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-sizef.png"_L1},
+    {Qt::SizeBDiagCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-sizeb.png"_L1},
+    {Qt::SizeAllCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-sizeall.png"_L1},
+    {Qt::SplitVCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-vsplit.png"_L1},
+    {Qt::SplitHCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-hsplit.png"_L1},
+    {Qt::PointingHandCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-hand.png"_L1},
+    {Qt::ForbiddenCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-forbidden.png"_L1},
+    {Qt::OpenHandCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-openhand.png"_L1},
+    {Qt::ClosedHandCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-closedhand.png"_L1},
+    {Qt::WhatsThisCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-whatsthis.png"_L1},
+    {Qt::BusyCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-busy.png"_L1}
+};
+
 QtCursorDatabase::QtCursorDatabase()
 {
     qAddPostRoutine(clearCursorDatabase);
 
-    appendCursor(Qt::ArrowCursor, QCoreApplication::translate("QtCursorDatabase", "Arrow"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-arrow.png"_L1));
-    appendCursor(Qt::UpArrowCursor, QCoreApplication::translate("QtCursorDatabase", "Up Arrow"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-uparrow.png"_L1));
-    appendCursor(Qt::CrossCursor, QCoreApplication::translate("QtCursorDatabase", "Cross"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-cross.png"_L1));
-    appendCursor(Qt::WaitCursor, QCoreApplication::translate("QtCursorDatabase", "Wait"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-wait.png"_L1));
-    appendCursor(Qt::IBeamCursor, QCoreApplication::translate("QtCursorDatabase", "IBeam"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-ibeam.png"_L1));
-    appendCursor(Qt::SizeVerCursor, QCoreApplication::translate("QtCursorDatabase", "Size Vertical"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-sizev.png"_L1));
-    appendCursor(Qt::SizeHorCursor, QCoreApplication::translate("QtCursorDatabase", "Size Horizontal"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-sizeh.png"_L1));
-    appendCursor(Qt::SizeFDiagCursor, QCoreApplication::translate("QtCursorDatabase", "Size Backslash"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-sizef.png"_L1));
-    appendCursor(Qt::SizeBDiagCursor, QCoreApplication::translate("QtCursorDatabase", "Size Slash"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-sizeb.png"_L1));
-    appendCursor(Qt::SizeAllCursor, QCoreApplication::translate("QtCursorDatabase", "Size All"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-sizeall.png"_L1));
-    appendCursor(Qt::BlankCursor, QCoreApplication::translate("QtCursorDatabase", "Blank"),
-                 QIcon());
-    appendCursor(Qt::SplitVCursor, QCoreApplication::translate("QtCursorDatabase", "Split Vertical"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-vsplit.png"_L1));
-    appendCursor(Qt::SplitHCursor, QCoreApplication::translate("QtCursorDatabase", "Split Horizontal"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-hsplit.png"_L1));
-    appendCursor(Qt::PointingHandCursor, QCoreApplication::translate("QtCursorDatabase", "Pointing Hand"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-hand.png"_L1));
-    appendCursor(Qt::ForbiddenCursor, QCoreApplication::translate("QtCursorDatabase", "Forbidden"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-forbidden.png"_L1));
-    appendCursor(Qt::OpenHandCursor, QCoreApplication::translate("QtCursorDatabase", "Open Hand"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-openhand.png"_L1));
-    appendCursor(Qt::ClosedHandCursor, QCoreApplication::translate("QtCursorDatabase", "Closed Hand"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-closedhand.png"_L1));
-    appendCursor(Qt::WhatsThisCursor, QCoreApplication::translate("QtCursorDatabase", "What's This"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-whatsthis.png"_L1));
-    appendCursor(Qt::BusyCursor, QCoreApplication::translate("QtCursorDatabase", "Busy"),
-                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-busy.png"_L1));
+    appendCursor(Qt::BlankCursor, QIcon{});
+
+    for (const auto &cursorResource : cursorResources)
+        appendCursor(cursorResource.first, QIcon(cursorResource.second));
 }
 
 void QtCursorDatabase::clear()
@@ -78,12 +96,13 @@ void QtCursorDatabase::clear()
     m_cursorShapeToValue.clear();
 }
 
-void QtCursorDatabase::appendCursor(Qt::CursorShape shape, const QString &name, const QIcon &icon)
+void QtCursorDatabase::appendCursor(Qt::CursorShape shape, const QIcon &icon)
 {
     if (m_cursorShapeToValue.contains(shape))
         return;
     const qsizetype value = m_cursorNames.size();
-    m_cursorNames.append(name);
+    const char *name = shapeNames().value(shape, nullptr);
+    m_cursorNames.append(name ? QCoreApplication::translate("QtCursorDatabase", name) : QString{});
     m_cursorIcons.insert(value, icon);
     m_valueToCursorShape.insert(value, shape);
     m_cursorShapeToValue.insert(shape, value);
