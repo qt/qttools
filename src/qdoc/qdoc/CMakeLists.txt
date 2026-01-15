@@ -100,6 +100,12 @@ set(qdoc_sources
     src/qdoc/xmlgenerator.cpp
 )
 
+if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
+    list(APPEND qdoc_sources
+        src/qdoc/templategenerator.cpp
+    )
+endif()
+
 qt_internal_add_tool(${target_name}
     REQUIRED_FOR_DOCS
     TARGET_DESCRIPTION "Qt Documentation Compiler"

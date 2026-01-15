@@ -8,25 +8,28 @@ if(NOT QT_BUILD_STANDALONE_TESTS AND NOT QT_BUILDING_QT)
 endif()
 
 qt_internal_add_test(tst_QDoc
-  SOURCES
-    ${CMAKE_CURRENT_LIST_DIR}/main.cpp
+    SOURCES
+        main.cpp
+        boundaries/filesystem/catch_filepath.cpp
+        boundaries/filesystem/catch_directorypath.cpp
+        filesystem/catch_fileresolver.cpp
+        node/catch_genustypes.cpp
+        inclusion/catch_inclusionstrategytests.cpp
+        ../../src/qdoc/boundaries/filesystem/filepath.cpp
+        ../../src/qdoc/boundaries/filesystem/directorypath.cpp
+        ../../src/qdoc/boundaries/filesystem/resolvedfile.cpp
+        ../../src/qdoc/filesystem/fileresolver.cpp
+        ../../src/qdoc/genustypes.h
+    INCLUDE_DIRECTORIES
+        ../../src/
+    LIBRARIES
+        Qt::QDocCatchPrivate
+        Qt::QDocCatchConversionsPrivate
+        Qt::QDocCatchGeneratorsPrivate
+)
 
-    ${CMAKE_CURRENT_LIST_DIR}/boundaries/filesystem/catch_filepath.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/boundaries/filesystem/catch_directorypath.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/filesystem/catch_fileresolver.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/node/catch_genustypes.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/inclusion/catch_inclusionstrategytests.cpp
-
-    ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/boundaries/filesystem/filepath.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/boundaries/filesystem/directorypath.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/boundaries/filesystem/resolvedfile.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/filesystem/fileresolver.cpp
-
-    ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/genustypes.h
-  INCLUDE_DIRECTORIES
-    ${CMAKE_CURRENT_LIST_DIR}/../../src/
-  LIBRARIES
-    Qt::QDocCatchPrivate
-    Qt::QDocCatchConversionsPrivate
-    Qt::QDocCatchGeneratorsPrivate
+qt_internal_extend_target(tst_QDoc
+    CONDITION QT_QDOC_ENABLE_TEMPLATE_GENERATOR
+    SOURCES
+        templategenerator/catch_templategenerator.cpp
 )

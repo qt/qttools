@@ -17,6 +17,9 @@
 #include "qmlcodeparser.h"
 #include "sourcefileparser.h"
 #include "utilities.h"
+#ifdef QDOC_TEMPLATE_GENERATOR_ENABLED
+#include "templategenerator.h"
+#endif
 #include "tokenizer.h"
 #include "tree.h"
 #include "webxmlgenerator.h"
@@ -435,6 +438,9 @@ static void processQdocconfFile(const QString &fileName)
     HtmlGenerator htmlGenerator{file_resolver};
     WebXMLGenerator webXMLGenerator{file_resolver};
     DocBookGenerator docBookGenerator{file_resolver};
+#ifdef QDOC_TEMPLATE_GENERATOR_ENABLED
+    TemplateGenerator templateGenerator{file_resolver};
+#endif
 
     Generator::initialize();
 
