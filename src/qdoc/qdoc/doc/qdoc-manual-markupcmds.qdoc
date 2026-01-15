@@ -3365,6 +3365,18 @@
 
     See also \l {Status}{status-related commands}.
 
+    \b {Document metadata}
+
+    A \c keywords argument for the \\meta command adds specified keywords
+    as metadata for the generated document:
+
+    \code [text]
+        \meta {keywords} {reference, internal}
+    \endcode
+
+    In HTML output, these keywords are generated as a
+    \c {<meta name="keywords" content="...">} element.
+
     \target noautolist-command
     \section1 \\noautolist
 

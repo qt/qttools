@@ -1715,6 +1715,21 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
               << "\">\n";
     }
 
+    // Write entries from `\meta keywords` as document meta-information
+    if (const auto *metaTags = node->doc().metaTagMap()) {
+        QStringList keywords;
+        for (const auto &kw : metaTags->values(u"keywords"_s))
+            keywords << kw.split(','_L1, Qt::SkipEmptyParts);
+
+        if (!keywords.isEmpty()) {
+            std::transform(keywords.begin(), keywords.end(), keywords.begin(),
+                           [](const QString &k) { return k.trimmed(); });
+            out() << "  <meta name=\"keywords\" content=\""
+                  << protectEnc(keywords.join(','_L1))
+                  << "\">\n";
+        }
+    }
+
     // determine the rest of the <title> element content: "title | titleSuffix version"
     QString titleSuffix;
     if (!m_landingtitle.isEmpty()) {
