@@ -14,6 +14,7 @@
 #include <QtGui/qpainterstateguard.h>
 
 #include <QtCore/qlocale.h>
+#include <QtCore/qoperatingsystemversion.h>
 
 #include <utility>
 
@@ -78,14 +79,105 @@ static constexpr CursorResource cursorResources[] = {
     {Qt::BusyCursor, ":/qt-project.org/qtpropertybrowser/images/cursor-busy.png"_L1}
 };
 
+// A Pixmap icon engine for resource pixmaps that do not have a DPR set.
+// It sets the DPR on the pixmaps and either scales it down or centers it.
+class QtPixmapIconEngine : public QtPropertyIconEngine
+{
+public:
+    Q_DISABLE_COPY_MOVE(QtPixmapIconEngine)
+
+    explicit QtPixmapIconEngine(QPixmap p) : m_pixmap(std::move(p)) { }
+
+    QIconEngine *clone() const override
+    {
+        return new QtPixmapIconEngine(m_pixmap);
+    }
+
+    void paint(QPainter *painter, const QRect &rect, QIcon::Mode, QIcon::State) override
+    {
+        QPainterStateGuard psg(painter);
+        painter->setRenderHint(QPainter::Antialiasing, true);
+
+        const auto dpr = painter->device()->devicePixelRatioF();
+        m_pixmap.setDevicePixelRatio(dpr);
+        QSize dipSize =
+                qFuzzyCompare(dpr, 1) ? m_pixmap.size() : (QSizeF(m_pixmap.size()) / dpr).toSize();
+        const int dipWidth = dipSize.width();
+        const int dipHeight = dipSize.height();
+        if (dipWidth > rect.width() || dipHeight > rect.height()) {
+            painter->setRenderHint(QPainter::SmoothPixmapTransform);
+            painter->drawPixmap(rect, m_pixmap); // Too big: Let Qt scale down
+        } else {
+            QPoint point = rect.topLeft(); // center if needed
+            if (dipWidth < rect.width())
+                point.rx() += (rect.width() - dipWidth) / 2;
+            if (dipHeight < rect.height())
+                point.ry() += (rect.height() - dipHeight) / 2;
+            painter->drawPixmap(point, m_pixmap);
+        }
+    }
+
+private:
+    QPixmap m_pixmap;
+};
+
+static inline QIcon getResourceCursorIcon(const QString &fn)
+{
+    return QIcon{new QtPixmapIconEngine(QPixmap(fn))};
+}
+
+// Get an icon from the resources of the Windows QPA plugin. No scaling required.
+[[maybe_unused]] static QIcon getWindowsCursorIcon(QLatin1StringView name)
+{
+    static constexpr auto root = ":/qt-project.org/windows/cursors/images/"_L1;
+    static constexpr QLatin1StringView suffixes[] = {"_32.png"_L1, "_48.png"_L1, "_64.png"_L1};
+    QIcon result;
+    for (auto suffix : suffixes) {
+        const QString path = root + name + suffix;
+        QPixmap pixmap(path);
+        if (pixmap.isNull())
+            qWarning("%s: Failed to load \"%s\"", __FUNCTION__, qPrintable(path));
+        else
+            result.addPixmap(pixmap);
+    }
+    return result;
+}
+
+// Get a (small) icon from the resources of the Cocoa QPA plugin.
+[[maybe_unused]] static QIcon getCocoaCursorIcon(QLatin1StringView name)
+{
+    static constexpr auto root = ":/qt-project.org/mac/cursors/images/"_L1;
+    const QString path = root + name;
+    QPixmap pixmap(path);
+    if (pixmap.isNull()) {
+        qWarning("%s: Failed to load \"%s\"", __FUNCTION__, qPrintable(path));
+        return {};
+    }
+    return QIcon{new QtPixmapIconEngine(pixmap)};
+}
+
 QtCursorDatabase::QtCursorDatabase()
 {
     qAddPostRoutine(clearCursorDatabase);
 
+    if constexpr (QOperatingSystemVersion::currentType() == QOperatingSystemVersion::Windows) {
+        appendCursor(Qt::ClosedHandCursor, getWindowsCursorIcon("closedhandcursor"_L1));
+        appendCursor(Qt::OpenHandCursor, getWindowsCursorIcon("openhandcursor"_L1));
+        appendCursor(Qt::SplitHCursor, getWindowsCursorIcon("splithcursor"_L1));
+        appendCursor(Qt::SplitVCursor, getWindowsCursorIcon("splitvcursor"_L1));
+    }
+
+    if constexpr (QOperatingSystemVersion::currentType() == QOperatingSystemVersion::MacOS) {
+        appendCursor(Qt::BusyCursor, getCocoaCursorIcon("spincursor.png"_L1));
+        appendCursor(Qt::WaitCursor, getCocoaCursorIcon("waitcursor.png"_L1));
+    }
+
     appendCursor(Qt::BlankCursor, QIcon{});
 
-    for (const auto &cursorResource : cursorResources)
-        appendCursor(cursorResource.first, QIcon(cursorResource.second));
+    for (const auto &cursorResource : cursorResources) {
+        if (!hasCursor(cursorResource.first))
+            appendCursor(cursorResource.first, getResourceCursorIcon(cursorResource.second));
+    }
 }
 
 void QtCursorDatabase::clear()
@@ -98,7 +190,7 @@ void QtCursorDatabase::clear()
 
 void QtCursorDatabase::appendCursor(Qt::CursorShape shape, const QIcon &icon)
 {
-    if (m_cursorShapeToValue.contains(shape))
+    if (hasCursor(shape) || (shape != Qt::BlankCursor && icon.isNull()))
         return;
     const qsizetype value = m_cursorNames.size();
     const char *name = shapeNames().value(shape, nullptr);
