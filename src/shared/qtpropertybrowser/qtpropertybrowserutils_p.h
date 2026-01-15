@@ -47,7 +47,7 @@ public:
     static QtCursorDatabase *instance();
 
 private:
-    void appendCursor(Qt::CursorShape shape, const QString &name, const QIcon &icon);
+    void appendCursor(Qt::CursorShape shape, const QIcon &icon);
     QStringList m_cursorNames;
     QMap<int, QIcon> m_cursorIcons;
     QMap<int, Qt::CursorShape> m_valueToCursorShape;
