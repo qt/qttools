@@ -99,6 +99,7 @@
     \page qdoctests-qdocfileoutput-exhaustive.html 
     \title Exhaustive testing of QDoc commands
     \brief This page is a dumping ground for QDoc commands under test.
+    \meta keywords {QDoc, commands}
 
     \section1 This is a section1
     \section2 This is a section2
