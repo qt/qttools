@@ -1327,7 +1327,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
             if (!(*noexcept_info).isEmpty()) writer.writeAttribute("noexcept_expression", *noexcept_info);
         }
 
-        if (auto trailing_requires = fn->trailingRequiresClause(); trailing_requires && !trailing_requires->isEmpty())
+        if (const auto &trailing_requires = fn->trailingRequiresClause(); trailing_requires && !trailing_requires->isEmpty())
             writer.writeAttribute("trailing_requires", *trailing_requires);
 
         /*
