@@ -1834,8 +1834,7 @@ void DocParser::parseAlso()
 
         if (m_input[m_position] == '{') {
             target = getArgument();
-            skipSpacesOnLine();
-            if (m_position < m_inputLength && m_input[m_position] == '{') {
+            if (isLeftBraceAhead()) {
                 str = getArgument();
 
                 // hack for C++ to support links like \l{QString::}{count()}

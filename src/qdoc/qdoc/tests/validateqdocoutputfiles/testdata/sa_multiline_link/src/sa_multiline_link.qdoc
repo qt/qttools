@@ -1,0 +1,30 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page target-page.html
+    \title Target Page
+    \brief A page to link to.
+
+    This is the target page that we link to from the test page.
+*/
+
+/*!
+    \page sa-multiline-link.html
+    \title Multi-line See Also Links
+    \brief Test that \\sa supports multi-line link syntax like \\l does.
+
+    The purpose of this test is to verify that the \\sa command supports
+    multi-line link syntax, where the link target and link text can be
+    on different lines. This matches the documented behavior that \\sa
+    supports the same kind of links as \\l.
+
+    \section1 Test Cases
+
+    This page tests multi-line \\sa syntax where {target} and {text}
+    are on separate lines, which should work just like it does with \\l.
+
+    \sa {target-page.html}
+        {Link text on the next line}
+*/
+
