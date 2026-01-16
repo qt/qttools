@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="SaMultilineLink Reference Documentation" version="" project="SaMultilineLink">
+    <namespace name="" status="active" access="public" module="samultilinelink">
+        <page name="sa-multiline-link.html" href="sa-multiline-link.html" status="active" location="sa_multiline_link.qdoc" documented="true" subtype="page" title="Multi-line See Also Links" fulltitle="Multi-line See Also Links" subtitle="" brief="Test that \sa supports multi-line link syntax like \l does">
+            <contents name="test-cases" title="Test Cases" level="1"/>
+        </page>
+        <page name="target-page.html" href="target-page.html" status="active" location="sa_multiline_link.qdoc" documented="true" subtype="page" title="Target Page" fulltitle="Target Page" subtitle="" brief="A page to link to"/>
+    </namespace>
+</INDEX>
