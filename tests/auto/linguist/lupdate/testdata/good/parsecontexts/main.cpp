@@ -349,4 +349,27 @@ OperatorNS::Type TestClass6::operator<<(const OperatorNS::Type& t)
     return t;
 }
 
+// - If the user code contains a function named "tr" (same name as our tr
+//   function), lupdate wrongly clears the parsed prospectiveContext.
+//   When lupdate parses the arguments of that function, upon
+//   encountering two Tok_Idents in the arguments
+//   lupdate wrongly assumes it is parsing an instance of
+//   Tok_Ident::Tok_ident... in the return type of a method signature.
+//   In that case, since such instance doesn't define context, lupdate
+//   clears the prospectiveContext.
+// - Test that two ident tokens (int num) as parameters of a function
+//   named "tr" don't result in clearing prospectiveContext in the cpp parser
+namespace MyNamespace {
+class MyClass : public QObject
+{
+    Q_OBJECT
+    void tr(int num);
+};
+void MyClass::tr(int num)
+{
+    if (num)
+        tr("translation");
+}
+} // namespace MyNamespace
+
 //#include "main.moc"

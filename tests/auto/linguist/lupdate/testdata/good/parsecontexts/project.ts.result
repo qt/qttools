@@ -146,6 +146,14 @@
     </message>
 </context>
 <context>
+    <name>MyNamespace::MyClass</name>
+    <message>
+        <location filename="main.cpp" line="371"/>
+        <source>translation</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <location filename="main.cpp" line="128"/>
