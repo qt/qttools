@@ -2154,9 +2154,9 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 prefix += yyWord;
                 prefix.detach();
             } else {
-                // Breaking the :: chain
-                if (!prefix.isEmpty() && yyTok != Tok_LeftParen && yyTok != Tok_LeftBracket
-                    && yyTok != Tok_Equals) {
+                // Breaking the :: chain in case of a return/member type
+                if (!prefix.isEmpty() && yyTok != Tok_LeftParen && yyTok != Tok_RightParen
+                    && yyTok != Tok_LeftBracket && yyTok != Tok_Equals) {
                     // We're breaking the chain NOT at a function call or member initialization
                     // This means prospectiveContext was from a return/member type
                     prospectiveContext.clear();
