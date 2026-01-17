@@ -7,6 +7,8 @@
 #include "codemarker.h"
 
 struct RelaxedTemplateDeclaration;
+struct RelaxedTemplateParameter;
+struct TemplateDeclarationStorage;
 
 QT_BEGIN_NAMESPACE
 
@@ -29,8 +31,13 @@ public:
     QString markedUpEnumValue(const QString &enumValue, const Node *relative) override;
 
 private:
+    enum class TemplateFormat { SingleLine, MultiLine };
+
     QString addMarkUp(const QString &protectedCode, const Node *relative, const Location &location);
-    static QString formatTemplateDecl(const RelaxedTemplateDeclaration *templateDecl);
+    QString formatTemplateDecl(const RelaxedTemplateDeclaration *templateDecl);
+    QString formatTemplateDeclStorage(const TemplateDeclarationStorage &templateDecl,
+                                      TemplateFormat format);
+    QString formatTemplateParameter(const RelaxedTemplateParameter &param);
 };
 
 QT_END_NAMESPACE
