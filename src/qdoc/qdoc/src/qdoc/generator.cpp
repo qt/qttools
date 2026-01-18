@@ -1116,7 +1116,7 @@ void Generator::generateDocumentation(Node *node)
                 child->location().warning(u"No documentation generated for %1 '%2' in global scope."_s
                     .arg(typeString(child), child->name()),
                             u"Maybe you forgot to use the '\\relates' command?"_s);
-                child->setStatus(Node::DontDocument);
+                child->setStatus(Status::DontDocument);
             } else if (child->isQmlModule() && !child->wasSeen()) {
                 // An undocumented QML module that was constructed as a placeholder
                 auto *qmlModule = static_cast<CollectionNode *>(child);
@@ -1214,13 +1214,13 @@ std::optional<QString> formatStatus(const Node *node, QDocDatabase *qdb)
             return {status};
     }
     const auto &since = node->deprecatedSince();
-    if (node->status() == Node::Deprecated) {
+    if (node->status() == Status::Deprecated) {
         status = u"Deprecated"_s;
         if (!since.isEmpty())
             status += " since %1"_L1.arg(since);
     } else if (!since.isEmpty()) {
         status = "Until %1"_L1.arg(since);
-    } else if (node->status() == Node::Preliminary) {
+    } else if (node->status() == Status::Preliminary) {
         status = u"Preliminary"_s;
     } else if (const auto collection = qdb->getModuleNode(node); collection) {
         status = collection->state();
@@ -1278,7 +1278,7 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
     Text text;
 
     switch (node->status()) {
-    case Node::Active:
+    case Status::Active:
         // Output the module 'state' description if set.
         if (node->isModule() || node->isQmlModule()) {
             const QString &state = static_cast<const CollectionNode*>(node)->state();
@@ -1296,12 +1296,12 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
                  << version << "." << Atom::ParaRight;
         }
         break;
-    case Node::Preliminary:
+    case Status::Preliminary:
         text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD) << "This "
              << typeString(node) << " is under development and is subject to change."
              << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD) << Atom::ParaRight;
         break;
-    case Node::Deprecated:
+    case Status::Deprecated:
         text << Atom::ParaLeft;
         if (node->isAggregate())
             text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD);
@@ -1318,7 +1318,7 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
             text << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
         text << Atom::ParaRight;
         break;
-    case Node::Internal:
+    case Status::Internal:
     default:
         break;
     }

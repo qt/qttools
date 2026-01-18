@@ -2119,7 +2119,7 @@ void HtmlGenerator::addStatusToMap(const Aggregate *aggregate, QMap<QString, Tex
         return;
 
     QString spanClass;
-    if (aggregate->status() == Node::Deprecated)
+    if (aggregate->status() == Status::Deprecated)
         spanClass = u"deprecated"_s; // Disregard any version info
     else
         spanClass = Utilities::asAsciiPrintable(status.value());

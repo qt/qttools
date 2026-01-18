@@ -616,15 +616,15 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         QString status = attributes.value(QLatin1String("status")).toString();
         // TODO: "obsolete" is kept for backward compatibility, remove in the near future
         if (status == QLatin1String("obsolete") || status == QLatin1String("deprecated"))
-            node->setStatus(Node::Deprecated);
+            node->setStatus(Status::Deprecated);
         else if (status == QLatin1String("preliminary"))
-            node->setStatus(Node::Preliminary);
+            node->setStatus(Status::Preliminary);
         else if (status == QLatin1String("internal"))
-            node->setStatus(Node::Internal);
+            node->setStatus(Status::Internal);
         else if (status == QLatin1String("ignored"))
-            node->setStatus(Node::DontDocument);
+            node->setStatus(Status::DontDocument);
         else
-            node->setStatus(Node::Active);
+            node->setStatus(Status::Active);
 
         QString physicalModuleName = attributes.value(QLatin1String("module")).toString();
         if (!physicalModuleName.isEmpty())
@@ -758,18 +758,18 @@ static QString getAccessString(Access t)
     return QLatin1String("public");
 }
 
-static QString getStatusString(Node::Status t)
+static QString getStatusString(Status t)
 {
     switch (t) {
-    case Node::Deprecated:
+    case Status::Deprecated:
         return QLatin1String("deprecated");
-    case Node::Preliminary:
+    case Status::Preliminary:
         return QLatin1String("preliminary");
-    case Node::Active:
+    case Status::Active:
         return QLatin1String("active");
-    case Node::Internal:
+    case Status::Internal:
         return QLatin1String("internal");
-    case Node::DontDocument:
+    case Status::DontDocument:
         return QLatin1String("ignored");
     default:
         break;

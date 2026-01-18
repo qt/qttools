@@ -254,7 +254,7 @@ static void warnAboutDocumentedChildInUndocumentedParent(const Node *aggregate, 
 {
     Q_ASSERT(child);
     const auto *parent{child->parent()};
-    if (parent && parent == aggregate && !child->isPrivate() && child->status() != Node::Internal
+    if (parent && parent == aggregate && !child->isPrivate() && child->status() != Status::Internal
             && !parent->isProxyNode() && !parent->isNamespace() && !parent->isDontDocument()
             && !parent->hasDoc()) {
         auto &config{Config::instance()};
@@ -294,7 +294,7 @@ void Aggregate::markUndocumentedChildrenInternal()
                     if (static_cast<TypedefNode *>(child)->hasAssociatedEnum())
                         continue;
                 }
-                child->setStatus(Node::Internal);
+                child->setStatus(Status::Internal);
             }
         } else {
             warnAboutDocumentedChildInUndocumentedParent(this, child);

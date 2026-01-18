@@ -94,7 +94,7 @@ FunctionNode::FunctionNode(Metaness kind, Aggregate *parent, const QString &name
 {
     setGenus(getGenus(m_metaness));
     if (!isCppNode() && name.startsWith("__"))
-        setStatus(Internal);
+        setStatus(Status::Internal);
 }
 
 /*!
@@ -356,7 +356,7 @@ const PropertyNode *FunctionNode::primaryAssociatedProperty() const
 */
 bool FunctionNode::isDeprecated() const
 {
-    return status() == Node::Deprecated;
+    return status() == Status::Deprecated;
 }
 
 /*! \fn unsigned char FunctionNode::overloadNumber() const
@@ -511,13 +511,13 @@ QString FunctionNode::returnTypeString() const
     Returns the status of the function, taking the status of any associated
     properties into account.
 */
-Node::Status FunctionNode::status() const
+Status FunctionNode::status() const
 {
     auto it = std::find_if_not(m_associatedProperties.begin(), m_associatedProperties.end(),
                                [](const Node *p) -> bool { return p->isDeprecated(); });
 
     if (!m_associatedProperties.isEmpty() && it == m_associatedProperties.end())
-        return Node::Deprecated;
+        return Status::Deprecated;
     else
         return Node::status();
 }

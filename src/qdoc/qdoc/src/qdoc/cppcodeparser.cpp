@@ -456,13 +456,13 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
     } else if (command == COMMAND_INQMLMODULE) {
         // Handled when parsing topic commands
     } else if (command == COMMAND_OBSOLETE) {
-        node->setStatus(Node::Deprecated);
+        node->setStatus(Status::Deprecated);
     } else if (command == COMMAND_NONREENTRANT) {
         node->setThreadSafeness(Node::NonReentrant);
     } else if (command == COMMAND_PRELIMINARY) {
         // \internal wins.
         if (!node->isInternal())
-            node->setStatus(Node::Preliminary);
+            node->setStatus(Status::Preliminary);
     } else if (command == COMMAND_INTERNAL) {
         node->markInternal();
     } else if (command == COMMAND_REENTRANT) {

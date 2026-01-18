@@ -1102,7 +1102,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         if (!internalFilePatterns_.exactMatches.isEmpty() || !internalFilePatterns_.globPatterns.isEmpty()
             || !internalFilePatterns_.regexPatterns.isEmpty()) {
             if (Config::matchesInternalFilePattern(location.filePath(), internalFilePatterns_))
-                classe->setStatus(Node::Internal);
+                classe->setStatus(Status::Internal);
         }
 
         classe->setAnonymous(clang_Cursor_isAnonymous(cursor));

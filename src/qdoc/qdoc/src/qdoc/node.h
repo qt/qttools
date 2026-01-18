@@ -6,6 +6,7 @@
 
 #include "access.h"
 #include "comparisoncategory.h"
+#include "status.h"
 #include "doc.h"
 #include "enumitem.h"
 #include "importrec.h"
@@ -54,14 +55,6 @@ typedef QMultiMap<QString, CollectionNode *> CNMultiMap;
 class Node : public INode
 {
 public:
-    enum Status : unsigned char {
-        Deprecated,
-        Preliminary,
-        Active,
-        Internal,
-        DontDocument
-    }; // don't reorder this enum
-
     enum ThreadSafeness : unsigned char {
         UnspecifiedSafeness,
         NonReentrant,
@@ -93,10 +86,10 @@ public:
     void setGenus(Genus t) { m_genus = t; }
     static Genus getGenus(NodeType t);
 
-    [[nodiscard]] bool isActive() const { return m_status == Active; }
+    [[nodiscard]] bool isActive() const { return m_status == Status::Active; }
     [[nodiscard]] bool isClass() const { return m_nodeType == NodeType::Class; }
     [[nodiscard]] bool isCppNode() const { return genus() == Genus::CPP; }
-    [[nodiscard]] bool isDontDocument() const { return (m_status == DontDocument); }
+    [[nodiscard]] bool isDontDocument() const { return (m_status == Status::DontDocument); }
     [[nodiscard]] bool isEnumType() const
     {
         return m_nodeType == NodeType::Enum || m_nodeType == NodeType::QmlEnum;
@@ -114,7 +107,7 @@ public:
     [[nodiscard]] bool isModule() const { return m_nodeType == NodeType::Module; }
     [[nodiscard]] bool isNamespace() const { return m_nodeType == NodeType::Namespace; }
     [[nodiscard]] bool isPage() const { return m_nodeType == NodeType::Page; }
-    [[nodiscard]] bool isPreliminary() const { return (m_status == Preliminary); }
+    [[nodiscard]] bool isPreliminary() const { return (m_status == Status::Preliminary); }
     [[nodiscard]] bool isPrivate() const { return m_access == Access::Private; }
     [[nodiscard]] bool isProperty() const { return m_nodeType == NodeType::Property; }
     [[nodiscard]] bool isProxyNode() const { return m_nodeType == NodeType::Proxy; }
@@ -138,7 +131,7 @@ public:
     [[nodiscard]] bool isVariable() const { return m_nodeType == NodeType::Variable; }
     [[nodiscard]] bool isGenericCollection() const { return (m_nodeType == NodeType::Collection); }
 
-    [[nodiscard]] virtual bool isDeprecated() const { return (m_status == Deprecated); }
+    [[nodiscard]] virtual bool isDeprecated() const { return (m_status == Status::Deprecated); }
     [[nodiscard]] virtual bool isAbstract() const { return false; }
     [[nodiscard]] virtual bool isAggregate() const { return false; } // means "can have children"
     [[nodiscard]] virtual bool isFirstClassAggregate() const
@@ -207,7 +200,7 @@ public:
     virtual bool setTitle(const QString &) { return false; }
     virtual bool setSubtitle(const QString &) { return false; }
 
-    void markInternal() { setStatus(Internal); }
+    void markInternal() { setStatus(Status::Internal); }
 
     virtual void markDefault() {}
     virtual void markReadOnly(bool) {}
@@ -289,7 +282,7 @@ private:
     Genus m_genus {};
     Access m_access { Access::Public };
     ThreadSafeness m_safeness { UnspecifiedSafeness };
-    Status m_status { Active };
+    Status m_status { Status::Active };
     ComparisonCategory m_comparisonCategory { ComparisonCategory::None };
     bool m_indexNodeFlag : 1;
     bool m_relatedNonmember : 1;

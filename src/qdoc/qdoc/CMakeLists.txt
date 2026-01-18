@@ -88,6 +88,7 @@ set(qdoc_sources
     src/qdoc/relatedclass.cpp
     src/qdoc/sections.cpp
     src/qdoc/sharedcommentnode.cpp
+    src/qdoc/status.h
     src/qdoc/tagfilewriter.cpp
     src/qdoc/text.cpp
     src/qdoc/tocwriter.cpp

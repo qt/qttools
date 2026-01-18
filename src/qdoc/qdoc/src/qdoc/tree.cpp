@@ -1533,7 +1533,7 @@ void Tree::markDontDocumentNodes()
     for (auto it = m_dontDocumentMap.begin(); it != m_dontDocumentMap.end(); ++it) {
         Aggregate *node = findAggregate(it.key());
         if (node != nullptr)
-            node->setStatus(Node::DontDocument);
+            node->setStatus(Status::DontDocument);
     }
 }
 

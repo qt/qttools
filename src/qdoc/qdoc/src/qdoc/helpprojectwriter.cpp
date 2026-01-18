@@ -494,7 +494,7 @@ void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &write
         QString membersPath = href + QStringLiteral("-members.html");
         writeSection(writer, membersPath, QStringLiteral("List of all members"));
     }
-    if (project.m_memberStatus[node].contains(Node::Deprecated)) {
+    if (project.m_memberStatus[node].contains(Status::Deprecated)) {
         QString obsoletePath = href + QStringLiteral("-obsolete.html");
         writeSection(writer, obsoletePath, QStringLiteral("Obsolete members"));
     }

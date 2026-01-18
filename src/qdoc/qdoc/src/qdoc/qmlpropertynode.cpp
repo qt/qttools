@@ -29,7 +29,7 @@ QmlPropertyNode::QmlPropertyNode(Aggregate *parent, const QString &name, QString
     if (m_type == "alias")
         m_isAlias = true;
     if (name.startsWith("__"))
-        setStatus(Internal);
+        setStatus(Status::Internal);
     // Set the default prefix for enumerators
     m_nativeEnum.setPrefix(parent->name());
 }

@@ -56,7 +56,7 @@ struct Keyword {
 
 struct HelpProject
 {
-    using NodeStatusSet = QSet<unsigned char>;
+    using NodeStatusSet = QSet<Status>;
 
     QString m_name {};
     QString m_helpNamespace {};

@@ -572,13 +572,13 @@ void Node::setStatus(Status t)
     // Set non-null, empty URL to nodes that are ignored as
     // link targets
     switch (t) {
-    case Internal: {
+    case Status::Internal: {
         const InclusionPolicy policy = Config::instance().createInclusionPolicy();
         if (InclusionFilter::processInternalDocs(policy))
             break;
         Q_FALLTHROUGH();
     }
-    case DontDocument:
+    case Status::DontDocument:
         m_url = QStringLiteral("");
         break;
     default:
@@ -859,9 +859,9 @@ Node::ThreadSafeness Node::inheritedThreadSafeness() const
  */
 bool Node::isInternal() const
 {
-    if (status() == Internal)
+    if (status() == Status::Internal)
         return true;
-    return parent() && parent()->status() == Internal && !parent()->isAbstract();
+    return parent() && parent()->status() == Status::Internal && !parent()->isAbstract();
 }
 
 /*! \fn void Node::markInternal()
@@ -1049,7 +1049,7 @@ void Node::setDeprecated(const QString &sinceVersion)
                 return;
         }
     }
-    setStatus(Deprecated);
+    setStatus(Status::Deprecated);
 }
 
 /*! \fn Node *Node::clone(Aggregate *parent)

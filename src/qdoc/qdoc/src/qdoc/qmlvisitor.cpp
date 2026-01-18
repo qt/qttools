@@ -460,11 +460,11 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
                 for (const auto &argument : args)
                     QDocDatabase::qdocDB()->addToGroup(argument.first, node);
             } else if (command == COMMAND_INTERNAL) {
-                node->setStatus(Node::Internal);
+                node->setStatus(Status::Internal);
             } else if (command == COMMAND_OBSOLETE) {
-                node->setStatus(Node::Deprecated);
+                node->setStatus(Status::Deprecated);
             } else if (command == COMMAND_PRELIMINARY) {
-                node->setStatus(Node::Preliminary);
+                node->setStatus(Status::Preliminary);
             } else if (command == COMMAND_SINCE) {
                 QString arg = args[0].first; //.join(' ');
                 node->setSince(arg);

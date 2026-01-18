@@ -32,7 +32,7 @@ public:
     void setAbstract(bool b) override { m_abstract = b; }
     void setWrapper() override { m_wrapper = true; }
     void setSingleton(bool singleton = true) { m_singleton = singleton; }
-    [[nodiscard]] bool isInternal() const override { return (status() == Internal); }
+    [[nodiscard]] bool isInternal() const override { return (status() == Status::Internal); }
     [[nodiscard]] QString qmlFullBaseName() const override;
     [[nodiscard]] QString logicalModuleName() const override;
     [[nodiscard]] QString logicalModuleVersion() const override;
