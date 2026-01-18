@@ -134,22 +134,22 @@ endif()
 qt_configure_add_report_entry(
     TYPE WARNING
     MESSAGE "${QDOC_CLANG_WARNING}"
-    CONDITION NOT QT_FEATURE_clang
+    CONDITION NOT QT_FEATURE_clang AND QT_FEATURE_qdoc
 )
 qt_configure_add_report_entry(
     TYPE WARNING
     MESSAGE "${QDOC_QMLPRIVATE_WARNING}"
-    CONDITION NOT TARGET Qt::QmlPrivate
+    CONDITION NOT TARGET Qt::QmlPrivate AND QT_FEATURE_qdoc
 )
 qt_configure_add_report_entry(
     TYPE WARNING
     MESSAGE "${QDOC_MISSING_FEATURES_WARNING}"
-    CONDITION NOT QT_FEATURE_commandlineparser OR NOT QT_FEATURE_thread
+    CONDITION (NOT QT_FEATURE_commandlineparser OR NOT QT_FEATURE_thread) AND QT_FEATURE_qdoc
 )
 qt_configure_add_report_entry(
     TYPE WARNING
     MESSAGE "${QDOC_CLANG_VERSION_WARNING}"
-    CONDITION QT_LIB_CLANG_VERSION VERSION_LESS QDOC_MINIMUM_CLANG_VERSION
+    CONDITION QT_LIB_CLANG_VERSION VERSION_LESS QDOC_MINIMUM_CLANG_VERSION AND QT_FEATURE_qdoc
 )
 
 qt_configure_add_report_entry(
