@@ -4,6 +4,9 @@
 #include <catch/catch.hpp>
 
 #include <qdoc/ir/documentir.h>
+#include <qdoc/access.h>
+#include <qdoc/genustypes.h>
+#include <qdoc/status.h>
 
 #include <QJsonObject>
 #include <QJsonValue>
@@ -19,7 +22,7 @@ SCENARIO("DocumentIR basic structure", "[DocumentIR][IR]") {
         WHEN("Converting to JSON") {
             QJsonObject json = ir.toJson();
 
-            THEN("The JSON contains all expected fields with empty values") {
+            THEN("The JSON contains all expected fields with empty or default values") {
                 REQUIRE(json.contains("title"_L1));
                 REQUIRE(json.contains("fullTitle"_L1));
                 REQUIRE(json.contains("url"_L1));
@@ -28,6 +31,19 @@ SCENARIO("DocumentIR basic structure", "[DocumentIR][IR]") {
                 REQUIRE(json["fullTitle"_L1].toString().isEmpty());
                 REQUIRE(json["url"_L1].toString().isEmpty());
                 REQUIRE(json["brief"_L1].toString().isEmpty());
+            }
+
+            THEN("The JSON contains classification fields with default values") {
+                // nodeType and genus are omitted when unclassified (NoType/DontCare)
+                REQUIRE(!json.contains("nodeType"_L1));
+                REQUIRE(!json.contains("genus"_L1));
+                // status and access are always present as {id, label} objects
+                REQUIRE(json.contains("status"_L1));
+                REQUIRE(json.contains("access"_L1));
+                REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "active");
+                REQUIRE(json["status"_L1].toObject()["label"_L1].toString() == "Active");
+                REQUIRE(json["access"_L1].toObject()["id"_L1].toString() == "public");
+                REQUIRE(json["access"_L1].toObject()["label"_L1].toString() == "Public");
             }
 
             THEN("The JSON does not contain a content field when contentJson is empty") {
@@ -51,6 +67,107 @@ SCENARIO("DocumentIR basic structure", "[DocumentIR][IR]") {
                 REQUIRE(json["fullTitle"_L1].toString() == "Test Module::Test Page");
                 REQUIRE(json["url"_L1].toString() == "test-page.html");
                 REQUIRE(json["brief"_L1].toString() == "A brief description of the test page.");
+            }
+        }
+    }
+}
+
+SCENARIO("DocumentIR classification metadata", "[DocumentIR][IR][Classification]") {
+
+    GIVEN("A DocumentIR representing a C++ class") {
+        DocumentIR ir;
+        ir.nodeType = NodeType::Class;
+        ir.genus = Genus::CPP;
+        ir.status = Status::Active;
+        ir.access = Access::Public;
+        ir.title = "MyClass"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("Classification fields are correctly serialized as id+label objects") {
+                REQUIRE(json["nodeType"_L1].toObject()["id"_L1].toString() == "class");
+                REQUIRE(json["nodeType"_L1].toObject()["label"_L1].toString() == "Class");
+                REQUIRE(json["genus"_L1].toObject()["id"_L1].toString() == "cpp");
+                REQUIRE(json["genus"_L1].toObject()["label"_L1].toString() == "C++");
+                REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "active");
+                REQUIRE(json["access"_L1].toObject()["id"_L1].toString() == "public");
+            }
+        }
+    }
+
+    GIVEN("A DocumentIR representing a deprecated QML type") {
+        DocumentIR ir;
+        ir.nodeType = NodeType::QmlType;
+        ir.genus = Genus::QML;
+        ir.status = Status::Deprecated;
+        ir.access = Access::Public;
+        ir.title = "LegacyItem"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("QML-specific classification is correctly serialized") {
+                REQUIRE(json["nodeType"_L1].toObject()["id"_L1].toString() == "qml-type");
+                REQUIRE(json["nodeType"_L1].toObject()["label"_L1].toString() == "QML type");
+                REQUIRE(json["genus"_L1].toObject()["id"_L1].toString() == "qml");
+                REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "deprecated");
+            }
+        }
+    }
+
+    GIVEN("A DocumentIR representing a preliminary internal function") {
+        DocumentIR ir;
+        ir.nodeType = NodeType::Function;
+        ir.genus = Genus::CPP;
+        ir.status = Status::Preliminary;
+        ir.access = Access::Protected;
+        ir.title = "experimentalMethod"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("Preliminary status and protected access are correctly serialized") {
+                REQUIRE(json["nodeType"_L1].toObject()["id"_L1].toString() == "function");
+                REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "preliminary");
+                REQUIRE(json["access"_L1].toObject()["id"_L1].toString() == "protected");
+            }
+        }
+    }
+
+    GIVEN("A DocumentIR representing an internal private property") {
+        DocumentIR ir;
+        ir.nodeType = NodeType::Property;
+        ir.genus = Genus::CPP;
+        ir.status = Status::Internal;
+        ir.access = Access::Private;
+        ir.title = "m_internalData"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("Internal status and private access are correctly serialized") {
+                REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "internal");
+                REQUIRE(json["access"_L1].toObject()["id"_L1].toString() == "private");
+            }
+        }
+    }
+
+    GIVEN("A DocumentIR representing a DOC page") {
+        DocumentIR ir;
+        ir.nodeType = NodeType::Page;
+        ir.genus = Genus::DOC;
+        ir.status = Status::Active;
+        ir.title = "Getting Started"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("DOC genus is correctly serialized") {
+                REQUIRE(json["nodeType"_L1].toObject()["id"_L1].toString() == "page");
+                REQUIRE(json["nodeType"_L1].toObject()["label"_L1].toString() == "Page");
+                REQUIRE(json["genus"_L1].toObject()["id"_L1].toString() == "doc");
+                REQUIRE(json["genus"_L1].toObject()["label"_L1].toString() == "Documentation");
             }
         }
     }

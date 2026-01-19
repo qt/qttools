@@ -4,6 +4,10 @@
 #ifndef DOCUMENTIR_H
 #define DOCUMENTIR_H
 
+#include "../access.h"
+#include "../genustypes.h"
+#include "../status.h"
+
 #include <QJsonObject>
 #include <QString>
 
@@ -14,10 +18,19 @@ class Node;
 
 struct DocumentIR
 {
+    // Classification
+    NodeType nodeType { NodeType::NoType };
+    Genus genus { Genus::DontCare };
+    Status status { Status::Active };
+    Access access { Access::Public };
+
+    // Identity
     QString title;              // Page title
     QString fullTitle;          // Full qualified title
     QString url;                // Output file URL (relative)
     QString brief;              // Brief description
+
+    // Content
     QJsonObject contentJson;    // Content as JSON (for template rendering)
 
     QJsonObject toJson() const;
