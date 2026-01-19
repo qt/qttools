@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "qdesigner_actions.h"
-#include "assistantclient.h"
+#include "helpclient.h"
 #include "designer_enums.h"
 #include <qdesigner_utils_p.h>
 #include "qdesigner.h"
@@ -144,25 +144,12 @@ QFileDialog *createSaveAsDialog(QWidget *parent, const QString &dir, const QStri
     return result;
 }
 
-static std::unique_ptr<HelpClient> createHelpClient(const Options &options)
-{
-    switch (options.helpMode) {
-    case Options::HelpMode::Web:
-        return std::make_unique<WebHelpClient>();
-    case Options::HelpMode::Python:
-        return std::make_unique<PythonWebHelpClient>();
-    case Options::HelpMode::Assistant:
-        break;
-    }
-    return std::make_unique<AssistantClient>();
-}
-
 QDesignerActions::QDesignerActions(const Options &options, QDesignerWorkbench *workbench)
     : QObject(workbench),
       m_workbench(workbench),
       m_core(workbench->core()),
       m_settings(workbench->core()),
-      m_helpClient(createHelpClient(options)),
+      m_helpClient(HelpClient::create(options.helpMode)),
       m_backupTimer(new QTimer(this)),
       m_fileActions(createActionGroup(this)),
       m_recentFilesActions(createActionGroup(this)),
