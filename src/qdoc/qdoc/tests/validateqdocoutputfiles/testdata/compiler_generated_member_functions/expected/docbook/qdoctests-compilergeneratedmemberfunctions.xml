@@ -23,15 +23,15 @@
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="CompilerGeneratedMemberFunctions">
-<db:title>[constexpr noexcept default] CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions()</db:title>
+<db:title>[constexpr noexcept implicit] CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions()</db:title>
 <db:para>Constructs a <db:link xlink:href="qdoctests-compilergeneratedmemberfunctions.xml">CompilerGeneratedMemberFunctions</db:link> object.</db:para>
 </db:section>
 <db:section xml:id="CompilerGeneratedMemberFunctions-1">
-<db:title>[constexpr noexcept default] CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions(const QDocTests::CompilerGeneratedMemberFunctions &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:title>[constexpr noexcept implicit] CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions(const QDocTests::CompilerGeneratedMemberFunctions &amp;<db:emphasis>other</db:emphasis>)</db:title>
 <db:para>Copy-constructs a <db:link xlink:href="qdoctests-compilergeneratedmemberfunctions.xml">CompilerGeneratedMemberFunctions</db:link> object from <db:code role="parameter">other</db:code>.</db:para>
 </db:section>
 <db:section xml:id="CompilerGeneratedMemberFunctions-2">
-<db:title>[constexpr noexcept default] CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions(const QDocTests::CompilerGeneratedMemberFunctions &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:title>[constexpr noexcept implicit] CompilerGeneratedMemberFunctions::CompilerGeneratedMemberFunctions(const QDocTests::CompilerGeneratedMemberFunctions &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
 <db:para>Move-constructs a <db:link xlink:href="qdoctests-compilergeneratedmemberfunctions.xml">CompilerGeneratedMemberFunctions</db:link> object from <db:code role="parameter">other</db:code>.</db:para>
 </db:section>
 </db:section>

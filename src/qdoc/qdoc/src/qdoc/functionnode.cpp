@@ -42,7 +42,7 @@ QT_BEGIN_NAMESPACE
 FunctionNode::FunctionNode(Aggregate *parent, const QString &name)
     : Node(NodeType::Function, parent, name),
       m_const(false),
-      m_default(false),
+      m_implicitlyGenerated(false),
       m_static(false),
       m_reimpFlag(false),
       m_attached(false),
@@ -75,7 +75,7 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString &name)
 FunctionNode::FunctionNode(Metaness kind, Aggregate *parent, const QString &name, bool attached)
     : Node(NodeType::Function, parent, name),
       m_const(false),
-      m_default(false),
+      m_implicitlyGenerated(false),
       m_static(false),
       m_reimpFlag(false),
       m_attached(attached),

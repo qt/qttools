@@ -3319,8 +3319,8 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             newLine();
         }
 
-        if (functionNode->isDefault())
-            generateModifier("default");
+        if (functionNode->isImplicitlyGenerated())
+            generateModifier("implicit");
         if (functionNode->isFinal())
             generateModifier("final");
         if (functionNode->isOverride())
@@ -3399,8 +3399,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             signature += " override";
         if (functionNode->isPureVirtual())
             signature += " = 0";
-        else if (functionNode->isDefault())
-            signature += " = default";
+        // TODO(QTBUG-140353): Emit " = default" for explicitly defaulted functions.
         if (const auto &req = functionNode->trailingRequiresClause(); req && !req->isEmpty())
             signature += " requires " + *req;
         generateSynopsisInfo("signature", signature);

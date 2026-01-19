@@ -1010,7 +1010,7 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
                         delete candidate;
                         return CXChildVisit_Continue;
                     }
-                    candidate->setDefault(true);
+                    candidate->setImplicitlyGenerated(true);
                     semanticParent->addChild(*fnNode = candidate);
                 }
             }

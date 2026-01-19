@@ -55,7 +55,7 @@ public:
     void setVirtualness(const QString &value);
     void setVirtualness(Virtualness virtualness) { m_virtualness = virtualness; }
     void setConst(bool b) { m_const = b; }
-    void setDefault(bool b) { m_default = b; }
+    void setImplicitlyGenerated(bool b) { m_implicitlyGenerated = b; }
     void setStatic(bool b) { m_static = b; }
     void setReimpFlag() { m_reimpFlag = true; }
     void setOverridesThis(const QString &path) { m_overridesThis = path; }
@@ -65,7 +65,7 @@ public:
     [[nodiscard]] QString returnTypeString() const;
     [[nodiscard]] QString virtualness() const;
     [[nodiscard]] bool isConst() const { return m_const; }
-    [[nodiscard]] bool isDefault() const override { return m_default; }
+    [[nodiscard]] bool isImplicitlyGenerated() const { return m_implicitlyGenerated; }
     [[nodiscard]] bool isStatic() const override { return m_static; }
     [[nodiscard]] bool isOverload() const { return m_overloadFlag; }
     [[nodiscard]] bool isMarkedReimp() const override { return m_reimpFlag; }
@@ -184,7 +184,7 @@ private:
     friend class PropertyNode;
 
     bool m_const : 1;
-    bool m_default : 1;
+    bool m_implicitlyGenerated : 1;
     bool m_static : 1;
     bool m_reimpFlag : 1;
     bool m_attached : 1;
