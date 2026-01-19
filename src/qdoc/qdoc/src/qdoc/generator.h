@@ -145,7 +145,7 @@ protected:
     };
     void generateThreadSafeness(const Node *node, CodeMarker *marker);
     bool generateComparisonCategory(const Node *node, CodeMarker *marker = nullptr);
-    bool generateComparisonList(const Node *node);
+    bool generateComparisonTable(const Node *node);
 
     QString generateOverloadSnippet(const FunctionNode *func);
     QString generateObjectName(const QString &className);

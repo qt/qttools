@@ -1816,7 +1816,7 @@ bool Generator::generateComparisonCategory(const Node *node, CodeMarker *marker)
         return false;
 
     Text text;
-    text << Atom::ParaLeft << "This %1 is "_L1.arg(typeString(node))
+    text << Atom::ParaLeft << "%1 is "_L1.arg(node->plainFullName())
          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_ITALIC)
          << QString::fromStdString(comparisonCategoryAsString(category))
          << ((category == ComparisonCategory::Equality) ? "-"_L1 : "ly "_L1)
@@ -1828,39 +1828,103 @@ bool Generator::generateComparisonCategory(const Node *node, CodeMarker *marker)
 }
 
 /*!
-    Generates a list of types that compare to \a node with the comparison
-    category that applies for the relationship, followed by (an optional)
-    descriptive text.
+    Generates a table of comparison categories for \a node, combining both
+    self-comparison (from \\compares) and comparisons with other types
+    (from \\compareswith).
+
+    If the node has a comparison category set via \\compares, it appears
+    as the first row in the table. Subsequent rows come from \\compareswith
+    entries.
+
+    The Description column is only included if at least one \\compareswith
+    entry has descriptive content.
 
     Returns \c true if text was generated, \c false otherwise.
  */
-bool Generator::generateComparisonList(const Node *node)
+bool Generator::generateComparisonTable(const Node *node)
 {
     Q_ASSERT(node);
-    if (!node->doc().comparesWithMap())
+
+    const auto selfCategory = node->comparisonCategory();
+    const auto *map = node->doc().comparesWithMap();
+
+    const bool hasSelfComparison = (selfCategory != ComparisonCategory::None);
+    const bool hasComparesWithEntries = (map && !map->isEmpty());
+
+    if (!hasSelfComparison && !hasComparesWithEntries)
         return false;
 
-    Text relationshipText;
-    for (auto [key, description] : node->doc().comparesWithMap()->asKeyValueRange()) {
-        const QString &category = QString::fromStdString(comparisonCategoryAsString(key));
-
-        relationshipText << Atom::ParaLeft << "This %1 is "_L1.arg(typeString(node))
-                         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD) << category
-                         << ((key == ComparisonCategory::Equality) ? "-"_L1 : "ly "_L1)
-                         << "comparable"_L1
-                         << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
-                         << " with "_L1;
-
-        const QStringList types{description.firstAtom()->string().split(';'_L1)};
-        for (const auto &name : types)
-            relationshipText << Atom(Atom::AutoLink, name)
-                             << Utilities::separator(types.indexOf(name), types.size());
-
-        relationshipText << Atom(Atom::ParaRight) << description;
+    bool hasDescriptions = false;
+    if (hasComparesWithEntries) {
+        for (const auto &description : *map) {
+            if (description.firstAtom()->next() != description.lastAtom()) {
+                hasDescriptions = true;
+                break;
+            }
+        }
     }
 
-    generateText(relationshipText, node, nullptr);
-    return !relationshipText.isEmpty();
+    Text text;
+
+    text << Atom::ParaLeft
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+         << "%1 Comparisons"_L1.arg(node->plainFullName())
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
+         << Atom::ParaRight;
+
+    text << Atom(Atom::TableLeft, "generic"_L1);
+
+    text << Atom::TableHeaderLeft
+         << Atom::TableItemLeft << "Category"_L1 << Atom::TableItemRight
+         << Atom::TableItemLeft << "Comparable Types"_L1 << Atom::TableItemRight;
+    if (hasDescriptions)
+        text << Atom::TableItemLeft << "Description"_L1 << Atom::TableItemRight;
+    text << Atom::TableHeaderRight;
+
+    // First row: self-comparison from \compares
+    if (hasSelfComparison) {
+        const QString &category = QString::fromStdString(comparisonCategoryAsString(selfCategory));
+
+        text << Atom::TableRowLeft;
+        text << Atom::TableItemLeft << category << Atom::TableItemRight;
+        text << Atom::TableItemLeft
+             << Atom(Atom::String, node->plainFullName()) << Atom::TableItemRight;
+        if (hasDescriptions)
+            text << Atom::TableItemLeft << Atom::TableItemRight;
+        text << Atom::TableRowRight;
+    }
+
+    // Subsequent rows: \compareswith entries
+    if (hasComparesWithEntries) {
+        for (auto [key, description] : map->asKeyValueRange()) {
+            const QString &category = QString::fromStdString(comparisonCategoryAsString(key));
+
+            text << Atom::TableRowLeft;
+
+            text << Atom::TableItemLeft << category << Atom::TableItemRight;
+
+            text << Atom::TableItemLeft;
+            const QStringList types{description.firstAtom()->string().split(';'_L1)};
+            for (const auto &name : types)
+                text << Atom(Atom::AutoLink, name)
+                     << Utilities::separator(types.indexOf(name), types.size());
+            text << Atom::TableItemRight;
+
+            if (hasDescriptions) {
+                text << Atom::TableItemLeft;
+                if (description.firstAtom()->next() != description.lastAtom())
+                    text << Text::subText(description.firstAtom()->next(), description.lastAtom());
+                text << Atom::TableItemRight;
+            }
+
+            text << Atom::TableRowRight;
+        }
+    }
+
+    text << Atom::TableRight;
+
+    generateText(text, node, nullptr);
+    return !text.isEmpty();
 }
 
 /*!

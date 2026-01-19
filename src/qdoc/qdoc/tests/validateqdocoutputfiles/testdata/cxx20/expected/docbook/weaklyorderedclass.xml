@@ -5,7 +5,23 @@
 <db:productname>Qt</db:productname>
 <db:titleabbrev>cxx20 Reference Documentation</db:titleabbrev>
 <db:abstract>
-<db:para>This class is <db:emphasis>weakly comparable</db:emphasis>.</db:para>
+<db:para><db:emphasis role="bold">WeaklyOrderedClass Comparisons</db:emphasis></db:para>
+<db:informaltable style="generic">
+<db:thead>
+<db:tr>
+<db:th>
+Category</db:th>
+<db:th>
+Comparable Types</db:th>
+</db:tr>
+</db:thead>
+<db:tr valign="top">
+<db:td>
+weak</db:td>
+<db:td>
+WeaklyOrderedClass</db:td>
+</db:tr>
+</db:informaltable>
 </db:abstract>
 </db:info>
 <db:variablelist>

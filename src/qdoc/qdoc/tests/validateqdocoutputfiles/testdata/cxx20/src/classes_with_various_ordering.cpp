@@ -74,6 +74,20 @@
 
 
 /*!
+    \class ComparesStronglyWithSelfAndOthers
+    \inmodule TestQDoc
+    \brief A class that uses both \\compares and \\compareswith.
+    \compares strong
+
+    \compareswith strong Foo Bar
+    Strong comparison with Foo and Bar.
+    \endcompareswith
+
+    \compareswith partial Baz
+    \endcompareswith
+*/
+
+/*!
     \class Foo
     \inmodule TestQDoc
 */

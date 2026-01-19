@@ -28,6 +28,9 @@ class ComparesStronglyWithThreeClassesAcrossMultipleLines
 class ComparesStronglyWithOneClassAndPartiallyWithAnother
 {
 };
+class ComparesStronglyWithSelfAndOthers
+{
+};
 class Foo
 {
 };

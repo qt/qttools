@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
 <db:info>
-<db:title>ComparesStronglyWithThreeClassesAcrossMultipleLines Class</db:title>
+<db:title>ComparesStronglyWithSelfAndOthers Class</db:title>
 <db:productname>Qt</db:productname>
 <db:titleabbrev>cxx20 Reference Documentation</db:titleabbrev>
 <db:abstract>
-<db:para><db:emphasis role="bold">ComparesStronglyWithThreeClassesAcrossMultipleLines Comparisons</db:emphasis></db:para>
+<db:para>A class that uses both <db:phrase>\compares</db:phrase> and <db:phrase>\compareswith</db:phrase>.</db:para>
+<db:para><db:emphasis role="bold">ComparesStronglyWithSelfAndOthers Comparisons</db:emphasis></db:para>
 <db:informaltable style="generic">
 <db:thead>
 <db:tr>
@@ -13,13 +14,34 @@
 Category</db:th>
 <db:th>
 Comparable Types</db:th>
+<db:th>
+Description</db:th>
 </db:tr>
 </db:thead>
 <db:tr valign="top">
 <db:td>
 strong</db:td>
 <db:td>
-<db:link xlink:href="foo.xml">Foo</db:link>, <db:link xlink:href="bar.xml">Bar</db:link>, and <db:link xlink:href="baz.xml">Baz</db:link>.</db:td>
+ComparesStronglyWithSelfAndOthers</db:td>
+<db:td>
+</db:td>
+</db:tr>
+<db:tr valign="top">
+<db:td>
+strong</db:td>
+<db:td>
+<db:link xlink:href="foo.xml">Foo</db:link> and <db:link xlink:href="bar.xml">Bar</db:link>.</db:td>
+<db:td>
+<db:para>Strong comparison with Foo and Bar.</db:para>
+</db:td>
+</db:tr>
+<db:tr valign="top">
+<db:td>
+partial</db:td>
+<db:td>
+<db:link xlink:href="baz.xml">Baz</db:link>.</db:td>
+<db:td>
+</db:td>
 </db:tr>
 </db:informaltable>
 </db:abstract>

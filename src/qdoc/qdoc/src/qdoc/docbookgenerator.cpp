@@ -1936,8 +1936,7 @@ void DocBookGenerator::generateHeader(const Text &title, const QString &subTitle
         generatedSomething |= generateStatus(node);
         generatedSomething |= generateSince(node);
         generatedSomething |= generateThreadSafeness(node);
-        generatedSomething |= generateComparisonCategory(node);
-        generatedSomething |= generateComparisonList(node);
+        generatedSomething |= generateComparisonTable(node);
 
         // An abstract cannot be empty, hence use the project description.
         if (!generatedSomething)

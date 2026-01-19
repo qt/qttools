@@ -6,10 +6,44 @@
 <db:titleabbrev>cxx20 Reference Documentation</db:titleabbrev>
 <db:abstract>
 <db:para>Class with various comparison relationships.</db:para>
-<db:para>This class is <db:emphasis role="bold">strongly comparable</db:emphasis> with <db:link xlink:href="foo.xml">Foo</db:link>.</db:para>
-<db:para>This class is <db:emphasis role="bold">partially comparable</db:emphasis> with <db:link xlink:href="bar.xml">Bar</db:link>.</db:para>
+<db:para><db:emphasis role="bold">ComparesStronglyWithOneClassAndPartiallyWithAnother Comparisons</db:emphasis></db:para>
+<db:informaltable style="generic">
+<db:thead>
+<db:tr>
+<db:th>
+Category</db:th>
+<db:th>
+Comparable Types</db:th>
+<db:th>
+Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr valign="top">
+<db:td>
+strong</db:td>
+<db:td>
+<db:link xlink:href="foo.xml">Foo</db:link>.</db:td>
+<db:td>
+</db:td>
+</db:tr>
+<db:tr valign="top">
+<db:td>
+partial</db:td>
+<db:td>
+<db:link xlink:href="bar.xml">Bar</db:link>.</db:td>
+<db:td>
 <db:para>Here we describe partial comparison with Bar.</db:para>
-<db:para>This class is <db:emphasis role="bold">equality-comparable</db:emphasis> with <db:link xlink:href="foo.xml">Foo</db:link>.</db:para>
+</db:td>
+</db:tr>
+<db:tr valign="top">
+<db:td>
+equality</db:td>
+<db:td>
+<db:link xlink:href="foo.xml">Foo</db:link>.</db:td>
+<db:td>
+</db:td>
+</db:tr>
+</db:informaltable>
 </db:abstract>
 </db:info>
 <db:variablelist>

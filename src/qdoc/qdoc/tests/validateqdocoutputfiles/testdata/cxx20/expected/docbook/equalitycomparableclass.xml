@@ -5,7 +5,23 @@
 <db:productname>Qt</db:productname>
 <db:titleabbrev>cxx20 Reference Documentation</db:titleabbrev>
 <db:abstract>
-<db:para>This class is <db:emphasis>equality-comparable</db:emphasis>.</db:para>
+<db:para><db:emphasis role="bold">EqualityComparableClass Comparisons</db:emphasis></db:para>
+<db:informaltable style="generic">
+<db:thead>
+<db:tr>
+<db:th>
+Category</db:th>
+<db:th>
+Comparable Types</db:th>
+</db:tr>
+</db:thead>
+<db:tr valign="top">
+<db:td>
+equality</db:td>
+<db:td>
+EqualityComparableClass</db:td>
+</db:tr>
+</db:informaltable>
 </db:abstract>
 </db:info>
 <db:variablelist>

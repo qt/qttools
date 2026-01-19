@@ -1193,10 +1193,9 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     }
 
     closeUnorderedList();
-    generateComparisonCategory(aggregate, marker);
-    generateComparisonList(aggregate);
 
     generateThreadSafeness(aggregate, marker);
+    generateComparisonTable(aggregate);
 
     bool needOtherSection = false;
 
