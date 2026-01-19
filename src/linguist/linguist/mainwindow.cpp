@@ -12,6 +12,7 @@
 #include "machinetranslationdialog.h"
 #include "errorsview.h"
 #include "finddialog.h"
+#include <helpclient.h>
 #include "uiformpreviewview.h"
 #ifndef Q_OS_WASM
 #  include "qmlformpreviewview.h"
@@ -48,7 +49,6 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QMimeData>
-#include <QProcess>
 #include <QRegularExpression>
 #include <QScreen>
 #include <QShortcut>
@@ -212,11 +212,9 @@ bool FocusWatcher::eventFilter(QObject *, QEvent *event)
     return false;
 }
 
-MainWindow::MainWindow()
+MainWindow::MainWindow(HelpClientType helpClientType)
     : QMainWindow(0, Qt::Window),
-#if QT_CONFIG(process)
-      m_assistantProcess(0),
-#endif // QT_CONFIG(process)
+      m_helpClient(HelpClient::create(helpClientType)),
 #if QT_CONFIG(printsupport)
       m_printer(0),
 #endif // QT_CONFIG(printsupport)
@@ -503,12 +501,6 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow()
 {
     writeConfig();
-#if QT_CONFIG(process)
-    if (m_assistantProcess && m_assistantProcess->state() == QProcess::Running) {
-        m_assistantProcess->terminate();
-        m_assistantProcess->waitForFinished(3000);
-    }
-#endif // QT_CONFIG(process)
     qDeleteAll(m_phraseBooks);
     delete m_dataModel;
     delete m_statistics;
@@ -1401,32 +1393,10 @@ void MainWindow::resetSorting()
 
 void MainWindow::manual()
 {
-#if QT_CONFIG(process)
-    if (!m_assistantProcess)
-        m_assistantProcess = new QProcess();
-
-    if (m_assistantProcess->state() != QProcess::Running) {
-        QString app = QLibraryInfo::path(QLibraryInfo::BinariesPath) + QDir::separator();
-#if !defined(Q_OS_MAC)
-        app += "assistant"_L1;
-#else
-        app += "Assistant.app/Contents/MacOS/Assistant"_L1;
-#endif
-
-        m_assistantProcess->start(app, { "-enableRemoteControl"_L1 });
-        if (!m_assistantProcess->waitForStarted()) {
-            QMessageBox::critical(this, tr("Qt Linguist"),
-                tr("Unable to launch Qt Assistant (%1)").arg(app));
-            return;
-        }
-    }
-    QTextStream str(m_assistantProcess);
-    str << "SetSource qthelp://org.qt-project.linguist."_L1 << QT_VERSION_MAJOR << QT_VERSION_MINOR
-        << QT_VERSION_PATCH << "/qtlinguist/qtlinguist-index.html"_L1 << u'\n' << Qt::endl;
-#else // QT_CONFIG(process)
-    QDesktopServices::openUrl(
-            QUrl::fromUserInput(QLatin1String("https://doc.qt.io/qt-6/qtlinguist-index.html")));
-#endif // QT_CONFIG(process)
+    QString errorMessage;
+    const QString page = m_helpClient->documentUrl(u"linguist"_s) + "/qtlinguist-index.html"_L1;
+    if (!m_helpClient->showPage(page, &errorMessage))
+        qWarning("%s", qPrintable(errorMessage));
 }
 
 QString MainWindow::description()

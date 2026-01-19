@@ -26,7 +26,6 @@ class QDialog;
 class QLabel;
 class QMenu;
 class QPrinter;
-class QProcess;
 class QIcon;
 class QSortFilterProxyModel;
 class QStackedWidget;
@@ -36,6 +35,7 @@ class QTreeView;
 class BatchTranslationDialog;
 class ErrorsView;
 class FocusWatcher;
+class HelpClient;
 class UiFormPreviewView;
 #ifndef Q_OS_WASM
 class QmlFormPreviewView;
@@ -49,6 +49,8 @@ class TranslationSettingsDialog;
 class SortedGroupsModel;
 class MachineTranslationDialog;
 
+enum class HelpClientType : quint8;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -56,7 +58,7 @@ public:
     enum {PhraseCloseMenu, PhraseEditMenu, PhrasePrintMenu};
     enum FindDirection {FindNext, FindPrev};
 
-    MainWindow();
+    explicit MainWindow(HelpClientType helpClientType);
     ~MainWindow();
 
     bool openFiles(const QStringList &names);
@@ -196,9 +198,8 @@ private:
     void updateIcons();
     bool searchItem(DataModel::FindLocation where, const QString &searchWhat);
 
-#if QT_CONFIG(process)
-    QProcess *m_assistantProcess;
-#endif // QT_CONFIG(process)
+    std::unique_ptr<HelpClient> m_helpClient;
+
     QTreeView *m_contextView;
     QTreeView *m_labelView;
     QTreeView *m_messageView;

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "mainwindow.h"
+#include <helpclient.h>
 
 #include <QtCore/QFile>
 #include <QtCore/QLibraryInfo>
@@ -86,6 +87,10 @@ int main(int argc, char **argv)
                                                u"Resource directory"_s,
                                                u"directory"_s);
     parser.addOption(resourceDirOption);
+
+    const QCommandLineOption webHelpOption(u"web-help"_s, u"Use the Web documentation"_s);
+    parser.addOption(webHelpOption);
+
     parser.addPositionalArgument(u"files"_s, u"The .ts files to open."_s);
 
     parser.process(app);
@@ -106,7 +111,7 @@ int main(int argc, char **argv)
     app.setOrganizationName("QtProject"_L1);
     app.setApplicationName("Linguist"_L1);
 
-    MainWindow mw;
+    MainWindow mw(parser.isSet(webHelpOption) ? HelpClientType::Web : HelpClientType::Assistant);
 #ifdef Q_OS_MAC
     eventFilter.setMainWindow(&mw);
 #endif // Q_OS_MAC
