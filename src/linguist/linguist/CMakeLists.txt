@@ -16,6 +16,7 @@ endif()
 
 qt_internal_add_app(linguist
     SOURCES
+        ../../shared/helpclient/helpclient.cpp ../../shared/helpclient/helpclient.h
         ../shared/numerus.cpp
         ../shared/po.cpp
         ../shared/qm.cpp
@@ -71,6 +72,7 @@ qt_internal_add_app(linguist
         QT_NO_CAST_TO_ASCII
     INCLUDE_DIRECTORIES
         ../shared
+        ../../shared/helpclient
     LIBRARIES
         Qt::CorePrivate
         Qt::Gui
@@ -79,6 +81,11 @@ qt_internal_add_app(linguist
         Qt::Widgets
         Qt::QuickWidgets
         Qt::QuickLayouts
+)
+
+qt_internal_extend_target(linguist CONDITION QT_FEATURE_process
+    SOURCES
+        ../../shared/helpclient/assistantclient.cpp ../../shared/helpclient/assistantclient.h
 )
 
 qt_internal_extend_target(linguist CONDITION QT_FEATURE_printsupport
