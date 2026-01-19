@@ -28,3 +28,10 @@ if(LCOV_EXECUTABLE)
     endif()
 endif()
 
+# Check if user explicitly disabled QDoc via -no-feature-qdoc
+# When TRUE, QDoc dependency warnings should be suppressed
+set(QDOC_EXPLICITLY_DISABLED FALSE)
+if(DEFINED FEATURE_qdoc AND NOT FEATURE_qdoc)
+    set(QDOC_EXPLICITLY_DISABLED TRUE)
+endif()
+
