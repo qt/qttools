@@ -30,9 +30,9 @@
                    "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
                   },
             "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/.*/expected/": {
-                   "comment": "",
+                   "comment": "Templates are distributed with QDoc; their license propagates to generated output",
                    "file type": "test",
-                   "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
+                   "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
                   }
        }
     },
@@ -193,6 +193,11 @@
                 "comment": "",
                 "file type": "test",
                 "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only"]
+            },
+            "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/.*/expected/": {
+                "comment": "Templates are distributed with QDoc; their license propagates to generated output",
+                "file type": "test",
+                "spdx": ["LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"]
             },
             "src/qdoc/qdoc/tests/": {
                 "comment": "",

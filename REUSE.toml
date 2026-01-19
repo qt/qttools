@@ -160,14 +160,22 @@ SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
 SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only"
 
 [[annotations]]
-path = ["src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.html",
-        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.cpp",
-        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.h",
-        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.qml",
-        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.qdoc",
+path = ["src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/src/**.cpp",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/src/**.h",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/src/**.qml",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/src/**.qdoc",
         "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.qdocconf"]
 precedence = "override"
-comment = ["files in this directory are for file generation within testing",
-           "Licensing for those files is test licensing"]
+comment = ["source files in this directory are for file generation within testing",
+           "Licensing for source files is standard test licensing"]
 SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
 SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only"
+
+[[annotations]]
+path = ["src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expected/**.html"]
+precedence = "override"
+comment = ["Generated output files inherit license from QDoc templates",
+           "Templates are distributed with QDoc and their license propagates to generated output",
+           "The Qt GPL exception allows tool output to be used in proprietary contexts"]
+SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"
