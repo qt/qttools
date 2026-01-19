@@ -114,35 +114,11 @@ qt_configure_add_summary_entry(ARGS "qtdiag")
 qt_configure_add_summary_entry(ARGS "qtplugininfo")
 qt_configure_end_summary_section() # end of "Qt Tools" section
 
-# Generate QDoc-specific warning messages
+# Register QDoc-related configure warnings
+include(${CMAKE_CURRENT_LIST_DIR}/src/qdoc/cmake/QDocConfigureMessages.cmake)
 if(NOT QT_CONFIGURE_RUNNING)
-    include(${CMAKE_CURRENT_LIST_DIR}/src/qdoc/cmake/QDocConfigureMessages.cmake)
-    qdoc_generate_clang_warning_message(QDOC_CLANG_WARNING)
-    qdoc_generate_qmlprivate_warning_message(QDOC_QMLPRIVATE_WARNING)
-    qdoc_generate_missing_features_warning_message(QDOC_MISSING_FEATURES_WARNING)
-    qdoc_generate_clang_version_warning_message(QDOC_CLANG_VERSION_WARNING)
+    qdoc_register_configure_warnings()
 endif()
-
-qt_configure_add_report_entry(
-    TYPE WARNING
-    MESSAGE "${QDOC_CLANG_WARNING}"
-    CONDITION NOT QT_FEATURE_clang AND NOT QDOC_EXPLICITLY_DISABLED
-)
-qt_configure_add_report_entry(
-    TYPE WARNING
-    MESSAGE "${QDOC_QMLPRIVATE_WARNING}"
-    CONDITION NOT TARGET Qt::QmlPrivate AND NOT QDOC_EXPLICITLY_DISABLED
-)
-qt_configure_add_report_entry(
-    TYPE WARNING
-    MESSAGE "${QDOC_MISSING_FEATURES_WARNING}"
-    CONDITION (NOT QT_FEATURE_commandlineparser OR NOT QT_FEATURE_thread) AND NOT QDOC_EXPLICITLY_DISABLED
-)
-qt_configure_add_report_entry(
-    TYPE WARNING
-    MESSAGE "${QDOC_CLANG_VERSION_WARNING}"
-    CONDITION QT_LIB_CLANG_VERSION VERSION_LESS QDOC_MINIMUM_CLANG_VERSION AND NOT QDOC_EXPLICITLY_DISABLED
-)
 
 qt_configure_add_report_entry(
     TYPE WARNING
