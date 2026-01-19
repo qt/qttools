@@ -10,10 +10,10 @@ qt_internal_add_app(designer
     SOURCES
         ../../../shared/fontpanel/fontpanel.cpp ../../../shared/fontpanel/fontpanel_p.h
         ../../../shared/qttoolbardialog/qttoolbardialog.cpp ../../../shared/qttoolbardialog/qttoolbardialog_p.h ../../../shared/qttoolbardialog/qttoolbardialog.ui
+        ../../../shared/helpclient/assistantclient.cpp ../../../shared/helpclient/assistantclient.h
+        ../../../shared/helpclient/helpclient.cpp ../../../shared/helpclient/helpclient.h
         appfontdialog.cpp appfontdialog.h
-        assistantclient.cpp assistantclient.h
         designer_enums.h
-        helpclient.cpp helpclient.h
         main.cpp
         mainwindow.cpp mainwindow.h
         newform.cpp newform.h
@@ -30,6 +30,7 @@ qt_internal_add_app(designer
         versiondialog.cpp versiondialog.h
     INCLUDE_DIRECTORIES
         ../../../shared/fontpanel
+        ../../../shared/helpclient
         ../../../shared/qttoolbardialog
         ../lib/extension
         ../lib/sdk
