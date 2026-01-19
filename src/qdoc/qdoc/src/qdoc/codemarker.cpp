@@ -233,6 +233,8 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
                 extra << "slot";
             else if (func->isImplicitlyGenerated())
                 extra << "implicit";
+            else if (func->isExplicitlyDefaulted())
+                extra << "default";
             else if (func->isInvokable())
                 extra << "invokable";
         }

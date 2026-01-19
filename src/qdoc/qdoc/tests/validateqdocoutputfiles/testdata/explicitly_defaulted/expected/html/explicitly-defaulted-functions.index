@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Explicitly defaulted functions Reference Documentation" version="" project="Explicitly defaulted functions">
+    <namespace name="" status="active" access="public" module="explicitly defaulted functions">
+        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTests" brief="Contains test classes for QDoc">
+            <class name="ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTests" brief="A test class for explicitly defaulted special member functions">
+                <function name="ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest::ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html#ExplicitlyDefaultedTest" status="active" access="public" location="testclass.h" documented="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="ExplicitlyDefaultedTest()"/>
+                <function name="ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest::ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html#ExplicitlyDefaultedTest-1" status="active" access="public" location="testclass.h" documented="true" meta="move-constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" overload="true" overload-number="1" signature="ExplicitlyDefaultedTest(QDocTests::ExplicitlyDefaultedTest &amp;&amp;other)">
+                    <parameter type="QDocTests::ExplicitlyDefaultedTest &amp;&amp;" name="other" default=""/>
+                </function>
+                <function name="ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest::ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html#ExplicitlyDefaultedTest-2" status="active" access="public" location="testclass.h" documented="true" meta="copy-constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" overload="true" overload-number="2" signature="ExplicitlyDefaultedTest(const QDocTests::ExplicitlyDefaultedTest &amp;other)">
+                    <parameter type="const QDocTests::ExplicitlyDefaultedTest &amp;" name="other" default=""/>
+                </function>
+                <function name="operator=" fullname="QDocTests::ExplicitlyDefaultedTest::operator=" href="qdoctests-explicitlydefaultedtest.html#operator-eq" status="active" access="public" location="testclass.h" documented="true" meta="move-assign" constexpr="true" explicitly-defaulted="true" noexcept="true" type="QDocTests::ExplicitlyDefaultedTest &amp;" signature="QDocTests::ExplicitlyDefaultedTest &amp; operator=(QDocTests::ExplicitlyDefaultedTest &amp;&amp;other)">
+                    <parameter type="QDocTests::ExplicitlyDefaultedTest &amp;&amp;" name="other" default=""/>
+                </function>
+                <function name="operator=" fullname="QDocTests::ExplicitlyDefaultedTest::operator=" href="qdoctests-explicitlydefaultedtest.html#operator-eq-1" status="active" access="public" location="testclass.h" documented="true" meta="copy-assign" constexpr="true" explicitly-defaulted="true" noexcept="true" overload="true" overload-number="1" type="QDocTests::ExplicitlyDefaultedTest &amp;" signature="QDocTests::ExplicitlyDefaultedTest &amp; operator=(const QDocTests::ExplicitlyDefaultedTest &amp;other)">
+                    <parameter type="const QDocTests::ExplicitlyDefaultedTest &amp;" name="other" default=""/>
+                </function>
+                <function name="~ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest::~ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html#dtor.ExplicitlyDefaultedTest" status="active" access="public" location="testclass.h" documented="true" meta="destructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="~ExplicitlyDefaultedTest()"/>
+            </class>
+        </namespace>
+        <module name="QDocTests" href="qdoctests-module.html" status="active" documented="true" seen="true" title="" brief="Module contains test classes for QDoc"/>
+    </namespace>
+</INDEX>

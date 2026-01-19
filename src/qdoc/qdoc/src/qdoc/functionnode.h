@@ -87,6 +87,9 @@ public:
     void markNoexcept(QString expression = "") { m_noexcept = expression; }
     const std::optional<QString>& getNoexcept() const { return m_noexcept; }
 
+    void markExplicitlyDefaulted() { m_explicitlyDefaulted = true; }
+    [[nodiscard]] bool isExplicitlyDefaulted() const { return m_explicitlyDefaulted; }
+
     void setTrailingRequiresClause(const QString &clause) {
         if (clause.isEmpty())
             m_trailingRequiresClause.reset();
@@ -195,6 +198,7 @@ private:
     bool m_isRef : 1;
     bool m_isRefRef : 1;
     bool m_isInvokable : 1;
+    bool m_explicitlyDefaulted : 1;
     bool m_explicit;
     bool m_constexpr;
 

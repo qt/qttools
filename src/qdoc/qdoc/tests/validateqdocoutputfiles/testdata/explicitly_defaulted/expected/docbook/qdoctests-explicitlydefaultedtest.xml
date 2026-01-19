@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QDocTests::ExplicitlyDefaultedTest Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Explicitly defaulted functions Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test class for explicitly defaulted special member functions.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>ExplicitlyDefaultedTest</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class tests that QDoc correctly detects and displays functions marked with <db:code>= default</db:code>.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="ExplicitlyDefaultedTest">
+<db:title>[constexpr noexcept default] ExplicitlyDefaultedTest::ExplicitlyDefaultedTest()</db:title>
+<db:constructorsynopsis>
+<db:methodname>ExplicitlyDefaultedTest</db:methodname>
+<db:void/>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">constructor</db:synopsisinfo>
+<db:synopsisinfo role="signature">ExplicitlyDefaultedTest() = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Default constructor.</db:para>
+</db:section>
+<db:section xml:id="ExplicitlyDefaultedTest-2">
+<db:title>[constexpr noexcept default] ExplicitlyDefaultedTest::ExplicitlyDefaultedTest(const QDocTests::ExplicitlyDefaultedTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:constructorsynopsis>
+<db:methodname>ExplicitlyDefaultedTest</db:methodname>
+<db:methodparam>
+<db:type>const QDocTests::ExplicitlyDefaultedTest &amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">copy-constructor</db:synopsisinfo>
+<db:synopsisinfo role="overload">overload</db:synopsisinfo>
+<db:synopsisinfo role="overload-number">2</db:synopsisinfo>
+<db:synopsisinfo role="signature">ExplicitlyDefaultedTest(const QDocTests::ExplicitlyDefaultedTest &amp;other) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Copy constructor.</db:para>
+</db:section>
+<db:section xml:id="ExplicitlyDefaultedTest-1">
+<db:title>[constexpr noexcept default] ExplicitlyDefaultedTest::ExplicitlyDefaultedTest(QDocTests::ExplicitlyDefaultedTest &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:constructorsynopsis>
+<db:methodname>ExplicitlyDefaultedTest</db:methodname>
+<db:methodparam>
+<db:type>QDocTests::ExplicitlyDefaultedTest &amp;&amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">move-constructor</db:synopsisinfo>
+<db:synopsisinfo role="overload">overload</db:synopsisinfo>
+<db:synopsisinfo role="overload-number">1</db:synopsisinfo>
+<db:synopsisinfo role="signature">ExplicitlyDefaultedTest(QDocTests::ExplicitlyDefaultedTest &amp;&amp;other) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Move constructor.</db:para>
+</db:section>
+<db:section xml:id="dtor.ExplicitlyDefaultedTest">
+<db:title>[constexpr noexcept default] ExplicitlyDefaultedTest::~ExplicitlyDefaultedTest()</db:title>
+<db:destructorsynopsis>
+<db:methodname>~ExplicitlyDefaultedTest</db:methodname>
+<db:void/>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">destructor</db:synopsisinfo>
+<db:synopsisinfo role="signature">~ExplicitlyDefaultedTest() = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:destructorsynopsis>
+<db:para>Destructor.</db:para>
+</db:section>
+<db:section xml:id="operator-eq">
+<db:title>[constexpr noexcept default] QDocTests::ExplicitlyDefaultedTest &amp;ExplicitlyDefaultedTest::operator=(QDocTests::ExplicitlyDefaultedTest &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>QDocTests::ExplicitlyDefaultedTest &amp;</db:type>
+<db:methodname>operator=</db:methodname>
+<db:methodparam>
+<db:type>QDocTests::ExplicitlyDefaultedTest &amp;&amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">move-assign</db:synopsisinfo>
+<db:synopsisinfo role="signature">QDocTests::ExplicitlyDefaultedTest &amp; operator=(QDocTests::ExplicitlyDefaultedTest &amp;&amp;other) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Move assigns <db:code role="parameter">other</db:code> to this object.</db:para>
+</db:section>
+<db:section xml:id="operator-eq-1">
+<db:title>[constexpr noexcept default] QDocTests::ExplicitlyDefaultedTest &amp;ExplicitlyDefaultedTest::operator=(const QDocTests::ExplicitlyDefaultedTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>QDocTests::ExplicitlyDefaultedTest &amp;</db:type>
+<db:methodname>operator=</db:methodname>
+<db:methodparam>
+<db:type>const QDocTests::ExplicitlyDefaultedTest &amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">copy-assign</db:synopsisinfo>
+<db:synopsisinfo role="overload">overload</db:synopsisinfo>
+<db:synopsisinfo role="overload-number">1</db:synopsisinfo>
+<db:synopsisinfo role="signature">QDocTests::ExplicitlyDefaultedTest &amp; operator=(const QDocTests::ExplicitlyDefaultedTest &amp;other) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Copy assigns <db:code role="parameter">other</db:code> to this object.</db:para>
+</db:section>
+</db:section>
+</db:article>

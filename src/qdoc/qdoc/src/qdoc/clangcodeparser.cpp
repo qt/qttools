@@ -1394,6 +1394,7 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     const clang::CXXConversionDecl* conversion_declaration = llvm::dyn_cast<const clang::CXXConversionDecl>(function_declaration);
 
     if (function_declaration->isConstexpr()) fn->markConstexpr();
+    if (function_declaration->isExplicitlyDefaulted()) fn->markExplicitlyDefaulted();
     if (
         (constructor_declaration && constructor_declaration->isExplicit()) ||
         (conversion_declaration && conversion_declaration->isExplicit())
