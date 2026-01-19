@@ -192,9 +192,9 @@ static inline QDesigner::ParseArgumentsResult
         }
     }
     if (parser.isSet(webHelpOption))
-        options->helpMode = Options::HelpMode::Web;
+        options->helpMode = HelpClientType::Web;
     else if (parser.isSet(pythonHelpOption))
-        options->helpMode = Options::HelpMode::Python;
+        options->helpMode = HelpClientType::Python;
     if (parser.isSet(resourceDirOption))
         options->resourceDir = parser.value(resourceDirOption);
     const auto pluginPathValues = parser.values(pluginPathsOption);

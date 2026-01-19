@@ -5,10 +5,15 @@
 #define HELPCLIENT_H
 
 #include <QtCore/qtclasshelpermacros.h>
+#include <QtCore/qtypes.h>
+
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 
 class QString;
+
+enum class HelpClientType : quint8 { Assistant, Web, Python };
 
 class HelpClient
 {
@@ -24,6 +29,8 @@ public:
 
     // Root of the Qt Widgets Designer documentation
     QString designerManualUrl() const;
+
+    static std::unique_ptr<HelpClient> create(HelpClientType type);
 };
 
 class WebHelpClient : public HelpClient

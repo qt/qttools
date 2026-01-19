@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "helpclient.h"
-
+#if QT_CONFIG(process)
+#  include "assistantclient.h"
+#endif
 #include <QtGui/qdesktopservices.h>
 
 #include <QtCore/qcoreapplication.h>
@@ -17,6 +19,25 @@ using namespace Qt::StringLiterals;
 QString HelpClient::designerManualUrl() const
 {
     return documentUrl(u"qtdesigner"_s);
+}
+
+std::unique_ptr<HelpClient> HelpClient::create(HelpClientType type)
+{
+    std::unique_ptr<HelpClient> result;
+    switch (type) {
+    case HelpClientType::Assistant:
+#if QT_CONFIG(process)
+        result = std::make_unique<AssistantClient>();
+        break;
+#endif
+    case HelpClientType::Web:
+        result = std::make_unique<WebHelpClient>();
+        break;
+    case HelpClientType::Python:
+        result = std::make_unique<PythonWebHelpClient>();
+        break;
+    }
+    return result;
 }
 
 static constexpr auto webPrefix = "https://doc.qt.io/qt-6/"_L1;
