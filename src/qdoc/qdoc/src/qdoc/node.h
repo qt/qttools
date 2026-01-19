@@ -6,7 +6,6 @@
 
 #include "access.h"
 #include "comparisoncategory.h"
-#include "status.h"
 #include "doc.h"
 #include "enumitem.h"
 #include "importrec.h"
@@ -14,6 +13,7 @@
 #include "genustypes.h"
 #include "parameters.h"
 #include "relatedclass.h"
+#include "status.h"
 #include "template_declaration.h"
 
 #include <QtCore/qdir.h>
