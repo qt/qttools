@@ -90,6 +90,9 @@ public:
     void markExplicitlyDefaulted() { m_explicitlyDefaulted = true; }
     [[nodiscard]] bool isExplicitlyDefaulted() const { return m_explicitlyDefaulted; }
 
+    void markDeletedAsWritten() { m_deleted = true; }
+    [[nodiscard]] bool isDeletedAsWritten() const { return m_deleted; }
+
     void setTrailingRequiresClause(const QString &clause) {
         if (clause.isEmpty())
             m_trailingRequiresClause.reset();
@@ -199,6 +202,7 @@ private:
     bool m_isRefRef : 1;
     bool m_isInvokable : 1;
     bool m_explicitlyDefaulted : 1;
+    bool m_deleted : 1;
     bool m_explicit;
     bool m_constexpr;
 

@@ -498,6 +498,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             if (attributes.value(QLatin1String("explicitly-defaulted")) == QLatin1String("true"))
                 fn->markExplicitlyDefaulted();
 
+            if (attributes.value(QLatin1String("deleted")) == QLatin1String("true"))
+                fn->markDeletedAsWritten();
+
             if (attributes.value(QLatin1String("noexcept")) == QLatin1String("true")) {
                 fn->markNoexcept(attributes.value("noexcept_expression").toString());
             }
@@ -1326,6 +1329,8 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
             writer.writeAttribute("constexpr", "true");
         if (fn->isExplicitlyDefaulted())
             writer.writeAttribute("explicitly-defaulted", "true");
+        if (fn->isDeletedAsWritten())
+            writer.writeAttribute("deleted", "true");
 
         if (auto noexcept_info = fn->getNoexcept()) {
             writer.writeAttribute("noexcept", "true");

@@ -106,12 +106,13 @@
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="Test">
-<db:title its:translate="no">Test::Test()</db:title>
+<db:title its:translate="no">[delete] Test::Test()</db:title>
 <db:constructorsynopsis>
 <db:methodname>Test</db:methodname>
 <db:void/>
+<db:modifier>delete</db:modifier>
 <db:synopsisinfo role="meta">constructor</db:synopsisinfo>
-<db:synopsisinfo role="signature">Test()</db:synopsisinfo>
+<db:synopsisinfo role="signature">Test() = delete</db:synopsisinfo>
 <db:synopsisinfo role="access">public</db:synopsisinfo>
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
@@ -298,7 +299,7 @@
 <db:para>Function that must be reimplemented.</db:para>
 </db:section>
 <db:section xml:id="operator-eq">
-<db:title its:translate="no">TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:title its:translate="no">[delete] TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
 <db:methodsynopsis>
 <db:type>TestQDoc::Test &amp;</db:type>
 <db:methodname>operator=</db:methodname>
@@ -306,8 +307,9 @@
 <db:type>TestQDoc::Test &amp;&amp;</db:type>
 <db:parameter>other</db:parameter>
 </db:methodparam>
+<db:modifier>delete</db:modifier>
 <db:synopsisinfo role="meta">move-assign</db:synopsisinfo>
-<db:synopsisinfo role="signature">TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other)</db:synopsisinfo>
+<db:synopsisinfo role="signature">TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other) = delete</db:synopsisinfo>
 <db:synopsisinfo role="access">public</db:synopsisinfo>
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>

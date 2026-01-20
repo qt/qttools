@@ -3323,6 +3323,8 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             generateModifier("implicit");
         else if (functionNode->isExplicitlyDefaulted())
             generateModifier("default");
+        else if (functionNode->isDeletedAsWritten())
+            generateModifier("delete");
         if (functionNode->isFinal())
             generateModifier("final");
         if (functionNode->isOverride())
@@ -3403,6 +3405,8 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             signature += " = 0";
         else if (functionNode->isExplicitlyDefaulted())
             signature += " = default";
+        else if (functionNode->isDeletedAsWritten())
+            signature += " = delete";
         if (const auto &req = functionNode->trailingRequiresClause(); req && !req->isEmpty())
             signature += " requires " + *req;
         generateSynopsisInfo("signature", signature);

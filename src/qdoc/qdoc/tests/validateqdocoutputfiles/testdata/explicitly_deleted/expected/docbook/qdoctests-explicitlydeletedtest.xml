@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QDocTests::ExplicitlyDeletedTest Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Explicitly deleted functions Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test class for explicitly deleted special member functions.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>ExplicitlyDeletedTest</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class tests that QDoc correctly detects and displays functions marked with <db:code>= delete</db:code>.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="ExplicitlyDeletedTest">
+<db:title>[constexpr noexcept default] ExplicitlyDeletedTest::ExplicitlyDeletedTest()</db:title>
+<db:constructorsynopsis>
+<db:methodname>ExplicitlyDeletedTest</db:methodname>
+<db:void/>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">constructor</db:synopsisinfo>
+<db:synopsisinfo role="signature">ExplicitlyDeletedTest() = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Default constructor.</db:para>
+</db:section>
+<db:section xml:id="ExplicitlyDeletedTest-2">
+<db:title>[delete] ExplicitlyDeletedTest::ExplicitlyDeletedTest(const QDocTests::ExplicitlyDeletedTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:constructorsynopsis>
+<db:methodname>ExplicitlyDeletedTest</db:methodname>
+<db:methodparam>
+<db:type>const QDocTests::ExplicitlyDeletedTest &amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>delete</db:modifier>
+<db:synopsisinfo role="meta">copy-constructor</db:synopsisinfo>
+<db:synopsisinfo role="overload">overload</db:synopsisinfo>
+<db:synopsisinfo role="overload-number">2</db:synopsisinfo>
+<db:synopsisinfo role="signature">ExplicitlyDeletedTest(const QDocTests::ExplicitlyDeletedTest &amp;other) = delete</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Copy constructor (deleted).</db:para>
+</db:section>
+<db:section xml:id="ExplicitlyDeletedTest-1">
+<db:title>[delete] ExplicitlyDeletedTest::ExplicitlyDeletedTest(QDocTests::ExplicitlyDeletedTest &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:constructorsynopsis>
+<db:methodname>ExplicitlyDeletedTest</db:methodname>
+<db:methodparam>
+<db:type>QDocTests::ExplicitlyDeletedTest &amp;&amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>delete</db:modifier>
+<db:synopsisinfo role="meta">move-constructor</db:synopsisinfo>
+<db:synopsisinfo role="overload">overload</db:synopsisinfo>
+<db:synopsisinfo role="overload-number">1</db:synopsisinfo>
+<db:synopsisinfo role="signature">ExplicitlyDeletedTest(QDocTests::ExplicitlyDeletedTest &amp;&amp;other) = delete</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Move constructor (deleted).</db:para>
+</db:section>
+<db:section xml:id="operator-eq">
+<db:title>[delete] QDocTests::ExplicitlyDeletedTest &amp;ExplicitlyDeletedTest::operator=(QDocTests::ExplicitlyDeletedTest &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>QDocTests::ExplicitlyDeletedTest &amp;</db:type>
+<db:methodname>operator=</db:methodname>
+<db:methodparam>
+<db:type>QDocTests::ExplicitlyDeletedTest &amp;&amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>delete</db:modifier>
+<db:synopsisinfo role="meta">move-assign</db:synopsisinfo>
+<db:synopsisinfo role="signature">QDocTests::ExplicitlyDeletedTest &amp; operator=(QDocTests::ExplicitlyDeletedTest &amp;&amp;other) = delete</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Move assigns <db:code role="parameter">other</db:code> to this object (deleted).</db:para>
+</db:section>
+<db:section xml:id="operator-eq-1">
+<db:title>[delete] QDocTests::ExplicitlyDeletedTest &amp;ExplicitlyDeletedTest::operator=(const QDocTests::ExplicitlyDeletedTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>QDocTests::ExplicitlyDeletedTest &amp;</db:type>
+<db:methodname>operator=</db:methodname>
+<db:methodparam>
+<db:type>const QDocTests::ExplicitlyDeletedTest &amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>delete</db:modifier>
+<db:synopsisinfo role="meta">copy-assign</db:synopsisinfo>
+<db:synopsisinfo role="overload">overload</db:synopsisinfo>
+<db:synopsisinfo role="overload-number">1</db:synopsisinfo>
+<db:synopsisinfo role="signature">QDocTests::ExplicitlyDeletedTest &amp; operator=(const QDocTests::ExplicitlyDeletedTest &amp;other) = delete</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Copy assigns <db:code role="parameter">other</db:code> to this object (deleted).</db:para>
+</db:section>
+</db:section>
+</db:article>

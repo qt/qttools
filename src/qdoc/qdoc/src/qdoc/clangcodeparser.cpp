@@ -1395,6 +1395,7 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
 
     if (function_declaration->isConstexpr()) fn->markConstexpr();
     if (function_declaration->isExplicitlyDefaulted()) fn->markExplicitlyDefaulted();
+    if (function_declaration->isDeletedAsWritten()) fn->markDeletedAsWritten();
     if (
         (constructor_declaration && constructor_declaration->isExplicit()) ||
         (conversion_declaration && conversion_declaration->isExplicit())

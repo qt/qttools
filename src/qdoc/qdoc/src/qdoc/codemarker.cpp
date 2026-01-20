@@ -235,6 +235,8 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
                 extra << "implicit";
             else if (func->isExplicitlyDefaulted())
                 extra << "default";
+            else if (func->isDeletedAsWritten())
+                extra << "delete";
             else if (func->isInvokable())
                 extra << "invokable";
         }

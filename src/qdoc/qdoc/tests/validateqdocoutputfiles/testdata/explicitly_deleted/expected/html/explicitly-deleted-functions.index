@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Explicitly deleted functions Reference Documentation" version="" project="Explicitly deleted functions">
+    <namespace name="" status="active" access="public" module="explicitly deleted functions">
+        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTests" brief="Contains test classes for QDoc">
+            <class name="ExplicitlyDeletedTest" fullname="QDocTests::ExplicitlyDeletedTest" href="qdoctests-explicitlydeletedtest.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTests" brief="A test class for explicitly deleted special member functions">
+                <function name="ExplicitlyDeletedTest" fullname="QDocTests::ExplicitlyDeletedTest::ExplicitlyDeletedTest" href="qdoctests-explicitlydeletedtest.html#ExplicitlyDeletedTest" status="active" access="public" location="testclass.h" documented="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="ExplicitlyDeletedTest()"/>
+                <function name="ExplicitlyDeletedTest" fullname="QDocTests::ExplicitlyDeletedTest::ExplicitlyDeletedTest" href="qdoctests-explicitlydeletedtest.html#ExplicitlyDeletedTest-1" status="active" access="public" location="testclass.h" documented="true" meta="move-constructor" deleted="true" overload="true" overload-number="1" signature="ExplicitlyDeletedTest(QDocTests::ExplicitlyDeletedTest &amp;&amp;other)">
+                    <parameter type="QDocTests::ExplicitlyDeletedTest &amp;&amp;" name="other" default=""/>
+                </function>
+                <function name="ExplicitlyDeletedTest" fullname="QDocTests::ExplicitlyDeletedTest::ExplicitlyDeletedTest" href="qdoctests-explicitlydeletedtest.html#ExplicitlyDeletedTest-2" status="active" access="public" location="testclass.h" documented="true" meta="copy-constructor" deleted="true" overload="true" overload-number="2" signature="ExplicitlyDeletedTest(const QDocTests::ExplicitlyDeletedTest &amp;other)">
+                    <parameter type="const QDocTests::ExplicitlyDeletedTest &amp;" name="other" default=""/>
+                </function>
+                <function name="operator=" fullname="QDocTests::ExplicitlyDeletedTest::operator=" href="qdoctests-explicitlydeletedtest.html#operator-eq" status="active" access="public" location="testclass.h" documented="true" meta="move-assign" deleted="true" type="QDocTests::ExplicitlyDeletedTest &amp;" signature="QDocTests::ExplicitlyDeletedTest &amp; operator=(QDocTests::ExplicitlyDeletedTest &amp;&amp;other)">
+                    <parameter type="QDocTests::ExplicitlyDeletedTest &amp;&amp;" name="other" default=""/>
+                </function>
+                <function name="operator=" fullname="QDocTests::ExplicitlyDeletedTest::operator=" href="qdoctests-explicitlydeletedtest.html#operator-eq-1" status="active" access="public" location="testclass.h" documented="true" meta="copy-assign" deleted="true" overload="true" overload-number="1" type="QDocTests::ExplicitlyDeletedTest &amp;" signature="QDocTests::ExplicitlyDeletedTest &amp; operator=(const QDocTests::ExplicitlyDeletedTest &amp;other)">
+                    <parameter type="const QDocTests::ExplicitlyDeletedTest &amp;" name="other" default=""/>
+                </function>
+            </class>
+        </namespace>
+        <module name="QDocTests" href="qdoctests-module.html" status="active" documented="true" seen="true" title="" brief="Module contains test classes for QDoc"/>
+    </namespace>
+</INDEX>
