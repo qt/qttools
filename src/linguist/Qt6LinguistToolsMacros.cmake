@@ -288,13 +288,10 @@ function(qt6_add_lupdate)
     set(lupdate_work_dir "${CMAKE_CURRENT_BINARY_DIR}/.lupdate")
     qt_internal_make_paths_absolute(ts_files "${arg_TS_FILES}")
     set(plurals_ts_file "")
-    set(raw_plurals_ts_file "")
     if(NOT "${arg_PLURALS_TS_FILE}" STREQUAL "")
         qt_internal_make_paths_absolute(plurals_ts_file "${arg_PLURALS_TS_FILE}")
         _qt_internal_ensure_ts_file(TS_FILE "${plurals_ts_file}")
-        get_filename_component(raw_plurals_ts_file "${plurals_ts_file}" NAME)
-        string(PREPEND raw_plurals_ts_file "${lupdate_work_dir}/")
-        list(APPEND ts_files "${raw_plurals_ts_file}")
+        list(APPEND ts_files "${plurals_ts_file}")
     endif()
 
     set(lupdate_project_base "${lupdate_work_dir}/${lupdate_target}_project")
@@ -336,22 +333,15 @@ set(lupdate_subproject${n}_autogen_dir \"${autogen_dir}\")
         COMMAND
             "${tool_wrapper}"
             $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lupdate>)
-    set(prepare_native_ts_command "")
-    set(finish_native_ts_command "")
+    set(finish_plurals_ts_command "")
     if(NOT plurals_ts_file STREQUAL "")
-        # Copy the existing .ts file to preserve already translated strings.
-        set(prepare_native_ts_command
-            COMMAND
-            "${CMAKE_COMMAND}" -E copy "${plurals_ts_file}" "${raw_plurals_ts_file}"
-        )
-
         # Filter out the non-numerus forms with lconvert.
-        set(finish_native_ts_command
+        set(finish_plurals_ts_command
             COMMAND
             "${tool_wrapper}"
             $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lconvert>
             -pluralonly
-            -i "${raw_plurals_ts_file}"
+            -i "${plurals_ts_file}"
             -o "${plurals_ts_file}"
         )
     endif()
@@ -359,9 +349,8 @@ set(lupdate_subproject${n}_autogen_dir \"${autogen_dir}\")
         COMMAND "${CMAKE_COMMAND}" "-DIN_FILE=${lupdate_project_cmake}"
                 "-DOUT_FILE=${lupdate_project_json}"
                 -P "${_Qt6_LINGUIST_TOOLS_DIR}/GenerateLUpdateProject.cmake"
-        ${prepare_native_ts_command}
         ${lupdate_command} -project "${lupdate_project_json}" ${arg_OPTIONS}
-        ${finish_native_ts_command}
+        ${finish_plurals_ts_command}
         DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::lupdate
         VERBATIM)
 
