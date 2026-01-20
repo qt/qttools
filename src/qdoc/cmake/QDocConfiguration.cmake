@@ -13,8 +13,13 @@ set(QDOC_SUPPORTED_CLANG_VERSIONS
 
 # Check if user explicitly disabled QDoc via -no-feature-qdoc
 # When TRUE, QDoc dependency warnings should be suppressed
-set(QDOC_EXPLICITLY_DISABLED FALSE)
-if(DEFINED FEATURE_qdoc AND NOT FEATURE_qdoc)
-    set(QDOC_EXPLICITLY_DISABLED TRUE)
+if(NOT QT_CONFIGURE_RUNNING AND NOT DEFINED QDOC_EXPLICITLY_DISABLED)
+    if(DEFINED FEATURE_qdoc AND NOT FEATURE_qdoc)
+        set(QDOC_EXPLICITLY_DISABLED TRUE CACHE INTERNAL
+            "QDoc was explicitly disabled by user via -no-feature-qdoc")
+    else()
+        set(QDOC_EXPLICITLY_DISABLED FALSE CACHE INTERNAL
+            "QDoc was not explicitly disabled by user")
+    endif()
 endif()
 
