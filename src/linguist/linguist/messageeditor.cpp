@@ -640,7 +640,7 @@ void MessageEditor::showMessage(const MultiDataIndex &index)
             if (!item->extraComment().isEmpty()) {
                 if (!commentText.isEmpty())
                     commentText += u'\n';
-                commentText += item->extraComment().simplified();
+                commentText += item->extraComment();
             }
 
             m_commentText->setTranslation(commentText);
