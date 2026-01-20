@@ -9,5 +9,5 @@ locationinfo = false
 projectroot = .
 logwarnings = true
 logwarnings.disablecliargs = true
-warninglimit = 4
+warninglimit = 3
 warninglimit.enabled = true
