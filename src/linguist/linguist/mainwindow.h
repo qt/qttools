@@ -59,6 +59,8 @@ public:
 
     bool openFiles(const QStringList &names);
 
+    static QString description();
+
 protected:
     void readConfig();
     void writeConfig();
