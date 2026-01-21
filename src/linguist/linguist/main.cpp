@@ -7,6 +7,8 @@
 #include <QtCore/QLibraryInfo>
 #include <QtCore/QLocale>
 #include <QtCore/QTranslator>
+#include <QtCore/qcommandlineparser.h>
+#include <QtCore/qcommandlineoption.h>
 
 #include <QtWidgets/QApplication>
 #include <QtGui/QPixmap>
@@ -64,6 +66,8 @@ private:
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QCoreApplication::setApplicationVersion(QLatin1StringView(qVersion()));
+    QCoreApplication::setApplicationName(u"Qt Linguist"_s);
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
 #ifdef Q_OS_MAC
@@ -71,22 +75,23 @@ int main(int argc, char **argv)
     app.installEventFilter(&eventFilter);
 #endif // Q_OS_MAC
 
-    QStringList files;
-    QString resourceDir = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
-    QStringList args = app.arguments();
 
-    for (int i = 1; i < args.size(); ++i) {
-        QString argument = args.at(i);
-        if (argument == "-resourcedir"_L1) {
-            if (i + 1 < args.size()) {
-                resourceDir = QFile::decodeName(args.at(++i).toLocal8Bit());
-            } else {
-                // issue a warning
-            }
-        } else if (!files.contains(argument)) {
-            files.append(argument);
-        }
-    }
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QCoreApplication::applicationName() + "\n\n"_L1 + MainWindow::description());
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
+
+    const QCommandLineOption resourceDirOption(u"resourcedir"_s,
+                                               u"Resource directory"_s,
+                                               u"directory"_s);
+    parser.addOption(resourceDirOption);
+    parser.addPositionalArgument(u"files"_s, u"The .ts files to open."_s);
+
+    parser.process(app);
+
+    QString resourceDir = parser.isSet(resourceDirOption)
+            ? parser.value(resourceDirOption) : QLibraryInfo::path(QLibraryInfo::TranslationsPath);
 
     QTranslator translator;
     QTranslator qtTranslator;
@@ -109,7 +114,7 @@ int main(int argc, char **argv)
     mw.show();
     QApplication::restoreOverrideCursor();
 
-    mw.openFiles(files);
+    mw.openFiles(parser.positionalArguments());
 
     return app.exec();
 }
