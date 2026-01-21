@@ -4,7 +4,10 @@ moduleheader = class.h
 
 locationinfo = false
 
-# This project generates three warnings but no .html output
-# TODO: Test the actual content of warnings
-warninglimit = 3
+# This project generates warnings and no .html output:
+# one for each explicitly documented member of an undocumented class.
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+warninglimit = 4
 warninglimit.enabled = true

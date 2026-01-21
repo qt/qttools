@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>AutoDocTests::AutoGenSmfTest Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Auto-generated SMF documentation Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test class with explicitly defaulted SMFs and no explicit documentation.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>AutoGenSmfTest</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class tests that QDoc correctly auto-generates documentation for explicitly defaulted special member functions when no <db:phrase>\fn</db:phrase> documentation is provided.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="AutoGenSmfTest">
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] AutoGenSmfTest::AutoGenSmfTest()</db:title>
+<db:para>Default-constructs an instance of <db:phrase>AutoGenSmfTest</db:phrase>.</db:para>
+</db:section>
+<db:section xml:id="AutoGenSmfTest-2">
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] AutoGenSmfTest::AutoGenSmfTest(const AutoDocTests::AutoGenSmfTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:para>Copy-constructs an instance of <db:phrase>AutoGenSmfTest</db:phrase>.</db:para>
+</db:section>
+<db:section xml:id="AutoGenSmfTest-1">
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] AutoGenSmfTest::AutoGenSmfTest(AutoDocTests::AutoGenSmfTest &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:para>Move-constructs an instance of <db:phrase>AutoGenSmfTest</db:phrase>.</db:para>
+</db:section>
+<db:section xml:id="dtor.AutoGenSmfTest">
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] AutoGenSmfTest::~AutoGenSmfTest()</db:title>
+<db:para>Destroys the instance of <db:phrase>AutoGenSmfTest</db:phrase>.</db:para>
+</db:section>
+<db:section xml:id="operator-eq">
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] AutoDocTests::AutoGenSmfTest &amp;AutoGenSmfTest::operator=(AutoDocTests::AutoGenSmfTest &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:para>Move-assigns <db:code role="parameter">other</db:code> to this <db:phrase>AutoGenSmfTest</db:phrase> instance.</db:para>
+</db:section>
+<db:section xml:id="operator-eq-1">
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] AutoDocTests::AutoGenSmfTest &amp;AutoGenSmfTest::operator=(const AutoDocTests::AutoGenSmfTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:para>Copy-assigns <db:code role="parameter">other</db:code> to this <db:phrase>AutoGenSmfTest</db:phrase> instance.</db:para>
+</db:section>
+</db:section>
+</db:article>

@@ -145,6 +145,10 @@
 </db:section>
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
+<db:section xml:id="Test">
+<db:title>[<db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Deleted_functions">delete</db:link>] Test::Test()</db:title>
+<db:para>Default-constructs an instance of <db:phrase>Test</db:phrase>. This function is deleted.</db:para>
+</db:section>
 <db:section xml:id="funcPtr">
 <db:title>void (*)(bool) Test::funcPtr(bool <db:emphasis>b</db:emphasis>, const char *<db:emphasis>s</db:emphasis>)</db:title>
 <db:para>Returns a pointer to a function that takes a boolean. Uses <db:code role="parameter">b</db:code> and <db:code role="parameter">s</db:code>.</db:para>

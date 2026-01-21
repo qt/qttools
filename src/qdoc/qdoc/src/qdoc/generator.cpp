@@ -704,32 +704,40 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 out() << "</p>";
             } else if (fn->isCtor()) {
                 Text text;
-                text << "Default constructs an instance of ";
-                text << fn->parent()->name() << ".";
+                text << "Default-constructs an instance of "
+                     << fn->parent()->name() << ".";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
             } else if (fn->isCCtor()) {
                 Text text;
-                text << "Copy constructor.";
+                text << "Copy-constructs an instance of "
+                     << fn->parent()->name() << ".";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
             } else if (fn->isMCtor()) {
                 Text text;
-                text << "Move-copy constructor.";
+                text << "Move-constructs an instance of "
+                     << fn->parent()->name() << ".";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
             } else if (fn->isCAssign()) {
                 Text text;
-                text << "Copy-assignment operator.";
+                text << "Copy-assigns "
+                     << Atom(Atom::FormattingLeft, ATOM_FORMATTING_PARAMETER)
+                     << "other" << Atom(Atom::FormattingRight, ATOM_FORMATTING_PARAMETER)
+                     << " to this " << fn->parent()->name() << " instance.";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
             } else if (fn->isMAssign()) {
                 Text text;
-                text << "Move-assignment operator.";
+                text << "Move-assigns "
+                     << Atom(Atom::FormattingLeft, ATOM_FORMATTING_PARAMETER)
+                     << "other" << Atom(Atom::FormattingRight, ATOM_FORMATTING_PARAMETER)
+                     << " to this " << fn->parent()->name() << " instance.";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";

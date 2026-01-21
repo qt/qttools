@@ -1,0 +1,10 @@
+# QDoc Warning Log
+# Project: Undocumented class with documented members
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/class.h:11: [Undocumented class with documented members] (qdoc) warning: No output generated for function 'TestClass::TestClass()' because 'TestClass' is undocumented
+src/class.cpp:6: [Undocumented class with documented members] (qdoc) warning: No output generated for function 'TestClass::method()' because 'TestClass' is undocumented
+src/class.cpp:16: [Undocumented class with documented members] (qdoc) warning: No output generated for variable 'TestClass::i' because 'TestClass' is undocumented
+src/class.cpp:11: [Undocumented class with documented members] (qdoc) warning: No output generated for function 'TestClass::globalFunc()' because 'TestClass' is undocumented

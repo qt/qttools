@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>AutoDocTests Namespace</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Auto-generated SMF documentation Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>The <db:link xlink:href="autodoctests-module.xml">AutoDocTests</db:link> namespace contains test classes for auto-generated documentation.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>AutoDocTests</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:section>
+<db:title>class <db:link xlink:href="autodoctests-autogensmftest.xml" xlink:role="class">AutoGenSmfTest</db:link></db:title>
+<db:para>A test class with explicitly defaulted SMFs and no explicit documentation.</db:para>
+</db:section>
+<db:section>
+<db:title>class <db:link xlink:href="autodoctests-deletedsmftest.xml" xlink:role="class">DeletedSmfTest</db:link></db:title>
+<db:para>A test class with deleted SMFs and no explicit documentation.</db:para>
+</db:section>
+<db:section>
+<db:title>class <db:link xlink:href="autodoctests-virtualdtortest.xml" xlink:role="class">VirtualDtorTest</db:link></db:title>
+<db:para>A test class with a virtual destructor.</db:para>
+</db:section>
+</db:section>
+</db:article>

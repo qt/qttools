@@ -16,6 +16,7 @@
                 <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
                     <parameter type="int &amp;" name="x" default=""/>
                 </function>
+                <function name="Test" fullname="TestQDoc::Test::Test" href="testqdoc-test.html#Test" status="active" access="public" location="testcpp.h" documented="true" auto-generated="true" meta="constructor" deleted="true" signature="Test()"/>
                 <function name="anotherObsoleteMember" fullname="TestQDoc::Test::anotherObsoleteMember" href="testqdoc-test-obsolete.html#anotherObsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void anotherObsoleteMember()"/>
                 <function name="deprecatedMember" fullname="TestQDoc::Test::deprecatedMember" href="testqdoc-test-obsolete.html#deprecatedMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void deprecatedMember()"/>
                 <function name="funcPtr" fullname="TestQDoc::Test::funcPtr" href="testqdoc-test.html#funcPtr" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void (*)(bool)" signature="void (*)(bool) funcPtr(bool b, const char *s)">

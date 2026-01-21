@@ -11,6 +11,11 @@
                     <brief>A macro with argument <argument>x</argument>.</brief>
                 </description>
             </function>
+            <function name="Test" fullname="TestQDoc::Test::Test" href="testqdoc-test.html#Test" status="active" access="public" location="testcpp.h" documented="true" auto-generated="true" meta="constructor" deleted="true" signature="Test()">
+                <description>
+                    <para>Default-constructs an instance of <teletype>Test</teletype>. This function is deleted.</para>
+                </description>
+            </function>
             <function name="anotherObsoleteMember" fullname="TestQDoc::Test::anotherObsoleteMember" href="testqdoc-test-obsolete.html#anotherObsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void anotherObsoleteMember()">
                 <description>
                     <para>Use <link raw="obsoleteMember()" href="testqdoc-test.html#obsoleteMember" type="function">obsoleteMember()</link> instead.</para>

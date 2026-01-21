@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>AutoDocTests::VirtualDtorTest Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Auto-generated SMF documentation Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test class with a virtual destructor.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>VirtualDtorTest</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class tests that QDoc correctly notes when a destructor is virtual in the auto-generated documentation.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="VirtualDtorTest">
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] VirtualDtorTest::VirtualDtorTest()</db:title>
+<db:para>Default-constructs an instance of <db:phrase>VirtualDtorTest</db:phrase>.</db:para>
+</db:section>
+<db:section xml:id="dtor.VirtualDtorTest">
+<db:title>[virtual constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] VirtualDtorTest::~VirtualDtorTest()</db:title>
+<db:para>Destroys the instance of <db:phrase>VirtualDtorTest</db:phrase>. This destructor is virtual.</db:para>
+</db:section>
+</db:section>
+</db:article>
