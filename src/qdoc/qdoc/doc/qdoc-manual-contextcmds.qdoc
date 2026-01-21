@@ -498,14 +498,14 @@
     \badcode *
     /*!
         \module QtFoo
-        \modulestate Technical Preview
+        \modulestate Technology Preview
     \1/
     \endcode
 
     QDoc will then add this information on the module page:
 
     \quotation
-    This module is in \e {Technical Preview} state.
+    This module is in \e {Technology Preview} state.
     \endquotation
 
     \note Do not use this command to deprecate a module. Use the
