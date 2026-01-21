@@ -132,6 +132,7 @@ private:
     void endSection();
     void writeAnchor(const QString &id);
     void generateSimpleLink(const QString &href, const QString &text);
+    void generateExtraSynopsis(const QString &extra);
     void generateStartRequisite(const QString &description);
     void generateEndRequisite();
     void generateRequisite(const QString &description, const QString &value);

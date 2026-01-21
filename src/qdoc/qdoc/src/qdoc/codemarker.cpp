@@ -234,9 +234,9 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
             else if (func->isImplicitlyGenerated())
                 extra << "implicit";
             else if (func->isExplicitlyDefaulted())
-                extra << "default";
+                extra << "<@extref target=\"cpp-explicitly-defaulted\">default</@extref>";
             else if (func->isDeletedAsWritten())
-                extra << "delete";
+                extra << "<@extref target=\"cpp-deleted-functions\">delete</@extref>";
             else if (func->isInvokable())
                 extra << "invokable";
         }

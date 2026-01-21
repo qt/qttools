@@ -3209,6 +3209,15 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
     static const QString headerTag("headerfile");
     static const QString funcTag("func");
     static const QString linkTag("link");
+    static const QString extrefTag("extref");
+
+    // URL mapping for external references to cppreference.com
+    static const QHash<QString, QString> extrefUrls = {
+        {"cpp-explicitly-defaulted"_L1,
+         "https://en.cppreference.com/w/cpp/language/function#Defaulted_functions"_L1},
+        {"cpp-deleted-functions"_L1,
+         "https://en.cppreference.com/w/cpp/language/function#Deleted_functions"_L1},
+    };
 
     // replace all <@link> tags: "(<@link node=\"([^\"]+)\">).*(</@link>)"
     // replace all <@func> tags: "(<@func target=\"([^\"]*)\">)(.*)(</@func>)"
@@ -3255,6 +3264,12 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
                     else
                         html += arg;
                 }
+            } else if (parseArg(src, extrefTag, &i, srcSize, &arg, &par1)) {
+                QString url = extrefUrls.value(par1.toString());
+                if (!url.isEmpty())
+                    addLink(url, arg, &html);
+                else
+                    html += arg;
             } else {
                 html += charLangle;
                 html += charAt;

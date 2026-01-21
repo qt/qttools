@@ -1983,6 +1983,43 @@ void DocBookGenerator::generateSimpleLink(const QString &href, const QString &te
     m_writer->writeEndElement(); // link
 }
 
+/*!
+    Writes the extra synopsis string \a extra, processing any embedded
+    <@extref> tags and converting them to DocBook links.
+*/
+void DocBookGenerator::generateExtraSynopsis(const QString &extra)
+{
+    static const QHash<QString, QString> extrefUrls = {
+        {u"cpp-explicitly-defaulted"_s,
+         u"https://en.cppreference.com/w/cpp/language/function#Defaulted_functions"_s},
+        {u"cpp-deleted-functions"_s,
+         u"https://en.cppreference.com/w/cpp/language/function#Deleted_functions"_s},
+    };
+
+    static const QRegularExpression extrefRegex(
+            u"<@extref target=\"([^\"]+)\">([^<]*)</@extref>"_s);
+
+    qsizetype pos = 0;
+    auto it = extrefRegex.globalMatch(extra);
+    while (it.hasNext()) {
+        auto match = it.next();
+        if (match.capturedStart() > pos)
+            m_writer->writeCharacters(extra.mid(pos, match.capturedStart() - pos));
+
+        QString target = match.captured(1);
+        QString text = match.captured(2);
+        QString url = extrefUrls.value(target);
+        if (!url.isEmpty())
+            generateSimpleLink(url, text);
+        else
+            m_writer->writeCharacters(text);
+
+        pos = match.capturedEnd();
+    }
+    if (pos < extra.size())
+        m_writer->writeCharacters(extra.mid(pos));
+}
+
 void DocBookGenerator::generateObsoleteMembers(const Sections &sections)
 {
     // From HtmlGenerator::generateObsoleteMembersFile.
@@ -3816,8 +3853,10 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
     const int MaxEnumValues = 6;
 
     if (generateExtra) {
-        if (auto extra = CodeMarker::extraSynopsis(node, style); !extra.isEmpty())
-            m_writer->writeCharacters(extra + " ");
+        if (auto extra = CodeMarker::extraSynopsis(node, style); !extra.isEmpty()) {
+            generateExtraSynopsis(extra);
+            m_writer->writeCharacters(u" "_s);
+        }
     }
 
     // Then generate the synopsis.

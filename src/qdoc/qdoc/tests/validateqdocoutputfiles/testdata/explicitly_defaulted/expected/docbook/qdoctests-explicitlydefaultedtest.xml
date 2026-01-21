@@ -23,7 +23,7 @@
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="ExplicitlyDefaultedTest">
-<db:title>[constexpr noexcept default] ExplicitlyDefaultedTest::ExplicitlyDefaultedTest()</db:title>
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] ExplicitlyDefaultedTest::ExplicitlyDefaultedTest()</db:title>
 <db:constructorsynopsis>
 <db:methodname>ExplicitlyDefaultedTest</db:methodname>
 <db:void/>
@@ -37,7 +37,7 @@
 <db:para>Default constructor.</db:para>
 </db:section>
 <db:section xml:id="ExplicitlyDefaultedTest-2">
-<db:title>[constexpr noexcept default] ExplicitlyDefaultedTest::ExplicitlyDefaultedTest(const QDocTests::ExplicitlyDefaultedTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] ExplicitlyDefaultedTest::ExplicitlyDefaultedTest(const QDocTests::ExplicitlyDefaultedTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
 <db:constructorsynopsis>
 <db:methodname>ExplicitlyDefaultedTest</db:methodname>
 <db:methodparam>
@@ -56,7 +56,7 @@
 <db:para>Copy constructor.</db:para>
 </db:section>
 <db:section xml:id="ExplicitlyDefaultedTest-1">
-<db:title>[constexpr noexcept default] ExplicitlyDefaultedTest::ExplicitlyDefaultedTest(QDocTests::ExplicitlyDefaultedTest &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] ExplicitlyDefaultedTest::ExplicitlyDefaultedTest(QDocTests::ExplicitlyDefaultedTest &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
 <db:constructorsynopsis>
 <db:methodname>ExplicitlyDefaultedTest</db:methodname>
 <db:methodparam>
@@ -75,7 +75,7 @@
 <db:para>Move constructor.</db:para>
 </db:section>
 <db:section xml:id="dtor.ExplicitlyDefaultedTest">
-<db:title>[constexpr noexcept default] ExplicitlyDefaultedTest::~ExplicitlyDefaultedTest()</db:title>
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] ExplicitlyDefaultedTest::~ExplicitlyDefaultedTest()</db:title>
 <db:destructorsynopsis>
 <db:methodname>~ExplicitlyDefaultedTest</db:methodname>
 <db:void/>
@@ -89,7 +89,7 @@
 <db:para>Destructor.</db:para>
 </db:section>
 <db:section xml:id="operator-eq">
-<db:title>[constexpr noexcept default] QDocTests::ExplicitlyDefaultedTest &amp;ExplicitlyDefaultedTest::operator=(QDocTests::ExplicitlyDefaultedTest &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] QDocTests::ExplicitlyDefaultedTest &amp;ExplicitlyDefaultedTest::operator=(QDocTests::ExplicitlyDefaultedTest &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
 <db:methodsynopsis>
 <db:type>QDocTests::ExplicitlyDefaultedTest &amp;</db:type>
 <db:methodname>operator=</db:methodname>
@@ -107,7 +107,7 @@
 <db:para>Move assigns <db:code role="parameter">other</db:code> to this object.</db:para>
 </db:section>
 <db:section xml:id="operator-eq-1">
-<db:title>[constexpr noexcept default] QDocTests::ExplicitlyDefaultedTest &amp;ExplicitlyDefaultedTest::operator=(const QDocTests::ExplicitlyDefaultedTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] QDocTests::ExplicitlyDefaultedTest &amp;ExplicitlyDefaultedTest::operator=(const QDocTests::ExplicitlyDefaultedTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
 <db:methodsynopsis>
 <db:type>QDocTests::ExplicitlyDefaultedTest &amp;</db:type>
 <db:methodname>operator=</db:methodname>
