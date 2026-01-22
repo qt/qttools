@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- types.qdoc -->
+  <meta name="description" content="A container type demonstrating combined property hints.">
+  <title>ContainerItem QML Type | QmlCombinedPropertyHints</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li><a href="testmodule-qmlmodule.html" translate="no">TestModule</a></li>
+<li>ContainerItem</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#properties">Properties</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">ContainerItem QML Type</h1>
+<!-- $$$ContainerItem-brief -->
+<p>A container type demonstrating combined property hints. <a href="#details">More...</a></p>
+<!-- @@@ContainerItem -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Import Statement:</td><td class="memItemRight bottomAlign"> <code translate="no">import TestModule</code></td></tr>
+</table></div>
+<ul>
+<li><a href="qml-testmodule-containeritem-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="properties">Properties</h2>
+<ul>
+<li class="fn" translate="no"><b><a href="qml-testmodule-containeritem.html#children-prop" translate="no">children</a></b> : list&lt;Item&gt;</li>
+<li class="fn" translate="no"><b><a href="qml-testmodule-containeritem.html#content-prop" translate="no">content</a></b> : Item</li>
+<li class="fn" translate="no"><b><a href="qml-testmodule-containeritem.html#count-prop" translate="no">count</a></b> : int</li>
+<li class="fn" translate="no"><b><a href="qml-testmodule-containeritem.html#name-prop" translate="no">name</a></b> : string</li>
+<li class="fn" translate="no"><b><a href="qml-testmodule-containeritem.html#title-prop" translate="no">title</a></b> : string</li>
+</ul>
+<!-- $$$ContainerItem-description -->
+<h2 id="details">Detailed Description</h2>
+<p>ContainerItem demonstrates that QML properties can have multiple hints applied simultaneously.</p>
+<!-- @@@ContainerItem -->
+<h2>Property Documentation</h2>
+<!-- $$$children -->
+<h3 class="fn qml-member qml-property" translate="no" id="children-prop"><span class="name">children</span> : <span class="type">list</span>&lt;<span class="type">Item</span>&gt; <code class="details extra" translate="no">[default read-only]</code></h3>
+<p>The children of this container, which is both the default and read-only.</p>
+<p>This property is the default property (child items are implicitly added here) and is also read-only (cannot be directly assigned to, only modified via methods like push/pop or by declaring children).</p>
+<!-- @@@children -->
+<!-- $$$content -->
+<h3 class="fn qml-member qml-property" translate="no" id="content-prop"><span class="name">content</span> : <span class="type">Item</span> <code class="details extra" translate="no">[default required]</code></h3>
+<p>Required default content item.</p>
+<p>This property demonstrates a default property that is also required.</p>
+<!-- @@@content -->
+<!-- $$$count -->
+<h3 class="fn qml-member qml-property" translate="no" id="count-prop"><span class="name">count</span> : <span class="type">int</span> <code class="details extra" translate="no">[read-only required]</code></h3>
+<p>A read-only required property.</p>
+<p>This property demonstrates that a property can be both read-only and required, meaning it must be set during construction but cannot be changed afterward.</p>
+<!-- @@@count -->
+<!-- $$$name -->
+<h3 class="fn qml-member qml-property" translate="no" id="name-prop"><span class="name">name</span> : <span class="type">string</span> <code class="details extra" translate="no">[read-only]</code></h3>
+<p>A simple read-only property.</p>
+<p>This property is only read-only for comparison.</p>
+<!-- @@@name -->
+<!-- $$$title -->
+<h3 class="fn qml-member qml-property" translate="no" id="title-prop"><span class="name">title</span> : <span class="type">string</span> <code class="details extra" translate="no">[required]</code></h3>
+<p>A simple required property.</p>
+<p>This property is only required for comparison.</p>
+<!-- @@@title -->
+</body>
+</html>
