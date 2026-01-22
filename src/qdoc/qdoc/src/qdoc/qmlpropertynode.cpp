@@ -110,6 +110,9 @@ bool QmlPropertyNode::isReadOnly()
 /*!
     Returns \c true if this QML property is marked with \required or the
     corresponding C++ property uses the REQUIRED keyword.
+
+    \note Like isReadOnly(), this method resolves and caches the attribute
+    from the associated C++ property on first call.
 */
 bool QmlPropertyNode::isRequired()
 {
@@ -117,7 +120,62 @@ bool QmlPropertyNode::isRequired()
         return fromFlagValue(m_required, false);
 
     PropertyNode *pn = findCorrespondingCppProperty();
-    return pn != nullptr && pn->isRequired();
+    bool required = pn != nullptr && pn->isRequired();
+    markRequired(required);
+    return required;
+}
+
+/*!
+    \internal
+
+    \fn bool QmlPropertyNode::isReadOnly() const
+    \fn bool QmlPropertyNode::isRequired() const
+
+    Const overloads that delegate to the resolving non-const versions
+    when the attribute hasn't been cached yet. This ensures consistent
+    behavior regardless of const-qualification at the call site.
+*/
+bool QmlPropertyNode::isReadOnly() const
+{
+    if (m_readOnly != FlagValueDefault)
+        return fromFlagValue(m_readOnly, false);
+
+    return const_cast<QmlPropertyNode *>(this)->isReadOnly();
+}
+
+bool QmlPropertyNode::isRequired() const
+{
+    if (m_required != FlagValueDefault)
+        return fromFlagValue(m_required, false);
+
+    return const_cast<QmlPropertyNode *>(this)->isRequired();
+}
+
+/*!
+    Returns a list of hint strings for this QML property, such as
+    "default", "read-only", or "required".
+
+    This method triggers resolution of attributes from associated C++
+    properties if they haven't been resolved yet.
+
+    \note The "attached" hint is not included here because attached
+    properties are already distinguished by their naming convention
+    (Type.property vs property).
+
+    \note The "default: value" hint is not included here as it requires
+    context-specific logic (avoiding "default default: value").
+*/
+QStringList QmlPropertyNode::hints() const
+{
+    QStringList result;
+    if (isDefault())
+        result << u"default"_s;
+    if (isReadOnly())
+        result << u"read-only"_s;
+    if (isRequired())
+        result << u"required"_s;
+
+    return result;
 }
 
 /*!

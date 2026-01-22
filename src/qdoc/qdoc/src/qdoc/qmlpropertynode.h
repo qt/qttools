@@ -28,11 +28,13 @@ public:
     [[nodiscard]] bool validateDataType(const QString &type = QString()) const;
     [[nodiscard]] const QString &defaultValue() const { return m_defaultValue; }
     [[nodiscard]] bool isStored() const { return fromFlagValue(m_stored, true); }
-    bool isRequired();
+    [[nodiscard]] bool isRequired() const;
+    [[nodiscard]] bool isRequired();
     [[nodiscard]] bool isDefault() const override { return m_isDefault; }
-    [[nodiscard]] bool isReadOnly() const { return fromFlagValue(m_readOnly, false); }
+    [[nodiscard]] bool isReadOnly() const;
     [[nodiscard]] bool isReadOnly();
     [[nodiscard]] bool isAlias() const override { return m_isAlias; }
+    [[nodiscard]] QStringList hints() const;
     [[nodiscard]] bool isAttached() const override { return m_attached; }
     [[nodiscard]] QString qmlTypeName() const override { return parent()->qmlTypeName(); }
     [[nodiscard]] QString logicalModuleName() const override
@@ -53,6 +55,7 @@ public:
 
     void markDefault() override { m_isDefault = true; }
     void markReadOnly(bool flag) override { m_readOnly = toFlagValue(flag); }
+    void markRequired(bool flag) { m_required = toFlagValue(flag); }
 
 private:
     PropertyNode *findCorrespondingCppProperty();

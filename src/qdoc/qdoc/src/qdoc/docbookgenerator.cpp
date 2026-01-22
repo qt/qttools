@@ -3289,19 +3289,24 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         m_writer->writeTextElement(dbNamespace, "varname", name);
         newLine();
 
+        const bool readOnly = qpn->isReadOnly();
+        const bool required = qpn->isRequired();
+
+        // Semantic modifiers for DocBook (machine-readable)
         if (qpn->isAttached()) {
             m_writer->writeTextElement(dbNamespace, "modifier", "attached");
             newLine();
         }
-        if (!(const_cast<QmlPropertyNode *>(qpn))->isReadOnly()) {
+        if (!readOnly) {
             m_writer->writeTextElement(dbNamespace, "modifier", "writable");
             newLine();
         }
-        if ((const_cast<QmlPropertyNode *>(qpn))->isRequired()) {
+        if (required) {
             m_writer->writeTextElement(dbNamespace, "modifier", "required");
             newLine();
         }
-        if (qpn->isReadOnly()) {
+        // Presentation modifiers (human-readable)
+        if (readOnly) {
             generateModifier("[read-only]");
             newLine();
         }

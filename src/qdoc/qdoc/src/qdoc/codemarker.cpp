@@ -254,15 +254,8 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
         break;
         case NodeType::QmlProperty: {
             auto qmlProperty = static_cast<const QmlPropertyNode *>(node);
-            if (qmlProperty->isDefault())
-                extra << u"default"_s;
-            // Call non-const overloads to ensure attributes are fetched from
-            // associated C++ properties
-            if (const_cast<QmlPropertyNode *>(qmlProperty)->isReadOnly())
-                extra << u"read-only"_s;
-            if (const_cast<QmlPropertyNode *>(qmlProperty)->isRequired())
-                extra << u"required"_s;
-            // Only show "default: value" if not a default property (avoid "default default: value")
+            extra << qmlProperty->hints();
+            // "default: value" not included in hints() to avoid "default default: value"
             if (!qmlProperty->isDefault() && !qmlProperty->defaultValue().isEmpty())
                 extra << u"default: "_s + qmlProperty->defaultValue();
         }

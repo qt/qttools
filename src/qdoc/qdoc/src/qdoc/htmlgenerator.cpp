@@ -2465,21 +2465,17 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
             std::function<void(Node *)> generate = [&](Node *n) {
                 out() << "<li class=\"fn\" translate=\"no\">";
                 generateQmlItem(n, aggregate, marker, true);
-
-                QStringList hints;
-                if (n->isDefault())
-                    hints << "default"_L1;
                 if (n->isQmlProperty()) {
-                    auto qpn = static_cast<const QmlPropertyNode *>(n);
-                    if (const_cast<QmlPropertyNode *>(qpn)->isReadOnly())
-                        hints << "read-only"_L1;
-                    if (const_cast<QmlPropertyNode *>(qpn)->isRequired())
-                        hints << "required"_L1;
+                    auto qpn = static_cast<QmlPropertyNode *>(n);
+                    QStringList hints = qpn->hints();
+                    if (qpn->isAttached())
+                        hints << "attached"_L1;
+                    if (!hints.isEmpty())
+                        out() << " [" << hints.join(' '_L1) << "]";
+                } else if (n->isAttached()) {
+                    // Non-property attached items (signals, methods) show [attached]
+                    out() << " [attached]";
                 }
-                if (n->isAttached())
-                    hints << "attached"_L1;
-                if (!hints.isEmpty())
-                    out() << " [" << hints.join(' '_L1) << "]";
                 // Indent property group members
                 if (n->isPropertyGroup()) {
                     out() << "<ul>\n";
