@@ -16,6 +16,7 @@
 #include "manifestwriter.h"
 #include "node.h"
 #include "propertynode.h"
+#include "qmlpropertynode.h"
 #include "qdocdatabase.h"
 #include "sharedcommentnode.h"
 #include "tagfilewriter.h"
@@ -2406,10 +2407,21 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
             std::function<void(Node *)> generate = [&](Node *n) {
                 out() << "<li class=\"fn\" translate=\"no\">";
                 generateQmlItem(n, aggregate, marker, true);
+
+                QStringList hints;
                 if (n->isDefault())
-                    out() << " [default]";
-                else if (n->isAttached())
-                    out() << " [attached]";
+                    hints << "default"_L1;
+                if (n->isQmlProperty()) {
+                    auto qpn = static_cast<const QmlPropertyNode *>(n);
+                    if (const_cast<QmlPropertyNode *>(qpn)->isReadOnly())
+                        hints << "read-only"_L1;
+                    if (const_cast<QmlPropertyNode *>(qpn)->isRequired())
+                        hints << "required"_L1;
+                }
+                if (n->isAttached())
+                    hints << "attached"_L1;
+                if (!hints.isEmpty())
+                    out() << " [" << hints.join(' '_L1) << "]";
                 // Indent property group members
                 if (n->isPropertyGroup()) {
                     out() << "<ul>\n";
