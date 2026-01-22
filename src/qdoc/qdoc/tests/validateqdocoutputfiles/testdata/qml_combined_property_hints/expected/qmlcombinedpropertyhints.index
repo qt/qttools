@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QmlCombinedPropertyHints Reference Documentation" version="" project="QmlCombinedPropertyHints">
+    <namespace name="" status="active" access="public" module="qmlcombinedpropertyhints">
+        <qmlclass name="ContainerItem" qml-module-name="TestModule" fullname="TestModule.ContainerItem" href="qml-testmodule-containeritem.html" status="active" access="public" location="types.qdoc" documented="true" brief="A container type demonstrating combined property hints">
+            <qmlproperty name="children" fullname="TestModule.ContainerItem.children" href="qml-testmodule-containeritem.html#children-prop" status="active" access="public" location="types.qdoc" documented="true" type="list&lt;Item&gt;" attached="false" writable="false" brief="Of this container, which is both the default and read-only"/>
+            <qmlproperty name="content" fullname="TestModule.ContainerItem.content" href="qml-testmodule-containeritem.html#content-prop" status="active" access="public" location="types.qdoc" documented="true" type="Item" attached="false" writable="true" required="true" brief="Required default content item"/>
+            <qmlproperty name="count" fullname="TestModule.ContainerItem.count" href="qml-testmodule-containeritem.html#count-prop" status="active" access="public" location="types.qdoc" documented="true" type="int" attached="false" writable="false" required="true" brief="A read-only required property"/>
+            <qmlproperty name="name" fullname="TestModule.ContainerItem.name" href="qml-testmodule-containeritem.html#name-prop" status="active" access="public" location="types.qdoc" documented="true" type="string" attached="false" writable="false" brief="A simple read-only property"/>
+            <qmlproperty name="title" fullname="TestModule.ContainerItem.title" href="qml-testmodule-containeritem.html#title-prop" status="active" access="public" location="types.qdoc" documented="true" type="string" attached="false" writable="true" required="true" brief="A simple required property"/>
+        </qmlclass>
+        <qmlmodule name="TestModule" qml-module-name="TestModule" href="testmodule-qmlmodule.html" status="active" location="types.qdoc" documented="true" seen="true" title="Test QML Types" brief="Test module for combined QML property hints"/>
+    </namespace>
+</INDEX>

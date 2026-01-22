@@ -1,0 +1,67 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule TestModule
+    \title Test QML Types
+    \brief Test module for combined QML property hints.
+
+    This module tests the combination of \c{\\qmldefault}, \c{\\readonly},
+    and \c{\\required} commands on QML properties.
+*/
+
+/*!
+    \qmltype ContainerItem
+    \inqmlmodule TestModule
+    \brief A container type demonstrating combined property hints.
+
+    ContainerItem demonstrates that QML properties can have multiple
+    hints applied simultaneously.
+*/
+
+/*!
+    \qmlproperty list<Item> ContainerItem::children
+    \qmldefault
+    \readonly
+    \brief The children of this container, which is both the default and read-only.
+
+    This property is the default property (child items are implicitly added here)
+    and is also read-only (cannot be directly assigned to, only modified via
+    methods like push/pop or by declaring children).
+*/
+
+/*!
+    \qmlproperty Item ContainerItem::content
+    \qmldefault
+    \required
+    \brief Required default content item.
+
+    This property demonstrates a default property that is also required.
+*/
+
+/*!
+    \qmlproperty int ContainerItem::count
+    \readonly
+    \required
+    \brief A read-only required property.
+
+    This property demonstrates that a property can be both read-only and required,
+    meaning it must be set during construction but cannot be changed afterward.
+*/
+
+/*!
+    \qmlproperty string ContainerItem::name
+    \readonly
+    \brief A simple read-only property.
+
+    This property is only read-only for comparison.
+*/
+
+/*!
+    \qmlproperty string ContainerItem::title
+    \required
+    \brief A simple required property.
+
+    This property is only required for comparison.
+*/
+
