@@ -47,6 +47,7 @@
 #include "template_declaration.h"
 
 #include <cstdio>
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
@@ -592,6 +593,46 @@ static QString reconstructQualifiedPathForCursor(CXCursor cur)
 }
 
 /*!
+  \internal
+
+  Extract a class name from a Clang parameter type, stripping references,
+  pointers, and qualifiers. Returns \c {std::nullopt} if the type doesn't
+  represent a class.
+ */
+static std::optional<QString> classNameFromParameterType(clang::QualType param_type)
+{
+    param_type = param_type.getNonReferenceType();
+    while (param_type->isPointerType())
+        param_type = param_type->getPointeeType();
+    param_type = param_type.getUnqualifiedType();
+
+    if (param_type->isBuiltinType())
+        return std::nullopt;
+
+    if (const auto *record_type = param_type->getAs<clang::RecordType>()) {
+        if (const auto *record_decl = record_type->getDecl())
+            return QString::fromStdString(record_decl->getQualifiedNameAsString());
+    }
+
+    // The type may be incomplete (forward-declared or unknown during \fn parsing).
+    // Extract the class name from the type spelling if it looks like a class.
+    QString class_name = QString::fromStdString(param_type.getAsString());
+    class_name.remove("const "_L1).remove("volatile "_L1);
+    class_name.remove("class "_L1).remove("struct "_L1);
+    class_name = class_name.trimmed();
+
+    if (class_name.isEmpty() || class_name.contains('('_L1) || class_name.contains('['_L1))
+        return std::nullopt;
+
+    // Strip template arguments (e.g. "QList<MyClass>" becomes "QList") as
+    // hidden friends are declared in the primary type.
+    if (auto angle = class_name.indexOf('<'_L1); angle > 0)
+        class_name.truncate(angle);
+
+    return class_name;
+}
+
+/*!
   Find the node from the QDocDatabase \a qdb that corresponds to the declaration
   represented by the cursor \a cur, if it exists.
  */
@@ -647,10 +688,45 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
         NodeVector candidates;
         parent->findChildren(functionName(cur), candidates);
         // Hidden friend functions are recorded under their lexical parent in the database
-        if (candidates.isEmpty() && get_cursor_declaration(cur)->getFriendObjectKind() != clang::Decl::FOK_None) {
+        auto *cur_decl = get_cursor_declaration(cur);
+        if (candidates.isEmpty() && cur_decl && cur_decl->getFriendObjectKind() != clang::Decl::FOK_None) {
             if (auto *lexical_parent = findNodeForCursor(qdb, clang_getCursorLexicalParent(cur));
                     lexical_parent && lexical_parent->isAggregate() && lexical_parent != parent) {
                 static_cast<Aggregate *>(lexical_parent)->findChildren(functionName(cur), candidates);
+            }
+        }
+
+        // Fallback for hidden friends documented with \fn using unqualified syntax.
+        // When a free function like "bool operator==(const MyClass&, const MyClass&)"
+        // isn't found, search classes referenced in the parameters for hidden friends.
+        if (candidates.isEmpty()) {
+            auto *func_decl = cur_decl ? cur_decl->getAsFunction() : nullptr;
+            if (!func_decl)
+                return nullptr;
+
+            QString funcName = functionName(cur);
+            QSet<ClassNode *> searched_classes;
+
+            for (unsigned i = 0; i < func_decl->getNumParams(); ++i) {
+                auto class_name = classNameFromParameterType(func_decl->getParamDecl(i)->getType());
+                if (!class_name)
+                    continue;
+
+                auto *class_node = qdb->findClassNode(class_name->split("::"_L1));
+                if (!class_node || searched_classes.contains(class_node))
+                    continue;
+
+                searched_classes.insert(class_node);
+                NodeVector class_candidates;
+                class_node->findChildren(funcName, class_candidates);
+
+                for (Node *candidate : class_candidates) {
+                    if (!candidate->isFunction(Genus::CPP))
+                        continue;
+                    auto *fn = static_cast<FunctionNode *>(candidate);
+                    if (fn->isHiddenFriend())
+                        candidates.append(candidate);
+                }
             }
         }
 

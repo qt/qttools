@@ -1,0 +1,24 @@
+project = HiddenFriendsFn
+description = Test case for documenting hidden friends with unqualified fn syntax
+
+outputformats             = WebXML HTML
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+locationinfo = false
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+documentationinheaders = true
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+

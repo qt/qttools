@@ -353,8 +353,8 @@
     and destructor, copy constructor and move-copy constructor,
     assignment operator, and move-assignment operator.
 
-    When documenting an hidden friend, it is required to prepend the
-    enclosing class name to the function name.
+    When documenting a hidden friend, you can use either the
+    class-qualified syntax or the unqualified free function syntax.
     For example, for:
 
     \code
@@ -365,12 +365,11 @@
     }
     \endcode
 
-    The command should be written as \c{"\fn Foo::operator==(const
-    Foo&, const Foo&)"} and not as the free function \c{"\fn
-    operator==(const Foo&, const Foo&)"}.
-
-    Failure to do so will have QDoc complaining about being unable to
-    resolve the function.
+    The command can be written as \c{"\fn Foo::operator==(const
+    Foo&, const Foo&)"} or as the free function \c{"\fn bool
+    operator==(const Foo&, const Foo&)"}. QDoc resolves hidden
+    friends by searching classes referenced in the function's
+    parameter types.
 
     \note The \\fn command is QDoc's default command: when no
     topic command can be found in a QDoc comment, QDoc tries to tie

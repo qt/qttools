@@ -345,9 +345,9 @@
     incorrect template arguments, return type, or qualifiers such as
     \e const.
 
-    \note The \c{\fn} signature for a \e {hidden friend} should be
-          fully qualified with the scope of the class that declares
-          the function.
+    \note A \e {hidden friend} can be documented using either the
+          class-qualified syntax or the unqualified free function
+          syntax with its return type.
 
     \section1 Failed to find qhp.<project>.subprojects.<subproject>.indexTitle
 

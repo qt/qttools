@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- testclass.cpp -->
+  <meta name="description" content="A class with hidden friends documented using unqualified fn syntax.">
+  <title>TestClass Class | HiddenFriendsFn</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li>TestClass</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#related-non-members">Related Non-Members</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">TestClass Class</h1>
+<!-- $$$TestClass-brief -->
+<p>A class with hidden friends documented using unqualified fn syntax. <a href="#details">More...</a></p>
+<!-- @@@TestClass -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;TestClass&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="testclass-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#TestClass" translate="no">TestClass</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#publicMethod" translate="no">publicMethod</a></b>()</td></tr>
+</table></div>
+<h2 id="related-non-members">Related Non-Members</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#operator-lt" translate="no">operator&lt;</a></b>(const TestClass &amp;<i>lhs</i>, const TestClass &amp;<i>rhs</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#operator-eq-eq" translate="no">operator==</a></b>(const TestClass &amp;<i>lhs</i>, const TestClass &amp;<i>rhs</i>)</td></tr>
+</table></div>
+<!-- $$$TestClass-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>This class tests that hidden friends can be documented using fn commands without requiring the class prefix.</p>
+</div>
+<!-- @@@TestClass -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$TestClass[overload1]$$$TestClass -->
+<h3 class="fn" translate="no" id="TestClass"><code class="details extra" translate="no">[constexpr noexcept <a href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions" translate="no">default</a>]</code> TestClass::<span class="name">TestClass</span>()</h3>
+<p>Default-constructs an instance of <span translate="no">TestClass</span>.</p>
+<!-- @@@TestClass -->
+<!-- $$$publicMethod[overload1]$$$publicMethod -->
+<h3 class="fn" translate="no" id="publicMethod"><span class="type">void</span> TestClass::<span class="name">publicMethod</span>()</h3>
+<p>Public member function.</p>
+<!-- @@@publicMethod -->
+</div>
+<div class="relnonmem">
+<h2>Related Non-Members</h2>
+<!-- $$$operator<[overload1]$$$operator<constTestClass&constTestClass& -->
+<h3 class="fn" translate="no" id="operator-lt"><span class="type">bool</span> <span class="name">operator&lt;</span>(const <span class="type"><a href="testclass.html" translate="no">TestClass</a></span> &amp;<i>lhs</i>, const <span class="type"><a href="testclass.html" translate="no">TestClass</a></span> &amp;<i>rhs</i>)</h3>
+<p>Hidden friend less-than operator documented without class prefix.</p>
+<p>Compares <i translate="no">lhs</i> and <i translate="no">rhs</i>. Returns <code translate="no">true</code> if <i translate="no">lhs</i> is less than <i translate="no">rhs</i>, <code translate="no">false</code> otherwise.</p>
+<!-- @@@operator< -->
+<!-- $$$operator==[overload1]$$$operator==constTestClass&constTestClass& -->
+<h3 class="fn" translate="no" id="operator-eq-eq"><span class="type">bool</span> <span class="name">operator==</span>(const <span class="type"><a href="testclass.html" translate="no">TestClass</a></span> &amp;<i>lhs</i>, const <span class="type"><a href="testclass.html" translate="no">TestClass</a></span> &amp;<i>rhs</i>)</h3>
+<p>Hidden friend equality operator documented without class prefix.</p>
+<p>Compares <i translate="no">lhs</i> and <i translate="no">rhs</i> for equality. Returns <code translate="no">true</code> if they are equal, <code translate="no">false</code> otherwise.</p>
+<!-- @@@operator== -->
+</div>
+</body>
+</html>

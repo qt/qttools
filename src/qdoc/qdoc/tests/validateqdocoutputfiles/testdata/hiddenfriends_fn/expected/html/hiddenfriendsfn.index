@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for documenting hidden friends with unqualified fn syntax" version="" project="HiddenFriendsFn">
+    <namespace name="" status="active" access="public" module="hiddenfriendsfn">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="HiddenFriendModule" brief="A class with hidden friends documented using unqualified fn syntax">
+            <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" auto-generated="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="TestClass()"/>
+            <function name="operator&lt;" href="testclass.html#operator-lt" status="active" access="public" location="testclass.h" documented="true" related="0" meta="plain" hidden-friend="true" type="bool" signature="bool operator&lt;(const TestClass &amp;lhs, const TestClass &amp;rhs)">
+                <parameter type="const TestClass &amp;" name="lhs" default=""/>
+                <parameter type="const TestClass &amp;" name="rhs" default=""/>
+            </function>
+            <function name="operator==" href="testclass.html#operator-eq-eq" status="active" access="public" location="testclass.h" documented="true" related="1" meta="plain" hidden-friend="true" type="bool" signature="bool operator==(const TestClass &amp;lhs, const TestClass &amp;rhs)">
+                <parameter type="const TestClass &amp;" name="lhs" default=""/>
+                <parameter type="const TestClass &amp;" name="rhs" default=""/>
+            </function>
+            <function name="publicMethod" fullname="TestClass::publicMethod" href="testclass.html#publicMethod" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" brief="Public member function" signature="void publicMethod()"/>
+        </class>
+        <module name="HiddenFriendModule" href="hiddenfriendmodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" title="" brief="Test module for hidden friend fn syntax"/>
+    </namespace>
+</INDEX>
