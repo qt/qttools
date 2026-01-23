@@ -6,6 +6,7 @@
             <contents name="commands" title="Commands" level="1"/>
             <contents name="previouspage" title="\previouspage" level="2"/>
             <description>
+                <relation href="https://what.ever" type="" meta="previous" description="External"/>
                 <para>The navigation commands...</para>
                 <quote>
                     <raw format="HTML">        &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;5&quot; width=&quot;100%&quot;&gt;

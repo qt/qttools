@@ -658,12 +658,14 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                         break;
                     case Atom::Link:
                         if (inItem) {
+                            // Omit external link targets
+                            const Node *page = m_qdb->findNodeForTarget(atom->string(), nullptr);
+                            if (!page || page->isExternalPage())
+                                break;
+
                             if (sectionStack.top() > 0)
                                 writer.writeEndElement(); // section
 
-                            const Node *page = m_qdb->findNodeForTarget(atom->string(), nullptr);
-                            if (page == nullptr)
-                                break;
                             writer.writeStartElement("section");
                             QString indexPath = m_gen->fullDocumentLocation(page);
                             writer.writeAttribute("ref", indexPath);

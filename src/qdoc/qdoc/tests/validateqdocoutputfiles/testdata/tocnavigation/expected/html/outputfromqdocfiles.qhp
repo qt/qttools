@@ -16,6 +16,8 @@
                 <section ref="group2.html" title="Group2">
                     <section ref="e.html" title="Page E"/>
                     <section ref="d.html" title="Page D"/>
+                    <section ref="page.html" title="Page"/>
+                    <section ref="qdoctests-qdocmanuallikefileoutput.html" title="Document Navigation"/>
                 </section>
             </section>
         </toc>
@@ -23,6 +25,7 @@
             <keyword name="Document Navigation" id="Document Navigation" ref="qdoctests-qdocmanuallikefileoutput.html"/>
             <keyword name="Exhaustive testing of QDoc commands" id="Exhaustive testing of QDoc commands" ref="qdoctests-qdocfileoutput-exhaustive.html"/>
             <keyword name="Group2" id="Group2" ref="group2.html"/>
+            <keyword name="Page" id="Page" ref="page.html"/>
             <keyword name="Page A" id="Page A" ref="a.html"/>
             <keyword name="Page C" id="Page C" ref="c.html"/>
             <keyword name="Page D" id="Page D" ref="d.html"/>
@@ -42,6 +45,7 @@
             <file>group2.html</file>
             <file>images/01.png</file>
             <file>images/leonardo-da-vinci.png</file>
+            <file>page.html</file>
             <file>qdoctests-qdocfileoutput-exhaustive.html</file>
             <file>qdoctests-qdocfileoutput-linking.html</file>
             <file>qdoctests-qdocfileoutput.html</file>

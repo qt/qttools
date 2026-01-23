@@ -3,6 +3,7 @@
     <document>
         <page name="d.html" href="d.html" status="active" location="group.qdoc" documented="true" groups="group2" subtype="page" title="Page D" fulltitle="Page D" subtitle="">
             <description>
+                <relation href="page.html" type="page" meta="next" description="Page"/>
                 <relation href="e.html" type="page" meta="previous" description="Page E"/>
             </description>
         </page>
