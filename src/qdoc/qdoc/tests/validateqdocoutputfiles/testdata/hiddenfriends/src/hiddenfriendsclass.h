@@ -52,7 +52,12 @@ private:
 
         Returns \c true if objects are equal.
     */
-    friend bool operator==(const HiddenFriendsClass &lhs, const HiddenFriendsClass &rhs);
+    friend bool operator==(const HiddenFriendsClass &lhs, const HiddenFriendsClass &rhs)
+    {
+        (void)lhs;
+        (void)rhs;
+        return true;
+    }
 
     /*!
         \brief Hidden friend swap function.
@@ -68,6 +73,10 @@ private:
         // Implementation would go here
     }
 
-    int m_privateData = 42; // Undocumented private member - should not appear
+    int m_privateData = 42;
+
+    // Friend declaration WITHOUT definition, which should NOT create a node.
+    // The out-of-line definition (if any) would create it in namespace scope.
+    friend void declaredButNotDefinedHere(HiddenFriendsClass &obj);
 };
 

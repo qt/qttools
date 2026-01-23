@@ -1,0 +1,26 @@
+project = FriendDeclarations
+description = Test case for friend declarations vs hidden friends
+
+outputformats             = WebXML HTML
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+locationinfo = false
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+documentationinheaders = yessir!
+
+# zero warning policy
+warninglimit = 0
+
+warninglimit.enabled = true
+

@@ -85,7 +85,7 @@
                     <para>The move assignment operator is deleted. <argument>other</argument> cannot be moved from.</para>
                 </description>
             </function>
-            <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="5" meta="plain" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
+            <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="5" meta="plain" hidden-friend="true" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
                 <parameter type="const TestQDoc::Test &amp;" name="lhs" default=""/>
                 <parameter type="const TestQDoc::Test &amp;" name="rhs" default=""/>
                 <description>

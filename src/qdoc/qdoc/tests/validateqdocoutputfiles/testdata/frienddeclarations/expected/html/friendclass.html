@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- friendclass.h -->
+  <meta name="description" content="A class with friend declaration and hidden friend.">
+  <title>FriendClass Class | FriendDeclarations</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li>FriendClass</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#related-non-members">Related Non-Members</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">FriendClass Class</h1>
+<!-- $$$FriendClass-brief -->
+<p>A class with friend declaration and hidden friend. <a href="#details">More...</a></p>
+<!-- @@@FriendClass -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;FriendClass&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="friendclass-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="friendclass.html#FriendClass" translate="no">FriendClass</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="friendclass.html#publicMethod" translate="no">publicMethod</a></b>()</td></tr>
+</table></div>
+<h2 id="related-non-members">Related Non-Members</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="friendclass.html#operator-eq-eq" translate="no">operator==</a></b>(const FriendClass &amp;<i>lhs</i>, const FriendClass &amp;<i>rhs</i>)</td></tr>
+</table></div>
+<!-- $$$FriendClass-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>This class has both a friend declaration (without inline definition) and a hidden friend (with inline definition).</p>
+<p>The friend declaration for operator!= should NOT create a documentation node under the class - only the hidden friend operator== should appear.</p>
+</div>
+<!-- @@@FriendClass -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$FriendClass[overload1]$$$FriendClass -->
+<h3 class="fn" translate="no" id="FriendClass"><code class="details extra" translate="no">[constexpr noexcept <a href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions" translate="no">default</a>]</code> FriendClass::<span class="name">FriendClass</span>()</h3>
+<p>Default constructor.</p>
+<!-- @@@FriendClass -->
+<!-- $$$publicMethod[overload1]$$$publicMethod -->
+<h3 class="fn" translate="no" id="publicMethod"><span class="type">void</span> FriendClass::<span class="name">publicMethod</span>()</h3>
+<p>Public member function.</p>
+<!-- @@@publicMethod -->
+</div>
+<div class="relnonmem">
+<h2>Related Non-Members</h2>
+<!-- $$$operator==[overload1]$$$operator==constFriendClass&constFriendClass& -->
+<h3 class="fn" translate="no" id="operator-eq-eq"><span class="type">bool</span> <span class="name">operator==</span>(const <span class="type"><a href="friendclass.html" translate="no">FriendClass</a></span> &amp;<i>lhs</i>, const <span class="type"><a href="friendclass.html" translate="no">FriendClass</a></span> &amp;<i>rhs</i>)</h3>
+<p>Hidden friend equality operator.</p>
+<p>This hidden friend (defined inline) should appear in documentation. <i translate="no">lhs</i> Left-hand side operand. <i translate="no">rhs</i> Right-hand side operand. Returns <code translate="no">true</code> if objects are equal.</p>
+<!-- @@@operator== -->
+</div>
+</body>
+</html>

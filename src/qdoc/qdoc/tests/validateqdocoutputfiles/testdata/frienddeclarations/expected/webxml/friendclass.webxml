@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="FriendClass" href="friendclass.html" status="active" access="public" location="friendclass.h" documented="true" module="FriendModule" brief="A class with friend declaration and hidden friend">
+            <description>
+                <brief>A class with friend declaration and hidden friend.</brief>
+                <para>This class has both a friend declaration (without inline definition) and a hidden friend (with inline definition).</para>
+                <para>The friend declaration for operator!= should NOT create a documentation node under the class - only the hidden friend operator== should appear.</para>
+            </description>
+            <function name="FriendClass" fullname="FriendClass::FriendClass" href="friendclass.html#FriendClass" status="active" access="public" location="friendclass.h" documented="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" brief="Default constructor" signature="FriendClass()">
+                <description>
+                    <brief>Default constructor.</brief>
+                </description>
+            </function>
+            <function name="operator==" href="friendclass.html#operator-eq-eq" status="active" access="public" location="friendclass.h" documented="true" related="0" meta="plain" hidden-friend="true" type="bool" brief="Hidden friend equality operator" signature="bool operator==(const FriendClass &amp;lhs, const FriendClass &amp;rhs)">
+                <parameter type="const FriendClass &amp;" name="lhs" default=""/>
+                <parameter type="const FriendClass &amp;" name="rhs" default=""/>
+                <description>
+                    <brief>Hidden friend equality operator.</brief>
+                    <para>This hidden friend (defined inline) should appear in documentation. <argument>lhs</argument> Left-hand side operand. <argument>rhs</argument> Right-hand side operand. Returns <teletype type="highlighted">true</teletype> if objects are equal.</para>
+                </description>
+            </function>
+            <function name="publicMethod" fullname="FriendClass::publicMethod" href="friendclass.html#publicMethod" status="active" access="public" location="friendclass.h" documented="true" meta="plain" type="void" brief="Public member function" signature="void publicMethod()">
+                <description>
+                    <brief>Public member function.</brief>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

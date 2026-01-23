@@ -93,6 +93,9 @@ public:
     void markDeletedAsWritten() { m_deleted = true; }
     [[nodiscard]] bool isDeletedAsWritten() const { return m_deleted; }
 
+    void setHiddenFriend(bool b) { m_hiddenFriend = b; }
+    [[nodiscard]] bool isHiddenFriend() const { return m_hiddenFriend; }
+
     void setTrailingRequiresClause(const QString &clause) {
         if (clause.isEmpty())
             m_trailingRequiresClause.reset();
@@ -203,6 +206,7 @@ private:
     bool m_isInvokable : 1;
     bool m_explicitlyDefaulted : 1;
     bool m_deleted : 1;
+    bool m_hiddenFriend : 1;
     bool m_explicit;
     bool m_constexpr;
 

@@ -132,7 +132,12 @@ private:
         Returns either \c true or \c false, entirely dependent on the values of
         \a lhs and \a rhs.
     */
-    friend bool operator==(const TestClass &lhs, const TestClass &rhs);
+    friend bool operator==(const TestClass &lhs, const TestClass &rhs)
+    {
+        (void)lhs;
+        (void)rhs;
+        return true;
+    }
 
     /*!
         \brief Hidden friend swap function.

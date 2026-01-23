@@ -1535,8 +1535,11 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
         parameters.append(QStringLiteral("..."));
     readParameterNamesAndAttributes(fn, cursor);
 
-    if (declaration->getFriendObjectKind() != clang::Decl::FOK_None)
+    if (declaration && declaration->getFriendObjectKind() != clang::Decl::FOK_None) {
         fn->setRelatedNonmember(true);
+        if (function_declaration && function_declaration->isThisDeclarationADefinition())
+            fn->setHiddenFriend(true);
+    }
 }
 
 bool ClangVisitor::parseProperty(const QString &spelling, const Location &loc)

@@ -33,7 +33,7 @@
                 <function name="operator=" fullname="TestQDoc::Test::operator=" href="testqdoc-test.html#operator-eq" status="active" access="public" location="testcpp.h" documented="true" meta="move-assign" deleted="true" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other)" groups="testgroup">
                     <parameter type="TestQDoc::Test &amp;&amp;" name="other" default=""/>
                 </function>
-                <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="3" meta="plain" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
+                <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="3" meta="plain" hidden-friend="true" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
                     <parameter type="const TestQDoc::Test &amp;" name="lhs" default=""/>
                     <parameter type="const TestQDoc::Test &amp;" name="rhs" default=""/>
                 </function>

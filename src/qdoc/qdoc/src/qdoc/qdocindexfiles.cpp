@@ -500,6 +500,8 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
 
             if (attributes.value(QLatin1String("deleted")) == QLatin1String("true"))
                 fn->markDeletedAsWritten();
+            if (attributes.value(QLatin1String("hidden-friend")) == QLatin1String("true"))
+                fn->setHiddenFriend(true);
 
             if (attributes.value(QLatin1String("noexcept")) == QLatin1String("true")) {
                 fn->markNoexcept(attributes.value("noexcept_expression").toString());
@@ -1335,6 +1337,8 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
             writer.writeAttribute("explicitly-defaulted", "true");
         if (fn->isDeletedAsWritten())
             writer.writeAttribute("deleted", "true");
+        if (fn->isHiddenFriend())
+            writer.writeAttribute("hidden-friend", "true");
 
         if (auto noexcept_info = fn->getNoexcept()) {
             writer.writeAttribute("noexcept", "true");

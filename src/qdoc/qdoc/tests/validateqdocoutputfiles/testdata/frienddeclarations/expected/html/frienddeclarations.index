@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for friend declarations vs hidden friends" version="" project="FriendDeclarations">
+    <namespace name="" status="active" access="public" module="frienddeclarations">
+        <class name="FriendClass" href="friendclass.html" status="active" access="public" location="friendclass.h" documented="true" module="FriendModule" brief="A class with friend declaration and hidden friend">
+            <function name="FriendClass" fullname="FriendClass::FriendClass" href="friendclass.html#FriendClass" status="active" access="public" location="friendclass.h" documented="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" brief="Default constructor" signature="FriendClass()"/>
+            <function name="operator==" href="friendclass.html#operator-eq-eq" status="active" access="public" location="friendclass.h" documented="true" related="0" meta="plain" hidden-friend="true" type="bool" brief="Hidden friend equality operator" signature="bool operator==(const FriendClass &amp;lhs, const FriendClass &amp;rhs)">
+                <parameter type="const FriendClass &amp;" name="lhs" default=""/>
+                <parameter type="const FriendClass &amp;" name="rhs" default=""/>
+            </function>
+            <function name="publicMethod" fullname="FriendClass::publicMethod" href="friendclass.html#publicMethod" status="active" access="public" location="friendclass.h" documented="true" meta="plain" type="void" brief="Public member function" signature="void publicMethod()"/>
+        </class>
+        <module name="FriendModule" href="friendmodule-module.html" status="active" location="friendclass.h" documented="true" seen="true" title="" brief="Test module for friend declarations"/>
+    </namespace>
+</INDEX>

@@ -12,7 +12,7 @@
                     <para>Creates a <link raw="HiddenFriendsClass" href="hiddenfriendsclass.html" type="class">HiddenFriendsClass</link> instance.</para>
                 </description>
             </function>
-            <function name="operator==" href="hiddenfriendsclass.html#operator-eq-eq" status="active" access="public" location="hiddenfriendsclass.h" documented="true" related="0" meta="plain" type="bool" brief="Hidden friend equality operator" signature="bool operator==(const HiddenFriendsClass &amp;lhs, const HiddenFriendsClass &amp;rhs)">
+            <function name="operator==" href="hiddenfriendsclass.html#operator-eq-eq" status="active" access="public" location="hiddenfriendsclass.h" documented="true" related="0" meta="plain" hidden-friend="true" type="bool" brief="Hidden friend equality operator" signature="bool operator==(const HiddenFriendsClass &amp;lhs, const HiddenFriendsClass &amp;rhs)">
                 <parameter type="const HiddenFriendsClass &amp;" name="lhs" default=""/>
                 <parameter type="const HiddenFriendsClass &amp;" name="rhs" default=""/>
                 <description>
@@ -35,7 +35,7 @@
                     <para>This should always appear in documentation.</para>
                 </description>
             </function>
-            <function name="swap" href="hiddenfriendsclass.html#swap" status="active" access="public" location="hiddenfriendsclass.h" documented="true" related="1" meta="plain" type="void" brief="Hidden friend swap function" signature="void swap(HiddenFriendsClass &amp;a, HiddenFriendsClass &amp;b)">
+            <function name="swap" href="hiddenfriendsclass.html#swap" status="active" access="public" location="hiddenfriendsclass.h" documented="true" related="1" meta="plain" hidden-friend="true" type="void" brief="Hidden friend swap function" signature="void swap(HiddenFriendsClass &amp;a, HiddenFriendsClass &amp;b)">
                 <parameter type="HiddenFriendsClass &amp;" name="a" default=""/>
                 <parameter type="HiddenFriendsClass &amp;" name="b" default=""/>
                 <description>
