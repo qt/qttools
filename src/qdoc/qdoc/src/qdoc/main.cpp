@@ -520,6 +520,25 @@ static void processQdocconfFile(const QString &fileName)
         }
     }
 
+    /*
+      Initialize all the classes and data structures with the
+      qdoc configuration. This is safe to do for each qdocconf
+      file processed, because all the data structures created
+      are either cleared after they have been used, or they
+      are cleared in the terminate() functions below.
+
+      NOTE: This must happen before buildPCH() because during
+      header parsing, auto-generated documentation may be created
+      that uses QDoc markup commands (e.g., \a for parameters).
+      Those commands require Doc::initialize() to have populated
+      the command hash.
+     */
+    Location::initialize();
+    Tokenizer::initialize();
+    CodeMarker::initialize();
+    CodeParser::initialize();
+    Doc::initialize(file_resolver);
+
     std::optional<PCHFile> pch = std::nullopt;
     if (config.dualExec() || config.preparing()) {
         const QString moduleHeader = config.get(CONFIG_MODULEHEADER).asString();
@@ -535,19 +554,6 @@ static void processQdocconfFile(const QString &fileName)
 
     ClangCodeParser clangParser(QDocDatabase::qdocDB(), Config::instance(), include_paths, clang_defines, pch);
     PureDocParser docParser{config.location()};
-
-    /*
-      Initialize all the classes and data structures with the
-      qdoc configuration. This is safe to do for each qdocconf
-      file processed, because all the data structures created
-      are either cleared after they have been used, or they
-      are cleared in the terminate() functions below.
-     */
-    Location::initialize();
-    Tokenizer::initialize();
-    CodeMarker::initialize();
-    CodeParser::initialize();
-    Doc::initialize(file_resolver);
 
     if (config.dualExec() || config.preparing()) {
         QStringList sourceList;
