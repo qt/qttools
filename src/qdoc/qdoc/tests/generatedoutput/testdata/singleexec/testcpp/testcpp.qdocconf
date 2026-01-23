@@ -1,0 +1,30 @@
+# Copyright (C) 2019 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+# Allow a single warning for self-referencing \sa documentation
+warninglimit = 1
+warninglimit.enabled = true
+
+# Don't write host system-specific paths to index files
+locationinfo = false
+
+HTML.nosubdirs = true
+HTML.outputsubdir = .
+
+project = TestCPP
+productname = Qt
+includepaths += -I./src
+
+headers = src/testcpp.h
+sources = src/testcpp.cpp \
+          src/classlists.qdoc
+exampledirs = src/snippets
+
+macro.CMDFN = \\\\fn
+macro.nothing = \\dontdocument ()
+macro.testnoautolist = \\if defined(test_noautolist)\n\\noautolist\n\\endif
+
+navigation.cppclassespage = "QDoc Test C++ Classes"

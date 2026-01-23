@@ -1,4 +1,3 @@
-../configs/testcpp_singleexec.qdocconf
+testcpp/testcpp.qdocconf
 
-../crossmodule/crossmodule_singleexec.qdocconf
-
+crossmodule/crossmodule.qdocconf

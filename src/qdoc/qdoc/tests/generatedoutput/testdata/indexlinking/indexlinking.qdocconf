@@ -1,29 +1,30 @@
-# test linking to entities loaded from index
+# Copyright (C) 2020 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+# Test linking to entities loaded from index
 project = IndexLinking
 
 # Use a URL different from what the dependency below uses,
 # to avoid linking with relative paths. See QTBUG-107762.
 url = indexlinking
 
-depends = \
-    qmlpropertygroups
+depends = qmlpropertygroups
 
-sources = linking.qdoc
+sources = src/linking.qdoc
 
 sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
-# images
-imagedirs = ../images
+# Images
+imagedirs = images
 
-# zero warning policy
+# Zero warning policy
 warninglimit = 0
 warninglimit.enabled = true
 
-# don't write host system-specific paths to index files
+# Don't write host system-specific paths to index files
 locationinfo = false
 
 # By default, use -outputdir directly, no subdir.
-# outputsubdir '.' matches the root of expected_output/
 HTML.nosubdirs = true
 HTML.outputsubdir = .

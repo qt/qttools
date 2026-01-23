@@ -1,0 +1,19 @@
+// Copyright (C) 2020 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page qmlmodules.html
+    \title QML Modules
+
+    \generatelist qml-modules
+
+    \section1 QML types
+
+    \generatelist qmltypesbymodule QDoc.Test
+
+    \section1 QML value types
+
+    \generatelist qmlvaluetypes
+
+    \generatelist qmlvaluetypesbymodule QDoc.Test
+*/

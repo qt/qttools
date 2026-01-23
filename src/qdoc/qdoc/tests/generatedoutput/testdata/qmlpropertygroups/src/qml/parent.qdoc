@@ -1,0 +1,87 @@
+// Copyright (C) 2019 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \qmltype AbstractParent
+    \inqmlmodule QDoc.Test
+    \qmlabstract
+    \brief Abstract base QML type.
+*/
+
+/*!
+    \qmlproperty list<Child> AbstractParent::children
+    \qmldefault
+    \brief Children of the type.
+*/
+
+/*!
+    \qmlmethod void AbstractParent::rear(Child child, var method =  Strict)
+    \brief Do some abstract parenting on \a child using a specific \a method.
+*/
+
+/*!
+    \qmlproperty string AbstractParent::name
+    \brief Name of this parent.
+*/
+
+/*!
+    \qmlmethod void AbstractParent::name(Child child, name)
+    \brief Name a \a child using \a name.
+
+*/
+
+/*!
+    \qmlmethod void AbstractParent::name()
+    \brief Name all children with random names.
+*/
+
+/*!
+    \qmltype Child
+    \inqmlmodule QDoc.Test
+    \inherits AbstractParent
+    \brief A Child inheriting its parent.
+*/
+
+/*!
+    //! override from abstract base
+    \qmlproperty string Child::name
+    \brief Name of this child.
+*/
+
+/*!
+    //! override from abstract base
+    \qmlmethod void Child::name(Child child, name)
+    \brief Name a \a child of this child using \a name.
+*/
+
+/*!
+    \qmlvaluetype int
+    \inqmlmodule QDoc.Test
+
+    \brief An integer value type.
+*/
+
+/*!
+    \qmlmethod int int::abs()
+    Returns the absolute value of this integer.
+*/
+
+/*!
+    \qmltype InternParent
+    \inqmlmodule QDoc.Test
+    \internal
+    \qmlabstract
+    \brief Internal abstract base QML type.
+*/
+
+/*!
+    \qmlproperty int InternParent::prop
+    \brief Propagated to inheriting type docs.
+*/
+
+/*!
+    \qmltype YetAnotherChild
+    \inherits InternParent
+    \inqmlmodule QDoc.Test
+    \brief A type inheriting from internal abstract parent.
+*/

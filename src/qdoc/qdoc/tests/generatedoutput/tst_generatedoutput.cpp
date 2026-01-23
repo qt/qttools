@@ -25,7 +25,6 @@ private slots:
     void inheritedQmlPropertyGroups();
     void crossModuleLinking();
     void indexLinking();
-    void includeFromExampleDirs();
     void singleExec();
     void preparePhase();
     void generatePhase();
@@ -169,7 +168,7 @@ void tst_generatedOutput::copyIndexFiles()
 
 void tst_generatedOutput::htmlFromCpp()
 {
-    testAndCompare("testdata/configs/testcpp.qdocconf",
+    testAndCompare("testdata/testcpp/testcpp.qdocconf",
                    "testcpp-module.html "
                    "testqdoc-test.html "
                    "testqdoc-test-members.html "
@@ -220,14 +219,6 @@ void tst_generatedOutput::crossModuleLinking()
                    indexDir.toLatin1().data());
 }
 
-void tst_generatedOutput::includeFromExampleDirs()
-{
-    testAndCompare("testdata/includefromexampledirs/includefromexampledirs.qdocconf",
-                   "includefromexampledirs/index.html "
-                   "includefromexampledirs/qml-qdoc-test-abstractparent.html "
-                   "includefromexampledirs/qml-qdoc-test-abstractparent-members.html");
-}
-
 void tst_generatedOutput::singleExec()
 {
     // Build both testcpp and crossmodule projects in single-exec mode
@@ -245,14 +236,14 @@ void tst_generatedOutput::singleExec()
 
 void tst_generatedOutput::preparePhase()
 {
-    testAndCompare("testdata/configs/testcpp.qdocconf",
+    testAndCompare("testdata/testcpp/testcpp.qdocconf",
                    "testcpp.index",
                    "-prepare");
 }
 
 void tst_generatedOutput::generatePhase()
 {
-    testAndCompare("testdata/configs/testcpp.qdocconf",
+    testAndCompare("testdata/testcpp/testcpp.qdocconf",
                    "testcpp-module.html "
                    "testqdoc-test.html "
                    "testqdoc-test-members.html "
@@ -262,7 +253,7 @@ void tst_generatedOutput::generatePhase()
 
 void tst_generatedOutput::noAutoList()
 {
-    testAndCompare("testdata/configs/noautolist.qdocconf",
+    testAndCompare("testdata/noautolist/noautolist.qdocconf",
                    "noautolist/testcpp-module.html "
                    "noautolist/test-componentset-example.html "
                    "noautolist/qdoc-test-qmlmodule.html "

@@ -1,15 +1,15 @@
-# Copyright (C) 2020 The Qt Company Ltd.
+# Copyright (C) 2019 The Qt Company Ltd.
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+project = Test
+productname = Qt
+description = "A test project for QDoc build artifacts"
 
 sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # Images
 imagedirs = images
-
-# Zero warning policy (plus one for expected warning)
-warninglimit = 1
-warninglimit.enabled = true
 
 # Don't write host system-specific paths to index files
 locationinfo = false
@@ -28,15 +28,10 @@ navigation.cppclassespage = "QDoc Test C++ Classes"
 
 moduleheader = TestCPP
 
-project = QmlPropertyGroups
-productname = Qt
-description = "A test project for QDoc build artifacts"
-
 exampledirs = src/qml
 
 headerdirs += src
 sourcedirs += src/qml
-sourcedirs += src
 
 examples.fileextensions = "*.qml *.cpp"
 
@@ -46,10 +41,20 @@ macro.QDocTestVer       = "1.1"
 navigation.qmltypespage     = "QDoc.Test QML Module"
 navigation.qmltypestitle    = "Types"
 
-url = https://doc.qt.io/${project}
+manifestmeta.examplecategories = "Application Examples" \
+                                 "Desktop" \
+                                 "Mobile" \
+                                 "Embedded"
+defines += test_noautolist
 
 outputformats = HTML DocBook
 
-{HTML.nosubdirs,DocBook.nosubdirs}  = true
-HTML.outputsubdir                   = qmlpropertygroups
-DocBook.outputsubdir                = qmlpropertygroups-docbook
+HTML.nosubdirs          = true
+DocBook.nosubdirs       = true
+HTML.outputsubdir       = noautolist
+DocBook.outputsubdir    = noautolist-docbook
+
+# TODO: DocBook generator has trouble handling shared comment nodes
+# - allow two warnings related to these
+warninglimit = 2
+warninglimit.enabled = true
