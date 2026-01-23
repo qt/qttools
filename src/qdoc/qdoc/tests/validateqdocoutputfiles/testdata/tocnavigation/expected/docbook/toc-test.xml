@@ -61,5 +61,25 @@
 </db:itemizedlist>
 </db:para>
 </db:listitem>
+<db:listitem>
+<db:para>Test exclusion of external links</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="page.xml">Page</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="https://doc.qt.io">Docs</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="http://localhost:9000/">http://localhost:9000/</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="https://what.ever">External</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="qdoctests-qdocmanuallikefileoutput.xml">Document Navigation</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:listitem>
 </db:itemizedlist>
 </db:article>

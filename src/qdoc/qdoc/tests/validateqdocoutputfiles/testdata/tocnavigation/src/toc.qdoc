@@ -23,5 +23,24 @@
         \generatelist group
         \li \l {Group2}
         \annotatedlist [descending] group2
+        \li Test exclusion of external links
+        \list
+            \li \l {Page}
+            \li \l {https://doc.qt.io}{Docs}
+            \li \l {http://localhost:9000/}
+            \li \l {External}
+            \li \l {Document Navigation}
+        \endlist
     \endlist
+*/
+
+// Dummy pages for TOC testing
+/*!
+    \page page.html
+    \title Page
+*/
+
+/*!
+    \externalpage https://what.ever
+    \title External
 */

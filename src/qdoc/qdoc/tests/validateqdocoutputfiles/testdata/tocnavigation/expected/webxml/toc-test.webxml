@@ -66,6 +66,31 @@
                                 </row>
                             </table></para>
                     </item>
+                    <item>
+                        <para>Test exclusion of external links</para>
+                        <list type="bullet">
+                            <item>
+                                <para>
+                                    <link raw="Page" href="page.html" type="page" page="Page">Page</link></para>
+                            </item>
+                            <item>
+                                <para>
+                                    <link raw="https://doc.qt.io" href="https://doc.qt.io" type="external">Docs</link></para>
+                            </item>
+                            <item>
+                                <para>
+                                    <link raw="http://localhost:9000/" href="http://localhost:9000/" type="external">http://localhost:9000/</link></para>
+                            </item>
+                            <item>
+                                <para>
+                                    <link raw="External" href="https://what.ever" type="">External</link></para>
+                            </item>
+                            <item>
+                                <para>
+                                    <link raw="Document Navigation" href="qdoctests-qdocmanuallikefileoutput.html" type="page" page="Document Navigation">Document Navigation</link></para>
+                            </item>
+                        </list>
+                    </item>
                 </list>
             </description>
         </page>

@@ -5,6 +5,7 @@
 <db:productname>Qt</db:productname>
 <db:edition>OutputFromQDocFiles - A test project for QDoc build artifacts</db:edition>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="https://what.ever" xlink:type="arc" xlink:arcrole="prev" xlink:title="External"/></db:extendedlink>
 <db:abstract>
 <db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
 </db:info>

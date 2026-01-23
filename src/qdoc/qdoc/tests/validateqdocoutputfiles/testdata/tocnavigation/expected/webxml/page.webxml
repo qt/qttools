@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="page.html" href="page.html" status="active" location="toc.qdoc" documented="true" subtype="page" title="Page" fulltitle="Page" subtitle="">
+            <description>
+                <relation href="https://what.ever" type="" meta="next" description="External"/>
+                <relation href="d.html" type="page" meta="previous" description="Page D"/>
+            </description>
+        </page>
+    </document>
+</WebXML>
