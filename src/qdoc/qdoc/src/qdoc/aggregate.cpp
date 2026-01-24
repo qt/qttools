@@ -161,19 +161,27 @@ FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters
     if (parameters.isEmpty()) {
         FunctionNode *fallback = nullptr;
         FunctionNode *lastResort = nullptr;
+        FunctionNode *deletedFallback = nullptr;
 
         for (auto *fn : *map_it) {
             // Primary overload takes highest priority - return immediately
             if (fn->isPrimaryOverload() && !fn->isInternal())
                 return fn;
 
-            // Remember first non-deprecated, non-internal as fallback
-            if (!fallback && !fn->isInternal() && !fn->isDeprecated())
+            // Remember first non-deprecated, non-internal, non-deleted as fallback.
+            // Deleted functions shouldn't be primary link targets - users linking
+            // to ClassName() want a usable constructor, not a deleted copy ctor.
+            if (!fallback && !fn->isInternal() && !fn->isDeprecated()
+                    && !fn->isDeletedAsWritten())
                 fallback = fn;
 
-            // Remember first non-internal as last resort
-            if (!lastResort && !fn->isInternal())
+            // Remember first non-internal, non-deleted as last resort
+            if (!lastResort && !fn->isInternal() && !fn->isDeletedAsWritten())
                 lastResort = fn;
+
+            // Deleted functions are valid link targets when no other option exists
+            if (!deletedFallback && !fn->isInternal())
+                deletedFallback = fn;
         }
 
         if (fallback)
@@ -182,7 +190,8 @@ FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters
         if (lastResort)
             return lastResort;
 
-        return nullptr;
+        // Fall back to deleted functions when they're the only option
+        return deletedFallback;
     }
 
     // Try exact parameter match

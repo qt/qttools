@@ -3,6 +3,20 @@
 <INDEX url="" title="Explicitly defaulted functions Reference Documentation" version="" project="Explicitly defaulted functions">
     <namespace name="" status="active" access="public" module="explicitly defaulted functions">
         <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTests" brief="Contains test classes for QDoc">
+            <class name="DeletedCopyCtorTest" fullname="QDocTests::DeletedCopyCtorTest" href="qdoctests-deletedcopyctortest.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTests" brief="A test class with a deleted copy constructor">
+                <function name="DeletedCopyCtorTest" fullname="QDocTests::DeletedCopyCtorTest::DeletedCopyCtorTest" href="qdoctests-deletedcopyctortest.html#DeletedCopyCtorTest" status="active" access="public" location="testclass.h" documented="true" auto-generated="true" meta="copy-constructor" deleted="true" signature="DeletedCopyCtorTest(const QDocTests::DeletedCopyCtorTest &amp;)">
+                    <parameter type="const QDocTests::DeletedCopyCtorTest &amp;" name="" default=""/>
+                </function>
+                <function name="DeletedCopyCtorTest" fullname="QDocTests::DeletedCopyCtorTest::DeletedCopyCtorTest" href="qdoctests-deletedcopyctortest.html#DeletedCopyCtorTest-1" status="active" access="public" location="testclass.h" documented="true" meta="constructor" overload="true" overload-number="1" signature="DeletedCopyCtorTest(int value, const char *name, void *data)">
+                    <parameter type="int" name="value" default=""/>
+                    <parameter type="const char *" name="name" default=""/>
+                    <parameter type="void *" name="data" default=""/>
+                </function>
+                <function name="operator=" fullname="QDocTests::DeletedCopyCtorTest::operator=" href="qdoctests-deletedcopyctortest.html#operator-eq" status="active" access="public" location="testclass.h" documented="true" auto-generated="true" meta="copy-assign" deleted="true" type="QDocTests::DeletedCopyCtorTest &amp;" signature="QDocTests::DeletedCopyCtorTest &amp; operator=(const QDocTests::DeletedCopyCtorTest &amp;)">
+                    <parameter type="const QDocTests::DeletedCopyCtorTest &amp;" name="" default=""/>
+                </function>
+                <function name="someMethod" fullname="QDocTests::DeletedCopyCtorTest::someMethod" href="qdoctests-deletedcopyctortest.html#someMethod" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" signature="void someMethod()"/>
+            </class>
             <class name="ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTests" brief="A test class for explicitly defaulted special member functions">
                 <function name="ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest::ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html#ExplicitlyDefaultedTest" status="active" access="public" location="testclass.h" documented="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="ExplicitlyDefaultedTest()"/>
                 <function name="ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest::ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html#ExplicitlyDefaultedTest-1" status="active" access="public" location="testclass.h" documented="true" meta="move-constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" overload="true" overload-number="1" signature="ExplicitlyDefaultedTest(QDocTests::ExplicitlyDefaultedTest &amp;&amp;other)">

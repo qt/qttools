@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QDocTests::DeletedCopyCtorTest Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Explicitly defaulted functions Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test class with a deleted copy constructor.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>DeletedCopyCtorTest</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class tests that QDoc correctly resolves links to constructors when a deleted copy constructor is present. The deleted copy constructor should not be chosen as the link target.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="DeletedCopyCtorTest-1">
+<db:title>DeletedCopyCtorTest::DeletedCopyCtorTest(int <db:emphasis>value</db:emphasis>, const char *<db:emphasis>name</db:emphasis>, void *<db:emphasis>data</db:emphasis>)</db:title>
+<db:constructorsynopsis>
+<db:methodname>DeletedCopyCtorTest</db:methodname>
+<db:methodparam>
+<db:type>int</db:type>
+<db:parameter>value</db:parameter>
+</db:methodparam>
+<db:methodparam>
+<db:type>const char *</db:type>
+<db:parameter>name</db:parameter>
+</db:methodparam>
+<db:methodparam>
+<db:type>void *</db:type>
+<db:parameter>data</db:parameter>
+</db:methodparam>
+<db:synopsisinfo role="meta">constructor</db:synopsisinfo>
+<db:synopsisinfo role="overload">overload</db:synopsisinfo>
+<db:synopsisinfo role="overload-number">1</db:synopsisinfo>
+<db:synopsisinfo role="signature">DeletedCopyCtorTest(int value, const char *name, void *data)</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Constructs a <db:link xlink:href="qdoctests-deletedcopyctortest.xml">DeletedCopyCtorTest</db:link> with the given <db:code role="parameter">value</db:code>, <db:code role="parameter">name</db:code>, and <db:code role="parameter">data</db:code>.</db:para>
+</db:section>
+<db:section xml:id="DeletedCopyCtorTest">
+<db:title>[<db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Deleted_functions">delete</db:link>] DeletedCopyCtorTest::DeletedCopyCtorTest(<db:emphasis>const QDocTests::DeletedCopyCtorTest &amp;</db:emphasis>)</db:title>
+<db:constructorsynopsis>
+<db:methodname>DeletedCopyCtorTest</db:methodname>
+<db:methodparam>
+<db:type>const QDocTests::DeletedCopyCtorTest &amp;</db:type>
+<db:parameter></db:parameter>
+</db:methodparam>
+<db:modifier>delete</db:modifier>
+<db:synopsisinfo role="meta">copy-constructor</db:synopsisinfo>
+<db:synopsisinfo role="signature">DeletedCopyCtorTest(const QDocTests::DeletedCopyCtorTest &amp;) = delete</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Copy-constructs an instance of <db:phrase>DeletedCopyCtorTest</db:phrase>. This function is deleted.</db:para>
+</db:section>
+<db:section xml:id="someMethod">
+<db:title>void DeletedCopyCtorTest::someMethod()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>someMethod</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void someMethod()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Does something.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="qdoctests-deletedcopyctortest.xml#DeletedCopyCtorTest-1">DeletedCopyCtorTest</db:link>()</db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="operator-eq">
+<db:title>[<db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Deleted_functions">delete</db:link>] QDocTests::DeletedCopyCtorTest &amp;DeletedCopyCtorTest::operator=(<db:emphasis>const QDocTests::DeletedCopyCtorTest &amp;</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>QDocTests::DeletedCopyCtorTest &amp;</db:type>
+<db:methodname>operator=</db:methodname>
+<db:methodparam>
+<db:type>const QDocTests::DeletedCopyCtorTest &amp;</db:type>
+<db:parameter></db:parameter>
+</db:methodparam>
+<db:modifier>delete</db:modifier>
+<db:synopsisinfo role="meta">copy-assign</db:synopsisinfo>
+<db:synopsisinfo role="signature">QDocTests::DeletedCopyCtorTest &amp; operator=(const QDocTests::DeletedCopyCtorTest &amp;) = delete</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Copy-assigns <db:code role="parameter">other</db:code> to this <db:phrase>DeletedCopyCtorTest</db:phrase> instance. This function is deleted.</db:para>
+</db:section>
+</db:section>
+</db:article>

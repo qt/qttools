@@ -22,6 +22,10 @@
 <db:section xml:id="classes">
 <db:title>Classes</db:title>
 <db:section>
+<db:title>class <db:link xlink:href="qdoctests-deletedcopyctortest.xml" xlink:role="class">DeletedCopyCtorTest</db:link></db:title>
+<db:para>A test class with a deleted copy constructor.</db:para>
+</db:section>
+<db:section>
 <db:title>class <db:link xlink:href="qdoctests-explicitlydefaultedtest.xml" xlink:role="class">ExplicitlyDefaultedTest</db:link></db:title>
 <db:para>A test class for explicitly defaulted special member functions.</db:para>
 </db:section>

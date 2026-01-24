@@ -69,3 +69,27 @@
     unnamed in the source code.
 */
 
+/*!
+    \class QDocTests::DeletedCopyCtorTest
+    \inmodule QDocTests
+    \brief A test class with a deleted copy constructor.
+
+    This class tests that QDoc correctly resolves links to constructors
+    when a deleted copy constructor is present. The deleted copy constructor
+    should not be chosen as the link target.
+*/
+
+/*!
+    \fn QDocTests::DeletedCopyCtorTest::DeletedCopyCtorTest(int value, const char *name, void *data)
+
+    Constructs a DeletedCopyCtorTest with the given \a value, \a name, and \a data.
+*/
+
+/*!
+    \fn void QDocTests::DeletedCopyCtorTest::someMethod()
+
+    Does something.
+
+    \sa DeletedCopyCtorTest()
+*/
+

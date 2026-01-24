@@ -29,6 +29,19 @@ private:
     int m_value{0};
 };
 
+class DeletedCopyCtorTest {
+public:
+    DeletedCopyCtorTest(const DeletedCopyCtorTest &) = delete;
+    DeletedCopyCtorTest &operator=(const DeletedCopyCtorTest &) = delete;
+
+    DeletedCopyCtorTest(int value, const char *name, void *data);
+
+    void someMethod();
+
+private:
+    int m_value{0};
+};
+
 } // QDocTests
 
 #endif // EXPLICITLYDEFAULTEDTEST_H
