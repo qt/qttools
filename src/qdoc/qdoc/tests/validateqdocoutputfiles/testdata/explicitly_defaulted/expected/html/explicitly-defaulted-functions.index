@@ -19,6 +19,15 @@
                 </function>
                 <function name="~ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest::~ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html#dtor.ExplicitlyDefaultedTest" status="active" access="public" location="testclass.h" documented="true" meta="destructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="~ExplicitlyDefaultedTest()"/>
             </class>
+            <class name="UnnamedParameterTest" fullname="QDocTests::UnnamedParameterTest" href="qdoctests-unnamedparametertest.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTests" brief="A test class with unnamed parameters in assignment operators">
+                <function name="UnnamedParameterTest" fullname="QDocTests::UnnamedParameterTest::UnnamedParameterTest" href="qdoctests-unnamedparametertest.html#UnnamedParameterTest" status="active" access="public" location="testclass.h" documented="true" auto-generated="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="UnnamedParameterTest()"/>
+                <function name="operator=" fullname="QDocTests::UnnamedParameterTest::operator=" href="qdoctests-unnamedparametertest.html#operator-eq" status="active" access="public" location="testclass.h" documented="true" auto-generated="true" meta="move-assign" constexpr="true" explicitly-defaulted="true" noexcept="true" type="QDocTests::UnnamedParameterTest &amp;" signature="QDocTests::UnnamedParameterTest &amp; operator=(QDocTests::UnnamedParameterTest &amp;&amp;)">
+                    <parameter type="QDocTests::UnnamedParameterTest &amp;&amp;" name="" default=""/>
+                </function>
+                <function name="operator=" fullname="QDocTests::UnnamedParameterTest::operator=" href="qdoctests-unnamedparametertest.html#operator-eq-1" status="active" access="public" location="testclass.h" documented="true" auto-generated="true" meta="copy-assign" constexpr="true" explicitly-defaulted="true" noexcept="true" overload="true" overload-number="1" type="QDocTests::UnnamedParameterTest &amp;" signature="QDocTests::UnnamedParameterTest &amp; operator=(const QDocTests::UnnamedParameterTest &amp;)">
+                    <parameter type="const QDocTests::UnnamedParameterTest &amp;" name="" default=""/>
+                </function>
+            </class>
         </namespace>
         <module name="QDocTests" href="qdoctests-module.html" status="active" documented="true" seen="true" title="" brief="Module contains test classes for QDoc"/>
     </namespace>

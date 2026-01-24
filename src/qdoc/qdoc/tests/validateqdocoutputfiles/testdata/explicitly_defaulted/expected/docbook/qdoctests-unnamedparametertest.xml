@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QDocTests::UnnamedParameterTest Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Explicitly defaulted functions Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test class with unnamed parameters in assignment operators.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>UnnamedParameterTest</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class tests that QDoc doesn't emit spurious &quot;No such parameter&quot; warnings for auto-generated documentation when the parameter is unnamed in the source code.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="UnnamedParameterTest">
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] UnnamedParameterTest::UnnamedParameterTest()</db:title>
+<db:constructorsynopsis>
+<db:methodname>UnnamedParameterTest</db:methodname>
+<db:void/>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">constructor</db:synopsisinfo>
+<db:synopsisinfo role="signature">UnnamedParameterTest() = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Default-constructs an instance of <db:phrase>UnnamedParameterTest</db:phrase>.</db:para>
+</db:section>
+<db:section xml:id="operator-eq">
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] QDocTests::UnnamedParameterTest &amp;UnnamedParameterTest::operator=(<db:emphasis>QDocTests::UnnamedParameterTest &amp;&amp;</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>QDocTests::UnnamedParameterTest &amp;</db:type>
+<db:methodname>operator=</db:methodname>
+<db:methodparam>
+<db:type>QDocTests::UnnamedParameterTest &amp;&amp;</db:type>
+<db:parameter></db:parameter>
+</db:methodparam>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">move-assign</db:synopsisinfo>
+<db:synopsisinfo role="signature">QDocTests::UnnamedParameterTest &amp; operator=(QDocTests::UnnamedParameterTest &amp;&amp;) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Move-assigns <db:code role="parameter">other</db:code> to this <db:phrase>UnnamedParameterTest</db:phrase> instance.</db:para>
+</db:section>
+<db:section xml:id="operator-eq-1">
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] QDocTests::UnnamedParameterTest &amp;UnnamedParameterTest::operator=(<db:emphasis>const QDocTests::UnnamedParameterTest &amp;</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>QDocTests::UnnamedParameterTest &amp;</db:type>
+<db:methodname>operator=</db:methodname>
+<db:methodparam>
+<db:type>const QDocTests::UnnamedParameterTest &amp;</db:type>
+<db:parameter></db:parameter>
+</db:methodparam>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">copy-assign</db:synopsisinfo>
+<db:synopsisinfo role="overload">overload</db:synopsisinfo>
+<db:synopsisinfo role="overload-number">1</db:synopsisinfo>
+<db:synopsisinfo role="signature">QDocTests::UnnamedParameterTest &amp; operator=(const QDocTests::UnnamedParameterTest &amp;) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Copy-assigns <db:code role="parameter">other</db:code> to this <db:phrase>UnnamedParameterTest</db:phrase> instance.</db:para>
+</db:section>
+</db:section>
+</db:article>

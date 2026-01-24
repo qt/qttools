@@ -19,6 +19,16 @@ private:
     int m_value{0};
 };
 
+class UnnamedParameterTest {
+public:
+    UnnamedParameterTest() = default;
+    UnnamedParameterTest &operator=(const UnnamedParameterTest &) = default;
+    UnnamedParameterTest &operator=(UnnamedParameterTest &&) = default;
+
+private:
+    int m_value{0};
+};
+
 } // QDocTests
 
 #endif // EXPLICITLYDEFAULTEDTEST_H

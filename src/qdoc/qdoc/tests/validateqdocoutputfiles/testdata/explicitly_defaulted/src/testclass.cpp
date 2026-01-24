@@ -59,3 +59,13 @@
     Move assigns \a other to this object.
 */
 
+/*!
+    \class QDocTests::UnnamedParameterTest
+    \inmodule QDocTests
+    \brief A test class with unnamed parameters in assignment operators.
+
+    This class tests that QDoc doesn't emit spurious "No such parameter"
+    warnings for auto-generated documentation when the parameter is
+    unnamed in the source code.
+*/
+

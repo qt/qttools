@@ -25,5 +25,9 @@
 <db:title>class <db:link xlink:href="qdoctests-explicitlydefaultedtest.xml" xlink:role="class">ExplicitlyDefaultedTest</db:link></db:title>
 <db:para>A test class for explicitly defaulted special member functions.</db:para>
 </db:section>
+<db:section>
+<db:title>class <db:link xlink:href="qdoctests-unnamedparametertest.xml" xlink:role="class">UnnamedParameterTest</db:link></db:title>
+<db:para>A test class with unnamed parameters in assignment operators.</db:para>
+</db:section>
 </db:section>
 </db:article>
