@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for custom module headers" version="" project="ModuleHeaderTest">
+    <namespace name="" status="active" access="public" module="moduleheadertest">
+        <page name="index.html" href="index.html" status="active" location="overview.qdoc" documented="true" subtype="page" title="Module Header Test" fulltitle="Module Header Test" subtitle="" brief="A test project demonstrating custom module headers">
+            <contents name="classes" title="Classes" level="1"/>
+            <contents name="global-functions" title="Global Functions" level="1"/>
+            <contents name="module-header-configuration" title="Module Header Configuration" level="1"/>
+        </page>
+    </namespace>
+</INDEX>

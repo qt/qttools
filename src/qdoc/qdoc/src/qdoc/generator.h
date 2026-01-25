@@ -74,6 +74,7 @@ public:
     QString linkForExampleFile(const QString &path, const QString &fileExt = QString());
     static QString exampleFileTitle(const ExampleNode *relative, const QString &fileName);
     static Generator *currentGenerator() { return s_currentGenerator; }
+    static void setCurrentGenerator(Generator *generator) { s_currentGenerator = generator; }
     static Generator *generatorForFormat(const QString &format);
     static void initialize();
     static const QString &outputDir() { return s_outDir; }

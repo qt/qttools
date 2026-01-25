@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="indexlinking" title="IndexLinking Reference Documentation" version="" project="IndexLinking">
+    <namespace name="" status="active" access="public" module="indexlinking">
+        <page name="index-linking.html" href="index-linking.html" status="active" location="linking.qdoc" documented="true" subtype="page" title="Linking" fulltitle="Linking" subtitle="">
+            <contents name="qml-properties" title="QML properties" level="1"/>
+            <contents name="auto-linking-to-types-in-code-snippets" title="Auto-linking to types in code snippets" level="1"/>
+        </page>
+        <qmlclass name="GrandChild" qml-module-name="LinkModule" qml-base-type="AnotherChild" fullname="LinkModule.GrandChild" href="qml-linkmodule-grandchild.html" status="active" access="public" location="linking.qdoc" documented="true"/>
+        <qmlmodule name="LinkModule" qml-module-name="LinkModule" qml-module-version="1.0" href="linkmodule-qmlmodule.html" status="active" location="linking.qdoc" documented="true" seen="true" title="LinkModule QML Types"/>
+    </namespace>
+</INDEX>

@@ -26,6 +26,7 @@
 
 #include "filesystem/fileresolver.h"
 #include "boundaries/filesystem/directorypath.h"
+#include "outputdirectory.h"
 
 #include <QtCore/qcompilerdetection.h>
 #include <QtCore/qdatetime.h>
@@ -296,6 +297,67 @@ void logStartEndMessage(const QLatin1String &startStop, Config &config)
 
     const QString msg = startStop + runName;
     qCInfo(lcQdoc) << msg.toUtf8().data();
+}
+
+/*!
+    \internal
+    Generates the index file for the current project.
+
+    Index files contain documentation metadata used for cross-module linking.
+    Index hrefs are relative paths to HTML files, so the index file must be
+    co-located with HTML output for correct link resolution.
+
+    Index generation only occurs during the prepare phase (single-exec mode)
+    or when not in generate-only mode (dual-exec mode).
+
+    \note This function still relies on Generator::currentGenerator() for
+    href computation via QDocIndexFiles. Full decoupling requires either
+    passing format context as parameters or pre-computing hrefs during an
+    IR construction phase. See QTBUG-142470.
+ */
+static void generateIndexFile(const Config &config)
+{
+    if (config.generating())
+        return;
+
+    const QString project = config.get(CONFIG_PROJECT).asString();
+    const QString url = config.get(CONFIG_URL).asString();
+    const QString description = config.get(CONFIG_DESCRIPTION)
+            .asString(project + " Reference Documentation"_L1);
+
+    // Index files must be co-located with HTML files for correct href resolution.
+    // Use HTML output directory when available; this handles HTML.outputsubdir.
+    QString outputDirPath;
+    if (config.getOutputFormats().contains(u"HTML"_s)) {
+        outputDirPath = config.getOutputDir(u"HTML"_s);
+    } else {
+        // Fallback for non-HTML builds (e.g., DocBook-only)
+        outputDirPath = Config::overrideOutputDir.isNull()
+                ? config.get(CONFIG_OUTPUTDIR).asString()
+                : Config::overrideOutputDir;
+        if (config.singleExec())
+            outputDirPath += '/'_L1 + project.toLower();
+    }
+
+    const QString fileBase = project.toLower().simplified().replace(' '_L1, '-'_L1);
+
+    OutputDirectory outputDir = OutputDirectory::ensure(outputDirPath, Location());
+    const QString indexFileName = fileBase + ".index"_L1;
+    const QString indexPath = outputDir.absoluteFilePath(indexFileName);
+
+    // HACK: QDocIndexFiles::generateIndex() uses Generator::currentGenerator()
+    // internally for fullDocumentLocation() calls, which need fileExtension().
+    // Temporarily set HTML generator as current to get correct .html extensions.
+    // This coupling should be removed by passing format context explicitly or
+    // by pre-computing document locations. See QTBUG-142470.
+    auto *htmlGenerator = Generator::generatorForFormat(u"HTML"_s);
+    auto *previousGenerator = Generator::currentGenerator();
+    if (htmlGenerator)
+        Generator::setCurrentGenerator(htmlGenerator);
+
+    QDocDatabase::qdocDB()->generateIndex(indexPath, url, description);
+
+    Generator::setCurrentGenerator(previousGenerator);
 }
 
 /*!
@@ -627,6 +689,8 @@ static void processQdocconfFile(const QString &fileName)
                     .fatal(QStringLiteral("QDoc: Unknown output format '%1'").arg(format));
         }
     }
+
+    generateIndexFile(config);
 
     qCDebug(lcQdoc, "Terminating qdoc classes");
     if (Utilities::debugging())

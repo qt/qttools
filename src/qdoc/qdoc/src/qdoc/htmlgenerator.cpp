@@ -267,8 +267,6 @@ void HtmlGenerator::generateDocs()
             outputDir(),
             m_project.toLower().simplified().replace(' '_L1, '-'_L1)
         );
-    if (!config->generating())
-        m_qdb->generateIndex("%1.index"_L1.arg(fileBase), m_projectUrl, m_projectDescription);
 
     if (!config->preparing()) {
         m_helpProjectWriter->generate();

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="CrossModule Reference Documentation" version="" project="CrossModule">
+    <namespace name="" status="active" access="public" module="crossmodule">
+        <namespace name="CrossModuleRef" href="crossmoduleref-sub-crossmodule.html" status="active" access="public" location="testtype.h">
+            <function name="documentMeToo" fullname="CrossModuleRef::documentMeToo" href="crossmoduleref-sub-crossmodule.html#documentMeToo" status="active" access="public" location="testtype.h" documented="true" meta="plain" type="void" signature="void documentMeToo()"/>
+        </namespace>
+        <class name="TestType" href="testtype.html" status="active" access="public" location="testtype.h" documented="true" bases="TestQDoc::TestDerived" module="CrossModule" brief="A class inheriting another class that lives in an external doc module">
+            <contents name="linking" title="Linking" level="1"/>
+            <contents name="generated-lists" title="Generated Lists" level="1"/>
+            <function name="nothing" fullname="TestType::nothing" href="testtype.html#nothing" status="active" access="public" location="testtype.h" documented="true" meta="plain" type="void" signature="void nothing()"/>
+        </class>
+        <module name="CrossModule" href="crossmodule-module.html" status="active" documented="true" seen="true" title=""/>
+    </namespace>
+</INDEX>
