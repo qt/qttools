@@ -971,6 +971,23 @@
         DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/myapp_de.xlf"
     )
     \endcode
+
+    \section1 PO format-specific options
+
+    When converting to PO format, you can disable automatic line wrapping
+    by setting the \c no-wrap flag in the \c po-flags extra metadata field.
+    By default, lines longer than 79 characters are wrapped. Set this field
+    in source code using the \l{Extra metadata (//~)}{//~ meta string}
+    (for example, \c{//~ po-flags no-wrap}) or directly in TS files using
+    the \c{<extra-po-flags>} element.
+
+    Other PO flags (see the
+    \l{https://www.gnu.org/software/gettext/manual/gettext.html#Sticky-flags-1}{GNU gettext documentation})
+    are preserved when converting between TS and PO formats but do not
+    affect \c lconvert processing.
+
+    \note The \c po-flags metadata is only preserved when converting directly
+    from TS to PO format.
 */
 
 /*!
@@ -2631,6 +2648,11 @@ Inspect the in-place source annotations marked with
         <extra-Context>Error dialogs</extra-Context>
     </message>
     \endcode
+
+    \section2 Recognized extra keys
+
+    While any key can be used with \c{//~}, the \c no-wrap flag within
+    \c po-flags is recognized by \c lconvert. See \l{PO format-specific options}.
 
     \section1 TRANSLATOR magic comments
 
