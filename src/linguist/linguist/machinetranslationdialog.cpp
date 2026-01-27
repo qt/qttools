@@ -279,7 +279,12 @@ void MachineTranslationDialog::stop()
     m_translator->stop();
     m_ui->stopButton->setEnabled(false);
     m_ui->translateButton->setEnabled(true);
-    refresh(false);
+    m_sentTexts = 0;
+    m_failedTranslations = 0;
+    m_ongoingTranslations.clear();
+    m_translator->start();
+    m_ui->applyButton->setEnabled(!m_receivedTranslations.empty());
+    m_ui->progressBar->setVisible(false);
     logError(tr("Translation Stopped."));
 }
 
@@ -432,6 +437,7 @@ void MachineTranslationDialog::applyTranslations()
         m_dataModel->setTranslations(item, translations);
     refresh(false);
     logInfo(tr("Translations Applied."));
+    updateStatus();
 }
 
 void MachineTranslationDialog::onTranslationFailed(QList<const TranslatorMessage *> failed)
