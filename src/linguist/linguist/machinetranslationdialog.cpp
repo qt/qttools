@@ -210,7 +210,9 @@ void MachineTranslationDialog::logProgress(const QList<QStringList> &table)
                     .arg(receivedCount)
                     .arg(m_sentTexts)
                     .arg(m_failedTranslations));
-    m_ui->progressBar->setValue((receivedCount + m_failedTranslations) * 100 / m_sentTexts);
+    const int progress =
+            m_sentTexts > 0 ? (receivedCount + m_failedTranslations) * 100 / m_sentTexts : 0;
+    m_ui->progressBar->setValue(progress);
     if (!table.empty()) {
         QString html = "<hr/><table cellpadding=\"4\""
                        "style=\""
@@ -349,6 +351,12 @@ void MachineTranslationDialog::translateSelection()
             }
         }
     }
+
+    if (messages.items.isEmpty()) {
+        logInfo(tr("No items to translate. All selected messages already have translations."));
+        return;
+    }
+
     messages.srcLang = QLocale::languageToString(dm->sourceLanguage());
     messages.tgtLang = QLocale::languageToString(dm->language());
     messages.pluralFormsCount = dm->numerusForms().size();
