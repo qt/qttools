@@ -56,6 +56,9 @@ macro.ver.match         = "^(\\d+\\.\\d+)"
 macro.versionnote.HTML      = "<p><b>This \1 was introduced in version \2.</b></p>\n"
 macro.versionnote.DocBook   = "<db:para>This \1 was introduced in version \2.</db:para>\n"
 
+preliminary             = "Under construction"
+preliminary.description = "This \1 is under heavy construction and will collapse if inspected."
+
 moduleheader = TestCPP
 
 examples.fileextensions = "*.qml *.cpp"

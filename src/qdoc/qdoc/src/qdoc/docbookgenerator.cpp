@@ -2505,8 +2505,11 @@ bool DocBookGenerator::generateStatus(const Node *node)
         m_writer->writeStartElement(dbNamespace, "para");
         m_writer->writeStartElement(dbNamespace, "emphasis");
         m_writer->writeAttribute("role", "bold");
-        m_writer->writeCharacters("This " + typeString(node)
-                                  + " is under development and is subject to change.");
+        m_writer->writeCharacters(
+                Config::instance()
+                        .get(CONFIG_PRELIMINARY + Config::dot + CONFIG_DESCRIPTION)
+                        .asString()
+                        .replace('\1'_L1, typeString(node)));
         m_writer->writeEndElement(); // emphasis
         m_writer->writeEndElement(); // para
         newLine();
@@ -3479,7 +3482,8 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         generateSynopsisInfo("status", "active");
         break;
     case Status::Preliminary:
-        generateSynopsisInfo("status", "preliminary");
+        generateSynopsisInfo("status",
+                             Config::instance().get(CONFIG_PRELIMINARY).asString().toLower());
         break;
     case Status::Deprecated:
         generateSynopsisInfo("status", "deprecated");

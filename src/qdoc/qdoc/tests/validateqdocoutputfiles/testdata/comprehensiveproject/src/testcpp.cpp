@@ -240,6 +240,7 @@ int Test::someFunction(int, int v)
 
 /*!
     \fn int Test::someFunction(int, int v = 0)
+    \preliminary
 
     Function that takes a parameter \a v.
     Also returns the value of \a v.

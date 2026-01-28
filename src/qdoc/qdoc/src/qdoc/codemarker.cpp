@@ -146,7 +146,8 @@ bool CodeMarker::recognizeLanguage(const QString &language)
 
     If a string is returned, it is one of:
     \list
-        \li \c {"preliminary"}
+        \li \c {"preliminary"} or the value of configuration option \c preliminary
+               (in lowercase)
         \li \c {"since <version_since>, deprecated in <version_deprecated>"}
         \li \c {"since <version_since>, until <version_deprecated>"}
         \li \c {"since <version_since>"}
@@ -161,7 +162,7 @@ bool CodeMarker::recognizeLanguage(const QString &language)
 static std::optional<QString> nodeStatusAsString(const Node *node)
 {
     if (node->isPreliminary())
-        return std::optional(u"preliminary"_s);
+        return std::optional(Config::instance().get(CONFIG_PRELIMINARY).asString().toLower());
 
     QStringList result;
     if (const auto &since = node->since(); !since.isEmpty())

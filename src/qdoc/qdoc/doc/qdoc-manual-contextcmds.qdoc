@@ -522,7 +522,7 @@
 
     The command must stand on its own line.
 
-    The \\preliminary command expands to a notification in the
+    The \\preliminary command expands to a note in the
     documentation, and marks the element as preliminary when it appears
     in lists.
 
@@ -540,6 +540,12 @@
         return QChar::joiningType(ucs);
     }
     \endcode
+
+    Since QDoc version 6.12, it is possible to customize the status
+    descriptor and the contents of the generated note for elements
+    marked with \\preliminary.
+
+    See also \qdocvar {preliminary} configuration variable.
 
     \target readonly-command
     \section1 \\readonly

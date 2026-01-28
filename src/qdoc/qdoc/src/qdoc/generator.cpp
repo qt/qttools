@@ -1295,7 +1295,8 @@ QString Generator::formatSince(const Node *node)
           \c {\meta {status} {<description>}},
       \li 'Deprecated [since <version>]' (\\deprecated [<version>]),
       \li 'Until <version>',
-      \li 'Preliminary' (\\preliminary), or
+      \li 'Preliminary' or the value of config variable `preliminary'
+          (\\preliminary), or
       \li The description adopted from associated module's state:
           \c {\modulestate {<description>}}.
     \endlist
@@ -1319,7 +1320,7 @@ std::optional<QString> formatStatus(const Node *node, QDocDatabase *qdb)
     } else if (!since.isEmpty()) {
         status = "Until %1"_L1.arg(since);
     } else if (node->status() == Status::Preliminary) {
-        status = u"Preliminary"_s;
+        status = Config::instance().get(CONFIG_PRELIMINARY).asString();
     } else if (const auto collection = qdb->getModuleNode(node); collection) {
         status = collection->state();
     }
@@ -1394,11 +1395,15 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
                  << version << "." << Atom::ParaRight;
         }
         break;
-    case Status::Preliminary:
-        text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD) << "This "
-             << typeString(node) << " is under development and is subject to change."
+    case Status::Preliminary: {
+        auto description = Config::instance()
+                                   .get(CONFIG_PRELIMINARY + Config::dot + CONFIG_DESCRIPTION)
+                                   .asString();
+        description.replace('\1'_L1, typeString(node));
+        text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+             << description
              << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD) << Atom::ParaRight;
-        break;
+    } break;
     case Status::Deprecated:
         text << Atom::ParaLeft;
         if (node->isAggregate())

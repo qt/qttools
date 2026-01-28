@@ -178,6 +178,7 @@
     \li \l {outputformats-variable} {outputformats}
     \li \l {outputprefixes-variable} {outputprefixes}
     \li \l {outputsuffixes-variable} {outputsuffixes}
+    \li \l {preliminary-variable} {preliminary}
     \li \l {productname-variable} {productname}
     \li \l {project-variable} {project}
     \li \l {projectroot-variable} {projectroot}
@@ -2153,6 +2154,42 @@
     documentation only uses the \c depends variable.
 
     See also \l depends, \l project and \l url.
+
+    \target preliminary-variable
+    \section1 preliminary
+
+    Use the \c preliminary variable to customize the status descriptor
+    assigned to elements using the \qdoccmd preliminary command.
+
+    By default, QDoc marks these elements with \c Preliminary
+    descriptor in the API reference, and generates a message
+
+    \quotation
+        \b {This <element type> is under development and is subject to change.}
+    \endquotation
+
+    In the element's documentation body. QDoc replaces \e {<element type>}
+    in above message with the type (for example, "module", "function", or
+    "class").
+
+    To use a custom status descriptor, define a \c preliminary variable:
+
+    \code [text]
+    preliminary = "Technology preview"
+    \endcode
+
+    To use a custom status message, define also a \c preliminary.description
+    subvariable:
+
+    \code [text]
+    preliminary = "Technology preview"
+    preliminary.description = "This \1 is in technology preview and is subject to change."
+    \endcode
+
+    If a placeholder \c {\1} appears in the description, QDoc replaces it
+    with the element type.
+
+    The \c preliminary variable was introduced to QDoc in Qt 6.12.
 
     \target productname-variable
     \section1 productname
