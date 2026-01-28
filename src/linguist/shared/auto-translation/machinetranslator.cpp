@@ -106,6 +106,9 @@ void MachineTranslator::activateTranslationModel(const QString &modelName)
 void MachineTranslator::requestModels()
 {
     QNetworkRequest req(m_translator->discoveryEndpoint());
+    // Copy Authorization header for APIs that require authentication (e.g., OpenRouter)
+    if (m_request->hasRawHeader("Authorization"))
+        req.setRawHeader("Authorization", m_request->rawHeader("Authorization"));
     QNetworkReply *reply = m_manager->get(req);
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         reply->deleteLater();

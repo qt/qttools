@@ -221,12 +221,18 @@ void OpenAICompatible::setUrl(const QString &url)
 
 QUrl OpenAICompatible::translationEndpoint() const
 {
-    return QUrl(m_url).resolved(QUrl("/v1/chat/completions"_L1));
+    QString base = m_url;
+    if (!base.endsWith(u'/'))
+        base += u'/';
+    return QUrl(base + "v1/chat/completions"_L1);
 }
 
 QUrl OpenAICompatible::discoveryEndpoint() const
 {
-    return QUrl(m_url).resolved(QUrl("/v1/models"_L1));
+    QString base = m_url;
+    if (!base.endsWith(u'/'))
+        base += u'/';
+    return QUrl(base + "v1/models"_L1);
 }
 
 void OpenAICompatible::onRequestRejected()
