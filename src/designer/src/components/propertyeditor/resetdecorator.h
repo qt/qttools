@@ -5,7 +5,6 @@
 #define RESETDECORATOR_H
 
 #include <QtWidgets/qwidget.h>
-#include <QtCore/qhash.h>
 
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
@@ -23,53 +22,61 @@ class ResetWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ResetWidget(QtProperty *property, QWidget *parent = nullptr);
+    explicit ResetWidget(QWidget *editor, QWidget *parent = nullptr);
 
-    void setWidget(QWidget *widget);
-    void setResetEnabled(bool enabled);
-    void setValueText(const QString &text);
-    void setValueIcon(const QIcon &icon);
     void setSpacing(int spacing);
 
-signals:
-    void resetProperty(QtProperty *property);
+public Q_SLOTS:
+    void setResetEnabled(bool enabled);
 
-private slots:
-    void slotClicked();
+Q_SIGNALS:
+    void reset();
 
 private:
-    QtProperty *m_property;
-    QLabel *m_textLabel;
-    QLabel *m_iconLabel;
     QToolButton *m_button;
-    int m_spacing = -1;
 };
 
-class ResetDecorator : public QObject
+class PropertyResetWidget : public ResetWidget
 {
     Q_OBJECT
 public:
-    explicit ResetDecorator(const QDesignerFormEditorInterface *core, QObject *parent = nullptr);
-    ~ResetDecorator() override;
+    explicit PropertyResetWidget(const QDesignerFormEditorInterface *core, QtProperty *property,
+                                 QWidget *editor, QWidget *parent = nullptr);
 
-    void connectPropertyManager(QtAbstractPropertyManager *manager);
-    QWidget *editor(QWidget *subEditor, bool resettable, QtAbstractPropertyManager *manager, QtProperty *property,
-                QWidget *parent);
-    void disconnectPropertyManager(QtAbstractPropertyManager *manager);
-    void setSpacing(int spacing);
+public Q_SLOTS:
+    void propertyChanged(QtProperty *property);
 
-signals:
+Q_SIGNALS:
     void resetProperty(QtProperty *property);
 
-private slots:
-    void slotPropertyChanged(QtProperty *property);
-    void slotEditorDestroyed(QObject *object);
+private Q_SLOTS:
+    void emitResetProperty();
 
 private:
-    QHash<const QtProperty *, QList<ResetWidget *>> m_createdResetWidgets;
-    QHash<ResetWidget *, QtProperty *> m_resetWidgetToProperty;
-    int m_spacing = -1;
     const QDesignerFormEditorInterface *m_core;
+    QtProperty *m_property;
+};
+
+// A dummy editor used for parent properties of sub properties
+// that can be reset (for example, QSize, which does not have an editor).
+// It merely displays icon and value text of the property.
+class DummyEditor : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit DummyEditor(QtProperty *property, QWidget *parent = nullptr);
+
+    void setSpacing(int spacing);
+
+public Q_SLOTS:
+    void propertyChanged(QtProperty *property);
+
+private:
+    void setValueIcon(const QIcon &icon);
+
+    QtProperty *m_property;
+    QLabel *m_textLabel;
+    QLabel *m_iconLabel;
 };
 } // namespace qdesigner_internal
 

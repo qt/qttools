@@ -26,53 +26,27 @@ namespace qdesigner_internal {
 
 using namespace Qt::StringLiterals;
 
-ResetWidget::ResetWidget(QtProperty *property, QWidget *parent) :
-      QWidget(parent),
-      m_property(property),
-      m_textLabel(new QLabel(this)),
-      m_iconLabel(new QLabel(this)),
-      m_button(new QToolButton(this))
+ResetWidget::ResetWidget(QWidget *editor, QWidget *parent)
+    : QWidget(parent), m_button(new QToolButton(this))
 {
-    m_textLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed));
-    m_iconLabel->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    QLayout *layout = new QHBoxLayout(this);
+    layout->setContentsMargins(QMargins());
+    layout->addWidget(editor);
+
     m_button->setToolButtonStyle(Qt::ToolButtonIconOnly);
     m_button->setIcon(createIconSet("resetproperty.png"_L1));
     m_button->setIconSize(QSize(8,8));
     m_button->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
-    connect(m_button, &QAbstractButton::clicked, this, &ResetWidget::slotClicked);
-    QLayout *layout = new QHBoxLayout(this);
-    layout->setContentsMargins(QMargins());
-    layout->setSpacing(m_spacing);
-    layout->addWidget(m_iconLabel);
-    layout->addWidget(m_textLabel);
+    connect(m_button, &QAbstractButton::clicked, this, &ResetWidget::reset);
     layout->addWidget(m_button);
-    setFocusProxy(m_textLabel);
+    setFocusProxy(editor);
+    setAutoFillBackground(true); // Hide value icon/text
     setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
 }
 
 void ResetWidget::setSpacing(int spacing)
 {
-    m_spacing = spacing;
-    layout()->setSpacing(m_spacing);
-}
-
-void ResetWidget::setWidget(QWidget *widget)
-{
-    if (m_textLabel) {
-        delete m_textLabel;
-        m_textLabel = nullptr;
-    }
-    if (m_iconLabel) {
-        delete m_iconLabel;
-        m_iconLabel = nullptr;
-    }
-    delete layout();
-    QLayout *layout = new QHBoxLayout(this);
-    layout->setContentsMargins(QMargins());
-    layout->setSpacing(m_spacing);
-    layout->addWidget(widget);
-    layout->addWidget(m_button);
-    setFocusProxy(widget);
+    layout()->setSpacing(spacing);
 }
 
 void ResetWidget::setResetEnabled(bool enabled)
@@ -80,53 +54,16 @@ void ResetWidget::setResetEnabled(bool enabled)
     m_button->setEnabled(enabled);
 }
 
-void ResetWidget::setValueText(const QString &text)
+PropertyResetWidget::PropertyResetWidget(const QDesignerFormEditorInterface *core,
+                                         QtProperty *property, QWidget *editor, QWidget *parent)
+    : ResetWidget(editor, parent), m_core(core), m_property(property)
 {
-    if (m_textLabel)
-        m_textLabel->setText(text);
+    connect(this, &ResetWidget::reset, this, &PropertyResetWidget::emitResetProperty);
 }
 
-void ResetWidget::setValueIcon(const QIcon &icon)
-{
-    QPixmap pix = icon.pixmap(QtPropertyBrowserUtils::itemViewIconSize, devicePixelRatioF());
-    if (m_iconLabel) {
-        m_iconLabel->setVisible(!pix.isNull());
-        m_iconLabel->setPixmap(pix);
-    }
-}
-
-void ResetWidget::slotClicked()
+void PropertyResetWidget::emitResetProperty()
 {
     emit resetProperty(m_property);
-}
-
-ResetDecorator::ResetDecorator(const QDesignerFormEditorInterface *core, QObject *parent)
-    : QObject(parent)
-    , m_core(core)
-{
-}
-
-ResetDecorator::~ResetDecorator()
-{
-    const auto editors = m_resetWidgetToProperty.keys();
-    qDeleteAll(editors);
-}
-
-void ResetDecorator::connectPropertyManager(QtAbstractPropertyManager *manager)
-{
-    connect(manager, &QtAbstractPropertyManager::propertyChanged,
-            this, &ResetDecorator::slotPropertyChanged);
-}
-
-void ResetDecorator::disconnectPropertyManager(QtAbstractPropertyManager *manager)
-{
-    disconnect(manager, &QtAbstractPropertyManager::propertyChanged,
-            this, &ResetDecorator::slotPropertyChanged);
-}
-
-void ResetDecorator::setSpacing(int spacing)
-{
-    m_spacing = spacing;
 }
 
 static inline bool isModifiedInMultiSelection(const QDesignerFormEditorInterface *core,
@@ -150,61 +87,47 @@ static inline bool isModifiedInMultiSelection(const QDesignerFormEditorInterface
     return false;
 }
 
-QWidget *ResetDecorator::editor(QWidget *subEditor, bool resettable, QtAbstractPropertyManager *manager, QtProperty *property,
-            QWidget *parent)
+void PropertyResetWidget::propertyChanged(QtProperty *property)
 {
-    Q_UNUSED(manager);
-
-    ResetWidget *resetWidget = nullptr;
-    if (resettable) {
-        resetWidget = new ResetWidget(property, parent);
-        resetWidget->setSpacing(m_spacing);
-        resetWidget->setResetEnabled(property->isModified() || isModifiedInMultiSelection(m_core, property->propertyName()));
-        resetWidget->setValueText(property->valueText());
-        resetWidget->setValueIcon(property->valueIcon());
-        resetWidget->setAutoFillBackground(true);
-        connect(resetWidget, &QObject::destroyed, this, &ResetDecorator::slotEditorDestroyed);
-        connect(resetWidget, &ResetWidget::resetProperty, this, &ResetDecorator::resetProperty);
-        m_createdResetWidgets[property].append(resetWidget);
-        m_resetWidgetToProperty[resetWidget] = property;
-    }
-    if (subEditor) {
-        if (resetWidget) {
-            subEditor->setParent(resetWidget);
-            resetWidget->setWidget(subEditor);
-        }
-    }
-    if (resetWidget)
-        return resetWidget;
-    return subEditor;
-}
-
-void ResetDecorator::slotPropertyChanged(QtProperty *property)
-{
-    const auto prIt = m_createdResetWidgets.constFind(property);
-    if (prIt == m_createdResetWidgets.constEnd())
-        return;
-
-    for (ResetWidget *widget : prIt.value()) {
-        widget->setResetEnabled(property->isModified()
-                                || isModifiedInMultiSelection(m_core, property->propertyName()));
-        widget->setValueText(property->valueText());
-        widget->setValueIcon(property->valueIcon());
+    if (property == m_property) {
+        // Update the resettable state as the user edits or resets.
+        const bool resettable = m_property->isModified()
+                || isModifiedInMultiSelection(m_core, m_property->propertyName());
+        setResetEnabled(resettable);
     }
 }
 
-void ResetDecorator::slotEditorDestroyed(QObject *object)
+DummyEditor::DummyEditor(QtProperty *property, QWidget *parent)
+    : QWidget(parent),
+      m_property(property),
+      m_textLabel(new QLabel(this)),
+      m_iconLabel(new QLabel(this))
 {
-    for (auto itEditor = m_resetWidgetToProperty.cbegin(), cend = m_resetWidgetToProperty.cend(); itEditor != cend; ++itEditor) {
-        if (itEditor.key() == object) {
-            ResetWidget *editor = itEditor.key();
-            QtProperty *property = itEditor.value();
-            m_resetWidgetToProperty.remove(editor);
-            m_createdResetWidgets[property].removeAll(editor);
-            if (m_createdResetWidgets[property].isEmpty())
-                m_createdResetWidgets.remove(property);
-            return;
-        }
+    m_textLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed));
+    m_iconLabel->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    QLayout *layout = new QHBoxLayout(this);
+    layout->setContentsMargins({});
+    layout->addWidget(m_iconLabel);
+    layout->addWidget(m_textLabel);
+}
+
+void DummyEditor::setSpacing(int spacing)
+{
+    layout()->setSpacing(spacing);
+}
+
+void DummyEditor::setValueIcon(const QIcon &icon)
+{
+    QPixmap pix = icon.pixmap(QtPropertyBrowserUtils::itemViewIconSize, devicePixelRatioF());
+    m_iconLabel->setVisible(!pix.isNull());
+    m_iconLabel->setPixmap(pix);
+}
+
+void DummyEditor::propertyChanged(QtProperty *property)
+{
+    if (m_property == property) {
+        m_textLabel->setText(property->valueText());
+        setValueIcon(property->valueIcon());
     }
 }
 

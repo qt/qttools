@@ -33,7 +33,6 @@ namespace qdesigner_internal
 class TextEditor;
 class PaletteEditorButton;
 class PixmapEditor;
-class ResetDecorator;
 class StringListEditorButton;
 class FormWindowBase;
 
@@ -237,7 +236,6 @@ private slots:
 private:
     TextEditor *createTextEditor(QWidget *parent, TextPropertyValidationMode vm, const QString &value);
 
-    ResetDecorator *m_resetDecorator;
     bool m_changingPropertyValue = false;
     QDesignerFormEditorInterface *m_core;
     FormWindowBase *m_fwb = nullptr;
