@@ -1651,11 +1651,8 @@ bool DesignerPropertyManager::resetIconSubProperty(QtProperty *property)
 // -------- DesignerEditorFactory
 DesignerEditorFactory::DesignerEditorFactory(QDesignerFormEditorInterface *core, QObject *parent) :
     QtVariantEditorFactory(parent),
-    m_resetDecorator(new ResetDecorator(core, this)),
     m_core(core)
 {
-    connect(m_resetDecorator, &ResetDecorator::resetProperty,
-            this, &DesignerEditorFactory::resetProperty);
 }
 
 DesignerEditorFactory::~DesignerEditorFactory() = default;
@@ -1663,7 +1660,6 @@ DesignerEditorFactory::~DesignerEditorFactory() = default;
 void DesignerEditorFactory::setSpacing(int spacing)
 {
     m_spacing = spacing;
-    m_resetDecorator->setSpacing(spacing);
 }
 
 void DesignerEditorFactory::setFormWindowBase(qdesigner_internal::FormWindowBase *fwb)
@@ -1680,7 +1676,6 @@ void DesignerEditorFactory::setFormWindowBase(qdesigner_internal::FormWindowBase
 
 void DesignerEditorFactory::connectPropertyManager(QtVariantPropertyManager *manager)
 {
-    m_resetDecorator->connectPropertyManager(manager);
     connect(manager, &QtVariantPropertyManager::attributeChanged,
                 this, &DesignerEditorFactory::slotAttributeChanged);
     connect(manager, &QtVariantPropertyManager::valueChanged,
@@ -1692,7 +1687,6 @@ void DesignerEditorFactory::connectPropertyManager(QtVariantPropertyManager *man
 
 void DesignerEditorFactory::disconnectPropertyManager(QtVariantPropertyManager *manager)
 {
-    m_resetDecorator->disconnectPropertyManager(manager);
     disconnect(manager, &QtVariantPropertyManager::attributeChanged,
                 this, &DesignerEditorFactory::slotAttributeChanged);
     disconnect(manager, &QtVariantPropertyManager::valueChanged,
@@ -2001,9 +1995,31 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
         }
         break;
     }
-    return m_resetDecorator->editor(editor,
-            manager->variantProperty(property)->attributeValue(resettableAttributeC).toBool(),
-            manager, property, parent);
+
+    // Note: editor may be null for parent properties of subproperties
+    const bool resettable =
+            manager->variantProperty(property)->attributeValue(resettableAttributeC).toBool();
+    if (!resettable)
+        return editor;
+
+    if (editor == nullptr) {
+        // Resettable parent property of sub properties, merely displaying the value
+        auto *dummyEditor = new DummyEditor(property);
+        dummyEditor->setSpacing(m_spacing);
+        dummyEditor->propertyChanged(property);
+        connect(manager, &QtAbstractPropertyManager::propertyChanged,
+                dummyEditor, &DummyEditor::propertyChanged);
+        editor = dummyEditor;
+    }
+
+    auto *resetWidget = new PropertyResetWidget(m_core, property, editor, parent);
+    resetWidget->setSpacing(m_spacing);
+    resetWidget->propertyChanged(property);
+    connect(manager, &QtAbstractPropertyManager::propertyChanged, resetWidget,
+            &PropertyResetWidget::propertyChanged);
+    connect(resetWidget, &PropertyResetWidget::resetProperty, this,
+            &DesignerEditorFactory::resetProperty);
+    return resetWidget;
 }
 
 template <class Editor>
