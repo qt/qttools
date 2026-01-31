@@ -13,7 +13,7 @@
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
-<db:para>Car</db:para>
+<db:para>car.h</db:para>
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>

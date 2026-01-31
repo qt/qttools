@@ -11,7 +11,7 @@
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
-<db:para>Struct</db:para>
+<db:para>trailing_backslashes.h</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

@@ -1024,26 +1024,23 @@ void CppCodeParser::processMetaCommands(const std::vector<TiedDocumentation> &ti
             auto *aggregate = static_cast<Aggregate *>(node);
 
             if (!aggregate->includeFile()) {
-                Aggregate *parent = aggregate;
-                while (parent->physicalModuleName().isEmpty() && (parent->parent() != nullptr))
-                    parent = parent->parent();
+                const QString className = aggregate->name();
 
-                if (parent == aggregate)
-                    // TODO: Understand if the name can be empty.
-                    // In theory it should not be possible as
-                    // there would be no aggregate to refer to
-                    // such that this code is never reached.
-                    //
-                    // If the name can be empty, this would
-                    // endanger users of the include file down the
-                    // line, forcing them to ensure that, further
-                    // to there being an actual include file, that
-                    // include file is not an empty string, such
-                    // that we would require a different way to
-                    // generate the include file here.
-                    aggregate->setIncludeFile(aggregate->name());
-                else if (aggregate->includeFile())
-                    aggregate->setIncludeFile(*parent->includeFile());
+                // Resolution priority:
+                // 1. Convenience header (if exists in include paths)
+                // 2. Include-relative path from declLocation
+                // 3. Class name as last resort (only if non-empty)
+                QString includeFile;
+                if (convenienceHeaderExists(className)) {
+                    includeFile = className;
+                } else {
+                    includeFile = computeIncludeSpelling(aggregate->declLocation());
+                    if (includeFile.isEmpty() && !className.isEmpty())
+                        includeFile = className;
+                }
+
+                if (!includeFile.isEmpty())
+                    aggregate->setIncludeFile(includeFile);
             }
         }
     }
@@ -1084,6 +1081,102 @@ void CppCodeParser::processQmlNativeTypeCommand(Node *node, const QString &cmd, 
 
     if (classNode->isQmlSingleton())
         qmlNode->setSingleton(true);
+}
+
+namespace {
+
+/*!
+    Strips compiler include path prefixes (-I, -isystem, etc.) from a path.
+    Returns an empty string if the path is an unrecognized flag.
+*/
+QString stripIncludePrefix(const QString &path)
+{
+    QString result = path.trimmed();
+
+    static const QStringList prefixes = {
+        "-I"_L1, "-isystem"_L1, "-iquote"_L1, "-idirafter"_L1
+    };
+
+    for (const QString &prefix : prefixes) {
+        if (result.startsWith(prefix)) {
+            result = result.mid(prefix.size()).trimmed();
+            return QDir::cleanPath(result);
+        }
+    }
+
+    // Skip framework paths and other unrecognized flags
+    if (result.startsWith(u'-'))
+        return {};
+
+    return QDir::cleanPath(result);
+}
+
+} // anonymous namespace
+
+/*!
+    Returns the cached list of cleaned include paths, combining both
+    command-line and qdocconf include paths with prefixes stripped.
+*/
+const QStringList &CppCodeParser::getCleanIncludePaths() const
+{
+    if (!m_includePathsCached) {
+        // Combine command-line and qdocconf include paths
+        QStringList rawPaths = Config::instance().includePaths();
+        rawPaths += Config::instance().getCanonicalPathList(
+                CONFIG_INCLUDEPATHS, Config::IncludePaths);
+
+        for (const QString &path : rawPaths) {
+            QString clean = stripIncludePrefix(path);
+            if (!clean.isEmpty() && !m_cleanIncludePaths.contains(clean))
+                m_cleanIncludePaths.append(clean);
+        }
+        m_includePathsCached = true;
+    }
+    return m_cleanIncludePaths;
+}
+
+/*!
+    Checks if a convenience header (extensionless file matching the class name)
+    exists in any of the configured include paths. Results are cached.
+
+    This supports Qt's convention where classes like QString have convenience
+    headers (extensionless files) that redirect to the actual header.
+*/
+bool CppCodeParser::convenienceHeaderExists(const QString &className) const
+{
+    if (className.isEmpty())
+        return false;
+
+    auto it = m_convenienceHeaderCache.constFind(className);
+    if (it != m_convenienceHeaderCache.constEnd())
+        return *it;
+
+    bool exists = false;
+    for (const QString &includePath : getCleanIncludePaths()) {
+        QFileInfo candidate(includePath + u'/' + className);
+        if (candidate.exists() && candidate.isFile()) {
+            exists = true;
+            break;
+        }
+    }
+
+    m_convenienceHeaderCache.insert(className, exists);
+    return exists;
+}
+
+/*!
+    Returns the basename of the header file from the declaration location.
+
+    This provides a simple, reliable include spelling that works regardless
+    of the working directory or include path configuration. For more complex
+    include paths (like subdirectories), users can use \\inheaderfile.
+*/
+QString CppCodeParser::computeIncludeSpelling(const Location &loc) const
+{
+    if (loc.isEmpty())
+        return {};
+
+    return loc.fileName();
 }
 
 QT_END_NAMESPACE

@@ -12,7 +12,7 @@
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
-<db:para>QDocTests</db:para>
+<db:para>compilergeneratedmemberfunctions.h</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

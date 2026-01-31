@@ -12,7 +12,7 @@
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
-<db:para>InternalOnlyClass</db:para>
+<db:para>internalclass.h</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

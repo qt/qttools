@@ -11,7 +11,7 @@
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
-<db:para>AxisAndAngle</db:para>
+<db:para>templatestruct.h</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

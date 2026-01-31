@@ -16,7 +16,7 @@
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
-<db:para>ComparesStronglyWithOneClassAndPartiallyWithAnother</db:para>
+<db:para>classes_with_various_ordering.h</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

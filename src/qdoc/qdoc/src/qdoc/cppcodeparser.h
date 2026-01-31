@@ -9,6 +9,8 @@
 #include "parsererror.h"
 #include "utilities.h"
 
+#include <QtCore/qhash.h>
+
 QT_BEGIN_NAMESPACE
 
 class ClassNode;
@@ -68,10 +70,17 @@ private:
                                   const QString &arg);
 
 private:
+    [[nodiscard]] bool convenienceHeaderExists(const QString &className) const;
+    [[nodiscard]] QString computeIncludeSpelling(const Location &loc) const;
+    [[nodiscard]] const QStringList &getCleanIncludePaths() const;
+
     FnCommandParser fn_parser;
     QString m_exampleNameFilter;
     QString m_exampleImageFilter;
     bool m_showLinkErrors { false };
+    mutable QHash<QString, bool> m_convenienceHeaderCache;
+    mutable QStringList m_cleanIncludePaths;
+    mutable bool m_includePathsCached { false };
 };
 
 /*!

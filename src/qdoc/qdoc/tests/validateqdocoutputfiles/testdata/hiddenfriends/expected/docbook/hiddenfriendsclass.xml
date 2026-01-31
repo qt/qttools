@@ -12,7 +12,7 @@
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
-<db:para>HiddenFriendsClass</db:para>
+<db:para>hiddenfriendsclass.h</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

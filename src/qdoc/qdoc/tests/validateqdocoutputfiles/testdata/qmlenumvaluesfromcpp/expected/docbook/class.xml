@@ -11,7 +11,7 @@
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
-<db:para>Class</db:para>
+<db:para>class.h</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

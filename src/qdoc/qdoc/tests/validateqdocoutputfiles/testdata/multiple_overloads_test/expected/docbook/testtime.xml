@@ -12,7 +12,7 @@
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
-<db:para>TestTime</db:para>
+<db:para>testoverloads.h</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

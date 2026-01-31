@@ -12,7 +12,7 @@
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
-<db:para>AutoGenSmfTest</db:para>
+<db:para>autogentest.h</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

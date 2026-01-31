@@ -12,7 +12,7 @@
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
-<db:para>TestAliases</db:para>
+<db:para>test.h</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

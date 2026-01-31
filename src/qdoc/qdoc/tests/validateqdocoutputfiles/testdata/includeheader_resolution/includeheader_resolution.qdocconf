@@ -1,0 +1,25 @@
+project = IncludeHeaderResolution
+description = Test automatic include header resolution
+
+outputformats = HTML
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+locationinfo = false
+warninglimit = 0
+warninglimit.enabled = true
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+# Include paths for header resolution:
+# - ./src: enables subdirectory-relative paths (e.g., subdir/subdirclass.h)
+# - ./convenience: enables convenience header discovery
+includepaths = ./src ./convenience
+
+# Documentation is in headers
+documentationinheaders = indeed
+
