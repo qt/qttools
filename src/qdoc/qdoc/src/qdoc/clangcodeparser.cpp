@@ -1313,7 +1313,8 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             fn->setTemplateDecl(get_template_declaration(template_declaration));
         }
 
-        autoGenerateSmfDoc(fn, parent_->name());
+        if (!clang_Location_isInSystemHeader(loc))
+            autoGenerateSmfDoc(fn, parent_->name());
 
         return CXChildVisit_Continue;
     }
