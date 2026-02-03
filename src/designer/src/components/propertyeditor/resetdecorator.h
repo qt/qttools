@@ -13,8 +13,6 @@ QT_FORWARD_DECLARE_CLASS(QDesignerFormEditorInterface)
 
 QT_BEGIN_NAMESPACE
 
-using namespace Qt::StringLiterals;
-
 class QtProperty;
 class QtAbstractPropertyManager;
 
