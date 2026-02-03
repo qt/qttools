@@ -1923,6 +1923,18 @@ Inspect the in-place source annotations marked with
  \l{https://github.com/ggml-org/llama.cpp}{llama.cpp}) or cloud-based APIs that
  support the OpenAI-compatible REST protocol (such as OpenAI, Groq, or Anthropic).
 
+ Qt Linguist supports two API modes:
+ \list
+     \li \e{Ollama} - Ollama's native REST API. Use this when running
+         \l{https://ollama.com}{Ollama} locally.
+     \li \e{OpenAI Compatible} - The standard OpenAI REST API format. Use this for:
+     \list
+         \li Local servers: LM Studio, llama.cpp, or Ollama (which also supports
+             OpenAI-compatible mode)
+         \li Cloud providers: OpenAI, Groq, DeepSeek, and others
+     \endlist
+ \endlist
+
  \section1 Setting up a local LLM server
 
  To use AI Translation with a local server, install one of the following and
@@ -1934,6 +1946,11 @@ Inspect the in-place source annotations marked with
      \li \l{https://github.com/ggml-org/llama.cpp}{llama.cpp} - Lightweight,
          runs GGUF models directly
  \endlist
+
+ \note Running LLMs locally requires sufficient memory depending on the model
+ size and quantization level. Refer to your LLM server's documentation for
+ specific requirements, for example
+ \l{https://lmstudio.ai/docs/app/system-requirements}{LM Studio System Requirements}.
 
  For Ollama, pull a model using the command line:
 
@@ -1965,8 +1982,10 @@ Inspect the in-place source annotations marked with
 
  To use cloud-based translation services, select \e{OpenAI Compatible} as the
  API type, enter the provider's API endpoint URL, and provide your API key.
- The API key field accepts authentication tokens for services like OpenAI,
- Anthropic, Groq, and other OpenAI-compatible providers.
+
+ Enter only the base URL without the \c{/v1} path suffix. For example, for
+ \l{https://openrouter.ai}{OpenRouter} use \c{https://openrouter.ai/api}.
+ Consult your provider's documentation for the correct endpoint URL.
 
  \section1 Using the AI Translation dialog
 
@@ -1976,11 +1995,13 @@ Inspect the in-place source annotations marked with
  The \c Configuration part of the dialog provides:
 
  \list
-     \li \uicontrol {API Type}: choose between \e{Ollama} for local Ollama servers
-         or \e{OpenAI Compatible} for LM Studio, llama.cpp, or cloud APIs.
-     \li \uicontrol {Server URL}: the REST endpoint where the server listens
-         (default \c http://localhost:11434 for Ollama,
-         \c http://localhost:8080 for OpenAI Compatible).
+     \li \uicontrol {API Type}: choose \e{Ollama} for local Ollama servers using
+         Ollama's native API, or \e{OpenAI Compatible} for LM Studio, llama.cpp,
+         cloud APIs, or Ollama in OpenAI-compatible mode.
+     \li \uicontrol {Server URL}: the base URL where the server listens. Do not
+         include the \c{/v1} path suffix.
+         Default: \c http://localhost:11434 for Ollama,
+         \c http://localhost:8080 for OpenAI Compatible.
      \li \uicontrol {API Key}: authentication key for cloud APIs (optional for
          local servers).
      \li \uicontrol Model: drop-down list of available models.
