@@ -656,15 +656,20 @@ void MachineTranslationDialog::validateAdvancedSettings()
 
     // Warn if JSON format tries is too low
     if (maxJsonFormatTries < 3) {
-        warnings << tr("\xe2\x9a\xa0 Max JSON Format Tries: Low value may cause premature format "
-                       "fallback on transient failures");
+        //: "Maximum JSON Format Tries" should use the same translation as
+        //: the label "Maximum JSON Format Tries" in Advanced Settings
+        warnings << tr("\xe2\x9a\xa0 Maximum JSON Format Tries: Low value may cause unnecessary "
+                       "format switching due to temporary errors. Recommended: 3 or higher.");
     }
 
     // Warn if max retries doesn't cover all format stages
     // 3 format stages: JsonObject, JsonSchema, None
     if (maxRetries < maxJsonFormatTries * 3) {
-        warnings << tr("\xe2\x9a\xa0 Max Retries: Should be at least 3\xc3\x97 Max JSON Format "
-                       "Tries for full fallback coverage");
+        //: "Maximum Retries" and "Maximum JSON Format Tries" should use the same
+        //: translations as the labels "Maximum Retries" and "Maximum JSON Format Tries"
+        //: in Advanced Settings
+        warnings << tr("\xe2\x9a\xa0 Maximum Retries: Should be at least 3\xc3\x97 'Maximum JSON "
+                       "Format Tries' for full fallback coverage");
     }
 
     m_ui->settingsWarningLabel->setText(warnings.join(u'\n'));
