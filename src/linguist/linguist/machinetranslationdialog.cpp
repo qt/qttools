@@ -399,10 +399,12 @@ void MachineTranslationDialog::onBatchTranslated(
 
 void MachineTranslationDialog::onNewDebugMessage(const QByteArray &message, bool fromLlm)
 {
+    const QString color = isDarkMode() ? "yellow"_L1 : "orange"_L1;
     const QString from = fromLlm ? "LLM:"_L1 : "Qt Linguist:"_L1;
-    QString log = "<p style=\"color:red; font-weight:bold; margin:0;\">%1</p>"
-                  "<p style=\"color:yellow; font-weight:normal; font-size:small; margin:0;\">%2</p>"
-                  "<hr/>"_L1.arg(from, QString::fromUtf8(message).toHtmlEscaped());
+    const QString log =
+            "<p style=\"color:red; font-weight:bold; margin:0;\">%1</p>"
+            "<p style=\"color:%2; font-weight:normal; font-size:small; margin:0;\">%3</p>"
+            "<hr/>"_L1.arg(from, color, QString::fromUtf8(message).toHtmlEscaped());
     m_ui->translationLog->append(log);
 }
 
