@@ -30,7 +30,37 @@
 <db:para>Corner case: Functions named &quot;primary&quot; to test whether the function name conflicts with the &quot;primary&quot; keyword in <db:phrase>\overload</db:phrase> commands.</db:para>
 </db:listitem>
 </db:orderedlist>
+<db:section xml:id="list-start-value-tests">
+<db:title>List Start Value Tests</db:title>
+<db:para>Starting at -10:</db:para>
+<db:orderedlist startingnumber="-10" numeration="arabic">
+<db:listitem>
+<db:para>Minus ten</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Minus nine</db:para>
+</db:listitem>
+</db:orderedlist>
+<db:para>Starting at 0:</db:para>
+<db:orderedlist startingnumber="0" numeration="arabic">
+<db:listitem>
+<db:para>Zero</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>One</db:para>
+</db:listitem>
+</db:orderedlist>
+<db:para>Starting at 5:</db:para>
+<db:orderedlist startingnumber="5" numeration="arabic">
+<db:listitem>
+<db:para>Five</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Six</db:para>
+</db:listitem>
+</db:orderedlist>
 <db:para>The <db:link xlink:href="testoverloads.xml#failOnWarning">failOnWarning</db:link>() functions demonstrate the original problem and its solution, while the <db:link xlink:href="testoverloads.xml#primary">primary</db:link>() functions test the corner case where a function happens to be named &quot;primary&quot;.</db:para>
+</db:section>
 </db:section>
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>

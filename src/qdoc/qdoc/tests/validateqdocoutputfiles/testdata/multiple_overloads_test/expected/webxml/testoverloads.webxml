@@ -2,6 +2,7 @@
 <WebXML>
     <document>
         <class name="TestOverloads" href="testoverloads.html" status="active" access="public" location="testoverloads.h" documented="true" module="TestQDocOverloadCommand" brief="Demonstrates multiple overloads and the \overload primary feature">
+            <contents name="list-start-value-tests" title="List Start Value Tests" level="1"/>
             <description>
                 <brief>Demonstrates multiple overloads and the <teletype>\overload</teletype> primary feature.</brief>
                 <para>This test case demonstrates various scenarios for the <teletype>\overload</teletype> command:</para>
@@ -16,7 +17,37 @@
                         <para>Corner case: Functions named &quot;primary&quot; to test whether the function name conflicts with the &quot;primary&quot; keyword in <teletype>\overload</teletype> commands.</para>
                     </item>
                 </list>
-                <para>The <link raw="failOnWarning()" href="testoverloads.html#failOnWarning" type="function">failOnWarning()</link> functions demonstrate the original problem and its solution, while the <link raw="primary()" href="testoverloads.html#primary" type="function">primary()</link> functions test the corner case where a function happens to be named &quot;primary&quot;.</para>
+                <section id="list-start-value-tests">
+                    <heading level="1">List Start Value Tests</heading>
+                    <para>Starting at -10:</para>
+                    <list type="ordered" start="-10">
+                        <item>
+                            <para>Minus ten</para>
+                        </item>
+                        <item>
+                            <para>Minus nine</para>
+                        </item>
+                    </list>
+                    <para>Starting at 0:</para>
+                    <list type="ordered" start="0">
+                        <item>
+                            <para>Zero</para>
+                        </item>
+                        <item>
+                            <para>One</para>
+                        </item>
+                    </list>
+                    <para>Starting at 5:</para>
+                    <list type="ordered" start="5">
+                        <item>
+                            <para>Five</para>
+                        </item>
+                        <item>
+                            <para>Six</para>
+                        </item>
+                    </list>
+                    <para>The <link raw="failOnWarning()" href="testoverloads.html#failOnWarning" type="function">failOnWarning()</link> functions demonstrate the original problem and its solution, while the <link raw="primary()" href="testoverloads.html#primary" type="function">primary()</link> functions test the corner case where a function happens to be named &quot;primary&quot;.</para>
+                </section>
             </description>
             <function name="failOnWarning" fullname="TestOverloads::failOnWarning" href="testoverloads.html#failOnWarning" status="active" access="public" location="testoverloads.h" documented="true" since="6.11" meta="plain" static="true" type="void" signature="void failOnWarning(const RegularExpression &amp;messagePattern)">
                 <parameter type="const RegularExpression &amp;" name="messagePattern" default=""/>

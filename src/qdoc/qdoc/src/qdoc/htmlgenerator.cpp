@@ -793,7 +793,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                 olType = "1";
             }
 
-            if (atom->next() != nullptr && atom->next()->string().toInt() > 1) {
+            if (atom->next() != nullptr && atom->next()->string().toInt() != 1) {
                 out() << QString(R"(<ol class="%1" type="%1" start="%2">)")
                                  .arg(olType, atom->next()->string());
             } else

@@ -16,6 +16,7 @@
 <ul>
 <li class="level1"><a href="#static-public-members">Static Public Members</a></li>
 <li class="level1"><a href="#details">Detailed Description</a></li>
+<li class="level2"><a href="#list-start-value-tests">List Start Value Tests</a></li>
 </ul>
 </div>
 <div class="sidebar-content" id="sidebar-content"></div></div>
@@ -52,6 +53,19 @@
 <ol class="1" type="1"><li>Original issue: Using <span translate="no">\overload</span> with unqualified function names (e.g., <span translate="no">\overload</span> <a href="testoverloads.html#failOnWarning" translate="no">failOnWarning</a>()) creates dead links when there are multiple overloads and QDoc cannot determine which overload should be the primary target.</li>
 <li>Solution: The <span translate="no">\overload</span> primary command allows explicitly designating which overload should be the primary target for unqualified <span translate="no">\overload</span> references.</li>
 <li>Corner case: Functions named &quot;primary&quot; to test whether the function name conflicts with the &quot;primary&quot; keyword in <span translate="no">\overload</span> commands.</li>
+</ol>
+<h3 id="list-start-value-tests">List Start Value Tests</h3>
+<p>Starting at -10:</p>
+<ol class="1" type="1" start="-10"><li>Minus ten</li>
+<li>Minus nine</li>
+</ol>
+<p>Starting at 0:</p>
+<ol class="1" type="1" start="0"><li>Zero</li>
+<li>One</li>
+</ol>
+<p>Starting at 5:</p>
+<ol class="1" type="1" start="5"><li>Five</li>
+<li>Six</li>
 </ol>
 <p>The <a href="testoverloads.html#failOnWarning" translate="no">failOnWarning</a>() functions demonstrate the original problem and its solution, while the <a href="testoverloads.html#primary" translate="no">primary</a>() functions test the corner case where a function happens to be named &quot;primary&quot;.</p>
 </div>

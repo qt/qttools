@@ -737,7 +737,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
         } else { // No recognized list type.
             m_writer->writeStartElement(dbNamespace, "orderedlist");
 
-            if (atom->next() != nullptr && atom->next()->string().toInt() > 1)
+            if (atom->next() != nullptr && atom->next()->string().toInt() != 1)
                 m_writer->writeAttribute("startingnumber", atom->next()->string());
 
             if (atom->string() == ATOM_LIST_UPPERALPHA)

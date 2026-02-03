@@ -554,7 +554,9 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
                 writer.writeAttribute("start", "I");
             else if (atom->string() == ATOM_LIST_LOWERROMAN)
                 writer.writeAttribute("start", "i");
-            else // (atom->string() == ATOM_LIST_NUMERIC)
+            else if (atom->next() != nullptr) // ATOM_LIST_NUMERIC with explicit start
+                writer.writeAttribute("start", atom->next()->string());
+            else
                 writer.writeAttribute("start", "1");
         }
         break;

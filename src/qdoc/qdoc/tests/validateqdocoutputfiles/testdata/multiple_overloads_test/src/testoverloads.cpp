@@ -27,6 +27,26 @@
             name conflicts with the "primary" keyword in \\overload commands.
     \endlist
 
+    \section1 List Start Value Tests
+
+    Starting at -10:
+    \list -10
+        \li Minus ten
+        \li Minus nine
+    \endlist
+
+    Starting at 0:
+    \list 0
+        \li Zero
+        \li One
+    \endlist
+
+    Starting at 5:
+    \list 5
+        \li Five
+        \li Six
+    \endlist
+
     The failOnWarning() functions demonstrate the original problem and its
     solution, while the primary() functions test the corner case where a
     function happens to be named "primary".
