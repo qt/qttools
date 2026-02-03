@@ -142,7 +142,7 @@
                   <string>Maximum number of retry attempts for failed translation requests</string>
                  </property>
                  <property name="text">
-                  <string>Max Retries</string>
+                  <string>Maximum Retries</string>
                  </property>
                  <property name="buddy">
                   <cstring>maxRetriesSpinBox</cstring>
@@ -165,7 +165,7 @@
                   <string>Maximum number of translation batches to process in parallel</string>
                  </property>
                  <property name="text">
-                  <string>Max Concurrent Batches</string>
+                  <string>Maximum Concurrent Batches</string>
                  </property>
                  <property name="buddy">
                   <cstring>maxConcurrentBatchesSpinBox</cstring>
@@ -211,7 +211,7 @@
                   <string>Maximum number of source texts to include in each translation batch</string>
                  </property>
                  <property name="text">
-                  <string>Max Batch Size</string>
+                  <string>Maximum Batch Size</string>
                  </property>
                  <property name="buddy">
                   <cstring>maxBatchSizeSpinBox</cstring>
@@ -254,10 +254,10 @@
                <item row="5" column="0">
                 <widget class="QLabel" name="maxJsonFormatTriesLabel">
                  <property name="toolTip">
-                  <string>Number of attempts per JSON response format before falling back</string>
+                  <string>Number of attempts of sending JSON-format requests before falling back to non-JSON format requests</string>
                  </property>
                  <property name="text">
-                  <string>Max JSON Format Tries</string>
+                  <string>Maximum JSON Format Tries</string>
                  </property>
                  <property name="buddy">
                   <cstring>maxJsonFormatTriesSpinBox</cstring>
