@@ -315,7 +315,7 @@ void MachineTranslationDialog::translateSelection()
         QMutexLocker lock(&m_mutex);
         for (DataModelIterator it(TEXTBASED, dm); it.isValid(); ++it) {
             const TranslatorMessage *tm = &it.current()->message();
-            if (tm->translation().isEmpty()) {
+            if (tm->translation().isEmpty() && !tm->sourceText().isEmpty()) {
                 messages.items.append(tm);
                 m_ongoingTranslations[tm] =
                         MultiDataIndex{ it.translationType(), id, it.group(), it.message() };
@@ -323,7 +323,7 @@ void MachineTranslationDialog::translateSelection()
         }
         for (DataModelIterator it(IDBASED, dm); it.isValid(); ++it) {
             const TranslatorMessage *tm = &it.current()->message();
-            if (tm->translation().isEmpty()) {
+            if (tm->translation().isEmpty() && !tm->sourceText().isEmpty()) {
                 messages.items.append(tm);
                 m_ongoingTranslations[tm] =
                         MultiDataIndex{ it.translationType(), id, it.group(), it.message() };
@@ -344,7 +344,7 @@ void MachineTranslationDialog::translateSelection()
             const GroupItem *g = dm->groupItem(groupIdx, type);
             for (int i = 0; i < g->messageCount(); i++) {
                 const TranslatorMessage *tm = &g->messageItem(i)->message();
-                if (tm->translation().isEmpty()) {
+                if (tm->translation().isEmpty() && !tm->sourceText().isEmpty()) {
                     messages.items.append(tm);
                     m_ongoingTranslations[tm] = MultiDataIndex{ type, id, groupIdx, i };
                 }
@@ -480,10 +480,12 @@ void MachineTranslationDialog::updateStatus()
     } else if (filter == 0) {
         int count = 0;
         for (DataModelIterator it(IDBASED, m_dataModel->model(model)); it.isValid(); ++it)
-            if (it.current()->translation().isEmpty())
+            if (it.current()->translation().isEmpty()
+                && !it.current()->message().sourceText().isEmpty())
                 count++;
         for (DataModelIterator it(TEXTBASED, m_dataModel->model(model)); it.isValid(); ++it)
-            if (it.current()->translation().isEmpty())
+            if (it.current()->translation().isEmpty()
+                && !it.current()->message().sourceText().isEmpty())
                 count++;
 
         m_ui->selectionLabel->setText(tr("Selected %n item(s).", 0, count));
@@ -494,7 +496,8 @@ void MachineTranslationDialog::updateStatus()
             const int groupIdx = item->data(Qt::UserRole).toInt();
             const GroupItem *g = m_dataModel->model(model)->groupItem(groupIdx, type);
             for (int i = 0; i < g->messageCount(); i++)
-                if (g->messageItem(i)->message().translation().isEmpty())
+                if (g->messageItem(i)->message().translation().isEmpty()
+                    && !g->messageItem(i)->message().sourceText().isEmpty())
                     count++;
         }
         m_ui->selectionLabel->setText(
