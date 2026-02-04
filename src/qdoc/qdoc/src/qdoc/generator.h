@@ -64,6 +64,7 @@ public:
 
     virtual bool canHandleFormat(const QString &format) { return format == this->format(); }
     [[nodiscard]] QString format() const override = 0;
+    [[nodiscard]] virtual QString fileExtension() const = 0;
     virtual void generateDocs();
     virtual void initializeGenerator();
     virtual void initializeFormat();
@@ -97,7 +98,6 @@ protected:
     static QFile *openSubPageFile(const PageNode *node, const QString &fileName);
     void beginSubPage(const Node *node, const QString &fileName);
     void endSubPage();
-    [[nodiscard]] virtual QString fileExtension() const = 0;
     virtual void generateExampleFilePage(const Node *, ResolvedFile, CodeMarker * = nullptr) {}
     virtual void generateAlsoList(const Node *node, CodeMarker *marker);
     virtual void generateAlsoList(const Node *node) { generateAlsoList(node, nullptr); }

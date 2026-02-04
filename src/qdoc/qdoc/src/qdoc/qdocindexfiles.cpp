@@ -1237,11 +1237,13 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     // files/images, as the generator produces them separately
     if (node->isExample() && m_gen->format() != QLatin1String("WebXML")) {
         const auto *exampleNode = static_cast<const ExampleNode *>(node);
+        const QString project = Generator::defaultModuleName();
+        const QString fileExt = m_gen->fileExtension();
         const auto &files = exampleNode->files();
         for (const QString &file : files) {
             writer.writeStartElement("page");
             writer.writeAttribute("name", file);
-            QString href = m_gen->linkForExampleFile(file);
+            QString href = Utilities::linkForExampleFile(file, project, fileExt);
             writer.writeAttribute("href", href);
             writer.writeAttribute("status", "active");
             writer.writeAttribute("subtype", "file");
@@ -1254,7 +1256,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         for (const QString &file : images) {
             writer.writeStartElement("page");
             writer.writeAttribute("name", file);
-            QString href = m_gen->linkForExampleFile(file);
+            QString href = Utilities::linkForExampleFile(file, project, fileExt);
             writer.writeAttribute("href", href);
             writer.writeAttribute("status", "active");
             writer.writeAttribute("subtype", "image");

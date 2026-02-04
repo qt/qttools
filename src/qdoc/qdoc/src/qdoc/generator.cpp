@@ -383,13 +383,7 @@ QString Generator::fileBase(const Node *node) const
  */
 QString Generator::linkForExampleFile(const QString &path, const QString &fileExt) const
 {
-    QString link{path};
-    link.prepend(s_project.toLower() + QLatin1Char('-'));
-
-    QString canonicalName{ Utilities::asAsciiPrintable(link) };
-    canonicalName.append(QLatin1Char('.'));
-    canonicalName.append(fileExt.isEmpty() ? fileExtension() : fileExt);
-    return canonicalName;
+    return Utilities::linkForExampleFile(path, s_project, fileExt.isEmpty() ? fileExtension() : fileExt);
 }
 
 /*!
@@ -2680,6 +2674,5 @@ QString Generator::generateObjectName(const QString &className)
 
     return name;
 }
-
 
 QT_END_NAMESPACE

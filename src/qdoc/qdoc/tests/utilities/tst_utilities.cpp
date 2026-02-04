@@ -60,6 +60,9 @@ private slots:
     void roundTrip_NullPointer();
 
     void isGeneratedFile();
+
+    void linkForExampleFile_basicPath();
+    void linkForExampleFile_pathWithSpecialChars();
 };
 
 void tst_Utilities::loggingCategoryName()
@@ -271,6 +274,20 @@ void tst_Utilities::isGeneratedFile()
         result[index++] = Utilities::isGeneratedFile(path);
     }
     QCOMPARE(result, expected);
+}
+
+void tst_Utilities::linkForExampleFile_basicPath()
+{
+    // Basic path: project prefix (lowercased) + path + extension
+    QString result = Utilities::linkForExampleFile("examples/widgets/main.cpp", "QtWidgets", "html");
+    QCOMPARE(result, QStringLiteral("qtwidgets-examples-widgets-main-cpp.html"));
+}
+
+void tst_Utilities::linkForExampleFile_pathWithSpecialChars()
+{
+    // Paths with special characters get sanitized via asAsciiPrintable
+    QString result = Utilities::linkForExampleFile("examples/file with spaces.qml", "QtQuick", "html");
+    QCOMPARE(result, QStringLiteral("qtquick-examples-file-with-spaces-qml.html"));
 }
 
 QTEST_APPLESS_MAIN(tst_Utilities)

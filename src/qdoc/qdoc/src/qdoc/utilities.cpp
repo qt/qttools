@@ -364,6 +364,19 @@ QStringList pathAndFragment(const QString &linkText)
     return result;
 }
 
+/*!
+    Constructs an href link from an example file name.
+
+    The \a path is the path to the example file. The \a project is the
+    module name (used as prefix). The \a fileExt is the file extension
+    for the generated link.
+ */
+QString linkForExampleFile(const QString &path, const QString &project, const QString &fileExt)
+{
+    QString link = project.toLower() + QLatin1Char('-') + path;
+    return asAsciiPrintable(link) + QLatin1Char('.') + fileExt;
+}
+
 } // namespace Utilities
 
 QT_END_NAMESPACE

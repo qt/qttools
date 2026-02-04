@@ -33,6 +33,7 @@ QString protect(const QString &string);
 QStringList getInternalIncludePaths(const QString &compiler);
 bool isGeneratedFile(const QString &path);
 QStringList pathAndFragment(const QString &linkText);
+[[nodiscard]] QString linkForExampleFile(const QString &path, const QString &project, const QString &fileExt);
 
 static constexpr QLatin1StringView samp = "&amp;"_L1;
 static constexpr QLatin1StringView slt = "&lt;"_L1;
