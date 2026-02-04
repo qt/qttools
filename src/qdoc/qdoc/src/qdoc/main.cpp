@@ -309,11 +309,6 @@ void logStartEndMessage(const QLatin1String &startStop, Config &config)
 
     Index generation only occurs during the prepare phase (single-exec mode)
     or when not in generate-only mode (dual-exec mode).
-
-    \note This function still relies on Generator::currentGenerator() for
-    href computation via QDocIndexFiles. Full decoupling requires either
-    passing format context as parameters or pre-computing hrefs during an
-    IR construction phase. See QTBUG-142470.
  */
 static void generateIndexFile(const Config &config)
 {
@@ -345,19 +340,11 @@ static void generateIndexFile(const Config &config)
     const QString indexFileName = fileBase + ".index"_L1;
     const QString indexPath = outputDir.absoluteFilePath(indexFileName);
 
-    // HACK: QDocIndexFiles::generateIndex() uses Generator::currentGenerator()
-    // internally for fullDocumentLocation() calls, which need fileExtension().
-    // Temporarily set HTML generator as current to get correct .html extensions.
-    // This coupling should be removed by passing format context explicitly or
-    // by pre-computing document locations. See QTBUG-142470.
+    // Index files use HTML-style hrefs (e.g., "qstring.html#append"),
+    // so we pass the HTML generator for correct file extension handling.
     auto *htmlGenerator = Generator::generatorForFormat(u"HTML"_s);
-    auto *previousGenerator = Generator::currentGenerator();
-    if (htmlGenerator)
-        Generator::setCurrentGenerator(htmlGenerator);
 
-    QDocDatabase::qdocDB()->generateIndex(indexPath, url, description);
-
-    Generator::setCurrentGenerator(previousGenerator);
+    QDocDatabase::qdocDB()->generateIndex(indexPath, url, description, htmlGenerator);
 }
 
 /*!

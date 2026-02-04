@@ -147,10 +147,10 @@ void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer, Node *node
     marker_ = CodeMarker::markerForFileName(node->location().filePath());
     auto qdocIndexFiles = QDocIndexFiles::qdocIndexFiles();
     if (qdocIndexFiles) {
-        qdocIndexFiles->generateIndexSections(writer, node, this);
+        qdocIndexFiles->generateIndexSections(writer, node, this, this);
         // generateIndexSections does nothing for groups, so handle them explicitly
         if (node->isGroup())
-            std::ignore = qdocIndexFiles->generateIndexSection(writer, node, this);
+            std::ignore = qdocIndexFiles->generateIndexSection(writer, node, this, this);
     }
 }
 

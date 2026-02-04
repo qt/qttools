@@ -869,15 +869,15 @@ void QDocIndexFiles::writeTargets(QXmlStreamWriter &writer, Node *node)
   specified, returning true if an element was written, and returning
   false if an element is not written.
 
+  The \a generator is used to compute document locations for hrefs.
+
   \note Function nodes are processed in generateFunctionSection()
  */
 bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
-                                          IndexSectionWriter *post)
+                                          const Generator *generator, IndexSectionWriter *post)
 {
-    if (m_gen == nullptr)
-        m_gen = Generator::currentGenerator();
-
-    Q_ASSERT(m_gen);
+    Q_ASSERT(generator);
+    m_gen = generator;
 
     post_ = nullptr;
     /*
@@ -1470,11 +1470,14 @@ void QDocIndexFiles::generateFunctionSections(QXmlStreamWriter &writer, Aggregat
 
 /*!
   Generate index sections for the child nodes of the given \a node
-  using the \a writer specified.
+  using the \a writer specified. The \a generator is used to compute
+  document locations for hrefs.
 */
 void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
-                                           IndexSectionWriter *post)
+                                           const Generator *generator, IndexSectionWriter *post)
 {
+    Q_ASSERT(generator);
+
     /*
       Note that groups, modules, QML modules, and proxies are written
       after all the other nodes.
@@ -1488,14 +1491,14 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
     if (!InclusionFilter::isPubliclyVisible(policy, context))
         return;
 
-    if (generateIndexSection(writer, node, post)) {
+    if (generateIndexSection(writer, node, generator, post)) {
         if (node->isAggregate()) {
             auto *aggregate = static_cast<Aggregate *>(node);
             // First write the function children, then write the nonfunction children.
             generateFunctionSections(writer, aggregate);
             const auto &nonFunctionList = aggregate->nonfunctionList();
             for (auto *node : nonFunctionList)
-                generateIndexSections(writer, node, post);
+                generateIndexSections(writer, node, generator, post);
         }
 
         if (node == root_) {
@@ -1509,7 +1512,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &groups = m_qdb->groups();
             if (!groups.isEmpty()) {
                 for (auto it = groups.constBegin(); it != groups.constEnd(); ++it) {
-                    if (generateIndexSection(writer, it.value(), post))
+                    if (generateIndexSection(writer, it.value(), generator, post))
                         writer.writeEndElement();
                 }
             }
@@ -1517,7 +1520,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &modules = m_qdb->modules();
             if (!modules.isEmpty()) {
                 for (auto it = modules.constBegin(); it != modules.constEnd(); ++it) {
-                    if (generateIndexSection(writer, it.value(), post))
+                    if (generateIndexSection(writer, it.value(), generator, post))
                         writer.writeEndElement();
                 }
             }
@@ -1525,17 +1528,17 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &qmlModules = m_qdb->qmlModules();
             if (!qmlModules.isEmpty()) {
                 for (auto it = qmlModules.constBegin(); it != qmlModules.constEnd(); ++it) {
-                    if (generateIndexSection(writer, it.value(), post))
+                    if (generateIndexSection(writer, it.value(), generator, post))
                         writer.writeEndElement();
                 }
             }
 
             for (auto *p : m_qdb->primaryTree()->proxies()) {
-                if (generateIndexSection(writer, p, post)) {
+                if (generateIndexSection(writer, p, generator, post)) {
                     auto aggregate = static_cast<Aggregate *>(p);
                     generateFunctionSections(writer, aggregate);
                     for (auto *n : aggregate->nonfunctionList())
-                        generateIndexSections(writer, n, post);
+                        generateIndexSections(writer, n, generator, post);
                     writer.writeEndElement();
                 }
             }
@@ -1549,18 +1552,20 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
   Writes a qdoc module index in XML to a file named \a fileName.
   \a url is the \c url attribute of the <INDEX> element.
   \a title is the \c title attribute of the <INDEX> element.
-  \a g is a pointer to the current Generator in use, stored for later use.
+  \a hrefGenerator is the generator to use for computing document locations
+  and file extensions. Must not be null.
  */
 void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
-                                   const QString &title)
+                                   const QString &title, const Generator *hrefGenerator)
 {
+    Q_ASSERT(hrefGenerator);
+    m_gen = hrefGenerator;
+
     QFile file(fileName);
     if (!file.open(QFile::WriteOnly | QFile::Text))
         return;
 
     qCDebug(lcQdoc) << "Writing index file:" << fileName;
-
-    m_gen = Generator::currentGenerator();
     m_relatedNodes.clear();
     QXmlStreamWriter writer(&file);
     writer.setAutoFormatting(true);
@@ -1577,7 +1582,7 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
     if (!root_->tree()->indexTitle().isEmpty())
         writer.writeAttribute("indexTitle", root_->tree()->indexTitle());
 
-    generateIndexSections(writer, root_, nullptr);
+    generateIndexSections(writer, root_, m_gen, nullptr);
 
     writer.writeEndElement(); // INDEX
     writer.writeEndElement(); // QDOCINDEX

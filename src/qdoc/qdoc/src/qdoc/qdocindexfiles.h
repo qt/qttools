@@ -48,19 +48,20 @@ private:
     bool adoptRelatedNode(Aggregate *adoptiveParent, int index);
     void writeTargets(QXmlStreamWriter &writer, Node *node);
 
-    void generateIndex(const QString &fileName, const QString &url, const QString &title);
+    void generateIndex(const QString &fileName, const QString &url, const QString &title,
+                       const Generator *hrefGenerator);
     void generateFunctionSection(QXmlStreamWriter &writer, FunctionNode *fn);
     void generateFunctionSections(QXmlStreamWriter &writer, Aggregate *aggregate);
     bool generateIndexSection(QXmlStreamWriter &writer, Node *node,
-                              IndexSectionWriter *post = nullptr);
+                              const Generator *generator, IndexSectionWriter *post = nullptr);
     void generateIndexSections(QXmlStreamWriter &writer, Node *node,
-                               IndexSectionWriter *post = nullptr);
+                               const Generator *generator, IndexSectionWriter *post = nullptr);
     QString appendAttributesToSignature(const FunctionNode *fn) const noexcept;
 
 private:
     static QDocIndexFiles *s_qdocIndexFiles;
     QDocDatabase *m_qdb {};
-    Generator *m_gen {};
+    const Generator *m_gen {};
     QString m_project;
     QList<std::pair<ClassNode *, QString>> m_basesList;
     NodeList m_relatedNodes;

@@ -1236,15 +1236,31 @@ void QDocDatabase::readIndexes(const QStringList &indexFiles)
 }
 
 /*!
-  Generates a qdoc index file and write it to \a fileName. The
-  index file is generated with the parameters \a url and \a title,
-  using the generator \a g.
+  Generates a qdoc index file and writes it to \a fileName. The
+  index file is generated with the parameters \a url, \a title,
+  and \a hrefGenerator.
+
+  The \a hrefGenerator is used to compute document locations (hrefs)
+  for nodes. For index files, this should be the HTML generator
+  to ensure correct .html file extensions in the generated hrefs.
+  If null, defaults to the HTML generator.
  */
-void QDocDatabase::generateIndex(const QString &fileName, const QString &url, const QString &title)
+void QDocDatabase::generateIndex(const QString &fileName, const QString &url, const QString &title,
+                                 const Generator *hrefGenerator)
 {
+    // Resolve generator before modifying any state
+    const Generator *generator = hrefGenerator;
+    if (!generator)
+        generator = Generator::generatorForFormat(u"HTML"_s);
+    if (!generator) {
+        qCWarning(lcQdoc) << "Cannot generate index file: no href generator available"
+                             " (HTML generator missing)";
+        return;
+    }
+
     QString t = fileName.mid(fileName.lastIndexOf(QChar('/')) + 1);
     primaryTree()->setIndexFileName(t);
-    QDocIndexFiles::qdocIndexFiles()->generateIndex(fileName, url, title);
+    QDocIndexFiles::qdocIndexFiles()->generateIndex(fileName, url, title, generator);
     QDocIndexFiles::destroyQDocIndexFiles();
 }
 

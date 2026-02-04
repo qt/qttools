@@ -381,7 +381,7 @@ QString Generator::fileBase(const Node *node) const
   (default value), retrieve the file extension from
   the generator.
  */
-QString Generator::linkForExampleFile(const QString &path, const QString &fileExt)
+QString Generator::linkForExampleFile(const QString &path, const QString &fileExt) const
 {
     QString link{path};
     link.prepend(s_project.toLower() + QLatin1Char('-'));
@@ -514,7 +514,7 @@ QMap<QString, QString> &Generator::formattingRightMap()
 /*!
   Returns the full document location.
  */
-QString Generator::fullDocumentLocation(const Node *node)
+QString Generator::fullDocumentLocation(const Node *node) const
 {
     if (node == nullptr)
         return QString();
@@ -530,13 +530,13 @@ QString Generator::fullDocumentLocation(const Node *node)
           an attribute containing the location of any documentation.
         */
         if (!fileBase(node).isEmpty())
-            parentName = fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
+            parentName = fileBase(node) + QLatin1Char('.') + fileExtension();
         else
             return QString();
     } else if (node->isQmlType()) {
-        return fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
+        return fileBase(node) + QLatin1Char('.') + fileExtension();
     } else if (node->isTextPageNode() || node->isCollectionNode()) {
-        parentName = fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
+        parentName = fileBase(node) + QLatin1Char('.') + fileExtension();
     } else if (fileBase(node).isEmpty())
         return QString();
 
@@ -554,7 +554,7 @@ QString Generator::fullDocumentLocation(const Node *node)
     case NodeType::Union:
     case NodeType::Namespace:
     case NodeType::Proxy:
-        parentName = fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
+        parentName = fileBase(node) + QLatin1Char('.') + fileExtension();
         break;
     case NodeType::Function: {
         const auto *fn = static_cast<const FunctionNode *>(node);
@@ -624,7 +624,7 @@ QString Generator::fullDocumentLocation(const Node *node)
         parentName = fileBase(node);
         parentName.replace(QLatin1Char('/'), QLatin1Char('-'))
                 .replace(QLatin1Char('.'), QLatin1Char('-'));
-        parentName += QLatin1Char('.') + currentGenerator()->fileExtension();
+        parentName += QLatin1Char('.') + fileExtension();
     } break;
     default:
         break;
@@ -632,8 +632,8 @@ QString Generator::fullDocumentLocation(const Node *node)
 
     if (!node->isClassNode() && !node->isNamespace()) {
         if (node->isDeprecated())
-            parentName.replace(QLatin1Char('.') + currentGenerator()->fileExtension(),
-                               "-obsolete." + currentGenerator()->fileExtension());
+            parentName.replace(QLatin1Char('.') + fileExtension(),
+                               "-obsolete." + fileExtension());
     }
 
     return parentName.toLower() + anchorRef;
