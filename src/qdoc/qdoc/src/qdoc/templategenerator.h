@@ -11,6 +11,7 @@ QT_BEGIN_NAMESPACE
 
 class Aggregate;
 class CodeMarker;
+struct DocumentIR;
 
 class TemplateGenerator : public Generator
 {
@@ -33,6 +34,14 @@ protected:
     qsizetype generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker) override;
 
 private:
+    // Render phase: The generator's actual job - format IR according to templates.
+    // These methods know nothing about Nodes, only IR.
+    void renderDocument(const DocumentIR &ir);
+
+    // Build phase: Extract data from Nodes into IR.
+    // This will eventually move to a separate IRBuilder class.
+    [[nodiscard]] DocumentIR buildPageIR(const PageNode *pn) const;
+
     QString m_templateDir;
 };
 

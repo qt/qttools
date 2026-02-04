@@ -36,6 +36,23 @@ using namespace Qt::Literals;
     formats pre-resolved data according to template rules, without
     performing resolution, database lookups, or state modifications.
 
+    \section1 Architecture
+
+    The generator maintains a strict separation between two phases:
+
+    \list
+    \li \b{Build phase}: Extract data from Node tree into IR structures.
+        Currently implemented as \c{buildXxxIR()} methods, but will move
+        to a separate IRBuilder class.
+    \li \b{Render phase}: Format IR into output using templates.
+        Implemented by \c{renderDocument()}, which knows nothing about Nodes.
+    \endlist
+
+    The \c{generateXxx()} methods inherited from Generator are thin wrappers
+    that call build then render. This separation ensures the render phase
+    can be tested independently and that IR design is driven by actual
+    rendering needs.
+
     This serves as both a working generator and a reference implementation
     that drives the design of QDoc's IR layer.
 */
@@ -144,15 +161,43 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 {
     Q_UNUSED(marker);
 
+    // Build phase: Node → IR (will move to IRBuilder)
+    DocumentIR ir = buildPageIR(pn);
+
+    // Render phase: IR → Output (TemplateGenerator's actual job)
+    renderDocument(ir);
+}
+
+/*!
+    \internal
+    Build phase: Extract documentation data from a PageNode into IR.
+
+    This method will eventually move to a separate IRBuilder class.
+    The TemplateGenerator should receive pre-built IR, not build it.
+*/
+DocumentIR TemplateGenerator::buildPageIR(const PageNode *pn) const
+{
     DocumentIR ir;
     ir.title = pn->title();
     ir.fullTitle = pn->fullTitle();
     ir.url = pn->url();
-    ir.brief = pn->doc().trimmedBriefText(pn->name()).toString();
+    ir.brief = pn->doc().briefText().toString();
 
     // TODO: Process atoms in later commits
     ir.contentJson["text"_L1] = "Content rendering from atoms will be implemented in upcoming commits."_L1;
 
+    return ir;
+}
+
+/*!
+    \internal
+    Render phase: Format pre-built IR according to a template.
+
+    This is TemplateGenerator's core responsibility. It receives IR and
+    produces formatted output without any knowledge of Nodes or the database.
+*/
+void TemplateGenerator::renderDocument(const DocumentIR &ir)
+{
     QString templateContent;
 
     if (!m_templateDir.isEmpty()) {
