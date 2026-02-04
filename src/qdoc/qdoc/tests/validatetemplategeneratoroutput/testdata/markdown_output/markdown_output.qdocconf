@@ -1,0 +1,18 @@
+project = Markdown output test
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions  = "*.h *.hpp"
+sources.fileextensions  = "*.cpp *.qml *.qdoc"
+
+headerdirs  = ./src
+sourcedirs  = ./src
+
+outputformats = template
+template.nosubdirs = true
+template.outputsubdir = template
+template.extension = md
+
+warninglimit = 0
+warninglimit.enabled = true

@@ -173,7 +173,8 @@ SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only"
 
 [[annotations]]
 path = ["src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expected/**.html",
-        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expected/**.index"]
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expected/**.index",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expected/**.md"]
 precedence = "override"
 comment = ["Generated output files inherit license from QDoc templates",
            "Templates are distributed with QDoc and their license propagates to generated output",

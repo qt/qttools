@@ -1,0 +1,11 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page readme
+    \title README
+    \brief A test page for Markdown output.
+
+    This test validates that QDoc's template generator can produce Markdown
+    output using the same DocumentIR as HTML output.
+*/

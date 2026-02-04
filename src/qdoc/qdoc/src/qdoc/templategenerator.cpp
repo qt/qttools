@@ -67,6 +67,11 @@ void TemplateGenerator::initializeGenerator()
     Generator::initializeGenerator();
 
     const Config &config = Config::instance();
+
+    QString extensionConfig = config.get(u"template.extension"_s).asString();
+    if (!extensionConfig.isEmpty())
+        m_fileExtension = extensionConfig;
+
     QString templateDirConfig = config.get(u"template.templatedir"_s).asString();
 
     if (templateDirConfig.isEmpty()) {
@@ -118,8 +123,7 @@ QString TemplateGenerator::format() const
 
 [[nodiscard]] QString TemplateGenerator::fileExtension() const
 {
-    // TODO: Make this configurable via template configuration
-    return "html"_L1;
+    return m_fileExtension;
 }
 
 void TemplateGenerator::generateDocs()
@@ -165,7 +169,7 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
     DocumentIR ir = buildPageIR(pn);
 
     // Render phase: IR → Output (TemplateGenerator's actual job)
-    renderDocument(ir);
+    renderDocument(ir, "page"_L1);
 }
 
 /*!
@@ -196,12 +200,13 @@ DocumentIR TemplateGenerator::buildPageIR(const PageNode *pn) const
     This is TemplateGenerator's core responsibility. It receives IR and
     produces formatted output without any knowledge of Nodes or the database.
 */
-void TemplateGenerator::renderDocument(const DocumentIR &ir)
+void TemplateGenerator::renderDocument(const DocumentIR &ir, const QString &templateBaseName)
 {
+    const QString templateFileName = templateBaseName + '.'_L1 + m_fileExtension;
     QString templateContent;
 
     if (!m_templateDir.isEmpty()) {
-        QString templatePath = m_templateDir + "/page.html"_L1;
+        QString templatePath = m_templateDir + '/'_L1 + templateFileName;
         QFile templateFile(templatePath);
 
         if (templateFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -211,7 +216,7 @@ void TemplateGenerator::renderDocument(const DocumentIR &ir)
     }
 
     if (templateContent.isEmpty()) {
-        QFile resourceFile(":/qdoc/templates/page.html"_L1);
+        QFile resourceFile(":/qdoc/templates/"_L1 + templateFileName);
         if (resourceFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
             templateContent = QString::fromUtf8(resourceFile.readAll());
             resourceFile.close();
@@ -219,8 +224,10 @@ void TemplateGenerator::renderDocument(const DocumentIR &ir)
     }
 
     if (templateContent.isEmpty())
-        qFatal("TemplateGenerator: No template file found. "
-               "Ensure 'page.html' exists in the configured template directory or in resources.");
+        qFatal("TemplateGenerator: No template file found for extension '%s'. "
+               "Ensure '%s.%s' exists in the configured template directory or in resources.",
+               qPrintable(m_fileExtension), qPrintable(templateBaseName),
+               qPrintable(m_fileExtension));
 
     QString rendered = InjaBridge::render(templateContent, ir.toJson());
     out() << rendered;
