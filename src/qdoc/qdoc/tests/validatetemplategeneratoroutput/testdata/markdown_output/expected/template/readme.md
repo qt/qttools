@@ -10,7 +10,7 @@ A test page for Markdown output.
 
 
 
-Content rendering from atoms will be implemented in upcoming commits.
+This test validates that QDoc's template generator can produce Markdown output using the same DocumentIR as HTML output.
 
 
 ---

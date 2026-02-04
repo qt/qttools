@@ -4,6 +4,7 @@
 #include "templategenerator.h"
 
 #include "aggregate.h"
+#include "atom.h"      // TEMPORARY: Remove when atom processing moves to IRBuilder
 #include "codemarker.h"
 #include "collectionnode.h"
 #include "config.h"
@@ -13,6 +14,7 @@
 #include "pagenode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
+#include "text.h"       // TEMPORARY: Remove when atom processing moves to IRBuilder
 
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
@@ -187,8 +189,40 @@ DocumentIR TemplateGenerator::buildPageIR(const PageNode *pn) const
     ir.url = pn->url();
     ir.brief = pn->doc().briefText().toString();
 
-    // TODO: Process atoms in later commits
-    ir.contentJson["text"_L1] = "Content rendering from atoms will be implemented in upcoming commits."_L1;
+    // TEMPORARY: Atom processing belongs in IRBuilder, not here.
+    // This extracts body content (text after the brief) directly from atoms,
+    // violating the separation between build and render phases. Move to
+    // IRBuilder once that class is implemented.
+    QString bodyText;
+    const Text &body = pn->doc().body();
+    const Atom *atom = body.firstAtom();
+    bool inBrief = false;
+
+    while (atom) {
+        switch (atom->type()) {
+        case Atom::BriefLeft:
+            inBrief = true;
+            break;
+        case Atom::BriefRight:
+            inBrief = false;
+            break;
+        case Atom::ParaLeft:
+            if (!inBrief && !bodyText.isEmpty())
+                bodyText += "\n\n"_L1;
+            break;
+        case Atom::String:
+        case Atom::AutoLink:
+        case Atom::C:
+            if (!inBrief)
+                bodyText += atom->string();
+            break;
+        default:
+            break;
+        }
+        atom = atom->next();
+    }
+
+    ir.contentJson["text"_L1] = bodyText.trimmed();
 
     return ir;
 }
