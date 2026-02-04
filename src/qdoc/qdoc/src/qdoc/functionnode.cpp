@@ -237,6 +237,23 @@ FunctionNode::Metaness FunctionNode::getMetanessFromTopic(const QString &topic)
 }
 
 /*!
+  Extends the base implementation to test whether an associated enum
+  is in the API.
+*/
+bool FunctionNode::isInAPI() const
+{
+    if (Node::isInAPI())
+        return true;
+
+    for (auto *property : m_associatedProperties) {
+        if (property->isInAPI())
+            return true;
+    }
+
+    return false;
+}
+
+/*!
   Sets the function node's overload number to \a number. If \a number
   is 0, the function node's overload flag is set to false. If
   \a number is greater than 0, the overload flag is set to true.

@@ -66,6 +66,7 @@ public:
     [[nodiscard]] QString virtualness() const;
     [[nodiscard]] bool isConst() const { return m_const; }
     [[nodiscard]] bool isImplicitlyGenerated() const { return m_implicitlyGenerated; }
+    [[nodiscard]] bool isInAPI() const override;
     [[nodiscard]] bool isStatic() const override { return m_static; }
     [[nodiscard]] bool isOverload() const { return m_overloadFlag; }
     [[nodiscard]] bool isMarkedReimp() const override { return m_reimpFlag; }

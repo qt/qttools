@@ -693,12 +693,12 @@ void Sections::distributeNodeInSummaryVector(SectionVector &sv, Node *n)
             else
                 sv[ProtectedSlots].insert(fn);
         } else if (fn->isSignal()) {
-            if (fn->isPublic())
+            if (fn->isPublic() && fn->isInAPI())
                 sv[Signals].insert(fn);
         } else if (fn->isPublic()) {
-            if (fn->isStatic())
+            if (fn->isStatic() && fn->isInAPI())
                 sv[StaticPublicMembers].insert(fn);
-            else if (!sv[PublicFunctions].insertReimplementedMember(fn))
+            else if (!sv[PublicFunctions].insertReimplementedMember(fn) && fn->isInAPI())
                 sv[PublicFunctions].insert(fn);
         } else if (fn->isPrivate()) {
             if (fn->isStatic())
