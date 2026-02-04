@@ -35,6 +35,10 @@ bool isGeneratedFile(const QString &path);
 QStringList pathAndFragment(const QString &linkText);
 [[nodiscard]] QString linkForExampleFile(const QString &path, const QString &project, const QString &fileExt);
 
+enum class ExampleFileKind { File, Image };
+[[nodiscard]] QString exampleFileTitle(const QString &fileName, ExampleFileKind kind);
+[[nodiscard]] QString exampleFileTitle(const QStringList &files, const QStringList &images, const QString &fileName);
+
 static constexpr QLatin1StringView samp = "&amp;"_L1;
 static constexpr QLatin1StringView slt = "&lt;"_L1;
 static constexpr QLatin1StringView sgt = "&gt;"_L1;

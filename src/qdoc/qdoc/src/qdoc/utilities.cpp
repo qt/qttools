@@ -377,6 +377,52 @@ QString linkForExampleFile(const QString &path, const QString &project, const QS
     return asAsciiPrintable(link) + QLatin1Char('.') + fileExt;
 }
 
+/*!
+    Constructs a title for a file or image page in an example.
+
+    Returns the base name of \a fileName with the appropriate suffix
+    based on \a kind: " Example File" for ExampleFileKind::File,
+    " Image File" for ExampleFileKind::Image.
+
+    Use this overload when you already know whether the file is an
+    example file or image (e.g., when iterating separate file/image lists).
+ */
+QString exampleFileTitle(const QString &fileName, ExampleFileKind kind)
+{
+    const QString suffix = [kind]() {
+        switch (kind) {
+        case ExampleFileKind::File:
+            return " Example File"_L1;
+        case ExampleFileKind::Image:
+            return " Image File"_L1;
+        }
+        Q_UNREACHABLE();
+    }();
+    return QFileInfo(fileName).fileName() + suffix;
+}
+
+/*!
+    Constructs a title for a file or image page in an example.
+
+    If \a fileName is found in \a files, returns the base name with
+    " Example File" suffix. If found in \a images, returns the base
+    name with " Image File" suffix. If not found in either list,
+    returns an empty string.
+
+    Matching uses exact string equality, not basename comparison.
+
+    \note This overload performs O(n) membership checks. When iterating
+    known file or image lists, prefer the overload taking ExampleFileKind.
+ */
+QString exampleFileTitle(const QStringList &files, const QStringList &images, const QString &fileName)
+{
+    if (files.contains(fileName))
+        return exampleFileTitle(fileName, ExampleFileKind::File);
+    if (images.contains(fileName))
+        return exampleFileTitle(fileName, ExampleFileKind::Image);
+    return {};
+}
+
 } // namespace Utilities
 
 QT_END_NAMESPACE

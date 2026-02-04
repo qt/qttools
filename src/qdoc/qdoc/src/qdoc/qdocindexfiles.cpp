@@ -1240,28 +1240,26 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         const QString project = Generator::defaultModuleName();
         const QString fileExt = m_gen->fileExtension();
         const auto &files = exampleNode->files();
+        const auto &images = exampleNode->images();
         for (const QString &file : files) {
             writer.writeStartElement("page");
             writer.writeAttribute("name", file);
-            QString href = Utilities::linkForExampleFile(file, project, fileExt);
-            writer.writeAttribute("href", href);
+            writer.writeAttribute("href", Utilities::linkForExampleFile(file, project, fileExt));
             writer.writeAttribute("status", "active");
             writer.writeAttribute("subtype", "file");
             writer.writeAttribute("title", "");
-            writer.writeAttribute("fulltitle", Generator::exampleFileTitle(exampleNode, file));
+            writer.writeAttribute("fulltitle", Utilities::exampleFileTitle(file, Utilities::ExampleFileKind::File));
             writer.writeAttribute("subtitle", file);
             writer.writeEndElement(); // page
         }
-        const auto &images = exampleNode->images();
         for (const QString &file : images) {
             writer.writeStartElement("page");
             writer.writeAttribute("name", file);
-            QString href = Utilities::linkForExampleFile(file, project, fileExt);
-            writer.writeAttribute("href", href);
+            writer.writeAttribute("href", Utilities::linkForExampleFile(file, project, fileExt));
             writer.writeAttribute("status", "active");
             writer.writeAttribute("subtype", "image");
             writer.writeAttribute("title", "");
-            writer.writeAttribute("fulltitle", Generator::exampleFileTitle(exampleNode, file));
+            writer.writeAttribute("fulltitle", Utilities::exampleFileTitle(file, Utilities::ExampleFileKind::Image));
             writer.writeAttribute("subtitle", file);
             writer.writeEndElement(); // page
         }

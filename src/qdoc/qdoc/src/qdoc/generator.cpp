@@ -392,15 +392,7 @@ QString Generator::linkForExampleFile(const QString &path, const QString &fileEx
 */
 QString Generator::exampleFileTitle(const ExampleNode *relative, const QString &fileName)
 {
-    QString suffix;
-    if (relative->files().contains(fileName))
-        suffix = QLatin1String(" Example File");
-    else if (relative->images().contains(fileName))
-        suffix = QLatin1String(" Image File");
-    else
-        return suffix;
-
-    return fileName.mid(fileName.lastIndexOf(QLatin1Char('/')) + 1) + suffix;
+    return Utilities::exampleFileTitle(relative->files(), relative->images(), fileName);
 }
 
 /*!

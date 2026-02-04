@@ -63,6 +63,13 @@ private slots:
 
     void linkForExampleFile_basicPath();
     void linkForExampleFile_pathWithSpecialChars();
+
+    void exampleFileTitle_fileMatch();
+    void exampleFileTitle_imageMatch();
+    void exampleFileTitle_noMatch();
+    void exampleFileTitle_basenameOnly();
+    void exampleFileTitle_duplicateInBothLists();
+    void exampleFileTitle_kindOverload();
 };
 
 void tst_Utilities::loggingCategoryName()
@@ -288,6 +295,64 @@ void tst_Utilities::linkForExampleFile_pathWithSpecialChars()
     // Paths with special characters get sanitized via asAsciiPrintable
     QString result = Utilities::linkForExampleFile("examples/file with spaces.qml", "QtQuick", "html");
     QCOMPARE(result, QStringLiteral("qtquick-examples-file-with-spaces-qml.html"));
+}
+
+void tst_Utilities::exampleFileTitle_fileMatch()
+{
+    QStringList files = {"src/main.cpp", "src/widget.cpp"};
+    QStringList images = {"images/logo.png"};
+    QString result = Utilities::exampleFileTitle(files, images, "src/main.cpp");
+    QCOMPARE(result, QStringLiteral("main.cpp Example File"));
+}
+
+void tst_Utilities::exampleFileTitle_imageMatch()
+{
+    QStringList files = {"src/main.cpp"};
+    QStringList images = {"images/logo.png", "images/icon.png"};
+    QString result = Utilities::exampleFileTitle(files, images, "images/logo.png");
+    QCOMPARE(result, QStringLiteral("logo.png Image File"));
+}
+
+void tst_Utilities::exampleFileTitle_noMatch()
+{
+    QStringList files = {"src/main.cpp"};
+    QStringList images = {"images/logo.png"};
+    QString result = Utilities::exampleFileTitle(files, images, "unknown/file.txt");
+    QCOMPARE(result, QString{});
+}
+
+void tst_Utilities::exampleFileTitle_basenameOnly()
+{
+    // Input without path separator returns same basename + suffix
+    QStringList files = {"main.cpp"};
+    QStringList images;
+    QString result = Utilities::exampleFileTitle(files, images, "main.cpp");
+    QCOMPARE(result, QStringLiteral("main.cpp Example File"));
+}
+
+void tst_Utilities::exampleFileTitle_duplicateInBothLists()
+{
+    // If fileName appears in both lists, files takes precedence (checked first)
+    QStringList files = {"shared/file.txt"};
+    QStringList images = {"shared/file.txt"};
+    QString result = Utilities::exampleFileTitle(files, images, "shared/file.txt");
+    QCOMPARE(result, QStringLiteral("file.txt Example File"));
+}
+
+void tst_Utilities::exampleFileTitle_kindOverload()
+{
+    // Test the O(1) overload that takes ExampleFileKind directly
+    using Utilities::ExampleFileKind;
+
+    QString fileResult = Utilities::exampleFileTitle("src/widget.cpp", ExampleFileKind::File);
+    QCOMPARE(fileResult, QStringLiteral("widget.cpp Example File"));
+
+    QString imageResult = Utilities::exampleFileTitle("images/icon.png", ExampleFileKind::Image);
+    QCOMPARE(imageResult, QStringLiteral("icon.png Image File"));
+
+    // Basename-only input works too
+    QString basenameResult = Utilities::exampleFileTitle("README.md", ExampleFileKind::File);
+    QCOMPARE(basenameResult, QStringLiteral("README.md Example File"));
 }
 
 QTEST_APPLESS_MAIN(tst_Utilities)
