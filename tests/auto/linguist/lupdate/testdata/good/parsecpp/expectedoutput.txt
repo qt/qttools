@@ -8,9 +8,9 @@
 .*/lupdate/testdata/good/parsecpp/main.cpp:739: labels cannot be used with text-based translation. Ignoring
 .*/lupdate/testdata/good/parsecpp/main.cpp:742: labels cannot be used with text-based translation. Ignoring
 .*/lupdate/testdata/good/parsecpp/main.cpp:757: Discarding unconsumed meta data
-.*/lupdate/testdata/good/parsecpp/main.cpp:833: Label placeholder <context> used, but no context available. Using <unnamed>.
-.*/lupdate/testdata/good/parsecpp/main.cpp:837: Label placeholder <class> used, but no class available. Using <unnamed>.
-.*/lupdate/testdata/good/parsecpp/main.cpp:851: labels cannot be used with text-based translation. Ignoring
-.*/lupdate/testdata/good/parsecpp/main.cpp:911: Label placeholder <class> used, but no class available. Using <unnamed>.
+.*/lupdate/testdata/good/parsecpp/main.cpp:830: Label placeholder <context> used, but no context available. Using <unnamed>.
+.*/lupdate/testdata/good/parsecpp/main.cpp:834: Label placeholder <class> used, but no class available. Using <unnamed>.
+.*/lupdate/testdata/good/parsecpp/main.cpp:848: labels cannot be used with text-based translation. Ignoring
+.*/lupdate/testdata/good/parsecpp/main.cpp:908: Label placeholder <class> used, but no class available. Using <unnamed>.
 Contradicting label for message with id id4
 lupdate warning: Message with id 'yet_another_id' has no source.

@@ -65,7 +65,6 @@ QString transcode(const QString &str);
     UNARY_MACRO(findMessage) /* QTranslator::findMessage() has the same parameters as \
                                 QApplication::translate() */                          \
     UNARY_MACRO(qtTrId)                                                               \
-    UNARY_MACRO(qTrId)                                                                \
     UNARY_MACRO(tr)                                                                   \
     UNARY_MACRO(trUtf8)                                                               \
     UNARY_MACRO(translate)                                                            \
