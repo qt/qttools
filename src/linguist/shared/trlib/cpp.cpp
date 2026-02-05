@@ -1919,7 +1919,6 @@ bool CppParser::parseTranslate(QString &prefix)
         forcePlural = true;
         Q_FALLTHROUGH();
     case TrFunctionAliasManager::Function_qtTrId:
-    case TrFunctionAliasManager::Function_qTrId:
     case TrFunctionAliasManager::Function_QT_TRID_NOOP:
         if (tor)
             handleTrId(prefix.size(), forcePlural);

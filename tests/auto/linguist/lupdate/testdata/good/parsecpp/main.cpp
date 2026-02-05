@@ -775,9 +775,6 @@ void SaveItemsDialog::adjustButtonWidths()
     possibleTexts << Tr::tr("Save Selected");
 }
 
-//% "Testing qTrId alias function"
-QString test_alias = qTrId("qtrid_alias_test");
-
 // ============================================================================
 // AUTO LABELS TESTS
 // ============================================================================
