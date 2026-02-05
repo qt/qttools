@@ -1924,6 +1924,18 @@ void Generator::generateDocs()
 
 Generator *Generator::generatorForFormat(const QString &format)
 {
+    // First, check the OutputProducerRegistry for producers.
+    // This supports both Generator-based producers (which register themselves)
+    // and future non-Generator IOutputProducer implementations.
+    if (auto *producer = OutputProducerRegistry::instance().producerForFormat(format)) {
+        // TODO: All registered producers are Generators, but this will
+        // change as we migrate to IOutputProducer-based implementations.
+        if (auto *gen = dynamic_cast<Generator *>(producer))
+            return gen;
+    }
+
+    // Fallback: Check the legacy s_generators list for unregistered generators.
+    // This should not normally be reached, but provides backward compatibility.
     for (const auto &generator : std::as_const(s_generators)) {
         if (generator->format() == format)
             return generator;
