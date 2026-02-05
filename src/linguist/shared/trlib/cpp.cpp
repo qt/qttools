@@ -899,7 +899,7 @@ CppParser::TokenType CppParser::getToken()
                 if (yyCh == '[') {
                     // C++11 attribute: [[...]]
                     yyCh = getChar();
-                    int depth = 1;
+                    int depth = 2;
                     bool inString = false;
                     bool inChar = false;
                     bool escaped = false;
@@ -923,7 +923,7 @@ CppParser::TokenType CppParser::getToken()
                         yyCh = getChar();
                     }
 
-                    if (yyCh == EOF || yyCh != ']') {
+                    if (yyCh == EOF) {
                         yyMsg(yyCurLineNo) << "Unterminated C++ attribute (missing ']]')\n";
                         return Tok_LeftBracket;
                     }
