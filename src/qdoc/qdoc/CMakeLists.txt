@@ -49,6 +49,7 @@ set(qdoc_sources
     src/qdoc/editdistance.cpp
     src/qdoc/enumnode.cpp
     src/qdoc/externalpagenode.cpp
+    src/qdoc/filedocumentwriter.cpp
     src/qdoc/filesystem/fileresolver.cpp
     src/qdoc/functionnode.cpp
     src/qdoc/generator.cpp
@@ -57,6 +58,7 @@ set(qdoc_sources
     src/qdoc/helpprojectwriter.cpp
     src/qdoc/htmlgenerator.cpp
     src/qdoc/inclusionfilter.h
+    src/qdoc/idocumentwriter.h
     src/qdoc/inclusionflags.h
     src/qdoc/inclusionpolicy.h
     src/qdoc/location.cpp
@@ -67,6 +69,7 @@ set(qdoc_sources
     src/qdoc/node.cpp
     src/qdoc/nodecontext.h
     src/qdoc/openedlist.cpp
+    src/qdoc/outputcontext.cpp
     src/qdoc/outputdirectory.cpp
     src/qdoc/outputproducerregistry.cpp
     src/qdoc/pagenode.cpp
