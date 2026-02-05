@@ -337,3 +337,9 @@ class [[maybe_unused]] OriginalBugTest : public QObject
 public:
     OriginalBugTest() { setObjectName(tr("OriginalBugTest: the reported bug")); }
 };
+
+// Test 33: Original QTBUG-143893 bug report
+// The exact case from the bug report (Objective-C calls misinterpreted as C++ attributes)
+void test() {
+    NSArray* apps = [[NSWorkspace sharedWorkspace] runningApplications];
+}
