@@ -223,35 +223,25 @@ private slots:
     void slotEditorDestroyed(QObject *object);
 
 private:
-    using EditorToPropertyMap = QHash<QWidget *, QtProperty *>;
-    mutable EditorToPropertyMap m_editorToProperty;
-
-    using PropertyToEditorMap = QHash<QtProperty *, QWidget *>;
-    mutable PropertyToEditorMap m_propertyToEditor;
     QtTreePropertyBrowserPrivate *m_editorPrivate = nullptr;
     mutable QTreeWidgetItem *m_editedItem = nullptr;
     mutable QWidget *m_editedWidget = nullptr;
+    mutable QtProperty *m_editedProperty = nullptr;
 };
 
 void QtPropertyEditorDelegate::slotEditorDestroyed(QObject *object)
 {
-    if (auto *w = qobject_cast<QWidget *>(object)) {
-        const auto it = m_editorToProperty.find(w);
-        if (it != m_editorToProperty.end()) {
-            m_propertyToEditor.remove(it.value());
-            m_editorToProperty.erase(it);
-        }
-        if (m_editedWidget == w) {
-            m_editedWidget = nullptr;
-            m_editedItem = nullptr;
-        }
+    if (m_editedWidget == object) {
+        m_editedWidget = nullptr;
+        m_editedItem = nullptr;
+        m_editedProperty = nullptr;
     }
 }
 
 void QtPropertyEditorDelegate::closeEditor(QtProperty *property)
 {
-    if (QWidget *w = m_propertyToEditor.value(property, nullptr))
-        w->deleteLater();
+    if (property == m_editedProperty)
+        m_editedWidget->deleteLater();
 }
 
 QWidget *QtPropertyEditorDelegate::createEditor(QWidget *parent,
@@ -269,8 +259,7 @@ QWidget *QtPropertyEditorDelegate::createEditor(QWidget *parent,
                 editor->installEventFilter(const_cast<QtPropertyEditorDelegate *>(this));
                 connect(editor, &QObject::destroyed,
                         this, &QtPropertyEditorDelegate::slotEditorDestroyed);
-                m_propertyToEditor[property] = editor;
-                m_editorToProperty[editor] = property;
+                m_editedProperty = property;
                 m_editedItem = item;
                 m_editedWidget = editor;
             }
