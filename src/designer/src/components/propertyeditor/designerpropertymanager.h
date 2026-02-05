@@ -215,24 +215,25 @@ protected:
                 QWidget *parent) override;
     void disconnectPropertyManager(QtVariantPropertyManager *manager) override;
 private slots:
-    void slotEditorDestroyed(QObject *object);
+    void slotEditorDestroyed(QtProperty *property, QObject *object);
     void slotAttributeChanged(QtProperty *property, const QString &attribute, const QVariant &value);
     void slotPropertyChanged(QtProperty *property);
     void slotValueChanged(QtProperty *property, const QVariant &value);
-    void slotStringTextChanged(const QString &value);
-    void slotKeySequenceChanged(const QKeySequence &value);
-    void slotPaletteChanged(const QPalette &value);
-    void slotPixmapChanged(const QString &value);
-    void slotIconChanged(const QString &value);
-    void slotIconThemeChanged(const QString &value);
-    void slotIconThemeEnumChanged(int value);
-    void slotUintChanged(const QString &value);
-    void slotIntChanged(int);
-    void slotLongLongChanged(const QString &value);
-    void slotULongLongChanged(const QString &value);
-    void slotUrlChanged(const QString &value);
-    void slotByteArrayChanged(const QString &value);
-    void slotStringListChanged(const QStringList &value);
+    void slotStringTextChanged(QtProperty *prop, const QString &value);
+    void slotKeySequenceChanged(QtProperty *prop, const QKeySequence &value);
+    void slotPaletteChanged(QtProperty *prop, const QPalette &value);
+    void slotPixmapChanged(QtProperty *prop, const QString &value);
+    void slotIconChanged(QtProperty *prop, const QString &value);
+    void slotIconThemeChanged(QtProperty *prop, const QString &value);
+    void slotIconThemeEnumChanged(QtProperty *prop, int value);
+    void slotUintChanged(QtProperty *prop, const QString &value);
+    void slotIntChanged(QtProperty *prop, int);
+    void slotLongLongChanged(QtProperty *prop, const QString &value);
+    void slotULongLongChanged(QtProperty *prop, const QString &value);
+    void slotUrlChanged(QtProperty *prop, const QString &value);
+    void slotByteArrayChanged(QtProperty *prop, const QString &value);
+    void slotStringListChanged(QtProperty *prop, const QStringList &value);
+
 private:
     TextEditor *createTextEditor(QWidget *parent, TextPropertyValidationMode vm, const QString &value);
 
@@ -243,29 +244,17 @@ private:
     int m_spacing = -1;
 
     QHash<const QtProperty *, QList<TextEditor *>>             m_stringPropertyToEditors;
-    QHash<TextEditor *, QtProperty *>                          m_editorToStringProperty;
     QHash<const QtProperty *, QList<QKeySequenceEdit *>>       m_keySequencePropertyToEditors;
-    QHash<QKeySequenceEdit *, QtProperty *>                    m_editorToKeySequenceProperty;
     QHash<const QtProperty *, QList<PaletteEditorButton *>>    m_palettePropertyToEditors;
-    QHash<PaletteEditorButton *, QtProperty *>                 m_editorToPaletteProperty;
     QHash<const QtProperty *, QList<PixmapEditor *>>           m_pixmapPropertyToEditors;
-    QHash<PixmapEditor *, QtProperty *>                        m_editorToPixmapProperty;
     QHash<const QtProperty *, QList<PixmapEditor *>>           m_iconPropertyToEditors;
-    QHash<PixmapEditor *, QtProperty *>                        m_editorToIconProperty;
     QHash<const QtProperty *, QList<QComboBox *>>              m_intPropertyToComboEditors;
-    QHash<QComboBox *, QtProperty *>                           m_comboEditorToIntProperty;
     QHash<const QtProperty *, QList<QLineEdit *>>              m_uintPropertyToEditors;
-    QHash<QLineEdit *, QtProperty *>                           m_editorToUintProperty;
     QHash<const QtProperty *, QList<QLineEdit *>>              m_longLongPropertyToEditors;
-    QHash<QLineEdit *, QtProperty *>                           m_editorToLongLongProperty;
     QHash<const QtProperty *, QList<QLineEdit *>>              m_uLongLongPropertyToEditors;
-    QHash<QLineEdit *, QtProperty *>                           m_editorToULongLongProperty;
     QHash<const QtProperty *, QList<TextEditor *>>             m_urlPropertyToEditors;
-    QHash<TextEditor *, QtProperty *>                          m_editorToUrlProperty;
     QHash<const QtProperty *, QList<TextEditor *>>             m_byteArrayPropertyToEditors;
-    QHash<TextEditor *, QtProperty *>                          m_editorToByteArrayProperty;
     QHash<const QtProperty *, QList<StringListEditorButton *>> m_stringListPropertyToEditors;
-    QHash<StringListEditorButton *, QtProperty *>              m_editorToStringListProperty;
 };
 
 } // namespace qdesigner_internal
