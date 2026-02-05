@@ -38,10 +38,6 @@ private:
     // These methods know nothing about Nodes, only IR.
     void renderDocument(const DocumentIR &ir, const QString &templateBaseName);
 
-    // Build phase: Extract data from Nodes into IR.
-    // This will eventually move to a separate IRBuilder class.
-    [[nodiscard]] DocumentIR buildPageIR(const PageNode *pn) const;
-
     QString m_templateDir;
     QString m_fileExtension = QStringLiteral("html");
 };

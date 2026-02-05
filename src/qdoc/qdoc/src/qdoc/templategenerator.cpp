@@ -4,17 +4,16 @@
 #include "templategenerator.h"
 
 #include "aggregate.h"
-#include "atom.h"      // TEMPORARY: Remove when atom processing moves to IRBuilder
 #include "codemarker.h"
 #include "collectionnode.h"
 #include "config.h"
 #include "injabridge.h"
 #include "ir/documentir.h"
+#include "ir/irbuilder.h"
 #include "node.h"
 #include "pagenode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
-#include "text.h"       // TEMPORARY: Remove when atom processing moves to IRBuilder
 
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
@@ -40,23 +39,22 @@ using namespace Qt::Literals;
 
     \section1 Architecture
 
-    The generator maintains a strict separation between two phases:
+    The generator follows QDoc's compile/link/render pipeline:
 
     \list
-    \li \b{Build phase}: Extract data from Node tree into IR structures.
-        Currently implemented as \c{buildXxxIR()} methods, but will move
-        to a separate IRBuilder class.
-    \li \b{Render phase}: Format IR into output using templates.
+    \li \b{Build phase} (IRBuilder): Extract data from Node tree into IR.
+        Handles all atom processing and Node interaction.
+    \li \b{Link phase} (HrefResolver, future): Resolve cross-module links.
+    \li \b{Render phase} (TemplateGenerator): Format IR into output.
         Implemented by \c{renderDocument()}, which knows nothing about Nodes.
     \endlist
 
     The \c{generateXxx()} methods inherited from Generator are thin wrappers
-    that call build then render. This separation ensures the render phase
-    can be tested independently and that IR design is driven by actual
-    rendering needs.
+    that call IRBuilder to build IR, then renderDocument() to format it.
+    This separation ensures the render phase can be tested independently
+    and that IR design is driven by actual rendering needs.
 
-    This serves as both a working generator and a reference implementation
-    that drives the design of QDoc's IR layer.
+    \sa IRBuilder, DocumentIR
 */
 
 TemplateGenerator::TemplateGenerator(FileResolver& file_resolver)
@@ -167,64 +165,12 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 {
     Q_UNUSED(marker);
 
-    // Build phase: Node → IR (will move to IRBuilder)
-    DocumentIR ir = buildPageIR(pn);
+    // Build phase: Node → IR (handled by IRBuilder)
+    IRBuilder builder;
+    DocumentIR ir = builder.buildPageIR(pn);
 
     // Render phase: IR → Output (TemplateGenerator's actual job)
     renderDocument(ir, "page"_L1);
-}
-
-/*!
-    \internal
-    Build phase: Extract documentation data from a PageNode into IR.
-
-    This method will eventually move to a separate IRBuilder class.
-    The TemplateGenerator should receive pre-built IR, not build it.
-*/
-DocumentIR TemplateGenerator::buildPageIR(const PageNode *pn) const
-{
-    DocumentIR ir;
-    ir.title = pn->title();
-    ir.fullTitle = pn->fullTitle();
-    ir.url = pn->url();
-    ir.brief = pn->doc().briefText().toString();
-
-    // TEMPORARY: Atom processing belongs in IRBuilder, not here.
-    // This extracts body content (text after the brief) directly from atoms,
-    // violating the separation between build and render phases. Move to
-    // IRBuilder once that class is implemented.
-    QString bodyText;
-    const Text &body = pn->doc().body();
-    const Atom *atom = body.firstAtom();
-    bool inBrief = false;
-
-    while (atom) {
-        switch (atom->type()) {
-        case Atom::BriefLeft:
-            inBrief = true;
-            break;
-        case Atom::BriefRight:
-            inBrief = false;
-            break;
-        case Atom::ParaLeft:
-            if (!inBrief && !bodyText.isEmpty())
-                bodyText += "\n\n"_L1;
-            break;
-        case Atom::String:
-        case Atom::AutoLink:
-        case Atom::C:
-            if (!inBrief)
-                bodyText += atom->string();
-            break;
-        default:
-            break;
-        }
-        atom = atom->next();
-    }
-
-    ir.contentJson["text"_L1] = bodyText.trimmed();
-
-    return ir;
 }
 
 /*!

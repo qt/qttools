@@ -106,6 +106,7 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     list(APPEND qdoc_sources
         src/qdoc/injabridge.cpp
         src/qdoc/ir/documentir.cpp
+        src/qdoc/ir/irbuilder.cpp
         src/qdoc/ir/linkir.cpp
         src/qdoc/templategenerator.cpp
     )
