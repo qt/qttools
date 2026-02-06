@@ -140,9 +140,8 @@ QString TemplateGenerator::format() const
     return "template"_L1;
 }
 
-void TemplateGenerator::beginDocument(const Node *node, const QString &outputFileName)
+void TemplateGenerator::beginDocument(const QString &outputFileName)
 {
-    Q_UNUSED(node);
     if (m_writer)
         m_writer->beginDocument(outputFileName);
 }

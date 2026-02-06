@@ -55,7 +55,7 @@ public:
     [[nodiscard]] QString format() const override;
 
     // === IDocumentationHandler interface ===
-    void beginDocument(const Node *node, const QString &fileName) override;
+    void beginDocument(const QString &fileName) override;
     void endDocument() override;
     [[nodiscard]] QString fileName(const Node *node) const override;
     void generateCollectionNode(CollectionNode *cn, CodeMarker *marker) override;

@@ -107,7 +107,7 @@ void DocumentationTraverser::traverseNode(Node *node, IDocumentationHandler &han
             auto *cn = static_cast<CollectionNode *>(node);
             if (cn->wasSeen()) {
                 handler.mergeCollections(cn);
-                handler.beginDocument(node, handler.fileName(node));
+                handler.beginDocument(handler.fileName(node));
                 handler.generateCollectionNode(cn, marker);
                 handler.endDocument();
             } else if (cn->isGenericCollection()) {
@@ -118,27 +118,27 @@ void DocumentationTraverser::traverseNode(Node *node, IDocumentationHandler &han
                 name.replace(QChar(' '), QString("-"));
                 QString filename = cn->tree()->physicalModuleName() + "-" + name + "."
                         + QFileInfo(handler.fileName(node)).suffix();
-                handler.beginDocument(node, filename);
+                handler.beginDocument(filename);
                 handler.generateGenericCollectionPage(cn, marker);
                 handler.endDocument();
             }
         } else if (node->isTextPageNode()) {
-            handler.beginDocument(node, handler.fileName(node));
+            handler.beginDocument(handler.fileName(node));
             handler.generatePageNode(static_cast<PageNode *>(node), marker);
             handler.endDocument();
         } else if (node->isAggregate()) {
             if ((node->isClassNode() || node->isHeader() || node->isNamespace())
                 && node->docMustBeGenerated()) {
-                handler.beginDocument(node, handler.fileName(node));
+                handler.beginDocument(handler.fileName(node));
                 handler.generateCppReferencePage(static_cast<Aggregate *>(node), marker);
                 handler.endDocument();
             } else if (node->isQmlType()) {
-                handler.beginDocument(node, handler.fileName(node));
+                handler.beginDocument(handler.fileName(node));
                 auto *qcn = static_cast<QmlTypeNode *>(node);
                 handler.generateQmlTypePage(qcn, marker);
                 handler.endDocument();
             } else if (node->isProxyNode()) {
-                handler.beginDocument(node, handler.fileName(node));
+                handler.beginDocument(handler.fileName(node));
                 handler.generateProxyPage(static_cast<Aggregate *>(node), marker);
                 handler.endDocument();
             }

@@ -11,7 +11,6 @@ QT_BEGIN_NAMESPACE
 class Aggregate;
 class CodeMarker;
 class CollectionNode;
-class Location;
 class Node;
 class PageNode;
 class QmlTypeNode;
@@ -39,7 +38,6 @@ public:
 
     // === File Lifecycle ===
     virtual void beginDocument(const QString &fileName) = 0;
-
     virtual void endDocument() = 0;
 
     // === Filename Computation ===
