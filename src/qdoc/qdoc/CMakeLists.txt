@@ -20,6 +20,48 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
 endif()
 
 
+#############
+## QDocLib ##
+#############
+# QDocLib is an internal static library used by the qdoc executable.
+# It is NOT installed, NOT exported, and NOT intended for external use.
+#
+# This library is under active development. Its API may change without
+# notice between versions. DO NOT depend on it from outside qttools.
+#
+# QDocLib contains components that:
+# - Have no dependencies on QDoc's core infrastructure.
+# - Can be instantiated and tested independently.
+# - Follow clean interface/implementation separation.
+set(qdoclib_sources
+    src/qdoc/boundaries/filesystem/directorypath.cpp
+    src/qdoc/boundaries/filesystem/filepath.cpp
+    src/qdoc/boundaries/filesystem/resolvedfile.cpp
+    src/qdoc/idocumentwriter.h
+    src/qdoc/ioutputproducer.h
+    src/qdoc/outputproducerregistry.cpp
+)
+
+# IR components are only available with template generator
+if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
+    list(APPEND qdoclib_sources
+        src/qdoc/ir/documentir.cpp
+        src/qdoc/ir/linkir.cpp
+    )
+endif()
+
+qt_add_library(QDocLib STATIC ${qdoclib_sources})
+
+target_include_directories(QDocLib
+    PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/src
+)
+
+target_link_libraries(QDocLib
+    PUBLIC
+        Qt::Core
+)
+
 #####################################################################
 ## qdoc Tool:
 #####################################################################
@@ -29,9 +71,6 @@ qt_get_tool_target_name(target_name qdoc)
 set(qdoc_sources
     src/qdoc/aggregate.cpp
     src/qdoc/atom.cpp
-    src/qdoc/boundaries/filesystem/directorypath.cpp
-    src/qdoc/boundaries/filesystem/filepath.cpp
-    src/qdoc/boundaries/filesystem/resolvedfile.cpp
     src/qdoc/clangcodeparser.cpp
     src/qdoc/classnode.cpp
     src/qdoc/codechunk.cpp
@@ -58,7 +97,6 @@ set(qdoc_sources
     src/qdoc/helpprojectwriter.cpp
     src/qdoc/htmlgenerator.cpp
     src/qdoc/inclusionfilter.h
-    src/qdoc/idocumentwriter.h
     src/qdoc/inclusionflags.h
     src/qdoc/inclusionpolicy.h
     src/qdoc/location.cpp
@@ -71,7 +109,6 @@ set(qdoc_sources
     src/qdoc/openedlist.cpp
     src/qdoc/outputcontext.cpp
     src/qdoc/outputdirectory.cpp
-    src/qdoc/outputproducerregistry.cpp
     src/qdoc/pagenode.cpp
     src/qdoc/parameters.cpp
     src/qdoc/parsererror.cpp
@@ -108,9 +145,7 @@ set(qdoc_sources
 if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     list(APPEND qdoc_sources
         src/qdoc/injabridge.cpp
-        src/qdoc/ir/documentir.cpp
         src/qdoc/ir/irbuilder.cpp
-        src/qdoc/ir/linkir.cpp
         src/qdoc/templategenerator.cpp
     )
 endif()
@@ -127,6 +162,7 @@ qt_internal_add_tool(${target_name}
     INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_LIST_DIR}/src
     LIBRARIES
+        QDocLib
         Qt::QmlPrivate
         WrapLibClang::WrapLibClang
     DEFINES
