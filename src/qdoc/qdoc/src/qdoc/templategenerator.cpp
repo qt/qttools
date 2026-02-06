@@ -7,19 +7,26 @@
 #include "codemarker.h"
 #include "collectionnode.h"
 #include "config.h"
+#include "documentationtraverser.h"
 #include "filedocumentwriter.h"
 #include "idocumentwriter.h"
+#include "inclusionfilter.h"
 #include "injabridge.h"
 #include "ir/documentir.h"
 #include "ir/irbuilder.h"
+#include "namespacenode.h"
 #include "node.h"
 #include "outputcontext.h"
+#include "outputproducerregistry.h"
 #include "pagenode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
+#include "tree.h"
+#include "utilities.h"
 
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
+#include <QtCore/qfileinfo.h>
 #include <QtCore/qloggingcategory.h>
 #include <QtCore/qtextstream.h>
 
@@ -34,45 +41,40 @@ using namespace Qt::Literals;
     \internal
     \brief Generates documentation using external templates and a pre-built IR.
 
-    TemplateGenerator is designed to consume a complete IR (Intermediate
-    Representation) that contains all resolved links, organized content
-    sections, and file paths. The generator itself is "dumb": it only
-    formats pre-resolved data according to template rules, without
-    performing resolution, database lookups, or state modifications.
+    TemplateGenerator implements IOutputProducer and IDocumentationHandler to
+    generate documentation without inheriting from Generator. It uses
+    DocumentationTraverser for tree traversal and delegates content generation
+    to templates via the IR system.
 
     \section1 Architecture
 
-    The generator follows QDoc's compile/link/render pipeline:
-
+    The generator follows a composition-based design:
     \list
-    \li \b{Build phase} (IRBuilder): Extract data from Node tree into IR.
-        Handles all atom processing and Node interaction.
-    \li \b{Link phase} (HrefResolver, future): Resolve cross-module links.
-    \li \b{Render phase} (TemplateGenerator): Format IR into output.
-        Implemented by \c{renderDocument()}, which knows nothing about Nodes.
+        \li \b{IOutputProducer}: Lifecycle interface (prepare/produce/finalize).
+        \li \b{IDocumentationHandler}: Content generation callbacks for
+            traverser.
+        \li \b{DocumentationTraverser}: Shared tree traversal logic.
+        \li \b{IDocumentWriter}: Output abstraction (file or string for tests).
     \endlist
 
-    The \c{generateXxx()} methods inherited from Generator are thin wrappers
-    that call IRBuilder to build IR, then renderDocument() to format it.
-    This separation ensures the render phase can be tested independently
-    and that IR design is driven by actual rendering needs.
-
-    \sa IRBuilder, DocumentIR
+    \sa DocumentationTraverser, IDocumentationHandler, IOutputProducer,
+        IRBuilder
 */
 
-TemplateGenerator::TemplateGenerator(FileResolver& file_resolver)
-    : Generator(file_resolver)
+TemplateGenerator::TemplateGenerator(FileResolver &fileResolver, QDocDatabase &qdb)
+    : m_fileResolver(fileResolver)
+    , m_qdb(qdb)
 {
+    OutputProducerRegistry::instance().registerProducer(this);
 }
 
-TemplateGenerator::~TemplateGenerator() = default;
-
-void TemplateGenerator::initializeGenerator()
+TemplateGenerator::~TemplateGenerator()
 {
-    Generator::initializeGenerator();
+    OutputProducerRegistry::instance().unregisterProducer(this);
+}
 
-    // Initialize output context and writer first, so we can use m_context
-    // for output directory resolution below
+void TemplateGenerator::prepare()
+{
     createDefaultWriter();
 
     const Config &config = Config::instance();
@@ -120,34 +122,17 @@ void TemplateGenerator::initializeGenerator()
         m_templateDir.clear();
 }
 
-void TemplateGenerator::terminateGenerator()
+void TemplateGenerator::produce()
 {
-    m_writer.reset();
-    Generator::terminateGenerator();
+    DocumentationTraverser traverser;
+    Node *root = m_qdb.primaryTreeRoot();
+    if (root)
+        traverser.traverse(root, *this);
 }
 
-/*!
-    \internal
-    Creates the production FileDocumentWriter.
-
-    This is called during initialization to create the default writer
-    that writes to the filesystem. For testing, a mock writer can be
-    injected by setting m_writer before calling initializeGenerator().
-
-    Also initializes m_context with configuration values, enabling
-    OutputContext-based access to output settings without depending
-    on Generator's static variables.
-*/
-void TemplateGenerator::createDefaultWriter()
+void TemplateGenerator::finalize()
 {
-    // Initialize OutputContext from configuration
-    const Config &config = Config::instance();
-    m_context.emplace(OutputContext::fromConfig(config, format()));
-
-    if (m_writer)
-        return; // Writer already set (e.g., injected for testing)
-
-    m_writer = std::make_unique<FileDocumentWriter>(*m_context);
+    m_writer.reset();
 }
 
 QString TemplateGenerator::format() const
@@ -155,44 +140,63 @@ QString TemplateGenerator::format() const
     return "template"_L1;
 }
 
-[[nodiscard]] QString TemplateGenerator::fileExtension() const
+void TemplateGenerator::beginDocument(const Node *node, const QString &outputFileName)
 {
-    return m_fileExtension;
+    Q_UNUSED(node);
+    if (m_writer)
+        m_writer->beginDocument(outputFileName);
 }
 
-void TemplateGenerator::generateDocs()
+void TemplateGenerator::endDocument()
 {
-    // TODO: This will be replaced with IR-based generation
-    // For now, call the base implementation to demonstrate integration
-    Generator::generateDocs();
+    if (m_writer)
+        m_writer->endDocument();
 }
 
-/*
-    Placeholder implementation.
+QString TemplateGenerator::fileName(const Node *node) const
+{
+    if (!node->url().isEmpty())
+        return node->url();
 
-    \note File management is handled by Generator::generateDocumentation().
-          This method only writes content.
- */
-void TemplateGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker)
+    // Special case for simple page nodes (\page commands) with explicit
+    // non-.html extensions. Use the normalized fileBase() but preserve
+    // user specified extension
+    if (node->isTextPageNode() && !node->isCollectionNode()) {
+        QFileInfo originalName(node->name());
+        QString suffix = originalName.suffix();
+        if (!suffix.isEmpty() && suffix != "html"_L1) {
+            // User specified a non-.html extension - use normalized base + original extension
+            QString name = fileBase(node);
+            return name + '.'_L1 + suffix;
+        }
+    }
+
+    QString name = fileBase(node) + '.'_L1;
+    return name + m_fileExtension;
+}
+
+void TemplateGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marker)
 {
     Q_UNUSED(marker);
 
-    // TODO: Load template, populate with IR data, render
-    out() << "<!-- TemplateGenerator: C++ Reference Page for "
-          << aggregate->name() << " -->\n";
-    out() << "<h1>" << aggregate->fullTitle() << "</h1>\n";
-    out() << "<p>Template-based output (IR integration pending)</p>\n";
+    // Placeholder - IR integration pending
+    if (m_writer && m_writer->isOpen()) {
+        m_writer->writeLine(QString(u"<!-- TemplateGenerator: Collection "_s + cn->name() + u" -->"_s));
+        m_writer->writeLine(QString(u"<h1>"_s + cn->fullTitle() + u"</h1>"_s));
+        m_writer->writeLine(u"<p>Template-based output (IR integration pending)</p>"_s);
+    }
 }
 
-void TemplateGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
+void TemplateGenerator::generateGenericCollectionPage(CollectionNode *cn, CodeMarker *marker)
 {
     Q_UNUSED(marker);
 
-    // TODO: Load template, populate with IR data, render
-    out() << "<!-- TemplateGenerator: QML Type Page for "
-          << qcn->name() << " -->\n";
-    out() << "<h1>" << qcn->fullTitle() << "</h1>\n";
-    out() << "<p>Template-based output (IR integration pending)</p>\n";
+    // Placeholder - IR integration pending
+    if (m_writer && m_writer->isOpen()) {
+        m_writer->writeLine(QString(u"<!-- TemplateGenerator: Generic Collection "_s + cn->name() + u" -->"_s));
+        m_writer->writeLine(QString(u"<h1>"_s + cn->fullTitle() + u"</h1>"_s));
+        m_writer->writeLine(u"<p>Template-based output (IR integration pending)</p>"_s);
+    }
 }
 
 void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
@@ -206,6 +210,59 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
     // Render phase: IR → Output (TemplateGenerator's actual job)
     renderDocument(ir, "page"_L1);
 }
+
+void TemplateGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker)
+{
+    Q_UNUSED(marker);
+
+    // Placeholder - IR integration pending
+    if (m_writer && m_writer->isOpen()) {
+        m_writer->writeLine(QString(u"<!-- TemplateGenerator: C++ Reference Page for "_s
+                           + aggregate->name() + u" -->"_s));
+        m_writer->writeLine(QString(u"<h1>"_s + aggregate->fullTitle() + u"</h1>"_s));
+        m_writer->writeLine(u"<p>Template-based output (IR integration pending)</p>"_s);
+    }
+}
+
+void TemplateGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
+{
+    Q_UNUSED(marker);
+
+    // Placeholder - IR integration pending
+    if (m_writer && m_writer->isOpen()) {
+        m_writer->writeLine(QString(u"<!-- TemplateGenerator: QML Type Page for "_s
+                           + qcn->name() + u" -->"_s));
+        m_writer->writeLine(QString(u"<h1>"_s + qcn->fullTitle() + u"</h1>"_s));
+        m_writer->writeLine(u"<p>Template-based output (IR integration pending)</p>"_s);
+    }
+}
+
+void TemplateGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
+{
+    Q_UNUSED(marker);
+
+    // Placeholder - IR integration pending
+    if (m_writer && m_writer->isOpen()) {
+        m_writer->writeLine(QString(u"<!-- TemplateGenerator: Proxy Page for "_s
+                           + aggregate->name() + u" -->"_s));
+        m_writer->writeLine(QString(u"<h1>"_s + aggregate->fullTitle() + u"</h1>"_s));
+        m_writer->writeLine(u"<p>Template-based output (IR integration pending)</p>"_s);
+    }
+}
+
+void TemplateGenerator::mergeCollections(CollectionNode *cn)
+{
+    m_qdb.mergeCollections(cn);
+}
+
+// === Public accessors ===
+
+QString TemplateGenerator::fileExtension() const
+{
+    return m_fileExtension;
+}
+
+// === Private implementation ===
 
 /*!
     \internal
@@ -245,45 +302,134 @@ void TemplateGenerator::renderDocument(const DocumentIR &ir, const QString &temp
 
     QString rendered = InjaBridge::render(templateContent, ir.toJson());
 
-    // Use IDocumentWriter if available and open (e.g., in tests), otherwise
-    // fall back to Generator's out() stream for production compatibility.
     if (m_writer && m_writer->isOpen())
         m_writer->write(rendered);
-    else
-        out() << rendered;
-}
-
-void TemplateGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marker)
-{
-    Q_UNUSED(marker);
-
-    out() << "<!-- TemplateGenerator: Collection "
-          << cn->name() << " -->\n";
-    out() << "<h1>" << cn->fullTitle() << "</h1>\n";
-    out() << "<p>Template-based output (IR integration pending)</p>\n";
 }
 
 /*!
     \internal
-    Stub implementation - not yet IR-driven.
+    Returns the output prefix/suffix key for a node based on its genus.
 
-    This method emits placeholder HTML comments and should not be relied upon
-    for actual content rendering. Atom processing will be integrated with the
-    IR system in future commits.
+    This is used to look up configured prefixes and suffixes from OutputContext.
 */
-qsizetype TemplateGenerator::generateAtom(const Atom *atom, const Node *relative,
-                                          CodeMarker *marker)
+static QString nodeTypeKey(const Node *node)
 {
-    Q_UNUSED(relative);
-    Q_UNUSED(marker);
-
-    // TODO: This will be replaced with template-based rendering
-    if (atom) {
-        out() << "<!-- Atom: " << atom->typeString() << " -->\n";
-        return 1;
+    if (node->isPageNode()) {
+        switch (node->genus()) {
+        case Genus::QML:
+            return u"QML"_s;
+        case Genus::CPP:
+            return u"CPP"_s;
+        default:
+            break;
+        }
     }
-    return 0;
+    return QString();
+}
+
+/*!
+    \internal
+    Computes the base filename for a node, adapted from Generator::fileBase().
+
+    This handles the various node types (collections, pages, QML types, etc.)
+    and applies the configured prefixes and suffixes.
+*/
+QString TemplateGenerator::fileBase(const Node *node) const
+{
+    if (!node->isPageNode() && !node->isCollectionNode())
+        node = node->parent();
+
+    if (node->hasFileNameBase())
+        return node->fileNameBase();
+
+    QString base{node->name()};
+    if (base.endsWith(".html"_L1))
+        base.truncate(base.size() - 5);
+
+    const QString typeKey = nodeTypeKey(node);
+
+    if (node->isCollectionNode()) {
+        if (node->isQmlModule())
+            base.append("-qmlmodule"_L1);
+        else if (node->isModule())
+            base.append("-module"_L1);
+        base.append(m_context->outputSuffix(typeKey));
+    } else if (node->isTextPageNode()) {
+        if (node->isExample()) {
+            base.prepend(u"%1-"_s.arg(m_context->project.toLower()));
+            base.append("-example"_L1);
+        }
+    } else if (node->isQmlType()) {
+        /*
+          To avoid file name conflicts in the html directory,
+          we prepend a prefix (by default, "qml-") and an optional suffix
+          to the file name. The suffix, if one exists, is appended to the
+          module name.
+
+          For historical reasons, skip the module name qualifier for QML value types
+          in order to avoid excess redirects in the online docs.
+        */
+        if (!node->logicalModuleName().isEmpty() && !node->isQmlBasicType()) {
+            const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+            const NodeContext context = node->logicalModule()->createContext();
+            if (InclusionFilter::isIncluded(policy, context))
+                base.prepend(u"%1%2-"_s.arg(node->logicalModuleName(), m_context->outputSuffix(typeKey)));
+        }
+    } else if (node->isProxyNode()) {
+        base.append(u"-%1-proxy"_s.arg(node->tree()->physicalModuleName()));
+    } else {
+        base.clear();
+        const Node *p = node;
+        forever {
+            const Node *pp = p->parent();
+            base.prepend(p->name());
+            if (pp == nullptr || pp->name().isEmpty() || pp->isTextPageNode())
+                break;
+            base.prepend('-'_L1);
+            p = pp;
+        }
+        if (node->isNamespace() && !node->name().isEmpty()) {
+            const auto *ns = static_cast<const NamespaceNode *>(node);
+            if (!ns->isDocumentedHere()) {
+                base.append("-sub-"_L1);
+                base.append(ns->tree()->camelCaseModuleName());
+            }
+        }
+        base.append(m_context->outputSuffix(typeKey));
+    }
+
+    base.prepend(m_context->outputPrefix(typeKey));
+    QString canonicalName{Utilities::asAsciiPrintable(base)};
+
+    // Cache the computed filename on the node for future lookups
+    // (const_cast is safe here as we're just caching)
+    auto *mutableNode = const_cast<Node *>(node);
+    mutableNode->setFileNameBase(canonicalName);
+
+    return canonicalName;
+}
+
+/*!
+    \internal
+    Creates the production FileDocumentWriter.
+
+    This is called during initialization to create the default writer
+    that writes to the filesystem. For testing, a mock writer can be
+    injected by setting m_writer before calling prepare().
+
+    Also initializes m_context with configuration values, enabling
+    OutputContext-based access to output settings.
+*/
+void TemplateGenerator::createDefaultWriter()
+{
+    // Initialize OutputContext from configuration
+    const Config &config = Config::instance();
+    m_context.emplace(OutputContext::fromConfig(config, format()));
+
+    if (m_writer)
+        return; // Writer already set (e.g., injected for testing)
+
+    m_writer = std::make_unique<FileDocumentWriter>(*m_context);
 }
 
 QT_END_NAMESPACE
-

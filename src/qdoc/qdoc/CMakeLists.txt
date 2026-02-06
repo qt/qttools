@@ -144,6 +144,7 @@ set(qdoc_sources
 
 if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     list(APPEND qdoc_sources
+        src/qdoc/documentationtraverser.cpp
         src/qdoc/injabridge.cpp
         src/qdoc/ir/irbuilder.cpp
         src/qdoc/templategenerator.cpp

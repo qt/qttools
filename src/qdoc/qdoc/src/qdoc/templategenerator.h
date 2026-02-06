@@ -4,7 +4,9 @@
 #ifndef TEMPLATEGENERATOR_H
 #define TEMPLATEGENERATOR_H
 
-#include "generator.h"
+#include "filedocumentwriter.h"
+#include "idocumentationhandler.h"
+#include "ioutputproducer.h"
 #include "outputcontext.h"
 #include "filesystem/fileresolver.h"
 
@@ -15,35 +17,41 @@ QT_BEGIN_NAMESPACE
 
 class Aggregate;
 class CodeMarker;
-class IDocumentWriter;
+class QDocDatabase;
 struct DocumentIR;
 
-class TemplateGenerator : public Generator
+class TemplateGenerator : public IOutputProducer, public IDocumentationHandler
 {
 public:
-    explicit TemplateGenerator(FileResolver& file_resolver);
+    explicit TemplateGenerator(FileResolver &fileResolver, QDocDatabase &qdb);
     ~TemplateGenerator() override;
 
-    void initializeGenerator() override;
-    void terminateGenerator() override;
-    QString format() const override;
-    void generateDocs() override;
+    void prepare() override;
+    void produce() override;
+    void finalize() override;
+    [[nodiscard]] QString format() const override;
 
-protected:
-    [[nodiscard]] QString fileExtension() const override;
+    void beginDocument(const Node *node, const QString &fileName) override;
+    void endDocument() override;
+    [[nodiscard]] QString fileName(const Node *node) const override;
+    void generateCollectionNode(CollectionNode *cn, CodeMarker *marker) override;
+    void generateGenericCollectionPage(CollectionNode *cn, CodeMarker *marker) override;
+    void generatePageNode(PageNode *pn, CodeMarker *marker) override;
     void generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker) override;
     void generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker) override;
-    void generatePageNode(PageNode *pn, CodeMarker *marker) override;
-    void generateCollectionNode(CollectionNode *cn, CodeMarker *marker) override;
+    void generateProxyPage(Aggregate *aggregate, CodeMarker *marker) override;
+    void mergeCollections(CollectionNode *cn) override;
 
-    qsizetype generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker) override;
+    [[nodiscard]] QString fileExtension() const;
 
 private:
     void renderDocument(const DocumentIR &ir, const QString &templateBaseName);
-
+    [[nodiscard]] QString fileBase(const Node *node) const;
     void createDefaultWriter();
 
-    std::unique_ptr<IDocumentWriter> m_writer;
+    FileResolver &m_fileResolver;
+    QDocDatabase &m_qdb;
+    std::unique_ptr<FileDocumentWriter> m_writer;
     std::optional<OutputContext> m_context;
     QString m_templateDir;
     QString m_fileExtension = QStringLiteral("html");
@@ -55,4 +63,3 @@ private:
 QT_END_NAMESPACE
 
 #endif // TEMPLATEGENERATOR_H
-
