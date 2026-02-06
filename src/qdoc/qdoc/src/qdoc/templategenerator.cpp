@@ -255,14 +255,10 @@ void TemplateGenerator::mergeCollections(CollectionNode *cn)
     m_qdb.mergeCollections(cn);
 }
 
-// === Public accessors ===
-
 QString TemplateGenerator::fileExtension() const
 {
     return m_fileExtension;
 }
-
-// === Private implementation ===
 
 /*!
     \internal
@@ -433,3 +429,4 @@ void TemplateGenerator::createDefaultWriter()
 }
 
 QT_END_NAMESPACE
+

@@ -10,7 +10,9 @@
 #include "docbookgenerator.h"
 #include "htmlgenerator.h"
 #include "inclusionpolicy.h"
+#include "ioutputproducer.h"
 #include "location.h"
+#include "outputproducerregistry.h"
 #include "puredocparser.h"
 #include "qdocdatabase.h"
 #include "qmlcodemarker.h"
@@ -488,7 +490,7 @@ static void processQdocconfFile(const QString &fileName)
     WebXMLGenerator webXMLGenerator{file_resolver};
     DocBookGenerator docBookGenerator{file_resolver};
 #ifdef QDOC_TEMPLATE_GENERATOR_ENABLED
-    TemplateGenerator templateGenerator{file_resolver};
+    TemplateGenerator templateGenerator{file_resolver, *QDocDatabase::qdocDB()};
 #endif
 
     Generator::initialize();
@@ -670,6 +672,11 @@ static void processQdocconfFile(const QString &fileName)
         if (generator) {
             generator->initializeFormat();
             generator->generateDocs();
+        } else if (auto *producer = OutputProducerRegistry::instance().producerForFormat(format)) {
+            // Non-Generator IOutputProducer implementation (e.g., TemplateGenerator)
+            producer->prepare();
+            producer->produce();
+            producer->finalize();
         } else {
             config.get(CONFIG_OUTPUTFORMATS)
                     .location()

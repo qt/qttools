@@ -20,17 +20,41 @@ class CodeMarker;
 class QDocDatabase;
 struct DocumentIR;
 
+/*!
+    \class TemplateGenerator
+    \internal
+    \brief Generates documentation using external templates and a pre-built IR.
+
+    TemplateGenerator implements IOutputProducer and IDocumentationHandler to
+    generate documentation without inheriting from Generator. It uses
+    DocumentationTraverser for tree traversal and delegates content generation
+    to templates via the IR system.
+
+    \section1 Architecture
+
+    The generator follows a composition-based design:
+    \list
+    \li \b{IOutputProducer}: Lifecycle interface (prepare/produce/finalize)
+    \li \b{IDocumentationHandler}: Content generation callbacks for traverser
+    \li \b{DocumentationTraverser}: Shared tree traversal logic
+    \li \b{IDocumentWriter}: Output abstraction (file or string for tests)
+    \endlist
+
+    \sa DocumentationTraverser, IDocumentationHandler, IOutputProducer
+*/
 class TemplateGenerator : public IOutputProducer, public IDocumentationHandler
 {
 public:
     explicit TemplateGenerator(FileResolver &fileResolver, QDocDatabase &qdb);
     ~TemplateGenerator() override;
 
+    // === IOutputProducer interface ===
     void prepare() override;
     void produce() override;
     void finalize() override;
     [[nodiscard]] QString format() const override;
 
+    // === IDocumentationHandler interface ===
     void beginDocument(const Node *node, const QString &fileName) override;
     void endDocument() override;
     [[nodiscard]] QString fileName(const Node *node) const override;
@@ -42,11 +66,17 @@ public:
     void generateProxyPage(Aggregate *aggregate, CodeMarker *marker) override;
     void mergeCollections(CollectionNode *cn) override;
 
+    // Public accessors for configuration
     [[nodiscard]] QString fileExtension() const;
 
 private:
+    // Render phase: Format IR according to templates.
     void renderDocument(const DocumentIR &ir, const QString &templateBaseName);
+
+    // Filename computation (adapted from Generator)
     [[nodiscard]] QString fileBase(const Node *node) const;
+
+    // Creates the production writer (FileDocumentWriter).
     void createDefaultWriter();
 
     FileResolver &m_fileResolver;
