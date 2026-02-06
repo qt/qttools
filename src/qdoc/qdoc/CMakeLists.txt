@@ -15,8 +15,22 @@ option(QT_QDOC_ENABLE_TEMPLATE_GENERATOR "Enable experimental template-based gen
 
 if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../cmake")
-    find_package(nlohmann_json REQUIRED)
-    find_package(Inja REQUIRED)
+    qt_find_package(nlohmann_json MODULE REQUIRED PROVIDED_TARGETS nlohmann_json::nlohmann_json)
+    qt_find_package_extend_sbom(TARGETS nlohmann_json::nlohmann_json
+        LICENSE_EXPRESSION "MIT"
+        SUPPLIER "Niels Lohmann"
+        DOWNLOAD_LOCATION "https://github.com/nlohmann/json/releases"
+        COPYRIGHTS
+            "Copyright (c) 2013-2022 Niels Lohmann"
+    )
+    qt_find_package(Inja MODULE REQUIRED PROVIDED_TARGETS Inja::inja)
+    qt_find_package_extend_sbom(TARGETS Inja::inja
+        LICENSE_EXPRESSION "MIT"
+        SUPPLIER "Lars Berscheid"
+        DOWNLOAD_LOCATION "https://github.com/pantor/inja/releases"
+        COPYRIGHTS
+            "Copyright (c) 2018 Lars Berscheid"
+    )
 endif()
 
 

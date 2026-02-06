@@ -1,7 +1,7 @@
 # Copyright (C) 2026 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# FindNlohmannJson.cmake - Find the nlohmann/json library
+# Findnlohmann_json.cmake - Find the nlohmann/json library
 #
 # This module defines:
 #   nlohmann_json_FOUND - System has nlohmann/json
@@ -28,6 +28,13 @@ if(PC_nlohmann_json_FOUND)
 else()
     find_path(nlohmann_json_INCLUDE_DIR
         NAMES nlohmann/json.hpp
+        HINTS
+            # Homebrew (Apple Silicon)
+            /opt/homebrew/opt/nlohmann-json
+            # Homebrew (Intel)
+            /usr/local/opt/nlohmann-json
+            # Environment variable override
+            ENV NLOHMANN_JSON_ROOT
         PATH_SUFFIXES include
         DOC "nlohmann/json include directory"
     )
