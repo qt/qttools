@@ -7,10 +7,13 @@
 #include "codemarker.h"
 #include "collectionnode.h"
 #include "config.h"
+#include "filedocumentwriter.h"
+#include "idocumentwriter.h"
 #include "injabridge.h"
 #include "ir/documentir.h"
 #include "ir/irbuilder.h"
 #include "node.h"
+#include "outputcontext.h"
 #include "pagenode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
@@ -62,9 +65,15 @@ TemplateGenerator::TemplateGenerator(FileResolver& file_resolver)
 {
 }
 
+TemplateGenerator::~TemplateGenerator() = default;
+
 void TemplateGenerator::initializeGenerator()
 {
     Generator::initializeGenerator();
+
+    // Initialize output context and writer first, so we can use m_context
+    // for output directory resolution below
+    createDefaultWriter();
 
     const Config &config = Config::instance();
 
@@ -80,7 +89,7 @@ void TemplateGenerator::initializeGenerator()
         m_templateDir = templateDirConfig;
     } else {
         // Relative path: resolve relative to output directory
-        QString outDir = outputDir();
+        const QString &outDir = m_context->outputDir.path();
         if (!outDir.isEmpty())
             m_templateDir = outDir + "/"_L1 + templateDirConfig;
         else
@@ -113,7 +122,32 @@ void TemplateGenerator::initializeGenerator()
 
 void TemplateGenerator::terminateGenerator()
 {
+    m_writer.reset();
     Generator::terminateGenerator();
+}
+
+/*!
+    \internal
+    Creates the production FileDocumentWriter.
+
+    This is called during initialization to create the default writer
+    that writes to the filesystem. For testing, a mock writer can be
+    injected by setting m_writer before calling initializeGenerator().
+
+    Also initializes m_context with configuration values, enabling
+    OutputContext-based access to output settings without depending
+    on Generator's static variables.
+*/
+void TemplateGenerator::createDefaultWriter()
+{
+    // Initialize OutputContext from configuration
+    const Config &config = Config::instance();
+    m_context.emplace(OutputContext::fromConfig(config, format()));
+
+    if (m_writer)
+        return; // Writer already set (e.g., injected for testing)
+
+    m_writer = std::make_unique<FileDocumentWriter>(*m_context);
 }
 
 QString TemplateGenerator::format() const
@@ -210,7 +244,13 @@ void TemplateGenerator::renderDocument(const DocumentIR &ir, const QString &temp
                qPrintable(m_fileExtension));
 
     QString rendered = InjaBridge::render(templateContent, ir.toJson());
-    out() << rendered;
+
+    // Use IDocumentWriter if available and open (e.g., in tests), otherwise
+    // fall back to Generator's out() stream for production compatibility.
+    if (m_writer && m_writer->isOpen())
+        m_writer->write(rendered);
+    else
+        out() << rendered;
 }
 
 void TemplateGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marker)

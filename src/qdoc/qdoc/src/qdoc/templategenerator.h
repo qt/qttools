@@ -5,19 +5,24 @@
 #define TEMPLATEGENERATOR_H
 
 #include "generator.h"
+#include "outputcontext.h"
 #include "filesystem/fileresolver.h"
+
+#include <memory>
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
 class Aggregate;
 class CodeMarker;
+class IDocumentWriter;
 struct DocumentIR;
 
 class TemplateGenerator : public Generator
 {
 public:
     explicit TemplateGenerator(FileResolver& file_resolver);
-    ~TemplateGenerator() override = default;
+    ~TemplateGenerator() override;
 
     void initializeGenerator() override;
     void terminateGenerator() override;
@@ -34,12 +39,17 @@ protected:
     qsizetype generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker) override;
 
 private:
-    // Render phase: The generator's actual job - format IR according to templates.
-    // These methods know nothing about Nodes, only IR.
     void renderDocument(const DocumentIR &ir, const QString &templateBaseName);
 
+    void createDefaultWriter();
+
+    std::unique_ptr<IDocumentWriter> m_writer;
+    std::optional<OutputContext> m_context;
     QString m_templateDir;
     QString m_fileExtension = QStringLiteral("html");
+
+    // For testing: allow injection of mock writers
+    friend class TemplateGeneratorTest;
 };
 
 QT_END_NAMESPACE
