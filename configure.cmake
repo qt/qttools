@@ -7,6 +7,15 @@ include(${CMAKE_CURRENT_LIST_DIR}/src/qdoc/cmake/QDocConfiguration.cmake)
 #### Tests
 
 qt_find_package(WrapLibClang 8 PROVIDED_TARGETS WrapLibClang::WrapLibClang)
+qt_find_package_extend_sbom(TARGETS WrapLibClang::WrapLibClang
+    PACKAGE_VERSION "${QT_LIB_CLANG_VERSION}"
+    LICENSE_EXPRESSION "Apache-2.0 WITH LLVM-exception"
+    SUPPLIER "LLVM Foundation"
+    DOWNLOAD_LOCATION "https://github.com/llvm/llvm-project/releases"
+    COPYRIGHTS
+        "Copyright (c) 2003-2019 University of Illinois at Urbana-Champaign."
+        "Copyright (c) 2019-2025 Contributors to the LLVM Project."
+)
 
 if(TARGET WrapLibClang::WrapLibClang)
     set(TEST_libclang "ON" CACHE BOOL "Required libclang version found." FORCE)
