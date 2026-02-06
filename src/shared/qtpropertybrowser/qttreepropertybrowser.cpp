@@ -223,8 +223,6 @@ private slots:
     void slotEditorDestroyed(QObject *object);
 
 private:
-    int indentation(const QModelIndex &index) const;
-
     using EditorToPropertyMap = QHash<QWidget *, QtProperty *>;
     mutable EditorToPropertyMap m_editorToProperty;
 
@@ -234,22 +232,6 @@ private:
     mutable QTreeWidgetItem *m_editedItem = nullptr;
     mutable QWidget *m_editedWidget = nullptr;
 };
-
-int QtPropertyEditorDelegate::indentation(const QModelIndex &index) const
-{
-    if (!m_editorPrivate)
-        return 0;
-
-    QTreeWidgetItem *item = m_editorPrivate->indexToItem(index);
-    int indent = 0;
-    while (item->parent()) {
-        item = item->parent();
-        ++indent;
-    }
-    if (m_editorPrivate->treeWidget()->rootIsDecorated())
-        ++indent;
-    return indent * m_editorPrivate->treeWidget()->indentation();
-}
 
 void QtPropertyEditorDelegate::slotEditorDestroyed(QObject *object)
 {
@@ -298,6 +280,8 @@ QWidget *QtPropertyEditorDelegate::createEditor(QWidget *parent,
     return nullptr;
 }
 
+// Span the entire area, hiding the value icon to ensure no icon
+// is displayed when for example editing using a check box
 void QtPropertyEditorDelegate::updateEditorGeometry(QWidget *editor,
         const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
