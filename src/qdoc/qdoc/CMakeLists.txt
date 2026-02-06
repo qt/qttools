@@ -182,6 +182,8 @@ qt_internal_add_tool(${target_name}
         QDocLib
         Qt::QmlPrivate
         WrapLibClang::WrapLibClang
+    ATTRIBUTION_FILE_DIR_PATHS
+        src/qdoc/clang/AST
     DEFINES
         # To provide the ability to workaround version-specific Clang issues.
         # A re-export of (LLVM|CLANG)_VERSION_MAJOR done in WrapLibClang.cmake
