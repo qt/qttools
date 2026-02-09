@@ -109,7 +109,7 @@ tst_validateTemplateGeneratorOutput::gitDiffDirectories(const QString &actualPat
     QProcess gitProcess;
     gitProcess.setProgram("git");
 
-    const QStringList arguments{"diff", "--", actualPath, expectedPath};
+    const QStringList arguments{"diff", "--", expectedPath, actualPath};
     gitProcess.setArguments(arguments);
 
     auto failGit = [&](QProcess::ProcessError) {

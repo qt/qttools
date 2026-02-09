@@ -111,7 +111,7 @@ tst_validateQdocOutputFiles::gitDiffDirectories(const QString &actualPath, const
     QProcess gitProcess;
     gitProcess.setProgram("git");
 
-    const QStringList arguments{"diff", "--", actualPath, expectedPath};
+    const QStringList arguments{"diff", "--", expectedPath, actualPath};
     gitProcess.setArguments(arguments);
 
     auto failGit = [&](QProcess::ProcessError) {
