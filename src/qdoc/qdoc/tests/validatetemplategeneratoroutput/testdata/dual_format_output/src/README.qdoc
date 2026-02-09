@@ -1,0 +1,12 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page readme
+    \title README
+    \brief A test page for dual-format output.
+
+    This test validates that two TemplateGenerator instances can produce
+    both HTML and Markdown output from the same documentation source in
+    a single QDoc invocation.
+*/

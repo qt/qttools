@@ -61,9 +61,11 @@ using namespace Qt::Literals;
         IRBuilder
 */
 
-TemplateGenerator::TemplateGenerator(FileResolver &fileResolver, QDocDatabase &qdb)
+TemplateGenerator::TemplateGenerator(FileResolver &fileResolver, QDocDatabase &qdb,
+                                     const QString &format)
     : m_fileResolver(fileResolver)
     , m_qdb(qdb)
+    , m_format(format.isEmpty() ? u"template"_s : format)
 {
     OutputProducerRegistry::instance().registerProducer(this);
 }
@@ -79,11 +81,11 @@ void TemplateGenerator::prepare()
 
     const Config &config = Config::instance();
 
-    QString extensionConfig = config.get(u"template.extension"_s).asString();
+    QString extensionConfig = config.get(m_format + ".extension"_L1).asString();
     if (!extensionConfig.isEmpty())
         m_fileExtension = extensionConfig;
 
-    QString templateDirConfig = config.get(u"template.templatedir"_s).asString();
+    QString templateDirConfig = config.get(m_format + ".templatedir"_L1).asString();
 
     if (templateDirConfig.isEmpty()) {
         m_templateDir.clear();
@@ -137,7 +139,7 @@ void TemplateGenerator::finalize()
 
 QString TemplateGenerator::format() const
 {
-    return "template"_L1;
+    return m_format;
 }
 
 void TemplateGenerator::beginDocument(const QString &outputFileName)

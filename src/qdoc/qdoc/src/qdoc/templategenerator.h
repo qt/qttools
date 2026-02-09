@@ -45,7 +45,8 @@ struct DocumentIR;
 class TemplateGenerator : public IOutputProducer, public IDocumentationHandler
 {
 public:
-    explicit TemplateGenerator(FileResolver &fileResolver, QDocDatabase &qdb);
+    explicit TemplateGenerator(FileResolver &fileResolver, QDocDatabase &qdb,
+                               const QString &format = QString());
     ~TemplateGenerator() override;
 
     // === IOutputProducer interface ===
@@ -81,6 +82,7 @@ private:
 
     FileResolver &m_fileResolver;
     QDocDatabase &m_qdb;
+    QString m_format;
     std::unique_ptr<FileDocumentWriter> m_writer;
     std::optional<OutputContext> m_context;
     QString m_templateDir;

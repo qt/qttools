@@ -44,6 +44,8 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <memory>
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 
@@ -490,7 +492,27 @@ static void processQdocconfFile(const QString &fileName)
     WebXMLGenerator webXMLGenerator{file_resolver};
     DocBookGenerator docBookGenerator{file_resolver};
 #ifdef QDOC_TEMPLATE_GENERATOR_ENABLED
-    TemplateGenerator templateGenerator{file_resolver, *QDocDatabase::qdocDB()};
+    // Create a TemplateGenerator instance for each template-based output format.
+    // Convention: any format whose name starts with "template" (case-insensitive)
+    // is recognized as template-based. This includes the legacy "template" format
+    // and multi-format names such as "TemplateHTML" or "TemplateMarkdown".
+    // Per-format config keys (e.g., TemplateHTML.extension) must match the format
+    // name exactly — config lookups are case-sensitive.
+    // Each instance self-registers with OutputProducerRegistry and unregisters
+    // on destruction, so the registry stays clean across runs.
+    // Formats are sorted for deterministic registration order.
+    auto configuredFormats = config.getOutputFormats().values();
+    std::sort(configuredFormats.begin(), configuredFormats.end(),
+              [](const QString &a, const QString &b) {
+                  return QString::compare(a, b, Qt::CaseInsensitive) < 0;
+              });
+    std::vector<std::unique_ptr<TemplateGenerator>> templateGenerators;
+    templateGenerators.reserve(configuredFormats.size());
+    for (const auto &fmt : configuredFormats) {
+        if (fmt.startsWith("template"_L1, Qt::CaseInsensitive))
+            templateGenerators.push_back(
+                    std::make_unique<TemplateGenerator>(file_resolver, *QDocDatabase::qdocDB(), fmt));
+    }
 #endif
 
     Generator::initialize();
