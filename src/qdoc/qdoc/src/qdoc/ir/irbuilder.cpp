@@ -64,9 +64,18 @@ using namespace Qt::Literals;
 DocumentIR IRBuilder::buildPageIR(const PageNode *pn) const
 {
     DocumentIR ir;
+
+    // Classification
+    ir.nodeType = pn->nodeType();
+    ir.genus = pn->genus();
+    ir.status = pn->status();
+    ir.access = pn->access();
+
+    // Identity
     ir.title = pn->title();
     ir.fullTitle = pn->fullTitle();
     ir.url = pn->url();
+    ir.since = pn->since();
     ir.brief = pn->doc().briefText().toString();
 
     QString bodyText;

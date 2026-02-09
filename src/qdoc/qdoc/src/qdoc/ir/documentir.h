@@ -28,6 +28,7 @@ struct DocumentIR
     QString title;              // Page title
     QString fullTitle;          // Full qualified title
     QString url;                // Output file URL (relative)
+    QString since;              // Version introduced (e.g., "6.8")
     QString brief;              // Brief description
 
     // Content

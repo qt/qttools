@@ -141,6 +141,8 @@ QJsonObject DocumentIR::toJson() const
     json["title"_L1] = title;
     json["fullTitle"_L1] = fullTitle;
     json["url"_L1] = url;
+    if (!since.isEmpty())
+        json["since"_L1] = since;
     json["brief"_L1] = brief;
 
     // Content
