@@ -1270,6 +1270,9 @@ bool CppParser::fullyQualify(const NamespaceList &namespaces, int nsCnt,
     }
 
     resolved->clear();
+    *resolved << HashString(QString());
+    if (unresolved)
+        *unresolved = segments.mid(initSegIdx);
     return false;
 }
 

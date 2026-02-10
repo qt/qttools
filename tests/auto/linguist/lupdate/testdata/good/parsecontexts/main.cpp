@@ -372,4 +372,10 @@ void MyClass::tr(int num)
 }
 } // namespace MyNamespace
 
+// Test unresolved class context (class not defined in this file)
+void UnknownClass::methodWithTr()
+{
+    QObject::tr("test7: unresolved class context");
+}
+
 //#include "main.moc"

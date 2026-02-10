@@ -161,6 +161,11 @@
         <comment>QObject</comment>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="main.cpp" line="378"/>
+        <source>test7: unresolved class context</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TestClass1_Widget</name>
