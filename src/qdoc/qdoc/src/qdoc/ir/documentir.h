@@ -13,9 +13,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class Atom;
-class Node;
-
 struct DocumentIR
 {
     // Classification
