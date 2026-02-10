@@ -59,6 +59,7 @@ set(qdoclib_sources
 # IR components are only available with template generator
 if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     list(APPEND qdoclib_sources
+        src/qdoc/ir/contentblockir.cpp
         src/qdoc/ir/documentir.cpp
         src/qdoc/ir/linkir.cpp
     )

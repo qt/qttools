@@ -42,9 +42,11 @@ qt_internal_extend_target(tst_QDoc
         injabridge/catch_injabridge.cpp
         templategenerator/catch_templategenerator.cpp
         documentir/catch_documentir.cpp
+        ir/catch_contentblockir.cpp
         ir/catch_linkir.cpp
         irbuilder/catch_irbuilder.cpp
         ../../src/qdoc/injabridge.cpp
+        ../../src/qdoc/ir/contentblockir.cpp
         ../../src/qdoc/ir/documentir.cpp
         ../../src/qdoc/ir/linkir.cpp
         # Note: irbuilder.cpp is NOT included because it depends on Doc, Text,
