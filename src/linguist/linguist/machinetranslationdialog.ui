@@ -126,7 +126,7 @@
                </size>
               </property>
               <property name="placeholderText">
-               <string>Optional: Provide additional context about your application (e.g., medical software, game, financial app) for more accurate translations...</string>
+               <string>Optional: Provide additional context about your application (e.g., medical software, game, financial app) for more accurate translations.</string>
               </property>
              </widget>
          </item>
@@ -336,7 +336,7 @@
                <sizepolicy hsizetype="Maximum" vsizetype="Fixed"/>
               </property>
               <property name="text">
-               <string>Advanced Settings ▶</string>
+               <string>Advanced Settings +</string>
               </property>
               <property name="checkable">
                <bool>true</bool>
