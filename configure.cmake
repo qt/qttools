@@ -21,7 +21,7 @@ if(TARGET WrapLibClang::WrapLibClang)
     set(TEST_libclang "ON" CACHE BOOL "Required libclang version found." FORCE)
 endif()
 
-
+qt_find_package(LLVM CONFIG)
 
 #### Features
 
@@ -114,6 +114,11 @@ qt_feature("fullqthelp" PUBLIC
     CONDITION (TARGET Qt::Widgets) AND (TARGET Qt::Network) AND QT_FEATURE_png AND
         QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton
 )
+qt_feature("objcnamemangler" PRIVATE
+    LABEL "Objective-C Name Mangler"
+    CONDITION "${LLVM_FOUND}" AND MACOS
+)
+
 qt_configure_add_summary_section(NAME "Qt Tools")
 qt_configure_add_summary_entry(ARGS "assistant")
 qt_configure_add_summary_entry(ARGS "clang")
@@ -129,6 +134,7 @@ qt_configure_add_summary_entry(ARGS "qdoc_coverage")
 qt_configure_add_summary_entry(ARGS "qtattributionsscanner")
 qt_configure_add_summary_entry(ARGS "qtdiag")
 qt_configure_add_summary_entry(ARGS "qtplugininfo")
+qt_configure_add_summary_entry(ARGS "objcnamemangler")
 qt_configure_end_summary_section() # end of "Qt Tools" section
 
 # Register QDoc-related configure warnings

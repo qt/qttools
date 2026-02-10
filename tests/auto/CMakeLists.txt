@@ -23,3 +23,7 @@ if(TARGET Qt::Help AND NOT CMAKE_CROSSCOMPILING)
         add_subdirectory(helpengineplugin)
     endif()
 endif()
+
+if(QT_FEATURE_objcnamemangler AND NOT CMAKE_CROSSCOMPILING)
+    add_subdirectory(objcnamemangler)
+endif()
