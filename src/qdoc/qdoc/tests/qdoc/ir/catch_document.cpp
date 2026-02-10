@@ -244,6 +244,65 @@ SCENARIO("IR::Document contentJson handling", "[IR::Document][IR][JSON]") {
     }
 }
 
+SCENARIO("IR::Document since field serialization", "[IR::Document][IR][JSON]") {
+
+    GIVEN("An IR::Document with no since value") {
+        IR::Document ir;
+        ir.title = "TestPage"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("The since field is absent from JSON output") {
+                REQUIRE(!json.contains("since"_L1));
+            }
+        }
+    }
+
+    GIVEN("An IR::Document with an empty since string") {
+        IR::Document ir;
+        ir.title = "TestPage"_L1;
+        ir.since = ""_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("The since field is absent from JSON output") {
+                REQUIRE(!json.contains("since"_L1));
+            }
+        }
+    }
+
+    GIVEN("An IR::Document with a since version") {
+        IR::Document ir;
+        ir.title = "TestPage"_L1;
+        ir.since = "6.8"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("The since field is present with the correct value") {
+                REQUIRE(json.contains("since"_L1));
+                REQUIRE(json["since"_L1].toString() == "6.8");
+            }
+        }
+    }
+
+    GIVEN("An IR::Document with a since version containing a minor.patch version") {
+        IR::Document ir;
+        ir.title = "TestPage"_L1;
+        ir.since = "6.8.2"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("The full version string is preserved") {
+                REQUIRE(json["since"_L1].toString() == "6.8.2");
+            }
+        }
+    }
+}
+
 SCENARIO("IR::Document complete workflow", "[IR::Document][IR][Integration]") {
 
     GIVEN("A fully populated IR::Document") {
