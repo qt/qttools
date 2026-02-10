@@ -12,8 +12,8 @@
 #include "idocumentwriter.h"
 #include "inclusionfilter.h"
 #include "injabridge.h"
-#include "ir/documentir.h"
-#include "ir/irbuilder.h"
+#include "ir/builder.h"
+#include "ir/document.h"
 #include "namespacenode.h"
 #include "node.h"
 #include "outputcontext.h"
@@ -58,7 +58,7 @@ using namespace Qt::Literals;
     \endlist
 
     \sa DocumentationTraverser, IDocumentationHandler, IOutputProducer,
-        IRBuilder
+        IR::Builder
 */
 
 TemplateGenerator::TemplateGenerator(FileResolver &fileResolver, QDocDatabase &qdb,
@@ -204,9 +204,9 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 {
     Q_UNUSED(marker);
 
-    // Build phase: Node → IR (handled by IRBuilder)
-    IRBuilder builder;
-    DocumentIR ir = builder.buildPageIR(pn);
+    // Build phase: Node → IR (handled by IR::Builder)
+    IR::Builder builder;
+    IR::Document ir = builder.buildPageIR(pn);
 
     // Render phase: IR → Output (TemplateGenerator's actual job)
     renderDocument(ir, "page"_L1);
@@ -268,7 +268,7 @@ QString TemplateGenerator::fileExtension() const
     This is TemplateGenerator's core responsibility. It receives IR and
     produces formatted output without any knowledge of Nodes or the database.
 */
-void TemplateGenerator::renderDocument(const DocumentIR &ir, const QString &templateBaseName)
+void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &templateBaseName)
 {
     const QString templateFileName = templateBaseName + '.'_L1 + m_fileExtension;
     QString templateContent;

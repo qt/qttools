@@ -1,7 +1,7 @@
 // Copyright (C) 2026 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#include "irbuilder.h"
+#include "builder.h"
 
 #include "../atom.h"
 #include "../pagenode.h"
@@ -11,12 +11,14 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::Literals;
 
+namespace IR {
+
 /*!
-    \class IRBuilder
+    \class IR::Builder
     \internal
     \brief Builds IR (Intermediate Representation) from QDoc's Node tree.
 
-    IRBuilder is the "compiler" in QDoc's compile/link/render pipeline. It
+    Builder is the "compiler" in QDoc's compile/link/render pipeline. It
     transforms Node objects into format-agnostic IR structures that can be:
 
     \list
@@ -27,7 +29,7 @@ using namespace Qt::Literals;
 
     \section1 Separation of Concerns
 
-    IRBuilder handles all interaction with Node classes and Atom chains.
+    Builder handles all interaction with Node classes and Atom chains.
     Generators receive pre-built IR and focus purely on formatting output.
     This separation enables:
 
@@ -44,7 +46,7 @@ using namespace Qt::Literals;
     href, to be resolved during the link phase when dependency .index files
     are available.
 
-    \sa DocumentIR, TemplateGenerator
+    \sa IR::Document, TemplateGenerator
 */
 
 
@@ -61,9 +63,9 @@ using namespace Qt::Literals;
     paragraph breaks. More complex atom types (lists, code blocks, images)
     will be added as the IR layer matures.
 */
-DocumentIR IRBuilder::buildPageIR(const PageNode *pn) const
+Document Builder::buildPageIR(const PageNode *pn) const
 {
-    DocumentIR ir;
+    Document ir;
 
     // Classification
     ir.nodeType = pn->nodeType();
@@ -111,6 +113,8 @@ DocumentIR IRBuilder::buildPageIR(const PageNode *pn) const
 
     return ir;
 }
+
+} // namespace IR
 
 QT_END_NAMESPACE
 

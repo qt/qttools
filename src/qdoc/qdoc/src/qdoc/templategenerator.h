@@ -18,7 +18,7 @@ QT_BEGIN_NAMESPACE
 class Aggregate;
 class CodeMarker;
 class QDocDatabase;
-struct DocumentIR;
+namespace IR { struct Document; }
 
 /*!
     \class TemplateGenerator
@@ -72,7 +72,7 @@ public:
 
 private:
     // Render phase: Format IR according to templates.
-    void renderDocument(const DocumentIR &ir, const QString &templateBaseName);
+    void renderDocument(const IR::Document &ir, const QString &templateBaseName);
 
     // Filename computation (adapted from Generator)
     [[nodiscard]] QString fileBase(const Node *node) const;

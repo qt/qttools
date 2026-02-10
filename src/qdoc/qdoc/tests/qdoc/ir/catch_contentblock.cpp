@@ -3,7 +3,7 @@
 
 #include <catch/catch.hpp>
 
-#include <qdoc/ir/contentblockir.h>
+#include <qdoc/ir/contentblock.h>
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -11,13 +11,13 @@
 
 using namespace Qt::Literals::StringLiterals;
 
-SCENARIO("InlineContentIR default construction", "[InlineContentIR][IR]") {
+SCENARIO("IR::InlineContent default construction", "[IR::InlineContent][IR]") {
 
-    GIVEN("A default-constructed InlineContentIR") {
-        InlineContentIR inline_;
+    GIVEN("A default-constructed IR::InlineContent") {
+        IR::InlineContent inline_;
 
         THEN("The type is Text") {
-            REQUIRE(inline_.type == InlineType::Text);
+            REQUIRE(inline_.type == IR::InlineType::Text);
         }
 
         THEN("Text fields are empty") {
@@ -36,49 +36,49 @@ SCENARIO("InlineContentIR default construction", "[InlineContentIR][IR]") {
     }
 }
 
-SCENARIO("InlineType JSON serialization", "[InlineContentIR][IR][JSON]") {
+SCENARIO("IR::InlineType JSON serialization", "[IR::InlineContent][IR][JSON]") {
 
-    GIVEN("An InlineContentIR of each type") {
-        auto checkTypeId = [](InlineType type, const QString &expectedId) {
-            InlineContentIR inline_;
+    GIVEN("An IR::InlineContent of each type") {
+        auto checkTypeId = [](IR::InlineType type, const QString &expectedId) {
+            IR::InlineContent inline_;
             inline_.type = type;
             QJsonObject json = inline_.toJson();
             REQUIRE(json["type"_L1].toString() == expectedId);
         };
 
         THEN("All inline types produce kebab-case IDs") {
-            checkTypeId(InlineType::Text, "text"_L1);
-            checkTypeId(InlineType::Code, "code"_L1);
-            checkTypeId(InlineType::Link, "link"_L1);
-            checkTypeId(InlineType::Bold, "bold"_L1);
-            checkTypeId(InlineType::Italic, "italic"_L1);
-            checkTypeId(InlineType::Teletype, "teletype"_L1);
-            checkTypeId(InlineType::Underline, "underline"_L1);
-            checkTypeId(InlineType::Strikethrough, "strikethrough"_L1);
-            checkTypeId(InlineType::Subscript, "subscript"_L1);
-            checkTypeId(InlineType::Superscript, "superscript"_L1);
-            checkTypeId(InlineType::Parameter, "parameter"_L1);
-            checkTypeId(InlineType::LineBreak, "line-break"_L1);
-            checkTypeId(InlineType::Image, "image"_L1);
-            checkTypeId(InlineType::Keyword, "keyword"_L1);
-            checkTypeId(InlineType::Target, "target"_L1);
+            checkTypeId(IR::InlineType::Text, "text"_L1);
+            checkTypeId(IR::InlineType::Code, "code"_L1);
+            checkTypeId(IR::InlineType::Link, "link"_L1);
+            checkTypeId(IR::InlineType::Bold, "bold"_L1);
+            checkTypeId(IR::InlineType::Italic, "italic"_L1);
+            checkTypeId(IR::InlineType::Teletype, "teletype"_L1);
+            checkTypeId(IR::InlineType::Underline, "underline"_L1);
+            checkTypeId(IR::InlineType::Strikethrough, "strikethrough"_L1);
+            checkTypeId(IR::InlineType::Subscript, "subscript"_L1);
+            checkTypeId(IR::InlineType::Superscript, "superscript"_L1);
+            checkTypeId(IR::InlineType::Parameter, "parameter"_L1);
+            checkTypeId(IR::InlineType::LineBreak, "line-break"_L1);
+            checkTypeId(IR::InlineType::Image, "image"_L1);
+            checkTypeId(IR::InlineType::Keyword, "keyword"_L1);
+            checkTypeId(IR::InlineType::Target, "target"_L1);
         }
     }
 }
 
-SCENARIO("Nested inline formatting", "[InlineContentIR][IR][JSON]") {
+SCENARIO("Nested inline formatting", "[IR::InlineContent][IR][JSON]") {
 
     GIVEN("Bold containing italic containing text") {
-        InlineContentIR innerText;
-        innerText.type = InlineType::Text;
+        IR::InlineContent innerText;
+        innerText.type = IR::InlineType::Text;
         innerText.text = "styled"_L1;
 
-        InlineContentIR italic;
-        italic.type = InlineType::Italic;
+        IR::InlineContent italic;
+        italic.type = IR::InlineType::Italic;
         italic.children = { innerText };
 
-        InlineContentIR bold;
-        bold.type = InlineType::Bold;
+        IR::InlineContent bold;
+        bold.type = IR::InlineType::Bold;
         bold.children = { italic };
 
         THEN("plainText traverses the full nesting") {
@@ -113,16 +113,16 @@ SCENARIO("Nested inline formatting", "[InlineContentIR][IR][JSON]") {
     }
 }
 
-SCENARIO("InlineContentIR link with optional fields", "[InlineContentIR][IR][JSON]") {
+SCENARIO("IR::InlineContent link with optional fields", "[IR::InlineContent][IR][JSON]") {
 
     GIVEN("A link with href and title") {
-        InlineContentIR link;
-        link.type = InlineType::Link;
+        IR::InlineContent link;
+        link.type = IR::InlineType::Link;
         link.href = "qstring.html"_L1;
         link.title = "QString documentation"_L1;
 
-        InlineContentIR linkText;
-        linkText.type = InlineType::Text;
+        IR::InlineContent linkText;
+        linkText.type = IR::InlineType::Text;
         linkText.text = "QString"_L1;
         link.children = { linkText };
 
@@ -141,12 +141,12 @@ SCENARIO("InlineContentIR link with optional fields", "[InlineContentIR][IR][JSO
     }
 
     GIVEN("A link without optional title") {
-        InlineContentIR link;
-        link.type = InlineType::Link;
+        IR::InlineContent link;
+        link.type = IR::InlineType::Link;
         link.href = "qstring.html"_L1;
 
-        InlineContentIR linkText;
-        linkText.type = InlineType::Text;
+        IR::InlineContent linkText;
+        linkText.type = IR::InlineType::Text;
         linkText.text = "QString"_L1;
         link.children = { linkText };
 
@@ -164,11 +164,11 @@ SCENARIO("InlineContentIR link with optional fields", "[InlineContentIR][IR][JSO
     }
 }
 
-SCENARIO("LineBreak inline produces newline text", "[InlineContentIR][IR]") {
+SCENARIO("LineBreak inline produces newline text", "[IR::InlineContent][IR]") {
 
     GIVEN("A LineBreak inline element") {
-        InlineContentIR lb;
-        lb.type = InlineType::LineBreak;
+        IR::InlineContent lb;
+        lb.type = IR::InlineType::LineBreak;
 
         THEN("plainText returns a newline") {
             REQUIRE(lb.plainText() == "\n");
@@ -184,11 +184,11 @@ SCENARIO("LineBreak inline produces newline text", "[InlineContentIR][IR]") {
     }
 }
 
-SCENARIO("Leaf vs container invariant for inline elements", "[InlineContentIR][IR][Invariant]") {
+SCENARIO("Leaf vs container invariant for inline elements", "[IR::InlineContent][IR][Invariant]") {
 
     GIVEN("A leaf inline (Text) with text and no children") {
-        InlineContentIR leaf;
-        leaf.type = InlineType::Text;
+        IR::InlineContent leaf;
+        leaf.type = IR::InlineType::Text;
         leaf.text = "hello"_L1;
 
         THEN("plainText returns the text") {
@@ -209,12 +209,12 @@ SCENARIO("Leaf vs container invariant for inline elements", "[InlineContentIR][I
     }
 
     GIVEN("A container inline (Bold) with children and no text") {
-        InlineContentIR child;
-        child.type = InlineType::Text;
+        IR::InlineContent child;
+        child.type = IR::InlineType::Text;
         child.text = "bold text"_L1;
 
-        InlineContentIR container;
-        container.type = InlineType::Bold;
+        IR::InlineContent container;
+        container.type = IR::InlineType::Bold;
         container.children = { child };
 
         THEN("text is empty on the container") {
@@ -239,13 +239,13 @@ SCENARIO("Leaf vs container invariant for inline elements", "[InlineContentIR][I
     }
 }
 
-SCENARIO("ContentBlockIR default construction", "[ContentBlockIR][IR]") {
+SCENARIO("IR::ContentBlock default construction", "[IR::ContentBlock][IR]") {
 
-    GIVEN("A default-constructed ContentBlockIR") {
-        ContentBlockIR block;
+    GIVEN("A default-constructed IR::ContentBlock") {
+        IR::ContentBlock block;
 
         THEN("The type is Paragraph") {
-            REQUIRE(block.type == BlockType::Paragraph);
+            REQUIRE(block.type == IR::BlockType::Paragraph);
         }
 
         THEN("Collections are empty") {
@@ -260,64 +260,64 @@ SCENARIO("ContentBlockIR default construction", "[ContentBlockIR][IR]") {
     }
 }
 
-SCENARIO("BlockType JSON serialization", "[ContentBlockIR][IR][JSON]") {
+SCENARIO("IR::BlockType JSON serialization", "[IR::ContentBlock][IR][JSON]") {
 
-    GIVEN("A ContentBlockIR of each type") {
-        auto checkTypeId = [](BlockType type, const QString &expectedId) {
-            ContentBlockIR block;
+    GIVEN("A IR::ContentBlock of each type") {
+        auto checkTypeId = [](IR::BlockType type, const QString &expectedId) {
+            IR::ContentBlock block;
             block.type = type;
             QJsonObject json = block.toJson();
             REQUIRE(json["type"_L1].toString() == expectedId);
         };
 
         THEN("All block types produce kebab-case IDs") {
-            checkTypeId(BlockType::Paragraph, "paragraph"_L1);
-            checkTypeId(BlockType::CodeBlock, "code-block"_L1);
-            checkTypeId(BlockType::List, "list"_L1);
-            checkTypeId(BlockType::ListItem, "list-item"_L1);
-            checkTypeId(BlockType::Section, "section"_L1);
-            checkTypeId(BlockType::SectionHeading, "section-heading"_L1);
-            checkTypeId(BlockType::Note, "note"_L1);
-            checkTypeId(BlockType::Warning, "warning"_L1);
-            checkTypeId(BlockType::Important, "important"_L1);
-            checkTypeId(BlockType::Details, "details"_L1);
-            checkTypeId(BlockType::Brief, "brief"_L1);
-            checkTypeId(BlockType::Div, "div"_L1);
-            checkTypeId(BlockType::Quotation, "quotation"_L1);
-            checkTypeId(BlockType::Legalese, "legalese"_L1);
-            checkTypeId(BlockType::HorizontalRule, "horizontal-rule"_L1);
-            checkTypeId(BlockType::Table, "table"_L1);
-            checkTypeId(BlockType::TableRow, "table-row"_L1);
-            checkTypeId(BlockType::TableCell, "table-cell"_L1);
-            checkTypeId(BlockType::Raw, "raw"_L1);
+            checkTypeId(IR::BlockType::Paragraph, "paragraph"_L1);
+            checkTypeId(IR::BlockType::CodeBlock, "code-block"_L1);
+            checkTypeId(IR::BlockType::List, "list"_L1);
+            checkTypeId(IR::BlockType::ListItem, "list-item"_L1);
+            checkTypeId(IR::BlockType::Section, "section"_L1);
+            checkTypeId(IR::BlockType::SectionHeading, "section-heading"_L1);
+            checkTypeId(IR::BlockType::Note, "note"_L1);
+            checkTypeId(IR::BlockType::Warning, "warning"_L1);
+            checkTypeId(IR::BlockType::Important, "important"_L1);
+            checkTypeId(IR::BlockType::Details, "details"_L1);
+            checkTypeId(IR::BlockType::Brief, "brief"_L1);
+            checkTypeId(IR::BlockType::Div, "div"_L1);
+            checkTypeId(IR::BlockType::Quotation, "quotation"_L1);
+            checkTypeId(IR::BlockType::Legalese, "legalese"_L1);
+            checkTypeId(IR::BlockType::HorizontalRule, "horizontal-rule"_L1);
+            checkTypeId(IR::BlockType::Table, "table"_L1);
+            checkTypeId(IR::BlockType::TableRow, "table-row"_L1);
+            checkTypeId(IR::BlockType::TableCell, "table-cell"_L1);
+            checkTypeId(IR::BlockType::Raw, "raw"_L1);
         }
     }
 }
 
-SCENARIO("Paragraph with mixed inline content", "[ContentBlockIR][IR][JSON]") {
+SCENARIO("Paragraph with mixed inline content", "[IR::ContentBlock][IR][JSON]") {
 
     GIVEN("A paragraph containing text, bold text, and inline code") {
-        ContentBlockIR para;
-        para.type = BlockType::Paragraph;
+        IR::ContentBlock para;
+        para.type = IR::BlockType::Paragraph;
 
-        InlineContentIR textBefore;
-        textBefore.type = InlineType::Text;
+        IR::InlineContent textBefore;
+        textBefore.type = IR::InlineType::Text;
         textBefore.text = "Hello "_L1;
 
-        InlineContentIR boldChild;
-        boldChild.type = InlineType::Text;
+        IR::InlineContent boldChild;
+        boldChild.type = IR::InlineType::Text;
         boldChild.text = "world"_L1;
 
-        InlineContentIR bold;
-        bold.type = InlineType::Bold;
+        IR::InlineContent bold;
+        bold.type = IR::InlineType::Bold;
         bold.children = { boldChild };
 
-        InlineContentIR textAfter;
-        textAfter.type = InlineType::Text;
+        IR::InlineContent textAfter;
+        textAfter.type = IR::InlineType::Text;
         textAfter.text = " with "_L1;
 
-        InlineContentIR code;
-        code.type = InlineType::Code;
+        IR::InlineContent code;
+        code.type = IR::InlineType::Code;
         code.text = "QDoc"_L1;
 
         para.inlineContent = { textBefore, bold, textAfter, code };
@@ -364,14 +364,14 @@ SCENARIO("Paragraph with mixed inline content", "[ContentBlockIR][IR][JSON]") {
     }
 }
 
-SCENARIO("Code block with language attribute", "[ContentBlockIR][IR][JSON]") {
+SCENARIO("Code block with language attribute", "[IR::ContentBlock][IR][JSON]") {
 
     GIVEN("A code block with C++ content") {
-        ContentBlockIR codeBlock;
-        codeBlock.type = BlockType::CodeBlock;
+        IR::ContentBlock codeBlock;
+        codeBlock.type = IR::BlockType::CodeBlock;
 
-        InlineContentIR codeText;
-        codeText.type = InlineType::Text;
+        IR::InlineContent codeText;
+        codeText.type = IR::InlineType::Text;
         codeText.text = "int x = 42;"_L1;
         codeBlock.inlineContent = { codeText };
 
@@ -401,33 +401,33 @@ SCENARIO("Code block with language attribute", "[ContentBlockIR][IR][JSON]") {
     }
 }
 
-SCENARIO("Nested blocks: List with ListItems", "[ContentBlockIR][IR][JSON]") {
+SCENARIO("Nested blocks: List with ListItems", "[IR::ContentBlock][IR][JSON]") {
 
     GIVEN("A bullet list with two items") {
-        ContentBlockIR list;
-        list.type = BlockType::List;
+        IR::ContentBlock list;
+        list.type = IR::BlockType::List;
         QJsonObject listAttrs;
         listAttrs["listType"_L1] = "bullet"_L1;
         list.attributes = listAttrs;
 
         // First item
-        ContentBlockIR item1;
-        item1.type = BlockType::ListItem;
-        ContentBlockIR item1Para;
-        item1Para.type = BlockType::Paragraph;
-        InlineContentIR item1Text;
-        item1Text.type = InlineType::Text;
+        IR::ContentBlock item1;
+        item1.type = IR::BlockType::ListItem;
+        IR::ContentBlock item1Para;
+        item1Para.type = IR::BlockType::Paragraph;
+        IR::InlineContent item1Text;
+        item1Text.type = IR::InlineType::Text;
         item1Text.text = "First item"_L1;
         item1Para.inlineContent = { item1Text };
         item1.children = { item1Para };
 
         // Second item
-        ContentBlockIR item2;
-        item2.type = BlockType::ListItem;
-        ContentBlockIR item2Para;
-        item2Para.type = BlockType::Paragraph;
-        InlineContentIR item2Text;
-        item2Text.type = InlineType::Text;
+        IR::ContentBlock item2;
+        item2.type = IR::BlockType::ListItem;
+        IR::ContentBlock item2Para;
+        item2Para.type = IR::BlockType::Paragraph;
+        IR::InlineContent item2Text;
+        item2Text.type = IR::InlineType::Text;
         item2Text.text = "Second item"_L1;
         item2Para.inlineContent = { item2Text };
         item2.children = { item2Para };
@@ -471,11 +471,11 @@ SCENARIO("Nested blocks: List with ListItems", "[ContentBlockIR][IR][JSON]") {
     }
 }
 
-SCENARIO("Empty block produces minimal JSON", "[ContentBlockIR][IR][JSON]") {
+SCENARIO("Empty block produces minimal JSON", "[IR::ContentBlock][IR][JSON]") {
 
     GIVEN("An empty paragraph with no content") {
-        ContentBlockIR block;
-        block.type = BlockType::Paragraph;
+        IR::ContentBlock block;
+        block.type = IR::BlockType::Paragraph;
 
         WHEN("Converting to JSON") {
             QJsonObject json = block.toJson();
@@ -495,14 +495,14 @@ SCENARIO("Empty block produces minimal JSON", "[ContentBlockIR][IR][JSON]") {
     }
 }
 
-SCENARIO("Leaf vs container invariant for block elements", "[ContentBlockIR][IR][Invariant]") {
+SCENARIO("Leaf vs container invariant for block elements", "[IR::ContentBlock][IR][Invariant]") {
 
     GIVEN("A leaf block (Paragraph) with inlineContent and no children") {
-        ContentBlockIR leaf;
-        leaf.type = BlockType::Paragraph;
+        IR::ContentBlock leaf;
+        leaf.type = IR::BlockType::Paragraph;
 
-        InlineContentIR text;
-        text.type = InlineType::Text;
+        IR::InlineContent text;
+        text.type = IR::InlineType::Text;
         text.text = "A paragraph."_L1;
         leaf.inlineContent = { text };
 
@@ -524,13 +524,13 @@ SCENARIO("Leaf vs container invariant for block elements", "[ContentBlockIR][IR]
     }
 
     GIVEN("A container block (Note) with children and no inlineContent") {
-        ContentBlockIR note;
-        note.type = BlockType::Note;
+        IR::ContentBlock note;
+        note.type = IR::BlockType::Note;
 
-        ContentBlockIR para;
-        para.type = BlockType::Paragraph;
-        InlineContentIR paraText;
-        paraText.type = InlineType::Text;
+        IR::ContentBlock para;
+        para.type = IR::BlockType::Paragraph;
+        IR::InlineContent paraText;
+        paraText.type = IR::InlineType::Text;
         paraText.text = "Note content."_L1;
         para.inlineContent = { paraText };
 

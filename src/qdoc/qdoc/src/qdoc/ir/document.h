@@ -1,8 +1,8 @@
 // Copyright (C) 2025 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#ifndef DOCUMENTIR_H
-#define DOCUMENTIR_H
+#ifndef QDOC_IR_DOCUMENT_H
+#define QDOC_IR_DOCUMENT_H
 
 #include "../access.h"
 #include "../genustypes.h"
@@ -13,7 +13,9 @@
 
 QT_BEGIN_NAMESPACE
 
-struct DocumentIR
+namespace IR {
+
+struct Document
 {
     // Classification
     NodeType nodeType { NodeType::NoType };
@@ -34,7 +36,9 @@ struct DocumentIR
     QJsonObject toJson() const;
 };
 
+} // namespace IR
+
 QT_END_NAMESPACE
 
-#endif // DOCUMENTIR_H
+#endif // QDOC_IR_DOCUMENT_H
 

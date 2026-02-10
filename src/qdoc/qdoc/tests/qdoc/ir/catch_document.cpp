@@ -3,7 +3,7 @@
 
 #include <catch/catch.hpp>
 
-#include <qdoc/ir/documentir.h>
+#include <qdoc/ir/document.h>
 #include <qdoc/access.h>
 #include <qdoc/genustypes.h>
 #include <qdoc/status.h>
@@ -14,10 +14,10 @@
 
 using namespace Qt::Literals::StringLiterals;
 
-SCENARIO("DocumentIR basic structure", "[DocumentIR][IR]") {
+SCENARIO("IR::Document basic structure", "[IR::Document][IR]") {
 
-    GIVEN("An empty DocumentIR") {
-        DocumentIR ir;
+    GIVEN("An empty IR::Document") {
+        IR::Document ir;
 
         WHEN("Converting to JSON") {
             QJsonObject json = ir.toJson();
@@ -52,8 +52,8 @@ SCENARIO("DocumentIR basic structure", "[DocumentIR][IR]") {
         }
     }
 
-    GIVEN("A DocumentIR with basic metadata") {
-        DocumentIR ir;
+    GIVEN("An IR::Document with basic metadata") {
+        IR::Document ir;
         ir.title = "Test Page"_L1;
         ir.fullTitle = "Test Module::Test Page"_L1;
         ir.url = "test-page.html"_L1;
@@ -72,10 +72,10 @@ SCENARIO("DocumentIR basic structure", "[DocumentIR][IR]") {
     }
 }
 
-SCENARIO("DocumentIR classification metadata", "[DocumentIR][IR][Classification]") {
+SCENARIO("IR::Document classification metadata", "[IR::Document][IR][Classification]") {
 
-    GIVEN("A DocumentIR representing a C++ class") {
-        DocumentIR ir;
+    GIVEN("An IR::Document representing a C++ class") {
+        IR::Document ir;
         ir.nodeType = NodeType::Class;
         ir.genus = Genus::CPP;
         ir.status = Status::Active;
@@ -96,8 +96,8 @@ SCENARIO("DocumentIR classification metadata", "[DocumentIR][IR][Classification]
         }
     }
 
-    GIVEN("A DocumentIR representing a deprecated QML type") {
-        DocumentIR ir;
+    GIVEN("An IR::Document representing a deprecated QML type") {
+        IR::Document ir;
         ir.nodeType = NodeType::QmlType;
         ir.genus = Genus::QML;
         ir.status = Status::Deprecated;
@@ -116,8 +116,8 @@ SCENARIO("DocumentIR classification metadata", "[DocumentIR][IR][Classification]
         }
     }
 
-    GIVEN("A DocumentIR representing a preliminary internal function") {
-        DocumentIR ir;
+    GIVEN("An IR::Document representing a preliminary internal function") {
+        IR::Document ir;
         ir.nodeType = NodeType::Function;
         ir.genus = Genus::CPP;
         ir.status = Status::Preliminary;
@@ -135,8 +135,8 @@ SCENARIO("DocumentIR classification metadata", "[DocumentIR][IR][Classification]
         }
     }
 
-    GIVEN("A DocumentIR representing an internal private property") {
-        DocumentIR ir;
+    GIVEN("An IR::Document representing an internal private property") {
+        IR::Document ir;
         ir.nodeType = NodeType::Property;
         ir.genus = Genus::CPP;
         ir.status = Status::Internal;
@@ -153,8 +153,8 @@ SCENARIO("DocumentIR classification metadata", "[DocumentIR][IR][Classification]
         }
     }
 
-    GIVEN("A DocumentIR representing a DOC page") {
-        DocumentIR ir;
+    GIVEN("An IR::Document representing a DOC page") {
+        IR::Document ir;
         ir.nodeType = NodeType::Page;
         ir.genus = Genus::DOC;
         ir.status = Status::Active;
@@ -173,10 +173,10 @@ SCENARIO("DocumentIR classification metadata", "[DocumentIR][IR][Classification]
     }
 }
 
-SCENARIO("DocumentIR contentJson handling", "[DocumentIR][IR][JSON]") {
+SCENARIO("IR::Document contentJson handling", "[IR::Document][IR][JSON]") {
 
-    GIVEN("A DocumentIR with empty contentJson") {
-        DocumentIR ir;
+    GIVEN("An IR::Document with empty contentJson") {
+        IR::Document ir;
         ir.title = "Test"_L1;
 
         WHEN("Converting to JSON") {
@@ -188,8 +188,8 @@ SCENARIO("DocumentIR contentJson handling", "[DocumentIR][IR][JSON]") {
         }
     }
 
-    GIVEN("A DocumentIR with simple contentJson") {
-        DocumentIR ir;
+    GIVEN("An IR::Document with simple contentJson") {
+        IR::Document ir;
         ir.title = "Test"_L1;
         ir.contentJson["text"_L1] = "Some content"_L1;
         ir.contentJson["count"_L1] = 42;
@@ -214,8 +214,8 @@ SCENARIO("DocumentIR contentJson handling", "[DocumentIR][IR][JSON]") {
         }
     }
 
-    GIVEN("A DocumentIR with nested contentJson structure") {
-        DocumentIR ir;
+    GIVEN("An IR::Document with nested contentJson structure") {
+        IR::Document ir;
         ir.title = "Test"_L1;
 
         QJsonObject innerContent;
@@ -244,10 +244,10 @@ SCENARIO("DocumentIR contentJson handling", "[DocumentIR][IR][JSON]") {
     }
 }
 
-SCENARIO("DocumentIR complete workflow", "[DocumentIR][IR][Integration]") {
+SCENARIO("IR::Document complete workflow", "[IR::Document][IR][Integration]") {
 
-    GIVEN("A fully populated DocumentIR") {
-        DocumentIR ir;
+    GIVEN("A fully populated IR::Document") {
+        IR::Document ir;
         ir.title = "QTextStream"_L1;
         ir.fullTitle = "Qt Core::QTextStream"_L1;
         ir.url = "qtextstream.html"_L1;

@@ -1,26 +1,28 @@
 // Copyright (C) 2025 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#include "linkir.h"
+#include "link.h"
 
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::Literals::StringLiterals;
 
+namespace IR {
+
 /*!
-    \struct LinkIR
+    \struct IR::Link
     \brief Intermediate representation for a resolved hyperlink.
 
-    LinkIR represents a fully-resolved link in QDoc's intermediate representation
+    Link represents a fully-resolved link in QDoc's intermediate representation
     layer. All target resolution happens during the IR building phase, so templates
     receive only pre-computed URLs and display text. This eliminates the need for
     generators to perform database lookups during output generation.
 
-    \sa DocumentIR, NavigationIR
+    \sa IR::Document
 */
 
 /*!
-    \enum LinkIR::State
+    \enum IR::Link::State
     Indicates the resolution state of the link target.
 
     \value Resolved Link target was found and resolved.
@@ -31,7 +33,7 @@ using namespace Qt::Literals::StringLiterals;
 
 
 /*!
-    Converts the LinkIR to a QJsonObject for template rendering.
+    Converts the Link to a QJsonObject for template rendering.
 
     The JSON structure uses camelCase field names following the established
     IR-to-JSON convention. The state is represented as a string for readability
@@ -40,7 +42,7 @@ using namespace Qt::Literals::StringLiterals;
     Returns a QJsonObject containing all link data suitable for template
     rendering via InjaBridge.
 */
-QJsonObject LinkIR::toJson() const
+QJsonObject Link::toJson() const
 {
     QJsonObject json;
     json["target"_L1] = target;
@@ -74,6 +76,8 @@ QJsonObject LinkIR::toJson() const
 
     return json;
 }
+
+} // namespace IR
 
 QT_END_NAMESPACE
 

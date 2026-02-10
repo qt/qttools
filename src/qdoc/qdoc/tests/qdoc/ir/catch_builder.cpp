@@ -3,12 +3,12 @@
 
 #include <catch/catch.hpp>
 
-#include <qdoc/ir/irbuilder.h>
-#include <qdoc/ir/documentir.h>
+#include <qdoc/ir/builder.h>
+#include <qdoc/ir/document.h>
 
 #include <QtCore/qglobal.h>
 
-// NOTE: IRBuilder requires PageNode instances, which need the full QDoc
+// NOTE: IR::Builder requires PageNode instances, which need the full QDoc
 // infrastructure (Aggregate parents, Doc objects with Atom chains, etc.).
 // Full unit testing requires either:
 //   1. Mock/fake implementations of PageNode and its dependencies
@@ -18,9 +18,9 @@
 // Currently, option 3 provides coverage. These tests verify compilation
 // and document intent for future comprehensive unit testing.
 
-SCENARIO("IRBuilder compilation", "[IRBuilder][IR][Compilation]") {
+SCENARIO("IR::Builder compilation", "[IR::Builder][IR][Compilation]") {
 
-    GIVEN("The IRBuilder class") {
+    GIVEN("The IR::Builder class") {
         WHEN("The header is included") {
             THEN("It compiles successfully") {
                 REQUIRE(true);
@@ -28,29 +28,29 @@ SCENARIO("IRBuilder compilation", "[IRBuilder][IR][Compilation]") {
         }
     }
 
-    GIVEN("An IRBuilder instance") {
-        IRBuilder builder;
+    GIVEN("An IR::Builder instance") {
+        IR::Builder builder;
         Q_UNUSED(builder);
 
         WHEN("Default constructed") {
             THEN("It is ready to use") {
-                // IRBuilder is stateless and always ready
+                // IR::Builder is stateless and always ready
                 REQUIRE(true);
             }
         }
     }
 }
 
-SCENARIO("IRBuilder interface design", "[IRBuilder][IR][Interface]") {
+SCENARIO("IR::Builder interface design", "[IR::Builder][IR][Interface]") {
 
-    GIVEN("An IRBuilder instance") {
-        IRBuilder builder;
+    GIVEN("An IR::Builder instance") {
+        IR::Builder builder;
         Q_UNUSED(builder);
 
         WHEN("Documenting the expected interface") {
-            THEN("buildPageIR takes a PageNode pointer and returns DocumentIR") {
+            THEN("buildPageIR takes a PageNode pointer and returns IR::Document") {
                 // The signature is:
-                //   DocumentIR buildPageIR(const PageNode *pn) const;
+                //   IR::Document buildPageIR(const PageNode *pn) const;
                 //
                 // This extracts:
                 //   - title from PageNode::title()
@@ -61,23 +61,23 @@ SCENARIO("IRBuilder interface design", "[IRBuilder][IR][Interface]") {
                 //
                 // TODO: Once test infrastructure supports PageNode creation,
                 // add tests that verify:
-                //   1. Empty PageNode produces empty/default DocumentIR
+                //   1. Empty PageNode produces empty/default IR::Document
                 //   2. PageNode with title populates ir.title
                 //   3. PageNode with brief populates ir.brief
                 //   4. PageNode with body content populates ir.contentJson["text"]
                 //   5. Brief content is excluded from body text
                 //   6. Paragraph breaks are converted to double newlines
-                INFO("IRBuilder::buildPageIR() signature verified by compilation");
+                INFO("IR::Builder::buildPageIR() signature verified by compilation");
                 REQUIRE(true);
             }
         }
     }
 }
 
-SCENARIO("IRBuilder atom processing", "[IRBuilder][IR][Atoms]") {
+SCENARIO("IR::Builder atom processing", "[IR::Builder][IR][Atoms]") {
 
     GIVEN("Documentation about atom processing behavior") {
-        THEN("IRBuilder handles specific atom types") {
+        THEN("IR::Builder handles specific atom types") {
             // Current atom types handled:
             //   - Atom::BriefLeft / BriefRight: Track brief section (excluded from body)
             //   - Atom::ParaLeft: Insert paragraph breaks in body
@@ -100,20 +100,20 @@ SCENARIO("IRBuilder atom processing", "[IRBuilder][IR][Atoms]") {
     }
 }
 
-SCENARIO("IRBuilder integration testing", "[IRBuilder][IR][Integration]") {
+SCENARIO("IR::Builder integration testing", "[IR::Builder][IR][Integration]") {
 
-    GIVEN("IRBuilder's role in the pipeline") {
+    GIVEN("IR::Builder's role in the pipeline") {
         THEN("End-to-end testing is provided by tst_validateTemplateGeneratorOutput") {
             // The test at:
             //   tests/validatetemplategeneratoroutput/
             //
             // Verifies that:
             //   1. QDoc parses source files correctly
-            //   2. IRBuilder extracts content from nodes
+            //   2. IR::Builder extracts content from nodes
             //   3. TemplateGenerator renders IR to output
             //   4. Output matches expected files
             //
-            // This provides integration coverage for IRBuilder without
+            // This provides integration coverage for IR::Builder without
             // requiring mock infrastructure.
             INFO("Integration coverage provided by tst_validateTemplateGeneratorOutput");
             REQUIRE(true);

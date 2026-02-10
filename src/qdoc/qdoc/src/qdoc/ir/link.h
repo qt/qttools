@@ -1,15 +1,17 @@
 // Copyright (C) 2025 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#ifndef LINKIR_H
-#define LINKIR_H
+#ifndef QDOC_IR_LINK_H
+#define QDOC_IR_LINK_H
 
 #include <QJsonObject>
 #include <QString>
 
 QT_BEGIN_NAMESPACE
 
-struct LinkIR
+namespace IR {
+
+struct Link
 {
     QString target;         //! Pre-resolved URL or anchor
     QString text;           //! Display text for the link
@@ -33,7 +35,9 @@ struct LinkIR
     [[nodiscard]] bool isExternal() const { return state == State::External; }
 };
 
+} // namespace IR
+
 QT_END_NAMESPACE
 
-#endif // LINKIR_H
+#endif // QDOC_IR_LINK_H
 

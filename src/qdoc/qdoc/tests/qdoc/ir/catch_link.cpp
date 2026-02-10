@@ -3,7 +3,7 @@
 
 #include <catch/catch.hpp>
 
-#include <qdoc/ir/linkir.h>
+#include <qdoc/ir/link.h>
 
 #include <QJsonObject>
 #include <QJsonValue>
@@ -11,24 +11,24 @@
 
 using namespace Qt::Literals::StringLiterals;
 
-SCENARIO("LinkIR basic structure", "[LinkIR][IR]") {
+SCENARIO("IR::Link basic structure", "[IR::Link][IR]") {
 
-    GIVEN("A default-constructed LinkIR") {
-        LinkIR link;
+    GIVEN("A default-constructed IR::Link") {
+        IR::Link link;
 
         THEN("The link is not valid when target is empty") {
             REQUIRE(!link.isValid());
         }
 
         THEN("The default state is Resolved") {
-            REQUIRE(link.state == LinkIR::State::Resolved);
+            REQUIRE(link.state == IR::Link::State::Resolved);
             REQUIRE(link.isResolved());
             REQUIRE(!link.isExternal());
         }
     }
 
-    GIVEN("A LinkIR with target and text") {
-        LinkIR link;
+    GIVEN("A IR::Link with target and text") {
+        IR::Link link;
         link.target = "qstring.html"_L1;
         link.text = "QString"_L1;
 
@@ -63,12 +63,12 @@ SCENARIO("LinkIR basic structure", "[LinkIR][IR]") {
         }
     }
 
-    GIVEN("A LinkIR with all fields populated") {
-        LinkIR link;
+    GIVEN("A IR::Link with all fields populated") {
+        IR::Link link;
         link.target = "https://doc.qt.io/qt-6/qstring.html"_L1;
         link.text = "QString"_L1;
         link.title = "Qt 6 QString Documentation"_L1;
-        link.state = LinkIR::State::External;
+        link.state = IR::Link::State::External;
         link.originalTarget = "QString"_L1;
 
         WHEN("Converting to JSON") {
@@ -90,13 +90,13 @@ SCENARIO("LinkIR basic structure", "[LinkIR][IR]") {
     }
 }
 
-SCENARIO("LinkIR state handling", "[LinkIR][IR][State]") {
+SCENARIO("IR::Link state handling", "[IR::Link][IR][State]") {
 
-    GIVEN("A LinkIR with Resolved state") {
-        LinkIR link;
+    GIVEN("A IR::Link with Resolved state") {
+        IR::Link link;
         link.target = "page.html"_L1;
         link.text = "Page"_L1;
-        link.state = LinkIR::State::Resolved;
+        link.state = IR::Link::State::Resolved;
 
         WHEN("Converting to JSON") {
             QJsonObject json = link.toJson();
@@ -107,11 +107,11 @@ SCENARIO("LinkIR state handling", "[LinkIR][IR][State]") {
         }
     }
 
-    GIVEN("A LinkIR with External state") {
-        LinkIR link;
+    GIVEN("A IR::Link with External state") {
+        IR::Link link;
         link.target = "https://example.com"_L1;
         link.text = "Example"_L1;
-        link.state = LinkIR::State::External;
+        link.state = IR::Link::State::External;
 
         WHEN("Converting to JSON") {
             QJsonObject json = link.toJson();
@@ -126,10 +126,10 @@ SCENARIO("LinkIR state handling", "[LinkIR][IR][State]") {
         }
     }
 
-    GIVEN("A LinkIR with Unresolved state") {
-        LinkIR link;
+    GIVEN("A IR::Link with Unresolved state") {
+        IR::Link link;
         link.text = "MissingClass"_L1;
-        link.state = LinkIR::State::Unresolved;
+        link.state = IR::Link::State::Unresolved;
         link.originalTarget = "MissingClass"_L1;
 
         THEN("The link is still valid for template rendering") {
@@ -150,11 +150,11 @@ SCENARIO("LinkIR state handling", "[LinkIR][IR][State]") {
         }
     }
 
-    GIVEN("A LinkIR with Broken state") {
-        LinkIR link;
+    GIVEN("A IR::Link with Broken state") {
+        IR::Link link;
         link.target = "#removed-section"_L1;
         link.text = "Removed Section"_L1;
-        link.state = LinkIR::State::Broken;
+        link.state = IR::Link::State::Broken;
 
         WHEN("Converting to JSON") {
             QJsonObject json = link.toJson();
@@ -166,10 +166,10 @@ SCENARIO("LinkIR state handling", "[LinkIR][IR][State]") {
     }
 }
 
-SCENARIO("LinkIR originalTarget tracking", "[LinkIR][IR][Diagnostics]") {
+SCENARIO("IR::Link originalTarget tracking", "[IR::Link][IR][Diagnostics]") {
 
-    GIVEN("A LinkIR where target matches originalTarget") {
-        LinkIR link;
+    GIVEN("A IR::Link where target matches originalTarget") {
+        IR::Link link;
         link.target = "qstring.html"_L1;
         link.text = "QString"_L1;
         link.originalTarget = "qstring.html"_L1;
@@ -183,8 +183,8 @@ SCENARIO("LinkIR originalTarget tracking", "[LinkIR][IR][Diagnostics]") {
         }
     }
 
-    GIVEN("A LinkIR where target differs from originalTarget") {
-        LinkIR link;
+    GIVEN("A IR::Link where target differs from originalTarget") {
+        IR::Link link;
         link.target = "qstring.html#section"_L1;
         link.text = "QString::section()"_L1;
         link.originalTarget = "QString::section()"_L1;
@@ -200,13 +200,13 @@ SCENARIO("LinkIR originalTarget tracking", "[LinkIR][IR][Diagnostics]") {
     }
 }
 
-SCENARIO("LinkIR template usage patterns", "[LinkIR][IR][Integration]") {
+SCENARIO("IR::Link template usage patterns", "[IR::Link][IR][Integration]") {
 
     GIVEN("A typical internal link for template rendering") {
-        LinkIR link;
+        IR::Link link;
         link.target = "qtcore-module.html"_L1;
         link.text = "Qt Core"_L1;
-        link.state = LinkIR::State::Resolved;
+        link.state = IR::Link::State::Resolved;
 
         WHEN("Converting to JSON for template") {
             QJsonObject json = link.toJson();
@@ -226,11 +226,11 @@ SCENARIO("LinkIR template usage patterns", "[LinkIR][IR][Integration]") {
     }
 
     GIVEN("An external link with title for accessibility") {
-        LinkIR link;
+        IR::Link link;
         link.target = "https://doc.qt.io/"_L1;
         link.text = "Qt Documentation"_L1;
         link.title = "Opens in new window"_L1;
-        link.state = LinkIR::State::External;
+        link.state = IR::Link::State::External;
 
         WHEN("Converting to JSON for template") {
             QJsonObject json = link.toJson();

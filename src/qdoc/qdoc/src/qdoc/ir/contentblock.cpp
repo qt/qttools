@@ -1,7 +1,7 @@
 // Copyright (C) 2026 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#include "contentblockir.h"
+#include "contentblock.h"
 
 #include <QJsonArray>
 #include <QStringList>
@@ -10,8 +10,10 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::Literals::StringLiterals;
 
+namespace IR {
+
 /*!
-    \enum InlineType
+    \enum IR::InlineType
     \internal
     \brief Discriminator for inline content elements within a block.
 
@@ -37,7 +39,7 @@ using namespace Qt::Literals::StringLiterals;
 */
 
 /*!
-    \enum BlockType
+    \enum IR::BlockType
     \internal
     \brief Discriminator for structural block elements in documentation.
 
@@ -68,11 +70,11 @@ using namespace Qt::Literals::StringLiterals;
 */
 
 /*!
-    \struct InlineContentIR
+    \struct IR::InlineContent
     \internal
     \brief Represents inline content within a documentation block.
 
-    InlineContentIR is a format-agnostic representation of inline content
+    InlineContent is a format-agnostic representation of inline content
     such as text, code, links, and formatting. Instances nest recursively
     to represent formatting like bold text containing a link.
 
@@ -89,15 +91,15 @@ using namespace Qt::Literals::StringLiterals;
     This is a pure value type with no dependencies on QDoc's core
     infrastructure. It belongs in QDocLib.
 
-    \sa ContentBlockIR, BlockType
+    \sa ContentBlock, BlockType
 */
 
 /*!
-    \struct ContentBlockIR
+    \struct IR::ContentBlock
     \internal
     \brief Represents a structural block element in documentation.
 
-    ContentBlockIR is a format-agnostic representation of documentation
+    ContentBlock is a format-agnostic representation of documentation
     structure. Each block is either a \e{leaf block} (has \c inlineContent,
     no \c children) or a \e{container block} (has \c children, no
     \c inlineContent). This invariant is enforced by Q_ASSERT in debug
@@ -112,10 +114,10 @@ using namespace Qt::Literals::StringLiterals;
 
     This is a pure value type with no dependencies on QDoc's core
     infrastructure. It belongs in QDocLib. Multiple renderers can read
-    the same ContentBlockIR concurrently — the frozen IR design supports
+    the same ContentBlock concurrently — the frozen IR design supports
     parallel rendering per output format.
 
-    \sa InlineContentIR, InlineType
+    \sa InlineContent, InlineType
 */
 
 // Returns the kebab-case string ID for an InlineType.
@@ -169,9 +171,9 @@ static QString blockTypeId(BlockType type)
 }
 
 /*!
-    Converts the InlineContentIR to a QJsonObject for template rendering.
+    Converts the InlineContent to a QJsonObject for template rendering.
 
-    The JSON uses kebab-case type IDs matching the convention in DocumentIR
+    The JSON uses kebab-case type IDs matching the convention in IR::Document
     classification. Leaf elements (no children) include a \c text key with
     their text content. Container elements (with children) omit \c text to
     avoid redundancy — the text is available in their children.
@@ -179,7 +181,7 @@ static QString blockTypeId(BlockType type)
     Optional fields (\c href, \c title) are omitted when empty.
     The \c children array is omitted when empty.
 */
-QJsonObject InlineContentIR::toJson() const
+QJsonObject InlineContent::toJson() const
 {
     Q_ASSERT(children.isEmpty() || text.isEmpty());
 
@@ -213,7 +215,7 @@ QJsonObject InlineContentIR::toJson() const
     For container elements (Bold, Italic, Link, etc.), concatenates the
     plain text of all children.
 */
-QString InlineContentIR::plainText() const
+QString InlineContent::plainText() const
 {
     Q_ASSERT(children.isEmpty() || text.isEmpty());
     if (type == InlineType::LineBreak)
@@ -231,13 +233,13 @@ QString InlineContentIR::plainText() const
 }
 
 /*!
-    Converts the ContentBlockIR to a QJsonObject for template rendering.
+    Converts the ContentBlock to a QJsonObject for template rendering.
 
     The JSON uses kebab-case type IDs. A computed \c text key contains the
     concatenated plain text of all inline content or children. Empty
     collections (\c inlines, \c children, \c attributes) are omitted.
 */
-QJsonObject ContentBlockIR::toJson() const
+QJsonObject ContentBlock::toJson() const
 {
     Q_ASSERT(inlineContent.isEmpty() || children.isEmpty());
 
@@ -273,7 +275,7 @@ QJsonObject ContentBlockIR::toJson() const
     all inline text. For container blocks (lists, sections), concatenates
     the plain text of child blocks separated by newlines.
 */
-QString ContentBlockIR::plainText() const
+QString ContentBlock::plainText() const
 {
     Q_ASSERT(inlineContent.isEmpty() || children.isEmpty());
     if (!inlineContent.isEmpty()) {
@@ -295,4 +297,7 @@ QString ContentBlockIR::plainText() const
     return {};
 }
 
+} // namespace IR
+
 QT_END_NAMESPACE
+

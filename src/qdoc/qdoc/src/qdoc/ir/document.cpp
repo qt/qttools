@@ -1,7 +1,7 @@
 // Copyright (C) 2025 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#include "documentir.h"
+#include "document.h"
 
 #include <optional>
 
@@ -9,11 +9,13 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::Literals::StringLiterals;
 
+namespace IR {
+
 /*!
-    \struct DocumentIR
+    \struct IR::Document
     \brief Intermediate representation for a documentation topic.
 
-    DocumentIR contains all information needed to render a single documentation
+    Document contains all information needed to render a single documentation
     page using templates. All links are pre-resolved, sections are pre-organized,
     and file paths are pre-computed. The template engine receives only this IR
     and performs no lookups or resolution itself.
@@ -110,7 +112,7 @@ static QJsonObject accessToJson(Access a)
 }
 
 /*!
-    Converts the DocumentIR to a QJsonObject for template rendering.
+    Converts the Document to a QJsonObject for template rendering.
 
     The JSON structure follows a convention where field names use camelCase
     and match template variable names. Classification fields (nodeType, genus,
@@ -123,7 +125,7 @@ static QJsonObject accessToJson(Access a)
     Returns a QJsonObject containing all IR data in a format suitable for
     passing to the Inja template engine via InjaBridge.
 */
-QJsonObject DocumentIR::toJson() const
+QJsonObject Document::toJson() const
 {
     QJsonObject json;
 
@@ -151,6 +153,8 @@ QJsonObject DocumentIR::toJson() const
 
     return json;
 }
+
+} // namespace IR
 
 QT_END_NAMESPACE
 
