@@ -613,8 +613,8 @@ void MachineTranslationDialog::updateConnectionIndicator()
 void MachineTranslationDialog::toggleAdvancedSettings(bool checked)
 {
     m_ui->advancedSettingsWidget->setVisible(checked);
-    m_ui->advancedSettingsToggle->setText(checked ? tr("Advanced Settings \xe2\x96\xbc")
-                                                  : tr("Advanced Settings \xe2\x96\xb6"));
+    m_ui->advancedSettingsToggle->setText(checked ? tr("Advanced Settings -")
+                                                  : tr("Advanced Settings +"));
     if (checked) {
         loadAdvancedSettings();
         validateAdvancedSettings();
@@ -661,7 +661,7 @@ void MachineTranslationDialog::validateAdvancedSettings()
     if (maxJsonFormatTries < 3) {
         //: "Maximum JSON Format Tries" should use the same translation as
         //: the label "Maximum JSON Format Tries" in Advanced Settings
-        warnings << tr("\xe2\x9a\xa0 Maximum JSON Format Tries: Low value may cause unnecessary "
+        warnings << tr("Warning: Maximum JSON Format Tries: Low value may cause unnecessary "
                        "format switching due to temporary errors. Recommended: 3 or higher.");
     }
 
@@ -671,7 +671,7 @@ void MachineTranslationDialog::validateAdvancedSettings()
         //: "Maximum Retries" and "Maximum JSON Format Tries" should use the same
         //: translations as the labels "Maximum Retries" and "Maximum JSON Format Tries"
         //: in Advanced Settings
-        warnings << tr("\xe2\x9a\xa0 Maximum Retries: Should be at least 3\xc3\x97 'Maximum JSON "
+        warnings << tr("Warning: Maximum Retries: Should be at least 3x 'Maximum JSON "
                        "Format Tries' for full fallback coverage");
     }
 
