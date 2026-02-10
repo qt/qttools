@@ -3,7 +3,7 @@
 
 #include "outputproducerregistry.h"
 
-#include "ioutputproducer.h"
+#include "outputproducer.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -12,7 +12,7 @@ QT_BEGIN_NAMESPACE
     \internal
     \brief Singleton registry for discovering output producers by format.
 
-    \sa IOutputProducer, Generator
+    \sa OutputProducer, Generator
 */
 
 /*!
@@ -28,7 +28,7 @@ OutputProducerRegistry &OutputProducerRegistry::instance()
     Registers \a producer with this registry.
 
     The producer is indexed by its format() identifier, which is
-    case-sensitive (see IOutputProducer::format()). If a producer
+    case-sensitive (see OutputProducer::format()). If a producer
     with the same format is already registered, it will be replaced.
 
     The format identifier must remain constant for the lifetime of
@@ -37,7 +37,7 @@ OutputProducerRegistry &OutputProducerRegistry::instance()
 
     \sa unregisterProducer()
 */
-void OutputProducerRegistry::registerProducer(IOutputProducer *producer)
+void OutputProducerRegistry::registerProducer(OutputProducer *producer)
 {
     if (!producer)
         return;
@@ -54,7 +54,7 @@ void OutputProducerRegistry::registerProducer(IOutputProducer *producer)
 
     \sa registerProducer()
 */
-void OutputProducerRegistry::unregisterProducer(IOutputProducer *producer)
+void OutputProducerRegistry::unregisterProducer(OutputProducer *producer)
 {
     if (!producer)
         return;
@@ -68,7 +68,7 @@ void OutputProducerRegistry::unregisterProducer(IOutputProducer *producer)
     Returns the producer registered for \a format, or nullptr if none.
     The \a format comparison is case-sensitive.
 */
-IOutputProducer *OutputProducerRegistry::producerForFormat(const QString &format) const
+OutputProducer *OutputProducerRegistry::producerForFormat(const QString &format) const
 {
     return m_producers.value(format, nullptr);
 }
@@ -76,7 +76,7 @@ IOutputProducer *OutputProducerRegistry::producerForFormat(const QString &format
 /*!
     Returns all registered producers in unspecified order.
 */
-QList<IOutputProducer *> OutputProducerRegistry::allProducers() const
+QList<OutputProducer *> OutputProducerRegistry::allProducers() const
 {
     return m_producers.values();
 }

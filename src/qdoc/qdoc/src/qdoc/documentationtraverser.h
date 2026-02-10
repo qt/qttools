@@ -8,17 +8,17 @@
 
 QT_BEGIN_NAMESPACE
 
-class IDocumentationHandler;
+class DocumentationHandler;
 class Node;
 
 class DocumentationTraverser
 {
 public:
     DocumentationTraverser() = default;
-    void traverse(Node *root, IDocumentationHandler &handler);
+    void traverse(Node *root, DocumentationHandler &handler);
 
 private:
-    void traverseNode(Node *node, IDocumentationHandler &handler);
+    void traverseNode(Node *node, DocumentationHandler &handler);
     [[nodiscard]] bool shouldSkip(const Node *node) const;
 };
 

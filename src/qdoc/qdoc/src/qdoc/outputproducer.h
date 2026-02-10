@@ -1,19 +1,19 @@
 // Copyright (C) 2026 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#ifndef IOUTPUTPRODUCER_H
-#define IOUTPUTPRODUCER_H
+#ifndef OUTPUTPRODUCER_H
+#define OUTPUTPRODUCER_H
 
 #include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 
 /*!
-    \class IOutputProducer
+    \class OutputProducer
     \internal
     \brief Interface for documentation output producers.
 
-    IOutputProducer defines the minimal contract for classes that generate
+    OutputProducer defines the minimal contract for classes that generate
     documentation output. This interface decouples the generation lifecycle
     from any particular implementation, enabling both stateful and stateless
     producers to participate in QDoc's output pipeline.
@@ -22,10 +22,10 @@ QT_BEGIN_NAMESPACE
 
     \sa Generator, TemplateGenerator
 */
-class IOutputProducer
+class OutputProducer
 {
 public:
-    virtual ~IOutputProducer() = default;
+    virtual ~OutputProducer() = default;
 
     /*!
         Returns the format identifier for this producer (e.g., "HTML", "DocBook", "template").
@@ -55,5 +55,5 @@ public:
 
 QT_END_NAMESPACE
 
-#endif // IOUTPUTPRODUCER_H
+#endif // OUTPUTPRODUCER_H
 

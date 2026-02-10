@@ -14,7 +14,7 @@ using namespace Qt::StringLiterals;
 /*!
     \class FileDocumentWriter
     \internal
-    \brief Production implementation of IDocumentWriter that writes to files.
+    \brief Production implementation of DocumentWriter that writes to files.
 
     FileDocumentWriter manages the lifecycle of output files, replacing the
     Generator's beginSubPage()/endSubPage() pattern with an explicit interface.
@@ -35,7 +35,7 @@ using namespace Qt::StringLiterals;
     If the file cannot be opened, beginDocument() reports an error and
     subsequent write calls become no-ops.
 
-    \sa IDocumentWriter, StringDocumentWriter, OutputContext
+    \sa DocumentWriter, StringDocumentWriter, OutputContext
 */
 
 /*!

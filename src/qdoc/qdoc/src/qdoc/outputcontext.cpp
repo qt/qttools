@@ -39,7 +39,7 @@ using namespace Qt::StringLiterals;
     | outputSuffixes      | s_outputSuffixes |
     | useSubdirs          | s_useOutputSubdirs |
 
-    \sa IDocumentWriter, FileDocumentWriter
+    \sa DocumentWriter, FileDocumentWriter
 */
 
 /*!

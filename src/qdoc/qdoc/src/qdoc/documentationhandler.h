@@ -1,8 +1,8 @@
 // Copyright (C) 2026 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#ifndef IDOCUMENTATIONHANDLER_H
-#define IDOCUMENTATIONHANDLER_H
+#ifndef DOCUMENTATIONHANDLER_H
+#define DOCUMENTATIONHANDLER_H
 
 #include <QtCore/qstring.h>
 
@@ -15,12 +15,17 @@ class Node;
 class PageNode;
 class QmlTypeNode;
 
+// DocumentationHandler has a single implementor (TemplateGenerator) but is
+// preserved because it enables DocumentationTraverser to remain independent
+// of any concrete generator type. This separation allows the traverser to
+// be reused when legacy Generator is eventually refactored.
+
 /*!
-    \class IDocumentationHandler
+    \class DocumentationHandler
     \internal
     \brief Interface handling documentation generation during tree traversal.
 
-    IDocumentationHandler defines the callbacks that DocumentationTraverser
+    DocumentationHandler defines the callbacks that DocumentationTraverser
     invokes as it walks the node tree. Implementations control file lifecycle
     and content generation while the traverser handles filtering, dispatch, and
     recursion.
@@ -31,10 +36,10 @@ class QmlTypeNode;
 
     \sa DocumentationTraverser
 */
-class IDocumentationHandler
+class DocumentationHandler
 {
 public:
-    virtual ~IDocumentationHandler() = default;
+    virtual ~DocumentationHandler() = default;
 
     // === File Lifecycle ===
     virtual void beginDocument(const QString &fileName) = 0;
@@ -57,5 +62,5 @@ public:
 
 QT_END_NAMESPACE
 
-#endif // IDOCUMENTATIONHANDLER_H
+#endif // DOCUMENTATIONHANDLER_H
 

@@ -1,8 +1,8 @@
 // Copyright (C) 2026 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#ifndef IDOCUMENTWRITER_H
-#define IDOCUMENTWRITER_H
+#ifndef DOCUMENTWRITER_H
+#define DOCUMENTWRITER_H
 
 #include <QtCore/qstring.h>
 #include <QtCore/qstringview.h>
@@ -10,11 +10,11 @@
 QT_BEGIN_NAMESPACE
 
 /*!
-    \class IDocumentWriter
+    \class DocumentWriter
     \internal
     \brief Interface for writing documentation output.
 
-    IDocumentWriter abstracts the output destination for documentation
+    DocumentWriter abstracts the output destination for documentation
     generators, enabling:
 
     \list
@@ -29,7 +29,7 @@ QT_BEGIN_NAMESPACE
     \section1 Usage Pattern
 
     \code
-    void generateDocument(IDocumentWriter &writer) {
+    void generateDocument(DocumentWriter &writer) {
         writer.write("<html>");
         writer.writeLine("<body>");
         writer.write("Content here");
@@ -39,10 +39,10 @@ QT_BEGIN_NAMESPACE
 
     \sa FileDocumentWriter, StringDocumentWriter
 */
-class IDocumentWriter
+class DocumentWriter
 {
 public:
-    virtual ~IDocumentWriter() = default;
+    virtual ~DocumentWriter() = default;
 
     /*!
         Writes \a content to the output without a trailing newline.
@@ -68,4 +68,5 @@ public:
 
 QT_END_NAMESPACE
 
-#endif // IDOCUMENTWRITER_H
+#endif // DOCUMENTWRITER_H
+

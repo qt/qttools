@@ -10,18 +10,18 @@
 
 QT_BEGIN_NAMESPACE
 
-class IOutputProducer;
+class OutputProducer;
 
 class OutputProducerRegistry
 {
 public:
     static OutputProducerRegistry &instance();
 
-    void registerProducer(IOutputProducer *producer);
-    void unregisterProducer(IOutputProducer *producer);
+    void registerProducer(OutputProducer *producer);
+    void unregisterProducer(OutputProducer *producer);
 
-    [[nodiscard]] IOutputProducer *producerForFormat(const QString &format) const;
-    [[nodiscard]] QList<IOutputProducer *> allProducers() const;
+    [[nodiscard]] OutputProducer *producerForFormat(const QString &format) const;
+    [[nodiscard]] QList<OutputProducer *> allProducers() const;
 
 private:
     OutputProducerRegistry() = default;
@@ -30,7 +30,7 @@ private:
     OutputProducerRegistry(const OutputProducerRegistry &) = delete;
     OutputProducerRegistry &operator=(const OutputProducerRegistry &) = delete;
 
-    QHash<QString, IOutputProducer *> m_producers;
+    QHash<QString, OutputProducer *> m_producers;
 };
 
 QT_END_NAMESPACE

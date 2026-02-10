@@ -1926,10 +1926,10 @@ Generator *Generator::generatorForFormat(const QString &format)
 {
     // First, check the OutputProducerRegistry for producers.
     // This supports both Generator-based producers (which register themselves)
-    // and future non-Generator IOutputProducer implementations.
+    // and future non-Generator OutputProducer implementations.
     if (auto *producer = OutputProducerRegistry::instance().producerForFormat(format)) {
         // TODO: All registered producers are Generators, but this will
-        // change as we migrate to IOutputProducer-based implementations.
+        // change as we migrate to OutputProducer-based implementations.
         if (auto *gen = dynamic_cast<Generator *>(producer))
             return gen;
     }

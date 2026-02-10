@@ -4,7 +4,7 @@
 #include <catch/catch.hpp>
 
 #include <qdoc/outputproducerregistry.h>
-#include <qdoc/ioutputproducer.h>
+#include <qdoc/outputproducer.h>
 
 #include <QString>
 #include <QList>
@@ -14,9 +14,9 @@ using namespace Qt::Literals::StringLiterals;
 /*!
     \class MockOutputProducer
     \internal
-    \brief Test double implementing IOutputProducer for registry tests.
+    \brief Test double implementing OutputProducer for registry tests.
 */
-class MockOutputProducer : public IOutputProducer
+class MockOutputProducer : public OutputProducer
 {
 public:
     explicit MockOutputProducer(const QString &format) : m_format(format) {}
@@ -51,7 +51,7 @@ public:
             m_registry.unregisterProducer(p);
     }
 
-    void add(IOutputProducer *p)
+    void add(OutputProducer *p)
     {
         if (!p)
             return;
@@ -61,13 +61,13 @@ public:
 
 private:
     OutputProducerRegistry &m_registry;
-    QList<IOutputProducer *> m_producers;
+    QList<OutputProducer *> m_producers;
 };
 
 TEST_CASE("OutputProducerRegistry lookup miss returns nullptr", "[OutputProducerRegistry][Registry]") {
     auto &registry = OutputProducerRegistry::instance();
 
-    IOutputProducer *result = registry.producerForFormat("nonexistent-format"_L1);
+    OutputProducer *result = registry.producerForFormat("nonexistent-format"_L1);
 
     REQUIRE(result == nullptr);
 }
@@ -79,12 +79,12 @@ TEST_CASE("OutputProducerRegistry register and lookup", "[OutputProducerRegistry
     guard.add(&producer);
 
     SECTION("Lookup by same format returns the producer") {
-        IOutputProducer *result = registry.producerForFormat("test-format-1"_L1);
+        OutputProducer *result = registry.producerForFormat("test-format-1"_L1);
         REQUIRE(result == &producer);
     }
 
     SECTION("Lookup by different format returns nullptr") {
-        IOutputProducer *result = registry.producerForFormat("other-format"_L1);
+        OutputProducer *result = registry.producerForFormat("other-format"_L1);
         REQUIRE(result == nullptr);
     }
 }
@@ -96,12 +96,12 @@ TEST_CASE("OutputProducerRegistry lookup is case-sensitive", "[OutputProducerReg
     guard.add(&producer);
 
     SECTION("Exact case matches") {
-        IOutputProducer *result = registry.producerForFormat("HTML"_L1);
+        OutputProducer *result = registry.producerForFormat("HTML"_L1);
         REQUIRE(result == &producer);
     }
 
     SECTION("Different case does not match") {
-        IOutputProducer *result = registry.producerForFormat("html"_L1);
+        OutputProducer *result = registry.producerForFormat("html"_L1);
         REQUIRE(result == nullptr);
     }
 }
@@ -117,14 +117,14 @@ TEST_CASE("OutputProducerRegistry producer replacement", "[OutputProducerRegistr
     guard.add(&replacement);
 
     SECTION("Replacement is returned for the format") {
-        IOutputProducer *result = registry.producerForFormat("replacement-test-format"_L1);
+        OutputProducer *result = registry.producerForFormat("replacement-test-format"_L1);
         REQUIRE(result == &replacement);
     }
 
     SECTION("Original cannot unregister the replacement (pointer mismatch protection)") {
         registry.unregisterProducer(&original);
 
-        IOutputProducer *result = registry.producerForFormat("replacement-test-format"_L1);
+        OutputProducer *result = registry.producerForFormat("replacement-test-format"_L1);
         REQUIRE(result == &replacement);
     }
 }
@@ -137,7 +137,7 @@ TEST_CASE("OutputProducerRegistry unregister removes entry", "[OutputProducerReg
 
     registry.unregisterProducer(&producer);
 
-    IOutputProducer *result = registry.producerForFormat("unregister-test-format"_L1);
+    OutputProducer *result = registry.producerForFormat("unregister-test-format"_L1);
     REQUIRE(result == nullptr);
 }
 
@@ -163,7 +163,7 @@ TEST_CASE("OutputProducerRegistry allProducers returns all registered", "[Output
     guard.add(&producer2);
     guard.add(&producer3);
 
-    QList<IOutputProducer *> all = registry.allProducers();
+    QList<OutputProducer *> all = registry.allProducers();
 
     REQUIRE(all.contains(&producer1));
     REQUIRE(all.contains(&producer2));

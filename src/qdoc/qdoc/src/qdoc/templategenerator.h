@@ -5,8 +5,8 @@
 #define TEMPLATEGENERATOR_H
 
 #include "filedocumentwriter.h"
-#include "idocumentationhandler.h"
-#include "ioutputproducer.h"
+#include "documentationhandler.h"
+#include "outputproducer.h"
 #include "outputcontext.h"
 #include "filesystem/fileresolver.h"
 
@@ -25,7 +25,7 @@ namespace IR { struct Document; }
     \internal
     \brief Generates documentation using external templates and a pre-built IR.
 
-    TemplateGenerator implements IOutputProducer and IDocumentationHandler to
+    TemplateGenerator implements OutputProducer and DocumentationHandler to
     generate documentation without inheriting from Generator. It uses
     DocumentationTraverser for tree traversal and delegates content generation
     to templates via the IR system.
@@ -34,28 +34,28 @@ namespace IR { struct Document; }
 
     The generator follows a composition-based design:
     \list
-    \li \b{IOutputProducer}: Lifecycle interface (prepare/produce/finalize)
-    \li \b{IDocumentationHandler}: Content generation callbacks for traverser
+    \li \b{OutputProducer}: Lifecycle interface (prepare/produce/finalize)
+    \li \b{DocumentationHandler}: Content generation callbacks for traverser
     \li \b{DocumentationTraverser}: Shared tree traversal logic
-    \li \b{IDocumentWriter}: Output abstraction (file or string for tests)
+    \li \b{DocumentWriter}: Output abstraction (file or string for tests)
     \endlist
 
-    \sa DocumentationTraverser, IDocumentationHandler, IOutputProducer
+    \sa DocumentationTraverser, DocumentationHandler, OutputProducer
 */
-class TemplateGenerator : public IOutputProducer, public IDocumentationHandler
+class TemplateGenerator : public OutputProducer, public DocumentationHandler
 {
 public:
     explicit TemplateGenerator(FileResolver &fileResolver, QDocDatabase &qdb,
                                const QString &format = QString());
     ~TemplateGenerator() override;
 
-    // === IOutputProducer interface ===
+    // === OutputProducer interface ===
     void prepare() override;
     void produce() override;
     void finalize() override;
     [[nodiscard]] QString format() const override;
 
-    // === IDocumentationHandler interface ===
+    // === DocumentationHandler interface ===
     void beginDocument(const QString &fileName) override;
     void endDocument() override;
     [[nodiscard]] QString fileName(const Node *node) const override;

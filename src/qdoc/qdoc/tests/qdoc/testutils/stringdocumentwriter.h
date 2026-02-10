@@ -4,7 +4,7 @@
 #ifndef STRINGDOCUMENTWRITER_H
 #define STRINGDOCUMENTWRITER_H
 
-#include "../../../src/qdoc/idocumentwriter.h"
+#include "../../../src/qdoc/documentwriter.h"
 
 #include <QtCore/qstring.h>
 
@@ -13,7 +13,7 @@ QT_BEGIN_NAMESPACE
 /*!
     \class StringDocumentWriter
     \internal
-    \brief Test double for IDocumentWriter that captures output in memory.
+    \brief Test double for DocumentWriter that captures output in memory.
 
     StringDocumentWriter enables unit testing of generators without filesystem
     access. All write operations capture content to an in-memory string that
@@ -32,9 +32,9 @@ QT_BEGIN_NAMESPACE
     REQUIRE(writer.content().contains("<title>"));
     \endcode
 
-    \sa IDocumentWriter, FileDocumentWriter
+    \sa DocumentWriter, FileDocumentWriter
 */
-class StringDocumentWriter : public IDocumentWriter
+class StringDocumentWriter : public DocumentWriter
 {
 public:
     StringDocumentWriter() = default;
@@ -59,7 +59,7 @@ public:
         m_open = false;
     }
 
-    // IDocumentWriter interface
+    // DocumentWriter interface
     void write(QStringView content) override
     {
         if (m_open)

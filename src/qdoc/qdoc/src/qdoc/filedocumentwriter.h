@@ -4,7 +4,7 @@
 #ifndef FILEDOCUMENTWRITER_H
 #define FILEDOCUMENTWRITER_H
 
-#include "idocumentwriter.h"
+#include "documentwriter.h"
 #include "outputcontext.h"
 
 #include <QtCore/qfile.h>
@@ -14,7 +14,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class FileDocumentWriter : public IDocumentWriter
+class FileDocumentWriter : public DocumentWriter
 {
 public:
     explicit FileDocumentWriter(OutputContext context);

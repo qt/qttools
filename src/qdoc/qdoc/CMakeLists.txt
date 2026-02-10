@@ -51,8 +51,8 @@ set(qdoclib_sources
     src/qdoc/boundaries/filesystem/directorypath.cpp
     src/qdoc/boundaries/filesystem/filepath.cpp
     src/qdoc/boundaries/filesystem/resolvedfile.cpp
-    src/qdoc/idocumentwriter.h
-    src/qdoc/ioutputproducer.h
+    src/qdoc/documentwriter.h
+    src/qdoc/outputproducer.h
     src/qdoc/outputproducerregistry.cpp
 )
 

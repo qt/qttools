@@ -7,7 +7,7 @@
 #include "codemarker.h"
 #include "collectionnode.h"
 #include "config.h"
-#include "idocumentationhandler.h"
+#include "documentationhandler.h"
 #include "inclusionfilter.h"
 #include "node.h"
 #include "pagenode.h"
@@ -39,7 +39,7 @@ using namespace Qt::Literals;
     \endlist
 
     The actual content generation and file lifecycle are delegated to an
-    IDocumentationHandler, enabling different generators to share traversal
+    DocumentationHandler, enabling different generators to share traversal
     logic while implementing their own output strategies.
 
     \section1 Usage
@@ -50,7 +50,7 @@ using namespace Qt::Literals;
     traverser.traverse(rootNode, handler);
     \endcode
 
-    \sa IDocumentationHandler, Generator, TemplateGenerator
+    \sa DocumentationHandler, Generator, TemplateGenerator
 */
 
 /*!
@@ -58,7 +58,7 @@ using namespace Qt::Literals;
     Traverses the node tree starting from \a root, dispatching to \a handler
     for each documentable node.
 */
-void DocumentationTraverser::traverse(Node *root, IDocumentationHandler &handler)
+void DocumentationTraverser::traverse(Node *root, DocumentationHandler &handler)
 {
     traverseNode(root, handler);
 }
@@ -76,7 +76,7 @@ void DocumentationTraverser::traverse(Node *root, IDocumentationHandler &handler
         \li Recursively processing child nodes.
     \endlist
 */
-void DocumentationTraverser::traverseNode(Node *node, IDocumentationHandler &handler)
+void DocumentationTraverser::traverseNode(Node *node, DocumentationHandler &handler)
 {
     if (shouldSkip(node))
         return;

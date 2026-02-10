@@ -10,7 +10,7 @@
 #include "docbookgenerator.h"
 #include "htmlgenerator.h"
 #include "inclusionpolicy.h"
-#include "ioutputproducer.h"
+#include "outputproducer.h"
 #include "location.h"
 #include "outputproducerregistry.h"
 #include "puredocparser.h"
@@ -695,7 +695,7 @@ static void processQdocconfFile(const QString &fileName)
             generator->initializeFormat();
             generator->generateDocs();
         } else if (auto *producer = OutputProducerRegistry::instance().producerForFormat(format)) {
-            // Non-Generator IOutputProducer implementation (e.g., TemplateGenerator)
+            // Non-Generator OutputProducer implementation (e.g., TemplateGenerator)
             producer->prepare();
             producer->produce();
             producer->finalize();

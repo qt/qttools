@@ -9,7 +9,7 @@
 #include "config.h"
 #include "documentationtraverser.h"
 #include "filedocumentwriter.h"
-#include "idocumentwriter.h"
+#include "documentwriter.h"
 #include "inclusionfilter.h"
 #include "injabridge.h"
 #include "ir/builder.h"
@@ -41,7 +41,7 @@ using namespace Qt::Literals;
     \internal
     \brief Generates documentation using external templates and a pre-built IR.
 
-    TemplateGenerator implements IOutputProducer and IDocumentationHandler to
+    TemplateGenerator implements OutputProducer and DocumentationHandler to
     generate documentation without inheriting from Generator. It uses
     DocumentationTraverser for tree traversal and delegates content generation
     to templates via the IR system.
@@ -50,14 +50,14 @@ using namespace Qt::Literals;
 
     The generator follows a composition-based design:
     \list
-        \li \b{IOutputProducer}: Lifecycle interface (prepare/produce/finalize).
-        \li \b{IDocumentationHandler}: Content generation callbacks for
+        \li \b{OutputProducer}: Lifecycle interface (prepare/produce/finalize).
+        \li \b{DocumentationHandler}: Content generation callbacks for
             traverser.
         \li \b{DocumentationTraverser}: Shared tree traversal logic.
-        \li \b{IDocumentWriter}: Output abstraction (file or string for tests).
+        \li \b{DocumentWriter}: Output abstraction (file or string for tests).
     \endlist
 
-    \sa DocumentationTraverser, IDocumentationHandler, IOutputProducer,
+    \sa DocumentationTraverser, DocumentationHandler, OutputProducer,
         IR::Builder
 */
 

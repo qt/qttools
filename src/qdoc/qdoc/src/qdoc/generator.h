@@ -4,7 +4,7 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-#include "ioutputproducer.h"
+#include "outputproducer.h"
 #include "text.h"
 #include "utilities.h"
 #include "filesystem/fileresolver.h"
@@ -35,7 +35,7 @@ struct RelatedClass;
 
 typedef QMultiMap<QString, Node *> NodeMultiMap;
 
-class Generator : public IOutputProducer
+class Generator : public OutputProducer
 {
 public:
     enum ListType { Generic, Obsolete };
