@@ -40,6 +40,39 @@ struct InlineContentIR
     [[nodiscard]] QString plainText() const;
 };
 
+enum class BlockType : unsigned char {
+    Paragraph,
+    CodeBlock,
+    List,
+    ListItem,
+    Section,
+    SectionHeading,
+    Note,
+    Warning,
+    Important,
+    Details,
+    Brief,
+    Div,
+    Quotation,
+    Legalese,
+    HorizontalRule,
+    Table,
+    TableRow,
+    TableCell,
+    Raw
+};
+
+struct ContentBlockIR
+{
+    BlockType type { BlockType::Paragraph };
+    QJsonObject attributes;                //!< Type-specific metadata
+    QList<InlineContentIR> inlineContent;  //!< Rich inline content
+    QList<ContentBlockIR> children;        //!< Nested blocks
+
+    [[nodiscard]] QJsonObject toJson() const;
+    [[nodiscard]] QString plainText() const;
+};
+
 QT_END_NAMESPACE
 
 #endif // CONTENTBLOCKIR_H
