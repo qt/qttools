@@ -303,6 +303,65 @@ SCENARIO("IR::Document since field serialization", "[IR::Document][IR][JSON]") {
     }
 }
 
+SCENARIO("IR::Document deprecatedSince field serialization", "[IR::Document][IR][JSON]") {
+
+    GIVEN("An IR::Document with no deprecatedSince value") {
+        IR::Document ir;
+        ir.title = "TestPage"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("The deprecatedSince field is absent from JSON output") {
+                REQUIRE(!json.contains("deprecatedSince"_L1));
+            }
+        }
+    }
+
+    GIVEN("An IR::Document with an empty deprecatedSince string") {
+        IR::Document ir;
+        ir.title = "TestPage"_L1;
+        ir.deprecatedSince = ""_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("The deprecatedSince field is absent from JSON output") {
+                REQUIRE(!json.contains("deprecatedSince"_L1));
+            }
+        }
+    }
+
+    GIVEN("An IR::Document with a deprecatedSince version") {
+        IR::Document ir;
+        ir.title = "TestPage"_L1;
+        ir.deprecatedSince = "6.5"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("The deprecatedSince field is present with the correct value") {
+                REQUIRE(json.contains("deprecatedSince"_L1));
+                REQUIRE(json["deprecatedSince"_L1].toString() == "6.5");
+            }
+        }
+    }
+
+    GIVEN("An IR::Document with a deprecatedSince version containing a minor.patch version") {
+        IR::Document ir;
+        ir.title = "TestPage"_L1;
+        ir.deprecatedSince = "6.5.1"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("The full version string is preserved") {
+                REQUIRE(json["deprecatedSince"_L1].toString() == "6.5.1");
+            }
+        }
+    }
+}
+
 SCENARIO("IR::Document complete workflow", "[IR::Document][IR][Integration]") {
 
     GIVEN("A fully populated IR::Document") {

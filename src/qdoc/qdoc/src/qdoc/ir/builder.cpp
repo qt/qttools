@@ -78,6 +78,7 @@ Document Builder::buildPageIR(const PageNode *pn) const
     ir.fullTitle = pn->fullTitle();
     ir.url = pn->url();
     ir.since = pn->since();
+    ir.deprecatedSince = pn->deprecatedSince();
     ir.brief = pn->doc().briefText().toString();
 
     QString bodyText;

@@ -145,6 +145,8 @@ QJsonObject Document::toJson() const
     json["url"_L1] = url;
     if (!since.isEmpty())
         json["since"_L1] = since;
+    if (!deprecatedSince.isEmpty())
+        json["deprecatedSince"_L1] = deprecatedSince;
     json["brief"_L1] = brief;
 
     // Content
