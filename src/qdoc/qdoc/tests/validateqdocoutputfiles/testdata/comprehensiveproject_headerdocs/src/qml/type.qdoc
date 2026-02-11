@@ -96,8 +96,8 @@
 */
 
 /*!
-    \qmlmethod Type::enable()
-    \qmlmethod Type::disable()
+    \qmlmethod void Type::enable()
+    \qmlmethod void Type::disable()
 
     Enables or disables this type.
 */
@@ -133,7 +133,7 @@
 */
 
 /*!
-    \qmlmethod Type::deprecatedMethod()
+    \qmlmethod void Type::deprecatedMethod()
 
     \deprecated [6.2] This method has no replacement.
 
@@ -142,7 +142,7 @@
 */
 
 /*!
-    \qmlmethod Type::futureDeprecated()
+    \qmlmethod void Type::futureDeprecated()
     \deprecated [6.3] Use something else instead.
 
     This is a method that's marked for deprecation in a future version.

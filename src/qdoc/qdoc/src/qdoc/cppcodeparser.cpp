@@ -709,53 +709,29 @@ EnumNode *CppCodeParser::processQmlEnumTopic(const QStringList &enumItemNames,
 FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Location &location,
                                                const QString &funcArg)
 {
-    QString funcName;
-    QString returnType;
+    auto parsingOpts { QmlPropertyArguments::ParsingOptions::RequireQualifiedPath };
 
-    qsizetype leftParen = funcArg.indexOf(QChar('('));
-    if (leftParen > 0)
-        funcName = funcArg.left(leftParen);
+    // Signatures for QML signals require no return type. Parameter list is optional.
+    if (topic.contains("signal"_L1))
+        parsingOpts = parsingOpts | QmlPropertyArguments::ParsingOptions::IgnoreType;
     else
-        funcName = funcArg;
-    qsizetype firstBlank = funcName.indexOf(QChar(' '));
-    if (firstBlank > 0) {
-        returnType = funcName.left(firstBlank);
-        funcName = funcName.right(funcName.size() - firstBlank - 1);
-    }
+        parsingOpts = parsingOpts | QmlPropertyArguments::ParsingOptions::ParseAsMethod;
 
-    QStringList colonSplit(funcName.split("::"));
-    if (colonSplit.size() < 2) {
-        QString msg = "Unrecognizable QML module/component qualifier for " + funcArg;
-        location.warning(msg.toLatin1().data());
+
+    auto methodArgs = QmlPropertyArguments::parse(funcArg, location, parsingOpts);
+    if (!methodArgs)
         return nullptr;
-    }
-    QString moduleName;
-    QString elementName;
-    if (colonSplit.size() > 2) {
-        moduleName = colonSplit[0];
-        elementName = colonSplit[1];
-    } else {
-        elementName = colonSplit[0];
-    }
-    funcName = colonSplit.last();
 
-    auto *aggregate = findOrCreateQmlType(moduleName, elementName, location);
-
-    QString params;
-    QStringList leftParenSplit = funcArg.split('(');
-    if (leftParenSplit.size() > 1) {
-        QStringList rightParenSplit = leftParenSplit[1].split(')');
-        if (!rightParenSplit.empty())
-            params = rightParenSplit[0];
-    }
+    auto *aggregate = findOrCreateQmlType((*methodArgs).m_module,
+                                          (*methodArgs).m_qmltype, location);
 
     FunctionNode::Metaness metaness = FunctionNode::getMetanessFromTopic(topic);
-    bool attached = topic.contains(QLatin1String("attached"));
-    auto *fn = new FunctionNode(metaness, aggregate, funcName, attached);
+    bool attached = topic.contains("attached"_L1);
+    auto *fn = new FunctionNode(metaness, aggregate, (*methodArgs).m_name, attached);
     fn->setAccess(Access::Public);
     fn->setLocation(location);
-    fn->setReturnType(returnType);
-    fn->setParameters(params);
+    fn->setReturnType((*methodArgs).m_type);
+    fn->setParameters((*methodArgs).m_params);
     return fn;
 }
 

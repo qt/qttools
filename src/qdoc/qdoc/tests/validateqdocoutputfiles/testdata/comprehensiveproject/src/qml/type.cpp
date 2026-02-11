@@ -119,8 +119,8 @@
 */
 
 /*!
-    \qmlmethod Type::enable()
-    \qmlmethod Type::disable()
+    \qmlmethod void Type::enable()
+    \qmlmethod void Type::disable()
 
     Enables or disables this type.
 */
@@ -135,12 +135,17 @@
 */
 
 /*!
-    \qmlmethod void Type::configureWithType(Type::SomeType typeParam)
+    \qmlmethod void Type::configureWithType (Type::SomeType typeParam)
 
     Configures the type using \a typeParam. This tests enum parameter linking
     using C++ namespace notation.
 
     \sa type
+*/
+
+/*!
+    \qmlmethod Type::missingReturnType()
+    QDoc won't like this.
 */
 
 /*!
@@ -156,7 +161,7 @@
 */
 
 /*!
-    \qmlmethod Type::deprecatedMethod()
+    \qmlmethod list<int> Type::deprecatedMethod()
 
     \deprecated [6.2] This method has no replacement.
 
@@ -165,8 +170,12 @@
 */
 
 /*!
-    \qmlmethod Type::futureDeprecated()
+    \qmlmethod void Type::futureDeprecated()
     \deprecated [6.3] Use something else instead.
 
     This is a method that's marked for deprecation in a future version.
+*/
+
+/*!
+    \qmlmethod int Type::justPlainWrong(oops
 */

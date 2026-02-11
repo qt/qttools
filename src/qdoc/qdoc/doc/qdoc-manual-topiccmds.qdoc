@@ -768,8 +768,9 @@
     \section1 \\qmlmethod
 
     The \\qmlmethod command is for documenting a QML method. The
-    argument is the complete method signature, including return
-    type and parameter names and types.
+    argument is the complete method signature, and must include
+    a return type and parameter names and types enclosed in
+    parentheses. If a method takes no arguments, use \c{()}.
 
     \badcode *
     /\1!
@@ -786,9 +787,8 @@
     \1/
     \endcode
 
-    QDoc includes this documentation on the element reference page for the
-    \l{http://doc.qt.io/qt-5/qml-qtquick-textinput.html#select-method}
-    {TextInput} element.
+    QDoc includes this documentation on the type reference page for the
+    \l{QtQuick::TextInput::select()}{TextInput} type.
 
     \target qmltype-command
     \section1 \\qmltype

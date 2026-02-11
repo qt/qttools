@@ -514,37 +514,16 @@
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type></type>
-            <name>deprecatedMethod</name>
-            <anchorfile>qml-qdoc-test-type-obsolete.html</anchorfile>
-            <anchor>deprecatedMethod-method</anchor>
-            <arglist>()</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>disable</name>
-            <anchorfile>qml-qdoc-test-type.html</anchorfile>
-            <anchor>disable-method</anchor>
-            <arglist>()</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>enable</name>
-            <anchorfile>qml-qdoc-test-type.html</anchorfile>
-            <anchor>enable-method</anchor>
-            <arglist>()</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>futureDeprecated</name>
-            <anchorfile>qml-qdoc-test-type.html</anchorfile>
-            <anchor>futureDeprecated-method</anchor>
-            <arglist>()</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
             <name>group.created</name>
             <anchorfile>qml-qdoc-test-type.html</anchorfile>
             <anchor>group.created-signal</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>list&lt;int&gt;</type>
+            <name>deprecatedMethod</name>
+            <anchorfile>qml-qdoc-test-type-obsolete.html</anchorfile>
+            <anchor>deprecatedMethod-method</anchor>
             <arglist>()</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
@@ -553,6 +532,27 @@
             <anchorfile>qml-qdoc-test-type.html</anchorfile>
             <anchor>configureWithType-method</anchor>
             <arglist>(Type::SomeType typeParam)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>disable</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>disable-method</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>enable</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>enable-method</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>futureDeprecated</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>futureDeprecated-method</anchor>
+            <arglist>()</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type>void</type>

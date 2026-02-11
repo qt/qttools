@@ -247,10 +247,10 @@
             <function name="copy" fullname="QDoc.Test.Type.copy" href="qml-qdoc-test-type.html#copy-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod" type="Type">
                 <parameter type="" name="a" default=""/>
             </function>
-            <function name="deprecatedMethod" fullname="QDoc.Test.Type.deprecatedMethod" href="qml-qdoc-test-type-obsolete.html#deprecatedMethod-method" status="deprecated" access="public" location="type.qdoc" documented="true" meta="qmlmethod"/>
-            <function name="disable" fullname="QDoc.Test.Type.disable" href="qml-qdoc-test-type.html#disable-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod"/>
-            <function name="enable" fullname="QDoc.Test.Type.enable" href="qml-qdoc-test-type.html#enable-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod"/>
-            <function name="futureDeprecated" fullname="QDoc.Test.Type.futureDeprecated" href="qml-qdoc-test-type.html#futureDeprecated-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod"/>
+            <function name="deprecatedMethod" fullname="QDoc.Test.Type.deprecatedMethod" href="qml-qdoc-test-type-obsolete.html#deprecatedMethod-method" status="deprecated" access="public" location="type.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <function name="disable" fullname="QDoc.Test.Type.disable" href="qml-qdoc-test-type.html#disable-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <function name="enable" fullname="QDoc.Test.Type.enable" href="qml-qdoc-test-type.html#enable-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <function name="futureDeprecated" fullname="QDoc.Test.Type.futureDeprecated" href="qml-qdoc-test-type.html#futureDeprecated-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod" type="void"/>
             <function name="group.created" fullname="QDoc.Test.Type.group.created" href="qml-qdoc-test-type.html#group.created-signal" status="active" access="public" location="type.qdoc" documented="true" meta="qmlsignal"/>
             <function name="setType" fullname="QDoc.Test.Type.setType" href="qml-qdoc-test-type.html#setType-method" status="active" access="public" location="type.qdoc" documented="true" meta="qmlmethod" type="void">
                 <parameter type="Type.SomeType" name="newType" default=""/>

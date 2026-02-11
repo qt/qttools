@@ -99,8 +99,8 @@
 */
 
 /*!
-    \qmlmethod Type::enable()
-    \qmlmethod Type::disable()
+    \qmlmethod void Type::enable()
+    \qmlmethod void Type::disable()
 
     Enables or disables this type.
 */
@@ -118,7 +118,7 @@
 */
 
 /*!
-    \qmlmethod Type::deprecatedMethod()
+    \qmlmethod void Type::deprecatedMethod()
 
     \deprecated [6.2] This method has no replacement.
 

@@ -12,8 +12,8 @@ headers.fileextensions = "*.h"
 # images
 imagedirs = ./src/images
 
-# warning policy
-warninglimit = 3
+# warning policy (see generated log for allowed warnings)
+warninglimit = 5
 warninglimit.enabled = true
 projectroot = .
 logwarnings = true

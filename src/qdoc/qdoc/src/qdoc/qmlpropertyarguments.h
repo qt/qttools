@@ -17,13 +17,15 @@ struct QmlPropertyArguments
     enum class ParsingOptions {
         None = 0x0,
         RequireQualifiedPath = 0x1,
-        IgnoreType = 0x2
+        IgnoreType = 0x2,
+        ParseAsMethod = 0x4
     };
 
     QString m_type {};
     QString m_module {};
     QString m_qmltype {};
     QString m_name {};
+    QString m_params {};
     bool m_isList { false };
 
     static std::optional<QmlPropertyArguments>
