@@ -326,10 +326,11 @@ static QString nodeTypeKey(const Node *node)
 
 /*!
     \internal
-    Computes the base filename for a node, adapted from Generator::fileBase().
+    Computes the base filename for a node, delegating the core computation
+    to Utilities::computeFileBase().
 
-    This handles the various node types (collections, pages, QML types, etc.)
-    and applies the configured prefixes and suffixes.
+    This handles caching and adapts the TemplateGenerator's OutputContext-based
+    prefix/suffix lookup to the shared interface.
 */
 QString TemplateGenerator::fileBase(const Node *node) const
 {
@@ -339,71 +340,17 @@ QString TemplateGenerator::fileBase(const Node *node) const
     if (node->hasFileNameBase())
         return node->fileNameBase();
 
-    QString base{node->name()};
-    if (base.endsWith(".html"_L1))
-        base.truncate(base.size() - 5);
+    QString result = Utilities::computeFileBase(
+        node, m_context->project,
+        [this](const Node *n) -> QString {
+            if (n->isCollectionNode())
+                return {};
+            return m_context->outputPrefix(nodeTypeKey(n));
+        },
+        [this](const Node *n) { return m_context->outputSuffix(nodeTypeKey(n)); });
 
-    const QString typeKey = nodeTypeKey(node);
-
-    if (node->isCollectionNode()) {
-        if (node->isQmlModule())
-            base.append("-qmlmodule"_L1);
-        else if (node->isModule())
-            base.append("-module"_L1);
-        base.append(m_context->outputSuffix(typeKey));
-    } else if (node->isTextPageNode()) {
-        if (node->isExample()) {
-            base.prepend(u"%1-"_s.arg(m_context->project.toLower()));
-            base.append("-example"_L1);
-        }
-    } else if (node->isQmlType()) {
-        /*
-          To avoid file name conflicts in the html directory,
-          we prepend a prefix (by default, "qml-") and an optional suffix
-          to the file name. The suffix, if one exists, is appended to the
-          module name.
-
-          For historical reasons, skip the module name qualifier for QML value types
-          in order to avoid excess redirects in the online docs.
-        */
-        if (!node->logicalModuleName().isEmpty() && !node->isQmlBasicType()) {
-            const InclusionPolicy policy = Config::instance().createInclusionPolicy();
-            const NodeContext context = node->logicalModule()->createContext();
-            if (InclusionFilter::isIncluded(policy, context))
-                base.prepend(u"%1%2-"_s.arg(node->logicalModuleName(), m_context->outputSuffix(typeKey)));
-        }
-    } else if (node->isProxyNode()) {
-        base.append(u"-%1-proxy"_s.arg(node->tree()->physicalModuleName()));
-    } else {
-        base.clear();
-        const Node *p = node;
-        forever {
-            const Node *pp = p->parent();
-            base.prepend(p->name());
-            if (pp == nullptr || pp->name().isEmpty() || pp->isTextPageNode())
-                break;
-            base.prepend('-'_L1);
-            p = pp;
-        }
-        if (node->isNamespace() && !node->name().isEmpty()) {
-            const auto *ns = static_cast<const NamespaceNode *>(node);
-            if (!ns->isDocumentedHere()) {
-                base.append("-sub-"_L1);
-                base.append(ns->tree()->camelCaseModuleName());
-            }
-        }
-        base.append(m_context->outputSuffix(typeKey));
-    }
-
-    base.prepend(m_context->outputPrefix(typeKey));
-    QString canonicalName{Utilities::asAsciiPrintable(base)};
-
-    // Cache the computed filename on the node for future lookups
-    // (const_cast is safe here as we're just caching)
-    auto *mutableNode = const_cast<Node *>(node);
-    mutableNode->setFileNameBase(canonicalName);
-
-    return canonicalName;
+    const_cast<Node *>(node)->setFileNameBase(result);
+    return result;
 }
 
 /*!

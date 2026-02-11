@@ -103,6 +103,7 @@ set(qdoc_sources
     src/qdoc/editdistance.cpp
     src/qdoc/enumnode.cpp
     src/qdoc/externalpagenode.cpp
+    src/qdoc/filebase.cpp
     src/qdoc/filedocumentwriter.cpp
     src/qdoc/filesystem/fileresolver.cpp
     src/qdoc/functionnode.cpp

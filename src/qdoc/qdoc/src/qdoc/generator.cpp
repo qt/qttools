@@ -313,66 +313,13 @@ QString Generator::fileBase(const Node *node) const
     if (node->hasFileNameBase())
         return node->fileNameBase();
 
-    QString base{node->name()};
-    if (base.endsWith(".html"))
-        base.truncate(base.size() - 5);
+    QString result = Utilities::computeFileBase(
+        node, s_project,
+        [](const Node *n) { return outputPrefix(n); },
+        [](const Node *n) { return outputSuffix(n); });
 
-    if (node->isCollectionNode()) {
-        if (node->isQmlModule())
-            base.append("-qmlmodule");
-        else if (node->isModule())
-            base.append("-module");
-        base.append(outputSuffix(node));
-    } else if (node->isTextPageNode()) {
-        if (node->isExample()) {
-            base.prepend("%1-"_L1.arg(s_project.toLower()));
-            base.append("-example");
-        }
-    } else if (node->isQmlType()) {
-        /*
-          To avoid file name conflicts in the html directory,
-          we prepend a prefix (by default, "qml-") and an optional suffix
-          to the file name. The suffix, if one exists, is appended to the
-          module name.
-
-          For historical reasons, skip the module name qualifier for QML value types
-          in order to avoid excess redirects in the online docs. TODO: re-assess
-        */
-        if (!node->logicalModuleName().isEmpty() && !node->isQmlBasicType()) {
-            const InclusionPolicy policy = Config::instance().createInclusionPolicy();
-            const NodeContext context = node->logicalModule()->createContext();
-            if (InclusionFilter::isIncluded(policy, context))
-                base.prepend("%1%2-"_L1.arg(node->logicalModuleName(), outputSuffix(node)));
-        }
-
-    } else if (node->isProxyNode()) {
-        base.append("-%1-proxy"_L1.arg(node->tree()->physicalModuleName()));
-    } else {
-        base.clear();
-        const Node *p = node;
-        forever {
-            const Node *pp = p->parent();
-            base.prepend(p->name());
-            if (pp == nullptr || pp->name().isEmpty() || pp->isTextPageNode())
-                break;
-            base.prepend('-'_L1);
-            p = pp;
-        }
-        if (node->isNamespace() && !node->name().isEmpty()) {
-            const auto *ns = static_cast<const NamespaceNode *>(node);
-            if (!ns->isDocumentedHere()) {
-                base.append(QLatin1String("-sub-"));
-                base.append(ns->tree()->camelCaseModuleName());
-            }
-        }
-        base.append(outputSuffix(node));
-    }
-
-    base.prepend(outputPrefix(node));
-    QString canonicalName{ Utilities::asAsciiPrintable(base) };
-    Node *n = const_cast<Node *>(node);
-    n->setFileNameBase(canonicalName);
-    return canonicalName;
+    const_cast<Node *>(node)->setFileNameBase(result);
+    return result;
 }
 
 /*!

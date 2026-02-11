@@ -7,6 +7,8 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qloggingcategory.h>
 
+#include <functional>
+
 using namespace Qt::Literals::StringLiterals;
 
 QT_BEGIN_NAMESPACE
@@ -16,6 +18,7 @@ Q_DECLARE_LOGGING_CATEGORY(lcQdocClang)
 
 class INode;
 class Location;
+class Node;
 
 namespace Utilities {
 void startDebugging(const QString &message);
@@ -38,6 +41,12 @@ QStringList pathAndFragment(const QString &linkText);
 enum class ExampleFileKind { File, Image };
 [[nodiscard]] QString exampleFileTitle(const QString &fileName, ExampleFileKind kind);
 [[nodiscard]] QString exampleFileTitle(const QStringList &files, const QStringList &images, const QString &fileName);
+
+QString computeFileBase(
+    const Node *node,
+    const QString &project,
+    const std::function<QString(const Node *)> &prefixFn,
+    const std::function<QString(const Node *)> &suffixFn);
 
 static constexpr QLatin1StringView samp = "&amp;"_L1;
 static constexpr QLatin1StringView slt = "&lt;"_L1;
