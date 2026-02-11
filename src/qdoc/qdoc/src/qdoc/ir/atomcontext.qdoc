@@ -1,0 +1,138 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \struct IR::AtomContext
+    \headerfile ir/atomcontext.h
+    \inmodule QDoc
+    \brief Stack-based state tracker for atom chain traversal.
+
+    AtomContext tracks where a content builder is in the document tree
+    during atom chain processing. Instead of using scattered boolean
+    flags (such as \c in_para, \c m_inLink, or \c m_inSectionHeading),
+    it maintains an explicit stack of typed context frames.
+
+    Each frame records a context type (Paragraph, List, CodeBlock, etc.)
+    and optional attributes (language, heading level, list style). The
+    stack naturally handles arbitrarily nested structures such as lists
+    within lists or code blocks inside admonitions.
+
+    AtomContext is a pure value type with no dependencies on QDoc
+    infrastructure. It depends only on Qt types (QList, QJsonObject).
+*/
+
+/*!
+    \enum IR::AtomContext::ContextType
+    \headerfile ir/atomcontext.h
+    \inmodule QDoc
+    \brief Identifies the kind of document structure a frame represents.
+
+    Each value corresponds to a block-level context that can appear
+    in a documentation page. The values align with BlockType in
+    contentblock.h, plus a few traversal-specific contexts such as
+    Brief and Link.
+
+    \value Paragraph A block of running text, typically containing inline
+           formatting such as bold, italic, code, and links.
+    \value Brief The brief description of a documentable entity. This is a
+           traversal-specific context with no BlockType counterpart;
+           ContentBuilder uses it to exclude brief content from the body,
+           since IR::Builder captures the brief separately.
+    \value Section A grouping of related content under a heading, such as
+           a \c{\section1} or \c{\section2} block. Sections can nest to
+           form the document's outline hierarchy.
+    \value SectionHeading The heading text within a section. Frame
+           attributes typically include \c{"level"} to indicate the
+           heading depth (1 through 4).
+    \value List An ordered or unordered list. Frame attributes typically
+           include \c{"listType"} with a value such as \c{"bullet"} or
+           \c{"numeric"}.
+    \value ListItem A single item within a list, usually containing one
+           or more paragraphs.
+    \value Note An admonition that highlights supplementary information
+           for the reader, rendered from \c{\\note} commands.
+    \value Warning An admonition that alerts readers to potential
+           pitfalls, rendered from \c{\\warning} commands.
+    \value Important An admonition that emphasizes critical information
+           the reader shouldn't overlook.
+    \value Details A collapsible or expandable block of supplementary
+           content, rendered from \c{\\details} commands.
+    \value CodeBlock A block of preformatted source code. Frame
+           attributes typically include \c{"language"} to identify the
+           programming language for syntax highlighting.
+    \value Table A tabular layout of rows and cells.
+    \value TableRow A single row within a table.
+    \value TableCell An individual cell within a table row.
+    \value Link An inline hyperlink context. This is a traversal-specific
+           context used to track that ContentBuilder is inside a link's
+           display text, so nested formatting is added as children of the
+           link rather than as siblings.
+    \value Caption Descriptive text associated with a table or figure.
+    \value Footnote A supplementary note referenced from the main text.
+    \value Legalese A block of legal text, rendered from \c{\\legalese}
+           commands.
+    \value Quotation A block quotation, rendered from \c{\\quotation}
+           commands.
+    \value Div A generic container block, used for content that doesn't
+           map to a more specific type. Also used for placeholder blocks
+           such as annotated lists and generated lists.
+    \value Sidebar A block of tangentially related content, typically
+           rendered alongside the main text.
+*/
+
+/*!
+    \struct IR::AtomContext::Frame
+    \headerfile ir/atomcontext.h
+    \inmodule QDoc
+    \brief A single entry on the context stack.
+
+    Each frame records the context type and optional attributes
+    such as \c{"language"} for code blocks or \c{"level"} for
+    section headings.
+*/
+
+/*!
+    \variable IR::AtomContext::Frame::type
+    \brief The context type for this frame.
+*/
+
+/*!
+    \variable IR::AtomContext::Frame::attributes
+    \brief Optional key-value attributes for this context frame.
+*/
+
+/*!
+    \fn void IR::AtomContext::push(ContextType type, QJsonObject attrs)
+    \brief Pushes a new context frame onto the stack.
+*/
+
+/*!
+    \fn IR::AtomContext::Frame IR::AtomContext::pop()
+    \brief Removes and returns the topmost context frame.
+*/
+
+/*!
+    \fn bool IR::AtomContext::isInContext(ContextType type) const
+    \brief Returns \c true if any ancestor frame matches \a type.
+*/
+
+/*!
+    \fn const IR::AtomContext::Frame &IR::AtomContext::current() const
+    \brief Returns a reference to the topmost context frame.
+*/
+
+/*!
+    \fn bool IR::AtomContext::isEmpty() const
+    \brief Returns \c true if the context stack is empty.
+*/
+
+/*!
+    \fn qsizetype IR::AtomContext::depth() const
+    \brief Returns the number of frames on the context stack.
+*/
+
+/*!
+    \fn void IR::AtomContext::clear()
+    \brief Removes all frames from the context stack.
+*/
+
