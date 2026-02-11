@@ -135,7 +135,7 @@
 <db:section xml:id="attached-property-documentation">
 <db:title>Attached Property Documentation</db:title>
 <db:section xml:id="duplicate-attached-prop">
-<db:title>Type.duplicate : int</db:title>
+<db:title>[attached] Type.duplicate : int</db:title>
 <db:fieldsynopsis>
 <db:type>int</db:type>
 <db:varname>Type.duplicate</db:varname>
@@ -149,7 +149,7 @@
 <db:para>This shadows the regular <db:link xlink:href="qml-qdoc-test-type.xml#duplicate-prop">duplicate</db:link> property.</db:para>
 </db:section>
 <db:section xml:id="type-attached-prop">
-<db:title>[default: Type.NoType] Type.type : enumeration</db:title>
+<db:title>[default: Type.NoType attached] Type.type : enumeration</db:title>
 <db:fieldsynopsis>
 <db:type>enumeration</db:type>
 <db:varname>Type.type</db:varname>
@@ -205,7 +205,7 @@
 <db:section xml:id="attached-signal-documentation">
 <db:title>Attached Signal Documentation</db:title>
 <db:section xml:id="configured-signal">
-<db:title>configured()</db:title>
+<db:title>[attached] configured()</db:title>
 <db:para>This attached signal is emitted when the type was configured.</db:para>
 <db:note>
 <db:para>The corresponding handler is <db:code>onConfigured</db:code>.</db:para>

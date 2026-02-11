@@ -240,6 +240,9 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
                 extra << "<@extref target=\"cpp-deleted-functions\">delete</@extref>";
             else if (func->isInvokable())
                 extra << "invokable";
+
+            if (func->isAttached())
+                extra << "attached";
         }
         break;
         case NodeType::TypeAlias:
@@ -251,6 +254,8 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
                 extra << "bindable";
             if (!propertyNode->isWritable())
                 extra << "read-only";
+            if (propertyNode->isAttached())
+                extra << "attached";
         }
         break;
         case NodeType::QmlProperty: {
@@ -259,6 +264,8 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
             // "default: value" not included in hints() to avoid "default default: value"
             if (!qmlProperty->isDefault() && !qmlProperty->defaultValue().isEmpty())
                 extra << u"default: "_s + qmlProperty->defaultValue();
+            if (qmlProperty->isAttached())
+                extra << "attached";
         }
         break;
         default:
