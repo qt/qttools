@@ -18,14 +18,14 @@ Usage",
     "Homepage": "www.qt.io",
     "Version": "1.0",
     "CPE": [
-        "cpe:2.3:a:qt:qt:test-version:*:*:*:*:*:*:*",
-        "cpe:2.3:a:qt:qtbase:test-version:*:*:*:*:*:*:*"
+        "cpe:2.3:a:qt:qt:$<VERSION>:*:*:*:*:*:*:*",
+        "cpe:2.3:a:qt:qtbase:$<VERSION>:*:*:*:*:*:*:*"
     ],
     "PURL": [
-        "pkg:github/qt/qt@test-version",
-        "pkg:github/qt/qtbase@test-version"
+        "pkg:github/qt/qt@$<VERSION>",
+        "pkg:github/qt/qtbase@$<VERSION>"
     ],
-    "DownloadLocation": "www.qt.io/1.0",
+    "DownloadLocation": "www.qt.io/$<VERSION>/qt-$<VERSION_DASHED>",
     "SecurityCritical": true,
     "LicenseId": "xxx",
     "LicenseFile": "../../../../../../LICENSES/BSD-3-Clause.txt",

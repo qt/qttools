@@ -396,6 +396,41 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         }
     }
 
+    // Replace $<VERSION> and $<VERSION_DASHED> in string values
+    {
+        const QString versionVar = u"$<VERSION>"_s;
+        const QString versionDashedVar = u"$<VERSION_DASHED>"_s;
+        auto replaceInString = [&](QString &s) {
+            if (s.contains(versionVar) || s.contains(versionDashedVar)) {
+                if (p.version.isEmpty()) {
+                    if (logLevel != SilentLog) {
+                        std::cerr << qPrintable(
+                                tr("File %1: $<VERSION> used but 'Version' is not set.")
+                                        .arg(QDir::toNativeSeparators(filePath)))
+                                  << std::endl;
+                    }
+                    validPackage = false;
+                    return;
+                }
+                s.replace(versionVar, p.version);
+                s.replace(versionDashedVar,
+                          QString(p.version).replace(u'.', u'-'));
+            }
+        };
+        auto replaceInList = [&](QStringList &list) {
+            for (QString &s : list)
+                replaceInString(s);
+        };
+        replaceInString(p.name);
+        replaceInString(p.homepage);
+        replaceInString(p.downloadLocation);
+        replaceInString(p.description);
+        replaceInString(p.qtUsage);
+        replaceInString(p.packageComment);
+        replaceInList(p.cpeList);
+        replaceInList(p.purlList);
+    }
+
     if (!p.copyrightFile.isEmpty()) {
         QFile file(p.copyrightFile);
         if (!file.open(QIODevice::ReadOnly)) {

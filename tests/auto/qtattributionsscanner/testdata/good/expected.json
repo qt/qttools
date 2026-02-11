@@ -25,13 +25,13 @@
     },
     {
         "CPE": [
-            "cpe:2.3:a:qt:qt:test-version:*:*:*:*:*:*:*",
-            "cpe:2.3:a:qt:qtbase:test-version:*:*:*:*:*:*:*"
+            "cpe:2.3:a:qt:qt:1.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:qt:qtbase:1.0:*:*:*:*:*:*:*"
         ],
         "Copyright": "Copyright",
         "CopyrightFile": "",
         "Description": "Multi\nLine\nDescription",
-        "DownloadLocation": "www.qt.io/1.0",
+        "DownloadLocation": "www.qt.io/1.0/qt-1-0",
         "Files": "",
         "Homepage": "www.qt.io",
         "Id": "complete",
@@ -40,8 +40,8 @@
         "LicenseId": "xxx",
         "Name": "Complete",
         "PURL": [
-            "pkg:github/qt/qt@test-version",
-            "pkg:github/qt/qtbase@test-version"
+            "pkg:github/qt/qt@1.0",
+            "pkg:github/qt/qtbase@1.0"
         ],
         "PackageComment": "just a test package",
         "Path": "%{PWD}/complete",
