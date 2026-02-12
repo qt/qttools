@@ -24,8 +24,10 @@ QT_BEGIN_NAMESPACE
 
     \note Inja and nlohmann::json may report template or data errors. QDoc is
     built with exceptions disabled (\c{-fno-exceptions}), so such errors are
-    treated as fatal and will terminate the process. This is consistent with
-    Qt's no-exception policy for command-line tools.
+    treated as fatal and will terminate the process. A custom \c INJA_THROW
+    override in the header ensures that error details (including source
+    location) are logged via \c qFatal() before termination, rather than
+    calling \c std::abort() silently.
 
     \sa QJsonObject, QJsonArray, QJsonValue
 */

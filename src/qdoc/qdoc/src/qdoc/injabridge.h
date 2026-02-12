@@ -4,6 +4,16 @@
 #ifndef INJABRIDGE_H
 #define INJABRIDGE_H
 
+#include <QtCore/qlogging.h>
+
+// Override Inja's default error handling before including inja.hpp.
+// Inja's throw.hpp guards INJA_THROW with #ifndef, so defining it first
+// takes precedence. Without this override, -fno-exceptions causes a bare
+// std::abort() with no diagnostic output. With it, qFatal() logs the
+// error message (including source location) before terminating.
+#define INJA_THROW(exception) \
+    qFatal("Inja template error: %s", (exception).what())
+
 #include <inja/inja.hpp>
 
 #include <QJsonObject>
