@@ -618,6 +618,42 @@ static bool isTranslatable(const QString &pname, const QVariant &v, const QMetaO
     return true;
 }
 
+// PYSIDE-3278 (since 7.0) Write fully qualified enums for Python. This code
+// path is used by QFormBuilder or Qt Widgets Designer when writing item view
+// content properties such as alignment (oversight from PYSIDE-2492, see also
+// qdesigner_resource.cpp).
+static bool supportsQualifiedEnums(const QVersionNumber &qtVersion)
+{
+    return qtVersion >= QVersionNumber{ 7, 0, 0 };
+}
+
+static QString enumPrefix(QMetaEnum metaEnum)
+{
+    QString result;
+    if (const auto *scope = metaEnum.scope())
+        result += QLatin1StringView(scope) + "::"_L1;
+    if (const auto *name = metaEnum.enumName()) // Anonymous?
+        result += QLatin1StringView(name) + "::"_L1;
+    return result;
+}
+
+static QString enumValue(QMetaEnum metaEnum, int v, const QVersionNumber &qtVersion)
+{
+    auto value = QLatin1StringView(metaEnum.valueToKey(v));
+    return supportsQualifiedEnums(qtVersion) ? enumPrefix(metaEnum) + value : QString{ value };
+}
+
+static QString flagsValue(QMetaEnum metaEnum, int v, const QVersionNumber &qtVersion)
+{
+    QString result = QLatin1StringView(metaEnum.valueToKeys(v));
+    if (supportsQualifiedEnums(qtVersion) && !result.isEmpty()) {
+        const QString prefix = enumPrefix(metaEnum);
+        result.replace(u'|', u'|' + prefix);
+        result.prepend(prefix);
+    }
+    return result;
+}
+
 // Convert complex variant types to DOM properties with the help of  QAbstractFormBuilder
 // Does not perform a check using  QAbstractFormBuilder::checkProperty().
 DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *meta,
@@ -632,9 +668,9 @@ DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *
         if (v.canConvert<int>() && meta_property.isEnumType()) {
             const QMetaEnum e = meta_property.enumerator();
             if (e.isFlag())
-                dom_prop->setElementSet(QString::fromLatin1(e.valueToKeys(v.toInt())));
+                dom_prop->setElementSet(flagsValue(e, v.toInt(), afb->d->m_saveVersion));
             else
-                dom_prop->setElementEnum(QString::fromLatin1(e.valueToKey(v.toInt())));
+                dom_prop->setElementEnum(enumValue(e, v.toInt(), afb->d->m_saveVersion));
             return dom_prop;
         }
         if (!meta_property.hasStdCppSet()

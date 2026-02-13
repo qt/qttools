@@ -103,6 +103,7 @@ static constexpr auto clipboardObjectName = "__qt_fake_top_level"_L1;
 
 namespace qdesigner_internal {
 
+// PYSIDE-2492 (since 6.7): Write fully qualified enums for Python
 static bool supportsQualifiedEnums(const QVersionNumber &qtVersion)
 {
     if (qtVersion >= QVersionNumber{6, 6, 2})
