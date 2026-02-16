@@ -1424,26 +1424,7 @@ QList<DomProperty*> QAbstractFormBuilder::computeProperties(QObject *obj)
 
         const QVariant v = prop.read(obj);
 
-        DomProperty *dom_prop = nullptr;
-        if (v.metaType().id() == QMetaType::Int) {
-            dom_prop = new DomProperty();
-
-            if (prop.isFlagType())
-                uiLibWarning(QCoreApplication::translate("QAbstractFormBuilder", "Flags property are not supported yet."));
-
-            if (prop.isEnumType()) {
-                QString scope = QString::fromUtf8(prop.enumerator().scope());
-                if (scope.size())
-                    scope += "::"_L1;
-                const QString e = QString::fromUtf8(prop.enumerator().valueToKey(v.toInt()));
-                if (e.size())
-                    dom_prop->setElementEnum(scope + e);
-            } else
-                dom_prop->setElementNumber(v.toInt());
-            dom_prop->setAttributeName(pname);
-        } else {
-            dom_prop = createProperty(obj, pname, v);
-        }
+        DomProperty *dom_prop = createProperty(obj, pname, v);
 
         if (!dom_prop || dom_prop->kind() == DomProperty::Unknown)
             delete dom_prop;
