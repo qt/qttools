@@ -1407,19 +1407,13 @@ QList<DomProperty*> QAbstractFormBuilder::computeProperties(QObject *obj)
 
     const QMetaObject *meta = obj->metaObject();
 
-    QHash<QByteArray, bool> properties;
     const int propertyCount = meta->propertyCount();
-    for(int i=0; i < propertyCount; ++i)
-        properties.insert(meta->property(i).name(), true);
+    lst.reserve(propertyCount);
+    for (int i = 0; i < propertyCount; ++i) {
+        const QMetaProperty prop = meta->property(i);
+        const QString pname = QString::fromUtf8(prop.name());
 
-    const auto propertyNames = properties.keys();
-
-    const int propertyNamesCount = propertyNames.size();
-    for(int i=0; i<propertyNamesCount ; ++i) {
-        const QString pname = QString::fromUtf8(propertyNames.at(i));
-        const QMetaProperty prop = meta->property(meta->indexOfProperty(pname.toUtf8()));
-
-        if (!prop.isWritable() || !checkProperty(obj, QLatin1StringView(prop.name())))
+        if (!prop.isWritable() || !checkProperty(obj, pname))
             continue;
 
         const QVariant v = prop.read(obj);
