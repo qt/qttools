@@ -13,6 +13,7 @@
 #include <QtGui/qpainter.h>
 #include <QtGui/qpainterstateguard.h>
 
+#include <QtCore/qhash.h>
 #include <QtCore/qlocale.h>
 #include <QtCore/qoperatingsystemversion.h>
 
