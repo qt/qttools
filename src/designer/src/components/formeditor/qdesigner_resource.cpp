@@ -130,6 +130,12 @@ static bool supportsQualifiedEnums(const QVersionNumber &qtVersion)
     return false;
 }
 
+// Separate horizontal/vertical size constraints since Qt 7 (QTBUG-17730).
+static bool supportsSeparateSizeConstraints(const QVersionNumber &qtVersion)
+{
+    return qtVersion >= QVersionNumber{7, 0, 0};
+}
+
 // -------------------- QDesignerResourceBuilder: A resource builder that works on the property sheet icon types.
 class QDesignerResourceBuilder : public QResourceBuilder
 {
@@ -498,7 +504,7 @@ void QDesignerResource::save(QIODevice *dev, QWidget *widget)
     // older uic.
     const auto qtVersion = m_formWindow->core()->integration()->qtVersion();
     d->m_fullyQualifiedEnums = supportsQualifiedEnums(qtVersion);
-    d->m_separateSizeConstraints = qtVersion >= QVersionNumber(7, 0, 0);
+    d->m_saveVersion = qtVersion;
     QAbstractFormBuilder::save(dev, widget);
 }
 
@@ -1605,8 +1611,10 @@ bool QDesignerResource::checkProperty(QObject *obj, const QString &prop) const
     if (prop == "objectName"_L1 || prop == "spacerName"_L1)  // ### don't store the property objectName
         return false;
 
-    if (!d->m_separateSizeConstraints && prop == "verticalSizeConstraint"_L1) // 7.0
+    if (!supportsSeparateSizeConstraints(d->m_saveVersion)
+        && prop == "verticalSizeConstraint"_L1) { // 7.0
         return false;
+    }
 
     QWidget *check_widget = nullptr;
     if (obj->isWidgetType())
@@ -2052,7 +2060,8 @@ DomProperty *QDesignerResource::createProperty(QObject *object, const QString &p
         if (!hasSetter(core(), object, propertyName))
             p->setAttributeStdset(0);
         // Map "horizontalSizeConstraint" to "sizeConstraint" for Qt 6
-        if (!d->m_separateSizeConstraints && propertyName == "horizontalSizeConstraint"_L1
+        if (!supportsSeparateSizeConstraints(d->m_saveVersion)
+            && propertyName == "horizontalSizeConstraint"_L1
             && object->inherits("QLayout")) {
             p->setAttributeName("sizeConstraint"_L1);
         } else {

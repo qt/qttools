@@ -22,6 +22,7 @@
 #include <QtCore/qstringlist.h>
 #include <QtCore/qmap.h>
 #include <QtCore/qdir.h>
+#include <QtCore/qversionnumber.h>
 #include <QtGui/qpalette.h>
 
 QT_BEGIN_NAMESPACE
@@ -160,12 +161,7 @@ public:
     QHash<QString, QAction*> m_actions;
     QHash<QString, QActionGroup*> m_actionGroups;
     bool m_fullyQualifiedEnums = true;
-    // separate horizontal/vertical size constraints since Qt 7 (QTBUG-17730).
-#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
-    bool m_separateSizeConstraints = false;
-#else
-    bool m_separateSizeConstraints = true;
-#endif
+    QVersionNumber m_saveVersion{ QT_VERSION_MAJOR, QT_VERSION_MINOR, QT_VERSION_PATCH };
     int m_defaultMargin;
     int m_defaultSpacing;
     QDir m_workingDirectory;
