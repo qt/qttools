@@ -142,6 +142,7 @@ MachineTranslationDialog::MachineTranslationDialog(QWidget *parent)
     // Advanced settings
     loadAdvancedSettings();
     validateAdvancedSettings();
+    toggleAdvancedSettings(false);
 
     connect(m_ui->advancedSettingsToggle, &QPushButton::toggled, this,
             &MachineTranslationDialog::toggleAdvancedSettings);
@@ -613,8 +614,7 @@ void MachineTranslationDialog::updateConnectionIndicator()
 void MachineTranslationDialog::toggleAdvancedSettings(bool checked)
 {
     m_ui->advancedSettingsWidget->setVisible(checked);
-    m_ui->advancedSettingsToggle->setText(checked ? tr("Advanced Settings -")
-                                                  : tr("Advanced Settings +"));
+    m_ui->advancedSettingsToggle->setText(tr("Advanced Settings") + (checked ? " -"_L1 : " +"_L1));
     if (checked) {
         loadAdvancedSettings();
         validateAdvancedSettings();

@@ -336,7 +336,6 @@
                <sizepolicy hsizetype="Maximum" vsizetype="Fixed"/>
               </property>
               <property name="text">
-               <string>Advanced Settings +</string>
               </property>
               <property name="checkable">
                <bool>true</bool>
