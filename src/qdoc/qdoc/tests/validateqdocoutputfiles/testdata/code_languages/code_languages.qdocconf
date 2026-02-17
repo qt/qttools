@@ -4,7 +4,7 @@ productname = Qt
 locationinfo = false
 
 outputformats             = WebXML HTML DocBook
-WebXML.quotinginformation = true
+WebXML.quotinginformation = false
 WebXML.nosubdirs          = true
 WebXML.outputsubdir = webxml
 
@@ -17,11 +17,14 @@ HTML.headerstyles = \
 DocBook.nosubdirs = true
 DocBook.outputsubdir = docbook
 
+moduleheader =
+
 headers.fileextensions  = "*.h *.hpp"
 sources.fileextensions  = "*.cpp *.qml *.qdoc"
 
 headerdirs  = ./src
 sourcedirs  = ./src
+exampledirs = ./src
 
 codelanguages = Python
 

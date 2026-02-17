@@ -12,6 +12,7 @@
 <h1 class="title">Code Languages</h1>
 <!-- $$$index.html-description -->
 <div class="descr" id="details">
+<h2 id="code-blocks">Code blocks</h2>
 <p>Code is marked up as C++ by default:</p>
 <pre class="cpp" translate="no"><code class="cpp"><span class="comment">// Some C++ code:</span>
 <span class="type">QWidget</span> <span class="operator">*</span>widget <span class="operator">=</span> getWidget();</code></pre>
@@ -40,6 +41,49 @@ Item {
 <p>A warning will be generated if the language is unknown and not listed in the <code translate="no">languages</code> configuration variable:</p>
 <pre class="basic" translate="no"><code class="basic"><span class="number">10</span> PRINT <span class="string">&quot;Hello world!&quot;</span>
 <span class="number">20</span> GOTO <span class="number">10</span></code></pre>
+<h2 id="snippets">Snippets</h2>
+<p>By default, code snippets use the appropriate language for the file that contains them, such as with this C++ code:</p>
+<pre class="cpp" translate="no"><code class="cpp"><span class="type">int</span> sum(<span class="type">int</span> v0<span class="operator">,</span> <span class="type">int</span> v1)
+{
+   <span class="keyword">return</span> v0 <span class="operator">+</span> v1;
+}</code></pre>
+<p>The language can be specified to override the language associated with the file name; for example, with <code translate="no">text</code> to obtain unmarked text:</p>
+<pre class="text" translate="no"><code class="text">int sum(int v0, int v1)
+{
+   return v0 + v1;
+}</code></pre>
+<p>As with code blocks, languages can be used that QDoc does not parse. Meta-data about the language is passed through to the output file:</p>
+<pre class="python" translate="no"><code class="python">def fn(a, b):
+    return a + b</code></pre>
+<p>This will only be styled correctly if a highlighter is used later in the publication process.</p>
+<h2 id="quoting-whole-files">Quoting whole files</h2>
+<p>Quoting a whole file using the <code translate="no">\\quotefile</code> command without a language argument relies on the use of the file name to determine the code marker:</p>
+<pre class="cpp" translate="no"><code class="cpp"><span class="comment">// Copyright (C) 2026 The Qt Company Ltd.</span>
+<span class="comment">// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0</span>
+
+<span class="type">int</span> sum(<span class="type">int</span> v0<span class="operator">,</span> <span class="type">int</span> v1)
+{
+   <span class="keyword">return</span> v0 <span class="operator">+</span> v1;
+}</code></pre>
+<p>With a language argument, the code marker can be overridden:</p>
+<pre class="text" translate="no"><code class="text">// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+int sum(int v0, int v1)
+{
+   return v0 + v1;
+}</code></pre>
+<h2 id="quoting-parts-of-files">Quoting parts of files</h2>
+<p>Using the <code translate="no">\\quotefromfile</code> command to quote parts of files without a language argument:</p>
+<pre class="cpp" translate="no"><code class="cpp"><span class="type">int</span> sum(<span class="type">int</span> v0<span class="operator">,</span> <span class="type">int</span> v1)
+{
+   <span class="keyword">return</span> v0 <span class="operator">+</span> v1;
+}</code></pre>
+<p>Parts of the file can be quoted with a different marker if the required language is passed as an argument to the <code translate="no">\\quotefromfile</code> command:</p>
+<pre class="text" translate="no"><code class="text">int sum(int v0, int v1)
+{
+   return v0 + v1;
+}</code></pre>
 </div>
 <!-- @@@index.html -->
 </body>
