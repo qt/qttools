@@ -1614,7 +1614,8 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
 
     if (declaration && declaration->getFriendObjectKind() != clang::Decl::FOK_None) {
         fn->setRelatedNonmember(true);
-        if (function_declaration && function_declaration->isThisDeclarationADefinition())
+        Q_ASSERT(function_declaration);
+        if (function_declaration->isThisDeclarationADefinition())
             fn->setHiddenFriend(true);
     }
 }
