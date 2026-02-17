@@ -19,6 +19,7 @@
 QT_BEGIN_NAMESPACE
 
 class Atom;
+class CodeMarker;
 class DocPrivate;
 class Quoter;
 class Text;
@@ -82,7 +83,8 @@ public:
     static void terminate();
     static void trimCStyleComment(Location &location, QString &str);
     static void quoteFromFile(const Location &location, Quoter &quoter,
-                                     ResolvedFile resolved_file);
+                                     ResolvedFile resolved_file,
+                                     CodeMarker *marker = nullptr);
 
 private:
     DocPrivate *m_priv { nullptr };

@@ -2,7 +2,12 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="CodeLanguages Reference Documentation" version="" project="CodeLanguages">
     <namespace name="" status="active" access="public" module="codelanguages">
-        <page name="index.html" href="index.html" status="active" location="index.qdoc" documented="true" subtype="page" title="Code Languages" fulltitle="Code Languages" subtitle=""/>
+        <page name="index.html" href="index.html" status="active" location="index.qdoc" documented="true" subtype="page" title="Code Languages" fulltitle="Code Languages" subtitle="">
+            <contents name="code-blocks" title="Code blocks" level="1"/>
+            <contents name="snippets" title="Snippets" level="1"/>
+            <contents name="quoting-whole-files" title="Quoting whole files" level="1"/>
+            <contents name="quoting-parts-of-files" title="Quoting parts of files" level="1"/>
+        </page>
         <module name="CodeLanguages" href="codelanguages-module.html" status="internal" seen="false" title=""/>
     </namespace>
 </INDEX>

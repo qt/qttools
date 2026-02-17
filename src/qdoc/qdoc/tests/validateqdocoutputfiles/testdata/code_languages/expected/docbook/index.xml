@@ -7,6 +7,8 @@
 <db:abstract>
 <db:para>CodeLanguages Reference Documentation.</db:para></db:abstract>
 </db:info>
+<db:section xml:id="code-blocks">
+<db:title>Code blocks</db:title>
 <db:para>Code is marked up as C++ by default:</db:para>
 <db:programlisting language="cpp">// Some C++ code:
 QWidget *widget = getWidget();
@@ -42,4 +44,63 @@ QWidget *widget = getWidget();
 <db:programlisting language="basic">10 PRINT &quot;Hello world!&quot;
 20 GOTO 10
 </db:programlisting>
+</db:section>
+<db:section xml:id="snippets">
+<db:title>Snippets</db:title>
+<db:para>By default, code snippets use the appropriate language for the file that contains them, such as with this C++ code:</db:para>
+<db:programlisting language="cpp">int sum(int v0, int v1)
+{
+   return v0 + v1;
+}
+</db:programlisting>
+<db:para>The language can be specified to override the language associated with the file name; for example, with <db:code>text</db:code> to obtain unmarked text:</db:para>
+<db:programlisting language="text">int sum(int v0, int v1)
+{
+   return v0 + v1;
+}
+</db:programlisting>
+<db:para>As with code blocks, languages can be used that QDoc does not parse. Meta-data about the language is passed through to the output file:</db:para>
+<db:programlisting language="python">def fn(a, b):
+    return a + b
+</db:programlisting>
+<db:para>This will only be styled correctly if a highlighter is used later in the publication process.</db:para>
+</db:section>
+<db:section xml:id="quoting-whole-files">
+<db:title>Quoting whole files</db:title>
+<db:para>Quoting a whole file using the <db:code>\\quotefile</db:code> command without a language argument relies on the use of the file name to determine the code marker:</db:para>
+<db:programlisting language="cpp">// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+int sum(int v0, int v1)
+{
+   return v0 + v1;
+}
+
+</db:programlisting>
+<db:para>With a language argument, the code marker can be overridden:</db:para>
+<db:programlisting language="text">// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+int sum(int v0, int v1)
+{
+   return v0 + v1;
+}
+
+</db:programlisting>
+</db:section>
+<db:section xml:id="quoting-parts-of-files">
+<db:title>Quoting parts of files</db:title>
+<db:para>Using the <db:code>\\quotefromfile</db:code> command to quote parts of files without a language argument:</db:para>
+<db:programlisting language="cpp">int sum(int v0, int v1)
+{
+   return v0 + v1;
+}
+</db:programlisting>
+<db:para>Parts of the file can be quoted with a different marker if the required language is passed as an argument to the <db:code>\\quotefromfile</db:code> command:</db:para>
+<db:programlisting language="text">int sum(int v0, int v1)
+{
+   return v0 + v1;
+}
+</db:programlisting>
+</db:section>
 </db:article>

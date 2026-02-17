@@ -813,7 +813,7 @@
     \endcode
 
     This can be useful when quoting a language that QDoc does not have
-    a marker for.
+    the ability to mark up.
 
     Alternatively, you can specify a language for a block of code that
     QDoc doesn't recognize by including the language in the list held
@@ -950,6 +950,21 @@
     \1/
     \endcode
 
+    From version 6.11, a language can be specified as an optional
+    case-insensitive argument on the same line as the \\quotefile
+    command.
+    This influences the quoted text in the same way as for the
+    \l{code-command}{\\code} command.
+
+    For example:
+
+    \code [text]
+    \quotefile [text] examples/main.cpp
+    \endcode
+
+    This can be useful when quoting from a file containing source code
+    that QDoc does not have the ability to mark up.
+
     See also \l {quotefromfile-command} {\\quotefromfile} and
     \l {code-command} {\\code}.
 
@@ -997,6 +1012,25 @@
     QDoc remembers which file it is quoting from, and the current
     position in that file (see \l {file} {\\printline} for more
     information). There is no need to "close" the file.
+
+    From version 6.11, a language can be specified as an optional
+    case-insensitive argument on the same line as the
+    \\quotefromfile command. This influences the quoted text in the
+    same way as for the \l{code-command}{\\code} command.
+
+    For example:
+
+    \code [text]
+    \quotefromfile [text] examples/main.cpp
+    \skipto main
+    \printuntil app(argc, argv)
+    \endcode
+
+    QDoc also remembers which code language it is quoting from, so
+    commands like \l{printline-command}{\\printline},
+    \l{printto-command}{\\printto} and \l{printuntil-command}{\\printuntil}
+    quote from the current file, applying a consistent style of markup
+    until a new file is read.
 
     See also \l {quotefile-command} {\\quotefile}, \l {code-command}
     {\\code} and \l {dots} {\\dots}.
@@ -1361,6 +1395,22 @@
     \note QDoc only handles space characters for indentation normalization,
     not tabs or other whitespace. For best results, use consistent space-based
     indentation in source files containing snippets.
+
+    From version 6.11, a language can be specified as an optional
+    case-insensitive argument on the same line as the \\snippet command.
+    This influences the quoted text in the same way as for the
+    \l{code-command}{\\code} command.
+
+    This example use of the command overrides the default C++ markup style
+    and outputs plain text instead:
+
+    \code [text]
+    \snippet [text] code.cpp
+    \endcode
+
+    This can be useful when quoting a language that QDoc does not have
+    the ability to mark up, or when needing to quote from a file with an
+    unconventional file name.
 
     \target codeline-command
     \section1 \\codeline
