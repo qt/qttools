@@ -1030,14 +1030,12 @@ void CppCodeParser::processMetaCommands(const std::vector<TiedDocumentation> &ti
                 // 1. Convenience header (if exists in include paths)
                 // 2. Include-relative path from declLocation
                 // 3. Class name as last resort (only if non-empty)
-                QString includeFile;
-                if (convenienceHeaderExists(className)) {
+                QString includeFile = convenienceHeaderExists(className)
+                        ? className
+                        : computeIncludeSpelling(aggregate->declLocation());
+
+                if (includeFile.isEmpty() && !className.isEmpty())
                     includeFile = className;
-                } else {
-                    includeFile = computeIncludeSpelling(aggregate->declLocation());
-                    if (includeFile.isEmpty() && !className.isEmpty())
-                        includeFile = className;
-                }
 
                 if (!includeFile.isEmpty())
                     aggregate->setIncludeFile(includeFile);
