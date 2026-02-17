@@ -323,6 +323,12 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
     QStack<bool> preprocessorSkipping;
     int numPreprocessorSkipping = 0;
 
+    // The code language is set by commands that accept an optional language
+    // argument, such as \code, \snippet, \quotefile and \quotefromfile.
+    // It is also used by the \print* commands which require a value to have
+    // been set first for reasonable output. The language is lower case.
+    QString codeLanguage;
+
     while (m_position < m_inputLength) {
         QChar ch = m_input.at(m_position);
 
@@ -402,20 +408,11 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 case CMD_CODE:
                     // Only allow arguments on the same line as the command.
-                    if (isLeftBracketAhead(0)) {
-                        p1 = getBracketedArgument();
-                        marker = CodeMarker::markerForLanguage(p1);
-                        // Suppress warning for explicitly allowed languages.
-                        if (!marker && !s_allowedLanguages.contains(p1, Qt::CaseInsensitive))
-                            location().warning(QStringLiteral("Unrecognized markup language '%1'").arg(p1));
-                    } else {
-                        p1 = ""_L1;
-                        marker = nullptr;
-                    }
+                    codeLanguage = getLanguageArgument(&marker);
                     leavePara();
                     // Store the code language in the atom, if specified, for
                     // the HTML and DocBook generators to use.
-                    appendAtom(Atom(Atom::Code, getCode(CMD_CODE, marker, getMetaCommandArgument(cmdStr)), p1.toLower()));
+                    appendAtom(Atom(Atom::Code, getCode(CMD_CODE, marker, getMetaCommandArgument(cmdStr)), codeLanguage));
                     break;
                 case CMD_QML:
                     leavePara();
@@ -820,34 +817,23 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         processComparesWithCommand(m_private, location());
                     }
                     break;
-                case CMD_PRINTLINE: {
-                    leavePara();
-                    QString rest = getRestOfLine();
-                    if (s_quoting) {
-                        appendAtom(Atom(Atom::CodeQuoteCommand, cmdStr));
-                        appendAtom(Atom(Atom::CodeQuoteArgument, rest));
-                    }
-                    appendToCode(m_quoter.quoteLine(location(), cmdStr, rest));
-                    break;
-                }
-                case CMD_PRINTTO: {
-                    leavePara();
-                    QString rest = getRestOfLine();
-                    if (s_quoting) {
-                        appendAtom(Atom(Atom::CodeQuoteCommand, cmdStr));
-                        appendAtom(Atom(Atom::CodeQuoteArgument, rest));
-                    }
-                    appendToCode(m_quoter.quoteTo(location(), cmdStr, rest));
-                    break;
-                }
+                case CMD_PRINTLINE:
+                case CMD_PRINTTO:
                 case CMD_PRINTUNTIL: {
                     leavePara();
+
+                    Atom::AtomType atomType = marker ? marker->atomType() : Atom::Code;
                     QString rest = getRestOfLine();
                     if (s_quoting) {
                         appendAtom(Atom(Atom::CodeQuoteCommand, cmdStr));
                         appendAtom(Atom(Atom::CodeQuoteArgument, rest));
                     }
-                    appendToCode(m_quoter.quoteUntil(location(), cmdStr, rest));
+                    if (cmd == CMD_PRINTLINE)
+                        appendToCode(m_quoter.quoteLine(location(), cmdStr, rest), atomType, codeLanguage);
+                    else if (cmd == CMD_PRINTTO)
+                        appendToCode(m_quoter.quoteTo(location(), cmdStr, rest), atomType, codeLanguage);
+                    else
+                        appendToCode(m_quoter.quoteUntil(location(), cmdStr, rest), atomType, codeLanguage);
                     break;
                 }
                 case CMD_QUOTATION:
@@ -856,27 +842,25 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         appendAtom(Atom(Atom::QuotationLeft));
                     }
                     break;
-                case CMD_QUOTEFILE: {
+                case CMD_QUOTEFILE:
+                case CMD_QUOTEFROMFILE: {
+                    // A language argument must be on the same line as the command.
+                    codeLanguage = getLanguageArgument(&marker);
                     leavePara();
 
                     QString fileName = getArgument();
-                    quoteFromFile(fileName);
                     if (s_quoting) {
                         appendAtom(Atom(Atom::CodeQuoteCommand, cmdStr));
                         appendAtom(Atom(Atom::CodeQuoteArgument, fileName));
                     }
-                    appendAtom(Atom(Atom::Code, m_quoter.quoteTo(location(), cmdStr, QString())));
-                    m_quoter.reset();
-                    break;
-                }
-                case CMD_QUOTEFROMFILE: {
-                    leavePara();
-                    QString arg = getArgument();
-                    if (s_quoting) {
-                        appendAtom(Atom(Atom::CodeQuoteCommand, cmdStr));
-                        appendAtom(Atom(Atom::CodeQuoteArgument, arg));
+                    if (!marker)
+                        marker = CodeMarker::markerForFileName(fileName);
+
+                    quoteFromFile(fileName, marker);
+                    if (cmd == CMD_QUOTEFILE) {
+                        appendAtom(Atom(Atom::Code, m_quoter.quoteTo(location(), cmdStr, QString()), codeLanguage));
+                        m_quoter.reset();
                     }
-                    quoteFromFile(arg);
                     break;
                 }
                 case CMD_RAW:
@@ -964,6 +948,9 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     startFormat(p1, cmd);
                     break;
                 case CMD_SNIPPET: {
+                    // A language argument must be on the same line as the command.
+                    codeLanguage = getLanguageArgument(&marker);
+
                     leavePara();
                     QString snippet = getArgument();
                     QString identifier = getRestOfLine();
@@ -972,9 +959,11 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         appendAtom(Atom(Atom::SnippetLocation, snippet));
                         appendAtom(Atom(Atom::SnippetIdentifier, identifier));
                     }
-                    marker = CodeMarker::markerForFileName(snippet);
-                    quoteFromFile(snippet);
-                    appendToCode(m_quoter.quoteSnippet(location(), identifier), marker->atomType());
+                    if (!marker)
+                        marker = CodeMarker::markerForFileName(snippet);
+
+                    quoteFromFile(snippet, marker);
+                    appendToCode(m_quoter.quoteSnippet(location(), identifier), marker->atomType(), codeLanguage);
                     break;
                 }
                 case CMD_SUB:
@@ -2013,10 +2002,16 @@ void DocParser::appendToCode(const QString &markedCode)
     m_lastAtom->concatenateString(markedCode);
 }
 
-void DocParser::appendToCode(const QString &markedCode, Atom::AtomType defaultType)
+/*!
+    Appends \a markedCode to the current documentation as an atom with the
+    \a defaultType. The \a language specifies the programming language that
+    the code is written in so that generators can include it as part of the
+    meta-data they produce.
+*/
+void DocParser::appendToCode(const QString &markedCode, Atom::AtomType defaultType, const QString &language)
 {
     if (!isCode(m_lastAtom)) {
-        appendAtom(Atom(defaultType, markedCode));
+        appendAtom(Atom(defaultType, markedCode, language));
         m_lastAtom = m_private->m_text.lastAtom();
     } else {
         m_lastAtom->concatenateString(markedCode);
@@ -2120,7 +2115,12 @@ void DocParser::leaveTableRow()
     }
 }
 
-void DocParser::quoteFromFile(const QString &filename)
+/*!
+    Quotes from the file with the given \a filename using an optional \a marker
+    to mark up the quoted text. If no marker is provided, a marker is selected
+    based on the file name.
+*/
+void DocParser::quoteFromFile(const QString &filename, CodeMarker *marker)
 {
     // KLUDGE: We dereference file_resolver as it is temporarily a pointer.
     // See the comment for file_resolver in the header files for more context.
@@ -2167,9 +2167,11 @@ void DocParser::quoteFromFile(const QString &filename)
         // managed in such a spread and unlocal way.
         m_quoter.reset();
 
-        CodeMarker *marker = CodeMarker::markerForFileName(QString{});
+        if (!marker)
+            marker = CodeMarker::markerForFileName(QString{});
         m_quoter.quoteFromFile(filename, QString{}, marker->markedUpCode(QString{}, nullptr, location()));
-    } else Doc::quoteFromFile(location(), m_quoter, *maybe_resolved_file);
+    } else
+        Doc::quoteFromFile(location(), m_quoter, *maybe_resolved_file, marker);
 }
 
 /*!
@@ -2472,6 +2474,26 @@ QString DocParser::getBracketedArgument()
     return arg;
 }
 
+/*!
+    Reads an optional bracketed language argument, updates the supplied
+    \a marker to refer to an appropriate code marker for the language and
+    returns a lower case representation of the language.
+
+    If no suitable marker is found, sets the marker to null and returns
+    an empty string.
+*/
+QString DocParser::getLanguageArgument(CodeMarker **marker)
+{
+    QString value{};
+    if (isLeftBracketAhead(0)) {
+        value = getBracketedArgument();
+        *marker = markerForLanguage(value);
+    } else {
+        value = ""_L1;
+        *marker = nullptr;
+    }
+    return value.toLower();
+}
 
 /*!
     Returns the list of arguments passed to a \a macro with name \a name.
@@ -2904,6 +2926,21 @@ bool DocParser::isQuote(const Atom *atom)
     return (type == Atom::CodeQuoteArgument || type == Atom::CodeQuoteCommand
             || type == Atom::SnippetCommand || type == Atom::SnippetIdentifier
             || type == Atom::SnippetLocation);
+}
+
+/*!
+    \internal
+    Returns a marker for the given \a language.
+    Returns \nullptr and warns if no suitable marker is found.
+*/
+CodeMarker *DocParser::markerForLanguage(const QString &language)
+{
+    CodeMarker *marker = CodeMarker::markerForLanguage(language.toLower());
+    // Suppress warning for explicitly allowed languages.
+    if (!marker && !s_allowedLanguages.contains(language, Qt::CaseInsensitive))
+        location().warning(QStringLiteral("Unrecognized markup language '%1'").arg(language));
+
+    return marker;
 }
 
 /*!

@@ -2,35 +2,91 @@
 <WebXML>
     <document>
         <page name="index.html" href="index.html" status="active" location="index.qdoc" documented="true" subtype="page" title="Code Languages" fulltitle="Code Languages" subtitle="">
+            <contents name="code-blocks" title="Code blocks" level="1"/>
+            <contents name="snippets" title="Snippets" level="1"/>
+            <contents name="quoting-whole-files" title="Quoting whole files" level="1"/>
+            <contents name="quoting-parts-of-files" title="Quoting parts of files" level="1"/>
             <description>
-                <para>Code is marked up as C++ by default:</para>
-                <code>// Some C++ code:
+                <section id="code-blocks">
+                    <heading level="1">Code blocks</heading>
+                    <para>Code is marked up as C++ by default:</para>
+                    <code>// Some C++ code:
 QWidget *widget = getWidget();</code>
-                <para>Code can be explicitly marked up as C++ with the <teletype type="highlighted">Cpp</teletype> language:</para>
-                <code>// Some C++ code:
+                    <para>Code can be explicitly marked up as C++ with the <teletype type="highlighted">Cpp</teletype> language:</para>
+                    <code>// Some C++ code:
 QWidget *widget = getWidget();</code>
-                <para>QML code can be requested with the <teletype type="highlighted">QML</teletype> language:</para>
-                <code>// Some QML code:
+                    <para>QML code can be requested with the <teletype type="highlighted">QML</teletype> language:</para>
+                    <code>// Some QML code:
 Item {
     id: my_item
 }</code>
-                <para>Plain text is shown if the <teletype type="highlighted">text</teletype> language is used:</para>
-                <code>// Some C++ code:
+                    <para>Plain text is shown if the <teletype type="highlighted">text</teletype> language is used:</para>
+                    <code>// Some C++ code:
 QWidget *widget = getWidget();
 
 // Some QML code:
 Item {
     id: my_item
 }</code>
-                <para>The case of the specified language is not important:</para>
-                <code>// Some C++ code:
+                    <para>The case of the specified language is not important:</para>
+                    <code>// Some C++ code:
 QWidget *widget = getWidget();</code>
-                <para>Languages that QDoc does not handle are accepted but not processed if the language was declared in the <teletype type="highlighted">languages</teletype> configuration variable:</para>
-                <code>def fn():
+                    <para>Languages that QDoc does not handle are accepted but not processed if the language was declared in the <teletype type="highlighted">languages</teletype> configuration variable:</para>
+                    <code>def fn():
     pass</code>
-                <para>A warning will be generated if the language is unknown and not listed in the <teletype type="highlighted">languages</teletype> configuration variable:</para>
-                <code>10 PRINT &quot;Hello world!&quot;
+                    <para>A warning will be generated if the language is unknown and not listed in the <teletype type="highlighted">languages</teletype> configuration variable:</para>
+                    <code>10 PRINT &quot;Hello world!&quot;
 20 GOTO 10</code>
+                </section>
+                <section id="snippets">
+                    <heading level="1">Snippets</heading>
+                    <para>By default, code snippets use the appropriate language for the file that contains them, such as with this C++ code:</para>
+                    <code>int sum(int v0, int v1)
+{
+   return v0 + v1;
+}</code>
+                    <para>The language can be specified to override the language associated with the file name; for example, with <teletype type="highlighted">text</teletype> to obtain unmarked text:</para>
+                    <code>int sum(int v0, int v1)
+{
+   return v0 + v1;
+}</code>
+                    <para>As with code blocks, languages can be used that QDoc does not parse. Meta-data about the language is passed through to the output file:</para>
+                    <code>def fn(a, b):
+    return a + b</code>
+                    <para>This will only be styled correctly if a highlighter is used later in the publication process.</para>
+                </section>
+                <section id="quoting-whole-files">
+                    <heading level="1">Quoting whole files</heading>
+                    <para>Quoting a whole file using the <teletype type="highlighted">\\quotefile</teletype> command without a language argument relies on the use of the file name to determine the code marker:</para>
+                    <code>// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+int sum(int v0, int v1)
+{
+   return v0 + v1;
+}</code>
+                    <para>With a language argument, the code marker can be overridden:</para>
+                    <code>// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+int sum(int v0, int v1)
+{
+   return v0 + v1;
+}</code>
+                </section>
+                <section id="quoting-parts-of-files">
+                    <heading level="1">Quoting parts of files</heading>
+                    <para>Using the <teletype type="highlighted">\\quotefromfile</teletype> command to quote parts of files without a language argument:</para>
+                    <code>int sum(int v0, int v1)
+{
+   return v0 + v1;
+}</code>
+                    <para>Parts of the file can be quoted with a different marker if the required language is passed as an argument to the <teletype type="highlighted">\\quotefromfile</teletype> command:</para>
+                    <code>int sum(int v0, int v1)
+{
+   return v0 + v1;
+}</code>
+                </section>
             </description>
         </page>
     </document>

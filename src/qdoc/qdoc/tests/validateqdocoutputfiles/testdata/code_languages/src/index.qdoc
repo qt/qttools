@@ -1,10 +1,12 @@
-// Copyright (C) 2025 The Qt Company Ltd.
+// Copyright (C) 2026 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
 /*!
     \page index.html
     \inmodule CodeLanguages
     \title Code Languages
+
+    \section1 Code blocks
 
     Code is marked up as C++ by default:
     \code
@@ -57,4 +59,52 @@
     10 PRINT "Hello world!"
     20 GOTO 10
     \endcode
+
+    \section1 Snippets
+
+    By default, code snippets use the appropriate language for the file
+    that contains them, such as with this C++ code:
+
+    \snippet code.cpp function
+
+    The language can be specified to override the language associated with
+    the file name; for example, with \c text to obtain unmarked text:
+
+    \snippet [text] code.cpp function
+
+    As with code blocks, languages can be used that QDoc does not parse.
+    Meta-data about the language is passed through to the output file:
+
+    \snippet [Python] code.py function
+
+    This will only be styled correctly if a highlighter is used later in
+    the publication process.
+
+    \section1 Quoting whole files
+
+    Quoting a whole file using the \c \\quotefile command without a
+    language argument relies on the use of the file name to determine the
+    code marker:
+
+    \quotefile code.cpp
+
+    With a language argument, the code marker can be overridden:
+
+    \quotefile [text] code.cpp
+
+    \section1 Quoting parts of files
+
+    Using the \c \\quotefromfile command to quote parts of files without
+    a language argument:
+
+    \quotefromfile code.cpp
+    \skipto sum
+    \printuntil }
+
+    Parts of the file can be quoted with a different marker if the required
+    language is passed as an argument to the \c \\quotefromfile command:
+
+    \quotefromfile [text] code.cpp
+    \skipto sum
+    \printuntil }
 */
