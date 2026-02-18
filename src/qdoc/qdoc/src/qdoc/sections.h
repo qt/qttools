@@ -26,14 +26,11 @@ public:
         m_divClass{divclass}, m_style{style}
     {}
 
-    ~Section();
-
     void insert(Node *node);
     bool insertReimplementedMember(Node *node);
 
     void appendMember(Node *node) { m_members.append(node); }
 
-    void clear();
     void reduce();
     [[nodiscard]] bool isEmpty() const
     {
@@ -53,6 +50,7 @@ public:
         return m_inheritedMembers;
     }
     ClassNodesList &classNodesList() { return m_classNodesList; }
+    [[nodiscard]] const ClassNodesList &classNodesList() const { return m_classNodesList; }
     [[nodiscard]] const NodeVector &obsoleteMembers() const { return m_obsoleteMembers; }
     void appendMembers(const NodeVector &nv) { m_members.append(nv); }
     [[nodiscard]] const Aggregate *aggregate() const { return m_aggregate; }
@@ -80,6 +78,8 @@ typedef QList<const Section *> SectionPtrVector;
 
 class Sections
 {
+    Q_DISABLE_COPY_MOVE(Sections)
+
 public:
     enum VectorIndex {
         PublicTypes = 0,
@@ -143,43 +143,19 @@ public:
 
     explicit Sections(Aggregate *aggregate);
     explicit Sections(const NodeMultiMap &nsmap);
-    ~Sections();
 
-    void clear(SectionVector &v);
-    void reduce(SectionVector &v);
-    void buildStdRefPageSections();
-    void buildStdCppClassRefPageSections();
-    void buildStdQmlTypeRefPageSections();
+    [[nodiscard]] bool hasObsoleteMembers(SectionPtrVector *summary_spv,
+                                          SectionPtrVector *details_spv) const;
 
-    bool hasObsoleteMembers(SectionPtrVector *summary_spv, SectionPtrVector *details_spv) const;
+    SectionVector &summarySections() { return m_summarySections; }
+    SectionVector &detailsSections() { return m_detailsSections; }
+    Section &allMembersSection() { return m_allMembers; }
+    SectionVector &sinceSections() { return m_sinceSections; }
 
-    static Section &allMembersSection() { return s_allMembers[0]; }
-    SectionVector &sinceSections() { return s_sinceSections; }
-    SectionVector &stdSummarySections() { return s_stdSummarySections; }
-    SectionVector &stdDetailsSections() { return s_stdDetailsSections; }
-    SectionVector &stdCppClassSummarySections() { return s_stdCppClassSummarySections; }
-    SectionVector &stdCppClassDetailsSections() { return s_stdCppClassDetailsSections; }
-    SectionVector &stdQmlTypeSummarySections() { return s_stdQmlTypeSummarySections; }
-    SectionVector &stdQmlTypeDetailsSections() { return s_stdQmlTypeDetailsSections; }
-
-    [[nodiscard]] const SectionVector &stdSummarySections() const { return s_stdSummarySections; }
-    [[nodiscard]] const SectionVector &stdDetailsSections() const { return s_stdDetailsSections; }
-    [[nodiscard]] const SectionVector &stdCppClassSummarySections() const
-    {
-        return s_stdCppClassSummarySections;
-    }
-    [[nodiscard]] const SectionVector &stdCppClassDetailsSections() const
-    {
-        return s_stdCppClassDetailsSections;
-    }
-    [[nodiscard]] const SectionVector &stdQmlTypeSummarySections() const
-    {
-        return s_stdQmlTypeSummarySections;
-    }
-    [[nodiscard]] const SectionVector &stdQmlTypeDetailsSections() const
-    {
-        return s_stdQmlTypeDetailsSections;
-    }
+    [[nodiscard]] const SectionVector &summarySections() const { return m_summarySections; }
+    [[nodiscard]] const SectionVector &detailsSections() const { return m_detailsSections; }
+    [[nodiscard]] const Section &allMembersSection() const { return m_allMembers; }
+    [[nodiscard]] const SectionVector &sinceSections() const { return m_sinceSections; }
 
     [[nodiscard]] Aggregate *aggregate() const { return m_aggregate; }
 
@@ -190,18 +166,17 @@ private:
     void distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n);
     void distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n, bool sharing = false);
     void initAggregate(SectionVector &v, Aggregate *aggregate);
+    void buildStdRefPageSections();
+    void buildStdCppClassRefPageSections();
+    void buildStdQmlTypeRefPageSections();
+    void reduce(SectionVector &v);
 
 private:
     Aggregate *m_aggregate { nullptr };
-
-    static SectionVector s_stdSummarySections;
-    static SectionVector s_stdDetailsSections;
-    static SectionVector s_stdCppClassSummarySections;
-    static SectionVector s_stdCppClassDetailsSections;
-    static SectionVector s_stdQmlTypeSummarySections;
-    static SectionVector s_stdQmlTypeDetailsSections;
-    static SectionVector s_sinceSections;
-    static SectionVector s_allMembers;
+    SectionVector m_summarySections;
+    SectionVector m_detailsSections;
+    Section m_allMembers { {}, "member", "members", {}, Section::AllMembers };
+    SectionVector m_sinceSections;
 };
 
 QT_END_NAMESPACE

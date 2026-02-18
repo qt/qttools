@@ -1106,29 +1106,23 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     QString fullTitle;
     Text titleText;
     NamespaceNode *ns = nullptr;
-    SectionVector *summarySections = nullptr;
-    SectionVector *detailsSections = nullptr;
-
     Sections sections(aggregate);
+    const SectionVector &summarySections = sections.summarySections();
+    const SectionVector &detailsSections = sections.detailsSections();
+
     QString typeWord = aggregate->typeWord(true);
     auto templateDecl = aggregate->templateDecl();
     if (aggregate->isNamespace()) {
         fullTitle = aggregate->plainFullName();
         title = "%1 %2"_L1.arg(fullTitle, typeWord);
         ns = static_cast<NamespaceNode *>(aggregate);
-        summarySections = &sections.stdSummarySections();
-        detailsSections = &sections.stdDetailsSections();
     } else if (aggregate->isClassNode()) {
         fullTitle = aggregate->plainFullName();
         title = "%1 %2"_L1.arg(fullTitle, typeWord);
-        summarySections = &sections.stdCppClassSummarySections();
-        detailsSections = &sections.stdCppClassDetailsSections();
     } else if (aggregate->isHeader()) {
         title = fullTitle = aggregate->fullTitle();
         if (!aggregate->doc().title().isEmpty())
             titleText << aggregate->name() << " - "_L1 << aggregate->doc().title();
-        summarySections = &sections.stdSummarySections();
-        detailsSections = &sections.stdDetailsSections();
     }
 
     Text subtitleText;
@@ -1145,7 +1139,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     }
 
     generateHeader(title, aggregate, marker);
-    generateTableOfContents(aggregate, marker, summarySections);
+    generateTableOfContents(aggregate, marker, &summarySections);
     if (!titleText.isEmpty())
         generateTitle(titleText, subtitleText, SmallSubTitle, aggregate, marker);
     else
@@ -1171,7 +1165,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     if (parentIsClass)
         generateSince(aggregate, marker);
 
-    QString membersLink = generateAllMembersFile(Sections::allMembersSection(), marker);
+    QString membersLink = generateAllMembersFile(sections.allMembersSection(), marker);
     if (!membersLink.isEmpty()) {
         openUnorderedList();
         out() << "<li><a href=\"" << membersLink << "\">"
@@ -1197,7 +1191,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
 
     bool needOtherSection = false;
 
-    for (const auto &section : std::as_const(*summarySections)) {
+    for (const auto &section : summarySections) {
         if (section.members().isEmpty() && section.reimplementedMembers().isEmpty()) {
             if (!section.inheritedMembers().isEmpty())
                 needOtherSection = true;
@@ -1226,7 +1220,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         out() << "<h3>Additional Inherited Members</h3>\n"
                  "<ul>\n";
 
-        for (const auto &section : std::as_const(*summarySections)) {
+        for (const auto &section : summarySections) {
             if (section.members().isEmpty() && !section.inheritedMembers().isEmpty())
                 generateSectionInheritedList(section, aggregate);
         }
@@ -1253,7 +1247,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         generateExtractionMark(aggregate, EndMark);
     }
 
-    for (const auto &section : std::as_const(*detailsSections)) {
+    for (const auto &section : detailsSections) {
         bool headerGenerated = false;
         if (section.isEmpty())
             continue;
@@ -1288,27 +1282,23 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
 {
     Q_ASSERT(aggregate->isProxyNode());
 
-    QString title;
-    QString rawTitle;
-    QString fullTitle;
     Text subtitleText;
-    SectionVector *summarySections = nullptr;
-    SectionVector *detailsSections = nullptr;
 
     Sections sections(aggregate);
-    rawTitle = aggregate->plainName();
-    fullTitle = aggregate->plainFullName();
-    title = rawTitle + " Proxy Page";
-    summarySections = &sections.stdSummarySections();
-    detailsSections = &sections.stdDetailsSections();
+    const SectionVector &summarySections = sections.summarySections();
+    const SectionVector &detailsSections = sections.detailsSections();
+
+    QString rawTitle = aggregate->plainName();
+    QString fullTitle = aggregate->plainFullName();
+    QString title = rawTitle + " Proxy Page";
     generateHeader(title, aggregate, marker);
     generateTitle(title, subtitleText, SmallSubTitle, aggregate, marker);
     generateBrief(aggregate, marker);
-    for (auto it = summarySections->constBegin(); it != summarySections->constEnd(); ++it) {
-        if (!it->members().isEmpty()) {
-            QString ref = registerRef(it->title().toLower());
-            out() << "<h2 id=\"" << ref << "\">" << protectEnc(it->title()) << "</h2>\n";
-            generateSection(it->members(), aggregate, marker);
+    for (const auto &section : summarySections) {
+        if (!section.members().isEmpty()) {
+            QString ref = registerRef(section.title().toLower());
+            out() << "<h2 id=\"" << ref << "\">" << protectEnc(section.title()) << "</h2>\n";
+            generateSection(section.members(), aggregate, marker);
         }
     }
 
@@ -1324,7 +1314,7 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
         generateExtractionMark(aggregate, EndMark);
     }
 
-    for (const auto &section : std::as_const(*detailsSections)) {
+    for (const auto &section : detailsSections) {
         if (section.isEmpty())
             continue;
 
@@ -1371,7 +1361,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
 
     generateHeader(htmlTitle, qcn, marker);
     Sections sections(qcn);
-    generateTableOfContents(qcn, marker, &sections.stdQmlTypeSummarySections());
+    generateTableOfContents(qcn, marker, &sections.summarySections());
     marker = CodeMarker::markerForLanguage(QLatin1String("QML"));
     generateTitle(htmlTitle, Text() << qcn->subtitle(), subTitleSize, qcn, marker);
     generateBrief(qcn, marker);
@@ -1410,8 +1400,8 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
 
     closeUnorderedList();
 
-    const QList<Section> &stdQmlTypeSummarySections = sections.stdQmlTypeSummarySections();
-    for (const auto &section : stdQmlTypeSummarySections) {
+    const SectionVector &qmlSummarySections = sections.summarySections();
+    for (const auto &section : qmlSummarySections) {
         if (!section.isEmpty()) {
             QString ref = registerRef(section.title().toLower());
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(section.title()) << "</h2>\n";
@@ -1427,8 +1417,8 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
     generateAlsoList(qcn, marker);
     generateExtractionMark(qcn, EndMark);
 
-    const QList<Section> &stdQmlTypeDetailsSections = sections.stdQmlTypeDetailsSections();
-    for (const auto &section : stdQmlTypeDetailsSections) {
+    const SectionVector &qmlDetailsSections = sections.detailsSections();
+    for (const auto &section : qmlDetailsSections) {
         if (section.isEmpty())
             continue;
         out() << "<h2>" << protectEnc(section.title()) << "</h2>\n";
@@ -2313,7 +2303,7 @@ void HtmlGenerator::generateBrief(const Node *node, CodeMarker *marker, const No
   Generates a table of contents beginning at \a node.
  */
 void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker,
-                                            QList<Section> *sections)
+                                            const SectionVector *sections)
 {
     QList<Atom *> toc;
     if (node->doc().hasTableOfContents())
@@ -2354,7 +2344,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
             }
         }
     } else if (sections && (node->isClassNode() || node->isNamespace() || node->isQmlType())) {
-        for (const auto &section : std::as_const(*sections)) {
+        for (const auto &section : *sections) {
             if (!section.members().isEmpty()) {
                 openUnorderedList();
                 out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
@@ -2459,11 +2449,11 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
     generateFullName(aggregate, nullptr);
     out() << ", including inherited members.</p>\n";
 
-    ClassNodesList &cknl = sections.allMembersSection().classNodesList();
+    const ClassNodesList &cknl = sections.allMembersSection().classNodesList();
     for (int i = 0; i < cknl.size(); i++) {
-        ClassNodes ckn = cknl[i];
+        const auto &ckn = cknl[i];
         const QmlTypeNode *qcn = ckn.first;
-        NodeVector &nodes = ckn.second;
+        const NodeVector &nodes = ckn.second;
         if (nodes.isEmpty())
             continue;
         if (i != 0) {

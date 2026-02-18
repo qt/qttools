@@ -3152,10 +3152,7 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
     }
 
     Sections sections(const_cast<Aggregate *>(aggregate));
-    SectionVector sectionVector =
-            (aggregate->isNamespace() || aggregate->isHeader()) ?
-                    sections.stdDetailsSections() :
-                    sections.stdCppClassDetailsSections();
+    const SectionVector &sectionVector = sections.detailsSections();
     for (const Section &section : sectionVector) {
         if (section.members().isEmpty())
             continue;
@@ -4631,7 +4628,7 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
     endSection();
 
     Sections sections(qcn);
-    for (const auto &section : sections.stdQmlTypeDetailsSections()) {
+    for (const auto &section : sections.detailsSections()) {
         if (!section.isEmpty()) {
             startSection(section.title().toLower(), section.title());
 
@@ -4873,9 +4870,9 @@ void DocBookGenerator::generateProxyPage(Aggregate *aggregate)
     }
 
     Sections sections(aggregate);
-    SectionVector *detailsSections = &sections.stdDetailsSections();
+    const SectionVector &detailsSections = sections.detailsSections();
 
-    for (const auto &section : std::as_const(*detailsSections)) {
+    for (const auto &section : detailsSections) {
         if (section.isEmpty())
             continue;
 

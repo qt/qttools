@@ -66,7 +66,7 @@ private:
     void generateBrief(const Node *node, CodeMarker *marker, const Node *relative = nullptr,
                        bool addLink = true);
     void generateTableOfContents(const Node *node, CodeMarker *marker,
-                                 QList<Section> *sections = nullptr);
+                                 const SectionVector *sections = nullptr);
     void generateSidebar();
     QString generateAllMembersFile(const Section &section, CodeMarker *marker);
     QString generateAllQmlMembersFile(const Sections &sections, CodeMarker *marker);
