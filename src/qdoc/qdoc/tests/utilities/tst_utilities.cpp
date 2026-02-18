@@ -64,6 +64,8 @@ private slots:
     void linkForExampleFile_basicPath();
     void linkForExampleFile_pathWithSpecialChars();
 
+    void asAsciiPrintable();
+
     void exampleFileTitle_fileMatch();
     void exampleFileTitle_imageMatch();
     void exampleFileTitle_noMatch();
@@ -295,6 +297,33 @@ void tst_Utilities::linkForExampleFile_pathWithSpecialChars()
     // Paths with special characters get sanitized via asAsciiPrintable
     QString result = Utilities::linkForExampleFile("examples/file with spaces.qml", "QtQuick", "html");
     QCOMPARE(result, QStringLiteral("qtquick-examples-file-with-spaces-qml.html"));
+}
+
+void tst_Utilities::asAsciiPrintable()
+{
+    QString result;
+    result = Utilities::asAsciiPrintable("");
+    QCOMPARE(result, QStringLiteral(""));
+    result = Utilities::asAsciiPrintable(" ");
+    QCOMPARE(result, QStringLiteral(""));
+    result = Utilities::asAsciiPrintable("a");
+    QCOMPARE(result, QStringLiteral("a"));
+    result = Utilities::asAsciiPrintable("a ");
+    QCOMPARE(result, QStringLiteral("a"));
+    result = Utilities::asAsciiPrintable(" a");
+    QCOMPARE(result, QStringLiteral("a"));
+    result = Utilities::asAsciiPrintable("Hello World");
+    QCOMPARE(result, QStringLiteral("hello-world"));
+    result = Utilities::asAsciiPrintable("Hello World ");
+    QCOMPARE(result, QStringLiteral("hello-world"));
+    result = Utilities::asAsciiPrintable("Hello World-");
+    QCOMPARE(result, QStringLiteral("hello-world"));
+    result = Utilities::asAsciiPrintable("myfile.txt");
+    QCOMPARE(result, QStringLiteral("myfile-txt"));
+    result = Utilities::asAsciiPrintable("Only printable!");
+    QCOMPARE(result, QStringLiteral("only-printable"));
+    result = Utilities::asAsciiPrintable("Multiple  spaces");
+    QCOMPARE(result, QStringLiteral("multiple-spaces"));
 }
 
 void tst_Utilities::exampleFileTitle_fileMatch()
