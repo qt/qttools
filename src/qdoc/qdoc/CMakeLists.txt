@@ -62,6 +62,7 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
         src/qdoc/ir/contentblock.cpp
         src/qdoc/ir/document.cpp
         src/qdoc/ir/link.cpp
+        src/qdoc/ir/pagemetadata.h
     )
 endif()
 
@@ -163,6 +164,8 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
         src/qdoc/documentationtraverser.cpp
         src/qdoc/injabridge.cpp
         src/qdoc/ir/builder.cpp
+        src/qdoc/nodeextractor.cpp
+        src/qdoc/nodeextractor.h
         src/qdoc/templategenerator.cpp
     )
 endif()
