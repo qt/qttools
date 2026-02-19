@@ -3,6 +3,7 @@
 
 #include "document.h"
 
+#include <QJsonArray>
 #include <optional>
 
 QT_BEGIN_NAMESPACE
@@ -149,9 +150,15 @@ QJsonObject Document::toJson() const
         json["deprecatedSince"_L1] = deprecatedSince;
     json["brief"_L1] = brief;
 
-    // Content
-    if (!contentJson.isEmpty())
-        json["content"_L1] = contentJson;
+    Q_ASSERT(!contentJson.contains("blocks"_L1));
+    QJsonObject content = contentJson;
+
+    QJsonArray blocks;
+    for (const auto &block : body)
+        blocks.append(block.toJson());
+    content["blocks"_L1] = blocks;
+
+    json["content"_L1] = content;
 
     return json;
 }

@@ -4,11 +4,14 @@
 #ifndef QDOC_IR_DOCUMENT_H
 #define QDOC_IR_DOCUMENT_H
 
-#include "../access.h"
-#include "../genustypes.h"
-#include "../status.h"
+#include "contentblock.h"
+
+#include "qdoc/access.h"
+#include "qdoc/genustypes.h"
+#include "qdoc/status.h"
 
 #include <QJsonObject>
+#include <QList>
 #include <QString>
 
 QT_BEGIN_NAMESPACE
@@ -32,7 +35,8 @@ struct Document
     QString brief;              // Brief description
 
     // Content
-    QJsonObject contentJson;    // Content as JSON (for template rendering)
+    QList<ContentBlock> body;
+    QJsonObject contentJson;
 
     QJsonObject toJson() const;
 };

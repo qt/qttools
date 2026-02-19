@@ -8,6 +8,7 @@
 #include <qdoc/genustypes.h>
 #include <qdoc/status.h>
 
+#include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QString>
@@ -46,8 +47,12 @@ SCENARIO("IR::Document basic structure", "[IR::Document][IR]") {
                 REQUIRE(json["access"_L1].toObject()["label"_L1].toString() == "Public");
             }
 
-            THEN("The JSON does not contain a content field when contentJson is empty") {
-                REQUIRE(!json.contains("content"_L1));
+            THEN("The content field contains only an empty blocks array when contentJson is empty") {
+                REQUIRE(json.contains("content"_L1));
+                QJsonObject content = json["content"_L1].toObject();
+                REQUIRE(content.contains("blocks"_L1));
+                REQUIRE(content["blocks"_L1].isArray());
+                REQUIRE(content["blocks"_L1].toArray().isEmpty());
             }
         }
     }
@@ -182,8 +187,11 @@ SCENARIO("IR::Document contentJson handling", "[IR::Document][IR][JSON]") {
         WHEN("Converting to JSON") {
             QJsonObject json = ir.toJson();
 
-            THEN("The content field is not present") {
-                REQUIRE(!json.contains("content"_L1));
+            THEN("The content field has an empty blocks array") {
+                REQUIRE(json.contains("content"_L1));
+                QJsonObject content = json["content"_L1].toObject();
+                REQUIRE(content.contains("blocks"_L1));
+                REQUIRE(content["blocks"_L1].toArray().isEmpty());
             }
         }
     }
@@ -204,6 +212,9 @@ SCENARIO("IR::Document contentJson handling", "[IR::Document][IR][JSON]") {
                 QJsonObject content = json["content"_L1].toObject();
                 REQUIRE(content["text"_L1].toString() == "Some content");
                 REQUIRE(content["count"_L1].toInt() == 42);
+                // Always-emit: blocks array is also present alongside legacy keys
+                REQUIRE(content.contains("blocks"_L1));
+                REQUIRE(content["blocks"_L1].toArray().isEmpty());
             }
 
             THEN("The root JSON contains metadata alongside nested content") {
@@ -408,6 +419,26 @@ SCENARIO("IR::Document complete workflow", "[IR::Document][IR][Integration]") {
 
                 // Content nested for organization: {{ content.main.description }}
                 REQUIRE(json["content"_L1].isObject());
+            }
+        }
+    }
+}
+
+SCENARIO("IR::Document body field with always-emit convention", "[IR::Document][IR][JSON]") {
+
+    GIVEN("An IR::Document with no body content") {
+        IR::Document ir;
+        ir.title = "TestPage"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("The content field is present with an empty blocks array") {
+                REQUIRE(json.contains("content"_L1));
+                QJsonObject content = json["content"_L1].toObject();
+                REQUIRE(content.contains("blocks"_L1));
+                REQUIRE(content["blocks"_L1].isArray());
+                REQUIRE(content["blocks"_L1].toArray().isEmpty());
             }
         }
     }
