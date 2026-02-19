@@ -19,11 +19,15 @@ namespace IR {
 class ContentBuilder
 {
 public:
-    explicit ContentBuilder();
+    explicit ContentBuilder(const QString &format = {});
     QList<ContentBlock> build(const Atom *firstAtom);
 
 private:
     void processAtoms(const Atom *atom);
+    const Atom *processUntilBoundary(const Atom *atom);
+    const Atom *processFormatIf(const Atom *atom);
+    const Atom *skipUntilBoundary(const Atom *atom);
+    const Atom *skipFormatIf(const Atom *atom);
     const Atom *dispatchAtom(const Atom *atom);
 
     void openBlock(BlockType type, QJsonObject attrs = {});
@@ -35,6 +39,7 @@ private:
     ContentBlock *resolveBlock();
     InlineContent *resolveInline();
 
+    QString m_format;
     QList<ContentBlock> m_result;
 
     // Index path through m_result / children hierarchy.
@@ -49,6 +54,8 @@ private:
     // closeBlock() can verify/restore inline depth (one entry per
     // m_blockPath entry, always in sync).
     QList<qsizetype> m_inlineBaseDepths;
+
+    bool m_inBrief = false;
 };
 
 } // namespace IR

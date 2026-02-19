@@ -27,12 +27,11 @@ namespace IR {
         \li SectionLeft, SectionRight -- Section containers.
         \li SectionHeadingLeft, SectionHeadingRight -- Section headings with
             level.
+        \li BriefLeft, BriefRight -- Brief exclusion (skipped in body).
+        \li FormatIf, FormatElse, FormatEndif -- Format-conditional content.
         \li Nop -- No-operation (skipped).
         \li BaseName -- No-operation (skipped).
     \endlist
-
-    Additional atom types, format-conditional handling, and inline formatting
-    are added in subsequent commits.
 
     ContentBuilder depends only on Atom (for reading the chain) and IR types
     (for producing output).
@@ -41,9 +40,13 @@ namespace IR {
 */
 
 /*!
-    Constructs a ContentBuilder.
+    Constructs a ContentBuilder that evaluates FormatIf atoms against
+    \a format. If \a format is empty, all FormatIf branches are skipped.
 */
-ContentBuilder::ContentBuilder() = default;
+ContentBuilder::ContentBuilder(const QString &format)
+    : m_format(format)
+{
+}
 
 /*!
     Walks the atom chain starting at \a firstAtom and returns a list
@@ -60,6 +63,7 @@ QList<ContentBlock> ContentBuilder::build(const Atom *firstAtom)
     m_blockPath.clear();
     m_inlinePath.clear();
     m_inlineBaseDepths.clear();
+    m_inBrief = false;
 
     if (!firstAtom)
         return {};
@@ -77,32 +81,160 @@ QList<ContentBlock> ContentBuilder::build(const Atom *firstAtom)
 
     Q_ASSERT(m_inlinePath.isEmpty());
     Q_ASSERT(m_inlineBaseDepths.isEmpty());
+    Q_ASSERT(!m_inBrief);
 
     return m_result;
 }
 
 /*!
-    Walks the full atom chain starting at \a atom, delegating each
-    atom to dispatchAtom() for processing. Unrecognized atoms are
-    ignored.
+    Walks the full atom chain starting at \a atom, building the
+    content tree. Stray FormatElse and FormatEndif atoms outside
+    any FormatIf context are ignored.
 */
 void ContentBuilder::processAtoms(const Atom *atom)
 {
     while (atom) {
-        atom = dispatchAtom(atom);
+        atom = processUntilBoundary(atom);
         if (!atom)
-            break;
+            return;
+        // Stray FormatElse/FormatEndif at top level — skip.
+        // Malformed chains (e.g. extra FormatElse) are treated as stray.
         atom = atom->next();
     }
 }
 
 /*!
+    Builds content from atoms until a FormatElse, FormatEndif, or
+    end of chain is reached. Returns the boundary atom, or \nullptr
+    if the chain ends without one.
+*/
+const Atom *ContentBuilder::processUntilBoundary(const Atom *atom)
+{
+    while (atom) {
+        if (atom->type() == Atom::FormatIf) {
+            atom = processFormatIf(atom);
+            continue;
+        }
+        if (atom->type() == Atom::FormatElse || atom->type() == Atom::FormatEndif)
+            return atom;
+        atom = dispatchAtom(atom);
+        if (!atom)
+            return nullptr;
+        atom = atom->next();
+    }
+    return nullptr;
+}
+
+/*!
+    Evaluates a FormatIf condition against the configured format.
+    Builds content from the matching branch and skips the other.
+    When no format is configured, both branches are skipped.
+
+    Returns a pointer to the atom after FormatEndif.
+*/
+const Atom *ContentBuilder::processFormatIf(const Atom *atom)
+{
+    Q_ASSERT(atom->type() == Atom::FormatIf);
+
+    if (m_format.isEmpty()) {
+        atom = skipUntilBoundary(atom->next());
+        if (!atom)
+            return nullptr;
+        if (atom->type() == Atom::FormatElse) {
+            atom = skipUntilBoundary(atom->next());
+            if (!atom)
+                return nullptr;
+        }
+        if (atom->type() == Atom::FormatEndif)
+            atom = atom->next();
+        return atom;
+    }
+
+    const bool formatMatches = (atom->string().compare(m_format, Qt::CaseInsensitive) == 0);
+
+    if (formatMatches)
+        atom = processUntilBoundary(atom->next());
+    else
+        atom = skipUntilBoundary(atom->next());
+    if (!atom)
+        return nullptr;
+
+    if (atom->type() == Atom::FormatElse) {
+        if (formatMatches)
+            atom = skipUntilBoundary(atom->next());
+        else
+            atom = processUntilBoundary(atom->next());
+        if (!atom)
+            return nullptr;
+    }
+
+    if (atom->type() == Atom::FormatEndif)
+        atom = atom->next();
+
+    return atom;
+}
+
+/*!
+    Advances past atoms until a FormatElse, FormatEndif, or end of
+    chain is reached, without building any content. Handles nested
+    FormatIf blocks by skipping both branches.
+
+    Returns the boundary atom, or \nullptr if the chain ends.
+*/
+const Atom *ContentBuilder::skipUntilBoundary(const Atom *atom)
+{
+    while (atom) {
+        if (atom->type() == Atom::FormatIf) {
+            atom = skipFormatIf(atom);
+            continue;
+        }
+        if (atom->type() == Atom::FormatElse || atom->type() == Atom::FormatEndif)
+            return atom;
+        atom = atom->next();
+    }
+    return nullptr;
+}
+
+/*!
+    Skips a complete FormatIf block (both branches) without building
+    content.
+
+    Returns a pointer to the atom after FormatEndif.
+*/
+const Atom *ContentBuilder::skipFormatIf(const Atom *atom)
+{
+    Q_ASSERT(atom->type() == Atom::FormatIf);
+    atom = skipUntilBoundary(atom->next());
+    if (!atom)
+        return nullptr;
+    if (atom->type() == Atom::FormatElse) {
+        atom = skipUntilBoundary(atom->next());
+        if (!atom)
+            return nullptr;
+    }
+    if (atom->type() == Atom::FormatEndif)
+        atom = atom->next();
+    return atom;
+}
+
+/*!
     Dispatches a single atom to the content model. Returns the last
     atom consumed — usually \a atom itself, but some atom types may
-    consume subsequent atoms in future commits.
+    consume subsequent atoms.
 */
 const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
 {
+    if (atom->type() == Atom::BriefLeft) {
+        m_inBrief = true;
+        return atom;
+    }
+    if (atom->type() == Atom::BriefRight) {
+        m_inBrief = false;
+        return atom;
+    }
+    if (m_inBrief)
+        return atom;
+
     switch (atom->type()) {
 
     case Atom::ParaLeft:
