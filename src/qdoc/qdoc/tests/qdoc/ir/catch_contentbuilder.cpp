@@ -504,20 +504,21 @@ SCENARIO("ContentBuilder skips BriefLeft/BriefRight content in body",
     }
 }
 
-SCENARIO("ContentBuilder excludes sections and paragraphs inside brief",
+SCENARIO("ContentBuilder excludes block-level atoms inside brief",
          "[IR::ContentBuilder][IR][Brief]")
 {
-    GIVEN("An atom chain with a section and paragraph inside BriefLeft/BriefRight")
+    GIVEN("An atom chain with a code block and list inside BriefLeft/BriefRight")
     {
         AtomChain chain(Atom::BriefLeft);
-        chain.append(Atom::SectionLeft);
-        chain.append(Atom::SectionHeadingLeft, u"1"_s);
-        chain.append(Atom::String, u"Brief heading"_s);
-        chain.append(Atom::SectionHeadingRight);
+        chain.append(Atom::Code, u"int x = 0;"_s);
+        chain.append(Atom::ListLeft, u"bullet"_s);
+        chain.append(Atom::ListItemLeft);
         chain.append(Atom::ParaLeft);
-        chain.append(Atom::String, u"brief para"_s);
+        chain.append(Atom::String, u"item"_s);
         chain.append(Atom::ParaRight);
-        chain.append(Atom::SectionRight);
+        chain.append(Atom::ListItemRight);
+        chain.append(Atom::ListRight);
+        chain.append(Atom::HR);
         chain.append(Atom::BriefRight);
         chain.append(Atom::ParaLeft);
         chain.append(Atom::String, u"Body text."_s);
@@ -533,6 +534,39 @@ SCENARIO("ContentBuilder excludes sections and paragraphs inside brief",
                 REQUIRE(blocks.size() == 1);
                 REQUIRE(blocks[0].type == IR::BlockType::Paragraph);
                 REQUIRE(blocks[0].inlineContent[0].text == u"Body text."_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder brief suppression prevents state corruption from unmatched atoms",
+         "[IR::ContentBuilder][IR][Brief]")
+{
+    GIVEN("An atom chain with unmatched open atoms inside BriefLeft/BriefRight")
+    {
+        // ListLeft without ListRight and SectionLeft without SectionRight
+        // inside brief. If brief suppression failed to prevent these from
+        // reaching dispatch, the block path would be corrupted and the
+        // subsequent paragraph would nest incorrectly or trigger asserts.
+        AtomChain chain(Atom::BriefLeft);
+        chain.append(Atom::ListLeft, u"bullet"_s);
+        chain.append(Atom::SectionLeft);
+        chain.append(Atom::BriefRight);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"after brief"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The builder state is clean; only the body paragraph appears")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Paragraph);
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                REQUIRE(blocks[0].inlineContent[0].text == u"after brief"_s);
             }
         }
     }
@@ -910,6 +944,322 @@ SCENARIO("ContentBuilder produces LineBreak inline from BR atom",
                 REQUIRE(blocks[0].inlineContent[1].type == IR::InlineType::LineBreak);
                 REQUIRE(blocks[0].inlineContent[2].type == IR::InlineType::Text);
                 REQUIRE(blocks[0].inlineContent[2].text == u"line two"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder produces CodeBlock from Code atom",
+         "[IR::ContentBuilder][IR][CodeBlock]")
+{
+    GIVEN("An atom chain with a Code atom")
+    {
+        AtomChain chain(Atom::Code, u"int x = 42;"_s, u"cpp"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("There is one CodeBlock with language attribute")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::CodeBlock);
+                REQUIRE(blocks[0].attributes["language"_L1].toString() == u"cpp"_s);
+            }
+
+            THEN("The code content is the inline text")
+            {
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                REQUIRE(blocks[0].inlineContent[0].type == IR::InlineType::Text);
+                REQUIRE(blocks[0].inlineContent[0].text == u"int x = 42;"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder produces CodeBlock from CodeBad atom with bad attribute",
+         "[IR::ContentBuilder][IR][CodeBlock]")
+{
+    GIVEN("An atom chain with a CodeBad atom")
+    {
+        AtomChain chain(Atom::CodeBad, u"broken code"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("There is one CodeBlock with language=cpp and bad=true")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::CodeBlock);
+                REQUIRE(blocks[0].attributes["language"_L1].toString() == u"cpp"_s);
+                REQUIRE(blocks[0].attributes["bad"_L1].toBool() == true);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder produces CodeBlock from Qml atom",
+         "[IR::ContentBuilder][IR][CodeBlock]")
+{
+    GIVEN("An atom chain with a Qml atom")
+    {
+        AtomChain chain(Atom::Qml, u"Item { width: 100 }"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("There is one CodeBlock with language=qml")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::CodeBlock);
+                REQUIRE(blocks[0].attributes["language"_L1].toString() == u"qml"_s);
+            }
+
+            THEN("The code content is the inline text")
+            {
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                REQUIRE(blocks[0].inlineContent[0].text == u"Item { width: 100 }"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder defaults Code language to cpp when no language string",
+         "[IR::ContentBuilder][IR][CodeBlock]")
+{
+    GIVEN("A Code atom with only one string parameter (no language)")
+    {
+        AtomChain chain(Atom::Code, u"int y = 0;"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("Language defaults to cpp")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].attributes["language"_L1].toString() == u"cpp"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder builds a bullet list with items",
+         "[IR::ContentBuilder][IR][List]")
+{
+    GIVEN("An atom chain representing a bullet list with two items")
+    {
+        AtomChain chain(Atom::ListLeft, u"bullet"_s);
+        chain.append(Atom::ListItemLeft);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"First item"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::ListItemRight);
+        chain.append(Atom::ListItemLeft);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"Second item"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::ListItemRight);
+        chain.append(Atom::ListRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("There is one List block with listType attribute")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::List);
+                REQUIRE(blocks[0].attributes["listType"_L1].toString() == u"bullet"_s);
+            }
+
+            THEN("The list has two ListItem children")
+            {
+                REQUIRE(blocks[0].children.size() == 2);
+                REQUIRE(blocks[0].children[0].type == IR::BlockType::ListItem);
+                REQUIRE(blocks[0].children[1].type == IR::BlockType::ListItem);
+            }
+
+            THEN("Each ListItem contains a Paragraph with text")
+            {
+                const auto &item1 = blocks[0].children[0];
+                REQUIRE(item1.children.size() == 1);
+                REQUIRE(item1.children[0].type == IR::BlockType::Paragraph);
+                REQUIRE(item1.children[0].inlineContent[0].text == u"First item"_s);
+
+                const auto &item2 = blocks[0].children[1];
+                REQUIRE(item2.children[0].inlineContent[0].text == u"Second item"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder builds a Note block",
+         "[IR::ContentBuilder][IR][Admonition]")
+{
+    GIVEN("An atom chain with NoteLeft/NoteRight wrapping a paragraph")
+    {
+        AtomChain chain(Atom::NoteLeft);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"This is important."_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::NoteRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("There is one Note block containing a Paragraph")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Note);
+                REQUIRE(blocks[0].children.size() == 1);
+                REQUIRE(blocks[0].children[0].type == IR::BlockType::Paragraph);
+                REQUIRE(blocks[0].children[0].inlineContent[0].text
+                        == u"This is important."_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder builds a Warning block",
+         "[IR::ContentBuilder][IR][Admonition]")
+{
+    GIVEN("An atom chain with WarningLeft/WarningRight wrapping a paragraph")
+    {
+        AtomChain chain(Atom::WarningLeft);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"Dangerous operation."_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::WarningRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("There is one Warning block containing a Paragraph")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Warning);
+                REQUIRE(blocks[0].children.size() == 1);
+                REQUIRE(blocks[0].children[0].type == IR::BlockType::Paragraph);
+                REQUIRE(blocks[0].children[0].inlineContent[0].text
+                        == u"Dangerous operation."_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder produces HorizontalRule from HR atom",
+         "[IR::ContentBuilder][IR][Misc]")
+{
+    GIVEN("An atom chain with HR between two paragraphs")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::String, u"above"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::HR);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"below"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("There are three blocks: Paragraph, HorizontalRule, Paragraph")
+            {
+                REQUIRE(blocks.size() == 3);
+                REQUIRE(blocks[0].type == IR::BlockType::Paragraph);
+                REQUIRE(blocks[1].type == IR::BlockType::HorizontalRule);
+                REQUIRE(blocks[2].type == IR::BlockType::Paragraph);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder produces Div for AnnotatedList atom",
+         "[IR::ContentBuilder][IR][Misc]")
+{
+    GIVEN("An atom chain with an AnnotatedList atom")
+    {
+        AtomChain chain(Atom::AnnotatedList, u"mygroup"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("There is one Div block with annotatedList attribute")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Div);
+                REQUIRE(blocks[0].attributes["annotatedList"_L1].toString()
+                        == u"mygroup"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder produces Div for GeneratedList atom",
+         "[IR::ContentBuilder][IR][Misc]")
+{
+    GIVEN("An atom chain with a GeneratedList atom")
+    {
+        AtomChain chain(Atom::GeneratedList, u"classes"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("There is one Div block with generatedList attribute")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Div);
+                REQUIRE(blocks[0].attributes["generatedList"_L1].toString()
+                        == u"classes"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder can be reused for multiple build() calls",
+         "[IR::ContentBuilder][IR]")
+{
+    GIVEN("A ContentBuilder used to build two different chains")
+    {
+        IR::ContentBuilder builder;
+
+        AtomChain chain1(Atom::ParaLeft);
+        chain1.append(Atom::String, u"first"_s);
+        chain1.append(Atom::ParaRight);
+
+        AtomChain chain2(Atom::ParaLeft);
+        chain2.append(Atom::String, u"second"_s);
+        chain2.append(Atom::ParaRight);
+
+        WHEN("build() is called twice")
+        {
+            auto blocks1 = builder.build(&chain1.first);
+            auto blocks2 = builder.build(&chain2.first);
+
+            THEN("Each result is independent")
+            {
+                REQUIRE(blocks1.size() == 1);
+                REQUIRE(blocks1[0].inlineContent[0].text == u"first"_s);
+                REQUIRE(blocks2.size() == 1);
+                REQUIRE(blocks2[0].inlineContent[0].text == u"second"_s);
             }
         }
     }

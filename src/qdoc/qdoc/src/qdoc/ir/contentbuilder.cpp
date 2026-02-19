@@ -25,20 +25,29 @@ namespace IR {
         \li ParaLeft, ParaRight -- Paragraph blocks.
         \li String -- Text inline content.
         \li C -- Inline code spans.
+        \li Code, CodeBad, Qml -- Code blocks with language attribute.
         \li SectionLeft, SectionRight -- Section containers.
         \li SectionHeadingLeft, SectionHeadingRight -- Section headings with
             level.
         \li FormattingLeft, FormattingRight -- Bold, italic, teletype,
             underline, subscript, superscript, parameter, uicontrol, trademark,
             link, index, notranslate, span.
+        \li ListLeft, ListRight -- Ordered and unordered lists.
+        \li ListItemLeft, ListItemRight -- List items.
+        \li ListItemNumber -- List start number metadata.
+        \li NoteLeft, NoteRight -- Note admonition blocks.
+        \li WarningLeft, WarningRight -- Warning admonition blocks.
         \li BriefLeft, BriefRight -- Brief exclusion (skipped in body).
         \li Link, NavLink -- Explicit links with unresolved target.
         \li AutoLink, NavAutoLink -- Auto-linked type names with unresolved
             target.
-        \li BR -- Line break inline.
         \li FormatIf, FormatElse, FormatEndif -- Format-conditional content.
+        \li BR -- Line break inline.
+        \li HR -- Horizontal rule block.
         \li Nop -- No-operation (skipped).
         \li BaseName -- No-operation (skipped).
+        \li AnnotatedList -- Placeholder Div.
+        \li GeneratedList -- Placeholder Div.
     \endlist
 
     ContentBuilder depends only on Atom (for reading the chain) and IR types
@@ -282,6 +291,27 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         addLeafInline(InlineType::Code, atom->string());
         break;
 
+    case Atom::Code:
+    case Atom::CodeBad:
+    case Atom::Qml: {
+        QJsonObject attrs;
+        if (atom->type() == Atom::Qml) {
+            attrs["language"_L1] = u"qml"_s;
+        } else if (atom->type() == Atom::CodeBad) {
+            attrs["language"_L1] = u"cpp"_s;
+            attrs["bad"_L1] = true;
+        } else if (atom->count() >= 2 && !atom->string(1).isEmpty()) {
+            attrs["language"_L1] = atom->string(1);
+        } else {
+            attrs["language"_L1] = u"cpp"_s;
+        }
+
+        openBlock(BlockType::CodeBlock, attrs);
+        addLeafInline(InlineType::Text, atom->string());
+        closeBlock();
+        break;
+    }
+
     case Atom::AutoLink:
     case Atom::NavAutoLink: {
         InlineContent link;
@@ -388,9 +418,69 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         closeBlock();
         break;
 
+    case Atom::ListLeft: {
+        QJsonObject attrs;
+        attrs["listType"_L1] = atom->string();
+        openBlock(BlockType::List, attrs);
+        break;
+    }
+
+    case Atom::ListRight:
+        closeBlock();
+        break;
+
+    case Atom::ListItemLeft:
+        openBlock(BlockType::ListItem);
+        break;
+
+    case Atom::ListItemRight:
+        closeBlock();
+        break;
+
+    case Atom::ListItemNumber:
+        // Start-number metadata is not yet represented in the IR.
+        break;
+
+    case Atom::NoteLeft:
+        openBlock(BlockType::Note);
+        break;
+
+    case Atom::NoteRight:
+        closeBlock();
+        break;
+
+    case Atom::WarningLeft:
+        openBlock(BlockType::Warning);
+        break;
+
+    case Atom::WarningRight:
+        closeBlock();
+        break;
+
     case Atom::BR:
         addLeafInline(InlineType::LineBreak, {});
         break;
+
+    case Atom::HR:
+        openBlock(BlockType::HorizontalRule);
+        closeBlock();
+        break;
+
+    case Atom::AnnotatedList: {
+        QJsonObject attrs;
+        attrs["annotatedList"_L1] = atom->string();
+        openBlock(BlockType::Div, attrs);
+        closeBlock();
+        break;
+    }
+
+    case Atom::GeneratedList: {
+        QJsonObject attrs;
+        attrs["generatedList"_L1] = atom->string();
+        openBlock(BlockType::Div, attrs);
+        closeBlock();
+        break;
+    }
 
     case Atom::Nop:
     case Atom::BaseName:
