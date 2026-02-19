@@ -1,0 +1,8 @@
+# QDoc Warning Log
+# Project: External Page Hyphens
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/test.qdoc:47: [External Page Hyphens] (qdoc) warning: Can't link to '-RFC 6749'
+src/test.qdoc:59: [External Page Hyphens] (qdoc) warning: Can't link to ''

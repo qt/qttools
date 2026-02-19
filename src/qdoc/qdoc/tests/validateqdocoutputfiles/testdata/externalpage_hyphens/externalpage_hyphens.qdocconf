@@ -15,8 +15,15 @@ HTML.outputsubdir = html
 headers.fileextensions  = "*.h *.hpp"
 sources.fileextensions  = "*.cpp *.qml *.qdoc"
 
-# zero warning policy
-warninglimit = 0
+# capture warnings for validation
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+
+# allow two warnings:
+# Can't link to '-RFC 6749'
+# Can't link to ''
+warninglimit = 2
 warninglimit.enabled = true
 
 # don't write host system-specific paths to index files
