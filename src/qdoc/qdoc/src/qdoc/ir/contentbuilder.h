@@ -24,6 +24,7 @@ public:
 
 private:
     void processAtoms(const Atom *atom);
+    const Atom *dispatchAtom(const Atom *atom);
 
     void openBlock(BlockType type, QJsonObject attrs = {});
     void closeBlock();

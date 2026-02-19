@@ -82,62 +82,68 @@ QList<ContentBlock> ContentBuilder::build(const Atom *firstAtom)
 }
 
 /*!
-    Processes atoms starting at \a atom, converting each recognized
-    atom type into the corresponding block or inline content.
-
-    Unrecognized atom types are silently skipped. Format-conditional
-    handling (FormatIf/FormatElse/FormatEndif) and the remaining atom
-    types are added in a subsequent commit.
+    Walks the full atom chain starting at \a atom, delegating each
+    atom to dispatchAtom() for processing. Unrecognized atoms are
+    ignored.
 */
 void ContentBuilder::processAtoms(const Atom *atom)
 {
     while (atom) {
-        switch (atom->type()) {
-
-        case Atom::ParaLeft:
-            openBlock(BlockType::Paragraph);
+        atom = dispatchAtom(atom);
+        if (!atom)
             break;
-
-        case Atom::ParaRight:
-            closeBlock();
-            break;
-
-        case Atom::String:
-            addLeafInline(InlineType::Text, atom->string());
-            break;
-
-        case Atom::SectionLeft:
-            openBlock(BlockType::Section);
-            break;
-
-        case Atom::SectionRight:
-            closeBlock();
-            break;
-
-        case Atom::SectionHeadingLeft: {
-            QJsonObject attrs;
-            attrs["level"_L1] = atom->string().toInt();
-            openBlock(BlockType::SectionHeading, attrs);
-            break;
-        }
-
-        case Atom::SectionHeadingRight:
-            closeBlock();
-            break;
-
-        case Atom::Nop:
-        case Atom::BaseName:
-            break;
-
-        default:
-            // Unhandled atoms are silently skipped. This includes
-            // FormatIf/FormatElse/FormatEndif, which are intentionally
-            // no-ops until format-conditional dispatch is added.
-            break;
-        }
-
         atom = atom->next();
     }
+}
+
+/*!
+    Dispatches a single atom to the content model. Returns the last
+    atom consumed — usually \a atom itself, but some atom types may
+    consume subsequent atoms in future commits.
+*/
+const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
+{
+    switch (atom->type()) {
+
+    case Atom::ParaLeft:
+        openBlock(BlockType::Paragraph);
+        break;
+
+    case Atom::ParaRight:
+        closeBlock();
+        break;
+
+    case Atom::String:
+        addLeafInline(InlineType::Text, atom->string());
+        break;
+
+    case Atom::SectionLeft:
+        openBlock(BlockType::Section);
+        break;
+
+    case Atom::SectionRight:
+        closeBlock();
+        break;
+
+    case Atom::SectionHeadingLeft: {
+        QJsonObject attrs;
+        attrs["level"_L1] = atom->string().toInt();
+        openBlock(BlockType::SectionHeading, attrs);
+        break;
+    }
+
+    case Atom::SectionHeadingRight:
+        closeBlock();
+        break;
+
+    case Atom::Nop:
+    case Atom::BaseName:
+        break;
+
+    default:
+        break;
+    }
+    return atom;
 }
 
 /*!
