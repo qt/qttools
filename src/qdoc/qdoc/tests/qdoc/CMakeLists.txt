@@ -46,7 +46,9 @@ qt_internal_extend_target(tst_QDoc
         ir/catch_link.cpp
         ir/catch_atomcontext.cpp
         ir/catch_builder.cpp
+        ir/catch_contentbuilder.cpp
         ../../src/qdoc/injabridge.cpp
+        ../../src/qdoc/ir/contentbuilder.cpp
         ../../src/qdoc/ir/contentblock.cpp
         ../../src/qdoc/ir/document.cpp
         ../../src/qdoc/ir/link.cpp
