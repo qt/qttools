@@ -33,9 +33,19 @@ public:
     [[nodiscard]] qsizetype count() const { return m_collective.size(); }
     void append(Node *node)
     {
-        m_collective.append(node);
-        node->setSharedCommentNode(this);
-        setGenus(node->genus());
+        if (count() == 0 || hasCommonGenusType(m_collective.first()->genus(), node->genus())) {
+            m_collective.append(node);
+            node->setSharedCommentNode(this);
+            setGenus(node->genus());
+        }
+    }
+    void prepend(Node *node)
+    {
+        if (count() == 0 || hasCommonGenusType(m_collective.first()->genus(), node->genus())) {
+            m_collective.prepend(node);
+            node->setSharedCommentNode(this);
+            setGenus(node->genus());
+        }
     }
     void sort() { std::sort(m_collective.begin(), m_collective.end(), Node::nodeNameOverloadLessThan); }
     [[nodiscard]] const QList<Node *> &collective() const { return m_collective; }
