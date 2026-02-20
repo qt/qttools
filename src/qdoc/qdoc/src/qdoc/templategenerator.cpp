@@ -16,6 +16,7 @@
 #include "ir/document.h"
 #include "namespacenode.h"
 #include "node.h"
+#include "nodeextractor.h"
 #include "outputcontext.h"
 #include "outputproducerregistry.h"
 #include "pagenode.h"
@@ -23,6 +24,8 @@
 #include "qmltypenode.h"
 #include "tree.h"
 #include "utilities.h"
+
+#include <utility>
 
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
@@ -204,11 +207,11 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 {
     Q_UNUSED(marker);
 
-    // Build phase: Node → IR (handled by IR::Builder)
-    IR::Builder builder;
-    IR::Document ir = builder.buildPageIR(pn);
+    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(pn, m_format);
 
-    // Render phase: IR → Output (TemplateGenerator's actual job)
+    IR::Builder builder;
+    IR::Document ir = builder.buildPageIR(std::move(pm));
+
     renderDocument(ir, "page"_L1);
 }
 

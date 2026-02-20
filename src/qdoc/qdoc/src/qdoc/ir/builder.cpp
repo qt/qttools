@@ -3,9 +3,9 @@
 
 #include "builder.h"
 
-#include "../atom.h"
-#include "../pagenode.h"
-#include "../text.h"
+#include "pagemetadata.h"
+
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 
@@ -16,101 +16,71 @@ namespace IR {
 /*!
     \class IR::Builder
     \internal
-    \brief Builds IR (Intermediate Representation) from QDoc's Node tree.
+    \brief Assembles IR Documents from pre-extracted metadata.
 
-    Builder is the "compiler" in QDoc's compile/link/render pipeline. It
-    transforms Node objects into format-agnostic IR structures that can be:
+    Builder consumes PageMetadata, a value-type struct populated by the
+    driver-side extraction layer (NodeExtractor). It copies pre-extracted
+    fields into an IR::Document without touching Node subclass headers,
+    Atom chains, or the documentation database.
 
-    \list
-    \li Rendered to output formats (HTML, Markdown, DocBook) by generators.
-    \li Written to .index files for cross-module linking.
-    \li Consumed by other IR processors.
-    \endlist
+    This separation means Builder has no dependencies on the legacy Node
+    layer and is eligible for QDocLib migration. Generators receive
+    pre-built IR and focus purely on formatting output.
 
-    \section1 Separation of Concerns
+    \section1 Content Pipeline
 
-    Builder handles all interaction with Node classes and Atom chains.
-    Generators receive pre-built IR and focus purely on formatting output.
-    This separation enables:
+    Content arrives pre-built as a list of ContentBlock values in
+    PageMetadata::body. ContentBuilder (called at extraction time)
+    handles the atom-to-block transformation, including format-conditional
+    evaluation and brief exclusion. Builder's role is assembly, not
+    transformation.
 
-    \list
-    \li Testing IR building independently from rendering.
-    \li Multiple output formats from the same IR.
-    \li Clear architectural boundaries.
-    \endlist
+    \section1 Flat Text Fallback
 
-    \section1 Link Resolution
+    Builder computes a flat text representation from the structured body
+    for \c{content.text}. This is transitional — templates will consume
+    \c{content.blocks} directly once content rendering is in place.
 
-    During IR building, \b{local links} (within the same module) are resolved
-    immediately. \b{Cross-module links} are marked as external with an empty
-    href, to be resolved during the link phase when dependency .index files
-    are available.
-
-    \sa IR::Document, TemplateGenerator
+    \sa IR::Document, IR::PageMetadata, TemplateGenerator
 */
 
 
 /*!
     \internal
-    Build IR for a PageNode.
+    Assemble an IR Document from pre-extracted PageMetadata.
 
-    This method extracts documentation content from the node's atom chain.
-    The brief is stored separately via Doc::briefText(), while body content
-    is extracted by walking the atom chain and collecting text atoms that
-    are not within the brief section.
-
-    \note Currently handles basic text atoms (String, AutoLink, C) and
-    paragraph breaks. More complex atom types (lists, code blocks, images)
-    will be added as the IR layer matures.
+    Classification, identity, and content fields are moved from
+    \a pm. The body (a list of ContentBlock values built by
+    ContentBuilder at extraction time) is transferred as-is. A flat
+    text fallback is computed until templates consume the structured
+    body directly.
 */
-Document Builder::buildPageIR(const PageNode *pn) const
+Document Builder::buildPageIR(PageMetadata pm) const
 {
     Document ir;
 
-    // Classification
-    ir.nodeType = pn->nodeType();
-    ir.genus = pn->genus();
-    ir.status = pn->status();
-    ir.access = pn->access();
+    ir.nodeType = pm.nodeType;
+    ir.genus = pm.genus;
+    ir.status = pm.status;
+    ir.access = pm.access;
 
-    // Identity
-    ir.title = pn->title();
-    ir.fullTitle = pn->fullTitle();
-    ir.url = pn->url();
-    ir.since = pn->since();
-    ir.deprecatedSince = pn->deprecatedSince();
-    ir.brief = pn->doc().briefText().toString();
+    ir.title = std::move(pm.title);
+    ir.fullTitle = std::move(pm.fullTitle);
+    ir.url = std::move(pm.url);
+    ir.since = std::move(pm.since);
+    ir.deprecatedSince = std::move(pm.deprecatedSince);
+    ir.brief = std::move(pm.brief);
 
-    QString bodyText;
-    const Text &body = pn->doc().body();
-    const Atom *atom = body.firstAtom();
-    bool inBrief = false;
+    ir.body = std::move(pm.body);
 
-    while (atom) {
-        switch (atom->type()) {
-        case Atom::BriefLeft:
-            inBrief = true;
-            break;
-        case Atom::BriefRight:
-            inBrief = false;
-            break;
-        case Atom::ParaLeft:
-            if (!inBrief && !bodyText.isEmpty())
-                bodyText += "\n\n"_L1;
-            break;
-        case Atom::String:
-        case Atom::AutoLink:
-        case Atom::C:
-            if (!inBrief)
-                bodyText += atom->string();
-            break;
-        default:
-            break;
-        }
-        atom = atom->next();
+    // Transitional: templates don't yet consume content.blocks.
+    QStringList paragraphs;
+    for (const auto &block : ir.body) {
+        const QString text = block.plainText();
+        if (!text.isEmpty())
+            paragraphs.append(text);
     }
-
-    ir.contentJson["text"_L1] = bodyText.trimmed();
+    ir.contentJson["text"_L1] = paragraphs.join("\n\n"_L1);
 
     return ir;
 }
@@ -118,4 +88,3 @@ Document Builder::buildPageIR(const PageNode *pn) const
 } // namespace IR
 
 QT_END_NAMESPACE
-

@@ -4,29 +4,15 @@
 #include <catch/catch.hpp>
 
 #include <qdoc/ir/builder.h>
+#include <qdoc/ir/contentblock.h>
 #include <qdoc/ir/document.h>
+#include <qdoc/ir/pagemetadata.h>
 
 #include <QtCore/qglobal.h>
 
-// NOTE: IR::Builder requires PageNode instances, which need the full QDoc
-// infrastructure (Aggregate parents, Doc objects with Atom chains, etc.).
-// Full unit testing requires either:
-//   1. Mock/fake implementations of PageNode and its dependencies
-//   2. A test fixture that sets up minimal QDoc infrastructure
-//   3. Integration testing via tst_validateTemplateGeneratorOutput
-//
-// Currently, option 3 provides coverage. These tests verify compilation
-// and document intent for future comprehensive unit testing.
+using namespace Qt::Literals;
 
-SCENARIO("IR::Builder compilation", "[IR::Builder][IR][Compilation]") {
-
-    GIVEN("The IR::Builder class") {
-        WHEN("The header is included") {
-            THEN("It compiles successfully") {
-                REQUIRE(true);
-            }
-        }
-    }
+SCENARIO("Builder compiles and default-constructs", "[IR::Builder][IR]") {
 
     GIVEN("An IR::Builder instance") {
         IR::Builder builder;
@@ -34,89 +20,117 @@ SCENARIO("IR::Builder compilation", "[IR::Builder][IR][Compilation]") {
 
         WHEN("Default constructed") {
             THEN("It is ready to use") {
-                // IR::Builder is stateless and always ready
                 REQUIRE(true);
             }
         }
     }
 }
 
-SCENARIO("IR::Builder interface design", "[IR::Builder][IR][Interface]") {
+SCENARIO("Builder populates Document from PageMetadata", "[IR::Builder][IR]") {
 
-    GIVEN("An IR::Builder instance") {
-        IR::Builder builder;
-        Q_UNUSED(builder);
+    GIVEN("A PageMetadata with populated fields") {
+        IR::PageMetadata pm;
+        pm.title = u"Test Page"_s;
+        pm.fullTitle = u"Test Page Full Title"_s;
+        pm.brief = u"A test page brief."_s;
+        pm.since = u"6.8"_s;
+        pm.deprecatedSince = u"6.5"_s;
+        pm.url = u"test-page.html"_s;
+        pm.nodeType = NodeType::Page;
+        pm.genus = Genus::DontCare;
+        pm.status = Status::Active;
+        pm.access = Access::Public;
 
-        WHEN("Documenting the expected interface") {
-            THEN("buildPageIR takes a PageNode pointer and returns IR::Document") {
-                // The signature is:
-                //   IR::Document buildPageIR(const PageNode *pn) const;
-                //
-                // This extracts:
-                //   - title from PageNode::title()
-                //   - fullTitle from PageNode::fullTitle()
-                //   - url from PageNode::url()
-                //   - brief from PageNode::doc().briefText().toString()
-                //   - body content from PageNode::doc().body() atom chain
-                //
-                // TODO: Once test infrastructure supports PageNode creation,
-                // add tests that verify:
-                //   1. Empty PageNode produces empty/default IR::Document
-                //   2. PageNode with title populates ir.title
-                //   3. PageNode with brief populates ir.brief
-                //   4. PageNode with body content populates ir.contentJson["text"]
-                //   5. Brief content is excluded from body text
-                //   6. Paragraph breaks are converted to double newlines
-                INFO("IR::Builder::buildPageIR() signature verified by compilation");
-                REQUIRE(true);
+        WHEN("buildPageIR is called") {
+            IR::Builder builder;
+            IR::Document ir = builder.buildPageIR(pm);
+
+            THEN("Document fields match PageMetadata") {
+                REQUIRE(ir.title == pm.title);
+                REQUIRE(ir.fullTitle == pm.fullTitle);
+                REQUIRE(ir.brief == pm.brief);
+                REQUIRE(ir.since == pm.since);
+                REQUIRE(ir.deprecatedSince == pm.deprecatedSince);
+                REQUIRE(ir.url == pm.url);
+                REQUIRE(ir.nodeType == pm.nodeType);
+                REQUIRE(ir.genus == pm.genus);
+                REQUIRE(ir.status == pm.status);
+                REQUIRE(ir.access == pm.access);
             }
         }
     }
 }
 
-SCENARIO("IR::Builder atom processing", "[IR::Builder][IR][Atoms]") {
+SCENARIO("Builder copies body from PageMetadata", "[IR::Builder][IR]") {
 
-    GIVEN("Documentation about atom processing behavior") {
-        THEN("IR::Builder handles specific atom types") {
-            // Current atom types handled:
-            //   - Atom::BriefLeft / BriefRight: Track brief section (excluded from body)
-            //   - Atom::ParaLeft: Insert paragraph breaks in body
-            //   - Atom::String: Plain text content
-            //   - Atom::AutoLink: Auto-linked text (treated as string for now)
-            //   - Atom::C: Code/monospace text (treated as string for now)
-            //
-            // Future atom types to handle:
-            //   - Atom::Link / LinkNode: Cross-references
-            //   - Atom::Code / CodeQuoteCommand: Code blocks
-            //   - Atom::Image: Images
-            //   - Atom::ListLeft / ListRight: Lists
-            //   - Atom::TableLeft / TableRight: Tables
-            //
-            // These will be added as the IR layer matures and templates
-            // require richer content structures.
-            INFO("Atom processing behavior documented for future implementation");
-            REQUIRE(true);
+    GIVEN("A PageMetadata with body content blocks") {
+        IR::PageMetadata pm;
+        pm.title = u"Body Test"_s;
+
+        IR::ContentBlock para1;
+        para1.type = IR::BlockType::Paragraph;
+        para1.inlineContent.append({ IR::InlineType::Text, u"First paragraph."_s, {}, {}, {} });
+
+        IR::ContentBlock para2;
+        para2.type = IR::BlockType::Paragraph;
+        para2.inlineContent.append({ IR::InlineType::Text, u"Second paragraph."_s, {}, {}, {} });
+
+        pm.body.append(para1);
+        pm.body.append(para2);
+
+        WHEN("buildPageIR is called") {
+            IR::Builder builder;
+            IR::Document ir = builder.buildPageIR(pm);
+
+            THEN("Document body matches PageMetadata body") {
+                REQUIRE(ir.body.size() == 2);
+                REQUIRE(ir.body[0].type == IR::BlockType::Paragraph);
+                REQUIRE(ir.body[1].type == IR::BlockType::Paragraph);
+                REQUIRE(ir.body[0].plainText() == u"First paragraph."_s);
+                REQUIRE(ir.body[1].plainText() == u"Second paragraph."_s);
+            }
+
+            THEN("Flat text fallback joins paragraphs with double newlines") {
+                REQUIRE(ir.contentJson["text"_L1].toString()
+                        == u"First paragraph.\n\nSecond paragraph."_s);
+            }
         }
     }
 }
 
-SCENARIO("IR::Builder integration testing", "[IR::Builder][IR][Integration]") {
+SCENARIO("Builder handles empty body", "[IR::Builder][IR]") {
 
-    GIVEN("IR::Builder's role in the pipeline") {
-        THEN("End-to-end testing is provided by tst_validateTemplateGeneratorOutput") {
-            // The test at:
-            //   tests/validatetemplategeneratoroutput/
-            //
-            // Verifies that:
-            //   1. QDoc parses source files correctly
-            //   2. IR::Builder extracts content from nodes
-            //   3. TemplateGenerator renders IR to output
-            //   4. Output matches expected files
-            //
-            // This provides integration coverage for IR::Builder without
-            // requiring mock infrastructure.
-            INFO("Integration coverage provided by tst_validateTemplateGeneratorOutput");
-            REQUIRE(true);
+    GIVEN("A PageMetadata with no body content") {
+        IR::PageMetadata pm;
+        pm.title = u"Empty Body"_s;
+
+        WHEN("buildPageIR is called") {
+            IR::Builder builder;
+            IR::Document ir = builder.buildPageIR(pm);
+
+            THEN("Document body is empty") {
+                REQUIRE(ir.body.isEmpty());
+            }
+
+            THEN("Flat text fallback is empty") {
+                REQUIRE(ir.contentJson["text"_L1].toString().isEmpty());
+            }
+        }
+    }
+}
+
+SCENARIO("Builder has no Node-layer dependencies", "[IR::Builder][IR]") {
+
+    GIVEN("The Builder interface") {
+        THEN("buildPageIR accepts PageMetadata, not PageNode") {
+            // Builder consumes a value-type struct (PageMetadata) instead
+            // of Node subclass pointers. This enables unit testing with
+            // plain struct construction and removes the IR layer's
+            // dependency on the legacy Node hierarchy.
+            IR::PageMetadata pm;
+            IR::Builder builder;
+            IR::Document ir = builder.buildPageIR(pm);
+            REQUIRE(ir.title.isEmpty());
         }
     }
 }

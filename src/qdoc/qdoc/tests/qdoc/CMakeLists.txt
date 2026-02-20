@@ -48,14 +48,11 @@ qt_internal_extend_target(tst_QDoc
         ir/catch_builder.cpp
         ir/catch_contentbuilder.cpp
         ../../src/qdoc/injabridge.cpp
+        ../../src/qdoc/ir/builder.cpp
         ../../src/qdoc/ir/contentbuilder.cpp
         ../../src/qdoc/ir/contentblock.cpp
         ../../src/qdoc/ir/document.cpp
         ../../src/qdoc/ir/link.cpp
-        # Note: builder.cpp is NOT included because it depends on Doc, Text,
-        # Atom, and other classes that would pull in most of QDoc. The test
-        # verifies header compilation; full integration testing is done by
-        # tst_validateTemplateGeneratorOutput.
     LIBRARIES
         Inja::inja
         nlohmann_json::nlohmann_json

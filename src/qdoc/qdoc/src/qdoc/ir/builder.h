@@ -5,10 +5,9 @@
 #define QDOC_IR_BUILDER_H
 
 #include "document.h"
+#include "pagemetadata.h"
 
 QT_BEGIN_NAMESPACE
-
-class PageNode;
 
 namespace IR {
 
@@ -17,7 +16,7 @@ class Builder
 public:
     Builder() = default;
 
-    [[nodiscard]] Document buildPageIR(const PageNode *pn) const;
+    [[nodiscard]] Document buildPageIR(PageMetadata pm) const;
 };
 
 } // namespace IR
