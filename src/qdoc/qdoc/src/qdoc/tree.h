@@ -80,6 +80,10 @@ public: // Of necessity, a few public functions remain.
     void addToDontDocumentMap(QString &arg);
     void markDontDocumentNodes();
     static QString refForAtom(const Atom *atom);
+    void resolveProperties();
+
+    void addPropertyFunction(PropertyNode *property, const QString &funcName,
+                             PropertyNode::FunctionRole funcRole);
 
 private: // The rest of the class is private.
     Aggregate *findAggregate(const QString &name);
@@ -114,11 +118,8 @@ private: // The rest of the class is private.
     const TargetRec *findUnambiguousTarget(const QString &target, Genus genus) const;
     [[nodiscard]] const PageNode *findPageNodeByTitle(const QString &title) const;
 
-    void addPropertyFunction(PropertyNode *property, const QString &funcName,
-                             PropertyNode::FunctionRole funcRole);
     void resolveBaseClasses(Aggregate *n);
     void resolvePropertyOverriddenFromPtrs(Aggregate *n);
-    void resolveProperties();
     void resolveCppToQmlLinks();
     void resolveSince(Aggregate &aggregate);
     void resolveEnumValueSince(EnumNode &en);
