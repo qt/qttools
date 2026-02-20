@@ -624,6 +624,324 @@ SCENARIO("ContentBuilder produces Link from Link atom with link formatting",
     }
 }
 
+SCENARIO("ContentBuilder handles Link atom followed by non-link formatting",
+         "[IR::ContentBuilder][IR][Link]")
+{
+    GIVEN("A Link atom followed by FormattingLeft(link), bold text inside, FormattingRight(link)")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::Link, u"target.html"_s);
+        chain.append(Atom::FormattingLeft, u"link"_s);
+        chain.append(Atom::FormattingLeft, u"bold"_s);
+        chain.append(Atom::String, u"bold link"_s);
+        chain.append(Atom::FormattingRight, u"bold"_s);
+        chain.append(Atom::FormattingRight, u"link"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The link contains a bold child with text")
+            {
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                const auto &link = blocks[0].inlineContent[0];
+                REQUIRE(link.type == IR::InlineType::Link);
+                REQUIRE(link.href == u"target.html"_s);
+                REQUIRE(link.children.size() == 1);
+                REQUIRE(link.children[0].type == IR::InlineType::Bold);
+                REQUIRE(link.children[0].children[0].text == u"bold link"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder produces Code inline from C atom",
+         "[IR::ContentBuilder][IR][Inline]")
+{
+    GIVEN("An atom chain with a C atom inside a paragraph")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::String, u"See "_s);
+        chain.append(Atom::C, u"QString"_s);
+        chain.append(Atom::String, u" for details."_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The paragraph has three inlines: Text, Code, Text")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].inlineContent.size() == 3);
+                REQUIRE(blocks[0].inlineContent[0].type == IR::InlineType::Text);
+                REQUIRE(blocks[0].inlineContent[0].text == u"See "_s);
+                REQUIRE(blocks[0].inlineContent[1].type == IR::InlineType::Code);
+                REQUIRE(blocks[0].inlineContent[1].text == u"QString"_s);
+                REQUIRE(blocks[0].inlineContent[2].type == IR::InlineType::Text);
+                REQUIRE(blocks[0].inlineContent[2].text == u" for details."_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder wraps bold formatting into Bold inline container",
+         "[IR::ContentBuilder][IR][Formatting]")
+{
+    GIVEN("An atom chain with FormattingLeft(bold) / String / FormattingRight(bold)")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::FormattingLeft, u"bold"_s);
+        chain.append(Atom::String, u"important"_s);
+        chain.append(Atom::FormattingRight, u"bold"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The paragraph has one Bold inline container with text child")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                REQUIRE(blocks[0].inlineContent[0].type == IR::InlineType::Bold);
+                REQUIRE(blocks[0].inlineContent[0].children.size() == 1);
+                REQUIRE(blocks[0].inlineContent[0].children[0].type == IR::InlineType::Text);
+                REQUIRE(blocks[0].inlineContent[0].children[0].text == u"important"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder wraps italic formatting into Italic inline container",
+         "[IR::ContentBuilder][IR][Formatting]")
+{
+    GIVEN("An atom chain with FormattingLeft(italic) / String / FormattingRight(italic)")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::FormattingLeft, u"italic"_s);
+        chain.append(Atom::String, u"emphasis"_s);
+        chain.append(Atom::FormattingRight, u"italic"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The paragraph has one Italic inline container")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                REQUIRE(blocks[0].inlineContent[0].type == IR::InlineType::Italic);
+                REQUIRE(blocks[0].inlineContent[0].children[0].text == u"emphasis"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder maps teletype formatting to Teletype inline",
+         "[IR::ContentBuilder][IR][Formatting]")
+{
+    GIVEN("An atom chain with FormattingLeft(teletype) / String / FormattingRight(teletype)")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::FormattingLeft, u"teletype"_s);
+        chain.append(Atom::String, u"monospace"_s);
+        chain.append(Atom::FormattingRight, u"teletype"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The paragraph has one Teletype inline container")
+            {
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                REQUIRE(blocks[0].inlineContent[0].type == IR::InlineType::Teletype);
+                REQUIRE(blocks[0].inlineContent[0].children[0].text == u"monospace"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder maps uicontrol formatting to Bold inline",
+         "[IR::ContentBuilder][IR][Formatting]")
+{
+    GIVEN("An atom chain with FormattingLeft(uicontrol) / String / FormattingRight(uicontrol)")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::FormattingLeft, u"uicontrol"_s);
+        chain.append(Atom::String, u"File > Save"_s);
+        chain.append(Atom::FormattingRight, u"uicontrol"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The paragraph has one Bold inline (uicontrol maps to Bold)")
+            {
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                REQUIRE(blocks[0].inlineContent[0].type == IR::InlineType::Bold);
+                REQUIRE(blocks[0].inlineContent[0].children[0].text == u"File > Save"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder skips index, trademark, notranslate, and span formatting",
+         "[IR::ContentBuilder][IR][Formatting]")
+{
+    GIVEN("An atom chain with index formatting around text in a paragraph")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::String, u"before"_s);
+        chain.append(Atom::FormattingLeft, u"index"_s);
+        chain.append(Atom::String, u"indexed"_s);
+        chain.append(Atom::FormattingRight, u"index"_s);
+        chain.append(Atom::String, u"after"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The index formatting is transparent; text appears as plain inlines")
+            {
+                REQUIRE(blocks[0].inlineContent.size() == 3);
+                REQUIRE(blocks[0].inlineContent[0].text == u"before"_s);
+                REQUIRE(blocks[0].inlineContent[1].text == u"indexed"_s);
+                REQUIRE(blocks[0].inlineContent[2].text == u"after"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder maps subscript and superscript formatting",
+         "[IR::ContentBuilder][IR][Formatting]")
+{
+    GIVEN("An atom chain with subscript and superscript formatting")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::String, u"H"_s);
+        chain.append(Atom::FormattingLeft, u"subscript"_s);
+        chain.append(Atom::String, u"2"_s);
+        chain.append(Atom::FormattingRight, u"subscript"_s);
+        chain.append(Atom::String, u"O"_s);
+        chain.append(Atom::FormattingLeft, u"superscript"_s);
+        chain.append(Atom::String, u"+"_s);
+        chain.append(Atom::FormattingRight, u"superscript"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("Subscript and superscript are properly mapped")
+            {
+                REQUIRE(blocks[0].inlineContent.size() == 4);
+                REQUIRE(blocks[0].inlineContent[0].type == IR::InlineType::Text);
+                REQUIRE(blocks[0].inlineContent[1].type == IR::InlineType::Subscript);
+                REQUIRE(blocks[0].inlineContent[1].children[0].text == u"2"_s);
+                REQUIRE(blocks[0].inlineContent[2].type == IR::InlineType::Text);
+                REQUIRE(blocks[0].inlineContent[3].type == IR::InlineType::Superscript);
+                REQUIRE(blocks[0].inlineContent[3].children[0].text == u"+"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder maps parameter formatting to Parameter inline",
+         "[IR::ContentBuilder][IR][Formatting]")
+{
+    GIVEN("An atom chain with parameter formatting")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::FormattingLeft, u"parameter"_s);
+        chain.append(Atom::String, u"arg"_s);
+        chain.append(Atom::FormattingRight, u"parameter"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The parameter formatting produces a Parameter inline")
+            {
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                REQUIRE(blocks[0].inlineContent[0].type == IR::InlineType::Parameter);
+                REQUIRE(blocks[0].inlineContent[0].children[0].text == u"arg"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder produces LineBreak inline from BR atom",
+         "[IR::ContentBuilder][IR][Misc]")
+{
+    GIVEN("An atom chain with BR between text in a paragraph")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::String, u"line one"_s);
+        chain.append(Atom::BR);
+        chain.append(Atom::String, u"line two"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The paragraph has Text, LineBreak, Text inlines")
+            {
+                REQUIRE(blocks[0].inlineContent.size() == 3);
+                REQUIRE(blocks[0].inlineContent[0].type == IR::InlineType::Text);
+                REQUIRE(blocks[0].inlineContent[0].text == u"line one"_s);
+                REQUIRE(blocks[0].inlineContent[1].type == IR::InlineType::LineBreak);
+                REQUIRE(blocks[0].inlineContent[2].type == IR::InlineType::Text);
+                REQUIRE(blocks[0].inlineContent[2].text == u"line two"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder handles stray FormattingRight without matching left",
+         "[IR::ContentBuilder][IR][Formatting]")
+{
+    GIVEN("A paragraph with FormattingRight(bold) but no FormattingLeft(bold)")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::String, u"before"_s);
+        chain.append(Atom::FormattingRight, u"bold"_s);
+        chain.append(Atom::String, u"after"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("Both text strings appear as plain inlines")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].inlineContent.size() == 2);
+                REQUIRE(blocks[0].inlineContent[0].text == u"before"_s);
+                REQUIRE(blocks[0].inlineContent[1].text == u"after"_s);
+            }
+        }
+    }
+}
+
 SCENARIO("ContentBuilder drops Link atom outside any block context",
          "[IR::ContentBuilder][IR][Link]")
 {

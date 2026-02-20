@@ -24,13 +24,18 @@ namespace IR {
     \list
         \li ParaLeft, ParaRight -- Paragraph blocks.
         \li String -- Text inline content.
+        \li C -- Inline code spans.
         \li SectionLeft, SectionRight -- Section containers.
         \li SectionHeadingLeft, SectionHeadingRight -- Section headings with
             level.
+        \li FormattingLeft, FormattingRight -- Bold, italic, teletype,
+            underline, subscript, superscript, parameter, uicontrol, trademark,
+            link, index, notranslate, span.
         \li BriefLeft, BriefRight -- Brief exclusion (skipped in body).
         \li Link, NavLink -- Explicit links with unresolved target.
         \li AutoLink, NavAutoLink -- Auto-linked type names with unresolved
             target.
+        \li BR -- Line break inline.
         \li FormatIf, FormatElse, FormatEndif -- Format-conditional content.
         \li Nop -- No-operation (skipped).
         \li BaseName -- No-operation (skipped).
@@ -41,6 +46,25 @@ namespace IR {
 
     \sa ContentBlock, InlineContent
 */
+
+static InlineType formattingToInlineType(const QString &formatting)
+{
+    if (formatting == ATOM_FORMATTING_BOLD)
+        return InlineType::Bold;
+    if (formatting == ATOM_FORMATTING_ITALIC)
+        return InlineType::Italic;
+    if (formatting == ATOM_FORMATTING_TELETYPE)
+        return InlineType::Teletype;
+    if (formatting == ATOM_FORMATTING_UNDERLINE)
+        return InlineType::Underline;
+    if (formatting == ATOM_FORMATTING_SUBSCRIPT)
+        return InlineType::Subscript;
+    if (formatting == ATOM_FORMATTING_SUPERSCRIPT)
+        return InlineType::Superscript;
+    if (formatting == ATOM_FORMATTING_PARAMETER)
+        return InlineType::Parameter;
+    return InlineType::Text;
+}
 
 /*!
     Constructs a ContentBuilder that evaluates FormatIf atoms against
@@ -254,6 +278,10 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         addLeafInline(InlineType::Text, atom->string());
         break;
 
+    case Atom::C:
+        addLeafInline(InlineType::Code, atom->string());
+        break;
+
     case Atom::AutoLink:
     case Atom::NavAutoLink: {
         InlineContent link;
@@ -286,18 +314,60 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         break;
     }
 
-    case Atom::FormattingRight:
-        if (atom->string() == ATOM_FORMATTING_LINK) {
+    case Atom::FormattingLeft: {
+        const QString &fmt = atom->string();
+
+        if (fmt == ATOM_FORMATTING_INDEX || fmt.startsWith(u"span "_s))
+            break;
+
+        if (fmt == ATOM_FORMATTING_LINK)
+            break;
+
+        if (fmt == ATOM_FORMATTING_TRADEMARK || fmt == ATOM_FORMATTING_NOTRANSLATE)
+            break;
+
+        if (fmt == ATOM_FORMATTING_UICONTROL) {
+            InlineContent bold;
+            bold.type = InlineType::Bold;
+            pushInlineContainer(std::move(bold));
+            break;
+        }
+
+        InlineType type = formattingToInlineType(fmt);
+        if (type == InlineType::Text)
+            break;
+
+        InlineContent container;
+        container.type = type;
+        pushInlineContainer(std::move(container));
+        break;
+    }
+
+    case Atom::FormattingRight: {
+        const QString &fmt = atom->string();
+
+        if (fmt == ATOM_FORMATTING_LINK) {
             if (m_inLink) {
-                Q_ASSERT(!m_inlinePath.isEmpty());
-                if (!m_inlinePath.isEmpty()) {
+                const qsizetype base = m_inlineBaseDepths.isEmpty() ? 0 : m_inlineBaseDepths.last();
+                if (m_inlinePath.size() > base) {
                     Q_ASSERT(resolveInline()->type == InlineType::Link);
                     m_inlinePath.removeLast();
                 }
                 m_inLink = false;
             }
+            break;
         }
+
+        if (fmt == ATOM_FORMATTING_INDEX || fmt == ATOM_FORMATTING_NOTRANSLATE
+            || fmt.startsWith(u"span "_s) || fmt == ATOM_FORMATTING_TRADEMARK) {
+            break;
+        }
+
+        const qsizetype base = m_inlineBaseDepths.isEmpty() ? 0 : m_inlineBaseDepths.last();
+        if (m_inlinePath.size() > base)
+            m_inlinePath.removeLast();
         break;
+    }
 
     case Atom::SectionLeft:
         openBlock(BlockType::Section);
@@ -316,6 +386,10 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
 
     case Atom::SectionHeadingRight:
         closeBlock();
+        break;
+
+    case Atom::BR:
+        addLeafInline(InlineType::LineBreak, {});
         break;
 
     case Atom::Nop:
