@@ -31,8 +31,9 @@ namespace IR {
 
     Content arrives pre-built as a list of ContentBlock values in
     PageMetadata::body. ContentBuilder (called at extraction time)
-    handles the atom-to-block transformation, including format-conditional
-    evaluation and brief exclusion. Builder's role is assembly, not
+    handles the atom-to-block transformation, including brief
+    exclusion. Format-conditional atoms are skipped unconditionally
+    since the IR is format-agnostic. Builder's role is assembly, not
     transformation.
 
     \section1 Flat Text Fallback

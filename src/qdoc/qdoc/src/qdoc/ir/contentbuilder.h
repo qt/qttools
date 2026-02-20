@@ -19,15 +19,11 @@ namespace IR {
 class ContentBuilder
 {
 public:
-    explicit ContentBuilder(const QString &format = {});
     QList<ContentBlock> build(const Atom *firstAtom);
 
 private:
     void processAtoms(const Atom *atom);
-    const Atom *processUntilBoundary(const Atom *atom);
-    const Atom *processFormatIf(const Atom *atom);
-    const Atom *skipUntilBoundary(const Atom *atom);
-    const Atom *skipFormatIf(const Atom *atom);
+    const Atom *skipFormatIfBlock(const Atom *atom);
     const Atom *dispatchAtom(const Atom *atom);
 
     void openBlock(BlockType type, QJsonObject attrs = {});
@@ -39,7 +35,6 @@ private:
     ContentBlock *resolveBlock();
     InlineContent *resolveInline();
 
-    QString m_format;
     QList<ContentBlock> m_result;
 
     // Index path through m_result / children hierarchy.

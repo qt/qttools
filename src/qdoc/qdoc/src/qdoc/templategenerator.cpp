@@ -207,7 +207,7 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 {
     Q_UNUSED(marker);
 
-    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(pn, m_format);
+    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(pn);
 
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));

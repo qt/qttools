@@ -273,8 +273,8 @@ SCENARIO("ContentBuilder preserves valid paragraphs around block gaps",
     }
 }
 
-SCENARIO("ContentBuilder skips FormatIf branches when no format is set",
-         "[IR::ContentBuilder][IR][FormatIf]")
+SCENARIO("ContentBuilder skips FormatIf blocks",
+         "[IR::ContentBuilder][IR][SkipFormatIfBlock]")
 {
     GIVEN("An atom chain with FormatIf/FormatElse/FormatEndif around content")
     {
@@ -288,132 +288,18 @@ SCENARIO("ContentBuilder skips FormatIf branches when no format is set",
         chain.append(Atom::String, u"after"_s);
         chain.append(Atom::ParaRight);
 
-        WHEN("ContentBuilder has no format set")
+        WHEN("ContentBuilder processes the chain")
         {
             IR::ContentBuilder builder;
             auto blocks = builder.build(&chain.first);
 
-            THEN("Both conditional branches are skipped, only surrounding text remains")
+            THEN("The entire FormatIf block is skipped, only surrounding text remains")
             {
                 REQUIRE(blocks.size() == 1);
                 REQUIRE(blocks[0].type == IR::BlockType::Paragraph);
                 REQUIRE(blocks[0].inlineContent.size() == 2);
                 REQUIRE(blocks[0].inlineContent[0].text == u"before"_s);
                 REQUIRE(blocks[0].inlineContent[1].text == u"after"_s);
-            }
-        }
-    }
-}
-
-SCENARIO("ContentBuilder emits matching FormatIf branch",
-         "[IR::ContentBuilder][IR][FormatIf]")
-{
-    GIVEN("An atom chain with FormatIf(HTML)/FormatElse/FormatEndif")
-    {
-        AtomChain chain(Atom::ParaLeft);
-        chain.append(Atom::String, u"before"_s);
-        chain.append(Atom::FormatIf, u"HTML"_s);
-        chain.append(Atom::String, u"html-only"_s);
-        chain.append(Atom::FormatElse);
-        chain.append(Atom::String, u"other-only"_s);
-        chain.append(Atom::FormatEndif);
-        chain.append(Atom::String, u"after"_s);
-        chain.append(Atom::ParaRight);
-
-        WHEN("ContentBuilder format is HTML")
-        {
-            IR::ContentBuilder builder(u"HTML"_s);
-            auto blocks = builder.build(&chain.first);
-
-            THEN("Only the if-branch text is emitted")
-            {
-                REQUIRE(blocks.size() == 1);
-                REQUIRE(blocks[0].inlineContent.size() == 3);
-                REQUIRE(blocks[0].inlineContent[0].text == u"before"_s);
-                REQUIRE(blocks[0].inlineContent[1].text == u"html-only"_s);
-                REQUIRE(blocks[0].inlineContent[2].text == u"after"_s);
-            }
-        }
-
-        WHEN("ContentBuilder format is DocBook (non-matching)")
-        {
-            IR::ContentBuilder builder(u"DocBook"_s);
-            auto blocks = builder.build(&chain.first);
-
-            THEN("Only the else-branch text is emitted")
-            {
-                REQUIRE(blocks.size() == 1);
-                REQUIRE(blocks[0].inlineContent.size() == 3);
-                REQUIRE(blocks[0].inlineContent[0].text == u"before"_s);
-                REQUIRE(blocks[0].inlineContent[1].text == u"other-only"_s);
-                REQUIRE(blocks[0].inlineContent[2].text == u"after"_s);
-            }
-        }
-    }
-}
-
-SCENARIO("ContentBuilder handles FormatIf without FormatElse",
-         "[IR::ContentBuilder][IR][FormatIf]")
-{
-    GIVEN("An atom chain with FormatIf/FormatEndif but no FormatElse")
-    {
-        AtomChain chain(Atom::ParaLeft);
-        chain.append(Atom::FormatIf, u"HTML"_s);
-        chain.append(Atom::String, u"html-only"_s);
-        chain.append(Atom::FormatEndif);
-        chain.append(Atom::String, u"always"_s);
-        chain.append(Atom::ParaRight);
-
-        WHEN("ContentBuilder format matches")
-        {
-            IR::ContentBuilder builder(u"HTML"_s);
-            auto blocks = builder.build(&chain.first);
-
-            THEN("The conditional content and unconditional content are both emitted")
-            {
-                REQUIRE(blocks.size() == 1);
-                REQUIRE(blocks[0].inlineContent.size() == 2);
-                REQUIRE(blocks[0].inlineContent[0].text == u"html-only"_s);
-                REQUIRE(blocks[0].inlineContent[1].text == u"always"_s);
-            }
-        }
-
-        WHEN("ContentBuilder format does not match")
-        {
-            IR::ContentBuilder builder(u"DocBook"_s);
-            auto blocks = builder.build(&chain.first);
-
-            THEN("Only the unconditional content is emitted")
-            {
-                REQUIRE(blocks.size() == 1);
-                REQUIRE(blocks[0].inlineContent.size() == 1);
-                REQUIRE(blocks[0].inlineContent[0].text == u"always"_s);
-            }
-        }
-    }
-}
-
-SCENARIO("ContentBuilder FormatIf comparison is case-insensitive",
-         "[IR::ContentBuilder][IR][FormatIf]")
-{
-    GIVEN("An atom chain with FormatIf(HTML)")
-    {
-        AtomChain chain(Atom::ParaLeft);
-        chain.append(Atom::FormatIf, u"HTML"_s);
-        chain.append(Atom::String, u"conditional"_s);
-        chain.append(Atom::FormatEndif);
-        chain.append(Atom::ParaRight);
-
-        WHEN("ContentBuilder format is 'html' (lowercase)")
-        {
-            IR::ContentBuilder builder(u"html"_s);
-            auto blocks = builder.build(&chain.first);
-
-            THEN("The conditional content is emitted (case-insensitive match)")
-            {
-                REQUIRE(blocks.size() == 1);
-                REQUIRE(blocks[0].inlineContent.size() == 1);
-                REQUIRE(blocks[0].inlineContent[0].text == u"conditional"_s);
             }
         }
     }
@@ -470,6 +356,42 @@ SCENARIO("ContentBuilder ignores stray FormatElse at top level",
                 REQUIRE(blocks.size() == 2);
                 REQUIRE(blocks[0].inlineContent[0].text == u"before"_s);
                 REQUIRE(blocks[1].inlineContent[0].text == u"after"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder skips nested FormatIf blocks",
+         "[IR::ContentBuilder][IR][SkipFormatIfBlock]")
+{
+    GIVEN("An atom chain with nested FormatIf/FormatEndif inside an outer FormatIf")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::String, u"before"_s);
+        chain.append(Atom::FormatIf, u"HTML"_s);
+        chain.append(Atom::String, u"outer-if"_s);
+        chain.append(Atom::FormatIf, u"DocBook"_s);
+        chain.append(Atom::String, u"inner-if"_s);
+        chain.append(Atom::FormatEndif);
+        chain.append(Atom::String, u"outer-after-inner"_s);
+        chain.append(Atom::FormatElse);
+        chain.append(Atom::String, u"outer-else"_s);
+        chain.append(Atom::FormatEndif);
+        chain.append(Atom::String, u"after"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The entire nested FormatIf structure is skipped")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Paragraph);
+                REQUIRE(blocks[0].inlineContent.size() == 2);
+                REQUIRE(blocks[0].inlineContent[0].text == u"before"_s);
+                REQUIRE(blocks[0].inlineContent[1].text == u"after"_s);
             }
         }
     }

@@ -41,7 +41,6 @@ namespace IR {
         \li Link, NavLink -- Explicit links with unresolved target.
         \li AutoLink, NavAutoLink -- Auto-linked type names with unresolved
             target.
-        \li FormatIf, FormatElse, FormatEndif -- Format-conditional content.
         \li BR -- Line break inline.
         \li HR -- Horizontal rule block.
         \li Nop -- No-operation (skipped).
@@ -49,6 +48,11 @@ namespace IR {
         \li AnnotatedList -- Placeholder Div.
         \li GeneratedList -- Placeholder Div.
     \endlist
+
+    Format-conditional atoms (FormatIf, FormatElse, FormatEndif) are
+    skipped unconditionally. The template generator builds a
+    format-agnostic IR that serves all output formats from a single
+    build pass.
 
     ContentBuilder depends only on Atom (for reading the chain) and IR types
     (for producing output).
@@ -73,15 +77,6 @@ static InlineType formattingToInlineType(const QString &formatting)
     if (formatting == ATOM_FORMATTING_PARAMETER)
         return InlineType::Parameter;
     return InlineType::Text;
-}
-
-/*!
-    Constructs a ContentBuilder that evaluates FormatIf atoms against
-    \a format. If \a format is empty, all FormatIf branches are skipped.
-*/
-ContentBuilder::ContentBuilder(const QString &format)
-    : m_format(format)
-{
 }
 
 /*!
@@ -126,132 +121,53 @@ QList<ContentBlock> ContentBuilder::build(const Atom *firstAtom)
 
 /*!
     Walks the full atom chain starting at \a atom, building the
-    content tree. Stray FormatElse and FormatEndif atoms outside
-    any FormatIf context are ignored.
+    content tree. FormatIf..FormatEndif blocks are skipped
+    unconditionally via skipFormatIfBlock(). Stray FormatElse and
+    FormatEndif atoms outside any FormatIf context are ignored.
 */
 void ContentBuilder::processAtoms(const Atom *atom)
 {
     while (atom) {
-        atom = processUntilBoundary(atom);
-        if (!atom)
-            return;
-        // Stray FormatElse/FormatEndif at top level — skip.
-        // Malformed chains (e.g. extra FormatElse) are treated as stray.
-        atom = atom->next();
-    }
-}
-
-/*!
-    Builds content from atoms until a FormatElse, FormatEndif, or
-    end of chain is reached. Returns the boundary atom, or \nullptr
-    if the chain ends without one.
-*/
-const Atom *ContentBuilder::processUntilBoundary(const Atom *atom)
-{
-    while (atom) {
         if (atom->type() == Atom::FormatIf) {
-            atom = processFormatIf(atom);
+            atom = skipFormatIfBlock(atom);
             continue;
         }
-        if (atom->type() == Atom::FormatElse || atom->type() == Atom::FormatEndif)
-            return atom;
+        if (atom->type() == Atom::FormatElse || atom->type() == Atom::FormatEndif) {
+            atom = atom->next();
+            continue;
+        }
         atom = dispatchAtom(atom);
         if (!atom)
-            return nullptr;
+            return;
         atom = atom->next();
     }
-    return nullptr;
 }
 
 /*!
-    Evaluates a FormatIf condition against the configured format.
-    Builds content from the matching branch and skips the other.
-    When no format is configured, both branches are skipped.
+    Skips an entire FormatIf..FormatEndif block, including any nested
+    FormatIf blocks and FormatElse branches. The scan only tracks
+    FormatIf and FormatEndif for depth counting; all other atom types
+    (including FormatElse) are treated as inert content and walked
+    past without dispatch.
 
-    Returns a pointer to the atom after FormatEndif.
+    The template generator builds a format-agnostic IR, so
+    format-conditional content is unconditionally excluded.
+
+    Returns a pointer to the atom after FormatEndif, or \nullptr if
+    the chain ends before FormatEndif is found.
 */
-const Atom *ContentBuilder::processFormatIf(const Atom *atom)
+const Atom *ContentBuilder::skipFormatIfBlock(const Atom *atom)
 {
     Q_ASSERT(atom->type() == Atom::FormatIf);
-
-    if (m_format.isEmpty()) {
-        atom = skipUntilBoundary(atom->next());
-        if (!atom)
-            return nullptr;
-        if (atom->type() == Atom::FormatElse) {
-            atom = skipUntilBoundary(atom->next());
-            if (!atom)
-                return nullptr;
-        }
-        if (atom->type() == Atom::FormatEndif)
-            atom = atom->next();
-        return atom;
-    }
-
-    const bool formatMatches = (atom->string().compare(m_format, Qt::CaseInsensitive) == 0);
-
-    if (formatMatches)
-        atom = processUntilBoundary(atom->next());
-    else
-        atom = skipUntilBoundary(atom->next());
-    if (!atom)
-        return nullptr;
-
-    if (atom->type() == Atom::FormatElse) {
-        if (formatMatches)
-            atom = skipUntilBoundary(atom->next());
-        else
-            atom = processUntilBoundary(atom->next());
-        if (!atom)
-            return nullptr;
-    }
-
-    if (atom->type() == Atom::FormatEndif)
-        atom = atom->next();
-
-    return atom;
-}
-
-/*!
-    Advances past atoms until a FormatElse, FormatEndif, or end of
-    chain is reached, without building any content. Handles nested
-    FormatIf blocks by skipping both branches.
-
-    Returns the boundary atom, or \nullptr if the chain ends.
-*/
-const Atom *ContentBuilder::skipUntilBoundary(const Atom *atom)
-{
-    while (atom) {
-        if (atom->type() == Atom::FormatIf) {
-            atom = skipFormatIf(atom);
-            continue;
-        }
-        if (atom->type() == Atom::FormatElse || atom->type() == Atom::FormatEndif)
-            return atom;
+    int depth = 1;
+    atom = atom->next();
+    while (atom && depth > 0) {
+        if (atom->type() == Atom::FormatIf)
+            ++depth;
+        else if (atom->type() == Atom::FormatEndif)
+            --depth;
         atom = atom->next();
     }
-    return nullptr;
-}
-
-/*!
-    Skips a complete FormatIf block (both branches) without building
-    content.
-
-    Returns a pointer to the atom after FormatEndif.
-*/
-const Atom *ContentBuilder::skipFormatIf(const Atom *atom)
-{
-    Q_ASSERT(atom->type() == Atom::FormatIf);
-    atom = skipUntilBoundary(atom->next());
-    if (!atom)
-        return nullptr;
-    if (atom->type() == Atom::FormatElse) {
-        atom = skipUntilBoundary(atom->next());
-        if (!atom)
-            return nullptr;
-    }
-    if (atom->type() == Atom::FormatEndif)
-        atom = atom->next();
     return atom;
 }
 

@@ -20,16 +20,15 @@ namespace NodeExtractor {
     This function reads classification, identity, brief, and body fields
     from the given PageNode and returns them as an IR::PageMetadata value.
     Body content is populated via ContentBuilder, which transforms the
-    atom chain into structured content blocks.
-
-    The \a format parameter is passed to ContentBuilder for FormatIf
-    evaluation in format-conditional documentation.
+    atom chain into structured content blocks. Format-conditional atoms
+    are skipped unconditionally since the template generator builds a
+    format-agnostic IR.
 
     The caller (TemplateGenerator) invokes this before passing the
     result to IR::Builder, ensuring Builder never includes PageNode
     or other Node subclass headers.
 */
-IR::PageMetadata extractPageMetadata(const PageNode *pn, const QString &format)
+IR::PageMetadata extractPageMetadata(const PageNode *pn)
 {
     Q_ASSERT_X(pn, "NodeExtractor::extractPageMetadata",
                "PageNode pointer must be non-null");
@@ -49,7 +48,7 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn, const QString &format)
 
     const Text &bodyText = pn->doc().body();
     if (const Atom *firstAtom = bodyText.firstAtom()) {
-        IR::ContentBuilder contentBuilder(format);
+        IR::ContentBuilder contentBuilder;
         pm.body = contentBuilder.build(firstAtom);
     }
 

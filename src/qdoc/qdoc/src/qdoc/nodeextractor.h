@@ -12,7 +12,7 @@ class PageNode;
 
 namespace NodeExtractor {
 
-IR::PageMetadata extractPageMetadata(const PageNode *pn, const QString &format);
+IR::PageMetadata extractPageMetadata(const PageNode *pn);
 
 } // namespace NodeExtractor
 
