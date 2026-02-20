@@ -56,6 +56,7 @@ private:
     QList<qsizetype> m_inlineBaseDepths;
 
     bool m_inBrief = false;
+    bool m_inLink = false;
 };
 
 } // namespace IR

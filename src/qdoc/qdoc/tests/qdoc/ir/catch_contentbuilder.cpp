@@ -537,3 +537,109 @@ SCENARIO("ContentBuilder excludes sections and paragraphs inside brief",
         }
     }
 }
+
+SCENARIO("ContentBuilder produces Link from AutoLink atom",
+         "[IR::ContentBuilder][IR][Link]")
+{
+    GIVEN("An atom chain with AutoLink inside a paragraph")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::AutoLink, u"QString"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The paragraph has one Link inline with href and text child")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                const auto &link = blocks[0].inlineContent[0];
+                REQUIRE(link.type == IR::InlineType::Link);
+                REQUIRE(link.href == u"QString"_s);
+                REQUIRE(link.children.size() == 1);
+                REQUIRE(link.children[0].type == IR::InlineType::Text);
+                REQUIRE(link.children[0].text == u"QString"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder produces Link from NavAutoLink atom",
+         "[IR::ContentBuilder][IR][Link]")
+{
+    GIVEN("An atom chain with NavAutoLink inside a paragraph")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::NavAutoLink, u"QWidget"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The paragraph has one Link inline")
+            {
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                const auto &link = blocks[0].inlineContent[0];
+                REQUIRE(link.type == IR::InlineType::Link);
+                REQUIRE(link.href == u"QWidget"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder produces Link from Link atom with link formatting",
+         "[IR::ContentBuilder][IR][Link]")
+{
+    GIVEN("An atom chain: Link -> FormattingLeft(link) -> String -> FormattingRight(link)")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::Link, u"qstring.html"_s);
+        chain.append(Atom::FormattingLeft, u"link"_s);
+        chain.append(Atom::String, u"QString class"_s);
+        chain.append(Atom::FormattingRight, u"link"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The paragraph has one Link inline with the display text as child")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                const auto &link = blocks[0].inlineContent[0];
+                REQUIRE(link.type == IR::InlineType::Link);
+                REQUIRE(link.href == u"qstring.html"_s);
+                REQUIRE(link.children.size() == 1);
+                REQUIRE(link.children[0].type == IR::InlineType::Text);
+                REQUIRE(link.children[0].text == u"QString class"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder drops Link atom outside any block context",
+         "[IR::ContentBuilder][IR][Link]")
+{
+    GIVEN("A Link atom with no enclosing paragraph or section")
+    {
+        AtomChain chain(Atom::Link, u"foo.html"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("No blocks are produced and m_inLink is not set")
+            {
+                REQUIRE(blocks.isEmpty());
+            }
+        }
+    }
+}

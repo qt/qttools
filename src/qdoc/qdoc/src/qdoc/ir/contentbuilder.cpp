@@ -28,6 +28,9 @@ namespace IR {
         \li SectionHeadingLeft, SectionHeadingRight -- Section headings with
             level.
         \li BriefLeft, BriefRight -- Brief exclusion (skipped in body).
+        \li Link, NavLink -- Explicit links with unresolved target.
+        \li AutoLink, NavAutoLink -- Auto-linked type names with unresolved
+            target.
         \li FormatIf, FormatElse, FormatEndif -- Format-conditional content.
         \li Nop -- No-operation (skipped).
         \li BaseName -- No-operation (skipped).
@@ -64,6 +67,7 @@ QList<ContentBlock> ContentBuilder::build(const Atom *firstAtom)
     m_inlinePath.clear();
     m_inlineBaseDepths.clear();
     m_inBrief = false;
+    m_inLink = false;
 
     if (!firstAtom)
         return {};
@@ -81,6 +85,7 @@ QList<ContentBlock> ContentBuilder::build(const Atom *firstAtom)
 
     Q_ASSERT(m_inlinePath.isEmpty());
     Q_ASSERT(m_inlineBaseDepths.isEmpty());
+    Q_ASSERT(!m_inLink);
     Q_ASSERT(!m_inBrief);
 
     return m_result;
@@ -249,6 +254,51 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         addLeafInline(InlineType::Text, atom->string());
         break;
 
+    case Atom::AutoLink:
+    case Atom::NavAutoLink: {
+        InlineContent link;
+        link.type = InlineType::Link;
+        link.href = atom->string();
+        link.children.append({ InlineType::Text, atom->string(), {}, {}, {} });
+        addInline(std::move(link));
+        break;
+    }
+
+    case Atom::Link:
+    case Atom::NavLink: {
+        if (Q_UNLIKELY(m_blockPath.isEmpty()))
+            break;
+
+        m_inLink = true;
+
+        InlineContent link;
+        link.type = InlineType::Link;
+        link.href = atom->string();
+
+        pushInlineContainer(std::move(link));
+
+        // Link atoms are always followed by FormattingLeft("link");
+        // skip it to avoid double-processing.
+        if (atom->next() && atom->next()->type() == Atom::FormattingLeft
+            && atom->next()->string() == ATOM_FORMATTING_LINK) {
+            return atom->next();
+        }
+        break;
+    }
+
+    case Atom::FormattingRight:
+        if (atom->string() == ATOM_FORMATTING_LINK) {
+            if (m_inLink) {
+                Q_ASSERT(!m_inlinePath.isEmpty());
+                if (!m_inlinePath.isEmpty()) {
+                    Q_ASSERT(resolveInline()->type == InlineType::Link);
+                    m_inlinePath.removeLast();
+                }
+                m_inLink = false;
+            }
+        }
+        break;
+
     case Atom::SectionLeft:
         openBlock(BlockType::Section);
         break;
@@ -323,9 +373,12 @@ void ContentBuilder::closeBlock()
             m_inlinePath.clear();
             m_blockPath.clear();
             m_inlineBaseDepths.clear();
+            m_inLink = false;
             return;
         }
         const qsizetype expectedDepth = m_inlineBaseDepths.last();
+        if (m_inLink && m_inlinePath.size() > expectedDepth)
+            m_inLink = false;
         Q_ASSERT(m_inlinePath.size() == expectedDepth);
         m_inlinePath.resize(expectedDepth);
         m_inlineBaseDepths.removeLast();
