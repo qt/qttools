@@ -27,6 +27,8 @@ public:
     void setTree(Tree *t) { m_tree = t; }
     [[nodiscard]] const NodeList &includedChildren() const;
     void includeChild(Node *child);
+    // This will be used when we rely purely on the index for information.
+    [[nodiscard]] const QString &whereDocumented() const { return m_whereDocumented; }
     void setWhereDocumented(const QString &t) { m_whereDocumented = t; }
     [[nodiscard]] bool isDocumentedHere() const;
     void reportDocumentedChildrenInUndocumentedNamespace() const;
