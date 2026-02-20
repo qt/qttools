@@ -257,7 +257,7 @@ public:
     virtual void setLogicalModuleInfo(const QStringList &) {}
     [[nodiscard]] virtual CollectionNode *logicalModule() const { return nullptr; }
     virtual void setQmlModule(CollectionNode *) {}
-    virtual ClassNode *classNode() { return nullptr; }
+    virtual ClassNode *classNode() const { return nullptr; }
     virtual void setClassNode(ClassNode *) {}
     [[nodiscard]] QString fullDocumentName() const;
     QString qualifyCppName();

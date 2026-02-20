@@ -24,7 +24,7 @@ class QmlTypeNode : public Aggregate
 public:
     QmlTypeNode(Aggregate *parent, const QString &name, NodeType type);
     [[nodiscard]] bool isFirstClassAggregate() const override { return true; }
-    ClassNode *classNode() override { return m_classNode; }
+    ClassNode *classNode() const override { return m_classNode; }
     void setClassNode(ClassNode *cn) override { m_classNode = cn; }
     [[nodiscard]] bool isAbstract() const override { return m_abstract; }
     [[nodiscard]] bool isWrapper() const override { return m_wrapper; }
