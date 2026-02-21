@@ -37,6 +37,7 @@ struct InlineContent
     QString href;                          //!< Link target or image source
     QString title;                         //!< Link tooltip or image alt text
     QList<InlineContent> children;         //!< Nested inline content
+    QJsonObject attributes;                //!< Type-specific metadata (e.g., link state)
 
     [[nodiscard]] QJsonObject toJson() const;
     [[nodiscard]] QString plainText() const;

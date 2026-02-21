@@ -1,0 +1,79 @@
+{#-
+Copyright (C) 2025 The Qt Company Ltd.
+SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+-#}
+    {% if length(content.blocks) > 0 %}
+    <section class="content" aria-label="Description">
+    {% for block in content.blocks %}
+    {% if block.type == "paragraph" %}
+        <p>{% for i in block.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "bold" %}<b>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</b>{% else if i.type == "italic" %}<i>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</i>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}"{% if existsIn(i, "attributes") %}{% if existsIn(i.attributes, "state") %} class="{{ i.attributes.state }}"{% endif %}{% endif %}>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "teletype" %}<tt>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</tt>{% else if i.type == "underline" %}<u>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</u>{% else if i.type == "strikethrough" %}<s>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</s>{% else if i.type == "subscript" %}<sub>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</sub>{% else if i.type == "superscript" %}<sup>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</sup>{% else if i.type == "parameter" %}<i>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</i>{% else if i.type == "line-break" %}<br/>{% else if i.type == "image" %}<img{% if existsIn(i, "href") %} src="{{ escape_html(i.href) }}"{% endif %}{% if existsIn(i, "title") %} alt="{{ escape_html(i.title) }}"{% endif %}/>{% else if i.type == "keyword" %}<a name="{{ escape_html(i.text) }}"></a>{% else if i.type == "target" %}<a name="{{ escape_html(i.text) }}"></a>{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</p>
+    {% else if block.type == "code-block" %}
+        <pre class="{{ block.attributes.language }}" translate="no"><code>{{ escape_html(block.text) }}</code></pre>
+    {% else if block.type == "section-heading" %}
+        <h{{ block.attributes.level }}{% if existsIn(block.attributes, "sectionRef") %} id="{{ block.attributes.sectionRef }}"{% endif %}>{{ escape_html(block.text) }}</h{{ block.attributes.level }}>
+    {% else if block.type == "list" %}
+        {% if block.attributes.listType == "numeric" %}<ol>{% else %}<ul>{% endif %}
+        {% for item in block.children %}
+        <li>{{ escape_html(item.text) }}</li>
+        {% endfor %}
+        {% if block.attributes.listType == "numeric" %}</ol>{% else %}</ul>{% endif %}
+    {% else if block.type == "note" %}
+        <aside class="admonition note" role="note"><p><b>Note: </b>{{ escape_html(block.text) }}</p></aside>
+    {% else if block.type == "warning" %}
+        <aside class="admonition warning" role="note"><p><b>Warning: </b>{{ escape_html(block.text) }}</p></aside>
+    {% else if block.type == "important" %}
+        <aside class="admonition important" role="note"><p><b>Important: </b>{{ escape_html(block.text) }}</p></aside>
+    {% else if block.type == "horizontal-rule" %}
+        <hr/>
+    {% else if block.type == "div" %}
+        <div>{{ escape_html(block.text) }}</div>
+    {% else if block.type == "table" %}
+        <div class="table"><table{% if existsIn(block.attributes, "style") %} class="{{ block.attributes.style }}"{% endif %}>
+        {% for row in block.children %}{% if row.type == "table-row" %}
+        {% if existsIn(row.attributes, "isHeader") %}<thead><tr class="qt-style">{% for cell in row.children %}{% if cell.type == "table-cell" %}<th>{{ escape_html(cell.text) }}</th>{% endif %}{% endfor %}</tr></thead>
+        {% else %}<tr valign="top">{% for cell in row.children %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
+        {% endif %}{% endif %}{% endfor %}
+        </table></div>
+    {% else if block.type == "section" %}
+        <section>
+        {% for child in block.children %}
+        {% if child.type == "section-heading" %}
+        <h{{ child.attributes.level }}{% if existsIn(child.attributes, "sectionRef") %} id="{{ child.attributes.sectionRef }}"{% endif %}>{{ escape_html(child.text) }}</h{{ child.attributes.level }}>
+        {% else if child.type == "paragraph" %}
+        <p>{{ escape_html(child.text) }}</p>
+        {% else if child.type == "code-block" %}
+        <pre class="{{ child.attributes.language }}" translate="no"><code>{{ escape_html(child.text) }}</code></pre>
+        {% else if child.type == "list" %}
+        {% if child.attributes.listType == "numeric" %}<ol>{% else %}<ul>{% endif %}
+        {% for item in child.children %}
+        <li>{{ escape_html(item.text) }}</li>
+        {% endfor %}
+        {% if child.attributes.listType == "numeric" %}</ol>{% else %}</ul>{% endif %}
+        {% else if child.type == "note" %}
+        <aside class="admonition note" role="note"><p><b>Note: </b>{{ escape_html(child.text) }}</p></aside>
+        {% else if child.type == "warning" %}
+        <aside class="admonition warning" role="note"><p><b>Warning: </b>{{ escape_html(child.text) }}</p></aside>
+        {% else if child.type == "horizontal-rule" %}
+        <hr/>
+        {% else if child.type == "table" %}
+        <div class="table"><table{% if existsIn(child.attributes, "style") %} class="{{ child.attributes.style }}"{% endif %}>
+        {% for row in child.children %}{% if row.type == "table-row" %}
+        {% if existsIn(row.attributes, "isHeader") %}<thead><tr class="qt-style">{% for cell in row.children %}{% if cell.type == "table-cell" %}<th>{{ escape_html(cell.text) }}</th>{% endif %}{% endfor %}</tr></thead>
+        {% else %}<tr valign="top">{% for cell in row.children %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
+        {% endif %}{% endif %}{% endfor %}
+        </table></div>
+        {% else %}
+        {{ escape_html(child.text) }}
+        {% endif %}
+        {% endfor %}
+        </section>
+    {% else %}
+        {{ escape_html(block.text) }}
+    {% endif %}
+    {% endfor %}
+    </section>
+    {% else if content.text %}
+    <section class="content" aria-label="Description">
+        {{ escape_html(content.text) }}
+    </section>
+    {% endif %}

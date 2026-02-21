@@ -74,6 +74,9 @@ private:
     // Render phase: Format IR according to templates.
     void renderDocument(const IR::Document &ir, const QString &templateBaseName);
 
+    // Include resolution for Inja {% include %} directives.
+    [[nodiscard]] QString resolveInclude(const QString &name) const;
+
     // Filename computation (adapted from Generator)
     [[nodiscard]] QString fileBase(const Node *node) const;
 

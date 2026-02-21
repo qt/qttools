@@ -21,16 +21,22 @@
 #include <QJsonValue>
 #include <QString>
 
+#include <functional>
+
 QT_BEGIN_NAMESPACE
 
 class InjaBridge
 {
 public:
+    using IncludeCallback = std::function<QString(const QString &name)>;
+
     static nlohmann::json toInjaJson(const QJsonValue &value);
     static nlohmann::json toInjaJson(const QJsonObject &obj);
     static nlohmann::json toInjaJson(const QJsonArray &array);
 
     static QString render(const QString &templateStr, const QJsonObject &data);
+    static QString render(const QString &templateStr, const QJsonObject &data,
+                          const IncludeCallback &includeCallback);
     static QString renderFile(const QString &templatePath, const QJsonObject &data);
 
 private:

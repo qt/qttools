@@ -300,10 +300,38 @@ void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &te
                qPrintable(m_fileExtension), qPrintable(templateBaseName),
                qPrintable(m_fileExtension));
 
-    QString rendered = InjaBridge::render(templateContent, ir.toJson());
+    auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
+    QString rendered = InjaBridge::render(templateContent, ir.toJson(), includeCallback);
 
     if (m_writer && m_writer->isOpen())
         m_writer->write(rendered);
+}
+
+/*!
+    \internal
+    Resolves an Inja \c{{% include %}} directive to template content.
+
+    Searches the filesystem first (for user-customized templates) and then
+    Qt's embedded resource system (for bundled defaults). This enables
+    Inja's include mechanism to work with Qt resources, where
+    \c{std::ifstream} can't open \c{:/} paths.
+
+    Returns the file content as a QString, or an empty QString if the file
+    isn't found in either location.
+*/
+QString TemplateGenerator::resolveInclude(const QString &name) const
+{
+    if (!m_templateDir.isEmpty()) {
+        QFile file(m_templateDir + '/'_L1 + name);
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+            return QString::fromUtf8(file.readAll());
+    }
+
+    QFile resourceFile(":/qdoc/templates/"_L1 + name);
+    if (resourceFile.open(QIODevice::ReadOnly | QIODevice::Text))
+        return QString::fromUtf8(resourceFile.readAll());
+
+    return {};
 }
 
 /*!

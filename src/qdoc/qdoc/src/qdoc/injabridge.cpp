@@ -3,7 +3,29 @@
 
 #include "injabridge.h"
 
+#include <cmath>
+
 QT_BEGIN_NAMESPACE
+
+static void registerCallbacks(inja::Environment &env)
+{
+    env.add_callback("escape_html", 1, [](inja::Arguments &args) {
+        auto input = args.at(0)->get<std::string>();
+        std::string buffer;
+        buffer.reserve(input.size() + input.size() / 8);
+        for (char c : input) {
+            switch (c) {
+            case '&':  buffer += "&amp;";  break;
+            case '"':  buffer += "&quot;"; break;
+            case '\'': buffer += "&apos;"; break;
+            case '<':  buffer += "&lt;";   break;
+            case '>':  buffer += "&gt;";   break;
+            default:   buffer += c;        break;
+            }
+        }
+        return buffer;
+    });
+}
 
 /*!
     \class InjaBridge
@@ -18,9 +40,10 @@ QT_BEGIN_NAMESPACE
     intermediate representation (IR) uses Qt types, and InjaBridge handles the
     conversion when rendering templates.
 
-    \note All numbers in QJsonValue are stored as doubles. When converted to
-    nlohmann::json, integers are rendered with decimal points (e.g., 30 becomes
-    "30.0" in template output). This is expected behavior.
+    \note All numbers in QJsonValue are stored as doubles. Whole-number doubles
+    (e.g., 30.0, 2.0) are converted to int64_t so that template output renders
+    them as integers (e.g., "30" not "30.0"). Fractional values pass through
+    as doubles.
 
     \note Inja and nlohmann::json may report template or data errors. QDoc is
     built with exceptions disabled (\c{-fno-exceptions}), so such errors are
@@ -28,6 +51,11 @@ QT_BEGIN_NAMESPACE
     override in the header ensures that error details (including source
     location) are logged via \c qFatal() before termination, rather than
     calling \c std::abort() silently.
+
+    All render methods register an \c{escape_html()} callback that templates
+    can invoke to escape HTML special characters (\c{&}, \c{<}, \c{>},
+    \c{"}, \c{'}). This keeps format-specific escaping under template author
+    control rather than baking it into the rendering bridge.
 
     \sa QJsonObject, QJsonArray, QJsonValue
 */
@@ -47,8 +75,12 @@ nlohmann::json InjaBridge::toInjaJson(const QJsonValue &value)
         return nullptr;
     case QJsonValue::Bool:
         return value.toBool();
-    case QJsonValue::Double:
-        return value.toDouble();
+    case QJsonValue::Double: {
+        double d = value.toDouble();
+        if (std::fmod(d, 1.0) == 0.0)
+            return static_cast<int64_t>(d);
+        return d;
+    }
     case QJsonValue::String:
         return value.toString().toUtf8().toStdString();
     case QJsonValue::Array:
@@ -111,8 +143,54 @@ nlohmann::json InjaBridge::toInjaJson(const QJsonArray &array)
 QString InjaBridge::render(const QString &templateStr, const QJsonObject &data)
 {
     inja::Environment env;
+    // Replace Inja's default "##" line statement prefix, which conflicts
+    // with Markdown headings. "%!" echoes Jinja2's "%" (statement) and
+    // QDoc's "!" (documentation marker), and is inert in both HTML and
+    // Markdown.
+    env.set_line_statement("%!");
+    registerCallbacks(env);
     nlohmann::json jsonData = toInjaJson(data);
 
+    std::string templateUtf8 = templateStr.toUtf8().toStdString();
+    std::string resultUtf8 = env.render(templateUtf8, jsonData);
+
+    return QString::fromUtf8(resultUtf8.c_str());
+}
+
+/*!
+    \brief Renders a template string, \a templateStr, with provided \a data,
+    using \a includeCallback to resolve \c{{% include %}} directives.
+
+    This overload configures the Inja environment with a custom include
+    callback so that templates can use \c{{% include "name" %}} directives.
+    The \a includeCallback receives the include name and returns the partial's
+    content as a QString. If the callback returns an empty string, the include
+    is treated as missing and a fatal error is raised.
+
+    This enables Inja's include mechanism to work with Qt's resource system,
+    where \c{std::ifstream} cannot open \c{:/} paths.
+
+    Returns the rendered template as a QString.
+*/
+QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
+                           const IncludeCallback &includeCallback)
+{
+    inja::Environment env;
+    env.set_line_statement("%!");
+    registerCallbacks(env);
+    env.set_search_included_templates_in_files(false);
+    env.set_include_callback(
+            [&includeCallback, &env](const std::filesystem::path & /*path*/,
+                                     const std::string &name) -> inja::Template {
+                QString content = includeCallback(QString::fromStdString(name));
+                if (content.isEmpty()) {
+                    INJA_THROW(
+                            inja::FileError("include not found: '" + name + "'"));
+                }
+                return env.parse(content.toUtf8().toStdString());
+            });
+
+    nlohmann::json jsonData = toInjaJson(data);
     std::string templateUtf8 = templateStr.toUtf8().toStdString();
     std::string resultUtf8 = env.render(templateUtf8, jsonData);
 
@@ -131,6 +209,8 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data)
 QString InjaBridge::renderFile(const QString &templatePath, const QJsonObject &data)
 {
     inja::Environment env;
+    env.set_line_statement("%!");
+    registerCallbacks(env);
     nlohmann::json jsonData = toInjaJson(data);
 
     std::string pathUtf8 = templatePath.toUtf8().toStdString();

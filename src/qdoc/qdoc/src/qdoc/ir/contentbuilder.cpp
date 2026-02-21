@@ -233,7 +233,7 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         InlineContent link;
         link.type = InlineType::Link;
         link.href = atom->string();
-        link.children.append({ InlineType::Text, atom->string(), {}, {}, {} });
+        link.children.append({ InlineType::Text, atom->string(), {}, {}, {}, {} });
         addInline(std::move(link));
         break;
     }

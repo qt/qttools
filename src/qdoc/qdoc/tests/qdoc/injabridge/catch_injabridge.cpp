@@ -250,9 +250,9 @@ SCENARIO("Rendering template files with InjaBridge", "[InjaBridge][Template][Fil
             QString result = InjaBridge::renderFile(temp_file.fileName(), data);
 
             THEN("The template file is rendered with the provided data") {
-                // Note: QJsonValue stores all numbers as doubles, so integers
-                // are rendered with decimal points (e.g., "30.0" not "30")
-                REQUIRE(result == "Name: Alice\nAge: 30.0");
+                // Whole-number doubles are converted to int64_t so that
+                // template output renders them as integers (e.g., "30" not "30.0")
+                REQUIRE(result == "Name: Alice\nAge: 30");
             }
         }
     }

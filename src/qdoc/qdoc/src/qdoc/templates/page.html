@@ -15,11 +15,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <p class="brief">{{ brief }}</p>
     {% endif %}
 
-    {% if content %}
-    <div class="content">
-        {{ content.text }}
-    </div>
-    {% endif %}
+    {% include "partials/html/content_blocks.html" %}
 
     <footer>
         <p>Built with QDoc's template engine.</p>

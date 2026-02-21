@@ -203,6 +203,9 @@ QJsonObject InlineContent::toJson() const
         json["children"_L1] = arr;
     }
 
+    if (!attributes.isEmpty())
+        json["attributes"_L1] = attributes;
+
     return json;
 }
 

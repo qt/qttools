@@ -9,10 +9,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {{ brief }}
 
 {% endif %}
-{% if content %}
-{{ content.text }}
-
-{% endif %}
+{% include "partials/md/content_blocks.md" %}
 ---
 
 *Built with QDoc's template engine.*
