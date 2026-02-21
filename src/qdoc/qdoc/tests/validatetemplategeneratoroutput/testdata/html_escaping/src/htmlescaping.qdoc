@@ -1,0 +1,16 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page html-escaping.html
+    \title HTML Escaping Test
+
+    This tests the "ampersand" (&) and apostrophe (')
+    characters in template output.
+
+    See also \l{html-escaping.html}{the "escaping" page & friends}.
+
+    \badcode
+    if (x < 0) return; // </code> must not break out
+    \endcode
+*/

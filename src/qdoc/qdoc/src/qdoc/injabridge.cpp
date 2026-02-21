@@ -148,6 +148,8 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data)
     // QDoc's "!" (documentation marker), and is inert in both HTML and
     // Markdown.
     env.set_line_statement("%!");
+    env.set_trim_blocks(true);
+    env.set_lstrip_blocks(true);
     registerCallbacks(env);
     nlohmann::json jsonData = toInjaJson(data);
 
@@ -177,6 +179,8 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
 {
     inja::Environment env;
     env.set_line_statement("%!");
+    env.set_trim_blocks(true);
+    env.set_lstrip_blocks(true);
     registerCallbacks(env);
     env.set_search_included_templates_in_files(false);
     env.set_include_callback(
@@ -210,6 +214,8 @@ QString InjaBridge::renderFile(const QString &templatePath, const QJsonObject &d
 {
     inja::Environment env;
     env.set_line_statement("%!");
+    env.set_trim_blocks(true);
+    env.set_lstrip_blocks(true);
     registerCallbacks(env);
     nlohmann::json jsonData = toInjaJson(data);
 

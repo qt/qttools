@@ -230,6 +230,11 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
 
     case Atom::AutoLink:
     case Atom::NavAutoLink: {
+        // href values are not author-controlled. They are produced by QDoc
+        // link resolution (\l, autolinks) against the node tree, or by
+        // \image path handling. They don't contain arbitrary schemes (e.g.
+        // javascript:). Only link text originates from user-authored docs
+        // and must be HTML-escaped in templates.
         InlineContent link;
         link.type = InlineType::Link;
         link.href = atom->string();

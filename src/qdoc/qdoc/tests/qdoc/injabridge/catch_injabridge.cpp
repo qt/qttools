@@ -226,7 +226,7 @@ SCENARIO("Rendering templates with InjaBridge", "[InjaBridge][Template]") {
             QString result = InjaBridge::render(template_str, data);
 
             THEN("The loop is expanded correctly") {
-                REQUIRE(result == "A B C ");
+                REQUIRE(result == "ABC");
             }
         }
     }
@@ -253,6 +253,70 @@ SCENARIO("Rendering template files with InjaBridge", "[InjaBridge][Template][Fil
                 // Whole-number doubles are converted to int64_t so that
                 // template output renders them as integers (e.g., "30" not "30.0")
                 REQUIRE(result == "Name: Alice\nAge: 30");
+            }
+        }
+    }
+}
+
+SCENARIO("escape_html escapes special characters in text nodes",
+         "[InjaBridge][Template][Escaping]") {
+
+    GIVEN("Text containing all five HTML special characters") {
+        QJsonObject data{};
+        data["text"_L1] = "5 < 10 & 10 > 5 with \"quotes\" and 'apostrophes'"_L1;
+
+        WHEN("Rendering through escape_html") {
+            QString result = InjaBridge::render(
+                    "{{ escape_html(text) }}"_L1, data);
+
+            THEN("All five characters are escaped") {
+                REQUIRE(result
+                        == "5 &lt; 10 &amp; 10 &gt; 5 with &quot;quotes&quot; "
+                           "and &apos;apostrophes&apos;");
+            }
+        }
+    }
+}
+
+SCENARIO("escape_html prevents code block breakout",
+         "[InjaBridge][Template][Escaping]") {
+
+    GIVEN("Code content containing a closing tag and script injection") {
+        QJsonObject data{};
+        data["code"_L1] = "x</code><script>alert(1)</script>"_L1;
+
+        WHEN("Rendering inside a code element") {
+            QString result = InjaBridge::render(
+                    "<code>{{ escape_html(code) }}</code>"_L1, data);
+
+            THEN("The closing tag and script are neutralized") {
+                REQUIRE(result
+                        == "<code>x&lt;/code&gt;&lt;script&gt;"
+                           "alert(1)&lt;/script&gt;</code>");
+            }
+        }
+    }
+}
+
+SCENARIO("escape_html escapes user-authored link text",
+         "[InjaBridge][Template][Escaping]") {
+
+    GIVEN("A link with an internal href and user-authored text containing special characters") {
+        // href is QDoc-internal (link resolution output), not author-controlled.
+        // Link text originates from user-authored docs and must be escaped.
+        QJsonObject data{};
+        data["href"_L1] = "qstring.html"_L1;
+        data["label"_L1] = "Click \"here\" & learn <more>"_L1;
+
+        WHEN("Rendering a link element") {
+            QString result = InjaBridge::render(
+                    "<a href=\"{{ escape_html(href) }}\">"
+                    "{{ escape_html(label) }}</a>"_L1, data);
+
+            THEN("The internal href passes through unchanged and link text is escaped") {
+                REQUIRE(result
+                        == "<a href=\"qstring.html\">"
+                           "Click &quot;here&quot; &amp; learn &lt;more&gt;</a>");
             }
         }
     }

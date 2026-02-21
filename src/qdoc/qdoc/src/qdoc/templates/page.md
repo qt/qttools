@@ -2,7 +2,6 @@
 Copyright (C) 2025 The Qt Company Ltd.
 SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 -#}
-
 # {{ fullTitle }}
 
 {% if brief %}
@@ -10,6 +9,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 
 {% endif %}
 {% include "partials/md/content_blocks.md" %}
+
 ---
 
 *Built with QDoc's template engine.*
