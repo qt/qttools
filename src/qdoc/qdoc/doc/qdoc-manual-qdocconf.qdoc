@@ -256,7 +256,7 @@
     special characters, such as C#, need to be quoted with double quotes
     when included in this list.
 
-    The \c codelanguages variable was introduced in QDoc 6.12 to enable
+    The \c codelanguages variable was introduced in QDoc 6.11 to enable
     online Qt documentation to use syntax highlighting for a subset of
     the \l{languages supported by highlight.js}.
 
