@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test that \include matches snippet names exactly, not as substrings" version="" project="include_snippet_exact_match">
+    <namespace name="" status="active" access="public" module="include_snippet_exact_match">
+        <page name="include-snippet-exact-match.html" href="include-snippet-exact-match.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Include snippet exact match test" fulltitle="Include snippet exact match test" subtitle=""/>
+    </namespace>
+</INDEX>

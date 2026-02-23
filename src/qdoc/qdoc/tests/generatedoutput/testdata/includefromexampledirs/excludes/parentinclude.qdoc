@@ -2,27 +2,27 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
 /*!
-//! abstract-type
+//! [abstract-type]
     \qmltype AbstractParent
     \inqmlmodule QDoc.Test
     \ingroup qmltypes
     \qmlabstract
     \brief Abstract base QML type.
-//! abstract-type
+//! [abstract-type]
 */
 
 /*!
     //! --- Observe the indented snippet tag:
-    //! children-qmlproperty
+    //! [children-qmlproperty]
     \qmlproperty list<Child> AbstractParent::children
     \qmldefault
     \brief Children of the type.
-    //! children-qmlproperty
+    //! [children-qmlproperty]
 */
 
 /*!
-//! rear-qmlmethod
+//! [rear-qmlmethod]
     \qmlmethod void AbstractParent::rear(Child child)
     \brief Do some abstract parenting on \a child.
-//! rear-qmlmethod
+//! [rear-qmlmethod]
 */

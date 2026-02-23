@@ -1,0 +1,13 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page include-snippet-exact-match.html
+    \title Include snippet exact match test
+
+    When a snippet name is a prefix of another snippet name that appears
+    earlier in the file, \\include must still select the exact match:
+
+    \include snippets.cpp metadata
+*/
+

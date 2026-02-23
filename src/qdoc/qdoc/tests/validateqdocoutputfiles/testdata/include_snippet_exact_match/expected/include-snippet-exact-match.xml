@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Include snippet exact match test</db:title>
+<db:productname>include_snippet_exact_match</db:productname>
+<db:titleabbrev>Test that \include matches snippet names exactly, not as substrings</db:titleabbrev>
+<db:abstract>
+<db:para>Test that \include matches snippet names exactly, not as substrings.</db:para></db:abstract>
+</db:info>
+<db:para>When a snippet name is a prefix of another snippet name that appears earlier in the file, <db:phrase>\include</db:phrase> must still select the exact match:</db:para>
+<db:para>This text is from the metadata snippet and MUST appear on the test page.</db:para>
+</db:article>

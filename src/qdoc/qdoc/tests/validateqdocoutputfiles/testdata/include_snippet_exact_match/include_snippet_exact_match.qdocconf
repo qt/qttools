@@ -1,0 +1,13 @@
+project = include_snippet_exact_match
+description = Test that \\include matches snippet names exactly, not as substrings
+
+outputformats = HTML DocBook WebXML
+outputdir = out
+locationinfo = false
+warninglimit.enabled = true
+warninglimit = 0
+
+sourcedirs = src
+headerdirs = src
+exampledirs = src
+
