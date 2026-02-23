@@ -50,9 +50,9 @@ public:
     std::pair<std::vector<TiedDocumentation>, std::vector<FnMatchError>>
     processTopicArgs(const UntiedDocumentation &untied);
 
-    void processMetaCommand(const Doc &doc, const QString &command, const ArgPair &argLocPair,
+    static void processMetaCommand(const Doc &doc, const QString &command, const ArgPair &argLocPair,
                             Node *node);
-    void processMetaCommands(const Doc &doc, Node *node);
+    static void processMetaCommands(const Doc &doc, Node *node);
     void processMetaCommands(const std::vector<TiedDocumentation> &tied);
 
 protected:
@@ -64,7 +64,7 @@ private:
     void setExampleFileLists(ExampleNode *en);
     static void processComparesCommand(Node *node, const QString &arg, const Location &loc);
     static void processOverloadCommand(Node *node, const Doc &doc);
-    void processQmlNativeTypeCommand(Node *node, const QString &cmd,
+    static void processQmlNativeTypeCommand(Node *node, const QString &cmd,
                                      const QString &arg, const Location &loc);
     EnumNode *processQmlEnumTopic(const QStringList &enumItemNames, const Location &location,
                                   const QString &arg);

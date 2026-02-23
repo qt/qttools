@@ -45,7 +45,7 @@ public:
     static CodeMarker *markerForLanguage(const QString &lang);
     static QString extraSynopsis(const Node *node, Section::Style style);
 
-    QString typified(const QString &string, bool trailingSpace = false);
+    static QString typified(const QString &string, bool trailingSpace = false);
 
 protected:
     static QString protect(const QString &string);

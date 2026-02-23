@@ -655,7 +655,7 @@ void CppCodeParser::processMetaCommands(const Doc &doc, Node *node)
     for (const auto &command : metaCommandsUsed) {
         const ArgList args = doc.metaCommandArgs(command);
         for (const auto &arg : args) {
-            std::for_each(nodes_to_process.cbegin(), nodes_to_process.cend(), [this, doc, command, arg](auto node){
+            std::for_each(nodes_to_process.cbegin(), nodes_to_process.cend(), [doc, command, arg](auto node){
                 processMetaCommand(doc, command, arg, node);
             });
         }
@@ -915,6 +915,8 @@ CppCodeParser::processTopicArgs(const UntiedDocumentation &untied)
                 tied.emplace_back(TiedDocumentation{doc, node});
             }
         } else if (args.size() > 1) {
+            // Find nodes for each of the topic commands and add them to shared
+            // comment nodes.
             QList<SharedCommentNode *> sharedCommentNodes;
             for (const auto &arg : std::as_const(args)) {
                 node = nullptr;
@@ -1036,7 +1038,7 @@ void CppCodeParser::processQmlNativeTypeCommand(Node *node, const QString &cmd, 
     auto classNode = database->findClassNode(arg.split(u"::"_s));
 
     if (!classNode) {
-        if (m_showLinkErrors) {
+        if (!Config::instance().get(CONFIG_NOLINKERRORS).asBool()) {
             location.warning(
                     QStringLiteral("C++ class %2 not found: \\%1 %2")
                             .arg(cmd, arg));
