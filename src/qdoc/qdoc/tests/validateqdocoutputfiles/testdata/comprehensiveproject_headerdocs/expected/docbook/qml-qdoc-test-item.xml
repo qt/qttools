@@ -6,6 +6,7 @@
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
 <db:para>Represents an Item.</db:para>
+<db:para><db:emphasis role="bold">This thing is under development and is subject to change.</db:emphasis></db:para>
 <db:para>This type was introduced in Qt 1.1.</db:para>
 </db:abstract>
 </db:info>
@@ -28,7 +29,14 @@
 <db:para><db:link xlink:href="qml-qdoc-test-doctest.xml" xlink:role="">DocTest</db:link> (QDoc.Test), <db:link xlink:href="qml-test-nover-doctest.xml" xlink:role="">DocTest</db:link> (Test.NoVer), <db:link xlink:href="qml-uicomponents-progressbar.xml" xlink:role="">ProgressBar</db:link>, <db:link xlink:href="qml-uicomponents-switch.xml" xlink:role="">Switch</db:link>, and <db:link xlink:href="qml-uicomponents-tabwidget.xml" xlink:role="">TabWidget</db:link></db:para>
 </db:listitem>
 </db:varlistentry>
+<db:varlistentry>
+<db:term>Status</db:term>
+<db:listitem>
+<db:para>Preliminary</db:para>
+</db:listitem>
+</db:varlistentry>
 </db:variablelist>
+<db:para><db:emphasis role="bold">This thing is under development and is subject to change.</db:emphasis></db:para>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
 </db:section>

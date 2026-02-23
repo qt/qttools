@@ -24,3 +24,14 @@
     Well, for one, it has a \\section1 heading in it's documentation! How
     exciting is that?!
 */
+
+/*!
+    \class MehClass
+    \inmodule WIPModule
+    \brief Not boring, not exciting, but internal because the module is internal.
+*/
+
+/*!
+    \module WIPModule
+    \internal
+*/

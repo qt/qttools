@@ -7,5 +7,6 @@
             <contents name="what-makes-excitingclass-more-exciting-than-boringclass" title="What makes ExcitingClass more exciting than BoringClass?" level="1"/>
         </class>
         <module name="ModuleInState" href="moduleinstate-module.html" status="active" location="module_in_a_state.qdoc" documented="true" seen="true" title=""/>
+        <module name="WIPModule" href="wipmodule-module.html" status="internal" location="module_in_a_state.qdoc" documented="true" seen="true" title=""/>
     </namespace>
 </INDEX>

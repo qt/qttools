@@ -6,6 +6,7 @@
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
 <db:para>Base QML type.</db:para>
+<db:para><db:emphasis role="bold">This type is under development and is subject to change.</db:emphasis></db:para>
 <db:para>This type was introduced in Qt 1.1.</db:para>
 </db:abstract>
 </db:info>
@@ -28,7 +29,14 @@
 <db:para><db:link xlink:href="qml-qdoc-test-anotherchild.xml" xlink:role="">AnotherChild</db:link></db:para>
 </db:listitem>
 </db:varlistentry>
+<db:varlistentry>
+<db:term>Status</db:term>
+<db:listitem>
+<db:para>Preliminary</db:para>
+</db:listitem>
+</db:varlistentry>
 </db:variablelist>
+<db:para><db:emphasis role="bold">This type is under development and is subject to change.</db:emphasis></db:para>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
 </db:section>

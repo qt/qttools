@@ -5,6 +5,7 @@
 #define COLLECTIONNODE_H
 
 #include "genustypes.h"
+#include "status.h"
 #include "pagenode.h"
 
 #include <QtCore/qglobal.h>
@@ -30,6 +31,7 @@ public:
     void setCMakeComponent(const QString &component) override { m_cmakeComponent = component; }
     void setCMakeTargetItem(const QString &targetItem) override { m_cmakeTargetItem = targetItem; }
     void addMember(Node *node) override;
+    void setStatus(Status status) override;
     [[nodiscard]] bool hasNamespaces() const override;
     [[nodiscard]] bool hasClasses() const override;
     [[nodiscard]] bool wasSeen() const override { return m_seen; }
@@ -80,6 +82,8 @@ public:
     void markNotSeen() { m_seen = false; }
 
 private:
+    void setMemberStatus(Node *member);
+
     bool m_seen { false };
     // REMARK: This is set by the database when merging the collection
     // node and is later used to avoid merging the same collection

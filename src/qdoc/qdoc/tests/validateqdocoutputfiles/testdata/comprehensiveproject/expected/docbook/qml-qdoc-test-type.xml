@@ -6,6 +6,7 @@
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
 <db:para>A QML type documented in a .cpp file.</db:para>
+<db:para><db:emphasis role="bold">This type is under heavy construction and will collapse if inspected.</db:emphasis></db:para>
 <db:para>This type was introduced in Qt 1.1.</db:para>
 </db:abstract>
 </db:info>
@@ -35,6 +36,7 @@
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>
+<db:para><db:emphasis role="bold">This type is under heavy construction and will collapse if inspected.</db:emphasis></db:para>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
 <db:para>Test links to a <db:link xlink:href="qml-qdoc-test-type.xml#duplicate-prop">property</db:link> and a <db:link xlink:href="qml-qdoc-test-type.xml#duplicate-attached-prop">attached property</db:link> with the same name.</db:para>

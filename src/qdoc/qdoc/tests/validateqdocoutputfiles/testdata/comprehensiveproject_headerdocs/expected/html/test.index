@@ -175,7 +175,7 @@
         <page name="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" href="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" status="active" location="classlists.qdoc" documented="true" subtype="externalpage" title="reentrant" fulltitle="reentrant" subtitle=""/>
         <page name="https://wiki.qt.io/QProperty" href="https://wiki.qt.io/QProperty" status="active" location="properties.qdoc" documented="true" subtype="externalpage" title="QProperty" fulltitle="QProperty" subtitle=""/>
         <variable name="QDOCTEST_GLOBAL_VARIABLE" href="testqdoc.html#QDOCTEST_GLOBAL_VARIABLE-var" status="active" access="public" location="testcpp.h" related="6" since="Test 1.2" documented="true" type="int" static="false" brief="This variable holds a test variable for since documentation"/>
-        <qmlclass name="AbstractParent" qml-module-name="QDoc.Test" fullname="QDoc.Test.AbstractParent" href="qml-qdoc-test-abstractparent.html" status="active" access="public" abstract="true" location="parent.qdoc" since="1.1" documented="true" brief="Abstract base QML type">
+        <qmlclass name="AbstractParent" qml-module-name="QDoc.Test" fullname="QDoc.Test.AbstractParent" href="qml-qdoc-test-abstractparent.html" status="preliminary" access="public" abstract="true" location="parent.qdoc" since="1.1" documented="true" brief="Abstract base QML type">
             <function name="name" fullname="QDoc.Test.AbstractParent.name" href="qml-qdoc-test-abstractparent.html#name-method" status="active" access="public" location="parent.qdoc" documented="true" meta="qmlmethod" type="void"/>
             <function name="name" fullname="QDoc.Test.AbstractParent.name" href="qml-qdoc-test-abstractparent.html#name-method" status="active" access="public" location="parent.qdoc" documented="true" meta="qmlmethod" type="void">
                 <parameter type="Child" name="child" default=""/>
@@ -188,14 +188,14 @@
             <qmlproperty name="children" fullname="QDoc.Test.AbstractParent.children" status="active" access="public" location="parent.qdoc" documented="true" type="list&lt;Child&gt;" attached="false" writable="true" brief="Children of the type"/>
             <qmlproperty name="name" fullname="QDoc.Test.AbstractParent.name" status="active" access="public" location="parent.qdoc" documented="true" type="string" attached="false" writable="true" brief="Name of this parent"/>
         </qmlclass>
-        <qmlclass name="Child" qml-module-name="QDoc.Test" qml-base-type="QDoc.Test::AbstractParent" fullname="QDoc.Test.Child" href="qml-qdoc-test-child.html" status="active" access="public" location="parent.qdoc" since="1.1" documented="true" brief="A Child inheriting its parent">
+        <qmlclass name="Child" qml-module-name="QDoc.Test" qml-base-type="QDoc.Test::AbstractParent" fullname="QDoc.Test.Child" href="qml-qdoc-test-child.html" status="preliminary" access="public" location="parent.qdoc" since="1.1" documented="true" brief="A Child inheriting its parent">
             <function name="name" fullname="QDoc.Test.Child.name" href="qml-qdoc-test-child.html#name-method" status="active" access="public" location="parent.qdoc" documented="true" meta="qmlmethod" type="void">
                 <parameter type="Child" name="child" default=""/>
                 <parameter type="" name="name" default=""/>
             </function>
             <qmlproperty name="name" fullname="QDoc.Test.Child.name" href="qml-qdoc-test-child.html#name-prop" status="active" access="public" location="parent.qdoc" documented="true" type="string" attached="false" writable="true" brief="Name of this child"/>
         </qmlclass>
-        <qmlclass name="DocTest" qml-module-name="QDoc.Test" qml-base-type="QDoc.Test::Item" fullname="QDoc.Test.DocTest" href="qml-qdoc-test-doctest.html" status="active" access="public" location="DocTest.qml" since="QDoc.Test 0.9" documented="true" brief="Represents a doc test case">
+        <qmlclass name="DocTest" qml-module-name="QDoc.Test" qml-base-type="QDoc.Test::Item" fullname="QDoc.Test.DocTest" href="qml-qdoc-test-doctest.html" status="preliminary" access="public" location="DocTest.qml" since="QDoc.Test 0.9" documented="true" brief="Represents a doc test case">
             <contents name="introduction" title="Introduction" level="1"/>
             <function name="completed" fullname="QDoc.Test.DocTest.completed" href="qml-qdoc-test-doctest.html#completed-signal" status="active" access="public" location="DocTest.qml" documented="true" meta="qmlsignal"/>
             <function name="fail" fullname="QDoc.Test.DocTest.fail" href="qml-qdoc-test-doctest.html#fail-method" status="active" access="public" location="DocTest.qml" documented="true" since="QDoc.Test 1.0" meta="qmlmethod">
@@ -215,7 +215,7 @@
             <qmlproperty name="name" fullname="QDoc.Test.DocTest.name" href="qml-qdoc-test-doctest.html#name-prop" status="active" access="public" location="DocTest.qml" documented="true" type="string" attached="false" writable="true" required="true"/>
         </qmlclass>
         <qmlclass name="DocTest" qml-module-name="Test.NoVer" qml-base-type="QDoc.Test::Item" fullname="Test.NoVer.DocTest" href="qml-test-nover-doctest.html" status="active" access="public" location="DocTest.qml" since="1.1" documented="true" brief="Shadows the type name in QDoc.Test module"/>
-        <qmlclass name="Item" qml-module-name="QDoc.Test" fullname="QDoc.Test.Item" href="qml-qdoc-test-item.html" status="active" access="public" location="Item.qdoc" since="1.1" documented="true" brief="Represents an Item"/>
+        <qmlclass name="Item" qml-module-name="QDoc.Test" fullname="QDoc.Test.Item" href="qml-qdoc-test-item.html" status="preliminary" access="public" location="Item.qdoc" since="1.1" documented="true" brief="Represents an Item"/>
         <qmlclass name="OldType" qml-module-name="QDoc.Test" fullname="QDoc.Test.OldType" href="qml-qdoc-test-oldtype.html" status="deprecated" access="public" location="type.qdoc" since="1.1" documented="true" brief="Deprecated old type"/>
         <qmlclass name="ProgressBar" qml-module-name="UIComponents" qml-base-type="QDoc.Test::Item" fullname="UIComponents.ProgressBar" href="qml-uicomponents-progressbar.html" status="active" access="public" location="ProgressBar.qml" documented="true" brief="A component that shows the progress of an event">
             <qmlproperty name="color" fullname="UIComponents.ProgressBar.color" href="qml-uicomponents-progressbar.html#color-prop" status="active" access="public" location="ProgressBar.qml" documented="true" type="color" attached="false" writable="true"/>
@@ -236,7 +236,7 @@
         <qmlclass name="TheType" qml-module-name="TheModule" fullname="TheModule.TheType" href="qml-themodule-thetype.html" status="active" access="public" location="properties.qdoc" documented="true">
             <qmlproperty name="name" fullname="TheModule.TheType.name" href="qml-themodule-thetype.html#name-prop" status="active" access="public" location="properties.qdoc" documented="true" type="string" attached="false" writable="false" brief="Read-only status of this property is resolved from Q_PROPERTY"/>
         </qmlclass>
-        <qmlclass name="Type" qml-module-name="QDoc.Test" fullname="QDoc.Test.Type" href="qml-qdoc-test-type.html" status="active" access="public" location="type.qdoc" since="1.1" documented="true" brief="A QML type documented in a .cpp file">
+        <qmlclass name="Type" qml-module-name="QDoc.Test" fullname="QDoc.Test.Type" href="qml-qdoc-test-type.html" status="preliminary" access="public" location="type.qdoc" since="1.1" documented="true" brief="A QML type documented in a .cpp file">
             <function name="completed" fullname="QDoc.Test.Type.completed" href="qml-qdoc-test-type.html#completed-signal" status="active" access="public" location="type.qdoc" documented="true" meta="qmlsignal">
                 <parameter type="int" name="status" default=""/>
             </function>
@@ -266,8 +266,8 @@
             <qmlproperty name="group" propertygroup="true" fullname="QDoc.Test.Type.group" href="qml-qdoc-test-type.html#group-prop" status="active" access="public" location="type.qdoc" documented="true"/>
         </qmlclass>
         <qmlclass name="TypeNoVersion" qml-module-name="Test.NoVer" fullname="Test.NoVer.TypeNoVersion" href="qml-test-nover-typenoversion.html" status="active" access="public" location="type.qdoc" since="1.1" documented="true" brief="Another QML type documented in a .cpp file"/>
-        <qmlclass name="YetAnotherChild" qml-module-name="QDoc.Test" qml-base-type="QDoc.Test::InternParent" fullname="QDoc.Test.YetAnotherChild" href="qml-qdoc-test-yetanotherchild.html" status="active" access="public" location="parent.qdoc" since="1.1" documented="true" brief="A type inheriting from internal abstract parent"/>
-        <qmlvaluetype name="int" qml-module-name="QDoc.Test" fullname="QDoc.Test.int" href="qml-int.html" status="active" access="public" location="parent.qdoc" since="1.1" documented="true" brief="An integer value type">
+        <qmlclass name="YetAnotherChild" qml-module-name="QDoc.Test" qml-base-type="QDoc.Test::InternParent" fullname="QDoc.Test.YetAnotherChild" href="qml-qdoc-test-yetanotherchild.html" status="preliminary" access="public" location="parent.qdoc" since="1.1" documented="true" brief="A type inheriting from internal abstract parent"/>
+        <qmlvaluetype name="int" qml-module-name="QDoc.Test" fullname="QDoc.Test.int" href="qml-int.html" status="preliminary" access="public" location="parent.qdoc" since="1.1" documented="true" brief="An integer value type">
             <function name="abs" fullname="QDoc.Test.int.abs" href="qml-int.html#abs-method" status="active" access="public" location="parent.qdoc" documented="true" meta="qmlmethod" type="int"/>
         </qmlvaluetype>
         <group name="cpptypes" href="cpptypes.html" status="active" location="classlists.qdoc" documented="true" seen="true" title="Test C++ Types"/>

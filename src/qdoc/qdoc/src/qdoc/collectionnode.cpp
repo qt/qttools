@@ -13,13 +13,56 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
-  Appends \a node to the collection node's member list, if
-  and only if it isn't already in the member list.
+    Appends \a node to the collection node's member list and
+    updates the new member's status.
+
+    \sa setMemberStatus()
  */
 void CollectionNode::addMember(Node *node)
 {
     if (!m_members.contains(node))
         m_members.append(node);
+    setMemberStatus(node);
+}
+
+/*!
+    \reimp
+
+    Sets this collection node's \a status and propagates it to
+    the collection's members.
+*/
+void CollectionNode::setStatus(Status status)
+{
+    Node::setStatus(status);
+    std::for_each(m_members.begin(), m_members.end(),
+                  [this](Node *m) { this->setMemberStatus(m); });
+}
+
+/*!
+    Propagates the collection's status to \a member node.
+
+    To avoid unexpected results, this propagation is done only if:
+
+    \list
+        \li Both the member and the collection are part of an API
+            (that is, this collection is a module),
+        \li the module was \e seen (documented in the current
+            project), and
+        \li the member node has not set a custom status.
+    \endlist
+*/
+void CollectionNode::setMemberStatus(Node *member)
+{
+    if (!wasSeen())
+        return;
+
+    if (!isApiGenus(this->genus()) || !isApiGenus(member->genus()))
+        return;
+
+    if (member->status() != Status::Active)
+        return;
+
+    member->setStatus(this->status());
 }
 
 /*!

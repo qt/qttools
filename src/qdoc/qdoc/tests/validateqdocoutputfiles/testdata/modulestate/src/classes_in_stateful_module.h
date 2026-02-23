@@ -12,4 +12,8 @@ class ExcitingClass
 {
 };
 
+class MehClass
+{
+};
+
 #endif // CLASSES_IN_STATEFUL_MODULE_H

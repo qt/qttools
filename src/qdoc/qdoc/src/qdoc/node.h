@@ -170,7 +170,7 @@ public:
     void setAccess(Access t) { m_access = t; }
     void setLocation(const Location &t);
     void setDoc(const Doc &doc, bool replace = false);
-    void setStatus(Status t);
+    virtual void setStatus(Status t);
     void setThreadSafeness(ThreadSafeness t) { m_safeness = t; }
     void setSince(const QString &since);
     void setPhysicalModuleName(const QString &name) { m_physicalModuleName = name; }
