@@ -1455,14 +1455,25 @@ void DocParser::include(const QString &fileName, const QString &identifier, cons
                 m_inputLength = m_input.size();
                 m_openedInputs.push(m_position + includedContent.size());
             } else {
+                auto isSnippetMarker = [&identifier](QStringView trimmedLine) -> bool {
+                    if (!trimmedLine.startsWith(QLatin1String("//!")))
+                        return false;
+                    auto bracketStart = trimmedLine.indexOf(QLatin1Char('['));
+                    auto bracketEnd = trimmedLine.indexOf(QLatin1Char(']'));
+                    if (bracketStart < 0 || bracketEnd <= bracketStart)
+                        return false;
+                    auto name = trimmedLine.mid(bracketStart + 1, bracketEnd - bracketStart - 1)
+                                        .trimmed();
+                    return name == identifier;
+                };
+
                 QStringList lineBuffer = includedContent.split(QLatin1Char('\n'));
                 qsizetype bufLen{lineBuffer.size()};
                 qsizetype i;
                 QStringView trimmedLine;
                 for (i = 0; i < bufLen; ++i) {
                     trimmedLine = QStringView{lineBuffer[i]}.trimmed();
-                    if (trimmedLine.startsWith(QLatin1String("//!")) &&
-                        trimmedLine.contains(identifier))
+                    if (isSnippetMarker(trimmedLine))
                         break;
                 }
                 if (i < bufLen - 1) {
@@ -1475,8 +1486,7 @@ void DocParser::include(const QString &fileName, const QString &identifier, cons
                 QString result;
                 do {
                     trimmedLine = QStringView{lineBuffer[i]}.trimmed();
-                    if (trimmedLine.startsWith(QLatin1String("//!")) &&
-                        trimmedLine.contains(identifier))
+                    if (isSnippetMarker(trimmedLine))
                         break;
                     else
                         result += lineBuffer[i] + QLatin1Char('\n');

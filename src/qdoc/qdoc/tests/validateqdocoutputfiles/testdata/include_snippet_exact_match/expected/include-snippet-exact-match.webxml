@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="include-snippet-exact-match.html" href="include-snippet-exact-match.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Include snippet exact match test" fulltitle="Include snippet exact match test" subtitle="">
+            <description>
+                <para>When a snippet name is a prefix of another snippet name that appears earlier in the file, <teletype>\include</teletype> must still select the exact match:</para>
+                <para>This text is from the metadata snippet and MUST appear on the test page.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>
