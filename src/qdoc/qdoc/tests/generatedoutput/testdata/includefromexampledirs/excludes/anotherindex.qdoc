@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
 /*!
-//! exampledirs-include
+//! [exampledirs-include]
     \page index.html
     \title doc index
 
@@ -10,5 +10,5 @@
     \generatelist {classesbymodule TestCPP}
     \section1 QML Types
     \annotatedlist qmltypes
-//! exampledirs-include
+//! [exampledirs-include]
 */
