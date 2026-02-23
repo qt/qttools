@@ -503,9 +503,8 @@ void QDesignerResource::save(QIODevice *dev, QWidget *widget)
     // Do not write fully qualified enumerations for spacer/line orientations
     // and other enum/flag properties for older Qt versions since that breaks
     // older uic.
-    const auto qtVersion = m_formWindow->core()->integration()->qtVersion();
-    d->m_fullyQualifiedEnums = supportsQualifiedEnums(qtVersion);
-    d->m_saveVersion = qtVersion;
+    d->m_saveVersion = m_formWindow->core()->integration()->qtVersion();
+    d->m_fullyQualifiedEnums = supportsQualifiedEnums(d->m_saveVersion);
     QAbstractFormBuilder::save(dev, widget);
 }
 
