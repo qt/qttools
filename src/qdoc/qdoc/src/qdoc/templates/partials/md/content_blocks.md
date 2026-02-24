@@ -33,6 +33,9 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% else if block.type == "horizontal-rule" %}
 ---
 
+{% else if block.type == "div" %}
+{{ block.text }}
+
 {% else if block.type == "table" %}
 {#- CommonMark tables don't support colspan/rowspan; cells render without spanning -#}
 {% for row in block.rows %}
@@ -59,6 +62,10 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 > **Note:** {{ child.text }}
 {% else if child.type == "warning" %}
 > **Warning:** {{ child.text }}
+{% else if child.type == "important" %}
+> **Important:** {{ child.text }}
+{% else if child.type == "horizontal-rule" %}
+---
 {% else if child.type == "table" %}
 {#- CommonMark tables don't support colspan/rowspan; cells render without spanning -#}
 {% for row in child.rows %}
@@ -67,6 +74,8 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% if row.type == "table-header-row" %}|{% for cell in row.cells %}{% if cell.type == "table-cell" %} --- |{% endif %}{% endfor %}
 
 {% endif %}{% endfor %}
+{% else if child.type == "div" %}
+{{ child.text }}
 {% else %}
 {{ child.text }}
 {% endif %}

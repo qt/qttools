@@ -54,6 +54,8 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
         <aside class="admonition note" role="note"><p><b>Note: </b>{{ escape_html(child.text) }}</p></aside>
         {% else if child.type == "warning" %}
         <aside class="admonition warning" role="note"><p><b>Warning: </b>{{ escape_html(child.text) }}</p></aside>
+        {% else if child.type == "important" %}
+        <aside class="admonition important" role="note"><p><b>Important: </b>{{ escape_html(child.text) }}</p></aside>
         {% else if child.type == "horizontal-rule" %}
         <hr/>
         {% else if child.type == "table" %}
@@ -62,6 +64,8 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
         {% else if row.type == "table-row" %}<tr valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell, "attributes") %}{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
         {% endif %}{% endfor %}
         </table></div>
+        {% else if child.type == "div" %}
+        <div>{{ escape_html(child.text) }}</div>
         {% else %}
         {{ escape_html(child.text) }}
         {% endif %}
