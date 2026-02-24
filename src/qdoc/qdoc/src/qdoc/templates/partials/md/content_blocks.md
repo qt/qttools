@@ -34,12 +34,13 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 ---
 
 {% else if block.type == "table" %}
-{% for row in block.children %}{% if row.type == "table-row" %}
-| {% for cell in row.children %}{% if cell.type == "table-cell" %}{{ cell.text }} | {% endif %}{% endfor %}
+{#- CommonMark tables don't support colspan/rowspan; cells render without spanning -#}
+{% for row in block.rows %}
+| {% for cell in row.cells %}{% if cell.type == "table-cell" %}{{ cell.text }} | {% endif %}{% endfor %}
 
-{% if existsIn(row.attributes, "isHeader") %}|{% for cell in row.children %}{% if cell.type == "table-cell" %} --- |{% endif %}{% endfor %}
+{% if row.type == "table-header-row" %}|{% for cell in row.cells %}{% if cell.type == "table-cell" %} --- |{% endif %}{% endfor %}
 
-{% endif %}{% endif %}{% endfor %}
+{% endif %}{% endfor %}
 {% else if block.type == "section" %}
 {% for child in block.children %}
 {% if child.type == "section-heading" %}
@@ -59,12 +60,13 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% else if child.type == "warning" %}
 > **Warning:** {{ child.text }}
 {% else if child.type == "table" %}
-{% for row in child.children %}{% if row.type == "table-row" %}
-| {% for cell in row.children %}{% if cell.type == "table-cell" %}{{ cell.text }} | {% endif %}{% endfor %}
+{#- CommonMark tables don't support colspan/rowspan; cells render without spanning -#}
+{% for row in child.rows %}
+| {% for cell in row.cells %}{% if cell.type == "table-cell" %}{{ cell.text }} | {% endif %}{% endfor %}
 
-{% if existsIn(row.attributes, "isHeader") %}|{% for cell in row.children %}{% if cell.type == "table-cell" %} --- |{% endif %}{% endfor %}
+{% if row.type == "table-header-row" %}|{% for cell in row.cells %}{% if cell.type == "table-cell" %} --- |{% endif %}{% endfor %}
 
-{% endif %}{% endif %}{% endfor %}
+{% endif %}{% endfor %}
 {% else %}
 {{ child.text }}
 {% endif %}

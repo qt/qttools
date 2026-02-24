@@ -63,9 +63,10 @@ namespace IR {
     \value Quotation A block quotation.
     \value Legalese A legal text block, such as a license notice.
     \value HorizontalRule A horizontal separator rule.
-    \value Table A table container (reserved for future use).
-    \value TableRow A row within a table (reserved for future use).
-    \value TableCell A cell within a table row (reserved for future use).
+    \value Table A table container with TableRow and TableHeaderRow children.
+    \value TableRow A data row within a table, containing TableCell children.
+    \value TableHeaderRow A header row within a table, containing header cells.
+    \value TableCell A cell within a table row.
     \value Raw Raw format-specific content passed through without processing.
 */
 
@@ -164,6 +165,7 @@ static QString blockTypeId(BlockType type)
     case BlockType::HorizontalRule: return u"horizontal-rule"_s;
     case BlockType::Table:          return u"table"_s;
     case BlockType::TableRow:       return u"table-row"_s;
+    case BlockType::TableHeaderRow: return u"table-header-row"_s;
     case BlockType::TableCell:      return u"table-cell"_s;
     case BlockType::Raw:            return u"raw"_s;
     }
@@ -264,7 +266,13 @@ QJsonObject ContentBlock::toJson() const
         QJsonArray arr;
         for (const auto &child : children)
             arr.append(child.toJson());
-        json["children"_L1] = arr;
+
+        if (type == BlockType::Table)
+            json["rows"_L1] = arr;
+        else if (type == BlockType::TableRow || type == BlockType::TableHeaderRow)
+            json["cells"_L1] = arr;
+        else
+            json["children"_L1] = arr;
     }
 
     return json;

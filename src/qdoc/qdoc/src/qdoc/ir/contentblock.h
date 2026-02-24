@@ -61,6 +61,7 @@ enum class BlockType : unsigned char {
     HorizontalRule,
     Table,
     TableRow,
+    TableHeaderRow,
     TableCell,
     Raw
 };

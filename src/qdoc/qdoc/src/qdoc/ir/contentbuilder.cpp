@@ -45,6 +45,14 @@ namespace IR {
         \li HR -- Horizontal rule block.
         \li Nop -- No-operation (skipped).
         \li BaseName -- No-operation (skipped).
+        \li TableLeft, TableRight -- Table containers with style attribute.
+        \li TableHeaderLeft, TableHeaderRight -- Table header rows.
+        \li TableRowLeft, TableRowRight -- Table data rows.
+        \li TableItemLeft, TableItemRight -- Table cells with optional
+            colspan/rowspan.
+        \li ListTagLeft, ListTagRight -- Value list tag items (ListItem
+            blocks).
+        \li SinceTagLeft, SinceTagRight -- Version tag items (skipped).
         \li AnnotatedList -- Placeholder Div.
         \li GeneratedList -- Placeholder Div.
     \endlist
@@ -402,6 +410,68 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         closeBlock();
         break;
     }
+
+    case Atom::TableLeft: {
+        QJsonObject attrs;
+        const QString &style = atom->string();
+        attrs["style"_L1] = style == "borderless"_L1 ? style : u"generic"_s;
+        openBlock(BlockType::Table, attrs);
+        break;
+    }
+
+    case Atom::TableRight:
+        closeBlock();
+        break;
+
+    case Atom::TableHeaderLeft:
+        openBlock(BlockType::TableHeaderRow);
+        break;
+
+    case Atom::TableHeaderRight:
+        closeBlock();
+        break;
+
+    case Atom::TableRowLeft:
+        openBlock(BlockType::TableRow);
+        break;
+
+    case Atom::TableRowRight:
+        closeBlock();
+        break;
+
+    case Atom::TableItemLeft: {
+        QJsonObject attrs;
+        const QString &spec = atom->string();
+        if (!spec.isEmpty()) {
+            const auto parts = QStringView{spec}.split(u',');
+            if (parts.size() >= 2) {
+                int colspan = qMax(1, parts[0].toInt());
+                int rowspan = qMax(1, parts[1].toInt());
+                if (colspan > 1)
+                    attrs["colspan"_L1] = colspan;
+                if (rowspan > 1)
+                    attrs["rowspan"_L1] = rowspan;
+            }
+        }
+        openBlock(BlockType::TableCell, attrs);
+        break;
+    }
+
+    case Atom::TableItemRight:
+        closeBlock();
+        break;
+
+    case Atom::ListTagLeft:
+        openBlock(BlockType::ListItem);
+        break;
+
+    case Atom::ListTagRight:
+        closeBlock();
+        break;
+
+    case Atom::SinceTagLeft:
+    case Atom::SinceTagRight:
+        break;
 
     case Atom::Nop:
     case Atom::BaseName:

@@ -29,11 +29,11 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     {% else if block.type == "div" %}
         <div>{{ escape_html(block.text) }}</div>
     {% else if block.type == "table" %}
-        <div class="table"><table{% if existsIn(block.attributes, "style") %} class="{{ block.attributes.style }}"{% endif %}>
-        {% for row in block.children %}{% if row.type == "table-row" %}
-        {% if existsIn(row.attributes, "isHeader") %}<thead><tr class="qt-style">{% for cell in row.children %}{% if cell.type == "table-cell" %}<th>{{ escape_html(cell.text) }}</th>{% endif %}{% endfor %}</tr></thead>
-        {% else %}<tr valign="top">{% for cell in row.children %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
-        {% endif %}{% endif %}{% endfor %}
+        <div class="table"><table class="{{ block.attributes.style }}">
+
+        {% for row in block.rows %}{% if row.type == "table-header-row" %}<thead><tr class="qt-style">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<th>{{ escape_html(cell.text) }}</th>{% endif %}{% endfor %}</tr></thead>
+        {% else if row.type == "table-row" %}<tr valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell, "attributes") %}{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
+        {% endif %}{% endfor %}
         </table></div>
     {% else if block.type == "section" %}
         <section>
@@ -57,11 +57,10 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
         {% else if child.type == "horizontal-rule" %}
         <hr/>
         {% else if child.type == "table" %}
-        <div class="table"><table{% if existsIn(child.attributes, "style") %} class="{{ child.attributes.style }}"{% endif %}>
-        {% for row in child.children %}{% if row.type == "table-row" %}
-        {% if existsIn(row.attributes, "isHeader") %}<thead><tr class="qt-style">{% for cell in row.children %}{% if cell.type == "table-cell" %}<th>{{ escape_html(cell.text) }}</th>{% endif %}{% endfor %}</tr></thead>
-        {% else %}<tr valign="top">{% for cell in row.children %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
-        {% endif %}{% endif %}{% endfor %}
+        <div class="table"><table class="{{ child.attributes.style }}">
+        {% for row in child.rows %}{% if row.type == "table-header-row" %}<thead><tr class="qt-style">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<th>{{ escape_html(cell.text) }}</th>{% endif %}{% endfor %}</tr></thead>
+        {% else if row.type == "table-row" %}<tr valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell, "attributes") %}{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
+        {% endif %}{% endfor %}
         </table></div>
         {% else %}
         {{ escape_html(child.text) }}

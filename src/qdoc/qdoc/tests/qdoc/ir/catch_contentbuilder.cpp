@@ -6,6 +6,7 @@
 #include <qdoc/ir/contentbuilder.h>
 #include <qdoc/atom.h>
 
+#include <QJsonArray>
 #include <QList>
 #include <QString>
 
@@ -1229,6 +1230,366 @@ SCENARIO("ContentBuilder drops Link atom outside any block context",
             THEN("No blocks are produced and m_inLink is not set")
             {
                 REQUIRE(blocks.isEmpty());
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder builds a simple 2x2 table",
+         "[IR::ContentBuilder][IR][Table]")
+{
+    GIVEN("An atom chain representing a 2x2 table with cells A, B, C, D")
+    {
+        AtomChain chain(Atom::TableLeft, u"generic"_s);
+        chain.append(Atom::TableRowLeft);
+        chain.append(Atom::TableItemLeft, u"1,1"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"A"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableItemLeft, u"1,1"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"B"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableRowRight);
+        chain.append(Atom::TableRowLeft);
+        chain.append(Atom::TableItemLeft, u"1,1"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"C"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableItemLeft, u"1,1"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"D"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableRowRight);
+        chain.append(Atom::TableRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("There is one Table block with generic style")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Table);
+                REQUIRE(blocks[0].attributes["style"_L1].toString() == u"generic"_s);
+            }
+
+            THEN("The table has two TableRow children")
+            {
+                REQUIRE(blocks[0].children.size() == 2);
+                REQUIRE(blocks[0].children[0].type == IR::BlockType::TableRow);
+                REQUIRE(blocks[0].children[1].type == IR::BlockType::TableRow);
+            }
+
+            THEN("Each row has two TableCell children with correct text")
+            {
+                const auto &row1 = blocks[0].children[0];
+                REQUIRE(row1.children.size() == 2);
+                REQUIRE(row1.children[0].type == IR::BlockType::TableCell);
+                REQUIRE(row1.children[1].type == IR::BlockType::TableCell);
+                REQUIRE(row1.children[0].children[0].inlineContent[0].text == u"A"_s);
+                REQUIRE(row1.children[1].children[0].inlineContent[0].text == u"B"_s);
+
+                const auto &row2 = blocks[0].children[1];
+                REQUIRE(row2.children.size() == 2);
+                REQUIRE(row2.children[0].children[0].inlineContent[0].text == u"C"_s);
+                REQUIRE(row2.children[1].children[0].inlineContent[0].text == u"D"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder builds a table with header row",
+         "[IR::ContentBuilder][IR][Table]")
+{
+    GIVEN("An atom chain with a header row followed by a data row")
+    {
+        AtomChain chain(Atom::TableLeft, u"generic"_s);
+        chain.append(Atom::TableHeaderLeft);
+        chain.append(Atom::TableItemLeft, u"1,1"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"Name"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableItemLeft, u"1,1"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"Value"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableHeaderRight);
+        chain.append(Atom::TableRowLeft);
+        chain.append(Atom::TableItemLeft, u"1,1"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"foo"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableItemLeft, u"1,1"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"bar"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableRowRight);
+        chain.append(Atom::TableRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The first row is TableHeaderRow and the second is TableRow")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].children.size() == 2);
+                REQUIRE(blocks[0].children[0].type == IR::BlockType::TableHeaderRow);
+                REQUIRE(blocks[0].children[1].type == IR::BlockType::TableRow);
+            }
+
+            THEN("All cells are TableCell regardless of parent row type")
+            {
+                const auto &headerRow = blocks[0].children[0];
+                REQUIRE(headerRow.children[0].type == IR::BlockType::TableCell);
+                REQUIRE(headerRow.children[1].type == IR::BlockType::TableCell);
+
+                const auto &dataRow = blocks[0].children[1];
+                REQUIRE(dataRow.children[0].type == IR::BlockType::TableCell);
+                REQUIRE(dataRow.children[1].type == IR::BlockType::TableCell);
+            }
+
+            THEN("Cell text is correct")
+            {
+                REQUIRE(blocks[0].children[0].children[0].children[0].inlineContent[0].text
+                        == u"Name"_s);
+                REQUIRE(blocks[0].children[0].children[1].children[0].inlineContent[0].text
+                        == u"Value"_s);
+                REQUIRE(blocks[0].children[1].children[0].children[0].inlineContent[0].text
+                        == u"foo"_s);
+                REQUIRE(blocks[0].children[1].children[1].children[0].inlineContent[0].text
+                        == u"bar"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder parses colspan from table cell spec",
+         "[IR::ContentBuilder][IR][Table]")
+{
+    GIVEN("An atom chain with a table cell having colspan=2, rowspan=1")
+    {
+        AtomChain chain(Atom::TableLeft, u"generic"_s);
+        chain.append(Atom::TableRowLeft);
+        chain.append(Atom::TableItemLeft, u"2,1"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"spanning"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableRowRight);
+        chain.append(Atom::TableRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The cell has colspan=2 and no rowspan attribute")
+            {
+                const auto &cell = blocks[0].children[0].children[0];
+                REQUIRE(cell.type == IR::BlockType::TableCell);
+                REQUIRE(cell.attributes["colspan"_L1].toInt() == 2);
+                REQUIRE(cell.attributes.contains("rowspan"_L1) == false);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder emits named JSON fields for table types",
+         "[IR::ContentBuilder][IR][Table]")
+{
+    GIVEN("A table with a header row and a data row")
+    {
+        AtomChain chain(Atom::TableLeft, u"generic"_s);
+        chain.append(Atom::TableHeaderLeft);
+        chain.append(Atom::TableItemLeft, u"1,1"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"H"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableHeaderRight);
+        chain.append(Atom::TableRowLeft);
+        chain.append(Atom::TableItemLeft, u"1,1"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"D"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableRowRight);
+        chain.append(Atom::TableRight);
+
+        WHEN("toJson() is called on the table block")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+            auto tableJson = blocks[0].toJson();
+
+            THEN("Table uses 'rows' key, not 'children'")
+            {
+                REQUIRE(tableJson.contains("rows"_L1));
+                REQUIRE(tableJson.contains("children"_L1) == false);
+            }
+
+            THEN("TableHeaderRow uses 'cells' key")
+            {
+                auto rows = tableJson["rows"_L1].toArray();
+                auto headerRowJson = rows[0].toObject();
+                REQUIRE(headerRowJson["type"_L1].toString() == u"table-header-row"_s);
+                REQUIRE(headerRowJson.contains("cells"_L1));
+                REQUIRE(headerRowJson.contains("children"_L1) == false);
+            }
+
+            THEN("TableRow uses 'cells' key")
+            {
+                auto rows = tableJson["rows"_L1].toArray();
+                auto dataRowJson = rows[1].toObject();
+                REQUIRE(dataRowJson["type"_L1].toString() == u"table-row"_s);
+                REQUIRE(dataRowJson.contains("cells"_L1));
+                REQUIRE(dataRowJson.contains("children"_L1) == false);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder recognizes borderless table style",
+         "[IR::ContentBuilder][IR][Table]")
+{
+    GIVEN("An atom chain with TableLeft('borderless')")
+    {
+        AtomChain chain(Atom::TableLeft, u"borderless"_s);
+        chain.append(Atom::TableRowLeft);
+        chain.append(Atom::TableItemLeft, u"1,1"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"x"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableRowRight);
+        chain.append(Atom::TableRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The table has style attribute of 'borderless'")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Table);
+                REQUIRE(blocks[0].attributes["style"_L1].toString() == u"borderless"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder maps ListTagLeft/Right to ListItem blocks",
+         "[IR::ContentBuilder][IR][ValueList]")
+{
+    GIVEN("An atom chain with ListTag and ListItem inside a list")
+    {
+        AtomChain chain(Atom::ListLeft, u"value"_s);
+        chain.append(Atom::ListTagLeft);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"enumValue"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::ListTagRight);
+        chain.append(Atom::ListItemLeft);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"Description"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::ListItemRight);
+        chain.append(Atom::ListRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The list has two ListItem children")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::List);
+                REQUIRE(blocks[0].children.size() == 2);
+                REQUIRE(blocks[0].children[0].type == IR::BlockType::ListItem);
+                REQUIRE(blocks[0].children[1].type == IR::BlockType::ListItem);
+            }
+
+            THEN("ListTag text is 'enumValue' and ListItem text is 'Description'")
+            {
+                REQUIRE(blocks[0].children[0].children[0].inlineContent[0].text
+                        == u"enumValue"_s);
+                REQUIRE(blocks[0].children[1].children[0].inlineContent[0].text
+                        == u"Description"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder parses rowspan from table cell spec",
+         "[IR::ContentBuilder][IR][Table]")
+{
+    GIVEN("An atom chain with a table cell having colspan=1, rowspan=3")
+    {
+        AtomChain chain(Atom::TableLeft, u"generic"_s);
+        chain.append(Atom::TableRowLeft);
+        chain.append(Atom::TableItemLeft, u"1,3"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"tall"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableRowRight);
+        chain.append(Atom::TableRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The cell has rowspan=3 and no colspan attribute")
+            {
+                const auto &cell = blocks[0].children[0].children[0];
+                REQUIRE(cell.type == IR::BlockType::TableCell);
+                REQUIRE(cell.attributes["rowspan"_L1].toInt() == 3);
+                REQUIRE(cell.attributes.contains("colspan"_L1) == false);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder handles empty table cell spec",
+         "[IR::ContentBuilder][IR][Table]")
+{
+    GIVEN("An atom chain with TableItemLeft having empty string()")
+    {
+        AtomChain chain(Atom::TableLeft, u"generic"_s);
+        chain.append(Atom::TableRowLeft);
+        chain.append(Atom::TableItemLeft);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"plain"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::TableItemRight);
+        chain.append(Atom::TableRowRight);
+        chain.append(Atom::TableRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The cell has no colspan or rowspan attributes")
+            {
+                const auto &cell = blocks[0].children[0].children[0];
+                REQUIRE(cell.type == IR::BlockType::TableCell);
+                REQUIRE(cell.attributes.isEmpty());
             }
         }
     }
