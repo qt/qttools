@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QtLottie Reference Documentation" version="" project="QtLottie">
+    <namespace name="" status="active" access="public" module="qtlottie">
+        <page name="qtlottieanimation-index.html" href="qtlottieanimation-index.html" status="active" location="qtlottie.qdoc" documented="true" subtype="page" title="Qt Lottie Animation" fulltitle="Qt Lottie Animation" subtitle="" brief="Display Lottie format vector graphics animations">
+            <contents name="getting-started" title="Getting Started" level="1"/>
+            <contents name="limitations" title="Limitations" level="1"/>
+            <contents name="general-limitations" title="General limitations" level="2"/>
+            <contents name="animation-level-limitations" title="Animation level limitations" level="2"/>
+            <contents name="layers" title="Layers" level="2"/>
+            <contents name="shapes" title="Shapes" level="2"/>
+            <contents name="effects" title="Effects" level="2"/>
+            <contents name="examples" title="Examples" level="2"/>
+            <contents name="licenses" title="Licenses" level="1"/>
+            <contents name="reference" title="Reference" level="1"/>
+            <contents name="related-information" title="Related Information" level="1"/>
+        </page>
+        <page name="https://github.com/airbnb/lottie-web" href="https://github.com/airbnb/lottie-web" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Lottie Source" fulltitle="Lottie Source" subtitle=""/>
+        <page name="https://lottie.github.io/lottie-spec/1.0/" href="https://lottie.github.io/lottie-spec/1.0/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Lottie Specification" fulltitle="Lottie Specification" subtitle=""/>
+        <page name="https://lottiefiles.com/plugins/after-effects" href="https://lottiefiles.com/plugins/after-effects" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Lottie" fulltitle="Lottie" subtitle=""/>
+        <qmlclass name="Item" href="qml-item.html" status="active" access="public" location="Item.qdoc" documented="true" brief="Represents an Item"/>
+        <qmlclass name="LayerItem" qml-module-name="Qt.labs.lottieqt.VectorImageHelpers" fullname="Qt.labs.lottieqt.VectorImageHelpers.LayerItem" href="qml-qt-labs-lottieqt-vectorimagehelpers-layeritem.html" status="active" access="public" location="qquicklayeritem.qdoc" since="6.10" documented="true" brief="An Item that provides access to its transformation matrix as a property">
+            <qmlproperty name="transformMatrix" fullname="Qt.labs.lottieqt.VectorImageHelpers.LayerItem.transformMatrix" href="qml-qt-labs-lottieqt-vectorimagehelpers-layeritem.html#transformMatrix-prop" status="active" access="public" location="qquicklayeritem.qdoc" documented="true" type="matrix4x4" attached="false" writable="true"/>
+        </qmlclass>
+        <qmlclass name="LottieAnimation" qml-module-name="Qt.labs.lottieqt" qml-base-type="::Item" fullname="Qt.labs.lottieqt.LottieAnimation" href="qml-qt-labs-lottieqt-lottieanimation.html" status="active" access="public" location="qlottieanimation.qdoc" since="5.13" documented="true" brief="A Lottie player for Qt">
+            <contents name="example-usage" title="Example Usage" level="1"/>
+            <contents name="rendering-performance" title="Rendering Performance" level="1"/>
+            <function name="finished" fullname="Qt.labs.lottieqt.LottieAnimation.finished" href="qml-qt-labs-lottieqt-lottieanimation.html#finished-signal" status="active" access="public" location="qlottieanimation.qdoc" documented="true" meta="qmlsignal"/>
+            <function name="getDuration" fullname="Qt.labs.lottieqt.LottieAnimation.getDuration" href="qml-qt-labs-lottieqt-lottieanimation.html#getDuration-method" status="active" access="public" location="qlottieanimation.qdoc" documented="true" meta="qmlmethod" type="double">
+                <parameter type="bool" name="inFrames" default=""/>
+            </function>
+            <function name="gotoAndPlay" fullname="Qt.labs.lottieqt.LottieAnimation.gotoAndPlay" href="qml-qt-labs-lottieqt-lottieanimation.html#gotoAndPlay-method" status="active" access="public" location="qlottieanimation.qdoc" documented="true" meta="qmlmethod" type="void">
+                <parameter type="int" name="frame" default=""/>
+            </function>
+            <function name="gotoAndPlay" fullname="Qt.labs.lottieqt.LottieAnimation.gotoAndPlay" href="qml-qt-labs-lottieqt-lottieanimation.html#gotoAndPlay-method" status="active" access="public" location="qlottieanimation.qdoc" documented="true" meta="qmlmethod" type="bool">
+                <parameter type="string" name="frameMarker" default=""/>
+            </function>
+            <function name="gotoAndStop" fullname="Qt.labs.lottieqt.LottieAnimation.gotoAndStop" href="qml-qt-labs-lottieqt-lottieanimation.html#gotoAndStop-method" status="active" access="public" location="qlottieanimation.qdoc" documented="true" meta="qmlmethod" type="void">
+                <parameter type="int" name="frame" default=""/>
+            </function>
+            <function name="gotoAndStop" fullname="Qt.labs.lottieqt.LottieAnimation.gotoAndStop" href="qml-qt-labs-lottieqt-lottieanimation.html#gotoAndStop-method" status="active" access="public" location="qlottieanimation.qdoc" documented="true" meta="qmlmethod" type="bool">
+                <parameter type="string" name="frameMarker" default=""/>
+            </function>
+            <function name="pause" fullname="Qt.labs.lottieqt.LottieAnimation.pause" href="qml-qt-labs-lottieqt-lottieanimation.html#pause-method" status="active" access="public" location="qlottieanimation.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <function name="play" fullname="Qt.labs.lottieqt.LottieAnimation.play" href="qml-qt-labs-lottieqt-lottieanimation.html#play-method" status="active" access="public" location="qlottieanimation.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <function name="start" fullname="Qt.labs.lottieqt.LottieAnimation.start" href="qml-qt-labs-lottieqt-lottieanimation.html#start-method" status="active" access="public" location="qlottieanimation.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <function name="stop" fullname="Qt.labs.lottieqt.LottieAnimation.stop" href="qml-qt-labs-lottieqt-lottieanimation.html#stop-method" status="active" access="public" location="qlottieanimation.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <function name="togglePause" fullname="Qt.labs.lottieqt.LottieAnimation.togglePause" href="qml-qt-labs-lottieqt-lottieanimation.html#togglePause-method" status="active" access="public" location="qlottieanimation.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <qmlproperty name="autoPlay" fullname="Qt.labs.lottieqt.LottieAnimation.autoPlay" href="qml-qt-labs-lottieqt-lottieanimation.html#autoPlay-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="bool" attached="false" writable="true"/>
+            <qmlproperty name="direction" fullname="Qt.labs.lottieqt.LottieAnimation.direction" href="qml-qt-labs-lottieqt-lottieanimation.html#direction-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="enumeration" attached="false" writable="true"/>
+            <qmlproperty name="endFrame" fullname="Qt.labs.lottieqt.LottieAnimation.endFrame" href="qml-qt-labs-lottieqt-lottieanimation.html#endFrame-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="int" attached="false" writable="false"/>
+            <qmlproperty name="frameRate" fullname="Qt.labs.lottieqt.LottieAnimation.frameRate" href="qml-qt-labs-lottieqt-lottieanimation.html#frameRate-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="int" attached="false" writable="true"/>
+            <qmlproperty name="loops" fullname="Qt.labs.lottieqt.LottieAnimation.loops" href="qml-qt-labs-lottieqt-lottieanimation.html#loops-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="int" attached="false" writable="true"/>
+            <qmlproperty name="quality" fullname="Qt.labs.lottieqt.LottieAnimation.quality" href="qml-qt-labs-lottieqt-lottieanimation.html#quality-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="enumeration" attached="false" writable="true"/>
+            <qmlproperty name="source" fullname="Qt.labs.lottieqt.LottieAnimation.source" href="qml-qt-labs-lottieqt-lottieanimation.html#source-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="url" attached="false" writable="true"/>
+            <qmlproperty name="startFrame" fullname="Qt.labs.lottieqt.LottieAnimation.startFrame" href="qml-qt-labs-lottieqt-lottieanimation.html#startFrame-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="int" attached="false" writable="false"/>
+            <qmlproperty name="status" fullname="Qt.labs.lottieqt.LottieAnimation.status" href="qml-qt-labs-lottieqt-lottieanimation.html#status-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="enumeration" attached="false" writable="true"/>
+        </qmlclass>
+        <group name="qmlmodules" href="qmlmodules.html" status="internal" seen="false" title=""/>
+        <qmlmodule name="QDoc.Test" href="qdoc-test-qmlmodule.html" status="internal" seen="false" title=""/>
+        <qmlmodule name="Qt.labs.lottieqt" qml-module-name="Qt.labs.lottieqt" qml-module-version="1.0" href="qt-labs-lottieqt-qmlmodule.html" status="active" location="qtlottie.qdoc" documented="true" groups="qmlmodules" seen="true" title="Qt Lottie Animation QML Types" brief="Provides QML types to display Lottie graphics and animations">
+            <contents name="qml-types" title="QML Types" level="1"/>
+        </qmlmodule>
+        <qmlmodule name="Qt.labs.lottieqt.VectorImageHelpers" qml-module-name="Qt.labs.lottieqt.VectorImageHelpers" href="qt-labs-lottieqt-vectorimagehelpers-qmlmodule.html" status="active" location="qtlottievectorimagehelpers.qdoc" since="6.10" documented="true" groups="qmlmodules" seen="true" title="Qt Lottie Vector Image Helpers QML Types" brief="Provides QML types used by VectorImage and related tools">
+            <contents name="qml-types" title="QML Types" level="1"/>
+        </qmlmodule>
+    </namespace>
+</INDEX>
