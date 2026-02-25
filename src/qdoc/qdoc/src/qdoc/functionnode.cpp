@@ -347,7 +347,8 @@ QString FunctionNode::metanessString() const
  */
 void FunctionNode::addAssociatedProperty(PropertyNode *p)
 {
-    m_associatedProperties.append(p);
+    if (p->isInAPI())
+        m_associatedProperties.append(p);
 }
 
 /*!

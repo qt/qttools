@@ -172,11 +172,10 @@ public:
 
     [[nodiscard]] virtual Status status() const override;
 
+    void addAssociatedProperty(PropertyNode *property);
     void autoGenerateSmfDoc(const QString &className);
 
 private:
-    void addAssociatedProperty(PropertyNode *property);
-
     friend class Aggregate;
     friend class PropertyNode;
 
