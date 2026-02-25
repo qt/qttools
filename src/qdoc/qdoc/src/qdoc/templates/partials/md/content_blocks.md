@@ -18,7 +18,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 
 {% else if block.type == "list" %}
 {% for item in block.children %}
-- {{ item.text }}
+- {% for p in item.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{% if i.type == "text" %}{{ i.text }}{% else if i.type == "code" %}`{{ i.text }}`{% else if i.type == "bold" %}**{% for c in i.children %}{% if c.type == "code" %}`{{ c.text }}`{% else %}{{ c.text }}{% endif %}{% endfor %}**{% else if i.type == "italic" %}_{% for c in i.children %}{% if c.type == "code" %}`{{ c.text }}`{% else %}{{ c.text }}{% endif %}{% endfor %}_{% else if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ c.text }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ c.text }}{% endfor %}{% endif %}{% else if i.type == "teletype" %}`{% for c in i.children %}{{ c.text }}{% endfor %}`{% else %}{{ i.text }}{% endif %}{% endfor %}{% endif %}{% endfor %}{{ "" }}
 {% endfor %}
 
 {% else if block.type == "note" %}
@@ -48,25 +48,33 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% for child in block.children %}
 {% if child.type == "section-heading" %}
 {% if child.attributes.level == 1 %}# {% else if child.attributes.level == 2 %}## {% else if child.attributes.level == 3 %}### {% else if child.attributes.level == 4 %}#### {% endif %}{{ child.text }}
+
 {% else if child.type == "paragraph" %}
 {% for i in child.inlines %}{% if i.type == "text" %}{{ i.text }}{% else if i.type == "code" %}`{{ i.text }}`{% else if i.type == "bold" %}**{% for c in i.children %}{{ c.text }}{% endfor %}**{% else if i.type == "italic" %}_{% for c in i.children %}{{ c.text }}{% endfor %}_{% else if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ c.text }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ c.text }}{% endfor %}{% endif %}{% else if i.type == "teletype" %}`{% for c in i.children %}{{ c.text }}{% endfor %}`{% else if i.type == "underline" %}<u>{% for c in i.children %}{{ c.text }}{% endfor %}</u>{% else if i.type == "strikethrough" %}~~{% for c in i.children %}{{ c.text }}{% endfor %}~~{% else if i.type == "subscript" %}<sub>{% for c in i.children %}{{ c.text }}{% endfor %}</sub>{% else if i.type == "superscript" %}<sup>{% for c in i.children %}{{ c.text }}{% endfor %}</sup>{% else if i.type == "parameter" %}_{% for c in i.children %}{{ c.text }}{% endfor %}_{% else if i.type == "line-break" %}
 {% else if i.type == "image" %}{% if existsIn(i, "href") %}![{% if existsIn(i, "title") %}{{ i.title }}{% endif %}]({{ i.href }}){% endif %}{% else if i.type == "keyword" %}{% else if i.type == "target" %}{% else %}{{ i.text }}{% endif %}{% endfor %}
+
 {% else if child.type == "code-block" %}
 ```{{ child.attributes.language }}
 {{ child.text }}
 ```
+
 {% else if child.type == "list" %}
 {% for item in child.children %}
-- {{ item.text }}
+- {% for p in item.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{% if i.type == "text" %}{{ i.text }}{% else if i.type == "code" %}`{{ i.text }}`{% else if i.type == "bold" %}**{% for c in i.children %}{% if c.type == "code" %}`{{ c.text }}`{% else %}{{ c.text }}{% endif %}{% endfor %}**{% else if i.type == "italic" %}_{% for c in i.children %}{% if c.type == "code" %}`{{ c.text }}`{% else %}{{ c.text }}{% endif %}{% endfor %}_{% else if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ c.text }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ c.text }}{% endfor %}{% endif %}{% else if i.type == "teletype" %}`{% for c in i.children %}{{ c.text }}{% endfor %}`{% else %}{{ i.text }}{% endif %}{% endfor %}{% endif %}{% endfor %}{{ "" }}
 {% endfor %}
+
 {% else if child.type == "note" %}
 > **Note:** {{ child.text }}
+
 {% else if child.type == "warning" %}
 > **Warning:** {{ child.text }}
+
 {% else if child.type == "important" %}
 > **Important:** {{ child.text }}
+
 {% else if child.type == "horizontal-rule" %}
 ---
+
 {% else if child.type == "table" %}
 {#- CommonMark tables don't support colspan/rowspan; cells render without spanning -#}
 {% for row in child.rows %}
@@ -75,10 +83,13 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% if row.type == "table-header-row" %}|{% for cell in row.cells %}{% if cell.type == "table-cell" %} --- |{% endif %}{% endfor %}
 
 {% endif %}{% endfor %}
+
 {% else if child.type == "div" %}
 {{ child.text }}
+
 {% else %}
 {{ child.text }}
+
 {% endif %}
 {% endfor %}
 
