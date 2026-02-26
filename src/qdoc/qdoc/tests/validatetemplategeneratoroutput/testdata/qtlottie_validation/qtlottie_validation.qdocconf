@@ -29,5 +29,6 @@ TemplateMarkdown.extension = md
 projectroot = .
 logwarnings = true
 logwarnings.disablecliargs = true
-warninglimit = 0
+# warninglimit is a hard cap; warnings are asserted via log file.
+warninglimit = 30
 warninglimit.enabled = true

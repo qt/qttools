@@ -17,6 +17,8 @@ QT_BEGIN_NAMESPACE
 
 class Aggregate;
 class CodeMarker;
+class HrefResolver;
+class LinkResolver;
 class QDocDatabase;
 namespace IR { struct Document; }
 
@@ -90,6 +92,8 @@ private:
     std::optional<OutputContext> m_context;
     QString m_templateDir;
     QString m_fileExtension = QStringLiteral("html");
+    std::unique_ptr<HrefResolver> m_hrefResolver;
+    std::unique_ptr<LinkResolver> m_linkResolver;
 
     // For testing: allow injection of mock writers
     friend class TemplateGeneratorTest;

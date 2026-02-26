@@ -10,10 +10,13 @@
 #include "documentationtraverser.h"
 #include "filedocumentwriter.h"
 #include "documentwriter.h"
+#include "generator.h"
+#include "hrefresolver.h"
 #include "inclusionfilter.h"
 #include "injabridge.h"
 #include "ir/builder.h"
 #include "ir/document.h"
+#include "linkresolver.h"
 #include "namespacenode.h"
 #include "node.h"
 #include "nodeextractor.h"
@@ -38,6 +41,8 @@ QT_BEGIN_NAMESPACE
 Q_LOGGING_CATEGORY(lcQDocTemplateGenerator, "qt.qdoc.templategenerator")
 
 using namespace Qt::Literals;
+
+static QString nodeTypeKey(const Node *node);
 
 /*!
     \class TemplateGenerator
@@ -125,6 +130,32 @@ void TemplateGenerator::prepare()
 
     if (!foundTemplates)
         m_templateDir.clear();
+
+    // Construct link resolvers using OutputContext data.
+    // TemplateGenerator doesn't inherit from Generator, so we use
+    // m_context (OutputContext) which has the same prefix/suffix data.
+    HrefResolverConfig hrefConfig;
+    hrefConfig.project = m_context->project;
+    hrefConfig.fileExtension = m_fileExtension;
+    hrefConfig.useOutputSubdirs = m_context->useSubdirs;
+    hrefConfig.noLinkErrors = Generator::noLinkErrors();
+    hrefConfig.inclusionPolicy = config.createInclusionPolicy();
+    hrefConfig.outputPrefixFn = [this](const Node *node) {
+        return m_context->outputPrefix(nodeTypeKey(node));
+    };
+    hrefConfig.outputSuffixFn = [this](const Node *node) {
+        return m_context->outputSuffix(nodeTypeKey(node));
+    };
+    hrefConfig.cleanRefFn = [](const QString &ref) { return Generator::cleanRef(ref); };
+    hrefConfig.qmlTypeContextFn = []() -> const QmlTypeNode * {
+        return Generator::qmlTypeContext();
+    };
+    m_hrefResolver = std::make_unique<HrefResolver>(hrefConfig);
+
+    LinkResolverConfig linkConfig;
+    linkConfig.autolinkErrors = Generator::autolinkErrors();
+    linkConfig.noLinkErrors = Generator::noLinkErrors();
+    m_linkResolver = std::make_unique<LinkResolver>(&m_qdb, *m_hrefResolver, linkConfig);
 }
 
 void TemplateGenerator::produce()
@@ -211,6 +242,9 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));
+
+    if (m_linkResolver && !ir.body.isEmpty())
+        m_linkResolver->resolve(ir.body, pn);
 
     renderDocument(ir, "page"_L1);
 }

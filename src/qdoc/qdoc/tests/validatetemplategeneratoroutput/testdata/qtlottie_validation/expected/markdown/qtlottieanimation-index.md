@@ -2,8 +2,8 @@
 
 Display Lottie format vector graphics animations.
 
-_Qt Lottie Animation_ provides QML APIs for rendering graphics and animations in Lottie format files. These are typically exported from the [Lottie](Lottie) plugins for Adobe After Effects.
-The [LottieAnimation](LottieAnimation) item renders animations into an intermediate buffer using the [QPainter](QPainter) software renderer. This may impose some performance restrictions on the sizes of illustrations, as well as on the target hardware. As an alternative, a tool called [lottietoqml](lottietoqml) is included. This tool converts Lottie animations to QML. As a result, they can be rendered using the hardware-accelerated renderer in Qt Quick.
+_Qt Lottie Animation_ provides QML APIs for rendering graphics and animations in Lottie format files. These are typically exported from the [Lottie](https://lottiefiles.com/plugins/after-effects) plugins for Adobe After Effects.
+The [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) item renders animations into an intermediate buffer using the [QPainter](QPainter) software renderer. This may impose some performance restrictions on the sizes of illustrations, as well as on the target hardware. As an alternative, a tool called [lottietoqml](lottietoqml.md) is included. This tool converts Lottie animations to QML. As a result, they can be rendered using the hardware-accelerated renderer in Qt Quick.
 Finally, the [VectorImage](VectorImage) Qt Quick item can load Lottie format files directly. It converts them to QML on the fly using the _lottietoqml_ functionality in a plugin.
 # Getting Started
 
@@ -16,7 +16,7 @@ import <@type>Qt</@type><@op>.</@op>labs<@op>.</@op>lottieqt
 
 # Limitations
 
-The implementation follows the [master specification for lottie](Lottie Specification). Deviations in exported Lottie files compared to the specification are taken into account as much as possible when differences are noticed.
+The implementation follows the [master specification for lottie](https://lottie.github.io/lottie-spec/1.0/). Deviations in exported Lottie files compared to the specification are taken into account as much as possible when differences are noticed.
 
 ## General limitations
 
@@ -56,8 +56,8 @@ The only supported effects are `Slide` and `Layer Fill`.
 
 ## Examples
 
-- The [qtlottieviewer Example](qtlottieviewer Example) demonstrates how to use the [LottieAnimation](LottieAnimation) item to load, display and control a Lottie file in a Qt Quick application.
-- The [lottietoqml Example](lottietoqml Example) demonstrates how the [lottietoqml](lottietoqml) tool can be used to convert Lottie files into Qt Quick scenes and load these in an application.
+- The [qtlottieviewer Example](qtlottie-qtlottieviewer-example.md) demonstrates how to use the [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) item to load, display and control a Lottie file in a Qt Quick application.
+- The [lottietoqml Example](qtlottie-lottietoqml-example.md) demonstrates how the [lottietoqml](lottietoqml.md) tool can be used to convert Lottie files into Qt Quick scenes and load these in an application.
 
 
 # Licenses
@@ -66,12 +66,12 @@ Qt Lottie Animation is available under commercial licenses from [The Qt Company]
 
 # Reference
 
-- [QML Types](Qt Lottie Animation QML Types)
+- [QML Types](qt-labs-lottieqt-qmlmodule.md)
 
 
 # Related Information
 
-- [Lottie on GitHub](Lottie Source)
+- [Lottie on GitHub](https://github.com/airbnb/lottie-web)
 
 
 

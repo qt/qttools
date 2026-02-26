@@ -2,12 +2,12 @@
 
 An example demonstrating the use of lottietoqml in an application.
 
-This example demonstrates how the [lottietoqml](lottietoqml) tool can be used to convert Lottie files into QML and then use these in an application.
+This example demonstrates how the [lottietoqml](lottietoqml.md) tool can be used to convert Lottie files into QML and then use these in an application.
 # Overview
 
-The example consists of nine vector animations that have been converted using [lottietoqml](lottietoqml). They are displayed in a grid in a full screen application window.
+The example consists of nine vector animations that have been converted using [lottietoqml](lottietoqml.md). They are displayed in a grid in a full screen application window.
 If the user clicks on one of the animated images, it will zoom to fill the screen. Since the image is vector-based, it will remain crisp without any scaling artifacts.
-The [lottietoqml](lottietoqml) does the equivalent to what [svgtoqml](svgtoqml) does for .SVG files. It converts as much as possible of the original vector image and animation to [Qt Quick Shapes](Qt Quick Shapes) and other [Qt Quick](Qt Quick) components. The result is a fully scalable and hardware-accelerated rendering of the animation.
+The [lottietoqml](lottietoqml.md) does the equivalent to what [svgtoqml](svgtoqml) does for .SVG files. It converts as much as possible of the original vector image and animation to [Qt Quick Shapes](Qt Quick Shapes) and other [Qt Quick](Qt Quick) components. The result is a fully scalable and hardware-accelerated rendering of the animation.
 For convenience, Lottie files can also be loaded at run-time through the [VectorImage](VectorImage) component. However, pregenerating the QML file is usually preferable, since this allows preprocessing the QML scene for faster loading.
 ```cpp
 qt_target_qml_from_lottie(applottietoqmlexample
