@@ -4,10 +4,23 @@
 #include "contentbuilder.h"
 
 #include "../atom.h"
+#include "../tree.h"
 
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::Literals::StringLiterals;
+
+static QString genusToString(Genus genus)
+{
+    switch (genus) {
+    case Genus::CPP: return u"cpp"_s;
+    case Genus::QML: return u"qml"_s;
+    case Genus::DOC: return u"doc"_s;
+    case Genus::API: return u"api"_s;
+    case Genus::DontCare: return {};
+    }
+    return {};
+}
 
 namespace IR {
 
@@ -246,6 +259,7 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         InlineContent link;
         link.type = InlineType::Link;
         link.href = atom->string();
+        link.attributes["linkOrigin"_L1] = u"auto"_s;
         link.children.append({ InlineType::Text, atom->string(), {}, {}, {}, {} });
         addInline(std::move(link));
         break;
@@ -261,6 +275,20 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         InlineContent link;
         link.type = InlineType::Link;
         link.href = atom->string();
+        link.attributes["linkOrigin"_L1] = u"explicit"_s;
+
+        // Extract genus and module scope from LinkAtom if available.
+        if (atom->isLinkAtom()) {
+            // genus() and domain() are non-const but non-mutating;
+            // the same const_cast pattern is used in qdocdatabase.cpp.
+            auto *mutableAtom = const_cast<Atom *>(atom);
+            Genus genus = mutableAtom->genus();
+            QString genusStr = genusToString(genus);
+            if (!genusStr.isEmpty())
+                link.attributes["linkGenus"_L1] = genusStr;
+            if (Tree *domain = mutableAtom->domain())
+                link.attributes["linkModule"_L1] = domain->physicalModuleName();
+        }
 
         pushInlineContainer(std::move(link));
 

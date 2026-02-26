@@ -164,6 +164,7 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
         src/qdoc/documentationtraverser.cpp
         src/qdoc/hrefresolver.cpp
         src/qdoc/injabridge.cpp
+        src/qdoc/linkresolver.cpp
         src/qdoc/ir/builder.cpp
         src/qdoc/ir/contentbuilder.cpp
         src/qdoc/nodeextractor.cpp
