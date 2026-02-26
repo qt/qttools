@@ -50,7 +50,8 @@ namespace IR {
         \li ListItemNumber -- List start number metadata.
         \li NoteLeft, NoteRight -- Note admonition blocks.
         \li WarningLeft, WarningRight -- Warning admonition blocks.
-        \li BriefLeft, BriefRight -- Brief exclusion (skipped in body).
+        \li BriefLeft, BriefRight -- Brief exclusion (skipped by default,
+            or emitted as Paragraph with BriefHandling::Include).
         \li Link, NavLink -- Explicit links with unresolved target.
         \li AutoLink, NavAutoLink -- Auto-linked type names with unresolved
             target.
@@ -75,11 +76,29 @@ namespace IR {
     format-agnostic IR that serves all output formats from a single
     build pass.
 
+    The optional BriefHandling parameter controls whether brief
+    content (between BriefLeft and BriefRight atoms) is included in
+    the output. The default is BriefHandling::Skip, which suppresses
+    brief content. BriefHandling::Include causes brief content to be
+    emitted as a Paragraph block.
+
     ContentBuilder depends only on Atom (for reading the chain) and IR types
     (for producing output).
 
     \sa ContentBlock, InlineContent
 */
+
+/*!
+    Constructs a ContentBuilder.
+
+    The \a briefHandling parameter controls whether content between
+    BriefLeft and BriefRight atoms is emitted as a Paragraph block
+    (BriefHandling::Include) or suppressed (BriefHandling::Skip).
+*/
+ContentBuilder::ContentBuilder(BriefHandling briefHandling)
+    : m_briefHandling(briefHandling)
+{
+}
 
 static InlineType formattingToInlineType(const QString &formatting)
 {
@@ -201,13 +220,17 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
 {
     if (atom->type() == Atom::BriefLeft) {
         m_inBrief = true;
+        if (m_briefHandling == BriefHandling::Include)
+            openBlock(BlockType::Paragraph);
         return atom;
     }
     if (atom->type() == Atom::BriefRight) {
+        if (m_briefHandling == BriefHandling::Include)
+            closeBlock();
         m_inBrief = false;
         return atom;
     }
-    if (m_inBrief)
+    if (m_inBrief && m_briefHandling != BriefHandling::Include)
         return atom;
 
     switch (atom->type()) {

@@ -16,9 +16,26 @@ class Atom;
 
 namespace IR {
 
+/*!
+    \enum IR::BriefHandling
+    \internal
+
+    Controls whether ContentBuilder emits brief content into the body.
+
+    \value Skip Brief content between BriefLeft/BriefRight is suppressed.
+        This is the default for IR::Builder, where the brief is stored
+        as a separate field in IR::Document.
+    \value Include Brief content is emitted as a normal Paragraph block.
+        This enables callers that need the brief rendered as part of
+        the body, matching the behavior where the brief appears as the
+        opening paragraph.
+*/
+enum class BriefHandling { Skip, Include };
+
 class ContentBuilder
 {
 public:
+    explicit ContentBuilder(BriefHandling briefHandling = BriefHandling::Skip);
     QList<ContentBlock> build(const Atom *firstAtom);
 
 private:
@@ -50,6 +67,7 @@ private:
     // m_blockPath entry, always in sync).
     QList<qsizetype> m_inlineBaseDepths;
 
+    BriefHandling m_briefHandling = BriefHandling::Skip;
     bool m_inBrief = false;
     bool m_inLink = false;
 };
