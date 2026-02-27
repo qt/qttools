@@ -6,22 +6,40 @@
 
 #ifdef QDOC_TEMPLATE_GENERATOR_ENABLED
 
+#include "inclusionpolicy.h"
+
 #include <QtCore/qhash.h>
 #include <QtCore/qstring.h>
 
 #include <functional>
+#include <variant>
 
 QT_BEGIN_NAMESPACE
 
 class Node;
+class QmlTypeNode;
+
+enum class HrefSuppressReason {
+    NullNode,
+    NoFileBase,
+    ExcludedByPolicy,
+    InternalAbstractQml,
+    SameFileAnchor,
+};
+
+using HrefResult = std::variant<QString, HrefSuppressReason>;
 
 struct HrefResolverConfig
 {
     QString project;
     QString fileExtension;
     bool useOutputSubdirs{false};
+    bool noLinkErrors{false};
+    InclusionPolicy inclusionPolicy;
     std::function<QString(const Node *)> outputPrefixFn;
     std::function<QString(const Node *)> outputSuffixFn;
+    std::function<QString(const QString &)> cleanRefFn;
+    std::function<const QmlTypeNode *()> qmlTypeContextFn;
 };
 
 class HrefResolver
@@ -29,7 +47,7 @@ class HrefResolver
 public:
     explicit HrefResolver(const HrefResolverConfig &config);
 
-    [[nodiscard]] QString hrefForNode(const Node *node, const Node *relative) const;
+    [[nodiscard]] HrefResult hrefForNode(const Node *node, const Node *relative) const;
     [[nodiscard]] QString anchorForNode(const Node *node) const;
     [[nodiscard]] QString fileName(const Node *node) const;
 

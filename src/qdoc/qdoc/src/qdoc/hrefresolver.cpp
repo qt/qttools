@@ -5,12 +5,10 @@
 
 #include "hrefresolver.h"
 
-#include "config.h"
 #include "functionnode.h"
-#include "generator.h"
 #include "inclusionfilter.h"
-#include "inclusionpolicy.h"
 #include "node.h"
+#include "qmltypenode.h"
 #include "tree.h"
 #include "typedefnode.h"
 #include "utilities.h"
@@ -31,6 +29,13 @@ QT_BEGIN_NAMESPACE
     Generator::outputPrefix() and Generator::outputSuffix() in the
     legacy path. Both should be set; an empty callback produces an
     empty prefix or suffix.
+
+    The \c cleanRefFn callback sanitizes anchor references. It
+    corresponds to Generator::cleanRef() in the legacy path.
+
+    The \c qmlTypeContextFn callback returns the current QML type
+    being documented, enabling property inheritance resolution for
+    abstract QML types. An empty callback disables this resolution.
 */
 
 /*!
@@ -178,45 +183,45 @@ QString HrefResolver::anchorForNode(const Node *node) const
     if (ref.isEmpty())
         return ref;
 
-    return Generator::cleanRef(ref);
+    return m_config.cleanRefFn ? m_config.cleanRefFn(ref) : ref;
 }
 
 /*!
     Computes a relative URL for \a node, relative to \a relative.
-    Returns an empty string for null nodes, self-links (where the
-    target is the same file and anchor as the context), and nodes
-    excluded by inclusion policy.
+    Returns the URL as a QString on success, or an HrefSuppressReason
+    explaining why linking should be suppressed.
 
     This consolidates logic from XmlGenerator::linkForNode() without
     depending on a Generator instance. Cross-module prefixing is
     applied when useOutputSubdirs is enabled and the node lives in
     a different tree than the relative node.
 */
-QString HrefResolver::hrefForNode(const Node *node, const Node *relative) const
+HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) const
 {
     if (node == nullptr)
-        return QString();
+        return HrefSuppressReason::NullNode;
     if (!node->url().isEmpty())
         return node->url();
 
     QString fn = fileName(node);
     if (fn.isEmpty())
-        return {};
+        return HrefSuppressReason::NoFileBase;
 
-    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
     const NodeContext context = node->createContext();
-    if (!InclusionFilter::isIncluded(policy, context))
-        return QString();
+    if (!InclusionFilter::isIncluded(m_config.inclusionPolicy, context))
+        return HrefSuppressReason::ExcludedByPolicy;
 
     if (node->parent() && node->parent()->isQmlType() && node->parent()->isAbstract()) {
-        if (Generator::qmlTypeContext()) {
-            if (Generator::qmlTypeContext()->inherits(node->parent())) {
-                fn = fileName(Generator::qmlTypeContext());
-            } else if (node->parent()->isInternal() && !Generator::noLinkErrors()) {
+        const QmlTypeNode *qmlContext = m_config.qmlTypeContextFn
+                ? m_config.qmlTypeContextFn() : nullptr;
+        if (qmlContext) {
+            if (qmlContext->inherits(node->parent())) {
+                fn = fileName(qmlContext);
+            } else if (node->parent()->isInternal() && !m_config.noLinkErrors) {
                 node->doc().location().warning(
                         u"Cannot link to property in internal type '%1'"_s
                                 .arg(node->parent()->name()));
-                return QString();
+                return HrefSuppressReason::InternalAbstractQml;
             }
         }
     }
@@ -226,7 +231,7 @@ QString HrefResolver::hrefForNode(const Node *node, const Node *relative) const
     if (!node->isPageNode() || node->isPropertyGroup()) {
         QString ref = anchorForNode(node);
         if (relative && fn == fileName(relative) && ref == anchorForNode(relative))
-            return QString();
+            return HrefSuppressReason::SameFileAnchor;
 
         link += '#'_L1;
         link += ref;
