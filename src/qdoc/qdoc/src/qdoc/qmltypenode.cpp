@@ -109,9 +109,9 @@ QString QmlTypeNode::logicalModuleIdentifier() const
 /*!
   Returns true if this QML type inherits \a type.
  */
-bool QmlTypeNode::inherits(Aggregate *type)
+bool QmlTypeNode::inherits(const Aggregate *type) const
 {
-    QmlTypeNode *qtn = qmlBaseNode();
+    const QmlTypeNode *qtn = qmlBaseNode();
     while (qtn != nullptr) {
         if (qtn == type)
             return true;

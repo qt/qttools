@@ -50,7 +50,7 @@ public:
     static void addInheritedBy(const Node *base, Node *sub);
     static void subclasses(const Node *base, NodeList &subs, bool recurse = false);
     static void terminate();
-    bool inherits(Aggregate *type);
+    [[nodiscard]] bool inherits(const Aggregate *type) const;
 
 public:
     static QMultiMap<const Node *, Node *> s_inheritedBy;
