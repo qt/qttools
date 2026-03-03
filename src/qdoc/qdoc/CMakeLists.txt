@@ -205,6 +205,24 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     )
 endif()
 
+# Resources
+
+# Embedded configuration files
+set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/config/defaults.qdocconf"
+        PROPERTIES QT_RESOURCE_ALIAS "config/defaults.qdocconf"
+    )
+
+set(qdoc_config_files
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/config/defaults.qdocconf"
+    )
+
+qt_internal_add_resource(${target_name} "qdoc_configs"
+    PREFIX
+        "/qdoc"
+    FILES
+        ${qdoc_config_files}
+    )
+
 # Embedded templates
 if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/page.html"

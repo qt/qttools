@@ -23,3 +23,19 @@ qt_internal_add_test(tst_config
     INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_LIST_DIR}/../../src/
 )
+
+# Default configuration file as a resource
+set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/config/defaults.qdocconf"
+        PROPERTIES QT_RESOURCE_ALIAS "config/defaults.qdocconf"
+    )
+
+set(qdoc_config_files
+        "${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/config/defaults.qdocconf"
+    )
+
+qt_internal_add_resource(tst_config "qdoc_test_configs"
+    PREFIX
+        "/qdoc"
+    FILES
+        ${qdoc_config_files}
+    )
