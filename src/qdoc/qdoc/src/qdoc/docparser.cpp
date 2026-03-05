@@ -1188,9 +1188,12 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
         }
         case '{':
             enterPara();
-            appendChar('{');
             ++m_braceDepth;
             ++m_position;
+            if (m_paragraphState != InBraceDelimitedParagraph)
+                appendChar('{');
+            else
+                skipSpacesOnLine();
             break;
         case '}': {
             --m_braceDepth;
@@ -1198,8 +1201,12 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
 
             auto format = m_pendingFormats.find(m_braceDepth);
             if (format == m_pendingFormats.end()) {
-                enterPara();
-                appendChar('}');
+                if (m_paragraphState == InBraceDelimitedParagraph) {
+                    leavePara();
+                } else {
+                    enterPara();
+                    appendChar('}');
+                }
             } else {
                 const auto &last{m_private->m_text.lastAtom()->string()};
                 appendAtom(Atom(Atom::FormattingRight, *format));
@@ -2050,10 +2057,10 @@ void DocParser::leavePara()
 {
     if (m_paragraphState == OutsideParagraph)
         return;
-
-    if (!m_pendingFormats.isEmpty()) {
-        location().warning(QStringLiteral("Missing '}'"));
+    if (!m_pendingFormats.isEmpty() || (m_paragraphState == InBraceDelimitedParagraph && m_braceDepth > 0)) {
+        location().warning(u"Missing '}'"_s);
         m_pendingFormats.clear();
+        m_braceDepth = 0;
     }
 
     if (m_private->m_text.lastAtom()->type() == m_pendingParagraphLeftType) {

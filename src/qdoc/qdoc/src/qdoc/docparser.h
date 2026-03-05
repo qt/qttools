@@ -120,7 +120,12 @@ private:
     qsizetype m_cachedPosition {};
 
     DocPrivate *m_private { nullptr };
-    enum ParagraphState { OutsideParagraph, InSingleLineParagraph, InMultiLineParagraph };
+    enum ParagraphState {
+        OutsideParagraph,
+        InSingleLineParagraph,
+        InMultiLineParagraph,
+        InBraceDelimitedParagraph
+    };
     ParagraphState m_paragraphState {};
     bool m_inTableHeader {};
     bool m_inTableRow {};
