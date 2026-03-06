@@ -36,6 +36,8 @@ public:
         ComparesRight,
         DetailsLeft,
         DetailsRight,
+        DetailsSummaryLeft,
+        DetailsSummaryRight,
         DivLeft,
         DivRight,
         ExampleFileLink,

@@ -412,10 +412,14 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         break;
     case Atom::DetailsLeft:
         out() << "<details>\n";
-        if (!atom->string().isEmpty())
-            out() << "<summary>" << protectEnc(atom->string()) << "</summary>\n";
-        else
-            out() << "<summary>...</summary>\n";
+        if (!atom->next(Atom::DetailsSummaryLeft))
+            out() << "<summary>...</summary>\n"; // Default summary string
+        break;
+    case Atom::DetailsSummaryLeft:
+        out() << "<summary>";
+        break;
+    case Atom::DetailsSummaryRight:
+        out() << "</summary>\n";
         break;
     case Atom::DetailsRight:
         out() << "</details>\n";

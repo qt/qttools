@@ -52,6 +52,8 @@ QT_BEGIN_NAMESPACE
   \value CodeQuoteCommand
   \value DetailsLeft
   \value DetailsRight
+  \value DetailsSummaryLeft
+  \value DetailsSummaryRight
   \value DivLeft
   \value DivRight
   \value ExampleFileLink
@@ -135,6 +137,8 @@ static const struct
              { "ComparesRight", Atom::ComparesRight },
              { "DetailsLeft", Atom::DetailsLeft },
              { "DetailsRight", Atom::DetailsRight },
+             { "DetailsSummaryLeft", Atom::DetailsSummaryLeft },
+             { "DetailsSummaryRight", Atom::DetailsSummaryRight },
              { "DivLeft", Atom::DivLeft },
              { "DivRight", Atom::DivRight },
              { "ExampleFileLink", Atom::ExampleFileLink },

@@ -59,6 +59,16 @@
     \details {\PROD details}
         \note You're looking at detailed information.
     \enddetails
+
+    \details { \tm \PROD, \b the
+               \e {Documentation generator}
+    }
+        Here be more details.
+    \enddetails
+
+    \details
+        Nothing much to see here.
+    \enddetails
 */
 
 /*!

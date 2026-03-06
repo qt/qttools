@@ -76,5 +76,7 @@
 <db:note>
 <db:para>You're looking at detailed information.</db:para>
 </db:note>
+<db:para>Here be more details.</db:para>
+<db:para>Nothing much to see here.</db:para>
 </db:section>
 </db:article>

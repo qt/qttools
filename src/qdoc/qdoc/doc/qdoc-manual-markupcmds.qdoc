@@ -140,19 +140,26 @@
     optional summary string enclosed in curly braces. This optional argument
     specifies a visible heading for the details.
 
+    if the argument is omitted, QDoc outputs \e {"..."} as the summary string.
+
     For example, with the following input:
-    \badcode *
-        /\1!
-            \details {QDoc details}
-              \note You're looking at detailed information.
-            \enddetails
-        \1/
+    \code [text] *
+    /\1!
+        \details {QDoc details}
+            \note You're looking at detailed information.
+        \enddetails
+    \1/
     \endcode
 
     If QDoc is generating HTML, it will translate these commands to:
 
-    \badcode
-    <summary>QDoc details</summary><div class="admonition note"><p><b>Note: </b>You're looking at detailed information.</p></div>
+    \code [text]
+    <details>
+      <summary>QDoc details</summary>
+      <div class="admonition note">
+        <p><b>Note: </b>You're looking at detailed information.</p>
+      </div>
+    </details>
     \endcode
 
     QDoc renders this as:

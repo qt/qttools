@@ -306,6 +306,13 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
     case Atom::DetailsLeft:
     case Atom::DetailsRight:
         break;
+    case Atom::DetailsSummaryLeft: { // Ignore/skip \details summary
+        qsizetype offset{ 0 };
+        std::ignore = atom->find(Atom::DetailsSummaryRight, &offset);
+        skipAhead += offset;
+    } break;
+    case Atom::DetailsSummaryRight:
+        break;
     case Atom::DivLeft:
     case Atom::DivRight:
         break;

@@ -429,7 +429,9 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 case CMD_DETAILS:
                     leavePara();
-                    appendAtom(Atom(Atom::DetailsLeft, getArgument()));
+                    appendAtom(Atom(Atom::DetailsLeft));
+                    if (!isBlankLine())
+                        enterPara(Atom::DetailsSummaryLeft, Atom::DetailsSummaryRight);
                     m_openedCommands.push(cmd);
                     break;
                 case CMD_ENDDETAILS:
@@ -2047,6 +2049,8 @@ void DocParser::enterPara(Atom::AtomType leftType, Atom::AtomType rightType, con
     m_pendingParagraphString = string;
     if (leftType == Atom::SectionHeadingLeft || leftType == Atom::TitleLeft) {
         m_paragraphState = InSingleLineParagraph;
+    } else if (leftType == Atom::DetailsSummaryLeft) {
+        m_paragraphState = isLeftBraceAhead() ? InBraceDelimitedParagraph : InSingleLineParagraph;
     } else {
         m_paragraphState = InMultiLineParagraph;
     }

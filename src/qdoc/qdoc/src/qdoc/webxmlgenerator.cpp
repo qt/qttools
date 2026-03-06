@@ -393,6 +393,12 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         }
         break;
 
+    case Atom::DetailsSummaryLeft: // Ignore/skip \details summary
+        return atom->find(Atom::DetailsSummaryRight, nullptr);
+
+    case Atom::DetailsSummaryRight:
+        break;
+
     case Atom::ExampleFileLink: {
         if (!m_inLink) {
             QString link = linkForExampleFile(atom->string());
