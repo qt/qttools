@@ -2,6 +2,10 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="QtLottie Reference Documentation" version="" project="QtLottie">
     <namespace name="" status="active" access="public" module="qtlottie">
+        <page name="lottietoqml.html" href="lottietoqml.html" status="active" location="lottietoqml.qdoc" documented="true" subtype="page" title="lottietoqml" fulltitle="lottietoqml" subtitle="" brief="A tool that converts a Lottie document to a QML file">
+            <contents name="overview" title="Overview" level="1"/>
+            <contents name="usage" title="Usage" level="1"/>
+        </page>
         <page name="qtlottieanimation-index.html" href="qtlottieanimation-index.html" status="active" location="qtlottie.qdoc" documented="true" subtype="page" title="Qt Lottie Animation" fulltitle="Qt Lottie Animation" subtitle="" brief="Display Lottie format vector graphics animations">
             <contents name="getting-started" title="Getting Started" level="1"/>
             <contents name="limitations" title="Limitations" level="1"/>
@@ -14,6 +18,13 @@
             <contents name="licenses" title="Licenses" level="1"/>
             <contents name="reference" title="Reference" level="1"/>
             <contents name="related-information" title="Related Information" level="1"/>
+        </page>
+        <page name="lottietoqml" href="qtlottie-lottietoqml-example.html" status="active" location="lottietoqmlexample.qdoc" documented="true" groups="category Graphics,qtlottieexamples" subtype="example" title="lottietoqml Example" fulltitle="lottietoqml Example" subtitle="" brief="An example demonstrating the use of lottietoqml in an application">
+            <contents name="overview" title="Overview" level="1"/>
+            <contents name="assets" title="Assets" level="1"/>
+        </page>
+        <page name="qtlottieviewer" href="qtlottie-qtlottieviewer-example.html" status="active" location="qtlottieviewerexample.qdoc" documented="true" groups="category Graphics,qtlottieexamples" subtype="example" title="qtlottieviewer Example" fulltitle="qtlottieviewer Example" subtitle="" brief="An example demonstrating the use of Qt LottieAnimation in an application">
+            <contents name="overview" title="Overview" level="1"/>
         </page>
         <page name="https://github.com/airbnb/lottie-web" href="https://github.com/airbnb/lottie-web" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Lottie Source" fulltitle="Lottie Source" subtitle=""/>
         <page name="https://lottie.github.io/lottie-spec/1.0/" href="https://lottie.github.io/lottie-spec/1.0/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Lottie Specification" fulltitle="Lottie Specification" subtitle=""/>
@@ -56,7 +67,9 @@
             <qmlproperty name="startFrame" fullname="Qt.labs.lottieqt.LottieAnimation.startFrame" href="qml-qt-labs-lottieqt-lottieanimation.html#startFrame-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="int" attached="false" writable="false"/>
             <qmlproperty name="status" fullname="Qt.labs.lottieqt.LottieAnimation.status" href="qml-qt-labs-lottieqt-lottieanimation.html#status-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="enumeration" attached="false" writable="true"/>
         </qmlclass>
+        <group name="category Graphics" href="category-graphics.html" status="internal" seen="false" title=""/>
         <group name="qmlmodules" href="qmlmodules.html" status="internal" seen="false" title=""/>
+        <group name="qtlottieexamples" href="qtlottieexamples.html" status="internal" seen="false" title=""/>
         <qmlmodule name="QDoc.Test" href="qdoc-test-qmlmodule.html" status="internal" seen="false" title=""/>
         <qmlmodule name="Qt.labs.lottieqt" qml-module-name="Qt.labs.lottieqt" qml-module-version="1.0" href="qt-labs-lottieqt-qmlmodule.html" status="active" location="qtlottie.qdoc" documented="true" groups="qmlmodules" seen="true" title="Qt Lottie Animation QML Types" brief="Provides QML types to display Lottie graphics and animations">
             <contents name="qml-types" title="QML Types" level="1"/>

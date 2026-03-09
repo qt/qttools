@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lottietoqml Example</title>
+</head>
+<body>
+    <h1>lottietoqml Example</h1>
+    <p class="brief">An example demonstrating the use of lottietoqml in an application.</p>
+
+    <section class="content" aria-label="Description">
+        <p>This example demonstrates how the <a href="lottietoqml">lottietoqml</a> tool can be used to convert Lottie files into QML and then use these in an application.</p>
+        <section>
+        <h1>Overview</h1>
+        <p>The example consists of nine vector animations that have been converted using <a href="lottietoqml">lottietoqml</a>. They are displayed in a grid in a full screen application window.</p>
+        <p>If the user clicks on one of the animated images, it will zoom to fill the screen. Since the image is vector-based, it will remain crisp without any scaling artifacts.</p>
+        <p>The <a href="lottietoqml">lottietoqml</a> does the equivalent to what <a href="svgtoqml">svgtoqml</a> does for .SVG files. It converts as much as possible of the original vector image and animation to <a href="Qt Quick Shapes">Qt Quick Shapes</a> and other <a href="Qt Quick">Qt Quick</a> components. The result is a fully scalable and hardware-accelerated rendering of the animation.</p>
+        <p>For convenience, Lottie files can also be loaded at run-time through the <a href="VectorImage">VectorImage</a> component. However, pregenerating the QML file is usually preferable, since this allows preprocessing the QML scene for faster loading.</p>
+        <pre class="cpp" translate="no"><code>qt_target_qml_from_lottie(applottietoqmlexample
+    CURVE_RENDERER
+    OPTIMIZE_PATHS
+    FILES
+        original/FingerprintIcon.json
+        original/GoogleIcons.json
+        original/HappyStar.json
+        original/HeartMedical.json
+        original/SurprisedBoy.json
+        original/USAMapWithOutlines.json
+        original/UserAuthentication.json
+        original/UserInteractionAnimation.json
+        original/UserInterface.json
+    OUTPUTS
+        generated/FingerprintIcon.qml
+        generated/GoogleIcons.qml
+        generated/HappyStar.qml
+        generated/HeartMedical.qml
+        generated/SurprisedBoy.qml
+        generated/USAMapWithOutlines.qml
+        generated/UserAuthentication.qml
+        generated/UserInteractionAnimation.qml
+        generated/UserInterface.qml
+)
+</code></pre>
+        <p>In this example, the Lottie files are automatically converted to QML using the <a href="CMake">CMake</a> function <a href="qt_target_qml_from_lottie">qt_target_qml_from_lottie()</a>.</p>
+        </section>
+        <section>
+        <h1>Assets</h1>
+        <p>This example contains animated vector images downloaded from the <a href="https://lottiefiles.com/free-animations/free">Lottiefiles list of free animations</a>. All the images are licensed under the <a href="https://lottiefiles.com/page/license">Lottie Simple License</a>.</p>
+<ul>        <li>&quot;Fingerprint icon&quot; by Solitudinem</li>
+        <li>&quot;Google Icons&quot; by Jeffrey Christopher</li>
+        <li>&quot;Happy Star&quot; by Natalia Świerz</li>
+        <li>&quot;Heartbeat | Medical&quot; by Sarpreet Kalyan</li>
+        <li>&quot;Surprised Boy&quot; by Hizen</li>
+        <li>&quot;USA Map with outlines blue&quot; by Marina Trajkovska</li>
+        <li>&quot;User Interaction&quot; by Mahendra Bhunwal</li>
+        <li>&quot;User Interface&quot; by Bashir Ahmad</li>
+        <li>&quot;User Authentication&quot; by Musa Adanur</li>
+</ul>        </section>
+    </section>
+
+    <footer>
+        <p>Built with QDoc's template engine.</p>
+    </footer>
+</body>
+</html>

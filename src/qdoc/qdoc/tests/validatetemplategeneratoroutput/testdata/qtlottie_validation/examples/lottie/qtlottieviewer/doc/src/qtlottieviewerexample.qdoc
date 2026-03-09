@@ -1,0 +1,36 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \title qtlottieviewer Example
+    \example qtlottieviewer
+    \image qtlottieviewerexample.png {Lottie animation viewer with frame rate and
+           scaling controls}
+    \brief An example demonstrating the use of Qt LottieAnimation in an application.
+    \ingroup qtlottieexamples
+    \examplecategory {Graphics}
+
+    This example demonstrates how to use the \l{LottieAnimation} item
+    of the \l{Qt.labs.lottieqt} module to directly display and control
+    a Lottie animated vector graphics file in a Qt Quick application.
+
+    \section1 Overview
+
+    The main part of the example window is a Rectangle containing a
+    LottieAnimation item which plays a Lottie animation.
+
+    Below this is a row controls. The user can control the animation
+    speed with the Frame Rate slider, and zoom in and out using the
+    Scale slider. The animation can be stopped and restarted using the
+    Play/Pause button. When paused, the user can select the exact
+    frame to be displayed using the Goto Frame slider. The Open button
+    will display a file dialog, allowing the user to select a Lottie
+    file to load and display.
+
+    LottieAnimation is a \l{QQuickPaintedItem}, employing software
+    rasterization of the vector graphics. For alternative ways
+    displaying Lottie files in Quick applications, utilizing graphics
+    hardware rendering, see \l{lottietoqml} and the \l{VectorImage}
+    item.
+
+*/

@@ -6,9 +6,15 @@ locationinfo = false
 headers.fileextensions  = "*.h *.hpp"
 sources.fileextensions  = "*.cpp *.qml *.qdoc"
 
+# Macro from qtbase global/macros.qdocconf, not available in standalone tests
+macro.examplecategory     = "\\meta category {\1}\n\\ingroup category \1"
+
 headerdirs  = ./src
 sourcedirs  = ./src
-exampledirs = ./src
+
+exampledirs = ./examples/lottie
+imagedirs   = ./examples/lottie/lottietoqml/doc/images \
+              ./examples/lottie/qtlottieviewer/doc/images
 
 outputformats = TemplateHTML TemplateMarkdown
 
@@ -20,5 +26,8 @@ TemplateMarkdown.nosubdirs = true
 TemplateMarkdown.outputsubdir = markdown
 TemplateMarkdown.extension = md
 
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
 warninglimit = 0
 warninglimit.enabled = true

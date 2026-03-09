@@ -1,0 +1,60 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \title lottietoqml Example
+    \example lottietoqml
+    \image lottietoqmlexample.png
+           {Grid of animated vector graphics}
+    \brief An example demonstrating the use of lottietoqml in an application.
+    \ingroup qtlottieexamples
+    \examplecategory {Graphics}
+
+    This example demonstrates how the \l{lottietoqml} tool can be used to convert Lottie files
+    into QML and then use these in an application.
+
+    \section1 Overview
+
+    The example consists of nine vector animations that have been converted using \l{lottietoqml}.
+    They are displayed in a grid in a full screen application window.
+
+    If the user clicks on one of the animated images, it will zoom to fill the screen. Since the
+    image is vector-based, it will remain crisp without any scaling artifacts.
+
+    \image lottietoqmlexample-closeup.png
+           {Zoomed view of single animated vector graphic}
+
+    The \l{lottietoqml} does the equivalent to what \l{svgtoqml} does for .SVG files. It converts
+    as much as possible of the original vector image and animation to \l{Qt Quick Shapes} and other
+    \l{Qt Quick} components. The result is a fully scalable and hardware-accelerated rendering of
+    the animation.
+
+    For convenience, Lottie files can also be loaded at run-time through the \l{VectorImage}
+    component. However, pregenerating the QML file is usually preferable, since this allows
+    preprocessing the QML scene for faster loading.
+
+    \snippet lottietoqml/CMakeLists.txt lottietoqml
+
+    In this example, the Lottie files are automatically converted to QML using the
+    CMake function \l{qt_target_qml_from_lottie}{qt_target_qml_from_lottie()}.
+
+    \section1 Assets
+
+    This example contains animated vector images downloaded from the
+    \l{https://lottiefiles.com/free-animations/free}{Lottiefiles list of free animations}.
+    All the images are licensed under the
+    \l{https://lottiefiles.com/page/license}{Lottie Simple License}.
+
+    \list
+        \li "Fingerprint icon" by Solitudinem
+        \li "Google Icons" by Jeffrey Christopher
+        \li "Happy Star" by Natalia Świerz
+        \li "Heartbeat | Medical" by Sarpreet Kalyan
+        \li "Surprised Boy" by Hizen
+        \li "USA Map with outlines blue" by Marina Trajkovska
+        \li "User Interaction" by Mahendra Bhunwal
+        \li "User Interface" by Bashir Ahmad
+        \li "User Authentication" by Musa Adanur
+    \endlist
+*/
+
