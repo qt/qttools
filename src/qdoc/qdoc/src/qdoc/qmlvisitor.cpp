@@ -163,7 +163,10 @@ Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *n
                         qmlProperty->setDataType(qpa->m_type);
                     } else {
                         bool isAttached = topic.contains(QLatin1String("attached"));
-                        QmlPropertyNode *n = parent->hasQmlProperty(qpa->m_name, isAttached);
+                        Aggregate::PropertySearchType searchType = isAttached
+                                                      ? Aggregate::AttachedProperties
+                                                      : Aggregate::UnattachedProperties;
+                        QmlPropertyNode *n = parent->hasQmlProperty(qpa->m_name, searchType);
                         if (n == nullptr)
                             n = new QmlPropertyNode(parent, qpa->m_name, qpa->m_type, isAttached);
                         n->setIsList(qpa->m_isList);

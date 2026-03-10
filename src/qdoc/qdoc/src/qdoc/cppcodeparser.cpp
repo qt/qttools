@@ -265,7 +265,9 @@ std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedD
                                     .arg(topicCommand.m_args));
                     continue;
                 }
-                QmlPropertyNode *existingProperty = qmlType->hasQmlProperty(qpa->m_name, attached);
+                Aggregate::PropertySearchType searchType = attached ? Aggregate::AttachedProperties
+                                                                    : Aggregate::UnattachedProperties;
+                QmlPropertyNode *existingProperty = qmlType->hasQmlProperty(qpa->m_name, searchType);
                 if (existingProperty) {
                     processMetaCommands(doc, existingProperty);
                     if (!doc.body().isEmpty()) {

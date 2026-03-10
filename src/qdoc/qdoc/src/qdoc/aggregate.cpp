@@ -562,32 +562,20 @@ void Aggregate::adoptChild(Node *child)
 }
 
 /*!
-  If this node has a child that is a QML property named \a n, return a
-  pointer to that child. Otherwise, return \nullptr.
- */
-QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n) const
-{
-    NodeType goal = NodeType::QmlProperty;
-    for (auto *child : std::as_const(m_children)) {
-        if (child->nodeType() == goal) {
-            if (child->name() == n)
-                return static_cast<QmlPropertyNode *>(child);
-        }
-    }
-    return nullptr;
-}
-
-/*!
   If this node has a child that is a QML property named \a n and that
   also matches \a attached, return a pointer to that child.
  */
-QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n, bool attached) const
+QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n, PropertySearchType attached) const
 {
     NodeType goal = NodeType::QmlProperty;
     for (auto *child : std::as_const(m_children)) {
         if (child->nodeType() == goal) {
-            if (child->name() == n && child->isAttached() == attached)
-                return static_cast<QmlPropertyNode *>(child);
+            if (child->name() == n) {
+                if (attached == AnyProperties
+                    || (child->isAttached() && attached == AttachedProperties)
+                    || (!child->isAttached() && attached == UnattachedProperties))
+                    return static_cast<QmlPropertyNode *>(child);
+            }
         }
     }
     return nullptr;
