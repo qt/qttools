@@ -1204,6 +1204,95 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
     return node;
 }
 
+/*!
+    Finds the node for \a target with genus and module scoping.
+
+    When \a moduleName is non-empty, the search is scoped to that
+    module's tree. Function signatures (targets ending with \c{()})
+    are parsed and dispatched to function-specific lookup. QML
+    dot-path targets are resolved via import-aware type lookup when
+    the \a genus is QML.
+
+    This overload extracts the dispatch logic from findNodeForAtom()
+    into a method that takes plain parameters instead of an Atom
+    pointer, enabling callers without Atom access (such as
+    LinkResolver) to use the same scoped lookup.
+*/
+const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *relative,
+                                            Genus genus, const QString &moduleName)
+{
+    if (target.isEmpty())
+        return relative;
+
+    Tree *domain = moduleName.isEmpty() ? nullptr : findTree(moduleName);
+
+    if (domain) {
+        const Node *node = nullptr;
+        if (target.endsWith(".html"_L1)) {
+            node = domain->findNodeByNameAndType(QStringList(target), &Node::isPageNode);
+        } else if (target.endsWith(')'_L1)) {
+            QString function = target;
+            QString signature;
+            if (function.endsWith("()"_L1))
+                function.chop(2);
+            if (function.endsWith(')'_L1)) {
+                qsizetype position = function.lastIndexOf('('_L1);
+                signature = function.mid(position + 1, function.size() - position - 2);
+                function = function.left(position);
+            }
+            QStringList path = function.split("::"_L1);
+            node = domain->findFunctionNode(path, Parameters(signature), nullptr, genus);
+        }
+        if (node)
+            return node;
+
+        if (genus == Genus::QML && target.contains('.'_L1) && !target.contains("::"_L1)) {
+            int typeFlags = SearchBaseClasses | SearchEnumValues | TypesOnly;
+            QStringList path = target.split('.'_L1);
+            node = domain->findNode(path, relative, typeFlags, genus);
+            if (node)
+                return node;
+            if (path.size() > 1) {
+                node = domain->findNode(QStringList{path.last()}, relative, typeFlags, genus);
+                if (node && node->isQmlType())
+                    return node;
+            }
+        }
+
+        int flags = SearchBaseClasses | SearchEnumValues;
+        QStringList nodePath = target.split("::"_L1);
+        if (relative && relative->tree()->physicalModuleName() != domain->physicalModuleName())
+            relative = nullptr;
+        QString ref;
+        return domain->findNodeForTarget(nodePath, {}, relative, flags, genus, ref);
+    }
+
+    // Forest-wide search: function signatures, QML dot-paths, then general.
+    if (target.endsWith(".html"_L1))
+        return findNodeByNameAndType(QStringList(target), &Node::isPageNode);
+
+    if (target.endsWith(')'_L1)) {
+        const Node *node = findFunctionNode(target, relative, genus);
+        if (node)
+            return node;
+    }
+
+    if (genus == Genus::QML && target.contains('.'_L1) && !target.contains("::"_L1)) {
+        const Node *node = findTypeNode(target, relative, genus);
+        if (node)
+            return node;
+    }
+
+    QStringList targetPath = target.split("::"_L1);
+    int flags = SearchBaseClasses | SearchEnumValues;
+    QString ref;
+    const Node *node = findNodeForTarget(targetPath, relative, genus, ref, flags);
+    if (node)
+        return node;
+
+    return findPageNodeByTitle(target);
+}
+
 QStringList QDocDatabase::groupNamesForNode(Node *node)
 {
     QStringList result;

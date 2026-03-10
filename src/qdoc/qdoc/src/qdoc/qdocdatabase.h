@@ -290,6 +290,8 @@ public:
                                          Genus genus);
     const Node *findTypeNode(const QString &type, const Node *relative, Genus genus);
     const Node *findNodeForTarget(const QString &target, const Node *relative);
+    const Node *findNodeForTarget(const QString &target, const Node *relative,
+                                  Genus genus, const QString &moduleName);
     const PageNode *findPageNodeByTitle(const QString &title)
     {
         return m_forest.findPageNodeByTitle(title);
