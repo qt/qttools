@@ -41,23 +41,23 @@
                         <description/>
                     </variable>
                 </struct>
-                <variable name="ipv4" fullname="PublicClass::PrivateData::(unnamed union)::ipv4" href="publicclass-privatedata-unnamed-union.html#ipv4-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+                <variable name="ipv4" fullname="PublicClass::PrivateData::(unnamed union)::ipv4" href="publicclass-privatedata-unnamed-union.html#ipv4-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed)::(unnamed)" static="false">
                     <description/>
                 </variable>
-                <variable name="ipv6" fullname="PublicClass::PrivateData::(unnamed union)::ipv6" href="publicclass-privatedata-unnamed-union.html#ipv6-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+                <variable name="ipv6" fullname="PublicClass::PrivateData::(unnamed union)::ipv6" href="publicclass-privatedata-unnamed-union.html#ipv6-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed)::(unnamed)" static="false">
                     <description/>
                 </variable>
-                <variable name="raw" fullname="PublicClass::PrivateData::(unnamed union)::raw" href="publicclass-privatedata-unnamed-union.html#raw-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+                <variable name="raw" fullname="PublicClass::PrivateData::(unnamed union)::raw" href="publicclass-privatedata-unnamed-union.html#raw-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed)::(unnamed)" static="false">
                     <description/>
                 </variable>
             </union>
-            <variable name="addressData" fullname="PublicClass::PrivateData::addressData" href="publicclass-privatedata.html#addressData-var" status="internal" access="public" location="publicclass_p.h" documented="true" type="union PublicClass::PrivateData::(unnamed union)" static="false" brief="Network address data with complex anonymous union">
+            <variable name="addressData" fullname="PublicClass::PrivateData::addressData" href="publicclass-privatedata.html#addressData-var" status="internal" access="public" location="publicclass_p.h" documented="true" type="union PublicClass::PrivateData::(unnamed)" static="false" brief="Network address data with complex anonymous union">
                 <description>
                     <brief>This variable holds Network address data with complex anonymous union..</brief>
                     <para>Similar to qhostaddress_p.h pattern with nested anonymous types.</para>
                 </description>
             </variable>
-            <variable name="headerCache" fullname="PublicClass::PrivateData::headerCache" href="publicclass-privatedata.html#headerCache-var" status="internal" access="public" location="publicclass_p.h" documented="true" type="struct PublicClass::PrivateData::(unnamed struct)" static="false" brief="Cached header data with anonymous struct pattern from Qt">
+            <variable name="headerCache" fullname="PublicClass::PrivateData::headerCache" href="publicclass-privatedata.html#headerCache-var" status="internal" access="public" location="publicclass_p.h" documented="true" type="struct PublicClass::PrivateData::(unnamed)" static="false" brief="Cached header data with anonymous struct pattern from Qt">
                 <description>
                     <brief>This variable holds Cached header data with anonymous struct pattern from Qt..</brief>
                     <para>Replicates the pattern from qnetworkrequest_p.h that causes anonymous type names with full file paths.</para>
@@ -75,7 +75,7 @@
                     <para>This is a regular (non-internal) private member in a private header. It should appear when showinternal is enabled, regardless of the</para>
                 </description>
             </variable>
-            <variable name="requestMetadata" fullname="PublicClass::PrivateData::requestMetadata" href="publicclass-privatedata.html#requestMetadata-var" status="internal" access="public" location="publicclass_p.h" documented="true" type="struct PublicClass::PrivateData::(unnamed struct)" static="false" brief="Multiple nested anonymous structures for disambiguation">
+            <variable name="requestMetadata" fullname="PublicClass::PrivateData::requestMetadata" href="publicclass-privatedata.html#requestMetadata-var" status="internal" access="public" location="publicclass_p.h" documented="true" type="struct PublicClass::PrivateData::(unnamed)" static="false" brief="Multiple nested anonymous structures for disambiguation">
                 <description>
                     <brief>This variable holds Multiple nested anonymous structures for disambiguation..</brief>
                     <para>Creates complex anonymous type hierarchy to force Clang path naming.</para>

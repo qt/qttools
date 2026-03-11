@@ -7,18 +7,18 @@
                 <para>
                     <argument>AngleT</argument> is the type used for angle values.</para>
             </description>
-            <variable name="axis" fullname="AxisAndAngle::axis" href="axisandangle.html#axis-var" status="active" access="public" location="templatestruct.h" documented="true" type="struct AxisAndAngle&lt;AngleT&gt;::(unnamed struct)" static="false">
+            <variable name="axis" fullname="AxisAndAngle::axis" href="axisandangle.html#axis-var" status="active" access="public" location="templatestruct.h" documented="true" type="struct AxisAndAngle&lt;AngleT&gt;::(unnamed)" static="false">
                 <description>
                     <para>The 3D axis that together with an angle corresponds to a quaternion.</para>
                     <para>An unnamed struct containing members x, y, z.</para>
                 </description>
             </variable>
-            <variable name="rotationCache" fullname="AxisAndAngle::rotationCache" href="axisandangle.html#rotationCache-var" status="active" access="public" location="templatestruct.h" documented="true" type="struct AxisAndAngle&lt;AngleT&gt;::(unnamed struct)" static="false">
+            <variable name="rotationCache" fullname="AxisAndAngle::rotationCache" href="axisandangle.html#rotationCache-var" status="active" access="public" location="templatestruct.h" documented="true" type="struct AxisAndAngle&lt;AngleT&gt;::(unnamed)" static="false">
                 <description>
                     <para>Cached rotation data with multiple anonymous types to trigger disambiguation.</para>
                 </description>
             </variable>
-            <variable name="transformationMatrix" fullname="AxisAndAngle::transformationMatrix" href="axisandangle.html#transformationMatrix-var" status="active" access="public" location="templatestruct.h" documented="true" type="union AxisAndAngle&lt;AngleT&gt;::(unnamed union)" static="false">
+            <variable name="transformationMatrix" fullname="AxisAndAngle::transformationMatrix" href="axisandangle.html#transformationMatrix-var" status="active" access="public" location="templatestruct.h" documented="true" type="union AxisAndAngle&lt;AngleT&gt;::(unnamed)" static="false">
                 <description>
                     <para>Complex nested anonymous types similar to Qt's real patterns.</para>
                 </description>

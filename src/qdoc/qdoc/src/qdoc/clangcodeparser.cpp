@@ -174,10 +174,10 @@ static const clang::Decl* get_cursor_declaration(CXCursor cursor) {
  * so as to ensure a consistent behavior and output.
  */
 static std::string get_fully_qualified_type_name(clang::QualType type, const clang::ASTContext& declaration_context) {
-     return clang::TypeName::getFullyQualifiedName(
-        type,
-        declaration_context,
-        declaration_context.getPrintingPolicy()
+    auto policy = declaration_context.getPrintingPolicy();
+    policy.AnonymousTagLocations = false;
+    return clang::TypeName::getFullyQualifiedName(
+        type, declaration_context, policy
     );
 }
 
@@ -193,10 +193,11 @@ static QString cleanAnonymousTypeName(const QString &typeName) {
 
     // Only do expensive cleaning when needed
     static const QRegularExpression pattern(
-        R"(\((unnamed|anonymous) (struct|union|class) at [^)]+\))"
+        R"(\((unnamed|anonymous)(?:\s+(struct|union|class))?\s+at\s+[^)]+\))"
     );
     QString cleaned = typeName;
     cleaned.replace(pattern, "(\\1 \\2)"_L1);
+    cleaned.replace(" )"_L1, ")"_L1);
     return cleaned;
 }
 
@@ -793,10 +794,10 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
                 CXType argType = clang_getArgType(funcType, i);
 
                 if (args.size() <= i)
-                    args.append(QString::fromStdString(get_fully_qualified_type_name(
+                    args.append(cleanAnonymousTypeName(QString::fromStdString(get_fully_qualified_type_name(
                         function_declaration->getParamDecl(i)->getOriginalType(),
                         function_declaration->getASTContext()
-                    )));
+                    ))));
 
                 QString recordedType = parameters.at(i).type();
                 QString typeSpelling = args.at(i);
@@ -808,10 +809,10 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
                     QStringView canonicalType = parameters.at(i).canonicalType();
                     if (!canonicalType.isEmpty()) {
                         different = canonicalType !=
-                            QString::fromStdString(get_fully_qualified_type_name(
+                            cleanAnonymousTypeName(QString::fromStdString(get_fully_qualified_type_name(
                                 function_declaration->getParamDecl(i)->getOriginalType().getCanonicalType(),
                                 function_declaration->getASTContext()
-                            ));
+                            )));
                     }
                 }
 

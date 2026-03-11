@@ -36,12 +36,12 @@
 <db:section xml:id="member-variable-documentation">
 <db:title>Member Variable Documentation</db:title>
 <db:section xml:id="addressData-var">
-<db:title>union PublicClass::PrivateData::(unnamed union) PrivateData::addressData</db:title>
+<db:title>union PublicClass::PrivateData::(unnamed) PrivateData::addressData</db:title>
 <db:para>Network address data with complex anonymous union.</db:para>
 <db:para>Similar to qhostaddress_p.h pattern with nested anonymous types.</db:para>
 </db:section>
 <db:section xml:id="headerCache-var">
-<db:title>struct PublicClass::PrivateData::(unnamed struct) PrivateData::headerCache</db:title>
+<db:title>struct PublicClass::PrivateData::(unnamed) PrivateData::headerCache</db:title>
 <db:para>Cached header data with anonymous struct pattern from Qt.</db:para>
 <db:para>Replicates the pattern from qnetworkrequest_p.h that causes anonymous type names with full file paths.</db:para>
 </db:section>
@@ -56,7 +56,7 @@
 <db:para>This is a regular (non-internal) private member in a private header. It should appear when showinternal is enabled, regardless of the</db:para>
 </db:section>
 <db:section xml:id="requestMetadata-var">
-<db:title>struct PublicClass::PrivateData::(unnamed struct) PrivateData::requestMetadata</db:title>
+<db:title>struct PublicClass::PrivateData::(unnamed) PrivateData::requestMetadata</db:title>
 <db:para>Multiple nested anonymous structures for disambiguation.</db:para>
 <db:para>Creates complex anonymous type hierarchy to force Clang path naming.</db:para>
 </db:section>

@@ -12,13 +12,13 @@
                     <description/>
                 </variable>
             </struct>
-            <variable name="ipv4" fullname="PublicClass::PrivateData::(unnamed union)::ipv4" href="publicclass-privatedata-unnamed-union.html#ipv4-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+            <variable name="ipv4" fullname="PublicClass::PrivateData::(unnamed union)::ipv4" href="publicclass-privatedata-unnamed-union.html#ipv4-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed)::(unnamed)" static="false">
                 <description/>
             </variable>
-            <variable name="ipv6" fullname="PublicClass::PrivateData::(unnamed union)::ipv6" href="publicclass-privatedata-unnamed-union.html#ipv6-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+            <variable name="ipv6" fullname="PublicClass::PrivateData::(unnamed union)::ipv6" href="publicclass-privatedata-unnamed-union.html#ipv6-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed)::(unnamed)" static="false">
                 <description/>
             </variable>
-            <variable name="raw" fullname="PublicClass::PrivateData::(unnamed union)::raw" href="publicclass-privatedata-unnamed-union.html#raw-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+            <variable name="raw" fullname="PublicClass::PrivateData::(unnamed union)::raw" href="publicclass-privatedata-unnamed-union.html#raw-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed)::(unnamed)" static="false">
                 <description/>
             </variable>
         </union>
