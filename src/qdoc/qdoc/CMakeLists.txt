@@ -104,6 +104,7 @@ qt_internal_add_tool(${target_name}
         src/qdoc/clang/AST
     DEFINES
         "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
+        QT_NO_KEYWORDS
         # To provide the ability to workaround version-specific Clang issues.
         # A re-export of (LLVM|CLANG)_VERSION_MAJOR done in WrapLibClang.cmake
         LIBCLANG_VERSION_MAJOR=${QT_LIB_CLANG_VERSION_MAJOR}
