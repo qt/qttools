@@ -498,14 +498,14 @@
     \badcode *
     /*!
         \module QtFoo
-        \modulestate Technology Preview
+        \modulestate Experimental
     \1/
     \endcode
 
     QDoc will then add this information on the module page:
 
     \quotation
-    This module is in \e {Technology Preview} state.
+    This module is in \e {Experimental} state.
     \endquotation
 
     \note Do not use this command to deprecate a module. Use the
@@ -513,6 +513,8 @@
 
     In HTML output, this state information appears also in the navigation
     bar (breadcrumbs) of reference pages for the module's members.
+
+    See also \qdoccmd {preliminary}.
 
     \target preliminary-command
     \section1 \\preliminary
