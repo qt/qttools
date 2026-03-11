@@ -69,6 +69,10 @@
     \details
         Nothing much to see here.
     \enddetails
+
+    //! Test invalid syntax (argument must start with '{')
+    \details Details
+    \enddetails
 */
 
 /*!

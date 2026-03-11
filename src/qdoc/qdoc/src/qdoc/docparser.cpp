@@ -430,8 +430,14 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                 case CMD_DETAILS:
                     leavePara();
                     appendAtom(Atom(Atom::DetailsLeft));
-                    if (!isBlankLine())
-                        enterPara(Atom::DetailsSummaryLeft, Atom::DetailsSummaryRight);
+                    if (!isBlankLine()) {
+                        if (isLeftBraceAhead()) {
+                            enterPara(Atom::DetailsSummaryLeft, Atom::DetailsSummaryRight);
+                        } else {
+                            location().warning(u"Expected '{' when parsing \\%1 argument"_s.arg(cmdName(cmd)));
+                            std::ignore = getRestOfLine();
+                        }
+                    }
                     m_openedCommands.push(cmd);
                     break;
                 case CMD_ENDDETAILS:
@@ -2050,7 +2056,7 @@ void DocParser::enterPara(Atom::AtomType leftType, Atom::AtomType rightType, con
     if (leftType == Atom::SectionHeadingLeft || leftType == Atom::TitleLeft) {
         m_paragraphState = InSingleLineParagraph;
     } else if (leftType == Atom::DetailsSummaryLeft) {
-        m_paragraphState = isLeftBraceAhead() ? InBraceDelimitedParagraph : InSingleLineParagraph;
+        m_paragraphState = InBraceDelimitedParagraph;
     } else {
         m_paragraphState = InMultiLineParagraph;
     }

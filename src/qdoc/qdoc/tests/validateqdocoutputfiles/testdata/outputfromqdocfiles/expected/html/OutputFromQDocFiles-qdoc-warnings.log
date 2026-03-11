@@ -1,0 +1,8 @@
+# QDoc Warning Log
+# Project: OutputFromQDocFiles
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/qdoctests-outputfromqdocfiles.qdoc:74: [OutputFromQDocFiles] (qdoc) warning: Expected '{' when parsing \details argument
+src/qdoctests-outputfromqdocfiles.qdoc:257: [OutputFromQDocFiles] (qdoc) warning: Can't link to ''

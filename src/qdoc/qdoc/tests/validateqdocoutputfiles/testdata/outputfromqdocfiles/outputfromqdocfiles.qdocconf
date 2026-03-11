@@ -10,8 +10,13 @@ headers.fileextensions = "*.h"
 # images
 imagedirs = ./src/images
 
-# zero warning policy -- here; allow one which is (qdoc) warning: Can't link to ''
-warninglimit = 1
+# capture warnings for validation
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+
+# allow two warnings (see generated log for details)
+warninglimit = 2
 warninglimit.enabled = true
 
 # don't write host system-specific paths to index files
