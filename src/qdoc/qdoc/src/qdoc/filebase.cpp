@@ -77,7 +77,7 @@ QString computeFileBase(
     } else {
         base.clear();
         const Node *p = node;
-        forever {
+        for (;;) {
             const Node *pp = p->parent();
             base.prepend(p->name());
             if (pp == nullptr || pp->name().isEmpty() || pp->isTextPageNode())
