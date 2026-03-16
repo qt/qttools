@@ -967,7 +967,7 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
 
             auto function_declaration = get_cursor_declaration(cur)->getAsFunction();
 
-            bool different = false;
+            bool typesDiffer = false;
             for (int i = 0; i < numArg; ++i) {
                 CXType argType = clang_getArgType(funcType, i);
 
@@ -980,13 +980,13 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
                 QString recordedType = parameters.at(i).type();
                 QString typeSpelling = args.at(i);
 
-                different = recordedType != typeSpelling;
+                typesDiffer = recordedType != typeSpelling;
 
                 // Retry with a canonical type spelling
-                if (different && (argType.kind == CXType_Typedef || argType.kind == CXType_Elaborated)) {
+                if (typesDiffer && (argType.kind == CXType_Typedef || argType.kind == CXType_Elaborated)) {
                     QStringView canonicalType = parameters.at(i).canonicalType();
                     if (!canonicalType.isEmpty()) {
-                        different = canonicalType !=
+                        typesDiffer = canonicalType !=
                             QString::fromStdString(get_fully_qualified_type_name(
                                 function_declaration->getParamDecl(i)->getOriginalType().getCanonicalType(),
                                 function_declaration->getASTContext()
@@ -994,12 +994,12 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
                     }
                 }
 
-                if (different) {
+                if (typesDiffer) {
                     break;
                 }
             }
 
-            if (!different)
+            if (!typesDiffer)
                 return fn;
         }
         return nullptr;
