@@ -46,8 +46,10 @@
 #include "clang/AST/QualTypeNames.h"
 #include "template_declaration.h"
 
+#include <algorithm>
 #include <cstdio>
 #include <optional>
+#include <string_view>
 
 QT_BEGIN_NAMESPACE
 
@@ -173,30 +175,107 @@ static const clang::Decl* get_cursor_declaration(CXCursor cursor) {
  * representation of a type is acquired as part of parsing with Clang,
  * so as to ensure a consistent behavior and output.
  */
+/*
+ * Ensures that bare "(unnamed)" or "(anonymous)" markers in \a typeName
+ * include the record keyword (struct, union, class). With
+ * AnonymousTagLocations disabled, some LLVM versions omit the keyword
+ * for some or all anonymous scopes. This function recovers the correct
+ * keyword for each scope from the RecordDecl hierarchy.
+ *
+ * Only anonymous record types produce scope components in fully qualified
+ * names — anonymous enums don't create "(unnamed enum)::" segments
+ * because their enumerators are injected into the enclosing scope.
+ *
+ * For nested anonymous records such as "(unnamed)::(unnamed)" where the
+ * outer scope is a union and the inner is a struct, each marker receives
+ * its own keyword. The parent walk follows only RecordDecl contexts,
+ * which is sufficient because only anonymous records produce these
+ * scope components in Clang's fully qualified name output.
+ *
+ * The function assumes Clang produces structurally well-formed anonymous
+ * markers: either bare "(unnamed)" or with a keyword "(unnamed struct)".
+ * Malformed spellings would silently consume a keyword entry.
+ */
+static std::string ensureAnonymousTagKeyword(std::string typeName, clang::QualType type)
+{
+    const clang::RecordType *rt = type->getAs<clang::RecordType>();
+    if (!rt)
+        return typeName;
+
+    // Collect keywords from innermost to outermost anonymous scope.
+    std::vector<std::string> keywords;
+    const clang::RecordDecl *decl = rt->getDecl();
+    while (decl) {
+        if (decl->getDeclName().isEmpty())
+            keywords.emplace_back(decl->getKindName());
+        const auto *parent = llvm::dyn_cast<clang::RecordDecl>(decl->getDeclContext());
+        decl = parent;
+    }
+    // Reverse so index 0 is the outermost anonymous scope,
+    // matching left-to-right marker order in the type string.
+    std::reverse(keywords.begin(), keywords.end());
+
+    // Scan left-to-right for "(unnamed" / "(anonymous" prefixes.
+    // Each prefix corresponds to one anonymous scope in the keyword list.
+    // Some LLVM versions already include the keyword (e.g., "(unnamed union)")
+    // while others produce bare "(unnamed)". Only inject when missing.
+    static constexpr std::string_view prefixes[] = { "(unnamed", "(anonymous" };
+    size_t keywordIndex = 0;
+    size_t pos = 0;
+    while (pos < typeName.size() && keywordIndex < keywords.size()) {
+        std::string_view foundPrefix;
+        size_t foundPos = std::string::npos;
+        for (auto prefix : prefixes) {
+            size_t p = typeName.find(prefix, pos);
+            if (p < foundPos) {
+                foundPos = p;
+                foundPrefix = prefix;
+            }
+        }
+        if (foundPos == std::string::npos)
+            break;
+
+        size_t afterPrefix = foundPos + foundPrefix.size();
+        if (afterPrefix < typeName.size() && typeName[afterPrefix] == ')') {
+            // Bare marker — inject the keyword before ')'.
+            typeName.insert(afterPrefix, " " + keywords[keywordIndex]);
+            pos = afterPrefix + 1 + keywords[keywordIndex].size() + 1;
+        } else {
+            // Already has a keyword — skip past the closing ')'.
+            size_t closePos = typeName.find(')', afterPrefix);
+            pos = (closePos != std::string::npos) ? closePos + 1 : afterPrefix;
+        }
+        ++keywordIndex;
+    }
+    return typeName;
+}
+
 static std::string get_fully_qualified_type_name(clang::QualType type, const clang::ASTContext& declaration_context) {
-     return clang::TypeName::getFullyQualifiedName(
-        type,
-        declaration_context,
-        declaration_context.getPrintingPolicy()
-    );
+    auto policy = declaration_context.getPrintingPolicy();
+    policy.AnonymousTagLocations = false;
+    std::string result = clang::TypeName::getFullyQualifiedName(type, declaration_context, policy);
+    return ensureAnonymousTagKeyword(std::move(result), type);
 }
 
 /*
- * Cleans up anonymous struct names in type strings by replacing
- * file-path-based identifiers with clean display names.
- * Only performs expensive cleaning when anonymous types are detected.
+ * Normalizes anonymous type names in strings that do not come through
+ * get_fully_qualified_type_name(), such as cursor spelling results.
+ * Strips file-path locations from anonymous type names, transforming
+ * patterns such as "(unnamed struct at /path/file.h:67)" into
+ * "(unnamed struct)". The single-word token between the marker and
+ * " at " is preserved as-is — this is intentionally broader than
+ * just C++ record keywords so that any Clang spelling passes through
+ * without an exhaustive keyword list.
  */
 static QString cleanAnonymousTypeName(const QString &typeName) {
-    if (!typeName.contains("(unnamed "_L1) && !typeName.contains("(anonymous "_L1)) {
-        return typeName; // Fast path for most cases
-    }
+    if (!typeName.contains("(unnamed "_L1) && !typeName.contains("(anonymous "_L1))
+        return typeName;
 
-    // Only do expensive cleaning when needed
     static const QRegularExpression pattern(
-        R"(\((unnamed|anonymous) (struct|union|class) at [^)]+\))"
+        R"(\((unnamed|anonymous)(\s+\w+)\s+at\s+[^)]+\))"
     );
     QString cleaned = typeName;
-    cleaned.replace(pattern, "(\\1 \\2)"_L1);
+    cleaned.replace(pattern, "(\\1\\2)"_L1);
     return cleaned;
 }
 
@@ -1580,10 +1659,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
 
         var->setAccess(access);
         var->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
-        var->setLeftType(cleanAnonymousTypeName(QString::fromStdString(get_fully_qualified_type_name(
+        var->setLeftType(QString::fromStdString(get_fully_qualified_type_name(
             value_declaration->getType(),
             value_declaration->getASTContext()
-        ))));
+        )));
         var->setStatic(kind == CXCursor_VarDecl && parent_->isClassNode());
 
         return CXChildVisit_Continue;
@@ -1699,10 +1778,10 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     else if (kind == CXCursor_Destructor)
         fn->setMetaness(FunctionNode::Dtor);
     else if (kind != CXCursor_ConversionFunction)
-        fn->setReturnType(cleanAnonymousTypeName(QString::fromStdString(get_fully_qualified_type_name(
+        fn->setReturnType(QString::fromStdString(get_fully_qualified_type_name(
             function_declaration->getReturnType(),
             function_declaration->getASTContext()
-        ))));
+        )));
 
     const clang::CXXConstructorDecl* constructor_declaration = llvm::dyn_cast<const clang::CXXConstructorDecl>(function_declaration);
 
@@ -1779,16 +1858,16 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     for (clang::ParmVarDecl* const parameter_declaration : function_declaration->parameters()) {
         clang::QualType parameter_type = parameter_declaration->getOriginalType();
 
-        parameters.append(cleanAnonymousTypeName(QString::fromStdString(get_fully_qualified_type_name(
+        parameters.append(QString::fromStdString(get_fully_qualified_type_name(
             parameter_type,
             parameter_declaration->getASTContext()
-        ))));
+        )));
 
         if (!parameter_type.isCanonical())
-            parameters.last().setCanonicalType(cleanAnonymousTypeName(QString::fromStdString(get_fully_qualified_type_name(
+            parameters.last().setCanonicalType(QString::fromStdString(get_fully_qualified_type_name(
                 parameter_type.getCanonicalType(),
                 parameter_declaration->getASTContext()
-            ))));
+            )));
     }
 
     if (parameters.count() > 0) {
