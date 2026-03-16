@@ -970,11 +970,12 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
             bool typesDiffer = false;
             for (int i = 0; i < numArg; ++i) {
                 CXType argType = clang_getArgType(funcType, i);
+                auto *paramDecl = function_declaration->getParamDecl(i);
+                auto paramType = paramDecl->getOriginalType();
 
                 if (args.size() <= i)
                     args.append(QString::fromStdString(get_fully_qualified_type_name(
-                        function_declaration->getParamDecl(i)->getOriginalType(),
-                        function_declaration->getASTContext()
+                        paramType, function_declaration->getASTContext()
                     )));
 
                 QString recordedType = parameters.at(i).type();
@@ -988,7 +989,7 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
                     if (!canonicalType.isEmpty()) {
                         typesDiffer = canonicalType !=
                             QString::fromStdString(get_fully_qualified_type_name(
-                                function_declaration->getParamDecl(i)->getOriginalType().getCanonicalType(),
+                                paramType.getCanonicalType(),
                                 function_declaration->getASTContext()
                             ));
                     }
