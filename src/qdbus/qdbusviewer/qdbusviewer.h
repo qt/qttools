@@ -41,7 +41,8 @@ public slots:
 
 private slots:
     void serviceChanged(const QModelIndex &index);
-    void showContextMenu(const QPoint &);
+    void showServicesViewContextMenu(const QPoint &);
+    void showTreeViewContextMenu(const QPoint &);
     void connectionRequested(const BusSignature &sig);
     void callMethod(const BusSignature &sig);
     void getProperty(const BusSignature &sig);
@@ -67,7 +68,15 @@ private:
     QDBusConnection c;
     QString currentService;
     QTreeView *tree;
-    QAction *refreshAction;
+    QAction *refreshChildrenAction;
+    QAction *copyServiceNameAction;
+    QAction *copyObjectPathAction;
+    QAction *copyInterfaceNameAction;
+    QAction *copyMemberSignalNameAction;
+    QAction *copyMemberMethodNameAction;
+    QAction *copyMemberPropertyNameAction;
+    QAction *connectAction;
+    QAction *callAction;
     QStringListModel *servicesModel;
     ServicesProxyModel *servicesProxyModel;
     QLineEdit *serviceFilterLine;

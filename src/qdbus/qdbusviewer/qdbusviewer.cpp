@@ -23,6 +23,7 @@
 #include <QtDBus/QDBusServiceWatcher>
 
 #include <QtGui/QAction>
+#include <QtGui/QClipboard>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QShortcut>
 
@@ -33,6 +34,20 @@
 #include <private/qdbusutil_p.h>
 
 using namespace Qt::StringLiterals;
+
+// Use enum for context menu's QAction::data to avoid collisions
+enum DBusActionData {
+    // Start with 1, because 0 is ambiguous since QVariant::toInt returns 0 on failure.
+    ACTION_DATA_REFRESH_CHILDREN = 1,
+    ACTION_DATA_COPY_SERVICE_NAME,
+    ACTION_DATA_COPY_OBJECT_PATH,
+    ACTION_DATA_COPY_INTERFACE_NAME,
+    ACTION_DATA_COPY_MEMBER_NAME,
+    ACTION_DATA_CONNECT,
+    ACTION_DATA_CALL,
+    ACTION_DATA_SET_PROPERTY,
+    ACTION_DATA_GET_PROPERTY
+};
 
 class QDBusViewModel: public QDBusModel
 {
@@ -88,22 +103,45 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)
     // Sort service list by default
     servicesView->setSortingEnabled(true);
     servicesView->sortByColumn(0, Qt::AscendingOrder);
+    servicesView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(servicesView, &QWidget::customContextMenuRequested, this, &QDBusViewer::showServicesViewContextMenu);
 
     connect(serviceFilterLine, &QLineEdit::textChanged, servicesProxyModel, &QSortFilterProxyModel::setFilterFixedString);
     connect(serviceFilterLine, &QLineEdit::returnPressed, this, &QDBusViewer::serviceFilterReturnPressed);
 
     tree = new QTreeView;
     tree->setContextMenuPolicy(Qt::CustomContextMenu);
-
+    connect(tree, &QWidget::customContextMenuRequested, this, &QDBusViewer::showTreeViewContextMenu);
     connect(tree, &QAbstractItemView::activated, this, &QDBusViewer::activate);
 
-    refreshAction = new QAction(tr("&Refresh"), tree);
-    refreshAction->setData(42); // increase the amount of 42 used as magic number by one
-    refreshAction->setShortcut(QKeySequence::Refresh);
-    connect(refreshAction, &QAction::triggered, this, &QDBusViewer::refreshChildren);
+    refreshChildrenAction = new QAction(tr("&Refresh"), this);
+    refreshChildrenAction->setData(ACTION_DATA_REFRESH_CHILDREN);
+    refreshChildrenAction->setShortcut(QKeySequence::Refresh);
+    connect(refreshChildrenAction, &QAction::triggered, this, &QDBusViewer::refreshChildren);
 
-    QShortcut *refreshShortcut = new QShortcut(QKeySequence::Refresh, tree);
+    QShortcut *refreshShortcut = new QShortcut(QKeySequence::Refresh, this);
     connect(refreshShortcut, &QShortcut::activated, this, &QDBusViewer::refreshChildren);
+
+    copyServiceNameAction = new QAction(tr("&Copy Service Name"), this);
+    copyServiceNameAction->setData(ACTION_DATA_COPY_SERVICE_NAME);
+    copyServiceNameAction->setShortcut(QKeySequence::Copy);
+
+    copyObjectPathAction = new QAction(tr("&Copy Object Path"), this);
+    copyObjectPathAction->setData(ACTION_DATA_COPY_OBJECT_PATH);
+    copyInterfaceNameAction = new QAction(tr("Copy &Interface Name"), this);
+    copyInterfaceNameAction->setData(ACTION_DATA_COPY_INTERFACE_NAME);
+    // Mutually exclusive actions share the same data tag
+    copyMemberSignalNameAction = new QAction(tr("Copy Signal &Name"), this);
+    copyMemberSignalNameAction->setData(ACTION_DATA_COPY_MEMBER_NAME);
+    copyMemberMethodNameAction = new QAction(tr("Copy Method &Name"), this);
+    copyMemberMethodNameAction->setData(ACTION_DATA_COPY_MEMBER_NAME);
+    copyMemberPropertyNameAction = new QAction(tr("Copy Property &Name"), this);
+    copyMemberPropertyNameAction->setData(ACTION_DATA_COPY_MEMBER_NAME);
+
+    connectAction = new QAction(tr("&Connect"), this);
+    connectAction->setData(ACTION_DATA_CONNECT);
+    callAction = new QAction(tr("&Call"), this);
+    callAction->setData(ACTION_DATA_CALL);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     topSplitter = new QSplitter(Qt::Vertical, this);
@@ -127,7 +165,6 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)
     topSplitter->addWidget(log);
 
     connect(servicesView->selectionModel(), &QItemSelectionModel::currentChanged, this, &QDBusViewer::serviceChanged);
-    connect(tree, &QWidget::customContextMenuRequested, this, &QDBusViewer::showContextMenu);
 
     QMetaObject::invokeMethod(this, &QDBusViewer::refresh, Qt::QueuedConnection);
 
@@ -349,13 +386,40 @@ void QDBusViewer::callMethod(const BusSignature &sig)
     c.callWithCallback(message, this, SLOT(dumpMessage(QDBusMessage)), SLOT(dumpError(QDBusError)));
 }
 
-void QDBusViewer::showContextMenu(const QPoint &point)
+void QDBusViewer::showServicesViewContextMenu(const QPoint &point)
+{
+    QModelIndex item = servicesView->indexAt(point);
+    if (!item.isValid())
+        return;
+
+    const QString serviceName = item.data().toString();
+
+    QMenu menu;
+    // servicesView doesn't need a manual refresh action, because the model updates automatically
+    menu.addAction(copyServiceNameAction);
+
+    QAction *selectedAction = menu.exec(servicesView->viewport()->mapToGlobal(point));
+    if (!selectedAction)
+        return;
+
+    switch (selectedAction->data().toInt()) {
+    case ACTION_DATA_COPY_SERVICE_NAME:
+        QGuiApplication::clipboard()->setText(serviceName);
+        break;
+    default:
+        break;
+    }
+}
+
+void QDBusViewer::showTreeViewContextMenu(const QPoint &point)
 {
     QModelIndex item = tree->indexAt(point);
     if (!item.isValid())
         return;
 
     const QDBusModel *model = static_cast<const QDBusModel *>(item.model());
+
+    auto itemType = model->itemType(item);
 
     BusSignature sig;
     sig.mService = currentService;
@@ -365,28 +429,42 @@ void QDBusViewer::showContextMenu(const QPoint &point)
     sig.mTypeSig = model->dBusTypeSignature(item);
 
     QMenu menu;
-    menu.addAction(refreshAction);
+    menu.addAction(refreshChildrenAction);
 
-    switch (model->itemType(item)) {
+    // Object path is applicable to all types of items
+    menu.addAction(copyObjectPathAction);
+
+    // Interface name is applicable to interfaces and members
+    switch (itemType) {
+    case QDBusModel::InterfaceItem:
+    case QDBusModel::SignalItem:
+    case QDBusModel::MethodItem:
+    case QDBusModel::PropertyItem:
+        menu.addAction(copyInterfaceNameAction);
+        break;
+    default:
+        break;
+    }
+
+    switch (itemType) {
     case QDBusModel::SignalItem: {
-        QAction *action = new QAction(tr("&Connect"), &menu);
-        action->setData(1);
-        menu.addAction(action);
+        menu.addAction(copyMemberSignalNameAction);
+        menu.addAction(connectAction);
         break; }
     case QDBusModel::MethodItem: {
-        QAction *action = new QAction(tr("&Call"), &menu);
-        action->setData(2);
-        menu.addAction(action);
+        menu.addAction(copyMemberMethodNameAction);
+        menu.addAction(callAction);
         break; }
     case QDBusModel::PropertyItem: {
+        menu.addAction(copyMemberPropertyNameAction);
         QDBusInterface iface(sig.mService, sig.mPath, sig.mInterface, c);
         QMetaProperty prop = iface.metaObject()->property(iface.metaObject()->indexOfProperty(sig.mName.toLatin1()));
         QAction *actionSet = new QAction(tr("&Set value"), &menu);
-        actionSet->setData(3);
+        actionSet->setData(ACTION_DATA_SET_PROPERTY);
         actionSet->setEnabled(prop.isWritable());
         QAction *actionGet = new QAction(tr("&Get value"), &menu);
         actionGet->setEnabled(prop.isReadable());
-        actionGet->setData(4);
+        actionGet->setData(ACTION_DATA_GET_PROPERTY);
         menu.addAction(actionSet);
         menu.addAction(actionGet);
         break; }
@@ -399,17 +477,28 @@ void QDBusViewer::showContextMenu(const QPoint &point)
         return;
 
     switch (selectedAction->data().toInt()) {
-    case 1:
+    case ACTION_DATA_COPY_OBJECT_PATH:
+        QGuiApplication::clipboard()->setText(sig.mPath);
+        break;
+    case ACTION_DATA_COPY_INTERFACE_NAME:
+        QGuiApplication::clipboard()->setText(sig.mInterface);
+        break;
+    case ACTION_DATA_COPY_MEMBER_NAME:
+        QGuiApplication::clipboard()->setText(sig.mName);
+        break;
+    case ACTION_DATA_CONNECT:
         connectionRequested(sig);
         break;
-    case 2:
+    case ACTION_DATA_CALL:
         callMethod(sig);
         break;
-    case 3:
+    case ACTION_DATA_SET_PROPERTY:
         setProperty(sig);
         break;
-    case 4:
+    case ACTION_DATA_GET_PROPERTY:
         getProperty(sig);
+        break;
+    default:
         break;
     }
 }
