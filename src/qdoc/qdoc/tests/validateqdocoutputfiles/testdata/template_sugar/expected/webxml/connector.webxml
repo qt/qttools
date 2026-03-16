@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Connector" href="connector.html" status="active" access="public" location="template_sugar.h" documented="true" module="TemplateSugarModule" brief="A class for testing Q_QDOC-style template parameter overloads">
+            <description>
+                <brief>A class for testing Q_QDOC-style template parameter overloads.</brief>
+                <para>Connector exercises the code path in findNodeForCursor where two overloads differ only in template parameter names, such as <teletype type="highlighted">Functor</teletype> vs <teletype type="highlighted">PointerToMemberFunction</teletype>. Without the TemplateTypeParmType guard, canonical comparison collapses both names to <teletype type="highlighted">type-parameter-0-0</teletype>, causing one overload to shadow the other.</para>
+            </description>
+            <function name="invoke" fullname="Connector::invoke" href="connector.html#invoke" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void invoke(Functor callback)">
+                <parameter type="Functor" name="callback" default=""/>
+                <description>
+                    <para>Invokes <argument>callback</argument> asynchronously.</para>
+                </description>
+            </function>
+            <function name="invoke" fullname="Connector::invoke" href="connector.html#invoke-1" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" overload="true" overload-number="1" type="void" signature="void invoke(PointerToMemberFunction callback, int priority)">
+                <parameter type="PointerToMemberFunction" name="callback" default=""/>
+                <parameter type="int" name="priority" default=""/>
+                <description>
+                    <para>Invokes <argument>callback</argument> with the given <argument>priority</argument>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

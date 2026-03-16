@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- template_sugar.cpp -->
+  <meta name="description" content="A container class for testing template parameter type matching.">
+  <title>MyContainer Class | Qt</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li>MyContainer</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">MyContainer Class</h1>
+<span class="small-subtitle" translate="no">template &lt;typename T&gt; class MyContainer</span>
+<!-- $$$MyContainer-brief -->
+<p>A container class for testing template parameter type matching. <a href="#details">More...</a></p>
+<!-- @@@MyContainer -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;template_sugar.h&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="mycontainer-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="mycontainer.html#append" translate="no">append</a></b>(const T &amp;<i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="mycontainer.html#prepend" translate="no">prepend</a></b>(T <i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="mycontainer.html#replace" translate="no">replace</a></b>(int <i>index</i>, const T &amp;<i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> MyContainer&lt;T&gt; </td><td class="memItemRight bottomAlign"><b><a href="mycontainer.html#operator-2b" translate="no">operator+</a></b>(const MyContainer&lt;T&gt; &amp;<i>other</i>) const</td></tr>
+</table></div>
+<!-- $$$MyContainer-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p><i translate="no">T</i> is the element type stored in the container.</p>
+<p>MyContainer exercises the code path in findNodeForCursor where template parameter types must match between header parsing and <span translate="no">\fn</span> re-parsing.</p>
+</div>
+<!-- @@@MyContainer -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$append[overload1]$$$appendconstT& -->
+<h3 class="fn" translate="no" id="append"><span class="type">void</span> MyContainer::<span class="name">append</span>(const <span class="type">T</span> &amp;<i>value</i>)</h3>
+<p>Appends <i translate="no">value</i> to the container.</p>
+<!-- @@@append -->
+<!-- $$$prepend[overload1]$$$prependT -->
+<h3 class="fn" translate="no" id="prepend"><span class="type">void</span> MyContainer::<span class="name">prepend</span>(<span class="type">T</span> <i>value</i>)</h3>
+<p>Prepends <i translate="no">value</i> to the container.</p>
+<!-- @@@prepend -->
+<!-- $$$replace[overload1]$$$replaceintconstT& -->
+<h3 class="fn" translate="no" id="replace"><span class="type">void</span> MyContainer::<span class="name">replace</span>(<span class="type">int</span> <i>index</i>, const <span class="type">T</span> &amp;<i>value</i>)</h3>
+<p>Replaces the item at <i translate="no">index</i> with <i translate="no">value</i>.</p>
+<!-- @@@replace -->
+<!-- $$$operator+[overload1]$$$operator+constMyContainer<T>& -->
+<h3 class="fn" translate="no" id="operator-2b"><span class="type"><a href="mycontainer.html" translate="no">MyContainer</a></span>&lt;<span class="type">T</span>&gt; MyContainer::<span class="name">operator+</span>(const <span class="type"><a href="mycontainer.html" translate="no">MyContainer</a></span>&lt;<span class="type">T</span>&gt; &amp;<i>other</i>) const</h3>
+<p>Returns a container that is the concatenation of this container and <i translate="no">other</i>.</p>
+<!-- @@@operator+ -->
+</div>
+</body>
+</html>

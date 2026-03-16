@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- template_sugar.cpp -->
+  <meta name="description" content="A class for testing Q_QDOC-style template parameter overloads.">
+  <title>Connector Class | Qt</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li>Connector</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">Connector Class</h1>
+<!-- $$$Connector-brief -->
+<p>A class for testing Q_QDOC-style template parameter overloads. <a href="#details">More...</a></p>
+<!-- @@@Connector -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;template_sugar.h&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="connector-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="connector.html#invoke" translate="no">invoke</a></b>(Functor <i>callback</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="connector.html#invoke-1" translate="no">invoke</a></b>(PointerToMemberFunction <i>callback</i>, int <i>priority</i>)</td></tr>
+</table></div>
+<!-- $$$Connector-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>Connector exercises the code path in findNodeForCursor where two overloads differ only in template parameter names, such as <code translate="no">Functor</code> vs <code translate="no">PointerToMemberFunction</code>. Without the TemplateTypeParmType guard, canonical comparison collapses both names to <code translate="no">type-parameter-0-0</code>, causing one overload to shadow the other.</p>
+</div>
+<!-- @@@Connector -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$invoke[overload1]$$$invokeFunctor -->
+<h3 class="fn" translate="no" id="invoke">template &lt;typename Functor&gt; <span class="type">void</span> Connector::<span class="name">invoke</span>(<span class="type">Functor</span> <i>callback</i>)</h3>
+<p>Invokes <i translate="no">callback</i> asynchronously.</p>
+<!-- @@@invoke -->
+<!-- $$$invoke$$$invokePointerToMemberFunctionint -->
+<h3 class="fn" translate="no" id="invoke-1">template &lt;typename PointerToMemberFunction&gt; <span class="type">void</span> Connector::<span class="name">invoke</span>(<span class="type">PointerToMemberFunction</span> <i>callback</i>, <span class="type">int</span> <i>priority</i>)</h3>
+<p>Invokes <i translate="no">callback</i> with the given <i translate="no">priority</i>.</p>
+<!-- @@@invoke -->
+</div>
+</body>
+</html>

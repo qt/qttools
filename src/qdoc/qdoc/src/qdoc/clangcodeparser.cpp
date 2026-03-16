@@ -969,7 +969,6 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
 
             bool typesDiffer = false;
             for (int i = 0; i < numArg; ++i) {
-                CXType argType = clang_getArgType(funcType, i);
                 auto *paramDecl = function_declaration->getParamDecl(i);
                 auto paramType = paramDecl->getOriginalType();
 
@@ -983,15 +982,26 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
 
                 typesDiffer = recordedType != typeSpelling;
 
-                // Retry with a canonical type spelling
-                if (typesDiffer && (argType.kind == CXType_Typedef || argType.kind == CXType_Elaborated)) {
-                    QStringView canonicalType = parameters.at(i).canonicalType();
-                    if (!canonicalType.isEmpty()) {
-                        typesDiffer = canonicalType !=
-                            QString::fromStdString(get_fully_qualified_type_name(
-                                paramType.getCanonicalType(),
-                                function_declaration->getASTContext()
-                            ));
+                // Retry with a canonical type spelling unless the parameter is a bare
+                // template type parameter, such as T but not const T& or MyContainer<T>.
+                // Wrapped forms are safe because both sides of the comparison are
+                // canonicalized in the same way. Exclude bare TemplateTypeParmType
+                // because canonicalization removes the spelled Q_QDOC template
+                // parameter name and can make distinct Q_QDOC-declared signatures
+                // appear identical during matching.
+                if (typesDiffer) {
+                    const bool isBareTemplateTypeParm =
+                        paramType.getTypePtrOrNull()
+                        && llvm::isa<clang::TemplateTypeParmType>(paramType.getTypePtr());
+                    if (!isBareTemplateTypeParm) {
+                        QStringView canonicalType = parameters.at(i).canonicalType();
+                        if (!canonicalType.isEmpty()) {
+                            typesDiffer = canonicalType !=
+                                QString::fromStdString(get_fully_qualified_type_name(
+                                    paramType.getCanonicalType(),
+                                    function_declaration->getASTContext()
+                                ));
+                        }
                     }
                 }
 

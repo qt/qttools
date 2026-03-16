@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>MyContainer Class</db:title>
+<db:subtitle>template &lt;typename T&gt; class MyContainer</db:subtitle>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Tests that template container parameters appear with generic signatures</db:titleabbrev>
+<db:abstract>
+<db:para>A container class for testing template parameter type matching.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>template_sugar.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para><db:code role="parameter">T</db:code> is the element type stored in the container.</db:para>
+<db:para><db:link xlink:href="mycontainer.xml">MyContainer</db:link> exercises the code path in findNodeForCursor where template parameter types must match between header parsing and <db:phrase>\fn</db:phrase> re-parsing.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="append">
+<db:title>void MyContainer::append(const T &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Appends <db:code role="parameter">value</db:code> to the container.</db:para>
+</db:section>
+<db:section xml:id="prepend">
+<db:title>void MyContainer::prepend(T <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Prepends <db:code role="parameter">value</db:code> to the container.</db:para>
+</db:section>
+<db:section xml:id="replace">
+<db:title>void MyContainer::replace(int <db:emphasis>index</db:emphasis>, const T &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Replaces the item at <db:code role="parameter">index</db:code> with <db:code role="parameter">value</db:code>.</db:para>
+</db:section>
+<db:section xml:id="operator-2b">
+<db:title>MyContainer&lt;T&gt; MyContainer::operator+(const MyContainer&lt;T&gt; &amp;<db:emphasis>other</db:emphasis>) const</db:title>
+<db:para>Returns a container that is the concatenation of this container and <db:code role="parameter">other</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

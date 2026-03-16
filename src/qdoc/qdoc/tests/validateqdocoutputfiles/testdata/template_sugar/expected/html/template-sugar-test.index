@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Tests that template container parameters appear with generic signatures" version="" project="Template sugar test">
+    <namespace name="" status="active" access="public" module="template sugar test">
+        <class name="AliasUser" href="aliasuser.html" status="active" access="public" location="template_sugar.h" documented="true" module="TemplateSugarModule" brief="A class that uses aliased template types as parameters">
+            <function name="process" fullname="AliasUser::process" href="aliasuser.html#process" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void process(ContainerAlias&lt;int&gt; items)">
+                <parameter type="ContainerAlias&lt;int&gt;" name="items" default=""/>
+            </function>
+            <function name="transform" fullname="AliasUser::transform" href="aliasuser.html#transform" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void transform(const ContainerAlias&lt;double&gt; &amp;source, ContainerAlias&lt;double&gt; &amp;dest)">
+                <parameter type="const ContainerAlias&lt;double&gt; &amp;" name="source" default=""/>
+                <parameter type="ContainerAlias&lt;double&gt; &amp;" name="dest" default=""/>
+            </function>
+        </class>
+        <class name="Connector" href="connector.html" status="active" access="public" location="template_sugar.h" documented="true" module="TemplateSugarModule" brief="A class for testing Q_QDOC-style template parameter overloads">
+            <function name="invoke" fullname="Connector::invoke" href="connector.html#invoke" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void invoke(Functor callback)">
+                <parameter type="Functor" name="callback" default=""/>
+            </function>
+            <function name="invoke" fullname="Connector::invoke" href="connector.html#invoke-1" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" overload="true" overload-number="1" type="void" signature="void invoke(PointerToMemberFunction callback, int priority)">
+                <parameter type="PointerToMemberFunction" name="callback" default=""/>
+                <parameter type="int" name="priority" default=""/>
+            </function>
+        </class>
+        <class name="Dispatcher" href="dispatcher.html" status="active" access="public" location="template_sugar.h" documented="true" module="TemplateSugarModule" brief="A class for testing wrapped template parameter types">
+            <function name="byConstRef" fullname="Dispatcher::byConstRef" href="dispatcher.html#byConstRef" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void byConstRef(const T &amp;value)">
+                <parameter type="const T &amp;" name="value" default=""/>
+            </function>
+            <function name="byPointer" fullname="Dispatcher::byPointer" href="dispatcher.html#byPointer" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void byPointer(T *value)">
+                <parameter type="T *" name="value" default=""/>
+            </function>
+            <function name="nested" fullname="Dispatcher::nested" href="dispatcher.html#nested" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void nested(MyContainer&lt;T&gt; items)">
+                <parameter type="MyContainer&lt;T&gt;" name="items" default=""/>
+            </function>
+        </class>
+        <class name="MyContainer" href="mycontainer.html" status="active" access="public" location="template_sugar.h" documented="true" module="TemplateSugarModule" brief="A container class for testing template parameter type matching">
+            <function name="append" fullname="MyContainer::append" href="mycontainer.html#append" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void append(const T &amp;value)">
+                <parameter type="const T &amp;" name="value" default=""/>
+            </function>
+            <function name="operator+" fullname="MyContainer::operator+" href="mycontainer.html#operator-2b" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" const="true" type="MyContainer&lt;T&gt;" signature="MyContainer&lt;T&gt; operator+(const MyContainer&lt;T&gt; &amp;other) const">
+                <parameter type="const MyContainer&lt;T&gt; &amp;" name="other" default=""/>
+            </function>
+            <function name="prepend" fullname="MyContainer::prepend" href="mycontainer.html#prepend" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void prepend(T value)">
+                <parameter type="T" name="value" default=""/>
+            </function>
+            <function name="replace" fullname="MyContainer::replace" href="mycontainer.html#replace" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void replace(int index, const T &amp;value)">
+                <parameter type="int" name="index" default=""/>
+                <parameter type="const T &amp;" name="value" default=""/>
+            </function>
+        </class>
+        <module name="TemplateSugarModule" href="templatesugarmodule-module.html" status="active" documented="true" seen="true" title="" brief="Module for template sugar tests"/>
+    </namespace>
+</INDEX>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="AliasUser" href="aliasuser.html" status="active" access="public" location="template_sugar.h" documented="true" module="TemplateSugarModule" brief="A class that uses aliased template types as parameters">
+            <description>
+                <brief>A class that uses aliased template types as parameters.</brief>
+                <para>
+                    <link raw="AliasUser" href="aliasuser.html" type="class">AliasUser</link> exercises canonical fallback for type aliases around template types. The alias introduces an extra layer of type sugar that the original fallback gating would have handled, verifying that broadening the fallback doesn't regress alias resolution.</para>
+            </description>
+            <function name="process" fullname="AliasUser::process" href="aliasuser.html#process" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void process(ContainerAlias&lt;int&gt; items)">
+                <parameter type="ContainerAlias&lt;int&gt;" name="items" default=""/>
+                <description>
+                    <para>Processes the given <argument>items</argument>.</para>
+                </description>
+            </function>
+            <function name="transform" fullname="AliasUser::transform" href="aliasuser.html#transform" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void transform(const ContainerAlias&lt;double&gt; &amp;source, ContainerAlias&lt;double&gt; &amp;dest)">
+                <parameter type="const ContainerAlias&lt;double&gt; &amp;" name="source" default=""/>
+                <parameter type="ContainerAlias&lt;double&gt; &amp;" name="dest" default=""/>
+                <description>
+                    <para>Transforms elements from <argument>source</argument> into <argument>dest</argument>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- template_sugar.cpp -->
+  <meta name="description" content="A class that uses aliased template types as parameters.">
+  <title>AliasUser Class | Qt</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li>AliasUser</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">AliasUser Class</h1>
+<!-- $$$AliasUser-brief -->
+<p>A class that uses aliased template types as parameters. <a href="#details">More...</a></p>
+<!-- @@@AliasUser -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;template_sugar.h&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="aliasuser-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="aliasuser.html#process" translate="no">process</a></b>(ContainerAlias&lt;int&gt; <i>items</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="aliasuser.html#transform" translate="no">transform</a></b>(const ContainerAlias&lt;double&gt; &amp;<i>source</i>, ContainerAlias&lt;double&gt; &amp;<i>dest</i>)</td></tr>
+</table></div>
+<!-- $$$AliasUser-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>AliasUser exercises canonical fallback for type aliases around template types. The alias introduces an extra layer of type sugar that the original fallback gating would have handled, verifying that broadening the fallback doesn't regress alias resolution.</p>
+</div>
+<!-- @@@AliasUser -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$process[overload1]$$$processContainerAlias<int> -->
+<h3 class="fn" translate="no" id="process"><span class="type">void</span> AliasUser::<span class="name">process</span>(<span class="type">ContainerAlias</span>&lt;<span class="type">int</span>&gt; <i>items</i>)</h3>
+<p>Processes the given <i translate="no">items</i>.</p>
+<!-- @@@process -->
+<!-- $$$transform[overload1]$$$transformconstContainerAlias<double>&ContainerAlias<double>& -->
+<h3 class="fn" translate="no" id="transform"><span class="type">void</span> AliasUser::<span class="name">transform</span>(const <span class="type">ContainerAlias</span>&lt;<span class="type">double</span>&gt; &amp;<i>source</i>, <span class="type">ContainerAlias</span>&lt;<span class="type">double</span>&gt; &amp;<i>dest</i>)</h3>
+<p>Transforms elements from <i translate="no">source</i> into <i translate="no">dest</i>.</p>
+<!-- @@@transform -->
+</div>
+</body>
+</html>

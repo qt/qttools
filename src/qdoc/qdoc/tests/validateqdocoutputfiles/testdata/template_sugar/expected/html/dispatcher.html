@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- template_sugar.cpp -->
+  <meta name="description" content="A class for testing wrapped template parameter types.">
+  <title>Dispatcher Class | Qt</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li>Dispatcher</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">Dispatcher Class</h1>
+<span class="small-subtitle" translate="no">template &lt;typename T&gt; class Dispatcher</span>
+<!-- $$$Dispatcher-brief -->
+<p>A class for testing wrapped template parameter types. <a href="#details">More...</a></p>
+<!-- @@@Dispatcher -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;template_sugar.h&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="dispatcher-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="dispatcher.html#byConstRef" translate="no">byConstRef</a></b>(const T &amp;<i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="dispatcher.html#byPointer" translate="no">byPointer</a></b>(T *<i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="dispatcher.html#nested" translate="no">nested</a></b>(MyContainer&lt;T&gt; <i>items</i>)</td></tr>
+</table></div>
+<!-- $$$Dispatcher-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p><i translate="no">T</i> is the dispatched element type.</p>
+<p>Dispatcher exercises canonical fallback for wrapped template parameter types such as <code translate="no">T *</code>, <code translate="no">const T &amp;</code>, and <code translate="no">MyContainer&lt;T&gt;</code>. These verify that canonical comparison is symmetric: both sides canonicalize the same way, so the fallback produces correct matches even though the user-facing template parameter name is lost in the canonical form.</p>
+</div>
+<!-- @@@Dispatcher -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$byConstRef[overload1]$$$byConstRefconstT& -->
+<h3 class="fn" translate="no" id="byConstRef"><span class="type">void</span> Dispatcher::<span class="name">byConstRef</span>(const <span class="type">T</span> &amp;<i>value</i>)</h3>
+<p>Dispatches via a const reference to <i translate="no">value</i>.</p>
+<!-- @@@byConstRef -->
+<!-- $$$byPointer[overload1]$$$byPointerT* -->
+<h3 class="fn" translate="no" id="byPointer"><span class="type">void</span> Dispatcher::<span class="name">byPointer</span>(<span class="type">T</span> *<i>value</i>)</h3>
+<p>Dispatches via a pointer to <i translate="no">value</i>.</p>
+<!-- @@@byPointer -->
+<!-- $$$nested[overload1]$$$nestedMyContainer<T> -->
+<h3 class="fn" translate="no" id="nested"><span class="type">void</span> Dispatcher::<span class="name">nested</span>(<span class="type"><a href="mycontainer.html" translate="no">MyContainer</a></span>&lt;<span class="type">T</span>&gt; <i>items</i>)</h3>
+<p>Dispatches all elements in <i translate="no">items</i>.</p>
+<!-- @@@nested -->
+</div>
+</body>
+</html>

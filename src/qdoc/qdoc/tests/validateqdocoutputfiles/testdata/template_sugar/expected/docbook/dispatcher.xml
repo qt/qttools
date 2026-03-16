@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Dispatcher Class</db:title>
+<db:subtitle>template &lt;typename T&gt; class Dispatcher</db:subtitle>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Tests that template container parameters appear with generic signatures</db:titleabbrev>
+<db:abstract>
+<db:para>A class for testing wrapped template parameter types.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>template_sugar.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para><db:code role="parameter">T</db:code> is the dispatched element type.</db:para>
+<db:para>Dispatcher exercises canonical fallback for wrapped template parameter types such as <db:code>T *</db:code>, <db:code>const T &amp;</db:code>, and <db:code>MyContainer&lt;T&gt;</db:code>. These verify that canonical comparison is symmetric: both sides canonicalize the same way, so the fallback produces correct matches even though the user-facing template parameter name is lost in the canonical form.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="byConstRef">
+<db:title>void Dispatcher::byConstRef(const T &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Dispatches via a const reference to <db:code role="parameter">value</db:code>.</db:para>
+</db:section>
+<db:section xml:id="byPointer">
+<db:title>void Dispatcher::byPointer(T *<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Dispatches via a pointer to <db:code role="parameter">value</db:code>.</db:para>
+</db:section>
+<db:section xml:id="nested">
+<db:title>void Dispatcher::nested(MyContainer&lt;T&gt; <db:emphasis>items</db:emphasis>)</db:title>
+<db:para>Dispatches all elements in <db:code role="parameter">items</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

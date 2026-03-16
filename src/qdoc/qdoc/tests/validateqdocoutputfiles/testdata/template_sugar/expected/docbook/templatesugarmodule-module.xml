@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title/>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Tests that template container parameters appear with generic signatures</db:titleabbrev>
+<db:abstract>
+<db:para>Module for template sugar tests.</db:para>
+</db:abstract>
+</db:info>
+<db:para>Module for template sugar tests.</db:para>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:variablelist role="classes">
+<db:varlistentry>
+<db:term><db:link xlink:href="aliasuser.xml" xlink:role="class">AliasUser</db:link></db:term>
+<db:listitem>
+<db:para>A class that uses aliased template types as parameters.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="connector.xml" xlink:role="class">Connector</db:link></db:term>
+<db:listitem>
+<db:para>A class for testing Q_QDOC-style template parameter overloads.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="dispatcher.xml" xlink:role="class">Dispatcher</db:link></db:term>
+<db:listitem>
+<db:para>A class for testing wrapped template parameter types.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="mycontainer.xml" xlink:role="class">MyContainer</db:link></db:term>
+<db:listitem>
+<db:para>A container class for testing template parameter type matching.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+</db:article>

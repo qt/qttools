@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>AliasUser Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Tests that template container parameters appear with generic signatures</db:titleabbrev>
+<db:abstract>
+<db:para>A class that uses aliased template types as parameters.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>template_sugar.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para><db:link xlink:href="aliasuser.xml">AliasUser</db:link> exercises canonical fallback for type aliases around template types. The alias introduces an extra layer of type sugar that the original fallback gating would have handled, verifying that broadening the fallback doesn't regress alias resolution.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="process">
+<db:title>void AliasUser::process(ContainerAlias&lt;int&gt; <db:emphasis>items</db:emphasis>)</db:title>
+<db:para>Processes the given <db:code role="parameter">items</db:code>.</db:para>
+</db:section>
+<db:section xml:id="transform">
+<db:title>void AliasUser::transform(const ContainerAlias&lt;double&gt; &amp;<db:emphasis>source</db:emphasis>, ContainerAlias&lt;double&gt; &amp;<db:emphasis>dest</db:emphasis>)</db:title>
+<db:para>Transforms elements from <db:code role="parameter">source</db:code> into <db:code role="parameter">dest</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Connector Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Tests that template container parameters appear with generic signatures</db:titleabbrev>
+<db:abstract>
+<db:para>A class for testing Q_QDOC-style template parameter overloads.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>template_sugar.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>Connector exercises the code path in findNodeForCursor where two overloads differ only in template parameter names, such as <db:code>Functor</db:code> vs <db:code>PointerToMemberFunction</db:code>. Without the TemplateTypeParmType guard, canonical comparison collapses both names to <db:code>type-parameter-0-0</db:code>, causing one overload to shadow the other.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="invoke">
+<db:title>template &lt;typename Functor&gt; void Connector::invoke(Functor <db:emphasis>callback</db:emphasis>)</db:title>
+<db:para>Invokes <db:code role="parameter">callback</db:code> asynchronously.</db:para>
+</db:section>
+<db:section xml:id="invoke-1">
+<db:title>template &lt;typename PointerToMemberFunction&gt; void Connector::invoke(PointerToMemberFunction <db:emphasis>callback</db:emphasis>, int <db:emphasis>priority</db:emphasis>)</db:title>
+<db:para>Invokes <db:code role="parameter">callback</db:code> with the given <db:code role="parameter">priority</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

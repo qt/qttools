@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Dispatcher" href="dispatcher.html" status="active" access="public" location="template_sugar.h" documented="true" module="TemplateSugarModule" brief="A class for testing wrapped template parameter types">
+            <description>
+                <brief>A class for testing wrapped template parameter types.</brief>
+                <para>
+                    <argument>T</argument> is the dispatched element type.</para>
+                <para>Dispatcher exercises canonical fallback for wrapped template parameter types such as <teletype type="highlighted">T *</teletype>, <teletype type="highlighted">const T &amp;</teletype>, and <teletype type="highlighted">MyContainer&lt;T&gt;</teletype>. These verify that canonical comparison is symmetric: both sides canonicalize the same way, so the fallback produces correct matches even though the user-facing template parameter name is lost in the canonical form.</para>
+            </description>
+            <function name="byConstRef" fullname="Dispatcher::byConstRef" href="dispatcher.html#byConstRef" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void byConstRef(const T &amp;value)">
+                <parameter type="const T &amp;" name="value" default=""/>
+                <description>
+                    <para>Dispatches via a const reference to <argument>value</argument>.</para>
+                </description>
+            </function>
+            <function name="byPointer" fullname="Dispatcher::byPointer" href="dispatcher.html#byPointer" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void byPointer(T *value)">
+                <parameter type="T *" name="value" default=""/>
+                <description>
+                    <para>Dispatches via a pointer to <argument>value</argument>.</para>
+                </description>
+            </function>
+            <function name="nested" fullname="Dispatcher::nested" href="dispatcher.html#nested" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void nested(MyContainer&lt;T&gt; items)">
+                <parameter type="MyContainer&lt;T&gt;" name="items" default=""/>
+                <description>
+                    <para>Dispatches all elements in <argument>items</argument>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="MyContainer" href="mycontainer.html" status="active" access="public" location="template_sugar.h" documented="true" module="TemplateSugarModule" brief="A container class for testing template parameter type matching">
+            <description>
+                <brief>A container class for testing template parameter type matching.</brief>
+                <para>
+                    <argument>T</argument> is the element type stored in the container.</para>
+                <para>
+                    <link raw="MyContainer" href="mycontainer.html" type="class">MyContainer</link> exercises the code path in findNodeForCursor where template parameter types must match between header parsing and <teletype>\fn</teletype> re-parsing.</para>
+            </description>
+            <function name="append" fullname="MyContainer::append" href="mycontainer.html#append" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void append(const T &amp;value)">
+                <parameter type="const T &amp;" name="value" default=""/>
+                <description>
+                    <para>Appends <argument>value</argument> to the container.</para>
+                </description>
+            </function>
+            <function name="operator+" fullname="MyContainer::operator+" href="mycontainer.html#operator-2b" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" const="true" type="MyContainer&lt;T&gt;" signature="MyContainer&lt;T&gt; operator+(const MyContainer&lt;T&gt; &amp;other) const">
+                <parameter type="const MyContainer&lt;T&gt; &amp;" name="other" default=""/>
+                <description>
+                    <para>Returns a container that is the concatenation of this container and <argument>other</argument>.</para>
+                </description>
+            </function>
+            <function name="prepend" fullname="MyContainer::prepend" href="mycontainer.html#prepend" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void prepend(T value)">
+                <parameter type="T" name="value" default=""/>
+                <description>
+                    <para>Prepends <argument>value</argument> to the container.</para>
+                </description>
+            </function>
+            <function name="replace" fullname="MyContainer::replace" href="mycontainer.html#replace" status="active" access="public" location="template_sugar.h" documented="true" meta="plain" type="void" signature="void replace(int index, const T &amp;value)">
+                <parameter type="int" name="index" default=""/>
+                <parameter type="const T &amp;" name="value" default=""/>
+                <description>
+                    <para>Replaces the item at <argument>index</argument> with <argument>value</argument>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>
