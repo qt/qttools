@@ -89,6 +89,7 @@ if(NOT CMAKE_CROSSCOMPILING)
             TESTNAME test_i18n_subdir_xcode
             GENERATOR Xcode
             MAKE_PROGRAM "${_xcode_wrapper}"
+            BUILD_OPTIONS "-DCMAKE_MAKE_PROGRAM=${_xcode_wrapper}"
             BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/test_i18n_subdir_xcode"
         )
 
@@ -96,6 +97,7 @@ if(NOT CMAKE_CROSSCOMPILING)
             TESTNAME test_i18n_subdir2_xcode
             GENERATOR Xcode
             MAKE_PROGRAM "${_xcode_wrapper}"
+            BUILD_OPTIONS "-DCMAKE_MAKE_PROGRAM=${_xcode_wrapper}"
             BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/test_i18n_subdir2_xcode")
     endif()
 endif()
