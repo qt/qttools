@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="sfinae_constraints.h" documented="true" module="SfinaeModule" brief="Test namespace for QDoc tests">
+            <description>
+                <brief>Test namespace for QDoc tests.</brief>
+            </description>
+            <class name="SfinaeContainer" fullname="QDocTests::SfinaeContainer" href="qdoctests-sfinaecontainer.html" status="active" access="public" location="sfinae_constraints.h" documented="true" module="SfinaeModule" brief="A container with SFINAE-constrained member functions">
+                <description>
+                    <brief>A container with SFINAE-constrained member functions.</brief>
+                    <para>This class demonstrates SFINAE constraint detection in QDoc.</para>
+                </description>
+                <function name="mixedConstraints" fullname="QDocTests::SfinaeContainer::mixedConstraints" href="qdoctests-sfinaecontainer.html#mixedConstraints" status="active" access="public" location="sfinae_constraints.h" documented="true" meta="plain" type="void" signature="void mixedConstraints(const T &amp;value)">
+                    <parameter type="const T &amp;" name="value" default=""/>
+                    <description>
+                        <para>Processes the given <argument>value</argument> using both SFINAE and an explicit requires clause. The combined constraint ensures the type T satisfies both the SFINAE alias and the direct type trait.</para>
+                    </description>
+                </function>
+                <function name="multiConstrained" fullname="QDocTests::SfinaeContainer::multiConstrained" href="qdoctests-sfinaecontainer.html#multiConstrained" status="active" access="public" location="sfinae_constraints.h" documented="true" meta="plain" type="void" signature="void multiConstrained(const T &amp;value)">
+                    <parameter type="const T &amp;" name="value" default=""/>
+                    <description>
+                        <para>Processes the given <argument>value</argument> with multiple constraints. This function is only available when the type T is both arithmetic and signed.</para>
+                    </description>
+                </function>
+                <function name="multiLayerSugar" fullname="QDocTests::SfinaeContainer::multiLayerSugar" href="qdoctests-sfinaecontainer.html#multiLayerSugar" status="active" access="public" location="sfinae_constraints.h" documented="true" meta="plain" type="void" signature="void multiLayerSugar(const T &amp;value)">
+                    <parameter type="const T &amp;" name="value" default=""/>
+                    <description>
+                        <para>Processes the given <argument>value</argument> using an alias that itself wraps another alias, testing multi-layer sugar chain detection.</para>
+                    </description>
+                </function>
+                <function name="namespacedAlias" fullname="QDocTests::SfinaeContainer::namespacedAlias" href="qdoctests-sfinaecontainer.html#namespacedAlias" status="active" access="public" location="sfinae_constraints.h" documented="true" meta="plain" type="void" signature="void namespacedAlias(const T &amp;value)">
+                    <parameter type="const T &amp;" name="value" default=""/>
+                    <description>
+                        <para>Processes the given <argument>value</argument> using a namespaced SFINAE alias. The rendered constraint preserves the QtPrivate qualification.</para>
+                    </description>
+                </function>
+                <function name="process" fullname="QDocTests::SfinaeContainer::process" href="qdoctests-sfinaecontainer.html#process" status="active" access="public" location="sfinae_constraints.h" documented="true" meta="plain" type="void" signature="void process(const T &amp;value)">
+                    <parameter type="const T &amp;" name="value" default=""/>
+                    <description>
+                        <para>Processes the given <argument>value</argument>. This function is only available when the type T satisfies the if_integral constraint.</para>
+                    </description>
+                </function>
+            </class>
+        </namespace>
+    </document>
+</WebXML>

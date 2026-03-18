@@ -154,6 +154,22 @@ struct ValuedDeclaration
     }
 };
 
+/*!
+ * Holds the source-level alias with its template arguments for a
+ * SFINAE constraint detected in a non-type template parameter.
+ *
+ * For example, given the declaration:
+ *
+ *     template <typename T, if_integral<T> = true>
+ *
+ * where \c if_integral is an alias for \c{std::enable_if_t<std::is_integral_v<T>, bool>},
+ * alias_with_args is "if_integral<T>".
+ */
+struct SfinaeConstraint
+{
+    std::string alias_with_args;
+};
+
 struct RelaxedTemplateParameter;
 
 struct TemplateDeclarationStorage
@@ -243,6 +259,7 @@ struct RelaxedTemplateParameter
     bool is_parameter_pack;
     ValuedDeclaration valued_declaration;
     std::optional<TemplateDeclarationStorage> template_declaration;
+    std::optional<SfinaeConstraint> sfinae_constraint;
 
     /*
      * Constructs and returns a human-readable representation of this
@@ -429,8 +446,46 @@ struct RelaxedTemplateDeclaration : TemplateDeclarationStorage
 {
     std::optional<std::string> requires_clause;
 
+    /*!
+     * Returns the number of template parameters that are visible in
+     * rendered output — SFINAE-annotated parameters are excluded.
+     */
+    [[nodiscard]] inline std::size_t visibleParameterCount() const
+    {
+        return std::count_if(parameters.cbegin(), parameters.cend(),
+                             [](const RelaxedTemplateParameter &p) {
+                                 return !p.sfinae_constraint;
+                             });
+    }
+
+    /*!
+     * Returns a string representation that excludes SFINAE-annotated
+     * parameters. Used by to_qstring() and to_qstring_multiline() so
+     * that the rendered signature shows a clean requires clause.
+     *
+     * The inherited to_std_string() retains all parameters (including
+     * SFINAE ones) for internal matching where parameter counts must
+     * agree between code-parsed and \\fn-parsed declarations.
+     */
+    [[nodiscard]] inline std::string to_std_string_for_rendering() const
+    {
+        std::vector<const RelaxedTemplateParameter *> visible;
+        for (const auto &p : parameters)
+            if (!p.sfinae_constraint)
+                visible.push_back(&p);
+
+        if (visible.empty())
+            return "template <>";
+
+        std::string result = "template <" + visible.front()->to_std_string();
+        for (std::size_t i = 1; i < visible.size(); ++i)
+            result += ", " + visible[i]->to_std_string();
+        result += ">";
+        return result;
+    }
+
     inline QString to_qstring() const {
-        std::string result = to_std_string();
+        std::string result = to_std_string_for_rendering();
         if (requires_clause && !requires_clause->empty())
             result += " requires " + *requires_clause;
         return QString::fromStdString(result);
@@ -465,10 +520,23 @@ struct RelaxedTemplateDeclaration : TemplateDeclarationStorage
             return result;
         }
 
+        // Collect non-SFINAE parameters for rendering.
+        std::vector<const RelaxedTemplateParameter *> visible;
+        for (const auto &p : parameters)
+            if (!p.sfinae_constraint)
+                visible.push_back(&p);
+
+        if (visible.empty()) {
+            QString result = QStringLiteral("template <>");
+            if (requires_clause && !requires_clause->empty())
+                result += QStringLiteral(" requires ") + QString::fromStdString(*requires_clause);
+            return result;
+        }
+
         QString result = QStringLiteral("template <\n");
-        for (std::size_t i = 0; i < parameters.size(); ++i) {
-            result += QStringLiteral("    ") + QString::fromStdString(parameters[i].to_std_string());
-            if (i + 1 < parameters.size())
+        for (std::size_t i = 0; i < visible.size(); ++i) {
+            result += QStringLiteral("    ") + QString::fromStdString(visible[i]->to_std_string());
+            if (i + 1 < visible.size())
                 result += QLatin1Char(',');
             result += QLatin1Char('\n');
         }

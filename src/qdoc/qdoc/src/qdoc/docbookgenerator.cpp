@@ -3896,7 +3896,7 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
 
         if (style == Section::Details) {
             if (auto templateDecl = func->templateDecl()) {
-                if (templateDecl->parameters.size() > QDoc::MultilineTemplateParamThreshold)
+                if (templateDecl->visibleParameterCount() > QDoc::MultilineTemplateParamThreshold)
                     m_writer->writeCharacters(templateDecl->to_qstring_multiline() + QLatin1Char('\n'));
                 else
                     m_writer->writeCharacters(templateDecl->to_qstring() + QLatin1Char(' '));
@@ -4008,7 +4008,7 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
     case NodeType::TypeAlias: {
         if (style == Section::Details) {
             if (auto templateDecl = node->templateDecl()) {
-                if (templateDecl->parameters.size() > QDoc::MultilineTemplateParamThreshold)
+                if (templateDecl->visibleParameterCount() > QDoc::MultilineTemplateParamThreshold)
                     m_writer->writeCharacters(templateDecl->to_qstring_multiline() + QLatin1Char('\n'));
                 else
                     m_writer->writeCharacters(templateDecl->to_qstring() + QLatin1Char(' '));

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="SFINAE Constraints Reference Documentation" version="" project="SFINAE Constraints">
+    <namespace name="" status="active" access="public" module="sfinae constraints">
+        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="sfinae_constraints.h" documented="true" module="SfinaeModule" brief="Test namespace for QDoc tests">
+            <class name="SfinaeContainer" fullname="QDocTests::SfinaeContainer" href="qdoctests-sfinaecontainer.html" status="active" access="public" location="sfinae_constraints.h" documented="true" module="SfinaeModule" brief="A container with SFINAE-constrained member functions">
+                <function name="mixedConstraints" fullname="QDocTests::SfinaeContainer::mixedConstraints" href="qdoctests-sfinaecontainer.html#mixedConstraints" status="active" access="public" location="sfinae_constraints.h" documented="true" meta="plain" type="void" signature="void mixedConstraints(const T &amp;value)">
+                    <parameter type="const T &amp;" name="value" default=""/>
+                </function>
+                <function name="multiConstrained" fullname="QDocTests::SfinaeContainer::multiConstrained" href="qdoctests-sfinaecontainer.html#multiConstrained" status="active" access="public" location="sfinae_constraints.h" documented="true" meta="plain" type="void" signature="void multiConstrained(const T &amp;value)">
+                    <parameter type="const T &amp;" name="value" default=""/>
+                </function>
+                <function name="multiLayerSugar" fullname="QDocTests::SfinaeContainer::multiLayerSugar" href="qdoctests-sfinaecontainer.html#multiLayerSugar" status="active" access="public" location="sfinae_constraints.h" documented="true" meta="plain" type="void" signature="void multiLayerSugar(const T &amp;value)">
+                    <parameter type="const T &amp;" name="value" default=""/>
+                </function>
+                <function name="namespacedAlias" fullname="QDocTests::SfinaeContainer::namespacedAlias" href="qdoctests-sfinaecontainer.html#namespacedAlias" status="active" access="public" location="sfinae_constraints.h" documented="true" meta="plain" type="void" signature="void namespacedAlias(const T &amp;value)">
+                    <parameter type="const T &amp;" name="value" default=""/>
+                </function>
+                <function name="process" fullname="QDocTests::SfinaeContainer::process" href="qdoctests-sfinaecontainer.html#process" status="active" access="public" location="sfinae_constraints.h" documented="true" meta="plain" type="void" signature="void process(const T &amp;value)">
+                    <parameter type="const T &amp;" name="value" default=""/>
+                </function>
+            </class>
+        </namespace>
+        <module name="SfinaeModule" href="sfinaemodule-module.html" status="active" location="sfinae_constraints.qdoc" documented="true" seen="true" title="SFINAE Module" brief="A test module for SFINAE constraint detection"/>
+    </namespace>
+</INDEX>

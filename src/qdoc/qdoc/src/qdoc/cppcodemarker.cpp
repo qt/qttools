@@ -105,13 +105,17 @@ QString CppCodeMarker::formatTemplateDeclStorage(const TemplateDeclarationStorag
     if (multiline)
         result += '\n'_L1;
 
-    for (qsizetype i = 0; i < static_cast<qsizetype>(templateDecl.parameters.size()); ++i) {
-        if (i > 0)
+    bool first = true;
+    for (const auto &param : templateDecl.parameters) {
+        if (param.sfinae_constraint)
+            continue;
+        if (!first)
             result += multiline ? ",\n"_L1 : ", "_L1;
         if (multiline)
             result += "    "_L1;  // indentation for multiline format
 
-        result += formatTemplateParameter(templateDecl.parameters[i]);
+        result += formatTemplateParameter(param);
+        first = false;
     }
 
     if (multiline)
@@ -133,7 +137,7 @@ QString CppCodeMarker::formatTemplateDeclStorage(const TemplateDeclarationStorag
 */
 QString CppCodeMarker::formatTemplateDecl(const RelaxedTemplateDeclaration *templateDecl)
 {
-    const bool multiline = templateDecl->parameters.size() > QDoc::MultilineTemplateParamThreshold;
+    const bool multiline = templateDecl->visibleParameterCount() > QDoc::MultilineTemplateParamThreshold;
     const auto format = multiline ? TemplateFormat::MultiLine : TemplateFormat::SingleLine;
 
     QString content = formatTemplateDeclStorage(*templateDecl, format);

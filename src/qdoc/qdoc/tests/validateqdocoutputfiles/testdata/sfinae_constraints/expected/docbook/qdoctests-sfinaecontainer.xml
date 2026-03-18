@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QDocTests::SfinaeContainer Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>SFINAE Constraints Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A container with SFINAE-constrained member functions.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>sfinae_constraints.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class demonstrates SFINAE constraint detection in QDoc.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="mixedConstraints">
+<db:title>template &lt;typename T&gt; requires if_integral&lt;T&gt; &amp;&amp; (std::is_integral&lt;T&gt;::value) void SfinaeContainer::mixedConstraints(const T &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Processes the given <db:code role="parameter">value</db:code> using both SFINAE and an explicit requires clause. The combined constraint ensures the type T satisfies both the SFINAE alias and the direct type trait.</db:para>
+</db:section>
+<db:section xml:id="multiConstrained">
+<db:title>template &lt;typename T&gt; requires if_arithmetic&lt;T&gt; &amp;&amp; if_signed&lt;T&gt; void SfinaeContainer::multiConstrained(const T &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Processes the given <db:code role="parameter">value</db:code> with multiple constraints. This function is only available when the type T is both arithmetic and signed.</db:para>
+</db:section>
+<db:section xml:id="multiLayerSugar">
+<db:title>template &lt;typename T&gt; requires if_numeric&lt;T&gt; void SfinaeContainer::multiLayerSugar(const T &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Processes the given <db:code role="parameter">value</db:code> using an alias that itself wraps another alias, testing multi-layer sugar chain detection.</db:para>
+</db:section>
+<db:section xml:id="namespacedAlias">
+<db:title>template &lt;typename T&gt; requires QtPrivate::if_scoped&lt;T&gt; void SfinaeContainer::namespacedAlias(const T &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Processes the given <db:code role="parameter">value</db:code> using a namespaced SFINAE alias. The rendered constraint preserves the QtPrivate qualification.</db:para>
+</db:section>
+<db:section xml:id="process">
+<db:title>template &lt;typename T&gt; requires if_integral&lt;T&gt; void SfinaeContainer::process(const T &amp;<db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Processes the given <db:code role="parameter">value</db:code>. This function is only available when the type T satisfies the if_integral constraint.</db:para>
+</db:section>
+</db:section>
+</db:article>

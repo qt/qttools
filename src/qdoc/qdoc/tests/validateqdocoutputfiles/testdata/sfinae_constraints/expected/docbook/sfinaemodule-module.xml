@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>SFINAE Module</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>SFINAE Constraints Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test module for SFINAE constraint detection.</db:para>
+</db:abstract>
+</db:info>
+<db:para>A test module for SFINAE constraint detection.</db:para>
+<db:section xml:id="namespaces">
+<db:title>Namespaces</db:title>
+<db:variablelist role="namespaces">
+<db:varlistentry>
+<db:term><db:link xlink:href="qdoctests.xml" xlink:role="namespace">QDocTests</db:link></db:term>
+<db:listitem>
+<db:para>Test namespace for QDoc tests.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:variablelist role="classes">
+<db:varlistentry>
+<db:term><db:link xlink:href="qdoctests-sfinaecontainer.xml" xlink:role="class">QDocTests::SfinaeContainer</db:link></db:term>
+<db:listitem>
+<db:para>A container with SFINAE-constrained member functions.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+</db:article>

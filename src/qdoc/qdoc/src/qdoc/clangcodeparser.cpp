@@ -365,6 +365,150 @@ static QString fromCXString(CXString &&string)
 }
 
 /*
+ * Unwraps ElaboratedType (LLVM <= 21 only) to find the first
+ * TemplateSpecializationType at or just below the given type.
+ *
+ * This does not perform a general desugar walk. It handles the
+ * specific sugar shape that Clang produces for type alias template
+ * specializations used in Qt SFINAE patterns.
+ */
+static const clang::TemplateSpecializationType *find_template_specialization_through_sugar(
+        const clang::Type *type)
+{
+    // Qt's deepest SFINAE alias nesting is 2–3 levels. The limit
+    // guards against pathological types that could loop indefinitely.
+    for (int depth = 0; depth < 10 && type; ++depth) {
+        if (auto *tst = llvm::dyn_cast<clang::TemplateSpecializationType>(type))
+            return tst;
+
+#if LIBCLANG_VERSION_MAJOR < 22
+        // LLVM <= 21 wraps TemplateSpecializationType in ElaboratedType
+        if (auto *elaborated = llvm::dyn_cast<clang::ElaboratedType>(type)) {
+            type = elaborated->getNamedType().getTypePtr();
+            continue;
+        }
+#endif
+
+        // Not a type we can unwrap further
+        break;
+    }
+
+    return nullptr;
+}
+
+/*
+ * Returns true if the given qualified name ends with "enable_if"
+ * or "enable_if_t".
+ */
+static bool is_enable_if_name(const std::string &qualified_name)
+{
+    auto ends_with = [](const std::string &str, const std::string &suffix) {
+        return str.size() >= suffix.size()
+               && str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
+    };
+
+    return ends_with(qualified_name, "enable_if_t")
+           || ends_with(qualified_name, "enable_if");
+}
+
+/*
+ * Detects whether a non-type template parameter encodes a SFINAE
+ * constraint via std::enable_if_t.
+ *
+ * Qt uses SFINAE constraints as unnamed non-type template parameters
+ * with a default value of true, where the parameter type is a
+ * type alias that resolves through enable_if_t. For example:
+ *
+ *     template <typename T, if_integral<T> = true>
+ *
+ * where if_integral<T> is an alias for
+ * std::enable_if_t<std::is_integral_v<T>, bool>.
+ *
+ * Detection targets unnamed NTTPs specifically. Named non-type
+ * template parameters are not treated as SFINAE constraints, even
+ * if their type resolves through enable_if_t, because named
+ * parameters carry explicit meaning that should be preserved in
+ * the rendered signature. A default value is not required — \fn
+ * commands often omit the "= true" default.
+ *
+ * After finding the outermost TemplateSpecializationType (unwrapping
+ * ElaboratedType on LLVM <= 21), the detection desugars inward to
+ * verify that enable_if or enable_if_t appears in the chain.
+ */
+static std::optional<SfinaeConstraint> detect_sfinae_constraint(
+        const clang::NonTypeTemplateParmDecl *param)
+{
+    if (!param->getName().empty())
+        return std::nullopt;
+
+    auto policy = param->getASTContext().getPrintingPolicy();
+
+    const clang::Type *type = param->getType().getTypePtr();
+
+    auto *alias_type = find_template_specialization_through_sugar(type);
+    if (!alias_type) {
+        // Heuristic fallback for dependent nested-alias cases. When
+        // the outer template parameter is dependent, Clang represents
+        // the type as DependentNameType rather than
+        // TemplateSpecializationType, so the sugar chain cannot be
+        // walked to verify enable_if. For example:
+        //
+        //   template <class T>
+        //   template <typename X, QPointer<T>::if_convertible<X> = true>
+        //
+        // Clang cannot resolve QPointer<T>::if_convertible<X> because
+        // T is dependent. The fallback requires both a default value
+        // (SFINAE parameters always have one — the caller never
+        // provides the argument) and angle brackets in the printed
+        // type name (indicating a template specialization applied to
+        // type parameters).
+        if (!param->hasDefaultArgument())
+            return std::nullopt;
+
+        std::string type_name = param->getType().getAsString(policy);
+        if (type_name.find('<') != std::string::npos)
+            return SfinaeConstraint{ std::move(type_name) };
+
+        return std::nullopt;
+    }
+
+    auto *alias_decl = alias_type->getTemplateName().getAsTemplateDecl();
+    if (!alias_decl)
+        return std::nullopt;
+
+    // Walk the sugar chain to verify enable_if / enable_if_t is present
+    bool found_enable_if = false;
+    const clang::Type *sugar = alias_type->desugar().getTypePtr();
+
+    for (int depth = 0; depth < 10 && sugar; ++depth) {
+        auto *tst = find_template_specialization_through_sugar(sugar);
+        if (!tst)
+            break;
+
+        if (auto *decl = tst->getTemplateName().getAsTemplateDecl()) {
+            if (is_enable_if_name(decl->getQualifiedNameAsString())) {
+                found_enable_if = true;
+                break;
+            }
+        }
+
+        sugar = tst->desugar().getTypePtr();
+    }
+
+    if (!found_enable_if)
+        return std::nullopt;
+
+    // Print from the original QualType (not the unwrapped TST) to
+    // preserve scope qualification. On LLVM <= 21 the ElaboratedType
+    // sugar carries the namespace qualifier; on LLVM 22+ the qualifier
+    // is embedded in the type name directly. The printed output is
+    // the same either way.
+    return SfinaeConstraint{
+        param->getType().getAsString(policy)
+    };
+}
+
+/*
  * Returns an intermediate representation that models the the given
  * template declaration.
  */
@@ -377,6 +521,8 @@ static RelaxedTemplateDeclaration get_template_declaration(const clang::Template
     for (auto template_parameter : template_parameters->asArray()) {
         auto kind{RelaxedTemplateParameter::Kind::TypeTemplateParameter};
         std::string type{};
+
+        std::optional<SfinaeConstraint> sfinae{};
 
         if (auto non_type_template_parameter = llvm::dyn_cast<clang::NonTypeTemplateParmDecl>(template_parameter)) {
             kind = RelaxedTemplateParameter::Kind::NonTypeTemplateParameter;
@@ -413,6 +559,8 @@ static RelaxedTemplateDeclaration get_template_declaration(const clang::Template
             //         Doesn't really impact performance in a
             //         meaningful way so it can be kept while waiting.
             if (QString::fromStdString(type).startsWith("typename ")) type.erase(0, std::string("typename ").size());
+
+            sfinae = detect_sfinae_constraint(non_type_template_parameter);
         }
 
         auto template_template_parameter = llvm::dyn_cast<clang::TemplateTemplateParmDecl>(template_parameter);
@@ -429,14 +577,45 @@ static RelaxedTemplateDeclaration get_template_declaration(const clang::Template
             (template_template_parameter ?
                 std::optional<TemplateDeclarationStorage>(TemplateDeclarationStorage{
                     get_template_declaration(template_template_parameter).parameters
-                }) : std::nullopt)
+                }) : std::nullopt),
+            std::move(sfinae)
         });
     }
 
-    if (const clang::Expr* requires_clause = template_parameters->getRequiresClause()) {
-        template_declaration_ir.requires_clause =
-            QString::fromStdString(get_expression_as_string(
+    // Collect the explicit requires clause first, if present.
+    std::string explicit_requires;
+    if (const clang::Expr *requires_clause = template_parameters->getRequiresClause()) {
+        explicit_requires = QString::fromStdString(get_expression_as_string(
                 requires_clause, template_declaration->getASTContext())).simplified().toStdString();
+    }
+
+    // Synthesize a requires clause from detected SFINAE constraints.
+    // SFINAE parameters are annotated but kept in the parameter list
+    // so that \fn matching (which compares parameter counts and types)
+    // still works when detection succeeds on one path but not the
+    // other. Rendering functions skip annotated parameters and emit
+    // the synthesized requires clause instead.
+    {
+        std::string synthesized;
+        const auto &params = template_declaration_ir.parameters;
+
+        for (const auto &param : params) {
+            if (param.sfinae_constraint) {
+                if (!synthesized.empty())
+                    synthesized += " && ";
+                synthesized += param.sfinae_constraint->alias_with_args;
+            }
+        }
+
+        // Combine synthesized SFINAE constraints with explicit requires
+        // clause when both are present. The explicit clause is wrapped
+        // in parentheses to preserve its precedence.
+        if (!synthesized.empty() && !explicit_requires.empty())
+            template_declaration_ir.requires_clause = synthesized + " && (" + explicit_requires + ")";
+        else if (!synthesized.empty())
+            template_declaration_ir.requires_clause = std::move(synthesized);
+        else if (!explicit_requires.empty())
+            template_declaration_ir.requires_clause = std::move(explicit_requires);
     }
 
     return template_declaration_ir;

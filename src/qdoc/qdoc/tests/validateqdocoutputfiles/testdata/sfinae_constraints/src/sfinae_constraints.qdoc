@@ -1,0 +1,59 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \module SfinaeModule
+    \title SFINAE Module
+    \brief A test module for SFINAE constraint detection.
+*/
+
+/*!
+    \namespace QDocTests
+    \inmodule SfinaeModule
+    \brief Test namespace for QDoc tests.
+*/
+
+/*!
+    \class QDocTests::SfinaeContainer
+    \inmodule SfinaeModule
+    \brief A container with SFINAE-constrained member functions.
+
+    This class demonstrates SFINAE constraint detection in QDoc.
+*/
+
+/*!
+    \fn template <typename T, if_integral<T> = true> void QDocTests::SfinaeContainer::process(const T &value)
+
+    Processes the given \a value. This function is only available
+    when the type T satisfies the if_integral constraint.
+*/
+
+/*!
+    \fn template <typename T, if_arithmetic<T> = true, if_signed<T> = true> void QDocTests::SfinaeContainer::multiConstrained(const T &value)
+
+    Processes the given \a value with multiple constraints.
+    This function is only available when the type T is both
+    arithmetic and signed.
+*/
+
+/*!
+    \fn template <typename T, if_integral<T> = true> requires std::is_integral<T>::value void QDocTests::SfinaeContainer::mixedConstraints(const T &value)
+
+    Processes the given \a value using both SFINAE and an explicit
+    requires clause. The combined constraint ensures the type T
+    satisfies both the SFINAE alias and the direct type trait.
+*/
+
+/*!
+    \fn template <typename T, QtPrivate::if_scoped<T> = true> void QDocTests::SfinaeContainer::namespacedAlias(const T &value)
+
+    Processes the given \a value using a namespaced SFINAE alias.
+    The rendered constraint preserves the QtPrivate qualification.
+*/
+
+/*!
+    \fn template <typename T, if_numeric<T> = true> void QDocTests::SfinaeContainer::multiLayerSugar(const T &value)
+
+    Processes the given \a value using an alias that itself wraps
+    another alias, testing multi-layer sugar chain detection.
+*/
