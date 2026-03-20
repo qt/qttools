@@ -318,3 +318,147 @@ SCENARIO("IR::MemberIR with NoType nodeType is omitted", "[IR::MemberIR][IR]") {
         }
     }
 }
+
+SCENARIO("IR::SectionIR construction and JSON", "[IR::SectionIR][IR]") {
+
+    GIVEN("A SectionIR with two members") {
+        IR::MemberIR m1;
+        m1.name = "show"_L1;
+        m1.fullName = "QWidget::show"_L1;
+        m1.signature = "void show()"_L1;
+        m1.href = "#show"_L1;
+        m1.nodeType = NodeType::Function;
+        m1.access = Access::Public;
+        m1.status = Status::Active;
+
+        IR::MemberIR m2;
+        m2.name = "hide"_L1;
+        m2.fullName = "QWidget::hide"_L1;
+        m2.signature = "void hide()"_L1;
+        m2.href = "#hide"_L1;
+        m2.nodeType = NodeType::Function;
+        m2.access = Access::Public;
+        m2.status = Status::Active;
+
+        IR::SectionIR section;
+        section.id = "public-functions"_L1;
+        section.title = "Public Functions"_L1;
+        section.singular = "public function"_L1;
+        section.plural = "public functions"_L1;
+        section.members = { m1, m2 };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = section.toJson();
+
+            THEN("Section metadata is correctly serialized") {
+                REQUIRE(json["id"_L1].toString() == "public-functions");
+                REQUIRE(json["title"_L1].toString() == "Public Functions");
+                REQUIRE(json["singular"_L1].toString() == "public function");
+                REQUIRE(json["plural"_L1].toString() == "public functions");
+            }
+
+            THEN("Members array contains both entries") {
+                REQUIRE(json.contains("members"_L1));
+                QJsonArray members = json["members"_L1].toArray();
+                REQUIRE(members.size() == 2);
+                REQUIRE(members[0].toObject()["name"_L1].toString() == "show");
+                REQUIRE(members[1].toObject()["name"_L1].toString() == "hide");
+            }
+
+            THEN("Empty reimplementedMembers and inheritedMembers are omitted") {
+                REQUIRE(!json.contains("reimplementedMembers"_L1));
+                REQUIRE(!json.contains("inheritedMembers"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("IR::SectionIR with reimplemented members", "[IR::SectionIR][IR]") {
+
+    GIVEN("A SectionIR with one member and one reimplemented member") {
+        IR::MemberIR m1;
+        m1.name = "paint"_L1;
+        m1.fullName = "MyWidget::paint"_L1;
+        m1.signature = "void paint(QPainter *painter)"_L1;
+        m1.href = "#paint"_L1;
+        m1.nodeType = NodeType::Function;
+        m1.access = Access::Protected;
+        m1.status = Status::Active;
+
+        IR::MemberIR reimpl;
+        reimpl.name = "sizeHint"_L1;
+        reimpl.fullName = "MyWidget::sizeHint"_L1;
+        reimpl.signature = "QSize sizeHint() const"_L1;
+        reimpl.href = "#sizeHint"_L1;
+        reimpl.nodeType = NodeType::Function;
+        reimpl.access = Access::Public;
+        reimpl.status = Status::Active;
+        reimpl.isConst = true;
+
+        IR::SectionIR section;
+        section.id = "protected-functions"_L1;
+        section.title = "Protected Functions"_L1;
+        section.singular = "protected function"_L1;
+        section.plural = "protected functions"_L1;
+        section.members = { m1 };
+        section.reimplementedMembers = { reimpl };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = section.toJson();
+
+            THEN("Both members and reimplementedMembers arrays are present") {
+                REQUIRE(json.contains("members"_L1));
+                REQUIRE(json["members"_L1].toArray().size() == 1);
+                REQUIRE(json.contains("reimplementedMembers"_L1));
+                REQUIRE(json["reimplementedMembers"_L1].toArray().size() == 1);
+                REQUIRE(json["reimplementedMembers"_L1].toArray()[0].toObject()["name"_L1].toString() == "sizeHint");
+            }
+        }
+    }
+}
+
+SCENARIO("IR::SectionIR with inherited members", "[IR::SectionIR][IR]") {
+
+    GIVEN("A SectionIR with an inherited members entry") {
+        IR::InheritedMembersIR inherited;
+        inherited.className = "QObject"_L1;
+        inherited.count = 5;
+        inherited.href = "qobject.html"_L1;
+
+        IR::SectionIR section;
+        section.id = "public-functions"_L1;
+        section.title = "Public Functions"_L1;
+        section.singular = "public function"_L1;
+        section.plural = "public functions"_L1;
+        section.inheritedMembers = { inherited };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = section.toJson();
+
+            THEN("The inheritedMembers array is present") {
+                REQUIRE(json.contains("inheritedMembers"_L1));
+                QJsonArray arr = json["inheritedMembers"_L1].toArray();
+                REQUIRE(arr.size() == 1);
+                REQUIRE(arr[0].toObject()["className"_L1].toString() == "QObject");
+                REQUIRE(arr[0].toObject()["count"_L1].toInt() == 5);
+                REQUIRE(arr[0].toObject()["href"_L1].toString() == "qobject.html");
+            }
+        }
+    }
+
+    GIVEN("A SectionIR with no inherited members") {
+        IR::SectionIR section;
+        section.id = "signals"_L1;
+        section.title = "Signals"_L1;
+        section.singular = "signal"_L1;
+        section.plural = "signals"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = section.toJson();
+
+            THEN("The inheritedMembers key is omitted") {
+                REQUIRE(!json.contains("inheritedMembers"_L1));
+            }
+        }
+    }
+}

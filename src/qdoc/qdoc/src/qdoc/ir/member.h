@@ -63,6 +63,17 @@ struct InheritedMembersIR {
     [[nodiscard]] QJsonObject toJson() const;
 };
 
+struct SectionIR {
+    QString id;
+    QString title;
+    QString singular;
+    QString plural;
+    QList<MemberIR> members;
+    QList<MemberIR> reimplementedMembers;
+    QList<InheritedMembersIR> inheritedMembers;
+    [[nodiscard]] QJsonObject toJson() const;
+};
+
 } // namespace IR
 
 QT_END_NAMESPACE

@@ -301,6 +301,94 @@ QJsonObject InheritedMembersIR::toJson() const
     return json;
 }
 
+/*!
+    \struct IR::SectionIR
+    \brief Intermediate representation of a member summary section.
+
+    SectionIR groups members by category (such as "Public Functions"
+    or "Properties") for summary table rendering. Each section carries
+    a title, singular and plural forms for inherited-member links, and
+    three member lists: primary members, reimplemented members, and
+    inherited member summaries.
+
+    The \c reimplementedMembers and \c inheritedMembers arrays are
+    omitted from JSON when empty.
+*/
+
+/*!
+    \variable IR::SectionIR::id
+    Stable ASCII identifier for anchor links, generated from the
+    title via Utilities::asAsciiPrintable().
+*/
+
+/*!
+    \variable IR::SectionIR::title
+    Display title (such as "Public Functions" or "Properties").
+*/
+
+/*!
+    \variable IR::SectionIR::singular
+    Singular form of the member type (such as "function").
+*/
+
+/*!
+    \variable IR::SectionIR::plural
+    Plural form of the member type (such as "functions").
+*/
+
+/*!
+    \variable IR::SectionIR::members
+    Primary members in this section.
+*/
+
+/*!
+    \variable IR::SectionIR::reimplementedMembers
+    Members that reimplement a virtual function from a base class.
+*/
+
+/*!
+    \variable IR::SectionIR::inheritedMembers
+    Summaries of members inherited from base classes.
+*/
+
+/*!
+    Converts the section to a QJsonObject for template rendering.
+
+    Emits \c id, \c title, \c singular, \c plural, and the \c members
+    array. The \c reimplementedMembers and \c inheritedMembers arrays
+    are omitted when empty.
+*/
+QJsonObject SectionIR::toJson() const
+{
+    QJsonObject json;
+
+    json["id"_L1] = id;
+    json["title"_L1] = title;
+    json["singular"_L1] = singular;
+    json["plural"_L1] = plural;
+
+    QJsonArray membersArray;
+    for (const auto &m : members)
+        membersArray.append(m.toJson());
+    json["members"_L1] = membersArray;
+
+    if (!reimplementedMembers.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &m : reimplementedMembers)
+            arr.append(m.toJson());
+        json["reimplementedMembers"_L1] = arr;
+    }
+
+    if (!inheritedMembers.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &im : inheritedMembers)
+            arr.append(im.toJson());
+        json["inheritedMembers"_L1] = arr;
+    }
+
+    return json;
+}
+
 } // namespace IR
 
 QT_END_NAMESPACE
