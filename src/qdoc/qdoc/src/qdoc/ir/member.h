@@ -4,7 +4,12 @@
 #ifndef QDOC_IR_MEMBER_H
 #define QDOC_IR_MEMBER_H
 
+#include "qdoc/access.h"
+#include "qdoc/genustypes.h"
+#include "qdoc/status.h"
+
 #include <QJsonObject>
+#include <QList>
 #include <QString>
 
 QT_BEGIN_NAMESPACE
@@ -22,6 +27,32 @@ struct EnumValueIR {
     QString name;
     QString value;
     QString since;
+    [[nodiscard]] QJsonObject toJson() const;
+};
+
+struct MemberIR {
+    QString name;
+    QString fullName;
+    QString signature;
+    QString href;
+    QString brief;
+
+    NodeType nodeType { NodeType::NoType };
+    Access access { Access::Public };
+    Status status { Status::Active };
+
+    QList<ParameterIR> parameters;
+    int overloadNumber { 0 };
+    bool isPrimaryOverload { true };
+
+    QList<EnumValueIR> enumValues;
+
+    bool isStatic { false };
+    bool isConst { false };
+    bool isVirtual { false };
+    bool isSignal { false };
+    bool isSlot { false };
+
     [[nodiscard]] QJsonObject toJson() const;
 };
 

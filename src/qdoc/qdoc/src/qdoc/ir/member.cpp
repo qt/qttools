@@ -3,6 +3,10 @@
 
 #include "member.h"
 
+#include "classificationjson.h"
+
+#include <QJsonArray>
+
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::Literals::StringLiterals;
@@ -94,6 +98,165 @@ QJsonObject EnumValueIR::toJson() const
         json["value"_L1] = value;
     if (!since.isEmpty())
         json["since"_L1] = since;
+    return json;
+}
+
+/*!
+    \struct IR::MemberIR
+    \brief Intermediate representation of a single documentable member.
+
+    MemberIR captures identity, classification, and type-specific
+    metadata for one member of an aggregate (such as a class,
+    namespace, or QML type). Function members carry parameter lists
+    and overload metadata; enum members carry value listings.
+    Templates use this to render summary tables and detail sections.
+
+    JSON output omits \c parameters and \c enumValues when the
+    respective lists are empty. The \c nodeType field is omitted
+    when set to NoType.
+*/
+
+/*!
+    \variable IR::MemberIR::name
+    Unqualified member name.
+*/
+
+/*!
+    \variable IR::MemberIR::fullName
+    Fully qualified name including the enclosing scope.
+*/
+
+/*!
+    \variable IR::MemberIR::signature
+    Display signature for synopsis rendering. The format depends on
+    the member type: functions include return type and default values,
+    properties use "name : type", and enums include the scoped or
+    unscoped distinction.
+*/
+
+/*!
+    \variable IR::MemberIR::href
+    URL of the member's detailed documentation.
+*/
+
+/*!
+    \variable IR::MemberIR::brief
+    One-line summary extracted from the member's doc comment,
+    empty if none.
+*/
+
+/*!
+    \variable IR::MemberIR::nodeType
+    Classification of the member's entity type (function, property,
+    enum, and so on). Defaults to NoType.
+*/
+
+/*!
+    \variable IR::MemberIR::access
+    Access level (public, protected, or private). Defaults to Public.
+*/
+
+/*!
+    \variable IR::MemberIR::status
+    Documentation status (active, deprecated, preliminary, or
+    internal). Defaults to Active.
+*/
+
+/*!
+    \variable IR::MemberIR::parameters
+    Parameter list for function members. Empty for non-functions.
+*/
+
+/*!
+    \variable IR::MemberIR::overloadNumber
+    Zero-based overload index. Zero indicates the primary overload.
+*/
+
+/*!
+    \variable IR::MemberIR::isPrimaryOverload
+    Whether this is the primary (first) overload of its name.
+    Defaults to true.
+*/
+
+/*!
+    \variable IR::MemberIR::enumValues
+    Value list for enum members. Empty for non-enums.
+*/
+
+/*!
+    \variable IR::MemberIR::isStatic
+    Whether the member is declared static.
+*/
+
+/*!
+    \variable IR::MemberIR::isConst
+    Whether the member is declared const.
+*/
+
+/*!
+    \variable IR::MemberIR::isVirtual
+    Whether the member is virtual (including pure virtual and
+    override).
+*/
+
+/*!
+    \variable IR::MemberIR::isSignal
+    Whether the member is a Qt signal.
+*/
+
+/*!
+    \variable IR::MemberIR::isSlot
+    Whether the member is a Qt slot.
+*/
+
+/*!
+    Converts the member to a QJsonObject for template rendering.
+
+    Emits identity fields (name, fullName, signature, href),
+    classification as \c {id, label} objects, overload metadata, and
+    qualifier flags. The \c brief, \c parameters, and \c enumValues
+    fields are omitted when empty. The \c nodeType field is omitted
+    when NoType.
+*/
+QJsonObject MemberIR::toJson() const
+{
+    QJsonObject json;
+
+    json["name"_L1] = name;
+    json["fullName"_L1] = fullName;
+    json["signature"_L1] = signature;
+    json["href"_L1] = href;
+    if (!brief.isEmpty())
+        json["brief"_L1] = brief;
+
+    if (const auto t = nodeTypeToJson(nodeType))
+        json["nodeType"_L1] = *t;
+    json["status"_L1] = statusToJson(status);
+    json["access"_L1] = accessToJson(access);
+
+    json["overloadNumber"_L1] = overloadNumber;
+    json["isPrimaryOverload"_L1] = isPrimaryOverload;
+
+    if (!parameters.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &p : parameters)
+            arr.append(p.toJson());
+        json["parameters"_L1] = arr;
+    }
+
+    if (!enumValues.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &ev : enumValues)
+            arr.append(ev.toJson());
+        json["enumValues"_L1] = arr;
+    }
+
+    json["isStatic"_L1] = isStatic;
+    json["isConst"_L1] = isConst;
+    json["isVirtual"_L1] = isVirtual;
+    json["isSignal"_L1] = isSignal;
+    json["isSlot"_L1] = isSlot;
+
     return json;
 }
 
