@@ -11,11 +11,44 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 </head>
 <body>
     <h1>{{ fullTitle }}</h1>
-    {% if brief %}
+    {% if default(brief, "") != "" %}
     <p class="brief">{{ brief }}</p>
     {% endif %}
 
     {% include "partials/html/content_blocks.html" %}
+    {% if length(sections) > 0 %}
+    {% for section in sections %}
+    <div class="section-{{ section.id }}">
+    <h2>{{ escape_html(section.title) }}</h2>
+    {% if length(section.members) > 0 %}
+    <table class="alignedsummary">
+    {% for member in section.members %}
+    <tr>
+    <td class="memItemLeft">{% if existsIn(member, "href") and member.href != "" %}<a href="{{ member.href }}">{{ escape_html(member.signature) }}</a>{% else %}{{ escape_html(member.signature) }}{% endif %}</td>
+    <td class="memItemRight">{{ escape_html(default(member.brief, "")) }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    {% endif %}
+    {% if existsIn(section, "reimplementedMembers") %}
+    <h3>Reimplemented {{ escape_html(section.plural) }}</h3>
+    <table class="alignedsummary">
+    {% for member in section.reimplementedMembers %}
+    <tr>
+    <td class="memItemLeft">{% if existsIn(member, "href") and member.href != "" %}<a href="{{ member.href }}">{{ escape_html(member.signature) }}</a>{% else %}{{ escape_html(member.signature) }}{% endif %}</td>
+    <td class="memItemRight">{{ escape_html(default(member.brief, "")) }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    {% endif %}
+    {% if existsIn(section, "inheritedMembers") %}
+    {% for inherited in section.inheritedMembers %}
+    <p>{{ inherited.count }} {{ escape_html(section.plural) }} inherited from {% if inherited.href != "" %}<a href="{{ inherited.href }}">{{ escape_html(inherited.className) }}</a>{% else %}{{ escape_html(inherited.className) }}{% endif %}</p>
+    {% endfor %}
+    {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
 
     <footer>
         <p>Built with QDoc's template engine.</p>

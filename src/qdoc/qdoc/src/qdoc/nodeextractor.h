@@ -8,11 +8,15 @@
 
 QT_BEGIN_NAMESPACE
 
+class Aggregate;
+class Node;
 class PageNode;
 
 namespace NodeExtractor {
 
 IR::PageMetadata extractPageMetadata(const PageNode *pn);
+QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate);
+IR::MemberIR extractMemberIR(const Node *node);
 
 } // namespace NodeExtractor
 

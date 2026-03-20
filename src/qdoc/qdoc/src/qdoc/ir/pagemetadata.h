@@ -5,6 +5,7 @@
 #define QDOC_IR_PAGEMETADATA_H
 
 #include "contentblock.h"
+#include "member.h"
 
 #include "qdoc/access.h"
 #include "qdoc/genustypes.h"
@@ -32,6 +33,7 @@ struct PageMetadata
     QString brief;
 
     QList<ContentBlock> body;
+    QList<SectionIR> summarySections;
 };
 
 } // namespace IR

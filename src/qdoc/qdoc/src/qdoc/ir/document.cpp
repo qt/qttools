@@ -75,6 +75,14 @@ QJsonObject Document::toJson() const
 
     json["content"_L1] = content;
 
+    // Sections (for aggregate pages with member listings).
+    // Always emitted (even when empty) so templates can iterate safely
+    // without existsIn() guards on the root data object.
+    QJsonArray sectionsArray;
+    for (const auto &section : summarySections)
+        sectionsArray.append(section.toJson());
+    json["sections"_L1] = sectionsArray;
+
     return json;
 }
 

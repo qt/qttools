@@ -5,6 +5,7 @@
 #define QDOC_IR_DOCUMENT_H
 
 #include "contentblock.h"
+#include "member.h"
 
 #include "qdoc/access.h"
 #include "qdoc/genustypes.h"
@@ -37,6 +38,9 @@ struct Document
     // Content
     QList<ContentBlock> body;
     QJsonObject contentJson;
+
+    // Members (for aggregate pages)
+    QList<SectionIR> summarySections;
 
     QJsonObject toJson() const;
 };

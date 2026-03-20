@@ -25,6 +25,21 @@ static void registerCallbacks(inja::Environment &env)
         }
         return buffer;
     });
+
+    env.add_callback("escape_md_table", 1, [](inja::Arguments &args) {
+        auto input = args.at(0)->get<std::string>();
+        std::string buffer;
+        buffer.reserve(input.size() + input.size() / 8);
+        for (char c : input) {
+            switch (c) {
+            case '|':  buffer += "\\|"; break;
+            case '\n': buffer += ' ';   break;
+            case '\r': break;
+            default:   buffer += c;     break;
+            }
+        }
+        return buffer;
+    });
 }
 
 /*!
@@ -52,10 +67,15 @@ static void registerCallbacks(inja::Environment &env)
     location) are logged via \c qFatal() before termination, rather than
     calling \c std::abort() silently.
 
-    All render methods register an \c{escape_html()} callback that templates
-    can invoke to escape HTML special characters (\c{&}, \c{<}, \c{>},
-    \c{"}, \c{'}). This keeps format-specific escaping under template author
-    control rather than baking it into the rendering bridge.
+    All render methods register format-specific escaping callbacks:
+    \list
+    \li \c{escape_html()} escapes HTML special characters (\c{&}, \c{<},
+        \c{>}, \c{"}, \c{'}).
+    \li \c{escape_md_table()} escapes pipe characters and collapses newlines
+        for safe use inside Markdown table cells.
+    \endlist
+    This keeps format-specific escaping under template author control rather
+    than baking it into the rendering bridge.
 
     \sa QJsonObject, QJsonArray, QJsonValue
 */

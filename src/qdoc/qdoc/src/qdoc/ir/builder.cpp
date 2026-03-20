@@ -73,6 +73,7 @@ Document Builder::buildPageIR(PageMetadata pm) const
     ir.brief = std::move(pm.brief);
 
     ir.body = std::move(pm.body);
+    ir.summarySections = std::move(pm.summarySections);
 
     // Transitional: templates don't yet consume content.blocks.
     QStringList paragraphs;
