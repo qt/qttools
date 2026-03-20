@@ -97,6 +97,47 @@ QJsonObject EnumValueIR::toJson() const
     return json;
 }
 
+/*!
+    \struct IR::InheritedMembersIR
+    \brief Summary of members inherited from a single base class.
+
+    InheritedMembersIR stores a count and link target for one base
+    class's contributed members. Templates use this to render lines
+    such as "5 public functions inherited from QObject" at the end
+    of a section.
+*/
+
+/*!
+    \variable IR::InheritedMembersIR::className
+    Fully qualified name of the base class.
+*/
+
+/*!
+    \variable IR::InheritedMembersIR::count
+    Number of members inherited from this base class.
+*/
+
+/*!
+    \variable IR::InheritedMembersIR::href
+    URL of the base class's documentation page.
+*/
+
+/*!
+    Converts the inherited members summary to a QJsonObject.
+
+    Emits \c className, \c count, and \c href. Templates combine
+    this with the enclosing section's \c plural field to render
+    links such as "5 public functions inherited from QObject".
+*/
+QJsonObject InheritedMembersIR::toJson() const
+{
+    QJsonObject json;
+    json["className"_L1] = className;
+    json["count"_L1] = count;
+    json["href"_L1] = href;
+    return json;
+}
+
 } // namespace IR
 
 QT_END_NAMESPACE

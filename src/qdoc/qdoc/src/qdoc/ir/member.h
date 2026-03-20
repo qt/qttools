@@ -25,6 +25,13 @@ struct EnumValueIR {
     [[nodiscard]] QJsonObject toJson() const;
 };
 
+struct InheritedMembersIR {
+    QString className;
+    int count { 0 };
+    QString href;
+    [[nodiscard]] QJsonObject toJson() const;
+};
+
 } // namespace IR
 
 QT_END_NAMESPACE
