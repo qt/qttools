@@ -250,7 +250,7 @@ void Section::insert(Node *node)
             if (inherited && (node->parent()->isClassNode() || node->parent()->isNamespace())) {
                 if (m_inheritedMembers.isEmpty()
                     || m_inheritedMembers.last().first != node->parent()) {
-                    std::pair<Aggregate *, int> p(node->parent(), 0);
+                    std::pair<const Aggregate *, int> p(node->parent(), 0);
                     m_inheritedMembers.append(p);
                 }
                 m_inheritedMembers.last().second++;
@@ -368,7 +368,7 @@ void Section::reduce()
   This constructor builds the section vectors based on the
   type of the \a aggregate node.
  */
-Sections::Sections(Aggregate *aggregate) : m_aggregate(aggregate)
+Sections::Sections(const Aggregate *aggregate) : m_aggregate(aggregate)
 {
     m_allMembers.setAggregate(m_aggregate);
     switch (m_aggregate->nodeType()) {
@@ -498,7 +498,7 @@ Sections::Sections(const NodeMultiMap &nsmap)
 /*!
   Initialize the Aggregate in each Section of vector \a v with \a aggregate.
  */
-void Sections::initAggregate(SectionVector &v, Aggregate *aggregate)
+void Sections::initAggregate(SectionVector &v, const Aggregate *aggregate)
 {
     for (Section &section : v)
         section.setAggregate(aggregate);
@@ -838,7 +838,7 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n, bool
     }
 }
 
-static void pushBaseClasses(QStack<ClassNode *> &stack, ClassNode *cn)
+static void pushBaseClasses(QStack<const ClassNode *> &stack, const ClassNode *cn)
 {
     const QList<RelatedClass> baseClasses = cn->baseClasses();
     for (const auto &cls : baseClasses) {
@@ -871,13 +871,13 @@ void Sections::buildStdCppClassRefPageSections()
             distributeNodeInSummaryVector(m_summarySections, node);
     }
 
-    QStack<ClassNode *> stack;
-    QSet<ClassNode *> visited;
-    auto *cn = static_cast<ClassNode *>(m_aggregate);
+    QStack<const ClassNode *> stack;
+    QSet<const ClassNode *> visited;
+    auto *cn = static_cast<const ClassNode *>(m_aggregate);
 
     pushBaseClasses(stack, cn);
     while (!stack.isEmpty()) {
-        ClassNode *cur = stack.pop();
+        const ClassNode *cur = stack.pop();
         if (visited.contains(cur))
             continue;
         visited.insert(cur);

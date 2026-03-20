@@ -2034,7 +2034,7 @@ void DocBookGenerator::generateObsoleteMembers(const Sections &sections)
     if (!sections.hasObsoleteMembers(&summary_spv, &details_spv))
         return;
 
-    Aggregate *aggregate = sections.aggregate();
+    const Aggregate *aggregate = sections.aggregate();
     startSection("obsolete", "Obsolete Members for " + aggregate->plainFullName());
 
     m_writer->writeStartElement(dbNamespace, "para");
@@ -2082,7 +2082,7 @@ void DocBookGenerator::generateObsoleteQmlMembers(const Sections &sections)
     if (!sections.hasObsoleteMembers(&summary_spv, &details_spv))
         return;
 
-    Aggregate *aggregate = sections.aggregate();
+    const Aggregate *aggregate = sections.aggregate();
     startSection("obsolete", "Obsolete Members for " + aggregate->name());
 
     m_writer->writeStartElement(dbNamespace, "para");
@@ -3158,7 +3158,7 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
         endSection();
     }
 
-    Sections sections(const_cast<Aggregate *>(aggregate));
+    Sections sections(aggregate);
     const SectionVector &sectionVector = sections.detailsSections();
     for (const Section &section : sectionVector) {
         if (section.members().isEmpty())
@@ -4552,7 +4552,7 @@ void DocBookGenerator::generateSectionList(const Section &section, const Node *r
 void DocBookGenerator::generateSectionInheritedList(const Section &section, const Node *relative)
 {
     // From HtmlGenerator::generateSectionInheritedList.
-    QList<std::pair<Aggregate *, int>>::ConstIterator p = section.inheritedMembers().constBegin();
+    QList<std::pair<const Aggregate *, int>>::ConstIterator p = section.inheritedMembers().constBegin();
     while (p != section.inheritedMembers().constEnd()) {
         m_writer->writeStartElement(dbNamespace, "listitem");
         m_writer->writeCharacters(QString::number((*p).second) + u' ');

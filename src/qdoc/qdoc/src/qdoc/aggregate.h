@@ -69,6 +69,7 @@ public:
     bool hasOverloads(const FunctionNode *fn) const;
     void appendToRelatedByProxy(const NodeList &t) { m_relatedByProxy.append(t); }
     NodeList &relatedByProxy() { return m_relatedByProxy; }
+    [[nodiscard]] const NodeList &relatedByProxy() const { return m_relatedByProxy; }
     [[nodiscard]] QString typeWord(bool cap) const;
 
 protected:

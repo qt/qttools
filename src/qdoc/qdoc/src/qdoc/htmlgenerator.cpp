@@ -2517,7 +2517,7 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
     if (!sections.hasObsoleteMembers(&summary_spv, &details_spv))
         return QString();
 
-    Aggregate *aggregate = sections.aggregate();
+    const Aggregate *aggregate = sections.aggregate();
     QString title = "Obsolete Members for " + aggregate->plainFullName();
     QString fileName = fileBase(aggregate) + "-obsolete." + fileExtension();
 
@@ -2563,7 +2563,7 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
     if (!sections.hasObsoleteMembers(&summary_spv, &details_spv))
         return QString();
 
-    Aggregate *aggregate = sections.aggregate();
+    const Aggregate *aggregate = sections.aggregate();
     QString title = "Obsolete Members for " + aggregate->name();
     QString fileName = fileBase(aggregate) + "-obsolete." + fileExtension();
 
@@ -3170,7 +3170,7 @@ void HtmlGenerator::generateSectionList(const Section &section, const Node *rela
 
 void HtmlGenerator::generateSectionInheritedList(const Section &section, const Node *relative)
 {
-    const QList<std::pair<Aggregate *, int>> &inheritedMembers = section.inheritedMembers();
+    const QList<std::pair<const Aggregate *, int>> &inheritedMembers = section.inheritedMembers();
     for (const auto &member : inheritedMembers) {
         out() << "<li class=\"fn\" translate=\"no\">";
         out() << member.second << ' ';

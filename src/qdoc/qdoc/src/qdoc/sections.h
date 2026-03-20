@@ -45,7 +45,7 @@ public:
     [[nodiscard]] const QString &plural() const { return m_plural; }
     [[nodiscard]] const NodeVector &members() const { return m_members; }
     [[nodiscard]] const NodeVector &reimplementedMembers() const { return m_reimplementedMembers; }
-    [[nodiscard]] const QList<std::pair<Aggregate *, int>> &inheritedMembers() const
+    [[nodiscard]] const QList<std::pair<const Aggregate *, int>> &inheritedMembers() const
     {
         return m_inheritedMembers;
     }
@@ -54,7 +54,7 @@ public:
     [[nodiscard]] const NodeVector &obsoleteMembers() const { return m_obsoleteMembers; }
     void appendMembers(const NodeVector &nv) { m_members.append(nv); }
     [[nodiscard]] const Aggregate *aggregate() const { return m_aggregate; }
-    void setAggregate(Aggregate *t) { m_aggregate = t; }
+    void setAggregate(const Aggregate *t) { m_aggregate = t; }
 
 private:
     QString m_title {};
@@ -63,11 +63,11 @@ private:
     QString m_divClass {};
     Style m_style {};
 
-    Aggregate *m_aggregate { nullptr };
+    const Aggregate *m_aggregate { nullptr };
     NodeVector m_members {};
     NodeVector m_obsoleteMembers {};
     NodeVector m_reimplementedMembers {};
-    QList<std::pair<Aggregate *, int>> m_inheritedMembers {};
+    QList<std::pair<const Aggregate *, int>> m_inheritedMembers {};
     ClassNodesList m_classNodesList {};
 
     QMultiMap<QString, Node *> m_reimplementedMemberMap {};
@@ -141,7 +141,7 @@ public:
         Macros = 18
     };
 
-    explicit Sections(Aggregate *aggregate);
+    explicit Sections(const Aggregate *aggregate);
     explicit Sections(const NodeMultiMap &nsmap);
 
     [[nodiscard]] bool hasObsoleteMembers(SectionPtrVector *summary_spv,
@@ -157,7 +157,7 @@ public:
     [[nodiscard]] const Section &allMembersSection() const { return m_allMembers; }
     [[nodiscard]] const SectionVector &sinceSections() const { return m_sinceSections; }
 
-    [[nodiscard]] Aggregate *aggregate() const { return m_aggregate; }
+    [[nodiscard]] const Aggregate *aggregate() const { return m_aggregate; }
 
 private:
     void stdRefPageSwitch(SectionVector &v, Node *n);
@@ -165,14 +165,14 @@ private:
     void distributeNodeInDetailsVector(SectionVector &dv, Node *n);
     void distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n);
     void distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n, bool sharing = false);
-    void initAggregate(SectionVector &v, Aggregate *aggregate);
+    void initAggregate(SectionVector &v, const Aggregate *aggregate);
     void buildStdRefPageSections();
     void buildStdCppClassRefPageSections();
     void buildStdQmlTypeRefPageSections();
     void reduce(SectionVector &v);
 
 private:
-    Aggregate *m_aggregate { nullptr };
+    const Aggregate *m_aggregate { nullptr };
     SectionVector m_summarySections;
     SectionVector m_detailsSections;
     Section m_allMembers { {}, "member", "members", {}, Section::AllMembers };
