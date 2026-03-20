@@ -18,6 +18,13 @@ struct ParameterIR {
     [[nodiscard]] QJsonObject toJson() const;
 };
 
+struct EnumValueIR {
+    QString name;
+    QString value;
+    QString since;
+    [[nodiscard]] QJsonObject toJson() const;
+};
+
 } // namespace IR
 
 QT_END_NAMESPACE

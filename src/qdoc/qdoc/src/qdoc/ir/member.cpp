@@ -52,6 +52,51 @@ QJsonObject ParameterIR::toJson() const
     return json;
 }
 
+/*!
+    \struct IR::EnumValueIR
+    \brief Intermediate representation of a single enum value.
+
+    EnumValueIR captures the name, explicit initializer, and version
+    information for one enumerator. Templates use this to render
+    enum value tables in class documentation.
+
+    JSON output omits \c value and \c since when their respective
+    strings are empty.
+*/
+
+/*!
+    \variable IR::EnumValueIR::name
+    Enumerator name.
+*/
+
+/*!
+    \variable IR::EnumValueIR::value
+    Explicit initializer expression, empty if the compiler assigns
+    the value.
+*/
+
+/*!
+    \variable IR::EnumValueIR::since
+    Qt version that introduced this enumerator, empty if unversioned.
+*/
+
+/*!
+    Converts the enum value to a QJsonObject for template rendering.
+
+    Always emits \c name. The \c value and \c since keys are omitted
+    when their respective strings are empty.
+*/
+QJsonObject EnumValueIR::toJson() const
+{
+    QJsonObject json;
+    json["name"_L1] = name;
+    if (!value.isEmpty())
+        json["value"_L1] = value;
+    if (!since.isEmpty())
+        json["since"_L1] = since;
+    return json;
+}
+
 } // namespace IR
 
 QT_END_NAMESPACE

@@ -45,3 +45,38 @@ SCENARIO("IR::ParameterIR construction and JSON", "[IR::ParameterIR][IR]") {
         }
     }
 }
+
+SCENARIO("IR::EnumValueIR construction and JSON", "[IR::EnumValueIR][IR]") {
+
+    GIVEN("An EnumValueIR with name, value, and since") {
+        IR::EnumValueIR ev;
+        ev.name = "AlignLeft"_L1;
+        ev.value = "0x0001"_L1;
+        ev.since = "6.2"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ev.toJson();
+
+            THEN("All three fields are present") {
+                REQUIRE(json["name"_L1].toString() == "AlignLeft");
+                REQUIRE(json["value"_L1].toString() == "0x0001");
+                REQUIRE(json["since"_L1].toString() == "6.2");
+            }
+        }
+    }
+
+    GIVEN("An EnumValueIR with only a name") {
+        IR::EnumValueIR ev;
+        ev.name = "AlignCenter"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ev.toJson();
+
+            THEN("Only name is present; value and since are omitted") {
+                REQUIRE(json["name"_L1].toString() == "AlignCenter");
+                REQUIRE(!json.contains("value"_L1));
+                REQUIRE(!json.contains("since"_L1));
+            }
+        }
+    }
+}
