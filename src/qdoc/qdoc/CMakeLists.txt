@@ -63,6 +63,7 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
         src/qdoc/ir/contentblock.cpp
         src/qdoc/ir/document.cpp
         src/qdoc/ir/link.cpp
+        src/qdoc/ir/member.cpp
         src/qdoc/ir/pagemetadata.h
     )
 endif()
