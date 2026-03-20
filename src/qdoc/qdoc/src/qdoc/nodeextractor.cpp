@@ -86,12 +86,7 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn)
 */
 QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate)
 {
-    // Sections constructor takes non-const Aggregate*. The internal mutation
-    // (clearing/reducing static section vectors) is side-effect-free for the
-    // aggregate itself. This const_cast is safe because Sections only reads
-    // from the aggregate; it mutates its own static section vectors.
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-    Sections sections(const_cast<Aggregate *>(aggregate));
+    Sections sections(aggregate);
 
     const auto &sv = sections.summarySections();
 
