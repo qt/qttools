@@ -27,11 +27,10 @@ SCENARIO("IR::Document basic structure", "[IR::Document][IR]") {
                 REQUIRE(json.contains("title"_L1));
                 REQUIRE(json.contains("fullTitle"_L1));
                 REQUIRE(json.contains("url"_L1));
-                REQUIRE(json.contains("brief"_L1));
+                REQUIRE(!json.contains("brief"_L1));
                 REQUIRE(json["title"_L1].toString().isEmpty());
                 REQUIRE(json["fullTitle"_L1].toString().isEmpty());
                 REQUIRE(json["url"_L1].toString().isEmpty());
-                REQUIRE(json["brief"_L1].toString().isEmpty());
             }
 
             THEN("The JSON contains classification fields with default values") {

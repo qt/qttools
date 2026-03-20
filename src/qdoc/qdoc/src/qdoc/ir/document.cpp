@@ -63,7 +63,8 @@ QJsonObject Document::toJson() const
         json["since"_L1] = since;
     if (!deprecatedSince.isEmpty())
         json["deprecatedSince"_L1] = deprecatedSince;
-    json["brief"_L1] = brief;
+    if (!brief.isEmpty())
+        json["brief"_L1] = brief;
 
     Q_ASSERT(!contentJson.contains("blocks"_L1));
     QJsonObject content = contentJson;
