@@ -14,9 +14,37 @@
 #include <QtCore/QList>
 #include <QtCore/QString>
 
+#include <optional>
+
 QT_BEGIN_NAMESPACE
 
 namespace IR {
+
+struct QmlTypeData
+{
+    QString importStatement;
+    bool isSingleton { false };
+    bool isValueType { false };
+
+    struct InheritsInfo {
+        QString name;
+        QString href;
+        QString moduleName;
+    };
+    std::optional<InheritsInfo> inherits;
+
+    struct InheritedByEntry {
+        QString name;
+        QString href;
+    };
+    QList<InheritedByEntry> inheritedBy;
+
+    struct NativeTypeInfo {
+        QString name;
+        QString href;
+    };
+    std::optional<NativeTypeInfo> nativeType;
+};
 
 struct PageMetadata
 {
@@ -34,6 +62,8 @@ struct PageMetadata
 
     QList<ContentBlock> body;
     QList<SectionIR> summarySections;
+
+    std::optional<QmlTypeData> qmlTypeData;
 };
 
 } // namespace IR

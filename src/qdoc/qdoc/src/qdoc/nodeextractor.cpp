@@ -6,9 +6,12 @@
 #include "aggregate.h"
 #include "atom.h"
 #include "classnode.h"
+#include "collectionnode.h"
+#include "config.h"
 #include "doc.h"
 #include "enumnode.h"
 #include "functionnode.h"
+#include "inclusionfilter.h"
 #include "ir/contentbuilder.h"
 #include "pagenode.h"
 #include "parameters.h"
@@ -57,8 +60,16 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn)
     pm.status = pn->status();
     pm.access = pn->access();
 
-    pm.title = pn->title();
-    pm.fullTitle = pn->fullTitle();
+    if (pn->isQmlType()) {
+        const auto *qcn = static_cast<const QmlTypeNode *>(pn);
+        QString suffix = qcn->isQmlBasicType() ? " QML Value Type"_L1 : " QML Type"_L1;
+        pm.title = pn->name() + suffix;
+        pm.fullTitle = pm.title;
+    } else {
+        pm.title = pn->title();
+        pm.fullTitle = pn->fullTitle();
+    }
+
     pm.url = pn->url();
     pm.since = pn->since();
     pm.deprecatedSince = pn->deprecatedSince();
@@ -73,7 +84,91 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn)
     if (pn->isAggregate())
         pm.summarySections = extractSummarySections(static_cast<const Aggregate *>(pn));
 
+    if (pn->isQmlType()) {
+        const auto *qcn = static_cast<const QmlTypeNode *>(pn);
+        pm.qmlTypeData = extractQmlTypeData(qcn);
+    }
+
     return pm;
+}
+
+/*!
+    \internal
+    Extract QML type metadata from a QmlTypeNode.
+
+    Populates import statement, inheritance chain, inherited-by list,
+    native C++ type link, and singleton/value-type flags. InclusionFilter
+    is applied to match the legacy generator's visibility filtering.
+*/
+IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn)
+{
+    IR::QmlTypeData data;
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+
+    if (!qcn->logicalModuleName().isEmpty()) {
+        bool includeImport = true;
+        const CollectionNode *collection = qcn->logicalModule();
+        if (collection) {
+            const NodeContext context = collection->createContext();
+            includeImport = InclusionFilter::isIncluded(policy, context);
+        }
+        if (includeImport) {
+            QStringList parts = QStringList()
+                << "import"_L1 << qcn->logicalModuleName() << qcn->logicalModuleVersion();
+            data.importStatement = parts.join(' '_L1).trimmed();
+        }
+    }
+
+    data.isSingleton = qcn->isSingleton();
+    data.isValueType = qcn->isQmlBasicType();
+
+    QmlTypeNode *base = qcn->qmlBaseNode();
+    while (base) {
+        const NodeContext context = base->createContext();
+        if (InclusionFilter::isIncluded(policy, context))
+            break;
+        base = base->qmlBaseNode();
+    }
+
+    NodeList subs;
+    QmlTypeNode::subclasses(qcn, subs, true);
+
+    if (base) {
+        IR::QmlTypeData::InheritsInfo inheritsInfo;
+        inheritsInfo.name = base->name();
+        inheritsInfo.href = base->url();
+        const CollectionNode *baseModule = base->logicalModule();
+        if (baseModule) {
+            const NodeContext moduleContext = baseModule->createContext();
+            if (InclusionFilter::isIncluded(policy, moduleContext))
+                inheritsInfo.moduleName = base->logicalModuleName();
+        }
+        data.inherits = inheritsInfo;
+    }
+
+    if (!subs.isEmpty()) {
+        QList<IR::QmlTypeData::InheritedByEntry> filteredSubs;
+        for (const auto *sub : std::as_const(subs)) {
+            const NodeContext context = sub->createContext();
+            if (InclusionFilter::isIncluded(policy, context))
+                filteredSubs.append({sub->name(), sub->url()});
+        }
+        std::sort(filteredSubs.begin(), filteredSubs.end(),
+                  [](const IR::QmlTypeData::InheritedByEntry &a,
+                     const IR::QmlTypeData::InheritedByEntry &b) {
+                      return a.name < b.name;
+                  });
+        data.inheritedBy = filteredSubs;
+    }
+
+    ClassNode *cn = qcn->classNode();
+    if (cn && cn->isQmlNativeType()) {
+        const NodeContext context = cn->createContext();
+        if (InclusionFilter::isIncluded(policy, context))
+            data.nativeType = IR::QmlTypeData::NativeTypeInfo{cn->name(), cn->url()};
+    }
+
+    return data;
 }
 
 /*!

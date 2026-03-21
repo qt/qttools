@@ -11,10 +11,12 @@ QT_BEGIN_NAMESPACE
 class Aggregate;
 class Node;
 class PageNode;
+class QmlTypeNode;
 
 namespace NodeExtractor {
 
 IR::PageMetadata extractPageMetadata(const PageNode *pn);
+IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn);
 QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate);
 IR::MemberIR extractMemberIR(const Node *node);
 
