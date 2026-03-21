@@ -254,6 +254,12 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/collection.md"
         PROPERTIES QT_RESOURCE_ALIAS "templates/collection.md"
     )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/members.html"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/members.html"
+    )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/members.md"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/members.md"
+    )
 
     set(qdoc_template_files
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/page.html"
@@ -262,6 +268,8 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/qmltype.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/collection.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/collection.md"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/members.html"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/members.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/content_blocks.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/content_blocks.md"
     )

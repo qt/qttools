@@ -7,6 +7,8 @@ A Lottie player for Qt.
 | Import Statement | `import Qt.labs.lottieqt 1.0` |
 | Inherits | Item|
 
+- [List of all members, including inherited members](qml-qt-labs-lottieqt-lottieanimation-members.md)
+
 The [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) type shows Lottie format files.
 [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) is used to load and render Lottie files exported from Adobe After Effects. Currently, only subset of the full Lottie specification is supported. Most notable deviations are:
 - Only Shape layer supported

@@ -45,6 +45,12 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     instance exists.</p>
     {% endif %}{% endif %}
 
+    {% if membersPageUrl != "" %}
+    <ul>
+    <li><a href="{{ membersPageUrl }}">List of all members, including inherited members</a></li>
+    </ul>
+    {% endif %}
+
     {% include "partials/html/content_blocks.html" %}
     {% if length(sections) > 0 %}
     {% for section in sections %}
@@ -73,7 +79,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     {% endif %}
     {% if existsIn(section, "inheritedMembers") %}
     {% for inherited in section.inheritedMembers %}
-    <p>{{ inherited.count }} {{ escape_html(section.plural) }} inherited from <a href="{{ inherited.href }}">{{ escape_html(inherited.className) }}</a></p>
+    <p>{{ inherited.count }} {{ escape_html(section.plural) }} inherited from {% if inherited.href != "" %}<a href="{{ inherited.href }}">{{ escape_html(inherited.className) }}</a>{% else %}{{ escape_html(inherited.className) }}{% endif %}</p>
     {% endfor %}
     {% endif %}
     </div>

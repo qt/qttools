@@ -20,7 +20,7 @@ class CodeMarker;
 class HrefResolver;
 class LinkResolver;
 class QDocDatabase;
-namespace IR { struct Document; }
+namespace IR { struct AllMembersIR; struct Document; }
 
 /*!
     \class TemplateGenerator
@@ -75,6 +75,8 @@ public:
 private:
     // Render phase: Format IR according to templates.
     void renderDocument(const IR::Document &ir, const QString &templateBaseName);
+    void renderJson(const QJsonObject &json, const QString &templateBaseName);
+    void generateMemberListingPage(const Node *node, const IR::AllMembersIR &allMembers);
 
     // Include resolution for Inja {% include %} directives.
     [[nodiscard]] QString resolveInclude(const QString &name) const;

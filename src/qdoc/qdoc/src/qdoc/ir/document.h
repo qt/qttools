@@ -106,6 +106,9 @@ struct Document
     // Collection metadata (populated for module, QML module, and group pages)
     std::optional<CollectionInfo> collectionInfo;
 
+    // Members sub-page URL (set when a members listing page is generated)
+    QString membersPageUrl;
+
     QJsonObject toJson() const;
 };
 

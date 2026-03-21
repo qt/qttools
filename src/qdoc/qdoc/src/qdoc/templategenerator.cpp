@@ -12,12 +12,10 @@
 #include "documentwriter.h"
 #include "generator.h"
 #include "hrefresolver.h"
-#include "inclusionfilter.h"
 #include "injabridge.h"
 #include "ir/builder.h"
 #include "ir/document.h"
 #include "linkresolver.h"
-#include "namespacenode.h"
 #include "node.h"
 #include "nodeextractor.h"
 #include "outputcontext.h"
@@ -273,14 +271,21 @@ void TemplateGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker
     Q_UNUSED(marker);
 
     IR::PageMetadata pm = NodeExtractor::extractPageMetadata(qcn);
+    auto allMembers = NodeExtractor::extractAllMembersIR(qcn);
 
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));
+
+    if (allMembers)
+        ir.membersPageUrl = fileBase(qcn) + "-members."_L1 + m_fileExtension;
 
     if (m_linkResolver && !ir.body.isEmpty())
         m_linkResolver->resolve(ir.body, qcn);
 
     renderDocument(ir, "qmltype"_L1);
+
+    if (allMembers)
+        generateMemberListingPage(qcn, *allMembers);
 }
 
 void TemplateGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
@@ -347,6 +352,73 @@ void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &te
 
     if (m_writer && m_writer->isOpen())
         m_writer->write(rendered);
+}
+
+/*!
+    \internal
+    Render a raw QJsonObject through a named template.
+
+    Unlike renderDocument(), this takes an arbitrary JSON object rather
+    than an IR::Document. It's used for sub-pages (such as the member
+    listing page) where the data structure differs from Document's.
+*/
+void TemplateGenerator::renderJson(const QJsonObject &json, const QString &templateBaseName)
+{
+    const QString templateFileName = templateBaseName + '.'_L1 + m_fileExtension;
+    QString templateContent;
+
+    if (!m_templateDir.isEmpty()) {
+        QString templatePath = m_templateDir + '/'_L1 + templateFileName;
+        QFile templateFile(templatePath);
+
+        if (templateFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            templateContent = QString::fromUtf8(templateFile.readAll());
+            templateFile.close();
+        }
+    }
+
+    if (templateContent.isEmpty()) {
+        QFile resourceFile(":/qdoc/templates/"_L1 + templateFileName);
+        if (resourceFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            templateContent = QString::fromUtf8(resourceFile.readAll());
+            resourceFile.close();
+        }
+    }
+
+    if (templateContent.isEmpty())
+        qFatal("TemplateGenerator: No template file found for '%s'. "
+               "Ensure '%s.%s' exists in the configured template directory or in resources.",
+               qPrintable(templateBaseName), qPrintable(templateBaseName),
+               qPrintable(m_fileExtension));
+
+    auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
+    QString rendered = InjaBridge::render(templateContent, json, includeCallback);
+
+    if (m_writer && m_writer->isOpen())
+        m_writer->write(rendered);
+}
+
+/*!
+    \internal
+    Generate a member listing sub-page for a C++ class or QML type.
+
+    Opens a new output file, renders the all-members data through the
+    \c members template, and closes the file. This mirrors
+    HtmlGenerator::generateAllMembersFile() but uses the IR pipeline
+    and template system instead of inline HTML generation.
+*/
+void TemplateGenerator::generateMemberListingPage(const Node *node,
+                                                   const IR::AllMembersIR &allMembers)
+{
+    const QString membersFileName =
+        fileBase(node) + "-members."_L1 + m_fileExtension;
+
+    QJsonObject json = allMembers.toJson();
+    json["title"_L1] = QString("List of All Members for "_L1 + allMembers.typeName);
+
+    beginDocument(membersFileName);
+    renderJson(json, "members"_L1);
+    endDocument();
 }
 
 /*!

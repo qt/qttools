@@ -23,6 +23,10 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 > **Note:** This type is a QML singleton. The type isn't creatable and only a single instance exists.
 
 {% endif %}{% endif %}
+{% if membersPageUrl != "" %}
+- [List of all members, including inherited members]({{ membersPageUrl }})
+
+{% endif %}
 {% include "partials/md/content_blocks.md" %}
 
 {% if length(sections) > 0 %}
@@ -47,7 +51,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% endif %}
 {% if existsIn(section, "inheritedMembers") %}
 {% for inherited in section.inheritedMembers %}
-- {{ inherited.count }} {{ section.plural }} inherited from [{{ inherited.className }}]({{ inherited.href }})
+- {{ inherited.count }} {{ section.plural }} inherited from {% if inherited.href != "" %}[{{ inherited.className }}]({{ inherited.href }}){% else %}{{ inherited.className }}{% endif %}
 {% endfor %}
 {% endif %}
 {% endfor %}

@@ -183,6 +183,10 @@ QJsonObject Document::toJson() const
     if (collectionInfo)
         json["collection"_L1] = collectionInfo->toJson();
 
+    // Members sub-page URL (always emitted for Inja root-level variable safety;
+    // empty string when no members sub-page was generated)
+    json["membersPageUrl"_L1] = membersPageUrl;
+
     // Sections (for aggregate pages with member listings).
     // Always emitted (even when empty) so templates can iterate safely
     // without existsIn() guards on the root data object.
