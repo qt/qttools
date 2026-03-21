@@ -1,3 +1,158 @@
-<!-- TemplateGenerator: QML Type Page for LottieAnimation -->
-<h1></h1>
-<p>Template-based output (IR integration pending)</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LottieAnimation QML Type</title>
+</head>
+<body>
+    <h1>LottieAnimation QML Type</h1>
+    <p class="brief">A Lottie player for Qt.</p>
+
+    <table class="requisites">
+    <tr><td class="memItemLeft">Import Statement:</td>
+    <td class="memItemRight"><code>import Qt.labs.lottieqt 1.0</code></td></tr>
+    <tr><td class="memItemLeft">Inherits:</td>
+    <td class="memItemRight">Item</td></tr>
+    </table>
+
+
+    <section class="content" aria-label="Description">
+        <p>The <a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> type shows Lottie format files.</p>
+        <p><a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> is used to load and render Lottie files exported from Adobe After Effects. Currently, only subset of the full Lottie specification is supported. Most notable deviations are:</p>
+<ul>        <li>Only Shape layer supported</li>
+        <li>Only integer frame-mode of a timeline supported (real frame numbers and time are rounded to the nearest integer)</li>
+        <li>Expressions are not supported</li>
+</ul>        <p>For the full list of devations, please see see the <a href="qtlottieanimation-index.html">Limitations</a> section.</p>
+        <section>
+        <h1>Example Usage</h1>
+        <p>The following example shows a simple usage of the <a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> type</p>
+        <pre class="qml" translate="no"><code>&lt;@type&gt;LottieAnimation&lt;/@type&gt; {
+    &lt;@name&gt;loops&lt;/@name&gt;: &lt;@number&gt;2&lt;/@number&gt;
+    &lt;@name&gt;quality&lt;/@name&gt;: &lt;@name&gt;LottieAnimation&lt;/@name&gt;.&lt;@name&gt;MediumQuality&lt;/@name&gt;
+    &lt;@name&gt;source&lt;/@name&gt;: &lt;@string&gt;&amp;quot;animation.json&amp;quot;&lt;/@string&gt;
+    &lt;@name&gt;autoPlay&lt;/@name&gt;: &lt;@number&gt;false&lt;/@number&gt;
+    &lt;@name&gt;onStatusChanged&lt;/@name&gt;: {
+        &lt;@keyword&gt;if&lt;/@keyword&gt; (&lt;@name&gt;status&lt;/@name&gt; &lt;@op&gt;===&lt;/@op&gt; &lt;@name&gt;LottieAnimation&lt;/@name&gt;.&lt;@name&gt;Ready&lt;/@name&gt;) {
+            &lt;@comment&gt;// any acvities needed before&lt;/@comment&gt;
+            &lt;@comment&gt;// playing starts go here&lt;/@comment&gt;
+            &lt;@name&gt;gotoAndPlay&lt;/@name&gt;(&lt;@name&gt;startFrame&lt;/@name&gt;);
+        }
+    }
+    &lt;@name&gt;onFinished&lt;/@name&gt;: {
+        &lt;@name&gt;console&lt;/@name&gt;.&lt;@name&gt;log&lt;/@name&gt;(&lt;@string&gt;&amp;quot;Finished playing&amp;quot;&lt;/@string&gt;)
+    }
+}
+</code></pre>
+        <aside class="admonition note" role="note"><p><b>Note: </b>Changing width or height of the element does not change the size of the animation within. Also, it is not possible to align the the content inside of a LottieAnimation element. To achieve this, position the animation inside e.g. an Item.</p></aside>
+        </section>
+        <section>
+        <h1>Rendering Performance</h1>
+        <p>Internally, the rendered frame data is cached to improve performance. You can control the memory usage by setting the <a href="QLOTTIE_RENDER_CACHE_SIZE">QLOTTIE_RENDER_CACHE_SIZE</a> environment variable (default value is 2).</p>
+        <p>You can monitor the rendering performance by turning on two logging categories:</p>
+<ul>        <li><code>qt&lt;@op&gt;.&lt;/@op&gt;lottieqt&lt;@op&gt;.&lt;/@op&gt;lottie&lt;@op&gt;.&lt;/@op&gt;render</code> - Provides information how the animation is rendered</li>
+        <li><code>qt&lt;@op&gt;.&lt;/@op&gt;lottieqt&lt;@op&gt;.&lt;/@op&gt;lottie&lt;@op&gt;.&lt;/@op&gt;render&lt;@op&gt;.&lt;/@op&gt;thread</code> - Provides information how the rendering process proceeds.</li>
+</ul>        <p>Specifically, you can monitor does the frame cache gets constantly full, or does the rendering process have to wait for frames to become ready. The first case implies that the animation is too complex, and the rendering cannot keep up the pace. Try making the animation simpler, or optimize the QML scene.</p>
+        </section>
+    </section>
+    <div class="section-properties">
+    <h2>Properties</h2>
+    <table class="alignedsummary">
+    <tr>
+    <td class="memItemLeft">autoPlay : bool</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">direction : enumeration</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">endFrame : int</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">frameRate : int</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">loops : int</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">quality : enumeration</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">source : url</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">startFrame : int</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">status : enumeration</td>
+    <td class="memItemRight"></td>
+    </tr>
+    </table>
+    </div>
+    <div class="section-signals">
+    <h2>Signals</h2>
+    <table class="alignedsummary">
+    <tr>
+    <td class="memItemLeft">finished()</td>
+    <td class="memItemRight"></td>
+    </tr>
+    </table>
+    </div>
+    <div class="section-methods">
+    <h2>Methods</h2>
+    <table class="alignedsummary">
+    <tr>
+    <td class="memItemLeft">double getDuration(bool inFrames)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">void gotoAndPlay(int frame)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">bool gotoAndPlay(string frameMarker)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">void gotoAndStop(int frame)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">bool gotoAndStop(string frameMarker)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">void pause()</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">void play()</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">void start()</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">void stop()</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">void togglePause()</td>
+    <td class="memItemRight"></td>
+    </tr>
+    </table>
+    </div>
+
+    <footer>
+        <p>Built with QDoc's template engine.</p>
+    </footer>
+</body>
+</html>

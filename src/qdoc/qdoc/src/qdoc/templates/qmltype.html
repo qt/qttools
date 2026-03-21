@@ -1,0 +1,87 @@
+{#-
+Copyright (C) 2026 The Qt Company Ltd.
+SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+-#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ fullTitle }}</h1>
+    {% if default(brief, "") != "" %}
+    <p class="brief">{{ brief }}</p>
+    {% endif %}
+
+    {% if hasQmlType %}
+    <table class="requisites">
+    {% if existsIn(qmlType, "importStatement") %}
+    <tr><td class="memItemLeft">Import Statement:</td>
+    <td class="memItemRight"><code>{{ qmlType.importStatement }}</code></td></tr>
+    {% endif %}
+    {% if existsIn(qmlType, "inherits") %}
+    <tr><td class="memItemLeft">Inherits:</td>
+    <td class="memItemRight">{% if qmlType.inherits.href != "" %}<a href="{{ qmlType.inherits.href }}">{{ escape_html(qmlType.inherits.name) }}</a>{% else %}{{ escape_html(qmlType.inherits.name) }}{% endif %}</td></tr>
+    {% endif %}
+    {% if existsIn(qmlType, "inheritedBy") %}
+    <tr><td class="memItemLeft">Inherited By:</td>
+    <td class="memItemRight">{% for sub in qmlType.inheritedBy %}{% if not loop.is_first %}, {% endif %}{% if sub.href != "" %}<a href="{{ sub.href }}">{{ escape_html(sub.name) }}</a>{% else %}{{ escape_html(sub.name) }}{% endif %}{% endfor %}</td></tr>
+    {% endif %}
+    {% if existsIn(qmlType, "nativeType") %}
+    <tr><td class="memItemLeft">In C++:</td>
+    <td class="memItemRight">{% if qmlType.nativeType.href != "" %}<a href="{{ qmlType.nativeType.href }}">{{ escape_html(qmlType.nativeType.name) }}</a>{% else %}{{ escape_html(qmlType.nativeType.name) }}{% endif %}</td></tr>
+    {% endif %}
+    {% if qmlType.isSingleton %}
+    <tr><td class="memItemLeft">Status:</td>
+    <td class="memItemRight">Singleton</td></tr>
+    {% endif %}
+    </table>
+    {% endif %}
+
+    {% if hasQmlType %}{% if qmlType.isSingleton %}
+    <p><b>Note:</b> This type is a QML singleton. The type isn't creatable and only a single
+    instance exists.</p>
+    {% endif %}{% endif %}
+
+    {% include "partials/html/content_blocks.html" %}
+    {% if length(sections) > 0 %}
+    {% for section in sections %}
+    <div class="section-{{ section.id }}">
+    <h2>{{ escape_html(section.title) }}</h2>
+    {% if length(section.members) > 0 %}
+    <table class="alignedsummary">
+    {% for member in section.members %}
+    <tr>
+    <td class="memItemLeft">{% if existsIn(member, "href") and member.href != "" %}<a href="{{ member.href }}">{{ escape_html(member.signature) }}</a>{% else %}{{ escape_html(member.signature) }}{% endif %}</td>
+    <td class="memItemRight">{{ escape_html(default(member.brief, "")) }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    {% endif %}
+    {% if existsIn(section, "reimplementedMembers") %}
+    <h3>Reimplemented {{ escape_html(section.plural) }}</h3>
+    <table class="alignedsummary">
+    {% for member in section.reimplementedMembers %}
+    <tr>
+    <td class="memItemLeft">{% if existsIn(member, "href") and member.href != "" %}<a href="{{ member.href }}">{{ escape_html(member.signature) }}</a>{% else %}{{ escape_html(member.signature) }}{% endif %}</td>
+    <td class="memItemRight">{{ escape_html(default(member.brief, "")) }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    {% endif %}
+    {% if existsIn(section, "inheritedMembers") %}
+    {% for inherited in section.inheritedMembers %}
+    <p>{{ inherited.count }} {{ escape_html(section.plural) }} inherited from <a href="{{ inherited.href }}">{{ escape_html(inherited.className) }}</a></p>
+    {% endfor %}
+    {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <footer>
+        <p>Built with QDoc's template engine.</p>
+    </footer>
+</body>
+</html>

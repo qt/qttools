@@ -1,3 +1,14 @@
-<!-- TemplateGenerator: QML Type Page for Item -->
-<h1></h1>
-<p>Template-based output (IR integration pending)</p>
+# Item QML Type
+
+Represents an Item
+
+| | |
+| --- | --- |
+| Inherited By | LottieAnimation|
+
+
+
+
+---
+
+*Built with QDoc's template engine.*

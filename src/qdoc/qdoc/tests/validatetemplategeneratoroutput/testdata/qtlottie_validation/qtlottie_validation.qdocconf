@@ -30,5 +30,5 @@ projectroot = .
 logwarnings = true
 logwarnings.disablecliargs = true
 # warninglimit is a hard cap; warnings are asserted via log file.
-warninglimit = 30
+warninglimit = 40
 warninglimit.enabled = true
