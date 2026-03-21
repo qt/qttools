@@ -6,6 +6,7 @@
 #include "aggregate.h"
 #include "atom.h"
 #include "classnode.h"
+#include "codemarker.h"
 #include "collectionnode.h"
 #include "config.h"
 #include "doc.h"
@@ -24,6 +25,8 @@
 #include "typedefnode.h"
 #include "utilities.h"
 #include "variablenode.h"
+
+#include <QRegularExpression>
 
 QT_BEGIN_NAMESPACE
 
@@ -388,6 +391,178 @@ IR::MemberIR extractMemberIR(const Node *node)
     }
 
     return member;
+}
+
+static QString stripCodeMarkerTags(const QString &marked)
+{
+    static const QRegularExpression tagRegex(
+        "<@[a-z]+[^>]*>|</@[a-z]+>"_L1,
+        QRegularExpression::InvertedGreedinessOption);
+    QString result = marked;
+    result.remove(tagRegex);
+    return result;
+}
+
+/*!
+    \internal
+    Extract a grouped all-members listing for a QML type.
+
+    Constructs a Sections object from the QmlTypeNode, extracts
+    allMembersSection().classNodesList() to group members by
+    originating QML type, and builds AllMemberEntry items with
+    QML-specific hints and property group nesting.
+*/
+static IR::AllMembersIR extractQmlAllMembersIR(const QmlTypeNode *qcn)
+{
+    IR::AllMembersIR result;
+    result.typeName = qcn->name();
+    result.typeHref = qcn->url();
+    result.isQmlType = true;
+
+    Sections sections(qcn);
+    ClassNodesList &groupedMembers = sections.allMembersSection().classNodesList();
+    if (groupedMembers.isEmpty())
+        return result;
+
+    CodeMarker *marker = CodeMarker::markerForLanguage("QML"_L1);
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+
+    std::function<IR::AllMemberEntry(Node *)> buildEntry = [&](Node *node) -> IR::AllMemberEntry {
+        IR::AllMemberEntry entry;
+        entry.signature = stripCodeMarkerTags(
+            marker->markedUpQmlItem(node, true));
+        entry.href = node->url();
+
+        if (node->isQmlProperty()) {
+            auto *qpn = static_cast<QmlPropertyNode *>(node);
+            QStringList qmlHints = qpn->hints();
+            if (qpn->isAttached() && !qmlHints.contains("attached"_L1))
+                qmlHints << "attached"_L1;
+            for (const auto &h : std::as_const(qmlHints))
+                entry.hints.append(h);
+        } else if (node->isAttached()) {
+            entry.hints.append("attached"_L1);
+        }
+
+        if (node->isPropertyGroup()) {
+            entry.isPropertyGroup = true;
+            const auto *scn = static_cast<SharedCommentNode *>(node);
+            for (auto *child : scn->collective()) {
+                const NodeContext childContext = child->createContext();
+                if (!InclusionFilter::isIncluded(policy, childContext))
+                    continue;
+                entry.children.append(buildEntry(child));
+            }
+        }
+
+        return entry;
+    };
+
+    auto isVisible = [&policy](Node *node) {
+        const NodeContext context = node->createContext();
+        return InclusionFilter::isIncluded(policy, context)
+            && !(node->isSharingComment() && node->sharedCommentNode()->isPropertyGroup());
+    };
+
+    for (const auto &[originType, nodes] : groupedMembers) {
+        Q_ASSERT(originType);
+        if (nodes.isEmpty())
+            continue;
+
+        IR::MemberGroup group;
+        if (originType != qcn) {
+            group.typeName = originType->name();
+            group.typeHref = originType->url();
+        }
+
+        for (auto *node : nodes) {
+            if (isVisible(node))
+                group.members.append(buildEntry(node));
+        }
+
+        result.memberGroups.append(group);
+    }
+
+    return result;
+}
+
+/*!
+    \internal
+    Extract a flat all-members listing for a C++ class or namespace.
+
+    Constructs a Sections object from the aggregate, extracts
+    allMembersSection().members(), builds AllMemberEntry for each
+    visible member, and returns an AllMembersIR with isQmlType=false.
+*/
+static IR::AllMembersIR extractCppAllMembersIR(const Aggregate *aggregate)
+{
+    IR::AllMembersIR result;
+    result.typeName = aggregate->plainFullName();
+    result.typeHref = aggregate->url();
+    result.isQmlType = false;
+
+    Sections sections(aggregate);
+    const Section &allMembers = sections.allMembersSection();
+    if (allMembers.isEmpty())
+        return result;
+
+    CodeMarker *marker = CodeMarker::markerForCode(QString());
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+
+    for (const auto *node : allMembers.members()) {
+        if (node->name().isEmpty())
+            continue;
+        const NodeContext context = node->createContext();
+        if (!InclusionFilter::isIncluded(policy, context))
+            continue;
+
+        IR::AllMemberEntry entry;
+        entry.signature = stripCodeMarkerTags(
+            marker->markedUpSynopsis(node, aggregate, Section::AllMembers));
+        entry.href = node->url();
+        result.members.append(entry);
+    }
+
+    return result;
+}
+
+/*!
+    \internal
+    Extract all-members IR for a page node.
+
+    Dispatches to the QML or C++ extraction function based on the page
+    type. Returns std::nullopt for page types that don't have member
+    listing pages (generic pages, QML basic types) or when the listing
+    would be empty.
+*/
+std::optional<IR::AllMembersIR> extractAllMembersIR(const PageNode *pn)
+{
+    if (pn->isQmlType()) {
+        const auto *qcn = static_cast<const QmlTypeNode *>(pn);
+        if (qcn->isQmlBasicType())
+            return std::nullopt;
+        auto result = extractQmlAllMembersIR(qcn);
+        bool hasMember = false;
+        for (const auto &group : std::as_const(result.memberGroups)) {
+            if (!group.members.isEmpty()) {
+                hasMember = true;
+                break;
+            }
+        }
+        if (!hasMember)
+            return std::nullopt;
+        return result;
+    }
+
+    if (pn->isAggregate() && (pn->isClassNode() || pn->isNamespace())) {
+        const auto *aggregate = static_cast<const Aggregate *>(pn);
+        auto result = extractCppAllMembersIR(aggregate);
+        if (result.members.isEmpty())
+            return std::nullopt;
+        return result;
+    }
+
+    return std::nullopt;
 }
 
 } // namespace NodeExtractor

@@ -81,6 +81,31 @@ struct SectionIR {
     [[nodiscard]] QJsonObject toJson() const;
 };
 
+struct AllMemberEntry {
+    QString signature;
+    QString href;
+    QStringList hints;
+    bool isPropertyGroup { false };
+    QList<AllMemberEntry> children;
+    [[nodiscard]] QJsonObject toJson() const;
+};
+
+struct MemberGroup {
+    QString typeName;
+    QString typeHref;
+    QList<AllMemberEntry> members;
+    [[nodiscard]] QJsonObject toJson() const;
+};
+
+struct AllMembersIR {
+    QString typeName;
+    QString typeHref;
+    bool isQmlType { false };
+    QList<AllMemberEntry> members;
+    QList<MemberGroup> memberGroups;
+    [[nodiscard]] QJsonObject toJson() const;
+};
+
 } // namespace IR
 
 QT_END_NAMESPACE

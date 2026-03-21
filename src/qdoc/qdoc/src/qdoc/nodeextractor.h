@@ -6,6 +6,8 @@
 
 #include "ir/pagemetadata.h"
 
+#include <optional>
+
 QT_BEGIN_NAMESPACE
 
 class Aggregate;
@@ -21,6 +23,7 @@ IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn);
 IR::CollectionData extractCollectionData(const CollectionNode *cn);
 QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate);
 IR::MemberIR extractMemberIR(const Node *node);
+std::optional<IR::AllMembersIR> extractAllMembersIR(const PageNode *pn);
 
 } // namespace NodeExtractor
 

@@ -604,3 +604,216 @@ SCENARIO("IR::MemberIR QML property with all flags", "[IR::MemberIR][IR][QML]") 
         }
     }
 }
+
+SCENARIO("AllMemberEntry minimal serialization", "[AllMembersIR][IR]") {
+
+    GIVEN("An AllMemberEntry with only signature and href") {
+        IR::AllMemberEntry entry;
+        entry.signature = "source : url"_L1;
+        entry.href = "#source-prop"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = entry.toJson();
+
+            THEN("signature and href are present, optional fields omitted") {
+                REQUIRE(json["signature"_L1].toString() == "source : url");
+                REQUIRE(json["href"_L1].toString() == "#source-prop");
+                REQUIRE(!json.contains("hints"_L1));
+                REQUIRE(!json.contains("isPropertyGroup"_L1));
+                REQUIRE(!json.contains("children"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("AllMemberEntry with hints", "[AllMembersIR][IR]") {
+
+    GIVEN("An AllMemberEntry with read-only and default hints") {
+        IR::AllMemberEntry entry;
+        entry.signature = "count : int"_L1;
+        entry.href = "#count-prop"_L1;
+        entry.hints = { "read-only"_L1, "default"_L1 };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = entry.toJson();
+
+            THEN("The hints array is present with both entries") {
+                REQUIRE(json.contains("hints"_L1));
+                QJsonArray hints = json["hints"_L1].toArray();
+                REQUIRE(hints.size() == 2);
+                REQUIRE(hints[0].toString() == "read-only");
+                REQUIRE(hints[1].toString() == "default");
+            }
+        }
+    }
+}
+
+SCENARIO("AllMemberEntry with property group and children", "[AllMembersIR][IR]") {
+
+    GIVEN("An AllMemberEntry that is a property group with children") {
+        IR::AllMemberEntry child1;
+        child1.signature = "font.family : string"_L1;
+        child1.href = "#font.family-prop"_L1;
+
+        IR::AllMemberEntry child2;
+        child2.signature = "font.pointSize : real"_L1;
+        child2.href = "#font.pointSize-prop"_L1;
+
+        IR::AllMemberEntry entry;
+        entry.signature = "font group"_L1;
+        entry.href = "#font-group"_L1;
+        entry.isPropertyGroup = true;
+        entry.children = { child1, child2 };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = entry.toJson();
+
+            THEN("isPropertyGroup is true and children are serialized") {
+                REQUIRE(json["isPropertyGroup"_L1].toBool() == true);
+                REQUIRE(json.contains("children"_L1));
+                QJsonArray children = json["children"_L1].toArray();
+                REQUIRE(children.size() == 2);
+                REQUIRE(children[0].toObject()["signature"_L1].toString() == "font.family : string");
+                REQUIRE(children[1].toObject()["signature"_L1].toString() == "font.pointSize : real");
+            }
+        }
+    }
+}
+
+SCENARIO("MemberGroup serialization", "[AllMembersIR][IR]") {
+
+    GIVEN("A MemberGroup with a type name and entries") {
+        IR::AllMemberEntry e1;
+        e1.signature = "width : real"_L1;
+        e1.href = "#width-prop"_L1;
+
+        IR::MemberGroup group;
+        group.typeName = "Item"_L1;
+        group.typeHref = "qml-item.html"_L1;
+        group.members = { e1 };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = group.toJson();
+
+            THEN("typeName, typeHref, and members array are present") {
+                REQUIRE(json["typeName"_L1].toString() == "Item");
+                REQUIRE(json["typeHref"_L1].toString() == "qml-item.html");
+                REQUIRE(json["members"_L1].toArray().size() == 1);
+                REQUIRE(json["members"_L1].toArray()[0].toObject()["signature"_L1].toString() == "width : real");
+            }
+        }
+    }
+}
+
+SCENARIO("AllMembersIR QML type with groups", "[AllMembersIR][IR]") {
+
+    GIVEN("An AllMembersIR for a QML type with two member groups") {
+        IR::AllMemberEntry ownEntry;
+        ownEntry.signature = "source : url"_L1;
+        ownEntry.href = "#source-prop"_L1;
+
+        IR::MemberGroup ownGroup;
+        ownGroup.members = { ownEntry };
+
+        IR::AllMemberEntry inheritedEntry;
+        inheritedEntry.signature = "width : real"_L1;
+        inheritedEntry.href = "#width-prop"_L1;
+
+        IR::MemberGroup inheritedGroup;
+        inheritedGroup.typeName = "Item"_L1;
+        inheritedGroup.typeHref = "qml-item.html"_L1;
+        inheritedGroup.members = { inheritedEntry };
+
+        IR::AllMembersIR allMembers;
+        allMembers.typeName = "LottieAnimation"_L1;
+        allMembers.typeHref = "qml-lottieanimation.html"_L1;
+        allMembers.isQmlType = true;
+        allMembers.memberGroups = { ownGroup, inheritedGroup };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = allMembers.toJson();
+
+            THEN("isQmlType is true and memberGroups are serialized") {
+                REQUIRE(json["typeName"_L1].toString() == "LottieAnimation");
+                REQUIRE(json["typeHref"_L1].toString() == "qml-lottieanimation.html");
+                REQUIRE(json["isQmlType"_L1].toBool() == true);
+                REQUIRE(json.contains("memberGroups"_L1));
+                REQUIRE(json["memberGroups"_L1].toArray().size() == 2);
+                REQUIRE(!json.contains("members"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("AllMembersIR C++ type with flat members", "[AllMembersIR][IR]") {
+
+    GIVEN("An AllMembersIR for a C++ class with flat members") {
+        IR::AllMemberEntry e1;
+        e1.signature = "void show()"_L1;
+        e1.href = "#show"_L1;
+
+        IR::AllMemberEntry e2;
+        e2.signature = "void hide()"_L1;
+        e2.href = "#hide"_L1;
+
+        IR::AllMembersIR allMembers;
+        allMembers.typeName = "QWidget"_L1;
+        allMembers.typeHref = "qwidget.html"_L1;
+        allMembers.isQmlType = false;
+        allMembers.members = { e1, e2 };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = allMembers.toJson();
+
+            THEN("isQmlType is false and members are serialized") {
+                REQUIRE(json["isQmlType"_L1].toBool() == false);
+                REQUIRE(json.contains("members"_L1));
+                REQUIRE(json["members"_L1].toArray().size() == 2);
+                REQUIRE(!json.contains("memberGroups"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("MemberGroup with empty typeName for own members", "[AllMembersIR][IR]") {
+
+    GIVEN("A MemberGroup with empty typeName indicating own members") {
+        IR::AllMemberEntry e1;
+        e1.signature = "source : url"_L1;
+        e1.href = "#source-prop"_L1;
+
+        IR::MemberGroup group;
+        group.members = { e1 };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = group.toJson();
+
+            THEN("typeName is emitted as empty string") {
+                REQUIRE(json["typeName"_L1].toString().isEmpty());
+                REQUIRE(json["typeHref"_L1].toString().isEmpty());
+                REQUIRE(json["members"_L1].toArray().size() == 1);
+            }
+        }
+    }
+}
+
+SCENARIO("AllMembersIR empty members produce empty JSON", "[AllMembersIR][IR]") {
+
+    GIVEN("An AllMembersIR with no members or groups") {
+        IR::AllMembersIR allMembers;
+        allMembers.typeName = "EmptyType"_L1;
+        allMembers.typeHref = "empty.html"_L1;
+        allMembers.isQmlType = true;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = allMembers.toJson();
+
+            THEN("Both members and memberGroups are absent") {
+                REQUIRE(json["typeName"_L1].toString() == "EmptyType");
+                REQUIRE(json["isQmlType"_L1].toBool() == true);
+                REQUIRE(!json.contains("members"_L1));
+                REQUIRE(!json.contains("memberGroups"_L1));
+            }
+        }
+    }
+}

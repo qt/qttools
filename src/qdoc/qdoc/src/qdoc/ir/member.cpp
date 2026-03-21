@@ -400,6 +400,120 @@ QJsonObject SectionIR::toJson() const
     return json;
 }
 
+/*!
+    \struct IR::AllMemberEntry
+    \brief A single entry in an all-members listing page.
+
+    AllMemberEntry captures the display signature and link target for
+    one member on an all-members sub-page. QML properties carry display
+    hints (such as "read-only" or "default") and property groups nest
+    child entries under a parent.
+*/
+
+/*!
+    Converts the entry to a QJsonObject for template rendering.
+
+    Always emits \c signature and \c href. The \c hints array, \c
+    isPropertyGroup flag, and \c children array are omitted when
+    empty or false.
+*/
+QJsonObject AllMemberEntry::toJson() const
+{
+    QJsonObject json;
+    json["signature"_L1] = signature;
+    json["href"_L1] = href;
+
+    if (!hints.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &hint : hints)
+            arr.append(hint);
+        json["hints"_L1] = arr;
+    }
+
+    if (isPropertyGroup)
+        json["isPropertyGroup"_L1] = true;
+
+    if (!children.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &child : children)
+            arr.append(child.toJson());
+        json["children"_L1] = arr;
+    }
+
+    return json;
+}
+
+/*!
+    \struct IR::MemberGroup
+    \brief Members grouped by originating QML type in an all-members listing.
+
+    MemberGroup groups AllMemberEntry items by the QML type they originate
+    from, enabling templates to render "inherited from ..." headings. An
+    empty \c typeName indicates the type's own members.
+*/
+
+/*!
+    Converts the member group to a QJsonObject for template rendering.
+
+    Always emits \c typeName (even when empty, since empty means own
+    members), \c typeHref, and \c members array.
+*/
+QJsonObject MemberGroup::toJson() const
+{
+    QJsonObject json;
+    json["typeName"_L1] = typeName;
+    json["typeHref"_L1] = typeHref;
+
+    QJsonArray arr;
+    for (const auto &entry : members)
+        arr.append(entry.toJson());
+    json["members"_L1] = arr;
+
+    return json;
+}
+
+/*!
+    \struct IR::AllMembersIR
+    \brief Intermediate representation of the all-members listing page.
+
+    AllMembersIR captures all data needed to render a member listing
+    sub-page. It supports two rendering paths: a flat alphabetical list
+    for C++ classes and a grouped-by-origin-type list for QML types.
+    The \c isQmlType flag determines which path the template uses.
+*/
+
+/*!
+    Converts the all-members IR to a QJsonObject for template rendering.
+
+    Always emits \c typeName, \c typeHref, and \c isQmlType. The
+    \c members and \c memberGroups arrays are emitted only when
+    non-empty, letting templates distinguish C++ from QML by checking
+    which key exists.
+*/
+QJsonObject AllMembersIR::toJson() const
+{
+    QJsonObject json;
+    json["typeName"_L1] = typeName;
+    json["typeHref"_L1] = typeHref;
+    json["isQmlType"_L1] = isQmlType;
+
+    if (!members.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &entry : members)
+            arr.append(entry.toJson());
+        json["members"_L1] = arr;
+    }
+
+    if (!memberGroups.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &group : memberGroups)
+            arr.append(group.toJson());
+        json["memberGroups"_L1] = arr;
+    }
+
+    return json;
+}
+
 } // namespace IR
 
 QT_END_NAMESPACE
