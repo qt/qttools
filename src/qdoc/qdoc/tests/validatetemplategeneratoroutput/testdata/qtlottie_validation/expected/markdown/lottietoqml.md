@@ -3,6 +3,7 @@
 A tool that converts a Lottie document to a QML file.
 
 `lottietoqml` is a command line tool shipped with Qt that converts a Lottie document to a QML file. This QML file can then be used as a component in Qt Quick applications.
+You can use `lottietoqml` directly, or via the [qt_target_qml_from_lottie](qt-target-qml-from-lottie.md) [CMake](CMake) command.
 For a demonstration of how `lottietoqml` can be used in an application, see the [lottietoqml Example](qtlottie-lottietoqml-example.md).
 # Overview
 
@@ -16,6 +17,7 @@ In addition, it supports the following options:
 |--- |--- |
 | –copyright-statement <string> | Adds <string> as a comment at the beginning of the generated file. | 
 | -c, –curve-renderer | Enables the curve renderer backend for Qt Quick Shapes. This enables smooth, antialiased shapes in the scene without multi-sampling, but at some extra cost. | 
+| <@op>-</@op>a, <@op>-</@op><@op>-</@op>asynchronous<@op>-</@op>shapes | Enables the {QtQuick.Shapes::Shape::asynchronous}{asynchronous} mode on all Shape elements in the generated scene. This may improve CPU utilization and responsiveness. | 
 | -p, –optimize-paths | Enables optimization of paths before committing them to the QML file, potentially making them faster to load and render later. | 
 | –outline-stroke-mode | Stroke the outline (contour) of the filled shape instead of the original path. | 
 | -t, –type-name <string> | In place of Shape, the output will use the type name <string> instead. This is enables using a custom item to override the default behavior of Shape items. | 

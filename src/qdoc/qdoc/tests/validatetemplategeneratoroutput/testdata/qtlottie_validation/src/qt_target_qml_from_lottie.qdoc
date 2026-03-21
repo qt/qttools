@@ -1,0 +1,70 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+\page qt_target_qml_from_lottie.html
+\ingroup cmake-commands-qtlottie
+
+\title qt_target_qml_from_lottie
+\keyword qt6_target_qml_from_lottie
+
+\summary {Generates QML code based on a Lottie file.}
+
+The command is defined in the \c LottieTools component of the \c Qt6 package, which can
+be loaded like this:
+
+\badcode
+find_package(Qt6 REQUIRED COMPONENTS LottieTools)
+\endcode
+
+\cmakecommandsince 6.11
+
+\section1 Synopsis
+
+\badcode
+qt_target_qml_from_lottie(target
+                          [CURVE_RENDERER]
+                          [ASYNCHRONOUS_SHAPES]
+                          [OPTIMIZE_PATHS]
+                          [OUTLINE_STROKE_MODE]
+                          [TYPE_NAME "MyShapeName"]
+                          [COPYRIGHT_STATEMENT "Copyright © Company1"]
+                          FILES file1.json [file2.json ...]
+                          OUTPUTS File1.qml [File2.qml ...]
+                          )
+\endcode
+
+\versionlessCMakeCommandsNote qt6_target_qml_from_lottie()
+
+Example:
+
+\snippet lottietoqml/CMakeLists.txt lottietoqml
+
+\section1 Description
+
+qt_target_qml_from_lottie() creates the build steps to run \l{lottietoqml} on the list of Lottie
+images in \c FILES. The names of the generated files should be specified in \c OUTPUTS. The length
+of this list must be the same as \c FILES, and the first element corresponds to the first element in
+\c FILES and so forth. The names provided in \c OUTPUTS will be the names of the QML types as they
+appear in the module. These can in turn be instantiated in the application code.
+
+The generated QML files will be added to the QML module of \c{target}. You must use
+\l{qt_add_qml_module()} to define a module for the \c{target} first.
+
+Optionally, a \c COPYRIGHT_STATEMENT argument can be provided to insert copyright information
+into the generated files.
+
+\note Certain characters must be escaped for command line use or you may see build errors on
+some platforms.
+
+\c TYPE_NAME is also optional, and can be used to replace all instances of the \l{Shape} type in
+the generated file with a custom type. This can be useful to make general customizations to all
+the shapes in the provided Lottie files. The \c{TYPE_NAME} should refer to a QML type which is
+available in the \c{target} QML module.
+
+The options \c CURVE_RENDERER, \c ASYNCHRONOUS_SHAPES, \c OPTIMIZE_PATHS and \c OUTLINE_STROKE_MODE
+correspond to the \c{--curve-renderer}, \c{--asynchronous-shapes}, \c{--optimize-paths} and
+\c{--outline-stroke-mode} in \l{lottietoqml} respectively.
+*/
+
+

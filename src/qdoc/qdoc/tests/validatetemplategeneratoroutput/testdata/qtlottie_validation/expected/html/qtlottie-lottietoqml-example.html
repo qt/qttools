@@ -15,8 +15,8 @@
         <h1>Overview</h1>
         <p>The example consists of nine vector animations that have been converted using <a href="lottietoqml.html">lottietoqml</a>. They are displayed in a grid in a full screen application window.</p>
         <p>If the user clicks on one of the animated images, it will zoom to fill the screen. Since the image is vector-based, it will remain crisp without any scaling artifacts.</p>
-        <p>The <a href="lottietoqml.html">lottietoqml</a> does the equivalent to what <a href="svgtoqml">svgtoqml</a> does for .SVG files. It converts as much as possible of the original vector image and animation to <a href="Qt Quick Shapes">Qt Quick Shapes</a> and other <a href="Qt Quick">Qt Quick</a> components. The result is a fully scalable and hardware-accelerated rendering of the animation.</p>
-        <p>For convenience, Lottie files can also be loaded at run-time through the <a href="VectorImage">VectorImage</a> component. However, pregenerating the QML file is usually preferable, since this allows preprocessing the QML scene for faster loading.</p>
+        <p>The <a href="lottietoqml.html">lottietoqml</a> does the equivalent to what <a href="https://doc.qt.io/qt-6/svgtoqml.html">svgtoqml</a> does for .SVG files. It converts as much as possible of the original vector image and animation to <a href="https://doc.qt.io/qt-6/qtquick-shapes-qmlmodule.html">Qt Quick Shapes</a> and other <a href="https://doc.qt.io/qt-6/qtquick-module.html">Qt Quick</a> components. The result is a fully scalable and hardware-accelerated rendering of the animation.</p>
+        <p>For convenience, Lottie files can also be loaded at run-time through the <a href="https://doc.qt.io/qt-6/qml-qtquick-vectorimage.html">VectorImage</a> component. However, pregenerating the QML file is usually preferable, since this allows preprocessing the QML scene for faster loading.</p>
         <pre class="cpp" translate="no"><code>qt_target_qml_from_lottie(applottietoqmlexample
     CURVE_RENDERER
     OPTIMIZE_PATHS
@@ -42,7 +42,7 @@
         generated/UserInterface.qml
 )
 </code></pre>
-        <p>In this example, the Lottie files are automatically converted to QML using the <a href="CMake">CMake</a> function <a href="qt_target_qml_from_lottie">qt_target_qml_from_lottie()</a>.</p>
+        <p>In this example, the Lottie files are automatically converted to QML using the <a href="CMake">CMake</a> function <a href="qt-target-qml-from-lottie.html">qt_target_qml_from_lottie()</a>.</p>
         </section>
         <section>
         <h1>Assets</h1>

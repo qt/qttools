@@ -7,8 +7,8 @@ This example demonstrates how the [lottietoqml](lottietoqml.md) tool can be used
 
 The example consists of nine vector animations that have been converted using [lottietoqml](lottietoqml.md). They are displayed in a grid in a full screen application window.
 If the user clicks on one of the animated images, it will zoom to fill the screen. Since the image is vector-based, it will remain crisp without any scaling artifacts.
-The [lottietoqml](lottietoqml.md) does the equivalent to what [svgtoqml](svgtoqml) does for .SVG files. It converts as much as possible of the original vector image and animation to [Qt Quick Shapes](Qt Quick Shapes) and other [Qt Quick](Qt Quick) components. The result is a fully scalable and hardware-accelerated rendering of the animation.
-For convenience, Lottie files can also be loaded at run-time through the [VectorImage](VectorImage) component. However, pregenerating the QML file is usually preferable, since this allows preprocessing the QML scene for faster loading.
+The [lottietoqml](lottietoqml.md) does the equivalent to what [svgtoqml](https://doc.qt.io/qt-6/svgtoqml.html) does for .SVG files. It converts as much as possible of the original vector image and animation to [Qt Quick Shapes](https://doc.qt.io/qt-6/qtquick-shapes-qmlmodule.html) and other [Qt Quick](https://doc.qt.io/qt-6/qtquick-module.html) components. The result is a fully scalable and hardware-accelerated rendering of the animation.
+For convenience, Lottie files can also be loaded at run-time through the [VectorImage](https://doc.qt.io/qt-6/qml-qtquick-vectorimage.html) component. However, pregenerating the QML file is usually preferable, since this allows preprocessing the QML scene for faster loading.
 ```cpp
 qt_target_qml_from_lottie(applottietoqmlexample
     CURVE_RENDERER
@@ -37,7 +37,7 @@ qt_target_qml_from_lottie(applottietoqmlexample
 
 ```
 
-In this example, the Lottie files are automatically converted to QML using the [CMake](CMake) function [qt_target_qml_from_lottie()](qt_target_qml_from_lottie).
+In this example, the Lottie files are automatically converted to QML using the [CMake](CMake) function [qt_target_qml_from_lottie()](qt-target-qml-from-lottie.md).
 
 # Assets
 

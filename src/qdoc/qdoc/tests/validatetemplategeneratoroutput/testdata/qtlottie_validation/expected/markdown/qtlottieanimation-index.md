@@ -3,8 +3,9 @@
 Display Lottie format vector graphics animations.
 
 _Qt Lottie Animation_ provides QML APIs for rendering graphics and animations in Lottie format files. These are typically exported from the [Lottie](https://lottiefiles.com/plugins/after-effects) plugins for Adobe After Effects.
-The [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) item renders animations into an intermediate buffer using the [QPainter](QPainter) software renderer. This may impose some performance restrictions on the sizes of illustrations, as well as on the target hardware. As an alternative, a tool called [lottietoqml](lottietoqml.md) is included. This tool converts Lottie animations to QML. As a result, they can be rendered using the hardware-accelerated renderer in Qt Quick.
-Finally, the [VectorImage](VectorImage) Qt Quick item can load Lottie format files directly. It converts them to QML on the fly using the _lottietoqml_ functionality in a plugin.
+The [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) item renders animations into an intermediate buffer using the [QPainter](https://doc.qt.io/qt-6/qpainter.html) software renderer. This may impose some performance restrictions on the sizes of illustrations, as well as on the target hardware. As an alternative, a tool called [lottietoqml](lottietoqml.md) is included. This tool converts Lottie animations to QML. As a result, they can be rendered using the hardware-accelerated renderer in Qt Quick.
+If the Lottie files are known at compile time, you can also convert them to QML using the [lottietoqml](lottietoqml.md) tool, or the [qt_target_qml_from_lottie](qt-target-qml-from-lottie.md) [CMake](CMake) command that wraps the tool.
+Finally, the [VectorImage](https://doc.qt.io/qt-6/qml-qtquick-vectorimage.html) Qt Quick item can load Lottie format files directly. It converts them to QML at runtime using the [lottietoqml](lottietoqml.md) functionality in a plugin.
 # Getting Started
 
 Import the types using the the following statement:
@@ -62,11 +63,13 @@ The only supported effects are `Slide` and `Layer Fill`.
 
 # Licenses
 
-Qt Lottie Animation is available under commercial licenses from [The Qt Company](The Qt Company). In addition, it is available under the [GNU General Public License, version 3](GNU General Public License, version 3). See [Qt Licensing](Qt Licensing) for further details.
+Qt Lottie Animation is available under commercial licenses from [The Qt Company](https://www.qt.io/company). In addition, it is available under the [GNU General Public License, version 3](https://www.gnu.org/licenses/gpl-3.0.html). See [Qt Licensing](https://doc.qt.io/qt-6/licensing.html) for further details.
 
 # Reference
 
 - [QML Types](qt-labs-lottieqt-qmlmodule.md)
+- [lottietoqml Tool](lottietoqml.md)
+- [qt_target_qml_from_lottie CMake Command](qt-target-qml-from-lottie.md)
 
 
 # Related Information

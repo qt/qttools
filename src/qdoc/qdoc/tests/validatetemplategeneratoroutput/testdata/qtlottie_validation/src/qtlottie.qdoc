@@ -1,7 +1,7 @@
 // Copyright (C) 2019 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
 //
-// Verbatim from qtlottie.git (f667eca126cd), with one deviation:
+// Verbatim from qtlottie.git (22d8687), with one deviation:
 // import-only snippets use \code instead of \qml because the standalone
 // test has no 'depends' to provide module grammar metadata, and an
 // import statement alone isn't a valid QML program for the parser.
@@ -20,8 +20,11 @@
     \l{lottietoqml} is included. This tool converts Lottie animations to QML. As a result,
     they can be rendered using the hardware-accelerated renderer in Qt Quick.
 
+    If the Lottie files are known at compile time, you can also convert them to QML using the
+    \l lottietoqml tool, or the \l{qt_target_qml_from_lottie} CMake command that wraps the tool.
+
     Finally, the \l{VectorImage} Qt Quick item can load Lottie format files directly. It converts
-    them to QML on the fly using the \e lottietoqml functionality in a plugin.
+    them to QML at runtime using the \l lottietoqml functionality in a plugin.
 
     \section1 Getting Started
 
@@ -106,6 +109,8 @@
     \section1 Reference
     \list
         \li \l {Qt Lottie Animation QML Types}{QML Types}
+        \li \l {lottietoqml}{lottietoqml Tool}
+        \li \l {qt_target_qml_from_lottie}{qt_target_qml_from_lottie CMake Command}
     \endlist
 
     \section1 Related Information

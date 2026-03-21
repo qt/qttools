@@ -15,3 +15,66 @@
     \externalpage https://lottie.github.io/lottie-spec/1.0/
     \title Lottie Specification
 */
+
+// Stubs for external targets from other Qt modules.
+// These prevent "Can't link to" warnings in the standalone test project.
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qpainter.html
+    \title QPainter
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qquickpainteditem.html
+    \title QQuickPaintedItem
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qml-qtquick-shapes-shape.html
+    \title Shape
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qtquick-module.html
+    \title Qt Quick
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qtquick-shapes-qmlmodule.html
+    \title Qt Quick Shapes
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qt-add-qml-module.html
+    \title qt_add_qml_module()
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html#versionless-commands
+    \title Versionless commands
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qml-qtquick-vectorimage.html
+    \title VectorImage
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/svgtoqml.html
+    \title svgtoqml
+*/
+
+/*!
+    \externalpage https://www.qt.io/company
+    \title The Qt Company
+*/
+
+/*!
+    \externalpage https://www.gnu.org/licenses/gpl-3.0.html
+    \title GNU General Public License, version 3
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/licensing.html
+    \title Qt Licensing
+*/

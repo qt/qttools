@@ -10,6 +10,8 @@
 to a QML file. This QML file can then be used as a component in Qt Quick
 applications.
 
+You can use \c lottietoqml directly, or via the \l{qt_target_qml_from_lottie} CMake command.
+
 For a demonstration of how \c lottietoqml can be used in an application, see the
 \l{lottietoqml Example}.
 
@@ -39,6 +41,10 @@ In addition, it supports the following options:
     \li -c, --curve-renderer
     \li Enables the curve renderer backend for \l{Qt Quick Shapes}. This enables smooth, antialiased
     shapes in the scene without multi-sampling, but at some extra cost.
+\row
+    \li \c{-a}, \c{--asynchronous-shapes}
+    \li Enables the {QtQuick.Shapes::Shape::asynchronous}{asynchronous} mode on all \l{Shape}
+    elements in the generated scene. This may improve CPU utilization and responsiveness.
 \row
     \li -p, --optimize-paths
     \li Enables optimization of paths before committing them to the QML file, potentially making
