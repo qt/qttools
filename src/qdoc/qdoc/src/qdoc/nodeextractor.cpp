@@ -90,6 +90,11 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn)
         pm.qmlTypeData = extractQmlTypeData(qcn);
     }
 
+    if (pn->isCollectionNode()) {
+        const auto *cn = static_cast<const CollectionNode *>(pn);
+        pm.collectionData = extractCollectionData(cn);
+    }
+
     return pm;
 }
 
@@ -167,6 +172,83 @@ IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn)
         const NodeContext context = cn->createContext();
         if (InclusionFilter::isIncluded(policy, context))
             data.nativeType = IR::QmlTypeData::NativeTypeInfo{cn->name(), cn->url()};
+    }
+
+    return data;
+}
+
+/*!
+    \internal
+    Extract collection metadata from a CollectionNode.
+
+    Populates module identity, CMake/qmake build variables, technology
+    preview state, and pre-sorted member listings. For C++ modules,
+    members are categorized into separate namespace and class lists.
+    For groups and QML modules, a single flat member list is produced.
+
+    All member lists are filtered through InclusionFilter (excluding
+    internal entries) and exclude deprecated nodes, then sorted
+    alphabetically by name (case-insensitive).
+*/
+IR::CollectionData extractCollectionData(const CollectionNode *cn)
+{
+    IR::CollectionData data;
+
+    data.logicalModuleName = cn->logicalModuleName();
+    data.logicalModuleVersion = cn->logicalModuleVersion();
+    data.qtVariable = cn->qtVariable();
+    data.cmakePackage = cn->cmakePackage();
+    data.cmakeComponent = cn->cmakeComponent();
+    data.cmakeTargetItem = cn->cmakeTargetItem();
+    data.state = cn->state();
+
+    data.isModule = cn->isModule();
+    data.isQmlModule = cn->isQmlModule();
+    data.isGroup = cn->isGroup();
+    data.noAutoList = cn->noAutoList();
+
+    if (cn->noAutoList())
+        return data;
+
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+
+    auto makeMemberEntry = [](const Node *node) -> IR::CollectionData::MemberEntry {
+        return { node->name(), node->url(), node->doc().briefText().toString() };
+    };
+
+    auto sortEntries = [](QList<IR::CollectionData::MemberEntry> &entries) {
+        std::sort(entries.begin(), entries.end(),
+                  [](const IR::CollectionData::MemberEntry &a,
+                     const IR::CollectionData::MemberEntry &b) {
+                      return a.name.compare(b.name, Qt::CaseInsensitive) < 0;
+                  });
+    };
+
+    if (cn->isModule()) {
+        const NodeMap nsMap = cn->getMembers(NodeType::Namespace);
+        for (auto *node : nsMap.values()) {
+            const NodeContext context = node->createContext();
+            if (InclusionFilter::isIncluded(policy, context) && !node->isDeprecated())
+                data.namespaces.append(makeMemberEntry(node));
+        }
+        sortEntries(data.namespaces);
+
+        const NodeMap classMap = cn->getMembers([](const Node *n) { return n->isClassNode(); });
+        for (auto *node : classMap.values()) {
+            const NodeContext context = node->createContext();
+            if (InclusionFilter::isIncluded(policy, context) && !node->isDeprecated())
+                data.classes.append(makeMemberEntry(node));
+        }
+        sortEntries(data.classes);
+    } else {
+        for (const auto *node : cn->members()) {
+            if (!node->isInAPI())
+                continue;
+            const NodeContext context = node->createContext();
+            if (InclusionFilter::isIncluded(policy, context) && !node->isDeprecated())
+                data.members.append(makeMemberEntry(node));
+        }
+        sortEntries(data.members);
     }
 
     return data;

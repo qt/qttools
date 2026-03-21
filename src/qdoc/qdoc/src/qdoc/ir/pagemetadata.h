@@ -46,6 +46,32 @@ struct QmlTypeData
     std::optional<NativeTypeInfo> nativeType;
 };
 
+struct CollectionData
+{
+    struct MemberEntry {
+        QString name;
+        QString href;
+        QString brief;
+    };
+
+    QString logicalModuleName;
+    QString logicalModuleVersion;
+    QString qtVariable;
+    QString cmakePackage;
+    QString cmakeComponent;
+    QString cmakeTargetItem;
+    QString state;
+
+    bool isModule { false };
+    bool isQmlModule { false };
+    bool isGroup { false };
+    bool noAutoList { false };
+
+    QList<MemberEntry> namespaces;
+    QList<MemberEntry> classes;
+    QList<MemberEntry> members;
+};
+
 struct PageMetadata
 {
     NodeType nodeType { NodeType::NoType };
@@ -64,6 +90,7 @@ struct PageMetadata
     QList<SectionIR> summarySections;
 
     std::optional<QmlTypeData> qmlTypeData;
+    std::optional<CollectionData> collectionData;
 };
 
 } // namespace IR
