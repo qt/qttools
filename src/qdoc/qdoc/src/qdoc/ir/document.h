@@ -15,9 +15,39 @@
 #include <QList>
 #include <QString>
 
+#include <optional>
+
 QT_BEGIN_NAMESPACE
 
 namespace IR {
+
+struct QmlTypeInfo
+{
+    QString importStatement;
+    bool isSingleton { false };
+    bool isValueType { false };
+
+    struct InheritsInfo {
+        QString name;
+        QString href;
+        QString moduleName;
+    };
+    std::optional<InheritsInfo> inherits;
+
+    struct InheritedByEntry {
+        QString name;
+        QString href;
+    };
+    QList<InheritedByEntry> inheritedBy;
+
+    struct NativeTypeInfo {
+        QString name;
+        QString href;
+    };
+    std::optional<NativeTypeInfo> nativeType;
+
+    [[nodiscard]] QJsonObject toJson() const;
+};
 
 struct Document
 {
@@ -41,6 +71,9 @@ struct Document
 
     // Members (for aggregate pages)
     QList<SectionIR> summarySections;
+
+    // QML type metadata (populated only for QML type pages)
+    std::optional<QmlTypeInfo> qmlTypeInfo;
 
     QJsonObject toJson() const;
 };

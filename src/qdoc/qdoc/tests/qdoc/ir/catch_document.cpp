@@ -442,3 +442,202 @@ SCENARIO("IR::Document body field with always-emit convention", "[IR::Document][
         }
     }
 }
+
+SCENARIO("IR::Document hasQmlType flag", "[IR::Document][IR][QmlTypeInfo]") {
+
+    GIVEN("An IR::Document without QML type info") {
+        IR::Document ir;
+        ir.title = "RegularPage"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("hasQmlType is false and qmlType key is absent") {
+                REQUIRE(json["hasQmlType"_L1].toBool() == false);
+                REQUIRE(!json.contains("qmlType"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("IR::QmlTypeInfo minimal defaults", "[IR::QmlTypeInfo][IR][QML]") {
+
+    GIVEN("A QmlTypeInfo with only default values") {
+        IR::QmlTypeInfo info;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("Flags are false") {
+                REQUIRE(json["isSingleton"_L1].toBool() == false);
+                REQUIRE(json["isValueType"_L1].toBool() == false);
+            }
+
+            THEN("Optional fields are absent") {
+                REQUIRE(!json.contains("importStatement"_L1));
+                REQUIRE(!json.contains("inherits"_L1));
+                REQUIRE(!json.contains("inheritedBy"_L1));
+                REQUIRE(!json.contains("nativeType"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("IR::QmlTypeInfo with import statement", "[IR::QmlTypeInfo][IR][QML]") {
+
+    GIVEN("A QmlTypeInfo with an import statement") {
+        IR::QmlTypeInfo info;
+        info.importStatement = "import QtQuick 2.15"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("The import statement is serialized") {
+                REQUIRE(json["importStatement"_L1].toString() == "import QtQuick 2.15");
+            }
+        }
+    }
+}
+
+SCENARIO("IR::QmlTypeInfo with inherits chain", "[IR::QmlTypeInfo][IR][QML]") {
+
+    GIVEN("A QmlTypeInfo with an inherited base type") {
+        IR::QmlTypeInfo info;
+        info.inherits = IR::QmlTypeInfo::InheritsInfo{
+            "Item"_L1, "qml-qtquick-item.html"_L1, "QtQuick"_L1
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("The inherits object contains name, href, and moduleName") {
+                REQUIRE(json.contains("inherits"_L1));
+                QJsonObject inherits = json["inherits"_L1].toObject();
+                REQUIRE(inherits["name"_L1].toString() == "Item");
+                REQUIRE(inherits["href"_L1].toString() == "qml-qtquick-item.html");
+                REQUIRE(inherits["moduleName"_L1].toString() == "QtQuick");
+            }
+        }
+    }
+}
+
+SCENARIO("IR::QmlTypeInfo with inheritedBy list", "[IR::QmlTypeInfo][IR][QML]") {
+
+    GIVEN("A QmlTypeInfo with two subclass entries") {
+        IR::QmlTypeInfo info;
+        info.inheritedBy = {
+            {"Rectangle"_L1, "qml-qtquick-rectangle.html"_L1},
+            {"Text"_L1, "qml-qtquick-text.html"_L1}
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("The inheritedBy array has two entries with name and href") {
+                REQUIRE(json.contains("inheritedBy"_L1));
+                QJsonArray arr = json["inheritedBy"_L1].toArray();
+                REQUIRE(arr.size() == 2);
+                REQUIRE(arr[0].toObject()["name"_L1].toString() == "Rectangle");
+                REQUIRE(arr[0].toObject()["href"_L1].toString() == "qml-qtquick-rectangle.html");
+                REQUIRE(arr[1].toObject()["name"_L1].toString() == "Text");
+            }
+        }
+    }
+}
+
+SCENARIO("IR::QmlTypeInfo with native type", "[IR::QmlTypeInfo][IR][QML]") {
+
+    GIVEN("A QmlTypeInfo with a native C++ type") {
+        IR::QmlTypeInfo info;
+        info.nativeType = IR::QmlTypeInfo::NativeTypeInfo{
+            "QQuickItem"_L1, "qquickitem.html"_L1
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("The nativeType object contains name and href") {
+                REQUIRE(json.contains("nativeType"_L1));
+                QJsonObject nt = json["nativeType"_L1].toObject();
+                REQUIRE(nt["name"_L1].toString() == "QQuickItem");
+                REQUIRE(nt["href"_L1].toString() == "qquickitem.html");
+            }
+        }
+    }
+}
+
+SCENARIO("IR::QmlTypeInfo with singleton flag", "[IR::QmlTypeInfo][IR][QML]") {
+
+    GIVEN("A QmlTypeInfo marked as singleton") {
+        IR::QmlTypeInfo info;
+        info.isSingleton = true;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("isSingleton is true") {
+                REQUIRE(json["isSingleton"_L1].toBool() == true);
+            }
+        }
+    }
+}
+
+SCENARIO("IR::QmlTypeInfo with value type flag", "[IR::QmlTypeInfo][IR][QML]") {
+
+    GIVEN("A QmlTypeInfo marked as value type") {
+        IR::QmlTypeInfo info;
+        info.isValueType = true;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("isValueType is true") {
+                REQUIRE(json["isValueType"_L1].toBool() == true);
+            }
+        }
+    }
+}
+
+SCENARIO("IR::QmlTypeInfo full population", "[IR::QmlTypeInfo][IR][QML]") {
+
+    GIVEN("A fully populated QmlTypeInfo") {
+        IR::QmlTypeInfo info;
+        info.importStatement = "import QtQuick 2.15"_L1;
+        info.isSingleton = false;
+        info.isValueType = false;
+        info.inherits = IR::QmlTypeInfo::InheritsInfo{
+            "Item"_L1, "qml-qtquick-item.html"_L1, "QtQuick"_L1
+        };
+        info.inheritedBy = {
+            {"Rectangle"_L1, "qml-qtquick-rectangle.html"_L1}
+        };
+        info.nativeType = IR::QmlTypeInfo::NativeTypeInfo{
+            "QQuickItem"_L1, "qquickitem.html"_L1
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("All fields are present") {
+                REQUIRE(json["importStatement"_L1].toString() == "import QtQuick 2.15");
+                REQUIRE(json.contains("inherits"_L1));
+                REQUIRE(json.contains("inheritedBy"_L1));
+                REQUIRE(json.contains("nativeType"_L1));
+            }
+        }
+
+        WHEN("Document includes QmlTypeInfo") {
+            IR::Document ir;
+            ir.title = "Item QML Type"_L1;
+            ir.qmlTypeInfo = info;
+            QJsonObject json = ir.toJson();
+
+            THEN("hasQmlType is true and qmlType key is present") {
+                REQUIRE(json["hasQmlType"_L1].toBool() == true);
+                REQUIRE(json.contains("qmlType"_L1));
+                REQUIRE(json["qmlType"_L1].toObject()["importStatement"_L1].toString()
+                        == "import QtQuick 2.15");
+            }
+        }
+    }
+}

@@ -28,6 +28,52 @@ namespace IR {
 */
 
 /*!
+    Converts the QmlTypeInfo to a QJsonObject for template rendering.
+
+    Always emits \c isSingleton and \c isValueType. The \c importStatement,
+    \c inherits, \c inheritedBy, and \c nativeType fields are omitted when
+    they don't have values. Templates should use \c{existsIn()} to guard
+    access to optional fields.
+*/
+QJsonObject QmlTypeInfo::toJson() const
+{
+    QJsonObject json;
+
+    if (!importStatement.isEmpty())
+        json["importStatement"_L1] = importStatement;
+    json["isSingleton"_L1] = isSingleton;
+    json["isValueType"_L1] = isValueType;
+
+    if (inherits) {
+        QJsonObject obj;
+        obj["name"_L1] = inherits->name;
+        obj["href"_L1] = inherits->href;
+        obj["moduleName"_L1] = inherits->moduleName;
+        json["inherits"_L1] = obj;
+    }
+
+    if (!inheritedBy.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &entry : inheritedBy) {
+            QJsonObject obj;
+            obj["name"_L1] = entry.name;
+            obj["href"_L1] = entry.href;
+            arr.append(obj);
+        }
+        json["inheritedBy"_L1] = arr;
+    }
+
+    if (nativeType) {
+        QJsonObject obj;
+        obj["name"_L1] = nativeType->name;
+        obj["href"_L1] = nativeType->href;
+        json["nativeType"_L1] = obj;
+    }
+
+    return json;
+}
+
+/*!
     Converts the Document to a QJsonObject for template rendering.
 
     The JSON structure follows a convention where field names use camelCase
@@ -75,6 +121,11 @@ QJsonObject Document::toJson() const
     content["blocks"_L1] = blocks;
 
     json["content"_L1] = content;
+
+    // QML type metadata (omitted for non-QML pages)
+    json["hasQmlType"_L1] = qmlTypeInfo.has_value();
+    if (qmlTypeInfo)
+        json["qmlType"_L1] = qmlTypeInfo->toJson();
 
     // Sections (for aggregate pages with member listings).
     // Always emitted (even when empty) so templates can iterate safely
