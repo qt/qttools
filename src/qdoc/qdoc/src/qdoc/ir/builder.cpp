@@ -75,6 +75,28 @@ Document Builder::buildPageIR(PageMetadata pm) const
     ir.body = std::move(pm.body);
     ir.summarySections = std::move(pm.summarySections);
 
+    if (pm.qmlTypeData) {
+        const auto &src = *pm.qmlTypeData;
+        QmlTypeInfo info;
+        info.importStatement = src.importStatement;
+        info.isSingleton = src.isSingleton;
+        info.isValueType = src.isValueType;
+
+        if (src.inherits) {
+            info.inherits = QmlTypeInfo::InheritsInfo{
+                src.inherits->name, src.inherits->href, src.inherits->moduleName
+            };
+        }
+
+        for (const auto &entry : src.inheritedBy)
+            info.inheritedBy.append({entry.name, entry.href});
+
+        if (src.nativeType)
+            info.nativeType = QmlTypeInfo::NativeTypeInfo{src.nativeType->name, src.nativeType->href};
+
+        ir.qmlTypeInfo = std::move(info);
+    }
+
     // Transitional: templates don't yet consume content.blocks.
     QStringList paragraphs;
     for (const auto &block : ir.body) {

@@ -462,3 +462,145 @@ SCENARIO("IR::SectionIR with inherited members", "[IR::SectionIR][IR]") {
         }
     }
 }
+
+SCENARIO("IR::MemberIR QML property with no flags", "[IR::MemberIR][IR][QML]") {
+
+    GIVEN("A MemberIR representing a QML property with defaults") {
+        IR::MemberIR member;
+        member.name = "width"_L1;
+        member.fullName = "Item::width"_L1;
+        member.signature = "width : real"_L1;
+        member.href = "#width-prop"_L1;
+        member.nodeType = NodeType::QmlProperty;
+        member.dataType = "real"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("dataType is present and boolean flags are absent") {
+                REQUIRE(json["dataType"_L1].toString() == "real");
+                REQUIRE(!json.contains("isAttached"_L1));
+                REQUIRE(!json.contains("isDefault"_L1));
+                REQUIRE(!json.contains("isReadOnly"_L1));
+                REQUIRE(!json.contains("isRequired"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("IR::MemberIR QML attached property", "[IR::MemberIR][IR][QML]") {
+
+    GIVEN("A MemberIR representing an attached QML property") {
+        IR::MemberIR member;
+        member.name = "keys"_L1;
+        member.fullName = "Keys::keys"_L1;
+        member.signature = "keys : list<Key>"_L1;
+        member.href = "#keys-attached-prop"_L1;
+        member.nodeType = NodeType::QmlProperty;
+        member.dataType = "list<Key>"_L1;
+        member.isAttached = true;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("isAttached is true") {
+                REQUIRE(json["isAttached"_L1].toBool() == true);
+            }
+        }
+    }
+}
+
+SCENARIO("IR::MemberIR QML default property", "[IR::MemberIR][IR][QML]") {
+
+    GIVEN("A MemberIR representing a default QML property") {
+        IR::MemberIR member;
+        member.name = "data"_L1;
+        member.fullName = "Item::data"_L1;
+        member.signature = "data : list<Object>"_L1;
+        member.href = "#data-prop"_L1;
+        member.nodeType = NodeType::QmlProperty;
+        member.dataType = "list<Object>"_L1;
+        member.isDefault = true;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("isDefault is true") {
+                REQUIRE(json["isDefault"_L1].toBool() == true);
+            }
+        }
+    }
+}
+
+SCENARIO("IR::MemberIR QML readonly property", "[IR::MemberIR][IR][QML]") {
+
+    GIVEN("A MemberIR representing a read-only QML property") {
+        IR::MemberIR member;
+        member.name = "count"_L1;
+        member.fullName = "ListView::count"_L1;
+        member.signature = "count : int"_L1;
+        member.href = "#count-prop"_L1;
+        member.nodeType = NodeType::QmlProperty;
+        member.dataType = "int"_L1;
+        member.isReadOnly = true;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("isReadOnly is true") {
+                REQUIRE(json["isReadOnly"_L1].toBool() == true);
+            }
+        }
+    }
+}
+
+SCENARIO("IR::MemberIR QML required property", "[IR::MemberIR][IR][QML]") {
+
+    GIVEN("A MemberIR representing a required QML property") {
+        IR::MemberIR member;
+        member.name = "model"_L1;
+        member.fullName = "Delegate::model"_L1;
+        member.signature = "model : var"_L1;
+        member.href = "#model-prop"_L1;
+        member.nodeType = NodeType::QmlProperty;
+        member.dataType = "var"_L1;
+        member.isRequired = true;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("isRequired is true") {
+                REQUIRE(json["isRequired"_L1].toBool() == true);
+            }
+        }
+    }
+}
+
+SCENARIO("IR::MemberIR QML property with all flags", "[IR::MemberIR][IR][QML]") {
+
+    GIVEN("A MemberIR with all QML property flags set") {
+        IR::MemberIR member;
+        member.name = "special"_L1;
+        member.fullName = "Test::special"_L1;
+        member.signature = "special : string"_L1;
+        member.href = "#special-prop"_L1;
+        member.nodeType = NodeType::QmlProperty;
+        member.dataType = "string"_L1;
+        member.isAttached = true;
+        member.isDefault = true;
+        member.isReadOnly = true;
+        member.isRequired = true;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("All four boolean flags are present and true") {
+                REQUIRE(json["isAttached"_L1].toBool() == true);
+                REQUIRE(json["isDefault"_L1].toBool() == true);
+                REQUIRE(json["isReadOnly"_L1].toBool() == true);
+                REQUIRE(json["isRequired"_L1].toBool() == true);
+                REQUIRE(json["dataType"_L1].toString() == "string");
+            }
+        }
+    }
+}

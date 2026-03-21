@@ -16,6 +16,7 @@
 #include "pagenode.h"
 #include "parameters.h"
 #include "propertynode.h"
+#include "qmlpropertynode.h"
 #include "qmltypenode.h"
 #include "sections.h"
 #include "sharedcommentnode.h"
@@ -281,6 +282,14 @@ IR::MemberIR extractMemberIR(const Node *node)
             ev.since = item.since();
             member.enumValues.append(ev);
         }
+    } else if (node->isQmlProperty()) {
+        const auto *qpn = static_cast<const QmlPropertyNode *>(node);
+        member.signature = qpn->name() + " : "_L1 + qpn->dataType();
+        member.dataType = qpn->dataType();
+        member.isAttached = qpn->isAttached();
+        member.isDefault = qpn->isDefault();
+        member.isReadOnly = qpn->isReadOnly();
+        member.isRequired = qpn->isRequired();
     } else if (node->isProperty()) {
         const auto *pn = static_cast<const PropertyNode *>(node);
         member.signature = pn->name() + " : "_L1 + pn->qualifiedDataType();

@@ -53,6 +53,13 @@ struct MemberIR {
     bool isSignal { false };
     bool isSlot { false };
 
+    // QML property attributes
+    bool isAttached { false };
+    bool isDefault { false };
+    bool isReadOnly { false };
+    bool isRequired { false };
+    QString dataType;
+
     [[nodiscard]] QJsonObject toJson() const;
 };
 

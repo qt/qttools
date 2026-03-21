@@ -257,6 +257,17 @@ QJsonObject MemberIR::toJson() const
     json["isSignal"_L1] = isSignal;
     json["isSlot"_L1] = isSlot;
 
+    if (isAttached)
+        json["isAttached"_L1] = true;
+    if (isDefault)
+        json["isDefault"_L1] = true;
+    if (isReadOnly)
+        json["isReadOnly"_L1] = true;
+    if (isRequired)
+        json["isRequired"_L1] = true;
+    if (!dataType.isEmpty())
+        json["dataType"_L1] = dataType;
+
     return json;
 }
 
