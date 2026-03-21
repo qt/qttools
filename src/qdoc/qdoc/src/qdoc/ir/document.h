@@ -49,6 +49,34 @@ struct QmlTypeInfo
     [[nodiscard]] QJsonObject toJson() const;
 };
 
+struct CollectionInfo
+{
+    QString logicalModuleName;
+    QString logicalModuleVersion;
+    QString qtVariable;
+    QString cmakePackage;
+    QString cmakeComponent;
+    QString cmakeTargetItem;
+    QString state;
+
+    bool isModule { false };
+    bool isQmlModule { false };
+    bool isGroup { false };
+    bool noAutoList { false };
+
+    struct MemberEntry {
+        QString name;
+        QString href;
+        QString brief;
+    };
+
+    QList<MemberEntry> namespaces;
+    QList<MemberEntry> classes;
+    QList<MemberEntry> members;
+
+    [[nodiscard]] QJsonObject toJson() const;
+};
+
 struct Document
 {
     // Classification
@@ -74,6 +102,9 @@ struct Document
 
     // QML type metadata (populated only for QML type pages)
     std::optional<QmlTypeInfo> qmlTypeInfo;
+
+    // Collection metadata (populated for module, QML module, and group pages)
+    std::optional<CollectionInfo> collectionInfo;
 
     QJsonObject toJson() const;
 };

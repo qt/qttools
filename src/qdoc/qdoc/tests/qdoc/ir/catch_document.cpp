@@ -641,3 +641,301 @@ SCENARIO("IR::QmlTypeInfo full population", "[IR::QmlTypeInfo][IR][QML]") {
         }
     }
 }
+
+SCENARIO("IR::CollectionInfo with full C++ module metadata", "[IR::CollectionInfo][IR][JSON]") {
+
+    GIVEN("A CollectionInfo with complete C++ module metadata") {
+        IR::CollectionInfo info;
+        info.logicalModuleName = "QtCore"_L1;
+        info.logicalModuleVersion = "6.8"_L1;
+        info.qtVariable = "core"_L1;
+        info.cmakePackage = "Qt6"_L1;
+        info.cmakeComponent = "Core"_L1;
+        info.cmakeTargetItem = "Qt6::Core"_L1;
+        info.state = "Technology Preview"_L1;
+        info.isModule = true;
+        info.isQmlModule = false;
+        info.isGroup = false;
+        info.noAutoList = false;
+
+        info.namespaces = {
+            {"QTest"_L1, "qtest.html"_L1, "Testing namespace"_L1},
+            {"Qt"_L1, "qt-namespace.html"_L1, "Global Qt namespace"_L1}
+        };
+
+        info.classes = {
+            {"QString"_L1, "qstring.html"_L1, "Unicode string class"_L1},
+            {"QObject"_L1, "qobject.html"_L1, "Base class for Qt objects"_L1}
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("All module metadata fields are present") {
+                REQUIRE(json["logicalModuleName"_L1].toString() == "QtCore");
+                REQUIRE(json["logicalModuleVersion"_L1].toString() == "6.8");
+                REQUIRE(json["state"_L1].toString() == "Technology Preview");
+            }
+
+            THEN("CMake/qmake variables are always emitted") {
+                REQUIRE(json.contains("qtVariable"_L1));
+                REQUIRE(json["qtVariable"_L1].toString() == "core");
+                REQUIRE(json["cmakePackage"_L1].toString() == "Qt6");
+                REQUIRE(json["cmakeComponent"_L1].toString() == "Core");
+                REQUIRE(json["cmakeTargetItem"_L1].toString() == "Qt6::Core");
+            }
+
+            THEN("Type flags are always emitted as booleans") {
+                REQUIRE(json.contains("isModule"_L1));
+                REQUIRE(json.contains("isQmlModule"_L1));
+                REQUIRE(json.contains("isGroup"_L1));
+                REQUIRE(json["isModule"_L1].toBool() == true);
+                REQUIRE(json["isQmlModule"_L1].toBool() == false);
+                REQUIRE(json["isGroup"_L1].toBool() == false);
+            }
+
+            THEN("noAutoList flag is always emitted") {
+                REQUIRE(json.contains("noAutoList"_L1));
+                REQUIRE(json["noAutoList"_L1].toBool() == false);
+            }
+
+            THEN("Namespaces are serialized as an array of objects") {
+                REQUIRE(json.contains("namespaces"_L1));
+                QJsonArray arr = json["namespaces"_L1].toArray();
+                REQUIRE(arr.size() == 2);
+                REQUIRE(arr[0].toObject()["name"_L1].toString() == "QTest");
+                REQUIRE(arr[0].toObject()["href"_L1].toString() == "qtest.html");
+                REQUIRE(arr[0].toObject()["brief"_L1].toString() == "Testing namespace");
+                REQUIRE(arr[1].toObject()["name"_L1].toString() == "Qt");
+            }
+
+            THEN("Classes are serialized as an array of objects") {
+                REQUIRE(json.contains("classes"_L1));
+                QJsonArray arr = json["classes"_L1].toArray();
+                REQUIRE(arr.size() == 2);
+                REQUIRE(arr[0].toObject()["name"_L1].toString() == "QString");
+                REQUIRE(arr[0].toObject()["href"_L1].toString() == "qstring.html");
+                REQUIRE(arr[0].toObject()["brief"_L1].toString() == "Unicode string class");
+            }
+
+            THEN("Members array is always emitted (empty for modules)") {
+                REQUIRE(json.contains("members"_L1));
+                REQUIRE(json["members"_L1].toArray().isEmpty());
+            }
+        }
+    }
+}
+
+SCENARIO("IR::CollectionInfo with minimal data (group)", "[IR::CollectionInfo][IR][JSON]") {
+
+    GIVEN("A CollectionInfo for a group with no module metadata") {
+        IR::CollectionInfo info;
+        info.isModule = false;
+        info.isQmlModule = false;
+        info.isGroup = true;
+        info.noAutoList = false;
+
+        info.members = {
+            {"QWidget"_L1, "qwidget.html"_L1, "Base class for widgets"_L1},
+            {"QLabel"_L1, "qlabel.html"_L1, "Text or image display"_L1}
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("Type flags indicate a group") {
+                REQUIRE(json["isModule"_L1].toBool() == false);
+                REQUIRE(json["isQmlModule"_L1].toBool() == false);
+                REQUIRE(json["isGroup"_L1].toBool() == true);
+            }
+
+            THEN("Conditional metadata fields are absent when empty") {
+                REQUIRE(!json.contains("logicalModuleName"_L1));
+                REQUIRE(!json.contains("logicalModuleVersion"_L1));
+                REQUIRE(!json.contains("state"_L1));
+            }
+
+            THEN("CMake/qmake variables are always emitted (empty strings)") {
+                REQUIRE(json.contains("qtVariable"_L1));
+                REQUIRE(json["qtVariable"_L1].toString().isEmpty());
+                REQUIRE(json.contains("cmakePackage"_L1));
+                REQUIRE(json["cmakePackage"_L1].toString().isEmpty());
+            }
+
+            THEN("Members array is populated for group") {
+                QJsonArray arr = json["members"_L1].toArray();
+                REQUIRE(arr.size() == 2);
+                REQUIRE(arr[0].toObject()["name"_L1].toString() == "QWidget");
+                REQUIRE(arr[1].toObject()["name"_L1].toString() == "QLabel");
+            }
+
+            THEN("Namespaces and classes arrays are always emitted (empty)") {
+                REQUIRE(json.contains("namespaces"_L1));
+                REQUIRE(json["namespaces"_L1].toArray().isEmpty());
+                REQUIRE(json.contains("classes"_L1));
+                REQUIRE(json["classes"_L1].toArray().isEmpty());
+            }
+        }
+    }
+}
+
+SCENARIO("IR::CollectionInfo MemberEntry serialization", "[IR::CollectionInfo][IR][JSON]") {
+
+    GIVEN("A CollectionInfo with a single member entry") {
+        IR::CollectionInfo info;
+        info.isGroup = true;
+        info.members = {
+            {"QTimer"_L1, "qtimer.html"_L1, "Repetitive and single-shot timers"_L1}
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("The member entry has name, href, and brief fields") {
+                QJsonArray arr = json["members"_L1].toArray();
+                REQUIRE(arr.size() == 1);
+                QJsonObject entry = arr[0].toObject();
+                REQUIRE(entry.contains("name"_L1));
+                REQUIRE(entry.contains("href"_L1));
+                REQUIRE(entry.contains("brief"_L1));
+                REQUIRE(entry["name"_L1].toString() == "QTimer");
+                REQUIRE(entry["href"_L1].toString() == "qtimer.html");
+                REQUIRE(entry["brief"_L1].toString() == "Repetitive and single-shot timers");
+            }
+        }
+    }
+}
+
+SCENARIO("IR::CollectionInfo noAutoList flag", "[IR::CollectionInfo][IR][JSON]") {
+
+    GIVEN("A CollectionInfo with noAutoList set to true") {
+        IR::CollectionInfo info;
+        info.isModule = true;
+        info.noAutoList = true;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("The noAutoList flag is true") {
+                REQUIRE(json["noAutoList"_L1].toBool() == true);
+            }
+
+            THEN("Member arrays are still present but empty") {
+                REQUIRE(json.contains("namespaces"_L1));
+                REQUIRE(json["namespaces"_L1].toArray().isEmpty());
+                REQUIRE(json.contains("classes"_L1));
+                REQUIRE(json["classes"_L1].toArray().isEmpty());
+                REQUIRE(json.contains("members"_L1));
+                REQUIRE(json["members"_L1].toArray().isEmpty());
+            }
+        }
+    }
+}
+
+SCENARIO("IR::CollectionInfo QML module type", "[IR::CollectionInfo][IR][JSON]") {
+
+    GIVEN("A CollectionInfo for a QML module") {
+        IR::CollectionInfo info;
+        info.logicalModuleName = "QtQuick"_L1;
+        info.logicalModuleVersion = "6.8"_L1;
+        info.isQmlModule = true;
+
+        info.members = {
+            {"Item"_L1, "qml-qtquick-item.html"_L1, "Base visual type"_L1},
+            {"Rectangle"_L1, "qml-qtquick-rectangle.html"_L1, "Rectangle with fill"_L1}
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("isQmlModule is true and isModule is false") {
+                REQUIRE(json["isQmlModule"_L1].toBool() == true);
+                REQUIRE(json["isModule"_L1].toBool() == false);
+            }
+
+            THEN("Members are in the flat members array") {
+                QJsonArray arr = json["members"_L1].toArray();
+                REQUIRE(arr.size() == 2);
+                REQUIRE(arr[0].toObject()["name"_L1].toString() == "Item");
+            }
+
+            THEN("Namespaces and classes are empty") {
+                REQUIRE(json["namespaces"_L1].toArray().isEmpty());
+                REQUIRE(json["classes"_L1].toArray().isEmpty());
+            }
+        }
+    }
+}
+
+SCENARIO("IR::Document with collectionInfo", "[IR::Document][IR::CollectionInfo][IR][JSON]") {
+
+    GIVEN("A Document with collectionInfo set") {
+        IR::Document ir;
+        ir.title = "Qt Core"_L1;
+        ir.nodeType = NodeType::Module;
+        ir.genus = Genus::CPP;
+
+        IR::CollectionInfo collInfo;
+        collInfo.logicalModuleName = "QtCore"_L1;
+        collInfo.isModule = true;
+        ir.collectionInfo = collInfo;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("hasCollection flag is true") {
+                REQUIRE(json.contains("hasCollection"_L1));
+                REQUIRE(json["hasCollection"_L1].toBool() == true);
+            }
+
+            THEN("The collection key contains the CollectionInfo JSON") {
+                REQUIRE(json.contains("collection"_L1));
+                REQUIRE(json["collection"_L1].isObject());
+                QJsonObject collection = json["collection"_L1].toObject();
+                REQUIRE(collection["logicalModuleName"_L1].toString() == "QtCore");
+                REQUIRE(collection["isModule"_L1].toBool() == true);
+            }
+        }
+    }
+
+    GIVEN("A Document without collectionInfo") {
+        IR::Document ir;
+        ir.title = "MyClass"_L1;
+        ir.nodeType = NodeType::Class;
+        ir.genus = Genus::CPP;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("hasCollection flag is false") {
+                REQUIRE(json.contains("hasCollection"_L1));
+                REQUIRE(json["hasCollection"_L1].toBool() == false);
+            }
+
+            THEN("The collection key is absent from JSON") {
+                REQUIRE(!json.contains("collection"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("IR::CollectionInfo with empty state", "[IR::CollectionInfo][IR][JSON]") {
+
+    GIVEN("A CollectionInfo with no state set") {
+        IR::CollectionInfo info;
+        info.isModule = true;
+        info.logicalModuleName = "QtWidgets"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("State field is absent from JSON") {
+                REQUIRE(!json.contains("state"_L1));
+            }
+
+            THEN("Module name is present") {
+                REQUIRE(json["logicalModuleName"_L1].toString() == "QtWidgets");
+            }
+        }
+    }
+}

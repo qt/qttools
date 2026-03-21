@@ -97,6 +97,32 @@ Document Builder::buildPageIR(PageMetadata pm) const
         ir.qmlTypeInfo = std::move(info);
     }
 
+    if (pm.collectionData) {
+        const auto &src = *pm.collectionData;
+        CollectionInfo info;
+        info.logicalModuleName = src.logicalModuleName;
+        info.logicalModuleVersion = src.logicalModuleVersion;
+        info.qtVariable = src.qtVariable;
+        info.cmakePackage = src.cmakePackage;
+        info.cmakeComponent = src.cmakeComponent;
+        info.cmakeTargetItem = src.cmakeTargetItem;
+        info.state = src.state;
+
+        info.isModule = src.isModule;
+        info.isQmlModule = src.isQmlModule;
+        info.isGroup = src.isGroup;
+        info.noAutoList = src.noAutoList;
+
+        for (const auto &entry : src.namespaces)
+            info.namespaces.append({entry.name, entry.href, entry.brief});
+        for (const auto &entry : src.classes)
+            info.classes.append({entry.name, entry.href, entry.brief});
+        for (const auto &entry : src.members)
+            info.members.append({entry.name, entry.href, entry.brief});
+
+        ir.collectionInfo = std::move(info);
+    }
+
     // Transitional: templates don't yet consume content.blocks.
     QStringList paragraphs;
     for (const auto &block : ir.body) {

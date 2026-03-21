@@ -73,6 +73,57 @@ QJsonObject QmlTypeInfo::toJson() const
     return json;
 }
 
+static QJsonArray memberEntriesToJson(const QList<CollectionInfo::MemberEntry> &entries)
+{
+    QJsonArray arr;
+    for (const auto &entry : entries) {
+        QJsonObject obj;
+        obj["name"_L1] = entry.name;
+        obj["href"_L1] = entry.href;
+        obj["brief"_L1] = entry.brief;
+        arr.append(obj);
+    }
+    return arr;
+}
+
+/*!
+    Converts the CollectionInfo to a QJsonObject for template rendering.
+
+    Type flags (\c isModule, \c isQmlModule, \c isGroup) and \c noAutoList are
+    always emitted so templates can use unconditional checks. CMake/qmake build
+    variables are always emitted as empty strings when absent, for template
+    safety. Module metadata (\c logicalModuleName, \c logicalModuleVersion,
+    \c state) is conditionally emitted when non-empty. Member arrays are always
+    emitted (empty arrays when no entries) so Inja can iterate without guards.
+*/
+QJsonObject CollectionInfo::toJson() const
+{
+    QJsonObject json;
+
+    json["isModule"_L1] = isModule;
+    json["isQmlModule"_L1] = isQmlModule;
+    json["isGroup"_L1] = isGroup;
+    json["noAutoList"_L1] = noAutoList;
+
+    if (!logicalModuleName.isEmpty())
+        json["logicalModuleName"_L1] = logicalModuleName;
+    if (!logicalModuleVersion.isEmpty())
+        json["logicalModuleVersion"_L1] = logicalModuleVersion;
+    if (!state.isEmpty())
+        json["state"_L1] = state;
+
+    json["qtVariable"_L1] = qtVariable;
+    json["cmakePackage"_L1] = cmakePackage;
+    json["cmakeComponent"_L1] = cmakeComponent;
+    json["cmakeTargetItem"_L1] = cmakeTargetItem;
+
+    json["namespaces"_L1] = memberEntriesToJson(namespaces);
+    json["classes"_L1] = memberEntriesToJson(classes);
+    json["members"_L1] = memberEntriesToJson(members);
+
+    return json;
+}
+
 /*!
     Converts the Document to a QJsonObject for template rendering.
 
@@ -126,6 +177,11 @@ QJsonObject Document::toJson() const
     json["hasQmlType"_L1] = qmlTypeInfo.has_value();
     if (qmlTypeInfo)
         json["qmlType"_L1] = qmlTypeInfo->toJson();
+
+    // Collection metadata (module, QML module, and group pages).
+    json["hasCollection"_L1] = collectionInfo.has_value();
+    if (collectionInfo)
+        json["collection"_L1] = collectionInfo->toJson();
 
     // Sections (for aggregate pages with member listings).
     // Always emitted (even when empty) so templates can iterate safely
