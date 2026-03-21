@@ -1,0 +1,72 @@
+{#-
+Copyright (C) 2026 The Qt Company Ltd.
+SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+-#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ fullTitle }}</h1>
+    {% if default(brief, "") != "" %}
+    <p class="brief">{{ brief }}</p>
+    {% endif %}
+
+    {% if hasCollection %}
+    {% if existsIn(collection, "state") %}
+    <p><b>Status:</b> {{ collection.state }}</p>
+    {% endif %}
+
+    {% if collection.isModule %}
+    <table class="requisites">
+    {% if collection.cmakePackage %}
+    <tr><td class="memItemLeft">CMake:</td>
+    <td class="memItemRight"><code>find_package({{ collection.cmakePackage }} REQUIRED COMPONENTS {{ collection.cmakeComponent }})</code><br/><code>target_link_libraries(mytarget PRIVATE {{ collection.cmakeTargetItem }})</code></td></tr>
+    {% endif %}
+    {% if collection.qtVariable %}
+    <tr><td class="memItemLeft">qmake:</td>
+    <td class="memItemRight"><code>QT += {{ collection.qtVariable }}</code></td></tr>
+    {% endif %}
+    </table>
+    {% endif %}
+    {% endif %}
+
+    {% include "partials/html/content_blocks.html" %}
+
+    {% if hasCollection %}{% if not collection.noAutoList %}
+    {% if collection.isModule %}
+    {% if length(collection.namespaces) > 0 %}
+    <h2>Namespaces</h2>
+    <table class="annotated">
+    {% for entry in collection.namespaces %}
+    <tr><td class="tblName">{% if entry.href != "" %}<a href="{{ entry.href }}">{{ escape_html(entry.name) }}</a>{% else %}{{ escape_html(entry.name) }}{% endif %}</td><td class="tblDescr">{{ escape_html(entry.brief) }}</td></tr>
+    {% endfor %}
+    </table>
+    {% endif %}
+    {% if length(collection.classes) > 0 %}
+    <h2>Classes</h2>
+    <table class="annotated">
+    {% for entry in collection.classes %}
+    <tr><td class="tblName">{% if entry.href != "" %}<a href="{{ entry.href }}">{{ escape_html(entry.name) }}</a>{% else %}{{ escape_html(entry.name) }}{% endif %}</td><td class="tblDescr">{{ escape_html(entry.brief) }}</td></tr>
+    {% endfor %}
+    </table>
+    {% endif %}
+    {% else %}
+    {% if length(collection.members) > 0 %}
+    <table class="annotated">
+    {% for entry in collection.members %}
+    <tr><td class="tblName">{% if entry.href != "" %}<a href="{{ entry.href }}">{{ escape_html(entry.name) }}</a>{% else %}{{ escape_html(entry.name) }}{% endif %}</td><td class="tblDescr">{{ escape_html(entry.brief) }}</td></tr>
+    {% endfor %}
+    </table>
+    {% endif %}
+    {% endif %}
+    {% endif %}{% endif %}
+
+    <footer>
+        <p>Built with QDoc's template engine.</p>
+    </footer>
+</body>
+</html>

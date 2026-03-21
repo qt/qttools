@@ -248,12 +248,20 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/qmltype.md"
         PROPERTIES QT_RESOURCE_ALIAS "templates/qmltype.md"
     )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/collection.html"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/collection.html"
+    )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/collection.md"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/collection.md"
+    )
 
     set(qdoc_template_files
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/page.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/page.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/qmltype.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/qmltype.md"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/collection.html"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/collection.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/content_blocks.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/content_blocks.md"
     )

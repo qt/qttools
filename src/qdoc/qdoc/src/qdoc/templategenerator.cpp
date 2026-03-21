@@ -214,24 +214,30 @@ void TemplateGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *m
 {
     Q_UNUSED(marker);
 
-    // Placeholder - IR integration pending
-    if (m_writer && m_writer->isOpen()) {
-        m_writer->writeLine(QString(u"<!-- TemplateGenerator: Collection "_s + cn->name() + u" -->"_s));
-        m_writer->writeLine(QString(u"<h1>"_s + cn->fullTitle() + u"</h1>"_s));
-        m_writer->writeLine(u"<p>Template-based output (IR integration pending)</p>"_s);
-    }
+    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(cn);
+
+    IR::Builder builder;
+    IR::Document ir = builder.buildPageIR(std::move(pm));
+
+    if (m_linkResolver && !ir.body.isEmpty())
+        m_linkResolver->resolve(ir.body, cn);
+
+    renderDocument(ir, "collection"_L1);
 }
 
 void TemplateGenerator::generateGenericCollectionPage(CollectionNode *cn, CodeMarker *marker)
 {
     Q_UNUSED(marker);
 
-    // Placeholder - IR integration pending
-    if (m_writer && m_writer->isOpen()) {
-        m_writer->writeLine(QString(u"<!-- TemplateGenerator: Generic Collection "_s + cn->name() + u" -->"_s));
-        m_writer->writeLine(QString(u"<h1>"_s + cn->fullTitle() + u"</h1>"_s));
-        m_writer->writeLine(u"<p>Template-based output (IR integration pending)</p>"_s);
-    }
+    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(cn);
+
+    IR::Builder builder;
+    IR::Document ir = builder.buildPageIR(std::move(pm));
+
+    if (m_linkResolver && !ir.body.isEmpty())
+        m_linkResolver->resolve(ir.body, cn);
+
+    renderDocument(ir, "collection"_L1);
 }
 
 void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
