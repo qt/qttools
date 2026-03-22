@@ -8,6 +8,7 @@
 #include "classnode.h"
 #include "codemarker.h"
 #include "collectionnode.h"
+#include "comparisoncategory.h"
 #include "config.h"
 #include "doc.h"
 #include "enumnode.h"
@@ -96,8 +97,11 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hre
         pm.body = contentBuilder.build(firstAtom);
     }
 
-    if (pn->isAggregate())
-        pm.summarySections = extractSummarySections(static_cast<const Aggregate *>(pn), hrefResolver);
+    if (pn->isAggregate()) {
+        const auto *aggregate = static_cast<const Aggregate *>(pn);
+        pm.summarySections = extractSummarySections(aggregate, hrefResolver);
+        pm.detailSections = extractDetailSections(aggregate, hrefResolver);
+    }
 
     if (pn->isQmlType()) {
         const auto *qcn = static_cast<const QmlTypeNode *>(pn);
@@ -300,10 +304,15 @@ QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate, const Hr
         for (const auto *member : section.members()) {
             if (member->isSharedCommentNode()) {
                 const auto *scn = static_cast<const SharedCommentNode *>(member);
-                for (const auto *child : scn->collective())
-                    irSection.members.append(extractMemberIR(child, hrefResolver, aggregate));
+                for (const auto *child : scn->collective()) {
+                    IR::MemberIR irMember = extractMemberIR(child, hrefResolver, aggregate);
+                    irMember.href = "#"_L1 + hrefResolver->anchorForNode(child);
+                    irSection.members.append(irMember);
+                }
             } else {
-                irSection.members.append(extractMemberIR(member, hrefResolver, aggregate));
+                IR::MemberIR irMember = extractMemberIR(member, hrefResolver, aggregate);
+                irMember.href = "#"_L1 + hrefResolver->anchorForNode(member);
+                irSection.members.append(irMember);
             }
         }
 
@@ -325,15 +334,94 @@ QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate, const Hr
 
 /*!
     \internal
+    Build categorized detail sections for an aggregate node.
+
+    Iterates Sections::detailsSections() and extracts full member
+    documentation including body content, anchor IDs, and metadata.
+    SharedCommentNode groups share a single documentation body across
+    their children, with each child getting its own anchorId and synopsis.
+*/
+QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const HrefResolver *hrefResolver)
+{
+    Sections sections(aggregate);
+    const auto &sv = sections.detailsSections();
+
+    QList<IR::SectionIR> result;
+    for (const auto &section : sv) {
+        if (section.isEmpty())
+            continue;
+
+        IR::SectionIR irSection;
+        irSection.title = section.title();
+        irSection.id = Utilities::asAsciiPrintable(section.title());
+        irSection.singular = section.singular();
+        irSection.plural = section.plural();
+
+        for (const auto *member : section.members()) {
+            if (member->isSharedCommentNode()) {
+                const auto *scn = static_cast<const SharedCommentNode *>(member);
+
+                QList<IR::ContentBlock> sharedBody;
+                const Text &bodyText = scn->doc().body();
+                if (const Atom *firstAtom = bodyText.firstAtom()) {
+                    IR::ContentBuilder contentBuilder(IR::BriefHandling::Include);
+                    sharedBody = contentBuilder.build(firstAtom);
+                }
+
+                QList<IR::ContentBlock> sharedAlso;
+                const QList<Text> &alsoTexts = scn->doc().alsoList();
+                for (const Text &alsoText : alsoTexts) {
+                    if (const Atom *firstAtom = alsoText.firstAtom()) {
+                        IR::ContentBuilder contentBuilder(IR::BriefHandling::Include);
+                        sharedAlso.append(contentBuilder.build(firstAtom));
+                    }
+                }
+
+                for (const auto *child : scn->collective()) {
+                    IR::MemberIR irMember = extractMemberIR(child, hrefResolver, aggregate, MemberExtractionLevel::Detail);
+                    irMember.body = sharedBody;
+                    irMember.alsoList = sharedAlso;
+                    irSection.members.append(irMember);
+                }
+            } else {
+                irSection.members.append(extractMemberIR(member, hrefResolver, aggregate, MemberExtractionLevel::Detail));
+            }
+        }
+
+        result.append(irSection);
+    }
+    return result;
+}
+
+static QString threadSafenessString(Node::ThreadSafeness ts)
+{
+    switch (ts) {
+    case Node::Reentrant:
+        return "reentrant"_L1;
+    case Node::ThreadSafe:
+        return "thread-safe"_L1;
+    default:
+        return {};
+    }
+}
+
+/*!
+    \internal
     Build a MemberIR from a single Node.
 
     Extracts identity, classification, and type-specific data from the node.
     FunctionNode provides signatures, parameters, and overload metadata.
     EnumNode provides scoped/unscoped signature and enum value listings.
     PropertyNode provides a qualified data type signature.
+
+    When \a level is MemberExtractionLevel::Detail, also populates
+    detail documentation fields: anchorId, synopsis, since,
+    threadSafety, comparisonCategory, noexcept metadata, body (via
+    ContentBuilder), and alsoList.
 */
-IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver, const Node *relative)
+IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver, const Node *relative, MemberExtractionLevel level)
 {
+    const bool includeDetail = (level == MemberExtractionLevel::Detail);
     IR::MemberIR member;
 
     member.name = node->name();
@@ -399,6 +487,41 @@ IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver,
         member.signature = vn->leftType() + vn->name() + vn->rightType();
     } else {
         member.signature = node->name();
+    }
+
+    if (includeDetail) {
+        member.anchorId = hrefResolver->anchorForNode(node);
+        member.synopsis = member.signature;
+        member.since = node->since();
+        member.threadSafety = threadSafenessString(node->threadSafeness());
+
+        const std::string catStr = comparisonCategoryAsString(node->comparisonCategory());
+        if (!catStr.empty())
+            member.comparisonCategory = QString::fromStdString(catStr);
+
+        if (node->isFunction()) {
+            const auto *fn = static_cast<const FunctionNode *>(node);
+            const auto &noexcept_ = fn->getNoexcept();
+            if (noexcept_) {
+                member.isNoexcept = true;
+                member.noexceptNote = *noexcept_;
+            }
+        }
+
+        const Text &bodyText = node->doc().body();
+        if (const Atom *firstAtom = bodyText.firstAtom()) {
+            IR::ContentBuilder contentBuilder(IR::BriefHandling::Include);
+            member.body = contentBuilder.build(firstAtom);
+        }
+
+        const QList<Text> &alsoTexts = node->doc().alsoList();
+        for (const Text &alsoText : alsoTexts) {
+            if (const Atom *firstAtom = alsoText.firstAtom()) {
+                IR::ContentBuilder contentBuilder(IR::BriefHandling::Include);
+                QList<IR::ContentBlock> blocks = contentBuilder.build(firstAtom);
+                member.alsoList.append(blocks);
+            }
+        }
     }
 
     return member;

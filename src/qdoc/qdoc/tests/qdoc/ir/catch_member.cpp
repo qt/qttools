@@ -3,6 +3,8 @@
 
 #include <catch/catch.hpp>
 
+#include <qdoc/ir/contentblock.h>
+#include <qdoc/ir/document.h>
 #include <qdoc/ir/member.h>
 #include <qdoc/access.h>
 #include <qdoc/genustypes.h>
@@ -813,6 +815,169 @@ SCENARIO("AllMembersIR empty members produce empty JSON", "[AllMembersIR][IR]") 
                 REQUIRE(json["isQmlType"_L1].toBool() == true);
                 REQUIRE(!json.contains("members"_L1));
                 REQUIRE(!json.contains("memberGroups"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("MemberIR detail fields serialize to JSON", "[IR::MemberIR][IR][detail]") {
+
+    GIVEN("A MemberIR with all detail fields populated") {
+        IR::ContentBlock bodyBlock;
+        bodyBlock.type = IR::BlockType::Paragraph;
+        IR::InlineContent textInline;
+        textInline.type = IR::InlineType::Text;
+        textInline.text = "Whether to play on load."_L1;
+        bodyBlock.inlineContent = { textInline };
+
+        IR::MemberIR member;
+        member.name = "autoPlay"_L1;
+        member.fullName = "LottieAnimation::autoPlay"_L1;
+        member.signature = "autoPlay : bool"_L1;
+        member.href = "#autoPlay-prop"_L1;
+        member.nodeType = NodeType::QmlProperty;
+        member.access = Access::Public;
+        member.status = Status::Active;
+        member.dataType = "bool"_L1;
+
+        member.anchorId = "autoPlay-prop"_L1;
+        member.synopsis = "autoPlay : bool"_L1;
+        member.since = "6.5"_L1;
+        member.comparisonCategory = "equality"_L1;
+        member.isNoexcept = true;
+        member.body = { bodyBlock };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("All detail fields are present") {
+                REQUIRE(json["anchorId"_L1].toString() == "autoPlay-prop");
+                REQUIRE(json["synopsis"_L1].toString() == "autoPlay : bool");
+                REQUIRE(json["since"_L1].toString() == "6.5");
+                REQUIRE(json["comparisonCategory"_L1].toString() == "equality");
+                REQUIRE(json["isNoexcept"_L1].toBool() == true);
+                REQUIRE(!json.contains("noexceptNote"_L1));
+            }
+
+            THEN("The body array is present with one block") {
+                REQUIRE(json.contains("body"_L1));
+                QJsonArray bodyArr = json["body"_L1].toArray();
+                REQUIRE(bodyArr.size() == 1);
+            }
+        }
+    }
+}
+
+SCENARIO("MemberIR empty detail fields omitted from JSON", "[IR::MemberIR][IR][detail]") {
+
+    GIVEN("A MemberIR with no detail fields set") {
+        IR::MemberIR member;
+        member.name = "width"_L1;
+        member.fullName = "Item::width"_L1;
+        member.signature = "width : real"_L1;
+        member.href = "#width-prop"_L1;
+        member.nodeType = NodeType::QmlProperty;
+        member.dataType = "real"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("Detail fields are absent from JSON") {
+                REQUIRE(!json.contains("anchorId"_L1));
+                REQUIRE(!json.contains("synopsis"_L1));
+                REQUIRE(!json.contains("comparisonCategory"_L1));
+                REQUIRE(!json.contains("isNoexcept"_L1));
+                REQUIRE(!json.contains("noexceptNote"_L1));
+                REQUIRE(!json.contains("body"_L1));
+                REQUIRE(!json.contains("alsoList"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("MemberIR alsoList serializes as array", "[IR::MemberIR][IR][detail]") {
+
+    GIVEN("A MemberIR with an alsoList containing one block") {
+        IR::ContentBlock alsoBlock;
+        alsoBlock.type = IR::BlockType::Paragraph;
+        IR::InlineContent linkInline;
+        linkInline.type = IR::InlineType::Link;
+        linkInline.text = "source"_L1;
+        linkInline.href = "#source-prop"_L1;
+        alsoBlock.inlineContent = { linkInline };
+
+        IR::MemberIR member;
+        member.name = "autoPlay"_L1;
+        member.fullName = "LottieAnimation::autoPlay"_L1;
+        member.signature = "autoPlay : bool"_L1;
+        member.href = "#autoPlay-prop"_L1;
+        member.nodeType = NodeType::QmlProperty;
+        member.dataType = "bool"_L1;
+        member.alsoList = { alsoBlock };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("The alsoList array is present") {
+                REQUIRE(json.contains("alsoList"_L1));
+                QJsonArray arr = json["alsoList"_L1].toArray();
+                REQUIRE(arr.size() == 1);
+            }
+        }
+    }
+}
+
+SCENARIO("SectionIR in detailSections serializes correctly in Document", "[IR::Document][IR][detail]") {
+
+    GIVEN("A Document with one detail section containing one member") {
+        IR::ContentBlock bodyBlock;
+        bodyBlock.type = IR::BlockType::Paragraph;
+        IR::InlineContent textInline;
+        textInline.type = IR::InlineType::Text;
+        textInline.text = "Property documentation."_L1;
+        bodyBlock.inlineContent = { textInline };
+
+        IR::MemberIR member;
+        member.name = "source"_L1;
+        member.fullName = "LottieAnimation::source"_L1;
+        member.signature = "source : url"_L1;
+        member.href = "#source-prop"_L1;
+        member.nodeType = NodeType::QmlProperty;
+        member.dataType = "url"_L1;
+        member.anchorId = "source-prop"_L1;
+        member.synopsis = "source : url"_L1;
+        member.body = { bodyBlock };
+
+        IR::SectionIR section;
+        section.id = "property-documentation"_L1;
+        section.title = "Property Documentation"_L1;
+        section.singular = "property"_L1;
+        section.plural = "properties"_L1;
+        section.members = { member };
+
+        IR::Document doc;
+        doc.title = "LottieAnimation"_L1;
+        doc.fullTitle = "LottieAnimation QML Type"_L1;
+        doc.detailSections = { section };
+
+        WHEN("Converting the Document to JSON") {
+            QJsonObject json = doc.toJson();
+
+            THEN("The detailSections array is present with one section") {
+                REQUIRE(json.contains("detailSections"_L1));
+                QJsonArray arr = json["detailSections"_L1].toArray();
+                REQUIRE(arr.size() == 1);
+                REQUIRE(arr[0].toObject()["title"_L1].toString() == "Property Documentation");
+            }
+
+            THEN("The detail section member has anchorId and body") {
+                QJsonArray arr = json["detailSections"_L1].toArray();
+                QJsonArray members = arr[0].toObject()["members"_L1].toArray();
+                REQUIRE(members.size() == 1);
+                QJsonObject memberJson = members[0].toObject();
+                REQUIRE(memberJson["anchorId"_L1].toString() == "source-prop");
+                REQUIRE(memberJson.contains("body"_L1));
+                REQUIRE(memberJson["body"_L1].toArray().size() == 1);
             }
         }
     }

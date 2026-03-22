@@ -99,6 +99,7 @@ struct Document
 
     // Members (for aggregate pages)
     QList<SectionIR> summarySections;
+    QList<SectionIR> detailSections;
 
     // QML type metadata (populated only for QML type pages)
     std::optional<QmlTypeInfo> qmlTypeInfo;

@@ -74,6 +74,7 @@ Document Builder::buildPageIR(PageMetadata pm) const
 
     ir.body = std::move(pm.body);
     ir.summarySections = std::move(pm.summarySections);
+    ir.detailSections = std::move(pm.detailSections);
 
     if (pm.qmlTypeData) {
         const auto &src = *pm.qmlTypeData;

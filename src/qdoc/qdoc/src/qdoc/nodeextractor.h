@@ -17,14 +17,17 @@ class Node;
 class PageNode;
 class QmlTypeNode;
 
+enum class MemberExtractionLevel { Summary, Detail };
+
 namespace NodeExtractor {
 
-IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hrefResolver = nullptr);
-IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn, const HrefResolver *hrefResolver = nullptr);
-IR::CollectionData extractCollectionData(const CollectionNode *cn, const HrefResolver *hrefResolver = nullptr);
-QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate, const HrefResolver *hrefResolver = nullptr);
-IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver = nullptr, const Node *relative = nullptr);
-std::optional<IR::AllMembersIR> extractAllMembersIR(const PageNode *pn, const HrefResolver *hrefResolver = nullptr);
+IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hrefResolver);
+IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn, const HrefResolver *hrefResolver);
+IR::CollectionData extractCollectionData(const CollectionNode *cn, const HrefResolver *hrefResolver);
+QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate, const HrefResolver *hrefResolver);
+QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const HrefResolver *hrefResolver);
+IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver, const Node *relative, MemberExtractionLevel level = MemberExtractionLevel::Summary);
+std::optional<IR::AllMembersIR> extractAllMembersIR(const PageNode *pn, const HrefResolver *hrefResolver);
 
 } // namespace NodeExtractor
 

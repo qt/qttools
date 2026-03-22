@@ -195,6 +195,11 @@ QJsonObject Document::toJson() const
         sectionsArray.append(section.toJson());
     json["sections"_L1] = sectionsArray;
 
+    QJsonArray detailSectionsArray;
+    for (const auto &section : detailSections)
+        detailSectionsArray.append(section.toJson());
+    json["detailSections"_L1] = detailSectionsArray;
+
     return json;
 }
 

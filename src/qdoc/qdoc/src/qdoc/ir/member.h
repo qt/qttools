@@ -4,6 +4,7 @@
 #ifndef QDOC_IR_MEMBER_H
 #define QDOC_IR_MEMBER_H
 
+#include "contentblock.h"
 #include "qdoc/access.h"
 #include "qdoc/genustypes.h"
 #include "qdoc/status.h"
@@ -59,6 +60,17 @@ struct MemberIR {
     bool isReadOnly { false };
     bool isRequired { false };
     QString dataType;
+
+    // Detail documentation (populated for detail sections, empty for summary)
+    QString anchorId;
+    QString synopsis;
+    QString since;
+    QString threadSafety;
+    QString comparisonCategory;
+    bool isNoexcept { false };
+    QString noexceptNote;
+    QList<ContentBlock> body;
+    QList<ContentBlock> alsoList;
 
     [[nodiscard]] QJsonObject toJson() const;
 };

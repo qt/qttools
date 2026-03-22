@@ -88,6 +88,7 @@ struct PageMetadata
 
     QList<ContentBlock> body;
     QList<SectionIR> summarySections;
+    QList<SectionIR> detailSections;
 
     std::optional<QmlTypeData> qmlTypeData;
     std::optional<CollectionData> collectionData;

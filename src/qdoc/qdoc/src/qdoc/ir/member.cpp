@@ -268,6 +268,35 @@ QJsonObject MemberIR::toJson() const
     if (!dataType.isEmpty())
         json["dataType"_L1] = dataType;
 
+    if (!anchorId.isEmpty())
+        json["anchorId"_L1] = anchorId;
+    if (!synopsis.isEmpty())
+        json["synopsis"_L1] = synopsis;
+    if (!since.isEmpty())
+        json["since"_L1] = since;
+    if (!threadSafety.isEmpty())
+        json["threadSafety"_L1] = threadSafety;
+    if (!comparisonCategory.isEmpty())
+        json["comparisonCategory"_L1] = comparisonCategory;
+    if (isNoexcept)
+        json["isNoexcept"_L1] = true;
+    if (!noexceptNote.isEmpty())
+        json["noexceptNote"_L1] = noexceptNote;
+
+    if (!body.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &block : body)
+            arr.append(block.toJson());
+        json["body"_L1] = arr;
+    }
+
+    if (!alsoList.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &block : alsoList)
+            arr.append(block.toJson());
+        json["alsoList"_L1] = arr;
+    }
+
     return json;
 }
 
