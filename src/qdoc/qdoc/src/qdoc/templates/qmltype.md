@@ -56,6 +56,18 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% endif %}
 {% endfor %}
 {% endif %}
+
+{% if length(detailSections) > 0 %}
+{% for section in detailSections %}
+{% if length(section.members) > 0 %}
+## {{ section.title }}
+
+{% for member in section.members %}
+{% include "partials/md/member_detail.md" %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
 ---
 
 *Built with QDoc's template engine.*

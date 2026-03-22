@@ -87,6 +87,144 @@ Specifically, you can monitor does the frame cache gets constantly full, or does
 | `void start()` |  |
 | `void stop()` |  |
 | `void togglePause()` |  |
+
+## Property Documentation
+
+<a id="autoPlay-prop"></a>
+### autoPlay : bool
+
+Defines whether the player will start playing animation automatically after the animation file has been loaded.
+The default value is `<@keyword>true</@keyword>`.
+<a id="direction-prop"></a>
+### direction : enumeration
+
+This property holds the direction of rendering.
+- LottieAnimation.Forward
+- Forward direction (Default)
+- LottieAnimation.Reverse
+- Reverse direction
+
+<a id="endFrame-prop"></a>
+### endFrame : int
+
+Frame number of the end of the animation. The value is available after the animation has been loaded and ready to play.
+<a id="frameRate-prop"></a>
+### frameRate : int
+
+This property holds the frame rate value of the Lottie animation.
+`frameRate` changes after the asset has been loaded. Changing the frame rate does not have effect before that, as the value defined in the asset overrides the value. To change the frame rate, you can write:
+```qml
+<@type>LottieAnimation</@type> {
+    <@name>source</@name>: <@string>&quot;animation.json&quot;</@string>
+    <@name>onStatusChanged</@name>: {
+        <@keyword>if</@keyword> (<@name>status</@name> <@op>===</@op> <@name>LottieAnimation</@name>.<@name>Ready</@name>)
+            <@name>frameRate</@name> <@op>=</@op> <@number>60</@number>;
+    }
+}
+
+```
+
+<a id="loops-prop"></a>
+### loops : int
+
+This property holds the number of loops the player will repeat. The value `LottieAnimation<@op>.</@op>Infinite` means that the the player repeats the animation continuously.
+The default value is `<@number>1</@number>`.
+<a id="quality-prop"></a>
+### quality : enumeration
+
+Speficies the rendering quality of the lottie player. If `LowQuality` is selected the rendering will happen into a frame buffer object, whereas with other options, the rendering will be done onto `<@type>QImage</@type>` (which in turn will be rendered on the screen).
+- LottieAnimation.LowQuality
+- Antialiasing or a smooth pixmap transformation algorithm are not used
+- LottieAnimation.MediumQuality
+- Smooth pixmap transformation algorithm is used but no antialiasing (Default)
+- LottieAnimation.HighQuality
+- Antialiasing and a smooth pixmap tranformation algorithm are both used
+
+<a id="source-prop"></a>
+### source : url
+
+The source of the Lottie asset that [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) plays.
+[LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) can handle any URL scheme supported by Qt. The URL may be absolute, or relative to the URL of the component.
+Setting the source property starts loading the animation asynchronously. To monitor progress of loading, connect to the [status](qml-qt-labs-lottieqt-lottieanimation.md#status-prop) change signal.
+<a id="startFrame-prop"></a>
+### startFrame : int
+
+Frame number of the start of the animation. The value is available after the animation has been loaded and ready to play.
+<a id="status-prop"></a>
+### status : enumeration
+
+This property holds the current status of the [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) element.
+- LottieAnimation.Null
+- An initial value that is used when the source is not defined (Default)
+- LottieAnimation.Loading
+- The player is loading a Lottie file
+- LottieAnimation.Ready
+- Loading has finished successfully and the player is ready to play the animation
+- LottieAnimation.Error
+- An error occurred while loading the animation
+
+For example, you could implement `onStatusChanged` signal handler to monitor progress of loading an animation as follows:
+```qml
+<@type>LottieAnimation</@type> {
+    <@name>source</@name>: <@string>&quot;animation.json&quot;</@string>
+    <@name>autoPlay</@name>: <@number>false</@number>
+    <@name>onStatusChanged</@name>: {
+        <@keyword>if</@keyword> (<@name>status</@name> <@op>===</@op> <@name>LottieAnimation</@name>.<@name>Ready</@name>)
+            <@name>start</@name>();
+    }
+}
+
+```
+
+## Signal Documentation
+
+<a id="finished-signal"></a>
+### finished()
+
+This signal is emitted when the player has finished playing. In case of looping, the signal is emitted when the last loop has been finished.
+## Method Documentation
+
+<a id="getDuration-method"></a>
+### double getDuration(bool inFrames)
+
+Returns the duration of the currently playing asset.
+If a given _inFrames_ is `<@keyword>true</@keyword>`, the return value is the duration in number of frames. Otherwise, returns the duration in seconds.
+<a id="gotoAndPlay-method"></a>
+### void gotoAndPlay(int frame)
+
+Plays the asset from the given _frame_.
+<a id="gotoAndPlay-method-1"></a>
+### bool gotoAndPlay(string frameMarker)
+
+Plays the asset from the frame that has a marker with the given _frameMarker_. Returns `<@keyword>true</@keyword>` if the frameMarker was found, `<@keyword>false</@keyword>` otherwise.
+<a id="gotoAndStop-method"></a>
+### void gotoAndStop(int frame)
+
+Moves the playhead to the given _frame_ and stops.
+<a id="gotoAndStop-method-1"></a>
+### bool gotoAndStop(string frameMarker)
+
+Moves the playhead to the given marker and stops. Returns `<@keyword>true</@keyword>` if _frameMarker_ was found, `<@keyword>false</@keyword>` otherwise.
+<a id="pause-method"></a>
+### void pause()
+
+Pauses the playback.
+<a id="play-method"></a>
+### void play()
+
+Starts or continues playing from the current position.
+<a id="start-method"></a>
+### void start()
+
+Starts playing the animation from the beginning.
+<a id="stop-method"></a>
+### void stop()
+
+Stops the playback and returns to [startFrame](qml-qt-labs-lottieqt-lottieanimation.md#startFrame-prop).
+<a id="togglePause-method"></a>
+### void togglePause()
+
+Toggles the status of player between playing and paused states.
 ---
 
 *Built with QDoc's template engine.*

@@ -16,6 +16,13 @@ The [LayerItem](qml-qt-labs-lottieqt-vectorimagehelpers-layeritem.md) type maint
 | Member | Description |
 | --- | --- |
 | `transformMatrix : matrix4x4` |  |
+
+## Property Documentation
+
+<a id="transformMatrix-prop"></a>
+### transformMatrix : matrix4x4
+
+The result of combining this item's transform with the transforms of its entire ancestor chain.
 ---
 
 *Built with QDoc's template engine.*

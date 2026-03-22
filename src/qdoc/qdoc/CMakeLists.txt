@@ -240,8 +240,14 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/content_blocks.html"
         PROPERTIES QT_RESOURCE_ALIAS "templates/partials/html/content_blocks.html"
     )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/member_detail.html"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/partials/html/member_detail.html"
+    )
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/content_blocks.md"
         PROPERTIES QT_RESOURCE_ALIAS "templates/partials/md/content_blocks.md"
+    )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/member_detail.md"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/partials/md/member_detail.md"
     )
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/qmltype.html"
         PROPERTIES QT_RESOURCE_ALIAS "templates/qmltype.html"
@@ -272,7 +278,9 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/members.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/members.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/content_blocks.html"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/member_detail.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/content_blocks.md"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/member_detail.md"
     )
 
     qt_internal_add_resource(${target_name} "qdoc_templates"
