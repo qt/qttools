@@ -17,7 +17,7 @@ import <@type>Qt</@type><@op>.</@op>labs<@op>.</@op>lottieqt<@op>.</@op>VectorIm
 
 | Name | Description |
 | --- | --- |
-| LayerItem| An Item that provides access to its transformation matrix as a property. |
+| [LayerItem](qml-qt-labs-lottieqt-vectorimagehelpers-layeritem.md)| An Item that provides access to its transformation matrix as a property. |
 ---
 
 *Built with QDoc's template engine.*

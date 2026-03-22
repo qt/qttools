@@ -5,28 +5,28 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 
 # List of All Members for LottieAnimation
 
-This is the complete list of members for LottieAnimation, including inherited members.
+This is the complete list of members for [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md), including inherited members.
 
-- `autoPlay : bool`
-- `direction : enumeration`
-- `endFrame : int`[read-only]
-- `frameRate : int`
-- `loops : int`
-- `quality : enumeration`
-- `source : url`
-- `startFrame : int`[read-only]
-- `status : enumeration`
-- `finished()`
-- `double getDuration(bool inFrames)`
-- `void gotoAndPlay(int frame)`
-- `bool gotoAndPlay(string frameMarker)`
-- `void gotoAndStop(int frame)`
-- `bool gotoAndStop(string frameMarker)`
-- `void pause()`
-- `void play()`
-- `void start()`
-- `void stop()`
-- `void togglePause()`
+- [`autoPlay : bool`](qml-qt-labs-lottieqt-lottieanimation.md#autoPlay-prop)
+- [`direction : enumeration`](qml-qt-labs-lottieqt-lottieanimation.md#direction-prop)
+- [`endFrame : int`](qml-qt-labs-lottieqt-lottieanimation.md#endFrame-prop)[read-only]
+- [`frameRate : int`](qml-qt-labs-lottieqt-lottieanimation.md#frameRate-prop)
+- [`loops : int`](qml-qt-labs-lottieqt-lottieanimation.md#loops-prop)
+- [`quality : enumeration`](qml-qt-labs-lottieqt-lottieanimation.md#quality-prop)
+- [`source : url`](qml-qt-labs-lottieqt-lottieanimation.md#source-prop)
+- [`startFrame : int`](qml-qt-labs-lottieqt-lottieanimation.md#startFrame-prop)[read-only]
+- [`status : enumeration`](qml-qt-labs-lottieqt-lottieanimation.md#status-prop)
+- [`finished()`](qml-qt-labs-lottieqt-lottieanimation.md#finished-signal)
+- [`double getDuration(bool inFrames)`](qml-qt-labs-lottieqt-lottieanimation.md#getDuration-method)
+- [`void gotoAndPlay(int frame)`](qml-qt-labs-lottieqt-lottieanimation.md#gotoAndPlay-method)
+- [`bool gotoAndPlay(string frameMarker)`](qml-qt-labs-lottieqt-lottieanimation.md#gotoAndPlay-method-1)
+- [`void gotoAndStop(int frame)`](qml-qt-labs-lottieqt-lottieanimation.md#gotoAndStop-method)
+- [`bool gotoAndStop(string frameMarker)`](qml-qt-labs-lottieqt-lottieanimation.md#gotoAndStop-method-1)
+- [`void pause()`](qml-qt-labs-lottieqt-lottieanimation.md#pause-method)
+- [`void play()`](qml-qt-labs-lottieqt-lottieanimation.md#play-method)
+- [`void start()`](qml-qt-labs-lottieqt-lottieanimation.md#start-method)
+- [`void stop()`](qml-qt-labs-lottieqt-lottieanimation.md#stop-method)
+- [`void togglePause()`](qml-qt-labs-lottieqt-lottieanimation.md#togglePause-method)
 
 ---
 

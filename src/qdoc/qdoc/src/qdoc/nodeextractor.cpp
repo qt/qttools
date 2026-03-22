@@ -12,6 +12,7 @@
 #include "doc.h"
 #include "enumnode.h"
 #include "functionnode.h"
+#include "hrefresolver.h"
 #include "inclusionfilter.h"
 #include "ir/contentbuilder.h"
 #include "pagenode.h"
@@ -31,6 +32,16 @@
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::Literals;
+
+static QString resolveHref(const HrefResolver *resolver, const Node *target, const Node *relative)
+{
+    if (!resolver)
+        return target->url();
+    auto result = resolver->hrefForNode(target, relative);
+    if (const auto *href = std::get_if<QString>(&result))
+        return *href;
+    return {};
+}
 
 namespace NodeExtractor {
 
@@ -53,7 +64,7 @@ namespace NodeExtractor {
     result to IR::Builder, ensuring Builder never includes PageNode
     or other Node subclass headers.
 */
-IR::PageMetadata extractPageMetadata(const PageNode *pn)
+IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hrefResolver)
 {
     Q_ASSERT_X(pn, "NodeExtractor::extractPageMetadata",
                "PageNode pointer must be non-null");
@@ -86,16 +97,16 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn)
     }
 
     if (pn->isAggregate())
-        pm.summarySections = extractSummarySections(static_cast<const Aggregate *>(pn));
+        pm.summarySections = extractSummarySections(static_cast<const Aggregate *>(pn), hrefResolver);
 
     if (pn->isQmlType()) {
         const auto *qcn = static_cast<const QmlTypeNode *>(pn);
-        pm.qmlTypeData = extractQmlTypeData(qcn);
+        pm.qmlTypeData = extractQmlTypeData(qcn, hrefResolver);
     }
 
     if (pn->isCollectionNode()) {
         const auto *cn = static_cast<const CollectionNode *>(pn);
-        pm.collectionData = extractCollectionData(cn);
+        pm.collectionData = extractCollectionData(cn, hrefResolver);
     }
 
     return pm;
@@ -109,7 +120,7 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn)
     native C++ type link, and singleton/value-type flags. InclusionFilter
     is applied to match the legacy generator's visibility filtering.
 */
-IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn)
+IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn, const HrefResolver *hrefResolver)
 {
     IR::QmlTypeData data;
     const InclusionPolicy policy = Config::instance().createInclusionPolicy();
@@ -145,7 +156,7 @@ IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn)
     if (base) {
         IR::QmlTypeData::InheritsInfo inheritsInfo;
         inheritsInfo.name = base->name();
-        inheritsInfo.href = base->url();
+        inheritsInfo.href = resolveHref(hrefResolver, base, qcn);
         const CollectionNode *baseModule = base->logicalModule();
         if (baseModule) {
             const NodeContext moduleContext = baseModule->createContext();
@@ -160,7 +171,7 @@ IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn)
         for (const auto *sub : std::as_const(subs)) {
             const NodeContext context = sub->createContext();
             if (InclusionFilter::isIncluded(policy, context))
-                filteredSubs.append({sub->name(), sub->url()});
+                filteredSubs.append({sub->name(), resolveHref(hrefResolver, sub, qcn)});
         }
         std::sort(filteredSubs.begin(), filteredSubs.end(),
                   [](const IR::QmlTypeData::InheritedByEntry &a,
@@ -174,7 +185,7 @@ IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn)
     if (cn && cn->isQmlNativeType()) {
         const NodeContext context = cn->createContext();
         if (InclusionFilter::isIncluded(policy, context))
-            data.nativeType = IR::QmlTypeData::NativeTypeInfo{cn->name(), cn->url()};
+            data.nativeType = IR::QmlTypeData::NativeTypeInfo{cn->name(), resolveHref(hrefResolver, cn, qcn)};
     }
 
     return data;
@@ -193,7 +204,7 @@ IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn)
     internal entries) and exclude deprecated nodes, then sorted
     alphabetically by name (case-insensitive).
 */
-IR::CollectionData extractCollectionData(const CollectionNode *cn)
+IR::CollectionData extractCollectionData(const CollectionNode *cn, const HrefResolver *hrefResolver)
 {
     IR::CollectionData data;
 
@@ -215,8 +226,8 @@ IR::CollectionData extractCollectionData(const CollectionNode *cn)
 
     const InclusionPolicy policy = Config::instance().createInclusionPolicy();
 
-    auto makeMemberEntry = [](const Node *node) -> IR::CollectionData::MemberEntry {
-        return { node->name(), node->url(), node->doc().briefText().toString() };
+    auto makeMemberEntry = [hrefResolver, cn](const Node *node) -> IR::CollectionData::MemberEntry {
+        return { node->name(), resolveHref(hrefResolver, node, cn), node->doc().briefText().toString() };
     };
 
     auto sortEntries = [](QList<IR::CollectionData::MemberEntry> &entries) {
@@ -265,7 +276,7 @@ IR::CollectionData extractCollectionData(const CollectionNode *cn)
     results into frozen SectionIR values. The section variant (C++ class,
     QML type, or generic) is chosen based on the aggregate's node type.
 */
-QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate)
+QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate, const HrefResolver *hrefResolver)
 {
     Sections sections(aggregate);
 
@@ -290,20 +301,20 @@ QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate)
             if (member->isSharedCommentNode()) {
                 const auto *scn = static_cast<const SharedCommentNode *>(member);
                 for (const auto *child : scn->collective())
-                    irSection.members.append(extractMemberIR(child));
+                    irSection.members.append(extractMemberIR(child, hrefResolver, aggregate));
             } else {
-                irSection.members.append(extractMemberIR(member));
+                irSection.members.append(extractMemberIR(member, hrefResolver, aggregate));
             }
         }
 
         for (const auto *reimpl : section.reimplementedMembers())
-            irSection.reimplementedMembers.append(extractMemberIR(reimpl));
+            irSection.reimplementedMembers.append(extractMemberIR(reimpl, hrefResolver, aggregate));
 
         for (const auto &[base, count] : section.inheritedMembers()) {
             IR::InheritedMembersIR inherited;
             inherited.className = base->plainFullName();
             inherited.count = count;
-            inherited.href = base->url();
+            inherited.href = resolveHref(hrefResolver, base, aggregate);
             irSection.inheritedMembers.append(inherited);
         }
 
@@ -321,13 +332,13 @@ QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate)
     EnumNode provides scoped/unscoped signature and enum value listings.
     PropertyNode provides a qualified data type signature.
 */
-IR::MemberIR extractMemberIR(const Node *node)
+IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver, const Node *relative)
 {
     IR::MemberIR member;
 
     member.name = node->name();
     member.fullName = node->plainFullName();
-    member.href = node->url();
+    member.href = resolveHref(hrefResolver, node, relative);
     member.brief = node->doc().briefText().toString();
 
     member.nodeType = node->nodeType();
@@ -412,11 +423,11 @@ static QString stripCodeMarkerTags(const QString &marked)
     originating QML type, and builds AllMemberEntry items with
     QML-specific hints and property group nesting.
 */
-static IR::AllMembersIR extractQmlAllMembersIR(const QmlTypeNode *qcn)
+static IR::AllMembersIR extractQmlAllMembersIR(const QmlTypeNode *qcn, const HrefResolver *hrefResolver)
 {
     IR::AllMembersIR result;
     result.typeName = qcn->name();
-    result.typeHref = qcn->url();
+    result.typeHref = resolveHref(hrefResolver, qcn, qcn);
     result.isQmlType = true;
 
     Sections sections(qcn);
@@ -431,7 +442,7 @@ static IR::AllMembersIR extractQmlAllMembersIR(const QmlTypeNode *qcn)
         IR::AllMemberEntry entry;
         entry.signature = stripCodeMarkerTags(
             marker->markedUpQmlItem(node, true));
-        entry.href = node->url();
+        entry.href = resolveHref(hrefResolver, node, qcn);
 
         if (node->isQmlProperty()) {
             auto *qpn = static_cast<QmlPropertyNode *>(node);
@@ -472,7 +483,7 @@ static IR::AllMembersIR extractQmlAllMembersIR(const QmlTypeNode *qcn)
         IR::MemberGroup group;
         if (originType != qcn) {
             group.typeName = originType->name();
-            group.typeHref = originType->url();
+            group.typeHref = resolveHref(hrefResolver, originType, qcn);
         }
 
         for (auto *node : nodes) {
@@ -494,11 +505,11 @@ static IR::AllMembersIR extractQmlAllMembersIR(const QmlTypeNode *qcn)
     allMembersSection().members(), builds AllMemberEntry for each
     visible member, and returns an AllMembersIR with isQmlType=false.
 */
-static IR::AllMembersIR extractCppAllMembersIR(const Aggregate *aggregate)
+static IR::AllMembersIR extractCppAllMembersIR(const Aggregate *aggregate, const HrefResolver *hrefResolver)
 {
     IR::AllMembersIR result;
     result.typeName = aggregate->plainFullName();
-    result.typeHref = aggregate->url();
+    result.typeHref = resolveHref(hrefResolver, aggregate, aggregate);
     result.isQmlType = false;
 
     Sections sections(aggregate);
@@ -519,7 +530,7 @@ static IR::AllMembersIR extractCppAllMembersIR(const Aggregate *aggregate)
         IR::AllMemberEntry entry;
         entry.signature = stripCodeMarkerTags(
             marker->markedUpSynopsis(node, aggregate, Section::AllMembers));
-        entry.href = node->url();
+        entry.href = resolveHref(hrefResolver, node, aggregate);
         result.members.append(entry);
     }
 
@@ -535,13 +546,13 @@ static IR::AllMembersIR extractCppAllMembersIR(const Aggregate *aggregate)
     listing pages (generic pages, QML basic types) or when the listing
     would be empty.
 */
-std::optional<IR::AllMembersIR> extractAllMembersIR(const PageNode *pn)
+std::optional<IR::AllMembersIR> extractAllMembersIR(const PageNode *pn, const HrefResolver *hrefResolver)
 {
     if (pn->isQmlType()) {
         const auto *qcn = static_cast<const QmlTypeNode *>(pn);
         if (qcn->isQmlBasicType())
             return std::nullopt;
-        auto result = extractQmlAllMembersIR(qcn);
+        auto result = extractQmlAllMembersIR(qcn, hrefResolver);
         bool hasMember = false;
         for (const auto &group : std::as_const(result.memberGroups)) {
             if (!group.members.isEmpty()) {
@@ -556,7 +567,7 @@ std::optional<IR::AllMembersIR> extractAllMembersIR(const PageNode *pn)
 
     if (pn->isAggregate() && (pn->isClassNode() || pn->isNamespace())) {
         const auto *aggregate = static_cast<const Aggregate *>(pn);
-        auto result = extractCppAllMembersIR(aggregate);
+        auto result = extractCppAllMembersIR(aggregate, hrefResolver);
         if (result.members.isEmpty())
             return std::nullopt;
         return result;

@@ -16,7 +16,7 @@ import <@type>Qt</@type><@op>.</@op>labs<@op>.</@op>lottieqt
 
 | Name | Description |
 | --- | --- |
-| LottieAnimation| A Lottie player for Qt. |
+| [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md)| A Lottie player for Qt. |
 ---
 
 *Built with QDoc's template engine.*

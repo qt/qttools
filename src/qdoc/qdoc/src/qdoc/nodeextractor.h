@@ -12,18 +12,19 @@ QT_BEGIN_NAMESPACE
 
 class Aggregate;
 class CollectionNode;
+class HrefResolver;
 class Node;
 class PageNode;
 class QmlTypeNode;
 
 namespace NodeExtractor {
 
-IR::PageMetadata extractPageMetadata(const PageNode *pn);
-IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn);
-IR::CollectionData extractCollectionData(const CollectionNode *cn);
-QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate);
-IR::MemberIR extractMemberIR(const Node *node);
-std::optional<IR::AllMembersIR> extractAllMembersIR(const PageNode *pn);
+IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hrefResolver = nullptr);
+IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn, const HrefResolver *hrefResolver = nullptr);
+IR::CollectionData extractCollectionData(const CollectionNode *cn, const HrefResolver *hrefResolver = nullptr);
+QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate, const HrefResolver *hrefResolver = nullptr);
+IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver = nullptr, const Node *relative = nullptr);
+std::optional<IR::AllMembersIR> extractAllMembersIR(const PageNode *pn, const HrefResolver *hrefResolver = nullptr);
 
 } // namespace NodeExtractor
 

@@ -4,7 +4,7 @@ Represents an Item
 
 | | |
 | --- | --- |
-| Inherited By | LottieAnimation|
+| Inherited By | [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md)|
 
 
 

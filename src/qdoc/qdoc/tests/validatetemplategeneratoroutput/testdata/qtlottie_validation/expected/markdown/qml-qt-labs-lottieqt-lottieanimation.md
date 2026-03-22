@@ -5,7 +5,7 @@ A Lottie player for Qt.
 | | |
 | --- | --- |
 | Import Statement | `import Qt.labs.lottieqt 1.0` |
-| Inherits | Item|
+| Inherits | [Item](qml-item.md)|
 
 - [List of all members, including inherited members](qml-qt-labs-lottieqt-lottieanimation-members.md)
 

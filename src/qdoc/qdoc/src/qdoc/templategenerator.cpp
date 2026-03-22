@@ -212,7 +212,7 @@ void TemplateGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *m
 {
     Q_UNUSED(marker);
 
-    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(cn);
+    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(cn, m_hrefResolver.get());
 
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));
@@ -227,7 +227,7 @@ void TemplateGenerator::generateGenericCollectionPage(CollectionNode *cn, CodeMa
 {
     Q_UNUSED(marker);
 
-    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(cn);
+    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(cn, m_hrefResolver.get());
 
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));
@@ -242,7 +242,7 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 {
     Q_UNUSED(marker);
 
-    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(pn);
+    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(pn, m_hrefResolver.get());
 
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));
@@ -270,8 +270,8 @@ void TemplateGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker
 {
     Q_UNUSED(marker);
 
-    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(qcn);
-    auto allMembers = NodeExtractor::extractAllMembersIR(qcn);
+    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(qcn, m_hrefResolver.get());
+    auto allMembers = NodeExtractor::extractAllMembersIR(qcn, m_hrefResolver.get());
 
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));
