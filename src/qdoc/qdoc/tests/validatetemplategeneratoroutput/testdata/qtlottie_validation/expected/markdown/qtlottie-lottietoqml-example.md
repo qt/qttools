@@ -37,7 +37,7 @@ qt_target_qml_from_lottie(applottietoqmlexample
 
 ```
 
-In this example, the Lottie files are automatically converted to QML using the [CMake](CMake) function [qt_target_qml_from_lottie()](qt-target-qml-from-lottie.md).
+In this example, the Lottie files are automatically converted to QML using the CMake function [qt_target_qml_from_lottie()](qt-target-qml-from-lottie.md).
 
 # Assets
 

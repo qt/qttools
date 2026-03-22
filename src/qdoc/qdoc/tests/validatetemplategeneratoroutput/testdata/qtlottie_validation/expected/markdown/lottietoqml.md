@@ -3,7 +3,7 @@
 A tool that converts a Lottie document to a QML file.
 
 `lottietoqml` is a command line tool shipped with Qt that converts a Lottie document to a QML file. This QML file can then be used as a component in Qt Quick applications.
-You can use `lottietoqml` directly, or via the [qt_target_qml_from_lottie](qt-target-qml-from-lottie.md) [CMake](CMake) command.
+You can use `lottietoqml` directly, or via the [qt_target_qml_from_lottie](qt-target-qml-from-lottie.md) CMake command.
 For a demonstration of how `lottietoqml` can be used in an application, see the [lottietoqml Example](qtlottie-lottietoqml-example.md).
 # Overview
 

@@ -58,7 +58,7 @@ qt_target_qml_from_lottie(applottietoqmlexample
 
 # Description
 
-[qt_target_qml_from_lottie()](qt_target_qml_from_lottie()) creates the build steps to run [lottietoqml](lottietoqml.md) on the list of Lottie images in `FILES`. The names of the generated files should be specified in `OUTPUTS`. The length of this list must be the same as `FILES`, and the first element corresponds to the first element in `FILES` and so forth. The names provided in `OUTPUTS` will be the names of the QML types as they appear in the module. These can in turn be instantiated in the application code.
+qt_target_qml_from_lottie() creates the build steps to run [lottietoqml](lottietoqml.md) on the list of Lottie images in `FILES`. The names of the generated files should be specified in `OUTPUTS`. The length of this list must be the same as `FILES`, and the first element corresponds to the first element in `FILES` and so forth. The names provided in `OUTPUTS` will be the names of the QML types as they appear in the module. These can in turn be instantiated in the application code.
 The generated QML files will be added to the QML module of `target`. You must use [qt_add_qml_module()](https://doc.qt.io/qt-6/qt-add-qml-module.html) to define a module for the `target` first.
 Optionally, a `COPYRIGHT_STATEMENT` argument can be provided to insert copyright information into the generated files.
 > **Note:** Certain characters must be escaped for command line use or you may see build errors on some platforms.

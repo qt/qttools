@@ -10,6 +10,7 @@
 #include "ir/contentblock.h"
 #include "node.h"
 #include "qdocdatabase.h"
+#include "utilities.h"
 
 using namespace Qt::Literals::StringLiterals;
 
@@ -28,6 +29,13 @@ static Genus genusFromString(const QString &s)
     return Genus::DontCare;
 }
 
+static bool isBrokenAutolink(const IR::InlineContent &inline_)
+{
+    return inline_.type == IR::InlineType::Link
+            && inline_.link.has_value()
+            && inline_.link->state == IR::LinkState::Broken
+            && inline_.link->origin == IR::LinkOrigin::Auto;
+}
 
 /*!
     Constructs a LinkResolver that uses \a qdb for node lookup,
@@ -75,6 +83,18 @@ void LinkResolver::resolveInlines(QList<IR::InlineContent> &inlines, const Node 
     for (auto &inline_ : inlines) {
         if (inline_.type == IR::InlineType::Link && !inline_.href.isEmpty())
             resolveLink(inline_, relative);
+
+        if (isBrokenAutolink(inline_)) {
+            qCDebug(lcQdoc) << "Autolink degraded to text:" << inline_.href;
+            inline_.type = IR::InlineType::Text;
+            inline_.text = inline_.plainText();
+            inline_.href.clear();
+            inline_.children.clear();
+            inline_.link.reset();
+            inline_.attributes = QJsonObject();
+            continue;
+        }
+
         if (!inline_.children.isEmpty())
             resolveInlines(inline_.children, relative);
     }

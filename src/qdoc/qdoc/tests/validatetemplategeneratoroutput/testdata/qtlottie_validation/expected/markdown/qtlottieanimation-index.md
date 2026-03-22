@@ -4,7 +4,7 @@ Display Lottie format vector graphics animations.
 
 _Qt Lottie Animation_ provides QML APIs for rendering graphics and animations in Lottie format files. These are typically exported from the [Lottie](https://lottiefiles.com/plugins/after-effects) plugins for Adobe After Effects.
 The [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) item renders animations into an intermediate buffer using the [QPainter](https://doc.qt.io/qt-6/qpainter.html) software renderer. This may impose some performance restrictions on the sizes of illustrations, as well as on the target hardware. As an alternative, a tool called [lottietoqml](lottietoqml.md) is included. This tool converts Lottie animations to QML. As a result, they can be rendered using the hardware-accelerated renderer in Qt Quick.
-If the Lottie files are known at compile time, you can also convert them to QML using the [lottietoqml](lottietoqml.md) tool, or the [qt_target_qml_from_lottie](qt-target-qml-from-lottie.md) [CMake](CMake) command that wraps the tool.
+If the Lottie files are known at compile time, you can also convert them to QML using the [lottietoqml](lottietoqml.md) tool, or the [qt_target_qml_from_lottie](qt-target-qml-from-lottie.md) CMake command that wraps the tool.
 Finally, the [VectorImage](https://doc.qt.io/qt-6/qml-qtquick-vectorimage.html) Qt Quick item can load Lottie format files directly. It converts them to QML at runtime using the [lottietoqml](lottietoqml.md) functionality in a plugin.
 # Getting Started
 

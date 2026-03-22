@@ -44,7 +44,7 @@ The following example shows a simple usage of the [LottieAnimation](qml-qt-labs-
 
 # Rendering Performance
 
-Internally, the rendered frame data is cached to improve performance. You can control the memory usage by setting the [QLOTTIE_RENDER_CACHE_SIZE](QLOTTIE_RENDER_CACHE_SIZE) environment variable (default value is 2).
+Internally, the rendered frame data is cached to improve performance. You can control the memory usage by setting the QLOTTIE_RENDER_CACHE_SIZE environment variable (default value is 2).
 You can monitor the rendering performance by turning on two logging categories:
 - `qt<@op>.</@op>lottieqt<@op>.</@op>lottie<@op>.</@op>render` - Provides information how the animation is rendered
 - `qt<@op>.</@op>lottieqt<@op>.</@op>lottie<@op>.</@op>render<@op>.</@op>thread` - Provides information how the rendering process proceeds.
