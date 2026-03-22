@@ -28,17 +28,6 @@ static Genus genusFromString(const QString &s)
     return Genus::DontCare;
 }
 
-static QString suppressReasonToString(HrefSuppressReason reason)
-{
-    switch (reason) {
-    case HrefSuppressReason::NullNode:           return "null"_L1;
-    case HrefSuppressReason::NoFileBase:         return "unaddressable"_L1;
-    case HrefSuppressReason::ExcludedByPolicy:   return "excluded"_L1;
-    case HrefSuppressReason::InternalAbstractQml: return "internal"_L1;
-    case HrefSuppressReason::SameFileAnchor:     return "self"_L1;
-    }
-    Q_UNREACHABLE_RETURN("unknown"_L1);
-}
 
 /*!
     Constructs a LinkResolver that uses \a qdb for node lookup,
@@ -106,7 +95,7 @@ void LinkResolver::resolveInlines(QList<IR::InlineContent> &inlines, const Node 
         deprecated.
     \li HrefResolver returns an HrefResult variant: a URL on success, or
         an HrefSuppressReason (self-link, policy exclusion, etc.) that
-        maps to a diagnostic linkState string.
+        maps to LinkState::Suppressed.
     \li Unresolvable links emit warnings controlled by LinkResolverConfig.
     \endlist
 
@@ -115,13 +104,15 @@ void LinkResolver::resolveInlines(QList<IR::InlineContent> &inlines, const Node 
 */
 void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
 {
+    Q_ASSERT(link.link.has_value());
+
     const QString &target = link.href;
 
     // External URL -- no resolution needed.
     if (target.startsWith("http:"_L1) || target.startsWith("https:"_L1)
         || target.startsWith("ftp:"_L1) || target.startsWith("file:"_L1)
         || target.startsWith("mailto:"_L1)) {
-        link.attributes["linkState"_L1] = u"external"_s;
+        link.link->state = IR::LinkState::External;
         return;
     }
 
@@ -135,11 +126,7 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
             m_qdb->findNodeForTarget(target, relative, genus, moduleName);
 
     if (!targetNode) {
-        // Emit warning based on link origin category.
-        const bool isAutoLink =
-                link.attributes.value("linkOrigin"_L1).toString() == "auto"_L1;
-
-        if (isAutoLink) {
+        if (link.link->origin == IR::LinkOrigin::Auto) {
             if (m_config.autolinkErrors && relative)
                 relative->doc().location().warning(
                         u"Can't autolink to '%1'"_s.arg(target));
@@ -149,7 +136,7 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
                         u"Can't link to '%1'"_s.arg(target));
         }
 
-        link.attributes["linkState"_L1] = u"broken"_s;
+        link.link->state = IR::LinkState::Broken;
         return;
     }
 
@@ -160,7 +147,7 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
     if (targetNode->isDeprecated() && relative
         && relative->parent() != targetNode && !relative->isDeprecated()) {
         link.href.clear();
-        link.attributes["linkState"_L1] = u"suppressed"_s;
+        link.link->state = IR::LinkState::Suppressed;
         return;
     }
 
@@ -168,20 +155,20 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
     QString url = targetNode->url();
     if (url.isNull()) {
         auto result = m_hrefResolver.hrefForNode(targetNode, relative);
-        if (const auto *reason = std::get_if<HrefSuppressReason>(&result)) {
+        if (std::get_if<HrefSuppressReason>(&result)) {
             link.href.clear();
-            link.attributes["linkState"_L1] = suppressReasonToString(*reason);
+            link.link->state = IR::LinkState::Suppressed;
             return;
         }
         url = std::get<QString>(std::move(result));
     } else if (url.isEmpty()) {
         link.href.clear();
-        link.attributes["linkState"_L1] = u"ignored"_s;
+        link.link->state = IR::LinkState::Ignored;
         return;
     }
 
     link.href = url;
-    link.attributes["linkState"_L1] = u"resolved"_s;
+    link.link->state = IR::LinkState::Resolved;
 }
 
 QT_END_NAMESPACE

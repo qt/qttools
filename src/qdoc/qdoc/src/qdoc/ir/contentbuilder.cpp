@@ -282,8 +282,8 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         InlineContent link;
         link.type = InlineType::Link;
         link.href = atom->string();
-        link.attributes["linkOrigin"_L1] = u"auto"_s;
-        link.children.append({ InlineType::Text, atom->string(), {}, {}, {}, {} });
+        link.link = InlineContent::LinkData{ LinkOrigin::Auto, LinkState::Unresolved };
+        link.children.append({ InlineType::Text, atom->string(), {}, {}, {}, {}, {} });
         addInline(std::move(link));
         break;
     }
@@ -298,7 +298,7 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         InlineContent link;
         link.type = InlineType::Link;
         link.href = atom->string();
-        link.attributes["linkOrigin"_L1] = u"explicit"_s;
+        link.link = InlineContent::LinkData{ LinkOrigin::Explicit, LinkState::Unresolved };
 
         // Extract genus and module scope from LinkAtom if available.
         if (atom->isLinkAtom()) {

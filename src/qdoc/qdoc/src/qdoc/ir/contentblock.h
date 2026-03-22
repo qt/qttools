@@ -8,6 +8,8 @@
 #include <QList>
 #include <QString>
 
+#include <optional>
+
 QT_BEGIN_NAMESPACE
 
 namespace IR {
@@ -30,6 +32,20 @@ enum class InlineType : unsigned char {
     Target
 };
 
+enum class LinkOrigin : unsigned char {
+    Auto,
+    Explicit
+};
+
+enum class LinkState : unsigned char {
+    Unresolved,
+    Resolved,
+    External,
+    Broken,
+    Suppressed,
+    Ignored
+};
+
 struct InlineContent
 {
     InlineType type { InlineType::Text };
@@ -37,7 +53,13 @@ struct InlineContent
     QString href;                          //!< Link target or image source
     QString title;                         //!< Link tooltip or image alt text
     QList<InlineContent> children;         //!< Nested inline content
-    QJsonObject attributes;                //!< Type-specific metadata (e.g., link state)
+    QJsonObject attributes;                //!< Type-specific metadata
+
+    struct LinkData {
+        LinkOrigin origin { LinkOrigin::Auto };
+        LinkState state { LinkState::Unresolved };
+    };
+    std::optional<LinkData> link;
 
     [[nodiscard]] QJsonObject toJson() const;
     [[nodiscard]] QString plainText() const;
