@@ -41,6 +41,7 @@ Q_LOGGING_CATEGORY(lcQDocTemplateGenerator, "qt.qdoc.templategenerator")
 using namespace Qt::Literals;
 
 static QString nodeTypeKey(const Node *node);
+static void resolveDocumentLinks(LinkResolver *resolver, IR::Document &ir, const Node *relative);
 
 /*!
     \class TemplateGenerator
@@ -217,8 +218,8 @@ void TemplateGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *m
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));
 
-    if (m_linkResolver && !ir.body.isEmpty())
-        m_linkResolver->resolve(ir.body, cn);
+    if (m_linkResolver)
+        resolveDocumentLinks(m_linkResolver.get(), ir, cn);
 
     renderDocument(ir, "collection"_L1);
 }
@@ -232,8 +233,8 @@ void TemplateGenerator::generateGenericCollectionPage(CollectionNode *cn, CodeMa
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));
 
-    if (m_linkResolver && !ir.body.isEmpty())
-        m_linkResolver->resolve(ir.body, cn);
+    if (m_linkResolver)
+        resolveDocumentLinks(m_linkResolver.get(), ir, cn);
 
     renderDocument(ir, "collection"_L1);
 }
@@ -247,8 +248,8 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));
 
-    if (m_linkResolver && !ir.body.isEmpty())
-        m_linkResolver->resolve(ir.body, pn);
+    if (m_linkResolver)
+        resolveDocumentLinks(m_linkResolver.get(), ir, pn);
 
     renderDocument(ir, "page"_L1);
 }
@@ -279,8 +280,8 @@ void TemplateGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker
     if (allMembers)
         ir.membersPageUrl = fileBase(qcn) + "-members."_L1 + m_fileExtension;
 
-    if (m_linkResolver && !ir.body.isEmpty())
-        m_linkResolver->resolve(ir.body, qcn);
+    if (m_linkResolver)
+        resolveDocumentLinks(m_linkResolver.get(), ir, qcn);
 
     renderDocument(ir, "qmltype"_L1);
 
@@ -467,6 +468,20 @@ static QString nodeTypeKey(const Node *node)
         }
     }
     return QString();
+}
+
+static void resolveDocumentLinks(LinkResolver *resolver, IR::Document &ir, const Node *relative)
+{
+    if (!ir.body.isEmpty())
+        resolver->resolve(ir.body, relative);
+    for (auto &section : ir.detailSections) {
+        for (auto &member : section.members) {
+            if (!member.body.isEmpty())
+                resolver->resolve(member.body, relative);
+            if (!member.alsoList.isEmpty())
+                resolver->resolve(member.alsoList, relative);
+        }
+    }
 }
 
 /*!
