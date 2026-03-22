@@ -112,8 +112,10 @@ set(qdoc_sources
     src/qdoc/functionnode.cpp
     src/qdoc/generator.cpp
     src/qdoc/genustypes.h
+    src/qdoc/anchorid.cpp
     src/qdoc/headernode.cpp
     src/qdoc/helpprojectwriter.cpp
+    src/qdoc/hrefresolver.cpp
     src/qdoc/htmlgenerator.cpp
     src/qdoc/inclusionfilter.h
     src/qdoc/inclusionflags.h
@@ -164,7 +166,6 @@ set(qdoc_sources
 if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     list(APPEND qdoc_sources
         src/qdoc/documentationtraverser.cpp
-        src/qdoc/hrefresolver.cpp
         src/qdoc/injabridge.cpp
         src/qdoc/linkresolver.cpp
         src/qdoc/ir/builder.cpp

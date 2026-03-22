@@ -8,6 +8,7 @@
 #include "enumnode.h"
 #include "examplenode.h"
 #include "functionnode.h"
+#include "anchorid.h"
 #include "inclusionfilter.h"
 #include "inclusionpolicy.h"
 #include "node.h"
@@ -258,67 +259,14 @@ QString XmlGenerator::registerRef(const QString &ref, bool xmlCompliant)
   Generates a clean and unique reference for the given \a node.
   This reference may depend on the type of the node (typedef,
   QML signal, etc.)
+
+  Delegates base anchor computation to the shared computeAnchorId()
+  utility, then runs the result through registerRef() for
+  per-document collision handling.
  */
 QString XmlGenerator::refForNode(const Node *node)
 {
-    QString ref;
-    switch (node->nodeType()) {
-    case NodeType::Enum:
-    case NodeType::QmlEnum:
-        ref = node->name() + "-enum";
-        break;
-    case NodeType::Typedef: {
-        const auto *tdf = static_cast<const TypedefNode *>(node);
-        if (tdf->associatedEnum())
-            return refForNode(tdf->associatedEnum());
-    } Q_FALLTHROUGH();
-    case NodeType::TypeAlias:
-        ref = node->name() + "-typedef";
-        break;
-    case NodeType::Function: {
-        const auto fn = static_cast<const FunctionNode *>(node);
-        switch (fn->metaness()) {
-        case FunctionNode::QmlSignal:
-            ref = fn->name() + "-signal";
-            break;
-        case FunctionNode::QmlSignalHandler:
-            ref = fn->name() + "-signal-handler";
-            break;
-        case FunctionNode::QmlMethod:
-            ref = fn->name() + "-method";
-            if (fn->overloadNumber() != 0)
-                ref += QLatin1Char('-') + QString::number(fn->overloadNumber());
-            break;
-        default:
-            if (const auto *p = fn->primaryAssociatedProperty(); p && fn->doc().isEmpty()) {
-                return refForNode(p);
-            } else {
-                ref = fn->name();
-                if (fn->overloadNumber() != 0)
-                    ref += QLatin1Char('-') + QString::number(fn->overloadNumber());
-            }
-            break;
-        }
-    } break;
-    case NodeType::SharedComment: {
-        if (!node->isPropertyGroup())
-            break;
-    } Q_FALLTHROUGH();
-    case NodeType::QmlProperty:
-        if (node->isAttached())
-            ref = node->name() + "-attached-prop";
-        else
-            ref = node->name() + "-prop";
-        break;
-    case NodeType::Property:
-        ref = node->name() + "-prop";
-        break;
-    case NodeType::Variable:
-        ref = node->name() + "-var";
-        break;
-    default:
-        break;
-    }
+    QString ref = computeAnchorId(node);
     return registerRef(ref);
 }
 

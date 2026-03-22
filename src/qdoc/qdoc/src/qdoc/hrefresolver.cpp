@@ -1,21 +1,17 @@
 // Copyright (C) 2026 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#ifdef QDOC_TEMPLATE_GENERATOR_ENABLED
-
 #include "hrefresolver.h"
 
-#include "functionnode.h"
+#ifdef QDOC_TEMPLATE_GENERATOR_ENABLED
+
+#include "anchorid.h"
 #include "inclusionfilter.h"
-#include "node.h"
 #include "qmltypenode.h"
 #include "tree.h"
-#include "typedefnode.h"
 #include "utilities.h"
 
 #include <QtCore/qfileinfo.h>
-
-using namespace Qt::Literals::StringLiterals;
 
 QT_BEGIN_NAMESPACE
 
@@ -115,74 +111,16 @@ QString HrefResolver::fileName(const Node *node) const
     Returns an empty string for page-level nodes that don't need
     anchors.
 
-    This extracts the anchor computation from XmlGenerator::refForNode()
-    and Generator::fullDocumentLocation().
+    Delegates to the free function computeAnchorId() for node-type
+    dispatch, then applies the configured cleanRefFn for sanitization.
+    This keeps the shared anchor logic generator-agnostic while
+    allowing each caller to control cleanup policy.
 */
 QString HrefResolver::anchorForNode(const Node *node) const
 {
-    QString ref;
-
-    switch (node->nodeType()) {
-    case NodeType::Enum:
-    case NodeType::QmlEnum:
-        ref = node->name() + "-enum"_L1;
-        break;
-    case NodeType::Typedef: {
-        const auto *tdf = static_cast<const TypedefNode *>(node);
-        if (tdf->associatedEnum())
-            return anchorForNode(tdf->associatedEnum());
-    } Q_FALLTHROUGH();
-    case NodeType::TypeAlias:
-        ref = node->name() + "-typedef"_L1;
-        break;
-    case NodeType::Function: {
-        const auto *fn = static_cast<const FunctionNode *>(node);
-        switch (fn->metaness()) {
-        case FunctionNode::QmlSignal:
-            ref = fn->name() + "-signal"_L1;
-            break;
-        case FunctionNode::QmlSignalHandler:
-            ref = fn->name() + "-signal-handler"_L1;
-            break;
-        case FunctionNode::QmlMethod:
-            ref = fn->name() + "-method"_L1;
-            if (fn->overloadNumber() != 0)
-                ref += '-'_L1 + QString::number(fn->overloadNumber());
-            break;
-        default:
-            if (const auto *p = fn->primaryAssociatedProperty(); p && fn->doc().isEmpty()) {
-                return anchorForNode(p);
-            } else {
-                ref = fn->name();
-                if (fn->overloadNumber() != 0)
-                    ref += '-'_L1 + QString::number(fn->overloadNumber());
-            }
-            break;
-        }
-    } break;
-    case NodeType::SharedComment: {
-        if (!node->isPropertyGroup())
-            break;
-    } Q_FALLTHROUGH();
-    case NodeType::QmlProperty:
-        if (node->isAttached())
-            ref = node->name() + "-attached-prop"_L1;
-        else
-            ref = node->name() + "-prop"_L1;
-        break;
-    case NodeType::Property:
-        ref = node->name() + "-prop"_L1;
-        break;
-    case NodeType::Variable:
-        ref = node->name() + "-var"_L1;
-        break;
-    default:
-        break;
-    }
-
+    const QString ref = computeAnchorId(node);
     if (ref.isEmpty())
         return ref;
-
     return m_config.cleanRefFn ? m_config.cleanRefFn(ref) : ref;
 }
 
