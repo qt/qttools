@@ -24,6 +24,7 @@ outputformats = TemplateHTML TemplateMarkdown
 TemplateHTML.nosubdirs = true
 TemplateHTML.outputsubdir = html
 TemplateHTML.extension = html
+TemplateHTML.stylesheet = true
 
 TemplateMarkdown.nosubdirs = true
 TemplateMarkdown.outputsubdir = markdown
