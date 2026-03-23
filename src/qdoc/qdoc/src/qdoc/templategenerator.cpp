@@ -130,6 +130,16 @@ void TemplateGenerator::prepare()
     if (!foundTemplates)
         m_templateDir.clear();
 
+    m_emitStylesheet = config.get(m_format + ".stylesheet"_L1).asBool();
+
+    if (m_emitStylesheet && m_context) {
+        const QString cssOutputPath = m_context->outputDir.path() + "/qdoc-default.css"_L1;
+        QFile::remove(cssOutputPath);
+        QFile::copy(":/qdoc/templates/assets/qdoc-default.css"_L1, cssOutputPath);
+        QFile(cssOutputPath).setPermissions(QFile::ReadOwner | QFile::WriteOwner
+                                            | QFile::ReadGroup | QFile::ReadOther);
+    }
+
     // Construct link resolvers using OutputContext data.
     // TemplateGenerator doesn't inherit from Generator, so we use
     // m_context (OutputContext) which has the same prefix/suffix data.
@@ -348,8 +358,11 @@ void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &te
                qPrintable(m_fileExtension), qPrintable(templateBaseName),
                qPrintable(m_fileExtension));
 
+    QJsonObject json = ir.toJson();
+    json["stylesheetEnabled"_L1] = m_emitStylesheet;
+
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
-    QString rendered = InjaBridge::render(templateContent, ir.toJson(), includeCallback);
+    QString rendered = InjaBridge::render(templateContent, json, includeCallback);
 
     if (m_writer && m_writer->isOpen())
         m_writer->write(rendered);
@@ -392,8 +405,11 @@ void TemplateGenerator::renderJson(const QJsonObject &json, const QString &templ
                qPrintable(templateBaseName), qPrintable(templateBaseName),
                qPrintable(m_fileExtension));
 
+    QJsonObject enrichedJson = json;
+    enrichedJson["stylesheetEnabled"_L1] = m_emitStylesheet;
+
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
-    QString rendered = InjaBridge::render(templateContent, json, includeCallback);
+    QString rendered = InjaBridge::render(templateContent, enrichedJson, includeCallback);
 
     if (m_writer && m_writer->isOpen())
         m_writer->write(rendered);

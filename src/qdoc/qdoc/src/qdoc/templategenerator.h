@@ -96,6 +96,7 @@ private:
     QString m_fileExtension = QStringLiteral("html");
     std::unique_ptr<HrefResolver> m_hrefResolver;
     std::unique_ptr<LinkResolver> m_linkResolver;
+    bool m_emitStylesheet = false;
 
     // For testing: allow injection of mock writers
     friend class TemplateGeneratorTest;
