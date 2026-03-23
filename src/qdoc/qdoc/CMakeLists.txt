@@ -267,6 +267,9 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/members.md"
         PROPERTIES QT_RESOURCE_ALIAS "templates/members.md"
     )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/assets/qdoc-default.css"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/assets/qdoc-default.css"
+    )
 
     set(qdoc_template_files
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/page.html"
@@ -281,6 +284,7 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/member_detail.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/content_blocks.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/member_detail.md"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/assets/qdoc-default.css"
     )
 
     qt_internal_add_resource(${target_name} "qdoc_templates"
