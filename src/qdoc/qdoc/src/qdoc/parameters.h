@@ -4,54 +4,16 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#include <QtCore/qlist.h>
+#include "parameter.h"
+
 #include <QtCore/qregularexpression.h>
 #include <QtCore/qset.h>
-
-#include <utility>
 
 QT_BEGIN_NAMESPACE
 
 class Location;
 class Tokenizer;
 class CodeChunk;
-
-class Parameter
-{
-public:
-    Parameter() = default;
-    explicit Parameter(QString type, QString name = QString(), QString defaultValue = QString())
-        : m_type(std::move(type)), m_name(std::move(name)), m_defaultValue(std::move(defaultValue))
-    {
-    }
-
-    void setName(const QString &name) { m_name = name; }
-    [[nodiscard]] bool hasType() const { return !m_type.isEmpty(); }
-    [[nodiscard]] const QString &type() const { return m_type; }
-    [[nodiscard]] const QString &name() const { return m_name; }
-    [[nodiscard]] const QString &defaultValue() const { return m_defaultValue; }
-    void setDefaultValue(const QString &t) { m_defaultValue = t; }
-
-    void set(const QString &type, const QString &name, const QString &defaultValue = QString())
-    {
-        m_type = type;
-        m_name = name;
-        m_defaultValue = defaultValue;
-    }
-
-    [[nodiscard]] QString signature(bool includeValue = false) const;
-
-    [[nodiscard]] const QString &canonicalType() const { return m_canonicalType; }
-    void setCanonicalType(const QString &t) { m_canonicalType = t; }
-
-public:
-    QString m_canonicalType {};
-    QString m_type {};
-    QString m_name {};
-    QString m_defaultValue {};
-};
-
-typedef QList<Parameter> ParameterVector;
 
 class Parameters
 {

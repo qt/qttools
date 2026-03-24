@@ -131,6 +131,7 @@ set(qdoc_sources
     src/qdoc/outputcontext.cpp
     src/qdoc/outputdirectory.cpp
     src/qdoc/pagenode.cpp
+    src/qdoc/parameter.cpp
     src/qdoc/parameters.cpp
     src/qdoc/parsererror.cpp
     src/qdoc/propertynode.cpp

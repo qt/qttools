@@ -28,6 +28,8 @@ qt_internal_add_test(tst_QDoc
         ../../src/qdoc/filesystem/fileresolver.cpp
         ../../src/qdoc/outputproducerregistry.cpp
         ../../src/qdoc/genustypes.h
+        parameters/catch_parameter.cpp
+        ../../src/qdoc/parameter.cpp
     INCLUDE_DIRECTORIES
         ../../src/
     LIBRARIES
