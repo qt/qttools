@@ -1,0 +1,12 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page page-with-images.html
+    \title Page With Images
+    \brief A test page for image rendering.
+
+    This paragraph contains an \inlineimage test-image.png {inline alt text} within the text flow.
+
+    \image test-image.png Block image alt text
+*/

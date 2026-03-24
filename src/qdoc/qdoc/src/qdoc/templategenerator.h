@@ -100,6 +100,7 @@ private:
     QString m_stylesheetName;
 
     void copyAssets();
+    void resolveImagePaths(IR::Document &ir);
 
     // For testing: allow injection of mock writers
     friend class TemplateGeneratorTest;

@@ -1,0 +1,17 @@
+project = ImageRendering
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions = "*.h"
+sources.fileextensions = "*.qdoc"
+
+sourcedirs = ./src
+imagedirs = ./src/images
+
+outputformats = template
+template.nosubdirs = true
+template.outputsubdir = template
+
+warninglimit = 0
+warninglimit.enabled = true

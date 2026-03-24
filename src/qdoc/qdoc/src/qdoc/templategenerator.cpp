@@ -242,6 +242,7 @@ void TemplateGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *m
     if (m_linkResolver)
         resolveDocumentLinks(m_linkResolver.get(), ir, cn);
 
+    resolveImagePaths(ir);
     renderDocument(ir, "collection"_L1);
 }
 
@@ -257,6 +258,7 @@ void TemplateGenerator::generateGenericCollectionPage(CollectionNode *cn, CodeMa
     if (m_linkResolver)
         resolveDocumentLinks(m_linkResolver.get(), ir, cn);
 
+    resolveImagePaths(ir);
     renderDocument(ir, "collection"_L1);
 }
 
@@ -272,6 +274,7 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
     if (m_linkResolver)
         resolveDocumentLinks(m_linkResolver.get(), ir, pn);
 
+    resolveImagePaths(ir);
     renderDocument(ir, "page"_L1);
 }
 
@@ -304,6 +307,7 @@ void TemplateGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker
     if (m_linkResolver)
         resolveDocumentLinks(m_linkResolver.get(), ir, qcn);
 
+    resolveImagePaths(ir);
     renderDocument(ir, "qmltype"_L1);
 
     if (allMembers)
@@ -563,6 +567,65 @@ void TemplateGenerator::createDefaultWriter()
         return; // Writer already set (e.g., injected for testing)
 
     m_writer = std::make_unique<FileDocumentWriter>(*m_context);
+}
+
+/*!
+    \internal
+    Walks content blocks recursively, resolving image filenames and copying
+    image files to the output directory.
+
+    For each InlineContent with type Image, the method resolves the raw
+    filename through FileResolver, copies the file to output/images/, and
+    prefixes the href with the images subdirectory path so that templates
+    render correct src attributes.
+
+*/
+void TemplateGenerator::resolveImagePaths(IR::Document &ir)
+{
+    if (!m_context)
+        return;
+
+    const QString &outDir = m_context->outputDir.path();
+    if (outDir.isEmpty())
+        return;
+
+    const QString imagesDir = u"images"_s;
+    const QString imagesDestDir = outDir + '/'_L1 + imagesDir;
+
+    QDir().mkpath(imagesDestDir);
+
+    auto resolveInlines = [&](QList<IR::InlineContent> &inlines) {
+        for (auto &inline_ : inlines) {
+            if (inline_.type != IR::InlineType::Image)
+                continue;
+
+            auto resolved = m_fileResolver.resolve(inline_.href);
+            if (!resolved)
+                continue;
+
+            const QString fileName = QFileInfo(resolved->get_path()).fileName();
+            QFile::copy(resolved->get_path(), imagesDestDir + '/'_L1 + fileName);
+            inline_.href = imagesDir + '/'_L1 + fileName;
+        }
+    };
+
+    std::function<void(QList<IR::ContentBlock> &)> walkBlocks;
+    walkBlocks = [&](QList<IR::ContentBlock> &blocks) {
+        for (auto &block : blocks) {
+            resolveInlines(block.inlineContent);
+            if (!block.children.isEmpty())
+                walkBlocks(block.children);
+        }
+    };
+
+    walkBlocks(ir.body);
+
+    for (auto &section : ir.detailSections) {
+        for (auto &member : section.members) {
+            walkBlocks(member.body);
+            walkBlocks(member.alsoList);
+        }
+    }
 }
 
 /*!

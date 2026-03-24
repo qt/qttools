@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="ImageRendering Reference Documentation" version="" project="ImageRendering">
+    <namespace name="" status="active" access="public" module="imagerendering">
+        <page name="page-with-images.html" href="page-with-images.html" status="active" location="image_rendering.qdoc" documented="true" subtype="page" title="Page With Images" fulltitle="Page With Images" subtitle="" brief="A test page for image rendering"/>
+    </namespace>
+</INDEX>
