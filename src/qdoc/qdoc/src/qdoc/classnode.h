@@ -54,8 +54,11 @@ public:
     bool isQmlNativeType() { return !m_nativeTypeForQml.empty(); }
     const QSet<QmlTypeNode *> &qmlNativeTypes() { return m_nativeTypeForQml; }
 
-    [[nodiscard]] bool isQmlSingleton() const { return m_isQmlSingleton; }
-    void setQmlSingleton(bool singleton = true) { m_isQmlSingleton = singleton; }
+    [[nodiscard]] bool isQmlSingleton() const
+    {
+        return m_qmlNativeTypeAttr == QmlNativeTypeAttribute::Singleton;
+    }
+    void setQmlNativeTypeAttribute(QmlNativeTypeAttribute attr) { m_qmlNativeTypeAttr = attr; }
 
     [[nodiscard]] bool isAnonymous() const { return m_anonymous; }
     void setAnonymous(bool anonymous = true) { m_anonymous = anonymous; }
@@ -86,7 +89,7 @@ private:
     QList<RelatedClass> m_ignoredBases {};
     bool m_abstract { false };
     bool m_wrapper { false };
-    bool m_isQmlSingleton { false };
+    QmlNativeTypeAttribute m_qmlNativeTypeAttr { QmlNativeTypeAttribute::None };
     bool m_anonymous { false };
     QSet<QmlTypeNode *> m_nativeTypeForQml;
 };

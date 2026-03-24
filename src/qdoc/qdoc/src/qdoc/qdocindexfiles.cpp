@@ -267,7 +267,8 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         if (attributes.value(QLatin1String("abstract")) == QLatin1String("true"))
             abstract = true;
         qmlTypeNode->setAbstract(abstract);
-        qmlTypeNode->setSingleton(attributes.value(QLatin1String("singleton")) == QLatin1String("true"));
+        if (attributes.value(QLatin1String("singleton")) == QLatin1String("true"))
+            qmlTypeNode->setSingleton();
         QString qmlFullBaseName = attributes.value(QLatin1String("qml-base-type")).toString();
         if (!qmlFullBaseName.isEmpty()) {
             qmlTypeNode->setQmlBaseName(qmlFullBaseName);

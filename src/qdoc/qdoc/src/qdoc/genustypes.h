@@ -175,6 +175,28 @@ enum class NodeType : unsigned char {
     Proxy
 };
 
+/*!
+  \enum QmlNativeTypeAttribute
+  \relates genustypes.h
+
+  \brief Defines QML-specific attributes affecting QmlTypeNode instances.
+
+  Both QmlTypeNode and ClassNode store this attribute. QmlTypeNode can set
+  it explicitly with the \\qmlsingletontype command, or it can be adopted
+  from a ClassNode that acts as the QML type's native type (via the
+  \\nativetype command).
+
+  \value None
+         A standard instantiable QML type.
+
+  \value Singleton
+         A singleton QML type.
+*/
+enum class QmlNativeTypeAttribute : unsigned char {
+    None,
+    Singleton
+};
+
 QT_END_NAMESPACE
 
 #endif // GENUSTYPES_H

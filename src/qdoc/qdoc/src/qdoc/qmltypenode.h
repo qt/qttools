@@ -28,10 +28,13 @@ public:
     void setClassNode(ClassNode *cn) override { m_classNode = cn; }
     [[nodiscard]] bool isAbstract() const override { return m_abstract; }
     [[nodiscard]] bool isWrapper() const override { return m_wrapper; }
-    [[nodiscard]] bool isSingleton() const { return m_singleton; }
+    [[nodiscard]] bool isSingleton() const
+    {
+        return m_qmlNativeTypeAttr == QmlNativeTypeAttribute::Singleton;
+    }
     void setAbstract(bool b) override { m_abstract = b; }
     void setWrapper() override { m_wrapper = true; }
-    void setSingleton(bool singleton = true) { m_singleton = singleton; }
+    void setSingleton() { m_qmlNativeTypeAttr = QmlNativeTypeAttribute::Singleton; }
     [[nodiscard]] bool isInternal() const override { return (status() == Status::Internal); }
     [[nodiscard]] QString qmlFullBaseName() const override;
     [[nodiscard]] QString logicalModuleName() const override;
@@ -58,7 +61,7 @@ public:
 private:
     bool m_abstract { false };
     bool m_wrapper { false };
-    bool m_singleton { false };
+    QmlNativeTypeAttribute m_qmlNativeTypeAttr { QmlNativeTypeAttribute::None };
     ClassNode *m_classNode { nullptr };
     QString m_qmlBaseName {};
     CollectionNode *m_logicalModule { nullptr };

@@ -196,11 +196,11 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
             database->addToQmlModule(qmid, qcn);
         qcn->setLocation(doc.startLocation());
         if (command == COMMAND_QMLSINGLETONTYPE)
-            qcn->setSingleton(true);
+            qcn->setSingleton();
         if (command == COMMAND_QMLTYPE && !qcn->isSingleton()) {
             auto classNode = database->findClassNode(arg.first.split(u"::"_s));
             if (classNode && classNode->isQmlSingleton())
-                qcn->setSingleton(true);
+                qcn->setSingleton();
         }
         return qcn;
     } else if (command == COMMAND_QMLENUM) {
@@ -1058,7 +1058,7 @@ void CppCodeParser::processQmlNativeTypeCommand(Node *node, const QString &cmd, 
     classNode->insertQmlNativeType(qmlNode);
 
     if (classNode->isQmlSingleton())
-        qmlNode->setSingleton(true);
+        qmlNode->setSingleton();
 }
 
 namespace {

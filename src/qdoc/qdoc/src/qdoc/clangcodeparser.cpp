@@ -1250,7 +1250,7 @@ public:
     Node *nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocation nextCommentLoc);
 
 private:
-    bool detectQmlSingleton(CXCursor cursor);
+    QmlNativeTypeAttribute detectQmlNativeTypeAttribute(CXCursor cursor);
     /*!
       SimpleLoc represents a simple location in the main source file,
       which can be used as a key in a QMap.
@@ -1303,22 +1303,28 @@ private:
 };
 
 /*!
-  Detects if a class cursor contains the \e QML_SINGLETON macro.
-  Returns true if the macro is detected, false otherwise.
+  Detects if a class cursor contains declarations specific to non-instantiable
+  QML types:
 
-  The \e QML_SINGLETON macro expands to multiple items including:
-  \list
-      \li \c {Q_CLASSINFO("QML.Singleton", "true")}
-      \li \c {enum class QmlIsSingleton}
-  \endlist
+  \details {QML_SINGLETON macro}
+      Returns QmlNativeTypeAttribute::Singleton if the macro is detected.
 
-  This method looks for these expansion artifacts to detect the macro.
+      The \e QML_SINGLETON macro expands to multiple items including:
+      \list
+          \li \c {Q_CLASSINFO("QML.Singleton", "true")}
+          \li \c {enum class QmlIsSingleton}
+      \endlist
+  \enddetails
+
+  This method looks for the above expansion artifacts to detect the macro.
+  If no artifacts are found, returns QmlNativeTypeAttribute::None
+  (that is, a standard instantiable QML type).
 */
-bool ClangVisitor::detectQmlSingleton(CXCursor cursor)
+QmlNativeTypeAttribute ClangVisitor::detectQmlNativeTypeAttribute(CXCursor cursor)
 {
-    bool hasSingletonMacro = false;
+    QmlNativeTypeAttribute attr{ QmlNativeTypeAttribute::None };
 
-    visitChildrenLambda(cursor, [&hasSingletonMacro](CXCursor child) -> CXChildVisitResult {
+    visitChildrenLambda(cursor, [&attr](CXCursor child) -> CXChildVisitResult {
         // Look for Q_CLASSINFO calls that indicate QML.Singleton
         if (clang_getCursorKind(child) == CXCursor_CallExpr) {
             CXSourceRange range = clang_getCursorExtent(child);
@@ -1327,7 +1333,7 @@ bool ClangVisitor::detectQmlSingleton(CXCursor cursor)
             static const QRegularExpression qmlSingletonPattern(
                 R"(Q_CLASSINFO\s*\(\s*["\']QML\.Singleton["\']\s*,\s*["\']true["\']\s*\))");
             if (qmlSingletonPattern.match(sourceText).hasMatch()) {
-                hasSingletonMacro = true;
+                attr = QmlNativeTypeAttribute::Singleton;
                 return CXChildVisit_Break;
             }
         }
@@ -1336,7 +1342,7 @@ bool ClangVisitor::detectQmlSingleton(CXCursor cursor)
         if (clang_getCursorKind(child) == CXCursor_EnumDecl) {
             QString spelling = fromCXString(clang_getCursorSpelling(child));
             if (spelling == "QmlIsSingleton"_L1) {
-                hasSingletonMacro = true;
+                attr = QmlNativeTypeAttribute::Singleton;
                 return CXChildVisit_Break;
             }
         }
@@ -1344,7 +1350,7 @@ bool ClangVisitor::detectQmlSingleton(CXCursor cursor)
         return CXChildVisit_Continue;
     });
 
-    return hasSingletonMacro;
+    return attr;
 }
 
 /*!
@@ -1520,10 +1526,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         }
 
         classe->setAnonymous(clang_Cursor_isAnonymous(cursor));
-
-        if (detectQmlSingleton(cursor)) {
-            classe->setQmlSingleton(true);
-        }
+        classe->setQmlNativeTypeAttribute(detectQmlNativeTypeAttribute(cursor));
 
         if (kind == CXCursor_ClassTemplate) {
             auto template_declaration = llvm::dyn_cast<clang::TemplateDecl>(get_cursor_declaration(cursor));
