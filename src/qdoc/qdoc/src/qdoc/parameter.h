@@ -34,6 +34,7 @@ public:
     }
 
     [[nodiscard]] QString signature(bool includeValue = false) const;
+    [[nodiscard]] qsizetype nameInsertionPoint() const;
 
     [[nodiscard]] const QString &canonicalType() const { return m_canonicalType; }
     void setCanonicalType(const QString &t) { m_canonicalType = t; }

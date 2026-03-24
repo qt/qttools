@@ -3835,8 +3835,14 @@ void DocBookGenerator::generateParameter(const Parameter &parameter, const Node 
     const QString &pname = parameter.name();
     const QString &ptype = parameter.type();
     QString paramName;
+    qsizetype insertPos = !pname.isEmpty() ? parameter.nameInsertionPoint() : -1;
     if (!pname.isEmpty()) {
-        typified(ptype, relative, true, generateType);
+        if (insertPos >= 0) {
+            // Inside-out declarator: name goes inside the type.
+            typified(ptype.left(insertPos), relative, false, generateType);
+        } else {
+            typified(ptype, relative, true, generateType);
+        }
         paramName = pname;
     } else {
         paramName = ptype;
@@ -3847,6 +3853,9 @@ void DocBookGenerator::generateParameter(const Parameter &parameter, const Node 
         m_writer->writeCharacters(paramName);
         m_writer->writeEndElement(); // emphasis
     }
+
+    if (insertPos >= 0)
+        typified(ptype.mid(insertPos), relative, false, generateType);
 
     const QString &pvalue = parameter.defaultValue();
     if (generateExtra && !pvalue.isEmpty())

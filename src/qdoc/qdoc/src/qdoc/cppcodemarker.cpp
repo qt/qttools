@@ -247,13 +247,22 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
                 for (int i = 0; i < parameters.count(); ++i) {
                     if (i > 0)
                         synopsis += ", ";
-                    QString name = parameters.at(i).name();
-                    QString type = parameters.at(i).type();
-                    QString value = parameters.at(i).defaultValue();
-                    bool trailingSpace = style != Section::AllMembers && !name.isEmpty();
-                    synopsis += typified(type, trailingSpace);
-                    if (style != Section::AllMembers && !name.isEmpty())
+                    const Parameter &param = parameters.at(i);
+                    QString name = param.name();
+                    QString type = param.type();
+                    QString value = param.defaultValue();
+                    qsizetype insertPos = param.nameInsertionPoint();
+                    if (insertPos >= 0 && style != Section::AllMembers && !name.isEmpty()) {
+                        // Inside-out declarator: name goes inside the type.
+                        synopsis += typified(type.left(insertPos), false);
                         synopsis += "<@param>" + protect(name) + "</@param>";
+                        synopsis += typified(type.mid(insertPos), false);
+                    } else {
+                        bool trailingSpace = style != Section::AllMembers && !name.isEmpty();
+                        synopsis += typified(type, trailingSpace);
+                        if (style != Section::AllMembers && !name.isEmpty())
+                            synopsis += "<@param>" + protect(name) + "</@param>";
+                    }
                     if (style != Section::AllMembers && !value.isEmpty())
                         synopsis += " = " + protect(value);
                 }

@@ -25,6 +25,27 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
+  Returns the position within the type string where the parameter
+  name should be inserted, or -1 if the name belongs at the end.
+
+  For types with inside-out declarator syntax (such as references
+  to arrays, pointers to functions, or pointers to members), the
+  parameter name must be inserted inside the type rather than
+  appended after it. Clang produces types like "const char (&)[Size]"
+  or "void (Cls::*)(int)" where the name belongs before the closing
+  paren: "const char (&data)[Size]", "void (Cls::*cb)(int)".
+ */
+qsizetype Parameter::nameInsertionPoint() const
+{
+    static const QRegularExpression insideOutDeclarator(
+            QStringLiteral(R"((\([^)]*[&*]\))\s*(\[|\())"));
+    auto match = insideOutDeclarator.match(m_type);
+    if (match.hasMatch())
+        return match.capturedStart(1) + match.capturedLength(1) - 1;
+    return -1;
+}
+
+/*!
   Reconstructs the text signature for the parameter and returns
   it. If \a includeValue is true and there is a default value,
   the default value is appended with '='.
@@ -33,19 +54,8 @@ QString Parameter::signature(bool includeValue) const
 {
     QString p = m_type;
     if (!m_name.isEmpty()) {
-        // For types with inside-out declarator syntax (such as references
-        // to arrays, pointers to functions, or pointers to members), the
-        // parameter name must be inserted inside the type rather than
-        // appended after it.
-        // Clang produces types like "const char (&)[Size]" or
-        // "void (Cls::*)(int)" where the name belongs before the closing
-        // paren: "const char (&data)[Size]", "void (Cls::*cb)(int)".
-        static const QRegularExpression insideOutDeclarator(
-                QStringLiteral(R"((\([^)]*[&*]\))\s*(\[|\())"));
-        auto match = insideOutDeclarator.match(p);
-        if (match.hasMatch()) {
-            // Insert name before the closing paren of the declarator group.
-            qsizetype insertPos = match.capturedStart(1) + match.capturedLength(1) - 1;
+        qsizetype insertPos = nameInsertionPoint();
+        if (insertPos >= 0) {
             p.insert(insertPos, m_name);
         } else {
             if (!p.isEmpty() && !p.endsWith(QChar('*')) && !p.endsWith(QChar('&'))

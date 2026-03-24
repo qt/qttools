@@ -39,7 +39,7 @@ void templated_function_with_defaulted_template_template_parameter(<db:emphasis>
 <db:para>A templated function with a defaulted type template parameter.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_fixed_size_array_parameter">
-<db:title>template &lt;unsigned int Size&gt; void templated_function_with_fixed_size_array_parameter(const char (&amp;)[Size] <db:emphasis>data</db:emphasis>)</db:title>
+<db:title>template &lt;unsigned int Size&gt; void templated_function_with_fixed_size_array_parameter(const char (&amp;<db:emphasis>data</db:emphasis>)[Size])</db:title>
 <db:para>A templated function with a reference-to-array parameter <db:code role="parameter">data</db:code> with a size given by <db:code role="parameter">Size</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_non_type_template_parameter">

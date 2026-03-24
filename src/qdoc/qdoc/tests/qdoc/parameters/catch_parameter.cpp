@@ -81,3 +81,89 @@ SCENARIO("Parameter signature with inside-out declarator syntax", "[Parameter][s
         }
     }
 }
+
+SCENARIO("Parameter name insertion point for inside-out declarators",
+         "[Parameter][nameInsertionPoint]")
+{
+    GIVEN("A simple type")
+    {
+        Parameter p(QStringLiteral("int"));
+        THEN("Returns -1 (name appended at end)")
+        {
+            REQUIRE(p.nameInsertionPoint() == -1);
+        }
+    }
+
+    GIVEN("A pointer type")
+    {
+        Parameter p(QStringLiteral("int *"));
+        THEN("Returns -1 (name appended at end)")
+        {
+            REQUIRE(p.nameInsertionPoint() == -1);
+        }
+    }
+
+    GIVEN("A reference type")
+    {
+        Parameter p(QStringLiteral("const int &"));
+        THEN("Returns -1 (name appended at end)")
+        {
+            REQUIRE(p.nameInsertionPoint() == -1);
+        }
+    }
+
+    GIVEN("A reference-to-array type")
+    {
+        Parameter p(QStringLiteral("const char (&)[Size]"));
+        THEN("Returns the position before the closing paren")
+        {
+            // "const char (&)[Size]"
+            //              ^ position 13
+            REQUIRE(p.nameInsertionPoint() == 13);
+        }
+    }
+
+    GIVEN("A pointer-to-function type")
+    {
+        Parameter p(QStringLiteral("void (*)(int, int)"));
+        THEN("Returns the position before the closing paren")
+        {
+            // "void (*)(int, int)"
+            //        ^ position 7
+            REQUIRE(p.nameInsertionPoint() == 7);
+        }
+    }
+
+    GIVEN("A pointer-to-member-function type")
+    {
+        Parameter p(QStringLiteral("void (Cls::*)(int)"));
+        THEN("Returns the position before the closing paren")
+        {
+            // "void (Cls::*)(int)"
+            //             ^ position 12
+            REQUIRE(p.nameInsertionPoint() == 12);
+        }
+    }
+
+    GIVEN("A pointer-to-array type")
+    {
+        Parameter p(QStringLiteral("int (*)[N]"));
+        THEN("Returns the position before the closing paren")
+        {
+            // "int (*)[N]"
+            //       ^ position 6
+            REQUIRE(p.nameInsertionPoint() == 6);
+        }
+    }
+
+    GIVEN("A pointer-to-pointer-to-array type")
+    {
+        Parameter p(QStringLiteral("int (**)[N]"));
+        THEN("Returns the position before the closing paren")
+        {
+            // "int (**)[N]"
+            //        ^ position 7
+            REQUIRE(p.nameInsertionPoint() == 7);
+        }
+    }
+}
