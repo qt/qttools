@@ -7,6 +7,7 @@
 
 #include "atom.h"
 #include "node.h"
+#include "qdoclogging.h"
 #include "qmlmarkupvisitor.h"
 #include "text.h"
 
@@ -87,6 +88,12 @@ QString QmlCodeMarker::markedUpName(const Node *node)
 QString QmlCodeMarker::addMarkUp(const QString &code, const Node * /* relative */,
                                  const Location &location)
 {
+    if (code.trimmed().isEmpty()) {
+        qCDebug(lcQdoc, "QML markup requested for empty code at %ls",
+                qUtf16Printable(location.toString()));
+        return {};
+    }
+
     QQmlJS::Engine engine;
     QQmlJS::Lexer lexer(&engine);
 
