@@ -1,0 +1,31 @@
+# Demo configuration for building QtLottie with the Qt-branded theme.
+#
+# Usage:
+#   cd <build/qttools>
+#   ./bin/qdoc -outputdir /tmp/qtlottie-themed <path-to>/demo-qtlottie.qdocconf
+#
+# This wrapper includes the base QtLottie validation config and adds theme
+# settings. The base config is NOT modified, so the existing validation test
+# continues to use built-in defaults.
+
+include(../../../qdoc/tests/validatetemplategeneratoroutput/testdata/qtlottie_validation/qtlottie_validation.qdocconf)
+
+# TemplateHTML.templatedir -- root directory for template and asset overrides.
+#   Templates in this directory replace QRC defaults on a per-file basis.
+#   An assets/ subdirectory is recursively copied to the output directory.
+#   Files not present in templatedir fall back to the built-in QRC defaults.
+#
+# TemplateHTML.stylesheetname -- filename of the CSS stylesheet.
+#   Defaults to "qdoc-default.css" if not set. Templates use {{ stylesheetName }}
+#   to reference this value. The stylesheet file is resolved from templatedir/assets/
+#   first, with QRC fallback if not found.
+#
+# TemplateHTML.stylesheet -- set to "true" to emit a stylesheet <link> tag in
+#   HTML output. Already set in the base config, repeated here for documentation.
+
+TemplateHTML.stylesheet = true
+TemplateHTML.stylesheetname = qt-doc.css
+
+# templatedir is resolved relative to this qdocconf file's directory,
+# so "." points to the theme directory containing this config file.
+TemplateHTML.templatedir = .
