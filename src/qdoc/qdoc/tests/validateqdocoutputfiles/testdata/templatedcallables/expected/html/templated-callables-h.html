@@ -22,6 +22,7 @@
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_defaulted_non_type_template_parameter" translate="no">templated_function_with_defaulted_non_type_template_parameter</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_defaulted_template_template_parameter" translate="no">templated_function_with_defaulted_template_template_parameter</a></b>(Container&lt;T, size&gt;)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_defaulted_type_template_parameter" translate="no">templated_function_with_defaulted_type_template_parameter</a></b>(T)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_fixed_size_array_parameter" translate="no">templated_function_with_fixed_size_array_parameter</a></b>(const char (&amp;)[Size] <i>data</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_non_type_template_parameter" translate="no">templated_function_with_non_type_template_parameter</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_non_type_template_parameter_pack" translate="no">templated_function_with_non_type_template_parameter_pack</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="templated-callables-h.html#templated_function_with_placeholder_non_type_template_parameter" translate="no">templated_function_with_placeholder_non_type_template_parameter</a></b>()</td></tr>
@@ -55,6 +56,10 @@
 <h3 class="fn" translate="no" id="templated_function_with_defaulted_type_template_parameter">template &lt;typename T = <span class="type">char</span>&gt; <span class="type">void</span> <span class="name">templated_function_with_defaulted_type_template_parameter</span>(<span class="type">T</span>)</h3>
 <p>A templated function with a defaulted type template parameter.</p>
 <!-- @@@templated_function_with_defaulted_type_template_parameter -->
+<!-- $$$templated_function_with_fixed_size_array_parameter[overload1]$$$templated_function_with_fixed_size_array_parameterconstchar(&)[Size] -->
+<h3 class="fn" translate="no" id="templated_function_with_fixed_size_array_parameter">template &lt;<span class="type">unsigned</span> <span class="type">int</span> Size&gt; <span class="type">void</span> <span class="name">templated_function_with_fixed_size_array_parameter</span>(const <span class="type">char</span> (&amp;)[<span class="type">Size</span>] <i>data</i>)</h3>
+<p>A templated function with a reference-to-array parameter <i translate="no">data</i> with a size given by <i translate="no">Size</i>.</p>
+<!-- @@@templated_function_with_fixed_size_array_parameter -->
 <!-- $$$templated_function_with_non_type_template_parameter[overload1]$$$templated_function_with_non_type_template_parameter -->
 <h3 class="fn" translate="no" id="templated_function_with_non_type_template_parameter">template &lt;<span class="type">char</span> Category&gt; <span class="type">void</span> <span class="name">templated_function_with_non_type_template_parameter</span>()</h3>
 <p>A templated function with a non-defaulted non-type template parameter <i translate="no">Category</i>.</p>

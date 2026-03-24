@@ -35,11 +35,29 @@ QRegularExpression Parameters::s_varComment(R"(^/\*\s*([a-zA-Z_0-9]+)\s*\*/$)");
 QString Parameter::signature(bool includeValue) const
 {
     QString p = m_type;
-    if (!p.isEmpty() && !p.endsWith(QChar('*')) && !p.endsWith(QChar('&')) &&
-        !p.endsWith(QChar(' ')) && !m_name.isEmpty()) {
-        p += QLatin1Char(' ');
+    if (!m_name.isEmpty()) {
+        // For types with inside-out declarator syntax (such as references
+        // to arrays, pointers to functions, or pointers to members), the
+        // parameter name must be inserted inside the type rather than
+        // appended after it.
+        // Clang produces types like "const char (&)[Size]" or
+        // "void (Cls::*)(int)" where the name belongs before the closing
+        // paren: "const char (&data)[Size]", "void (Cls::*cb)(int)".
+        static const QRegularExpression insideOutDeclarator(
+                QStringLiteral(R"((\([^)]*[&*]\))\s*(\[|\())"));
+        auto match = insideOutDeclarator.match(p);
+        if (match.hasMatch()) {
+            // Insert name before the closing paren of the declarator group.
+            qsizetype insertPos = match.capturedStart(1) + match.capturedLength(1) - 1;
+            p.insert(insertPos, m_name);
+        } else {
+            if (!p.isEmpty() && !p.endsWith(QChar('*')) && !p.endsWith(QChar('&'))
+                && !p.endsWith(QChar(' '))) {
+                p += QLatin1Char(' ');
+            }
+            p += m_name;
+        }
     }
-    p += m_name;
     if (includeValue && !m_defaultValue.isEmpty())
         p += " = " + m_defaultValue;
     return p;

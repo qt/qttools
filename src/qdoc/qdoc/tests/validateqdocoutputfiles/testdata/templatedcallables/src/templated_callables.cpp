@@ -159,3 +159,11 @@
  *
  *  A templated function with a template-template parameter pack \a Container.
  */
+
+/*!
+ * \fn template <unsigned int Size> void templated_function_with_fixed_size_array_parameter(const char (&data)[Size])
+ * \relates <templated_callables.h>
+ *
+ *  A templated function with a reference-to-array parameter \a data with a size
+ *  given by \a Size.
+ */

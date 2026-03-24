@@ -71,3 +71,6 @@ void templated_function_with_defaulted_template_template_parameter(Container<T, 
 
 template <typename T, template <typename> typename... Container>
 void templated_function_with_template_template_parameter_pack(Container<T>...);
+
+template <unsigned int Size>
+void templated_function_with_fixed_size_array_parameter(const char (&data)[Size]);

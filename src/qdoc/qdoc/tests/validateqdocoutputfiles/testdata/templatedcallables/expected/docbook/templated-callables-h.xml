@@ -38,6 +38,10 @@ void templated_function_with_defaulted_template_template_parameter(<db:emphasis>
 <db:title>template &lt;typename T = char&gt; void templated_function_with_defaulted_type_template_parameter(<db:emphasis>T</db:emphasis>)</db:title>
 <db:para>A templated function with a defaulted type template parameter.</db:para>
 </db:section>
+<db:section xml:id="templated_function_with_fixed_size_array_parameter">
+<db:title>template &lt;unsigned int Size&gt; void templated_function_with_fixed_size_array_parameter(const char (&amp;)[Size] <db:emphasis>data</db:emphasis>)</db:title>
+<db:para>A templated function with a reference-to-array parameter <db:code role="parameter">data</db:code> with a size given by <db:code role="parameter">Size</db:code>.</db:para>
+</db:section>
 <db:section xml:id="templated_function_with_non_type_template_parameter">
 <db:title>template &lt;char Category&gt; void templated_function_with_non_type_template_parameter()</db:title>
 <db:para>A templated function with a non-defaulted non-type template parameter <db:code role="parameter">Category</db:code>.</db:para>
