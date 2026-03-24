@@ -336,12 +336,12 @@
     \endcode
 
     When invoking QDoc on a project that has dependencies and uses the
-    \c depends variable, one or more \c -indexdir path(s) must be passed
+    \c depends variable, one or more \c --indexdir path(s) must be passed
     as command line option(s). QDoc uses these paths to search for
     the dependencies' index files.
 
     \badcode
-    qdoc mydoc.qdocconf -outputdir $PWD/html -indexdir $QT_INSTALL_DOCS
+    qdoc mydoc.qdocconf --outputdir $PWD/html --indexdir $QT_INSTALL_DOCS
     \endcode
 
     With above, QDoc will search for a file
@@ -2172,7 +2172,7 @@
 
     The \c indexes variable provides an alternative to \l depends for
     defining project's dependencies. As direct paths are provided, no
-    \c -indexdir command line option(s) are required when invoking QDoc.
+    \c --indexdir command line option(s) are required when invoking QDoc.
 
     It is possible to define dependencies using either variable. Qt
     documentation only uses the \c depends variable.

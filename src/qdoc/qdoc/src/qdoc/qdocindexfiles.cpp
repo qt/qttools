@@ -139,7 +139,7 @@ void QDocIndexFiles::readIndexFile(const QString &path)
     // directory tree. Otherwise, link using the full index URL.
     if (!Config::installDir.isEmpty() && indexUrl == Config::instance().get(CONFIG_URL).asString()) {
         // Generate a relative URL between the install dir and the index file
-        // when the -installdir command line option is set.
+        // when the --installdir command line option is set.
         QDir installDir(path.section('/', 0, -3) + '/' + Generator::outputSubdir());
         indexUrl = installDir.relativeFilePath(path).section('/', 0, -2);
     }

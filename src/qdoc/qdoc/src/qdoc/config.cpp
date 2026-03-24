@@ -550,7 +550,7 @@ void Config::setIncludePaths()
 }
 
 /*!
-  Stores paths from -indexdir command line option(s).
+  Stores paths from --indexdir command line option(s).
  */
 void Config::setIndexDirs()
 {
@@ -568,7 +568,7 @@ void Config::setIndexDirs()
   Function to return the correct outputdir for the output \a format.
   If \a format is not specified, defaults to 'HTML'.
   outputdir can be set using the qdocconf or the command-line
-  variable -outputdir.
+  variable --outputdir.
   */
 QString Config::getOutputDir(const QString &format) const
 {
@@ -593,7 +593,7 @@ QString Config::getOutputDir(const QString &format) const
 /*!
   Function to return the correct outputformats.
   outputformats can be set using the qdocconf or the command-line
-  variable -outputformat.
+  variable --outputformat.
   */
 QSet<QString> Config::getOutputFormats() const
 {

@@ -106,7 +106,7 @@ The URL is stored in the generated index file for the project.
 QDoc will use this as the base URL when constructing external links
 to content listed in the index.
 
-\note QDoc omits this value when the -installdir argument
+\note QDoc omits this value when the --installdir argument
 is specified when running QDoc.
 
 \badcode

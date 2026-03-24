@@ -178,5 +178,5 @@ void QDocCommandLineParser::process(const QStringList &arguments)
     QCommandLineParser::process(allArguments);
 
     if (isSet(singleExecOption) && isSet(indexDirOption))
-        qCWarning(lcQdoc) << "Warning: -indexdir option ignored: Index files are not used in single-exec mode.";
+        qCWarning(lcQdoc) << "Warning: --indexdir option ignored: Index files are not used in single-exec mode.";
 }

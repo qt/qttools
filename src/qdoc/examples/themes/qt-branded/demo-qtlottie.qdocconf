@@ -2,7 +2,7 @@
 #
 # Usage:
 #   cd <build/qttools>
-#   ./bin/qdoc -outputdir /tmp/qtlottie-themed <path-to>/demo-qtlottie.qdocconf
+#   ./bin/qdoc --outputdir /tmp/qtlottie-themed <path-to>/demo-qtlottie.qdocconf
 #
 # This wrapper includes the base QtLottie validation config and adds theme
 # settings. The base config is NOT modified, so the existing validation test

@@ -350,9 +350,9 @@ NodeMultiMapMap QDocDatabase::s_newSinceMaps;
   write documentation for nodes marked \c internal.
 
   \a singleExec_ is false when qdoc is being used in the standard
-  way of running qdoc twices for each module, first with -prepare
-  and then with -generate. First the -prepare phase is run for
-  each module, then the -generate phase is run for each module.
+  way of running qdoc twices for each module, first with --prepare
+  and then with --generate. First the --prepare phase is run for
+  each module, then the --generate phase is run for each module.
 
   When \a singleExec_ is true, qdoc is run only once. During the
   single execution, qdoc processes the qdocconf files for all the
@@ -1012,7 +1012,7 @@ void QDocDatabase::resolveNamespaces()
             } else if (!indexNamespace) {
                 // Warn about documented children in undocumented namespaces.
                 // As the namespace can be documented outside this project,
-                // skip the warning if -no-link-errors is set
+                // skip the warning if --no-link-errors is set
                 if (linkErrors) {
                     for (auto *node : namespaces) {
                         if (!node->isIndexNode())

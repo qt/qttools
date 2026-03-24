@@ -315,7 +315,7 @@
 
     \section1 Dependent modules specified, but no index directories were set.
 
-    QDoc expected to see one or more -indexdir arguments on the command line.
+    QDoc expected to see one or more --indexdir arguments on the command line.
     Without them, QDoc cannot locate the index files of any dependencies
     defined with the 'depends' configuration variable.
 
