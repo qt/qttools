@@ -923,7 +923,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
 
         out() << R"(<div class="table"><table class=")" << attr << '"';
         if (!width.isEmpty())
-            out() << " width=\"" << width << '"';
+            out() << " style=\"width: " << width << '"';
         out() << ">\n ";
         m_numTableRows = 0;
     } break;
