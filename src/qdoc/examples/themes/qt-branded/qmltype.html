@@ -1,0 +1,185 @@
+{#-
+Copyright (C) 2025 The Qt Company Ltd.
+SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
+-#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ escape_html(title) }}</title>
+{%- if stylesheetEnabled %}
+    <link rel="stylesheet" href="{{ escape_html(stylesheetName) }}">
+{%- endif %}
+</head>
+<body>
+    <header class="header-bar">
+        <div class="qt-logo">
+            <img src="qt-logo-documentation.png" alt="Qt Documentation" height="28">
+        </div>
+        <nav class="breadcrumbs" aria-label="Breadcrumbs">
+{% if exists("breadcrumbs") %}{% for crumb in breadcrumbs %}{% if existsIn(crumb, "current") %}<span class="crumb current">{{ escape_html(crumb.title) }}</span>{% else %}<span class="crumb">{{ escape_html(crumb.title) }}</span>{% if not loop.is_last %}<span class="separator">&gt;</span>{% endif %}{% endif %}{% endfor %}{% else %}<span class="crumb current">{{ escape_html(title) }}</span>{% endif %}
+        </nav>
+    </header>
+
+    <main class="content">
+        <h1>{{ escape_html(fullTitle) }}</h1>
+{% if default(brief, "") != "" %}
+        <p class="brief">{{ escape_html(brief) }}</p>
+{% endif %}
+{% if exists("since") %}
+        <span class="since">Since {{ escape_html(since) }}</span>
+{% endif %}
+
+{% set ai_prompt = "I'm reading the Qt documentation for the '" + title + "' QML type" %}
+{% if brief %}{% set ai_prompt = ai_prompt + ". Summary: " + brief %}{% endif %}
+{% set ai_prompt = ai_prompt + ". Explain the key properties, signals, and typical usage patterns." %}
+        <div class="toolbar">
+            <button class="toolbar-btn" id="copy-btn" onclick="copyPage()" title="Copy page content">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="5.5" width="8" height="9" rx="1"/><path d="M3 10.5V3a1 1 0 011-1h6.5"/></svg> Copy
+            </button>
+            <a href="#" id="md-link" class="toolbar-btn" title="View as Markdown">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M4 10V6l2 2.5L8 6v4"/><path d="M11 8.5l1.5 1.5L14 8.5"/></svg> Markdown
+            </a>
+            <details class="ask-ai">
+                <summary class="toolbar-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.5 3.5l1.4 1.4M11.1 11.1l1.4 1.4M12.5 3.5l-1.4 1.4M4.9 11.1l-1.4 1.4"/><circle cx="8" cy="8" r="2.5"/></svg> Ask AI
+                </summary>
+                <nav class="dropdown-content" id="ai-menu" data-prompt="{{ escape_html(ai_prompt) }}">
+                    <a class="ai-link" data-provider="claude"><span class="ai-badge ai-claude">C</span> Explain with Claude</a>
+                    <a class="ai-link" data-provider="chatgpt"><span class="ai-badge ai-chatgpt">G</span> Explain with ChatGPT</a>
+                    <a class="ai-link" data-provider="grok"><span class="ai-badge ai-grok">X</span> Explain with Grok</a>
+                </nav>
+            </details>
+        </div>
+
+    {% if hasQmlType %}
+    <table class="requisites">
+    {% if existsIn(qmlType, "importStatement") %}
+    <tr><td class="memItemLeft">Import Statement:</td>
+    <td class="memItemRight"><code>{{ escape_html(qmlType.importStatement) }}</code></td></tr>
+    {% endif %}
+    {% if existsIn(qmlType, "inherits") %}
+    <tr><td class="memItemLeft">Inherits:</td>
+    <td class="memItemRight">{% if qmlType.inherits.href != "" %}<a href="{{ qmlType.inherits.href }}">{{ escape_html(qmlType.inherits.name) }}</a>{% else %}{{ escape_html(qmlType.inherits.name) }}{% endif %}</td></tr>
+    {% endif %}
+    {% if existsIn(qmlType, "inheritedBy") %}
+    <tr><td class="memItemLeft">Inherited By:</td>
+    <td class="memItemRight">{% for sub in qmlType.inheritedBy %}{% if not loop.is_first %}, {% endif %}{% if sub.href != "" %}<a href="{{ sub.href }}">{{ escape_html(sub.name) }}</a>{% else %}{{ escape_html(sub.name) }}{% endif %}{% endfor %}</td></tr>
+    {% endif %}
+    {% if existsIn(qmlType, "nativeType") %}
+    <tr><td class="memItemLeft">In C++:</td>
+    <td class="memItemRight">{% if qmlType.nativeType.href != "" %}<a href="{{ qmlType.nativeType.href }}">{{ escape_html(qmlType.nativeType.name) }}</a>{% else %}{{ escape_html(qmlType.nativeType.name) }}{% endif %}</td></tr>
+    {% endif %}
+    {% if qmlType.isSingleton %}
+    <tr><td class="memItemLeft">Status:</td>
+    <td class="memItemRight">Singleton</td></tr>
+    {% endif %}
+    </table>
+    {% endif %}
+
+    {% if hasQmlType %}{% if qmlType.isSingleton %}
+    <p><b>Note:</b> This type is a QML singleton. The type isn't creatable and only a single
+    instance exists.</p>
+    {% endif %}{% endif %}
+
+    {% if membersPageUrl != "" %}
+    <ul>
+    <li><a href="{{ membersPageUrl }}">List of all members, including inherited members</a></li>
+    </ul>
+    {% endif %}
+
+    {% if length(sections) > 0 %}
+    {% for section in sections %}
+    <section class="section-{{ section.id }}" aria-label="{{ escape_html(section.title) }}">
+    <h2>{{ escape_html(section.title) }}</h2>
+    {% if length(section.members) > 0 %}
+    <ul>
+    {% for member in section.members %}
+    <li class="fn" translate="no"><b>{% if existsIn(member, "href") and member.href != "" %}<a href="{{ member.href }}">{{ escape_html(member.name) }}</a>{% else %}{{ escape_html(member.name) }}{% endif %}</b>{% if existsIn(member, "dataType") and member.dataType != "" %}&#160;: {{ escape_html(member.dataType) }}{% else %}({% if existsIn(member, "parameters") %}{% for p in member.parameters %}{% if not loop.is_first %}, {% endif %}{{ escape_html(p.type) }}&#160;<i>{{ escape_html(p.name) }}</i>{% endfor %}{% endif %}){% endif %}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% if existsIn(section, "reimplementedMembers") %}
+    <h3>Reimplemented {{ escape_html(section.plural) }}</h3>
+    <ul>
+    {% for member in section.reimplementedMembers %}
+    <li class="fn" translate="no"><b>{% if existsIn(member, "href") and member.href != "" %}<a href="{{ member.href }}">{{ escape_html(member.name) }}</a>{% else %}{{ escape_html(member.name) }}{% endif %}</b>{% if existsIn(member, "dataType") and member.dataType != "" %}&#160;: {{ escape_html(member.dataType) }}{% else %}({% if existsIn(member, "parameters") %}{% for p in member.parameters %}{% if not loop.is_first %}, {% endif %}{{ escape_html(p.type) }}&#160;<i>{{ escape_html(p.name) }}</i>{% endfor %}{% endif %}){% endif %}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% if existsIn(section, "inheritedMembers") %}
+    {% for inherited in section.inheritedMembers %}
+    <p>{{ inherited.count }} {{ escape_html(section.plural) }} inherited from {% if inherited.href != "" %}<a href="{{ inherited.href }}">{{ escape_html(inherited.className) }}</a>{% else %}{{ escape_html(inherited.className) }}{% endif %}</p>
+    {% endfor %}
+    {% endif %}
+    </section>
+    {% endfor %}
+    {% endif %}
+
+    {% if length(content.blocks) > 0 %}
+    <h2>Detailed Description</h2>
+    {% endif %}
+    {% include "partials/html/content_blocks.html" %}
+
+    {% if length(detailSections) > 0 %}
+    {% for section in detailSections %}
+    {% if length(section.members) > 0 %}
+    <h2>{{ escape_html(section.title) }}</h2>
+    {% for member in section.members %}
+    {% include "partials/html/member_detail.html" %}
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    </main>
+
+    <footer class="content footer">
+        <p>Generated by QDoc.</p>
+    </footer>
+
+    <script>
+    function copyPage() {
+        var btn = document.getElementById('copy-btn');
+        var text = document.querySelector('main.content').innerText;
+        navigator.clipboard.writeText(text).then(function() {
+            btn.textContent = 'Copied!';
+            setTimeout(function() { btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="5.5" width="8" height="9" rx="1"/><path d="M3 10.5V3a1 1 0 011-1h6.5"/></svg> Copy'; }, 1500);
+        });
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        var menu = document.getElementById('ai-menu');
+        if (menu) {
+            var prompt = encodeURIComponent(menu.getAttribute('data-prompt'));
+            var urls = { claude: 'https://claude.ai/new?q=', chatgpt: 'https://chatgpt.com/?q=', grok: 'https://grok.com/?q=' };
+            var links = menu.querySelectorAll('.ai-link');
+            for (var i = 0; i < links.length; i++) {
+                var provider = links[i].getAttribute('data-provider');
+                if (urls[provider]) links[i].href = urls[provider] + prompt;
+                links[i].target = '_blank';
+                links[i].rel = 'noopener';
+            }
+        }
+        var mdLink = document.getElementById('md-link');
+        if (mdLink) {
+            var path = window.location.pathname;
+            var name = path.substring(path.lastIndexOf('/') + 1).replace('.html', '.md');
+            mdLink.href = '../markdown/' + name;
+        }
+        document.querySelectorAll('pre').forEach(function(pre) {
+            var btn = document.createElement('button');
+            btn.className = 'code-copy-btn';
+            btn.textContent = 'Copy';
+            btn.addEventListener('click', function() {
+                navigator.clipboard.writeText(pre.textContent).then(function() {
+                    btn.textContent = 'Copied!';
+                    setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+                });
+            });
+            pre.style.position = 'relative';
+            pre.appendChild(btn);
+        });
+    });
+    </script>
+</body>
+</html>

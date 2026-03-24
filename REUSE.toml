@@ -97,7 +97,8 @@ SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR BSD-3-Clause"
 
 [[annotations]]
 path = ["**/doc/snippets/**", "examples/**", "src/qdoc/qdoc/doc/examples/**",
-        "src/qdoc/qdoc/tests/**/testdata/**/examples/**"]
+        "src/qdoc/qdoc/tests/**/testdata/**/examples/**",
+        "src/qdoc/examples/**"]
 comment = "this must be after the build system table because example and snippets take precedence over build system"
 precedence = "closest"
 SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
