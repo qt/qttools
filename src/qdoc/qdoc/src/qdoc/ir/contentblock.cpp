@@ -104,12 +104,10 @@ namespace IR {
     \brief Represents a structural block element in documentation.
 
     ContentBlock is a format-agnostic representation of documentation
-    structure. Each block is either a \e{leaf block} (has \c inlineContent,
-    no \c children) or a \e{container block} (has \c children, no
-    \c inlineContent). This invariant is enforced by Q_ASSERT in debug
-    builds. Typically, content-bearing blocks such as Paragraph, CodeBlock,
-    and SectionHeading are leaves, while structural blocks such as List,
-    Section, and callout blocks (Note, Warning, etc.) are containers.
+    structure. Most blocks are either \e{leaf blocks} (with \c inlineContent)
+    or \e{container blocks} (with \c children). Some atom chains produce
+    blocks that mix both — serialization and plainText() handle this
+    gracefully.
 
     The \c attributes field holds type-specific metadata as a QJsonObject.
     Attribute keys use camelCase for compatibility with Inja dot notation
@@ -182,9 +180,11 @@ static QString blockTypeId(BlockType type)
     Converts the InlineContent to a QJsonObject for template rendering.
 
     The JSON uses kebab-case type IDs matching the convention in IR::Document
-    classification. Leaf elements (no children) include a \c text key with
-    their text content. Container elements (with children) omit \c text to
-    avoid redundancy — the text is available in their children.
+    classification. Every element includes a \c text key: leaf elements use
+    their text field directly, while container elements produce a flattened
+    plain-text concatenation of their children. This ensures templates can
+    always access \c text without checking whether the element is a leaf or
+    container.
 
     Optional fields (\c href, \c title) are omitted when empty.
     The \c children array is omitted when empty.
@@ -195,21 +195,17 @@ QJsonObject InlineContent::toJson() const
 
     QJsonObject json;
     json["type"_L1] = inlineTypeId(type);
-
-    if (children.isEmpty())
-        json["text"_L1] = plainText();
+    json["text"_L1] = plainText();
 
     if (!href.isEmpty())
         json["href"_L1] = href;
     if (!title.isEmpty())
         json["title"_L1] = title;
 
-    if (!children.isEmpty()) {
-        QJsonArray arr;
-        for (const auto &child : children)
-            arr.append(child.toJson());
-        json["children"_L1] = arr;
-    }
+    QJsonArray childArr;
+    for (const auto &child : children)
+        childArr.append(child.toJson());
+    json["children"_L1] = childArr;
 
     if (!attributes.isEmpty())
         json["attributes"_L1] = attributes;
@@ -252,8 +248,6 @@ QString InlineContent::plainText() const
 */
 QJsonObject ContentBlock::toJson() const
 {
-    Q_ASSERT(inlineContent.isEmpty() || children.isEmpty());
-
     QJsonObject json;
     json["type"_L1] = blockTypeId(type);
     json["text"_L1] = plainText();
@@ -268,7 +262,7 @@ QJsonObject ContentBlock::toJson() const
         json["inlines"_L1] = arr;
     }
 
-    if (!children.isEmpty()) {
+    {
         QJsonArray arr;
         for (const auto &child : children)
             arr.append(child.toJson());
@@ -285,33 +279,32 @@ QJsonObject ContentBlock::toJson() const
 }
 
 /*!
-    Returns the concatenated plain text of this block's inline content or
-    child blocks, recursively.
-
-    For leaf blocks with inline content (paragraphs, headings), concatenates
-    all inline text. For container blocks (lists, sections), concatenates
-    the plain text of child blocks separated by newlines.
+    Returns the concatenated plain text of this block's content,
+    recursively. Collects inline text first, then child block text.
+    Blocks may have both inline content and children when the atom
+    chain mixes inline and block-level elements within the same
+    container.
 */
 QString ContentBlock::plainText() const
 {
-    Q_ASSERT(inlineContent.isEmpty() || children.isEmpty());
+    QStringList parts;
+
     if (!inlineContent.isEmpty()) {
-        QStringList parts;
         parts.reserve(inlineContent.size());
         for (const auto &inline_ : inlineContent)
             parts.append(inline_.plainText());
-        return parts.join(u""_s);
     }
 
     if (!children.isEmpty()) {
-        QStringList parts;
-        parts.reserve(children.size());
+        QStringList childParts;
         for (const auto &child : children)
-            parts.append(child.plainText());
-        return parts.join(u"\n"_s);
+            childParts.append(child.plainText());
+        if (!parts.isEmpty())
+            parts.append(u"\n"_s);
+        parts.append(childParts.join(u"\n"_s));
     }
 
-    return {};
+    return parts.join(u""_s);
 }
 
 } // namespace IR

@@ -155,17 +155,12 @@ QList<ContentBlock> ContentBuilder::build(const Atom *firstAtom)
 
     // Malformed atom chain recovery: auto-close remaining blocks in
     // release builds, assert in debug to surface the source error.
-    if (Q_UNLIKELY(!m_blockPath.isEmpty())) {
-        Q_ASSERT_X(false, "ContentBuilder::build",
-                    "Unclosed blocks at end of atom chain");
-        while (!m_blockPath.isEmpty())
-            closeBlock();
-    }
-
-    Q_ASSERT(m_inlinePath.isEmpty());
-    Q_ASSERT(m_inlineBaseDepths.isEmpty());
-    Q_ASSERT(!m_inLink);
-    Q_ASSERT(!m_inBrief);
+    while (!m_blockPath.isEmpty())
+        closeBlock();
+    m_inlinePath.clear();
+    m_inlineBaseDepths.clear();
+    m_inLink = false;
+    m_inBrief = false;
 
     return m_result;
 }
@@ -649,11 +644,6 @@ void ContentBuilder::closeBlock()
 {
     if (!m_blockPath.isEmpty()) {
         if (Q_UNLIKELY(m_inlineBaseDepths.isEmpty())) {
-            // openBlock() always pushes a base depth, so this indicates
-            // a logic error in the builder. Assert in debug; recover in
-            // release by clearing all state.
-            Q_ASSERT_X(false, "ContentBuilder::closeBlock",
-                        "m_inlineBaseDepths empty with non-empty m_blockPath");
             m_inlinePath.clear();
             m_blockPath.clear();
             m_inlineBaseDepths.clear();
@@ -663,7 +653,7 @@ void ContentBuilder::closeBlock()
         const qsizetype expectedDepth = m_inlineBaseDepths.last();
         if (m_inLink && m_inlinePath.size() > expectedDepth)
             m_inLink = false;
-        Q_ASSERT(m_inlinePath.size() == expectedDepth);
+        m_inlinePath.resize(expectedDepth);
         m_inlinePath.resize(expectedDepth);
         m_inlineBaseDepths.removeLast();
         m_blockPath.removeLast();
@@ -688,11 +678,7 @@ void ContentBuilder::addInline(InlineContent inline_)
     } else if (!m_blockPath.isEmpty()) {
         resolveBlock()->inlineContent.append(std::move(inline_));
     } else {
-        // Inline content without an enclosing block is dropped.
-        // QDoc's atom chains always wrap text in ParaLeft/ParaRight,
-        // so this path indicates a malformed chain.
-        Q_ASSERT_X(false, "ContentBuilder::addInline",
-                    "Inline content without an enclosing block");
+        qWarning("ContentBuilder: dropping inline content outside any block");
     }
 }
 

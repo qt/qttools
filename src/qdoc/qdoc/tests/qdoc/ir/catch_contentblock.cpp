@@ -202,8 +202,9 @@ SCENARIO("Leaf vs container invariant for inline elements", "[IR::InlineContent]
                 REQUIRE(json["text"_L1].toString() == "hello");
             }
 
-            THEN("children is absent") {
-                REQUIRE(!json.contains("children"_L1));
+            THEN("children is an empty array") {
+                REQUIRE(json.contains("children"_L1));
+                REQUIRE(json["children"_L1].toArray().isEmpty());
             }
         }
     }
@@ -228,8 +229,9 @@ SCENARIO("Leaf vs container invariant for inline elements", "[IR::InlineContent]
         WHEN("Converting to JSON") {
             QJsonObject json = container.toJson();
 
-            THEN("text is absent from container JSON") {
-                REQUIRE(!json.contains("text"_L1));
+            THEN("text contains flattened child text") {
+                REQUIRE(json.contains("text"_L1));
+                REQUIRE(json["text"_L1].toString() == "bold text");
             }
 
             THEN("children is present") {
@@ -346,19 +348,21 @@ SCENARIO("Paragraph with mixed inline content", "[IR::ContentBlock][IR][JSON]") 
                 REQUIRE(inlines[3].toObject()["type"_L1].toString() == "code");
             }
 
-            THEN("Bold element has children but no text in JSON") {
+            THEN("Bold element has children and flattened text in JSON") {
                 QJsonArray inlines = json["inlines"_L1].toArray();
                 QJsonObject boldJson = inlines[1].toObject();
                 REQUIRE(boldJson.contains("children"_L1));
-                REQUIRE(!boldJson.contains("text"_L1));
+                REQUIRE(boldJson.contains("text"_L1));
+                REQUIRE(boldJson["text"_L1].toString() == "world");
                 QJsonArray boldChildren = boldJson["children"_L1].toArray();
                 REQUIRE(boldChildren.size() == 1);
                 REQUIRE(boldChildren[0].toObject()["text"_L1].toString() == "world");
             }
 
-            THEN("Empty collections are omitted") {
+            THEN("Empty attributes are omitted, children always present") {
                 REQUIRE(!json.contains("attributes"_L1));
-                REQUIRE(!json.contains("children"_L1));
+                REQUIRE(json.contains("children"_L1));
+                REQUIRE(json["children"_L1].toArray().isEmpty());
             }
         }
     }
@@ -486,10 +490,11 @@ SCENARIO("Empty block produces minimal JSON", "[IR::ContentBlock][IR][JSON]") {
                 REQUIRE(json["text"_L1].toString().isEmpty());
             }
 
-            THEN("Empty collections are omitted") {
+            THEN("Empty attributes and inlines are omitted, children always present") {
                 REQUIRE(!json.contains("attributes"_L1));
                 REQUIRE(!json.contains("inlines"_L1));
-                REQUIRE(!json.contains("children"_L1));
+                REQUIRE(json.contains("children"_L1));
+                REQUIRE(json["children"_L1].toArray().isEmpty());
             }
         }
     }
@@ -517,8 +522,9 @@ SCENARIO("Leaf vs container invariant for block elements", "[IR::ContentBlock][I
                 REQUIRE(json.contains("inlines"_L1));
             }
 
-            THEN("children is absent") {
-                REQUIRE(!json.contains("children"_L1));
+            THEN("children is an empty array") {
+                REQUIRE(json.contains("children"_L1));
+                REQUIRE(json["children"_L1].toArray().isEmpty());
             }
         }
     }
