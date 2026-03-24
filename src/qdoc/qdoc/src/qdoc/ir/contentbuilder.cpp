@@ -471,8 +471,28 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
 
     case Atom::TableLeft: {
         QJsonObject attrs;
-        const QString &style = atom->string();
-        attrs["style"_L1] = style == "borderless"_L1 ? style : u"generic"_s;
+        QString tableStyle = u"generic"_s;
+        QString width;
+
+        for (int i = 0; i < atom->count(); ++i) {
+            const QString &arg = atom->string(i);
+            if (arg == "borderless"_L1)
+                tableStyle = arg;
+            else if (arg.contains('%'_L1))
+                width = arg;
+        }
+
+        // Handle "100 %" (space before percent) — the percent arrives
+        // as a separate atom argument, reconstruct the width value.
+        if (width == "%"_L1) {
+            bool ok = false;
+            int pct = atom->string(0).toInt(&ok);
+            width = ok ? QString::number(pct) + '%'_L1 : QString();
+        }
+
+        attrs["style"_L1] = tableStyle;
+        if (!width.isEmpty())
+            attrs["width"_L1] = width;
         openBlock(BlockType::Table, attrs);
         break;
     }

@@ -48,7 +48,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
         {% endfor %}
         </section>
     {% else if block.type == "table" %}
-        <div class="table"><table class="{{ block.attributes.style }}">
+        <div class="table"><table class="{{ block.attributes.style }}"{% if existsIn(block.attributes, "width") %}{{ " " }}style="width: {{ block.attributes.width }}"{% endif %}>
         {% for row in block.rows %}{% if row.type == "table-header-row" %}<thead><tr class="qt-style">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<th>{{ escape_html(cell.text) }}</th>{% endif %}{% endfor %}</tr></thead>
         {% else if row.type == "table-row" %}<tr valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell, "attributes") %}{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
         {% endif %}{% endfor %}
