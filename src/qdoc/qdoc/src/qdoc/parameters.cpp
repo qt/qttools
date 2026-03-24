@@ -4,7 +4,6 @@
 #include "parameters.h"
 
 #include "codechunk.h"
-#include "generator.h"
 #include "tokenizer.h"
 
 QT_BEGIN_NAMESPACE
