@@ -10,11 +10,15 @@
 #include <QList>
 #include <QString>
 
+#include <functional>
+
 QT_BEGIN_NAMESPACE
 
 class Atom;
 
 namespace IR {
+
+using DiagnosticHandler = std::function<void(QtMsgType, const QString &)>;
 
 /*!
     \enum IR::BriefHandling
@@ -36,7 +40,8 @@ class ContentBuilder
 {
 public:
     explicit ContentBuilder(BriefHandling briefHandling = BriefHandling::Skip,
-                            int headingOffset = 0);
+                            int headingOffset = 0,
+                            DiagnosticHandler diagnosticHandler = {});
     QList<ContentBlock> build(const Atom *firstAtom);
 
 private:
@@ -72,6 +77,7 @@ private:
     int m_headingOffset = 0;
     bool m_inBrief = false;
     bool m_inLink = false;
+    DiagnosticHandler m_diagnose;
 };
 
 } // namespace IR

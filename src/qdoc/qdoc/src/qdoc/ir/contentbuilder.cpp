@@ -106,8 +106,10 @@ namespace IR {
     the node type; callers pass that same offset here so the IR
     produces correct heading levels without depending on \b Node.
 */
-ContentBuilder::ContentBuilder(BriefHandling briefHandling, int headingOffset)
-    : m_briefHandling(briefHandling), m_headingOffset(headingOffset)
+ContentBuilder::ContentBuilder(BriefHandling briefHandling, int headingOffset,
+                               DiagnosticHandler diagnosticHandler)
+    : m_briefHandling(briefHandling), m_headingOffset(headingOffset),
+      m_diagnose(std::move(diagnosticHandler))
 {
 }
 
@@ -678,7 +680,8 @@ void ContentBuilder::addInline(InlineContent inline_)
     } else if (!m_blockPath.isEmpty()) {
         resolveBlock()->inlineContent.append(std::move(inline_));
     } else {
-        qWarning("ContentBuilder: dropping inline content outside any block");
+        if (m_diagnose)
+            m_diagnose(QtWarningMsg, u"Dropping inline content outside any block"_s);
     }
 }
 

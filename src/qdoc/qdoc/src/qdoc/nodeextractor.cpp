@@ -28,11 +28,28 @@
 #include "utilities.h"
 #include "variablenode.h"
 
+#include "location.h"
+
 #include <QRegularExpression>
 
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::Literals;
+
+static IR::DiagnosticHandler diagnosticHandlerFor(const Node *node)
+{
+    const Location &loc = node->doc().location();
+    return [loc](QtMsgType type, const QString &message) {
+        switch (type) {
+        case QtWarningMsg:
+            loc.warning(message);
+            break;
+        default:
+            loc.warning(message);
+            break;
+        }
+    };
+}
 
 static QString resolveHref(const HrefResolver *resolver, const Node *target, const Node *relative)
 {
@@ -115,7 +132,8 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hre
                 return 3;
             }
         }();
-        IR::ContentBuilder contentBuilder(IR::BriefHandling::Skip, headingOffset);
+        IR::ContentBuilder contentBuilder(IR::BriefHandling::Skip, headingOffset,
+                                          diagnosticHandlerFor(pn));
         pm.body = contentBuilder.build(firstAtom);
     }
 
@@ -386,7 +404,8 @@ QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const Hre
                 QList<IR::ContentBlock> sharedBody;
                 const Text &bodyText = scn->doc().body();
                 if (const Atom *firstAtom = bodyText.firstAtom()) {
-                    IR::ContentBuilder contentBuilder(IR::BriefHandling::Include);
+                    IR::ContentBuilder contentBuilder(IR::BriefHandling::Include, 0,
+                                                      diagnosticHandlerFor(scn));
                     sharedBody = contentBuilder.build(firstAtom);
                 }
 
@@ -394,7 +413,8 @@ QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const Hre
                 const QList<Text> &alsoTexts = scn->doc().alsoList();
                 for (const Text &alsoText : alsoTexts) {
                     if (const Atom *firstAtom = alsoText.firstAtom()) {
-                        IR::ContentBuilder contentBuilder(IR::BriefHandling::Include);
+                        IR::ContentBuilder contentBuilder(IR::BriefHandling::Include, 0,
+                                                          diagnosticHandlerFor(scn));
                         sharedAlso.append(contentBuilder.build(firstAtom));
                     }
                 }
@@ -532,14 +552,16 @@ IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver,
 
         const Text &bodyText = node->doc().body();
         if (const Atom *firstAtom = bodyText.firstAtom()) {
-            IR::ContentBuilder contentBuilder(IR::BriefHandling::Include);
+            IR::ContentBuilder contentBuilder(IR::BriefHandling::Include, 0,
+                                              diagnosticHandlerFor(node));
             member.body = contentBuilder.build(firstAtom);
         }
 
         const QList<Text> &alsoTexts = node->doc().alsoList();
         for (const Text &alsoText : alsoTexts) {
             if (const Atom *firstAtom = alsoText.firstAtom()) {
-                IR::ContentBuilder contentBuilder(IR::BriefHandling::Include);
+                IR::ContentBuilder contentBuilder(IR::BriefHandling::Include, 0,
+                                                  diagnosticHandlerFor(node));
                 QList<IR::ContentBlock> blocks = contentBuilder.build(firstAtom);
                 member.alsoList.append(blocks);
             }
