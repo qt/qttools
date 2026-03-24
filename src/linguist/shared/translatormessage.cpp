@@ -54,7 +54,8 @@ void TranslatorMessage::addReferenceUniq(const QString &fileName, int lineNumber
             return;
         if (!m_extraRefs.isEmpty()) { // Rather common case, so special-case it
             for (const Reference &ref : std::as_const(m_extraRefs)) {
-                if (fileName == ref.fileName() && lineNumber == ref.lineNumber() && startOffset == m_startOffset)
+                if (fileName == ref.fileName() && lineNumber == ref.lineNumber()
+                    && startOffset == ref.startOffset())
                     return;
             }
         }
