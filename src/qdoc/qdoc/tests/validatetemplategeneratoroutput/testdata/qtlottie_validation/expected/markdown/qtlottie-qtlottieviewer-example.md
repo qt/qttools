@@ -2,6 +2,7 @@
 
 An example demonstrating the use of Qt LottieAnimation in an application.
 
+![Lottie animation viewer with frame rate and scaling controls](qtlottieviewerexample.png)
 This example demonstrates how to use the [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) item of the [Qt.labs.lottieqt](qml-qt-labs-lottieqt-qmlmodule.md) module to directly display and control a Lottie animated vector graphics file in a Qt Quick application.
 #### Overview
 

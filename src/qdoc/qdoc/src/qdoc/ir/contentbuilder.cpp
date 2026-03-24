@@ -64,6 +64,10 @@ namespace IR {
         \li TableRowLeft, TableRowRight -- Table data rows.
         \li TableItemLeft, TableItemRight -- Table cells with optional
             colspan/rowspan.
+        \li Image -- Block-level image (wrapping Paragraph with centerAlign).
+        \li InlineImage -- Inline image within a paragraph.
+        \li ImageText -- Alt text consumed by the preceding Image or
+            InlineImage handler.
         \li ListTagLeft, ListTagRight -- Value list tag items (ListItem
             blocks).
         \li SinceTagLeft, SinceTagRight -- Version tag items (skipped).
@@ -545,6 +549,44 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
 
     case Atom::ListTagRight:
         closeBlock();
+        break;
+
+    case Atom::Image: {
+        QJsonObject attrs;
+        attrs["class"_L1] = u"centerAlign"_s;
+        openBlock(BlockType::Paragraph, attrs);
+
+        InlineContent img;
+        img.type = InlineType::Image;
+        img.href = atom->string();
+        if (atom->next() && atom->next()->type() == Atom::ImageText)
+            img.title = atom->next()->string();
+        addInline(std::move(img));
+
+        closeBlock();
+
+        if (atom->next() && atom->next()->type() == Atom::ImageText)
+            return atom->next();
+        break;
+    }
+
+    case Atom::InlineImage: {
+        if (Q_UNLIKELY(m_blockPath.isEmpty()))
+            break;
+
+        InlineContent img;
+        img.type = InlineType::Image;
+        img.href = atom->string();
+        if (atom->next() && atom->next()->type() == Atom::ImageText)
+            img.title = atom->next()->string();
+        addInline(std::move(img));
+
+        if (atom->next() && atom->next()->type() == Atom::ImageText)
+            return atom->next();
+        break;
+    }
+
+    case Atom::ImageText:
         break;
 
     case Atom::SinceTagLeft:

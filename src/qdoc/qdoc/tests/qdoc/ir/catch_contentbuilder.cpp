@@ -1594,3 +1594,114 @@ SCENARIO("ContentBuilder handles empty table cell spec",
         }
     }
 }
+
+SCENARIO("ContentBuilder produces InlineType::Image from InlineImage atom",
+         "[IR::ContentBuilder][IR][Image]")
+{
+    GIVEN("An atom chain: ParaLeft -> InlineImage('test.png') -> ImageText('Alt text') -> ParaRight")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::InlineImage, u"test.png"_s);
+        chain.append(Atom::ImageText, u"Alt text"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The paragraph has one Image inline with href and title")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Paragraph);
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                const auto &img = blocks[0].inlineContent[0];
+                REQUIRE(img.type == IR::InlineType::Image);
+                REQUIRE(img.href == u"test.png"_s);
+                REQUIRE(img.title == u"Alt text"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder produces centered paragraph from block-level Image atom",
+         "[IR::ContentBuilder][IR][Image]")
+{
+    GIVEN("An atom chain: Image('photo.png') -> ImageText('A photo')")
+    {
+        AtomChain chain(Atom::Image, u"photo.png"_s);
+        chain.append(Atom::ImageText, u"A photo"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("A Paragraph with centerAlign class wraps an Image inline")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Paragraph);
+                REQUIRE(blocks[0].attributes["class"_L1].toString() == u"centerAlign"_s);
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                const auto &img = blocks[0].inlineContent[0];
+                REQUIRE(img.type == IR::InlineType::Image);
+                REQUIRE(img.href == u"photo.png"_s);
+                REQUIRE(img.title == u"A photo"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder handles InlineImage without ImageText",
+         "[IR::ContentBuilder][IR][Image]")
+{
+    GIVEN("An atom chain: ParaLeft -> InlineImage('icon.png') -> ParaRight")
+    {
+        AtomChain chain(Atom::ParaLeft);
+        chain.append(Atom::InlineImage, u"icon.png"_s);
+        chain.append(Atom::ParaRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The paragraph has an Image inline with href but empty title")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                const auto &img = blocks[0].inlineContent[0];
+                REQUIRE(img.type == IR::InlineType::Image);
+                REQUIRE(img.href == u"icon.png"_s);
+                REQUIRE(img.title.isEmpty());
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder handles block-level Image without ImageText",
+         "[IR::ContentBuilder][IR][Image]")
+{
+    GIVEN("An atom chain: Image('bg.png') alone")
+    {
+        AtomChain chain(Atom::Image, u"bg.png"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("A Paragraph with centerAlign class wraps an Image inline with href")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Paragraph);
+                REQUIRE(blocks[0].attributes["class"_L1].toString() == u"centerAlign"_s);
+                REQUIRE(blocks[0].inlineContent.size() == 1);
+                const auto &img = blocks[0].inlineContent[0];
+                REQUIRE(img.type == IR::InlineType::Image);
+                REQUIRE(img.href == u"bg.png"_s);
+                REQUIRE(img.title.isEmpty());
+            }
+        }
+    }
+}
