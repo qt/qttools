@@ -8,7 +8,7 @@
 #include "genustypes.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
-#include "utilities.h"
+#include "qdoclogging.h"
 
 #include <utility>
 

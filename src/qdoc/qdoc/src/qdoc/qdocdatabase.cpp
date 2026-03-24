@@ -9,8 +9,10 @@
 #include "generator.h"
 #include "genustypes.h"
 #include "qdocindexfiles.h"
+#include "qdoclogging.h"
 #include "qmltypenode.h"
 #include "tree.h"
+#include "utilities.h"
 
 #include <QtCore/qregularexpression.h>
 #include <stack>

@@ -4,8 +4,8 @@
 #include "qmlcodeparser.h"
 
 #include "node.h"
+#include "qdoclogging.h"
 #include "qmlvisitor.h"
-#include "utilities.h"
 
 #include <private/qqmljsast_p.h>
 

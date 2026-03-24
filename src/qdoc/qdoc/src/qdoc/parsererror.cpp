@@ -6,7 +6,7 @@
 #include "qdocdatabase.h"
 #include "config.h"
 #include "inclusionfilter.h"
-#include "utilities.h"
+#include "qdoclogging.h"
 
 #include <QtCore/qregularexpression.h>
 

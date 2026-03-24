@@ -17,6 +17,7 @@
 #include "qdocdatabase.h"
 #include "text.h"
 #include "typedefnode.h"
+#include "utilities.h"
 
 QT_BEGIN_NAMESPACE
 

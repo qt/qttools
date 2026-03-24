@@ -10,7 +10,7 @@
 #include "ir/contentblock.h"
 #include "node.h"
 #include "qdocdatabase.h"
-#include "utilities.h"
+#include "qdoclogging.h"
 
 using namespace Qt::Literals::StringLiterals;
 

@@ -3,7 +3,7 @@
 
 #include "qdoccommandlineparser.h"
 
-#include "utilities.h"
+#include "qdoclogging.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qfile.h>

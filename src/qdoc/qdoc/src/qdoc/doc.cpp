@@ -12,7 +12,6 @@
 #include "qmltypenode.h"
 #include "quoter.h"
 #include "text.h"
-#include "utilities.h"
 
 #include <qcryptographichash.h>
 

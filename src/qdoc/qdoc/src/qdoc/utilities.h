@@ -4,17 +4,15 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
+#include "qdoclogging.h"
+
 #include <QtCore/qstring.h>
-#include <QtCore/qloggingcategory.h>
 
 #include <functional>
 
 using namespace Qt::Literals::StringLiterals;
 
 QT_BEGIN_NAMESPACE
-
-Q_DECLARE_LOGGING_CATEGORY(lcQdoc)
-Q_DECLARE_LOGGING_CATEGORY(lcQdocClang)
 
 class INode;
 class Location;

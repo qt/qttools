@@ -11,11 +11,11 @@
 #include "nativeenum.h"
 #include "node.h"
 #include "qdocdatabase.h"
+#include "qdoclogging.h"
 #include "qmlpropertyarguments.h"
 #include "qmlpropertynode.h"
 #include "sharedcommentnode.h"
 #include "tokenizer.h"
-#include "utilities.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qfileinfo.h>

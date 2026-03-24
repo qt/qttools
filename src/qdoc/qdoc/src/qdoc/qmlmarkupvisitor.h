@@ -6,7 +6,6 @@
 
 #include "node.h"
 #include "tree.h"
-#include "utilities.h"
 
 #include <QtCore/qstring.h>
 

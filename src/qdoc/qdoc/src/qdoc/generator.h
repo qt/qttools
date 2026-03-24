@@ -6,7 +6,6 @@
 
 #include "outputproducer.h"
 #include "text.h"
-#include "utilities.h"
 #include "filesystem/fileresolver.h"
 
 #include <QtCore/qlist.h>

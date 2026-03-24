@@ -6,8 +6,8 @@
 #include "functionnode.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
+#include "qdoclogging.h"
 #include "qmltypenode.h"
-#include "utilities.h"
 
 #include <QtCore/qlatin1stringview.h>
 

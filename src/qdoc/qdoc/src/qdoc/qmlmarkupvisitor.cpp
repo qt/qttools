@@ -3,6 +3,8 @@
 
 #include "qmlmarkupvisitor.h"
 
+#include "utilities.h"
+
 #include <QtCore/qglobal.h>
 #include <QtCore/qstringlist.h>
 

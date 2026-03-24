@@ -13,7 +13,6 @@
 #include "pagenode.h"
 #include "qmltypenode.h"
 #include "tree.h"
-#include "utilities.h"
 
 #include <QtCore/qfileinfo.h>
 

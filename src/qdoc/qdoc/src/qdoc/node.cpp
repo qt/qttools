@@ -12,6 +12,7 @@
 #include "inclusionfilter.h"
 #include "nodecontext.h"
 #include "qdocdatabase.h"
+#include "qdoclogging.h"
 #include "qmltypenode.h"
 #include "qmlpropertynode.h"
 #include "relatedclass.h"
