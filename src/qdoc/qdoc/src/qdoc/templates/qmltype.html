@@ -9,7 +9,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
 {%- if stylesheetEnabled %}
-    <link rel="stylesheet" href="qdoc-default.css">
+    <link rel="stylesheet" href="{{ escape_html(stylesheetName) }}">
 {%- endif %}
 </head>
 <body>
@@ -24,7 +24,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <table class="requisites">
     {% if existsIn(qmlType, "importStatement") %}
     <tr><td class="memItemLeft">Import Statement:</td>
-    <td class="memItemRight"><code>{{ qmlType.importStatement }}</code></td></tr>
+    <td class="memItemRight"><code>{{ escape_html(qmlType.importStatement) }}</code></td></tr>
     {% endif %}
     {% if existsIn(qmlType, "inherits") %}
     <tr><td class="memItemLeft">Inherits:</td>
@@ -56,40 +56,38 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     </ul>
     {% endif %}
 
-    {% include "partials/html/content_blocks.html" %}
     {% if length(sections) > 0 %}
     {% for section in sections %}
-    <div class="section-{{ section.id }}">
+    <section class="section-{{ section.id }}" aria-label="{{ escape_html(section.title) }}">
     <h2>{{ escape_html(section.title) }}</h2>
     {% if length(section.members) > 0 %}
-    <table class="alignedsummary">
+    <ul>
     {% for member in section.members %}
-    <tr>
-    <td class="memItemLeft">{% if existsIn(member, "href") and member.href != "" %}<a href="{{ member.href }}">{{ escape_html(member.signature) }}</a>{% else %}{{ escape_html(member.signature) }}{% endif %}</td>
-    <td class="memItemRight">{{ escape_html(default(member.brief, "")) }}</td>
-    </tr>
+    <li class="fn" translate="no"><b>{% if existsIn(member, "href") and member.href != "" %}<a href="{{ member.href }}">{{ escape_html(member.name) }}</a>{% else %}{{ escape_html(member.name) }}{% endif %}</b>{% if existsIn(member, "dataType") and member.dataType != "" %}&#160;: {{ escape_html(member.dataType) }}{% else %}({% if existsIn(member, "parameters") %}{% for p in member.parameters %}{% if not loop.is_first %}, {% endif %}{{ escape_html(p.type) }}&#160;<i>{{ escape_html(p.name) }}</i>{% endfor %}{% endif %}){% endif %}</li>
     {% endfor %}
-    </table>
+    </ul>
     {% endif %}
     {% if existsIn(section, "reimplementedMembers") %}
     <h3>Reimplemented {{ escape_html(section.plural) }}</h3>
-    <table class="alignedsummary">
+    <ul>
     {% for member in section.reimplementedMembers %}
-    <tr>
-    <td class="memItemLeft">{% if existsIn(member, "href") and member.href != "" %}<a href="{{ member.href }}">{{ escape_html(member.signature) }}</a>{% else %}{{ escape_html(member.signature) }}{% endif %}</td>
-    <td class="memItemRight">{{ escape_html(default(member.brief, "")) }}</td>
-    </tr>
+    <li class="fn" translate="no"><b>{% if existsIn(member, "href") and member.href != "" %}<a href="{{ member.href }}">{{ escape_html(member.name) }}</a>{% else %}{{ escape_html(member.name) }}{% endif %}</b>{% if existsIn(member, "dataType") and member.dataType != "" %}&#160;: {{ escape_html(member.dataType) }}{% else %}({% if existsIn(member, "parameters") %}{% for p in member.parameters %}{% if not loop.is_first %}, {% endif %}{{ escape_html(p.type) }}&#160;<i>{{ escape_html(p.name) }}</i>{% endfor %}{% endif %}){% endif %}</li>
     {% endfor %}
-    </table>
+    </ul>
     {% endif %}
     {% if existsIn(section, "inheritedMembers") %}
     {% for inherited in section.inheritedMembers %}
     <p>{{ inherited.count }} {{ escape_html(section.plural) }} inherited from {% if inherited.href != "" %}<a href="{{ inherited.href }}">{{ escape_html(inherited.className) }}</a>{% else %}{{ escape_html(inherited.className) }}{% endif %}</p>
     {% endfor %}
     {% endif %}
-    </div>
+    </section>
     {% endfor %}
     {% endif %}
+
+    {% if length(content.blocks) > 0 %}
+    <h2>Detailed Description</h2>
+    {% endif %}
+    {% include "partials/html/content_blocks.html" %}
 
     {% if length(detailSections) > 0 %}
     {% for section in detailSections %}

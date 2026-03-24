@@ -18,29 +18,29 @@
         <p>If the Lottie files are known at compile time, you can also convert them to QML using the <a href="lottietoqml.html">lottietoqml</a> tool, or the <a href="qt-target-qml-from-lottie.html">qt_target_qml_from_lottie</a> CMake command that wraps the tool.</p>
         <p>Finally, the <a href="https://doc.qt.io/qt-6/qml-qtquick-vectorimage.html">VectorImage</a> Qt Quick item can load Lottie format files directly. It converts them to QML at runtime using the <a href="lottietoqml.html">lottietoqml</a> functionality in a plugin.</p>
         <section>
-        <h1>Getting Started</h1>
+        <h2>Getting Started</h2>
         <p>Import the types using the the following statement:</p>
         <pre class="cpp" translate="no"><code>import &lt;@type&gt;Qt&lt;/@type&gt;&lt;@op&gt;.&lt;/@op&gt;labs&lt;@op&gt;.&lt;/@op&gt;lottieqt
 </code></pre>
         </section>
         <section>
-        <h1>Limitations</h1>
+        <h2>Limitations</h2>
         <p>The implementation follows the <a href="https://lottie.github.io/lottie-spec/1.0/">master specification for lottie</a>. Deviations in exported Lottie files compared to the specification are taken into account as much as possible when differences are noticed.</p>
         </section>
         <section>
-        <h2>General limitations</h2>
+        <h3>General limitations</h3>
 <ul>        <li>expressions are not supported</li>
         <li>the timeline only supports frame-mode, not time-mode</li>
 </ul>        <aside class="admonition warning" role="note"><p><b>Warning: </b>The input files for Qt Lottie Animation are assumed to be trusted content. Application developers are advised to never pass in data from untrusted sources.</p></aside>
         </section>
         <section>
-        <h2>Animation level limitations</h2>
+        <h3>Animation level limitations</h3>
         <p>The following properties are not supported:</p>
 <ul>        <li><code>assets</code> - reusable text and images</li>
         <li><code>chars</code> text</li>
 </ul>        </section>
         <section>
-        <h2>Layers</h2>
+        <h3>Layers</h3>
         <p>The following properties are not supported:</p>
 <ul>        <li><code>ao</code> (auto-orientation)</li>
         <li><code>bm</code> (blend mode)</li>
@@ -48,33 +48,33 @@
         <li><code>sr</code> (time stretch)</li>
 </ul>        </section>
         <section>
-        <h2>Shapes</h2>
+        <h3>Shapes</h3>
         <p>Some more rarely used elements and shapes are not supported, including:</p>
 <ul>        <li>the <code>gstroke</code> (gradient stroke) element</li>
         <li>Nested Repeater shapes</li>
 </ul>        <p>Also note that the behavior when using multiple active trim paths (e.g. trim paths in nested groups) is unpredictable.</p>
         </section>
         <section>
-        <h2>Effects</h2>
+        <h3>Effects</h3>
         <p>The only supported effects are <code>Slide</code> and <code>Layer Fill</code>.</p>
         </section>
         <section>
-        <h2>Examples</h2>
+        <h3>Examples</h3>
 <ul>        <li>The <a href="qtlottie-qtlottieviewer-example.html">qtlottieviewer Example</a> demonstrates how to use the <a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> item to load, display and control a Lottie file in a Qt Quick application.</li>
         <li>The <a href="qtlottie-lottietoqml-example.html">lottietoqml Example</a> demonstrates how the <a href="lottietoqml.html">lottietoqml</a> tool can be used to convert Lottie files into Qt Quick scenes and load these in an application.</li>
 </ul>        </section>
         <section>
-        <h1>Licenses</h1>
+        <h2>Licenses</h2>
         <p>Qt Lottie Animation is available under commercial licenses from <a href="https://www.qt.io/company">The Qt Company</a>. In addition, it is available under the <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General Public License, version 3</a>. See <a href="https://doc.qt.io/qt-6/licensing.html">Qt Licensing</a> for further details.</p>
         </section>
         <section>
-        <h1>Reference</h1>
+        <h2>Reference</h2>
 <ul>        <li><a href="qt-labs-lottieqt-qmlmodule.html">QML Types</a></li>
         <li><a href="lottietoqml.html">lottietoqml Tool</a></li>
         <li><a href="qt-target-qml-from-lottie.html">qt_target_qml_from_lottie CMake Command</a></li>
 </ul>        </section>
         <section>
-        <h1>Related Information</h1>
+        <h2>Related Information</h2>
 <ul>        <li><a href="https://github.com/airbnb/lottie-web">Lottie on GitHub</a></li>
 </ul>        </section>
     </section>

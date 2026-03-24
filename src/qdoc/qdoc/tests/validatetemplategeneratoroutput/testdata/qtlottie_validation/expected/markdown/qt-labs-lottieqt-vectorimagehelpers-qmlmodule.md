@@ -10,7 +10,7 @@ import <@type>Qt</@type><@op>.</@op>labs<@op>.</@op>lottieqt<@op>.</@op>VectorIm
 
 ```
 
-# QML Types
+## QML Types
 
 
 

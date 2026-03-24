@@ -9,7 +9,7 @@ find_package(Qt6 REQUIRED COMPONENTS LottieTools)
 ```
 
 This command was introduced in Qt 6.11.
-# Synopsis
+## Synopsis
 
 ```cpp
 qt_target_qml_from_lottie(target
@@ -56,7 +56,7 @@ qt_target_qml_from_lottie(applottietoqmlexample
 ```
 
 
-# Description
+## Description
 
 qt_target_qml_from_lottie() creates the build steps to run [lottietoqml](lottietoqml.md) on the list of Lottie images in `FILES`. The names of the generated files should be specified in `OUTPUTS`. The length of this list must be the same as `FILES`, and the first element corresponds to the first element in `FILES` and so forth. The names provided in `OUTPUTS` will be the names of the QML types as they appear in the module. These can in turn be instantiated in the application code.
 The generated QML files will be added to the QML module of `target`. You must use [qt_add_qml_module()](https://doc.qt.io/qt-6/qt-add-qml-module.html) to define a module for the `target` first.

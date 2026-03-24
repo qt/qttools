@@ -1,0 +1,19 @@
+project = Custom stylesheet test
+productname = Qt
+
+locationinfo = false
+
+sources.fileextensions  = "*.qdoc"
+
+sourcedirs = ./src
+
+outputformats = TemplateHTML
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = true
+TemplateHTML.stylesheetname = my-custom-theme.css
+
+warninglimit = 0
+warninglimit.enabled = true

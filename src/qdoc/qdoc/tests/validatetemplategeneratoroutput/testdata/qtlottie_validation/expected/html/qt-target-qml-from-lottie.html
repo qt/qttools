@@ -18,7 +18,7 @@
 </code></pre>
         <p>This command was introduced in Qt 6.11.</p>
         <section>
-        <h1>Synopsis</h1>
+        <h2>Synopsis</h2>
         <pre class="cpp" translate="no"><code>qt_target_qml_from_lottie(target
                           &lt;@op&gt;[&lt;/@op&gt;CURVE_RENDERER&lt;@op&gt;]&lt;/@op&gt;
                           &lt;@op&gt;[&lt;/@op&gt;ASYNCHRONOUS_SHAPES&lt;@op&gt;]&lt;/@op&gt;
@@ -59,7 +59,7 @@
 </code></pre>
         </section>
         <section>
-        <h1>Description</h1>
+        <h2>Description</h2>
         <p>qt_target_qml_from_lottie() creates the build steps to run <a href="lottietoqml.html">lottietoqml</a> on the list of Lottie images in <code>FILES</code>. The names of the generated files should be specified in <code>OUTPUTS</code>. The length of this list must be the same as <code>FILES</code>, and the first element corresponds to the first element in <code>FILES</code> and so forth. The names provided in <code>OUTPUTS</code> will be the names of the QML types as they appear in the module. These can in turn be instantiated in the application code.</p>
         <p>The generated QML files will be added to the QML module of <code>target</code>. You must use <a href="https://doc.qt.io/qt-6/qt-add-qml-module.html">qt_add_qml_module()</a> to define a module for the <code>target</code> first.</p>
         <p>Optionally, a <code>COPYRIGHT_STATEMENT</code> argument can be provided to insert copyright information into the generated files.</p>

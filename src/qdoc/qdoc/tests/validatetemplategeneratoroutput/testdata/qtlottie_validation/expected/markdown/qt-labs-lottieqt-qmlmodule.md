@@ -9,7 +9,7 @@ import <@type>Qt</@type><@op>.</@op>labs<@op>.</@op>lottieqt
 
 ```
 
-# QML Types
+## QML Types
 
 
 

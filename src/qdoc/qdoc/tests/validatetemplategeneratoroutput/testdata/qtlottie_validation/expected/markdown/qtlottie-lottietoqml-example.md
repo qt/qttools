@@ -3,7 +3,7 @@
 An example demonstrating the use of lottietoqml in an application.
 
 This example demonstrates how the [lottietoqml](lottietoqml.md) tool can be used to convert Lottie files into QML and then use these in an application.
-# Overview
+#### Overview
 
 The example consists of nine vector animations that have been converted using [lottietoqml](lottietoqml.md). They are displayed in a grid in a full screen application window.
 If the user clicks on one of the animated images, it will zoom to fill the screen. Since the image is vector-based, it will remain crisp without any scaling artifacts.
@@ -39,7 +39,7 @@ qt_target_qml_from_lottie(applottietoqmlexample
 
 In this example, the Lottie files are automatically converted to QML using the CMake function [qt_target_qml_from_lottie()](qt-target-qml-from-lottie.md).
 
-# Assets
+#### Assets
 
 This example contains animated vector images downloaded from the [Lottiefiles list of free animations](https://lottiefiles.com/free-animations/free). All the images are licensed under the [Lottie Simple License](https://lottiefiles.com/page/license).
 - "Fingerprint icon" by Solitudinem

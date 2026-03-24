@@ -9,7 +9,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
 {%- if stylesheetEnabled %}
-    <link rel="stylesheet" href="qdoc-default.css">
+    <link rel="stylesheet" href="{{ escape_html(stylesheetName) }}">
 {%- endif %}
 </head>
 <body>

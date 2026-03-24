@@ -29,6 +29,7 @@
 #include <utility>
 
 #include <QtCore/qdir.h>
+#include <QtCore/qdiriterator.h>
 #include <QtCore/qfile.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qloggingcategory.h>
@@ -99,12 +100,10 @@ void TemplateGenerator::prepare()
     } else if (QDir::isAbsolutePath(templateDirConfig)) {
         m_templateDir = templateDirConfig;
     } else {
-        // Relative path: resolve relative to output directory
-        const QString &outDir = m_context->outputDir.path();
-        if (!outDir.isEmpty())
-            m_templateDir = outDir + "/"_L1 + templateDirConfig;
-        else
-            m_templateDir = templateDirConfig;
+        // Relative path: resolve relative to the qdocconf file's directory,
+        // consistent with how sourcedirs, headerdirs, etc. are resolved.
+        m_templateDir = QDir::cleanPath(
+            QDir(config.currentDir()).absoluteFilePath(templateDirConfig));
     }
 
     bool foundTemplates = false;
@@ -132,13 +131,25 @@ void TemplateGenerator::prepare()
 
     m_emitStylesheet = config.get(m_format + ".stylesheet"_L1).asBool();
 
-    if (m_emitStylesheet && m_context) {
-        const QString cssOutputPath = m_context->outputDir.path() + "/qdoc-default.css"_L1;
-        QFile::remove(cssOutputPath);
-        QFile::copy(":/qdoc/templates/assets/qdoc-default.css"_L1, cssOutputPath);
-        QFile(cssOutputPath).setPermissions(QFile::ReadOwner | QFile::WriteOwner
-                                            | QFile::ReadGroup | QFile::ReadOther);
+    m_stylesheetName = config.get(m_format + ".stylesheetname"_L1).asString();
+    if (m_stylesheetName.isEmpty())
+        m_stylesheetName = u"qdoc-default.css"_s;
+
+    // Enforce plain filename — no directory separators, no traversal.
+    // The stylesheet is copied to and referenced from the output root,
+    // so subpaths would create inconsistencies between theme-provided
+    // assets and the QRC fallback.
+    if (m_stylesheetName.contains('/'_L1)
+        || m_stylesheetName.contains('\\'_L1)
+        || m_stylesheetName.contains(".."_L1)
+        || QDir::isAbsolutePath(m_stylesheetName)) {
+        qCWarning(lcQDocTemplateGenerator)
+            << "Ignoring stylesheetname:" << m_stylesheetName
+            << "— must be a plain filename (no path separators)";
+        m_stylesheetName = u"qdoc-default.css"_s;
     }
+
+    copyAssets();
 
     // Construct link resolvers using OutputContext data.
     // TemplateGenerator doesn't inherit from Generator, so we use
@@ -360,6 +371,7 @@ void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &te
 
     QJsonObject json = ir.toJson();
     json["stylesheetEnabled"_L1] = m_emitStylesheet;
+    json["stylesheetName"_L1] = m_stylesheetName;
 
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
     QString rendered = InjaBridge::render(templateContent, json, includeCallback);
@@ -407,6 +419,7 @@ void TemplateGenerator::renderJson(const QJsonObject &json, const QString &templ
 
     QJsonObject enrichedJson = json;
     enrichedJson["stylesheetEnabled"_L1] = m_emitStylesheet;
+    enrichedJson["stylesheetName"_L1] = m_stylesheetName;
 
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
     QString rendered = InjaBridge::render(templateContent, enrichedJson, includeCallback);
@@ -550,6 +563,67 @@ void TemplateGenerator::createDefaultWriter()
         return; // Writer already set (e.g., injected for testing)
 
     m_writer = std::make_unique<FileDocumentWriter>(*m_context);
+}
+
+/*!
+    \internal
+    Copies static assets to the output directory using a two-tier resolution
+    strategy: templatedir assets take priority, with QRC defaults as fallback.
+
+    When a template directory provides an \c{assets/} subdirectory, all files
+    within it are copied recursively to the output directory, preserving the
+    subdirectory structure. This supports fonts, images, and other static
+    resources organized in subdirectories.
+
+    After copying theme assets, the method checks whether a stylesheet is
+    needed (controlled by \c{m_emitStylesheet}). If the theme didn't provide
+    one, the default QRC stylesheet is copied with the configured filename.
+*/
+void TemplateGenerator::copyAssets()
+{
+    if (!m_context)
+        return;
+
+    const QString &outDir = m_context->outputDir.path();
+    if (outDir.isEmpty())
+        return;
+
+    QSet<QString> themeAssets;
+
+    if (!m_templateDir.isEmpty()) {
+        QDir assetsDir(m_templateDir + "/assets"_L1);
+        if (assetsDir.exists()) {
+            QDirIterator it(assetsDir.path(), QDir::Files,
+                            QDirIterator::Subdirectories);
+            int count = 0;
+            while (it.hasNext()) {
+                it.next();
+                QString rel = assetsDir.relativeFilePath(it.filePath());
+                QString dst = outDir + '/'_L1 + rel;
+                QDir().mkpath(QFileInfo(dst).path());
+                QFile::remove(dst);
+                if (QFile::copy(it.filePath(), dst)) {
+                    themeAssets.insert(rel);
+                    qCDebug(lcQDocTemplateGenerator) << "Asset (theme):" << rel;
+                    ++count;
+                } else {
+                    qCWarning(lcQDocTemplateGenerator)
+                            << "Failed to copy asset:" << it.filePath() << "->" << dst;
+                }
+            }
+            if (count > 0)
+                qCInfo(lcQDocTemplateGenerator) << "Copied" << count << "theme asset(s)";
+        }
+    }
+
+    if (m_emitStylesheet && !themeAssets.contains(m_stylesheetName)) {
+        const QString dstCss = outDir + '/'_L1 + m_stylesheetName;
+        QFile::remove(dstCss);
+        QFile::copy(":/qdoc/templates/assets/qdoc-default.css"_L1, dstCss);
+        QFile(dstCss).setPermissions(QFile::ReadOwner | QFile::WriteOwner
+                                     | QFile::ReadGroup | QFile::ReadOther);
+        qCDebug(lcQDocTemplateGenerator) << "Asset (QRC fallback):" << m_stylesheetName;
+    }
 }
 
 QT_END_NAMESPACE

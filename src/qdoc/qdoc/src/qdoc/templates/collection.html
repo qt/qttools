@@ -9,7 +9,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
 {%- if stylesheetEnabled %}
-    <link rel="stylesheet" href="qdoc-default.css">
+    <link rel="stylesheet" href="{{ escape_html(stylesheetName) }}">
 {%- endif %}
 </head>
 <body>
@@ -22,18 +22,18 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <main>
     {% if hasCollection %}
     {% if existsIn(collection, "state") %}
-    <p><b>Status:</b> {{ collection.state }}</p>
+    <p><b>Status:</b> {{ escape_html(collection.state) }}</p>
     {% endif %}
 
     {% if collection.isModule %}
     <table class="requisites">
     {% if collection.cmakePackage %}
     <tr><td class="memItemLeft">CMake:</td>
-    <td class="memItemRight"><code>find_package({{ collection.cmakePackage }} REQUIRED COMPONENTS {{ collection.cmakeComponent }})</code><br/><code>target_link_libraries(mytarget PRIVATE {{ collection.cmakeTargetItem }})</code></td></tr>
+    <td class="memItemRight"><code>find_package({{ escape_html(collection.cmakePackage) }} REQUIRED COMPONENTS {{ escape_html(collection.cmakeComponent) }})</code><br/><code>target_link_libraries(mytarget PRIVATE {{ escape_html(collection.cmakeTargetItem) }})</code></td></tr>
     {% endif %}
     {% if collection.qtVariable %}
     <tr><td class="memItemLeft">qmake:</td>
-    <td class="memItemRight"><code>QT += {{ collection.qtVariable }}</code></td></tr>
+    <td class="memItemRight"><code>QT += {{ escape_html(collection.qtVariable) }}</code></td></tr>
     {% endif %}
     </table>
     {% endif %}

@@ -17,11 +17,11 @@
         <p>You can use <code>lottietoqml</code> directly, or via the <a href="qt-target-qml-from-lottie.html">qt_target_qml_from_lottie</a> CMake command.</p>
         <p>For a demonstration of how <code>lottietoqml</code> can be used in an application, see the <a href="qtlottie-lottietoqml-example.html">lottietoqml Example</a>.</p>
         <section>
-        <h1>Overview</h1>
+        <h2>Overview</h2>
         <p>The <code>lottietoqml</code> tool will convert a Lottie file to a QML file which uses Qt Quick primitives. Since the Qt Quick is hardware-accelerated, rendering the animation may perform and consume less CPU time than using the built-in software renderer in <a href="qtlottieanimation-index.html">Qt Lottie Animation</a>. In addition, Qt Quick supports scalable vector graphics, so the resulting item will be smoothly transformable as far as this is possible.</p>
         </section>
         <section>
-        <h1>Usage</h1>
+        <h2>Usage</h2>
         <p>The basic usage of <code>lottietoqml</code> is to provide an input file and an output file: <code>lottietoqml input&lt;@op&gt;.&lt;/@op&gt;json output&lt;@op&gt;.&lt;/@op&gt;qml</code>. This will read the <code>input&lt;@op&gt;.&lt;/@op&gt;json</code> file and convert it into the corresponding Qt Quick scene in <code>output&lt;@op&gt;.&lt;/@op&gt;qml</code>, which can then be used as part of a Qt Quick application.</p>
         <p>In addition, it supports the following options:</p>
         <div class="table"><table class="generic">

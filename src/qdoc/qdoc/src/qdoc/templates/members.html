@@ -9,7 +9,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
 {%- if stylesheetEnabled %}
-    <link rel="stylesheet" href="qdoc-default.css">
+    <link rel="stylesheet" href="{{ escape_html(stylesheetName) }}">
 {%- endif %}
 </head>
 <body>
@@ -17,7 +17,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <h1>{{ title }}</h1>
     </header>
     <main>
-    <p>This is the complete list of members for {% if typeHref != "" %}<a href="{{ typeHref }}">{{ typeName }}</a>{% else %}{{ typeName }}{% endif %}, including inherited members.</p>
+    <p>This is the complete list of members for {% if typeHref != "" %}<a href="{{ typeHref }}">{{ escape_html(typeName) }}</a>{% else %}{{ escape_html(typeName) }}{% endif %}, including inherited members.</p>
 
     {% if isQmlType %}
     {% for group in memberGroups %}
@@ -26,7 +26,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     {% endif %}
     <ul>
     {% for entry in group.members %}
-    <li class="fn" translate="no">{% if entry.href != "" %}<a href="{{ entry.href }}">{{ escape_html(entry.signature) }}</a>{% else %}{{ escape_html(entry.signature) }}{% endif %}{% if existsIn(entry, "hints") %} [{% for h in entry.hints %}{% if not loop.is_first %} {% endif %}{{ h }}{% endfor %}]{% endif %}{% if existsIn(entry, "children") %}<ul>
+    <li class="fn" translate="no">{% if entry.href != "" %}<a href="{{ entry.href }}">{{ escape_html(entry.signature) }}</a>{% else %}{{ escape_html(entry.signature) }}{% endif %}{% if existsIn(entry, "hints") %}&#160;[{% for h in entry.hints %}{% if not loop.is_first %} {% endif %}{{ h }}{% endfor %}]{% endif %}{% if existsIn(entry, "children") %}<ul>
     {% for child in entry.children %}
     <li class="fn" translate="no">{% if child.href != "" %}<a href="{{ child.href }}">{{ escape_html(child.signature) }}</a>{% else %}{{ escape_html(child.signature) }}{% endif %}{% if existsIn(child, "hints") %} [{% for h in child.hints %}{% if not loop.is_first %} {% endif %}{{ h }}{% endfor %}]{% endif %}</li>
     {% endfor %}

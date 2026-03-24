@@ -16,7 +16,7 @@ The [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) type shows Lottie
 - Expressions are not supported
 
 For the full list of devations, please see see the [Limitations](qtlottieanimation-index.md) section.
-# Example Usage
+## Example Usage
 
 The following example shows a simple usage of the [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) type
 ```qml
@@ -42,7 +42,7 @@ The following example shows a simple usage of the [LottieAnimation](qml-qt-labs-
 > **Note:** Changing width or height of the element does not change the size of the animation within. Also, it is not possible to align the the content inside of a LottieAnimation element. To achieve this, position the animation inside e.g. an Item.
 
 
-# Rendering Performance
+## Rendering Performance
 
 Internally, the rendered frame data is cached to improve performance. You can control the memory usage by setting the QLOTTIE_RENDER_CACHE_SIZE environment variable (default value is 2).
 You can monitor the rendering performance by turning on two logging categories:

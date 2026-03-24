@@ -24,6 +24,43 @@
     <li><a href="qml-qt-labs-lottieqt-lottieanimation-members.html">List of all members, including inherited members</a></li>
     </ul>
 
+    <section class="section-properties" aria-label="Properties">
+    <h2>Properties</h2>
+    <ul>
+    <li class="fn" translate="no"><b><a href="#autoPlay-prop">autoPlay</a></b>&#160;: bool</li>
+    <li class="fn" translate="no"><b><a href="#direction-prop">direction</a></b>&#160;: enumeration</li>
+    <li class="fn" translate="no"><b><a href="#endFrame-prop">endFrame</a></b>&#160;: int</li>
+    <li class="fn" translate="no"><b><a href="#frameRate-prop">frameRate</a></b>&#160;: int</li>
+    <li class="fn" translate="no"><b><a href="#loops-prop">loops</a></b>&#160;: int</li>
+    <li class="fn" translate="no"><b><a href="#quality-prop">quality</a></b>&#160;: enumeration</li>
+    <li class="fn" translate="no"><b><a href="#source-prop">source</a></b>&#160;: url</li>
+    <li class="fn" translate="no"><b><a href="#startFrame-prop">startFrame</a></b>&#160;: int</li>
+    <li class="fn" translate="no"><b><a href="#status-prop">status</a></b>&#160;: enumeration</li>
+    </ul>
+    </section>
+    <section class="section-signals" aria-label="Signals">
+    <h2>Signals</h2>
+    <ul>
+    <li class="fn" translate="no"><b><a href="#finished-signal">finished</a></b>()</li>
+    </ul>
+    </section>
+    <section class="section-methods" aria-label="Methods">
+    <h2>Methods</h2>
+    <ul>
+    <li class="fn" translate="no"><b><a href="#getDuration-method">getDuration</a></b>(bool&#160;<i>inFrames</i>)</li>
+    <li class="fn" translate="no"><b><a href="#gotoAndPlay-method">gotoAndPlay</a></b>(int&#160;<i>frame</i>)</li>
+    <li class="fn" translate="no"><b><a href="#gotoAndPlay-method-1">gotoAndPlay</a></b>(string&#160;<i>frameMarker</i>)</li>
+    <li class="fn" translate="no"><b><a href="#gotoAndStop-method">gotoAndStop</a></b>(int&#160;<i>frame</i>)</li>
+    <li class="fn" translate="no"><b><a href="#gotoAndStop-method-1">gotoAndStop</a></b>(string&#160;<i>frameMarker</i>)</li>
+    <li class="fn" translate="no"><b><a href="#pause-method">pause</a></b>()</li>
+    <li class="fn" translate="no"><b><a href="#play-method">play</a></b>()</li>
+    <li class="fn" translate="no"><b><a href="#start-method">start</a></b>()</li>
+    <li class="fn" translate="no"><b><a href="#stop-method">stop</a></b>()</li>
+    <li class="fn" translate="no"><b><a href="#togglePause-method">togglePause</a></b>()</li>
+    </ul>
+    </section>
+
+    <h2>Detailed Description</h2>
     <section class="content" aria-label="Description">
         <p>The <a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> type shows Lottie format files.</p>
         <p><a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> is used to load and render Lottie files exported from Adobe After Effects. Currently, only subset of the full Lottie specification is supported. Most notable deviations are:</p>
@@ -32,7 +69,7 @@
         <li>Expressions are not supported</li>
 </ul>        <p>For the full list of devations, please see see the <a href="qtlottieanimation-index.html">Limitations</a> section.</p>
         <section>
-        <h1>Example Usage</h1>
+        <h2>Example Usage</h2>
         <p>The following example shows a simple usage of the <a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> type</p>
         <pre class="qml" translate="no"><code>&lt;@type&gt;LottieAnimation&lt;/@type&gt; {
     &lt;@name&gt;loops&lt;/@name&gt;: &lt;@number&gt;2&lt;/@number&gt;
@@ -54,7 +91,7 @@
         <aside class="admonition note" role="note"><p><b>Note: </b>Changing width or height of the element does not change the size of the animation within. Also, it is not possible to align the the content inside of a LottieAnimation element. To achieve this, position the animation inside e.g. an Item.</p></aside>
         </section>
         <section>
-        <h1>Rendering Performance</h1>
+        <h2>Rendering Performance</h2>
         <p>Internally, the rendered frame data is cached to improve performance. You can control the memory usage by setting the QLOTTIE_RENDER_CACHE_SIZE environment variable (default value is 2).</p>
         <p>You can monitor the rendering performance by turning on two logging categories:</p>
 <ul>        <li><code>qt&lt;@op&gt;.&lt;/@op&gt;lottieqt&lt;@op&gt;.&lt;/@op&gt;lottie&lt;@op&gt;.&lt;/@op&gt;render</code> - Provides information how the animation is rendered</li>
@@ -62,101 +99,6 @@
 </ul>        <p>Specifically, you can monitor does the frame cache gets constantly full, or does the rendering process have to wait for frames to become ready. The first case implies that the animation is too complex, and the rendering cannot keep up the pace. Try making the animation simpler, or optimize the QML scene.</p>
         </section>
     </section>
-    <div class="section-properties">
-    <h2>Properties</h2>
-    <table class="alignedsummary">
-    <tr>
-    <td class="memItemLeft"><a href="#autoPlay-prop">autoPlay : bool</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#direction-prop">direction : enumeration</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#endFrame-prop">endFrame : int</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#frameRate-prop">frameRate : int</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#loops-prop">loops : int</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#quality-prop">quality : enumeration</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#source-prop">source : url</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#startFrame-prop">startFrame : int</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#status-prop">status : enumeration</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    </table>
-    </div>
-    <div class="section-signals">
-    <h2>Signals</h2>
-    <table class="alignedsummary">
-    <tr>
-    <td class="memItemLeft"><a href="#finished-signal">finished()</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    </table>
-    </div>
-    <div class="section-methods">
-    <h2>Methods</h2>
-    <table class="alignedsummary">
-    <tr>
-    <td class="memItemLeft"><a href="#getDuration-method">double getDuration(bool inFrames)</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#gotoAndPlay-method">void gotoAndPlay(int frame)</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#gotoAndPlay-method-1">bool gotoAndPlay(string frameMarker)</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#gotoAndStop-method">void gotoAndStop(int frame)</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#gotoAndStop-method-1">bool gotoAndStop(string frameMarker)</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#pause-method">void pause()</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#play-method">void play()</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#start-method">void start()</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#stop-method">void stop()</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    <tr>
-    <td class="memItemLeft"><a href="#togglePause-method">void togglePause()</a></td>
-    <td class="memItemRight"></td>
-    </tr>
-    </table>
-    </div>
 
     <h2>Property Documentation</h2>
     <h3 class="fn" id="autoPlay-prop">autoPlay : bool</h3>

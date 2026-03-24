@@ -5,11 +5,11 @@ A tool that converts a Lottie document to a QML file.
 `lottietoqml` is a command line tool shipped with Qt that converts a Lottie document to a QML file. This QML file can then be used as a component in Qt Quick applications.
 You can use `lottietoqml` directly, or via the [qt_target_qml_from_lottie](qt-target-qml-from-lottie.md) CMake command.
 For a demonstration of how `lottietoqml` can be used in an application, see the [lottietoqml Example](qtlottie-lottietoqml-example.md).
-# Overview
+## Overview
 
 The `lottietoqml` tool will convert a Lottie file to a QML file which uses Qt Quick primitives. Since the Qt Quick is hardware-accelerated, rendering the animation may perform and consume less CPU time than using the built-in software renderer in [Qt Lottie Animation](qtlottieanimation-index.md). In addition, Qt Quick supports scalable vector graphics, so the resulting item will be smoothly transformable as far as this is possible.
 
-# Usage
+## Usage
 
 The basic usage of `lottietoqml` is to provide an input file and an output file: `lottietoqml input<@op>.</@op>json output<@op>.</@op>qml`. This will read the `input<@op>.</@op>json` file and convert it into the corresponding Qt Quick scene in `output<@op>.</@op>qml`, which can then be used as part of a Qt Quick application.
 In addition, it supports the following options:
