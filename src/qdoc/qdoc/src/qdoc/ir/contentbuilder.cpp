@@ -94,9 +94,16 @@ namespace IR {
     The \a briefHandling parameter controls whether content between
     BriefLeft and BriefRight atoms is emitted as a Paragraph block
     (BriefHandling::Include) or suppressed (BriefHandling::Skip).
+
+    The \a headingOffset parameter shifts section heading levels to
+    account for the page structure. QDoc's \\section1 maps to level 1,
+    but pages already use \c{<h1>} for the title and \c{<h2>} for
+    major sections. The legacy generators apply an offset derived from
+    the node type; callers pass that same offset here so the IR
+    produces correct heading levels without depending on \b Node.
 */
-ContentBuilder::ContentBuilder(BriefHandling briefHandling)
-    : m_briefHandling(briefHandling)
+ContentBuilder::ContentBuilder(BriefHandling briefHandling, int headingOffset)
+    : m_briefHandling(briefHandling), m_headingOffset(headingOffset)
 {
 }
 
@@ -389,7 +396,7 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
 
     case Atom::SectionHeadingLeft: {
         QJsonObject attrs;
-        attrs["level"_L1] = atom->string().toInt();
+        attrs["level"_L1] = atom->string().toInt() + m_headingOffset;
         openBlock(BlockType::SectionHeading, attrs);
         break;
     }

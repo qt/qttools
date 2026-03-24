@@ -35,7 +35,8 @@ enum class BriefHandling { Skip, Include };
 class ContentBuilder
 {
 public:
-    explicit ContentBuilder(BriefHandling briefHandling = BriefHandling::Skip);
+    explicit ContentBuilder(BriefHandling briefHandling = BriefHandling::Skip,
+                            int headingOffset = 0);
     QList<ContentBlock> build(const Atom *firstAtom);
 
 private:
@@ -68,6 +69,7 @@ private:
     QList<qsizetype> m_inlineBaseDepths;
 
     BriefHandling m_briefHandling = BriefHandling::Skip;
+    int m_headingOffset = 0;
     bool m_inBrief = false;
     bool m_inLink = false;
 };

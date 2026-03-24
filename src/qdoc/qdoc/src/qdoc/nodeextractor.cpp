@@ -93,7 +93,29 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hre
 
     const Text &bodyText = pn->doc().body();
     if (const Atom *firstAtom = bodyText.firstAtom()) {
-        IR::ContentBuilder contentBuilder;
+        // Offset section heading levels to account for page structure.
+        // QDoc's \section1 maps to level 1, but pages already use <h1>
+        // for the title. The legacy generators apply a node-type-dependent
+        // offset; we replicate the same mapping here.
+        const int headingOffset = [&] {
+            switch (pn->nodeType()) {
+            case NodeType::Namespace:
+            case NodeType::Class:
+            case NodeType::Struct:
+            case NodeType::Union:
+            case NodeType::Module:
+                return 2;
+            case NodeType::QmlModule:
+            case NodeType::QmlValueType:
+            case NodeType::QmlType:
+            case NodeType::Page:
+            case NodeType::Group:
+                return 1;
+            default:
+                return 3;
+            }
+        }();
+        IR::ContentBuilder contentBuilder(IR::BriefHandling::Skip, headingOffset);
         pm.body = contentBuilder.build(firstAtom);
     }
 
