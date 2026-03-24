@@ -208,9 +208,12 @@
 
     \section1 Cannot tie this documentation to anything
 
-    QDoc found a \beginqdoc ... \endqdoc comment, with no \l{Topic Commands}{topic command}, that was
-    not immediately followed by a class, function or property definition.
-    It thus does not know what the comment documents.
+    QDoc found a \beginqdoc ... \endqdoc comment, with no \l{Topic Commands}{topic command}, and
+    could not associate the declaration or definition immediately following the
+    comment with a documented entity. This can happen if there's no declaration
+    or definition following the comment, or if the entity isn't visible to QDoc,
+    such as when the declaration is behind a preprocessor conditional that QDoc
+    doesn't evaluate.
 
     \section1 <class> tries to inherit itself
 

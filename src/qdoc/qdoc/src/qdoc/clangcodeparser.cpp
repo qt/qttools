@@ -2351,8 +2351,9 @@ ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
                             QStringLiteral("Cannot tie this documentation to anything"),
                             QStringLiteral("qdoc found a /*! ... */ comment, but there was no "
                                            "topic command (e.g., '\\%1', '\\%2') in the "
-                                           "comment and no function definition following "
-                                           "the comment.")
+                                           "comment and qdoc could not associate the "
+                                           "declaration or definition following the "
+                                           "comment with a documented entity.")
                                     .arg(COMMAND_FN, COMMAND_PAGE));
                 }
             }
