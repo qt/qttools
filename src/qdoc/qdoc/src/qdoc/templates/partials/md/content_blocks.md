@@ -21,6 +21,19 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 - {% for p in item.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{% if i.type == "text" %}{{ i.text }}{% else if i.type == "code" %}`{{ i.text }}`{% else if i.type == "bold" %}**{% for c in i.children %}{% if c.type == "code" %}`{{ c.text }}`{% else %}{{ c.text }}{% endif %}{% endfor %}**{% else if i.type == "italic" %}_{% for c in i.children %}{% if c.type == "code" %}`{{ c.text }}`{% else %}{{ c.text }}{% endif %}{% endfor %}_{% else if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ c.text }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ c.text }}{% endfor %}{% endif %}{% else if i.type == "teletype" %}`{% for c in i.children %}{{ c.text }}{% endfor %}`{% else %}{{ i.text }}{% endif %}{% endfor %}{% endif %}{% endfor %}{{ "" }}
 {% endfor %}
 
+{% else if block.type == "definition-list" %}
+{% if block.attributes.listType == "value" %}
+| Constant | Description |
+| --- | --- |
+{% for entry in block.children %}{% if entry.type == "definition-term" %}| `{% if existsIn(entry, "children") and length(entry.children) > 0 %}{% for p in entry.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{{ i.text }}{% endfor %}{% endif %}{% endfor %}{% else if existsIn(entry, "inlines") %}{% for i in entry.inlines %}{{ i.text }}{% endfor %}{% else %}{{ entry.text }}{% endif %}` | {% else if entry.type == "definition-description" %}{% if existsIn(entry, "children") and length(entry.children) > 0 %}{% for p in entry.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{{ i.text }}{% endfor %}{% endif %}{% endfor %}{% else if existsIn(entry, "inlines") %}{% for i in entry.inlines %}{{ i.text }}{% endfor %}{% endif %} |
+{% endif %}{% endfor %}
+{% else %}
+{% for entry in block.children %}
+{% if entry.type == "definition-term" %}**{% if existsIn(entry, "children") and length(entry.children) > 0 %}{% for p in entry.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{{ i.text }}{% endfor %}{% endif %}{% endfor %}{% else if existsIn(entry, "inlines") %}{% for i in entry.inlines %}{{ i.text }}{% endfor %}{% else %}{{ entry.text }}{% endif %}**
+{% else if entry.type == "definition-description" %}:   {% if existsIn(entry, "children") and length(entry.children) > 0 %}{% for p in entry.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{{ i.text }}{% endfor %}{% endif %}{% endfor %}{% else if existsIn(entry, "inlines") %}{% for i in entry.inlines %}{{ i.text }}{% endfor %}{% endif %}
+{% endif %}{% endfor %}
+{% endif %}
+
 {% else if block.type == "note" %}
 > **Note:** {{ block.text }}
 
@@ -62,6 +75,12 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% for item in child.children %}
 - {% for p in item.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{% if i.type == "text" %}{{ i.text }}{% else if i.type == "code" %}`{{ i.text }}`{% else if i.type == "bold" %}**{% for c in i.children %}{% if c.type == "code" %}`{{ c.text }}`{% else %}{{ c.text }}{% endif %}{% endfor %}**{% else if i.type == "italic" %}_{% for c in i.children %}{% if c.type == "code" %}`{{ c.text }}`{% else %}{{ c.text }}{% endif %}{% endfor %}_{% else if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ c.text }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ c.text }}{% endfor %}{% endif %}{% else if i.type == "teletype" %}`{% for c in i.children %}{{ c.text }}{% endfor %}`{% else %}{{ i.text }}{% endif %}{% endfor %}{% endif %}{% endfor %}{{ "" }}
 {% endfor %}
+
+{% else if child.type == "definition-list" %}
+{% for entry in child.children %}
+{% if entry.type == "definition-term" %}**{{ entry.text }}**
+{% else if entry.type == "definition-description" %}:   {{ entry.text }}
+{% endif %}{% endfor %}
 
 {% else if child.type == "note" %}
 > **Note:** {{ child.text }}

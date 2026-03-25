@@ -411,8 +411,12 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
 
     case Atom::ListLeft: {
         QJsonObject attrs;
-        attrs["listType"_L1] = atom->string();
-        openBlock(BlockType::List, attrs);
+        const QString &listType = atom->string();
+        attrs["listType"_L1] = listType;
+        if (listType == ATOM_LIST_TAG || listType == ATOM_LIST_VALUE)
+            openBlock(BlockType::DefinitionList, attrs);
+        else
+            openBlock(BlockType::List, attrs);
         break;
     }
 
@@ -420,9 +424,14 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         closeBlock();
         break;
 
-    case Atom::ListItemLeft:
-        openBlock(BlockType::ListItem);
+    case Atom::ListItemLeft: {
+        ContentBlock *parent = resolveBlock();
+        if (parent->type == BlockType::DefinitionList)
+            openBlock(BlockType::DefinitionDescription);
+        else
+            openBlock(BlockType::ListItem);
         break;
+    }
 
     case Atom::ListItemRight:
         closeBlock();
@@ -544,7 +553,7 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         break;
 
     case Atom::ListTagLeft:
-        openBlock(BlockType::ListItem);
+        openBlock(BlockType::DefinitionTerm);
         break;
 
     case Atom::ListTagRight:

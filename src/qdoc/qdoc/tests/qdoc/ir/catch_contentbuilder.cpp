@@ -1491,15 +1491,72 @@ SCENARIO("ContentBuilder recognizes borderless table style",
     }
 }
 
-SCENARIO("ContentBuilder maps ListTagLeft/Right to ListItem blocks",
-         "[IR::ContentBuilder][IR][ValueList]")
+SCENARIO("ContentBuilder builds definition list for value type",
+         "[IR::ContentBuilder][IR][DefinitionList]")
 {
-    GIVEN("An atom chain with ListTag and ListItem inside a list")
+    GIVEN("An atom chain with ListTag and ListItem inside a value list")
     {
         AtomChain chain(Atom::ListLeft, u"value"_s);
         chain.append(Atom::ListTagLeft);
-        chain.append(Atom::ParaLeft);
         chain.append(Atom::String, u"enumValue"_s);
+        chain.append(Atom::ListTagRight);
+        chain.append(Atom::ListItemLeft);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"Description"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::ListItemRight);
+        chain.append(Atom::ListRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The root block is a DefinitionList with value listType")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::DefinitionList);
+                REQUIRE(blocks[0].attributes["listType"_L1].toString() == u"value"_s);
+            }
+
+            THEN("Children are DefinitionTerm and DefinitionDescription")
+            {
+                REQUIRE(blocks[0].children.size() == 2);
+                REQUIRE(blocks[0].children[0].type == IR::BlockType::DefinitionTerm);
+                REQUIRE(blocks[0].children[1].type == IR::BlockType::DefinitionDescription);
+            }
+
+            THEN("Term has inline text 'enumValue' and description has paragraph child")
+            {
+                REQUIRE(blocks[0].children[0].inlineContent[0].text
+                        == u"enumValue"_s);
+                REQUIRE(blocks[0].children[1].children[0].inlineContent[0].text
+                        == u"Description"_s);
+            }
+
+            THEN("JSON serialization uses definition-list types")
+            {
+                auto json = blocks[0].toJson();
+                REQUIRE(json["type"_L1].toString() == u"definition-list"_s);
+                auto children = json["children"_L1].toArray();
+                REQUIRE(children[0].toObject()["type"_L1].toString()
+                        == u"definition-term"_s);
+                REQUIRE(children[1].toObject()["type"_L1].toString()
+                        == u"definition-description"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder builds definition list for tag type",
+         "[IR::ContentBuilder][IR][DefinitionList]")
+{
+    GIVEN("An atom chain with ListTag and ListItem inside a tag list")
+    {
+        AtomChain chain(Atom::ListLeft, u"tag"_s);
+        chain.append(Atom::ListTagLeft);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"Term"_s);
         chain.append(Atom::ParaRight);
         chain.append(Atom::ListTagRight);
         chain.append(Atom::ListItemLeft);
@@ -1514,21 +1571,57 @@ SCENARIO("ContentBuilder maps ListTagLeft/Right to ListItem blocks",
             IR::ContentBuilder builder;
             auto blocks = builder.build(&chain.first);
 
-            THEN("The list has two ListItem children")
+            THEN("The root block is a DefinitionList with tag listType")
             {
                 REQUIRE(blocks.size() == 1);
-                REQUIRE(blocks[0].type == IR::BlockType::List);
-                REQUIRE(blocks[0].children.size() == 2);
-                REQUIRE(blocks[0].children[0].type == IR::BlockType::ListItem);
-                REQUIRE(blocks[0].children[1].type == IR::BlockType::ListItem);
+                REQUIRE(blocks[0].type == IR::BlockType::DefinitionList);
+                REQUIRE(blocks[0].attributes["listType"_L1].toString() == u"tag"_s);
             }
 
-            THEN("ListTag text is 'enumValue' and ListItem text is 'Description'")
+            THEN("Children are DefinitionTerm and DefinitionDescription")
+            {
+                REQUIRE(blocks[0].children.size() == 2);
+                REQUIRE(blocks[0].children[0].type == IR::BlockType::DefinitionTerm);
+                REQUIRE(blocks[0].children[1].type == IR::BlockType::DefinitionDescription);
+            }
+
+            THEN("Term text is 'Term' and description text is 'Description'")
             {
                 REQUIRE(blocks[0].children[0].children[0].inlineContent[0].text
-                        == u"enumValue"_s);
+                        == u"Term"_s);
                 REQUIRE(blocks[0].children[1].children[0].inlineContent[0].text
                         == u"Description"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder handles empty value description",
+         "[IR::ContentBuilder][IR][DefinitionList]")
+{
+    GIVEN("An atom chain with a value entry that has no description")
+    {
+        AtomChain chain(Atom::ListLeft, u"value"_s);
+        chain.append(Atom::ListTagLeft);
+        chain.append(Atom::String, u"EnumConstant"_s);
+        chain.append(Atom::ListTagRight);
+        chain.append(Atom::ListItemLeft);
+        chain.append(Atom::ListItemRight);
+        chain.append(Atom::ListRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("DefinitionDescription exists but has no children")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::DefinitionList);
+                REQUIRE(blocks[0].children.size() == 2);
+                REQUIRE(blocks[0].children[0].type == IR::BlockType::DefinitionTerm);
+                REQUIRE(blocks[0].children[1].type == IR::BlockType::DefinitionDescription);
+                REQUIRE(blocks[0].children[1].children.isEmpty());
             }
         }
     }

@@ -106,11 +106,12 @@
         <p>The default value is <code>&lt;@keyword&gt;true&lt;/@keyword&gt;</code>.</p>
     <h3 class="fn" id="direction-prop">direction : enumeration</h3>
         <p>This property holds the direction of rendering.</p>
-<ul>        <li>LottieAnimation.Forward</li>
-        <li>Forward direction (Default)</li>
-        <li>LottieAnimation.Reverse</li>
-        <li>Reverse direction</li>
-</ul>    <h3 class="fn" id="endFrame-prop">endFrame : int</h3>
+        <div class="table"><table class="valuelist">
+        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">LottieAnimation.Forward</code></td><td class="topAlign">Forward direction (Default)</td></tr>
+<tr><td class="topAlign"><code translate="no">LottieAnimation.Reverse</code></td><td class="topAlign">Reverse direction</td></tr>
+        </table></div>
+    <h3 class="fn" id="endFrame-prop">endFrame : int</h3>
         <p>Frame number of the end of the animation. The value is available after the animation has been loaded and ready to play.</p>
     <h3 class="fn" id="frameRate-prop">frameRate : int</h3>
         <p>This property holds the frame rate value of the Lottie animation.</p>
@@ -128,13 +129,13 @@
         <p>The default value is <code>&lt;@number&gt;1&lt;/@number&gt;</code>.</p>
     <h3 class="fn" id="quality-prop">quality : enumeration</h3>
         <p>Speficies the rendering quality of the lottie player. If <code>LowQuality</code> is selected the rendering will happen into a frame buffer object, whereas with other options, the rendering will be done onto <code>&lt;@type&gt;QImage&lt;/@type&gt;</code> (which in turn will be rendered on the screen).</p>
-<ul>        <li>LottieAnimation.LowQuality</li>
-        <li>Antialiasing or a smooth pixmap transformation algorithm are not used</li>
-        <li>LottieAnimation.MediumQuality</li>
-        <li>Smooth pixmap transformation algorithm is used but no antialiasing (Default)</li>
-        <li>LottieAnimation.HighQuality</li>
-        <li>Antialiasing and a smooth pixmap tranformation algorithm are both used</li>
-</ul>    <h3 class="fn" id="source-prop">source : url</h3>
+        <div class="table"><table class="valuelist">
+        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">LottieAnimation.LowQuality</code></td><td class="topAlign">Antialiasing or a smooth pixmap transformation algorithm are not used</td></tr>
+<tr><td class="topAlign"><code translate="no">LottieAnimation.MediumQuality</code></td><td class="topAlign">Smooth pixmap transformation algorithm is used but no antialiasing (Default)</td></tr>
+<tr><td class="topAlign"><code translate="no">LottieAnimation.HighQuality</code></td><td class="topAlign">Antialiasing and a smooth pixmap tranformation algorithm are both used</td></tr>
+        </table></div>
+    <h3 class="fn" id="source-prop">source : url</h3>
         <p>The source of the Lottie asset that <a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> plays.</p>
         <p><a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> can handle any URL scheme supported by Qt. The URL may be absolute, or relative to the URL of the component.</p>
         <p>Setting the source property starts loading the animation asynchronously. To monitor progress of loading, connect to the <a href="qml-qt-labs-lottieqt-lottieanimation.html#status-prop">status</a> change signal.</p>
@@ -142,15 +143,14 @@
         <p>Frame number of the start of the animation. The value is available after the animation has been loaded and ready to play.</p>
     <h3 class="fn" id="status-prop">status : enumeration</h3>
         <p>This property holds the current status of the <a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> element.</p>
-<ul>        <li>LottieAnimation.Null</li>
-        <li>An initial value that is used when the source is not defined (Default)</li>
-        <li>LottieAnimation.Loading</li>
-        <li>The player is loading a Lottie file</li>
-        <li>LottieAnimation.Ready</li>
-        <li>Loading has finished successfully and the player is ready to play the animation</li>
-        <li>LottieAnimation.Error</li>
-        <li>An error occurred while loading the animation</li>
-</ul>        <p>For example, you could implement <code>onStatusChanged</code> signal handler to monitor progress of loading an animation as follows:</p>
+        <div class="table"><table class="valuelist">
+        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">LottieAnimation.Null</code></td><td class="topAlign">An initial value that is used when the source is not defined (Default)</td></tr>
+<tr><td class="topAlign"><code translate="no">LottieAnimation.Loading</code></td><td class="topAlign">The player is loading a Lottie file</td></tr>
+<tr><td class="topAlign"><code translate="no">LottieAnimation.Ready</code></td><td class="topAlign">Loading has finished successfully and the player is ready to play the animation</td></tr>
+<tr><td class="topAlign"><code translate="no">LottieAnimation.Error</code></td><td class="topAlign">An error occurred while loading the animation</td></tr>
+        </table></div>
+        <p>For example, you could implement <code>onStatusChanged</code> signal handler to monitor progress of loading an animation as follows:</p>
         <pre class="qml" translate="no"><code>&lt;@type&gt;LottieAnimation&lt;/@type&gt; {
     &lt;@name&gt;source&lt;/@name&gt;: &lt;@string&gt;&amp;quot;animation.json&amp;quot;&lt;/@string&gt;
     &lt;@name&gt;autoPlay&lt;/@name&gt;: &lt;@number&gt;false&lt;/@number&gt;

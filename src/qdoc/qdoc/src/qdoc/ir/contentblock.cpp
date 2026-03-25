@@ -68,6 +68,9 @@ namespace IR {
     \value TableHeaderRow A header row within a table, containing header cells.
     \value TableCell A cell within a table row.
     \value Raw Raw format-specific content passed through without processing.
+    \value DefinitionList A definition or value list containing DefinitionTerm and DefinitionDescription pairs.
+    \value DefinitionTerm The term or key in a definition list entry.
+    \value DefinitionDescription The description or value in a definition list entry.
 */
 
 /*!
@@ -168,6 +171,9 @@ static QString blockTypeId(BlockType type)
     case BlockType::TableHeaderRow: return u"table-header-row"_s;
     case BlockType::TableCell:      return u"table-cell"_s;
     case BlockType::Raw:            return u"raw"_s;
+    case BlockType::DefinitionList:        return u"definition-list"_s;
+    case BlockType::DefinitionTerm:        return u"definition-term"_s;
+    case BlockType::DefinitionDescription: return u"definition-description"_s;
     }
     Q_UNREACHABLE();
 }

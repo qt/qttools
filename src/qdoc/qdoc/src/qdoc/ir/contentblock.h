@@ -85,7 +85,10 @@ enum class BlockType : unsigned char {
     TableRow,
     TableHeaderRow,
     TableCell,
-    Raw
+    Raw,
+    DefinitionList,
+    DefinitionTerm,
+    DefinitionDescription
 };
 
 struct ContentBlock

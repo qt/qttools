@@ -99,10 +99,10 @@ The default value is `<@keyword>true</@keyword>`.
 ### direction : enumeration
 
 This property holds the direction of rendering.
-- LottieAnimation.Forward
-- Forward direction (Default)
-- LottieAnimation.Reverse
-- Reverse direction
+| Constant | Description |
+| --- | --- |
+| `LottieAnimation.Forward` | Forward direction (Default)|
+| `LottieAnimation.Reverse` | Reverse direction|
 
 <a id="endFrame-prop"></a>
 ### endFrame : int
@@ -133,12 +133,11 @@ The default value is `<@number>1</@number>`.
 ### quality : enumeration
 
 Speficies the rendering quality of the lottie player. If `LowQuality` is selected the rendering will happen into a frame buffer object, whereas with other options, the rendering will be done onto `<@type>QImage</@type>` (which in turn will be rendered on the screen).
-- LottieAnimation.LowQuality
-- Antialiasing or a smooth pixmap transformation algorithm are not used
-- LottieAnimation.MediumQuality
-- Smooth pixmap transformation algorithm is used but no antialiasing (Default)
-- LottieAnimation.HighQuality
-- Antialiasing and a smooth pixmap tranformation algorithm are both used
+| Constant | Description |
+| --- | --- |
+| `LottieAnimation.LowQuality` | Antialiasing or a smooth pixmap transformation algorithm are not used|
+| `LottieAnimation.MediumQuality` | Smooth pixmap transformation algorithm is used but no antialiasing (Default)|
+| `LottieAnimation.HighQuality` | Antialiasing and a smooth pixmap tranformation algorithm are both used|
 
 <a id="source-prop"></a>
 ### source : url
@@ -154,14 +153,12 @@ Frame number of the start of the animation. The value is available after the ani
 ### status : enumeration
 
 This property holds the current status of the [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) element.
-- LottieAnimation.Null
-- An initial value that is used when the source is not defined (Default)
-- LottieAnimation.Loading
-- The player is loading a Lottie file
-- LottieAnimation.Ready
-- Loading has finished successfully and the player is ready to play the animation
-- LottieAnimation.Error
-- An error occurred while loading the animation
+| Constant | Description |
+| --- | --- |
+| `LottieAnimation.Null` | An initial value that is used when the source is not defined (Default)|
+| `LottieAnimation.Loading` | The player is loading a Lottie file|
+| `LottieAnimation.Ready` | Loading has finished successfully and the player is ready to play the animation|
+| `LottieAnimation.Error` | An error occurred while loading the animation|
 
 For example, you could implement `onStatusChanged` signal handler to monitor progress of loading an animation as follows:
 ```qml
