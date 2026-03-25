@@ -49,8 +49,9 @@
         }
     },
     {
-        "file_pattern_ending": [".qdoc", ".qdocinc" , ".qdocconf", ".qdoc.sample", "README.md",
-                                 "README", "qt_attribution.json", "README_test.chromium"],
+        "file_pattern_ending": [".qdoc", ".qdocinc" , ".qdocconf", ".qdoc.sample",
+                                "README.md", "README", "README_test.chromium", "CONTRIBUTING.md",
+                                "qt_attribution.json"],
         "location":{
             "": {
                 "comment": "",
