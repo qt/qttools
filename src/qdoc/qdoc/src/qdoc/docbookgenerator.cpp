@@ -2300,7 +2300,9 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
 
         // Inherits.
         QList<RelatedClass>::ConstIterator r;
-        if (classe && !classe->baseClasses().isEmpty()) {
+        const auto *metaTags = classe ? classe->doc().metaTagMap() : nullptr;
+        bool suppressInherits = metaTags && metaTags->contains(u"qdoc-suppress-inheritance"_s);
+        if (classe && !suppressInherits && !classe->baseClasses().isEmpty()) {
             generateStartRequisite("Inherits");
 
             r = classe->baseClasses().constBegin();

@@ -1946,7 +1946,9 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
                 addQmlNativeTypesToMap(requisites, &text, nativeTypeText, classe);
         }
 
-        addInheritsToMap(requisites, &text, inheritsText, classe);
+        const auto *metaTags = classe ? classe->doc().metaTagMap() : nullptr;
+        if (!metaTags || !metaTags->contains(u"qdoc-suppress-inheritance"_s))
+            addInheritsToMap(requisites, &text, inheritsText, classe);
         addInheritedByToMap(requisites, &text, inheritedByText, classe);
     }
 
