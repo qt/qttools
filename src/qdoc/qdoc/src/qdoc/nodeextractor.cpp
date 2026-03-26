@@ -16,6 +16,7 @@
 #include "hrefresolver.h"
 #include "inclusionfilter.h"
 #include "ir/contentbuilder.h"
+#include "ir/signaturespan.h"
 #include "pagenode.h"
 #include "parameters.h"
 #include "propertynode.h"
@@ -23,6 +24,7 @@
 #include "qmltypenode.h"
 #include "sections.h"
 #include "sharedcommentnode.h"
+#include "template_declaration.h"
 #include "text.h"
 #include "typedefnode.h"
 #include "utilities.h"
@@ -568,17 +570,604 @@ IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver,
         }
     }
 
+    Section::Style spanStyle = includeDetail ? Section::Details : Section::Summary;
+    member.signatureSpans = buildSignatureSpans(node, hrefResolver, relative, spanStyle);
+
     return member;
 }
 
-static QString stripCodeMarkerTags(const QString &marked)
+static QList<IR::SignatureSpan> buildTypeSpans(const QString &typeString)
 {
-    static const QRegularExpression tagRegex(
-        "<@[a-z]+[^>]*>|</@[a-z]+>"_L1,
-        QRegularExpression::InvertedGreedinessOption);
-    QString result = marked;
-    result.remove(tagRegex);
+    QList<IR::SignatureSpan> spans;
+    QString pendingWord;
+
+    for (int i = 0; i <= typeString.size(); ++i) {
+        QChar ch;
+        if (i != typeString.size())
+            ch = typeString.at(i);
+
+        QChar lower = ch.toLower();
+        if ((lower >= 'a'_L1 && lower <= 'z'_L1) || ch.digitValue() >= 0
+            || ch == '_'_L1 || ch == ':'_L1) {
+            pendingWord += ch;
+        } else {
+            if (!pendingWord.isEmpty()) {
+                bool isProbablyType = (pendingWord != "const"_L1);
+                IR::SignatureSpan span;
+                span.role = isProbablyType ? IR::SpanRole::Type : IR::SpanRole::Text;
+                span.text = pendingWord;
+                spans.append(span);
+            }
+            pendingWord.clear();
+
+            if (!ch.isNull()) {
+                IR::SignatureSpan span;
+                span.role = IR::SpanRole::Text;
+                span.text = QString(ch);
+                spans.append(span);
+            }
+        }
+    }
+    return spans;
+}
+
+static QList<IR::SignatureSpan> buildExtraSpans(const Node *node, Section::Style style)
+{
+    QString extraStr = CodeMarker::extraSynopsis(node, style);
+    if (extraStr.isEmpty())
+        return {};
+
+    // extraSynopsis may contain <@extref target="...">text</@extref> tags for
+    // cppreference links. Parse those into ExternalRef spans; everything else
+    // becomes Extra spans.
+    static const QRegularExpression extrefRegex(
+        u"<@extref target=\"([^\"]+)\">([^<]+)</@extref>"_s);
+
+    QList<IR::SignatureSpan> spans;
+    IR::SignatureSpan wrapper;
+    wrapper.role = IR::SpanRole::Extra;
+
+    qsizetype pos = 0;
+    auto it = extrefRegex.globalMatch(extraStr);
+    while (it.hasNext()) {
+        auto match = it.next();
+        if (match.capturedStart() > pos) {
+            IR::SignatureSpan textSpan;
+            textSpan.role = IR::SpanRole::Text;
+            textSpan.text = extraStr.mid(pos, match.capturedStart() - pos);
+            wrapper.children.append(textSpan);
+        }
+        IR::SignatureSpan ref;
+        ref.role = IR::SpanRole::ExternalRef;
+        ref.text = match.captured(2);
+        ref.href = "https://en.cppreference.com/w/cpp/language/"_L1 + match.captured(1);
+        wrapper.children.append(ref);
+        pos = match.capturedEnd();
+    }
+    if (pos < extraStr.size()) {
+        IR::SignatureSpan textSpan;
+        textSpan.role = IR::SpanRole::Text;
+        textSpan.text = extraStr.mid(pos);
+        wrapper.children.append(textSpan);
+    }
+
+    if (wrapper.children.isEmpty()) {
+        wrapper.text = extraStr;
+    }
+    spans.append(wrapper);
+    return spans;
+}
+
+static QList<IR::SignatureSpan> buildTemplateDeclSpans(const RelaxedTemplateDeclaration *templateDecl)
+{
+    if (!templateDecl)
+        return {};
+
+    IR::SignatureSpan declSpan;
+    declSpan.role = IR::SpanRole::TemplateDecl;
+    declSpan.text = "template"_L1;
+
+    IR::SignatureSpan open;
+    open.role = IR::SpanRole::Text;
+    open.text = "<"_L1;
+    declSpan.children.append(open);
+
+    bool first = true;
+    for (const auto &param : templateDecl->parameters) {
+        if (param.sfinae_constraint)
+            continue;
+        if (!first) {
+            IR::SignatureSpan comma;
+            comma.role = IR::SpanRole::Text;
+            comma.text = ", "_L1;
+            declSpan.children.append(comma);
+        }
+
+        switch (param.kind) {
+        case RelaxedTemplateParameter::Kind::TypeTemplateParameter:
+        case RelaxedTemplateParameter::Kind::TemplateTemplateParameter: {
+            IR::SignatureSpan kw;
+            kw.role = IR::SpanRole::Text;
+            kw.text = "typename"_L1;
+            declSpan.children.append(kw);
+            break;
+        }
+        case RelaxedTemplateParameter::Kind::NonTypeTemplateParameter: {
+            if (!param.valued_declaration.type.empty()) {
+                auto typeSpans = buildTypeSpans(QString::fromStdString(param.valued_declaration.type));
+                declSpan.children.append(typeSpans);
+            }
+            break;
+        }
+        }
+
+        if (param.is_parameter_pack) {
+            IR::SignatureSpan dots;
+            dots.role = IR::SpanRole::Text;
+            dots.text = "..."_L1;
+            declSpan.children.append(dots);
+        }
+
+        if (!param.valued_declaration.name.empty()) {
+            IR::SignatureSpan space;
+            space.role = IR::SpanRole::Text;
+            space.text = " "_L1;
+            declSpan.children.append(space);
+
+            IR::SignatureSpan nameSpan;
+            nameSpan.role = IR::SpanRole::Parameter;
+            nameSpan.text = QString::fromStdString(param.valued_declaration.name);
+            declSpan.children.append(nameSpan);
+        }
+
+        if (!param.valued_declaration.initializer.empty()) {
+            IR::SignatureSpan eq;
+            eq.role = IR::SpanRole::Text;
+            eq.text = " = "_L1;
+            declSpan.children.append(eq);
+
+            if (param.kind == RelaxedTemplateParameter::Kind::TypeTemplateParameter
+                || param.kind == RelaxedTemplateParameter::Kind::TemplateTemplateParameter) {
+                auto typeSpans = buildTypeSpans(QString::fromStdString(param.valued_declaration.initializer));
+                declSpan.children.append(typeSpans);
+            } else {
+                IR::SignatureSpan val;
+                val.role = IR::SpanRole::Text;
+                val.text = QString::fromStdString(param.valued_declaration.initializer);
+                declSpan.children.append(val);
+            }
+        }
+
+        first = false;
+    }
+
+    IR::SignatureSpan close;
+    close.role = IR::SpanRole::Text;
+    close.text = ">"_L1;
+    declSpan.children.append(close);
+
+    if (templateDecl->requires_clause && !templateDecl->requires_clause->empty()) {
+        IR::SignatureSpan req;
+        req.role = IR::SpanRole::Text;
+        req.text = " requires "_L1 + QString::fromStdString(*templateDecl->requires_clause);
+        declSpan.children.append(req);
+    }
+
+    return { declSpan };
+}
+
+static QList<IR::SignatureSpan> buildCppSynopsisSpans(const Node *node,
+                                                       const HrefResolver *hrefResolver,
+                                                       const Node *relative,
+                                                       Section::Style style)
+{
+    Q_UNUSED(hrefResolver);
+    QList<IR::SignatureSpan> spans;
+
+    auto appendText = [&spans](const QString &text) {
+        IR::SignatureSpan span;
+        span.role = IR::SpanRole::Text;
+        span.text = text;
+        spans.append(span);
+    };
+
+    auto appendName = [&spans, node, hrefResolver, relative](const QString &name) {
+        IR::SignatureSpan span;
+        span.role = IR::SpanRole::Name;
+        span.text = name;
+        span.href = resolveHref(hrefResolver, node, relative);
+        spans.append(span);
+    };
+
+    auto appendTypeSpans = [&spans](const QString &type, bool trailingSpace) {
+        auto typeSpans = buildTypeSpans(type);
+        spans.append(typeSpans);
+        if (trailingSpace && !type.isEmpty()
+            && !type.endsWith('*'_L1) && !type.endsWith('&'_L1)) {
+            IR::SignatureSpan space;
+            space.role = IR::SpanRole::Text;
+            space.text = " "_L1;
+            spans.append(space);
+        }
+    };
+
+    // Extra qualifiers go first (prepended in CppCodeMarker)
+    if (style != Section::AllMembers) {
+        auto extras = buildExtraSpans(node, style);
+        if (!extras.isEmpty()) {
+            spans.append(extras);
+            appendText(" "_L1);
+        }
+    }
+
+    // Name with parent prefix for Details style
+    QString nameText = node->name();
+    bool linkName = (style != Section::Details);
+
+    if (style == Section::Details) {
+        if (!node->isRelatedNonmember() && !node->isProxyNode()
+            && !node->parent()->name().isEmpty()
+            && !node->parent()->isHeader() && !node->isProperty() && !node->isQmlNode()) {
+            nameText = node->parent()->name() + "::"_L1 + nameText;
+        }
+    }
+
+    switch (node->nodeType()) {
+    case NodeType::Namespace:
+    case NodeType::Class:
+    case NodeType::Struct:
+    case NodeType::Union:
+        appendText(Node::nodeTypeString(node->nodeType()) + " "_L1);
+        if (linkName) {
+            appendName(nameText);
+        } else {
+            IR::SignatureSpan span;
+            span.role = IR::SpanRole::Name;
+            span.text = nameText;
+            spans.append(span);
+        }
+        break;
+    case NodeType::Function: {
+        const auto *func = static_cast<const FunctionNode *>(node);
+
+        if (style == Section::Details) {
+            if (auto templateDecl = node->templateDecl()) {
+                auto tmplSpans = buildTemplateDeclSpans(&*templateDecl);
+                spans.append(tmplSpans);
+                appendText(" "_L1);
+            }
+        }
+
+        if (style == Section::Summary || style == Section::Accessors) {
+            if (!func->isNonvirtual())
+                appendText("virtual "_L1);
+        }
+
+        if (style != Section::AllMembers && !func->returnType().isEmpty())
+            appendTypeSpans(func->returnTypeString(), true);
+
+        if (linkName) {
+            appendName(nameText);
+        } else {
+            IR::SignatureSpan span;
+            span.role = IR::SpanRole::Name;
+            span.text = nameText;
+            spans.append(span);
+        }
+
+        if (!func->isMacroWithoutParams()) {
+            appendText("("_L1);
+            if (!func->parameters().isEmpty()) {
+                const Parameters &parameters = func->parameters();
+                for (int i = 0; i < parameters.count(); ++i) {
+                    if (i > 0)
+                        appendText(", "_L1);
+                    const Parameter &param = parameters.at(i);
+                    QString pName = param.name();
+                    QString type = param.type();
+                    QString value = param.defaultValue();
+                    qsizetype insertPos = param.nameInsertionPoint();
+                    if (insertPos >= 0 && style != Section::AllMembers && !pName.isEmpty()) {
+                        appendTypeSpans(type.left(insertPos), false);
+                        IR::SignatureSpan paramSpan;
+                        paramSpan.role = IR::SpanRole::Parameter;
+                        paramSpan.text = pName;
+                        spans.append(paramSpan);
+                        appendTypeSpans(type.mid(insertPos), false);
+                    } else {
+                        bool trailingSpace = style != Section::AllMembers && !pName.isEmpty();
+                        appendTypeSpans(type, trailingSpace);
+                        if (style != Section::AllMembers && !pName.isEmpty()) {
+                            IR::SignatureSpan paramSpan;
+                            paramSpan.role = IR::SpanRole::Parameter;
+                            paramSpan.text = pName;
+                            spans.append(paramSpan);
+                        }
+                    }
+                    if (style != Section::AllMembers && !value.isEmpty())
+                        appendText(" = "_L1 + value);
+                }
+            }
+            appendText(")"_L1);
+        }
+
+        if (func->isConst())
+            appendText(" const"_L1);
+
+        if (style == Section::Summary || style == Section::Accessors) {
+            if (func->isFinal())
+                appendText(" final"_L1);
+            if (func->isOverride())
+                appendText(" override"_L1);
+            if (func->isPureVirtual())
+                appendText(" = 0"_L1);
+            if (func->isRef())
+                appendText(" &"_L1);
+            else if (func->isRefRef())
+                appendText(" &&"_L1);
+        } else if (style == Section::AllMembers) {
+            if (!func->returnType().isEmpty() && func->returnType() != "void"_L1) {
+                appendText(" : "_L1);
+                appendTypeSpans(func->returnTypeString(), false);
+            }
+        } else {
+            if (func->isRef())
+                appendText(" &"_L1);
+            else if (func->isRefRef())
+                appendText(" &&"_L1);
+            if (const auto &req = func->trailingRequiresClause(); req && !req->isEmpty())
+                appendText(" requires "_L1 + *req);
+        }
+        break;
+    }
+    case NodeType::Enum: {
+        const auto *enume = static_cast<const EnumNode *>(node);
+        appendText("enum"_L1);
+        if (enume->isScoped())
+            appendText(" class"_L1);
+        if (!enume->isAnonymous()) {
+            appendText(" "_L1);
+            if (linkName) {
+                appendName(nameText);
+            } else {
+                IR::SignatureSpan span;
+                span.role = IR::SpanRole::Name;
+                span.text = nameText;
+                spans.append(span);
+            }
+        }
+        if (style == Section::Summary) {
+            appendText(" { "_L1);
+            const int MaxEnumValues = 6;
+            QStringList documentedItems = enume->doc().enumItemNames();
+            if (documentedItems.isEmpty()) {
+                const auto &enumItems = enume->items();
+                for (const auto &item : enumItems)
+                    documentedItems << item.name();
+            }
+            const QStringList omitItems = enume->doc().omitEnumItemNames();
+            for (const auto &item : omitItems)
+                documentedItems.removeAll(item);
+
+            if (documentedItems.size() > MaxEnumValues) {
+                const QString last = documentedItems.last();
+                documentedItems = documentedItems.mid(0, MaxEnumValues - 1);
+                documentedItems += "..."_L1;
+                documentedItems += last;
+            }
+            appendText(documentedItems.join(", "_L1));
+            if (!documentedItems.isEmpty())
+                appendText(" "_L1);
+            appendText("}"_L1);
+        }
+        break;
+    }
+    case NodeType::TypeAlias: {
+        if (style == Section::Details) {
+            if (auto templateDecl = node->templateDecl()) {
+                auto tmplSpans = buildTemplateDeclSpans(&*templateDecl);
+                spans.append(tmplSpans);
+                appendText(" "_L1);
+            }
+        }
+        if (linkName) {
+            appendName(nameText);
+        } else {
+            IR::SignatureSpan span;
+            span.role = IR::SpanRole::Name;
+            span.text = nameText;
+            spans.append(span);
+        }
+        break;
+    }
+    case NodeType::Typedef: {
+        if (static_cast<const TypedefNode *>(node)->associatedEnum())
+            appendText("flags "_L1);
+        if (linkName) {
+            appendName(nameText);
+        } else {
+            IR::SignatureSpan span;
+            span.role = IR::SpanRole::Name;
+            span.text = nameText;
+            spans.append(span);
+        }
+        break;
+    }
+    case NodeType::Property: {
+        const auto *property = static_cast<const PropertyNode *>(node);
+        if (linkName) {
+            appendName(nameText);
+        } else {
+            IR::SignatureSpan span;
+            span.role = IR::SpanRole::Name;
+            span.text = nameText;
+            spans.append(span);
+        }
+        appendText(" : "_L1);
+        appendTypeSpans(property->qualifiedDataType(), false);
+        break;
+    }
+    case NodeType::QmlProperty: {
+        const auto *property = static_cast<const QmlPropertyNode *>(node);
+        if (linkName) {
+            appendName(nameText);
+        } else {
+            IR::SignatureSpan span;
+            span.role = IR::SpanRole::Name;
+            span.text = nameText;
+            spans.append(span);
+        }
+        appendText(" : "_L1);
+        appendTypeSpans(property->dataType(), false);
+        break;
+    }
+    case NodeType::Variable: {
+        const auto *variable = static_cast<const VariableNode *>(node);
+        if (style == Section::AllMembers) {
+            if (linkName) {
+                appendName(nameText);
+            } else {
+                IR::SignatureSpan span;
+                span.role = IR::SpanRole::Name;
+                span.text = nameText;
+                spans.append(span);
+            }
+            appendText(" : "_L1);
+            appendTypeSpans(variable->dataType(), false);
+        } else {
+            appendTypeSpans(variable->leftType(), true);
+            if (linkName) {
+                appendName(nameText);
+            } else {
+                IR::SignatureSpan span;
+                span.role = IR::SpanRole::Name;
+                span.text = nameText;
+                spans.append(span);
+            }
+            appendText(variable->rightType());
+        }
+        break;
+    }
+    default:
+        if (linkName) {
+            appendName(nameText);
+        } else {
+            IR::SignatureSpan span;
+            span.role = IR::SpanRole::Name;
+            span.text = nameText;
+            spans.append(span);
+        }
+        break;
+    }
+
+    return spans;
+}
+
+static QList<IR::SignatureSpan> buildQmlItemSpans(const Node *node,
+                                                   const HrefResolver *hrefResolver)
+{
+    QList<IR::SignatureSpan> spans;
+
+    auto appendText = [&spans](const QString &text) {
+        IR::SignatureSpan span;
+        span.role = IR::SpanRole::Text;
+        span.text = text;
+        spans.append(span);
+    };
+
+    auto appendTypeSpans = [&spans](const QString &type, bool trailingSpace) {
+        auto typeSpans = buildTypeSpans(type);
+        spans.append(typeSpans);
+        if (trailingSpace && !type.isEmpty()
+            && !type.endsWith('*'_L1) && !type.endsWith('&'_L1)) {
+            IR::SignatureSpan space;
+            space.role = IR::SpanRole::Text;
+            space.text = " "_L1;
+            spans.append(space);
+        }
+    };
+
+    IR::SignatureSpan nameSpan;
+    nameSpan.role = IR::SpanRole::Name;
+    nameSpan.text = node->name();
+    nameSpan.href = resolveHref(hrefResolver, node, node->parent());
+
+    if (node->isQmlProperty()) {
+        const auto *pn = static_cast<const QmlPropertyNode *>(node);
+        spans.append(nameSpan);
+        appendText(" : "_L1);
+        appendTypeSpans(pn->dataType(), false);
+    } else if (node->isFunction(Genus::QML)) {
+        const auto *func = static_cast<const FunctionNode *>(node);
+        if (!func->returnType().isEmpty())
+            appendTypeSpans(func->returnTypeString(), true);
+        spans.append(nameSpan);
+        appendText("("_L1);
+        if (!func->parameters().isEmpty()) {
+            const Parameters &parameters = func->parameters();
+            for (int i = 0; i < parameters.count(); ++i) {
+                if (i > 0)
+                    appendText(", "_L1);
+                QString pName = parameters.at(i).name();
+                QString type = parameters.at(i).type();
+                if (!pName.isEmpty()) {
+                    appendTypeSpans(type, true);
+                    IR::SignatureSpan paramSpan;
+                    paramSpan.role = IR::SpanRole::Parameter;
+                    paramSpan.text = pName;
+                    spans.append(paramSpan);
+                } else {
+                    IR::SignatureSpan paramSpan;
+                    paramSpan.role = IR::SpanRole::Parameter;
+                    paramSpan.text = type;
+                    spans.append(paramSpan);
+                }
+            }
+        }
+        appendText(")"_L1);
+    } else {
+        spans.append(nameSpan);
+    }
+
+    auto extras = buildExtraSpans(node, Section::Summary);
+    if (!extras.isEmpty()) {
+        appendText(" "_L1);
+        spans.append(extras);
+    }
+
+    return spans;
+}
+
+static QString plainTextFromSpans(const QList<IR::SignatureSpan> &spans)
+{
+    QString result;
+    for (const auto &span : spans)
+        result += span.plainText();
     return result;
+}
+
+/*!
+    \internal
+    Build structured signature spans from Node data.
+
+    This function produces a QList of SignatureSpan values that carry
+    semantic roles (Type, Name, Parameter, Extra, and so on) for each
+    element of a member's synopsis. It parallels what CppCodeMarker's
+    markedUpSynopsis() and markedUpQmlItem() produce as tagged strings,
+    but outputs structured IR spans instead.
+
+    The \a style parameter controls level of detail: Summary includes
+    virtual/override qualifiers, Details adds template declarations and
+    parent prefixes, AllMembers uses a condensed format.
+*/
+QList<IR::SignatureSpan> buildSignatureSpans(const Node *node,
+                                             const HrefResolver *hrefResolver,
+                                             const Node *relative,
+                                             Section::Style style)
+{
+    if (node->isQmlNode() && !node->isEnumType())
+        return buildQmlItemSpans(node, hrefResolver);
+    return buildCppSynopsisSpans(node, hrefResolver, relative, style);
 }
 
 /*!
@@ -602,13 +1191,12 @@ static IR::AllMembersIR extractQmlAllMembersIR(const QmlTypeNode *qcn, const Hre
     if (groupedMembers.isEmpty())
         return result;
 
-    CodeMarker *marker = CodeMarker::markerForLanguage("QML"_L1);
     const InclusionPolicy policy = Config::instance().createInclusionPolicy();
 
     std::function<IR::AllMemberEntry(Node *)> buildEntry = [&](Node *node) -> IR::AllMemberEntry {
         IR::AllMemberEntry entry;
-        entry.signature = stripCodeMarkerTags(
-            marker->markedUpQmlItem(node, true));
+        entry.signatureSpans = buildQmlItemSpans(node, hrefResolver);
+        entry.signature = plainTextFromSpans(entry.signatureSpans);
         entry.href = resolveHref(hrefResolver, node, qcn);
 
         if (node->isQmlProperty()) {
@@ -684,7 +1272,6 @@ static IR::AllMembersIR extractCppAllMembersIR(const Aggregate *aggregate, const
     if (allMembers.isEmpty())
         return result;
 
-    CodeMarker *marker = CodeMarker::markerForCode(QString());
     const InclusionPolicy policy = Config::instance().createInclusionPolicy();
 
     for (const auto *node : allMembers.members()) {
@@ -695,8 +1282,8 @@ static IR::AllMembersIR extractCppAllMembersIR(const Aggregate *aggregate, const
             continue;
 
         IR::AllMemberEntry entry;
-        entry.signature = stripCodeMarkerTags(
-            marker->markedUpSynopsis(node, aggregate, Section::AllMembers));
+        entry.signatureSpans = buildSignatureSpans(node, hrefResolver, aggregate, Section::AllMembers);
+        entry.signature = plainTextFromSpans(entry.signatureSpans);
         entry.href = resolveHref(hrefResolver, node, aggregate);
         result.members.append(entry);
     }

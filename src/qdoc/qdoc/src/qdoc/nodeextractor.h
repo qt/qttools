@@ -5,6 +5,8 @@
 #define QDOC_NODEEXTRACTOR_H
 
 #include "ir/pagemetadata.h"
+#include "ir/signaturespan.h"
+#include "sections.h"
 
 #include <optional>
 
@@ -28,6 +30,7 @@ QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate, const Hr
 QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const HrefResolver *hrefResolver);
 IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver, const Node *relative, MemberExtractionLevel level = MemberExtractionLevel::Summary);
 std::optional<IR::AllMembersIR> extractAllMembersIR(const PageNode *pn, const HrefResolver *hrefResolver);
+QList<IR::SignatureSpan> buildSignatureSpans(const Node *node, const HrefResolver *hrefResolver, const Node *relative, Section::Style style);
 
 } // namespace NodeExtractor
 
