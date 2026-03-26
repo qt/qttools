@@ -50,6 +50,7 @@ qt_internal_extend_target(tst_QDoc
         ir/catch_builder.cpp
         ir/catch_contentbuilder.cpp
         ir/catch_member.cpp
+        ir/catch_signaturespan.cpp
         ../../src/qdoc/injabridge.cpp
         ../../src/qdoc/ir/member.cpp
         ../../src/qdoc/ir/builder.cpp
@@ -57,6 +58,7 @@ qt_internal_extend_target(tst_QDoc
         ../../src/qdoc/ir/contentblock.cpp
         ../../src/qdoc/ir/document.cpp
         ../../src/qdoc/ir/link.cpp
+        ../../src/qdoc/ir/signaturespan.cpp
     LIBRARIES
         Inja::inja
         nlohmann_json::nlohmann_json
