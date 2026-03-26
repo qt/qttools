@@ -184,6 +184,14 @@ QJsonObject EnumValueIR::toJson() const
 */
 
 /*!
+    \variable IR::MemberIR::signatureSpans
+    Structured signature spans carrying semantic roles and resolved
+    hrefs. When populated, templates can render rich signatures with
+    type links and role-based styling. Empty by default for backward
+    compatibility with the plain text \c synopsis field.
+*/
+
+/*!
     \variable IR::MemberIR::isStatic
     Whether the member is declared static.
 */
@@ -272,6 +280,12 @@ QJsonObject MemberIR::toJson() const
         json["anchorId"_L1] = anchorId;
     if (!synopsis.isEmpty())
         json["synopsis"_L1] = synopsis;
+    if (!signatureSpans.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &span : signatureSpans)
+            arr.append(span.toJson());
+        json["signatureSpans"_L1] = arr;
+    }
     if (!since.isEmpty())
         json["since"_L1] = since;
     if (!threadSafety.isEmpty())
@@ -450,6 +464,12 @@ QJsonObject AllMemberEntry::toJson() const
 {
     QJsonObject json;
     json["signature"_L1] = signature;
+    if (!signatureSpans.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &span : signatureSpans)
+            arr.append(span.toJson());
+        json["signatureSpans"_L1] = arr;
+    }
     json["href"_L1] = href;
 
     if (!hints.isEmpty()) {

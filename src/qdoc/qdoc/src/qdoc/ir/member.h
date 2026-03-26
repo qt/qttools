@@ -5,6 +5,7 @@
 #define QDOC_IR_MEMBER_H
 
 #include "contentblock.h"
+#include "signaturespan.h"
 #include "qdoc/access.h"
 #include "qdoc/genustypes.h"
 #include "qdoc/status.h"
@@ -64,6 +65,7 @@ struct MemberIR {
     // Detail documentation (populated for detail sections, empty for summary)
     QString anchorId;
     QString synopsis;
+    QList<IR::SignatureSpan> signatureSpans;
     QString since;
     QString threadSafety;
     QString comparisonCategory;
@@ -95,6 +97,7 @@ struct SectionIR {
 
 struct AllMemberEntry {
     QString signature;
+    QList<IR::SignatureSpan> signatureSpans;
     QString href;
     QStringList hints;
     bool isPropertyGroup { false };
