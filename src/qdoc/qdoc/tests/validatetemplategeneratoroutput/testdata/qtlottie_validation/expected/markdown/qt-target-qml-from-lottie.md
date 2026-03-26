@@ -13,14 +13,14 @@ This command was introduced in Qt 6.11.
 
 ```cpp
 qt_target_qml_from_lottie(target
-                          <@op>[</@op>CURVE_RENDERER<@op>]</@op>
-                          <@op>[</@op>ASYNCHRONOUS_SHAPES<@op>]</@op>
-                          <@op>[</@op>OPTIMIZE_PATHS<@op>]</@op>
-                          <@op>[</@op>OUTLINE_STROKE_MODE<@op>]</@op>
-                          <@op>[</@op>TYPE_NAME <@string>&quot;MyShapeName&quot;</@string><@op>]</@op>
-                          <@op>[</@op>COPYRIGHT_STATEMENT <@string>&quot;Copyright © Company1&quot;</@string><@op>]</@op>
-                          FILES file1<@op>.</@op>json <@op>[</@op>file2<@op>.</@op>json <@op>.</@op><@op>.</@op><@op>.</@op><@op>]</@op>
-                          OUTPUTS File1<@op>.</@op>qml <@op>[</@op>File2<@op>.</@op>qml <@op>.</@op><@op>.</@op><@op>.</@op><@op>]</@op>
+                          [CURVE_RENDERER]
+                          [ASYNCHRONOUS_SHAPES]
+                          [OPTIMIZE_PATHS]
+                          [OUTLINE_STROKE_MODE]
+                          [TYPE_NAME "MyShapeName"]
+                          [COPYRIGHT_STATEMENT "Copyright © Company1"]
+                          FILES file1.json [file2.json ...]
+                          OUTPUTS File1.qml [File2.qml ...]
                           )
 
 ```
@@ -64,7 +64,7 @@ Optionally, a `COPYRIGHT_STATEMENT` argument can be provided to insert copyright
 > **Note:** Certain characters must be escaped for command line use or you may see build errors on some platforms.
 
 `TYPE_NAME` is also optional, and can be used to replace all instances of the [Shape](https://doc.qt.io/qt-6/qml-qtquick-shapes-shape.html) type in the generated file with a custom type. This can be useful to make general customizations to all the shapes in the provided Lottie files. The `TYPE_NAME` should refer to a QML type which is available in the `target` QML module.
-The options `CURVE_RENDERER`, `ASYNCHRONOUS_SHAPES`, `OPTIMIZE_PATHS` and `OUTLINE_STROKE_MODE` correspond to the `<@op>-</@op><@op>-</@op>curve<@op>-</@op>renderer`, `<@op>-</@op><@op>-</@op>asynchronous<@op>-</@op>shapes`, `<@op>-</@op><@op>-</@op>optimize<@op>-</@op>paths` and `<@op>-</@op><@op>-</@op>outline<@op>-</@op>stroke<@op>-</@op>mode` in [lottietoqml](lottietoqml.md) respectively.
+The options `CURVE_RENDERER`, `ASYNCHRONOUS_SHAPES`, `OPTIMIZE_PATHS` and `OUTLINE_STROKE_MODE` correspond to the `--curve-renderer`, `--asynchronous-shapes`, `--optimize-paths` and `--outline-stroke-mode` in [lottietoqml](lottietoqml.md) respectively.
 
 
 ---

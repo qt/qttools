@@ -10,6 +10,18 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::Literals::StringLiterals;
 
+static QString stripCodeMarkerTags(const QString &markedCode)
+{
+    static const QRegularExpression tag(u"</?@[^>]*>"_s);
+    QString t = markedCode;
+    t.replace(tag, QString());
+    t.replace(u"&quot;"_s, u"\""_s);
+    t.replace(u"&gt;"_s, u">"_s);
+    t.replace(u"&lt;"_s, u"<"_s);
+    t.replace(u"&amp;"_s, u"&"_s);
+    return t;
+}
+
 static QString genusToString(Genus genus)
 {
     switch (genus) {
@@ -256,7 +268,7 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         break;
 
     case Atom::C:
-        addLeafInline(InlineType::Code, atom->string());
+        addLeafInline(InlineType::Code, stripCodeMarkerTags(atom->string()));
         break;
 
     case Atom::Code:
@@ -275,7 +287,7 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         }
 
         openBlock(BlockType::CodeBlock, attrs);
-        addLeafInline(InlineType::Text, atom->string());
+        addLeafInline(InlineType::Text, stripCodeMarkerTags(atom->string()));
         closeBlock();
         break;
     }

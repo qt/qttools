@@ -20,14 +20,14 @@
         <section>
         <h2>Synopsis</h2>
         <pre class="cpp" translate="no"><code>qt_target_qml_from_lottie(target
-                          &lt;@op&gt;[&lt;/@op&gt;CURVE_RENDERER&lt;@op&gt;]&lt;/@op&gt;
-                          &lt;@op&gt;[&lt;/@op&gt;ASYNCHRONOUS_SHAPES&lt;@op&gt;]&lt;/@op&gt;
-                          &lt;@op&gt;[&lt;/@op&gt;OPTIMIZE_PATHS&lt;@op&gt;]&lt;/@op&gt;
-                          &lt;@op&gt;[&lt;/@op&gt;OUTLINE_STROKE_MODE&lt;@op&gt;]&lt;/@op&gt;
-                          &lt;@op&gt;[&lt;/@op&gt;TYPE_NAME &lt;@string&gt;&amp;quot;MyShapeName&amp;quot;&lt;/@string&gt;&lt;@op&gt;]&lt;/@op&gt;
-                          &lt;@op&gt;[&lt;/@op&gt;COPYRIGHT_STATEMENT &lt;@string&gt;&amp;quot;Copyright © Company1&amp;quot;&lt;/@string&gt;&lt;@op&gt;]&lt;/@op&gt;
-                          FILES file1&lt;@op&gt;.&lt;/@op&gt;json &lt;@op&gt;[&lt;/@op&gt;file2&lt;@op&gt;.&lt;/@op&gt;json &lt;@op&gt;.&lt;/@op&gt;&lt;@op&gt;.&lt;/@op&gt;&lt;@op&gt;.&lt;/@op&gt;&lt;@op&gt;]&lt;/@op&gt;
-                          OUTPUTS File1&lt;@op&gt;.&lt;/@op&gt;qml &lt;@op&gt;[&lt;/@op&gt;File2&lt;@op&gt;.&lt;/@op&gt;qml &lt;@op&gt;.&lt;/@op&gt;&lt;@op&gt;.&lt;/@op&gt;&lt;@op&gt;.&lt;/@op&gt;&lt;@op&gt;]&lt;/@op&gt;
+                          [CURVE_RENDERER]
+                          [ASYNCHRONOUS_SHAPES]
+                          [OPTIMIZE_PATHS]
+                          [OUTLINE_STROKE_MODE]
+                          [TYPE_NAME &quot;MyShapeName&quot;]
+                          [COPYRIGHT_STATEMENT &quot;Copyright © Company1&quot;]
+                          FILES file1.json [file2.json ...]
+                          OUTPUTS File1.qml [File2.qml ...]
                           )
 </code></pre>
         <p>If <a href="https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html#versionless-commands">versionless commands</a> are disabled, use <code>qt6_target_qml_from_lottie()</code> instead. It supports the same set of arguments as this command.</p>
@@ -65,7 +65,7 @@
         <p>Optionally, a <code>COPYRIGHT_STATEMENT</code> argument can be provided to insert copyright information into the generated files.</p>
         <aside class="admonition note" role="note"><p><b>Note: </b>Certain characters must be escaped for command line use or you may see build errors on some platforms.</p></aside>
         <p><code>TYPE_NAME</code> is also optional, and can be used to replace all instances of the <a href="https://doc.qt.io/qt-6/qml-qtquick-shapes-shape.html">Shape</a> type in the generated file with a custom type. This can be useful to make general customizations to all the shapes in the provided Lottie files. The <code>TYPE_NAME</code> should refer to a QML type which is available in the <code>target</code> QML module.</p>
-        <p>The options <code>CURVE_RENDERER</code>, <code>ASYNCHRONOUS_SHAPES</code>, <code>OPTIMIZE_PATHS</code> and <code>OUTLINE_STROKE_MODE</code> correspond to the <code>&lt;@op&gt;-&lt;/@op&gt;&lt;@op&gt;-&lt;/@op&gt;curve&lt;@op&gt;-&lt;/@op&gt;renderer</code>, <code>&lt;@op&gt;-&lt;/@op&gt;&lt;@op&gt;-&lt;/@op&gt;asynchronous&lt;@op&gt;-&lt;/@op&gt;shapes</code>, <code>&lt;@op&gt;-&lt;/@op&gt;&lt;@op&gt;-&lt;/@op&gt;optimize&lt;@op&gt;-&lt;/@op&gt;paths</code> and <code>&lt;@op&gt;-&lt;/@op&gt;&lt;@op&gt;-&lt;/@op&gt;outline&lt;@op&gt;-&lt;/@op&gt;stroke&lt;@op&gt;-&lt;/@op&gt;mode</code> in <a href="lottietoqml.html">lottietoqml</a> respectively.</p>
+        <p>The options <code>CURVE_RENDERER</code>, <code>ASYNCHRONOUS_SHAPES</code>, <code>OPTIMIZE_PATHS</code> and <code>OUTLINE_STROKE_MODE</code> correspond to the <code>--curve-renderer</code>, <code>--asynchronous-shapes</code>, <code>--optimize-paths</code> and <code>--outline-stroke-mode</code> in <a href="lottietoqml.html">lottietoqml</a> respectively.</p>
         </section>
     </section>
     </main>

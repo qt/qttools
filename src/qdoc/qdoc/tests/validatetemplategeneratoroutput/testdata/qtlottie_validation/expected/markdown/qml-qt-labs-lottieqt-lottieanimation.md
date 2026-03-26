@@ -20,20 +20,20 @@ For the full list of devations, please see see the [Limitations](qtlottieanimati
 
 The following example shows a simple usage of the [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) type
 ```qml
-<@type>LottieAnimation</@type> {
-    <@name>loops</@name>: <@number>2</@number>
-    <@name>quality</@name>: <@name>LottieAnimation</@name>.<@name>MediumQuality</@name>
-    <@name>source</@name>: <@string>&quot;animation.json&quot;</@string>
-    <@name>autoPlay</@name>: <@number>false</@number>
-    <@name>onStatusChanged</@name>: {
-        <@keyword>if</@keyword> (<@name>status</@name> <@op>===</@op> <@name>LottieAnimation</@name>.<@name>Ready</@name>) {
-            <@comment>// any acvities needed before</@comment>
-            <@comment>// playing starts go here</@comment>
-            <@name>gotoAndPlay</@name>(<@name>startFrame</@name>);
+LottieAnimation {
+    loops: 2
+    quality: LottieAnimation.MediumQuality
+    source: "animation.json"
+    autoPlay: false
+    onStatusChanged: {
+        if (status === LottieAnimation.Ready) {
+            // any acvities needed before
+            // playing starts go here
+            gotoAndPlay(startFrame);
         }
     }
-    <@name>onFinished</@name>: {
-        <@name>console</@name>.<@name>log</@name>(<@string>&quot;Finished playing&quot;</@string>)
+    onFinished: {
+        console.log("Finished playing")
     }
 }
 
@@ -46,8 +46,8 @@ The following example shows a simple usage of the [LottieAnimation](qml-qt-labs-
 
 Internally, the rendered frame data is cached to improve performance. You can control the memory usage by setting the QLOTTIE_RENDER_CACHE_SIZE environment variable (default value is 2).
 You can monitor the rendering performance by turning on two logging categories:
-- `qt<@op>.</@op>lottieqt<@op>.</@op>lottie<@op>.</@op>render` - Provides information how the animation is rendered
-- `qt<@op>.</@op>lottieqt<@op>.</@op>lottie<@op>.</@op>render<@op>.</@op>thread` - Provides information how the rendering process proceeds.
+- `qt.lottieqt.lottie.render` - Provides information how the animation is rendered
+- `qt.lottieqt.lottie.render.thread` - Provides information how the rendering process proceeds.
 
 Specifically, you can monitor does the frame cache gets constantly full, or does the rendering process have to wait for frames to become ready. The first case implies that the animation is too complex, and the rendering cannot keep up the pace. Try making the animation simpler, or optimize the QML scene.
 
@@ -94,7 +94,7 @@ Specifically, you can monitor does the frame cache gets constantly full, or does
 ### autoPlay : bool
 
 Defines whether the player will start playing animation automatically after the animation file has been loaded.
-The default value is `<@keyword>true</@keyword>`.
+The default value is `true`.
 <a id="direction-prop"></a>
 ### direction : enumeration
 
@@ -114,11 +114,11 @@ Frame number of the end of the animation. The value is available after the anima
 This property holds the frame rate value of the Lottie animation.
 `frameRate` changes after the asset has been loaded. Changing the frame rate does not have effect before that, as the value defined in the asset overrides the value. To change the frame rate, you can write:
 ```qml
-<@type>LottieAnimation</@type> {
-    <@name>source</@name>: <@string>&quot;animation.json&quot;</@string>
-    <@name>onStatusChanged</@name>: {
-        <@keyword>if</@keyword> (<@name>status</@name> <@op>===</@op> <@name>LottieAnimation</@name>.<@name>Ready</@name>)
-            <@name>frameRate</@name> <@op>=</@op> <@number>60</@number>;
+LottieAnimation {
+    source: "animation.json"
+    onStatusChanged: {
+        if (status === LottieAnimation.Ready)
+            frameRate = 60;
     }
 }
 
@@ -127,12 +127,12 @@ This property holds the frame rate value of the Lottie animation.
 <a id="loops-prop"></a>
 ### loops : int
 
-This property holds the number of loops the player will repeat. The value `LottieAnimation<@op>.</@op>Infinite` means that the the player repeats the animation continuously.
-The default value is `<@number>1</@number>`.
+This property holds the number of loops the player will repeat. The value `LottieAnimation.Infinite` means that the the player repeats the animation continuously.
+The default value is `1`.
 <a id="quality-prop"></a>
 ### quality : enumeration
 
-Speficies the rendering quality of the lottie player. If `LowQuality` is selected the rendering will happen into a frame buffer object, whereas with other options, the rendering will be done onto `<@type>QImage</@type>` (which in turn will be rendered on the screen).
+Speficies the rendering quality of the lottie player. If `LowQuality` is selected the rendering will happen into a frame buffer object, whereas with other options, the rendering will be done onto `QImage` (which in turn will be rendered on the screen).
 | Constant | Description |
 | --- | --- |
 | `LottieAnimation.LowQuality` | Antialiasing or a smooth pixmap transformation algorithm are not used|
@@ -162,12 +162,12 @@ This property holds the current status of the [LottieAnimation](qml-qt-labs-lott
 
 For example, you could implement `onStatusChanged` signal handler to monitor progress of loading an animation as follows:
 ```qml
-<@type>LottieAnimation</@type> {
-    <@name>source</@name>: <@string>&quot;animation.json&quot;</@string>
-    <@name>autoPlay</@name>: <@number>false</@number>
-    <@name>onStatusChanged</@name>: {
-        <@keyword>if</@keyword> (<@name>status</@name> <@op>===</@op> <@name>LottieAnimation</@name>.<@name>Ready</@name>)
-            <@name>start</@name>();
+LottieAnimation {
+    source: "animation.json"
+    autoPlay: false
+    onStatusChanged: {
+        if (status === LottieAnimation.Ready)
+            start();
     }
 }
 
@@ -185,7 +185,7 @@ This signal is emitted when the player has finished playing. In case of looping,
 ### double getDuration(bool inFrames)
 
 Returns the duration of the currently playing asset.
-If a given _inFrames_ is `<@keyword>true</@keyword>`, the return value is the duration in number of frames. Otherwise, returns the duration in seconds.
+If a given _inFrames_ is `true`, the return value is the duration in number of frames. Otherwise, returns the duration in seconds.
 <a id="gotoAndPlay-method"></a>
 ### void gotoAndPlay(int frame)
 
@@ -193,7 +193,7 @@ Plays the asset from the given _frame_.
 <a id="gotoAndPlay-method-1"></a>
 ### bool gotoAndPlay(string frameMarker)
 
-Plays the asset from the frame that has a marker with the given _frameMarker_. Returns `<@keyword>true</@keyword>` if the frameMarker was found, `<@keyword>false</@keyword>` otherwise.
+Plays the asset from the frame that has a marker with the given _frameMarker_. Returns `true` if the frameMarker was found, `false` otherwise.
 <a id="gotoAndStop-method"></a>
 ### void gotoAndStop(int frame)
 
@@ -201,7 +201,7 @@ Moves the playhead to the given _frame_ and stops.
 <a id="gotoAndStop-method-1"></a>
 ### bool gotoAndStop(string frameMarker)
 
-Moves the playhead to the given marker and stops. Returns `<@keyword>true</@keyword>` if _frameMarker_ was found, `<@keyword>false</@keyword>` otherwise.
+Moves the playhead to the given marker and stops. Returns `true` if _frameMarker_ was found, `false` otherwise.
 <a id="pause-method"></a>
 ### void pause()
 

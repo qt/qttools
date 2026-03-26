@@ -71,20 +71,20 @@
         <section>
         <h2>Example Usage</h2>
         <p>The following example shows a simple usage of the <a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> type</p>
-        <pre class="qml" translate="no"><code>&lt;@type&gt;LottieAnimation&lt;/@type&gt; {
-    &lt;@name&gt;loops&lt;/@name&gt;: &lt;@number&gt;2&lt;/@number&gt;
-    &lt;@name&gt;quality&lt;/@name&gt;: &lt;@name&gt;LottieAnimation&lt;/@name&gt;.&lt;@name&gt;MediumQuality&lt;/@name&gt;
-    &lt;@name&gt;source&lt;/@name&gt;: &lt;@string&gt;&amp;quot;animation.json&amp;quot;&lt;/@string&gt;
-    &lt;@name&gt;autoPlay&lt;/@name&gt;: &lt;@number&gt;false&lt;/@number&gt;
-    &lt;@name&gt;onStatusChanged&lt;/@name&gt;: {
-        &lt;@keyword&gt;if&lt;/@keyword&gt; (&lt;@name&gt;status&lt;/@name&gt; &lt;@op&gt;===&lt;/@op&gt; &lt;@name&gt;LottieAnimation&lt;/@name&gt;.&lt;@name&gt;Ready&lt;/@name&gt;) {
-            &lt;@comment&gt;// any acvities needed before&lt;/@comment&gt;
-            &lt;@comment&gt;// playing starts go here&lt;/@comment&gt;
-            &lt;@name&gt;gotoAndPlay&lt;/@name&gt;(&lt;@name&gt;startFrame&lt;/@name&gt;);
+        <pre class="qml" translate="no"><code>LottieAnimation {
+    loops: 2
+    quality: LottieAnimation.MediumQuality
+    source: &quot;animation.json&quot;
+    autoPlay: false
+    onStatusChanged: {
+        if (status === LottieAnimation.Ready) {
+            // any acvities needed before
+            // playing starts go here
+            gotoAndPlay(startFrame);
         }
     }
-    &lt;@name&gt;onFinished&lt;/@name&gt;: {
-        &lt;@name&gt;console&lt;/@name&gt;.&lt;@name&gt;log&lt;/@name&gt;(&lt;@string&gt;&amp;quot;Finished playing&amp;quot;&lt;/@string&gt;)
+    onFinished: {
+        console.log(&quot;Finished playing&quot;)
     }
 }
 </code></pre>
@@ -94,54 +94,54 @@
         <h2>Rendering Performance</h2>
         <p>Internally, the rendered frame data is cached to improve performance. You can control the memory usage by setting the QLOTTIE_RENDER_CACHE_SIZE environment variable (default value is 2).</p>
         <p>You can monitor the rendering performance by turning on two logging categories:</p>
-<ul>        <li><code>qt&lt;@op&gt;.&lt;/@op&gt;lottieqt&lt;@op&gt;.&lt;/@op&gt;lottie&lt;@op&gt;.&lt;/@op&gt;render</code> - Provides information how the animation is rendered</li>
-        <li><code>qt&lt;@op&gt;.&lt;/@op&gt;lottieqt&lt;@op&gt;.&lt;/@op&gt;lottie&lt;@op&gt;.&lt;/@op&gt;render&lt;@op&gt;.&lt;/@op&gt;thread</code> - Provides information how the rendering process proceeds.</li>
+<ul>        <li><code>qt.lottieqt.lottie.render</code> - Provides information how the animation is rendered</li>
+        <li><code>qt.lottieqt.lottie.render.thread</code> - Provides information how the rendering process proceeds.</li>
 </ul>        <p>Specifically, you can monitor does the frame cache gets constantly full, or does the rendering process have to wait for frames to become ready. The first case implies that the animation is too complex, and the rendering cannot keep up the pace. Try making the animation simpler, or optimize the QML scene.</p>
         </section>
     </section>
 
     <h2>Property Documentation</h2>
-    <h3 class="fn" id="autoPlay-prop">autoPlay : bool</h3>
+    <h3 class="fn" id="autoPlay-prop"><span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#autoPlay-prop">autoPlay</a></span> : <span class="type">bool</span></h3>
         <p>Defines whether the player will start playing animation automatically after the animation file has been loaded.</p>
-        <p>The default value is <code>&lt;@keyword&gt;true&lt;/@keyword&gt;</code>.</p>
-    <h3 class="fn" id="direction-prop">direction : enumeration</h3>
+        <p>The default value is <code>true</code>.</p>
+    <h3 class="fn" id="direction-prop"><span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#direction-prop">direction</a></span> : <span class="type">enumeration</span></h3>
         <p>This property holds the direction of rendering.</p>
         <div class="table"><table class="valuelist">
         <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
 <tr><td class="topAlign"><code translate="no">LottieAnimation.Forward</code></td><td class="topAlign">Forward direction (Default)</td></tr>
 <tr><td class="topAlign"><code translate="no">LottieAnimation.Reverse</code></td><td class="topAlign">Reverse direction</td></tr>
         </table></div>
-    <h3 class="fn" id="endFrame-prop">endFrame : int</h3>
+    <h3 class="fn" id="endFrame-prop"><span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#endFrame-prop">endFrame</a></span> : <span class="type">int</span></h3>
         <p>Frame number of the end of the animation. The value is available after the animation has been loaded and ready to play.</p>
-    <h3 class="fn" id="frameRate-prop">frameRate : int</h3>
+    <h3 class="fn" id="frameRate-prop"><span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#frameRate-prop">frameRate</a></span> : <span class="type">int</span></h3>
         <p>This property holds the frame rate value of the Lottie animation.</p>
         <p><code>frameRate</code> changes after the asset has been loaded. Changing the frame rate does not have effect before that, as the value defined in the asset overrides the value. To change the frame rate, you can write:</p>
-        <pre class="qml" translate="no"><code>&lt;@type&gt;LottieAnimation&lt;/@type&gt; {
-    &lt;@name&gt;source&lt;/@name&gt;: &lt;@string&gt;&amp;quot;animation.json&amp;quot;&lt;/@string&gt;
-    &lt;@name&gt;onStatusChanged&lt;/@name&gt;: {
-        &lt;@keyword&gt;if&lt;/@keyword&gt; (&lt;@name&gt;status&lt;/@name&gt; &lt;@op&gt;===&lt;/@op&gt; &lt;@name&gt;LottieAnimation&lt;/@name&gt;.&lt;@name&gt;Ready&lt;/@name&gt;)
-            &lt;@name&gt;frameRate&lt;/@name&gt; &lt;@op&gt;=&lt;/@op&gt; &lt;@number&gt;60&lt;/@number&gt;;
+        <pre class="qml" translate="no"><code>LottieAnimation {
+    source: &quot;animation.json&quot;
+    onStatusChanged: {
+        if (status === LottieAnimation.Ready)
+            frameRate = 60;
     }
 }
 </code></pre>
-    <h3 class="fn" id="loops-prop">loops : int</h3>
-        <p>This property holds the number of loops the player will repeat. The value <code>LottieAnimation&lt;@op&gt;.&lt;/@op&gt;Infinite</code> means that the the player repeats the animation continuously.</p>
-        <p>The default value is <code>&lt;@number&gt;1&lt;/@number&gt;</code>.</p>
-    <h3 class="fn" id="quality-prop">quality : enumeration</h3>
-        <p>Speficies the rendering quality of the lottie player. If <code>LowQuality</code> is selected the rendering will happen into a frame buffer object, whereas with other options, the rendering will be done onto <code>&lt;@type&gt;QImage&lt;/@type&gt;</code> (which in turn will be rendered on the screen).</p>
+    <h3 class="fn" id="loops-prop"><span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#loops-prop">loops</a></span> : <span class="type">int</span></h3>
+        <p>This property holds the number of loops the player will repeat. The value <code>LottieAnimation.Infinite</code> means that the the player repeats the animation continuously.</p>
+        <p>The default value is <code>1</code>.</p>
+    <h3 class="fn" id="quality-prop"><span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#quality-prop">quality</a></span> : <span class="type">enumeration</span></h3>
+        <p>Speficies the rendering quality of the lottie player. If <code>LowQuality</code> is selected the rendering will happen into a frame buffer object, whereas with other options, the rendering will be done onto <code>QImage</code> (which in turn will be rendered on the screen).</p>
         <div class="table"><table class="valuelist">
         <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
 <tr><td class="topAlign"><code translate="no">LottieAnimation.LowQuality</code></td><td class="topAlign">Antialiasing or a smooth pixmap transformation algorithm are not used</td></tr>
 <tr><td class="topAlign"><code translate="no">LottieAnimation.MediumQuality</code></td><td class="topAlign">Smooth pixmap transformation algorithm is used but no antialiasing (Default)</td></tr>
 <tr><td class="topAlign"><code translate="no">LottieAnimation.HighQuality</code></td><td class="topAlign">Antialiasing and a smooth pixmap tranformation algorithm are both used</td></tr>
         </table></div>
-    <h3 class="fn" id="source-prop">source : url</h3>
+    <h3 class="fn" id="source-prop"><span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#source-prop">source</a></span> : <span class="type">url</span></h3>
         <p>The source of the Lottie asset that <a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> plays.</p>
         <p><a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> can handle any URL scheme supported by Qt. The URL may be absolute, or relative to the URL of the component.</p>
         <p>Setting the source property starts loading the animation asynchronously. To monitor progress of loading, connect to the <a href="qml-qt-labs-lottieqt-lottieanimation.html#status-prop">status</a> change signal.</p>
-    <h3 class="fn" id="startFrame-prop">startFrame : int</h3>
+    <h3 class="fn" id="startFrame-prop"><span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#startFrame-prop">startFrame</a></span> : <span class="type">int</span></h3>
         <p>Frame number of the start of the animation. The value is available after the animation has been loaded and ready to play.</p>
-    <h3 class="fn" id="status-prop">status : enumeration</h3>
+    <h3 class="fn" id="status-prop"><span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#status-prop">status</a></span> : <span class="type">enumeration</span></h3>
         <p>This property holds the current status of the <a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> element.</p>
         <div class="table"><table class="valuelist">
         <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
@@ -151,39 +151,39 @@
 <tr><td class="topAlign"><code translate="no">LottieAnimation.Error</code></td><td class="topAlign">An error occurred while loading the animation</td></tr>
         </table></div>
         <p>For example, you could implement <code>onStatusChanged</code> signal handler to monitor progress of loading an animation as follows:</p>
-        <pre class="qml" translate="no"><code>&lt;@type&gt;LottieAnimation&lt;/@type&gt; {
-    &lt;@name&gt;source&lt;/@name&gt;: &lt;@string&gt;&amp;quot;animation.json&amp;quot;&lt;/@string&gt;
-    &lt;@name&gt;autoPlay&lt;/@name&gt;: &lt;@number&gt;false&lt;/@number&gt;
-    &lt;@name&gt;onStatusChanged&lt;/@name&gt;: {
-        &lt;@keyword&gt;if&lt;/@keyword&gt; (&lt;@name&gt;status&lt;/@name&gt; &lt;@op&gt;===&lt;/@op&gt; &lt;@name&gt;LottieAnimation&lt;/@name&gt;.&lt;@name&gt;Ready&lt;/@name&gt;)
-            &lt;@name&gt;start&lt;/@name&gt;();
+        <pre class="qml" translate="no"><code>LottieAnimation {
+    source: &quot;animation.json&quot;
+    autoPlay: false
+    onStatusChanged: {
+        if (status === LottieAnimation.Ready)
+            start();
     }
 }
 </code></pre>
     <h2>Signal Documentation</h2>
-    <h3 class="fn" id="finished-signal">finished()</h3>
+    <h3 class="fn" id="finished-signal"><span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#finished-signal">finished</a></span>()</h3>
         <p>This signal is emitted when the player has finished playing. In case of looping, the signal is emitted when the last loop has been finished.</p>
     <h2>Method Documentation</h2>
-    <h3 class="fn" id="getDuration-method">double getDuration(bool inFrames)</h3>
+    <h3 class="fn" id="getDuration-method"><span class="type">double</span> <span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#getDuration-method">getDuration</a></span>(<span class="type">bool</span> <i>inFrames</i>)</h3>
         <p>Returns the duration of the currently playing asset.</p>
-        <p>If a given <i>inFrames</i> is <code>&lt;@keyword&gt;true&lt;/@keyword&gt;</code>, the return value is the duration in number of frames. Otherwise, returns the duration in seconds.</p>
-    <h3 class="fn" id="gotoAndPlay-method">void gotoAndPlay(int frame)</h3>
+        <p>If a given <i>inFrames</i> is <code>true</code>, the return value is the duration in number of frames. Otherwise, returns the duration in seconds.</p>
+    <h3 class="fn" id="gotoAndPlay-method"><span class="type">void</span> <span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#gotoAndPlay-method">gotoAndPlay</a></span>(<span class="type">int</span> <i>frame</i>)</h3>
         <p>Plays the asset from the given <i>frame</i>.</p>
-    <h3 class="fn" id="gotoAndPlay-method-1">bool gotoAndPlay(string frameMarker)</h3>
-        <p>Plays the asset from the frame that has a marker with the given <i>frameMarker</i>. Returns <code>&lt;@keyword&gt;true&lt;/@keyword&gt;</code> if the frameMarker was found, <code>&lt;@keyword&gt;false&lt;/@keyword&gt;</code> otherwise.</p>
-    <h3 class="fn" id="gotoAndStop-method">void gotoAndStop(int frame)</h3>
+    <h3 class="fn" id="gotoAndPlay-method-1"><span class="type">bool</span> <span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#gotoAndPlay-method-1">gotoAndPlay</a></span>(<span class="type">string</span> <i>frameMarker</i>)</h3>
+        <p>Plays the asset from the frame that has a marker with the given <i>frameMarker</i>. Returns <code>true</code> if the frameMarker was found, <code>false</code> otherwise.</p>
+    <h3 class="fn" id="gotoAndStop-method"><span class="type">void</span> <span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#gotoAndStop-method">gotoAndStop</a></span>(<span class="type">int</span> <i>frame</i>)</h3>
         <p>Moves the playhead to the given <i>frame</i> and stops.</p>
-    <h3 class="fn" id="gotoAndStop-method-1">bool gotoAndStop(string frameMarker)</h3>
-        <p>Moves the playhead to the given marker and stops. Returns <code>&lt;@keyword&gt;true&lt;/@keyword&gt;</code> if <i>frameMarker</i> was found, <code>&lt;@keyword&gt;false&lt;/@keyword&gt;</code> otherwise.</p>
-    <h3 class="fn" id="pause-method">void pause()</h3>
+    <h3 class="fn" id="gotoAndStop-method-1"><span class="type">bool</span> <span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#gotoAndStop-method-1">gotoAndStop</a></span>(<span class="type">string</span> <i>frameMarker</i>)</h3>
+        <p>Moves the playhead to the given marker and stops. Returns <code>true</code> if <i>frameMarker</i> was found, <code>false</code> otherwise.</p>
+    <h3 class="fn" id="pause-method"><span class="type">void</span> <span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#pause-method">pause</a></span>()</h3>
         <p>Pauses the playback.</p>
-    <h3 class="fn" id="play-method">void play()</h3>
+    <h3 class="fn" id="play-method"><span class="type">void</span> <span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#play-method">play</a></span>()</h3>
         <p>Starts or continues playing from the current position.</p>
-    <h3 class="fn" id="start-method">void start()</h3>
+    <h3 class="fn" id="start-method"><span class="type">void</span> <span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#start-method">start</a></span>()</h3>
         <p>Starts playing the animation from the beginning.</p>
-    <h3 class="fn" id="stop-method">void stop()</h3>
+    <h3 class="fn" id="stop-method"><span class="type">void</span> <span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#stop-method">stop</a></span>()</h3>
         <p>Stops the playback and returns to <a href="qml-qt-labs-lottieqt-lottieanimation.html#startFrame-prop">startFrame</a>.</p>
-    <h3 class="fn" id="togglePause-method">void togglePause()</h3>
+    <h3 class="fn" id="togglePause-method"><span class="type">void</span> <span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#togglePause-method">togglePause</a></span>()</h3>
         <p>Toggles the status of player between playing and paused states.</p>
     </main>
     <footer>

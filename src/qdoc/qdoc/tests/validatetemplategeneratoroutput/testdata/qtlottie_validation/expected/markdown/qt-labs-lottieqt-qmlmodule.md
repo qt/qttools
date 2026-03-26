@@ -5,7 +5,7 @@ Provides QML types to display Lottie graphics and animations.
 
 Import the types using the the following statement:
 ```cpp
-import <@type>Qt</@type><@op>.</@op>labs<@op>.</@op>lottieqt
+import Qt.labs.lottieqt
 
 ```
 

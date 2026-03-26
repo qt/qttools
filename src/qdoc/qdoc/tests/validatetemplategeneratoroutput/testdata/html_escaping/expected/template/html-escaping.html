@@ -13,7 +13,7 @@
     <section class="content" aria-label="Description">
         <p>This tests the &quot;ampersand&quot; (&amp;) and apostrophe (&apos;) characters in template output.</p>
         <p>See also <a href="html-escaping.html">the &quot;escaping&quot; page &amp; friends</a>.</p>
-        <pre class="cpp" translate="no"><code>&lt;@keyword&gt;if&lt;/@keyword&gt; (x &lt;@op&gt;&amp;lt;&lt;/@op&gt; &lt;@number&gt;0&lt;/@number&gt;) &lt;@keyword&gt;return&lt;/@keyword&gt;; &lt;@comment&gt;// &amp;lt;/code&amp;gt; must not break out&lt;/@comment&gt;
+        <pre class="cpp" translate="no"><code>if (x &lt; 0) return; // &lt;/code&gt; must not break out
 </code></pre>
     </section>
     </main>

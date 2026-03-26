@@ -22,13 +22,13 @@
         </section>
         <section>
         <h2>Usage</h2>
-        <p>The basic usage of <code>lottietoqml</code> is to provide an input file and an output file: <code>lottietoqml input&lt;@op&gt;.&lt;/@op&gt;json output&lt;@op&gt;.&lt;/@op&gt;qml</code>. This will read the <code>input&lt;@op&gt;.&lt;/@op&gt;json</code> file and convert it into the corresponding Qt Quick scene in <code>output&lt;@op&gt;.&lt;/@op&gt;qml</code>, which can then be used as part of a Qt Quick application.</p>
+        <p>The basic usage of <code>lottietoqml</code> is to provide an input file and an output file: <code>lottietoqml input.json output.qml</code>. This will read the <code>input.json</code> file and convert it into the corresponding Qt Quick scene in <code>output.qml</code>, which can then be used as part of a Qt Quick application.</p>
         <p>In addition, it supports the following options:</p>
         <div class="table"><table class="generic">
 <thead><tr class="qt-style"><th>Option</th><th>Description</th></tr></thead>
 <tr valign="top"><td>–copyright-statement &lt;string&gt;</td><td>Adds &lt;string&gt; as a comment at the beginning of the generated file.</td></tr>
 <tr valign="top"><td>-c, –curve-renderer</td><td>Enables the curve renderer backend for Qt Quick Shapes. This enables smooth, antialiased shapes in the scene without multi-sampling, but at some extra cost.</td></tr>
-<tr valign="top"><td>&lt;@op&gt;-&lt;/@op&gt;a, &lt;@op&gt;-&lt;/@op&gt;&lt;@op&gt;-&lt;/@op&gt;asynchronous&lt;@op&gt;-&lt;/@op&gt;shapes</td><td>Enables the {QtQuick.Shapes::Shape::asynchronous}{asynchronous} mode on all Shape elements in the generated scene. This may improve CPU utilization and responsiveness.</td></tr>
+<tr valign="top"><td>-a, --asynchronous-shapes</td><td>Enables the {QtQuick.Shapes::Shape::asynchronous}{asynchronous} mode on all Shape elements in the generated scene. This may improve CPU utilization and responsiveness.</td></tr>
 <tr valign="top"><td>-p, –optimize-paths</td><td>Enables optimization of paths before committing them to the QML file, potentially making them faster to load and render later.</td></tr>
 <tr valign="top"><td>–outline-stroke-mode</td><td>Stroke the outline (contour) of the filled shape instead of the original path.</td></tr>
 <tr valign="top"><td>-t, –type-name &lt;string&gt;</td><td>In place of Shape, the output will use the type name &lt;string&gt; instead. This is enables using a custom item to override the default behavior of Shape items.</td></tr>

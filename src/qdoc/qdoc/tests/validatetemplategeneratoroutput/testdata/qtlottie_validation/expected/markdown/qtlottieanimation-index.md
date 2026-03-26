@@ -10,7 +10,7 @@ Finally, the [VectorImage](https://doc.qt.io/qt-6/qml-qtquick-vectorimage.html) 
 
 Import the types using the the following statement:
 ```cpp
-import <@type>Qt</@type><@op>.</@op>labs<@op>.</@op>lottieqt
+import Qt.labs.lottieqt
 
 ```
 
