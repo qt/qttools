@@ -4616,6 +4616,8 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
 
     if (qcn->isSingleton())
         title.append(" (Singleton)");
+    else if (qcn->isUncreatable())
+        title.append(" (Uncreatable)");
     // TODO: for ITS attribute, only apply translate="no" on qcn->fullTitle(),
     // not its suffix (which should be translated). generateHeader doesn't
     // allow this kind of input, the title isn't supposed to be structured.
@@ -4625,15 +4627,19 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
     generateQmlRequisites(qcn);
     generateStatus(qcn);
 
-    if (qcn->isSingleton()) {
+    if (qcn->isSingleton() || qcn->isUncreatable()) {
         m_writer->writeStartElement(dbNamespace, "note");
         m_writer->writeStartElement(dbNamespace, "para");
         m_writer->writeStartElement(dbNamespace, "emphasis");
         m_writer->writeAttribute("role", "bold");
         m_writer->writeCharacters("Note: ");
         m_writer->writeEndElement(); // emphasis
-        m_writer->writeCharacters("This type is a QML singleton. "
-                                  "There is only one instance of this type in the QML engine.");
+        if (qcn->isSingleton())
+            m_writer->writeCharacters("This type is a QML singleton. "
+                                      "There is only one instance of this type in the QML engine.");
+        else
+            m_writer->writeCharacters("This is an uncreatable type. "
+                                      "It cannot be instantiated in QML.");
         m_writer->writeEndElement(); // para
         m_writer->writeEndElement(); // note
     }

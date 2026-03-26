@@ -1303,8 +1303,7 @@ private:
 };
 
 /*!
-  Detects if a class cursor contains declarations specific to non-instantiable
-  QML types:
+  Detects if a class cursor contains declarations specific to QML types:
 
   \details {QML_SINGLETON macro}
       Returns QmlNativeTypeAttribute::Singleton if the macro is detected.
@@ -1316,7 +1315,17 @@ private:
       \endlist
   \enddetails
 
-  This method looks for the above expansion artifacts to detect the macro.
+  \details {QML_UNCREATABLE macro}
+      Returns ClassNode::QmlNativeTypeAttribute::Uncreatable if the macro is detected.
+
+      The \e QML_UNCREATABLE macro expands to multiple items including:
+      \list
+          \li \c {Q_CLASSINFO("QML.Creatable", "false")}
+          \li \c {enum class QmlIsUncreatable}
+      \endlist
+  \enddetails
+
+  This method looks for the above expansion artifacts to detect the macros.
   If no artifacts are found, returns QmlNativeTypeAttribute::None
   (that is, a standard instantiable QML type).
 */
@@ -1325,16 +1334,21 @@ QmlNativeTypeAttribute ClangVisitor::detectQmlNativeTypeAttribute(CXCursor curso
     QmlNativeTypeAttribute attr{ QmlNativeTypeAttribute::None };
 
     visitChildrenLambda(cursor, [&attr](CXCursor child) -> CXChildVisitResult {
-        // Look for Q_CLASSINFO calls that indicate QML.Singleton
+        // Look for Q_CLASSINFO calls that indicate QML.Singleton or QML.Creatable = false
         if (clang_getCursorKind(child) == CXCursor_CallExpr) {
             CXSourceRange range = clang_getCursorExtent(child);
             QString sourceText = getSpelling(range);
-            // More precise matching: look for the exact Q_CLASSINFO pattern
-            static const QRegularExpression qmlSingletonPattern(
-                R"(Q_CLASSINFO\s*\(\s*["\']QML\.Singleton["\']\s*,\s*["\']true["\']\s*\))");
-            if (qmlSingletonPattern.match(sourceText).hasMatch()) {
-                attr = QmlNativeTypeAttribute::Singleton;
-                return CXChildVisit_Break;
+            static const QRegularExpression qmlClassInfoPattern(
+                    R"(Q_CLASSINFO\s*\(\s*["\']QML\.(Singleton|Creatable)["\']\s*,\s*["\'](true|false)["\']\s*\))");
+            const auto match = qmlClassInfoPattern.match(sourceText);
+            if (match.hasMatch()) {
+                if (match.captured(1) == "Singleton"_L1 && match.captured(2) == "true"_L1) {
+                    attr = QmlNativeTypeAttribute::Singleton;
+                    return CXChildVisit_Break;
+                } else if (match.captured(1) == "Creatable"_L1 && match.captured(2) == "false"_L1) {
+                    attr = QmlNativeTypeAttribute::Uncreatable;
+                    return CXChildVisit_Break;
+                }
             }
         }
 
@@ -1343,6 +1357,9 @@ QmlNativeTypeAttribute ClangVisitor::detectQmlNativeTypeAttribute(CXCursor curso
             QString spelling = fromCXString(clang_getCursorSpelling(child));
             if (spelling == "QmlIsSingleton"_L1) {
                 attr = QmlNativeTypeAttribute::Singleton;
+                return CXChildVisit_Break;
+            } else if (spelling == "QmlIsUncreatable"_L1) {
+                attr = QmlNativeTypeAttribute::Uncreatable;
                 return CXChildVisit_Break;
             }
         }

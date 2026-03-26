@@ -1362,6 +1362,8 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
 
     if (qcn->isSingleton())
         htmlTitle.append(" (Singleton)"_L1);
+    else if (qcn->isUncreatable())
+        htmlTitle.append(" (Uncreatable)"_L1);
 
     generateHeader(htmlTitle, qcn, marker);
     Sections sections(qcn);
@@ -1375,6 +1377,9 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
     if (qcn->isSingleton()) {
         out() << "<p><strong>Note:</strong> This type is a QML singleton. "_L1
               << "There is only one instance of this type in the QML engine.</p>\n"_L1;
+    } else if (qcn->isUncreatable()) {
+        out() << "<p><strong>Note:</strong> This is an uncreatable type. "_L1
+              << "It cannot be instantiated in QML.</p>\n"_L1;
     }
 
     QString allQmlMembersLink;

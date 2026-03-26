@@ -269,6 +269,8 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         qmlTypeNode->setAbstract(abstract);
         if (attributes.value(QLatin1String("singleton")) == QLatin1String("true"))
             qmlTypeNode->setSingleton();
+        else if (attributes.value(QLatin1String("uncreatable")) == QLatin1String("true"))
+            qmlTypeNode->setUncreatable();
         QString qmlFullBaseName = attributes.value(QLatin1String("qml-base-type")).toString();
         if (!qmlFullBaseName.isEmpty()) {
             qmlTypeNode->setQmlBaseName(qmlFullBaseName);
@@ -1102,6 +1104,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         const auto *qmlTypeNode = static_cast<const QmlTypeNode *>(node);
         if (qmlTypeNode->isSingleton())
             writer.writeAttribute("singleton", "true");
+        if (qmlTypeNode->isUncreatable())
+            writer.writeAttribute("uncreatable", "true");
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;

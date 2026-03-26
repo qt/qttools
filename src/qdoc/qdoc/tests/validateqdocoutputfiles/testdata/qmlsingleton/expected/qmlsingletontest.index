@@ -6,6 +6,11 @@
             <class name="MySingleton2" fullname="TestNamespace::MySingleton2" href="testnamespace-mysingleton2.html" status="active" access="public" location="collisionsingleton.h" documented="true" bases="QObject" module="TestModule" brief="A different C++ class with same QML name but no QML_SINGLETON"/>
         </namespace>
         <class name="GhostSingleton" href="ghostsingleton.html" status="active" access="public" location="ghostsingleton.h" documented="true" bases="QObject" module="TestModule" brief="A C++ class with QML_SINGLETON but no \qmltype documentation"/>
+        <class name="MyBase" href="mybase.html" status="active" access="public" location="uncreatable.h" documented="true" bases="QObject" module="TestModule" brief="A C++ class for a QML uncreatable type">
+            <function name="MyBase" fullname="MyBase::MyBase" href="mybase.html#MyBase" status="active" access="public" location="uncreatable.h" documented="true" meta="constructor" explicit="true" signature="MyBase(QObject *parent)">
+                <parameter type="QObject *" name="parent" default="nullptr"/>
+            </function>
+        </class>
         <class name="MySingleton" href="mysingleton.html" status="active" access="public" location="singleton.h" documented="true" bases="QObject" module="TestModule" brief="A C++ class for a QML singleton type">
             <function name="MySingleton" fullname="MySingleton::MySingleton" href="mysingleton.html#MySingleton" status="active" access="public" location="singleton.h" documented="true" meta="constructor" explicit="true" signature="MySingleton(QObject *parent)">
                 <parameter type="QObject *" name="parent" default="nullptr"/>
@@ -13,6 +18,8 @@
             <function name="getMessage" fullname="MySingleton::getMessage" href="mysingleton.html#getMessage" status="active" access="public" location="singleton.h" documented="true" meta="plain" const="true" type="QString" signature="QString getMessage() const"/>
         </class>
         <class name="MySingleton2" href="mysingleton2.html" status="active" access="public" location="collisionsingleton.h" documented="true" bases="QObject" module="TestModule" brief="A C++ class with QML_SINGLETON to test name collision handling"/>
+        <qmlclass name="Base" qml-module-name="Test" fullname="Test.Base" href="qml-test-base.html" status="active" access="public" documented="true" uncreatable="true" brief="A QML uncreatable type using the QML_UNCREATABLE macro"/>
+        <qmlclass name="ExplicitBase" qml-module-name="Test" fullname="Test.ExplicitBase" href="qml-test-explicitbase.html" status="active" access="public" location="explicituncreatable.qdoc" documented="true" uncreatable="true" brief="A QML uncreatable type using explicit \qmluncreatabletype command"/>
         <qmlclass name="ExplicitSingleton" qml-module-name="QmlSingletonTest" fullname="QmlSingletonTest.ExplicitSingleton" href="qml-qmlsingletontest-explicitsingleton.html" status="active" access="public" location="explicitsingleton.qdoc" since="QmlSingletonTest 1.0" documented="true" singleton="true" brief="A QML singleton type using explicit \qmlsingletontype command">
             <function name="doSomething" fullname="QmlSingletonTest.ExplicitSingleton.doSomething" href="qml-qmlsingletontest-explicitsingleton.html#doSomething-method" status="active" access="public" location="explicitsingleton.qdoc" documented="true" meta="qmlmethod" type="void"/>
             <qmlproperty name="enabled" fullname="QmlSingletonTest.ExplicitSingleton.enabled" href="qml-qmlsingletontest-explicitsingleton.html#enabled-prop" status="active" access="public" location="explicitsingleton.qdoc" documented="true" type="bool" attached="false" writable="false"/>

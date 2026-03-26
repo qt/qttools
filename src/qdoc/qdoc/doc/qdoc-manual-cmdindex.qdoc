@@ -101,6 +101,7 @@
     \li \l {qmlproperty-command} {\\qmlproperty}
     \li \l {qmlsignal-command} {\\qmlsignal}
     \li \l {qmlmodule-command} {\\qmlmodule}
+    \li \l {qmluncreatabletype-command} {\\qmluncreatabletype}
     \li \l {qtcmakepackage-command} {\\qtcmakepackage}
     \li \l {qtcmaketargetitem-command} {\\qtcmaketargetitem}
     \li \l {quotation-command} {\\quotation}

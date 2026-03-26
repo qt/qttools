@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "qmltypenode.h"
+#include "classnode.h"
 #include "collectionnode.h"
 #include "qdocdatabase.h"
 
@@ -21,6 +22,17 @@ QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString &name, NodeType type)
     : Aggregate(type, parent, name)
 {
     Q_ASSERT(type == NodeType::QmlType || type == NodeType::QmlValueType);
+}
+
+/*!
+  Set ClassNode \a cn as this QML type's \e {native type},
+  and adopts its attribute if not set explicitly.
+*/
+void QmlTypeNode::setClassNode(ClassNode *cn)
+{
+    m_classNode = cn;
+    if (m_qmlNativeTypeAttr == QmlNativeTypeAttribute::None)
+        m_qmlNativeTypeAttr = cn->qmlNativeTypeAttribute();
 }
 
 /*!

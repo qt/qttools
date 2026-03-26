@@ -191,10 +191,14 @@ enum class NodeType : unsigned char {
 
   \value Singleton
          A singleton QML type.
+
+  \value Uncreatable
+         A type that cannot be instantiated directly in QML.
 */
 enum class QmlNativeTypeAttribute : unsigned char {
     None,
-    Singleton
+    Singleton,
+    Uncreatable
 };
 
 QT_END_NAMESPACE

@@ -58,6 +58,14 @@ public:
     {
         return m_qmlNativeTypeAttr == QmlNativeTypeAttribute::Singleton;
     }
+    [[nodiscard]] bool isQmlUncreatable() const
+    {
+        return m_qmlNativeTypeAttr == QmlNativeTypeAttribute::Uncreatable;
+    }
+    [[nodiscard]] QmlNativeTypeAttribute qmlNativeTypeAttribute() const
+    {
+        return m_qmlNativeTypeAttr;
+    }
     void setQmlNativeTypeAttribute(QmlNativeTypeAttribute attr) { m_qmlNativeTypeAttr = attr; }
 
     [[nodiscard]] bool isAnonymous() const { return m_anonymous; }

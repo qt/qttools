@@ -826,10 +826,11 @@
     the \\qmltype comment should include one or more \l{ingroup-command}
     {\\ingroup} commands.
 
-    \note QDoc automatically detects QML singleton types when the corresponding
-    C++ class uses the \c{QML_SINGLETON} macro. For such types, using
-    \qdoccmd {qmltype} is sufficient, as the singleton nature will be detected
-    and documented automatically.
+    \note QDoc automatically detects QML singleton types and uncreatable types
+    when the corresponding C++ class uses either the \c{QML_SINGLETON} or
+    \c{QML_UNCREATABLE} macro. For such types, using \qdoccmd {qmltype} is
+    sufficient, as the singleton/uncreatable nature will be detected and
+    documented automatically.
 
     \target qmlsingletontype-command
     \section1 \\qmlsingletontype
@@ -857,6 +858,37 @@
     For C++ classes that use the \c{QML_SINGLETON} macro, prefer using
     \qdoccmd {qmltype} instead, as QDoc will automatically detect the singleton
     nature from the C++ code.
+
+    See also \qdoccmd {qmluncreatabletype}.
+
+    \target qmluncreatabletype-command
+    \section1 \\qmluncreatabletype
+
+    The \\qmluncreatabletype command is for explicitly documenting a type that
+    is registered to the QML type system but cannot be instantiated directly in QML.
+
+    This command is functionally identical to \qdoccmd {qmltype}, but it
+    explicitly marks the type as uncreatable regardless of the C++ implementation.
+
+    The uncreatable designation is displayed in the generated documentation with
+    an "(Uncreatable)" indicator in the title and an explanatory note.
+
+    \code [text] *
+    /\1!
+        \qmluncreatabletype Dialog
+        \inqmlmodule QtQuick.Dialogs
+
+        \brief The base type of native dialogs.
+    \1/
+    \endcode
+
+    For C++ classes that use the \c{QML_UNCREATABLE} macro, prefer using
+    \qdoccmd {qmltype} instead, as QDoc will automatically detect the uncreatable
+    nature from the C++ code.
+
+    The \\qmluncreatabletype command was introduced to QDoc in Qt 6.12.
+
+    See also \qdoccmd {qmlsingletontype}.
 
     \target qmlproperty-command
     \section1 \\qmlproperty

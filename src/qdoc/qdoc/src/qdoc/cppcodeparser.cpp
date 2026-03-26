@@ -174,11 +174,12 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         auto *pn = new PageNode(database->primaryTreeRoot(), arg.first.split(' ').front());
         pn->setLocation(doc.startLocation());
         return pn;
-    } else if (command == COMMAND_QMLTYPE ||
-               command == COMMAND_QMLSINGLETONTYPE ||
-               command == COMMAND_QMLVALUETYPE ||
-               command == COMMAND_QMLBASICTYPE) {
-        auto nodeType = (command == COMMAND_QMLTYPE || command == COMMAND_QMLSINGLETONTYPE) ? NodeType::QmlType : NodeType::QmlValueType;
+    } else if (command == COMMAND_QMLTYPE || command == COMMAND_QMLSINGLETONTYPE
+               || command == COMMAND_QMLUNCREATABLETYPE || command == COMMAND_QMLVALUETYPE
+               || command == COMMAND_QMLBASICTYPE) {
+        auto nodeType = (command == COMMAND_QMLVALUETYPE || command == COMMAND_QMLBASICTYPE)
+                ? NodeType::QmlValueType
+                : NodeType::QmlType;
         QString qmid;
         if (auto args = doc.metaCommandArgs(COMMAND_INQMLMODULE); !args.isEmpty())
             qmid = args.first().first;
@@ -197,16 +198,24 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         qcn->setLocation(doc.startLocation());
         if (command == COMMAND_QMLSINGLETONTYPE)
             qcn->setSingleton();
-        if (command == COMMAND_QMLTYPE && !qcn->isSingleton()) {
-            auto classNode = database->findClassNode(arg.first.split(u"::"_s));
-            if (classNode && classNode->isQmlSingleton())
-                qcn->setSingleton();
+        else if (command == COMMAND_QMLUNCREATABLETYPE)
+            qcn->setUncreatable();
+        else if (command == COMMAND_QMLTYPE && !qcn->isSingleton() && !qcn->isUncreatable()) {
+            // TODO: Replace name-based matching with QML_ELEMENT/QML_NAMED_ELEMENT macro
+            // detection and automatically setting the native type relationship.
+            if (auto classNode = database->findClassNode(arg.first.split(u"::"_s))) {
+                if (classNode->isQmlSingleton())
+                    qcn->setSingleton();
+                else if (classNode->isQmlUncreatable())
+                    qcn->setUncreatable();
+            }
         }
         return qcn;
     } else if (command == COMMAND_QMLENUM) {
         return processQmlEnumTopic(doc.enumItemNames(), doc.location(), arg.first);
     } else if ((command == COMMAND_QMLSIGNAL) || (command == COMMAND_QMLMETHOD)
-               || (command == COMMAND_QMLATTACHEDSIGNAL) || (command == COMMAND_QMLATTACHEDMETHOD)) {
+               || (command == COMMAND_QMLATTACHEDSIGNAL)
+               || (command == COMMAND_QMLATTACHEDMETHOD)) {
         Q_UNREACHABLE();
     }
     return nullptr;
@@ -1056,9 +1065,6 @@ void CppCodeParser::processQmlNativeTypeCommand(Node *node, const QString &cmd, 
 
     qmlNode->setClassNode(classNode);
     classNode->insertQmlNativeType(qmlNode);
-
-    if (classNode->isQmlSingleton())
-        qmlNode->setSingleton();
 }
 
 namespace {

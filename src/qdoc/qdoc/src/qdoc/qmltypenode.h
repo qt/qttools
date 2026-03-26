@@ -25,16 +25,21 @@ public:
     QmlTypeNode(Aggregate *parent, const QString &name, NodeType type);
     [[nodiscard]] bool isFirstClassAggregate() const override { return true; }
     ClassNode *classNode() const override { return m_classNode; }
-    void setClassNode(ClassNode *cn) override { m_classNode = cn; }
+    void setClassNode(ClassNode *cn) override;
     [[nodiscard]] bool isAbstract() const override { return m_abstract; }
     [[nodiscard]] bool isWrapper() const override { return m_wrapper; }
     [[nodiscard]] bool isSingleton() const
     {
         return m_qmlNativeTypeAttr == QmlNativeTypeAttribute::Singleton;
     }
+    [[nodiscard]] bool isUncreatable() const
+    {
+        return m_qmlNativeTypeAttr == QmlNativeTypeAttribute::Uncreatable;
+    }
     void setAbstract(bool b) override { m_abstract = b; }
     void setWrapper() override { m_wrapper = true; }
     void setSingleton() { m_qmlNativeTypeAttr = QmlNativeTypeAttribute::Singleton; }
+    void setUncreatable() { m_qmlNativeTypeAttr = QmlNativeTypeAttribute::Uncreatable; }
     [[nodiscard]] bool isInternal() const override { return (status() == Status::Internal); }
     [[nodiscard]] QString qmlFullBaseName() const override;
     [[nodiscard]] QString logicalModuleName() const override;

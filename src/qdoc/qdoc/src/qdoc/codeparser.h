@@ -66,6 +66,7 @@ QT_BEGIN_NAMESPACE
 #define COMMAND_QMLSIGNAL QLatin1String("qmlsignal")
 #define COMMAND_QMLTYPE QLatin1String("qmltype")
 #define COMMAND_QMLSINGLETONTYPE QLatin1String("qmlsingletontype")
+#define COMMAND_QMLUNCREATABLETYPE QLatin1String("qmluncreatabletype")
 #define COMMAND_QTCMAKEPACKAGE QLatin1String("qtcmakepackage")
 #define COMMAND_QTCMAKETARGETITEM QLatin1String("qtcmaketargetitem")
 #define COMMAND_QTVARIABLE QLatin1String("qtvariable")
