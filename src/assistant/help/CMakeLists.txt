@@ -34,6 +34,11 @@ qt_internal_add_module(Help
     NO_GENERATE_CPP_EXPORTS
 )
 
+qt_internal_extend_target(Help CONDITION QT_FEATURE_concurrent
+    LIBRARIES
+        Qt::Concurrent
+)
+
 if(QT_FEATURE_fullqthelp)
     qt_internal_extend_target(Help
         SOURCES
