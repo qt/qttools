@@ -172,6 +172,8 @@ public:
 
     [[nodiscard]] virtual Status status() const override;
 
+    void autoGenerateSmfDoc(const QString &className);
+
 private:
     void addAssociatedProperty(PropertyNode *property);
 
