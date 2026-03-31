@@ -85,6 +85,7 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)
 {
     serviceFilterLine = new QLineEdit(this);
     serviceFilterLine->setPlaceholderText(tr("Search..."));
+    serviceFilterLine->setClearButtonEnabled(true);
 
     // Create model for services list
     servicesModel = new ServicesModel(this);
