@@ -166,11 +166,16 @@ int main(int argc, char **argv)
         QStringList translationsVariables = { u"TRANSLATIONS"_s, u"EXTRA_TRANSLATIONS"_s };
         QHash<QString, QString> outDirMap;
         QString outDir = QDir::currentPath();
-        for (const QString &proFile : std::as_const(proFiles))
-            outDirMap[proFile] = outDir;
+        QStringList cleanProFiles;
+        cleanProFiles.reserve(proFiles.size());
+        for (const QString &proFile : std::as_const(proFiles)) {
+            const QString cleanFile = QDir::cleanPath(QFileInfo(proFile).absoluteFilePath());
+            cleanProFiles << cleanFile;
+            outDirMap[cleanFile] = outDir;
+        }
 
-        projectDescription =
-                generateProjects(proFiles, translationsVariables, outDirMap, 0, true, &errorString);
+        projectDescription = generateProjects(cleanProFiles, translationsVariables, outDirMap, 0,
+                                              true, &errorString);
         if (!errorString.isEmpty()) {
             printErr("lrelease error: %1\n"_L1.arg(errorString));
             return 1;
