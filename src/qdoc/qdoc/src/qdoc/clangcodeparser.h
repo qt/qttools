@@ -63,7 +63,7 @@ private:
     QDocDatabase* m_qdb;
     const std::set<Config::HeaderFilePath>& m_allHeaders; // file name->path
     QList<QByteArray> m_defines {};
-    std::vector<const char *> m_args {};
+    std::vector<QByteArray> m_args {};
     std::optional<std::reference_wrapper<const PCHFile>> m_pch;
 };
 
@@ -85,7 +85,7 @@ private:
     std::set<Config::HeaderFilePath> m_allHeaders {}; // file name->path
     const std::vector<QByteArray>& m_includePaths;
     QList<QByteArray> m_defines {};
-    std::vector<const char *> m_args {};
+    std::vector<QByteArray> m_args {};
     QStringList m_namespaceScope {};
     QByteArray s_fn;
     std::optional<std::reference_wrapper<const PCHFile>> m_pch;

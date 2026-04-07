@@ -2052,18 +2052,28 @@ static const char *defaultArgs_[] = {
     "-xc++"
 };
 
+static std::vector<const char *> toConstCharPointers(const std::vector<QByteArray> &args)
+{
+    std::vector<const char *> pointers;
+    pointers.reserve(args.size());
+    for (const auto &arg : args)
+        pointers.push_back(arg.constData());
+    return pointers;
+}
+
 /*!
   Load the default arguments and the defines into \a args.
   Clear \a args first.
  */
-void getDefaultArgs(const QList<QByteArray>& defines, std::vector<const char*>& args)
+void getDefaultArgs(const QList<QByteArray>& defines, std::vector<QByteArray>& args)
 {
     args.clear();
-    args.insert(args.begin(), std::begin(defaultArgs_), std::end(defaultArgs_));
+    for (const char *arg : defaultArgs_)
+        args.emplace_back(arg);
 
     // Add the defines from the qdocconf file.
     for (const auto &p : std::as_const(defines))
-        args.push_back(p.constData());
+        args.push_back(p);
 }
 
 static QList<QByteArray> includePathsFromHeaders(const std::set<Config::HeaderFilePath> &allHeaders)
@@ -2085,7 +2095,7 @@ static QList<QByteArray> includePathsFromHeaders(const std::set<Config::HeaderFi
 void getMoreArgs(
     const std::vector<QByteArray>& include_paths,
     const std::set<Config::HeaderFilePath>& all_headers,
-    std::vector<const char*>& args
+    std::vector<QByteArray>& args
 ) {
     if (include_paths.empty()) {
         /*
@@ -2096,12 +2106,12 @@ void getMoreArgs(
         qCWarning(lcQdoc) << "No include paths passed to qdoc; guessing reasonable include paths";
 
         QString basicIncludeDir = QDir::cleanPath(QString(Config::installDir + "/../include"));
-        args.emplace_back(QByteArray("-I" + basicIncludeDir.toLatin1()).constData());
+        args.emplace_back("-I" + basicIncludeDir.toLatin1());
 
         auto include_paths_from_headers = includePathsFromHeaders(all_headers);
         args.insert(args.end(), include_paths_from_headers.begin(), include_paths_from_headers.end());
     } else {
-        std::copy(include_paths.begin(), include_paths.end(), std::back_inserter(args));
+        args.insert(args.end(), include_paths.begin(), include_paths.end());
     }
 }
 
@@ -2118,7 +2128,7 @@ std::optional<PCHFile> buildPCH(
     const QList<QByteArray>& defines,
     const InclusionPolicy& policy
 ) {
-    static std::vector<const char*> arguments{};
+    static std::vector<QByteArray> arguments{};
 
     if (module_header.isEmpty()) return std::nullopt;
 
@@ -2218,9 +2228,11 @@ std::optional<PCHFile> buildPCH(
         }
     }
 
+    const auto argPointers = toConstCharPointers(arguments);
+    const QByteArray tmpHeaderLocal = tmpHeader.toLatin1();
     CXErrorCode err =
-            clang_parseTranslationUnit2(index, tmpHeader.toLatin1().data(), arguments.data(),
-                                        static_cast<int>(arguments.size()), nullptr, 0,
+            clang_parseTranslationUnit2(index, tmpHeaderLocal.constData(), argPointers.data(),
+                                        static_cast<int>(argPointers.size()), nullptr, 0,
                                         flags_ | CXTranslationUnit_ForSerialization, &tu.tu);
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << tmpHeader << arguments
                     << ") returns" << err;
@@ -2280,14 +2292,16 @@ ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
             && !std::holds_alternative<CppHeaderSourceFile>(tag_source_file(filePath).second)) {
         m_args.push_back("-w");
         m_args.push_back("-include-pch");
-        m_args.push_back((*m_pch).get().name.constData());
+        m_args.push_back((*m_pch).get().name);
     }
     getMoreArgs(m_includePaths, m_allHeaders, m_args);
 
     TranslationUnit tu;
+    const auto argPointers = toConstCharPointers(m_args);
+    const QByteArray filePathLocal = filePath.toLocal8Bit();
     CXErrorCode err =
-            clang_parseTranslationUnit2(index, filePath.toLocal8Bit(), m_args.data(),
-                                        static_cast<int>(m_args.size()), nullptr, 0, flags_, &tu.tu);
+            clang_parseTranslationUnit2(index, filePathLocal.constData(), argPointers.data(),
+                                        static_cast<int>(argPointers.size()), nullptr, 0, flags_, &tu.tu);
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << filePath << m_args
                     << ") returns" << err;
     printDiagnostics(tu);
@@ -2452,7 +2466,7 @@ std::variant<Node*, FnMatchError> FnCommandParser::operator()(const Location &lo
     if (m_pch) {
         m_args.push_back("-w");
         m_args.push_back("-include-pch");
-        m_args.push_back((*m_pch).get().name.constData());
+        m_args.push_back((*m_pch).get().name);
     }
 
     TranslationUnit tu;
@@ -2467,8 +2481,9 @@ std::variant<Node*, FnMatchError> FnCommandParser::operator()(const Location &lo
     const char *dummyFileName = fnDummyFileName;
     CXUnsavedFile unsavedFile { dummyFileName, s_fn.constData(),
                                 static_cast<unsigned long>(s_fn.size()) };
-    CXErrorCode err = clang_parseTranslationUnit2(index, dummyFileName, m_args.data(),
-                                                  int(m_args.size()), &unsavedFile, 1, flags, &tu.tu);
+    const auto argPointers = toConstCharPointers(m_args);
+    CXErrorCode err = clang_parseTranslationUnit2(index, dummyFileName, argPointers.data(),
+                                                  int(argPointers.size()), &unsavedFile, 1, flags, &tu.tu);
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << dummyFileName << m_args
                     << ") returns" << err;
     printDiagnostics(tu);
