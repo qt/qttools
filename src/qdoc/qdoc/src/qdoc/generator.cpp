@@ -302,7 +302,7 @@ QString Generator::fileBase(const Node *node) const
     } else {
         base.clear();
         const Node *p = node;
-        forever {
+        while (true) {
             const Node *pp = p->parent();
             base.prepend(p->name());
             if (pp == nullptr || pp->name().isEmpty() || pp->isTextPageNode())
