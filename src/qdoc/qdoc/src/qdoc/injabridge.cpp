@@ -7,23 +7,111 @@
 
 QT_BEGIN_NAMESPACE
 
+static std::string escapeHtml(const std::string &input)
+{
+    std::string buffer;
+    buffer.reserve(input.size() + input.size() / 8);
+    for (char c : input) {
+        switch (c) {
+        case '&':
+            buffer += "&amp;";
+            break;
+        case '"':
+            buffer += "&quot;";
+            break;
+        case '\'':
+            buffer += "&apos;";
+            break;
+        case '<':
+            buffer += "&lt;";
+            break;
+        case '>':
+            buffer += "&gt;";
+            break;
+        default:
+            buffer += c;
+            break;
+        }
+    }
+    return buffer;
+}
+
+static std::string renderSignatureSpans(const nlohmann::json &spans)
+{
+    if (!spans.is_array()) {
+        qWarning("render_signature_spans: expected JSON array, got %s",
+                 spans.type_name());
+        return {};
+    }
+
+    std::string result;
+    for (const auto &s : spans) {
+        const auto role = s.value("role", "");
+        const auto text = s.value("text", "");
+        const bool hasHref = s.contains("href");
+        const auto href = s.value("href", "");
+
+        if (role == "extra") {
+            result += R"(<code class="details extra" translate="no">)";
+            if (s.contains("children") && s["children"].is_array()) {
+                for (const auto &c : s["children"]) {
+                    if (c.value("role", "") == "external-ref")
+                        result += "<a href=\"" + c.value("href", "") + "\">"
+                                + escapeHtml(c.value("text", "")) + "</a>";
+                    else
+                        result += escapeHtml(c.value("text", ""));
+                }
+            } else {
+                result += escapeHtml(text);
+            }
+            result += "</code>";
+        } else if (role == "type") {
+            result += R"(<span class="type">)";
+            if (hasHref)
+                result += "<a href=\"" + href + "\">";
+            result += escapeHtml(text);
+            if (hasHref)
+                result += "</a>";
+            result += "</span>";
+        } else if (role == "name") {
+            result += R"(<span class="name">)";
+            if (hasHref)
+                result += "<a href=\"" + href + "\">";
+            result += escapeHtml(text);
+            if (hasHref)
+                result += "</a>";
+            result += "</span>";
+        } else if (role == "parameter") {
+            result += "<i>" + escapeHtml(text) + "</i>";
+        } else if (role == "external-ref") {
+            result += "<a href=\"" + href + "\">" + escapeHtml(text) + "</a>";
+        } else if (role == "template-decl") {
+            result += R"(<span class="template-decl">)";
+            if (s.contains("children") && s["children"].is_array()) {
+                for (const auto &c : s["children"]) {
+                    if (c.value("role", "") == "type")
+                        result += R"(<span class="type">)" + escapeHtml(c.value("text", ""))
+                                + "</span>";
+                    else
+                        result += escapeHtml(c.value("text", ""));
+                }
+            }
+            result += "</span>";
+        } else {
+            result += escapeHtml(text);
+        }
+    }
+    return result;
+}
+
 static void registerCallbacks(inja::Environment &env)
 {
     env.add_callback("escape_html", 1, [](inja::Arguments &args) {
-        auto input = args.at(0)->get<std::string>();
-        std::string buffer;
-        buffer.reserve(input.size() + input.size() / 8);
-        for (char c : input) {
-            switch (c) {
-            case '&':  buffer += "&amp;";  break;
-            case '"':  buffer += "&quot;"; break;
-            case '\'': buffer += "&apos;"; break;
-            case '<':  buffer += "&lt;";   break;
-            case '>':  buffer += "&gt;";   break;
-            default:   buffer += c;        break;
-            }
-        }
-        return buffer;
+        return escapeHtml(args.at(0)->get<std::string>());
+    });
+
+    env.add_callback("render_signature_spans", 1, [](inja::Arguments &args) {
+        return renderSignatureSpans(*args.at(0));
     });
 
     env.add_callback("escape_md_table", 1, [](inja::Arguments &args) {
@@ -32,10 +120,17 @@ static void registerCallbacks(inja::Environment &env)
         buffer.reserve(input.size() + input.size() / 8);
         for (char c : input) {
             switch (c) {
-            case '|':  buffer += "\\|"; break;
-            case '\n': buffer += ' ';   break;
-            case '\r': break;
-            default:   buffer += c;     break;
+            case '|':
+                buffer += "\\|";
+                break;
+            case '\n':
+                buffer += ' ';
+                break;
+            case '\r':
+                break;
+            default:
+                buffer += c;
+                break;
             }
         }
         return buffer;
@@ -67,15 +162,19 @@ static void registerCallbacks(inja::Environment &env)
     location) are logged via \c qFatal() before termination, rather than
     calling \c std::abort() silently.
 
-    All render methods register format-specific escaping callbacks:
+    All render methods register template callbacks:
     \list
     \li \c{escape_html()} escapes HTML special characters (\c{&}, \c{<},
         \c{>}, \c{"}, \c{'}).
     \li \c{escape_md_table()} escapes pipe characters and collapses newlines
         for safe use inside Markdown table cells.
+    \li \c{render_signature_spans()} converts a JSON array of signature spans
+        (from SignatureSpan IR) into semantic HTML with role-based markup
+        (\c{<span class="type">}, \c{<span class="name">}, etc.).
     \endlist
-    This keeps format-specific escaping under template author control rather
-    than baking it into the rendering bridge.
+    Escaping callbacks keep format-specific logic under template author control.
+    The \c{render_signature_spans()} callback centralizes signature rendering
+    that was previously duplicated across multiple templates.
 
     \sa QJsonObject, QJsonArray, QJsonValue
 */
