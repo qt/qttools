@@ -111,19 +111,19 @@ void TemplateGenerator::prepare()
         QDir templateDir(m_templateDir);
         if (templateDir.exists() && !templateDir.entryList(QDir::Files).isEmpty()) {
             foundTemplates = true;
-            qCInfo(lcQDocTemplateGenerator) << "Using template directory:" << m_templateDir;
+            qCInfo(lcQDocTemplateGenerator) << "[%1]"_L1.arg(m_format) << "Using template directory:" << m_templateDir;
         } else if (!templateDir.exists()) {
             qCInfo(lcQDocTemplateGenerator)
-                    << "Configured template directory does not exist:" << m_templateDir
+                    << "[%1]"_L1.arg(m_format) << "Configured template directory does not exist:" << m_templateDir
                     << "- will use embedded templates";
         } else {
             qCInfo(lcQDocTemplateGenerator)
-                    << "Configured template directory is empty:" << m_templateDir
+                    << "[%1]"_L1.arg(m_format) << "Configured template directory is empty:" << m_templateDir
                     << "- will use embedded templates";
         }
     } else {
         qCInfo(lcQDocTemplateGenerator)
-                << "No external template directory configured - will use embedded templates";
+                << "[%1]"_L1.arg(m_format) << "No external template directory configured - will use embedded templates";
     }
 
     if (!foundTemplates)
@@ -144,7 +144,7 @@ void TemplateGenerator::prepare()
         || m_stylesheetName.contains(".."_L1)
         || QDir::isAbsolutePath(m_stylesheetName)) {
         qCWarning(lcQDocTemplateGenerator)
-            << "Ignoring stylesheetname:" << m_stylesheetName
+            << "[%1]"_L1.arg(m_format) << "Ignoring stylesheetname:" << m_stylesheetName
             << "— must be a plain filename (no path separators)";
         m_stylesheetName = u"qdoc-default.css"_s;
     }
@@ -368,10 +368,10 @@ void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &te
     }
 
     if (templateContent.isEmpty())
-        qFatal("TemplateGenerator: No template file found for extension '%s'. "
+        qFatal("TemplateGenerator[%s]: No template file found for extension '%s'. "
                "Ensure '%s.%s' exists in the configured template directory or in resources.",
-               qPrintable(m_fileExtension), qPrintable(templateBaseName),
-               qPrintable(m_fileExtension));
+               qPrintable(m_format), qPrintable(m_fileExtension),
+               qPrintable(templateBaseName), qPrintable(m_fileExtension));
 
     QJsonObject json = ir.toJson();
     json["stylesheetEnabled"_L1] = m_emitStylesheet;
@@ -416,10 +416,10 @@ void TemplateGenerator::renderJson(const QJsonObject &json, const QString &templ
     }
 
     if (templateContent.isEmpty())
-        qFatal("TemplateGenerator: No template file found for '%s'. "
+        qFatal("TemplateGenerator[%s]: No template file found for '%s'. "
                "Ensure '%s.%s' exists in the configured template directory or in resources.",
-               qPrintable(templateBaseName), qPrintable(templateBaseName),
-               qPrintable(m_fileExtension));
+               qPrintable(m_format), qPrintable(templateBaseName),
+               qPrintable(templateBaseName), qPrintable(m_fileExtension));
 
     QJsonObject enrichedJson = json;
     enrichedJson["stylesheetEnabled"_L1] = m_emitStylesheet;
@@ -667,15 +667,15 @@ void TemplateGenerator::copyAssets()
                 QFile::remove(dst);
                 if (QFile::copy(it.filePath(), dst)) {
                     themeAssets.insert(rel);
-                    qCDebug(lcQDocTemplateGenerator) << "Asset (theme):" << rel;
+                    qCDebug(lcQDocTemplateGenerator) << "[%1]"_L1.arg(m_format) << "Asset (theme):" << rel;
                     ++count;
                 } else {
                     qCWarning(lcQDocTemplateGenerator)
-                            << "Failed to copy asset:" << it.filePath() << "->" << dst;
+                            << "[%1]"_L1.arg(m_format) << "Failed to copy asset:" << it.filePath() << "->" << dst;
                 }
             }
             if (count > 0)
-                qCInfo(lcQDocTemplateGenerator) << "Copied" << count << "theme asset(s)";
+                qCInfo(lcQDocTemplateGenerator) << "[%1]"_L1.arg(m_format) << "Copied" << count << "theme asset(s)";
         }
     }
 
@@ -685,7 +685,7 @@ void TemplateGenerator::copyAssets()
         QFile::copy(":/qdoc/templates/assets/qdoc-default.css"_L1, dstCss);
         QFile(dstCss).setPermissions(QFile::ReadOwner | QFile::WriteOwner
                                      | QFile::ReadGroup | QFile::ReadOther);
-        qCDebug(lcQDocTemplateGenerator) << "Asset (QRC fallback):" << m_stylesheetName;
+        qCDebug(lcQDocTemplateGenerator) << "[%1]"_L1.arg(m_format) << "Asset (QRC fallback):" << m_stylesheetName;
     }
 }
 
