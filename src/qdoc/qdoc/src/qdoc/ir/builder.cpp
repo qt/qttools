@@ -124,6 +124,68 @@ Document Builder::buildPageIR(PageMetadata pm) const
         ir.collectionInfo = std::move(info);
     }
 
+    if (pm.cppReferenceData) {
+        const auto &src = *pm.cppReferenceData;
+        CppReferenceInfo info;
+
+        info.headerInclude = src.headerInclude;
+        info.cmakeFindPackage = src.cmakeFindPackage;
+        info.cmakeTargetLinkLibraries = src.cmakeTargetLinkLibraries;
+        info.qmakeVariable = src.qmakeVariable;
+        info.statusText = src.statusText;
+        info.statusCssClass = src.statusCssClass;
+
+        if (src.qmlNativeType)
+            info.qmlNativeType = CppReferenceInfo::QmlNativeTypeLink{
+                src.qmlNativeType->name, src.qmlNativeType->href};
+
+        for (const auto &bc : src.baseClasses)
+            info.baseClasses.append({bc.name, bc.href, bc.access});
+        for (const auto &dc : src.derivedClasses)
+            info.derivedClasses.append({dc.name, dc.href});
+        info.suppressInheritance = src.suppressInheritance;
+
+        info.templateDeclSpans = src.templateDeclSpans;
+
+        info.isInnerClass = src.isInnerClass;
+        info.isNamespace = src.isNamespace;
+        info.isHeader = src.isHeader;
+
+        info.isPartialNamespace = src.isPartialNamespace;
+        info.fullNamespaceHref = src.fullNamespaceHref;
+        info.fullNamespaceModuleName = src.fullNamespaceModuleName;
+
+        info.typeWord = src.typeWord;
+        info.ancestorNames = src.ancestorNames;
+
+        info.selfComparisonCategory = src.selfComparisonCategory;
+        for (const auto &ce : src.comparisonEntries)
+            info.comparisonEntries.append({ce.category, ce.comparableTypes, ce.description});
+
+        if (src.threadSafety) {
+            CppReferenceInfo::ThreadSafetyInfo ts;
+            ts.level = src.threadSafety->level;
+            for (const auto &e : src.threadSafety->reentrantExceptions)
+                ts.reentrantExceptions.append({e.name, e.href});
+            for (const auto &e : src.threadSafety->threadSafeExceptions)
+                ts.threadSafeExceptions.append({e.name, e.href});
+            for (const auto &e : src.threadSafety->nonReentrantExceptions)
+                ts.nonReentrantExceptions.append({e.name, e.href});
+            info.threadSafety = std::move(ts);
+        }
+
+        for (const auto &g : src.groups)
+            info.groups.append({g.name, g.href});
+
+        info.hasObsoleteMembers = src.hasObsoleteMembers;
+        // TODO: obsoleteMembersUrl is currently set by the generator
+        // after assembly because it depends on the file extension.
+        // This post-build mutation violates frozen-IR. The Builder
+        // should receive the file extension and compute it here.
+
+        ir.cppReferenceInfo = std::move(info);
+    }
+
     // Transitional: templates don't yet consume content.blocks.
     QStringList paragraphs;
     for (const auto &block : ir.body) {
