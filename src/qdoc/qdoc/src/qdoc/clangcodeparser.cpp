@@ -2076,40 +2076,18 @@ void getDefaultArgs(const QList<QByteArray>& defines, std::vector<QByteArray>& a
         args.push_back(p);
 }
 
-static QList<QByteArray> includePathsFromHeaders(const std::set<Config::HeaderFilePath> &allHeaders)
-{
-    QList<QByteArray> result;
-    for (const auto& [header_path, _] : allHeaders) {
-        const QByteArray path = "-I" + header_path.toLatin1();
-        const QByteArray parent =
-                "-I" + QDir::cleanPath(header_path + QLatin1String("/../")).toLatin1();
-    }
-
-    return result;
-}
-
 /*!
-  Load the include paths into \a moreArgs. If no include paths
-  were provided, try to guess reasonable include paths.
+  Load the include paths into \a args.
  */
 void getMoreArgs(
     const std::vector<QByteArray>& include_paths,
-    const std::set<Config::HeaderFilePath>& all_headers,
     std::vector<QByteArray>& args
 ) {
     if (include_paths.empty()) {
-        /*
-          The include paths provided are inadequate. Make a list
-          of reasonable places to look for include files and use
-          that list instead.
-         */
-        qCWarning(lcQdoc) << "No include paths passed to qdoc; guessing reasonable include paths";
-
-        QString basicIncludeDir = QDir::cleanPath(QString(Config::installDir + "/../include"));
-        args.emplace_back("-I" + basicIncludeDir.toLatin1());
-
-        auto include_paths_from_headers = includePathsFromHeaders(all_headers);
-        args.insert(args.end(), include_paths_from_headers.begin(), include_paths_from_headers.end());
+        qCWarning(lcQdoc) << "No include paths provided."
+                          << "Set 'includepaths' in the qdocconf file"
+                          << "or pass -I flags on the command line."
+                          << "C++ parsing may produce incomplete results.";
     } else {
         args.insert(args.end(), include_paths.begin(), include_paths.end());
     }
@@ -2133,7 +2111,7 @@ std::optional<PCHFile> buildPCH(
     if (module_header.isEmpty()) return std::nullopt;
 
     getDefaultArgs(defines, arguments);
-    getMoreArgs(include_paths, all_headers, arguments);
+    getMoreArgs(include_paths, arguments);
 
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
                                                   | CXTranslationUnit_SkipFunctionBodies
@@ -2294,7 +2272,7 @@ ParsedCppFileIR ClangCodeParser::parse_cpp_file(const QString &filePath)
         m_args.push_back("-include-pch");
         m_args.push_back((*m_pch).get().name);
     }
-    getMoreArgs(m_includePaths, m_allHeaders, m_args);
+    getMoreArgs(m_includePaths, m_args);
 
     TranslationUnit tu;
     const auto argPointers = toConstCharPointers(m_args);
