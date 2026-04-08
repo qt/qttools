@@ -849,7 +849,7 @@ public:
     struct Data
     {
         double val{0};
-        double minVal{std::numeric_limits<double>::min()};
+        double minVal{std::numeric_limits<double>::lowest()};
         double maxVal{std::numeric_limits<double>::max()};
         double singleStep{1};
         int decimals{2};
