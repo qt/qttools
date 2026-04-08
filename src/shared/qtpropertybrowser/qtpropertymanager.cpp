@@ -4180,10 +4180,10 @@ void QtRectFPropertyManagerPrivate::setConstraint(QtProperty *property,
             const QRectF &constraint, const QRectF &val)
 {
     const bool isNull = constraint.isNull();
-    const float left   = isNull ? std::numeric_limits<float>::min() : constraint.left();
+    const float left   = isNull ? std::numeric_limits<float>::lowest() : constraint.left();
     const float right  = isNull
             ? std::numeric_limits<float>::max() : constraint.left() + constraint.width();
-    const float top    = isNull ? std::numeric_limits<float>::min() : constraint.top();
+    const float top    = isNull ? std::numeric_limits<float>::lowest() : constraint.top();
     const float bottom = isNull
             ? std::numeric_limits<float>::max() : constraint.top() + constraint.height();
     const float width  = isNull ? std::numeric_limits<float>::max() : constraint.width();
