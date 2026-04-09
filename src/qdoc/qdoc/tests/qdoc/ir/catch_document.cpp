@@ -1070,7 +1070,7 @@ SCENARIO("CppReferenceInfo with derived classes", "[IR::CppReferenceInfo][IR][JS
 
 SCENARIO("CppReferenceInfo with thread safety info", "[IR::CppReferenceInfo][IR][JSON]") {
 
-    GIVEN("A CppReferenceInfo with thread safety level and exceptions") {
+    GIVEN("A CppReferenceInfo with thread safety level, exceptions, and admonition") {
         IR::CppReferenceInfo info;
         IR::CppReferenceInfo::ThreadSafetyInfo ts;
         ts.level = "reentrant"_L1;
@@ -1078,6 +1078,25 @@ SCENARIO("CppReferenceInfo with thread safety info", "[IR::CppReferenceInfo][IR]
             {"QCoapClient::get"_L1, "qcoapclient.html#get"_L1}
         };
         info.threadSafety = ts;
+
+        IR::ContentBlock block;
+        block.type = IR::BlockType::Paragraph;
+        IR::InlineContent textInline;
+        textInline.text = "All functions in this class are "_L1;
+        block.inlineContent.append(textInline);
+        IR::InlineContent linkInline;
+        linkInline.type = IR::InlineType::Link;
+        linkInline.href = "reentrant"_L1;
+        linkInline.link = IR::InlineContent::LinkData{
+            IR::LinkOrigin::Explicit, IR::LinkState::Unresolved};
+        IR::InlineContent linkText;
+        linkText.text = "reentrant"_L1;
+        linkInline.children.append(linkText);
+        block.inlineContent.append(linkInline);
+        IR::InlineContent dotInline;
+        dotInline.text = "."_L1;
+        block.inlineContent.append(dotInline);
+        info.threadSafetyAdmonition = {block};
 
         WHEN("Converting to JSON") {
             QJsonObject json = info.toJson();
@@ -1096,6 +1115,18 @@ SCENARIO("CppReferenceInfo with thread safety info", "[IR::CppReferenceInfo][IR]
 
                 REQUIRE(tsObj["threadSafeExceptions"_L1].toArray().isEmpty());
                 REQUIRE(tsObj["nonReentrantExceptions"_L1].toArray().isEmpty());
+            }
+
+            THEN("The threadSafetyAdmonition contains content blocks with topic link") {
+                REQUIRE(json.contains("threadSafetyAdmonition"_L1));
+                QJsonArray admonition = json["threadSafetyAdmonition"_L1].toArray();
+                REQUIRE(admonition.size() == 1);
+                QJsonObject blockJson = admonition[0].toObject();
+                REQUIRE(blockJson["type"_L1].toString() == "paragraph");
+                QJsonArray inlines = blockJson["inlines"_L1].toArray();
+                REQUIRE(inlines.size() == 3);
+                REQUIRE(inlines[1].toObject()["type"_L1].toString() == "link");
+                REQUIRE(inlines[1].toObject()["href"_L1].toString() == "reentrant");
             }
         }
     }

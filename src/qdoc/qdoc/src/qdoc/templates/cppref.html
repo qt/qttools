@@ -91,13 +91,11 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <p>{{ escape_html(title) }} is part of {% for group in cppRef.groups %}{% if not loop.is_first %}, {% endif %}<a href="{{ group.href }}">{{ escape_html(group.name) }}</a>{% endfor %}.</p>
     {% endif %}
 
-    {% if hasCppRef and existsIn(cppRef, "threadSafety") %}
-    {% if cppRef.threadSafety.level == "thread-safe" %}
-    <aside class="admonition note" role="note"><p><b>Note:</b> All functions in this {{ escape_html(cppRef.typeWord) }} are <a href="threads-reentrancy.html">thread-safe</a>.{% if length(cppRef.threadSafety.nonReentrantExceptions) > 0 %} with the following exceptions:{% for exc in cppRef.threadSafety.nonReentrantExceptions %}{% if not loop.is_first %}, {% endif %}{% if exc.href != "" %}<a href="{{ exc.href }}">{{ escape_html(exc.name) }}</a>{% else %}{{ escape_html(exc.name) }}{% endif %}{% endfor %}{% endif %}</p></aside>
-    {% else if cppRef.threadSafety.level == "reentrant" %}
-    <aside class="admonition warning" role="note"><p><b>Note:</b> All functions in this {{ escape_html(cppRef.typeWord) }} are <a href="threads-reentrancy.html">reentrant</a>.{% if length(cppRef.threadSafety.threadSafeExceptions) > 0 %} These functions are also <a href="threads-reentrancy.html">thread-safe</a>: {% for exc in cppRef.threadSafety.threadSafeExceptions %}{% if not loop.is_first %}, {% endif %}{% if exc.href != "" %}<a href="{{ exc.href }}">{{ escape_html(exc.name) }}</a>{% else %}{{ escape_html(exc.name) }}{% endif %}{% endfor %}.{% endif %}{% if length(cppRef.threadSafety.nonReentrantExceptions) > 0 %} These functions aren't <a href="threads-reentrancy.html">reentrant</a>: {% for exc in cppRef.threadSafety.nonReentrantExceptions %}{% if not loop.is_first %}, {% endif %}{% if exc.href != "" %}<a href="{{ exc.href }}">{{ escape_html(exc.name) }}</a>{% else %}{{ escape_html(exc.name) }}{% endif %}{% endfor %}.{% endif %}</p></aside>
-    {% else if cppRef.threadSafety.level == "non-reentrant" %}
-    <aside class="admonition warning" role="note"><p><b>Warning:</b> All functions in this {{ escape_html(cppRef.typeWord) }} are <a href="threads-reentrancy.html">non-reentrant</a>.{% if length(cppRef.threadSafety.reentrantExceptions) > 0 %} These functions are <a href="threads-reentrancy.html">reentrant</a>: {% for exc in cppRef.threadSafety.reentrantExceptions %}{% if not loop.is_first %}, {% endif %}{% if exc.href != "" %}<a href="{{ exc.href }}">{{ escape_html(exc.name) }}</a>{% else %}{{ escape_html(exc.name) }}{% endif %}{% endfor %}.{% endif %}</p></aside>
+    {% if hasCppRef and existsIn(cppRef, "threadSafetyAdmonition") %}
+    {% if cppRef.threadSafety.level == "non-reentrant" %}
+    <aside class="admonition warning" role="note"><p><b>Warning:</b>{{ " " }}{% for block in cppRef.threadSafetyAdmonition %}{% for i in block.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% endif %}{% endfor %}{% endfor %}</p></aside>
+    {% else %}
+    <aside class="admonition note" role="note"><p><b>Note:</b>{{ " " }}{% for block in cppRef.threadSafetyAdmonition %}{% for i in block.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% endif %}{% endfor %}{% endfor %}</p></aside>
     {% endif %}
     {% endif %}
 

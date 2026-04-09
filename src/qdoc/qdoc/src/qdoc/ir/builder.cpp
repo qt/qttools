@@ -13,6 +13,103 @@ using namespace Qt::Literals;
 
 namespace IR {
 
+static InlineContent makeTextInline(const QString &text)
+{
+    InlineContent ic;
+    ic.type = InlineType::Text;
+    ic.text = text;
+    return ic;
+}
+
+static InlineContent makeTopicLink(const QString &topicName)
+{
+    InlineContent ic;
+    ic.type = InlineType::Link;
+    ic.href = topicName;
+    ic.link = InlineContent::LinkData{LinkOrigin::Explicit, LinkState::Unresolved};
+    ic.children.append(makeTextInline(topicName));
+    return ic;
+}
+
+static InlineContent makeResolvedLink(const QString &name, const QString &href)
+{
+    InlineContent ic;
+    ic.type = InlineType::Link;
+    ic.href = href;
+    ic.link = InlineContent::LinkData{LinkOrigin::Explicit, LinkState::Resolved};
+    ic.children.append(makeTextInline(name));
+    return ic;
+}
+
+static void appendExceptionList(
+        QList<InlineContent> &inlines,
+        const QString &prefix,
+        const QString &topicName,
+        const QList<CppReferenceData::ThreadSafetyExceptionEntry> &exceptions)
+{
+    if (exceptions.isEmpty())
+        return;
+    inlines.append(makeTextInline(prefix));
+    inlines.append(makeTopicLink(topicName));
+    inlines.append(makeTextInline(": "_L1));
+    for (qsizetype i = 0; i < exceptions.size(); ++i) {
+        if (i > 0)
+            inlines.append(makeTextInline(", "_L1));
+        const auto &exc = exceptions[i];
+        if (!exc.href.isEmpty())
+            inlines.append(makeResolvedLink(exc.name, exc.href));
+        else
+            inlines.append(makeTextInline(exc.name));
+    }
+    inlines.append(makeTextInline("."_L1));
+}
+
+static QList<ContentBlock> buildThreadSafetyAdmonition(
+        const CppReferenceData::ThreadSafetyInfo &ts,
+        const QString &typeWord)
+{
+    QList<InlineContent> inlines;
+    const bool hasExceptions = !ts.reentrantExceptions.isEmpty()
+            || ts.threadSafeExceptions.isEmpty() == false
+            || !ts.nonReentrantExceptions.isEmpty();
+
+    if (ts.level == "non-reentrant"_L1) {
+        inlines.append(makeTextInline("This "_L1 + typeWord + " is not "_L1));
+        inlines.append(makeTopicLink("reentrant"_L1));
+        inlines.append(makeTextInline("."_L1));
+        appendExceptionList(inlines, " These functions are "_L1, "reentrant"_L1,
+                            ts.reentrantExceptions);
+    } else if (ts.level == "reentrant"_L1) {
+        inlines.append(makeTextInline("All functions in this "_L1 + typeWord + " are "_L1));
+        inlines.append(makeTopicLink("reentrant"_L1));
+        const bool hasThreadSafe = !ts.threadSafeExceptions.isEmpty();
+        if (hasExceptions && !hasThreadSafe)
+            inlines.append(makeTextInline(" with the following exceptions:"_L1));
+        else
+            inlines.append(makeTextInline("."_L1));
+        appendExceptionList(inlines, " These functions are not "_L1, "reentrant"_L1,
+                            ts.nonReentrantExceptions);
+        appendExceptionList(inlines, " These functions are also "_L1, "thread-safe"_L1,
+                            ts.threadSafeExceptions);
+    } else if (ts.level == "thread-safe"_L1) {
+        inlines.append(makeTextInline("All functions in this "_L1 + typeWord + " are "_L1));
+        inlines.append(makeTopicLink("thread-safe"_L1));
+        if (hasExceptions)
+            inlines.append(makeTextInline(" with the following exceptions:"_L1));
+        else
+            inlines.append(makeTextInline("."_L1));
+        appendExceptionList(inlines, " These functions are only "_L1, "reentrant"_L1,
+                            ts.reentrantExceptions);
+        appendExceptionList(inlines, " These functions are not "_L1, "reentrant"_L1,
+                            ts.nonReentrantExceptions);
+    }
+
+    ContentBlock block;
+    block.type = BlockType::Paragraph;
+    block.inlineContent = std::move(inlines);
+    return {block};
+}
+
 /*!
     \class IR::Builder
     \internal
@@ -172,6 +269,8 @@ Document Builder::buildPageIR(PageMetadata pm) const
             for (const auto &e : src.threadSafety->nonReentrantExceptions)
                 ts.nonReentrantExceptions.append({e.name, e.href});
             info.threadSafety = std::move(ts);
+            info.threadSafetyAdmonition = buildThreadSafetyAdmonition(
+                    *src.threadSafety, src.typeWord);
         }
 
         for (const auto &g : src.groups)

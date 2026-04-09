@@ -148,6 +148,7 @@ struct CppReferenceInfo
     QList<ComparisonEntry> comparisonEntries;
 
     std::optional<ThreadSafetyInfo> threadSafety;
+    QList<ContentBlock> threadSafetyAdmonition;
 
     QList<GroupEntry> groups;
 

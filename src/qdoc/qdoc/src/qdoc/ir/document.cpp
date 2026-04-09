@@ -236,6 +236,13 @@ QJsonObject CppReferenceInfo::toJson() const
         json["threadSafety"_L1] = tsObj;
     }
 
+    if (!threadSafetyAdmonition.isEmpty()) {
+        QJsonArray admonitionArr;
+        for (const auto &block : threadSafetyAdmonition)
+            admonitionArr.append(block.toJson());
+        json["threadSafetyAdmonition"_L1] = admonitionArr;
+    }
+
     QJsonArray groupsArr;
     for (const auto &entry : groups) {
         QJsonObject obj;

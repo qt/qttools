@@ -589,6 +589,8 @@ static void resolveDocumentLinks(LinkResolver *resolver, IR::Document &ir, const
 {
     if (!ir.body.isEmpty())
         resolver->resolve(ir.body, relative);
+    if (ir.cppReferenceInfo && !ir.cppReferenceInfo->threadSafetyAdmonition.isEmpty())
+        resolver->resolve(ir.cppReferenceInfo->threadSafetyAdmonition, relative);
     for (auto &section : ir.detailSections) {
         for (auto &member : section.members) {
             if (!member.body.isEmpty())

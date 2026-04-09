@@ -52,15 +52,12 @@ The {{ title }} namespace is documented in the module [{{ cppRef.fullNamespaceMo
 {{ title }} is part of {% for group in cppRef.groups %}{% if not loop.is_first %}, {% endif %}[{{ group.name }}]({{ group.href }}){% endfor %}.
 
 {% endif %}
-{% if hasCppRef and existsIn(cppRef, "threadSafety") %}
-{% if cppRef.threadSafety.level == "thread-safe" %}
-> **Note:** All functions in this {{ cppRef.typeWord }} are [thread-safe](threads-reentrancy.html).{% if length(cppRef.threadSafety.nonReentrantExceptions) > 0 %} with the following exceptions: {% for exc in cppRef.threadSafety.nonReentrantExceptions %}{% if not loop.is_first %}, {% endif %}{% if exc.href != "" %}[{{ exc.name }}]({{ exc.href }}){% else %}{{ exc.name }}{% endif %}{% endfor %}{% endif %}
+{% if hasCppRef and existsIn(cppRef, "threadSafetyAdmonition") %}
+{% if cppRef.threadSafety.level == "non-reentrant" %}
+> **Warning:**{{ " " }}{% for block in cppRef.threadSafetyAdmonition %}{% for i in block.inlines %}{% if i.type == "text" %}{{ i.text }}{% else if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ c.text }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ c.text }}{% endfor %}{% endif %}{% endif %}{% endfor %}{% endfor %}
 
-{% else if cppRef.threadSafety.level == "reentrant" %}
-> **Note:** All functions in this {{ cppRef.typeWord }} are [reentrant](threads-reentrancy.html).{% if length(cppRef.threadSafety.threadSafeExceptions) > 0 %} These functions are also [thread-safe](threads-reentrancy.html): {% for exc in cppRef.threadSafety.threadSafeExceptions %}{% if not loop.is_first %}, {% endif %}{% if exc.href != "" %}[{{ exc.name }}]({{ exc.href }}){% else %}{{ exc.name }}{% endif %}{% endfor %}.{% endif %}{% if length(cppRef.threadSafety.nonReentrantExceptions) > 0 %} These functions aren't [reentrant](threads-reentrancy.html): {% for exc in cppRef.threadSafety.nonReentrantExceptions %}{% if not loop.is_first %}, {% endif %}{% if exc.href != "" %}[{{ exc.name }}]({{ exc.href }}){% else %}{{ exc.name }}{% endif %}{% endfor %}.{% endif %}
-
-{% else if cppRef.threadSafety.level == "non-reentrant" %}
-> **Warning:** All functions in this {{ cppRef.typeWord }} are [non-reentrant](threads-reentrancy.html).{% if length(cppRef.threadSafety.reentrantExceptions) > 0 %} These functions are [reentrant](threads-reentrancy.html): {% for exc in cppRef.threadSafety.reentrantExceptions %}{% if not loop.is_first %}, {% endif %}{% if exc.href != "" %}[{{ exc.name }}]({{ exc.href }}){% else %}{{ exc.name }}{% endif %}{% endfor %}.{% endif %}
+{% else %}
+> **Note:**{{ " " }}{% for block in cppRef.threadSafetyAdmonition %}{% for i in block.inlines %}{% if i.type == "text" %}{{ i.text }}{% else if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ c.text }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ c.text }}{% endfor %}{% endif %}{% endif %}{% endfor %}{% endfor %}
 
 {% endif %}
 {% endif %}
