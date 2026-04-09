@@ -44,6 +44,8 @@ qt_internal_add_app(designer
         Qt::Network
         Qt::Widgets
         Qt::Xml
+    DEFINES
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
     ENABLE_AUTOGEN_TOOLS
         uic
     PRECOMPILED_HEADER

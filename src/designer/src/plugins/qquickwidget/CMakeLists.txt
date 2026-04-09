@@ -10,6 +10,8 @@ qt_internal_add_plugin(QQuickWidgetPlugin
     PLUGIN_TYPE designer
     SOURCES
         qquickwidget_plugin.cpp qquickwidget_plugin.h
+    DEFINES
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
     LIBRARIES
         Qt::Core
         Qt::Designer

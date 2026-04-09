@@ -161,6 +161,7 @@ qt_internal_add_module(Designer
         QDESIGNER_UILIB_LIBRARY
         QT_DESIGNER
         QT_USE_QSTRINGBUILDER
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
     INCLUDE_DIRECTORIES
         ../../../shared/deviceskin
         ../../../shared/findwidget

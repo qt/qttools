@@ -21,6 +21,7 @@ qt_internal_add_module(UiTools
         QT_DESIGNER
         QT_DESIGNER_STATIC
         QT_USE_QSTRINGBUILDER
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
     INCLUDE_DIRECTORIES
         ../designer/src/lib/uilib
     LIBRARIES

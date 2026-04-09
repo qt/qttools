@@ -103,6 +103,7 @@ qt_internal_add_module(DesignerComponentsPrivate
     DEFINES
         QDESIGNER_COMPONENTS_LIBRARY
         QT_STATICPLUGIN
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
     INCLUDE_DIRECTORIES
         .
         ..
