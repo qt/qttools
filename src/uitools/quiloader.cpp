@@ -213,8 +213,8 @@ public:
                 if (prop.startsWith(PROP_GENERIC_PREFIX)) {
                     const QByteArray propName = prop.mid(sizeof(PROP_GENERIC_PREFIX) - 1);
                     const auto tsv =
-                                qvariant_cast<QUiTranslatableStringValue>(o->property(prop));
-                    o->setProperty(propName, tsv.translate(m_className, m_idBased));
+                                qvariant_cast<QUiTranslatableStringValue>(o->property(prop.constData()));
+                    o->setProperty(propName.constData(), tsv.translate(m_className, m_idBased));
                 }
             }
             if (0) {
@@ -469,11 +469,11 @@ void FormBuilderPrivate::applyProperties(QObject *o, const QList<DomProperty*> &
         const QByteArray name = p->attributeName().toUtf8();
         if (dynamicTr) {
             const QByteArray dynname = QByteArray(PROP_GENERIC_PREFIX + name);
-            o->setProperty(dynname, QVariant::fromValue(strVal));
+            o->setProperty(dynname.constData(), QVariant::fromValue(strVal));
             anyTrs = trEnabled;
         }
         if (p->elementString()->text() != text)
-            o->setProperty(name, text);
+            o->setProperty(name.constData(), text);
     }
     if (anyTrs)
         o->installEventFilter(m_trwatch);

@@ -526,7 +526,8 @@ void QFormBuilderExtra::setupColorGroup(QPalette *palette, QPalette::ColorGroup 
     const auto colorRoles = group->elementColorRole();
     for (const DomColorRole *colorRole : colorRoles) {
         if (colorRole->hasAttributeRole()) {
-            const int r = colorRole_enum.keyToValue(colorRole->attributeRole().toLatin1());
+            const auto &roleName = colorRole->attributeRole().toLatin1();
+            const int r = colorRole_enum.keyToValue(roleName.constData());
             if (r != -1) {
                 const QBrush br = setupBrush(colorRole->elementBrush());
                 palette->setBrush(colorGroup, static_cast<QPalette::ColorRole>(r), br);
@@ -603,8 +604,8 @@ QBrush QFormBuilderExtra::setupBrush(const DomBrush *brush)
         const QMetaEnum gradientCoordinate_enum = metaEnum<QAbstractFormBuilderGadget>("gradientCoordinate");
 
         const DomGradient *gradient = brush->elementGradient();
-        const auto type = enumKeyToValue<QGradient::Type>(gradientType_enum, gradient->attributeType().toLatin1());
-
+        const auto type = enumKeyToValue<QGradient::Type>(
+                gradientType_enum, gradient->attributeType().toLatin1().constData());
 
         QGradient *gr = nullptr;
 
@@ -622,10 +623,13 @@ QBrush QFormBuilderExtra::setupBrush(const DomBrush *brush)
         if (!gr)
             return br;
 
-        const auto spread = enumKeyToValue<QGradient::Spread>(gradientSpread_enum, gradient->attributeSpread().toLatin1());
+        const auto spread = enumKeyToValue<QGradient::Spread>(
+                gradientSpread_enum, gradient->attributeSpread().toLatin1().constData());
         gr->setSpread(spread);
 
-        const auto coord = enumKeyToValue<QGradient::CoordinateMode>(gradientCoordinate_enum, gradient->attributeCoordinateMode().toLatin1());
+        const auto coord = enumKeyToValue<QGradient::CoordinateMode>(
+                gradientCoordinate_enum,
+                gradient->attributeCoordinateMode().toLatin1().constData());
         gr->setCoordinateMode(coord);
 
         const auto &stops = gradient->elementGradientStop();

@@ -1207,7 +1207,8 @@ void QDesignerPropertySheet::setProperty(int index, const QVariant &value)
                 d->setStringListProperty(index, qvariant_cast<qdesigner_internal::PropertySheetStringListValue>(value));
             if (d->isKeySequenceProperty(index))
                 d->setKeySequenceProperty(index, qvariant_cast<qdesigner_internal::PropertySheetKeySequenceValue>(value));
-            d->m_object->setProperty(propertyName(index).toUtf8(), resolvePropertyValue(index, value));
+            d->m_object->setProperty(propertyName(index).toUtf8().constData(),
+                                     resolvePropertyValue(index, value));
             if (d->m_object->isWidgetType()) {
                 QWidget *w = qobject_cast<QWidget *>(d->m_object);
                 w->setStyleSheet(w->styleSheet());
@@ -1302,7 +1303,7 @@ bool QDesignerPropertySheet::reset(int index)
         }
         if (oldValue == newValue)
             return true;
-        d->m_object->setProperty(propName.toUtf8(), defaultValue);
+        d->m_object->setProperty(propName.toUtf8().constData(), defaultValue);
         d->m_addProperties[index] = newValue;
         return true;
     } else if (!d->m_info.value(index).defaultValue.isNull()) {

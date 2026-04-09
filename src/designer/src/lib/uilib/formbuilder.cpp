@@ -296,7 +296,7 @@ void QFormBuilder::createConnections(DomConnections *ui_connections, QWidget *wi
         sig.prepend("2");
         QByteArray sl = c->elementSlot().toUtf8();
         sl.prepend("1");
-        QObject::connect(sender, sig, receiver, sl);
+        QObject::connect(sender, sig.constData(), receiver, sl.constData());
     }
 }
 
@@ -477,7 +477,7 @@ void QFormBuilder::applyProperties(QObject *o, const QList<DomProperty*> &proper
             // ### special-casing for Line (QFrame) -- try to fix me
             o->setProperty("frameShape", v); // v is of QFrame::Shape enum
         } else {
-            o->setProperty(attributeName.toUtf8(), v);
+            o->setProperty(attributeName.toUtf8().constData(), v);
         }
     }
 }
