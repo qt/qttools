@@ -884,7 +884,7 @@ void QAbstractFormBuilder::applyProperties(QObject *o, const QList<DomProperty*>
             if (attributeName == "numDigits"_L1 && o->inherits("QLCDNumber")) // Deprecated in Qt 4, removed in Qt 5.
                 attributeName = u"digitCount"_s;
             if (!d->applyPropertyInternally(o, attributeName, v))
-                o->setProperty(attributeName.toUtf8(), v);
+                o->setProperty(attributeName.toUtf8().constData(), v);
         }
     }
 }
@@ -1641,8 +1641,10 @@ static void loadItemPropsNFlags(QAbstractFormBuilder *abstractFormBuilder, T *it
     loadItemProps<T>(abstractFormBuilder, item, properties);
 
     DomProperty *p = properties.value(QFormBuilderStrings::flagsAttribute);
-    if (p != nullptr && p->kind() == DomProperty::Set)
-        item->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum, p->elementSet().toLatin1()));
+    if (p != nullptr && p->kind() == DomProperty::Set) {
+        item->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum,
+                                                      p->elementSet().toLatin1().constData()));
+    }
 }
 
 /*!
@@ -2079,7 +2081,8 @@ void QAbstractFormBuilder::loadTreeWidgetExtraInfo(DomWidget *ui_widget, QTreeWi
         for (DomProperty *property : properties) {
             if (property->attributeName() == QFormBuilderStrings::flagsAttribute
                 && !property->elementSet().isEmpty()) {
-                currentItem->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum, property->elementSet().toLatin1()));
+                currentItem->setFlags(enumKeysToValue<Qt::ItemFlags>(
+                        itemFlags_enum, property->elementSet().toLatin1().constData()));
             } else if (property->attributeName() == QFormBuilderStrings::textAttribute
                        && property->elementString()) {
                 col++;

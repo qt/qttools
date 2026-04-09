@@ -248,7 +248,7 @@ void QDesignerFormBuilder::applyProperties(QObject *o, const QList<DomProperty*>
             obj = scroll->viewport();
 
         // a real property
-        obj->setProperty(attributeName.toUtf8(), v);
+        obj->setProperty(attributeName.toUtf8().constData(), v);
     }
 }
 

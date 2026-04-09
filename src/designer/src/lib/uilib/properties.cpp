@@ -34,7 +34,7 @@ QVariant domPropertyToVariant(QAbstractFormBuilder *afb,const QMetaObject *meta,
     // Complex types that need functions from QAbstractFormBuilder
     switch(p->kind()) {
     case DomProperty::String: {
-        const int index = meta->indexOfProperty(p->attributeName().toUtf8());
+        const int index = meta->indexOfProperty(p->attributeName().toUtf8().constData());
         if (index != -1 && meta->property(index).metaType().id() == QMetaType::QKeySequence)
             return QVariant::fromValue(QKeySequence(p->elementString()->text()));
     }
@@ -59,7 +59,7 @@ QVariant domPropertyToVariant(QAbstractFormBuilder *afb,const QMetaObject *meta,
 
     case DomProperty::Set: {
         const QByteArray pname = p->attributeName().toUtf8();
-        const int index = meta->indexOfProperty(pname);
+        const int index = meta->indexOfProperty(pname.constData());
         if (index == -1) {
             uiLibWarning(QCoreApplication::translate("QFormBuilder", "The set-type property %1 could not be read.").arg(p->attributeName()));
             return QVariant();
@@ -79,8 +79,8 @@ QVariant domPropertyToVariant(QAbstractFormBuilder *afb,const QMetaObject *meta,
     }
 
     case DomProperty::Enum: {
-        const QByteArray pname = p->attributeName().toUtf8();
-        const int index = meta->indexOfProperty(pname);
+        const QByteArray pname = p->attributeName().toUtf8().constData();
+        const int index = meta->indexOfProperty(pname.constData());
         const auto &enumValue = p->elementEnum();
         // Triggers in case of objects in Designer like Spacer/Line for which properties
         // are serialized using language introspection. On preview, however, these objects are
@@ -292,14 +292,16 @@ QVariant domPropertyToVariant(const DomProperty *p)
         if (sizep->hasElementHSizeType()) {
             sizePolicy.setHorizontalPolicy((QSizePolicy::Policy) sizep->elementHSizeType());
         } else if (sizep->hasAttributeHSizeType()) {
-            const auto sp = enumKeyToValue<QSizePolicy::Policy>(sizeType_enum, sizep->attributeHSizeType().toLatin1());
+            const auto sp = enumKeyToValue<QSizePolicy::Policy>(
+                    sizeType_enum, sizep->attributeHSizeType().toLatin1().constData());
             sizePolicy.setHorizontalPolicy(sp);
         }
 
         if (sizep->hasElementVSizeType()) {
             sizePolicy.setVerticalPolicy((QSizePolicy::Policy) sizep->elementVSizeType());
         } else if (sizep->hasAttributeVSizeType()) {
-            const  auto sp = enumKeyToValue<QSizePolicy::Policy>(sizeType_enum, sizep->attributeVSizeType().toLatin1());
+            const auto sp = enumKeyToValue<QSizePolicy::Policy>(
+                    sizeType_enum, sizep->attributeVSizeType().toLatin1().constData());
             sizePolicy.setVerticalPolicy(sp);
         }
 
@@ -626,7 +628,7 @@ DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *
     auto *dom_prop = new DomProperty();
     dom_prop->setAttributeName(pname);
 
-    const int pindex = meta->indexOfProperty(pname.toLatin1());
+    const int pindex = meta->indexOfProperty(pname.toLatin1().constData());
     if (pindex != -1) {
         QMetaProperty meta_property = meta->property(pindex);
         if (v.canConvert<int>() && meta_property.isEnumType()) {
