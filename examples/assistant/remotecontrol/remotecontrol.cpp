@@ -65,7 +65,7 @@ void RemoteControl::onLaunchClicked()
         return;
 
     QString app = QLibraryInfo::path(QLibraryInfo::BinariesPath);
-#if !defined(Q_OS_MAC)
+#if !defined(Q_OS_MACOS)
     app += "/assistant"_L1;
 #else
     app += "/Assistant.app/Contents/MacOS/Assistant"_L1;

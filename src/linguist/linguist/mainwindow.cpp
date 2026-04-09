@@ -2095,7 +2095,7 @@ void MainWindow::setupMenuBar()
     m_ui.menuViewViews->addAction(m_sourceAndFormDock->toggleViewAction());
     m_ui.menuViewViews->addAction(m_errorsDock->toggleViewAction());
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
     // Window menu
     QMenu *windowMenu = new QMenu(tr("&Window"), this);
     menuBar()->insertMenu(m_ui.menuHelp->menuAction(), windowMenu);

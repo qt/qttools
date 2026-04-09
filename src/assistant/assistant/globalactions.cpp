@@ -108,7 +108,7 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     connect(m_findAction, &QAction::triggered, centralWidget, &CentralWidget::showTextSearch);
     m_actionList << m_findAction;
 
-#if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
+#if defined (Q_OS_UNIX) && !defined(Q_OS_APPLE)
     m_backAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoPrevious,
                                            m_backAction->icon()));
     m_nextAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoNext,

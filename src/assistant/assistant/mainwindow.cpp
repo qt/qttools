@@ -582,7 +582,7 @@ void MainWindow::setupActions()
             this, &MainWindow::showAboutDialog);
     m_aboutAction->setMenuRole(QAction::AboutRole);
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_APPLE)
     m_resetZoomAction->setIcon(QIcon::fromTheme("zoom-original"_L1, m_resetZoomAction->icon()));
     m_syncAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ViewRefresh,
                           m_syncAction->icon()));
@@ -605,7 +605,7 @@ void MainWindow::setupActions()
     navigationBar->addAction(globalActions->zoomOutAction());
     navigationBar->addAction(m_resetZoomAction);
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
     QMenu *windowMenu = new QMenu(tr("&Window"), this);
     menuBar()->insertMenu(menu->menuAction(), windowMenu);
     windowMenu->addAction(tr("Zoom"),
