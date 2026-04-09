@@ -19,6 +19,8 @@ qt_internal_add_app(qdbusviewer
         Qt::Gui
         Qt::Widgets
         Qt::Xml
+    DEFINES
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
 )
 
 # Resources:

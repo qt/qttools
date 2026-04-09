@@ -10,6 +10,8 @@ qt_internal_add_app(kmap2qmap
         main.cpp
     LIBRARIES
         Qt::InputSupportPrivate
+    DEFINES
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
 )
 set_target_properties(kmap2qmap PROPERTIES
     WIN32_EXECUTABLE FALSE

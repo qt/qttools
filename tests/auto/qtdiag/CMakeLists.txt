@@ -16,4 +16,5 @@ qt_internal_add_test(tst_tdiag
         tst_qtdiag.cpp
     DEFINES
         QT_USE_USING_NAMESPACE
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
 )

@@ -17,5 +17,7 @@ qt_internal_add_test(tst_qtattributionsscanner
 )
 
 target_compile_definitions(tst_qtattributionsscanner
-    PRIVATE QTTOOLS_LICENSES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../../../LICENSES"
+    PRIVATE
+        QTTOOLS_LICENSES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../../../LICENSES"
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
 )
