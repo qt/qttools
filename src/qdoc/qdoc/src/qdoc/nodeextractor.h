@@ -26,6 +26,7 @@ namespace NodeExtractor {
 IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hrefResolver);
 IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn, const HrefResolver *hrefResolver);
 IR::CollectionData extractCollectionData(const CollectionNode *cn, const HrefResolver *hrefResolver);
+IR::CppReferenceData extractCppReferenceData(const Aggregate *aggregate, const HrefResolver *hrefResolver);
 QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate, const HrefResolver *hrefResolver);
 QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const HrefResolver *hrefResolver);
 IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver, const Node *relative, MemberExtractionLevel level = MemberExtractionLevel::Summary);

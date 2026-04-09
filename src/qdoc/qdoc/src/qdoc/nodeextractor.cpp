@@ -13,19 +13,23 @@
 #include "doc.h"
 #include "enumnode.h"
 #include "functionnode.h"
+#include "generator.h"
 #include "hrefresolver.h"
 #include "inclusionfilter.h"
+#include "namespacenode.h"
 #include "ir/contentbuilder.h"
 #include "ir/signaturespan.h"
 #include "pagenode.h"
 #include "parameters.h"
 #include "propertynode.h"
 #include "qmlpropertynode.h"
+#include "qdocdatabase.h"
 #include "qmltypenode.h"
 #include "sections.h"
 #include "sharedcommentnode.h"
 #include "template_declaration.h"
 #include "text.h"
+#include "tree.h"
 #include "typedefnode.h"
 #include "utilities.h"
 #include "variablenode.h"
@@ -100,6 +104,13 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hre
         QString suffix = qcn->isQmlBasicType() ? " QML Value Type"_L1 : " QML Type"_L1;
         pm.title = pn->name() + suffix;
         pm.fullTitle = pm.title;
+    } else if (pn->isClassNode() || pn->isNamespace() || pn->isHeader()) {
+        // plainFullName() produces qualified names for nested aggregates
+        // (e.g. "Outer::Inner"), matching the legacy generator behavior.
+        // For top-level types and headers the result is the same as name().
+        const auto *aggregate = static_cast<const Aggregate *>(pn);
+        pm.fullTitle = aggregate->plainFullName();
+        pm.title = pm.fullTitle;
     } else {
         pm.title = pn->title();
         pm.fullTitle = pn->fullTitle();
@@ -153,6 +164,11 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hre
     if (pn->isCollectionNode()) {
         const auto *cn = static_cast<const CollectionNode *>(pn);
         pm.collectionData = extractCollectionData(cn, hrefResolver);
+    }
+
+    if (pn->isClassNode() || pn->isNamespace() || pn->isHeader()) {
+        const auto *aggregate = static_cast<const Aggregate *>(pn);
+        pm.cppReferenceData = extractCppReferenceData(aggregate, hrefResolver);
     }
 
     return pm;
@@ -309,6 +325,254 @@ IR::CollectionData extractCollectionData(const CollectionNode *cn, const HrefRes
                 data.members.append(makeMemberEntry(node));
         }
         sortEntries(data.members);
+    }
+
+    return data;
+}
+
+static QList<IR::SignatureSpan> buildTemplateDeclSpans(const RelaxedTemplateDeclaration *templateDecl);
+
+/*!
+    \internal
+    Extract C++ reference page metadata from a class, namespace, or header.
+
+    Reads requisite table fields (header include, build-system snippets,
+    status), inheritance hierarchies, template declarations, comparison
+    operators, thread-safeness, and group associations. The result is a
+    value-type struct that captures everything the template generator needs
+    to render the requisites table and secondary sections without touching
+    the Node tree at render time.
+
+    All three aggregate page types (ClassNode, NamespaceNode, HeaderNode)
+    are handled, with ClassNode-specific sections gated on isClassNode().
+*/
+IR::CppReferenceData extractCppReferenceData(const Aggregate *aggregate, const HrefResolver *hrefResolver)
+{
+    IR::CppReferenceData data;
+    QDocDatabase *qdb = QDocDatabase::qdocDB();
+
+    data.isNamespace = aggregate->isNamespace();
+    data.isHeader = aggregate->isHeader();
+    data.isInnerClass = aggregate->parent() && aggregate->parent()->isClassNode();
+    data.typeWord = aggregate->typeWord(false);
+    data.hasObsoleteMembers = aggregate->hasObsoleteMembers();
+
+    auto ancestors = aggregate->plainFullName().split("::"_L1);
+    ancestors.pop_back();
+    data.ancestorNames = ancestors;
+
+    if (aggregate->includeFile())
+        data.headerInclude = *aggregate->includeFile();
+
+    if (!aggregate->physicalModuleName().isEmpty()) {
+        const CollectionNode *cn =
+            qdb->getCollectionNode(aggregate->physicalModuleName(), NodeType::Module);
+        if (cn && (!cn->cmakeComponent().isEmpty() || !cn->cmakePackage().isEmpty())) {
+            const QString package = cn->cmakePackage().isEmpty()
+                ? "Qt"_L1 + QString::number(QT_VERSION_MAJOR)
+                : cn->cmakePackage();
+            QString findPkg;
+            if (cn->cmakeComponent().isEmpty())
+                findPkg = "find_package("_L1 + package + " REQUIRED)"_L1;
+            else
+                findPkg = "find_package("_L1 + package + " REQUIRED COMPONENTS "_L1
+                    + cn->cmakeComponent() + ")"_L1;
+
+            QString target;
+            if (!cn->cmakeTargetItem().isEmpty()) {
+                target = cn->cmakeTargetItem();
+            } else if (cn->cmakeComponent().isEmpty()) {
+                target = package + "::"_L1 + package;
+            } else {
+                target = package + "::"_L1 + cn->cmakeComponent();
+            }
+
+            data.cmakeFindPackage = findPkg;
+            data.cmakeTargetLinkLibraries =
+                "target_link_libraries(mytarget PRIVATE "_L1 + target + ")"_L1;
+        }
+        if (cn && !cn->qtVariable().isEmpty())
+            data.qmakeVariable = "QT += "_L1 + cn->qtVariable();
+    }
+
+    auto statusOpt = formatStatus(aggregate, qdb);
+    if (statusOpt) {
+        data.statusText = *statusOpt;
+        if (aggregate->status() == Status::Deprecated)
+            data.statusCssClass = "deprecated"_L1;
+        else if (aggregate->status() == Status::Preliminary)
+            data.statusCssClass = "preliminary"_L1;
+    }
+
+    if (aggregate->isClassNode()) {
+        auto *classNode = const_cast<ClassNode *>(static_cast<const ClassNode *>(aggregate));
+
+        if (classNode->isQmlNativeType()) {
+            const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+            const NodeContext context = classNode->createContext();
+            if (InclusionFilter::isIncluded(policy, context)) {
+                QList<QmlTypeNode *> nativeTypes{classNode->qmlNativeTypes().cbegin(),
+                                                  classNode->qmlNativeTypes().cend()};
+                if (!nativeTypes.isEmpty()) {
+                    std::sort(nativeTypes.begin(), nativeTypes.end(), Node::nodeNameLessThan);
+                    data.qmlNativeType = IR::CppReferenceData::QmlNativeTypeLink{
+                        nativeTypes.first()->name(),
+                        resolveHref(hrefResolver, nativeTypes.first(), aggregate)
+                    };
+                }
+            }
+        }
+
+        const auto *metaTags = classNode->doc().metaTagMap();
+        if (metaTags && metaTags->contains(u"qdoc-suppress-inheritance"_s))
+            data.suppressInheritance = true;
+
+        if (!data.suppressInheritance) {
+            const auto &baseClasses = classNode->baseClasses();
+            for (const auto &bc : baseClasses) {
+                if (bc.m_node) {
+                    data.baseClasses.append({
+                        bc.m_node->plainFullName(),
+                        resolveHref(hrefResolver, bc.m_node, aggregate),
+                        bc.m_access
+                    });
+                }
+            }
+
+            const auto &derivedClasses = classNode->derivedClasses();
+            for (const auto &dc : derivedClasses) {
+                if (dc.m_node) {
+                    data.derivedClasses.append({
+                        dc.m_node->plainFullName(),
+                        resolveHref(hrefResolver, dc.m_node, aggregate)
+                    });
+                }
+            }
+            std::sort(data.derivedClasses.begin(), data.derivedClasses.end(),
+                      [](const IR::CppReferenceData::DerivedClassEntry &a,
+                         const IR::CppReferenceData::DerivedClassEntry &b) {
+                          return a.name.compare(b.name, Qt::CaseInsensitive) < 0;
+                      });
+        }
+    }
+
+    if (aggregate->templateDecl()) {
+        data.templateDeclSpans = buildTemplateDeclSpans(&*aggregate->templateDecl());
+    }
+
+    const auto selfCategory = aggregate->comparisonCategory();
+    if (selfCategory != ComparisonCategory::None)
+        data.selfComparisonCategory = QString::fromStdString(comparisonCategoryAsString(selfCategory));
+
+    const auto *comparesMap = aggregate->doc().comparesWithMap();
+    if (comparesMap && !comparesMap->isEmpty()) {
+        for (auto [key, description] : comparesMap->asKeyValueRange()) {
+            IR::CppReferenceData::ComparisonEntry entry;
+            entry.category = QString::fromStdString(comparisonCategoryAsString(key));
+
+            const QStringList types{description.firstAtom()->string().split(';'_L1)};
+            entry.comparableTypes = types;
+
+            if (description.firstAtom()->next() != description.lastAtom()) {
+                Text descText = Text::subText(description.firstAtom()->next(),
+                                              description.lastAtom());
+                entry.description = descText.toString();
+            }
+            data.comparisonEntries.append(entry);
+        }
+    }
+
+    Node::ThreadSafeness ts = aggregate->threadSafeness();
+    if (ts != Node::UnspecifiedSafeness) {
+        IR::CppReferenceData::ThreadSafetyInfo tsInfo;
+        switch (ts) {
+        case Node::NonReentrant:
+            tsInfo.level = "non-reentrant"_L1;
+            break;
+        case Node::Reentrant:
+            tsInfo.level = "reentrant"_L1;
+            break;
+        case Node::ThreadSafe:
+            tsInfo.level = "thread-safe"_L1;
+            break;
+        default:
+            break;
+        }
+
+        NodeList reentrant, threadsafe, nonreentrant;
+        bool hasExceptions = false;
+        for (const auto *child : aggregate->childNodes()) {
+            if (!child->isDeprecated()) {
+                switch (child->threadSafeness()) {
+                case Node::Reentrant:
+                    reentrant.append(const_cast<Node *>(child));
+                    if (ts == Node::ThreadSafe) hasExceptions = true;
+                    break;
+                case Node::ThreadSafe:
+                    threadsafe.append(const_cast<Node *>(child));
+                    if (ts == Node::Reentrant) hasExceptions = true;
+                    break;
+                case Node::NonReentrant:
+                    nonreentrant.append(const_cast<Node *>(child));
+                    hasExceptions = true;
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+        if (hasExceptions) {
+            for (const auto *node : std::as_const(reentrant)) {
+                tsInfo.reentrantExceptions.append({
+                    node->plainFullName(),
+                    resolveHref(hrefResolver, node, aggregate)
+                });
+            }
+            for (const auto *node : std::as_const(threadsafe)) {
+                tsInfo.threadSafeExceptions.append({
+                    node->plainFullName(),
+                    resolveHref(hrefResolver, node, aggregate)
+                });
+            }
+            for (const auto *node : std::as_const(nonreentrant)) {
+                tsInfo.nonReentrantExceptions.append({
+                    node->plainFullName(),
+                    resolveHref(hrefResolver, node, aggregate)
+                });
+            }
+        }
+        data.threadSafety = std::move(tsInfo);
+    }
+
+    const QStringList &groupNames = aggregate->groupNames();
+    if (!groupNames.isEmpty()) {
+        const auto &groupMap = qdb->groups();
+        for (const auto &groupName : groupNames) {
+            auto it = groupMap.find(groupName);
+            if (it == groupMap.end() || !*it)
+                continue;
+            CollectionNode *group = *it;
+            // TODO: mergeCollections() mutates the node tree during
+            // extraction, violating the principle that the new pipeline
+            // reads without side effects. Replace with an eager merge
+            // pass that runs before generation begins.
+            qdb->mergeCollections(group);
+            if (group->wasSeen()) {
+                data.groups.append({
+                    group->fullTitle(),
+                    resolveHref(hrefResolver, group, aggregate)
+                });
+            }
+        }
+    }
+
+    if (aggregate->isNamespace()) {
+        const auto *ns = static_cast<const NamespaceNode *>(aggregate);
+        if (!ns->hasDoc() && ns->docNode()) {
+            data.isPartialNamespace = true;
+            data.fullNamespaceHref = resolveHref(hrefResolver, ns->docNode(), aggregate);
+            data.fullNamespaceModuleName = ns->docNode()->tree()->camelCaseModuleName();
+        }
     }
 
     return data;
