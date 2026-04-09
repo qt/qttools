@@ -126,6 +126,9 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
 {
     Q_ASSERT(link.link.has_value());
 
+    if (link.link->state != IR::LinkState::Unresolved)
+        return;
+
     const QString &target = link.href;
 
     // External URL -- no resolution needed.
@@ -157,6 +160,7 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
         }
 
         link.link->state = IR::LinkState::Broken;
+        link.href.clear();
         return;
     }
 
