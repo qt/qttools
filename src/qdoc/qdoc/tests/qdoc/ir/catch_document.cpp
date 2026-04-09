@@ -939,3 +939,308 @@ SCENARIO("IR::CollectionInfo with empty state", "[IR::CollectionInfo][IR][JSON]"
         }
     }
 }
+
+SCENARIO("Empty CppReferenceInfo serialization", "[IR::CppReferenceInfo][IR][JSON]") {
+
+    GIVEN("A default-constructed CppReferenceInfo") {
+        IR::CppReferenceInfo info;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("Boolean flags are present with default values") {
+                REQUIRE(json.contains("isInnerClass"_L1));
+                REQUIRE(json["isInnerClass"_L1].toBool() == false);
+                REQUIRE(json.contains("isNamespace"_L1));
+                REQUIRE(json["isNamespace"_L1].toBool() == false);
+                REQUIRE(json.contains("isHeader"_L1));
+                REQUIRE(json["isHeader"_L1].toBool() == false);
+                REQUIRE(json.contains("hasObsoleteMembers"_L1));
+                REQUIRE(json["hasObsoleteMembers"_L1].toBool() == false);
+                REQUIRE(json.contains("suppressInheritance"_L1));
+                REQUIRE(json["suppressInheritance"_L1].toBool() == false);
+            }
+
+            THEN("List fields are present as empty arrays") {
+                REQUIRE(json.contains("baseClasses"_L1));
+                REQUIRE(json["baseClasses"_L1].toArray().isEmpty());
+                REQUIRE(json.contains("derivedClasses"_L1));
+                REQUIRE(json["derivedClasses"_L1].toArray().isEmpty());
+                REQUIRE(json.contains("groups"_L1));
+                REQUIRE(json["groups"_L1].toArray().isEmpty());
+                REQUIRE(json.contains("comparisonEntries"_L1));
+                REQUIRE(json["comparisonEntries"_L1].toArray().isEmpty());
+                REQUIRE(json.contains("ancestorNames"_L1));
+                REQUIRE(json["ancestorNames"_L1].toArray().isEmpty());
+                REQUIRE(json.contains("templateDeclSpans"_L1));
+                REQUIRE(json["templateDeclSpans"_L1].toArray().isEmpty());
+            }
+
+            THEN("Optional string fields are absent") {
+                REQUIRE(!json.contains("headerInclude"_L1));
+                REQUIRE(!json.contains("cmakeFindPackage"_L1));
+                REQUIRE(!json.contains("cmakeTargetLinkLibraries"_L1));
+                REQUIRE(!json.contains("qmakeVariable"_L1));
+                REQUIRE(!json.contains("statusText"_L1));
+                REQUIRE(!json.contains("selfComparisonCategory"_L1));
+                REQUIRE(!json.contains("qmlNativeType"_L1));
+                REQUIRE(!json.contains("threadSafety"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("CppReferenceInfo with requisite table fields", "[IR::CppReferenceInfo][IR][JSON]") {
+
+    GIVEN("A CppReferenceInfo with all requisite fields populated") {
+        IR::CppReferenceInfo info;
+        info.headerInclude = "<QCoapClient>"_L1;
+        info.cmakeFindPackage = "find_package(Qt6 REQUIRED COMPONENTS Coap)"_L1;
+        info.cmakeTargetLinkLibraries = "target_link_libraries(mytarget PRIVATE Qt6::Coap)"_L1;
+        info.qmakeVariable = "coap"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("All requisite fields are present in JSON") {
+                REQUIRE(json["headerInclude"_L1].toString() == "<QCoapClient>");
+                REQUIRE(json["cmakeFindPackage"_L1].toString()
+                        == "find_package(Qt6 REQUIRED COMPONENTS Coap)");
+                REQUIRE(json["cmakeTargetLinkLibraries"_L1].toString()
+                        == "target_link_libraries(mytarget PRIVATE Qt6::Coap)");
+                REQUIRE(json["qmakeVariable"_L1].toString() == "coap");
+            }
+        }
+    }
+}
+
+SCENARIO("CppReferenceInfo with base classes", "[IR::CppReferenceInfo][IR][JSON]") {
+
+    GIVEN("A CppReferenceInfo with two base class entries") {
+        IR::CppReferenceInfo info;
+        info.baseClasses = {
+            {"QIODevice"_L1, "qiodevice.html"_L1, Access::Public},
+            {"QAbstractSocket"_L1, "qabstractsocket.html"_L1, Access::Protected}
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("The baseClasses array has two entries with access as {id, label}") {
+                QJsonArray arr = json["baseClasses"_L1].toArray();
+                REQUIRE(arr.size() == 2);
+
+                QJsonObject first = arr[0].toObject();
+                REQUIRE(first["name"_L1].toString() == "QIODevice");
+                REQUIRE(first["href"_L1].toString() == "qiodevice.html");
+                REQUIRE(first["access"_L1].toObject()["id"_L1].toString() == "public");
+                REQUIRE(first["access"_L1].toObject()["label"_L1].toString() == "Public");
+
+                QJsonObject second = arr[1].toObject();
+                REQUIRE(second["name"_L1].toString() == "QAbstractSocket");
+                REQUIRE(second["access"_L1].toObject()["id"_L1].toString() == "protected");
+            }
+        }
+    }
+}
+
+SCENARIO("CppReferenceInfo with derived classes", "[IR::CppReferenceInfo][IR][JSON]") {
+
+    GIVEN("A CppReferenceInfo with two derived class entries") {
+        IR::CppReferenceInfo info;
+        info.derivedClasses = {
+            {"QCoapReply"_L1, "qcoapreply.html"_L1},
+            {"QCoapResourceDiscoveryReply"_L1, "qcoapresourcediscoveryreply.html"_L1}
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("The derivedClasses array has two entries with name and href") {
+                QJsonArray arr = json["derivedClasses"_L1].toArray();
+                REQUIRE(arr.size() == 2);
+                REQUIRE(arr[0].toObject()["name"_L1].toString() == "QCoapReply");
+                REQUIRE(arr[0].toObject()["href"_L1].toString() == "qcoapreply.html");
+                REQUIRE(arr[1].toObject()["name"_L1].toString()
+                        == "QCoapResourceDiscoveryReply");
+            }
+        }
+    }
+}
+
+SCENARIO("CppReferenceInfo with thread safety info", "[IR::CppReferenceInfo][IR][JSON]") {
+
+    GIVEN("A CppReferenceInfo with thread safety level and exceptions") {
+        IR::CppReferenceInfo info;
+        IR::CppReferenceInfo::ThreadSafetyInfo ts;
+        ts.level = "reentrant"_L1;
+        ts.reentrantExceptions = {
+            {"QCoapClient::get"_L1, "qcoapclient.html#get"_L1}
+        };
+        info.threadSafety = ts;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("The threadSafety object contains level and exception arrays") {
+                REQUIRE(json.contains("threadSafety"_L1));
+                QJsonObject tsObj = json["threadSafety"_L1].toObject();
+                REQUIRE(tsObj["level"_L1].toString() == "reentrant");
+
+                QJsonArray reentrantArr = tsObj["reentrantExceptions"_L1].toArray();
+                REQUIRE(reentrantArr.size() == 1);
+                REQUIRE(reentrantArr[0].toObject()["name"_L1].toString()
+                        == "QCoapClient::get");
+                REQUIRE(reentrantArr[0].toObject()["href"_L1].toString()
+                        == "qcoapclient.html#get");
+
+                REQUIRE(tsObj["threadSafeExceptions"_L1].toArray().isEmpty());
+                REQUIRE(tsObj["nonReentrantExceptions"_L1].toArray().isEmpty());
+            }
+        }
+    }
+}
+
+SCENARIO("CppReferenceInfo with comparison entries", "[IR::CppReferenceInfo][IR][JSON]") {
+
+    GIVEN("A CppReferenceInfo with a comparison entry") {
+        IR::CppReferenceInfo info;
+        info.selfComparisonCategory = "strong"_L1;
+        info.comparisonEntries = {
+            {"strong"_L1, {"QCoapOption"_L1, "int"_L1}, "Supports == and <=>."_L1}
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("The selfComparisonCategory and comparisonEntries are serialized") {
+                REQUIRE(json["selfComparisonCategory"_L1].toString() == "strong");
+
+                QJsonArray arr = json["comparisonEntries"_L1].toArray();
+                REQUIRE(arr.size() == 1);
+                QJsonObject entry = arr[0].toObject();
+                REQUIRE(entry["category"_L1].toString() == "strong");
+                REQUIRE(entry["description"_L1].toString() == "Supports == and <=>.");
+
+                QJsonArray types = entry["comparableTypes"_L1].toArray();
+                REQUIRE(types.size() == 2);
+                REQUIRE(types[0].toString() == "QCoapOption");
+                REQUIRE(types[1].toString() == "int");
+            }
+        }
+    }
+}
+
+SCENARIO("CppReferenceInfo with groups", "[IR::CppReferenceInfo][IR][JSON]") {
+
+    GIVEN("A CppReferenceInfo with two group entries") {
+        IR::CppReferenceInfo info;
+        info.groups = {
+            {"Network"_L1, "group-network.html"_L1},
+            {"IoT"_L1, "group-iot.html"_L1}
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("The groups array has two entries") {
+                QJsonArray arr = json["groups"_L1].toArray();
+                REQUIRE(arr.size() == 2);
+                REQUIRE(arr[0].toObject()["name"_L1].toString() == "Network");
+                REQUIRE(arr[0].toObject()["href"_L1].toString() == "group-network.html");
+                REQUIRE(arr[1].toObject()["name"_L1].toString() == "IoT");
+            }
+        }
+    }
+}
+
+SCENARIO("CppReferenceInfo namespace fields", "[IR::CppReferenceInfo][IR][JSON]") {
+
+    GIVEN("A CppReferenceInfo for a partial namespace") {
+        IR::CppReferenceInfo info;
+        info.isNamespace = true;
+        info.isPartialNamespace = true;
+        info.fullNamespaceHref = "qtcoap-namespace.html"_L1;
+        info.fullNamespaceModuleName = "QtCoap"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("Namespace-specific fields are serialized") {
+                REQUIRE(json["isNamespace"_L1].toBool() == true);
+                REQUIRE(json["isPartialNamespace"_L1].toBool() == true);
+                REQUIRE(json["fullNamespaceHref"_L1].toString()
+                        == "qtcoap-namespace.html");
+                REQUIRE(json["fullNamespaceModuleName"_L1].toString() == "QtCoap");
+            }
+        }
+    }
+}
+
+SCENARIO("CppReferenceInfo with QML native type", "[IR::CppReferenceInfo][IR][JSON]") {
+
+    GIVEN("A CppReferenceInfo with a QML native type link") {
+        IR::CppReferenceInfo info;
+        info.qmlNativeType = IR::CppReferenceInfo::QmlNativeTypeLink{
+            "CoapClient"_L1, "qml-qtcoap-coapclient.html"_L1
+        };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("The qmlNativeType object contains name and href") {
+                REQUIRE(json.contains("qmlNativeType"_L1));
+                QJsonObject nt = json["qmlNativeType"_L1].toObject();
+                REQUIRE(nt["name"_L1].toString() == "CoapClient");
+                REQUIRE(nt["href"_L1].toString() == "qml-qtcoap-coapclient.html");
+            }
+        }
+    }
+}
+
+SCENARIO("Document toJson includes cppReferenceInfo", "[IR::Document][IR::CppReferenceInfo][IR][JSON]") {
+
+    GIVEN("A Document with cppReferenceInfo set") {
+        IR::Document ir;
+        ir.title = "QCoapClient"_L1;
+        ir.nodeType = NodeType::Class;
+        ir.genus = Genus::CPP;
+
+        IR::CppReferenceInfo cppInfo;
+        cppInfo.headerInclude = "<QCoapClient>"_L1;
+        ir.cppReferenceInfo = cppInfo;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("hasCppRef flag is true and cppRef key is present") {
+                REQUIRE(json.contains("hasCppRef"_L1));
+                REQUIRE(json["hasCppRef"_L1].toBool() == true);
+                REQUIRE(json.contains("cppRef"_L1));
+                REQUIRE(json["cppRef"_L1].isObject());
+                REQUIRE(json["cppRef"_L1].toObject()["headerInclude"_L1].toString()
+                        == "<QCoapClient>");
+            }
+        }
+    }
+}
+
+SCENARIO("Document toJson without cppReferenceInfo", "[IR::Document][IR::CppReferenceInfo][IR][JSON]") {
+
+    GIVEN("A Document without cppReferenceInfo") {
+        IR::Document ir;
+        ir.title = "RegularPage"_L1;
+        ir.nodeType = NodeType::Page;
+        ir.genus = Genus::DOC;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("hasCppRef flag is false and cppRef key is absent") {
+                REQUIRE(json.contains("hasCppRef"_L1));
+                REQUIRE(json["hasCppRef"_L1].toBool() == false);
+                REQUIRE(!json.contains("cppRef"_L1));
+            }
+        }
+    }
+}

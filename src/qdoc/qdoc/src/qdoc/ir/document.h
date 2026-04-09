@@ -6,6 +6,7 @@
 
 #include "contentblock.h"
 #include "member.h"
+#include "signaturespan.h"
 
 #include "qdoc/access.h"
 #include "qdoc/genustypes.h"
@@ -14,6 +15,7 @@
 #include <QJsonObject>
 #include <QList>
 #include <QString>
+#include <QStringList>
 
 #include <optional>
 
@@ -77,6 +79,84 @@ struct CollectionInfo
     [[nodiscard]] QJsonObject toJson() const;
 };
 
+struct CppReferenceInfo
+{
+    struct BaseClassEntry {
+        QString name;
+        QString href;
+        Access access { Access::Public };
+    };
+
+    struct DerivedClassEntry {
+        QString name;
+        QString href;
+    };
+
+    struct QmlNativeTypeLink {
+        QString name;
+        QString href;
+    };
+
+    struct ComparisonEntry {
+        QString category;
+        QStringList comparableTypes;
+        QString description;
+    };
+
+    struct ThreadSafetyExceptionEntry {
+        QString name;
+        QString href;
+    };
+
+    struct ThreadSafetyInfo {
+        QString level;
+        QList<ThreadSafetyExceptionEntry> reentrantExceptions;
+        QList<ThreadSafetyExceptionEntry> threadSafeExceptions;
+        QList<ThreadSafetyExceptionEntry> nonReentrantExceptions;
+    };
+
+    struct GroupEntry {
+        QString name;
+        QString href;
+    };
+
+    QString headerInclude;
+    QString cmakeFindPackage;
+    QString cmakeTargetLinkLibraries;
+    QString qmakeVariable;
+    QString statusText;
+    QString statusCssClass;
+    std::optional<QmlNativeTypeLink> qmlNativeType;
+    QList<BaseClassEntry> baseClasses;
+    QList<DerivedClassEntry> derivedClasses;
+    bool suppressInheritance { false };
+
+    QList<SignatureSpan> templateDeclSpans;
+
+    bool isInnerClass { false };
+    bool isNamespace { false };
+    bool isHeader { false };
+
+    bool isPartialNamespace { false };
+    QString fullNamespaceHref;
+    QString fullNamespaceModuleName;
+
+    QString typeWord;
+    QStringList ancestorNames;
+
+    QString selfComparisonCategory;
+    QList<ComparisonEntry> comparisonEntries;
+
+    std::optional<ThreadSafetyInfo> threadSafety;
+
+    QList<GroupEntry> groups;
+
+    bool hasObsoleteMembers { false };
+    QString obsoleteMembersUrl;
+
+    [[nodiscard]] QJsonObject toJson() const;
+};
+
 struct Document
 {
     // Classification
@@ -106,6 +186,9 @@ struct Document
 
     // Collection metadata (populated for module, QML module, and group pages)
     std::optional<CollectionInfo> collectionInfo;
+
+    // C++ reference metadata (populated for class, namespace, and header pages)
+    std::optional<CppReferenceInfo> cppReferenceInfo;
 
     // Members sub-page URL (set when a members listing page is generated)
     QString membersPageUrl;

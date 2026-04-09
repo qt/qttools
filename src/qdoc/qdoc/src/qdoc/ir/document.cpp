@@ -125,6 +125,135 @@ QJsonObject CollectionInfo::toJson() const
 }
 
 /*!
+    Converts CppReferenceInfo to a QJsonObject for template rendering.
+
+    Boolean flags and list fields are always emitted so templates can
+    iterate without guards. String fields are omitted when empty.
+    The access specifier on base class entries uses the {id, label}
+    convention from classificationjson.h.
+*/
+QJsonObject CppReferenceInfo::toJson() const
+{
+    QJsonObject json;
+
+    if (!headerInclude.isEmpty())
+        json["headerInclude"_L1] = headerInclude;
+    if (!cmakeFindPackage.isEmpty())
+        json["cmakeFindPackage"_L1] = cmakeFindPackage;
+    if (!cmakeTargetLinkLibraries.isEmpty())
+        json["cmakeTargetLinkLibraries"_L1] = cmakeTargetLinkLibraries;
+    if (!qmakeVariable.isEmpty())
+        json["qmakeVariable"_L1] = qmakeVariable;
+    if (!statusText.isEmpty())
+        json["statusText"_L1] = statusText;
+    if (!statusCssClass.isEmpty())
+        json["statusCssClass"_L1] = statusCssClass;
+
+    if (qmlNativeType) {
+        QJsonObject obj;
+        obj["name"_L1] = qmlNativeType->name;
+        obj["href"_L1] = qmlNativeType->href;
+        json["qmlNativeType"_L1] = obj;
+    }
+
+    QJsonArray baseClassesArr;
+    for (const auto &entry : baseClasses) {
+        QJsonObject obj;
+        obj["name"_L1] = entry.name;
+        obj["href"_L1] = entry.href;
+        obj["access"_L1] = accessToJson(entry.access);
+        baseClassesArr.append(obj);
+    }
+    json["baseClasses"_L1] = baseClassesArr;
+
+    QJsonArray derivedClassesArr;
+    for (const auto &entry : derivedClasses) {
+        QJsonObject obj;
+        obj["name"_L1] = entry.name;
+        obj["href"_L1] = entry.href;
+        derivedClassesArr.append(obj);
+    }
+    json["derivedClasses"_L1] = derivedClassesArr;
+
+    json["suppressInheritance"_L1] = suppressInheritance;
+
+    QJsonArray templateDeclArr;
+    for (const auto &span : templateDeclSpans)
+        templateDeclArr.append(span.toJson());
+    json["templateDeclSpans"_L1] = templateDeclArr;
+
+    json["isInnerClass"_L1] = isInnerClass;
+    json["isNamespace"_L1] = isNamespace;
+    json["isHeader"_L1] = isHeader;
+
+    json["isPartialNamespace"_L1] = isPartialNamespace;
+    if (!fullNamespaceHref.isEmpty())
+        json["fullNamespaceHref"_L1] = fullNamespaceHref;
+    if (!fullNamespaceModuleName.isEmpty())
+        json["fullNamespaceModuleName"_L1] = fullNamespaceModuleName;
+
+    if (!typeWord.isEmpty())
+        json["typeWord"_L1] = typeWord;
+
+    QJsonArray ancestorNamesArr;
+    for (const auto &name : ancestorNames)
+        ancestorNamesArr.append(name);
+    json["ancestorNames"_L1] = ancestorNamesArr;
+
+    if (!selfComparisonCategory.isEmpty())
+        json["selfComparisonCategory"_L1] = selfComparisonCategory;
+
+    QJsonArray comparisonArr;
+    for (const auto &entry : comparisonEntries) {
+        QJsonObject obj;
+        obj["category"_L1] = entry.category;
+        QJsonArray typesArr;
+        for (const auto &t : entry.comparableTypes)
+            typesArr.append(t);
+        obj["comparableTypes"_L1] = typesArr;
+        obj["description"_L1] = entry.description;
+        comparisonArr.append(obj);
+    }
+    json["comparisonEntries"_L1] = comparisonArr;
+
+    if (threadSafety) {
+        QJsonObject tsObj;
+        tsObj["level"_L1] = threadSafety->level;
+
+        auto exceptionListToJson = [](const QList<ThreadSafetyExceptionEntry> &entries) {
+            QJsonArray arr;
+            for (const auto &entry : entries) {
+                QJsonObject obj;
+                obj["name"_L1] = entry.name;
+                obj["href"_L1] = entry.href;
+                arr.append(obj);
+            }
+            return arr;
+        };
+
+        tsObj["reentrantExceptions"_L1] = exceptionListToJson(threadSafety->reentrantExceptions);
+        tsObj["threadSafeExceptions"_L1] = exceptionListToJson(threadSafety->threadSafeExceptions);
+        tsObj["nonReentrantExceptions"_L1] = exceptionListToJson(threadSafety->nonReentrantExceptions);
+        json["threadSafety"_L1] = tsObj;
+    }
+
+    QJsonArray groupsArr;
+    for (const auto &entry : groups) {
+        QJsonObject obj;
+        obj["name"_L1] = entry.name;
+        obj["href"_L1] = entry.href;
+        groupsArr.append(obj);
+    }
+    json["groups"_L1] = groupsArr;
+
+    json["hasObsoleteMembers"_L1] = hasObsoleteMembers;
+    if (!obsoleteMembersUrl.isEmpty())
+        json["obsoleteMembersUrl"_L1] = obsoleteMembersUrl;
+
+    return json;
+}
+
+/*!
     Converts the Document to a QJsonObject for template rendering.
 
     The JSON structure follows a convention where field names use camelCase
@@ -138,6 +267,7 @@ QJsonObject CollectionInfo::toJson() const
     Returns a QJsonObject containing all IR data in a format suitable for
     passing to the Inja template engine via InjaBridge.
 */
+
 QJsonObject Document::toJson() const
 {
     QJsonObject json;
@@ -182,6 +312,11 @@ QJsonObject Document::toJson() const
     json["hasCollection"_L1] = collectionInfo.has_value();
     if (collectionInfo)
         json["collection"_L1] = collectionInfo->toJson();
+
+    // C++ reference metadata (class, namespace, and header pages).
+    json["hasCppRef"_L1] = cppReferenceInfo.has_value();
+    if (cppReferenceInfo)
+        json["cppRef"_L1] = cppReferenceInfo->toJson();
 
     // Members sub-page URL (always emitted for Inja root-level variable safety;
     // empty string when no members sub-page was generated)

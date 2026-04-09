@@ -6,6 +6,7 @@
 
 #include "contentblock.h"
 #include "member.h"
+#include "signaturespan.h"
 
 #include "qdoc/access.h"
 #include "qdoc/genustypes.h"
@@ -13,6 +14,7 @@
 
 #include <QtCore/QList>
 #include <QtCore/QString>
+#include <QtCore/QStringList>
 
 #include <optional>
 
@@ -72,6 +74,81 @@ struct CollectionData
     QList<MemberEntry> members;
 };
 
+struct CppReferenceData
+{
+    struct BaseClassEntry {
+        QString name;
+        QString href;
+        Access access { Access::Public };
+    };
+
+    struct DerivedClassEntry {
+        QString name;
+        QString href;
+    };
+
+    struct QmlNativeTypeLink {
+        QString name;
+        QString href;
+    };
+
+    struct ComparisonEntry {
+        QString category;
+        QStringList comparableTypes;
+        QString description;
+    };
+
+    struct ThreadSafetyExceptionEntry {
+        QString name;
+        QString href;
+    };
+
+    struct ThreadSafetyInfo {
+        QString level;
+        QList<ThreadSafetyExceptionEntry> reentrantExceptions;
+        QList<ThreadSafetyExceptionEntry> threadSafeExceptions;
+        QList<ThreadSafetyExceptionEntry> nonReentrantExceptions;
+    };
+
+    struct GroupEntry {
+        QString name;
+        QString href;
+    };
+
+    QString headerInclude;
+    QString cmakeFindPackage;
+    QString cmakeTargetLinkLibraries;
+    QString qmakeVariable;
+    QString statusText;
+    QString statusCssClass;
+    std::optional<QmlNativeTypeLink> qmlNativeType;
+    QList<BaseClassEntry> baseClasses;
+    QList<DerivedClassEntry> derivedClasses;
+    bool suppressInheritance { false };
+
+    QList<SignatureSpan> templateDeclSpans;
+
+    bool isInnerClass { false };
+    bool isNamespace { false };
+    bool isHeader { false };
+
+    bool isPartialNamespace { false };
+    QString fullNamespaceHref;
+    QString fullNamespaceModuleName;
+
+    QString typeWord;
+    QStringList ancestorNames;
+
+    QString selfComparisonCategory;
+    QList<ComparisonEntry> comparisonEntries;
+
+    std::optional<ThreadSafetyInfo> threadSafety;
+
+    QList<GroupEntry> groups;
+
+    bool hasObsoleteMembers { false };
+};
+
 struct PageMetadata
 {
     NodeType nodeType { NodeType::NoType };
@@ -92,6 +169,7 @@ struct PageMetadata
 
     std::optional<QmlTypeData> qmlTypeData;
     std::optional<CollectionData> collectionData;
+    std::optional<CppReferenceData> cppReferenceData;
 };
 
 } // namespace IR
