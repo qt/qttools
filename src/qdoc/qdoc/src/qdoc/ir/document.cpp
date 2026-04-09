@@ -192,8 +192,7 @@ QJsonObject CppReferenceInfo::toJson() const
     if (!fullNamespaceModuleName.isEmpty())
         json["fullNamespaceModuleName"_L1] = fullNamespaceModuleName;
 
-    if (!typeWord.isEmpty())
-        json["typeWord"_L1] = typeWord;
+    json["typeWord"_L1] = typeWord;
 
     QJsonArray ancestorNamesArr;
     for (const auto &name : ancestorNames)

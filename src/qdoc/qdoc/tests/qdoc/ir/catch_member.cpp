@@ -882,9 +882,9 @@ SCENARIO("MemberIR empty detail fields omitted from JSON", "[IR::MemberIR][IR][d
         WHEN("Converting to JSON") {
             QJsonObject json = member.toJson();
 
-            THEN("Detail fields are absent from JSON") {
-                REQUIRE(!json.contains("anchorId"_L1));
-                REQUIRE(!json.contains("synopsis"_L1));
+            THEN("Detail fields are empty or absent from JSON") {
+                REQUIRE(json["anchorId"_L1].toString().isEmpty());
+                REQUIRE(json["synopsis"_L1].toString().isEmpty());
                 REQUIRE(!json.contains("comparisonCategory"_L1));
                 REQUIRE(!json.contains("isNoexcept"_L1));
                 REQUIRE(!json.contains("noexceptNote"_L1));

@@ -276,10 +276,8 @@ QJsonObject MemberIR::toJson() const
     if (!dataType.isEmpty())
         json["dataType"_L1] = dataType;
 
-    if (!anchorId.isEmpty())
-        json["anchorId"_L1] = anchorId;
-    if (!synopsis.isEmpty())
-        json["synopsis"_L1] = synopsis;
+    json["anchorId"_L1] = anchorId;
+    json["synopsis"_L1] = synopsis;
     if (!signatureSpans.isEmpty()) {
         QJsonArray arr;
         for (const auto &span : signatureSpans)
