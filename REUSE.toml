@@ -166,6 +166,7 @@ path = ["src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/src/**.
         "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/src/**.qml",
         "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/src/**.qdoc",
         "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/src/**.png",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/src/**/Q*",
         "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**.qdocconf"]
 precedence = "override"
 comment = ["source files in this directory are for file generation within testing",
@@ -186,7 +187,8 @@ path = ["src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expecte
         "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expected/**.index",
         "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expected/**.md",
         "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expected/**.log",
-        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expected/**.png"]
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expected/**.png",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expected/**.webp"]
 precedence = "override"
 comment = ["Generated output files inherit license from QDoc templates",
            "Templates are distributed with QDoc and their license propagates to generated output",

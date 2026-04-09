@@ -1,0 +1,71 @@
+// Copyright (C) 2019 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page qtcoap-index.html
+    \title Qt CoAP
+    \brief Provides classes and functions to make CoAP programming simple and
+    portable.
+
+    Constrained Application Protocol (\l CoAP) is a machine-to-machine (M2M) web
+    transfer protocol for use with constrained nodes and constrained networks in
+    the Internet of Things (IoT). It is designed to easily interface with HTTP for
+    integration with the Web, while meeting specialized requirements such as multicast
+    support, very low overhead, and simplicity for constrained environments.
+
+    The Qt CoAP module implements the client side of CoAP defined by \l{RFC 7252}.
+    Generally, CoAP is designed to use datagram-oriented transport such as UDP, so
+    the current implementation of the transport is based on UDP. However implementing
+    custom transports based on TCP, WebSocket, and so on, is also possible.
+
+    The Qt CoAP module supports:
+
+    \list
+    \li Security based on Datagram TLS (DTLS) over UDP
+    \li Group communication defined by \l{RFC 7390}
+    \li Blockwise transfers defined by \l{RFC 7959}
+    \li Resource observation defined by \l{RFC 7641}
+    \li Resource discovery (multicast and single server)
+    \endlist
+
+    \include module-use.qdocinc using qt module
+
+    \code
+    find_package(Qt6 REQUIRED COMPONENTS Coap)
+    target_link_libraries(mytarget PRIVATE Qt6::Coap)
+    \endcode
+
+    See also the \l {Build with CMake} overview.
+
+    \include module-use.qdocinc building with qmake
+
+    \code
+    QT += coap
+    \endcode
+
+    \section1 Articles and Guides
+
+    \list
+        \li \l{Qt CoAP Overview}{Overview}
+    \endlist
+
+    \section1 Examples
+
+    \list
+        \li \l{Qt CoAP Examples}
+    \endlist
+
+    \section1 Reference
+
+    \list
+         \li \l{Qt CoAP C++ Classes}{C++ Classes}
+    \endlist
+
+    \section1 Licenses and Attributions
+
+    Qt CoAP is available under commercial licenses from \l{The Qt Company}.
+    In addition, it is available under the
+    \l{GNU General Public License, version 3}.
+
+    \annotatedlist attributions-qtcoap
+*/

@@ -1,0 +1,4 @@
+module CoapSecureClientModule
+prefer :/qt/qml/CoapSecureClientModule/
+FilePicker 1.0 FilePicker.qml
+Main 1.0 Main.qml

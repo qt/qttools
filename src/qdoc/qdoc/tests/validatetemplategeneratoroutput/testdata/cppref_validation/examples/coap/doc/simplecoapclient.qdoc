@@ -1,0 +1,156 @@
+// Copyright (C) 2019 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \example simplecoapclient
+    \title Simple CoAP Client
+    \examplecategory {Connectivity}
+    \ingroup qtcoap-examples
+    \brief Creating an application that communicates with a CoAP server.
+
+    \image simplecoapclient.webp
+           {CoAP client window with Add Options dialog and discovered resources}
+
+    \e {Simple CoAP Client} demonstrates how to create a minimalistic CoAP client
+    application to send and receive CoAP messages.
+
+    \include examples-run.qdocinc
+
+    \section1 Setting Up a CoAP Server
+
+    To use the application, you need to specify a CoAP server. You have the following
+    options:
+
+    \list
+        \li Use the CoAP test server located at \c {coap://coap.me}.
+        \li Create a CoAP server using \l {https://github.com/obgm/libcoap} {libcoap},
+        \l {https://github.com/keith-cullen/FreeCoAP} {FreeCoAP} or any other CoAP
+        server implementation.
+        \li Use the \l {https://github.com/eclipse/californium/} {Californium} plugtest
+        server, which supports most of the CoAP features. You can build it manually or
+        use a ready Docker image, which builds and starts the plugtest server. The steps
+        for using the docker-based server are described below.
+
+    \endlist
+
+    \section2 Using the Docker-based Test Server
+
+    The following command pulls the docker container for the CoAP server from the Docker
+    Hub and starts it:
+
+    \badcode
+    docker run --name coap-test-server -d --rm -p 5683:5683/udp -p 5684:5684/udp tqtc/coap-californium-test-server:3.8.0
+    \endcode
+
+    To find out the IP address of the docker container, first retrieve the container ID
+    by running \c {docker ps}, which will output something like:
+
+    \badcode
+    $ docker ps
+    CONTAINER ID        IMAGE
+    5e46502df88f        tqtc/coap-californium-test-server:3.8.0
+    \endcode
+
+    Then you can obtain the IP address with the following command:
+
+    \badcode
+    docker inspect <container_id> | grep IPAddress
+    \endcode
+
+    For example:
+
+    \badcode
+    $ docker inspect 5e46502df88f | grep IPAddress
+    ...
+    "IPAddress": "172.17.0.2",
+    ...
+    \endcode
+
+    The CoAP test server will be reachable by the retrieved IP address on ports
+    \e 5683 (non-secure) and \e 5684 (secure).
+
+    To terminate the docker container after usage, use the following command:
+
+    \badcode
+    docker stop <container_id>
+    \endcode
+
+    The \c {<container_id>} here is the same as retrieved by the \c {docker ps}
+    command.
+
+    \section1 Creating a Client
+
+    The first step is to create a CoAP client using the QCoapClient class. Then
+    we need to connect its signals, to get notified when a CoAP reply is received
+    or a request has failed:
+
+    \quotefromfile simplecoapclient/mainwindow.cpp
+    \skipto MainWindow::MainWindow
+    \printuntil onError
+    \dots
+
+    \section1 Sending Requests
+    We use the QCoapRequest class to create CoAP requests. This class provides methods
+    for constructing CoAP frames.
+
+    \skipto on_runButton_clicked
+    \printuntil addOption
+    \dots
+
+    In this example, we set the URL, as well as the message type and add options
+    to the request. It is also possible to set the payload, message ID, token,
+    and so on, but we are using the default values here. Note that by default,
+    the message ID and token are generated randomly.
+
+    Based on the selected request method, we send a \c GET, \c PUT, \c POST or
+    \c DELETE request to the server:
+
+    \skipto switch
+    \dots
+    \printuntil }
+    \dots
+
+    For \c PUT and \c POST requests we also add \c m_currentData as a payload for
+    the request.
+
+    For browsing the contents of the server and discovering the resources available on
+    it, a \e discovery request is used:
+
+    \skipto on_discoverButton_clicked
+    \printuntil {
+    \dots
+    \skipto discoverReply
+    \printuntil onDiscovered
+    \dots
+
+    \note Instead of QCoapReply class, we use the QCoapResourceDiscoveryReply to keep
+    the reply for a discovery request. It has the QCoapResourceDiscoveryReply::discovered
+    signal, which returns the list of QCoapResources that has been discovered.
+
+    If there are \e observable resources on the server (meaning that they have the
+    resource type \c obs), we can subscribe to updates on that resource by running
+    an \e observe request:
+
+    \skipto on_observeButton_clicked
+    \printuntil {
+    \dots
+    \skipto observeReply
+    \printline observeReply
+    \dots
+    \skipto onNotified
+    \printline onNotified
+    \dots
+
+    The client can unsubscribe from the resource observation by handling the
+    \c clicked() signal of the \c cancelObserveButton:
+
+    \skipto clicked
+    \dots
+    \printuntil })
+
+    The responses coming from the server are displayed in the UI:
+
+    \quotefromfile simplecoapclient/mainwindow.cpp
+    \skipto MainWindow::addMessage
+    \printto on_runButton_clicked
+*/

@@ -1,0 +1,42 @@
+// Copyright (C) 2019 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \externalpage https://coap.technology/
+    \title CoAP
+*/
+
+/*!
+    \externalpage https://datatracker.ietf.org/doc/html/rfc7252
+    \title RFC 7252
+*/
+
+/*!
+    \externalpage https://datatracker.ietf.org/doc/html/rfc7390
+    \title RFC 7390
+*/
+
+/*!
+    \externalpage https://datatracker.ietf.org/doc/html/rfc7959
+    \title RFC 7959
+*/
+
+/*!
+    \externalpage https://datatracker.ietf.org/doc/html/rfc7641
+    \title RFC 7641
+*/
+
+/*!
+    \externalpage https://datatracker.ietf.org/doc/html/rfc7390#section-2.5
+    \title RFC 7390 - Section 2.5
+*/
+
+/*!
+    \externalpage https://datatracker.ietf.org/doc/html/rfc7252#section-4.2
+    \title RFC 7252 - Section 4.2
+*/
+
+/*!
+    \externalpage https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats
+    \title CoAP Content-Formats Registry
+*/
