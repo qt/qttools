@@ -13,6 +13,8 @@ qt_internal_add_plugin(QView3DPlugin
         view3d_global.h
         view3d_plugin.cpp view3d_plugin.h
         view3d_tool.cpp view3d_tool.h
+    DEFINES
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
     LIBRARIES
         Qt::Core
         Qt::Designer
