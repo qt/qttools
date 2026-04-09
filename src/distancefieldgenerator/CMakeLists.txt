@@ -15,6 +15,7 @@ qt_internal_add_app(qdistancefieldgenerator
         QT_NO_CAST_FROM_ASCII
         QT_NO_CAST_TO_ASCII
         QT_NO_FOREACH
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
     LIBRARIES
         Qt::CorePrivate
         Qt::Gui
