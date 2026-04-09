@@ -23,6 +23,7 @@
 #include "pagenode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
+#include "sections.h"
 #include "tree.h"
 #include "utilities.h"
 
@@ -282,13 +283,30 @@ void TemplateGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarke
 {
     Q_UNUSED(marker);
 
-    // Placeholder - IR integration pending
-    if (m_writer && m_writer->isOpen()) {
-        m_writer->writeLine(QString(u"<!-- TemplateGenerator: C++ Reference Page for "_s
-                           + aggregate->name() + u" -->"_s));
-        m_writer->writeLine(QString(u"<h1>"_s + aggregate->fullTitle() + u"</h1>"_s));
-        m_writer->writeLine(u"<p>Template-based output (IR integration pending)</p>"_s);
-    }
+    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(aggregate, m_hrefResolver.get());
+    auto allMembers = NodeExtractor::extractAllMembersIR(aggregate, m_hrefResolver.get());
+
+    IR::Builder builder;
+    IR::Document ir = builder.buildPageIR(std::move(pm));
+
+    if (allMembers)
+        ir.membersPageUrl = fileBase(aggregate) + "-members."_L1 + m_fileExtension;
+
+    if (ir.cppReferenceInfo && ir.cppReferenceInfo->hasObsoleteMembers)
+        ir.cppReferenceInfo->obsoleteMembersUrl =
+            fileBase(aggregate) + "-obsolete."_L1 + m_fileExtension;
+
+    if (m_linkResolver)
+        resolveDocumentLinks(m_linkResolver.get(), ir, aggregate);
+
+    resolveImagePaths(ir);
+    renderDocument(ir, "cppref"_L1);
+
+    if (allMembers)
+        generateMemberListingPage(aggregate, *allMembers);
+
+    if (ir.cppReferenceInfo && ir.cppReferenceInfo->hasObsoleteMembers)
+        generateObsoleteMembersPage(aggregate);
 }
 
 void TemplateGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
@@ -452,6 +470,70 @@ void TemplateGenerator::generateMemberListingPage(const Node *node,
 
     beginDocument(membersFileName);
     renderJson(json, "members"_L1);
+    endDocument();
+}
+
+/*!
+    \internal
+    Generate a sub-page listing obsolete members for a C++ aggregate.
+
+    Opens a new output file, extracts obsolete summary and detail
+    sections through the Sections API, converts each member to MemberIR
+    JSON, and renders the result through the \c obsolete template.
+*/
+void TemplateGenerator::generateObsoleteMembersPage(const Aggregate *aggregate)
+{
+    Sections sections(aggregate);
+    SectionPtrVector obsoleteSummary;
+    SectionPtrVector obsoleteDetail;
+
+    if (!sections.hasObsoleteMembers(&obsoleteSummary, &obsoleteDetail))
+        return;
+
+    const QString obsoleteFileName =
+        fileBase(aggregate) + "-obsolete."_L1 + m_fileExtension;
+
+    QJsonObject json;
+    json["title"_L1] = QString("Obsolete Members for "_L1 + aggregate->plainFullName());
+    json["typeName"_L1] = aggregate->plainFullName();
+    json["typeHref"_L1] = QString(fileBase(aggregate) + "."_L1 + m_fileExtension);
+
+    QJsonArray summaryArr;
+    for (const Section *section : obsoleteSummary) {
+        QJsonObject sectionJson;
+        sectionJson["title"_L1] = section->title();
+        sectionJson["id"_L1] = section->title().toLower().replace(' '_L1, '-'_L1);
+        QJsonArray membersJson;
+        for (const Node *node : section->obsoleteMembers()) {
+            IR::MemberIR mir = NodeExtractor::extractMemberIR(
+                node, m_hrefResolver.get(), aggregate,
+                MemberExtractionLevel::Summary);
+            membersJson.append(mir.toJson());
+        }
+        sectionJson["members"_L1] = membersJson;
+        summaryArr.append(sectionJson);
+    }
+
+    QJsonArray detailArr;
+    for (const Section *section : obsoleteDetail) {
+        QJsonObject sectionJson;
+        sectionJson["title"_L1] = section->title();
+        QJsonArray membersJson;
+        for (const Node *node : section->obsoleteMembers()) {
+            IR::MemberIR mir = NodeExtractor::extractMemberIR(
+                node, m_hrefResolver.get(), aggregate,
+                MemberExtractionLevel::Detail);
+            membersJson.append(mir.toJson());
+        }
+        sectionJson["members"_L1] = membersJson;
+        detailArr.append(sectionJson);
+    }
+
+    json["sections"_L1] = summaryArr;
+    json["detailSections"_L1] = detailArr;
+
+    beginDocument(obsoleteFileName);
+    renderJson(json, "obsolete"_L1);
     endDocument();
 }
 

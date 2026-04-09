@@ -77,6 +77,7 @@ private:
     void renderDocument(const IR::Document &ir, const QString &templateBaseName);
     void renderJson(const QJsonObject &json, const QString &templateBaseName);
     void generateMemberListingPage(const Node *node, const IR::AllMembersIR &allMembers);
+    void generateObsoleteMembersPage(const Aggregate *aggregate);
 
     // Include resolution for Inja {% include %} directives.
     [[nodiscard]] QString resolveInclude(const QString &name) const;

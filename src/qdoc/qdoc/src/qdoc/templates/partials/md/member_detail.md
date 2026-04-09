@@ -120,8 +120,8 @@ This {{ lower(member.nodeType.label) }} was introduced in Qt {{ member.since }}.
 > **Note:** Comparison category is {{ member.comparisonCategory }}.
 
 {% endif %}
-{% if existsIn(member, "isNoexcept") %}
-> **Note:** This function is noexcept{% if existsIn(member, "noexceptNote") %} when {{ member.noexceptNote }}{% endif %}.
+{% if existsIn(member, "noexceptNote") and member.noexceptNote != "" %}
+> **Note:** This function is noexcept when {{ member.noexceptNote }}.
 
 {% endif %}
 {% if existsIn(member, "alsoList") and length(member.alsoList) > 0 %}

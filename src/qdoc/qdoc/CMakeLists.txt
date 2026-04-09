@@ -275,6 +275,18 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/members.md"
         PROPERTIES QT_RESOURCE_ALIAS "templates/members.md"
     )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/cppref.html"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/cppref.html"
+    )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/cppref.md"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/cppref.md"
+    )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/obsolete.html"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/obsolete.html"
+    )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/obsolete.md"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/obsolete.md"
+    )
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/assets/qdoc-default.css"
         PROPERTIES QT_RESOURCE_ALIAS "templates/assets/qdoc-default.css"
     )
@@ -288,6 +300,10 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/collection.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/members.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/members.md"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/cppref.html"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/cppref.md"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/obsolete.html"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/obsolete.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/content_blocks.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/member_detail.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/content_blocks.md"

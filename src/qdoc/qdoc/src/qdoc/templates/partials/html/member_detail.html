@@ -91,8 +91,8 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     {% if existsIn(member, "comparisonCategory") and member.comparisonCategory != "" %}
     <p><b>Note:</b> Comparison category is {{ escape_html(member.comparisonCategory) }}.</p>
     {% endif %}
-    {% if existsIn(member, "isNoexcept") %}
-    <p><b>Note:</b> This function is noexcept{% if existsIn(member, "noexceptNote") %} when {{ escape_html(member.noexceptNote) }}{% endif %}.</p>
+    {% if existsIn(member, "noexceptNote") and member.noexceptNote != "" %}
+    <p><b>Note:</b> This function is noexcept when {{ escape_html(member.noexceptNote) }}.</p>
     {% endif %}
     {% if existsIn(member, "alsoList") and length(member.alsoList) > 0 %}
     <p><b>See also </b>{% for block in member.alsoList %}{% for i in block.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% endfor %}.</p>
