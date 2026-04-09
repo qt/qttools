@@ -40,3 +40,76 @@
     \externalpage https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats
     \title CoAP Content-Formats Registry
 */
+
+// Cross-module stubs for standalone test project.
+// These targets live in qtbase/qtdeclarative/qtcreator in a real build.
+
+/*!
+    \externalpage https://doc.qt.io/qtcreator/
+    \title Qt Creator Documentation
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qtcreator/creator-build-example-application.html
+    \title Qt Creator: Tutorial: Build and run
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/cmake-manual.html
+    \title CMake Documentation
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html
+    \title Build with CMake
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qtqml-cppintegration-definetypes.html
+    \title Defining QML Types from C++
+*/
+
+/*!
+    \externalpage https://www.qt.io/
+    \title The Qt Company
+*/
+
+/*!
+    \externalpage https://www.gnu.org/licenses/gpl-3.0.html
+    \title GNU General Public License, version 3
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qobject.html#Q_INVOKABLE
+    \title Q_INVOKABLE
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qobject.html#Q_PROPERTY
+    \title Q_PROPERTY
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qqmlengine.html#QML_ANONYMOUS
+    \title QML_ANONYMOUS
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qqmlengine.html#QML_NAMED_ELEMENT
+    \title QML_NAMED_ELEMENT
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qcborstreamreader.html
+    \title QCborStreamReader
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qcborstreamwriter.html
+    \title QCborStreamWriter
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt-6/qnetworkinterface.html#isValid
+    \title QNetworkInterface::isValid()
+*/

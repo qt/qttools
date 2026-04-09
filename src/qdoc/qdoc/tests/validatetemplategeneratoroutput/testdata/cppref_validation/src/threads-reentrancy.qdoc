@@ -1,0 +1,15 @@
+// Copyright (C) 2024 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page threads-reentrancy.html
+    \title Reentrancy and Thread-Safety
+    \keyword reentrant
+    \keyword thread-safe
+
+    \brief Definitions of reentrant and thread-safe used in Qt documentation.
+
+    This page provides the topic definitions that thread safety admonitions
+    in class documentation link to. In a full Qt documentation build, these
+    definitions come from qtbase.
+*/
