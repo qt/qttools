@@ -310,8 +310,8 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
 
     case Atom::Link:
     case Atom::NavLink: {
-        if (Q_UNLIKELY(m_blockPath.isEmpty()))
-            break;
+        if (m_blockPath.isEmpty())
+            openBlock(BlockType::Paragraph);
 
         m_inLink = true;
 

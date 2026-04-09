@@ -1215,21 +1215,33 @@ SCENARIO("ContentBuilder handles stray FormattingRight without matching left",
     }
 }
 
-SCENARIO("ContentBuilder drops Link atom outside any block context",
+SCENARIO("ContentBuilder auto-opens paragraph for Link atom outside any block",
          "[IR::ContentBuilder][IR][Link]")
 {
-    GIVEN("A Link atom with no enclosing paragraph or section")
+    GIVEN("A \\sa-style atom chain: Link, FormattingLeft, String, FormattingRight")
     {
-        AtomChain chain(Atom::Link, u"foo.html"_s);
+        AtomChain chain(Atom::Link, u"setHost"_s);
+        chain.append(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
+        chain.append(Atom::String, u"setHost()"_s);
+        chain.append(Atom::FormattingRight, ATOM_FORMATTING_LINK);
 
         WHEN("ContentBuilder processes the chain")
         {
             IR::ContentBuilder builder;
             auto blocks = builder.build(&chain.first);
 
-            THEN("No blocks are produced and m_inLink is not set")
+            THEN("A paragraph is auto-opened containing a structured link")
             {
-                REQUIRE(blocks.isEmpty());
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Paragraph);
+
+                const auto &inlines = blocks[0].inlineContent;
+                REQUIRE(inlines.size() == 1);
+                REQUIRE(inlines[0].type == IR::InlineType::Link);
+                REQUIRE(inlines[0].href == u"setHost"_s);
+                REQUIRE(inlines[0].children.size() == 1);
+                REQUIRE(inlines[0].children[0].type == IR::InlineType::Text);
+                REQUIRE(inlines[0].children[0].text == u"setHost()"_s);
             }
         }
     }
