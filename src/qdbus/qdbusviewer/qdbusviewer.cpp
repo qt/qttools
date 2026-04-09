@@ -285,7 +285,8 @@ void QDBusViewer::getProperty(const BusSignature &sig)
 void QDBusViewer::setProperty(const BusSignature &sig)
 {
     QDBusInterface iface(sig.mService, sig.mPath, sig.mInterface, c);
-    QMetaProperty prop = iface.metaObject()->property(iface.metaObject()->indexOfProperty(sig.mName.toLatin1()));
+    const int index = iface.metaObject()->indexOfProperty(sig.mName.toLatin1().constData());
+    QMetaProperty prop = iface.metaObject()->property(index);
 
     bool ok;
     QString input = QInputDialog::getText(this, tr("Arguments"),
@@ -458,7 +459,8 @@ void QDBusViewer::showTreeViewContextMenu(const QPoint &point)
     case QDBusModel::PropertyItem: {
         menu.addAction(copyMemberPropertyNameAction);
         QDBusInterface iface(sig.mService, sig.mPath, sig.mInterface, c);
-        QMetaProperty prop = iface.metaObject()->property(iface.metaObject()->indexOfProperty(sig.mName.toLatin1()));
+        const int index = iface.metaObject()->indexOfProperty(sig.mName.toLatin1().constData());
+        QMetaProperty prop = iface.metaObject()->property(index);
         QAction *actionSet = new QAction(tr("&Set value"), &menu);
         actionSet->setData(ACTION_DATA_SET_PROPERTY);
         actionSet->setEnabled(prop.isWritable());
