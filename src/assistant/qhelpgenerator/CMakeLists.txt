@@ -20,6 +20,8 @@ qt_internal_add_tool(${target_name}
     LIBRARIES
         Qt::Gui
         Qt::HelpPrivate
+    DEFINES
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
 )
 qt_internal_return_unless_building_tools()
 
