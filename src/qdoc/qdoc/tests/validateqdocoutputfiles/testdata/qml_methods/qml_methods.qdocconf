@@ -1,0 +1,15 @@
+project = QmlMethods
+locationinfo = false
+
+# Validate the eight deliberate invalid-link warnings against the log.
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+warninglimit = 8
+warninglimit.enabled = true
+
+sourcedirs = src
+headerdirs = src
+
+sources.fileextensions = "*.cpp *.qdoc *.qml"
+headers.fileextensions = "*.h"

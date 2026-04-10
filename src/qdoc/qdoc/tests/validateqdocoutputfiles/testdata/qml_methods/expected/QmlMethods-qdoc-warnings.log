@@ -1,0 +1,14 @@
+# QDoc Warning Log
+# Project: QmlMethods
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/types.qdoc:51: [QmlMethods] (qdoc) warning: Can't link to 'BaseItem.select(int, float)#Missing'
+src/types.qdoc:52: [QmlMethods] (qdoc) warning: Can't link to 'BaseItem.select(int, float))'
+src/types.qdoc:53: [QmlMethods] (qdoc) warning: Can't link to 'BaseItem.select(string)'
+src/types.qdoc:54: [QmlMethods] (qdoc) warning: Can't link to 'BaseItem.select(,)'
+src/types.qdoc:55: [QmlMethods] (qdoc) warning: Can't link to 'BaseItem::select(,)'
+src/types.qdoc:56: [QmlMethods] (qdoc) warning: Can't link to 'BaseItem.select(,)'
+src/types.qdoc:57: [QmlMethods] (qdoc) warning: Can't link to 'BaseItem::select(,)'
+src/types.qdoc:58: [QmlMethods] (qdoc) warning: Can't link to 'TestModule.BaseItem()'

@@ -249,6 +249,8 @@ public:
     const Node *findQmlNode(const QString &path, const Node *relative, FindFlags flags);
 
 private:
+    static const Node *setReferenceFromFragment(const QString &fragment, const Node *node,
+                                               QString &ref);
     void findAllClasses(Aggregate *node) { node->findAllClasses(); }
     void findAllFunctions(Aggregate *node) { node->findAllFunctions(m_functionIndex); }
     void findAllAttributions(Aggregate *node) { node->findAllAttributions(m_attributions); }

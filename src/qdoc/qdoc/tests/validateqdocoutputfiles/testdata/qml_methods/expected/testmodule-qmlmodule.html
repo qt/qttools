@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- types.qdoc -->
+  <meta name="description" content="Test module for QML methods.">
+  <meta name="keywords" content="qmlmodule">
+  <title>Test QML Types and Methods | QmlMethods</title>
+</head>
+<body>
+<ul class="breadcrumb">
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#links-to-methods">Links to methods</a></li>
+<li class="level1"><a href="#types">Types</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">Test QML Types and Methods</h1>
+<!-- $$$TestModule-description -->
+<div class="descr" id="details">
+<h2 id="links-to-methods">Links to methods</h2>
+<p>QML syntax, using the module name:</p>
+<ul>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">TestModule.BaseItem.select</a>()</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">TestModule.BaseItem.select</a>( )</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">BaseItem.select</a>()</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">select</a>()</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">TestModule::BaseItem::select</a>()</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">BaseItem::select</a>()</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">select</a>()</li>
+</ul>
+<p>QML syntax, without the module name:</p>
+<ul>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">BaseItem.select</a>()</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">BaseItem::select</a>()</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">BaseItem::select</a>( )</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">BaseItem::select</a>( )</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">select</a>()</li>
+<li><a href="qml-testmodule-baseitem.html#select-method-1" translate="no">BaseItem::select</a>(int, int)</li>
+<li><a href="qml-testmodule-baseitem.html#select-method-1" translate="no">BaseItem.select</a>(int, int)</li>
+<li><a href="qml-testmodule-baseitem.html#select-method-1" translate="no">select</a>(int, int)</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">BaseItem::select</a>(int, float)</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">BaseItem.select</a>(int, float)</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">select</a>(int, float)</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">TestModule.BaseItem.child.select</a>(int, float)</li>
+<li><a href="qml-testmodule-baseitem.html#selection" translate="no">BaseItem.select</a>(int, float)#Selection</li>
+<li><a href="qml-testmodule-baseitem.html#select-method" translate="no">BaseItem.select</a>(int, float)</li>
+</ul>
+<p>Type/module precedence must not change for a forced QML name:</p>
+<ul>
+<li><a href="qml-testmodule-collision.html" translate="no">Collision</a></li>
+<li><a href="qml-testmodule-collision.html" translate="no">Collision</a></li>
+<li><a href="qml-testmodule-collision.html" translate="no">TestModule.Collision</a></li>
+</ul>
+<p>Invalid signatures and fragments must fail:</p>
+<ul>
+<li>BaseItem.select(int, float)#Missing</li>
+<li>BaseItem.select(int, float))</li>
+<li>BaseItem.select(string)</li>
+<li>BaseItem.select(,)</li>
+<li>BaseItem::select(,)</li>
+<li>BaseItem.select(,)</li>
+<li>BaseItem::select(,)</li>
+<li>TestModule.BaseItem()</li>
+</ul>
+<h2 id="types">Types</h2>
+<p>A list of types is automatically included below.</p>
+</div>
+<!-- @@@TestModule -->
+<div class="table"><table class="annotated">
+<tr class="odd topAlign"><td class="tblName" translate="no"><p><a href="qml-testmodule-baseitem.html">BaseItem</a></p></td><td class="tblDescr"><p>A base QML type with properties</p></td></tr>
+<tr class="even topAlign"><td class="tblName" translate="no"><p><a href="qml-testmodule-collision.html">Collision</a></p></td><td class="tblDescr"><p>A type that must not be shadowed by the unrelated module</p></td></tr>
+</table></div>
+</body>
+</html>

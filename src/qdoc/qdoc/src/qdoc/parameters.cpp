@@ -8,6 +8,8 @@
 
 #include <algorithm>
 
+using namespace Qt::Literals::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 QRegularExpression Parameters::s_varComment(R"(^/\*\s*([a-zA-Z_0-9]+)\s*\*/$)");
@@ -524,6 +526,55 @@ bool Parameters::match(const Parameters &parameters) const
     return std::equal(m_parameters.cbegin(), m_parameters.cend(), parameters.m_parameters.cbegin(),
                       parameters.m_parameters.cend(),
                       [](const Parameter &a, const Parameter &b) { return a.type() == b.type(); });
+}
+
+/*!
+  Returns a string containing only the list of parameters within
+  parentheses in the supplied \a signature, or a null string if
+  no parameter list is found.
+
+  If a parameter list is found, modifies the signature to remove
+  the parameter list and its surrounding parentheses.
+
+  An unbalanced signature is left unchanged and returns a null string.
+*/
+QString Parameters::extractParameters(QString &signature)
+{
+    if (!signature.endsWith(')'_L1))
+        return {};
+
+    qsizetype position = signature.size() - 1;
+    qsizetype depth{0};
+
+    while (position >= 0) {
+        if (signature.at(position) == ')'_L1)
+            ++depth;
+        else if (signature.at(position) == '('_L1) {
+            --depth;
+            if (depth == 0)
+                break;
+        }
+        --position;
+    }
+    if (position < 0)
+        return {};
+
+    // An unmatched parenthesis in the name is not part of a valid signature.
+    for (qsizetype i = 0; i < position; ++i) {
+        if (signature.at(i) == '('_L1)
+            ++depth;
+        else if (signature.at(i) == ')'_L1) {
+            --depth;
+            if (depth < 0)
+                return {};
+        }
+    }
+    if (depth != 0)
+        return {};
+
+    QString parameters = signature.mid(position + 1, signature.size() - position - 2);
+    signature.truncate(position);
+    return parameters;
 }
 
 QT_END_NAMESPACE

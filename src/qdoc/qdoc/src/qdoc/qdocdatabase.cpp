@@ -1200,18 +1200,14 @@ void QDocDatabase::resolveProxies()
 const FunctionNode *QDocDatabase::findFunctionNode(const QString &target, const Node *relative,
                                                    Genus genus)
 {
-    QString signature;
     QString function = target;
-    qsizetype length = target.size();
-    if (function.endsWith("()"))
-        function.chop(2);
-    if (function.endsWith(QChar(')'))) {
-        qsizetype position = function.lastIndexOf(QChar('('));
-        signature = function.mid(position + 1, length - position - 2);
-        function = function.left(position);
-    }
-    QStringList path = function.split("::");
-    return m_forest.findFunctionNode(path, Parameters(signature), relative, genus);
+    const QString signature = Parameters::extractParameters(function);
+    const Parameters parameters(signature.trimmed());
+    if (!parameters.isValid())
+        return nullptr;
+
+    const QStringList path = function.split("::"_L1);
+    return m_forest.findFunctionNode(path, parameters, relative, genus);
 }
 
 /*!
@@ -1331,16 +1327,12 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
             node = domain->findNodeByNameAndType(QStringList(target), &Node::isPageNode);
         } else if (target.endsWith(')'_L1)) {
             QString function = target;
-            QString signature;
-            if (function.endsWith("()"_L1))
-                function.chop(2);
-            if (function.endsWith(')'_L1)) {
-                qsizetype position = function.lastIndexOf('('_L1);
-                signature = function.mid(position + 1, function.size() - position - 2);
-                function = function.left(position);
-            }
-            QStringList path = function.split("::"_L1);
-            node = domain->findFunctionNode(path, Parameters(signature), nullptr, genus);
+            const QString signature = Parameters::extractParameters(function);
+            const Parameters parameters(signature.trimmed());
+
+            const QStringList path = function.split("::"_L1);
+            if (parameters.isValid())
+                node = domain->findFunctionNode(path, parameters, nullptr, genus);
         }
         if (node)
             return node;
@@ -1674,8 +1666,11 @@ void QDocDatabase::mergeCollections(CollectionNode *c)
 */
 const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative, FindFlags flags)
 {
+    QString qmlPath = path;
+    const QString signature = Parameters::extractParameters(qmlPath);
+    const bool findFunction = !signature.isNull();
     QStringList pieces;
-    for (const QString &piece : path.split('.'_L1))
+    for (const QString &piece : qmlPath.split('.'_L1))
         pieces.append(piece.split("::"_L1));
 
     // Try to resolve a leading QML module name.
@@ -1693,7 +1688,7 @@ const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative,
     }
 
     if (modulePrefixSize == pieces.size())
-        return moduleNode;
+        return findFunction ? nullptr : moduleNode;
 
     QmlTypeNode *qmlType = nullptr;
     if (moduleNode) {
@@ -1703,7 +1698,7 @@ const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative,
         qmlType = findQmlType(pieces.takeFirst(), relative);
 
     if (!qmlType || pieces.isEmpty())
-        return qmlType;
+        return findFunction ? nullptr : qmlType;
 
     const auto searchType = flags.testFlag(QmlAttachedProperties)
             ? Aggregate::AttachedProperties : Aggregate::UnattachedProperties;
@@ -1732,10 +1727,13 @@ const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative,
         pieces.removeFirst();
     }
 
-    if (path.endsWith("()"_L1)) {
+    if (findFunction) {
         if (flags.testFlag(QmlAttachedProperties) || pieces.size() != 1)
             return nullptr;
-        return qmlType->findFunctionChild(pieces.first().chopped(2), Parameters());
+        const Parameters parameters(signature.trimmed());
+        if (!parameters.isValid())
+            return nullptr;
+        return qmlType->findFunctionChild(pieces.first(), parameters);
     }
 
     const QString memberName = pieces.join('.'_L1);
@@ -1745,6 +1743,21 @@ const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative,
     if (flags.testFlag(QmlAttachedProperties))
         return nullptr;
     return qmlType->findChildNode(memberName, Genus::QML);
+}
+
+/*!
+    Resolves \a fragment in the documentation of \a node and stores its
+    reference in \a ref. Returns \c nullptr if the fragment cannot be
+    resolved. An empty fragment leaves the node unchanged.
+*/
+const Node *QDocDatabase::setReferenceFromFragment(const QString &fragment, const Node *node,
+                                                   QString &ref)
+{
+    if (!node || fragment.isEmpty())
+        return node;
+
+    ref = node->tree()->getRef(fragment, node);
+    return ref.isEmpty() ? nullptr : node;
 }
 
 /*!
@@ -1764,6 +1777,7 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
     Atom *atom = const_cast<Atom *>(a);
     QStringList targetPath = Utilities::pathAndFragment(atom->string());
     QString first = targetPath.first().trimmed();
+    const QString fragment = targetPath.value(1);
 
     Tree *domain = nullptr;
 
@@ -1773,11 +1787,13 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
         if (atom->genus() != Genus::DontCare)
             genus = atom->genus();
 
-        if (!first.contains("://"_L1) && !first.contains(' '_L1)
-            && !first.endsWith(".html"_L1) && first.contains('.'_L1)) {
+        QString qmlName = first;
+        Parameters::extractParameters(qmlName);
+        if (!qmlName.contains("://"_L1) && !qmlName.contains(' '_L1)
+            && !qmlName.endsWith(".html"_L1) && qmlName.contains('.'_L1)) {
             const auto flags = FindFlags::fromInt(a->flags());
             if (const Node *found = findQmlNode(first, relative, flags))
-                return found;
+                return setReferenceFromFragment(fragment, found, ref);
         }
     }
 
@@ -1787,18 +1803,13 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
         if (first.endsWith(".html"))
             node = domain->findNodeByNameAndType(QStringList(first), &Node::isPageNode);
         else if (first.endsWith(QChar(')'))) {
-            QString signature;
             QString function = first;
-            qsizetype length = first.size();
-            if (function.endsWith("()"))
-                function.chop(2);
-            if (function.endsWith(QChar(')'))) {
-                qsizetype position = function.lastIndexOf(QChar('('));
-                signature = function.mid(position + 1, length - position - 2);
-                function = function.left(position);
-            }
-            QStringList path = function.split("::");
-            node = domain->findFunctionNode(path, Parameters(signature), nullptr, genus);
+            const QString signature = Parameters::extractParameters(function);
+            const Parameters parameters(signature.trimmed());
+
+            const QStringList path = function.split("::"_L1);
+            if (parameters.isValid())
+                node = domain->findFunctionNode(path, parameters, nullptr, genus);
         }
         if (node == nullptr) {
             int flags = SearchBaseClasses | SearchEnumValues;
@@ -1821,16 +1832,8 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
             if (genus == Genus::QML && first.contains('.') && !first.contains("::")) {
                 // Try import-aware lookup using findTypeNode logic
                 node = findTypeNode(first, relative, genus);
-                if (node) {
-                    // Handle any fragment reference
-                    targetPath.removeFirst();
-                    if (!targetPath.isEmpty()) {
-                        ref = node->root()->tree()->getRef(targetPath.first(), node);
-                        if (ref.isEmpty())
-                            node = nullptr;
-                    }
-                    return node;
-                }
+                if (node)
+                    return setReferenceFromFragment(fragment, node, ref);
             }
             return findNodeForTarget(targetPath, relative, genus, ref, atom->flags());
         }

@@ -1,0 +1,104 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule TestModule
+    \title Test QML Types and Methods
+    \brief Test module for QML methods.
+
+    \section1 Links to methods
+
+    QML syntax, using the module name:
+
+    \list
+    \li \l{TestModule.BaseItem.select()}
+    \li \l{TestModule.BaseItem.select( )}
+    \li \l{TestModule::}{BaseItem.select()}
+    \li \l{TestModule.BaseItem::}{select()}
+    \li \l{TestModule::BaseItem::select()}
+    \li \l{TestModule::}{BaseItem::select()}
+    \li \l{TestModule::BaseItem::}{select()}
+    \endlist
+
+    QML syntax, without the module name:
+
+    \list
+    \li \l{BaseItem.select()}
+    \li \l{BaseItem::select()}
+    \li \l{BaseItem::select( )}
+    \li \l [QmlMethods] {BaseItem::select( )}
+    \li \l{BaseItem::}{select()}
+    \li \l{BaseItem::select(int, int)}
+    \li \l{BaseItem.select(int, int)}
+    \li \l{BaseItem::}{select(int, int)}
+    \li \l{BaseItem::select(int, float)}
+    \li \l{BaseItem.select(int, float)}
+    \li \l{BaseItem::}{select(int, float)}
+    \li \l{TestModule.BaseItem.child.select(int, float)}
+    \li \l{BaseItem.select(int, float)#Selection}
+    \li \l [QmlMethods] {BaseItem.select(int, float)}
+    \endlist
+
+    Type/module precedence must not change for a forced QML name:
+    \list
+    \li \l [QML] Collision
+    \li \l Collision
+    \li \l TestModule.Collision
+    \endlist
+
+    Invalid signatures and fragments must fail:
+    \list
+    \li \l{BaseItem.select(int, float)#Missing}
+    \li \l{BaseItem.select(int, float))}
+    \li \l{BaseItem.select(string)}
+    \li \l{BaseItem.select(,)}
+    \li \l{BaseItem::select(,)}
+    \li \l [QmlMethods] {BaseItem.select(,)}
+    \li \l [QmlMethods] {BaseItem::select(,)}
+    \li \l{TestModule.BaseItem()}
+    \endlist
+
+    \section1 Types
+
+    A list of types is automatically included below.
+*/
+
+/*!
+    \qmltype BaseItem
+    \inqmlmodule TestModule
+    \brief A base QML type with properties.
+
+    BaseItem provides common properties for derived types.
+*/
+
+/*!
+    \qmlmethod void BaseItem::select(int start, int length)
+
+    Selects a span of text from \a start with the given \a length.
+*/
+
+/*!
+    \qmlproperty BaseItem BaseItem::child
+    \brief A nested item with the same methods.
+*/
+
+/*!
+    \qmlmodule Collision
+    \title Collision Module
+    \brief A module with the same name as a QML type.
+*/
+
+/*!
+    \qmltype Collision
+    \inqmlmodule TestModule
+    \brief A type that must not be shadowed by the unrelated module.
+*/
+
+/*!
+    \qmlmethod void BaseItem::select(int start, float length)
+
+    Selects a span of text from \a start with the given \a length.
+
+    \section1 Selection
+    Floating-point selection lengths are supported.
+*/
