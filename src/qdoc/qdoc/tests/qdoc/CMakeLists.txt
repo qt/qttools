@@ -30,7 +30,11 @@ qt_internal_add_test(tst_QDoc
         ../../src/qdoc/outputproducerregistry.cpp
         ../../src/qdoc/genustypes.h
         parameters/catch_parameter.cpp
+        parameters/catch_parameters.cpp
         ../../src/qdoc/parameter.cpp
+        ../../src/qdoc/parameters.cpp
+        ../../src/qdoc/codechunk.cpp
+        ../../src/qdoc/tokenizer.cpp
         location/catch_location.cpp
         text/catch_text.cpp
         text/qdocdatabase_stub.cpp

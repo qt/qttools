@@ -51,6 +51,8 @@ public:
     [[nodiscard]] QString generateNameList() const;
     [[nodiscard]] bool match(const Parameters &parameters) const;
 
+    static QString extractParameters(QString &signature);
+
 private:
     void readToken();
     QString lexeme();

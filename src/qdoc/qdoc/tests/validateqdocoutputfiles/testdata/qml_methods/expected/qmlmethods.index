@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QmlMethods Reference Documentation" version="" project="QmlMethods">
+    <namespace name="" status="active" access="public" module="qmlmethods">
+        <qmlclass name="BaseItem" qml-module-name="TestModule" fullname="TestModule.BaseItem" href="qml-testmodule-baseitem.html" status="active" access="public" location="types.qdoc" documented="true" brief="A base QML type with properties">
+            <function name="select" fullname="TestModule.BaseItem.select" href="qml-testmodule-baseitem.html#select-method" status="active" access="public" location="types.qdoc" documented="true" meta="qmlmethod" type="void">
+                <parameter type="int" name="start" default=""/>
+                <parameter type="float" name="length" default=""/>
+            </function>
+            <function name="select" fullname="TestModule.BaseItem.select" href="qml-testmodule-baseitem.html#select-method" status="active" access="public" location="types.qdoc" documented="true" meta="qmlmethod" type="void">
+                <parameter type="int" name="start" default=""/>
+                <parameter type="int" name="length" default=""/>
+            </function>
+            <qmlproperty name="child" fullname="TestModule.BaseItem.child" href="qml-testmodule-baseitem.html#child-prop" status="active" access="public" location="types.qdoc" documented="true" type="BaseItem" attached="false" writable="true" brief="A nested item with the same methods"/>
+        </qmlclass>
+        <qmlclass name="Collision" qml-module-name="TestModule" fullname="TestModule.Collision" href="qml-testmodule-collision.html" status="active" access="public" location="types.qdoc" documented="true" brief="A type that must not be shadowed by the unrelated module"/>
+        <qmlmodule name="Collision" qml-module-name="Collision" href="collision-qmlmodule.html" status="active" location="types.qdoc" documented="true" seen="true" title="Collision Module" brief="A module with the same name as a QML type"/>
+        <qmlmodule name="TestModule" qml-module-name="TestModule" href="testmodule-qmlmodule.html" status="active" location="types.qdoc" documented="true" seen="true" title="Test QML Types and Methods" brief="Test module for QML methods">
+            <contents name="links-to-methods" title="Links to methods" level="1"/>
+            <contents name="types" title="Types" level="1"/>
+        </qmlmodule>
+    </namespace>
+</INDEX>
