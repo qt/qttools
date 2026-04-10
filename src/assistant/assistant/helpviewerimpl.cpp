@@ -37,7 +37,7 @@ HelpViewerImpl::~HelpViewerImpl()
 void HelpViewerImpl::home()
 {
     TRACE_OBJ
-    setSource(HelpEngineWrapper::instance().homePage());
+    setSource(QUrl(HelpEngineWrapper::instance().homePage()));
 }
 
 // -- private slots

@@ -171,7 +171,7 @@ void HelpViewerPrivate::setSourceInternal(const QUrl &url, int *vscroll, bool re
     QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     const bool isHelp = (url.toString() == "help"_L1);
-    const QUrl resolvedUrl = (isHelp ? HelpViewerImpl::LocalHelpFile
+    const QUrl resolvedUrl = (isHelp ? QUrl(HelpViewerImpl::LocalHelpFile)
                                      : HelpEngineWrapper::instance().findFile(url));
 
     QUrl currentUrlWithoutFragment = m_viewer->url();
@@ -365,7 +365,7 @@ void HelpViewer::copy()
 
 void HelpViewer::home()
 {
-    setSource(HelpEngineWrapper::instance().homePage());
+    setSource(QUrl(HelpEngineWrapper::instance().homePage()));
 }
 
 void HelpViewer::forward()

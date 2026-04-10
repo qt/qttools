@@ -121,7 +121,7 @@ void HelpViewerImpl::doSetSource(const QUrl &url, QTextDocument::ResourceType ty
         return;
 
     bool helpOrAbout = (url.toString() == "help"_L1);
-    const QUrl resolvedUrl = (helpOrAbout ? LocalHelpFile : HelpEngineWrapper::instance().findFile(url));
+    const QUrl resolvedUrl = (helpOrAbout ? QUrl(LocalHelpFile) : HelpEngineWrapper::instance().findFile(url));
 
     QTextBrowser::doSetSource(resolvedUrl, type);
 
@@ -317,7 +317,7 @@ void HelpViewerImpl::contextMenuEvent(QContextMenuEvent *event)
     QAction *copyAnchorAction = nullptr;
 #endif
     if (d->hasAnchorAt(this, event->pos())) {
-        link = anchorAt(event->pos());
+        link = QUrl(anchorAt(event->pos()));
         if (link.isRelative())
             link = source().resolved(link);
         menu.addAction(tr("Open Link"), d, &HelpViewerImplPrivate::openLink);

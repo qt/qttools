@@ -767,7 +767,7 @@ void MainWindow::showNewAddress(const QUrl &url)
 void MainWindow::gotoAddress()
 {
     TRACE_OBJ
-    m_centralWidget->setSource(m_addressLineEdit->text());
+    m_centralWidget->setSource(QUrl(m_addressLineEdit->text()));
 }
 
 void MainWindow::showTopicChooser(const QList<QHelpLink> &documents,

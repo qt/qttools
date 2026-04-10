@@ -50,7 +50,7 @@ public:
         if (lastAnchor.isEmpty())
             return false;
 
-        lastAnchor = browser->source().resolved(lastAnchor).toString();
+        lastAnchor = browser->source().resolved(QUrl(lastAnchor)).toString();
         if (lastAnchor.at(0) == u'#') {
             QString src = browser->source().toString();
             int hsh = src.indexOf(u'#');
@@ -82,9 +82,9 @@ private:
         if (lastAnchor.isEmpty())
             return;
         if (newPage)
-            OpenPagesManager::instance()->createPage(lastAnchor);
+            OpenPagesManager::instance()->createPage(QUrl(lastAnchor));
         else
-            CentralWidget::instance()->setSource(lastAnchor);
+            CentralWidget::instance()->setSource(QUrl(lastAnchor));
         lastAnchor.clear();
     }
 
