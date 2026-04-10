@@ -536,7 +536,7 @@ void ActionView::slotCurrentChanged(QAction *action)
 {
     // emit only for currently visible
     if (sender() == currentWidget())
-        emit currentChanged(action);
+        emit currentActionChanged(action);
 }
 
 void ActionView::filter(const QString &text)

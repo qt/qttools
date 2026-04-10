@@ -208,7 +208,8 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     connect(m_actionView, &ActionView::resourceImageDropped,
             this, &ActionEditor::resourceImageDropped);
 
-    connect(m_actionView, &ActionView::currentChanged,this, &ActionEditor::slotCurrentItemChanged);
+    connect(m_actionView, &ActionView::currentActionChanged,
+            this, &ActionEditor::slotCurrentItemChanged);
     // make it possible for vs integration to reimplement edit action dialog
     connect(m_actionView, &ActionView::activated, this, &ActionEditor::itemActivated);
 
