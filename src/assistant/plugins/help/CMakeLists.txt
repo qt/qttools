@@ -11,4 +11,6 @@ qt_internal_add_plugin(QHelpEnginePlugin
         Qt::Core
         Qt::QmlLSPrivate
         Qt::Help
+    DEFINES
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
 )
