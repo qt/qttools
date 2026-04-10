@@ -87,7 +87,7 @@ void OpenPagesManager::setupInitialPages(bool defaultCollection,
     int initialPage = 0;
     switch (helpEngine.startOption()) {
     case ShowHomePage:
-        m_model->addPage(helpEngine.homePage());
+        m_model->addPage(QUrl(helpEngine.homePage()));
         break;
     case ShowBlankPage:
         m_model->addPage(QUrl("about:blank"_L1));
@@ -112,9 +112,9 @@ void OpenPagesManager::setupInitialPages(bool defaultCollection,
             }
             for (int curPage = 0; curPage < pageCount; ++curPage) {
                 const QString &curFile = lastShownPageList.at(curPage);
-                if (helpEngine.findFile(curFile).isValid()
+                if (helpEngine.findFile(QUrl(curFile)).isValid()
                     || curFile == "about:blank"_L1) {
-                    m_model->addPage(curFile, zoomFactors.at(curPage).toFloat());
+                    m_model->addPage(QUrl(curFile), zoomFactors.at(curPage).toFloat());
                 } else if (curPage <= initialPage && initialPage > 0)
                     --initialPage;
             }
@@ -126,7 +126,7 @@ void OpenPagesManager::setupInitialPages(bool defaultCollection,
     }
 
     if (m_model->rowCount() == 0)
-        m_model->addPage(helpEngine.homePage());
+        m_model->addPage(QUrl(helpEngine.homePage()));
     for (int i = 0; i < m_model->rowCount(); ++i)
         CentralWidget::instance()->addPage(m_model->pageAt(i));
     setCurrentPage((initialPage >= m_model->rowCount())

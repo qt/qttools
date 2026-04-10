@@ -158,7 +158,7 @@ void SearchWidget::contextMenuEvent(QContextMenuEvent *contextMenuEvent)
     if (!browser->rect().contains(point, true))
         return;
 
-    QUrl link = browser->anchorAt(point);
+    QUrl link = QUrl(browser->anchorAt(point));
 
     QKeySequence keySeq;
 #if QT_CONFIG(clipboard)

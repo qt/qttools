@@ -53,6 +53,8 @@ qt_internal_add_app(assistant
         qlitehtml
     ATTRIBUTION_FILE_DIR_PATHS
         ../qlitehtml/src/3rdparty
+    DEFINES
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
 )
 
 qt_add_ui(assistant SOURCES
