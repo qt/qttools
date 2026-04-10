@@ -191,7 +191,7 @@ public slots:
 
 signals:
     void contextMenuRequested(QContextMenuEvent *event, QAction *);
-    void currentChanged(QAction *action);
+    void currentActionChanged(QAction *action);
     void activated(QAction *action, int column);
     void selectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
     void resourceImageDropped(const QString &data, QAction *action);
