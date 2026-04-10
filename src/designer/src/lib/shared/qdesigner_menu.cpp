@@ -50,6 +50,16 @@ static inline void extendClickableArea(QRect *subMenuRect, Qt::LayoutDirection d
     }
 }
 
+namespace qdesigner_internal {
+class MenuEventFilter : public QObject
+{
+public:
+    using QObject::QObject;
+
+    bool eventFilter(QObject *object, QEvent *event) override;
+};
+} // namespace qdesigner_internal
+
 QDesignerMenu::QDesignerMenu(QWidget *parent) :
     QMenu(parent),
     m_subMenuPixmap(QPixmap(u":/qt-project.org/formeditor/images/submenu.png"_s)),
@@ -83,7 +93,7 @@ QDesignerMenu::QDesignerMenu(QWidget *parent) :
 
     connect(m_editor, &qdesigner_internal::MenuActionLineEdit::focusOut,
             this, &QDesignerMenu::stopInlineEditing);
-    installEventFilter(this);
+    installEventFilter(new qdesigner_internal::MenuEventFilter(this));
 }
 
 QDesignerMenu::~QDesignerMenu() = default;
@@ -610,14 +620,12 @@ QDesignerMenu *QDesignerMenu::findActivatedMenu() const
     return nullptr;
 }
 
-bool QDesignerMenu::eventFilter(QObject *object, QEvent *event)
+bool qdesigner_internal::MenuEventFilter::eventFilter(QObject *object, QEvent *event)
 {
-    if (object != this)
-        return false;
-
     switch (event->type()) {
         case QEvent::WindowDeactivate:
-            deactivateMenu();
+            if (auto *menu = qobject_cast<QDesignerMenu *>(object))
+                menu->deactivateMenu();
             break;
         case QEvent::ContextMenu:
         case QEvent::MouseButtonPress:
@@ -635,13 +643,16 @@ bool QDesignerMenu::eventFilter(QObject *object, QEvent *event)
         case QEvent::Enter:
         case QEvent::Leave:
         case QEvent::FocusIn:
-        case QEvent::FocusOut:
-            return handleEvent(event);
+        case QEvent::FocusOut: {
+            auto *menu = qobject_cast<QDesignerMenu *>(object);
+            Q_ASSERT(menu);
+            return menu->handleEvent(event);
+        }
         default:
             break;
     }
 
-    return false;
+    return QObject::eventFilter(object, event);
 };
 
 int QDesignerMenu::findAction(const QPoint &pos) const

@@ -49,7 +49,8 @@ public:
     QDesignerMenu(QWidget *parent = nullptr);
     ~QDesignerMenu() override;
 
-    bool eventFilter(QObject *object, QEvent *event) override;
+    bool handleEvent(QEvent *event); // for the event filter
+    void deactivateMenu(); // for the event filter
 
     QDesignerFormWindowInterface *formWindow() const;
     QDesignerActionProviderExtension *actionProvider();
@@ -97,7 +98,6 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) override;
     void showEvent(QShowEvent *event) override;
 
-    bool handleEvent(QEvent *event);
     bool handleMouseDoubleClickEvent(QMouseEvent *event);
     bool handleMousePressEvent(QMouseEvent *event);
     bool handleMouseReleaseEvent(QMouseEvent *event);
@@ -135,7 +135,6 @@ protected:
 
     void hideSubMenu();
     void deleteAction();
-    void deactivateMenu();
 
     bool canCreateSubMenu(QAction *action) const;
     QDesignerMenu *findRootMenu() const;

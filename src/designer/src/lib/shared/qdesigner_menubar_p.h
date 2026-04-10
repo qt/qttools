@@ -52,7 +52,7 @@ public:
     QDesignerMenuBar(QWidget *parent = nullptr);
     ~QDesignerMenuBar() override;
 
-    bool eventFilter(QObject *object, QEvent *event) override;
+    bool handleEvent(QEvent *event); // for the event filter
 
     QDesignerFormWindowInterface *formWindow() const;
     QDesignerActionProviderExtension *actionProvider();
@@ -85,7 +85,6 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
 
-    bool handleEvent(QEvent *event);
     bool handleMouseDoubleClickEvent(QMouseEvent *event);
     bool handleMousePressEvent(QMouseEvent *event);
     bool handleMouseReleaseEvent(QMouseEvent *event);

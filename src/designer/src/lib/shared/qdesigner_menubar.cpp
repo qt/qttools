@@ -45,8 +45,15 @@ SpecialMenuAction::SpecialMenuAction(QObject *parent)
 
 SpecialMenuAction::~SpecialMenuAction() = default;
 
-} // namespace qdesigner_internal
+class MenuBarEventFilter : public QObject
+{
+public:
+    using QObject::QObject;
 
+    bool eventFilter(QObject *object, QEvent *event) override;
+};
+
+} // namespace qdesigner_internal
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 QDesignerMenuBar::QDesignerMenuBar(QWidget *parent)  :
@@ -72,7 +79,7 @@ QDesignerMenuBar::QDesignerMenuBar(QWidget *parent)  :
     m_editor->hide();
     connect(m_editor, &qdesigner_internal::MenuActionLineEdit::focusOut,
             this, &QDesignerMenuBar::stopInlineEditing);
-    installEventFilter(this);
+    installEventFilter(new qdesigner_internal::MenuBarEventFilter(this));
 }
 
 QDesignerMenuBar::~QDesignerMenuBar() = default;
@@ -495,7 +502,7 @@ void QDesignerMenuBar::showLineEdit()
     m_editor->grabKeyboard();
 }
 
-bool QDesignerMenuBar::eventFilter(QObject *, QEvent *event)
+bool qdesigner_internal::MenuBarEventFilter::eventFilter(QObject *object, QEvent *event)
 {
     switch (event->type()) {
         case QEvent::KeyPress:
@@ -509,7 +516,9 @@ bool QDesignerMenuBar::eventFilter(QObject *, QEvent *event)
         case QEvent::Leave:
         case QEvent::FocusIn:
         case QEvent::FocusOut:
-            return handleEvent(event);
+            if (auto *mb = qobject_cast<QDesignerMenuBar *>(object))
+                return mb->handleEvent(event);
+            break;
         case QEvent::Shortcut:
             event->accept();
             return true;
@@ -517,8 +526,7 @@ bool QDesignerMenuBar::eventFilter(QObject *, QEvent *event)
             break;
 
     }
-
-    return false;
+    return QObject::eventFilter(object, event);
 };
 
 int QDesignerMenuBar::findAction(const QPoint &pos) const
