@@ -67,14 +67,12 @@ bool ToolBarEventFilter::eventFilter (QObject *watched, QEvent *event)
 
     bool handled = false;
     switch (event->type()) {
-    case QEvent::ChildAdded: {
-        // Children should not interact with the mouse
-        const QChildEvent *ce = static_cast<const QChildEvent *>(event);
-        if (QWidget *w = qobject_cast<QWidget *>(ce->child())) {
+    case QEvent::ChildAdded: // Children should not interact with the mouse
+        if (auto *c = static_cast<const QChildEvent *>(event)->child(); c->isWidgetType()) {
+            QWidget *w = static_cast<QWidget *>(c);
             w->setAttribute(Qt::WA_TransparentForMouseEvents, true);
             w->setFocusPolicy(Qt::NoFocus);
         }
-    }
         break;
     case QEvent::ContextMenu:
         handled = handleContextMenuEvent(static_cast<QContextMenuEvent*>(event));
