@@ -259,7 +259,7 @@ QHelpSearchResultWidget::~QHelpSearchResultWidget()
 QUrl QHelpSearchResultWidget::linkAt(const QPoint &point)
 {
     if (d->resultTextBrowser)
-        return d->resultTextBrowser->anchorAt(point);
+        return QUrl(d->resultTextBrowser->anchorAt(point));
     return {};
 }
 
