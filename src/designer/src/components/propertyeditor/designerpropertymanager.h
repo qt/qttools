@@ -116,8 +116,7 @@ public Q_SLOTS:
     void setValue(QtProperty *property, const QVariant &value) override;
 Q_SIGNALS:
     // sourceOfChange - a subproperty (or just property) which caused a change
-    //void valueChanged(QtProperty *property, const QVariant &value, QtProperty *sourceOfChange);
-    void valueChanged(QtProperty *property, const QVariant &value, bool enableSubPropertyHandling);
+    void valueChanged2(QtProperty *property, const QVariant &value, bool enableSubPropertyHandling);
 protected:
     void initializeProperty(QtProperty *property) override;
     void uninitializeProperty(QtProperty *property) override;

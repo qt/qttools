@@ -367,7 +367,7 @@ void DesignerPropertyManager::slotValueChanged(QtProperty *property, const QVari
         subResult = m_fontManager.valueChanged(this, property, value);
     if (subResult != NoMatch) {
         if (subResult == Changed)
-            emit valueChanged(property, value, enableSubPropertyHandling);
+            emit valueChanged2(property, value, enableSubPropertyHandling);
         return;
     }
 
@@ -481,7 +481,7 @@ void DesignerPropertyManager::slotValueChanged(QtProperty *property, const QVari
     } else if (m_iconValues.contains(property)) {
         enableSubPropertyHandling = m_sourceOfChange;
     }
-    emit valueChanged(property, value, enableSubPropertyHandling);
+    emit valueChanged2(property, value, enableSubPropertyHandling);
 }
 
 void DesignerPropertyManager::slotPropertyDestroyed(QtProperty *property)

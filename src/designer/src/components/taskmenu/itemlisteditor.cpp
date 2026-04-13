@@ -56,7 +56,7 @@ AbstractItemEditor::AbstractItemEditor(QDesignerFormWindowInterface *form, QWidg
 
     connect(m_editorFactory, &DesignerEditorFactory::resetProperty,
             this, &AbstractItemEditor::resetProperty);
-    connect(m_propertyManager, &DesignerPropertyManager::valueChanged,
+    connect(m_propertyManager, &DesignerPropertyManager::valueChanged2,
             this, &AbstractItemEditor::propertyChanged);
     connect(iconCache(), &DesignerIconCache::reloaded, this, &AbstractItemEditor::cacheReloaded);
 }
