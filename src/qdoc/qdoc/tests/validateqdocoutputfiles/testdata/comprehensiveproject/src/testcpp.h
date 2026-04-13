@@ -42,6 +42,14 @@ using Specialized = Struct<int, T>;
         VeryLastValue
     };
 #endif
+    enum Admonitions {
+        NoteInValue,
+        WarningInValue,
+        ImportantInValue,
+        MultipleAdmonitions,
+        MultipleNotes
+    };
+
     typedef struct {
         int data;
     } SomeType;

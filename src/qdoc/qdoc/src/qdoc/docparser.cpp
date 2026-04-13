@@ -2026,7 +2026,18 @@ void DocParser::enterPara(Atom::AtomType leftType, Atom::AtomType rightType, con
     if ((m_private->m_text.lastAtom()->type() != Atom::ListItemLeft)
         && (m_private->m_text.lastAtom()->type() != Atom::DivLeft)
         && (m_private->m_text.lastAtom()->type() != Atom::DetailsLeft)) {
-        leaveValueList();
+        // Admonition commands (\note, \warning, \important) can appear
+        // inside enum \value descriptions without closing the value list.
+        // Structural commands (sections, tables, images) that should close
+        // the value list already call leaveValueList() explicitly before
+        // reaching enterPara(). See QTBUG-145755.
+        const bool inValueList = !m_openedLists.isEmpty()
+                && m_openedLists.top().style() == OpenedList::Value;
+        const bool isAdmonition = leftType == Atom::NoteLeft
+                || leftType == Atom::WarningLeft
+                || leftType == Atom::ImportantLeft;
+        if (!inValueList || !isAdmonition)
+            leaveValueList();
     }
 
     appendAtom(Atom(leftType, string));

@@ -49,6 +49,13 @@
                     <parameter type="bool" name="b" default="false"/>
                 </function>
                 <function name="virtualFun" fullname="TestQDoc::Test::virtualFun" href="testqdoc-test.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" type="void" signature="void virtualFun()"/>
+                <enum name="Admonitions" fullname="TestQDoc::Test::Admonitions" href="testqdoc-test.html#Admonitions-enum" status="active" access="public" location="testcpp.h" documented="true">
+                    <value name="NoteInValue" value="0"/>
+                    <value name="WarningInValue" value="1"/>
+                    <value name="ImportantInValue" value="2"/>
+                    <value name="MultipleAdmonitions" value="3"/>
+                    <value name="MultipleNotes" value="4"/>
+                </enum>
                 <typedef name="SomeType" fullname="TestQDoc::Test::SomeType" href="testqdoc-test.html#SomeType-typedef" status="active" access="public" location="testcpp.h" documented="true"/>
             </class>
             <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" bases="TestQDoc::Test" module="TestCPP" brief="A class in a namespace, derived from Test">

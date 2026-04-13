@@ -268,6 +268,38 @@ void Test::virtualFun()
 */
 
 /*!
+    \enum TestQDoc::Test::Admonitions
+
+    Enum to exercise admonition commands within \\value descriptions.
+
+    \value NoteInValue A value with a note.
+
+           \note This note should remain inside the value description.
+
+    \value WarningInValue A value with a warning.
+
+           \warning This warning should remain inside the value description.
+
+    \value ImportantInValue A value with an important notice.
+
+           \important This important notice should remain inside the value
+           description.
+
+    \value MultipleAdmonitions A value with multiple admonitions.
+
+           \note First admonition in this value.
+
+           \warning Second admonition in the same value.
+
+    \value MultipleNotes A value with multiple notes, as in the
+           WindowStaysOnBottomHint documentation for Qt::WindowType.
+
+           \note First note for this value.
+
+           \note Second note for this value.
+*/
+
+/*!
     \reimp
 */
 void TestDerived::virtualFun()
