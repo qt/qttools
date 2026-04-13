@@ -27,6 +27,41 @@
     <compound kind="class">
         <name>TestQDoc::Test</name>
         <filename>testqdoc-test.html</filename>
+        <member kind="enumeration">
+            <name>Admonitions</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>Admonitions-enum</anchor>
+        </member>
+        <member kind="enumvalue">
+            <name>NoteInValue</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>Admonitions-enum</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="enumvalue">
+            <name>WarningInValue</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>Admonitions-enum</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="enumvalue">
+            <name>ImportantInValue</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>Admonitions-enum</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="enumvalue">
+            <name>MultipleAdmonitions</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>Admonitions-enum</anchor>
+            <arglist></arglist>
+        </member>
+        <member kind="enumvalue">
+            <name>MultipleNotes</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>Admonitions-enum</anchor>
+            <arglist></arglist>
+        </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type></type>
             <name>QDOCTEST_MACRO2</name>

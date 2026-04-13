@@ -123,6 +123,57 @@
                         <para>Function that must be reimplemented.</para>
                     </description>
                 </function>
+                <enum name="Admonitions" fullname="TestQDoc::Test::Admonitions" href="testqdoc-test.html#Admonitions-enum" status="active" access="public" location="testcpp.h" documented="true">
+                    <value name="NoteInValue" value="0"/>
+                    <value name="WarningInValue" value="1"/>
+                    <value name="ImportantInValue" value="2"/>
+                    <value name="MultipleAdmonitions" value="3"/>
+                    <value name="MultipleNotes" value="4"/>
+                    <description>
+                        <para>Enum to exercise admonition commands within <teletype>\value</teletype> descriptions.</para>
+                        <list type="enum">
+                            <definition>
+                                <term>TestQDoc::Test::NoteInValue</term>NoteInValue</definition>
+                            <item>
+                                <para>A value with a note.</para>
+                                <para>
+                                    <bold>Note:</bold> This note should remain inside the value description.</para>
+                            </item>
+                            <definition>
+                                <term>TestQDoc::Test::WarningInValue</term>WarningInValue</definition>
+                            <item>
+                                <para>A value with a warning.</para>
+                                <para>
+                                    <bold>Warning:</bold> This warning should remain inside the value description.</para>
+                            </item>
+                            <definition>
+                                <term>TestQDoc::Test::ImportantInValue</term>ImportantInValue</definition>
+                            <item>
+                                <para>A value with an important notice.</para>
+                                <para>
+                                    <bold>Important:</bold> This important notice should remain inside the value description.</para>
+                            </item>
+                            <definition>
+                                <term>TestQDoc::Test::MultipleAdmonitions</term>MultipleAdmonitions</definition>
+                            <item>
+                                <para>A value with multiple admonitions.</para>
+                                <para>
+                                    <bold>Note:</bold> First admonition in this value.</para>
+                                <para>
+                                    <bold>Warning:</bold> Second admonition in the same value.</para>
+                            </item>
+                            <definition>
+                                <term>TestQDoc::Test::MultipleNotes</term>MultipleNotes</definition>
+                            <item>
+                                <para>A value with multiple notes, as in the WindowStaysOnBottomHint documentation for Qt::WindowType.</para>
+                                <para>
+                                    <bold>Note:</bold> First note for this value.</para>
+                                <para>
+                                    <bold>Note:</bold> Second note for this value.</para>
+                            </item>
+                        </list>
+                    </description>
+                </enum>
                 <typedef name="SomeType" fullname="TestQDoc::Test::SomeType" href="testqdoc-test.html#SomeType-typedef" status="active" access="public" location="testcpp.h" documented="true">
                     <description>
                         <brief>A typedef.</brief>

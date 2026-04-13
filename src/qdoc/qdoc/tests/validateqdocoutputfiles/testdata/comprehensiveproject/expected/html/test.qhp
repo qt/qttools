@@ -106,7 +106,13 @@
             <keyword name="Test C++ Types" id="Test C++ Types" ref="cpptypes.html"/>
             <keyword name="Test.Empty" id="QML.Empty.Test" ref="test-empty-qmlmodule.html"/>
             <keyword name="Test.NoVer" id="QML.NoVer.Test" ref="test-nover-qmlmodule.html"/>
+            <keyword name="Test::Admonitions" id="Test::Admonitions" ref="testqdoc-test.html#Admonitions-enum"/>
+            <keyword name="Test::ImportantInValue" id="Test::ImportantInValue" ref="testqdoc-test.html#Admonitions-enum"/>
+            <keyword name="Test::MultipleAdmonitions" id="Test::MultipleAdmonitions" ref="testqdoc-test.html#Admonitions-enum"/>
+            <keyword name="Test::MultipleNotes" id="Test::MultipleNotes" ref="testqdoc-test.html#Admonitions-enum"/>
+            <keyword name="Test::NoteInValue" id="Test::NoteInValue" ref="testqdoc-test.html#Admonitions-enum"/>
             <keyword name="Test::SomeType" id="Test::SomeType" ref="testqdoc-test.html#SomeType-typedef"/>
+            <keyword name="Test::WarningInValue" id="Test::WarningInValue" ref="testqdoc-test.html#Admonitions-enum"/>
             <keyword name="TestDerived" id="TestQDoc::TestDerived" ref="testqdoc-testderived.html"/>
             <keyword name="TestDerived::DerivedType" id="TestDerived::DerivedType" ref="testqdoc-testderived.html#DerivedType-typedef"/>
             <keyword name="TestDerived::NotTypedef" id="TestDerived::NotTypedef" ref="testqdoc-testderived.html#NotTypedef-typedef"/>

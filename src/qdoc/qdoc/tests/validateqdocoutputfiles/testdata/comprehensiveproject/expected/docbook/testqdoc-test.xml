@@ -69,6 +69,111 @@
 </db:section>
 <db:section xml:id="member-type-documentation">
 <db:title>Member Type Documentation</db:title>
+<db:section xml:id="Admonitions-enum">
+<db:title its:translate="no">enum Test::Admonitions</db:title>
+<db:enumsynopsis>
+<db:enumname>Admonitions</db:enumname>
+<db:enumitem>
+<db:enumidentifier>NoteInValue</db:enumidentifier>
+<db:enumvalue>0</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>WarningInValue</db:enumidentifier>
+<db:enumvalue>1</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>ImportantInValue</db:enumidentifier>
+<db:enumvalue>2</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>MultipleAdmonitions</db:enumidentifier>
+<db:enumvalue>3</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>MultipleNotes</db:enumidentifier>
+<db:enumvalue>4</db:enumvalue>
+</db:enumitem>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:enumsynopsis>
+<db:para>Enum to exercise admonition commands within <db:phrase its:translate="no">\value</db:phrase> descriptions.</db:para>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Value</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::NoteInValue</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">0</db:code></db:td>
+<db:td>
+<db:para>A value with a note.</db:para>
+<db:note>
+<db:para>This note should remain inside the value description.</db:para>
+</db:note>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::WarningInValue</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">1</db:code></db:td>
+<db:td>
+<db:para>A value with a warning.</db:para>
+<db:warning>
+<db:para>This warning should remain inside the value description.</db:para>
+</db:warning>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::ImportantInValue</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">2</db:code></db:td>
+<db:td>
+<db:para>A value with an important notice.</db:para>
+<db:important>
+<db:para>This important notice should remain inside the value description.</db:para>
+</db:important>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::MultipleAdmonitions</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">3</db:code></db:td>
+<db:td>
+<db:para>A value with multiple admonitions.</db:para>
+<db:note>
+<db:para>First admonition in this value.</db:para>
+</db:note>
+<db:warning>
+<db:para>Second admonition in the same value.</db:para>
+</db:warning>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para its:translate="no"><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::MultipleNotes</db:code></db:para>
+</db:td>
+<db:td><db:code its:translate="no">4</db:code></db:td>
+<db:td>
+<db:para>A value with multiple notes, as in the WindowStaysOnBottomHint documentation for Qt::WindowType.</db:para>
+<db:note>
+<db:para>First note for this value.</db:para>
+</db:note>
+<db:note>
+<db:para>Second note for this value.</db:para>
+</db:note>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
 <db:section xml:id="SomeType-typedef">
 <db:title its:translate="no">Test::SomeType</db:title>
 <db:typedefsynopsis>
