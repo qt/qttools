@@ -304,7 +304,7 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
             this, &PropertyEditor::slotResetProperty);
     connect(m_treeFactory, &DesignerEditorFactory::resetProperty,
             this, &PropertyEditor::slotResetProperty);
-    connect(m_propertyManager, &DesignerPropertyManager::valueChanged,
+    connect(m_propertyManager, &DesignerPropertyManager::valueChanged2,
             this, &PropertyEditor::slotValueChanged);
 
     // retrieve initial settings
