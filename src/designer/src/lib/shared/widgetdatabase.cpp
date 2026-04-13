@@ -264,7 +264,9 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
 #define DECLARE_COMPAT_WIDGET(W, C) DECLARE_WIDGET(W, C)
 #define DECLARE_WIDGET(W, C) addWidgetItem(this, #W, W::staticMetaObject, C);
 
+// AXIVION DISABLE Style Qt-Generic-NoIrregularInclude Required functionality
 #include <widgets.table>
+// AXIVION ENABLE Style Qt-Generic-NoIrregularInclude
 
 #undef DECLARE_COMPAT_WIDGET
 #undef DECLARE_LAYOUT
