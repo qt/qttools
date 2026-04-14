@@ -342,14 +342,20 @@ void Aggregate::resolveRelates()
     auto *database = QDocDatabase::qdocDB();
 
     for (auto *node : m_children) {
-        if (node->isRelatedNonmember())
-            continue;
         if (node->genus() != Genus::CPP)
             continue;
 
         if (!node->isAggregate()) {
             const auto &relates_args = node->doc().metaCommandArgs("relates"_L1);
             if (relates_args.isEmpty())
+                continue;
+            // Hidden friends are marked as related non-members during
+            // initial parsing (they belong to their enclosing class).
+            // An explicit \relates directive should still relocate them
+            // when the function participates in a different class's
+            // protocol (e.g. qHashEquals as a QHash customization point).
+            // Skip only if already adopted by a different \relates target.
+            if (node->isRelatedNonmember() && node->parent() != this)
                 continue;
 
             auto *aggregate = database->findRelatesNode(relates_args[0].first.split("::"_L1));

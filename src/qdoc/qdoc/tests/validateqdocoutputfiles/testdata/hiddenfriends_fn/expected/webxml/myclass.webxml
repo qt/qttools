@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="MyClass" href="myclass.html" status="active" access="public" location="testclass.h" documented="true" module="HiddenFriendModule" brief="A class with a hidden friend that should be documented on Container's page">
+            <description>
+                <brief>A class with a hidden friend that should be documented on Container's page.</brief>
+            </description>
+            <function name="myEquals" href="container.html#myEquals" status="active" access="public" location="testclass.h" documented="true" related="2" meta="plain" hidden-friend="true" noexcept="true" type="bool" signature="bool myEquals(const MyClass &amp;a, const MyClass &amp;b)">
+                <parameter type="const MyClass &amp;" name="a" default=""/>
+                <parameter type="const MyClass &amp;" name="b" default=""/>
+                <description>
+                    <para>
+                        <link raw="MyClass" href="myclass.html" type="class">MyClass</link>-specific overload. Returns <teletype type="highlighted">true</teletype> if <argument>a</argument> and <argument>b</argument> have the same internal value.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

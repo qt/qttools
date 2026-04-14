@@ -891,6 +891,44 @@ static std::optional<QString> classNameFromParameterType(clang::QualType param_t
 }
 
 /*!
+  \internal
+
+  Search for hidden friend candidates by inspecting parameter types.
+  When a \fn command uses unqualified syntax for a hidden friend, the
+  initial name lookup won't find it because hidden friends are stored
+  under their enclosing class, not in the global namespace. This
+  function examines the parameter types of \a func_decl to locate
+  classes that may contain hidden friends with matching names.
+
+  Appends any found hidden friend nodes to \a candidates.
+ */
+static void findHiddenFriendCandidates(QDocDatabase *qdb, const QString &funcName,
+                                       const clang::FunctionDecl *func_decl, NodeVector &candidates)
+{
+    QSet<ClassNode *> searched_classes;
+    for (const auto *param : func_decl->parameters()) {
+        auto class_name = classNameFromParameterType(param->getType());
+        if (!class_name)
+            continue;
+
+        auto *class_node = qdb->findClassNode(class_name->split("::"_L1));
+        if (!class_node || searched_classes.contains(class_node))
+            continue;
+
+        searched_classes.insert(class_node);
+        NodeVector class_candidates;
+        class_node->findChildren(funcName, class_candidates);
+
+        for (Node *candidate : class_candidates) {
+            if (!candidate->isFunction(Genus::CPP))
+                continue;
+            if (static_cast<FunctionNode *>(candidate)->isHiddenFriend())
+                candidates.append(candidate);
+        }
+    }
+}
+
+/*!
   Find the node from the QDocDatabase \a qdb that corresponds to the declaration
   represented by the cursor \a cur, if it exists.
  */
@@ -955,37 +993,19 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
         }
 
         // Fallback for hidden friends documented with \fn using unqualified syntax.
-        // When a free function like "bool operator==(const MyClass&, const MyClass&)"
-        // isn't found, search classes referenced in the parameters for hidden friends.
-        if (candidates.isEmpty()) {
+        // Hidden friends are stored under their enclosing class, not in the global
+        // namespace, so the initial findChildren won't find them. Search parameter
+        // types to locate them, even when other candidates (e.g. a same-named
+        // template) already exist. (QTBUG-145790)
+        const bool hasHiddenFriend =
+                std::any_of(candidates.cbegin(), candidates.cend(), [](const Node *n) {
+                    return n->isFunction(Genus::CPP)
+                            && static_cast<const FunctionNode *>(n)->isHiddenFriend();
+                });
+        if (!hasHiddenFriend) {
             auto *func_decl = cur_decl ? cur_decl->getAsFunction() : nullptr;
-            if (!func_decl)
-                return nullptr;
-
-            QString funcName = functionName(cur);
-            QSet<ClassNode *> searched_classes;
-
-            for (unsigned i = 0; i < func_decl->getNumParams(); ++i) {
-                auto class_name = classNameFromParameterType(func_decl->getParamDecl(i)->getType());
-                if (!class_name)
-                    continue;
-
-                auto *class_node = qdb->findClassNode(class_name->split("::"_L1));
-                if (!class_node || searched_classes.contains(class_node))
-                    continue;
-
-                searched_classes.insert(class_node);
-                NodeVector class_candidates;
-                class_node->findChildren(funcName, class_candidates);
-
-                for (Node *candidate : class_candidates) {
-                    if (!candidate->isFunction(Genus::CPP))
-                        continue;
-                    auto *fn = static_cast<FunctionNode *>(candidate);
-                    if (fn->isHiddenFriend())
-                        candidates.append(candidate);
-                }
-            }
+            if (func_decl)
+                findHiddenFriendCandidates(qdb, functionName(cur), func_decl, candidates);
         }
 
         if (candidates.isEmpty())

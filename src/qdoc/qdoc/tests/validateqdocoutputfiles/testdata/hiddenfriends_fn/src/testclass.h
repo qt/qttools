@@ -33,3 +33,28 @@ private:
     int m_data = 0;
 };
 
+// QTBUG-145790: Container class that serves as a \relates target
+// for a hidden friend defined in a different class.
+class Container
+{
+};
+
+// Generic template — the customization point.
+// Has the same name as the hidden friend in MyClass below.
+template <typename T>
+bool myEquals(const T &a, const T &b)
+{
+    return a == b;
+}
+
+// Class with a hidden friend overload of myEquals.
+// The hidden friend's doc uses \relates Container, not \relates MyClass.
+class MyClass
+{
+public:
+    MyClass(int v) : value(v) { }
+
+private:
+    int value;
+    friend bool myEquals(const MyClass &a, const MyClass &b) noexcept { return a.value == b.value; }
+};

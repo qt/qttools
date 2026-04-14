@@ -32,3 +32,32 @@
     Returns \c true if \a lhs is less than \a rhs, \c false otherwise.
 */
 
+// QTBUG-145790: Hidden friend with \relates targeting a different class,
+// plus a template overload with the same name.
+
+/*!
+    \class Container
+    \inmodule HiddenFriendModule
+    \brief A container class that collects related non-member functions.
+*/
+
+/*!
+    \class MyClass
+    \inmodule HiddenFriendModule
+    \brief A class with a hidden friend that should be documented on Container's page.
+*/
+
+/*!
+    \fn template <typename T> bool myEquals(const T &a, const T &b)
+    \relates Container
+
+    Generic implementation. Returns \c true if \a a equals \a b.
+*/
+
+/*!
+    \fn bool myEquals(const MyClass &a, const MyClass &b) noexcept
+    \relates Container
+
+    MyClass-specific overload. Returns \c true if \a a and \a b
+    have the same internal value.
+*/
