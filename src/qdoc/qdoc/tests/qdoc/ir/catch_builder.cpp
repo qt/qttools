@@ -67,13 +67,17 @@ SCENARIO("Builder copies body from PageMetadata", "[IR::Builder][IR]") {
         IR::PageMetadata pm;
         pm.title = u"Body Test"_s;
 
+        IR::InlineContent text1;
+        text1.text = u"First paragraph."_s;
         IR::ContentBlock para1;
         para1.type = IR::BlockType::Paragraph;
-        para1.inlineContent.append({ IR::InlineType::Text, u"First paragraph."_s, {}, {}, {} });
+        para1.inlineContent.append(text1);
 
+        IR::InlineContent text2;
+        text2.text = u"Second paragraph."_s;
         IR::ContentBlock para2;
         para2.type = IR::BlockType::Paragraph;
-        para2.inlineContent.append({ IR::InlineType::Text, u"Second paragraph."_s, {}, {}, {} });
+        para2.inlineContent.append(text2);
 
         pm.body.append(para1);
         pm.body.append(para2);

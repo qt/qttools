@@ -997,7 +997,7 @@ SCENARIO("CppReferenceInfo with requisite table fields", "[IR::CppReferenceInfo]
         info.headerInclude = "<QCoapClient>"_L1;
         info.cmakeFindPackage = "find_package(Qt6 REQUIRED COMPONENTS Coap)"_L1;
         info.cmakeTargetLinkLibraries = "target_link_libraries(mytarget PRIVATE Qt6::Coap)"_L1;
-        info.qmakeVariable = "coap"_L1;
+        info.qmakeVariable = "QT += coap"_L1;
 
         WHEN("Converting to JSON") {
             QJsonObject json = info.toJson();
@@ -1008,7 +1008,7 @@ SCENARIO("CppReferenceInfo with requisite table fields", "[IR::CppReferenceInfo]
                         == "find_package(Qt6 REQUIRED COMPONENTS Coap)");
                 REQUIRE(json["cmakeTargetLinkLibraries"_L1].toString()
                         == "target_link_libraries(mytarget PRIVATE Qt6::Coap)");
-                REQUIRE(json["qmakeVariable"_L1].toString() == "coap");
+                REQUIRE(json["qmakeVariable"_L1].toString() == "QT += coap");
             }
         }
     }
