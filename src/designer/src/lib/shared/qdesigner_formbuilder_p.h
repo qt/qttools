@@ -17,6 +17,7 @@
 
 #include "shared_global_p.h"
 #include "deviceprofile_p.h"
+#include "qdesigner_utils_p.h"
 
 #include <QtDesigner/formbuilder.h>
 
@@ -32,9 +33,6 @@ class QPixmap;
 class QtResourceSet;
 
 namespace qdesigner_internal {
-
-class DesignerPixmapCache;
-class DesignerIconCache;
 
 /* Form builder used for previewing forms and widget box.
  * It applies the system settings to its toplevel window. */
@@ -101,8 +99,8 @@ private:
 
     const DeviceProfile m_deviceProfile;
 
-    DesignerPixmapCache *m_pixmapCache;
-    DesignerIconCache *m_iconCache;
+    DesignerPixmapCache m_pixmapCache;
+    DesignerIconCache m_iconCache;
     bool m_ignoreCreateResources;
     QtResourceSet *m_tempResourceSet;
     bool m_mainWidget;

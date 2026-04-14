@@ -52,8 +52,7 @@ QDesignerFormBuilder::QDesignerFormBuilder(QDesignerFormEditorInterface *core,
                                            const DeviceProfile &deviceProfile) :
     m_core(core),
     m_deviceProfile(deviceProfile),
-    m_pixmapCache(nullptr),
-    m_iconCache(nullptr),
+    m_iconCache(&m_pixmapCache),
     m_ignoreCreateResources(false),
     m_tempResourceSet(nullptr),
     m_mainWidget(true)
@@ -80,8 +79,8 @@ QWidget *QDesignerFormBuilder::create(DomUI *ui, QWidget *parentWidget)
     m_ignoreCreateResources = true;
     DesignerPixmapCache pixmapCache;
     DesignerIconCache iconCache(&pixmapCache);
-    m_pixmapCache = &pixmapCache;
-    m_iconCache = &iconCache;
+    m_pixmapCache.clear();
+    m_iconCache.clear();
 
     QWidget *widget = QFormBuilder::create(ui, parentWidget);
 
@@ -89,8 +88,8 @@ QWidget *QDesignerFormBuilder::create(DomUI *ui, QWidget *parentWidget)
     core()->resourceModel()->removeResourceSet(m_tempResourceSet);
     m_tempResourceSet = nullptr;
     m_ignoreCreateResources = false;
-    m_pixmapCache = nullptr;
-    m_iconCache = nullptr;
+    m_pixmapCache.clear();
+    m_iconCache.clear();
 
     m_customWidgetsWithScript.clear();
     return widget;
@@ -215,11 +214,13 @@ void QDesignerFormBuilder::applyProperties(QObject *o, const QList<DomProperty*>
     QDesignerPropertySheet *designerPropertySheet = qobject_cast<QDesignerPropertySheet *>(
                     core()->extensionManager()->extension(o, Q_TYPEID(QDesignerPropertySheetExtension)));
 
+    DesignerPixmapCache *oldPixmapCache{};
+    DesignerIconCache *oldIconCache{};
     if (designerPropertySheet) {
-        if (designerPropertySheet->pixmapCache())
-            designerPropertySheet->setPixmapCache(m_pixmapCache);
-        if (designerPropertySheet->iconCache())
-            designerPropertySheet->setIconCache(m_iconCache);
+        oldPixmapCache = designerPropertySheet->pixmapCache();
+        designerPropertySheet->setPixmapCache(&m_pixmapCache);
+        oldIconCache = designerPropertySheet->iconCache();
+        designerPropertySheet->setIconCache(&m_iconCache);
     }
 
     for (DomProperty *p : properties) {
@@ -249,6 +250,11 @@ void QDesignerFormBuilder::applyProperties(QObject *o, const QList<DomProperty*>
 
         // a real property
         obj->setProperty(attributeName.toUtf8().constData(), v);
+    }
+
+    if (designerPropertySheet) {
+        designerPropertySheet->setPixmapCache(oldPixmapCache);
+        designerPropertySheet->setIconCache(oldIconCache);
     }
 }
 
