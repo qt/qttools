@@ -297,9 +297,9 @@ private:
             }
             uint n;
 #ifdef Q_CC_MSVC
-            sscanf_s(hex, "%x", &n);
+            sscanf_s(hex.constData(), "%x", &n);
 #else
-            std::sscanf(hex, "%x", &n);
+            std::sscanf(hex.constData(), "%x", &n);
 #endif
 
             QByteArray hexChar = QString(QChar(n)).toUtf8();
@@ -320,9 +320,9 @@ private:
                     return false;
             } while (yyCh >= '0' && yyCh < '8' && n < 3);
 #ifdef Q_CC_MSVC
-            sscanf_s(oct, "%o", &n);
+            sscanf_s(oct.constData(), "%o", &n);
 #else
-            std::sscanf(oct, "%o", &n);
+            std::sscanf(oct.constData(), "%o", &n);
 #endif
             if (yyStringLen < sizeof(yyString) - 1)
                 yyString[yyStringLen++] = char(n);
@@ -546,7 +546,7 @@ private:
     bool matchEncoding(bool *utf8)
     {
         // Remove any leading module paths.
-        if (yyTok == Tok_Ident && std::strcmp(yyIdent, "PySide6") == 0) {
+        if (yyTok == Tok_Ident && yyIdent == "PySide6") {
             yyTok = getToken();
 
             if (yyTok != Tok_Dot)
@@ -555,8 +555,7 @@ private:
             yyTok = getToken();
         }
 
-        if (yyTok == Tok_Ident
-            && (std::strcmp(yyIdent, "QtGui") == 0 || std::strcmp(yyIdent, "QtCore") == 0)) {
+        if (yyTok == Tok_Ident && (yyIdent == "QtGui" || yyIdent == "QtCore")) {
             yyTok = getToken();
 
             if (yyTok != Tok_Dot)
@@ -566,9 +565,8 @@ private:
         }
 
         if (yyTok == Tok_Ident) {
-            if (std::strcmp(yyIdent, "QApplication") == 0
-                || std::strcmp(yyIdent, "QGuiApplication") == 0
-                || std::strcmp(yyIdent, "QCoreApplication") == 0) {
+            if (yyIdent == "QApplication" || yyIdent == "QGuiApplication"
+                || yyIdent == "QCoreApplication") {
                 yyTok = getToken();
 
                 if (yyTok == Tok_Dot)

@@ -231,7 +231,7 @@ bool Releaser::save(QIODevice *iod)
         QByteArray lang = originalBytes(m_language);
         quint32 las = quint32(lang.size());
         s << quint8(Language) << las;
-        s.writeRawData(lang, las);
+        s.writeRawData(lang.constData(), las);
     }
     if (!m_dependencyArray.isEmpty()) {
         quint32 das = quint32(m_dependencyArray.size());

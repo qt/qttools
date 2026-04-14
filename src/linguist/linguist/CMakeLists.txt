@@ -69,6 +69,7 @@ qt_internal_add_app(linguist
         QT_KEYWORDS
         QT_NO_CAST_FROM_ASCII
         QT_NO_CAST_TO_ASCII
+        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
     INCLUDE_DIRECTORIES
         ../shared
         ../../shared/helpclient

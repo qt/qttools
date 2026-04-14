@@ -36,12 +36,12 @@
 QT_BEGIN_NAMESPACE
 
 #if defined(Q_CC_SUN) || defined(Q_CC_HPACC) || defined(Q_CC_XLC)
-size_t qHash(const QUiTranslatableStringValue &tsv)
+size_t qHash(const QUiTranslatableStringValue &tsv, size_t seed = 0)
 #else
-static size_t qHash(const QUiTranslatableStringValue &tsv)
+static size_t qHash(const QUiTranslatableStringValue &tsv, size_t seed = 0)
 #endif
 {
-    return qHash(tsv.value()) ^ qHash(tsv.qualifier());
+    return qHash(tsv.value(), seed) ^ qHash(tsv.qualifier(), seed);
 }
 
 static bool operator==(const QUiTranslatableStringValue &tsv1, const QUiTranslatableStringValue &tsv2)
@@ -116,8 +116,8 @@ static void buildTargets(QObject *o, TargetsHash *targets)
     for (const QByteArray &prop : propNames) {
         if (prop.startsWith(PROP_GENERIC_PREFIX)) {
             const QByteArray propName = prop.mid(sizeof(PROP_GENERIC_PREFIX) - 1);
-            INSERT_TARGET(o->property(prop),
-                TranslatableProperty, object = o, name = qstrdup(propName.data()));
+            INSERT_TARGET(o->property(prop.constData()), TranslatableProperty, object = o,
+                          name = qstrdup(propName.constData()));
         }
     }
     if (0) {

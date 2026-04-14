@@ -82,9 +82,9 @@ QMakeBaseKey::QMakeBaseKey(const QString &_root, const QString &_stash, bool _ho
 {
 }
 
-size_t qHash(const QMakeBaseKey &key)
+size_t qHash(const QMakeBaseKey &key, size_t seed)
 {
-    return qHash(key.root) ^ qHash(key.stash) ^ (uint)key.hostBuild;
+    return qHash(key.root, seed) ^ qHash(key.stash, seed) ^ (uint)key.hostBuild;
 }
 
 bool operator==(const QMakeBaseKey &one, const QMakeBaseKey &two)

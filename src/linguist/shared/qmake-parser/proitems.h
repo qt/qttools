@@ -161,7 +161,7 @@ private:
     int m_file;
     mutable size_t m_hash;
     size_t updatedHash() const;
-    friend size_t qHash(const ProString &str);
+    friend size_t qHash(const ProString &str, size_t seed);
     friend QString operator+(const ProString &one, const ProString &two);
     friend class ProKey;
 };
@@ -231,8 +231,7 @@ template <> struct QConcatenable<ProKey>
     }
 };
 
-
-size_t qHash(const ProString &str);
+size_t qHash(const ProString &str, size_t seed = 0);
 
 inline QString &operator+=(QString &that, const ProString &other)
     { return that += other.toQStringView(); }
