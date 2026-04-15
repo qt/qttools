@@ -348,10 +348,10 @@ void FunctionNode::addAssociatedProperty(PropertyNode *p)
   Returns the \e primary associated property, if this is an
   access function for one or more properties.
 
-  An associated property is considered a primary if this
-  function's name starts with the property name. If there's
-  no such property, return the first one available as a
-  fallback.
+  An associated property is considered primary if this
+  function's name starts with the property name. If no
+  prefix match exists, the property with the alphabetically
+  first name is returned for deterministic output.
 
   If no associated properties exist, returns \nullptr.
  */
@@ -367,8 +367,15 @@ const PropertyNode *FunctionNode::primaryAssociatedProperty() const
                     [this](const PropertyNode *p) {
                         return name().startsWith(p->name());
                     });
+    if (it != m_associatedProperties.cend())
+        return *it;
 
-    return it != m_associatedProperties.cend() ? *it : m_associatedProperties[0];
+    // No prefix match: multiple properties share this signal but none
+    // match by name. Pick alphabetically for deterministic output
+    // regardless of tree traversal order.
+    return *std::min_element(
+            m_associatedProperties.cbegin(), m_associatedProperties.cend(),
+            [](const PropertyNode *a, const PropertyNode *b) { return a->name() < b->name(); });
 }
 
 /*!
