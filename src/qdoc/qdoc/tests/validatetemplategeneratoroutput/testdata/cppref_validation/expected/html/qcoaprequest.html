@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCoapRequest</title>
+    <link rel="stylesheet" href="qdoc-default.css">
+</head>
+<body>
+    <header>
+    <h1>QCoapRequest</h1>
+    <p class="subtitle">class QCoapRequest</p>
+    <p class="brief">The QCoapRequest class holds a CoAP request. This request can be sent with QCoapClient.</p>
+    </header>
+    <main>
+
+    <table class="requisites">
+    <tr><td class="memItemLeft">Header:</td>
+    <td class="memItemRight"><code>QCoapRequest</code></td></tr>
+    <tr><td class="memItemLeft">CMake:</td>
+    <td class="memItemRight"><code>find_package(Qt6 REQUIRED COMPONENTS Coap)</code><br/><code>target_link_libraries(mytarget PRIVATE Qt6::Coap)</code></td></tr>
+    <tr><td class="memItemLeft">qmake:</td>
+    <td class="memItemRight"><code>QT += coap</code></td></tr>
+    <tr><td class="memItemLeft">Inherits:</td>
+    <td class="memItemRight"><a href="qcoapmessage.html">QCoapMessage</a></td></tr>
+    </table>
+
+
+    <ul>
+    <li><a href="qcoaprequest-members.html">List of all members, including inherited members</a></li>
+    </ul>
+
+
+
+    <aside class="admonition note" role="note"><p><b>Note:</b> All functions in this class are <a href="threads-reentrancy.html">reentrant</a>.</p></aside>
+
+
+    <section class="section-public-functions" aria-label="Public Functions">
+    <h2>Public Functions</h2>
+    <table class="alignedsummary">
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoaprequest.html#QCoapRequest-1">QCoapRequest</a></span>(const <span class="type">char</span> *<i>url</i>, <span class="type">QCoapMessage::Type</span> <i>type</i> = Type::NonConfirmable)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoaprequest.html#QCoapRequest-2">QCoapRequest</a></span>(const <span class="type">QUrl</span> &amp;<i>url</i> = QUrl(), <span class="type">QCoapMessage::Type</span> <i>type</i> = Type::NonConfirmable, const <span class="type">QUrl</span> &amp;<i>proxyUrl</i> = QUrl())</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoaprequest.html#QCoapRequest">QCoapRequest</a></span>(const <span class="type">QCoapRequest</span> &amp;<i>other</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoaprequest.html#dtor.QCoapRequest">~QCoapRequest</a></span>()</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoaprequest.html#enableObserve">enableObserve</a></span>()</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">bool</span> <span class="name"><a href="qcoaprequest.html#isObserve">isObserve</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QtCoap::Method</span> <span class="name"><a href="qcoaprequest.html#method">method</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QUrl</span> <span class="name"><a href="qcoaprequest.html#proxyUrl">proxyUrl</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoaprequest.html#setProxyUrl">setProxyUrl</a></span>(const <span class="type">QUrl</span> &amp;<i>proxyUrl</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoaprequest.html#setUrl">setUrl</a></span>(const <span class="type">QUrl</span> &amp;<i>url</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QUrl</span> <span class="name"><a href="qcoaprequest.html#url">url</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QCoapRequest</span> &amp;<span class="name"><a href="qcoaprequest.html#operator-eq">operator=</a></span>(const <span class="type">QCoapRequest</span> &amp;<i>other</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    </table>
+    </section>
+
+    <h2>Detailed Description</h2>
+    <section class="content" aria-label="Description">
+        <p>The <a href="qcoaprequest.html">QCoapRequest</a> contains data needed to make CoAP frames that can be sent to the URL it holds.</p>
+    </section>
+
+    <h2>Member Function Documentation</h2>
+    <h3 class="fn" id="QCoapRequest-1"><code class="details extra" translate="no">[explicit]</code> <span class="name">QCoapRequest::QCoapRequest</span>(const <span class="type">char</span> *<i>url</i>, <span class="type">QCoapMessage::Type</span> <i>type</i> = Type::NonConfirmable)</h3>
+        <p>Constructs a <a href="qcoaprequest.html">QCoapRequest</a> from a string literal</p>
+    <h3 class="fn" id="QCoapRequest-2"><code class="details extra" translate="no">[explicit]</code> <span class="name">QCoapRequest::QCoapRequest</span>(const <span class="type">QUrl</span> &amp;<i>url</i> = QUrl(), <span class="type">QCoapMessage::Type</span> <i>type</i> = Type::NonConfirmable, const <span class="type">QUrl</span> &amp;<i>proxyUrl</i> = QUrl())</h3>
+        <p>Constructs a <a href="qcoaprequest.html">QCoapRequest</a> object with the target <i>url</i>, the proxy URL <i>proxyUrl</i> and the <i>type</i> of the message.</p>
+    <h3 class="fn" id="QCoapRequest"><span class="name">QCoapRequest::QCoapRequest</span>(const <span class="type">QCoapRequest</span> &amp;<i>other</i>)</h3>
+        <p>Constructs a copy of the <i>other</i> <a href="qcoaprequest.html">QCoapRequest</a>.</p>
+    <h3 class="fn" id="dtor.QCoapRequest"><code class="details extra" translate="no">[noexcept]</code> <span class="name">QCoapRequest::~QCoapRequest</span>()</h3>
+        <p>Destroys the <a href="qcoaprequest.html">QCoapRequest</a>.</p>
+    <h3 class="fn" id="enableObserve"><span class="type">void</span> <span class="name">QCoapRequest::enableObserve</span>()</h3>
+        <p>Sets the observe to <code>true</code> to make an observe request.</p>
+    <p><b>See also </b><a href="qcoaprequest.html#isObserve">isObserve()</a>.</p>
+    <h3 class="fn" id="isObserve"><span class="type">bool</span> <span class="name">QCoapRequest::isObserve</span>() const</h3>
+        <p>Returns <code>true</code> if the request is an observe request.</p>
+    <p><b>See also </b><a href="qcoaprequest.html#enableObserve">enableObserve()</a>.</p>
+    <h3 class="fn" id="method"><span class="type">QtCoap::Method</span> <span class="name">QCoapRequest::method</span>() const</h3>
+        <p>Returns the method of the request.</p>
+    <h3 class="fn" id="proxyUrl"><span class="type">QUrl</span> <span class="name">QCoapRequest::proxyUrl</span>() const</h3>
+        <p>Returns the proxy URI of the request. The request shall be sent directly if this is invalid.</p>
+    <p><b>See also </b><a href="qcoaprequest.html#setProxyUrl">setProxyUrl()</a>.</p>
+    <h3 class="fn" id="setProxyUrl"><span class="type">void</span> <span class="name">QCoapRequest::setProxyUrl</span>(const <span class="type">QUrl</span> &amp;<i>proxyUrl</i>)</h3>
+        <p>Sets the proxy URI of the request to the given <i>proxyUrl</i>.</p>
+    <p><b>See also </b><a href="qcoaprequest.html#proxyUrl">proxyUrl()</a>.</p>
+    <h3 class="fn" id="setUrl"><span class="type">void</span> <span class="name">QCoapRequest::setUrl</span>(const <span class="type">QUrl</span> &amp;<i>url</i>)</h3>
+        <p>Sets the target URI of the request to the given <i>url</i>.</p>
+        <p>If not indicated, the scheme of the URL will default to &apos;coap&apos;, and its port will default to 5683.</p>
+    <p><b>See also </b><a href="qcoaprequest.html#url">url()</a>.</p>
+    <h3 class="fn" id="url"><span class="type">QUrl</span> <span class="name">QCoapRequest::url</span>() const</h3>
+        <p>Returns the target URI of the request.</p>
+    <p><b>See also </b><a href="qcoaprequest.html#setUrl">setUrl()</a>.</p>
+    <h3 class="fn" id="operator-eq"><span class="type">QCoapRequest</span> &amp;<span class="name">QCoapRequest::operator=</span>(const <span class="type">QCoapRequest</span> &amp;<i>other</i>)</h3>
+        <p>Creates a copy of <i>other</i>.</p>
+    </main>
+    <footer>
+        <p>Generated by QDoc.</p>
+    </footer>
+</body>
+</html>

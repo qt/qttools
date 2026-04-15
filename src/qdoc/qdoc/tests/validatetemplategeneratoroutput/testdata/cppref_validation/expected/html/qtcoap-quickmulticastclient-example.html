@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick CoAP Multicast Discovery</title>
+    <link rel="stylesheet" href="qdoc-default.css">
+</head>
+<body>
+    <header>
+    <h1>Quick CoAP Multicast Discovery</h1>
+    <p class="brief">Using the CoAP client for a multicast resource discovery with a Qt Quick user interface.</p>
+    </header>
+    <main>
+    <section class="content" aria-label="Description">
+        <p class="centerAlign"><img src="images/quickmulticastclient.webp" alt="Multicast discovery window showing discovered CoAP resources"/></p>
+        <p>The <i>Quick CoAP Multicast Discovery</i> example demonstrates how to register <a href="qcoapclient.html">QCoapClient</a> as a QML type and use it in a Qt Quick application for CoAP multicast resource discovery.</p>
+        <aside class="admonition note" role="note"><p><b>Note: </b>Qt CoAP does not provide a QML API in its current version. However, you can make the C++ classes of the module available to QML as shown in this example.</p></aside>
+        <section>
+        <h4>Running the Example</h4>
+        <p>To run the example from <a href="https://doc.qt.io/qtcreator/">Qt Creator</a>, open the <b>Welcome</b> mode and select the example from <b>Examples</b>. For more information, see <a href="https://doc.qt.io/qtcreator/creator-build-example-application.html">Qt Creator: Tutorial: Build and run</a>.</p>
+        </section>
+        <section>
+        <h4>Setting Up a CoAP Server</h4>
+        <p>To run the example application, you first need to set up and start at least one CoAP server supporting multicast resource discovery. You have the following options:</p>
+<ul>        <li>Manually build and run CoAP servers using <a href="https://github.com/obgm/libcoap">libcoap</a>, <a href="https://github.com/eclipse/californium/">Californium</a>, or any other CoAP server implementation, which supports multicast and resource discovery features.</li>
+        <li>Use the ready Docker image available at Docker Hub, which builds and starts CoAP server based on Californium&apos;s <a href="https://github.com/eclipse/californium/tree/2.0.0/demo-apps/cf-helloworld-server">multicast server example</a>.</li>
+</ul>        </section>
+        <section>
+        <h5>Using the Docker-based Test Server</h5>
+        <p>The following command pulls the docker container for the CoAP server from the Docker Hub and starts it:</p>
+        <pre class="cpp" translate="no"><code>docker run --name coap-multicast-server -d --rm --net=host tqtc/coap-multicast-test-server:californium-2.0.0
+</code></pre>
+        <aside class="admonition note" role="note"><p><b>Note: </b>You can run more than one multicast CoAP servers (on the same host or other hosts in the network) by passing a different --name to the command above.</p></aside>
+        <p>To terminate the docker container after usage, first obtain the container&apos;s ID by executing the <code>docker ps</code> command. The output will look like this:</p>
+        <pre class="cpp" translate="no"><code>$ docker ps
+CONTAINER ID   IMAGE
+8b991fae7789   tqtc/coap-multicast-test-server:californium-2.0.0
+</code></pre>
+        <p>After that, use this ID to stop the container:</p>
+        <pre class="cpp" translate="no"><code>docker stop &lt;container_id&gt;
+</code></pre>
+        </section>
+        <section>
+        <h4>Exposign C++ Classes to QML</h4>
+        <p>In this example, you need to expose the <a href="qcoapresource.html">QCoapResource</a> and <a href="qcoapclient.html">QCoapClient</a> classes, as well as the <a href="qtcoap.html">QtCoap</a> namespace, to QML. To achieve this, create custom wrapper classes and use the special <a href="https://doc.qt.io/qt-6/qtqml-cppintegration-definetypes.html">registration macros</a>.</p>
+        <p>Create the <code>QmlCoapResource</code> class as a wrapper around <a href="qcoapresource.html">QCoapResource</a>. Use the <a href="https://doc.qt.io/qt-6/qobject.html#Q_PROPERTY">Q_PROPERTY</a> macro to make several properties accessible from QML. The class does not need to be directly instantiable from QML, so use the <a href="https://doc.qt.io/qt-6/qqmlengine.html#QML_ANONYMOUS">QML_ANONYMOUS</a> macro to register it.</p>
+        <pre class="cpp" translate="no"><code>class QmlCoapResource : public QCoapResource
+{
+    Q_GADGET
+    Q_PROPERTY(QString title READ title)
+    Q_PROPERTY(QString host READ hostStr)
+    Q_PROPERTY(QString path READ path)
+
+    QML_ANONYMOUS
+public:
+    QmlCoapResource() : QCoapResource() {}
+    QmlCoapResource(const QCoapResource &amp;resource)
+        : QCoapResource(resource) {}
+
+    QString hostStr() const { return host().toString(); }
+};
+</code></pre>
+        <p>After that, create the <code>QmlCoapMulticastClient</code> class with the <a href="qcoapclient.html">QCoapClient</a> class as a base class. Use the <a href="https://doc.qt.io/qt-6/qobject.html#Q_PROPERTY">Q_PROPERTY</a> macro to expose a custom property, and also create several <a href="https://doc.qt.io/qt-6/qobject.html#Q_INVOKABLE">Q_INVOKABLE</a> methods. Both the property and the invokable methods can be accessed from QML. Unlike <code>QmlCoapResource</code>, you want to be able to create this class from QML, so use the <a href="https://doc.qt.io/qt-6/qqmlengine.html#QML_NAMED_ELEMENT">QML_NAMED_ELEMENT</a> macro to register the class in QML.</p>
+        <pre class="cpp" translate="no"><code>class QmlCoapMulticastClient : public QCoapClient
+{
+    Q_OBJECT
+
+    Q_PROPERTY(bool isDiscovering READ isDiscovering NOTIFY isDiscoveringChanged)
+
+    QML_NAMED_ELEMENT(CoapMulticastClient)
+public:
+    QmlCoapMulticastClient(QObject *parent = nullptr);
+
+    Q_INVOKABLE void discover(const QString &amp;host, int port, const QString &amp;discoveryPath);
+    Q_INVOKABLE void discover(QtCoap::MulticastGroup group, int port, const QString &amp;discoveryPath);
+    Q_INVOKABLE void stopDiscovery();
+
+    bool isDiscovering() const;
+
+Q_SIGNALS:
+    void discovered(const QmlCoapResource &amp;resource);
+    void finished(int error);
+    // The bool parameter is not provided, because the signal is only used by
+    // the QML property system, and it does not use the passed value anyway.
+    void isDiscoveringChanged();
+
+public slots:
+    void onDiscovered(QCoapResourceDiscoveryReply *reply, const QList&lt;QCoapResource&gt; &amp;resources);
+
+private:
+    QCoapResourceDiscoveryReply *m_reply = nullptr;
+};
+</code></pre>
+        <p>Finally, register the <a href="qtcoap.html">QtCoap</a> namespace, so that you can use the enums provided there:</p>
+        <pre class="cpp" translate="no"><code>namespace QCoapForeignNamespace
+{
+    Q_NAMESPACE
+    QML_FOREIGN_NAMESPACE(QtCoap)
+    QML_NAMED_ELEMENT(QtCoap)
+}
+</code></pre>
+        </section>
+        <section>
+        <h4>Adjusting Build Files</h4>
+        <p>To make the custom types available from QML, update the build system files accordingly.</p>
+        </section>
+        <section>
+        <h5>CMake Build</h5>
+        <p>For a <a href="qtcoap-quicksecureclient-example.html">CMake</a>-based build, add the following to the <code>CMakeLists.txt</code>:</p>
+        <pre class="cpp" translate="no"><code>qt_add_qml_module(quickmulticastclient
+    URI CoapClientModule
+    VERSION 1.0
+    SOURCES
+        qmlcoapmulticastclient.cpp qmlcoapmulticastclient.h
+    QML_FILES
+        Main.qml
+)
+
+</code></pre>
+        </section>
+        <section>
+        <h5>qmake Build</h5>
+        <p>For a qmake build, modify the <code>quickmulticastclient.pro</code> file in the following way:</p>
+        <pre class="cpp" translate="no"><code>CONFIG += qmltypes
+QML_IMPORT_NAME = CoapClientModule
+QML_IMPORT_MAJOR_VERSION = 1
+    ...
+qml_resources.files = \
+    qmldir \
+    Main.qml
+
+qml_resources.prefix = /qt/qml/CoapClientModule
+
+RESOURCES += qml_resources
+
+</code></pre>
+        </section>
+        <section>
+        <h4>Using New QML Types</h4>
+        <p>Now, when the C++ classes are properly exposed to QML, you can use the new types:</p>
+        <pre class="qml" translate="no"><code>CoapMulticastClient {
+    id: client
+    onDiscovered: (resource) =&gt; { root.addResource(resource) }
+
+    onFinished: (error) =&gt; {
+        statusLabel.text = (error === QtCoap.Error.Ok)
+                ? qsTr(&quot;Finished resource discovery.&quot;)
+                : qsTr(&quot;Resource discovery failed with error code: %1&quot;).arg(error)
+    }
+}
+</code></pre>
+        <p>The <code>QmlCoapMulticastClient::finished()</code> signal triggers the <code>onFinished</code> signal handler, to show the request&apos;s status in the UI. Note that the example does not use <a href="qcoapclient.html">QCoapClient</a>&apos;s signals directly, because both <a href="qcoapclient.html#error">error()</a> and <a href="qcoapclient.html#finished">finished()</a> signals take a <a href="qcoapreply.html">QCoapReply</a> as a parameter (which is not exposed to QML), and the example only requires the error code.</p>
+        <p>The <code>QmlCoapMulticastClient</code>&apos;s constructor forwards the <a href="qcoapclient.html">QCoapClient</a>&apos;s signals to <code>QmlCoapMulticastClient::finished()</code> signal:</p>
+        <pre class="cpp" translate="no"><code>QmlCoapMulticastClient::QmlCoapMulticastClient(QObject *parent)
+    : QCoapClient(QtCoap::SecurityMode::NoSecurity, parent)
+{
+    connect(this, &amp;QCoapClient::finished, this,
+            [this](QCoapReply *reply) {
+                if (reply) {
+                    emit finished(static_cast&lt;int&gt;(reply-&gt;errorReceived()));
+                    reply-&gt;deleteLater();
+                    if (m_reply == reply) {
+                        m_reply = nullptr;
+                        emit isDiscoveringChanged();
+                    }
+                } else {
+                    qCWarning(lcCoapClient, &quot;Something went wrong, received a null reply&quot;);
+                }
+            });
+
+    connect(this, &amp;QCoapClient::error, this,
+            [this](QCoapReply *, QtCoap::Error err) {
+                emit finished(static_cast&lt;int&gt;(err));
+            });
+}
+</code></pre>
+        <p>When the <b>Discover</b> button is pressed, one of the overloaded <code>discover()</code> methods is invoked, based on the selected multicast group:</p>
+        <pre class="qml" translate="no"><code>Button {
+    id: discoverButton
+    text: client.isDiscovering ? qsTr(&quot;Stop Discovery&quot;) : qsTr(&quot;Discover&quot;)
+    Layout.preferredWidth: 100
+
+    onClicked: {
+        if (client.isDiscovering) {
+            client.stopDiscovery()
+        } else {
+            var currentGroup = groupComboBox.model.get(groupComboBox.currentIndex).value;
+
+            var path = &quot;&quot;;
+            if (currentGroup !== - 1) {
+                client.discover(currentGroup, parseInt(portField.text),
+                                discoveryPathField.text);
+                path = groupComboBox.currentText;
+            } else {
+                client.discover(customGroupField.text, parseInt(portField.text),
+                                discoveryPathField.text);
+                path = customGroupField.text + discoveryPathField.text;
+            }
+            statusLabel.text = qsTr(&quot;Discovering resources at %1...&quot;).arg(path);
+        }
+    }
+}
+</code></pre>
+        <p>This overload is called when a custom multicast group or a host address is selected:</p>
+        <pre class="cpp" translate="no"><code>void QmlCoapMulticastClient::discover(const QString &amp;host, int port, const QString &amp;discoveryPath)
+{
+    QUrl url;
+    url.setHost(host);
+    url.setPort(port);
+
+    m_reply = QCoapClient::discover(url, discoveryPath);
+    if (m_reply) {
+        connect(m_reply, &amp;QCoapResourceDiscoveryReply::discovered,
+                this, &amp;QmlCoapMulticastClient::onDiscovered);
+        emit isDiscoveringChanged();
+    } else {
+        qCWarning(lcCoapClient, &quot;Discovery request failed.&quot;);
+    }
+}
+</code></pre>
+        <p>And this overload is called when one of the suggested multicast groups is selected in the UI:</p>
+        <pre class="cpp" translate="no"><code>void QmlCoapMulticastClient::discover(QtCoap::MulticastGroup group, int port,
+                                      const QString &amp;discoveryPath)
+{
+    m_reply = QCoapClient::discover(group, port, discoveryPath);
+    if (m_reply) {
+        connect(m_reply, &amp;QCoapResourceDiscoveryReply::discovered,
+                this, &amp;QmlCoapMulticastClient::onDiscovered);
+        emit isDiscoveringChanged();
+    } else {
+        qCWarning(lcCoapClient, &quot;Discovery request failed.&quot;);
+    }
+}
+</code></pre>
+        <p>The <a href="qcoapresourcediscoveryreply.html#discovered">QCoapResourceDiscoveryReply::discovered()</a> signal delivers a list of <a href="qcoapresource.html">QCoapResource</a>s, which is not a QML type. To make the resources available in QML, forward each resource in the list to the <code>QmlCoapMulticastClient::discovered()</code> signal, which takes a <code>QmlCoapResource</code> instead:</p>
+        <pre class="cpp" translate="no"><code>void QmlCoapMulticastClient::onDiscovered(QCoapResourceDiscoveryReply *reply,
+                                          const QList&lt;QCoapResource&gt; &amp;resources)
+{
+    Q_UNUSED(reply)
+    for (const auto &amp;resource : resources)
+        emit discovered(resource);
+}
+</code></pre>
+        <p>The discovered resources are added to the <code>resourceModel</code> of the list view in the UI:</p>
+        <pre class="qml" translate="no"><code>function addResource(resource) {
+    resourceModel.insert(0, {&quot;host&quot; : resource.host,
+                             &quot;path&quot; : resource.path,
+                             &quot;title&quot; : resource.title})
+}
+</code></pre>
+        <p>While the discovery is in progress, press the <b>Stop Discovery</b> button to stop the discovery. Internally it is done by aborting the current request:</p>
+        <pre class="cpp" translate="no"><code>void QmlCoapMulticastClient::stopDiscovery()
+{
+    if (m_reply)
+        m_reply-&gt;abortRequest();
+}
+</code></pre>
+        </section>
+    </section>
+    </main>
+    <footer>
+        <p>Generated by QDoc.</p>
+    </footer>
+</body>
+</html>

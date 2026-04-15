@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Secure CoAP Client</title>
+    <link rel="stylesheet" href="qdoc-default.css">
+</head>
+<body>
+    <header>
+    <h1>Quick Secure CoAP Client</h1>
+    <p class="brief">Securing the CoAP client and using it with a Qt Quick user interface.</p>
+    </header>
+    <main>
+    <section class="content" aria-label="Description">
+        <p class="centerAlign"><img src="images/quicksecureclient.png" alt="Secure CoAP client with certificate configuration and response"/></p>
+        <p><i>Quick Secure CoAP Client</i> demonstrates how to create a secure CoAP client and use it in a Qt Quick application.</p>
+        <aside class="admonition note" role="note"><p><b>Note: </b>Qt CoAP does not provide a QML API in its current version. However, you can make the C++ classes of the module available to QML as it is shown in the example.</p></aside>
+        <section>
+        <h4>Running the Example</h4>
+        <p>To run the example from <a href="https://doc.qt.io/qtcreator/">Qt Creator</a>, open the <b>Welcome</b> mode and select the example from <b>Examples</b>. For more information, see <a href="https://doc.qt.io/qtcreator/creator-build-example-application.html">Qt Creator: Tutorial: Build and run</a>.</p>
+        <p>To run the example application, you first need to set up a secure CoAP server. You can run the example with any secure CoAP server supporting one of the <i>pre-shared key (PSK)</i> or <i>certificate</i> authentication modes. For more information about setting up a secure CoAP server, see <a href="qtcoap-quicksecureclient-example.html">Setting Up a Secure CoAP Server</a>.</p>
+        </section>
+        <section>
+        <h4>Exposing C++ Classes to QML</h4>
+        <p>In this example, you need to expose the <a href="qcoapclient.html">QCoapClient</a> class and the <a href="qtcoap.html">QtCoap</a> namespace to QML. To achieve this, create a custom wrapper class and use the special <a href="https://doc.qt.io/qt-6/qtqml-cppintegration-definetypes.html">registration macros</a>.</p>
+        <p>Create the <code>QmlCoapSecureClient</code> class as a wrapper around <a href="qcoapclient.html">QCoapClient</a>. This class also holds the selected security mode and security configuration parameters. Use the <a href="https://doc.qt.io/qt-6/qobject.html#Q_INVOKABLE">Q_INVOKABLE</a> macro to expose several methods to QML. Also use the <a href="https://doc.qt.io/qt-6/qqmlengine.html#QML_NAMED_ELEMENT">QML_NAMED_ELEMENT</a> macro to register the class in QML as <code>CoapSecureClient</code>.</p>
+        <pre class="cpp" translate="no"><code>class QmlCoapSecureClient : public QObject
+{
+    Q_OBJECT
+    QML_NAMED_ELEMENT(CoapSecureClient)
+
+public:
+    QmlCoapSecureClient(QObject *parent = nullptr);
+    ~QmlCoapSecureClient() override;
+
+    Q_INVOKABLE void setSecurityMode(QtCoap::SecurityMode mode);
+    Q_INVOKABLE void sendGetRequest(const QString &amp;host, const QString &amp;path, int port);
+    Q_INVOKABLE void setSecurityConfiguration(const QString &amp;preSharedKey, const QString &amp;identity);
+    Q_INVOKABLE void setSecurityConfiguration(const QString &amp;localCertificatePath,
+                                              const QString &amp;caCertificatePath,
+                                              const QString &amp;privateKeyPath);
+    Q_INVOKABLE void disconnect();
+
+Q_SIGNALS:
+    void finished(const QString &amp;result);
+
+private:
+    QCoapClient *m_coapClient;
+    QCoapSecurityConfiguration m_configuration;
+    QtCoap::SecurityMode m_securityMode;
+};
+</code></pre>
+        <p>After that, register the <a href="qtcoap.html">QtCoap</a> namespace, so that you can use the enums provided there:</p>
+        <pre class="cpp" translate="no"><code>namespace QCoapForeignNamespace
+{
+    Q_NAMESPACE
+    QML_FOREIGN_NAMESPACE(QtCoap)
+    QML_NAMED_ELEMENT(QtCoap)
+}
+</code></pre>
+        </section>
+        <section>
+        <h4>Adjusting Build Files</h4>
+        <p>To make the custom types available from QML, update the build system files accordingly.</p>
+        </section>
+        <section>
+        <h5>CMake</h5>
+        <p>For a <a href="qtcoap-quicksecureclient-example.html">CMake</a>-based build, add the following to the <code>CMakeLists.txt</code>:</p>
+        <pre class="cpp" translate="no"><code>qt_add_qml_module(quicksecureclient
+    URI CoapSecureClientModule
+    SOURCES
+        qmlcoapsecureclient.cpp qmlcoapsecureclient.h
+    QML_FILES
+        FilePicker.qml
+        Main.qml
+)
+
+</code></pre>
+        </section>
+        <section>
+        <h5>qmake</h5>
+        <p>For a qmake build, modify the <code>quicksecureclient.pro</code> file in the following way:</p>
+        <pre class="cpp" translate="no"><code>CONFIG += qmltypes
+QML_IMPORT_NAME = CoapSecureClientModule
+QML_IMPORT_MAJOR_VERSION = 1
+    ...
+qml_resources.files = \
+    qmldir \
+    FilePicker.qml \
+    Main.qml
+
+qml_resources.prefix = /qt/qml/CoapSecureClientModule
+
+RESOURCES += qml_resources
+
+</code></pre>
+        </section>
+        <section>
+        <h4>Using New QML Types</h4>
+        <p>Now, when the C++ classes are properly exposed to QML, you can use the new types.</p>
+        </section>
+        <section>
+        <h5>Creating the Client</h5>
+        <p><code>CoapSecureClient</code> is instantiated from the <code>Main.qml</code> file. It handles the <code>QmlCoapSecureClient::finished()</code> signal and updates the UI accordingly:</p>
+        <pre class="qml" translate="no"><code>CoapSecureClient {
+    id: client
+    onFinished: (result) =&gt; {
+        outputView.text = result;
+        statusLabel.text = &quot;&quot;;
+        disconnectButton.enabled = true;
+    }
+}
+</code></pre>
+        <p>The instance of <a href="qcoapclient.html">QCoapClient</a> is created when the user selects or changes the security mode in the UI. The <code>QmlCoapSecureClient::setSecurityMode()</code> method is invoked from the QML code, when one of the security modes is selected:</p>
+        <pre class="qml" translate="no"><code>ButtonGroup {
+    id: securityModeGroup
+    onClicked: {
+        if ((securityModeGroup.checkedButton as RadioButton) === preSharedMode)
+            client.setSecurityMode(QtCoap.SecurityMode.PreSharedKey);
+        else
+            client.setSecurityMode(QtCoap.SecurityMode.Certificate);
+    }
+}
+</code></pre>
+        <p>On the C++ side, this method creates a <a href="qcoapclient.html">QCoapClient</a> and connects to its <a href="qcoapclient.html#finished">finished()</a> and <a href="qcoapclient.html#error">error()</a> signals. The class handles both signals internally, and forwards them to the new <code>finished()</code> signal.</p>
+        <pre class="cpp" translate="no"><code>void QmlCoapSecureClient::setSecurityMode(QtCoap::SecurityMode mode)
+{
+    // Create a new client, if the security mode has changed
+    if (m_coapClient &amp;&amp; mode != m_securityMode) {
+        delete m_coapClient;
+        m_coapClient = nullptr;
+    }
+
+    if (!m_coapClient) {
+        m_coapClient = new QCoapClient(mode);
+        m_securityMode = mode;
+
+        connect(m_coapClient, &amp;QCoapClient::finished, this,
+                [this](QCoapReply *reply) {
+                    if (!reply)
+                        emit finished(tr(&quot;Something went wrong, received a null reply&quot;));
+                    else if (reply-&gt;errorReceived() != QtCoap::Error::Ok)
+                        emit finished(errorMessage(reply-&gt;errorReceived()));
+                    else
+                        emit finished(reply-&gt;message().payload());
+                });
+
+        connect(m_coapClient, &amp;QCoapClient::error, this,
+                [this](QCoapReply *, QtCoap::Error errorCode) {
+                    emit finished(errorMessage(errorCode));
+                });
+    }
+}
+</code></pre>
+        </section>
+        <section>
+        <h5>Sending a Request</h5>
+        <p>Click the <b>Send Request</b> button to set the security configuration based on the selected security mode and send a <code>GET</code> request:</p>
+        <pre class="qml" translate="no"><code>Button {
+    id: requestButton
+    text: qsTr(&quot;Send Request&quot;)
+    enabled: securityModeGroup.checkState !== Qt.Unchecked
+
+    onClicked: {
+        outputView.text = &quot;&quot;;
+        if ((securityModeGroup.checkedButton as RadioButton) === preSharedMode)
+            client.setSecurityConfiguration(pskField.text, identityField.text);
+        else
+            client.setSecurityConfiguration(localCertificatePicker.selectedFile,
+                                            caCertificatePicker.selectedFile,
+                                            privateKeyPicker.selectedFile);
+
+        client.sendGetRequest(hostComboBox.editText, resourceField.text,
+                              parseInt(portField.text));
+
+        statusLabel.text = qsTr(&quot;Sending request to %1%2...&quot;).arg(hostComboBox.editText)
+                                                             .arg(resourceField.text);
+    }
+}
+</code></pre>
+        <p>There are two overloads for the <code>setSecurityConfiguration</code> method.</p>
+        <p>The overload for the PSK mode simply sets the client identity and the pre-shared key:</p>
+        <pre class="cpp" translate="no"><code>void
+QmlCoapSecureClient::setSecurityConfiguration(const QString &amp;preSharedKey, const QString &amp;identity)
+{
+    QCoapSecurityConfiguration configuration;
+    configuration.setPreSharedKey(preSharedKey.toUtf8());
+    configuration.setPreSharedKeyIdentity(identity.toUtf8());
+    m_configuration = configuration;
+}
+</code></pre>
+        <p>And the overload for X.509 certificates reads the certificate files and the private key and sets the security configuration:</p>
+        <pre class="cpp" translate="no"><code>void QmlCoapSecureClient::setSecurityConfiguration(const QString &amp;localCertificatePath,
+                                                   const QString &amp;caCertificatePath,
+                                                   const QString &amp;privateKeyPath)
+{
+    QCoapSecurityConfiguration configuration;
+
+    const auto localCerts =
+            QSslCertificate::fromPath(QUrl(localCertificatePath).toLocalFile(), QSsl::Pem,
+                                      QSslCertificate::PatternSyntax::FixedString);
+    if (localCerts.isEmpty())
+        qCWarning(lcCoapClient, &quot;The specified local certificate file is not valid.&quot;);
+    else
+        configuration.setLocalCertificateChain(localCerts.toVector());
+
+    const auto caCerts = QSslCertificate::fromPath(QUrl(caCertificatePath).toLocalFile(), QSsl::Pem,
+                                                   QSslCertificate::PatternSyntax::FixedString);
+    if (caCerts.isEmpty())
+        qCWarning(lcCoapClient, &quot;The specified CA certificate file is not valid.&quot;);
+    else
+        configuration.setCaCertificates(caCerts.toVector());
+
+    QFile privateKey(QUrl(privateKeyPath).toLocalFile());
+    if (privateKey.open(QIODevice::ReadOnly)) {
+        QCoapPrivateKey key(privateKey.readAll(), QSsl::Ec);
+        configuration.setPrivateKey(key);
+    } else {
+        qCWarning(lcCoapClient) &lt;&lt; &quot;Unable to read the specified private key file&quot;
+                                &lt;&lt; privateKeyPath;
+    }
+    m_configuration = configuration;
+}
+</code></pre>
+        <p>After setting the security configuration, the <code>sendGetRequest</code> method sets the request URL and sends a <code>GET</code> request:</p>
+        <pre class="cpp" translate="no"><code>void QmlCoapSecureClient::sendGetRequest(const QString &amp;host, const QString &amp;path, int port)
+{
+    if (!m_coapClient)
+        return;
+
+    m_coapClient-&gt;setSecurityConfiguration(m_configuration);
+
+    QUrl url;
+    url.setHost(host);
+    url.setPath(path);
+    url.setPort(port);
+    m_coapClient-&gt;get(url);
+}
+</code></pre>
+        <p>When sending the first request, a handshake with the CoAP server is performed. After the handshake is successfully done, all the subsequent messages are encrypted, and changing the security configuration after a successful handshake won&apos;t have any effect. If you want to change it, or change the host, you need to disconnect first.</p>
+        <pre class="cpp" translate="no"><code>void QmlCoapSecureClient::disconnect()
+{
+    if (m_coapClient)
+        m_coapClient-&gt;disconnect();
+}
+</code></pre>
+        <p>This will abort the handshake and close the open sockets.</p>
+        <p>For the authentication using X.509 certificates, the certificate files need to be specified. The <code>FilePicker</code> component is used for this purpose. It combines a text field and a button for opening a file dialog when the button is pressed:</p>
+        <pre class="qml" translate="no"><code>Item {
+    id: filePicker
+
+    property string dialogText
+    property alias selectedFile: filePathField.text
+
+    height: addFileButton.height
+
+    FileDialog {
+        id: fileDialog
+        title: qsTr(&quot;Please Choose %1&quot;).arg(filePicker.dialogText)
+        currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
+        fileMode: FileDialog.OpenFile
+        onAccepted: filePathField.text = fileDialog.selectedFile
+    }
+
+    RowLayout {
+        anchors.fill: parent
+        TextField {
+            id: filePathField
+            placeholderText: qsTr(&quot;&lt;%1&gt;&quot;).arg(filePicker.dialogText)
+            inputMethodHints: Qt.ImhUrlCharactersOnly
+            selectByMouse: true
+            Layout.fillWidth: true
+        }
+
+        Button {
+            id: addFileButton
+            text: qsTr(&quot;Add %1&quot;).arg(filePicker.dialogText)
+            onClicked: fileDialog.open()
+        }
+    }
+}
+</code></pre>
+        <p><code>FilePicker</code> is instantiated several times in the <code>Main.qml</code> file for creating input fields for certificates and the private key:</p>
+        <pre class="qml" translate="no"><code>FilePicker {
+    id: localCertificatePicker
+    dialogText: qsTr(&quot;Local Certificate&quot;)
+    enabled: (securityModeGroup.checkedButton as RadioButton) === certificateMode
+    Layout.columnSpan: 2
+    Layout.fillWidth: true
+}
+
+FilePicker {
+    id: caCertificatePicker
+    dialogText: qsTr(&quot;CA Certificate&quot;)
+    enabled: (securityModeGroup.checkedButton as RadioButton) === certificateMode
+    Layout.columnSpan: 2
+    Layout.fillWidth: true
+}
+
+FilePicker {
+    id: privateKeyPicker
+    dialogText: qsTr(&quot;Private Key&quot;)
+    enabled: (securityModeGroup.checkedButton as RadioButton) === certificateMode
+    Layout.columnSpan: 2
+    Layout.fillWidth: true
+}
+</code></pre>
+        </section>
+        <section>
+        <h4>Setting Up a Secure CoAP Server</h4>
+        <p>To run this example, you need to have a secure CoAP server supporting either PSK or Certificate modes (or both). You have the following options:</p>
+<ul>        <li>Manually build and run a secure CoAP server using, for example, <a href="https://github.com/obgm/libcoap">libcoap</a>, <a href="https://github.com/eclipse/californium">Californium</a>, <a href="https://github.com/keith-cullen/FreeCoAP">FreeCoAP</a>, or any other CoAP library which supports DTLS.</li>
+        <li>Use the ready Docker images available at Docker Hub, which build and run the secure CoAP servers suitable for our example. The steps required for using the docker-based CoAP servers are described below.</li>
+</ul>        </section>
+        <section>
+        <h5>Setting Up a Server For PSK Mode</h5>
+        <p>The following command pulls the docker container for a secure CoAP server based on <a href="https://github.com/eclipse/californium/tree/master/demo-apps/cf-plugtest-server">Californium plugtest</a> (which is not secure by default) from the Docker Hub and starts it:</p>
+        <pre class="cpp" translate="no"><code>docker run --name coap-test-server -d --rm -p 5683:5683/udp -p 5684:5684/udp tqtc/coap-californium-test-server:3.8.0
+</code></pre>
+        <p>The CoAP test server will be reachable on ports <i>5683</i> (non-secure) and <i>5684</i> (secure). For instructions on retrieving the IP address see <a href="qtcoap-quicksecureclient-example.html">Getting The IP Address</a>.</p>
+        <p>To run the example with this server, you need to set the pre-shared key to <code>secretPSK</code> and the identity to <code>Client_identity</code>.</p>
+        </section>
+        <section>
+        <h5>Setting Up a Server For Certificate Mode</h5>
+        <p>The docker image of the secure server using authentication with X.509 certificates is based on the <a href="https://github.com/keith-cullen/FreeCoAP/tree/master/sample/time_server">time server</a> example from the FreeCoAP library. The following command pulls the container from Docker Hub and starts it:</p>
+        <pre class="cpp" translate="no"><code>docker run --name coap-time-server -d --rm -p 5684:5684/udp tqtc/coap-secure-time-server:freecoap
+</code></pre>
+        <p>For instructions on retrieving the IP address see <a href="qtcoap-quicksecureclient-example.html">Getting The IP Address</a>. The CoAP test server will be reachable by the retrieved IP address on port <i>5684</i> and resource path <code>/time</code>.</p>
+        <p>To run the example with this server, you need to specify the certificate files required by the server. They are located in the docker container, under <code>/root/certs</code> directory. To copy them to a local directory, use the following command:</p>
+        <pre class="cpp" translate="no"><code>docker cp &lt;container_id&gt;:/root/certs &lt;local_directory_path&gt;
+</code></pre>
+        <p>For example:</p>
+        <pre class="cpp" translate="no"><code>$ docker cp 5e46502df88f:/root/certs ~/
+</code></pre>
+        <p>The instructions for getting the container ID are described below.</p>
+        </section>
+        <section>
+        <h5>Getting The IP Address</h5>
+        <p>To find out the IP address of a docker container, first retrieve the container ID by running the <code>docker ps</code> command, which will output something like:</p>
+        <pre class="cpp" translate="no"><code>$ docker ps
+CONTAINER ID        IMAGE
+5e46502df88f        tqtc/coap-californium-test-server:3.8.0
+</code></pre>
+        <p>Then you can obtain the IP address with the following command:</p>
+        <pre class="cpp" translate="no"><code>docker inspect &lt;container_id&gt; | grep IPAddress
+</code></pre>
+        <p>For example:</p>
+        <pre class="cpp" translate="no"><code>$ docker inspect 5e46502df88f | grep IPAddress
+...
+&quot;IPAddress&quot;: &quot;172.17.0.2&quot;,
+...
+</code></pre>
+        </section>
+        <section>
+        <h5>Terminating a Docker Container</h5>
+        <p>To terminate a docker container after usage, use the following command:</p>
+        <pre class="cpp" translate="no"><code>docker stop &lt;container_id&gt;
+</code></pre>
+        <p>The <code>&lt;container_id&gt;</code> here is the same as retrieved by the <code>docker ps</code> command.</p>
+        </section>
+    </section>
+    </main>
+    <footer>
+        <p>Generated by QDoc.</p>
+    </footer>
+</body>
+</html>

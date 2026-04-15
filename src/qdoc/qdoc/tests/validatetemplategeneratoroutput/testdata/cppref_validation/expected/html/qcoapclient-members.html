@@ -1,0 +1,60 @@
+<!--
+Copyright (C) 2026 The Qt Company Ltd.
+SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of All Members for QCoapClient</title>
+    <link rel="stylesheet" href="qdoc-default.css">
+</head>
+<body>
+    <header>
+    <h1>List of All Members for QCoapClient</h1>
+    </header>
+    <main>
+    <p>This is the complete list of members for <a href="qcoapclient.html">QCoapClient</a>, including inherited members.</p>
+
+    <ul>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#QCoapClient">QCoapClient</a></span>(<span class="type">QtCoap::SecurityMode</span>, <span class="type">QObject</span> *)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#dtor.QCoapClient">~QCoapClient</a></span>()</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#bindInterface-prop">bindInterface</a></span>() const : <span class="type">QNetworkInterface</span></li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#bindInterface-prop">bindInterfaceChanged</a></span>(const <span class="type">QNetworkInterface</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#cancelObserve">cancelObserve</a></span>(<span class="type">QCoapReply</span> *)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#cancelObserve-1">cancelObserve</a></span>(const <span class="type">QUrl</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#deleteResource">deleteResource</a></span>(const <span class="type">QCoapRequest</span> &amp;) : <span class="type">QCoapReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#deleteResource-1">deleteResource</a></span>(const <span class="type">QUrl</span> &amp;) : <span class="type">QCoapReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#disconnect">disconnect</a></span>()</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#discover">discover</a></span>(const <span class="type">QUrl</span> &amp;, const <span class="type">QString</span> &amp;) : <span class="type">QCoapResourceDiscoveryReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#discover-1">discover</a></span>(<span class="type">QtCoap::MulticastGroup</span>, <span class="type">int</span>, const <span class="type">QString</span> &amp;) : <span class="type">QCoapResourceDiscoveryReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#error">error</a></span>(<span class="type">QCoapReply</span> *, <span class="type">QtCoap::Error</span>)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#finished">finished</a></span>(<span class="type">QCoapReply</span> *)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#get">get</a></span>(const <span class="type">QCoapRequest</span> &amp;) : <span class="type">QCoapReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#get-1">get</a></span>(const <span class="type">QUrl</span> &amp;) : <span class="type">QCoapReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#observe">observe</a></span>(const <span class="type">QCoapRequest</span> &amp;) : <span class="type">QCoapReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#observe-1">observe</a></span>(const <span class="type">QUrl</span> &amp;) : <span class="type">QCoapReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#post">post</a></span>(const <span class="type">QCoapRequest</span> &amp;, const <span class="type">QByteArray</span> &amp;) : <span class="type">QCoapReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#post-1">post</a></span>(const <span class="type">QCoapRequest</span> &amp;, <span class="type">QIODevice</span> *) : <span class="type">QCoapReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#post-2">post</a></span>(const <span class="type">QUrl</span> &amp;, const <span class="type">QByteArray</span> &amp;) : <span class="type">QCoapReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#put">put</a></span>(const <span class="type">QCoapRequest</span> &amp;, const <span class="type">QByteArray</span> &amp;) : <span class="type">QCoapReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#put-1">put</a></span>(const <span class="type">QCoapRequest</span> &amp;, <span class="type">QIODevice</span> *) : <span class="type">QCoapReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#put-2">put</a></span>(const <span class="type">QUrl</span> &amp;, const <span class="type">QByteArray</span> &amp;) : <span class="type">QCoapReply</span> *</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#responseToMulticastReceived">responseToMulticastReceived</a></span>(<span class="type">QCoapReply</span> *, const <span class="type">QCoapMessage</span> &amp;, const <span class="type">QHostAddress</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#setAckRandomFactor">setAckRandomFactor</a></span>(<span class="type">double</span>)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#setAckTimeout">setAckTimeout</a></span>(<span class="type">uint</span>)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#bindInterface-prop">setBindInterface</a></span>(const <span class="type">QNetworkInterface</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#setBlockSize">setBlockSize</a></span>(<span class="type">quint16</span>)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#setMaximumRetransmitCount">setMaximumRetransmitCount</a></span>(<span class="type">uint</span>)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#setMaximumServerResponseDelay">setMaximumServerResponseDelay</a></span>(<span class="type">uint</span>)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#setMinimumTokenSize">setMinimumTokenSize</a></span>(<span class="type">int</span>)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#setSecurityConfiguration">setSecurityConfiguration</a></span>(const <span class="type">QCoapSecurityConfiguration</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapclient.html#setSocketOption">setSocketOption</a></span>(<span class="type">QAbstractSocket::SocketOption</span>, const <span class="type">QVariant</span> &amp;)</li>
+    </ul>
+    </main>
+    <footer>
+        <p>Generated by QDoc.</p>
+    </footer>
+</body>
+</html>

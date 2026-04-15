@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCoapOption</title>
+    <link rel="stylesheet" href="qdoc-default.css">
+</head>
+<body>
+    <header>
+    <h1>QCoapOption</h1>
+    <p class="subtitle">class QCoapOption</p>
+    <p class="brief">The QCoapOption class holds data about CoAP options.</p>
+    </header>
+    <main>
+
+    <table class="requisites">
+    <tr><td class="memItemLeft">Header:</td>
+    <td class="memItemRight"><code>QCoapOption</code></td></tr>
+    <tr><td class="memItemLeft">CMake:</td>
+    <td class="memItemRight"><code>find_package(Qt6 REQUIRED COMPONENTS Coap)</code><br/><code>target_link_libraries(mytarget PRIVATE Qt6::Coap)</code></td></tr>
+    <tr><td class="memItemLeft">qmake:</td>
+    <td class="memItemRight"><code>QT += coap</code></td></tr>
+    </table>
+
+
+    <ul>
+    <li><a href="qcoapoption-members.html">List of all members, including inherited members</a></li>
+    </ul>
+
+
+
+    <aside class="admonition note" role="note"><p><b>Note:</b> All functions in this class are <a href="threads-reentrancy.html">reentrant</a>.</p></aside>
+
+
+    <section class="section-public-types" aria-label="Public Types">
+    <h2>Public Types</h2>
+    <table class="alignedsummary">
+    <tr>
+    <td class="memItemLeft">enum <span class="name"><a href="qcoapoption.html#OptionName-enum">OptionName</a></span> { Invalid, IfMatch, UriHost, Etag, IfNoneMatch, ..., Size1 }</td>
+    <td class="memItemRight"></td>
+    </tr>
+    </table>
+    </section>
+    <section class="section-public-functions" aria-label="Public Functions">
+    <h2>Public Functions</h2>
+    <table class="alignedsummary">
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoapoption.html#QCoapOption-2">QCoapOption</a></span>(<span class="type">QCoapOption::OptionName</span> <i>name</i> = Invalid, const <span class="type">QByteArray</span> &amp;<i>opaqueValue</i> = QByteArray())</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoapoption.html#QCoapOption-3">QCoapOption</a></span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>, const <span class="type">QString</span> &amp;<i>stringValue</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoapoption.html#QCoapOption-4">QCoapOption</a></span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>, <span class="type">quint32</span> <i>intValue</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoapoption.html#QCoapOption-1">QCoapOption</a></span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoapoption.html#QCoapOption">QCoapOption</a></span>(<span class="type">QCoapOption</span> &amp;&amp;<i>other</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoapoption.html#dtor.QCoapOption">~QCoapOption</a></span>()</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">bool</span> <span class="name"><a href="qcoapoption.html#isValid">isValid</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">int</span> <span class="name"><a href="qcoapoption.html#length">length</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QCoapOption::OptionName</span> <span class="name"><a href="qcoapoption.html#name">name</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QByteArray</span> <span class="name"><a href="qcoapoption.html#opaqueValue">opaqueValue</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QString</span> <span class="name"><a href="qcoapoption.html#stringValue">stringValue</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapoption.html#swap">swap</a></span>(<span class="type">QCoapOption</span> &amp;<i>other</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">quint32</span> <span class="name"><a href="qcoapoption.html#uintValue">uintValue</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">bool</span> <span class="name"><a href="qcoapoption.html#operator-not-eq">operator!=</a></span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>) const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QCoapOption</span> &amp;<span class="name"><a href="qcoapoption.html#operator-eq">operator=</a></span>(<span class="type">QCoapOption</span> &amp;&amp;<i>other</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QCoapOption</span> &amp;<span class="name"><a href="qcoapoption.html#operator-eq-1">operator=</a></span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">bool</span> <span class="name"><a href="qcoapoption.html#operator-eq-eq">operator==</a></span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>) const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    </table>
+    </section>
+
+    <h2>Detailed Description</h2>
+    <section class="content" aria-label="Description">
+        <p>CoAP defines a number of options that can be included in a message. Both requests and responses may include a list of one or more options. For example, the URI in a request is transported in several options, and metadata that would be carried in an HTTP header in HTTP is supplied as options as well.</p>
+        <p>An option contains a name, related to an option ID, and a value. The name is one of the values from the <a href="qcoapoption.html#OptionName-enum">OptionName</a> enumeration.</p>
+    </section>
+
+    <h2>Member Type Documentation</h2>
+    <h3 class="fn" id="OptionName-enum">enum <span class="name">QCoapOption::OptionName</span></h3>
+        <p>Indicates the name of an option. The value of each ID is as specified by the CoAP standard, with the exception of Invalid. You can refer to <a href="https://tools.ietf.org/html/rfc7252#section-5.10">RFC 7252</a> and <a href="https://tools.ietf.org/html/rfc7959#section-2.1">RFC 7959</a> for more details.</p>
+        <div class="table"><table class="valuelist">
+        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">Invalid</code></td><td class="topAlign">An invalid option.</td></tr>
+<tr><td class="topAlign"><code translate="no">IfMatch</code></td><td class="topAlign">If-Match option.</td></tr>
+<tr><td class="topAlign"><code translate="no">UriHost</code></td><td class="topAlign">Uri-Host option.</td></tr>
+<tr><td class="topAlign"><code translate="no">Etag</code></td><td class="topAlign">Etag option.</td></tr>
+<tr><td class="topAlign"><code translate="no">IfNoneMatch</code></td><td class="topAlign">If-None-Match option.</td></tr>
+<tr><td class="topAlign"><code translate="no">Observe</code></td><td class="topAlign">Observe option.</td></tr>
+<tr><td class="topAlign"><code translate="no">UriPort</code></td><td class="topAlign">Uri-Port option.</td></tr>
+<tr><td class="topAlign"><code translate="no">LocationPath</code></td><td class="topAlign">Location-path option.</td></tr>
+<tr><td class="topAlign"><code translate="no">UriPath</code></td><td class="topAlign">Uri-Path option.</td></tr>
+<tr><td class="topAlign"><code translate="no">ContentFormat</code></td><td class="topAlign">Content-Format option.</td></tr>
+<tr><td class="topAlign"><code translate="no">MaxAge</code></td><td class="topAlign">Max-Age option.</td></tr>
+<tr><td class="topAlign"><code translate="no">UriQuery</code></td><td class="topAlign">Uri-Query option.</td></tr>
+<tr><td class="topAlign"><code translate="no">Accept</code></td><td class="topAlign">Accept option.</td></tr>
+<tr><td class="topAlign"><code translate="no">LocationQuery</code></td><td class="topAlign">Location-Query option.</td></tr>
+<tr><td class="topAlign"><code translate="no">Block2</code></td><td class="topAlign">Block2 option.</td></tr>
+<tr><td class="topAlign"><code translate="no">Block1</code></td><td class="topAlign">Block1 option.</td></tr>
+<tr><td class="topAlign"><code translate="no">Size2</code></td><td class="topAlign">Size2 option.</td></tr>
+<tr><td class="topAlign"><code translate="no">ProxyUri</code></td><td class="topAlign">Proxy-Uri option.</td></tr>
+<tr><td class="topAlign"><code translate="no">ProxyScheme</code></td><td class="topAlign">Proxy-Scheme option.</td></tr>
+<tr><td class="topAlign"><code translate="no">Size1</code></td><td class="topAlign">Size1 option.</td></tr>
+        </table></div>
+    <h2>Member Function Documentation</h2>
+    <h3 class="fn" id="QCoapOption-2"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i> = Invalid, const <span class="type">QByteArray</span> &amp;<i>opaqueValue</i> = QByteArray())</h3>
+        <p>Constructs a new CoAP option with the given <i>name</i> and QByteArray <i>opaqueValue</i>. If no parameters are passed, constructs an Invalid object.</p>
+    <p><b>See also </b><a href="qcoapoption.html#isValid">isValid()</a>.</p>
+    <h3 class="fn" id="QCoapOption-3"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>, const <span class="type">QString</span> &amp;<i>stringValue</i>)</h3>
+        <p>Constructs a new CoAP option with the given <i>name</i> and the QString <i>stringValue</i>.</p>
+    <p><b>See also </b><a href="qcoapoption.html#isValid">isValid()</a>.</p>
+    <h3 class="fn" id="QCoapOption-4"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>, <span class="type">quint32</span> <i>intValue</i>)</h3>
+        <p>Constructs a new CoAP option with the given <i>name</i> and the unsigned integer <i>intValue</i>.</p>
+    <p><b>See also </b><a href="qcoapoption.html#isValid">isValid()</a>.</p>
+    <h3 class="fn" id="QCoapOption-1"><span class="name">QCoapOption::QCoapOption</span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>)</h3>
+        <p>Constructs a new CoAP option as a copy of <i>other</i>, making the two options identical.</p>
+    <p><b>See also </b><a href="qcoapoption.html#isValid">isValid()</a>.</p>
+    <h3 class="fn" id="QCoapOption"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption</span> &amp;&amp;<i>other</i>)</h3>
+        <p>Move-constructs a <a href="qcoapoption.html">QCoapOption</a>, making it point to the same object as <i>other</i> was pointing to.</p>
+    <h3 class="fn" id="dtor.QCoapOption"><code class="details extra" translate="no">[noexcept]</code> <span class="name">QCoapOption::~QCoapOption</span>()</h3>
+        <p>Destroys the <a href="qcoapoption.html">QCoapOption</a> object.</p>
+    <h3 class="fn" id="isValid"><span class="type">bool</span> <span class="name">QCoapOption::isValid</span>() const</h3>
+        <p>Returns <code>true</code> if the option is valid.</p>
+    <h3 class="fn" id="length"><span class="type">int</span> <span class="name">QCoapOption::length</span>() const</h3>
+        <p>Returns the length of the value of the option.</p>
+    <h3 class="fn" id="name"><span class="type">QCoapOption::OptionName</span> <span class="name">QCoapOption::name</span>() const</h3>
+        <p>Returns the name of the option.</p>
+    <h3 class="fn" id="opaqueValue"><span class="type">QByteArray</span> <span class="name">QCoapOption::opaqueValue</span>() const</h3>
+        <p>Returns the value of the option.</p>
+    <h3 class="fn" id="stringValue"><span class="type">QString</span> <span class="name">QCoapOption::stringValue</span>() const</h3>
+        <p>Returns the QString value of the option.</p>
+    <h3 class="fn" id="swap"><code class="details extra" translate="no">[noexcept]</code> <span class="type">void</span> <span class="name">QCoapOption::swap</span>(<span class="type">QCoapOption</span> &amp;<i>other</i>)</h3>
+        <p>Swaps this option with <i>other</i>. This operation is very fast and never fails.</p>
+    <h3 class="fn" id="uintValue"><span class="type">quint32</span> <span class="name">QCoapOption::uintValue</span>() const</h3>
+        <p>Returns the integer value of the option.</p>
+    <h3 class="fn" id="operator-not-eq"><span class="type">bool</span> <span class="name">QCoapOption::operator!=</span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>) const</h3>
+        <p>Returns <code>true</code> if this <a href="qcoapoption.html">QCoapOption</a> and <i>other</i> are different.</p>
+    <h3 class="fn" id="operator-eq"><code class="details extra" translate="no">[noexcept]</code> <span class="type">QCoapOption</span> &amp;<span class="name">QCoapOption::operator=</span>(<span class="type">QCoapOption</span> &amp;&amp;<i>other</i>)</h3>
+        <p>Moves <i>other</i> into this option and returns a reference to this <a href="qcoapoption.html">QCoapOption</a>.</p>
+    <h3 class="fn" id="operator-eq-1"><span class="type">QCoapOption</span> &amp;<span class="name">QCoapOption::operator=</span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>)</h3>
+        <p>Copies <i>other</i> into this option, making the two options identical. Returns a reference to this <a href="qcoapoption.html">QCoapOption</a>.</p>
+    <h3 class="fn" id="operator-eq-eq"><span class="type">bool</span> <span class="name">QCoapOption::operator==</span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>) const</h3>
+        <p>Returns <code>true</code> if this <a href="qcoapoption.html">QCoapOption</a> and <i>other</i> are equals.</p>
+    </main>
+    <footer>
+        <p>Generated by QDoc.</p>
+    </footer>
+</body>
+</html>

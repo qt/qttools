@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple CoAP Client</title>
+    <link rel="stylesheet" href="qdoc-default.css">
+</head>
+<body>
+    <header>
+    <h1>Simple CoAP Client</h1>
+    <p class="brief">Creating an application that communicates with a CoAP server.</p>
+    </header>
+    <main>
+    <section class="content" aria-label="Description">
+        <p class="centerAlign"><img src="images/simplecoapclient.webp" alt="CoAP client window with Add Options dialog and discovered resources"/></p>
+        <p><i>Simple CoAP Client</i> demonstrates how to create a minimalistic CoAP client application to send and receive CoAP messages.</p>
+        <section>
+        <h4>Running the Example</h4>
+        <p>To run the example from <a href="https://doc.qt.io/qtcreator/">Qt Creator</a>, open the <b>Welcome</b> mode and select the example from <b>Examples</b>. For more information, see <a href="https://doc.qt.io/qtcreator/creator-build-example-application.html">Qt Creator: Tutorial: Build and run</a>.</p>
+        </section>
+        <section>
+        <h4>Setting Up a CoAP Server</h4>
+        <p>To use the application, you need to specify a CoAP server. You have the following options:</p>
+<ul>        <li>Use the CoAP test server located at <code>coap://coap.me</code>.</li>
+        <li>Create a CoAP server using <a href="https://github.com/obgm/libcoap">libcoap</a>, <a href="https://github.com/keith-cullen/FreeCoAP">FreeCoAP</a> or any other CoAP server implementation.</li>
+        <li>Use the <a href="https://github.com/eclipse/californium/">Californium</a> plugtest server, which supports most of the CoAP features. You can build it manually or use a ready Docker image, which builds and starts the plugtest server. The steps for using the docker-based server are described below.</li>
+</ul>        </section>
+        <section>
+        <h5>Using the Docker-based Test Server</h5>
+        <p>The following command pulls the docker container for the CoAP server from the Docker Hub and starts it:</p>
+        <pre class="cpp" translate="no"><code>docker run --name coap-test-server -d --rm -p 5683:5683/udp -p 5684:5684/udp tqtc/coap-californium-test-server:3.8.0
+</code></pre>
+        <p>To find out the IP address of the docker container, first retrieve the container ID by running <code>docker ps</code>, which will output something like:</p>
+        <pre class="cpp" translate="no"><code>$ docker ps
+CONTAINER ID        IMAGE
+5e46502df88f        tqtc/coap-californium-test-server:3.8.0
+</code></pre>
+        <p>Then you can obtain the IP address with the following command:</p>
+        <pre class="cpp" translate="no"><code>docker inspect &lt;container_id&gt; | grep IPAddress
+</code></pre>
+        <p>For example:</p>
+        <pre class="cpp" translate="no"><code>$ docker inspect 5e46502df88f | grep IPAddress
+...
+&quot;IPAddress&quot;: &quot;172.17.0.2&quot;,
+...
+</code></pre>
+        <p>The CoAP test server will be reachable by the retrieved IP address on ports <i>5683</i> (non-secure) and <i>5684</i> (secure).</p>
+        <p>To terminate the docker container after usage, use the following command:</p>
+        <pre class="cpp" translate="no"><code>docker stop &lt;container_id&gt;
+</code></pre>
+        <p>The <code>&lt;container_id&gt;</code> here is the same as retrieved by the <code>docker ps</code> command.</p>
+        </section>
+        <section>
+        <h4>Creating a Client</h4>
+        <p>The first step is to create a CoAP client using the <a href="qcoapclient.html">QCoapClient</a> class. Then we need to connect its signals, to get notified when a CoAP reply is received or a request has failed:</p>
+        <pre class="cpp" translate="no"><code>MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
+{
+    m_client = new QCoapClient(QtCoap::SecurityMode::NoSecurity, this);
+    connect(m_client, &amp;QCoapClient::finished, this, &amp;MainWindow::onFinished);
+    connect(m_client, &amp;QCoapClient::error, this, &amp;MainWindow::onError);
+    ...
+</code></pre>
+        </section>
+        <section>
+        <h4>Sending Requests</h4>
+        <p>We use the <a href="qcoaprequest.html">QCoapRequest</a> class to create CoAP requests. This class provides methods for constructing CoAP frames.</p>
+        <pre class="cpp" translate="no"><code>void MainWindow::on_runButton_clicked()
+{
+    const auto msgType = ui-&gt;msgTypeCheckBox-&gt;isChecked() ? QCoapMessage::Type::Confirmable
+                                                          : QCoapMessage::Type::NonConfirmable;
+    QUrl url;
+    url.setHost(tryToResolveHostName(ui-&gt;hostComboBox-&gt;currentText()));
+    url.setPort(ui-&gt;portSpinBox-&gt;value());
+    url.setPath(ui-&gt;resourceComboBox-&gt;currentText());
+
+    QCoapRequest request(url, msgType);
+    for (const auto &amp;option : std::as_const(m_options))
+        request.addOption(option);
+    ...
+</code></pre>
+        <p>In this example, we set the URL, as well as the message type and add options to the request. It is also possible to set the payload, message ID, token, and so on, but we are using the default values here. Note that by default, the message ID and token are generated randomly.</p>
+        <p>Based on the selected request method, we send a <code>GET</code>, <code>PUT</code>, <code>POST</code> or <code>DELETE</code> request to the server:</p>
+        <pre class="cpp" translate="no"><code>    ...
+    switch (method) {
+    case QtCoap::Method::Get:
+        m_client-&gt;get(request);
+        break;
+    case QtCoap::Method::Put:
+        m_client-&gt;put(request, m_currentData);
+        break;
+    case QtCoap::Method::Post:
+        m_client-&gt;post(request, m_currentData);
+        break;
+    case QtCoap::Method::Delete:
+        m_client-&gt;deleteResource(request);
+        break;
+    default:
+        break;
+    }
+    ...
+</code></pre>
+        <p>For <code>PUT</code> and <code>POST</code> requests we also add <code>m_currentData</code> as a payload for the request.</p>
+        <p>For browsing the contents of the server and discovering the resources available on it, a <i>discovery</i> request is used:</p>
+        <pre class="cpp" translate="no"><code>void MainWindow::on_discoverButton_clicked()
+{
+    ...
+    QCoapResourceDiscoveryReply *discoverReply =
+            m_client-&gt;discover(url, ui-&gt;discoveryPathEdit-&gt;text());
+    if (discoverReply) {
+        connect(discoverReply, &amp;QCoapResourceDiscoveryReply::discovered,
+                this, &amp;MainWindow::onDiscovered);
+    ...
+</code></pre>
+        <aside class="admonition note" role="note"><p><b>Note: </b>Instead of QCoapReply class, we use the QCoapResourceDiscoveryReply to keep the reply for a discovery request. It has the QCoapResourceDiscoveryReply::discovered signal, which returns the list of QCoapResources that has been discovered.</p></aside>
+        <p>If there are <i>observable</i> resources on the server (meaning that they have the resource type <code>obs</code>), we can subscribe to updates on that resource by running an <i>observe</i> request:</p>
+        <pre class="cpp" translate="no"><code>void MainWindow::on_observeButton_clicked()
+{
+    ...
+    QCoapReply *observeReply = m_client-&gt;observe(url);
+    ...
+    connect(observeReply, &amp;QCoapReply::notified, this, &amp;MainWindow::onNotified);
+    ...
+</code></pre>
+        <p>The client can unsubscribe from the resource observation by handling the <code>clicked()</code> signal of the <code>cancelObserveButton</code>:</p>
+        <pre class="cpp" translate="no"><code>    ...
+    connect(ui-&gt;cancelObserveButton, &amp;QPushButton::clicked, this, [this, url]() {
+        m_client-&gt;cancelObserve(url);
+        ui-&gt;cancelObserveButton-&gt;setEnabled(false);
+    });
+</code></pre>
+        <p>The responses coming from the server are displayed in the UI:</p>
+        <pre class="cpp" translate="no"><code>void MainWindow::addMessage(const QString &amp;message, bool isError)
+{
+    const QString content = &quot;--------------- %1 ---------------\n%2\n\n&quot;_L1
+                                .arg(QDateTime::currentDateTime().toString(), message);
+    ui-&gt;textEdit-&gt;setTextColor(isError ? Qt::red : Qt::black);
+    ui-&gt;textEdit-&gt;insertPlainText(content);
+    ui-&gt;textEdit-&gt;ensureCursorVisible();
+}
+
+void MainWindow::onFinished(QCoapReply *reply)
+{
+    if (reply-&gt;errorReceived() == QtCoap::Error::Ok)
+        addMessage(reply-&gt;message().payload());
+}
+
+static QString errorMessage(QtCoap::Error errorCode)
+{
+    const auto error = QMetaEnum::fromType&lt;QtCoap::Error&gt;().valueToKey(static_cast&lt;int&gt;(errorCode));
+    return MainWindow::tr(&quot;Request failed with error: %1\n&quot;).arg(error);
+}
+
+void MainWindow::onError(QCoapReply *reply, QtCoap::Error error)
+{
+    const auto errorCode = reply ? reply-&gt;errorReceived() : error;
+    addMessage(errorMessage(errorCode), true);
+}
+
+void MainWindow::onDiscovered(QCoapResourceDiscoveryReply *reply, QList&lt;QCoapResource&gt; resources)
+{
+    if (reply-&gt;errorReceived() != QtCoap::Error::Ok)
+        return;
+
+    QString message;
+    for (const auto &amp;resource : std::as_const(resources)) {
+        ui-&gt;resourceComboBox-&gt;addItem(resource.path());
+        message += tr(&quot;Discovered resource: \&quot;%1\&quot; on path %2\n&quot;)
+                        .arg(resource.title(), resource.path());
+    }
+    addMessage(message);
+}
+
+void MainWindow::onNotified(QCoapReply *reply, const QCoapMessage &amp;message)
+{
+    if (reply-&gt;errorReceived() == QtCoap::Error::Ok) {
+        addMessage(tr(&quot;Received observe notification with payload: %1&quot;)
+                        .arg(QString::fromUtf8(message.payload())));
+    }
+}
+
+static QString tryToResolveHostName(const QString hostName)
+{
+    const auto hostInfo = QHostInfo::fromName(hostName);
+    if (!hostInfo.addresses().empty())
+        return hostInfo.addresses().first().toString();
+
+    return hostName;
+}
+
+</code></pre>
+        </section>
+    </section>
+    </main>
+    <footer>
+        <p>Generated by QDoc.</p>
+    </footer>
+</body>
+</html>

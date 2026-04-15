@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QtCoap</title>
+    <link rel="stylesheet" href="qdoc-default.css">
+</head>
+<body>
+    <header>
+    <h1>QtCoap</h1>
+    <p class="subtitle">namespace QtCoap</p>
+    <p class="brief">Contains miscellaneous identifiers used throughout the Qt CoAP module.</p>
+    </header>
+    <main>
+
+    <table class="requisites">
+    <tr><td class="memItemLeft">Header:</td>
+    <td class="memItemRight"><code>qcoapnamespace.h</code></td></tr>
+    <tr><td class="memItemLeft">CMake:</td>
+    <td class="memItemRight"><code>find_package(Qt6 REQUIRED COMPONENTS Coap)</code><br/><code>target_link_libraries(mytarget PRIVATE Qt6::Coap)</code></td></tr>
+    <tr><td class="memItemLeft">qmake:</td>
+    <td class="memItemRight"><code>QT += coap</code></td></tr>
+    </table>
+
+
+
+
+
+
+
+    <section class="section-types" aria-label="Types">
+    <h2>Types</h2>
+    <table class="alignedsummary">
+    <tr>
+    <td class="memItemLeft">enum class <span class="name"><a href="qtcoap.html#Error-enum">Error</a></span> { Ok, HostNotFound, AddressInUse, TimeOut, BadRequest, ..., Unknown }</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">enum class <span class="name"><a href="qtcoap.html#Method-enum">Method</a></span> { Invalid, Get, Post, Put, Delete, Other }</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">enum class <span class="name"><a href="qtcoap.html#MulticastGroup-enum">MulticastGroup</a></span> { AllCoapNodesIPv4, AllCoapNodesIPv6LinkLocal, AllCoapNodesIPv6SiteLocal }</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">enum <span class="name"><a href="qtcoap.html#Port-enum">Port</a></span> { DefaultPort, DefaultSecurePort }</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">enum class <span class="name"><a href="qtcoap.html#ResponseCode-enum">ResponseCode</a></span> { EmptyMessage, Created, Deleted, Valid, Changed, ..., InvalidCode }</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">enum class <span class="name"><a href="qtcoap.html#SecurityMode-enum">SecurityMode</a></span> { NoSecurity, PreSharedKey, RawPublicKey, Certificate }</td>
+    <td class="memItemRight"></td>
+    </tr>
+    </table>
+    </section>
+
+    <section class="content" aria-label="Description">
+        
+    </section>
+
+    <h2>Type Documentation</h2>
+    <h3 class="fn" id="Error-enum">enum class <span class="name">QtCoap::Error</span></h3>
+        <p>Indicates the error condition found during processing of the request.</p>
+        <div class="table"><table class="valuelist">
+        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">Ok</code></td><td class="topAlign">No error condition.</td></tr>
+<tr><td class="topAlign"><code translate="no">HostNotFound</code></td><td class="topAlign">The remote host name was not found.</td></tr>
+<tr><td class="topAlign"><code translate="no">AddressInUse</code></td><td class="topAlign">The address is already in use.</td></tr>
+<tr><td class="topAlign"><code translate="no">TimeOut</code></td><td class="topAlign">The response did not arrive in time.</td></tr>
+<tr><td class="topAlign"><code translate="no">BadRequest</code></td><td class="topAlign">The request was not recognized.</td></tr>
+<tr><td class="topAlign"><code translate="no">Unauthorized</code></td><td class="topAlign">The client is not authorized to perform the requested action.</td></tr>
+<tr><td class="topAlign"><code translate="no">BadOption</code></td><td class="topAlign">The request could not be understood by the server due to one or more unrecognized or malformed options.</td></tr>
+<tr><td class="topAlign"><code translate="no">Forbidden</code></td><td class="topAlign">Access to this resource is forbidden.</td></tr>
+<tr><td class="topAlign"><code translate="no">NotFound</code></td><td class="topAlign">The resource requested was not found.</td></tr>
+<tr><td class="topAlign"><code translate="no">MethodNotAllowed</code></td><td class="topAlign">The server does not allow the method used for the URL requested.</td></tr>
+<tr><td class="topAlign"><code translate="no">NotAcceptable</code></td><td class="topAlign">No resource satisfying the request&apos;s acceptance criteria was found.</td></tr>
+<tr><td class="topAlign"><code translate="no">RequestEntityIncomplete</code></td><td class="topAlign">The server has not received the blocks of the request body that it needs to proceed. The client has not sent all blocks, has not sent them in the order required by the server, or sent them long enough ago that the server has already discarded them.</td></tr>
+<tr><td class="topAlign"><code translate="no">PreconditionFailed</code></td><td class="topAlign">One or more conditions given in the request header fields evaluated to false when tested on the server.</td></tr>
+<tr><td class="topAlign"><code translate="no">RequestEntityTooLarge</code></td><td class="topAlign">The request payload is larger than the server is willing or able to process.</td></tr>
+<tr><td class="topAlign"><code translate="no">UnsupportedContentFormat</code></td><td class="topAlign">The payload is in a format not supported by this method on the target resource.</td></tr>
+<tr><td class="topAlign"><code translate="no">InternalServerFault</code></td><td class="topAlign">The server encountered an unexpected condition that prevented it from fulfilling the request.</td></tr>
+<tr><td class="topAlign"><code translate="no">NotImplemented</code></td><td class="topAlign">The server does not support the functionality required to fulfill the request.</td></tr>
+<tr><td class="topAlign"><code translate="no">BadGateway</code></td><td class="topAlign">An error occurred with an upstream server.</td></tr>
+<tr><td class="topAlign"><code translate="no">ServiceUnavailable</code></td><td class="topAlign">The service is currently unavailable.</td></tr>
+<tr><td class="topAlign"><code translate="no">GatewayTimeout</code></td><td class="topAlign">The server, while acting as a gateway or proxy, did not receive a timely response from an upstream server it needed to access in order to complete the request.</td></tr>
+<tr><td class="topAlign"><code translate="no">ProxyingNotSupported</code></td><td class="topAlign">The server is unable or unwilling to act as a forward-proxy for the URI specified in the Proxy-Uri Option or using the scheme specified in Proxy-Scheme.</td></tr>
+<tr><td class="topAlign"><code translate="no">Unknown</code></td><td class="topAlign">An unknown error occurred.</td></tr>
+        </table></div>
+    <h3 class="fn" id="Method-enum">enum class <span class="name">QtCoap::Method</span></h3>
+        <p>This enum specifies CoAP request methods.</p>
+        <div class="table"><table class="valuelist">
+        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">Invalid</code></td><td class="topAlign">The default request method for an empty request.</td></tr>
+<tr><td class="topAlign"><code translate="no">Get</code></td><td class="topAlign">GET method.</td></tr>
+<tr><td class="topAlign"><code translate="no">Post</code></td><td class="topAlign">POST method.</td></tr>
+<tr><td class="topAlign"><code translate="no">Put</code></td><td class="topAlign">PUT method.</td></tr>
+<tr><td class="topAlign"><code translate="no">Delete</code></td><td class="topAlign">DELETE method.</td></tr>
+<tr><td class="topAlign"><code translate="no">Other</code></td><td class="topAlign">Other request method.</td></tr>
+        </table></div>
+    <h3 class="fn" id="MulticastGroup-enum">enum class <span class="name">QtCoap::MulticastGroup</span></h3>
+        <p>This enum represents CoAP multicast group addresses defined in <a href="https://tools.ietf.org/html/rfc7252#section-12.8">RFC 7252</a>.</p>
+        <div class="table"><table class="valuelist">
+        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">AllCoapNodesIPv4</code></td><td class="topAlign">IPv4 &quot;All CoAP Nodes&quot; address 224.0.1.187, from the &quot;IPv4 Multicast Address Space Registry&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">AllCoapNodesIPv6LinkLocal</code></td><td class="topAlign">IPv6 &quot;All CoAP Nodes&quot; link-local scoped address FF02::FD, from the &quot;IPv6 Multicast Address Space Registry&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">AllCoapNodesIPv6SiteLocal</code></td><td class="topAlign">IPv6 &quot;All CoAP Nodes&quot; site-local scoped address FF05::FD, from the &quot;IPv6 Multicast Address Space Registry&quot;.</td></tr>
+        </table></div>
+    <h3 class="fn" id="Port-enum">enum <span class="name">QtCoap::Port</span></h3>
+        <p>This enum specifies the default CoAP port values.</p>
+        <div class="table"><table class="valuelist">
+        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">DefaultPort</code></td><td class="topAlign">The default port used for the non-secure transmission.</td></tr>
+<tr><td class="topAlign"><code translate="no">DefaultSecurePort</code></td><td class="topAlign">The default port used for the secure transmission.</td></tr>
+        </table></div>
+    <h3 class="fn" id="ResponseCode-enum">enum class <span class="name">QtCoap::ResponseCode</span></h3>
+        <p>This enum represents the response code from the CoAP protocol, as defined in <a href="https://tools.ietf.org/html/rfc7252#section-5.9">RFC 7252</a> and <a href="https://tools.ietf.org/html/rfc7959#section-2.9">RFC 7959</a>.</p>
+        <div class="table"><table class="valuelist">
+        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">EmptyMessage</code></td><td class="topAlign">The response code for an empty message.</td></tr>
+<tr><td class="topAlign"><code translate="no">Created</code></td><td class="topAlign">The request was successful and has resulted in new resources being created. This response code corresponds to HTTP 201 &quot;Created&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">Deleted</code></td><td class="topAlign">The resource has been successfully deleted. This response code corresponds to HTTP 204 &quot;No Content&quot; but is only used in response to requests that cause the resource to cease being available, such as DELETE and, in certain circumstances, POST.</td></tr>
+<tr><td class="topAlign"><code translate="no">Valid</code></td><td class="topAlign">This response code is related to HTTP 304 &quot;Not Modified&quot; but is only used to indicate that the response identified by the entity-tag given in the ETag Option is valid.</td></tr>
+<tr><td class="topAlign"><code translate="no">Changed</code></td><td class="topAlign">The resource has been successfully modified. This response code corresponds to HTTP 204 &quot;No Content&quot; but is only used in response to POST and PUT requests.</td></tr>
+<tr><td class="topAlign"><code translate="no">Content</code></td><td class="topAlign">The request has succeeded. This response code corresponds to HTTP 200 &quot;OK&quot; but is only used in response to GET requests.</td></tr>
+<tr><td class="topAlign"><code translate="no">Continue</code></td><td class="topAlign">Indicates that the transfer of the current block was successful, and the server will send more blocks.</td></tr>
+<tr><td class="topAlign"><code translate="no">BadRequest</code></td><td class="topAlign">The request was not recognized. This response code corresponds to HTTP 400 &quot;Bad Request&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">Unauthorized</code></td><td class="topAlign">The client is not authorized to perform the requested action. This response code corresponds to HTTP 401 &quot;Unauthorized&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">BadOption</code></td><td class="topAlign">The request could not be understood by the server due to unrecognized options.</td></tr>
+<tr><td class="topAlign"><code translate="no">Forbidden</code></td><td class="topAlign">Access to this resource is forbidden. This response code corresponds to HTTP 403 &quot;Forbidden&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">NotFound</code></td><td class="topAlign">The resource requested was not found. This response code corresponds to HTTP 404 &quot;Not Found&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">MethodNotAllowed</code></td><td class="topAlign">The server does not allow the method used for the URL requested. This response code corresponds to HTTP 405 &quot;Method Not Allowed&quot; but with no parallel to the &quot;Allow&quot; header field.</td></tr>
+<tr><td class="topAlign"><code translate="no">NotAcceptable</code></td><td class="topAlign">No resource satisfying the request&apos;s acceptance criteria was found. This response code corresponds to HTTP 406 &quot;Not Acceptable&quot;, but with no response entity.</td></tr>
+<tr><td class="topAlign"><code translate="no">RequestEntityIncomplete</code></td><td class="topAlign">The server has not received all blocks, of the request body, that it needs to proceed.</td></tr>
+<tr><td class="topAlign"><code translate="no">PreconditionFailed</code></td><td class="topAlign">Preconditions given in the request header fields evaluated to <code>false</code> when tested on the server. This response code corresponds to HTTP 412 &quot;Precondition Failed&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">RequestEntityTooLarge</code></td><td class="topAlign">The request payload is larger than the server is willing or able to process. This response code corresponds to HTTP 413 &quot;Request Entity Too Large&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">UnsupportedContentFormat</code></td><td class="topAlign">The payload is in a format not supported by this method on the target resource. This response code corresponds to HTTP 415 &quot;Unsupported Media Type&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">InternalServerFault</code></td><td class="topAlign">The server encountered an unexpected condition that prevented it from fulfilling the request. This response code corresponds to HTTP 500 &quot;Internal Server Error&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">NotImplemented</code></td><td class="topAlign">The server does not support the functionality required to fulfill the request. This response code corresponds to HTTP 501 &quot;Not Implemented&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">BadGateway</code></td><td class="topAlign">An error occurred with an upstream server. This response code corresponds to HTTP 502 &quot;Bad Gateway&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">ServiceUnavailable</code></td><td class="topAlign">The service is currently unavailable. This response code corresponds to HTTP 503 &quot;Service Unavailable&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">GatewayTimeout</code></td><td class="topAlign">The server, while acting as a gateway or proxy, did not receive a timely response from an upstream server. This response code corresponds to HTTP 504 &quot;Gateway Timeout&quot;.</td></tr>
+<tr><td class="topAlign"><code translate="no">ProxyingNotSupported</code></td><td class="topAlign">The server is unable or unwilling to act as a forward-proxy for the URI specified in the Proxy-Uri Option or using the scheme specified in Proxy-Scheme.</td></tr>
+<tr><td class="topAlign"><code translate="no">InvalidCode</code></td><td class="topAlign">An invalid response code.</td></tr>
+        </table></div>
+    <h3 class="fn" id="SecurityMode-enum">enum class <span class="name">QtCoap::SecurityMode</span></h3>
+        <p>Specifies the security mode used for securing a CoAP connection, as defined in <a href="https://tools.ietf.org/html/rfc7252#section-9">RFC 7252</a>.</p>
+        <div class="table"><table class="valuelist">
+        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">NoSecurity</code></td><td class="topAlign">There is no protocol-level security (DTLS is disabled).</td></tr>
+<tr><td class="topAlign"><code translate="no">PreSharedKey</code></td><td class="topAlign">DTLS is enabled. PSK authentication will be used for security.</td></tr>
+<tr><td class="topAlign"><code translate="no">RawPublicKey</code></td><td class="topAlign">DTLS is enabled. An asymmetric key pair without a certificate (a raw public key) will be used for security. This mode is not supported yet.</td></tr>
+<tr><td class="topAlign"><code translate="no">Certificate</code></td><td class="topAlign">DTLS is enabled. An asymmetric key pair with an X.509 certificate will be used for security.</td></tr>
+        </table></div>
+    </main>
+    <footer>
+        <p>Generated by QDoc.</p>
+    </footer>
+</body>
+</html>

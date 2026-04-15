@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qt CoAP Overview</title>
+    <link rel="stylesheet" href="qdoc-default.css">
+</head>
+<body>
+    <header>
+    <h1>Qt CoAP Overview</h1>
+    <p class="brief">Provides insight into the CoAP protocol and the Qt CoAP module.</p>
+    </header>
+    <main>
+    <section class="content" aria-label="Description">
+        <p>Constrained Application Protocol (CoAP) is an IoT protocol that is specifically designed for M2M data exchange between constrained devices (such as microcontrollers) in constrained networks.</p>
+        <p>The interaction model of CoAP is similar to the client/server model of HTTP, but unlike HTTP, it uses datagram-oriented connectionless transport such as UDP, which leads to a very low overhead and allows UDP broadcast and multicast to be used for addressing. At the same time it provides lightweight reliability mechanisms and security.</p>
+        <p>Qt CoAP implements the client side of CoAP. By default, the transport layer uses QUdpSocket and QDtls for security. Alternative transports can be used by implementing the QCoapConnection interface.</p>
+        <section>
+        <h2>Messaging Model</h2>
+        <p>The CoAP messaging model is based on the exchange of messages between endpoints: clients make requests to servers; servers send back responses. Clients may <i>GET</i>, <i>PUT</i>, <i>POST</i> and <i>DELETE</i> resources. They can also discover resources on a server by making discovery requests, or in the local network, by making multicast discovery requests. It is also possible to subscribe to a resource, with an observe request.</p>
+        <p>Reliability of the transfer is achieved by marking a message <i>confirmable</i> (CON). A confirmable message is retransmitted using a default timeout and exponential back-off between retransmissions, until the recipient sends an <i>acknowledgment</i> (ACK) message. When the recipient is not able to process a confirmable message, it replies with a <i>reset</i> message (RST) instead of an acknowledgment.</p>
+        <p>A message that does not require reliable transmission can be sent as a <i>non-confirmable</i> (NON) message.</p>
+        </section>
+        <section>
+        <h2>Using the Qt CoAP API</h2>
+        <p>The communication of the client with the CoAP server is done using the <a href="qcoapclient.html">QCoapClient</a> class. It contains the methods for sending different CoAP requests and the signals that get triggered when the replies for the sent request arrive. The <a href="qcoaprequest.html">QCoapRequest</a> class is used for creating CoAP requests. The response from the server is returned in a <a href="qcoapreply.html">QCoapReply</a> object. For example:</p>
+        <pre class="cpp" translate="no"><code>QCoapClient *client = new QCoapClient();
+connect(client, &amp;QCoapClient::finished, this, &amp;MyClass::onFinished);
+connect(client, &amp;QCoapClient::error, this, &amp;MyClass::onError);
+
+QCoapRequest request(QUrl(&quot;coap://127.0.0.1/test&quot;), QCoapMessage::Confirmable);
+client-&gt;get(request);
+client-&gt;put(request, QByteArray(&quot;payload&quot;));
+
+</code></pre>
+        </section>
+        <section>
+        <h2>Supported Features</h2>
+        </section>
+        <section>
+        <h3>Resource Discovery</h3>
+        <p>CoAP discovery requests are used to query the resources available on an endpoint or in the complete network. This is really important for M2M applications, where there are no humans in the loop. For example, for home or building automation, there is a need for local clients and servers to find and interact with each other without human intervention. Resource discovery allows clients to learn about the endpoints available in the network.</p>
+        <p>Qt CoAP supports discovery requests to a single endpoint and to multicast groups. For example, a discovery request to <code>/.well-known/core</code>, which is the default resource discovery entry point, may return something like:</p>
+        <pre class="cpp" translate="no"><code>RES: 2.05 Content
+&lt;/sensors/temp&gt;;rt=&quot;temperature-c&quot;;if=&quot;sensor&quot;;obs,
+&lt;/sensors/light&gt;;rt=&quot;light-lux&quot;;if=&quot;sensor&quot;,
+&lt;/firmware/v2.1&gt;;rt=&quot;firmware&quot;;sz=262144
+</code></pre>
+        <p>Indicating that there are resources for temperature and light sensors and a firmware resource available in the network. The reply is represented in <a href="https://tools.ietf.org/html/rfc6690">CoRE Link Format</a>.</p>
+        <p>The specialized <a href="qcoapresourcediscoveryreply.html">QCoapResourceDiscoveryReply</a> class is used to get the discovery replies:</p>
+        <pre class="cpp" translate="no"><code>// This will make a multicast discovery request to the CoAP IPv4 multicast group.
+QCoapResourceDiscoveryReply *discoverReply = client-&gt;discover();
+connect(discoverReply, &amp;QCoapResourceDiscoveryReply::discovered, this, &amp;MyClass::onDiscovered);
+</code></pre>
+        <p>The QCoapResourceDiscoveryReply::discovered will return the list of CoAP resources found in the network.</p>
+        </section>
+        <section>
+        <h3>Resource Observation</h3>
+        <p>Observe requests are used to receive automatic server notifications for a resource. The client becomes an observer of an observable resource by sending an observe request to the resource. For example, the temperature sensor from the above example is observable, because it has the <code>obs</code> attribute. So the client can subscribe to the temperature updates by sending an observe request to it.</p>
+        <p>The following example code shows how to send observe requests using Qt CoAP:</p>
+        <pre class="cpp" translate="no"><code>QCoapReply *reply = client-&gt;observe(QUrl(&quot;127.0.0.1/temp&quot;));
+connect(reply, &amp;QCoapReply::notified, this, &amp;MyClass::onNotified);
+</code></pre>
+        <p>For Observe requests specifically, you can use the QCoapReply::notified signal to handle notifications from the CoAP server.</p>
+        </section>
+        <section>
+        <h3>Blockwise Transfers</h3>
+        <p>Since CoAP is based on datagram transports such as UDP, there are limits on how big a resource representation can be, to be transferred without fragmentation causing problems. Qt CoAP supports block-wise transfers for situations where a resource representation is larger than can be comfortably transferred in the payload of a single CoAP datagram.</p>
+        </section>
+        <section>
+        <h3>Security</h3>
+        <p>The following security modes are defined for CoAP:</p>
+<ul>        <li><b>Pre-Shared Key</b> - in this mode the client must send to the server its identity and the pre-shared key.</li>
+        <li><b>Raw Public Key</b> - the client has an asymmetric key pair without a certificate (a raw public key). The client also has an identity calculated from the public key and a list of identities of the nodes it can communicate with. Qt CoAP has not implemented this mode yet.</li>
+        <li><b>Certificate</b> - the client has an asymmetric key pair with an X.509 certificate that is signed by some common trust root.</li>
+</ul>        <p>Since CoAP is designed to be a UDP-based protocol, Qt CoAP module implements security based on Datagram TLS (DTLS) over UDP. However, as mentioned above, it is possible to provide a custom transport with another security type.</p>
+        <p>For securing the CoAP client, one of the supported security modes should be specified when creating the client:</p>
+        <pre class="cpp" translate="no"><code>QCoapClient *client = new QCoapClient(this, QtCoap::PreSharedKey);
+</code></pre>
+        <p>The <a href="qcoapsecurityconfiguration.html">QCoapSecurityConfiguration</a> class is used for specifying the security parameters. For example, in pre-shared key mode the following example code can be used:</p>
+        <pre class="cpp" translate="no"><code>QCoapSecurityConfiguration config;
+config.setPreSharedKey(&quot;secretPSK&quot;);
+config.setIdentity(&quot;Client_identity&quot;);
+client-&gt;setSecurityConfiguration(config);
+</code></pre>
+        <p>And in certificate mode:</p>
+        <pre class="cpp" translate="no"><code>QCoapClient *client = new QCoapClient(this, QtCoap::Certificate);
+QList&lt;QSslCertificate&gt; localCertificates, caCertificates;
+QCoapPrivateKey key;
+// Initialize the key and certificates
+QCoapSecurityConfiguration config;
+config.setLocalCertificateChain(localCertificates);
+config.setCaCertificates(caCertificates)
+config.setPrivateKey(key);
+client-&gt;setSecurityConfiguration(config);
+
+</code></pre>
+        </section>
+    </section>
+    </main>
+    <footer>
+        <p>Generated by QDoc.</p>
+    </footer>
+</body>
+</html>

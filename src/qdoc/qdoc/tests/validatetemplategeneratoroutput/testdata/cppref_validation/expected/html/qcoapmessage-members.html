@@ -1,0 +1,57 @@
+<!--
+Copyright (C) 2026 The Qt Company Ltd.
+SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of All Members for QCoapMessage</title>
+    <link rel="stylesheet" href="qdoc-default.css">
+</head>
+<body>
+    <header>
+    <h1>List of All Members for QCoapMessage</h1>
+    </header>
+    <main>
+    <p>This is the complete list of members for <a href="qcoapmessage.html">QCoapMessage</a>, including inherited members.</p>
+
+    <ul>
+    <li class="fn" translate="no">enum class <span class="name"><a href="qcoapmessage.html#Type-enum">Type</a></span></li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#QCoapMessage">QCoapMessage</a></span>()</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#QCoapMessage-1">QCoapMessage</a></span>(const <span class="type">QCoapMessage</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#dtor.QCoapMessage">~QCoapMessage</a></span>()</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#addOption">addOption</a></span>(const <span class="type">QCoapOption</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#addOption-1">addOption</a></span>(<span class="type">QCoapOption::OptionName</span>, const <span class="type">QByteArray</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#clearOptions">clearOptions</a></span>()</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#hasOption">hasOption</a></span>(<span class="type">QCoapOption::OptionName</span>) const : <span class="type">bool</span></li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#messageId">messageId</a></span>() const : <span class="type">quint16</span></li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#option">option</a></span>(<span class="type">QCoapOption::OptionName</span>) const : <span class="type">QCoapOption</span></li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#optionAt">optionAt</a></span>(<span class="type">int</span>) const : <span class="type">QCoapOption</span></li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#optionCount">optionCount</a></span>() const : <span class="type">int</span></li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#options">options</a></span>() const : const <span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; &amp;</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#options-1">options</a></span>(<span class="type">QCoapOption::OptionName</span>) const : <span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt;</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#payload">payload</a></span>() const : <span class="type">QByteArray</span></li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#removeOption">removeOption</a></span>(<span class="type">QCoapOption::OptionName</span>)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#removeOption-1">removeOption</a></span>(const <span class="type">QCoapOption</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#setMessageId">setMessageId</a></span>(<span class="type">quint16</span>)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#setOptions">setOptions</a></span>(const <span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#setPayload">setPayload</a></span>(const <span class="type">QByteArray</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#setToken">setToken</a></span>(const <span class="type">QByteArray</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#setType">setType</a></span>(const <span class="type">QCoapMessage::Type</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#setVersion">setVersion</a></span>(<span class="type">quint8</span>)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#swap">swap</a></span>(<span class="type">QCoapMessage</span> &amp;)</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#token">token</a></span>() const : <span class="type">QByteArray</span></li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#tokenLength">tokenLength</a></span>() const : <span class="type">quint8</span></li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#type">type</a></span>() const : <span class="type">QCoapMessage::Type</span></li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#version">version</a></span>() const : <span class="type">quint8</span></li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#operator-eq">operator=</a></span>(<span class="type">QCoapMessage</span> &amp;&amp;) : <span class="type">QCoapMessage</span> &amp;</li>
+    <li class="fn" translate="no"><span class="name"><a href="qcoapmessage.html#operator-eq-1">operator=</a></span>(const <span class="type">QCoapMessage</span> &amp;) : <span class="type">QCoapMessage</span> &amp;</li>
+    </ul>
+    </main>
+    <footer>
+        <p>Generated by QDoc.</p>
+    </footer>
+</body>
+</html>

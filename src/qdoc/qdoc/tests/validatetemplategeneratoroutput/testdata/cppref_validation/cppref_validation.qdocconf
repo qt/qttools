@@ -1,0 +1,33 @@
+project = QtCoap
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions  = "*.h *.hpp"
+sources.fileextensions  = "*.cpp *.qml *.qdoc"
+
+# Macros from qtbase global/macros.qdocconf, not available in standalone tests
+macro.nullptr          = "\\c{nullptr}"
+macro.examplecategory  = "\\meta category {\1}\n\\ingroup category \1"
+macro.QC               = "Qt Creator"
+
+headerdirs  = ./src
+sourcedirs  = ./src
+includepaths += ./src/QtCoap
+
+exampledirs = ./examples/coap
+imagedirs   = ./examples/coap/doc/images
+
+outputformats = TemplateHTML TemplateMarkdown
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = true
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+warninglimit = 1
+warninglimit.enabled = true

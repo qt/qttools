@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCoapMessage</title>
+    <link rel="stylesheet" href="qdoc-default.css">
+</head>
+<body>
+    <header>
+    <h1>QCoapMessage</h1>
+    <p class="subtitle">class QCoapMessage</p>
+    <p class="brief">The QCoapMessage class holds information about a CoAP message that can be a request or a reply.</p>
+    </header>
+    <main>
+
+    <table class="requisites">
+    <tr><td class="memItemLeft">Header:</td>
+    <td class="memItemRight"><code>QCoapMessage</code></td></tr>
+    <tr><td class="memItemLeft">CMake:</td>
+    <td class="memItemRight"><code>find_package(Qt6 REQUIRED COMPONENTS Coap)</code><br/><code>target_link_libraries(mytarget PRIVATE Qt6::Coap)</code></td></tr>
+    <tr><td class="memItemLeft">qmake:</td>
+    <td class="memItemRight"><code>QT += coap</code></td></tr>
+    <tr><td class="memItemLeft">Inherited By:</td>
+    <td class="memItemRight"><a href="qcoaprequest.html">QCoapRequest</a></td></tr>
+    </table>
+
+
+    <ul>
+    <li><a href="qcoapmessage-members.html">List of all members, including inherited members</a></li>
+    </ul>
+
+
+
+    <aside class="admonition note" role="note"><p><b>Note:</b> All functions in this class are <a href="threads-reentrancy.html">reentrant</a>.</p></aside>
+
+
+    <section class="section-public-types" aria-label="Public Types">
+    <h2>Public Types</h2>
+    <table class="alignedsummary">
+    <tr>
+    <td class="memItemLeft">enum class <span class="name"><a href="qcoapmessage.html#Type-enum">Type</a></span> { Confirmable, NonConfirmable, Acknowledgment, Reset }</td>
+    <td class="memItemRight"></td>
+    </tr>
+    </table>
+    </section>
+    <section class="section-public-functions" aria-label="Public Functions">
+    <h2>Public Functions</h2>
+    <table class="alignedsummary">
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoapmessage.html#QCoapMessage">QCoapMessage</a></span>()</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoapmessage.html#QCoapMessage-1">QCoapMessage</a></span>(const <span class="type">QCoapMessage</span> &amp;<i>other</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="name"><a href="qcoapmessage.html#dtor.QCoapMessage">~QCoapMessage</a></span>()</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapmessage.html#addOption">addOption</a></span>(const <span class="type">QCoapOption</span> &amp;<i>option</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapmessage.html#addOption-1">addOption</a></span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>, const <span class="type">QByteArray</span> &amp;<i>value</i> = QByteArray())</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapmessage.html#clearOptions">clearOptions</a></span>()</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">bool</span> <span class="name"><a href="qcoapmessage.html#hasOption">hasOption</a></span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>) const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">quint16</span> <span class="name"><a href="qcoapmessage.html#messageId">messageId</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QCoapOption</span> <span class="name"><a href="qcoapmessage.html#option">option</a></span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>) const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QCoapOption</span> <span class="name"><a href="qcoapmessage.html#optionAt">optionAt</a></span>(<span class="type">int</span> <i>index</i>) const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">int</span> <span class="name"><a href="qcoapmessage.html#optionCount">optionCount</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft">const <span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; &amp;<span class="name"><a href="qcoapmessage.html#options">options</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; <span class="name"><a href="qcoapmessage.html#options-1">options</a></span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>) const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QByteArray</span> <span class="name"><a href="qcoapmessage.html#payload">payload</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapmessage.html#removeOption">removeOption</a></span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapmessage.html#removeOption-1">removeOption</a></span>(const <span class="type">QCoapOption</span> &amp;<i>option</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapmessage.html#setMessageId">setMessageId</a></span>(<span class="type">quint16</span> <i>id</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapmessage.html#setOptions">setOptions</a></span>(const <span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; &amp;<i>options</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapmessage.html#setPayload">setPayload</a></span>(const <span class="type">QByteArray</span> &amp;<i>payload</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapmessage.html#setToken">setToken</a></span>(const <span class="type">QByteArray</span> &amp;<i>token</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapmessage.html#setType">setType</a></span>(const <span class="type">QCoapMessage::Type</span> &amp;<i>type</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapmessage.html#setVersion">setVersion</a></span>(<span class="type">quint8</span> <i>version</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapmessage.html#swap">swap</a></span>(<span class="type">QCoapMessage</span> &amp;<i>other</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QByteArray</span> <span class="name"><a href="qcoapmessage.html#token">token</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">quint8</span> <span class="name"><a href="qcoapmessage.html#tokenLength">tokenLength</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QCoapMessage::Type</span> <span class="name"><a href="qcoapmessage.html#type">type</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">quint8</span> <span class="name"><a href="qcoapmessage.html#version">version</a></span>() const</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QCoapMessage</span> &amp;<span class="name"><a href="qcoapmessage.html#operator-eq">operator=</a></span>(<span class="type">QCoapMessage</span> &amp;&amp;<i>other</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    <tr>
+    <td class="memItemLeft"><span class="type">QCoapMessage</span> &amp;<span class="name"><a href="qcoapmessage.html#operator-eq-1">operator=</a></span>(const <span class="type">QCoapMessage</span> &amp;<i>other</i>)</td>
+    <td class="memItemRight"></td>
+    </tr>
+    </table>
+    </section>
+
+    <h2>Detailed Description</h2>
+    <section class="content" aria-label="Description">
+        <p>It holds information such as the message type, message id, token and other ancillary data.</p>
+    </section>
+
+    <h2>Member Type Documentation</h2>
+    <h3 class="fn" id="Type-enum">enum class <span class="name">QCoapMessage::Type</span></h3>
+        <p>Indicates the type of the message.</p>
+        <div class="table"><table class="valuelist">
+        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">Confirmable</code></td><td class="topAlign">A Confirmable message. The destination endpoint needs to acknowledge the message.</td></tr>
+<tr><td class="topAlign"><code translate="no">NonConfirmable</code></td><td class="topAlign">A Non-Confirmable message. The destination endpoint does not need to acknowledge the message.</td></tr>
+<tr><td class="topAlign"><code translate="no">Acknowledgment</code></td><td class="topAlign">An Acknowledgment message. A message sent or received in reply to a Confirmable message.</td></tr>
+<tr><td class="topAlign"><code translate="no">Reset</code></td><td class="topAlign">A Reset message. This message type is used in case of errors or to stop the ongoing transmission. (For example, it is used to cancel an observation).</td></tr>
+        </table></div>
+    <h2>Member Function Documentation</h2>
+    <h3 class="fn" id="QCoapMessage"><span class="name">QCoapMessage::QCoapMessage</span>()</h3>
+        <p>Constructs a new <a href="qcoapmessage.html">QCoapMessage</a>.</p>
+    <h3 class="fn" id="QCoapMessage-1"><span class="name">QCoapMessage::QCoapMessage</span>(const <span class="type">QCoapMessage</span> &amp;<i>other</i>)</h3>
+        <p>Constructs a shallow copy of <i>other</i>.</p>
+    <h3 class="fn" id="dtor.QCoapMessage"><code class="details extra" translate="no">[noexcept]</code> <span class="name">QCoapMessage::~QCoapMessage</span>()</h3>
+        <p>Destroys the <a href="qcoapmessage.html">QCoapMessage</a>.</p>
+    <h3 class="fn" id="addOption"><span class="type">void</span> <span class="name">QCoapMessage::addOption</span>(const <span class="type">QCoapOption</span> &amp;<i>option</i>)</h3>
+        <p>Adds the given CoAP <i>option</i>.</p>
+    <h3 class="fn" id="addOption-1"><span class="type">void</span> <span class="name">QCoapMessage::addOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>, const <span class="type">QByteArray</span> &amp;<i>value</i> = QByteArray())</h3>
+        <p>Adds the CoAP option with the given <i>name</i> and <i>value</i>.</p>
+    <h3 class="fn" id="clearOptions"><span class="type">void</span> <span class="name">QCoapMessage::clearOptions</span>()</h3>
+        <p>Removes all options.</p>
+    <h3 class="fn" id="hasOption"><span class="type">bool</span> <span class="name">QCoapMessage::hasOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>) const</h3>
+        <p>Returns <code>true</code> if the message contains at last one option with <i>name</i>.</p>
+    <h3 class="fn" id="messageId"><span class="type">quint16</span> <span class="name">QCoapMessage::messageId</span>() const</h3>
+        <p>Returns the message id.</p>
+    <p><b>See also </b><a href="qcoapmessage.html#setMessageId">setMessageId()</a>.</p>
+    <h3 class="fn" id="option"><span class="type">QCoapOption</span> <span class="name">QCoapMessage::option</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>) const</h3>
+        <p>Finds and returns the first option with the given <i>name</i>. If there is no such option, returns an invalid <a href="qcoapoption.html">QCoapOption</a> with an empty value.</p>
+    <h3 class="fn" id="optionAt"><span class="type">QCoapOption</span> <span class="name">QCoapMessage::optionAt</span>(<span class="type">int</span> <i>index</i>) const</h3>
+        <p>Returns the option at <i>index</i> position.</p>
+    <h3 class="fn" id="optionCount"><span class="type">int</span> <span class="name">QCoapMessage::optionCount</span>() const</h3>
+        <p>Returns the number of options.</p>
+    <h3 class="fn" id="options">const <span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; &amp;<span class="name">QCoapMessage::options</span>() const</h3>
+        <p>Returns the list of options.</p>
+    <h3 class="fn" id="options-1"><span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; <span class="name">QCoapMessage::options</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>) const</h3>
+        <p>Finds and returns the list of options with the given <i>name</i>.</p>
+    <h3 class="fn" id="payload"><span class="type">QByteArray</span> <span class="name">QCoapMessage::payload</span>() const</h3>
+        <p>Returns the payload.</p>
+    <p><b>See also </b><a href="qcoapmessage.html#setPayload">setPayload()</a>.</p>
+    <h3 class="fn" id="removeOption"><span class="type">void</span> <span class="name">QCoapMessage::removeOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>)</h3>
+        <p>Removes all options with the given <i>name</i>. The CoAP protocol allows for the same option to repeat.</p>
+    <h3 class="fn" id="removeOption-1"><span class="type">void</span> <span class="name">QCoapMessage::removeOption</span>(const <span class="type">QCoapOption</span> &amp;<i>option</i>)</h3>
+        <p>Removes the given <i>option</i>.</p>
+    <h3 class="fn" id="setMessageId"><span class="type">void</span> <span class="name">QCoapMessage::setMessageId</span>(<span class="type">quint16</span> <i>id</i>)</h3>
+        <p>Sets the message ID to <i>id</i>.</p>
+    <p><b>See also </b><a href="qcoapmessage.html#messageId">messageId()</a>.</p>
+    <h3 class="fn" id="setOptions"><span class="type">void</span> <span class="name">QCoapMessage::setOptions</span>(const <span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; &amp;<i>options</i>)</h3>
+        <p>Sets the message options to <i>options</i>.</p>
+    <h3 class="fn" id="setPayload"><span class="type">void</span> <span class="name">QCoapMessage::setPayload</span>(const <span class="type">QByteArray</span> &amp;<i>payload</i>)</h3>
+        <p>Sets the message payload to <i>payload</i>. The payload can be represented in one of the content formats defined in <a href="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats">CoAP Content-Formats Registry</a>.</p>
+        <aside class="admonition note" role="note"><p><b>Note: </b>CoAP supports common content formats such as XML, JSON, and so on, but these are text based and consequently heavy both in payload and in processing. One of the recommended content formats to use with CoAP is CBOR, which is designed to be used in such contexts.</p></aside>
+    <p><b>See also </b><a href="qcoapmessage.html#payload">payload()</a><a href="https://doc.qt.io/qt-6/qcborstreamwriter.html">QCborStreamWriter</a><a href="https://doc.qt.io/qt-6/qcborstreamreader.html">QCborStreamReader</a>.</p>
+    <h3 class="fn" id="setToken"><span class="type">void</span> <span class="name">QCoapMessage::setToken</span>(const <span class="type">QByteArray</span> &amp;<i>token</i>)</h3>
+        <p>Sets the message token to <i>token</i>.</p>
+    <p><b>See also </b><a href="qcoapmessage.html#token">token()</a>.</p>
+    <h3 class="fn" id="setType"><span class="type">void</span> <span class="name">QCoapMessage::setType</span>(const <span class="type">QCoapMessage::Type</span> &amp;<i>type</i>)</h3>
+        <p>Sets the message type to <i>type</i>.</p>
+    <p><b>See also </b><a href="qcoapmessage.html#type">type()</a>.</p>
+    <h3 class="fn" id="setVersion"><span class="type">void</span> <span class="name">QCoapMessage::setVersion</span>(<span class="type">quint8</span> <i>version</i>)</h3>
+        <p>Sets the CoAP version to <i>version</i>.</p>
+    <p><b>See also </b><a href="qcoapmessage.html#version">version()</a>.</p>
+    <h3 class="fn" id="swap"><code class="details extra" translate="no">[noexcept]</code> <span class="type">void</span> <span class="name">QCoapMessage::swap</span>(<span class="type">QCoapMessage</span> &amp;<i>other</i>)</h3>
+        <p>Swaps this message with <i>other</i>. This operation is very fast and never fails.</p>
+    <h3 class="fn" id="token"><span class="type">QByteArray</span> <span class="name">QCoapMessage::token</span>() const</h3>
+        <p>Returns the message token.</p>
+    <p><b>See also </b><a href="qcoapmessage.html#setToken">setToken()</a>.</p>
+    <h3 class="fn" id="tokenLength"><span class="type">quint8</span> <span class="name">QCoapMessage::tokenLength</span>() const</h3>
+        <p>Returns the token length.</p>
+    <h3 class="fn" id="type"><span class="type">QCoapMessage::Type</span> <span class="name">QCoapMessage::type</span>() const</h3>
+        <p>Returns the message type.</p>
+    <p><b>See also </b><a href="qcoapmessage.html#setType">setType()</a>.</p>
+    <h3 class="fn" id="version"><span class="type">quint8</span> <span class="name">QCoapMessage::version</span>() const</h3>
+        <p>Returns the CoAP version.</p>
+    <p><b>See also </b><a href="qcoapmessage.html#setVersion">setVersion()</a>.</p>
+    <h3 class="fn" id="operator-eq"><code class="details extra" translate="no">[noexcept]</code> <span class="type">QCoapMessage</span> &amp;<span class="name">QCoapMessage::operator=</span>(<span class="type">QCoapMessage</span> &amp;&amp;<i>other</i>)</h3>
+        <p>Moves <i>other</i> into this message and returns a reference to this <a href="qcoapmessage.html">QCoapMessage</a>.</p>
+    <h3 class="fn" id="operator-eq-1"><span class="type">QCoapMessage</span> &amp;<span class="name">QCoapMessage::operator=</span>(const <span class="type">QCoapMessage</span> &amp;<i>other</i>)</h3>
+        <p>Copies the contents of <i>other</i> into this message. Returns a reference to this <a href="qcoapmessage.html">QCoapMessage</a>.</p>
+    </main>
+    <footer>
+        <p>Generated by QDoc.</p>
+    </footer>
+</body>
+</html>

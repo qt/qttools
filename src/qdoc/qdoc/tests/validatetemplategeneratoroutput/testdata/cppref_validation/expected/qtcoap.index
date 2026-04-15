@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QtCoap Reference Documentation" version="" project="QtCoap">
+    <namespace name="" status="active" access="public" module="qtcoap">
+        <namespace name="QtCoap" href="qtcoap.html" status="active" access="public" location="qcoapnamespace.h" documented="true" module="QtCoap" brief="Contains miscellaneous identifiers used throughout the Qt CoAP module">
+            <keyword name="qtcoap-namespace" title="{QtCoap Namespace}"/>
+            <enum name="Error" fullname="QtCoap::Error" href="qtcoap.html#Error-enum" status="active" access="public" location="qcoapnamespace.h" documented="true" scoped="true">
+                <value name="Ok" value="0"/>
+                <value name="HostNotFound" value="1"/>
+                <value name="AddressInUse" value="2"/>
+                <value name="TimeOut" value="3"/>
+                <value name="BadRequest" value="4"/>
+                <value name="Unauthorized" value="5"/>
+                <value name="BadOption" value="6"/>
+                <value name="Forbidden" value="7"/>
+                <value name="NotFound" value="8"/>
+                <value name="MethodNotAllowed" value="9"/>
+                <value name="NotAcceptable" value="10"/>
+                <value name="RequestEntityIncomplete" value="11"/>
+                <value name="PreconditionFailed" value="12"/>
+                <value name="RequestEntityTooLarge" value="13"/>
+                <value name="UnsupportedContentFormat" value="14"/>
+                <value name="InternalServerFault" value="15"/>
+                <value name="NotImplemented" value="16"/>
+                <value name="BadGateway" value="17"/>
+                <value name="ServiceUnavailable" value="18"/>
+                <value name="GatewayTimeout" value="19"/>
+                <value name="ProxyingNotSupported" value="20"/>
+                <value name="Unknown" value="21"/>
+            </enum>
+            <enum name="Method" fullname="QtCoap::Method" href="qtcoap.html#Method-enum" status="active" access="public" location="qcoapnamespace.h" documented="true" scoped="true">
+                <value name="Invalid" value="0"/>
+                <value name="Get" value="1"/>
+                <value name="Post" value="2"/>
+                <value name="Put" value="3"/>
+                <value name="Delete" value="4"/>
+                <value name="Other" value="5"/>
+            </enum>
+            <enum name="MulticastGroup" fullname="QtCoap::MulticastGroup" href="qtcoap.html#MulticastGroup-enum" status="active" access="public" location="qcoapnamespace.h" documented="true" scoped="true">
+                <value name="AllCoapNodesIPv4" value="0"/>
+                <value name="AllCoapNodesIPv6LinkLocal" value="1"/>
+                <value name="AllCoapNodesIPv6SiteLocal" value="2"/>
+            </enum>
+            <enum name="Port" fullname="QtCoap::Port" href="qtcoap.html#Port-enum" status="active" access="public" location="qcoapnamespace.h" documented="true">
+                <value name="DefaultPort" value="5683"/>
+                <value name="DefaultSecurePort" value="5684"/>
+            </enum>
+            <enum name="ResponseCode" fullname="QtCoap::ResponseCode" href="qtcoap.html#ResponseCode-enum" status="active" access="public" location="qcoapnamespace.h" documented="true" scoped="true">
+                <value name="EmptyMessage" value="0x00"/>
+                <value name="Created" value="0x41"/>
+                <value name="Deleted" value="0x42"/>
+                <value name="Valid" value="0x43"/>
+                <value name="Changed" value="0x44"/>
+                <value name="Content" value="0x45"/>
+                <value name="Continue" value="0x5F"/>
+                <value name="BadRequest" value="0x-80"/>
+                <value name="Unauthorized" value="0x-7f"/>
+                <value name="BadOption" value="0x-7e"/>
+                <value name="Forbidden" value="0x-7d"/>
+                <value name="NotFound" value="0x-7c"/>
+                <value name="MethodNotAllowed" value="0x-7b"/>
+                <value name="NotAcceptable" value="0x-7a"/>
+                <value name="RequestEntityIncomplete" value="0x-78"/>
+                <value name="PreconditionFailed" value="0x-74"/>
+                <value name="RequestEntityTooLarge" value="0x-73"/>
+                <value name="UnsupportedContentFormat" value="0x-72"/>
+                <value name="InternalServerFault" value="0x-60"/>
+                <value name="NotImplemented" value="0x-5f"/>
+                <value name="BadGateway" value="0x-5e"/>
+                <value name="ServiceUnavailable" value="0x-5d"/>
+                <value name="GatewayTimeout" value="0x-5c"/>
+                <value name="ProxyingNotSupported" value="0x-5b"/>
+                <value name="InvalidCode" value="0xFF"/>
+            </enum>
+            <enum name="SecurityMode" fullname="QtCoap::SecurityMode" href="qtcoap.html#SecurityMode-enum" status="active" access="public" location="qcoapnamespace.h" documented="true" scoped="true">
+                <value name="NoSecurity" value="0"/>
+                <value name="PreSharedKey" value="1"/>
+                <value name="RawPublicKey" value="2"/>
+                <value name="Certificate" value="3"/>
+            </enum>
+        </namespace>
+        <class threadsafety="reentrant" name="QCoapClient" href="qcoapclient.html" status="active" access="public" location="qcoapclient.h" documented="true" bases="QObject" module="QtCoap" brief="Allows the application to send CoAP requests and receive replies">
+            <function name="QCoapClient" fullname="QCoapClient::QCoapClient" href="qcoapclient.html#QCoapClient" status="active" access="public" location="qcoapclient.h" documented="true" meta="constructor" explicit="true" signature="QCoapClient(QtCoap::SecurityMode securityMode, QObject *parent)">
+                <parameter type="QtCoap::SecurityMode" name="securityMode" default="QtCoap::SecurityMode::NoSecurity"/>
+                <parameter type="QObject *" name="parent" default="nullptr"/>
+            </function>
+            <function name="bindInterface" fullname="QCoapClient::bindInterface" href="qcoapclient.html#bindInterface-prop" status="active" access="public" location="qcoapclient.h" meta="plain" const="true" associated-property="bindInterface" type="QNetworkInterface" signature="QNetworkInterface bindInterface() const"/>
+            <function name="bindInterfaceChanged" fullname="QCoapClient::bindInterfaceChanged" href="qcoapclient.html#bindInterface-prop" status="active" access="public" location="qcoapclient.h" meta="signal" associated-property="bindInterface" type="void" signature="void bindInterfaceChanged(const QNetworkInterface &amp;iface)">
+                <parameter type="const QNetworkInterface &amp;" name="iface" default=""/>
+            </function>
+            <function name="cancelObserve" fullname="QCoapClient::cancelObserve" href="qcoapclient.html#cancelObserve" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="void" signature="void cancelObserve(QCoapReply *notifiedReply)">
+                <parameter type="QCoapReply *" name="notifiedReply" default=""/>
+            </function>
+            <function name="cancelObserve" fullname="QCoapClient::cancelObserve" href="qcoapclient.html#cancelObserve-1" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" overload="true" overload-number="1" type="void" signature="void cancelObserve(const QUrl &amp;url)">
+                <parameter type="const QUrl &amp;" name="url" default=""/>
+            </function>
+            <function name="deleteResource" fullname="QCoapClient::deleteResource" href="qcoapclient.html#deleteResource" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="QCoapReply *" signature="QCoapReply * deleteResource(const QCoapRequest &amp;request)">
+                <parameter type="const QCoapRequest &amp;" name="request" default=""/>
+            </function>
+            <function name="deleteResource" fullname="QCoapClient::deleteResource" href="qcoapclient.html#deleteResource-1" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" overload="true" overload-number="1" type="QCoapReply *" signature="QCoapReply * deleteResource(const QUrl &amp;url)">
+                <parameter type="const QUrl &amp;" name="url" default=""/>
+            </function>
+            <function name="disconnect" fullname="QCoapClient::disconnect" href="qcoapclient.html#disconnect" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="void" signature="void disconnect()"/>
+            <function name="discover" fullname="QCoapClient::discover" href="qcoapclient.html#discover" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="QCoapResourceDiscoveryReply *" signature="QCoapResourceDiscoveryReply * discover(const QUrl &amp;url, const QString &amp;discoveryPath)">
+                <parameter type="const QUrl &amp;" name="url" default=""/>
+                <parameter type="const QString &amp;" name="discoveryPath" default="QLatin1String(&quot;/.well-known/core&quot;)"/>
+            </function>
+            <function name="discover" fullname="QCoapClient::discover" href="qcoapclient.html#discover-1" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" overload="true" overload-number="1" type="QCoapResourceDiscoveryReply *" signature="QCoapResourceDiscoveryReply * discover(QtCoap::MulticastGroup group, int port, const QString &amp;discoveryPath)">
+                <parameter type="QtCoap::MulticastGroup" name="group" default="QtCoap::MulticastGroup::AllCoapNodesIPv4"/>
+                <parameter type="int" name="port" default="QtCoap::DefaultPort"/>
+                <parameter type="const QString &amp;" name="discoveryPath" default="QLatin1String(&quot;/.well-known/core&quot;)"/>
+            </function>
+            <function name="error" fullname="QCoapClient::error" href="qcoapclient.html#error" status="active" access="public" location="qcoapclient.h" documented="true" meta="signal" type="void" signature="void error(QCoapReply *reply, QtCoap::Error error)">
+                <parameter type="QCoapReply *" name="reply" default=""/>
+                <parameter type="QtCoap::Error" name="error" default=""/>
+            </function>
+            <function name="finished" fullname="QCoapClient::finished" href="qcoapclient.html#finished" status="active" access="public" location="qcoapclient.h" documented="true" meta="signal" type="void" signature="void finished(QCoapReply *reply)">
+                <parameter type="QCoapReply *" name="reply" default=""/>
+            </function>
+            <function name="get" fullname="QCoapClient::get" href="qcoapclient.html#get" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="QCoapReply *" signature="QCoapReply * get(const QCoapRequest &amp;request)">
+                <parameter type="const QCoapRequest &amp;" name="request" default=""/>
+            </function>
+            <function name="get" fullname="QCoapClient::get" href="qcoapclient.html#get-1" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" overload="true" overload-number="1" type="QCoapReply *" signature="QCoapReply * get(const QUrl &amp;url)">
+                <parameter type="const QUrl &amp;" name="url" default=""/>
+            </function>
+            <function name="observe" fullname="QCoapClient::observe" href="qcoapclient.html#observe" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="QCoapReply *" signature="QCoapReply * observe(const QCoapRequest &amp;request)">
+                <parameter type="const QCoapRequest &amp;" name="request" default=""/>
+            </function>
+            <function name="observe" fullname="QCoapClient::observe" href="qcoapclient.html#observe-1" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" overload="true" overload-number="1" type="QCoapReply *" signature="QCoapReply * observe(const QUrl &amp;url)">
+                <parameter type="const QUrl &amp;" name="url" default=""/>
+            </function>
+            <function name="post" fullname="QCoapClient::post" href="qcoapclient.html#post" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="QCoapReply *" signature="QCoapReply * post(const QCoapRequest &amp;request, const QByteArray &amp;data)">
+                <parameter type="const QCoapRequest &amp;" name="request" default=""/>
+                <parameter type="const QByteArray &amp;" name="data" default="QByteArray()"/>
+            </function>
+            <function name="post" fullname="QCoapClient::post" href="qcoapclient.html#post-1" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" overload="true" overload-number="1" type="QCoapReply *" signature="QCoapReply * post(const QCoapRequest &amp;request, QIODevice *device)">
+                <parameter type="const QCoapRequest &amp;" name="request" default=""/>
+                <parameter type="QIODevice *" name="device" default=""/>
+            </function>
+            <function name="post" fullname="QCoapClient::post" href="qcoapclient.html#post-2" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" overload="true" overload-number="2" type="QCoapReply *" signature="QCoapReply * post(const QUrl &amp;url, const QByteArray &amp;data)">
+                <parameter type="const QUrl &amp;" name="url" default=""/>
+                <parameter type="const QByteArray &amp;" name="data" default="QByteArray()"/>
+            </function>
+            <function name="put" fullname="QCoapClient::put" href="qcoapclient.html#put" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="QCoapReply *" signature="QCoapReply * put(const QCoapRequest &amp;request, const QByteArray &amp;data)">
+                <parameter type="const QCoapRequest &amp;" name="request" default=""/>
+                <parameter type="const QByteArray &amp;" name="data" default="QByteArray()"/>
+            </function>
+            <function name="put" fullname="QCoapClient::put" href="qcoapclient.html#put-1" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" overload="true" overload-number="1" type="QCoapReply *" signature="QCoapReply * put(const QCoapRequest &amp;request, QIODevice *device)">
+                <parameter type="const QCoapRequest &amp;" name="request" default=""/>
+                <parameter type="QIODevice *" name="device" default=""/>
+            </function>
+            <function name="put" fullname="QCoapClient::put" href="qcoapclient.html#put-2" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" overload="true" overload-number="2" type="QCoapReply *" signature="QCoapReply * put(const QUrl &amp;url, const QByteArray &amp;data)">
+                <parameter type="const QUrl &amp;" name="url" default=""/>
+                <parameter type="const QByteArray &amp;" name="data" default="QByteArray()"/>
+            </function>
+            <function name="responseToMulticastReceived" fullname="QCoapClient::responseToMulticastReceived" href="qcoapclient.html#responseToMulticastReceived" status="active" access="public" location="qcoapclient.h" documented="true" meta="signal" type="void" signature="void responseToMulticastReceived(QCoapReply *reply, const QCoapMessage &amp;message, const QHostAddress &amp;sender)">
+                <parameter type="QCoapReply *" name="reply" default=""/>
+                <parameter type="const QCoapMessage &amp;" name="message" default=""/>
+                <parameter type="const QHostAddress &amp;" name="sender" default=""/>
+            </function>
+            <function name="setAckRandomFactor" fullname="QCoapClient::setAckRandomFactor" href="qcoapclient.html#setAckRandomFactor" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="void" signature="void setAckRandomFactor(double ackRandomFactor)">
+                <parameter type="double" name="ackRandomFactor" default=""/>
+            </function>
+            <function name="setAckTimeout" fullname="QCoapClient::setAckTimeout" href="qcoapclient.html#setAckTimeout" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="void" signature="void setAckTimeout(uint ackTimeout)">
+                <parameter type="uint" name="ackTimeout" default=""/>
+            </function>
+            <function name="setBindInterface" fullname="QCoapClient::setBindInterface" href="qcoapclient.html#bindInterface-prop" status="active" access="public" location="qcoapclient.h" meta="plain" associated-property="bindInterface" type="void" signature="void setBindInterface(const QNetworkInterface &amp;iface)">
+                <parameter type="const QNetworkInterface &amp;" name="iface" default=""/>
+            </function>
+            <function name="setBlockSize" fullname="QCoapClient::setBlockSize" href="qcoapclient.html#setBlockSize" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="void" signature="void setBlockSize(quint16 blockSize)">
+                <parameter type="quint16" name="blockSize" default=""/>
+            </function>
+            <function name="setMaximumRetransmitCount" fullname="QCoapClient::setMaximumRetransmitCount" href="qcoapclient.html#setMaximumRetransmitCount" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="void" signature="void setMaximumRetransmitCount(uint maximumRetransmitCount)">
+                <parameter type="uint" name="maximumRetransmitCount" default=""/>
+            </function>
+            <function name="setMaximumServerResponseDelay" fullname="QCoapClient::setMaximumServerResponseDelay" href="qcoapclient.html#setMaximumServerResponseDelay" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="void" signature="void setMaximumServerResponseDelay(uint responseDelay)">
+                <parameter type="uint" name="responseDelay" default=""/>
+            </function>
+            <function name="setMinimumTokenSize" fullname="QCoapClient::setMinimumTokenSize" href="qcoapclient.html#setMinimumTokenSize" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="void" signature="void setMinimumTokenSize(int tokenSize)">
+                <parameter type="int" name="tokenSize" default=""/>
+            </function>
+            <function name="setSecurityConfiguration" fullname="QCoapClient::setSecurityConfiguration" href="qcoapclient.html#setSecurityConfiguration" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="void" signature="void setSecurityConfiguration(const QCoapSecurityConfiguration &amp;configuration)">
+                <parameter type="const QCoapSecurityConfiguration &amp;" name="configuration" default=""/>
+            </function>
+            <function name="setSocketOption" fullname="QCoapClient::setSocketOption" href="qcoapclient.html#setSocketOption" status="active" access="public" location="qcoapclient.h" documented="true" meta="plain" type="void" signature="void setSocketOption(QAbstractSocket::SocketOption option, const QVariant &amp;value)">
+                <parameter type="QAbstractSocket::SocketOption" name="option" default=""/>
+                <parameter type="const QVariant &amp;" name="value" default=""/>
+            </function>
+            <function name="~QCoapClient" fullname="QCoapClient::~QCoapClient" href="qcoapclient.html#dtor.QCoapClient" status="active" access="public" location="qcoapclient.h" documented="true" meta="destructor" virtual="virtual" noexcept="true" signature="~QCoapClient()"/>
+            <property name="bindInterface" fullname="QCoapClient::bindInterface" href="qcoapclient.html#bindInterface-prop" status="active" access="public" location="qcoapclient.h" since="6.11" documented="true" dataType="QNetworkInterface" brief="The network interface to be used by the socket">
+                <getter name="bindInterface"/>
+                <setter name="setBindInterface"/>
+                <notifier name="bindInterfaceChanged"/>
+            </property>
+        </class>
+        <class threadsafety="reentrant" name="QCoapMessage" href="qcoapmessage.html" status="active" access="public" location="qcoapmessage.h" documented="true" module="QtCoap" brief="Holds information about a CoAP message that can be a request or a reply">
+            <function name="QCoapMessage" fullname="QCoapMessage::QCoapMessage" href="qcoapmessage.html#QCoapMessage" status="active" access="public" location="qcoapmessage.h" documented="true" meta="constructor" signature="QCoapMessage()"/>
+            <function name="QCoapMessage" fullname="QCoapMessage::QCoapMessage" href="qcoapmessage.html#QCoapMessage-1" status="active" access="public" location="qcoapmessage.h" documented="true" meta="copy-constructor" overload="true" overload-number="1" signature="QCoapMessage(const QCoapMessage &amp;other)">
+                <parameter type="const QCoapMessage &amp;" name="other" default=""/>
+            </function>
+            <function name="addOption" fullname="QCoapMessage::addOption" href="qcoapmessage.html#addOption" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" type="void" signature="void addOption(const QCoapOption &amp;option)">
+                <parameter type="const QCoapOption &amp;" name="option" default=""/>
+            </function>
+            <function name="addOption" fullname="QCoapMessage::addOption" href="qcoapmessage.html#addOption-1" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" overload="true" overload-number="1" type="void" signature="void addOption(QCoapOption::OptionName name, const QByteArray &amp;value)">
+                <parameter type="QCoapOption::OptionName" name="name" default=""/>
+                <parameter type="const QByteArray &amp;" name="value" default="QByteArray()"/>
+            </function>
+            <function name="clearOptions" fullname="QCoapMessage::clearOptions" href="qcoapmessage.html#clearOptions" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" type="void" signature="void clearOptions()"/>
+            <function name="hasOption" fullname="QCoapMessage::hasOption" href="qcoapmessage.html#hasOption" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" const="true" type="bool" signature="bool hasOption(QCoapOption::OptionName name) const">
+                <parameter type="QCoapOption::OptionName" name="name" default=""/>
+            </function>
+            <function name="messageId" fullname="QCoapMessage::messageId" href="qcoapmessage.html#messageId" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" const="true" type="quint16" signature="quint16 messageId() const"/>
+            <function name="operator=" fullname="QCoapMessage::operator=" href="qcoapmessage.html#operator-eq" status="active" access="public" location="qcoapmessage.h" documented="true" meta="move-assign" noexcept="true" type="QCoapMessage &amp;" signature="QCoapMessage &amp; operator=(QCoapMessage &amp;&amp;other)">
+                <parameter type="QCoapMessage &amp;&amp;" name="other" default=""/>
+            </function>
+            <function name="operator=" fullname="QCoapMessage::operator=" href="qcoapmessage.html#operator-eq-1" status="active" access="public" location="qcoapmessage.h" documented="true" meta="copy-assign" overload="true" overload-number="1" type="QCoapMessage &amp;" signature="QCoapMessage &amp; operator=(const QCoapMessage &amp;other)">
+                <parameter type="const QCoapMessage &amp;" name="other" default=""/>
+            </function>
+            <function name="option" fullname="QCoapMessage::option" href="qcoapmessage.html#option" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" const="true" type="QCoapOption" signature="QCoapOption option(QCoapOption::OptionName name) const">
+                <parameter type="QCoapOption::OptionName" name="name" default=""/>
+            </function>
+            <function name="optionAt" fullname="QCoapMessage::optionAt" href="qcoapmessage.html#optionAt" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" const="true" type="QCoapOption" signature="QCoapOption optionAt(int index) const">
+                <parameter type="int" name="index" default=""/>
+            </function>
+            <function name="optionCount" fullname="QCoapMessage::optionCount" href="qcoapmessage.html#optionCount" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" const="true" type="int" signature="int optionCount() const"/>
+            <function name="options" fullname="QCoapMessage::options" href="qcoapmessage.html#options" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" const="true" type="const QList&lt;QCoapOption&gt; &amp;" signature="const QList&lt;QCoapOption&gt; &amp; options() const"/>
+            <function name="options" fullname="QCoapMessage::options" href="qcoapmessage.html#options-1" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" const="true" overload="true" overload-number="1" type="QList&lt;QCoapOption&gt;" signature="QList&lt;QCoapOption&gt; options(QCoapOption::OptionName name) const">
+                <parameter type="QCoapOption::OptionName" name="name" default=""/>
+            </function>
+            <function name="payload" fullname="QCoapMessage::payload" href="qcoapmessage.html#payload" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" const="true" type="QByteArray" signature="QByteArray payload() const"/>
+            <function name="removeOption" fullname="QCoapMessage::removeOption" href="qcoapmessage.html#removeOption" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" type="void" signature="void removeOption(QCoapOption::OptionName name)">
+                <parameter type="QCoapOption::OptionName" name="name" default=""/>
+            </function>
+            <function name="removeOption" fullname="QCoapMessage::removeOption" href="qcoapmessage.html#removeOption-1" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" overload="true" overload-number="1" type="void" signature="void removeOption(const QCoapOption &amp;option)">
+                <parameter type="const QCoapOption &amp;" name="option" default=""/>
+            </function>
+            <function name="setMessageId" fullname="QCoapMessage::setMessageId" href="qcoapmessage.html#setMessageId" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" type="void" signature="void setMessageId(quint16 id)">
+                <parameter type="quint16" name="id" default=""/>
+            </function>
+            <function name="setOptions" fullname="QCoapMessage::setOptions" href="qcoapmessage.html#setOptions" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" type="void" signature="void setOptions(const QList&lt;QCoapOption&gt; &amp;options)">
+                <parameter type="const QList&lt;QCoapOption&gt; &amp;" name="options" default=""/>
+            </function>
+            <function name="setPayload" fullname="QCoapMessage::setPayload" href="qcoapmessage.html#setPayload" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" type="void" signature="void setPayload(const QByteArray &amp;payload)">
+                <parameter type="const QByteArray &amp;" name="payload" default=""/>
+            </function>
+            <function name="setToken" fullname="QCoapMessage::setToken" href="qcoapmessage.html#setToken" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" type="void" signature="void setToken(const QByteArray &amp;token)">
+                <parameter type="const QByteArray &amp;" name="token" default=""/>
+            </function>
+            <function name="setType" fullname="QCoapMessage::setType" href="qcoapmessage.html#setType" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" type="void" signature="void setType(const QCoapMessage::Type &amp;type)">
+                <parameter type="const QCoapMessage::Type &amp;" name="type" default=""/>
+            </function>
+            <function name="setVersion" fullname="QCoapMessage::setVersion" href="qcoapmessage.html#setVersion" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" type="void" signature="void setVersion(quint8 version)">
+                <parameter type="quint8" name="version" default=""/>
+            </function>
+            <function name="swap" fullname="QCoapMessage::swap" href="qcoapmessage.html#swap" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" noexcept="true" type="void" signature="void swap(QCoapMessage &amp;other)">
+                <parameter type="QCoapMessage &amp;" name="other" default=""/>
+            </function>
+            <function name="token" fullname="QCoapMessage::token" href="qcoapmessage.html#token" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" const="true" type="QByteArray" signature="QByteArray token() const"/>
+            <function name="tokenLength" fullname="QCoapMessage::tokenLength" href="qcoapmessage.html#tokenLength" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" const="true" type="quint8" signature="quint8 tokenLength() const"/>
+            <function name="type" fullname="QCoapMessage::type" href="qcoapmessage.html#type" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" const="true" type="QCoapMessage::Type" signature="QCoapMessage::Type type() const"/>
+            <function name="version" fullname="QCoapMessage::version" href="qcoapmessage.html#version" status="active" access="public" location="qcoapmessage.h" documented="true" meta="plain" const="true" type="quint8" signature="quint8 version() const"/>
+            <function name="~QCoapMessage" fullname="QCoapMessage::~QCoapMessage" href="qcoapmessage.html#dtor.QCoapMessage" status="active" access="public" location="qcoapmessage.h" documented="true" meta="destructor" noexcept="true" signature="~QCoapMessage()"/>
+            <enum name="Type" fullname="QCoapMessage::Type" href="qcoapmessage.html#Type-enum" status="active" access="public" location="qcoapmessage.h" documented="true" scoped="true">
+                <value name="Confirmable" value="0"/>
+                <value name="NonConfirmable" value="1"/>
+                <value name="Acknowledgment" value="2"/>
+                <value name="Reset" value="3"/>
+            </enum>
+        </class>
+        <class threadsafety="reentrant" name="QCoapOption" href="qcoapoption.html" status="active" access="public" location="qcoapoption.h" documented="true" module="QtCoap" brief="Holds data about CoAP options">
+            <function name="QCoapOption" fullname="QCoapOption::QCoapOption" href="qcoapoption.html#QCoapOption" status="active" access="public" location="qcoapoption.h" documented="true" meta="move-constructor" signature="QCoapOption(QCoapOption &amp;&amp;other)">
+                <parameter type="QCoapOption &amp;&amp;" name="other" default=""/>
+            </function>
+            <function name="QCoapOption" fullname="QCoapOption::QCoapOption" href="qcoapoption.html#QCoapOption-1" status="active" access="public" location="qcoapoption.h" documented="true" meta="copy-constructor" overload="true" overload-number="1" signature="QCoapOption(const QCoapOption &amp;other)">
+                <parameter type="const QCoapOption &amp;" name="other" default=""/>
+            </function>
+            <function name="QCoapOption" fullname="QCoapOption::QCoapOption" href="qcoapoption.html#QCoapOption-2" status="active" access="public" location="qcoapoption.h" documented="true" meta="constructor" overload="true" overload-number="2" signature="QCoapOption(QCoapOption::OptionName name, const QByteArray &amp;opaqueValue)">
+                <parameter type="QCoapOption::OptionName" name="name" default="Invalid"/>
+                <parameter type="const QByteArray &amp;" name="opaqueValue" default="QByteArray()"/>
+            </function>
+            <function name="QCoapOption" fullname="QCoapOption::QCoapOption" href="qcoapoption.html#QCoapOption-3" status="active" access="public" location="qcoapoption.h" documented="true" meta="constructor" overload="true" overload-number="3" signature="QCoapOption(QCoapOption::OptionName name, const QString &amp;stringValue)">
+                <parameter type="QCoapOption::OptionName" name="name" default=""/>
+                <parameter type="const QString &amp;" name="stringValue" default=""/>
+            </function>
+            <function name="QCoapOption" fullname="QCoapOption::QCoapOption" href="qcoapoption.html#QCoapOption-4" status="active" access="public" location="qcoapoption.h" documented="true" meta="constructor" overload="true" overload-number="4" signature="QCoapOption(QCoapOption::OptionName name, quint32 intValue)">
+                <parameter type="QCoapOption::OptionName" name="name" default=""/>
+                <parameter type="quint32" name="intValue" default=""/>
+            </function>
+            <function name="isValid" fullname="QCoapOption::isValid" href="qcoapoption.html#isValid" status="active" access="public" location="qcoapoption.h" documented="true" meta="plain" const="true" type="bool" signature="bool isValid() const"/>
+            <function name="length" fullname="QCoapOption::length" href="qcoapoption.html#length" status="active" access="public" location="qcoapoption.h" documented="true" meta="plain" const="true" type="int" signature="int length() const"/>
+            <function name="name" fullname="QCoapOption::name" href="qcoapoption.html#name" status="active" access="public" location="qcoapoption.h" documented="true" meta="plain" const="true" type="QCoapOption::OptionName" signature="QCoapOption::OptionName name() const"/>
+            <function name="opaqueValue" fullname="QCoapOption::opaqueValue" href="qcoapoption.html#opaqueValue" status="active" access="public" location="qcoapoption.h" documented="true" meta="plain" const="true" type="QByteArray" signature="QByteArray opaqueValue() const"/>
+            <function name="operator!=" fullname="QCoapOption::operator!=" href="qcoapoption.html#operator-not-eq" status="active" access="public" location="qcoapoption.h" documented="true" meta="plain" const="true" type="bool" signature="bool operator!=(const QCoapOption &amp;other) const">
+                <parameter type="const QCoapOption &amp;" name="other" default=""/>
+            </function>
+            <function name="operator=" fullname="QCoapOption::operator=" href="qcoapoption.html#operator-eq" status="active" access="public" location="qcoapoption.h" documented="true" meta="move-assign" noexcept="true" type="QCoapOption &amp;" signature="QCoapOption &amp; operator=(QCoapOption &amp;&amp;other)">
+                <parameter type="QCoapOption &amp;&amp;" name="other" default=""/>
+            </function>
+            <function name="operator=" fullname="QCoapOption::operator=" href="qcoapoption.html#operator-eq-1" status="active" access="public" location="qcoapoption.h" documented="true" meta="copy-assign" overload="true" overload-number="1" type="QCoapOption &amp;" signature="QCoapOption &amp; operator=(const QCoapOption &amp;other)">
+                <parameter type="const QCoapOption &amp;" name="other" default=""/>
+            </function>
+            <function name="operator==" fullname="QCoapOption::operator==" href="qcoapoption.html#operator-eq-eq" status="active" access="public" location="qcoapoption.h" documented="true" meta="plain" const="true" type="bool" signature="bool operator==(const QCoapOption &amp;other) const">
+                <parameter type="const QCoapOption &amp;" name="other" default=""/>
+            </function>
+            <function name="stringValue" fullname="QCoapOption::stringValue" href="qcoapoption.html#stringValue" status="active" access="public" location="qcoapoption.h" documented="true" meta="plain" const="true" type="QString" signature="QString stringValue() const"/>
+            <function name="swap" fullname="QCoapOption::swap" href="qcoapoption.html#swap" status="active" access="public" location="qcoapoption.h" documented="true" meta="plain" noexcept="true" type="void" signature="void swap(QCoapOption &amp;other)">
+                <parameter type="QCoapOption &amp;" name="other" default=""/>
+            </function>
+            <function name="uintValue" fullname="QCoapOption::uintValue" href="qcoapoption.html#uintValue" status="active" access="public" location="qcoapoption.h" documented="true" meta="plain" const="true" type="quint32" signature="quint32 uintValue() const"/>
+            <function name="~QCoapOption" fullname="QCoapOption::~QCoapOption" href="qcoapoption.html#dtor.QCoapOption" status="active" access="public" location="qcoapoption.h" documented="true" meta="destructor" noexcept="true" signature="~QCoapOption()"/>
+            <enum name="OptionName" fullname="QCoapOption::OptionName" href="qcoapoption.html#OptionName-enum" status="active" access="public" location="qcoapoption.h" documented="true">
+                <value name="Invalid" value="0"/>
+                <value name="IfMatch" value="1"/>
+                <value name="UriHost" value="3"/>
+                <value name="Etag" value="4"/>
+                <value name="IfNoneMatch" value="5"/>
+                <value name="Observe" value="6"/>
+                <value name="UriPort" value="7"/>
+                <value name="LocationPath" value="8"/>
+                <value name="UriPath" value="11"/>
+                <value name="ContentFormat" value="12"/>
+                <value name="MaxAge" value="14"/>
+                <value name="UriQuery" value="15"/>
+                <value name="Accept" value="17"/>
+                <value name="LocationQuery" value="20"/>
+                <value name="Block2" value="23"/>
+                <value name="Block1" value="27"/>
+                <value name="Size2" value="28"/>
+                <value name="ProxyUri" value="35"/>
+                <value name="ProxyScheme" value="39"/>
+                <value name="Size1" value="60"/>
+            </enum>
+        </class>
+        <class name="QCoapPrivateKey" href="qcoapprivatekey.html" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" module="QtCoap" brief="Interface for managing CoAP security keys">
+            <function name="QCoapPrivateKey" fullname="QCoapPrivateKey::QCoapPrivateKey" href="qcoapprivatekey.html#QCoapPrivateKey" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="constructor" signature="QCoapPrivateKey()"/>
+            <function name="QCoapPrivateKey" fullname="QCoapPrivateKey::QCoapPrivateKey" href="qcoapprivatekey.html#QCoapPrivateKey-1" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="move-constructor" noexcept="true" overload="true" overload-number="1" signature="QCoapPrivateKey(QCoapPrivateKey &amp;&amp;other)">
+                <parameter type="QCoapPrivateKey &amp;&amp;" name="other" default=""/>
+            </function>
+            <function name="QCoapPrivateKey" fullname="QCoapPrivateKey::QCoapPrivateKey" href="qcoapprivatekey.html#QCoapPrivateKey-2" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="copy-constructor" overload="true" overload-number="2" signature="QCoapPrivateKey(const QCoapPrivateKey &amp;other)">
+                <parameter type="const QCoapPrivateKey &amp;" name="other" default=""/>
+            </function>
+            <function name="QCoapPrivateKey" fullname="QCoapPrivateKey::QCoapPrivateKey" href="qcoapprivatekey.html#QCoapPrivateKey-3" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="constructor" overload="true" overload-number="3" signature="QCoapPrivateKey(const Qt::HANDLE &amp;handle)">
+                <parameter type="const Qt::HANDLE &amp;" name="handle" default=""/>
+            </function>
+            <function name="QCoapPrivateKey" fullname="QCoapPrivateKey::QCoapPrivateKey" href="qcoapprivatekey.html#QCoapPrivateKey-4" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="constructor" overload="true" overload-number="4" signature="QCoapPrivateKey(const QByteArray &amp;key, QSsl::KeyAlgorithm algorithm, QSsl::EncodingFormat format, const QByteArray &amp;passPhrase)">
+                <parameter type="const QByteArray &amp;" name="key" default=""/>
+                <parameter type="QSsl::KeyAlgorithm" name="algorithm" default=""/>
+                <parameter type="QSsl::EncodingFormat" name="format" default="QSsl::Pem"/>
+                <parameter type="const QByteArray &amp;" name="passPhrase" default="QByteArray()"/>
+            </function>
+            <function name="algorithm" fullname="QCoapPrivateKey::algorithm" href="qcoapprivatekey.html#algorithm" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" const="true" type="QSsl::KeyAlgorithm" signature="QSsl::KeyAlgorithm algorithm() const"/>
+            <function name="encodingFormat" fullname="QCoapPrivateKey::encodingFormat" href="qcoapprivatekey.html#encodingFormat" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" const="true" type="QSsl::EncodingFormat" signature="QSsl::EncodingFormat encodingFormat() const"/>
+            <function name="handle" fullname="QCoapPrivateKey::handle" href="qcoapprivatekey.html#handle" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" const="true" type="Qt::HANDLE" signature="Qt::HANDLE handle() const"/>
+            <function name="isNull" fullname="QCoapPrivateKey::isNull" href="qcoapprivatekey.html#isNull" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" const="true" type="bool" signature="bool isNull() const"/>
+            <function name="key" fullname="QCoapPrivateKey::key" href="qcoapprivatekey.html#key" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" const="true" type="QByteArray" signature="QByteArray key() const"/>
+            <function name="operator=" fullname="QCoapPrivateKey::operator=" href="qcoapprivatekey.html#operator-eq" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="copy-assign" type="QCoapPrivateKey &amp;" signature="QCoapPrivateKey &amp; operator=(const QCoapPrivateKey &amp;other)">
+                <parameter type="const QCoapPrivateKey &amp;" name="other" default=""/>
+            </function>
+            <function name="passPhrase" fullname="QCoapPrivateKey::passPhrase" href="qcoapprivatekey.html#passPhrase" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" const="true" type="QByteArray" signature="QByteArray passPhrase() const"/>
+            <function name="swap" fullname="QCoapPrivateKey::swap" href="qcoapprivatekey.html#swap" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" noexcept="true" type="void" signature="void swap(QCoapPrivateKey &amp;other)">
+                <parameter type="QCoapPrivateKey &amp;" name="other" default=""/>
+            </function>
+            <function name="~QCoapPrivateKey" fullname="QCoapPrivateKey::~QCoapPrivateKey" href="qcoapprivatekey.html#dtor.QCoapPrivateKey" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="destructor" noexcept="true" signature="~QCoapPrivateKey()"/>
+        </class>
+        <class threadsafety="reentrant" name="QCoapReply" href="qcoapreply.html" status="active" access="public" location="qcoapreply.h" documented="true" bases="QIODevice" module="QtCoap" brief="Holds the data of a CoAP reply">
+            <function name="abortRequest" fullname="QCoapReply::abortRequest" href="qcoapreply.html#abortRequest" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" type="void" signature="void abortRequest()"/>
+            <function name="aborted" fullname="QCoapReply::aborted" href="qcoapreply.html#aborted" status="active" access="public" location="qcoapreply.h" documented="true" meta="signal" type="void" signature="void aborted(const QCoapToken &amp;token)">
+                <parameter type="const QCoapToken &amp;" name="token" default=""/>
+            </function>
+            <function name="error" fullname="QCoapReply::error" href="qcoapreply.html#error" status="active" access="public" location="qcoapreply.h" documented="true" meta="signal" type="void" signature="void error(QCoapReply *reply, QtCoap::Error error)">
+                <parameter type="QCoapReply *" name="reply" default=""/>
+                <parameter type="QtCoap::Error" name="error" default=""/>
+            </function>
+            <function name="errorReceived" fullname="QCoapReply::errorReceived" href="qcoapreply.html#errorReceived" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" const="true" type="QtCoap::Error" signature="QtCoap::Error errorReceived() const"/>
+            <function name="finished" fullname="QCoapReply::finished" href="qcoapreply.html#finished" status="active" access="public" location="qcoapreply.h" documented="true" meta="signal" type="void" signature="void finished(QCoapReply *reply)">
+                <parameter type="QCoapReply *" name="reply" default=""/>
+            </function>
+            <function name="isAborted" fullname="QCoapReply::isAborted" href="qcoapreply.html#isAborted" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" const="true" type="bool" signature="bool isAborted() const"/>
+            <function name="isFinished" fullname="QCoapReply::isFinished" href="qcoapreply.html#isFinished" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" const="true" type="bool" signature="bool isFinished() const"/>
+            <function name="isRunning" fullname="QCoapReply::isRunning" href="qcoapreply.html#isRunning" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" const="true" type="bool" signature="bool isRunning() const"/>
+            <function name="isSuccessful" fullname="QCoapReply::isSuccessful" href="qcoapreply.html#isSuccessful" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" const="true" type="bool" signature="bool isSuccessful() const"/>
+            <function name="message" fullname="QCoapReply::message" href="qcoapreply.html#message" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" const="true" type="QCoapMessage" signature="QCoapMessage message() const"/>
+            <function name="method" fullname="QCoapReply::method" href="qcoapreply.html#method" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" const="true" type="QtCoap::Method" signature="QtCoap::Method method() const"/>
+            <function name="notified" fullname="QCoapReply::notified" href="qcoapreply.html#notified" status="active" access="public" location="qcoapreply.h" documented="true" meta="signal" type="void" signature="void notified(QCoapReply *reply, const QCoapMessage &amp;message)">
+                <parameter type="QCoapReply *" name="reply" default=""/>
+                <parameter type="const QCoapMessage &amp;" name="message" default=""/>
+            </function>
+            <function name="request" fullname="QCoapReply::request" href="qcoapreply.html#request" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" const="true" type="QCoapRequest" signature="QCoapRequest request() const"/>
+            <function name="responseCode" fullname="QCoapReply::responseCode" href="qcoapreply.html#responseCode" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" const="true" type="QtCoap::ResponseCode" signature="QtCoap::ResponseCode responseCode() const"/>
+            <function name="url" fullname="QCoapReply::url" href="qcoapreply.html#url" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" const="true" type="QUrl" signature="QUrl url() const"/>
+            <function name="~QCoapReply" fullname="QCoapReply::~QCoapReply" href="qcoapreply.html#dtor.QCoapReply" status="active" access="public" location="qcoapreply.h" documented="true" meta="destructor" virtual="virtual" override="true" noexcept="true" signature="~QCoapReply() override"/>
+        </class>
+        <class threadsafety="reentrant" name="QCoapRequest" href="qcoaprequest.html" status="active" access="public" location="qcoaprequest.h" documented="true" bases="QCoapMessage" module="QtCoap" brief="Holds a CoAP request. This request can be sent with QCoapClient">
+            <function name="QCoapRequest" fullname="QCoapRequest::QCoapRequest" href="qcoaprequest.html#QCoapRequest" status="active" access="public" location="qcoaprequest.h" documented="true" meta="copy-constructor" signature="QCoapRequest(const QCoapRequest &amp;other)">
+                <parameter type="const QCoapRequest &amp;" name="other" default=""/>
+            </function>
+            <function name="QCoapRequest" fullname="QCoapRequest::QCoapRequest" href="qcoaprequest.html#QCoapRequest-1" status="active" access="public" location="qcoaprequest.h" documented="true" meta="constructor" explicit="true" overload="true" overload-number="1" signature="QCoapRequest(const char *url, QCoapMessage::Type type)">
+                <parameter type="const char *" name="url" default=""/>
+                <parameter type="QCoapMessage::Type" name="type" default="Type::NonConfirmable"/>
+            </function>
+            <function name="QCoapRequest" fullname="QCoapRequest::QCoapRequest" href="qcoaprequest.html#QCoapRequest-2" status="active" access="public" location="qcoaprequest.h" documented="true" meta="constructor" explicit="true" overload="true" overload-number="2" signature="QCoapRequest(const QUrl &amp;url, QCoapMessage::Type type, const QUrl &amp;proxyUrl)">
+                <parameter type="const QUrl &amp;" name="url" default="QUrl()"/>
+                <parameter type="QCoapMessage::Type" name="type" default="Type::NonConfirmable"/>
+                <parameter type="const QUrl &amp;" name="proxyUrl" default="QUrl()"/>
+            </function>
+            <function name="enableObserve" fullname="QCoapRequest::enableObserve" href="qcoaprequest.html#enableObserve" status="active" access="public" location="qcoaprequest.h" documented="true" meta="plain" type="void" signature="void enableObserve()"/>
+            <function name="isObserve" fullname="QCoapRequest::isObserve" href="qcoaprequest.html#isObserve" status="active" access="public" location="qcoaprequest.h" documented="true" meta="plain" const="true" type="bool" signature="bool isObserve() const"/>
+            <function name="method" fullname="QCoapRequest::method" href="qcoaprequest.html#method" status="active" access="public" location="qcoaprequest.h" documented="true" meta="plain" const="true" type="QtCoap::Method" signature="QtCoap::Method method() const"/>
+            <function name="operator=" fullname="QCoapRequest::operator=" href="qcoaprequest.html#operator-eq" status="active" access="public" location="qcoaprequest.h" documented="true" meta="copy-assign" type="QCoapRequest &amp;" signature="QCoapRequest &amp; operator=(const QCoapRequest &amp;other)">
+                <parameter type="const QCoapRequest &amp;" name="other" default=""/>
+            </function>
+            <function name="proxyUrl" fullname="QCoapRequest::proxyUrl" href="qcoaprequest.html#proxyUrl" status="active" access="public" location="qcoaprequest.h" documented="true" meta="plain" const="true" type="QUrl" signature="QUrl proxyUrl() const"/>
+            <function name="setProxyUrl" fullname="QCoapRequest::setProxyUrl" href="qcoaprequest.html#setProxyUrl" status="active" access="public" location="qcoaprequest.h" documented="true" meta="plain" type="void" signature="void setProxyUrl(const QUrl &amp;proxyUrl)">
+                <parameter type="const QUrl &amp;" name="proxyUrl" default=""/>
+            </function>
+            <function name="setUrl" fullname="QCoapRequest::setUrl" href="qcoaprequest.html#setUrl" status="active" access="public" location="qcoaprequest.h" documented="true" meta="plain" type="void" signature="void setUrl(const QUrl &amp;url)">
+                <parameter type="const QUrl &amp;" name="url" default=""/>
+            </function>
+            <function name="url" fullname="QCoapRequest::url" href="qcoaprequest.html#url" status="active" access="public" location="qcoaprequest.h" documented="true" meta="plain" const="true" type="QUrl" signature="QUrl url() const"/>
+            <function name="~QCoapRequest" fullname="QCoapRequest::~QCoapRequest" href="qcoaprequest.html#dtor.QCoapRequest" status="active" access="public" location="qcoaprequest.h" documented="true" meta="destructor" noexcept="true" signature="~QCoapRequest()"/>
+        </class>
+        <class threadsafety="reentrant" name="QCoapResource" href="qcoapresource.html" status="active" access="public" location="qcoapresource.h" documented="true" module="QtCoap" brief="Holds information about a discovered resource">
+            <function name="QCoapResource" fullname="QCoapResource::QCoapResource" href="qcoapresource.html#QCoapResource" status="active" access="public" location="qcoapresource.h" documented="true" meta="constructor" signature="QCoapResource()"/>
+            <function name="QCoapResource" fullname="QCoapResource::QCoapResource" href="qcoapresource.html#QCoapResource-1" status="active" access="public" location="qcoapresource.h" documented="true" meta="copy-constructor" overload="true" overload-number="1" signature="QCoapResource(const QCoapResource &amp;other)">
+                <parameter type="const QCoapResource &amp;" name="other" default=""/>
+            </function>
+            <function name="contentFormat" fullname="QCoapResource::contentFormat" href="qcoapresource.html#contentFormat" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" const="true" type="uint" signature="uint contentFormat() const"/>
+            <function name="host" fullname="QCoapResource::host" href="qcoapresource.html#host" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" const="true" type="QHostAddress" signature="QHostAddress host() const"/>
+            <function name="interface" fullname="QCoapResource::interface" href="qcoapresource.html#interface" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" const="true" type="QString" signature="QString interface() const"/>
+            <function name="maximumSize" fullname="QCoapResource::maximumSize" href="qcoapresource.html#maximumSize" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" const="true" type="int" signature="int maximumSize() const"/>
+            <function name="observable" fullname="QCoapResource::observable" href="qcoapresource.html#observable" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" const="true" type="bool" signature="bool observable() const"/>
+            <function name="operator=" fullname="QCoapResource::operator=" href="qcoapresource.html#operator-eq" status="active" access="public" location="qcoapresource.h" documented="true" meta="copy-assign" type="QCoapResource &amp;" signature="QCoapResource &amp; operator=(const QCoapResource &amp;other)">
+                <parameter type="const QCoapResource &amp;" name="other" default=""/>
+            </function>
+            <function name="path" fullname="QCoapResource::path" href="qcoapresource.html#path" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" const="true" type="QString" signature="QString path() const"/>
+            <function name="resourceType" fullname="QCoapResource::resourceType" href="qcoapresource.html#resourceType" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" const="true" type="QString" signature="QString resourceType() const"/>
+            <function name="setContentFormat" fullname="QCoapResource::setContentFormat" href="qcoapresource.html#setContentFormat" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" type="void" signature="void setContentFormat(uint contentFormat)">
+                <parameter type="uint" name="contentFormat" default=""/>
+            </function>
+            <function name="setHost" fullname="QCoapResource::setHost" href="qcoapresource.html#setHost" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" type="void" signature="void setHost(const QHostAddress &amp;host)">
+                <parameter type="const QHostAddress &amp;" name="host" default=""/>
+            </function>
+            <function name="setInterface" fullname="QCoapResource::setInterface" href="qcoapresource.html#setInterface" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" type="void" signature="void setInterface(const QString &amp;interface)">
+                <parameter type="const QString &amp;" name="interface" default=""/>
+            </function>
+            <function name="setMaximumSize" fullname="QCoapResource::setMaximumSize" href="qcoapresource.html#setMaximumSize" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" type="void" signature="void setMaximumSize(int maximumSize)">
+                <parameter type="int" name="maximumSize" default=""/>
+            </function>
+            <function name="setObservable" fullname="QCoapResource::setObservable" href="qcoapresource.html#setObservable" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" type="void" signature="void setObservable(bool observable)">
+                <parameter type="bool" name="observable" default=""/>
+            </function>
+            <function name="setPath" fullname="QCoapResource::setPath" href="qcoapresource.html#setPath" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" type="void" signature="void setPath(const QString &amp;path)">
+                <parameter type="const QString &amp;" name="path" default=""/>
+            </function>
+            <function name="setResourceType" fullname="QCoapResource::setResourceType" href="qcoapresource.html#setResourceType" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" type="void" signature="void setResourceType(const QString &amp;resourceType)">
+                <parameter type="const QString &amp;" name="resourceType" default=""/>
+            </function>
+            <function name="setTitle" fullname="QCoapResource::setTitle" href="qcoapresource.html#setTitle" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" type="void" signature="void setTitle(const QString &amp;title)">
+                <parameter type="const QString &amp;" name="title" default=""/>
+            </function>
+            <function name="swap" fullname="QCoapResource::swap" href="qcoapresource.html#swap" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" noexcept="true" type="void" signature="void swap(QCoapResource &amp;other)">
+                <parameter type="QCoapResource &amp;" name="other" default=""/>
+            </function>
+            <function name="title" fullname="QCoapResource::title" href="qcoapresource.html#title" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" const="true" type="QString" signature="QString title() const"/>
+            <function name="~QCoapResource" fullname="QCoapResource::~QCoapResource" href="qcoapresource.html#dtor.QCoapResource" status="active" access="public" location="qcoapresource.h" documented="true" meta="destructor" noexcept="true" signature="~QCoapResource()"/>
+        </class>
+        <class threadsafety="reentrant" name="QCoapResourceDiscoveryReply" href="qcoapresourcediscoveryreply.html" status="active" access="public" location="qcoapresourcediscoveryreply.h" documented="true" bases="QCoapReply" module="QtCoap" brief="Holds the data of a CoAP reply for a resource discovery request">
+            <function name="discovered" fullname="QCoapResourceDiscoveryReply::discovered" href="qcoapresourcediscoveryreply.html#discovered" status="active" access="public" location="qcoapresourcediscoveryreply.h" documented="true" meta="signal" type="void" signature="void discovered(QCoapResourceDiscoveryReply *reply, QList&lt;QCoapResource&gt; resources)">
+                <parameter type="QCoapResourceDiscoveryReply *" name="reply" default=""/>
+                <parameter type="QList&lt;QCoapResource&gt;" name="resources" default=""/>
+            </function>
+            <function name="resources" fullname="QCoapResourceDiscoveryReply::resources" href="qcoapresourcediscoveryreply.html#resources" status="active" access="public" location="qcoapresourcediscoveryreply.h" documented="true" meta="plain" const="true" type="QList&lt;QCoapResource&gt;" signature="QList&lt;QCoapResource&gt; resources() const"/>
+        </class>
+        <class name="QCoapSecurityConfiguration" href="qcoapsecurityconfiguration.html" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" module="QtCoap" brief="Holds configuration options during the authentication process">
+            <function name="QCoapSecurityConfiguration" fullname="QCoapSecurityConfiguration::QCoapSecurityConfiguration" href="qcoapsecurityconfiguration.html#QCoapSecurityConfiguration" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="constructor" signature="QCoapSecurityConfiguration()"/>
+            <function name="QCoapSecurityConfiguration" fullname="QCoapSecurityConfiguration::QCoapSecurityConfiguration" href="qcoapsecurityconfiguration.html#QCoapSecurityConfiguration-1" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="move-constructor" noexcept="true" overload="true" overload-number="1" signature="QCoapSecurityConfiguration(QCoapSecurityConfiguration &amp;&amp;other)">
+                <parameter type="QCoapSecurityConfiguration &amp;&amp;" name="other" default=""/>
+            </function>
+            <function name="QCoapSecurityConfiguration" fullname="QCoapSecurityConfiguration::QCoapSecurityConfiguration" href="qcoapsecurityconfiguration.html#QCoapSecurityConfiguration-2" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="copy-constructor" overload="true" overload-number="2" signature="QCoapSecurityConfiguration(const QCoapSecurityConfiguration &amp;other)">
+                <parameter type="const QCoapSecurityConfiguration &amp;" name="other" default=""/>
+            </function>
+            <function name="caCertificates" fullname="QCoapSecurityConfiguration::caCertificates" href="qcoapsecurityconfiguration.html#caCertificates" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" const="true" type="QList&lt;QSslCertificate&gt;" signature="QList&lt;QSslCertificate&gt; caCertificates() const"/>
+            <function name="defaultCipherString" fullname="QCoapSecurityConfiguration::defaultCipherString" href="qcoapsecurityconfiguration.html#defaultCipherString" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" const="true" type="QString" signature="QString defaultCipherString() const"/>
+            <function name="localCertificateChain" fullname="QCoapSecurityConfiguration::localCertificateChain" href="qcoapsecurityconfiguration.html#localCertificateChain" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" const="true" type="QList&lt;QSslCertificate&gt;" signature="QList&lt;QSslCertificate&gt; localCertificateChain() const"/>
+            <function name="operator=" fullname="QCoapSecurityConfiguration::operator=" href="qcoapsecurityconfiguration.html#operator-eq" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="copy-assign" type="QCoapSecurityConfiguration &amp;" signature="QCoapSecurityConfiguration &amp; operator=(const QCoapSecurityConfiguration &amp;other)">
+                <parameter type="const QCoapSecurityConfiguration &amp;" name="other" default=""/>
+            </function>
+            <function name="preSharedKey" fullname="QCoapSecurityConfiguration::preSharedKey" href="qcoapsecurityconfiguration.html#preSharedKey" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" const="true" type="QByteArray" signature="QByteArray preSharedKey() const"/>
+            <function name="preSharedKeyIdentity" fullname="QCoapSecurityConfiguration::preSharedKeyIdentity" href="qcoapsecurityconfiguration.html#preSharedKeyIdentity" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" const="true" type="QByteArray" signature="QByteArray preSharedKeyIdentity() const"/>
+            <function name="privateKey" fullname="QCoapSecurityConfiguration::privateKey" href="qcoapsecurityconfiguration.html#privateKey" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" const="true" type="QCoapPrivateKey" signature="QCoapPrivateKey privateKey() const"/>
+            <function name="setCaCertificates" fullname="QCoapSecurityConfiguration::setCaCertificates" href="qcoapsecurityconfiguration.html#setCaCertificates" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" type="void" signature="void setCaCertificates(const QList&lt;QSslCertificate&gt; &amp;certificates)">
+                <parameter type="const QList&lt;QSslCertificate&gt; &amp;" name="certificates" default=""/>
+            </function>
+            <function name="setDefaultCipherString" fullname="QCoapSecurityConfiguration::setDefaultCipherString" href="qcoapsecurityconfiguration.html#setDefaultCipherString" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" type="void" signature="void setDefaultCipherString(const QString &amp;cipherString)">
+                <parameter type="const QString &amp;" name="cipherString" default=""/>
+            </function>
+            <function name="setLocalCertificateChain" fullname="QCoapSecurityConfiguration::setLocalCertificateChain" href="qcoapsecurityconfiguration.html#setLocalCertificateChain" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" type="void" signature="void setLocalCertificateChain(const QList&lt;QSslCertificate&gt; &amp;localChain)">
+                <parameter type="const QList&lt;QSslCertificate&gt; &amp;" name="localChain" default=""/>
+            </function>
+            <function name="setPreSharedKey" fullname="QCoapSecurityConfiguration::setPreSharedKey" href="qcoapsecurityconfiguration.html#setPreSharedKey" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" type="void" signature="void setPreSharedKey(const QByteArray &amp;preSharedKey)">
+                <parameter type="const QByteArray &amp;" name="preSharedKey" default=""/>
+            </function>
+            <function name="setPreSharedKeyIdentity" fullname="QCoapSecurityConfiguration::setPreSharedKeyIdentity" href="qcoapsecurityconfiguration.html#setPreSharedKeyIdentity" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" type="void" signature="void setPreSharedKeyIdentity(const QByteArray &amp;identity)">
+                <parameter type="const QByteArray &amp;" name="identity" default=""/>
+            </function>
+            <function name="setPrivateKey" fullname="QCoapSecurityConfiguration::setPrivateKey" href="qcoapsecurityconfiguration.html#setPrivateKey" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" type="void" signature="void setPrivateKey(const QCoapPrivateKey &amp;key)">
+                <parameter type="const QCoapPrivateKey &amp;" name="key" default=""/>
+            </function>
+            <function name="swap" fullname="QCoapSecurityConfiguration::swap" href="qcoapsecurityconfiguration.html#swap" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="plain" noexcept="true" type="void" signature="void swap(QCoapSecurityConfiguration &amp;other)">
+                <parameter type="QCoapSecurityConfiguration &amp;" name="other" default=""/>
+            </function>
+            <function name="~QCoapSecurityConfiguration" fullname="QCoapSecurityConfiguration::~QCoapSecurityConfiguration" href="qcoapsecurityconfiguration.html#dtor.QCoapSecurityConfiguration" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="destructor" noexcept="true" signature="~QCoapSecurityConfiguration()"/>
+        </class>
+        <page name="qtcoap-index.html" href="qtcoap-index.html" status="active" location="qtcoap-index.qdoc" documented="true" subtype="page" title="Qt CoAP" fulltitle="Qt CoAP" subtitle="" brief="Provides classes and functions to make CoAP programming simple and portable">
+            <contents name="using-the-module" title="Using the Module" level="1"/>
+            <contents name="building-with-cmake" title="Building with CMake" level="2"/>
+            <contents name="building-with-qmake" title="Building with qmake" level="2"/>
+            <contents name="articles-and-guides" title="Articles and Guides" level="1"/>
+            <contents name="examples" title="Examples" level="1"/>
+            <contents name="reference" title="Reference" level="1"/>
+            <contents name="licenses-and-attributions" title="Licenses and Attributions" level="1"/>
+        </page>
+        <page name="qtcoap-overview.html" href="qtcoap-overview.html" status="active" location="qtcoap-overview.qdoc" documented="true" groups="explanations-networkingandconnectivity" subtype="page" title="Qt CoAP Overview" fulltitle="Qt CoAP Overview" subtitle="" brief="Provides insight into the CoAP protocol and the Qt CoAP module">
+            <contents name="messaging-model" title="Messaging Model" level="1"/>
+            <contents name="using-the-qt-coap-api" title="Using the Qt CoAP API" level="1"/>
+            <contents name="supported-features" title="Supported Features" level="1"/>
+            <contents name="resource-discovery" title="Resource Discovery" level="2"/>
+            <contents name="resource-observation" title="Resource Observation" level="2"/>
+            <contents name="blockwise-transfers" title="Blockwise Transfers" level="2"/>
+            <contents name="security" title="Security" level="2"/>
+        </page>
+        <page name="threads-reentrancy.html" href="threads-reentrancy.html" status="active" location="threads-reentrancy.qdoc" documented="true" subtype="page" title="Reentrancy and Thread-Safety" fulltitle="Reentrancy and Thread-Safety" subtitle="" brief="Definitions of reentrant and thread-safe used in Qt documentation">
+            <keyword name="reentrant"/>
+            <keyword name="thread-safe"/>
+        </page>
+        <page name="quickmulticastclient" href="qtcoap-quickmulticastclient-example.html" status="active" location="quickmulticastclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Quick CoAP Multicast Discovery" fulltitle="Quick CoAP Multicast Discovery" subtitle="" brief="Using the CoAP client for a multicast resource discovery with a Qt Quick user interface">
+            <contents name="running-the-example" title="Running the Example" level="1"/>
+            <contents name="setting-up-a-coap-server" title="Setting Up a CoAP Server" level="1"/>
+            <contents name="using-the-docker-based-test-server" title="Using the Docker-based Test Server" level="2"/>
+            <contents name="exposign-c-classes-to-qml" title="Exposign C++ Classes to QML" level="1"/>
+            <contents name="adjusting-build-files" title="Adjusting Build Files" level="1"/>
+            <contents name="cmake-build" title="CMake Build" level="2"/>
+            <contents name="qmake-build" title="qmake Build" level="2"/>
+            <contents name="using-new-qml-types" title="Using New QML Types" level="1"/>
+            <page name="quickmulticastclient/qmlcoapmulticastclient.cpp" href="qtcoap-quickmulticastclient-qmlcoapmulticastclient-cpp.html" status="active" subtype="file" title="" fulltitle="qmlcoapmulticastclient.cpp Example File" subtitle="quickmulticastclient/qmlcoapmulticastclient.cpp"/>
+            <page name="quickmulticastclient/qmlcoapmulticastclient.h" href="qtcoap-quickmulticastclient-qmlcoapmulticastclient-h.html" status="active" subtype="file" title="" fulltitle="qmlcoapmulticastclient.h Example File" subtitle="quickmulticastclient/qmlcoapmulticastclient.h"/>
+            <page name="quickmulticastclient/main.cpp" href="qtcoap-quickmulticastclient-main-cpp.html" status="active" subtype="file" title="" fulltitle="main.cpp Example File" subtitle="quickmulticastclient/main.cpp"/>
+            <page name="quickmulticastclient/CMakeLists.txt" href="qtcoap-quickmulticastclient-cmakelists-txt.html" status="active" subtype="file" title="" fulltitle="CMakeLists.txt Example File" subtitle="quickmulticastclient/CMakeLists.txt"/>
+            <page name="quickmulticastclient/qmldir" href="qtcoap-quickmulticastclient-qmldir.html" status="active" subtype="file" title="" fulltitle="qmldir Example File" subtitle="quickmulticastclient/qmldir"/>
+            <page name="quickmulticastclient/quickmulticastclient.pro" href="qtcoap-quickmulticastclient-quickmulticastclient-pro.html" status="active" subtype="file" title="" fulltitle="quickmulticastclient.pro Example File" subtitle="quickmulticastclient/quickmulticastclient.pro"/>
+        </page>
+        <page name="quicksecureclient" href="qtcoap-quicksecureclient-example.html" status="active" location="quicksecureclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Quick Secure CoAP Client" fulltitle="Quick Secure CoAP Client" subtitle="" brief="Securing the CoAP client and using it with a Qt Quick user interface">
+            <contents name="running-the-example" title="Running the Example" level="1"/>
+            <contents name="exposing-c-classes-to-qml" title="Exposing C++ Classes to QML" level="1"/>
+            <contents name="adjusting-build-files" title="Adjusting Build Files" level="1"/>
+            <contents name="cmake" title="CMake" level="2"/>
+            <contents name="qmake" title="qmake" level="2"/>
+            <contents name="using-new-qml-types" title="Using New QML Types" level="1"/>
+            <contents name="creating-the-client" title="Creating the Client" level="2"/>
+            <contents name="sending-a-request" title="Sending a Request" level="2"/>
+            <contents name="setting-up-a-secure-coap-server" title="Setting Up a Secure CoAP Server" level="1"/>
+            <contents name="setting-up-a-server-for-psk-mode" title="Setting Up a Server For PSK Mode" level="2"/>
+            <contents name="setting-up-a-server-for-certificate-mode" title="Setting Up a Server For Certificate Mode" level="2"/>
+            <contents name="getting-the-ip-address" title="Getting The IP Address" level="2"/>
+            <contents name="terminating-a-docker-container" title="Terminating a Docker Container" level="2"/>
+            <page name="quicksecureclient/qmlcoapsecureclient.cpp" href="qtcoap-quicksecureclient-qmlcoapsecureclient-cpp.html" status="active" subtype="file" title="" fulltitle="qmlcoapsecureclient.cpp Example File" subtitle="quicksecureclient/qmlcoapsecureclient.cpp"/>
+            <page name="quicksecureclient/qmlcoapsecureclient.h" href="qtcoap-quicksecureclient-qmlcoapsecureclient-h.html" status="active" subtype="file" title="" fulltitle="qmlcoapsecureclient.h Example File" subtitle="quicksecureclient/qmlcoapsecureclient.h"/>
+            <page name="quicksecureclient/main.cpp" href="qtcoap-quicksecureclient-main-cpp.html" status="active" subtype="file" title="" fulltitle="main.cpp Example File" subtitle="quicksecureclient/main.cpp"/>
+            <page name="quicksecureclient/CMakeLists.txt" href="qtcoap-quicksecureclient-cmakelists-txt.html" status="active" subtype="file" title="" fulltitle="CMakeLists.txt Example File" subtitle="quicksecureclient/CMakeLists.txt"/>
+            <page name="quicksecureclient/qmldir" href="qtcoap-quicksecureclient-qmldir.html" status="active" subtype="file" title="" fulltitle="qmldir Example File" subtitle="quicksecureclient/qmldir"/>
+            <page name="quicksecureclient/quicksecureclient.pro" href="qtcoap-quicksecureclient-quicksecureclient-pro.html" status="active" subtype="file" title="" fulltitle="quicksecureclient.pro Example File" subtitle="quicksecureclient/quicksecureclient.pro"/>
+        </page>
+        <page name="simplecoapclient" href="qtcoap-simplecoapclient-example.html" status="active" location="simplecoapclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Simple CoAP Client" fulltitle="Simple CoAP Client" subtitle="" brief="Creating an application that communicates with a CoAP server">
+            <contents name="running-the-example" title="Running the Example" level="1"/>
+            <contents name="setting-up-a-coap-server" title="Setting Up a CoAP Server" level="1"/>
+            <contents name="using-the-docker-based-test-server" title="Using the Docker-based Test Server" level="2"/>
+            <contents name="creating-a-client" title="Creating a Client" level="1"/>
+            <contents name="sending-requests" title="Sending Requests" level="1"/>
+            <page name="simplecoapclient/mainwindow.cpp" href="qtcoap-simplecoapclient-mainwindow-cpp.html" status="active" subtype="file" title="" fulltitle="mainwindow.cpp Example File" subtitle="simplecoapclient/mainwindow.cpp"/>
+            <page name="simplecoapclient/mainwindow.h" href="qtcoap-simplecoapclient-mainwindow-h.html" status="active" subtype="file" title="" fulltitle="mainwindow.h Example File" subtitle="simplecoapclient/mainwindow.h"/>
+            <page name="simplecoapclient/mainwindow.ui" href="qtcoap-simplecoapclient-mainwindow-ui.html" status="active" subtype="file" title="" fulltitle="mainwindow.ui Example File" subtitle="simplecoapclient/mainwindow.ui"/>
+            <page name="simplecoapclient/optiondialog.cpp" href="qtcoap-simplecoapclient-optiondialog-cpp.html" status="active" subtype="file" title="" fulltitle="optiondialog.cpp Example File" subtitle="simplecoapclient/optiondialog.cpp"/>
+            <page name="simplecoapclient/optiondialog.h" href="qtcoap-simplecoapclient-optiondialog-h.html" status="active" subtype="file" title="" fulltitle="optiondialog.h Example File" subtitle="simplecoapclient/optiondialog.h"/>
+            <page name="simplecoapclient/optiondialog.ui" href="qtcoap-simplecoapclient-optiondialog-ui.html" status="active" subtype="file" title="" fulltitle="optiondialog.ui Example File" subtitle="simplecoapclient/optiondialog.ui"/>
+            <page name="simplecoapclient/main.cpp" href="qtcoap-simplecoapclient-main-cpp.html" status="active" subtype="file" title="" fulltitle="main.cpp Example File" subtitle="simplecoapclient/main.cpp"/>
+            <page name="simplecoapclient/CMakeLists.txt" href="qtcoap-simplecoapclient-cmakelists-txt.html" status="active" subtype="file" title="" fulltitle="CMakeLists.txt Example File" subtitle="simplecoapclient/CMakeLists.txt"/>
+            <page name="simplecoapclient/simplecoapclient.pro" href="qtcoap-simplecoapclient-simplecoapclient-pro.html" status="active" subtype="file" title="" fulltitle="simplecoapclient.pro Example File" subtitle="simplecoapclient/simplecoapclient.pro"/>
+        </page>
+        <page name="https://coap.technology/" href="https://coap.technology/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="CoAP" fulltitle="CoAP" subtitle=""/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc7252" href="https://datatracker.ietf.org/doc/html/rfc7252" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7252" fulltitle="RFC 7252" subtitle=""/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc7252#section-4.2" href="https://datatracker.ietf.org/doc/html/rfc7252#section-4.2" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7252 - Section 4.2" fulltitle="RFC 7252 - Section 4.2" subtitle=""/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc7390" href="https://datatracker.ietf.org/doc/html/rfc7390" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7390" fulltitle="RFC 7390" subtitle=""/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc7390#section-2.5" href="https://datatracker.ietf.org/doc/html/rfc7390#section-2.5" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7390 - Section 2.5" fulltitle="RFC 7390 - Section 2.5" subtitle=""/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc7641" href="https://datatracker.ietf.org/doc/html/rfc7641" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7641" fulltitle="RFC 7641" subtitle=""/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc7959" href="https://datatracker.ietf.org/doc/html/rfc7959" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7959" fulltitle="RFC 7959" subtitle=""/>
+        <page name="https://doc.qt.io/qt-6/cmake-manual.html" href="https://doc.qt.io/qt-6/cmake-manual.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="CMake Documentation" fulltitle="CMake Documentation" subtitle=""/>
+        <page name="https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html" href="https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Build with CMake" fulltitle="Build with CMake" subtitle=""/>
+        <page name="https://doc.qt.io/qt-6/qcborstreamreader.html" href="https://doc.qt.io/qt-6/qcborstreamreader.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QCborStreamReader" fulltitle="QCborStreamReader" subtitle=""/>
+        <page name="https://doc.qt.io/qt-6/qcborstreamwriter.html" href="https://doc.qt.io/qt-6/qcborstreamwriter.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QCborStreamWriter" fulltitle="QCborStreamWriter" subtitle=""/>
+        <page name="https://doc.qt.io/qt-6/qnetworkinterface.html#isValid" href="https://doc.qt.io/qt-6/qnetworkinterface.html#isValid" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QNetworkInterface::isValid()" fulltitle="QNetworkInterface::isValid()" subtitle=""/>
+        <page name="https://doc.qt.io/qt-6/qobject.html#Q_INVOKABLE" href="https://doc.qt.io/qt-6/qobject.html#Q_INVOKABLE" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Q_INVOKABLE" fulltitle="Q_INVOKABLE" subtitle=""/>
+        <page name="https://doc.qt.io/qt-6/qobject.html#Q_PROPERTY" href="https://doc.qt.io/qt-6/qobject.html#Q_PROPERTY" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Q_PROPERTY" fulltitle="Q_PROPERTY" subtitle=""/>
+        <page name="https://doc.qt.io/qt-6/qqmlengine.html#QML_ANONYMOUS" href="https://doc.qt.io/qt-6/qqmlengine.html#QML_ANONYMOUS" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QML_ANONYMOUS" fulltitle="QML_ANONYMOUS" subtitle=""/>
+        <page name="https://doc.qt.io/qt-6/qqmlengine.html#QML_NAMED_ELEMENT" href="https://doc.qt.io/qt-6/qqmlengine.html#QML_NAMED_ELEMENT" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QML_NAMED_ELEMENT" fulltitle="QML_NAMED_ELEMENT" subtitle=""/>
+        <page name="https://doc.qt.io/qt-6/qtqml-cppintegration-definetypes.html" href="https://doc.qt.io/qt-6/qtqml-cppintegration-definetypes.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Defining QML Types from C++" fulltitle="Defining QML Types from C++" subtitle=""/>
+        <page name="https://doc.qt.io/qtcreator/" href="https://doc.qt.io/qtcreator/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Qt Creator Documentation" fulltitle="Qt Creator Documentation" subtitle=""/>
+        <page name="https://doc.qt.io/qtcreator/creator-build-example-application.html" href="https://doc.qt.io/qtcreator/creator-build-example-application.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Qt Creator: Tutorial: Build and run" fulltitle="Qt Creator: Tutorial: Build and run" subtitle=""/>
+        <page name="https://www.gnu.org/licenses/gpl-3.0.html" href="https://www.gnu.org/licenses/gpl-3.0.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="GNU General Public License, version 3" fulltitle="GNU General Public License, version 3" subtitle=""/>
+        <page name="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats" href="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="CoAP Content-Formats Registry" fulltitle="CoAP Content-Formats Registry" subtitle=""/>
+        <page name="https://www.qt.io/" href="https://www.qt.io/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="The Qt Company" fulltitle="The Qt Company" subtitle=""/>
+        <group name="category Connectivity" href="category-connectivity.html" status="internal" seen="false" title=""/>
+        <group name="explanations-networkingandconnectivity" href="explanations-networkingandconnectivity.html" status="internal" seen="false" title=""/>
+        <group name="modules" href="modules.html" status="internal" seen="false" title=""/>
+        <group name="qtcoap-examples" href="qtcoap-examples.html" status="active" location="examples.qdoc" documented="true" seen="true" title="Qt CoAP Examples" brief="List of Qt CoAP examples"/>
+        <module name="QtCoap" href="qtcoap-module.html" status="active" location="qtcoap-module-cpp.qdoc" documented="true" groups="modules" seen="true" title="Qt CoAP C++ Classes" brief="Provides classes to use CoAP protocol"/>
+    </namespace>
+</INDEX>
