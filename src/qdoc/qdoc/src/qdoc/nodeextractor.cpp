@@ -400,8 +400,12 @@ IR::CppReferenceData extractCppReferenceData(const Aggregate *aggregate, const H
         data.statusText = *statusOpt;
         if (aggregate->status() == Status::Deprecated)
             data.statusCssClass = "deprecated"_L1;
+        else if (!aggregate->deprecatedSince().isEmpty())
+            data.statusCssClass = "pending-deprecation"_L1;
         else if (aggregate->status() == Status::Preliminary)
             data.statusCssClass = "preliminary"_L1;
+        else
+            data.statusCssClass = "status"_L1;
     }
 
     if (aggregate->isClassNode()) {
