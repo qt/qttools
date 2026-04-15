@@ -940,6 +940,14 @@
 
     The documentation for this function is included on the reference
     page for class QChar, listed under the \e {Related Non-members} section.
+
+    \note When QDoc resolves unqualified function or type names in
+    documentation, it searches the context of the page where the
+    documentation appears. Because \\relates moves the documentation
+    to a different class's page, autolinks that worked in the
+    original context may no longer resolve. Use fully qualified
+    names or explicit \\l commands for cross-references to members
+    of the original class.
 */
 
 /*!
