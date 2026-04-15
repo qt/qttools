@@ -89,10 +89,8 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
     m_ui->iconSelector->setFormEditor(form->core());
     FormWindowBase *formBase = qobject_cast<FormWindowBase *>(form);
 
-    if (formBase) {
-        m_ui->iconSelector->setPixmapCache(formBase->pixmapCache());
+    if (formBase)
         m_ui->iconSelector->setIconCache(formBase->iconCache());
-    }
 }
 
 NewActionDialog::~NewActionDialog()

@@ -238,7 +238,6 @@ public:
     QAction *m_resetAllAction = nullptr;
     PropertySheetIconValue m_icon;
     DesignerIconCache *m_iconCache = nullptr;
-    DesignerPixmapCache *m_pixmapCache = nullptr;
     QtResourceModel *m_resourceModel = nullptr;
     QDesignerFormEditorInterface *m_core = nullptr;
 };
@@ -515,13 +514,6 @@ void IconSelector::setIconCache(DesignerIconCache *iconCache)
 {
     d_ptr->m_iconCache = iconCache;
     connect(iconCache, &DesignerIconCache::reloaded, this, [this] { d_ptr->slotUpdate(); });
-    d_ptr->slotUpdate();
-}
-
-void IconSelector::setPixmapCache(DesignerPixmapCache *pixmapCache)
-{
-    d_ptr->m_pixmapCache = pixmapCache;
-    connect(pixmapCache, &DesignerPixmapCache::reloaded, this, [this] { d_ptr->slotUpdate(); });
     d_ptr->slotUpdate();
 }
 

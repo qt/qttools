@@ -70,7 +70,6 @@ public:
 
     void setFormEditor(QDesignerFormEditorInterface *core); // required for dialog gui.
     void setIconCache(DesignerIconCache *iconCache);
-    void setPixmapCache(DesignerPixmapCache *pixmapCache);
 
     void setIcon(const PropertySheetIconValue &icon);
     PropertySheetIconValue icon() const;
