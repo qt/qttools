@@ -238,7 +238,7 @@ void tst_lupdate::good_data()
 #endif
 
     for (const QString &dir : dirs) {
-        QTest::newRow(dir.toLocal8Bit()) << dir;
+        QTest::newRow(dir.toLocal8Bit().constData()) << dir;
     }
 }
 
