@@ -10,8 +10,6 @@ qt_internal_add_plugin(QWebViewPlugin
     PLUGIN_TYPE designer
     SOURCES
         qwebview_plugin.cpp qwebview_plugin.h
-    DEFINES
-        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
     LIBRARIES
         Qt::Core
         Qt::Designer

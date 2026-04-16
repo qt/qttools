@@ -12,8 +12,6 @@ qt_internal_add_app(qtdiag
         qtdiag.cpp qtdiag.h
     LIBRARIES
         Qt::CorePrivate
-    DEFINES
-        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
 )
 set_target_properties(qtdiag PROPERTIES
     WIN32_EXECUTABLE FALSE

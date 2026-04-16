@@ -19,7 +19,6 @@ qt_internal_add_tool(${target_name}
         ../shared/ts.cpp
     DEFINES
         LINGUIST_CONSOLE_APPLICATION
-        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
     INCLUDE_DIRECTORIES
         ../shared
     LIBRARIES

@@ -18,8 +18,6 @@ qt_internal_add_tool(${target_name}
         ../shared/xmlparser.cpp ../shared/xmlparser.h
         ../shared/ts.cpp
         recorddirectory.h recorddirectory.cpp
-    DEFINES
-        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
     INCLUDE_DIRECTORIES
         ../shared
     LIBRARIES

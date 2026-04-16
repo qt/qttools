@@ -71,11 +71,6 @@ endif()
 
 qt_add_library(QDocLib STATIC ${qdoclib_sources})
 
-target_compile_definitions(QDocLib
-    PRIVATE
-        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
-)
-
 target_include_directories(QDocLib
     PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/src
@@ -201,7 +196,6 @@ qt_internal_add_tool(${target_name}
     ATTRIBUTION_FILE_DIR_PATHS
         src/qdoc/clang/AST
     DEFINES
-        "QT_ENABLE_STRICT_MODE_UP_TO=QT_VERSION_CHECK(6,11,0)"
         QT_NO_KEYWORDS
         # To provide the ability to workaround version-specific Clang issues.
         # A re-export of (LLVM|CLANG)_VERSION_MAJOR done in WrapLibClang.cmake
