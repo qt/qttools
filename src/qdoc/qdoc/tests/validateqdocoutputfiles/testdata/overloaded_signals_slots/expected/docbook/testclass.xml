@@ -62,6 +62,9 @@ connect(testClass, qOverload&lt;int&gt;(&amp;TestClass::dataChanged),
 <db:para>For more examples and approaches, see <db:link db:linkend="https://example.org/connecting-overloaded-signals">connecting to overloaded signals</db:link>.</db:para>
 </db:note>
 </db:section>
+<db:section xml:id="documentMe">
+<db:title>[signal] void TestClass::documentMe()</db:title>
+</db:section>
 <db:section xml:id="process">
 <db:title>[slot] void TestClass::process(const QString &amp;<db:emphasis>value</db:emphasis>)</db:title>
 <db:para>Processes a string <db:code role="parameter">value</db:code>.</db:para>
@@ -91,6 +94,9 @@ connect(sender, &amp;SenderClass::signal,
         testClass, [receiver = testClass](int value) { receiver-&gt;process(value); });</db:programlisting>
 <db:para>For more examples and approaches, see <db:link db:linkend="https://example.org/connecting-overloaded-slots">connecting to overloaded slots</db:link>.</db:para>
 </db:note>
+</db:section>
+<db:section xml:id="processDocs">
+<db:title>[slot] void TestClass::processDocs(const QString &amp;<db:emphasis>doc</db:emphasis>)</db:title>
 </db:section>
 </db:section>
 </db:article>

@@ -41,11 +41,13 @@
 <div class="table"><table class="alignedsummary" translate="no">
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#process" translate="no">process</a></b>(const QString &amp;<i>value</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#process-1" translate="no">process</a></b>(int <i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b>processDocs</b>(const QString &amp;<i>doc</i>)</td></tr>
 </table></div>
 <h2 id="signals">Signals</h2>
 <div class="table"><table class="alignedsummary" translate="no">
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#dataChanged" translate="no">dataChanged</a></b>(const QString &amp;<i>value</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testclass.html#dataChanged-1" translate="no">dataChanged</a></b>(int <i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b>documentMe</b>()</td></tr>
 </table></div>
 <!-- $$$TestClass-description -->
 <div class="descr">
@@ -89,6 +91,9 @@ connect(testClass, qOverload<int>(&TestClass::dataChanged),
 
 For more examples and approaches, see <a href="https://example.org/connecting-overloaded-signals">connecting to overloaded signals</a>.</p>
 </div><!-- @@@dataChanged -->
+<!-- $$$documentMe[overload1]$$$documentMe -->
+<h3 class="fn internal" translate="no" id="documentMe"><code class="details extra" translate="no">[signal]</code> <span class="type">void</span> TestClass::<span class="name">documentMe</span>()</h3>
+<!-- @@@documentMe -->
 <!-- $$$process[overload1]$$$processconstQString& -->
 <h3 class="fn" translate="no" id="process"><code class="details extra" translate="no">[slot]</code> <span class="type">void</span> TestClass::<span class="name">process</span>(const <span class="type">QString</span> &amp;<i>value</i>)</h3>
 <p>Processes a string <i translate="no">value</i>.</p>
@@ -119,6 +124,9 @@ connect(sender, &SenderClass::signal,
 
 For more examples and approaches, see <a href="https://example.org/connecting-overloaded-slots">connecting to overloaded slots</a>.</p>
 </div><!-- @@@process -->
+<!-- $$$processDocs[overload1]$$$processDocsconstQString& -->
+<h3 class="fn internal" translate="no" id="processDocs"><code class="details extra" translate="no">[slot]</code> <span class="type">void</span> TestClass::<span class="name">processDocs</span>(const <span class="type">QString</span> &amp;<i>doc</i>)</h3>
+<!-- @@@processDocs -->
 </div>
 </body>
 </html>

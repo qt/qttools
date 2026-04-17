@@ -24,6 +24,9 @@
                     <para>This signal is emitted when an integer <argument>value</argument> changes.</para>
                 </description>
             </function>
+            <function name="documentMe" fullname="TestClass::documentMe" href="testclass.html#documentMe" status="internal-auto" access="public" location="testclass.h" meta="signal" type="void" signature="void documentMe()">
+                <description/>
+            </function>
             <function name="process" fullname="TestClass::process" href="testclass.html#process" status="active" access="public" location="testclass.h" documented="true" meta="slot" type="void" signature="void process(const QString &amp;value)">
                 <parameter type="const QString &amp;" name="value" default=""/>
                 <description>
@@ -35,6 +38,10 @@
                 <description>
                     <para>Processes an integer <argument>value</argument>.</para>
                 </description>
+            </function>
+            <function name="processDocs" fullname="TestClass::processDocs" href="testclass.html#processDocs" status="internal-auto" access="public" location="testclass.h" meta="slot" type="void" signature="void processDocs(const QString &amp;doc)">
+                <parameter type="const QString &amp;" name="doc" default=""/>
+                <description/>
             </function>
         </class>
     </document>

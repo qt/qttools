@@ -17,14 +17,12 @@ public:
 signals:
     void dataChanged(int value);
     void dataChanged(const QString &value);
-    void internalStateChanged();
+    void documentMe();
 
 public slots:
     void process(int value);
     void process(const QString &value);
-
-private Q_SLOTS:
-    void _q_doProcess();
+    void processDocs(const QString &doc);
 };
 
 #endif // TESTCLASS_H
