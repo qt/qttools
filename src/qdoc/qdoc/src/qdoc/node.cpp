@@ -176,6 +176,8 @@ NodeContext Node::createContext() const
 {
     NodeContext context;
     context.type = nodeType();
+    if (isFunction())
+        context.metaness = static_cast<const FunctionNode *>(this)->metaness();
     context.isPrivate = isPrivate();
     context.isInternal = isInternal();
     context.isInternalAuto = isInternalAuto();

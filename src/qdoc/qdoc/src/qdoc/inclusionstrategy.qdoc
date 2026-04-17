@@ -165,6 +165,14 @@
 */
 
 /*!
+    \variable NodeContext::metaness
+    \brief Stores the kind of function the node represents.
+
+    Valid if \l type is NodeType::Function, \c std::nullopt
+    otherwise.
+*/
+
+/*!
     \variable NodeContext::isPrivate
     \brief Whether the node has private access level.
 

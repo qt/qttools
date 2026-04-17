@@ -9,11 +9,14 @@
 
 #include <QtGlobal>
 
+#include <optional>
+
 QT_BEGIN_NAMESPACE
 
 struct NodeContext
 {
     NodeType type {NodeType::NoType};
+    std::optional<Metaness> metaness {};
     bool isPrivate {false};
     bool isInternal {false};
     bool isInternalAuto {false};

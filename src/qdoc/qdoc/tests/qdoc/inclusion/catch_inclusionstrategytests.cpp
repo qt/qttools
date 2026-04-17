@@ -91,6 +91,25 @@ TEST_CASE("NodeContext correctly captures internal status", "[NodeContext]")
         REQUIRE(context.isInternal == true);
         REQUIRE(context.isInternalAuto == false);
     }
+    SECTION("Default NodeContext has no metaness")
+    {
+        NodeContext context;
+        REQUIRE(context.metaness == std::nullopt);
+    }
+
+    SECTION("NodeContext metaness can be set to Signal")
+    {
+        NodeContext context;
+        context.metaness = Metaness::Signal;
+        REQUIRE(context.metaness == Metaness::Signal);
+    }
+
+    SECTION("NodeContext metaness can be set to Slot")
+    {
+        NodeContext context;
+        context.metaness = Metaness::Slot;
+        REQUIRE(context.metaness == Metaness::Slot);
+    }
 }
 
 TEST_CASE("NodeContext toFlags() behavior", "[NodeContext]")
