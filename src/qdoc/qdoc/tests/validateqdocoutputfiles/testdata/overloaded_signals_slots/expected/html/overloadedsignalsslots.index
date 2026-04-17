@@ -12,11 +12,15 @@
             <function name="dataChanged" fullname="TestClass::dataChanged" href="testclass.html#dataChanged-1" status="active" access="public" location="testclass.h" documented="true" meta="signal" overload="true" overload-number="1" type="void" signature="void dataChanged(int value)">
                 <parameter type="int" name="value" default=""/>
             </function>
+            <function name="documentMe" fullname="TestClass::documentMe" href="testclass.html#documentMe" status="internal-auto" access="public" location="testclass.h" meta="signal" type="void" signature="void documentMe()"/>
             <function name="process" fullname="TestClass::process" href="testclass.html#process" status="active" access="public" location="testclass.h" documented="true" meta="slot" type="void" signature="void process(const QString &amp;value)">
                 <parameter type="const QString &amp;" name="value" default=""/>
             </function>
             <function name="process" fullname="TestClass::process" href="testclass.html#process-1" status="active" access="public" location="testclass.h" documented="true" meta="slot" overload="true" overload-number="1" type="void" signature="void process(int value)">
                 <parameter type="int" name="value" default=""/>
+            </function>
+            <function name="processDocs" fullname="TestClass::processDocs" href="testclass.html#processDocs" status="internal-auto" access="public" location="testclass.h" meta="slot" type="void" signature="void processDocs(const QString &amp;doc)">
+                <parameter type="const QString &amp;" name="doc" default=""/>
             </function>
         </class>
         <module name="OverloadedSignalsSlots" href="overloadedsignalsslots-module.html" status="active" documented="true" seen="true" title="Overloaded Signals Slots Test Module" brief="Test module for overloaded signals and slots"/>

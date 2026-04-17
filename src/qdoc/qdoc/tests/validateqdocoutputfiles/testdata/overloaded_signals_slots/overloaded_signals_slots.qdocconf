@@ -23,5 +23,9 @@ locationinfo = false
 overloadedsignalstarget = https://example.org/connecting-overloaded-signals
 overloadedslotstarget = https://example.org/connecting-overloaded-slots
 
-warninglimit = 0
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+# Accept two warnings for undocumented signal and slot
+warninglimit = 2
 warninglimit.enabled = true

@@ -663,7 +663,7 @@ void Sections::distributeNodeInSummaryVector(SectionVector &sv, Node *n)
             else
                 sv[ProtectedSlots].insert(fn);
         } else if (fn->isSignal()) {
-            if (fn->isPublic() && fn->isInAPI())
+            if (fn->isPublic())
                 sv[Signals].insert(fn);
         } else if (fn->isPublic()) {
             if (fn->isStatic() && fn->isInAPI())

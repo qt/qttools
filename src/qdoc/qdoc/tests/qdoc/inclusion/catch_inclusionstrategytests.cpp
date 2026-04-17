@@ -755,3 +755,274 @@ TEST_CASE("InclusionFilter auto-generated docs filtering", "[InclusionFilter]")
     }
 }
 
+TEST_CASE("InclusionFilter isInternalAuto behavior", "[InclusionFilter]")
+{
+    SECTION("InternalAuto non-signal is excluded when showInternal is false")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isInternalAuto = true;
+        context.metaness = Metaness::Plain;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == false);
+    }
+
+    SECTION("InternalAuto signal is included even when showInternal is false")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isInternalAuto = true;
+        context.metaness = Metaness::Signal;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == true);
+    }
+
+    SECTION("InternalAuto slot is included even when showInternal is false")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isInternalAuto = true;
+        context.metaness = Metaness::Slot;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == true);
+    }
+
+    SECTION("InternalAuto signal is included when showInternal is true")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isInternalAuto = true;
+        context.metaness = Metaness::Signal;
+
+        InclusionPolicy policy;
+        policy.showInternal = true;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == true);
+    }
+
+    SECTION("Explicitly internal signal is excluded when showInternal is false")
+    {
+        // Status::Internal: isInternal=true, isInternalAuto=false
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isInternal = true;
+        context.isInternalAuto = false;
+        context.metaness = Metaness::Signal;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == false);
+    }
+
+    SECTION("Status::InternalAuto signal is included when showInternal is false")
+    {
+        // Status::InternalAuto causes both isInternal and isInternalAuto to be true
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isInternal = true;
+        context.isInternalAuto = true;
+        context.metaness = Metaness::Signal;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == true);
+    }
+
+    SECTION("Status::InternalAuto non-signal is excluded when showInternal is false")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isInternal = true;
+        context.isInternalAuto = true;
+        context.metaness = Metaness::Plain;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isIncluded(policy, context) == false);
+    }
+}
+
+TEST_CASE("InclusionFilter requiresDocumentation for signals and slots", "[InclusionFilter]")
+{
+    SECTION("Signal requires documentation when not internal")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.metaness = Metaness::Signal;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::requiresDocumentation(policy, context) == true);
+    }
+
+    SECTION("Slot requires documentation when not internal")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.metaness = Metaness::Slot;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::requiresDocumentation(policy, context) == true);
+    }
+
+    SECTION("Explicitly internal signal does not require documentation")
+    {
+        // Status::Internal: isInternal=true, isInternalAuto=false
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.metaness = Metaness::Signal;
+        context.isInternal = true;
+        context.isInternalAuto = false;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::requiresDocumentation(policy, context) == false);
+    }
+
+    SECTION("Status::InternalAuto signal requires documentation despite isInternal")
+    {
+        // Status::InternalAuto causes both isInternal and isInternalAuto to be true.
+        // Signals with InternalAuto status are still expected to be documented.
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.metaness = Metaness::Signal;
+        context.isInternal = true;
+        context.isInternalAuto = true;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::requiresDocumentation(policy, context) == true);
+    }
+
+    SECTION("Status::InternalAuto slot requires documentation despite isInternal")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.metaness = Metaness::Slot;
+        context.isInternal = true;
+        context.isInternalAuto = true;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::requiresDocumentation(policy, context) == true);
+    }
+}
+
+TEST_CASE("InclusionFilter isPubliclyVisible with isInternalAuto", "[InclusionFilter]")
+{
+    SECTION("Non-internal node is publicly visible")
+    {
+        NodeContext context;
+        context.isInternal = false;
+        context.isInternalAuto = false;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isPubliclyVisible(policy, context) == true);
+    }
+
+    SECTION("InternalAuto node is not publicly visible when showInternal is false")
+    {
+        NodeContext context;
+        context.isInternalAuto = true;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isPubliclyVisible(policy, context) == false);
+    }
+
+    SECTION("InternalAuto node is publicly visible when showInternal is true")
+    {
+        NodeContext context;
+        context.isInternalAuto = true;
+
+        InclusionPolicy policy;
+        policy.showInternal = true;
+
+        REQUIRE(InclusionFilter::isPubliclyVisible(policy, context) == true);
+    }
+
+    SECTION("Explicitly internal node is not publicly visible when showInternal is false")
+    {
+        NodeContext context;
+        context.isInternal = true;
+        context.isInternalAuto = false;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isPubliclyVisible(policy, context) == false);
+    }
+
+    SECTION("InternalAuto signal is publicly visible even when showInternal is false")
+    {
+        NodeContext context;
+        context.isInternalAuto = true;
+        context.metaness = Metaness::Signal;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isPubliclyVisible(policy, context) == true);
+    }
+
+    SECTION("InternalAuto slot is publicly visible even when showInternal is false")
+    {
+        NodeContext context;
+        context.isInternalAuto = true;
+        context.metaness = Metaness::Slot;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isPubliclyVisible(policy, context) == true);
+    }
+
+    SECTION("Explicitly internal signal is not publicly visible when showInternal is false")
+    {
+        // Status::Internal: isInternal=true, isInternalAuto=false
+        NodeContext context;
+        context.isInternal = true;
+        context.isInternalAuto = false;
+        context.metaness = Metaness::Signal;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isPubliclyVisible(policy, context) == false);
+    }
+
+    SECTION("Status::InternalAuto signal is publicly visible when showInternal is false")
+    {
+        // Status::InternalAuto causes both isInternal and isInternalAuto to be true
+        NodeContext context;
+        context.isInternal = true;
+        context.isInternalAuto = true;
+        context.metaness = Metaness::Signal;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        REQUIRE(InclusionFilter::isPubliclyVisible(policy, context) == true);
+    }
+}

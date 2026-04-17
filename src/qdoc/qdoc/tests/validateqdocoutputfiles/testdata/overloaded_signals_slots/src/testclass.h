@@ -17,10 +17,12 @@ public:
 signals:
     void dataChanged(int value);
     void dataChanged(const QString &value);
+    void documentMe();
 
 public slots:
     void process(int value);
     void process(const QString &value);
+    void processDocs(const QString &doc);
 };
 
 #endif // TESTCLASS_H
