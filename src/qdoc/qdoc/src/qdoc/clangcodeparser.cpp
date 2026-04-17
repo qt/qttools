@@ -1753,9 +1753,9 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
         if (kind == CXCursor_AnnotateAttr) {
             QString annotation = fromCXString(clang_getCursorDisplayName(cur));
             if (annotation == QLatin1String("qt_slot")) {
-                fn->setMetaness(FunctionNode::Slot);
+                fn->setMetaness(Metaness::Slot);
             } else if (annotation == QLatin1String("qt_signal")) {
-                fn->setMetaness(FunctionNode::Signal);
+                fn->setMetaness(Metaness::Signal);
             }
             if (annotation == QLatin1String("qt_invokable"))
                 fn->setInvokable(true);
@@ -1814,9 +1814,9 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     if (kind == CXCursor_Constructor
         // a constructor template is classified as CXCursor_FunctionTemplate
         || (kind == CXCursor_FunctionTemplate && fn->name() == parent_->name()))
-        fn->setMetaness(FunctionNode::Ctor);
+        fn->setMetaness(Metaness::Ctor);
     else if (kind == CXCursor_Destructor)
-        fn->setMetaness(FunctionNode::Dtor);
+        fn->setMetaness(Metaness::Dtor);
     else if (kind != CXCursor_ConversionFunction)
         fn->setReturnType(QString::fromStdString(get_fully_qualified_type_name(
             function_declaration->getReturnType(),
@@ -1825,8 +1825,8 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
 
     const clang::CXXConstructorDecl* constructor_declaration = llvm::dyn_cast<const clang::CXXConstructorDecl>(function_declaration);
 
-    if (constructor_declaration && constructor_declaration->isCopyConstructor()) fn->setMetaness(FunctionNode::CCtor);
-    else if (constructor_declaration && constructor_declaration->isMoveConstructor()) fn->setMetaness(FunctionNode::MCtor);
+    if (constructor_declaration && constructor_declaration->isCopyConstructor()) fn->setMetaness(Metaness::CCtor);
+    else if (constructor_declaration && constructor_declaration->isMoveConstructor()) fn->setMetaness(Metaness::MCtor);
 
     const clang::CXXConversionDecl* conversion_declaration = llvm::dyn_cast<const clang::CXXConversionDecl>(function_declaration);
 
@@ -1840,8 +1840,8 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
 
     const clang::CXXMethodDecl* method_declaration = llvm::dyn_cast<const clang::CXXMethodDecl>(function_declaration);
 
-    if (method_declaration && method_declaration->isCopyAssignmentOperator()) fn->setMetaness(FunctionNode::CAssign);
-    else if (method_declaration && method_declaration->isMoveAssignmentOperator()) fn->setMetaness(FunctionNode::MAssign);
+    if (method_declaration && method_declaration->isCopyAssignmentOperator()) fn->setMetaness(Metaness::CAssign);
+    else if (method_declaration && method_declaration->isMoveAssignmentOperator()) fn->setMetaness(Metaness::MAssign);
 
     const clang::FunctionType* function_type = function_declaration->getFunctionType();
     const clang::FunctionProtoType* function_prototype = static_cast<const clang::FunctionProtoType*>(function_type);

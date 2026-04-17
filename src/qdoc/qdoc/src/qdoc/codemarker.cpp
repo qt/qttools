@@ -416,13 +416,13 @@ QString CodeMarker::taggedQmlNode(const Node *node)
     if (node->isFunction()) {
         const auto *fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
-        case FunctionNode::QmlSignal:
+        case Metaness::QmlSignal:
             tag = QLatin1String("@signal");
             break;
-        case FunctionNode::QmlSignalHandler:
+        case Metaness::QmlSignalHandler:
             tag = QLatin1String("@signalhandler");
             break;
-        case FunctionNode::QmlMethod:
+        case Metaness::QmlMethod:
             tag = QLatin1String("@method");
             break;
         default:

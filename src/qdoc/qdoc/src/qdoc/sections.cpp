@@ -442,13 +442,13 @@ Sections::Sections(const NodeMultiMap &nsmap)
         case NodeType::Function: {
             const auto *fn = static_cast<const FunctionNode *>(node);
             switch (fn->metaness()) {
-            case FunctionNode::QmlSignal:
+            case Metaness::QmlSignal:
                 m_sinceSections[SinceQmlSignals].appendMember(node);
                 break;
-            case FunctionNode::QmlSignalHandler:
+            case Metaness::QmlSignalHandler:
                 m_sinceSections[SinceQmlSignalHandlers].appendMember(node);
                 break;
-            case FunctionNode::QmlMethod:
+            case Metaness::QmlMethod:
                 m_sinceSections[SinceQmlMethods].appendMember(node);
                 break;
             default:

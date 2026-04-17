@@ -736,7 +736,7 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     auto *aggregate = findOrCreateQmlType((*methodArgs).m_module,
                                           (*methodArgs).m_qmltype, location);
 
-    FunctionNode::Metaness metaness = FunctionNode::getMetanessFromTopic(topic);
+    Metaness metaness = FunctionNode::getMetanessFromTopic(topic);
     bool attached = topic.contains("attached"_L1);
     auto *fn = new FunctionNode(metaness, aggregate, (*methodArgs).m_name, attached);
     fn->setAccess(Access::Public);
@@ -786,9 +786,9 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
         returnType += QChar(' ') + macroName.left(i);
         macroName = macroName.mid(i);
     }
-    FunctionNode::Metaness metaness = FunctionNode::MacroWithParams;
+    Metaness metaness = Metaness::MacroWithParams;
     if (params.isNull())
-        metaness = FunctionNode::MacroWithoutParams;
+        metaness = Metaness::MacroWithoutParams;
     auto *macro = new FunctionNode(metaness, database->primaryTreeRoot(), macroName);
     macro->setAccess(Access::Public);
     macro->setLocation(location);

@@ -47,13 +47,13 @@ QString computeAnchorId(const Node *node)
     case NodeType::Function: {
         const auto *fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
-        case FunctionNode::QmlSignal:
+        case Metaness::QmlSignal:
             ref = fn->name() + "-signal"_L1;
             break;
-        case FunctionNode::QmlSignalHandler:
+        case Metaness::QmlSignalHandler:
             ref = fn->name() + "-signal-handler"_L1;
             break;
-        case FunctionNode::QmlMethod:
+        case Metaness::QmlMethod:
             ref = fn->name() + "-method"_L1;
             if (fn->overloadNumber() != 0)
                 ref += '-'_L1 + QString::number(fn->overloadNumber());

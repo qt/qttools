@@ -473,7 +473,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
     } else if (elementName == QLatin1String("function")) {
         QString t = attributes.value(QLatin1String("meta")).toString();
         bool attached = false;
-        FunctionNode::Metaness metaness = FunctionNode::Plain;
+        Metaness metaness = Metaness::Plain;
         if (!t.isEmpty())
             metaness = FunctionNode::getMetaness(t);
         if (attributes.value(QLatin1String("attached")) == QLatin1String("true"))

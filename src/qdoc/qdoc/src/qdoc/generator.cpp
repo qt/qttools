@@ -492,13 +492,13 @@ QString Generator::fullDocumentLocation(const Node *node) const
     case NodeType::Function: {
         const auto *fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
-        case FunctionNode::QmlSignal:
+        case Metaness::QmlSignal:
             anchorRef = QLatin1Char('#') + node->name() + "-signal";
             break;
-        case FunctionNode::QmlSignalHandler:
+        case Metaness::QmlSignalHandler:
             anchorRef = QLatin1Char('#') + node->name() + "-signal-handler";
             break;
-        case FunctionNode::QmlMethod:
+        case Metaness::QmlMethod:
             anchorRef = QLatin1Char('#') + node->name() + "-method";
             break;
         default:
@@ -2427,14 +2427,14 @@ QString Generator::typeString(const Node *node, bool plural)
     case NodeType::Function: {
         const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
-        case FunctionNode::QmlSignal:
+        case Metaness::QmlSignal:
             return plural ? "signals"_L1 : "signal"_L1;
-        case FunctionNode::QmlSignalHandler:
+        case Metaness::QmlSignalHandler:
             return plural ? "signal handlers"_L1 : "signal handler"_L1;
-        case FunctionNode::QmlMethod:
+        case Metaness::QmlMethod:
             return plural ? "methods"_L1 : "method"_L1;
-        case FunctionNode::MacroWithParams:
-        case FunctionNode::MacroWithoutParams:
+        case Metaness::MacroWithParams:
+        case Metaness::MacroWithoutParams:
             return plural ? "macros"_L1 : "macro"_L1;
         default:
             break;

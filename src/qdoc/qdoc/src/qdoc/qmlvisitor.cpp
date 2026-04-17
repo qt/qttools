@@ -611,7 +611,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
         if (m_current->isQmlType()) {
             auto *qmlType = static_cast<QmlTypeNode *>(m_current);
             if (qmlType) {
-                FunctionNode::Metaness metaness = FunctionNode::QmlSignal;
+                Metaness metaness = Metaness::QmlSignal;
                 QString name = member->name.toString();
                 auto *newSignal = new FunctionNode(metaness, m_current, name);
                 Parameters &parameters = newSignal->parameters();
@@ -672,7 +672,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::IdentifierPropertyName *)
 bool QmlDocVisitor::visit(QQmlJS::AST::FunctionDeclaration *fd)
 {
     if (m_nestingLevel <= 1) {
-        FunctionNode::Metaness metaness = FunctionNode::QmlMethod;
+        Metaness metaness = Metaness::QmlMethod;
         if (!m_current->isQmlType())
             return true;
         QString name = fd->name.toString();

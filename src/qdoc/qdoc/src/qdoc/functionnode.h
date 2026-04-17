@@ -20,24 +20,6 @@ class FunctionNode : public Node
 public:
     enum Virtualness { NonVirtual, NormalVirtual, PureVirtual };
 
-    enum Metaness {
-        Plain,
-        Signal,
-        Slot,
-        Ctor,
-        Dtor,
-        CCtor, // copy constructor
-        MCtor, // move-copy constructor
-        MacroWithParams,
-        MacroWithoutParams,
-        Native,
-        CAssign, // copy-assignment operator
-        MAssign, // move-assignment operator
-        QmlSignal,
-        QmlSignalHandler,
-        QmlMethod,
-    };
-
     FunctionNode(Aggregate *parent, const QString &name); // C++ function (Plain)
     FunctionNode(Metaness type, Aggregate *parent, const QString &name, bool attached = false);
 
@@ -71,8 +53,8 @@ public:
     [[nodiscard]] bool isOverload() const { return m_overloadFlag; }
     [[nodiscard]] bool isMarkedReimp() const override { return m_reimpFlag; }
     [[nodiscard]] bool isSomeCtor() const { return isCtor() || isCCtor() || isMCtor(); }
-    [[nodiscard]] bool isMacroWithParams() const { return (m_metaness == MacroWithParams); }
-    [[nodiscard]] bool isMacroWithoutParams() const { return (m_metaness == MacroWithoutParams); }
+    [[nodiscard]] bool isMacroWithParams() const { return (m_metaness == Metaness::MacroWithParams); }
+    [[nodiscard]] bool isMacroWithoutParams() const { return (m_metaness == Metaness::MacroWithoutParams); }
     [[nodiscard]] bool isMacro() const override
     {
         return (isMacroWithParams() || isMacroWithoutParams());
@@ -105,19 +87,19 @@ public:
     }
     const std::optional<QString>& trailingRequiresClause() const { return m_trailingRequiresClause; }
 
-    [[nodiscard]] bool isCppFunction() const { return m_metaness == Plain; } // Is this correct?
-    [[nodiscard]] bool isSignal() const { return (m_metaness == Signal); }
-    [[nodiscard]] bool isSlot() const { return (m_metaness == Slot); }
-    [[nodiscard]] bool isCtor() const { return (m_metaness == Ctor); }
-    [[nodiscard]] bool isDtor() const { return (m_metaness == Dtor); }
-    [[nodiscard]] bool isCCtor() const { return (m_metaness == CCtor); }
-    [[nodiscard]] bool isMCtor() const { return (m_metaness == MCtor); }
-    [[nodiscard]] bool isCAssign() const { return (m_metaness == CAssign); }
-    [[nodiscard]] bool isMAssign() const { return (m_metaness == MAssign); }
+    [[nodiscard]] bool isCppFunction() const { return m_metaness == Metaness::Plain; } // Is this correct?
+    [[nodiscard]] bool isSignal() const { return (m_metaness == Metaness::Signal); }
+    [[nodiscard]] bool isSlot() const { return (m_metaness == Metaness::Slot); }
+    [[nodiscard]] bool isCtor() const { return (m_metaness == Metaness::Ctor); }
+    [[nodiscard]] bool isDtor() const { return (m_metaness == Metaness::Dtor); }
+    [[nodiscard]] bool isCCtor() const { return (m_metaness == Metaness::CCtor); }
+    [[nodiscard]] bool isMCtor() const { return (m_metaness == Metaness::MCtor); }
+    [[nodiscard]] bool isCAssign() const { return (m_metaness == Metaness::CAssign); }
+    [[nodiscard]] bool isMAssign() const { return (m_metaness == Metaness::MAssign); }
 
-    [[nodiscard]] bool isQmlMethod() const { return (m_metaness == QmlMethod); }
-    [[nodiscard]] bool isQmlSignal() const { return (m_metaness == QmlSignal); }
-    [[nodiscard]] bool isQmlSignalHandler() const { return (m_metaness == QmlSignalHandler); }
+    [[nodiscard]] bool isQmlMethod() const { return (m_metaness == Metaness::QmlMethod); }
+    [[nodiscard]] bool isQmlSignal() const { return (m_metaness == Metaness::QmlSignal); }
+    [[nodiscard]] bool isQmlSignalHandler() const { return (m_metaness == Metaness::QmlSignalHandler); }
 
     [[nodiscard]] bool isSpecialMemberFunction() const
     {

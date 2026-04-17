@@ -201,6 +201,46 @@ enum class QmlNativeTypeAttribute : unsigned char {
     Uncreatable
 };
 
+/*!
+    \enum Metaness
+    \relates genustypes.h
+
+    Specifies the kind of function a FunctionNode represents.
+
+    \value Plain       A plain C++ function.
+    \value Signal      A Qt signal.
+    \value Slot        A Qt slot.
+    \value Ctor        A constructor.
+    \value Dtor        A destructor.
+    \value CCtor       A copy constructor.
+    \value MCtor       A move constructor.
+    \value MacroWithParams    A macro that takes parameters.
+    \value MacroWithoutParams A macro that takes no parameters.
+    \value Native      A native (non-virtual) function.
+    \value CAssign     A copy-assignment operator.
+    \value MAssign     A move-assignment operator.
+    \value QmlSignal         A QML signal.
+    \value QmlSignalHandler  A QML signal handler.
+    \value QmlMethod         A QML method.
+*/
+enum class Metaness : unsigned char {
+    Plain,
+    Signal,
+    Slot,
+    Ctor,
+    Dtor,
+    CCtor,
+    MCtor,
+    MacroWithParams,
+    MacroWithoutParams,
+    Native,
+    CAssign,
+    MAssign,
+    QmlSignal,
+    QmlSignalHandler,
+    QmlMethod,
+};
+
 QT_END_NAMESPACE
 
 #endif // GENUSTYPES_H
