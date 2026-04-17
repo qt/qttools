@@ -18,6 +18,6 @@
         <variable name="globalVar" href="testheader.html#globalVar-var" status="active" access="public" location="testheader.h" related="2" documented="true" type="const int" static="false" brief="Global variable"/>
         <group name="headers" href="headers.html" status="active" documented="true" seen="true" title="Headers"/>
         <group name="tests" href="tests.html" status="active" documented="true" seen="true" title="Tests"/>
-        <module name="TestCPP" href="testcpp-module.html" status="internal" seen="false" title=""/>
+        <module name="TestCPP" href="testcpp-module.html" status="internal-auto" seen="false" title=""/>
     </namespace>
 </INDEX>

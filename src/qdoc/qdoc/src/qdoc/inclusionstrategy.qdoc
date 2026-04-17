@@ -46,8 +46,14 @@
            to the general \c{includeprivate} option.
 
     \value Internal
-           Internal API elements marked with \\internal. Corresponds to the
-           \c{showinternal} configuration option and command line flag.
+           Internal API elements explicitly marked with \\internal.
+           Corresponds to the \c{showinternal} configuration option and command
+           line flag, together with \c InternalAuto.
+
+    \value InternalAuto
+           API elements that QDoc has automatically determined to be internal.
+           Like \c Internal, corresponds to the \c{showinternal} configuration
+           option/command line flag.
 
     \sa InclusionFlags, InclusionPolicy
 */
@@ -139,7 +145,8 @@
     \list
     \li The node's type (function, class, variable, etc.)
     \li Whether the node has private access
-    \li Whether the node is marked as internal
+    \li Whether the node is explicitly marked as \internal
+    \li Whether the node is automatically determined to be internal
     \li Whether the node is a pure virtual function
     \endlist
 
@@ -167,10 +174,18 @@
 
 /*!
     \variable NodeContext::isInternal
-    \brief Whether the node is marked as internal API.
+    \brief Whether the node is explicitly marked as internal API.
 
     True if the node is marked with \\internal documentation command,
     indicating it's internal API not intended for public consumption.
+*/
+
+/*!
+    \variable NodeContext::isInternalAuto
+    \brief Whether the node is automatically determined to be internal.
+
+    True if the node is automatically marked as internal, for example,
+    because it is undocumented.
 */
 
 /*!

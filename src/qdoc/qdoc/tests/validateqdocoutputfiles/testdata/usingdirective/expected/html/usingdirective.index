@@ -10,6 +10,6 @@
                 <parameter type="Space::spacename" name="space" default=""/>
             </function>
         </namespace>
-        <module name="UsingDirective" href="usingdirective-module.html" status="internal" seen="false" title=""/>
+        <module name="UsingDirective" href="usingdirective-module.html" status="internal-auto" seen="false" title=""/>
     </namespace>
 </INDEX>

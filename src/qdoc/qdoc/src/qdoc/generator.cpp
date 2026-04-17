@@ -1357,6 +1357,7 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
         text << Atom::ParaRight;
         break;
     case Status::Internal:
+    case Status::InternalAuto:
         if (node->isPageNode())
             text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
                  << "Part of developer documentation for internal use."

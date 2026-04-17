@@ -118,6 +118,8 @@ inline QJsonObject statusToJson(Status s)
         return classificationObject("active"_L1, "Active"_L1);
     case Status::Internal:
         return classificationObject("internal"_L1, "Internal"_L1);
+    case Status::InternalAuto:
+        return classificationObject("internal-auto"_L1, "Internal (auto)"_L1);
     case Status::DontDocument:
         return classificationObject("ignored"_L1, "Ignored"_L1);
     }

@@ -8,6 +8,6 @@
             <contents name="quoting-whole-files" title="Quoting whole files" level="1"/>
             <contents name="quoting-parts-of-files" title="Quoting parts of files" level="1"/>
         </page>
-        <module name="CodeLanguages" href="codelanguages-module.html" status="internal" seen="false" title=""/>
+        <module name="CodeLanguages" href="codelanguages-module.html" status="internal-auto" seen="false" title=""/>
     </namespace>
 </INDEX>

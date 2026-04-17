@@ -14,6 +14,6 @@
         <class name="PartiallyOrderedClass" href="partiallyorderedclass.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc" comparison_category="partial"/>
         <class name="StronglyOrderedClass" href="stronglyorderedclass.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc" comparison_category="strong"/>
         <class name="WeaklyOrderedClass" href="weaklyorderedclass.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc" comparison_category="weak"/>
-        <module name="TestQDoc" href="testqdoc-module.html" status="internal" seen="false" title=""/>
+        <module name="TestQDoc" href="testqdoc-module.html" status="internal-auto" seen="false" title=""/>
     </namespace>
 </INDEX>

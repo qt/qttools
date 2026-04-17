@@ -13,6 +13,7 @@ enum class Status : unsigned char {
     Preliminary,
     Active,
     Internal,
+    InternalAuto,
     DontDocument
 };
 

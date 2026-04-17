@@ -8,6 +8,6 @@
                 <value name="Problem" value="0"/>
             </enum>
         </class>
-        <module name="Test" href="test-module.html" status="internal" seen="false" title=""/>
+        <module name="Test" href="test-module.html" status="internal-auto" seen="false" title=""/>
     </namespace>
 </INDEX>

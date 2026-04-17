@@ -87,6 +87,7 @@ public:
     static Genus getGenus(NodeType t);
 
     [[nodiscard]] bool isActive() const { return m_status == Status::Active; }
+    [[nodiscard]] bool isInternalAuto() const { return m_status == Status::InternalAuto; }
     [[nodiscard]] bool isClass() const { return m_nodeType == NodeType::Class; }
     [[nodiscard]] bool isCppNode() const { return genus() == Genus::CPP; }
     [[nodiscard]] bool isDontDocument() const { return (m_status == Status::DontDocument); }

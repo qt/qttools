@@ -41,36 +41,36 @@
                         <para>This function handles internal implementation details.</para>
                     </description>
                 </function>
-                <struct name="(unnamed struct)" fullname="PublicClass::PrivateData::(unnamed struct)" href="publicclass-privatedata-unnamed-struct.html" status="internal" access="public" location="publicclass_p.h">
+                <struct name="(unnamed struct)" fullname="PublicClass::PrivateData::(unnamed struct)" href="publicclass-privatedata-unnamed-struct.html" status="internal-auto" access="public" location="publicclass_p.h">
                     <description/>
-                    <variable name="cacheVersion" fullname="PublicClass::PrivateData::(unnamed struct)::cacheVersion" href="publicclass-privatedata-unnamed-struct.html#cacheVersion-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                    <variable name="cacheVersion" fullname="PublicClass::PrivateData::(unnamed struct)::cacheVersion" href="publicclass-privatedata-unnamed-struct.html#cacheVersion-var" status="internal-auto" access="public" location="publicclass_p.h" type="int" static="false">
                         <description/>
                     </variable>
-                    <variable name="headersList" fullname="PublicClass::PrivateData::(unnamed struct)::headersList" href="publicclass-privatedata-unnamed-struct.html#headersList-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                    <variable name="headersList" fullname="PublicClass::PrivateData::(unnamed struct)::headersList" href="publicclass-privatedata-unnamed-struct.html#headersList-var" status="internal-auto" access="public" location="publicclass_p.h" type="int" static="false">
                         <description/>
                     </variable>
-                    <variable name="isCached" fullname="PublicClass::PrivateData::(unnamed struct)::isCached" href="publicclass-privatedata-unnamed-struct.html#isCached-var" status="internal" access="public" location="publicclass_p.h" type="bool" static="false">
+                    <variable name="isCached" fullname="PublicClass::PrivateData::(unnamed struct)::isCached" href="publicclass-privatedata-unnamed-struct.html#isCached-var" status="internal-auto" access="public" location="publicclass_p.h" type="bool" static="false">
                         <description/>
                     </variable>
                 </struct>
-                <union name="(unnamed union)" fullname="PublicClass::PrivateData::(unnamed union)" href="publicclass-privatedata-unnamed-union.html" status="internal" access="public" location="publicclass_p.h">
+                <union name="(unnamed union)" fullname="PublicClass::PrivateData::(unnamed union)" href="publicclass-privatedata-unnamed-union.html" status="internal-auto" access="public" location="publicclass_p.h">
                     <description/>
-                    <struct name="(unnamed struct)" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)" href="publicclass-privatedata-unnamed-union-unnamed-struct.html" status="internal" access="public" location="publicclass_p.h">
+                    <struct name="(unnamed struct)" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)" href="publicclass-privatedata-unnamed-union-unnamed-struct.html" status="internal-auto" access="public" location="publicclass_p.h">
                         <description/>
-                        <variable name="ipv4Address" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)::ipv4Address" href="publicclass-privatedata-unnamed-union-unnamed-struct.html#ipv4Address-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                        <variable name="ipv4Address" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)::ipv4Address" href="publicclass-privatedata-unnamed-union-unnamed-struct.html#ipv4Address-var" status="internal-auto" access="public" location="publicclass_p.h" type="int" static="false">
                             <description/>
                         </variable>
-                        <variable name="port" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)::port" href="publicclass-privatedata-unnamed-union-unnamed-struct.html#port-var" status="internal" access="public" location="publicclass_p.h" type="int" static="false">
+                        <variable name="port" fullname="PublicClass::PrivateData::(unnamed union)::(unnamed struct)::port" href="publicclass-privatedata-unnamed-union-unnamed-struct.html#port-var" status="internal-auto" access="public" location="publicclass_p.h" type="int" static="false">
                             <description/>
                         </variable>
                     </struct>
-                    <variable name="ipv4" fullname="PublicClass::PrivateData::(unnamed union)::ipv4" href="publicclass-privatedata-unnamed-union.html#ipv4-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+                    <variable name="ipv4" fullname="PublicClass::PrivateData::(unnamed union)::ipv4" href="publicclass-privatedata-unnamed-union.html#ipv4-var" status="internal-auto" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
                         <description/>
                     </variable>
-                    <variable name="ipv6" fullname="PublicClass::PrivateData::(unnamed union)::ipv6" href="publicclass-privatedata-unnamed-union.html#ipv6-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+                    <variable name="ipv6" fullname="PublicClass::PrivateData::(unnamed union)::ipv6" href="publicclass-privatedata-unnamed-union.html#ipv6-var" status="internal-auto" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
                         <description/>
                     </variable>
-                    <variable name="raw" fullname="PublicClass::PrivateData::(unnamed union)::raw" href="publicclass-privatedata-unnamed-union.html#raw-var" status="internal" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
+                    <variable name="raw" fullname="PublicClass::PrivateData::(unnamed union)::raw" href="publicclass-privatedata-unnamed-union.html#raw-var" status="internal-auto" access="public" location="publicclass_p.h" type="struct PublicClass::PrivateData::(unnamed union)::(unnamed struct)" static="false">
                         <description/>
                     </variable>
                 </union>
@@ -110,29 +110,29 @@
                     <brief>Struct with unnamed members for testing anonymous type cleaning.</brief>
                     <para>This struct contains anonymous unions and structs to test type name cleaning in tag files and other output formats.</para>
                 </description>
-                <struct name="(anonymous struct)" fullname="PublicClass::TestStruct::(anonymous struct)" href="publicclass-teststruct-anonymous-struct.html" status="internal" access="public" location="publicclass.h">
+                <struct name="(anonymous struct)" fullname="PublicClass::TestStruct::(anonymous struct)" href="publicclass-teststruct-anonymous-struct.html" status="internal-auto" access="public" location="publicclass.h">
                     <description/>
-                    <variable name="structMemberX" fullname="PublicClass::TestStruct::(anonymous struct)::structMemberX" href="publicclass-teststruct-anonymous-struct.html#structMemberX-var" status="internal" access="public" location="publicclass.h" type="int" static="false">
+                    <variable name="structMemberX" fullname="PublicClass::TestStruct::(anonymous struct)::structMemberX" href="publicclass-teststruct-anonymous-struct.html#structMemberX-var" status="internal-auto" access="public" location="publicclass.h" type="int" static="false">
                         <description/>
                     </variable>
-                    <variable name="structMemberY" fullname="PublicClass::TestStruct::(anonymous struct)::structMemberY" href="publicclass-teststruct-anonymous-struct.html#structMemberY-var" status="internal" access="public" location="publicclass.h" type="int" static="false">
+                    <variable name="structMemberY" fullname="PublicClass::TestStruct::(anonymous struct)::structMemberY" href="publicclass-teststruct-anonymous-struct.html#structMemberY-var" status="internal-auto" access="public" location="publicclass.h" type="int" static="false">
                         <description/>
                     </variable>
                 </struct>
-                <union name="(anonymous union)" fullname="PublicClass::TestStruct::(anonymous union)" href="publicclass-teststruct-anonymous-union.html" status="internal" access="public" location="publicclass.h">
+                <union name="(anonymous union)" fullname="PublicClass::TestStruct::(anonymous union)" href="publicclass-teststruct-anonymous-union.html" status="internal-auto" access="public" location="publicclass.h">
                     <description/>
-                    <variable name="unionMemberFloat" fullname="PublicClass::TestStruct::(anonymous union)::unionMemberFloat" href="publicclass-teststruct-anonymous-union.html#unionMemberFloat-var" status="internal" access="public" location="publicclass.h" type="float" static="false">
+                    <variable name="unionMemberFloat" fullname="PublicClass::TestStruct::(anonymous union)::unionMemberFloat" href="publicclass-teststruct-anonymous-union.html#unionMemberFloat-var" status="internal-auto" access="public" location="publicclass.h" type="float" static="false">
                         <description/>
                     </variable>
-                    <variable name="unionMemberInt" fullname="PublicClass::TestStruct::(anonymous union)::unionMemberInt" href="publicclass-teststruct-anonymous-union.html#unionMemberInt-var" status="internal" access="public" location="publicclass.h" type="int" static="false">
+                    <variable name="unionMemberInt" fullname="PublicClass::TestStruct::(anonymous union)::unionMemberInt" href="publicclass-teststruct-anonymous-union.html#unionMemberInt-var" status="internal-auto" access="public" location="publicclass.h" type="int" static="false">
                         <description/>
                     </variable>
                 </union>
             </struct>
-            <variable name="d" fullname="PublicClass::d" href="publicclass.html#d-var" status="internal" access="private" location="publicclass.h" type="PublicClass::PrivateData *" static="false">
+            <variable name="d" fullname="PublicClass::d" href="publicclass.html#d-var" status="internal-auto" access="private" location="publicclass.h" type="PublicClass::PrivateData *" static="false">
                 <description/>
             </variable>
-            <variable name="testStructInstance" fullname="PublicClass::testStructInstance" href="publicclass.html#testStructInstance-var" status="internal" access="private" location="publicclass.h" type="struct PublicClass::TestStruct" static="false">
+            <variable name="testStructInstance" fullname="PublicClass::testStructInstance" href="publicclass.html#testStructInstance-var" status="internal-auto" access="private" location="publicclass.h" type="struct PublicClass::TestStruct" static="false">
                 <description/>
             </variable>
         </class>

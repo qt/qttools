@@ -84,11 +84,11 @@
             <qmlproperty name="startFrame" fullname="Qt.labs.lottieqt.LottieAnimation.startFrame" href="qml-qt-labs-lottieqt-lottieanimation.html#startFrame-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="int" attached="false" writable="false"/>
             <qmlproperty name="status" fullname="Qt.labs.lottieqt.LottieAnimation.status" href="qml-qt-labs-lottieqt-lottieanimation.html#status-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="enumeration" attached="false" writable="true"/>
         </qmlclass>
-        <group name="category Graphics" href="category-graphics.html" status="internal" seen="false" title=""/>
-        <group name="cmake-commands-qtlottie" href="cmake-commands-qtlottie.html" status="internal" seen="false" title=""/>
-        <group name="qmlmodules" href="qmlmodules.html" status="internal" seen="false" title=""/>
-        <group name="qtlottieexamples" href="qtlottieexamples.html" status="internal" seen="false" title=""/>
-        <qmlmodule name="QDoc.Test" href="qdoc-test-qmlmodule.html" status="internal" seen="false" title=""/>
+        <group name="category Graphics" href="category-graphics.html" status="internal-auto" seen="false" title=""/>
+        <group name="cmake-commands-qtlottie" href="cmake-commands-qtlottie.html" status="internal-auto" seen="false" title=""/>
+        <group name="qmlmodules" href="qmlmodules.html" status="internal-auto" seen="false" title=""/>
+        <group name="qtlottieexamples" href="qtlottieexamples.html" status="internal-auto" seen="false" title=""/>
+        <qmlmodule name="QDoc.Test" href="qdoc-test-qmlmodule.html" status="internal-auto" seen="false" title=""/>
         <qmlmodule name="Qt.labs.lottieqt" qml-module-name="Qt.labs.lottieqt" qml-module-version="1.0" href="qt-labs-lottieqt-qmlmodule.html" status="active" location="qtlottie.qdoc" documented="true" groups="qmlmodules" seen="true" title="Qt Lottie Animation QML Types" brief="Provides QML types to display Lottie graphics and animations">
             <contents name="qml-types" title="QML Types" level="1"/>
         </qmlmodule>

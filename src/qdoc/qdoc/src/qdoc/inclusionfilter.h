@@ -74,6 +74,7 @@ public:
         // We create a non-internal context to bypass internal checks in isIncluded()
         NodeContext nonInternalContext = context;
         nonInternalContext.isInternal = false;
+        nonInternalContext.isInternalAuto = false;
 
         return isIncluded(policy, nonInternalContext);
     }

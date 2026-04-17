@@ -13,6 +13,6 @@
             </function>
             <function name="method" fullname="TestClass::method" href="testclass.html#method" status="active" access="public" location="classwithoverloads.h" documented="true" meta="plain" type="void" signature="void method()"/>
         </class>
-        <module name="TestModule" href="testmodule-module.html" status="internal" seen="false" title=""/>
+        <module name="TestModule" href="testmodule-module.html" status="internal-auto" seen="false" title=""/>
     </namespace>
 </INDEX>

@@ -16,7 +16,7 @@
             <variable name="regularPrivateVar" fullname="InternalClass::regularPrivateVar" href="internalclass.html#regularPrivateVar-var" status="active" access="private" location="internalclass.h" documented="true" type="int" static="false" brief="Regular private variable"/>
         </class>
         <module name="NoShowInternalModule" href="noshowinternalmodule-module.html" status="active" location="internalclass.h" documented="true" seen="true" title="" brief="Test module for showinternal functionality"/>
-        <module name="ShowInternalModule" href="showinternalmodule-module.html" status="internal" seen="false" title=""/>
+        <module name="ShowInternalModule" href="showinternalmodule-module.html" status="internal-auto" seen="false" title=""/>
         <proxy name="NoShowInternalModule" href="noshowinternalmodule-noshowinternal-proxy.html" status="active" access="public">
             <function name="regularGlobalFunction" href="noshowinternalmodule-noshowinternal-proxy.html#regularGlobalFunction" status="active" access="public" location="internalclass.h" documented="true" related="0" meta="plain" type="void" brief="Regular global function" signature="void regularGlobalFunction()"/>
         </proxy>

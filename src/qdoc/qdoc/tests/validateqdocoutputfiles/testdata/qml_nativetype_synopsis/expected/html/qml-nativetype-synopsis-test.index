@@ -13,8 +13,8 @@
             <contents name="signals" title="Signals" level="1"/>
             <contents name="methods" title="Methods" level="1"/>
         </qmlclass>
-        <group name="qml_nativetype_synopsis" href="qml-nativetype-synopsis.html" status="internal" seen="false" title=""/>
-        <module name="QmlNativeTypeSynopsis" href="qmlnativetypesynopsis-module.html" status="internal" seen="false" title=""/>
+        <group name="qml_nativetype_synopsis" href="qml-nativetype-synopsis.html" status="internal-auto" seen="false" title=""/>
+        <module name="QmlNativeTypeSynopsis" href="qmlnativetypesynopsis-module.html" status="internal-auto" seen="false" title=""/>
         <qmlmodule name="QmlNativeTypeSynopsis" qml-module-name="QmlNativeTypeSynopsis" href="qmlnativetypesynopsis-qmlmodule.html" status="active" documented="true" seen="true" title=""/>
     </namespace>
 </INDEX>

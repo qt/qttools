@@ -78,6 +78,6 @@
                 <parameter type="Ts..." name="" default=""/>
             </function>
         </header>
-        <module name="TestQDoc" href="testqdoc-module.html" status="internal" seen="false" title=""/>
+        <module name="TestQDoc" href="testqdoc-module.html" status="internal-auto" seen="false" title=""/>
     </namespace>
 </INDEX>

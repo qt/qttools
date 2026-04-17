@@ -38,7 +38,7 @@
         <page name="toc.html" href="toc.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Table of Contents" fulltitle="Table of Contents" subtitle=""/>
         <page name="http://localhost" href="http://localhost" status="active" location="group.qdoc" documented="true" groups="group" subtype="externalpage" title="Page B" fulltitle="Page B" subtitle=""/>
         <page name="https://what.ever" href="https://what.ever" status="active" location="toc.qdoc" documented="true" subtype="externalpage" title="External" fulltitle="External" subtitle=""/>
-        <group name="group" href="group.html" status="internal" seen="false" title=""/>
+        <group name="group" href="group.html" status="internal-auto" seen="false" title=""/>
         <group name="group2" href="group2.html" status="active" location="group.qdoc" documented="true" seen="true" title="Group2"/>
         <group name="group3" href="group3.html" status="active" location="group3.qdoc" documented="true" seen="true" title="Group 3"/>
     </namespace>

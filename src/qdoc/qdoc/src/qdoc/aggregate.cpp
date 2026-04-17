@@ -241,8 +241,8 @@ FunctionNode *Aggregate::findFunctionChild(const FunctionNode *clone)
         non-member), to avoid duplicate warnings as the node appears under multiple
         aggregates.
     \li The child is private (private members don't generate output).
-    \li The child is explicitly marked \c{\\internal} (we check the child's own
-        status, not inherited internal status from the parent).
+    \li The child has \c Internal or \c InternalAuto status (we check the child's
+        own status, not inherited internal status from the parent).
     \li The parent is a proxy node (automatically generated, no documentation).
     \li The parent is a namespace node (handled separately by
         NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace()).
@@ -259,7 +259,7 @@ FunctionNode *Aggregate::findFunctionChild(const FunctionNode *clone)
 
     \note We check \c{child->status()} directly rather than \c{child->isInternal()}
     because \c{isInternal()} also considers the parent's status. Since the parent
-    is undocumented (and thus marked Internal), \c{isInternal()} would incorrectly
+    is undocumented (and thus marked InternalAuto), \c{isInternal()} would incorrectly
     return true for all children, suppressing the warning entirely.
 
     \sa NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace()
@@ -269,8 +269,9 @@ static void warnAboutDocumentedChildInUndocumentedParent(const Node *aggregate, 
     Q_ASSERT(child);
     const auto *parent{child->parent()};
     if (parent && parent == aggregate && !child->isPrivate()
-            && child->status() != Status::Internal && !parent->isProxyNode()
-            && !parent->isNamespace() && !parent->isDontDocument() && !parent->hasDoc()) {
+            && child->status() != Status::Internal && child->status() != Status::InternalAuto
+            && !parent->isProxyNode() && !parent->isNamespace() && !parent->isDontDocument()
+            && !parent->hasDoc()) {
 
         if (child->isDontDocument())
             return;
@@ -317,7 +318,7 @@ void Aggregate::markUndocumentedChildrenInternal()
                     if (static_cast<TypedefNode *>(child)->hasAssociatedEnum())
                         continue;
                 }
-                child->setStatus(Status::Internal);
+                child->setStatus(Status::InternalAuto);
             }
         } else {
             warnAboutDocumentedChildInUndocumentedParent(this, child);

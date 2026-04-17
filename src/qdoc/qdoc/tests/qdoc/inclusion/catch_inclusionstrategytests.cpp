@@ -69,6 +69,28 @@ TEST_CASE("NodeContext correctly captures internal status", "[NodeContext]")
         REQUIRE(context.isPrivate == true);
         REQUIRE(context.isInternal == true);
     }
+
+    SECTION("Default NodeContext has isInternalAuto false")
+    {
+        NodeContext context;
+        REQUIRE(context.isInternalAuto == false);
+    }
+
+    SECTION("NodeContext can be set to isInternalAuto")
+    {
+        NodeContext context;
+        context.isInternalAuto = true;
+        REQUIRE(context.isInternalAuto == true);
+    }
+
+    SECTION("isInternalAuto is independent from isInternal")
+    {
+        NodeContext context;
+        context.isInternal = true;
+        context.isInternalAuto = false;
+        REQUIRE(context.isInternal == true);
+        REQUIRE(context.isInternalAuto == false);
+    }
 }
 
 TEST_CASE("NodeContext toFlags() behavior", "[NodeContext]")
@@ -161,6 +183,29 @@ TEST_CASE("NodeContext toFlags() behavior", "[NodeContext]")
         REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
         REQUIRE((flags & InclusionFlag::PrivateType) != InclusionFlag::PrivateType);
     }
+
+    SECTION("isInternalAuto sets InternalAuto flag but not Internal")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isInternalAuto = true;
+
+        auto flags = context.toFlags();
+        REQUIRE((flags & InclusionFlag::InternalAuto) == InclusionFlag::InternalAuto);
+        REQUIRE((flags & InclusionFlag::Internal) != InclusionFlag::Internal);
+    }
+
+    SECTION("Both isInternal and isInternalAuto set both flags")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isInternal = true;
+        context.isInternalAuto = true;
+
+        auto flags = context.toFlags();
+        REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
+        REQUIRE((flags & InclusionFlag::InternalAuto) == InclusionFlag::InternalAuto);
+    }
 }
 
 TEST_CASE("InclusionPolicy basic functionality", "[InclusionPolicy]")
@@ -195,6 +240,7 @@ TEST_CASE("InclusionPolicy basic functionality", "[InclusionPolicy]")
 
         auto flags = policy.toFlags();
         REQUIRE((flags & InclusionFlag::Internal) == InclusionFlag::Internal);
+        REQUIRE((flags & InclusionFlag::InternalAuto) == InclusionFlag::InternalAuto);
     }
 
     SECTION("InclusionPolicy toFlags() without showInternal")
@@ -204,6 +250,7 @@ TEST_CASE("InclusionPolicy basic functionality", "[InclusionPolicy]")
 
         auto flags = policy.toFlags();
         REQUIRE((flags & InclusionFlag::Internal) != InclusionFlag::Internal);
+        REQUIRE((flags & InclusionFlag::InternalAuto) != InclusionFlag::InternalAuto);
     }
 
     SECTION("InclusionPolicy toFlags() with both private and internal")
@@ -381,6 +428,20 @@ TEST_CASE("InclusionFilter::isReimplementedMemberVisible functionality", "[Inclu
 
         // This is the key test - public reimplemented members should be visible
         // even when marked internal and showInternal is false
+        REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
+    }
+
+    SECTION("Public auto-internal reimplemented member is always visible")
+    {
+        NodeContext context;
+        context.type = NodeType::Function;
+        context.isPrivate = false;
+        context.isInternalAuto = true;
+
+        InclusionPolicy policy;
+        policy.showInternal = false;
+
+        // Context is a node with isInternalAuto = true (undocumented node)
         REQUIRE(InclusionFilter::isReimplementedMemberVisible(policy, context) == true);
     }
 

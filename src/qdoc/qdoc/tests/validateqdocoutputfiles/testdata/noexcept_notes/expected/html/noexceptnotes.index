@@ -6,6 +6,6 @@
             <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" meta="constructor" signature="TestClass()"/>
             <function name="fn" fullname="TestClass::fn" href="testclass.html#fn" status="active" access="public" location="testclass.h" documented="true" meta="plain" noexcept="true" noexcept_expression="some_expression_v" type="void" signature="void fn()"/>
         </class>
-        <module name="QDocTest" href="qdoctest-module.html" status="internal" seen="false" title=""/>
+        <module name="QDocTest" href="qdoctest-module.html" status="internal-auto" seen="false" title=""/>
     </namespace>
 </INDEX>

@@ -12,6 +12,6 @@
             <contents name="annotatedlist" title="\annotatedlist" level="1"/>
             <contents name="annotatedlist-descending-3" title="descending" level="2"/>
         </page>
-        <group name="list" href="list.html" status="internal" seen="false" title=""/>
+        <group name="list" href="list.html" status="internal-auto" seen="false" title=""/>
     </namespace>
 </INDEX>

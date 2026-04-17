@@ -2200,7 +2200,7 @@ void DocBookGenerator::generateSortedNames(const ClassNode *cn, const QList<Rela
     QList<RelatedClass>::ConstIterator r = rc.constBegin();
     while (r != rc.constEnd()) {
         ClassNode *rcn = (*r).m_node;
-        if (rcn && rcn->access() == Access::Public && rcn->status() != Status::Internal
+        if (rcn && rcn->access() == Access::Public && !rcn->isInternal()
             && !rcn->doc().isEmpty()) {
             classMap[rcn->plainFullName(cn).toLower()] = rcn;
         }
@@ -2284,7 +2284,7 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
     if (aggregate->nodeType() == NodeType::Class) {
         // Native type information.
         auto *classe = const_cast<ClassNode *>(static_cast<const ClassNode *>(aggregate));
-        if (classe && classe->isQmlNativeType() && classe->status() != Status::Internal) {
+        if (classe && classe->isQmlNativeType() && !classe->isInternal()) {
             generateStartRequisite("In QML");
 
             qsizetype idx{0};
@@ -2438,7 +2438,7 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
 
     // Native type information.
     ClassNode *cn = (const_cast<QmlTypeNode *>(qcn))->classNode();
-    if (cn && cn->isQmlNativeType() && cn->status() != Status::Internal) {
+    if (cn && cn->isQmlNativeType() && !cn->isInternal()) {
         generateStartRequisite(nativeTypeText);
         generateSimpleLink(fullDocumentLocation(cn), cn->name());
         generateEndRequisite();
@@ -2543,6 +2543,7 @@ bool DocBookGenerator::generateStatus(const Node *node)
         newLine();
         return true;
     case Status::Internal:
+    case Status::InternalAuto:
     default:
         return false;
     }
@@ -3495,6 +3496,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         generateSynopsisInfo("status", "deprecated");
         break;
     case Status::Internal:
+    case Status::InternalAuto:
         generateSynopsisInfo("status", "internal");
         break;
     default:
@@ -3530,7 +3532,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         if (aggregate->nodeType() == NodeType::Class) {
             // Native type
             auto *classe = const_cast<ClassNode *>(static_cast<const ClassNode *>(aggregate));
-            if (classe && classe->isQmlNativeType() && classe->status() != Status::Internal) {
+            if (classe && classe->isQmlNativeType() && !classe->isInternal()) {
                 m_writer->writeStartElement(dbNamespace, "synopsisinfo");
                 m_writer->writeAttribute("role", "nativeTypeFor");
 
@@ -3653,7 +3655,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         // Native type
         ClassNode *cn = (const_cast<QmlTypeNode *>(qcn))->classNode();
 
-        if (cn && cn->isQmlNativeType() && (cn->status() != Status::Internal)) {
+        if (cn && cn->isQmlNativeType() && !cn->isInternal()) {
             const Node *otherNode = nullptr;
             Atom a = Atom(Atom::LinkNode, Utilities::stringForNode(qcn));
             QString link = getAutoLink(&a, cn, &otherNode);

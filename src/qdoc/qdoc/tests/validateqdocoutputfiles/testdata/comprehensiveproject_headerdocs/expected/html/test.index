@@ -271,8 +271,8 @@
             <function name="abs" fullname="QDoc.Test.int.abs" href="qml-int.html#abs-method" status="active" access="public" location="parent.qdoc" documented="true" meta="qmlmethod" type="int"/>
         </qmlvaluetype>
         <group name="cpptypes" href="cpptypes.html" status="active" location="classlists.qdoc" documented="true" seen="true" title="Test C++ Types"/>
-        <group name="deprecated-classes" href="deprecated-classes.html" status="internal" seen="false" title=""/>
-        <group name="testgroup" href="testgroup.html" status="internal" seen="false" title=""/>
+        <group name="deprecated-classes" href="deprecated-classes.html" status="internal-auto" seen="false" title=""/>
+        <group name="testgroup" href="testgroup.html" status="internal-auto" seen="false" title=""/>
         <module name="TestCPP" href="testcpp-module.html" status="active" location="testcpp.qdoc" since="2.0" documented="true" seen="true" title="QDoc Test C++ Classes" brief="A test module page">
             <contents name="linking-to-function-like-things" title="Linking to function-like things" level="1"/>
             <contents name="section" title="section()" level="2"/>

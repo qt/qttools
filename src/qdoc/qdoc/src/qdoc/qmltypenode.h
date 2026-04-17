@@ -40,7 +40,6 @@ public:
     void setWrapper() override { m_wrapper = true; }
     void setSingleton() { m_qmlNativeTypeAttr = QmlNativeTypeAttribute::Singleton; }
     void setUncreatable() { m_qmlNativeTypeAttr = QmlNativeTypeAttribute::Uncreatable; }
-    [[nodiscard]] bool isInternal() const override { return (status() == Status::Internal); }
     [[nodiscard]] QString qmlFullBaseName() const override;
     [[nodiscard]] QString logicalModuleName() const override;
     [[nodiscard]] QString logicalModuleVersion() const override;
