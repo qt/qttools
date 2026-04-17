@@ -28,10 +28,12 @@ QT_BEGIN_NAMESPACE
 using namespace Qt::Literals::StringLiterals;
 
 #ifdef Q_OS_WIN
-static bool shouldUseCRLF(const QString &filename)
+static bool usesCRLF(const QString &filename)
 {
     QFile file(filename);
-    return !file.open(QIODevice::ReadOnly) || file.read(4096).contains("\r\n"_ba);
+    if (!file.open(QIODevice::ReadOnly))
+        return false;
+    return file.read(4096).contains("\r\n"_ba);
 }
 #endif
 
@@ -328,8 +330,8 @@ bool Translator::save(const QString &filename, ConversionData &cd, const QString
         file.setFileName(filename);
         QIODevice::OpenMode mode = QIODevice::WriteOnly;
 #ifdef Q_OS_WIN
-        // Use CRLF line endings on Windows unless the file already exists with LF-only
-        if (shouldUseCRLF(filename))
+        // Preserve CRLF line endings on Windows
+        if (usesCRLF(filename))
             mode |= QIODevice::Text;
 #endif
         if (!file.open(mode)) {
