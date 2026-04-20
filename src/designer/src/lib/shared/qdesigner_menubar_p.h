@@ -29,10 +29,10 @@ QT_BEGIN_NAMESPACE
 class QDesignerFormWindowInterface;
 class QDesignerActionProviderExtension;
 
-class QLineEdit;
 class QMimeData;
 
 namespace qdesigner_internal {
+class MenuActionLineEdit;
 class PromotionTaskMenu;
 
 class SpecialMenuAction: public QAction
@@ -72,6 +72,7 @@ public:
 private slots:
     void deleteMenu();
     void slotRemoveMenuBar();
+    void stopInlineEditing();
 
 protected:
     void actionEvent(QActionEvent *event) override;
@@ -128,7 +129,7 @@ private:
     QPointer<QMenu> m_activeMenu;
     QPoint m_startPosition;
     int m_currentIndex = 0;
-    QLineEdit *m_editor;
+    qdesigner_internal::MenuActionLineEdit *m_editor;
     bool m_dragging = false;
     int m_lastMenuActionIndex = -1;
     QPointer<QWidget> m_lastFocusWidget;

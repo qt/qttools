@@ -79,6 +79,7 @@ qt_internal_add_module(Designer
         shared/invisible_widget.cpp shared/invisible_widget_p.h
         shared/layout.cpp shared/layout_p.h
         shared/layoutinfo.cpp shared/layoutinfo_p.h
+        shared/menuactionlineedit_p.h
         shared/metadatabase.cpp shared/metadatabase_p.h
         shared/morphmenu.cpp shared/morphmenu_p.h
         shared/newactiondialog.cpp shared/newactiondialog_p.h

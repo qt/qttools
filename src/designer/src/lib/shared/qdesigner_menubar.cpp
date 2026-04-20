@@ -8,6 +8,7 @@
 #include "actionrepository_p.h"
 #include "actionprovider_p.h"
 #include "actioneditor_p.h"
+#include "menuactionlineedit_p.h"
 #include "qdesigner_utils_p.h"
 #include "promotiontaskmenu_p.h"
 #include "qdesigner_objectinspector_p.h"
@@ -51,7 +52,7 @@ SpecialMenuAction::~SpecialMenuAction() = default;
 QDesignerMenuBar::QDesignerMenuBar(QWidget *parent)  :
     QMenuBar(parent),
     m_addMenu(new qdesigner_internal::SpecialMenuAction(this)),
-    m_editor(new QLineEdit(this)),
+    m_editor(new qdesigner_internal::MenuActionLineEdit(this)),
     m_promotionTaskMenu(new qdesigner_internal::PromotionTaskMenu(this, qdesigner_internal::PromotionTaskMenu::ModeSingleWidget, this))
 {
     setContextMenuPolicy(Qt::DefaultContextMenu);
@@ -69,7 +70,8 @@ QDesignerMenuBar::QDesignerMenuBar(QWidget *parent)  :
 
     m_editor->setObjectName(u"__qt__passive_editor"_s);
     m_editor->hide();
-    m_editor->installEventFilter(this);
+    connect(m_editor, &qdesigner_internal::MenuActionLineEdit::focusOut,
+            this, &QDesignerMenuBar::stopInlineEditing);
     installEventFilter(this);
 }
 
@@ -113,12 +115,7 @@ bool QDesignerMenuBar::handleEvent(QWidget *widget, QEvent *event)
     if (!formWindow())
         return false;
 
-    if (event->type() == QEvent::FocusIn || event->type() == QEvent::FocusOut)
-        update();
-
     switch (event->type()) {
-        default: break;
-
         case QEvent::MouseButtonDblClick:
             return handleMouseDoubleClickEvent(widget, static_cast<QMouseEvent*>(event));
         case QEvent::MouseButtonPress:
@@ -133,7 +130,10 @@ bool QDesignerMenuBar::handleEvent(QWidget *widget, QEvent *event)
             return handleKeyPressEvent(widget, static_cast<QKeyEvent*>(event));
         case QEvent::FocusIn:
         case QEvent::FocusOut:
-            return widget != m_editor;
+            update();
+            break;
+        default:
+            break;
     }
 
     return true;
@@ -406,6 +406,15 @@ void QDesignerMenuBar::slotRemoveMenuBar()
     fw->commandHistory()->push(cmd);
 }
 
+void QDesignerMenuBar::stopInlineEditing()
+{
+    if (!m_editor->isHidden()) {
+        leaveEditMode(Default);
+        m_editor->hide();
+        update();
+    }
+}
+
 void QDesignerMenuBar::focusOutEvent(QFocusEvent *event)
 {
     QMenuBar::focusOutEvent(event);
@@ -488,21 +497,7 @@ void QDesignerMenuBar::showLineEdit()
 
 bool QDesignerMenuBar::eventFilter(QObject *object, QEvent *event)
 {
-    if (object != this && object != m_editor)
-        return false;
-
-    if (!m_editor->isHidden() && object == m_editor && event->type() == QEvent::FocusOut) {
-        leaveEditMode(Default);
-        m_editor->hide();
-        update();
-        return true;
-    }
-
-    bool dispatch = true;
-
     switch (event->type()) {
-        default: break;
-
         case QEvent::KeyPress:
         case QEvent::KeyRelease:
         case QEvent::ContextMenu:
@@ -510,23 +505,17 @@ bool QDesignerMenuBar::eventFilter(QObject *object, QEvent *event)
         case QEvent::MouseButtonPress:
         case QEvent::MouseButtonRelease:
         case QEvent::MouseButtonDblClick:
-            dispatch = (object != m_editor);
-            Q_FALLTHROUGH(); // no break
-
         case QEvent::Enter:
         case QEvent::Leave:
         case QEvent::FocusIn:
         case QEvent::FocusOut:
-        {
-            QWidget *widget = qobject_cast<QWidget*>(object);
-
-            if (dispatch && widget && (widget == this || isAncestorOf(widget)))
-                return handleEvent(widget, event);
-        } break;
-
+            return handleEvent(qobject_cast<QWidget*>(object), event);
         case QEvent::Shortcut:
             event->accept();
             return true;
+        default:
+            break;
+
     }
 
     return false;

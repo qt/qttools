@@ -39,6 +39,7 @@ class QMimeData;
 namespace qdesigner_internal {
     class CreateSubmenuCommand;
     class ActionInsertionCommand;
+    class MenuActionLineEdit;
 }
 
 class QDESIGNER_SHARED_EXPORT QDesignerMenu: public QMenu
@@ -83,6 +84,7 @@ private slots:
     void slotShowSubMenuNow();
     void slotDeactivateNow();
     void slotAdjustSizeNow();
+    void stopInlineEditing();
 
 protected:
     void actionEvent(QActionEvent *event) override;
@@ -157,7 +159,7 @@ private:
     QTimer *m_showSubMenuTimer;
     QTimer *m_deactivateWindowTimer;
     QTimer *m_adjustSizeTimer;
-    QLineEdit *m_editor;
+    qdesigner_internal::MenuActionLineEdit *m_editor;
     bool m_dragging = false;
     int m_lastSubMenuIndex = -1;
 
