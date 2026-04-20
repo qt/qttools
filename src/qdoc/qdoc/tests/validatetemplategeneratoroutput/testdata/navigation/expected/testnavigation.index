@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Navigation and page chrome test fixture" version="" project="TestNavigation" indexTitle="Landing">
+    <namespace name="" status="active" access="public" module="testnavigation">
+        <class name="NavWidget" href="navwidget.html" status="active" access="public" location="classpage.h" documented="true" module="TestNavigation" brief="A widget for navigation testing">
+            <contents name="basic-usage" title="Basic Usage" level="1"/>
+            <contents name="configuration" title="Configuration" level="2"/>
+            <contents name="advanced-options" title="Advanced Options" level="3"/>
+            <contents name="thread-safety" title="Thread Safety" level="1"/>
+            <contents name="performance" title="Performance" level="1"/>
+            <contents name="benchmarks" title="Benchmarks" level="2"/>
+            <function name="NavWidget" fullname="NavWidget::NavWidget" href="navwidget.html#NavWidget" status="active" access="public" location="classpage.h" documented="true" meta="constructor" signature="NavWidget()"/>
+            <function name="navigate" fullname="NavWidget::navigate" href="navwidget.html#navigate" status="active" access="public" location="classpage.h" documented="true" meta="plain" type="void" signature="void navigate(const QString &amp;target)">
+                <parameter type="const QString &amp;" name="target" default=""/>
+            </function>
+        </class>
+        <page name="cpp-classes.html" href="cpp-classes.html" status="active" location="cppclassespage.qdoc" documented="true" subtype="page" title="C++ Classes" fulltitle="C++ Classes" subtitle="" brief="Collection page linked from C++ class breadcrumbs"/>
+        <page name="navigation-landing.html" href="navigation-landing.html" status="active" location="landingpage.qdoc" documented="true" subtype="page" title="Navigation Landing" fulltitle="Navigation Landing" subtitle="" brief="Landing page for the navigation test"/>
+        <page name="navigation-test-home.html" href="navigation-test-home.html" status="active" location="homepage.qdoc" documented="true" subtype="page" title="Navigation Test Home" fulltitle="Navigation Test Home" subtitle="" brief="Entry point for the navigation test">
+            <contents name="overview" title="Overview" level="1"/>
+            <contents name="subsection" title="Subsection" level="2"/>
+        </page>
+        <page name="qml-types.html" href="qml-types.html" status="active" location="qmltypespage.qdoc" documented="true" subtype="page" title="QML Types" fulltitle="QML Types" subtitle="" brief="Collection page linked from QML type breadcrumbs"/>
+        <page name="subpage.html" href="subpage.html" status="active" location="subpage.qdoc" documented="true" subtype="page" title="Sub Page" fulltitle="Sub Page" subtitle="" brief="A sub-page that exercises sequential links">
+            <contents name="details" title="Details" level="1"/>
+            <contents name="more-information" title="More Information" level="1"/>
+        </page>
+        <qmlclass name="NavItem" href="qml-navitem.html" status="active" access="public" location="qmltype.qdoc" documented="true" brief="A QML navigation item">
+            <contents name="usage" title="Usage" level="1"/>
+            <contents name="properties" title="Properties" level="2"/>
+        </qmlclass>
+        <module name="TestNavigation" href="testnavigation-module.html" status="active" location="testnavmodule.qdoc" documented="true" seen="true" title="TestNavigation" brief="Test module for navigation fixture"/>
+        <qmlmodule name="TestNavigation" href="testnavigation-qmlmodule.html" status="internal" seen="false" title=""/>
+    </namespace>
+</INDEX>

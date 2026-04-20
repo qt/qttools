@@ -1,0 +1,16 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \qmltype NavItem
+    \inqmlmodule TestNavigation
+    \brief A QML navigation item.
+
+    \section1 Usage
+
+    NavItem provides navigation within QML applications.
+
+    \section2 Properties
+
+    Configure the target property to set the navigation destination.
+*/

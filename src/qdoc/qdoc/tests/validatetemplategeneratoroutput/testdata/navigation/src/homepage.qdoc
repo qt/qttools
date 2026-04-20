@@ -1,0 +1,18 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page navigation-test-home.html
+    \title Navigation Test Home
+    \brief Entry point for the navigation test.
+
+    This is the homepage for the navigation test fixture.
+
+    \section1 Overview
+
+    The navigation test validates breadcrumbs, TOC, and sequential links.
+
+    \section2 Subsection
+
+    Some detail content.
+*/

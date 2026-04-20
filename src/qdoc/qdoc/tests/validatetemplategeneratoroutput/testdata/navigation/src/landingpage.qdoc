@@ -1,0 +1,10 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page navigation-landing.html
+    \title Navigation Landing
+    \brief Landing page for the navigation test.
+
+    This is the landing page, second level in the breadcrumb chain.
+*/

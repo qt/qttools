@@ -1,0 +1,31 @@
+project = TestNavigation
+description = Navigation and page chrome test fixture
+
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+sourcedirs += src
+headerdirs += src
+
+warninglimit = 0
+warninglimit.enabled = true
+locationinfo = false
+
+outputformats = TemplateHTML TemplateMarkdown
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = true
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+navigation.homepage = "Navigation Test Home"
+navigation.hometitle = "Home"
+navigation.landingpage = "Navigation Landing"
+navigation.landingtitle = "Landing"
+navigation.cppclassespage = "C++ Classes"
+navigation.cppclassestitle = "C++ Classes"
+navigation.qmltypespage = "QML Types"
+navigation.qmltypestitle = "QML Types"
+
+TemplateHTML.tocdepth = 3
