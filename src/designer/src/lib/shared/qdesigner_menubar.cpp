@@ -110,24 +110,24 @@ void QDesignerMenuBar::paintEvent(QPaintEvent *event)
     }
 }
 
-bool QDesignerMenuBar::handleEvent(QWidget *widget, QEvent *event)
+bool QDesignerMenuBar::handleEvent(QEvent *event)
 {
     if (!formWindow())
         return false;
 
     switch (event->type()) {
         case QEvent::MouseButtonDblClick:
-            return handleMouseDoubleClickEvent(widget, static_cast<QMouseEvent*>(event));
+            return handleMouseDoubleClickEvent(static_cast<QMouseEvent*>(event));
         case QEvent::MouseButtonPress:
-            return handleMousePressEvent(widget, static_cast<QMouseEvent*>(event));
+            return handleMousePressEvent(static_cast<QMouseEvent*>(event));
         case QEvent::MouseButtonRelease:
-            return handleMouseReleaseEvent(widget, static_cast<QMouseEvent*>(event));
+            return handleMouseReleaseEvent(static_cast<QMouseEvent*>(event));
         case QEvent::MouseMove:
-            return handleMouseMoveEvent(widget, static_cast<QMouseEvent*>(event));
+            return handleMouseMoveEvent(static_cast<QMouseEvent*>(event));
         case QEvent::ContextMenu:
-            return handleContextMenuEvent(widget, static_cast<QContextMenuEvent*>(event));
+            return handleContextMenuEvent(static_cast<QContextMenuEvent*>(event));
         case QEvent::KeyPress:
-            return handleKeyPressEvent(widget, static_cast<QKeyEvent*>(event));
+            return handleKeyPressEvent(static_cast<QKeyEvent*>(event));
         case QEvent::FocusIn:
         case QEvent::FocusOut:
             update();
@@ -139,7 +139,7 @@ bool QDesignerMenuBar::handleEvent(QWidget *widget, QEvent *event)
     return true;
 }
 
-bool QDesignerMenuBar::handleMouseDoubleClickEvent(QWidget *, QMouseEvent *event)
+bool QDesignerMenuBar::handleMouseDoubleClickEvent(QMouseEvent *event)
 {
     if (!rect().contains(event->position().toPoint()))
         return true;
@@ -159,7 +159,7 @@ bool QDesignerMenuBar::handleMouseDoubleClickEvent(QWidget *, QMouseEvent *event
     return true;
 }
 
-bool QDesignerMenuBar::handleKeyPressEvent(QWidget *, QKeyEvent *e)
+bool QDesignerMenuBar::handleKeyPressEvent(QKeyEvent *e)
 {
     if (m_editor->isHidden()) { // In navigation mode
         switch (e->key()) {
@@ -294,7 +294,7 @@ void QDesignerMenuBar::startDrag(const QPoint &pos)
     }
 }
 
-bool QDesignerMenuBar::handleMousePressEvent(QWidget *, QMouseEvent *event)
+bool QDesignerMenuBar::handleMousePressEvent(QMouseEvent *event)
 {
     m_startPosition = QPoint();
     event->accept();
@@ -311,7 +311,7 @@ bool QDesignerMenuBar::handleMousePressEvent(QWidget *, QMouseEvent *event)
     return true;
 }
 
-bool QDesignerMenuBar::handleMouseReleaseEvent(QWidget *, QMouseEvent *event)
+bool QDesignerMenuBar::handleMouseReleaseEvent(QMouseEvent *event)
 {
     m_startPosition = QPoint();
 
@@ -326,7 +326,7 @@ bool QDesignerMenuBar::handleMouseReleaseEvent(QWidget *, QMouseEvent *event)
     return true;
 }
 
-bool QDesignerMenuBar::handleMouseMoveEvent(QWidget *, QMouseEvent *event)
+bool QDesignerMenuBar::handleMouseMoveEvent(QMouseEvent *event)
 {
     if ((event->buttons() & Qt::LeftButton) != Qt::LeftButton)
         return true;
@@ -379,7 +379,7 @@ ActionList QDesignerMenuBar::contextMenuActions()
     return rc;
 }
 
-bool QDesignerMenuBar::handleContextMenuEvent(QWidget *, QContextMenuEvent *event)
+bool QDesignerMenuBar::handleContextMenuEvent(QContextMenuEvent *event)
 {
     event->accept();
 
@@ -495,7 +495,7 @@ void QDesignerMenuBar::showLineEdit()
     m_editor->grabKeyboard();
 }
 
-bool QDesignerMenuBar::eventFilter(QObject *object, QEvent *event)
+bool QDesignerMenuBar::eventFilter(QObject *, QEvent *event)
 {
     switch (event->type()) {
         case QEvent::KeyPress:
@@ -509,7 +509,7 @@ bool QDesignerMenuBar::eventFilter(QObject *object, QEvent *event)
         case QEvent::Leave:
         case QEvent::FocusIn:
         case QEvent::FocusOut:
-            return handleEvent(qobject_cast<QWidget*>(object), event);
+            return handleEvent(event);
         case QEvent::Shortcut:
             event->accept();
             return true;

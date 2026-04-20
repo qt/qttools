@@ -85,13 +85,13 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
 
-    bool handleEvent(QWidget *widget, QEvent *event);
-    bool handleMouseDoubleClickEvent(QWidget *widget, QMouseEvent *event);
-    bool handleMousePressEvent(QWidget *widget, QMouseEvent *event);
-    bool handleMouseReleaseEvent(QWidget *widget, QMouseEvent *event);
-    bool handleMouseMoveEvent(QWidget *widget, QMouseEvent *event);
-    bool handleContextMenuEvent(QWidget *widget, QContextMenuEvent *event);
-    bool handleKeyPressEvent(QWidget *widget, QKeyEvent *event);
+    bool handleEvent(QEvent *event);
+    bool handleMouseDoubleClickEvent(QMouseEvent *event);
+    bool handleMousePressEvent(QMouseEvent *event);
+    bool handleMouseReleaseEvent(QMouseEvent *event);
+    bool handleMouseMoveEvent(QMouseEvent *event);
+    bool handleContextMenuEvent(QContextMenuEvent *event);
+    bool handleKeyPressEvent(QKeyEvent *event);
 
     void startDrag(const QPoint &pos);
 

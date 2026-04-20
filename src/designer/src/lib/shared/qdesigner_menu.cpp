@@ -105,21 +105,21 @@ void QDesignerMenu::stopInlineEditing()
     }
 }
 
-bool QDesignerMenu::handleEvent(QWidget *widget, QEvent *event)
+bool QDesignerMenu::handleEvent(QEvent *event)
 {
     switch (event->type()) {
         case QEvent::MouseButtonPress:
-            return handleMousePressEvent(widget, static_cast<QMouseEvent*>(event));
+            return handleMousePressEvent(static_cast<QMouseEvent*>(event));
         case QEvent::MouseButtonRelease:
-            return handleMouseReleaseEvent(widget, static_cast<QMouseEvent*>(event));
+            return handleMouseReleaseEvent(static_cast<QMouseEvent*>(event));
         case QEvent::MouseButtonDblClick:
-            return handleMouseDoubleClickEvent(widget, static_cast<QMouseEvent*>(event));
+            return handleMouseDoubleClickEvent(static_cast<QMouseEvent*>(event));
         case QEvent::MouseMove:
-            return handleMouseMoveEvent(widget, static_cast<QMouseEvent*>(event));
+            return handleMouseMoveEvent(static_cast<QMouseEvent*>(event));
         case QEvent::ContextMenu:
-            return handleContextMenuEvent(widget, static_cast<QContextMenuEvent*>(event));
+            return handleContextMenuEvent(static_cast<QContextMenuEvent*>(event));
         case QEvent::KeyPress:
-            return handleKeyPressEvent(widget, static_cast<QKeyEvent*>(event));
+            return handleKeyPressEvent(static_cast<QKeyEvent*>(event));
         case QEvent::FocusIn:
         case QEvent::FocusOut:
             update();
@@ -168,7 +168,7 @@ void QDesignerMenu::startDrag(const QPoint &pos, Qt::KeyboardModifiers modifiers
     }
 }
 
-bool QDesignerMenu::handleKeyPressEvent(QWidget * /*widget*/, QKeyEvent *e)
+bool QDesignerMenu::handleKeyPressEvent(QKeyEvent *e)
 {
     m_showSubMenuTimer->stop();
 
@@ -283,7 +283,7 @@ static void sendMouseEventTo(QWidget *target, const QPoint &targetPoint, const Q
     QApplication::sendEvent(target, &e);
 }
 
-bool QDesignerMenu::handleMouseDoubleClickEvent(QWidget *, QMouseEvent *event)
+bool QDesignerMenu::handleMouseDoubleClickEvent(QMouseEvent *event)
 {
     event->accept();
     m_startPosition = QPoint();
@@ -320,7 +320,7 @@ bool QDesignerMenu::handleMouseDoubleClickEvent(QWidget *, QMouseEvent *event)
     return true;
 }
 
-bool QDesignerMenu::handleMousePressEvent(QWidget * /*widget*/, QMouseEvent *event)
+bool QDesignerMenu::handleMousePressEvent(QMouseEvent *event)
 {
     if (!rect().contains(event->position().toPoint())) {
         QWidget *clickedWidget = QApplication::widgetAt(event->globalPosition().toPoint());
@@ -392,7 +392,7 @@ bool QDesignerMenu::handleMousePressEvent(QWidget * /*widget*/, QMouseEvent *eve
     return true;
 }
 
-bool QDesignerMenu::handleMouseReleaseEvent(QWidget *, QMouseEvent *event)
+bool QDesignerMenu::handleMouseReleaseEvent(QMouseEvent *event)
 {
     event->accept();
     m_startPosition = QPoint();
@@ -400,7 +400,7 @@ bool QDesignerMenu::handleMouseReleaseEvent(QWidget *, QMouseEvent *event)
     return true;
 }
 
-bool QDesignerMenu::handleMouseMoveEvent(QWidget *, QMouseEvent *event)
+bool QDesignerMenu::handleMouseMoveEvent(QMouseEvent *event)
 {
     if ((event->buttons() & Qt::LeftButton) != Qt::LeftButton)
         return true;
@@ -437,7 +437,7 @@ bool QDesignerMenu::handleMouseMoveEvent(QWidget *, QMouseEvent *event)
     return true;
 }
 
-bool QDesignerMenu::handleContextMenuEvent(QWidget *, QContextMenuEvent *event)
+bool QDesignerMenu::handleContextMenuEvent(QContextMenuEvent *event)
 {
     event->accept();
 
@@ -636,7 +636,7 @@ bool QDesignerMenu::eventFilter(QObject *object, QEvent *event)
         case QEvent::Leave:
         case QEvent::FocusIn:
         case QEvent::FocusOut:
-            return handleEvent(qobject_cast<QWidget*>(object), event);
+            return handleEvent(event);
         default:
             break;
     }
