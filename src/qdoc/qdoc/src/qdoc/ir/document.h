@@ -158,6 +158,41 @@ struct CppReferenceInfo
     [[nodiscard]] QJsonObject toJson() const;
 };
 
+struct NavigationInfo
+{
+    enum class CrumbState {
+        Link,
+        Current,
+        Unresolved,
+    };
+
+    struct BreadcrumbEntry {
+        QString title;
+        QString href;
+        CrumbState state { CrumbState::Link };
+    };
+
+    struct LinkEntry {
+        QString title;
+        QString href;
+    };
+
+    struct TocEntry {
+        QString title;
+        QString anchorId;
+        int level { 2 };
+    };
+
+    QList<BreadcrumbEntry> breadcrumbs;
+    std::optional<LinkEntry> previousLink;
+    std::optional<LinkEntry> nextLink;
+    std::optional<LinkEntry> startLink;
+    QList<TocEntry> tocEntries;
+    int tocDepth { -1 };
+
+    [[nodiscard]] QJsonObject toJson() const;
+};
+
 struct Document
 {
     // Classification
@@ -190,6 +225,9 @@ struct Document
 
     // C++ reference metadata (populated for class, namespace, and header pages)
     std::optional<CppReferenceInfo> cppReferenceInfo;
+
+    // Navigation metadata (populated for all pages with navigation config)
+    std::optional<NavigationInfo> navigationInfo;
 
     // Members sub-page URL (set when a members listing page is generated)
     QString membersPageUrl;

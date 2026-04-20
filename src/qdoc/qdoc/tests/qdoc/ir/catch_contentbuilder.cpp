@@ -1810,3 +1810,92 @@ SCENARIO("ContentBuilder handles block-level Image without ImageText",
         }
     }
 }
+
+SCENARIO("ContentBuilder captures section ref from atom string(1)",
+         "[IR::ContentBuilder][IR]")
+{
+    GIVEN("A SectionHeading atom with a ref in string(1)")
+    {
+        AtomChain chain(Atom::SectionLeft);
+        auto *heading = chain.append(Atom::SectionHeadingLeft, u"1"_s);
+        heading->append(u"my-section-ref"_s);
+        chain.append(Atom::String, u"My Section"_s);
+        chain.append(Atom::SectionHeadingRight);
+        chain.append(Atom::SectionRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The SectionHeading has sectionRef in attributes")
+            {
+                REQUIRE(blocks.size() == 1);
+                const auto &hdg = blocks[0].children[0];
+                REQUIRE(hdg.type == IR::BlockType::SectionHeading);
+                REQUIRE(hdg.attributes.contains("sectionRef"_L1));
+                REQUIRE(hdg.attributes["sectionRef"_L1].toString() == u"my-section-ref"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder omits sectionRef when atom has no ref",
+         "[IR::ContentBuilder][IR]")
+{
+    GIVEN("A SectionHeading atom without a ref (count < 2)")
+    {
+        AtomChain chain(Atom::SectionLeft);
+        chain.append(Atom::SectionHeadingLeft, u"2"_s);
+        chain.append(Atom::String, u"No Ref Heading"_s);
+        chain.append(Atom::SectionHeadingRight);
+        chain.append(Atom::SectionRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The SectionHeading does NOT have sectionRef in attributes")
+            {
+                const auto &hdg = blocks[0].children[0];
+                REQUIRE(!hdg.attributes.contains("sectionRef"_L1));
+                REQUIRE(hdg.attributes["level"_L1].toInt() == 2);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder captures independent sectionRefs at multiple levels",
+         "[IR::ContentBuilder][IR]")
+{
+    GIVEN("Two nested sections each with different sectionRefs")
+    {
+        AtomChain chain(Atom::SectionLeft);
+        auto *h1 = chain.append(Atom::SectionHeadingLeft, u"1"_s);
+        h1->append(u"overview"_s);
+        chain.append(Atom::String, u"Overview"_s);
+        chain.append(Atom::SectionHeadingRight);
+        chain.append(Atom::SectionLeft);
+        auto *h2 = chain.append(Atom::SectionHeadingLeft, u"2"_s);
+        h2->append(u"details"_s);
+        chain.append(Atom::String, u"Details"_s);
+        chain.append(Atom::SectionHeadingRight);
+        chain.append(Atom::SectionRight);
+        chain.append(Atom::SectionRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("Each heading has its own sectionRef")
+            {
+                const auto &outer = blocks[0].children[0];
+                REQUIRE(outer.attributes["sectionRef"_L1].toString() == u"overview"_s);
+                const auto &inner = blocks[0].children[1].children[0];
+                REQUIRE(inner.attributes["sectionRef"_L1].toString() == u"details"_s);
+            }
+        }
+    }
+}

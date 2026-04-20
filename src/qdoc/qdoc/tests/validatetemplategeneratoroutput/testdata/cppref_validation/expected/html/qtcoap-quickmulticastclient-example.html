@@ -17,17 +17,17 @@
         <p>The <i>Quick CoAP Multicast Discovery</i> example demonstrates how to register <a href="qcoapclient.html">QCoapClient</a> as a QML type and use it in a Qt Quick application for CoAP multicast resource discovery.</p>
         <aside class="admonition note" role="note"><p><b>Note: </b>Qt CoAP does not provide a QML API in its current version. However, you can make the C++ classes of the module available to QML as shown in this example.</p></aside>
         <section>
-        <h4>Running the Example</h4>
+        <h4 id="running-the-example">Running the Example</h4>
         <p>To run the example from <a href="https://doc.qt.io/qtcreator/">Qt Creator</a>, open the <b>Welcome</b> mode and select the example from <b>Examples</b>. For more information, see <a href="https://doc.qt.io/qtcreator/creator-build-example-application.html">Qt Creator: Tutorial: Build and run</a>.</p>
         </section>
         <section>
-        <h4>Setting Up a CoAP Server</h4>
+        <h4 id="setting-up-a-coap-server">Setting Up a CoAP Server</h4>
         <p>To run the example application, you first need to set up and start at least one CoAP server supporting multicast resource discovery. You have the following options:</p>
 <ul>        <li>Manually build and run CoAP servers using <a href="https://github.com/obgm/libcoap">libcoap</a>, <a href="https://github.com/eclipse/californium/">Californium</a>, or any other CoAP server implementation, which supports multicast and resource discovery features.</li>
         <li>Use the ready Docker image available at Docker Hub, which builds and starts CoAP server based on Californium&apos;s <a href="https://github.com/eclipse/californium/tree/2.0.0/demo-apps/cf-helloworld-server">multicast server example</a>.</li>
 </ul>        </section>
         <section>
-        <h5>Using the Docker-based Test Server</h5>
+        <h5 id="using-the-docker-based-test-server">Using the Docker-based Test Server</h5>
         <p>The following command pulls the docker container for the CoAP server from the Docker Hub and starts it:</p>
         <pre class="cpp" translate="no"><code>docker run --name coap-multicast-server -d --rm --net=host tqtc/coap-multicast-test-server:californium-2.0.0
 </code></pre>
@@ -42,7 +42,7 @@ CONTAINER ID   IMAGE
 </code></pre>
         </section>
         <section>
-        <h4>Exposign C++ Classes to QML</h4>
+        <h4 id="exposign-c-classes-to-qml">Exposign C++ Classes to QML</h4>
         <p>In this example, you need to expose the <a href="qcoapresource.html">QCoapResource</a> and <a href="qcoapclient.html">QCoapClient</a> classes, as well as the <a href="qtcoap.html">QtCoap</a> namespace, to QML. To achieve this, create custom wrapper classes and use the special <a href="https://doc.qt.io/qt-6/qtqml-cppintegration-definetypes.html">registration macros</a>.</p>
         <p>Create the <code>QmlCoapResource</code> class as a wrapper around <a href="qcoapresource.html">QCoapResource</a>. Use the <a href="https://doc.qt.io/qt-6/qobject.html#Q_PROPERTY">Q_PROPERTY</a> macro to make several properties accessible from QML. The class does not need to be directly instantiable from QML, so use the <a href="https://doc.qt.io/qt-6/qqmlengine.html#QML_ANONYMOUS">QML_ANONYMOUS</a> macro to register it.</p>
         <pre class="cpp" translate="no"><code>class QmlCoapResource : public QCoapResource
@@ -102,11 +102,11 @@ private:
 </code></pre>
         </section>
         <section>
-        <h4>Adjusting Build Files</h4>
+        <h4 id="adjusting-build-files">Adjusting Build Files</h4>
         <p>To make the custom types available from QML, update the build system files accordingly.</p>
         </section>
         <section>
-        <h5>CMake Build</h5>
+        <h5 id="cmake-build">CMake Build</h5>
         <p>For a <a href="qtcoap-quicksecureclient-example.html">CMake</a>-based build, add the following to the <code>CMakeLists.txt</code>:</p>
         <pre class="cpp" translate="no"><code>qt_add_qml_module(quickmulticastclient
     URI CoapClientModule
@@ -120,7 +120,7 @@ private:
 </code></pre>
         </section>
         <section>
-        <h5>qmake Build</h5>
+        <h5 id="qmake-build">qmake Build</h5>
         <p>For a qmake build, modify the <code>quickmulticastclient.pro</code> file in the following way:</p>
         <pre class="cpp" translate="no"><code>CONFIG += qmltypes
 QML_IMPORT_NAME = CoapClientModule
@@ -137,7 +137,7 @@ RESOURCES += qml_resources
 </code></pre>
         </section>
         <section>
-        <h4>Using New QML Types</h4>
+        <h4 id="using-new-qml-types">Using New QML Types</h4>
         <p>Now, when the C++ classes are properly exposed to QML, you can use the new types:</p>
         <pre class="qml" translate="no"><code>CoapMulticastClient {
     id: client

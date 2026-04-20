@@ -69,7 +69,7 @@
         <li>Expressions are not supported</li>
 </ul>        <p>For the full list of devations, please see see the <a href="qtlottieanimation-index.html">Limitations</a> section.</p>
         <section>
-        <h2>Example Usage</h2>
+        <h2 id="example-usage">Example Usage</h2>
         <p>The following example shows a simple usage of the <a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> type</p>
         <pre class="qml" translate="no"><code>LottieAnimation {
     loops: 2
@@ -91,7 +91,7 @@
         <aside class="admonition note" role="note"><p><b>Note: </b>Changing width or height of the element does not change the size of the animation within. Also, it is not possible to align the the content inside of a LottieAnimation element. To achieve this, position the animation inside e.g. an Item.</p></aside>
         </section>
         <section>
-        <h2>Rendering Performance</h2>
+        <h2 id="rendering-performance">Rendering Performance</h2>
         <p>Internally, the rendered frame data is cached to improve performance. You can control the memory usage by setting the QLOTTIE_RENDER_CACHE_SIZE environment variable (default value is 2).</p>
         <p>You can monitor the rendering performance by turning on two logging categories:</p>
 <ul>        <li><code>qt.lottieqt.lottie.render</code> - Provides information how the animation is rendered</li>

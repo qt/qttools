@@ -1275,3 +1275,214 @@ SCENARIO("Document toJson without cppReferenceInfo", "[IR::Document][IR::CppRefe
         }
     }
 }
+
+SCENARIO("IR::NavigationInfo empty defaults", "[IR::NavigationInfo][IR]") {
+
+    GIVEN("A default-constructed NavigationInfo") {
+        IR::NavigationInfo info;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("breadcrumbs is an empty array") {
+                REQUIRE(json["breadcrumbs"_L1].isArray());
+                REQUIRE(json["breadcrumbs"_L1].toArray().isEmpty());
+            }
+
+            THEN("tocEntries is an empty array") {
+                REQUIRE(json["tocEntries"_L1].isArray());
+                REQUIRE(json["tocEntries"_L1].toArray().isEmpty());
+            }
+
+            THEN("tocDepth is -1") {
+                REQUIRE(json["tocDepth"_L1].toInt() == -1);
+            }
+
+            THEN("Optional link keys are absent") {
+                REQUIRE(!json.contains("prevLink"_L1));
+                REQUIRE(!json.contains("nextLink"_L1));
+                REQUIRE(!json.contains("startLink"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("IR::NavigationInfo breadcrumb chain serialization", "[IR::NavigationInfo][IR]") {
+
+    GIVEN("A NavigationInfo with 3 breadcrumb entries") {
+        IR::NavigationInfo info;
+        info.breadcrumbs.append({"Qt Documentation"_L1, "index.html"_L1});
+        info.breadcrumbs.append({"Qt Core"_L1, "qtcore-index.html"_L1});
+        info.breadcrumbs.append({"QString"_L1, {}, IR::NavigationInfo::CrumbState::Current});
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("breadcrumbs array has 3 entries with title, href, and state") {
+                QJsonArray arr = json["breadcrumbs"_L1].toArray();
+                REQUIRE(arr.size() == 3);
+                REQUIRE(arr[0].toObject()["title"_L1].toString() == "Qt Documentation"_L1);
+                REQUIRE(arr[0].toObject()["href"_L1].toString() == "index.html"_L1);
+                REQUIRE(arr[0].toObject()["state"_L1].toString() == "link"_L1);
+                REQUIRE(arr[2].toObject()["title"_L1].toString() == "QString"_L1);
+                REQUIRE(arr[2].toObject()["href"_L1].toString().isEmpty());
+                REQUIRE(arr[2].toObject()["state"_L1].toString() == "current"_L1);
+            }
+        }
+    }
+}
+
+SCENARIO("IR::NavigationInfo breadcrumb state variants", "[IR::NavigationInfo][IR]") {
+
+    GIVEN("A NavigationInfo with one crumb of each state") {
+        IR::NavigationInfo info;
+        info.breadcrumbs.append({"Home"_L1, "index.html"_L1, IR::NavigationInfo::CrumbState::Link});
+        info.breadcrumbs.append({"C++ Classes"_L1, {}, IR::NavigationInfo::CrumbState::Unresolved});
+        info.breadcrumbs.append({"QString"_L1, {}, IR::NavigationInfo::CrumbState::Current});
+
+        WHEN("Converting to JSON") {
+            QJsonArray arr = info.toJson()["breadcrumbs"_L1].toArray();
+
+            THEN("Each state serializes to its distinct string") {
+                REQUIRE(arr[0].toObject()["state"_L1].toString() == "link"_L1);
+                REQUIRE(arr[1].toObject()["state"_L1].toString() == "unresolved"_L1);
+                REQUIRE(arr[2].toObject()["state"_L1].toString() == "current"_L1);
+            }
+
+            THEN("Unresolved and current both have empty href but different state") {
+                REQUIRE(arr[1].toObject()["href"_L1].toString().isEmpty());
+                REQUIRE(arr[2].toObject()["href"_L1].toString().isEmpty());
+                REQUIRE(arr[1].toObject()["state"_L1].toString()
+                        != arr[2].toObject()["state"_L1].toString());
+            }
+        }
+    }
+}
+
+SCENARIO("IR::NavigationInfo toc entries serialization", "[IR::NavigationInfo][IR]") {
+
+    GIVEN("A NavigationInfo with TOC entries at multiple levels") {
+        IR::NavigationInfo info;
+        info.tocEntries.append({"Public Functions"_L1, "public-functions"_L1, 2});
+        info.tocEntries.append({"Detailed Description"_L1, "details"_L1, 2});
+        info.tocEntries.append({"Basic Usage"_L1, "basic-usage"_L1, 3});
+        info.tocEntries.append({"Configuration"_L1, "configuration"_L1, 4});
+
+        WHEN("Converting to JSON") {
+            QJsonArray arr = info.toJson()["tocEntries"_L1].toArray();
+
+            THEN("tocEntries preserves order and carries title, anchor, level") {
+                REQUIRE(arr.size() == 4);
+                REQUIRE(arr[0].toObject()["title"_L1].toString() == "Public Functions"_L1);
+                REQUIRE(arr[0].toObject()["anchorId"_L1].toString() == "public-functions"_L1);
+                REQUIRE(arr[0].toObject()["level"_L1].toInt() == 2);
+                REQUIRE(arr[3].toObject()["level"_L1].toInt() == 4);
+            }
+        }
+    }
+}
+
+SCENARIO("IR::NavigationInfo sequential links serialization", "[IR::NavigationInfo][IR]") {
+
+    GIVEN("A NavigationInfo with all three sequential links") {
+        IR::NavigationInfo info;
+        info.previousLink = IR::NavigationInfo::LinkEntry{"Previous Page"_L1, "prev.html"_L1};
+        info.nextLink = IR::NavigationInfo::LinkEntry{"Next Page"_L1, "next.html"_L1};
+        info.startLink = IR::NavigationInfo::LinkEntry{"Start Page"_L1, "start.html"_L1};
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("All three link objects are present") {
+                REQUIRE(json.contains("prevLink"_L1));
+                REQUIRE(json["prevLink"_L1].toObject()["title"_L1].toString() == "Previous Page"_L1);
+                REQUIRE(json["prevLink"_L1].toObject()["href"_L1].toString() == "prev.html"_L1);
+                REQUIRE(json.contains("nextLink"_L1));
+                REQUIRE(json.contains("startLink"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("IR::NavigationInfo partial sequential links", "[IR::NavigationInfo][IR]") {
+
+    GIVEN("A NavigationInfo with only previousLink set") {
+        IR::NavigationInfo info;
+        info.previousLink = IR::NavigationInfo::LinkEntry{"Prev"_L1, "prev.html"_L1};
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = info.toJson();
+
+            THEN("Only prevLink is present") {
+                REQUIRE(json.contains("prevLink"_L1));
+                REQUIRE(!json.contains("nextLink"_L1));
+                REQUIRE(!json.contains("startLink"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("IR::NavigationInfo tocDepth values", "[IR::NavigationInfo][IR]") {
+
+    GIVEN("NavigationInfo with various tocDepth values") {
+
+        WHEN("tocDepth is 0 (suppress TOC)") {
+            IR::NavigationInfo info;
+            info.tocDepth = 0;
+            QJsonObject json = info.toJson();
+
+            THEN("tocDepth serializes as 0") {
+                REQUIRE(json["tocDepth"_L1].toInt() == 0);
+            }
+        }
+
+        WHEN("tocDepth is 3 (limited)") {
+            IR::NavigationInfo info;
+            info.tocDepth = 3;
+            QJsonObject json = info.toJson();
+
+            THEN("tocDepth serializes as 3") {
+                REQUIRE(json["tocDepth"_L1].toInt() == 3);
+            }
+        }
+    }
+}
+
+SCENARIO("IR::Document hasNavigation flag", "[IR::Document][IR][NavigationInfo]") {
+
+    GIVEN("An IR::Document without navigation info") {
+        IR::Document ir;
+        ir.title = "RegularPage"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("hasNavigation is false and navigation key is absent") {
+                REQUIRE(json["hasNavigation"_L1].toBool() == false);
+                REQUIRE(!json.contains("navigation"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("IR::Document with NavigationInfo", "[IR::Document][IR][NavigationInfo]") {
+
+    GIVEN("An IR::Document with navigation info") {
+        IR::Document ir;
+        ir.title = "SomePage"_L1;
+        IR::NavigationInfo nav;
+        nav.breadcrumbs.append({"Home"_L1, "index.html"_L1});
+        nav.tocDepth = 2;
+        ir.navigationInfo = std::move(nav);
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("hasNavigation is true and navigation object is present") {
+                REQUIRE(json["hasNavigation"_L1].toBool() == true);
+                REQUIRE(json.contains("navigation"_L1));
+                REQUIRE(json["navigation"_L1].toObject()["tocDepth"_L1].toInt() == 2);
+            }
+        }
+    }
+}

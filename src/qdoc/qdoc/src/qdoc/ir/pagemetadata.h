@@ -149,6 +149,39 @@ struct CppReferenceData
     bool hasObsoleteMembers { false };
 };
 
+struct NavigationData
+{
+    enum class CrumbState {
+        Link,
+        Current,
+        Unresolved,
+    };
+
+    struct BreadcrumbEntry {
+        QString title;
+        QString href;
+        CrumbState state { CrumbState::Link };
+    };
+
+    struct LinkEntry {
+        QString title;
+        QString href;
+    };
+
+    struct TocEntry {
+        QString title;
+        QString anchorId;
+        int level { 2 };
+    };
+
+    QList<BreadcrumbEntry> breadcrumbs;
+    std::optional<LinkEntry> previousLink;
+    std::optional<LinkEntry> nextLink;
+    std::optional<LinkEntry> startLink;
+    QList<TocEntry> tocEntries;
+    int tocDepth { -1 };
+};
+
 struct PageMetadata
 {
     NodeType nodeType { NodeType::NoType };
@@ -170,6 +203,7 @@ struct PageMetadata
     std::optional<QmlTypeData> qmlTypeData;
     std::optional<CollectionData> collectionData;
     std::optional<CppReferenceData> cppReferenceData;
+    NavigationData navigationData;
 };
 
 } // namespace IR

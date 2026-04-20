@@ -259,6 +259,81 @@ QJsonObject CppReferenceInfo::toJson() const
     return json;
 }
 
+static QString crumbStateString(NavigationInfo::CrumbState state)
+{
+    switch (state) {
+    case NavigationInfo::CrumbState::Link:
+        return u"link"_s;
+    case NavigationInfo::CrumbState::Current:
+        return u"current"_s;
+    case NavigationInfo::CrumbState::Unresolved:
+        return u"unresolved"_s;
+    }
+    Q_UNREACHABLE_RETURN(u"link"_s);
+}
+
+/*!
+    Converts NavigationInfo to a QJsonObject for template rendering.
+
+    The \c breadcrumbs and \c tocEntries arrays are always emitted (empty
+    when none exist) so templates can iterate without guards. Each breadcrumb
+    carries a \c state discriminator (\c link, \c current, or \c unresolved)
+    so templates can distinguish a resolvable link, the current page, and
+    an unresolvable ancestor without conflating them through an empty href.
+    Sequential link objects (\c prevLink, \c nextLink, \c startLink) are
+    conditionally emitted only when set. The \c tocDepth integer is always
+    emitted (\c{-1} means unlimited depth).
+*/
+QJsonObject NavigationInfo::toJson() const
+{
+    QJsonObject json;
+
+    QJsonArray breadcrumbArr;
+    for (const auto &entry : breadcrumbs) {
+        QJsonObject obj;
+        obj["title"_L1] = entry.title;
+        obj["href"_L1] = entry.href;
+        obj["state"_L1] = crumbStateString(entry.state);
+        breadcrumbArr.append(obj);
+    }
+    json["breadcrumbs"_L1] = breadcrumbArr;
+
+    if (previousLink) {
+        QJsonObject obj;
+        obj["title"_L1] = previousLink->title;
+        obj["href"_L1] = previousLink->href;
+        json["prevLink"_L1] = obj;
+    }
+
+    if (nextLink) {
+        QJsonObject obj;
+        obj["title"_L1] = nextLink->title;
+        obj["href"_L1] = nextLink->href;
+        json["nextLink"_L1] = obj;
+    }
+
+    if (startLink) {
+        QJsonObject obj;
+        obj["title"_L1] = startLink->title;
+        obj["href"_L1] = startLink->href;
+        json["startLink"_L1] = obj;
+    }
+
+    QJsonArray tocArr;
+    for (const auto &entry : tocEntries) {
+        QJsonObject obj;
+        obj["title"_L1] = entry.title;
+        obj["anchorId"_L1] = entry.anchorId;
+        obj["level"_L1] = entry.level;
+        tocArr.append(obj);
+    }
+    json["tocEntries"_L1] = tocArr;
+
+    json["tocDepth"_L1] = tocDepth;
+
+    return json;
+}
+
 /*!
     Converts the Document to a QJsonObject for template rendering.
 
@@ -323,6 +398,11 @@ QJsonObject Document::toJson() const
     json["hasCppRef"_L1] = cppReferenceInfo.has_value();
     if (cppReferenceInfo)
         json["cppRef"_L1] = cppReferenceInfo->toJson();
+
+    // Navigation metadata (breadcrumbs, sequential links, TOC depth).
+    json["hasNavigation"_L1] = navigationInfo.has_value();
+    if (navigationInfo)
+        json["navigation"_L1] = navigationInfo->toJson();
 
     // Members sub-page URL (always emitted for Inja root-level variable safety;
     // empty string when no members sub-page was generated)

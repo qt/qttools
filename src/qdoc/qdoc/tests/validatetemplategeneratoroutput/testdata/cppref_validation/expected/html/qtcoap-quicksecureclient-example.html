@@ -17,12 +17,12 @@
         <p><i>Quick Secure CoAP Client</i> demonstrates how to create a secure CoAP client and use it in a Qt Quick application.</p>
         <aside class="admonition note" role="note"><p><b>Note: </b>Qt CoAP does not provide a QML API in its current version. However, you can make the C++ classes of the module available to QML as it is shown in the example.</p></aside>
         <section>
-        <h4>Running the Example</h4>
+        <h4 id="running-the-example">Running the Example</h4>
         <p>To run the example from <a href="https://doc.qt.io/qtcreator/">Qt Creator</a>, open the <b>Welcome</b> mode and select the example from <b>Examples</b>. For more information, see <a href="https://doc.qt.io/qtcreator/creator-build-example-application.html">Qt Creator: Tutorial: Build and run</a>.</p>
         <p>To run the example application, you first need to set up a secure CoAP server. You can run the example with any secure CoAP server supporting one of the <i>pre-shared key (PSK)</i> or <i>certificate</i> authentication modes. For more information about setting up a secure CoAP server, see <a href="qtcoap-quicksecureclient-example.html">Setting Up a Secure CoAP Server</a>.</p>
         </section>
         <section>
-        <h4>Exposing C++ Classes to QML</h4>
+        <h4 id="exposing-c-classes-to-qml">Exposing C++ Classes to QML</h4>
         <p>In this example, you need to expose the <a href="qcoapclient.html">QCoapClient</a> class and the <a href="qtcoap.html">QtCoap</a> namespace to QML. To achieve this, create a custom wrapper class and use the special <a href="https://doc.qt.io/qt-6/qtqml-cppintegration-definetypes.html">registration macros</a>.</p>
         <p>Create the <code>QmlCoapSecureClient</code> class as a wrapper around <a href="qcoapclient.html">QCoapClient</a>. This class also holds the selected security mode and security configuration parameters. Use the <a href="https://doc.qt.io/qt-6/qobject.html#Q_INVOKABLE">Q_INVOKABLE</a> macro to expose several methods to QML. Also use the <a href="https://doc.qt.io/qt-6/qqmlengine.html#QML_NAMED_ELEMENT">QML_NAMED_ELEMENT</a> macro to register the class in QML as <code>CoapSecureClient</code>.</p>
         <pre class="cpp" translate="no"><code>class QmlCoapSecureClient : public QObject
@@ -61,11 +61,11 @@ private:
 </code></pre>
         </section>
         <section>
-        <h4>Adjusting Build Files</h4>
+        <h4 id="adjusting-build-files">Adjusting Build Files</h4>
         <p>To make the custom types available from QML, update the build system files accordingly.</p>
         </section>
         <section>
-        <h5>CMake</h5>
+        <h5 id="cmake">CMake</h5>
         <p>For a <a href="qtcoap-quicksecureclient-example.html">CMake</a>-based build, add the following to the <code>CMakeLists.txt</code>:</p>
         <pre class="cpp" translate="no"><code>qt_add_qml_module(quicksecureclient
     URI CoapSecureClientModule
@@ -79,7 +79,7 @@ private:
 </code></pre>
         </section>
         <section>
-        <h5>qmake</h5>
+        <h5 id="qmake">qmake</h5>
         <p>For a qmake build, modify the <code>quicksecureclient.pro</code> file in the following way:</p>
         <pre class="cpp" translate="no"><code>CONFIG += qmltypes
 QML_IMPORT_NAME = CoapSecureClientModule
@@ -97,11 +97,11 @@ RESOURCES += qml_resources
 </code></pre>
         </section>
         <section>
-        <h4>Using New QML Types</h4>
+        <h4 id="using-new-qml-types">Using New QML Types</h4>
         <p>Now, when the C++ classes are properly exposed to QML, you can use the new types.</p>
         </section>
         <section>
-        <h5>Creating the Client</h5>
+        <h5 id="creating-the-client">Creating the Client</h5>
         <p><code>CoapSecureClient</code> is instantiated from the <code>Main.qml</code> file. It handles the <code>QmlCoapSecureClient::finished()</code> signal and updates the UI accordingly:</p>
         <pre class="qml" translate="no"><code>CoapSecureClient {
     id: client
@@ -155,7 +155,7 @@ RESOURCES += qml_resources
 </code></pre>
         </section>
         <section>
-        <h5>Sending a Request</h5>
+        <h5 id="sending-a-request">Sending a Request</h5>
         <p>Click the <b>Send Request</b> button to set the security configuration based on the selected security mode and send a <code>GET</code> request:</p>
         <pre class="qml" translate="no"><code>Button {
     id: requestButton
@@ -308,13 +308,13 @@ FilePicker {
 </code></pre>
         </section>
         <section>
-        <h4>Setting Up a Secure CoAP Server</h4>
+        <h4 id="setting-up-a-secure-coap-server">Setting Up a Secure CoAP Server</h4>
         <p>To run this example, you need to have a secure CoAP server supporting either PSK or Certificate modes (or both). You have the following options:</p>
 <ul>        <li>Manually build and run a secure CoAP server using, for example, <a href="https://github.com/obgm/libcoap">libcoap</a>, <a href="https://github.com/eclipse/californium">Californium</a>, <a href="https://github.com/keith-cullen/FreeCoAP">FreeCoAP</a>, or any other CoAP library which supports DTLS.</li>
         <li>Use the ready Docker images available at Docker Hub, which build and run the secure CoAP servers suitable for our example. The steps required for using the docker-based CoAP servers are described below.</li>
 </ul>        </section>
         <section>
-        <h5>Setting Up a Server For PSK Mode</h5>
+        <h5 id="setting-up-a-server-for-psk-mode">Setting Up a Server For PSK Mode</h5>
         <p>The following command pulls the docker container for a secure CoAP server based on <a href="https://github.com/eclipse/californium/tree/master/demo-apps/cf-plugtest-server">Californium plugtest</a> (which is not secure by default) from the Docker Hub and starts it:</p>
         <pre class="cpp" translate="no"><code>docker run --name coap-test-server -d --rm -p 5683:5683/udp -p 5684:5684/udp tqtc/coap-californium-test-server:3.8.0
 </code></pre>
@@ -322,7 +322,7 @@ FilePicker {
         <p>To run the example with this server, you need to set the pre-shared key to <code>secretPSK</code> and the identity to <code>Client_identity</code>.</p>
         </section>
         <section>
-        <h5>Setting Up a Server For Certificate Mode</h5>
+        <h5 id="setting-up-a-server-for-certificate-mode">Setting Up a Server For Certificate Mode</h5>
         <p>The docker image of the secure server using authentication with X.509 certificates is based on the <a href="https://github.com/keith-cullen/FreeCoAP/tree/master/sample/time_server">time server</a> example from the FreeCoAP library. The following command pulls the container from Docker Hub and starts it:</p>
         <pre class="cpp" translate="no"><code>docker run --name coap-time-server -d --rm -p 5684:5684/udp tqtc/coap-secure-time-server:freecoap
 </code></pre>
@@ -336,7 +336,7 @@ FilePicker {
         <p>The instructions for getting the container ID are described below.</p>
         </section>
         <section>
-        <h5>Getting The IP Address</h5>
+        <h5 id="getting-the-ip-address">Getting The IP Address</h5>
         <p>To find out the IP address of a docker container, first retrieve the container ID by running the <code>docker ps</code> command, which will output something like:</p>
         <pre class="cpp" translate="no"><code>$ docker ps
 CONTAINER ID        IMAGE
@@ -353,7 +353,7 @@ CONTAINER ID        IMAGE
 </code></pre>
         </section>
         <section>
-        <h5>Terminating a Docker Container</h5>
+        <h5 id="terminating-a-docker-container">Terminating a Docker Container</h5>
         <p>To terminate a docker container after usage, use the following command:</p>
         <pre class="cpp" translate="no"><code>docker stop &lt;container_id&gt;
 </code></pre>

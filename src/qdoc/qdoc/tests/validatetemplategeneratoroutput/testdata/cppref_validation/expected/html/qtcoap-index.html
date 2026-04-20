@@ -22,11 +22,11 @@
         <li>Resource observation defined by <a href="https://datatracker.ietf.org/doc/html/rfc7641">RFC 7641</a></li>
         <li>Resource discovery (multicast and single server)</li>
 </ul>        <section>
-        <h2>Using the Module</h2>
+        <h2 id="using-the-module">Using the Module</h2>
         <p>Using a Qt module requires linking against the module library, either directly or through other dependencies. Several build tools have dedicated support for this, including <a href="https://doc.qt.io/qt-6/cmake-manual.html">CMake</a> and <a href="qtcoap-quicksecureclient-example.html">qmake</a>.</p>
         </section>
         <section>
-        <h3>Building with CMake</h3>
+        <h3 id="building-with-cmake">Building with CMake</h3>
         <p>Use the <code>find_package()</code> command to locate the needed module components in the <code>Qt6</code> package:</p>
         <pre class="cpp" translate="no"><code>find_package(Qt6 REQUIRED COMPONENTS Coap)
 target_link_libraries(mytarget PRIVATE Qt6::Coap)
@@ -34,25 +34,25 @@ target_link_libraries(mytarget PRIVATE Qt6::Coap)
         <p>See also the <a href="https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html">Build with CMake</a> overview.</p>
         </section>
         <section>
-        <h3>Building with qmake</h3>
+        <h3 id="building-with-qmake">Building with qmake</h3>
         <p>To configure the module for building with qmake, add the module as a value of the <code>QT</code> variable in the project&apos;s .pro file:</p>
         <pre class="cpp" translate="no"><code>QT += coap
 </code></pre>
         </section>
         <section>
-        <h2>Articles and Guides</h2>
+        <h2 id="articles-and-guides">Articles and Guides</h2>
 <ul>        <li><a href="qtcoap-overview.html">Overview</a></li>
 </ul>        </section>
         <section>
-        <h2>Examples</h2>
+        <h2 id="examples">Examples</h2>
 <ul>        <li><a href="qtcoap-examples.html">Qt CoAP Examples</a></li>
 </ul>        </section>
         <section>
-        <h2>Reference</h2>
+        <h2 id="reference">Reference</h2>
 <ul>        <li><a href="qtcoap-module.html">C++ Classes</a></li>
 </ul>        </section>
         <section>
-        <h2>Licenses and Attributions</h2>
+        <h2 id="licenses-and-attributions">Licenses and Attributions</h2>
         <p>Qt CoAP is available under commercial licenses from <a href="https://www.qt.io/">The Qt Company</a>. In addition, it is available under the <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General Public License, version 3</a>.</p>
         <div></div>
         </section>

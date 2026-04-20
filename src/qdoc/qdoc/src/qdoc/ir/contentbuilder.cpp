@@ -410,6 +410,11 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
     case Atom::SectionHeadingLeft: {
         QJsonObject attrs;
         attrs["level"_L1] = atom->string().toInt() + m_headingOffset;
+        // SectionHeadingLeft carries the heading level at string(0) and the
+        // anchor identifier at string(1). The second payload is populated
+        // only when a heading-level macro (\sectionN) emits an explicit ref.
+        if (atom->count() >= 2)
+            attrs["sectionRef"_L1] = atom->string(1);
         openBlock(BlockType::SectionHeading, attrs);
         break;
     }

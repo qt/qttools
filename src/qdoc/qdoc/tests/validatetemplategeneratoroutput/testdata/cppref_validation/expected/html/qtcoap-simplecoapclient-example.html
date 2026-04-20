@@ -16,18 +16,18 @@
         <p class="centerAlign"><img src="images/simplecoapclient.webp" alt="CoAP client window with Add Options dialog and discovered resources"/></p>
         <p><i>Simple CoAP Client</i> demonstrates how to create a minimalistic CoAP client application to send and receive CoAP messages.</p>
         <section>
-        <h4>Running the Example</h4>
+        <h4 id="running-the-example">Running the Example</h4>
         <p>To run the example from <a href="https://doc.qt.io/qtcreator/">Qt Creator</a>, open the <b>Welcome</b> mode and select the example from <b>Examples</b>. For more information, see <a href="https://doc.qt.io/qtcreator/creator-build-example-application.html">Qt Creator: Tutorial: Build and run</a>.</p>
         </section>
         <section>
-        <h4>Setting Up a CoAP Server</h4>
+        <h4 id="setting-up-a-coap-server">Setting Up a CoAP Server</h4>
         <p>To use the application, you need to specify a CoAP server. You have the following options:</p>
 <ul>        <li>Use the CoAP test server located at <code>coap://coap.me</code>.</li>
         <li>Create a CoAP server using <a href="https://github.com/obgm/libcoap">libcoap</a>, <a href="https://github.com/keith-cullen/FreeCoAP">FreeCoAP</a> or any other CoAP server implementation.</li>
         <li>Use the <a href="https://github.com/eclipse/californium/">Californium</a> plugtest server, which supports most of the CoAP features. You can build it manually or use a ready Docker image, which builds and starts the plugtest server. The steps for using the docker-based server are described below.</li>
 </ul>        </section>
         <section>
-        <h5>Using the Docker-based Test Server</h5>
+        <h5 id="using-the-docker-based-test-server">Using the Docker-based Test Server</h5>
         <p>The following command pulls the docker container for the CoAP server from the Docker Hub and starts it:</p>
         <pre class="cpp" translate="no"><code>docker run --name coap-test-server -d --rm -p 5683:5683/udp -p 5684:5684/udp tqtc/coap-californium-test-server:3.8.0
 </code></pre>
@@ -52,7 +52,7 @@ CONTAINER ID        IMAGE
         <p>The <code>&lt;container_id&gt;</code> here is the same as retrieved by the <code>docker ps</code> command.</p>
         </section>
         <section>
-        <h4>Creating a Client</h4>
+        <h4 id="creating-a-client">Creating a Client</h4>
         <p>The first step is to create a CoAP client using the <a href="qcoapclient.html">QCoapClient</a> class. Then we need to connect its signals, to get notified when a CoAP reply is received or a request has failed:</p>
         <pre class="cpp" translate="no"><code>MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -65,7 +65,7 @@ CONTAINER ID        IMAGE
 </code></pre>
         </section>
         <section>
-        <h4>Sending Requests</h4>
+        <h4 id="sending-requests">Sending Requests</h4>
         <p>We use the <a href="qcoaprequest.html">QCoapRequest</a> class to create CoAP requests. This class provides methods for constructing CoAP frames.</p>
         <pre class="cpp" translate="no"><code>void MainWindow::on_runButton_clicked()
 {
