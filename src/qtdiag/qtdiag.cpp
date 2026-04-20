@@ -298,6 +298,18 @@ void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation
         { "HalfAttributes", QRhi::HalfAttributes },
         { "RenderToOneDimensionalTexture", QRhi::RenderToOneDimensionalTexture },
         { "ThreeDimensionalTextureMipmaps", QRhi::ThreeDimensionalTextureMipmaps },
+        { "MultiView", QRhi::MultiView },
+        { "TextureViewFormat", QRhi::TextureViewFormat },
+        { "ResolveDepthStencil", QRhi::ResolveDepthStencil },
+        { "VariableRateShading", QRhi::VariableRateShading },
+        { "VariableRateShadingMap", QRhi::VariableRateShadingMap },
+        { "VariableRateShadingMapWithTexture", QRhi::VariableRateShadingMapWithTexture },
+        { "PerRenderTargetBlending", QRhi::PerRenderTargetBlending },
+        { "SampleVariables", QRhi::SampleVariables },
+        { "InstanceIndexIncludesBaseInstance", QRhi::InstanceIndexIncludesBaseInstance },
+        { "DepthClamp", QRhi::DepthClamp },
+        { "DrawIndirect", QRhi::DrawIndirect },
+        { "DrawIndirectMulti", QRhi::DrawIndirectMulti },
 
         { nullptr, QRhi::Feature(0) }
     };
