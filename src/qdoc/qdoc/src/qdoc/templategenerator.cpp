@@ -442,6 +442,8 @@ void TemplateGenerator::renderJson(const QJsonObject &json, const QString &templ
     QJsonObject enrichedJson = json;
     enrichedJson["stylesheetEnabled"_L1] = m_emitStylesheet;
     enrichedJson["stylesheetName"_L1] = m_stylesheetName;
+    if (!enrichedJson.contains("hasNavigation"_L1))
+        enrichedJson["hasNavigation"_L1] = false;
 
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
     QString rendered = InjaBridge::render(templateContent, enrichedJson, includeCallback);

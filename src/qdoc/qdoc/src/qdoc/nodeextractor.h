@@ -32,6 +32,7 @@ QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const Hre
 IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver, const Node *relative, MemberExtractionLevel level = MemberExtractionLevel::Summary);
 std::optional<IR::AllMembersIR> extractAllMembersIR(const PageNode *pn, const HrefResolver *hrefResolver);
 QList<IR::SignatureSpan> buildSignatureSpans(const Node *node, const HrefResolver *hrefResolver, const Node *relative, Section::Style style);
+IR::NavigationData extractNavigationData(const PageNode *pn, const HrefResolver *hrefResolver);
 
 } // namespace NodeExtractor
 

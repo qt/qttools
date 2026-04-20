@@ -139,6 +139,13 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
         return;
     }
 
+    // Intra-page anchor link -- references a section heading or member
+    // anchor within the same page. These don't go through node lookup.
+    if (target.startsWith('#'_L1)) {
+        link.link->state = IR::LinkState::Resolved;
+        return;
+    }
+
     // Use genus and module metadata from ContentBuilder when available.
     // Explicit links (LinkAtom) carry genus and module; autolinks don't.
     const Genus genus = genusFromString(

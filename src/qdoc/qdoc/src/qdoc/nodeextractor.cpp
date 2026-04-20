@@ -171,6 +171,8 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hre
         pm.cppReferenceData = extractCppReferenceData(aggregate, hrefResolver);
     }
 
+    pm.navigationData = extractNavigationData(pn, hrefResolver);
+
     return pm;
 }
 
@@ -1596,6 +1598,187 @@ std::optional<IR::AllMembersIR> extractAllMembersIR(const PageNode *pn, const Hr
     }
 
     return std::nullopt;
+}
+
+/*!
+    \internal
+    Extract navigation metadata from a PageNode.
+
+    Reads navigation configuration values (homepage, landingpage,
+    cppclassespage, qmltypespage) and the node's position in the
+    documentation tree to produce a breadcrumb chain, sequential
+    links (previous/next/start), and the configured TOC depth.
+
+    The breadcrumb chain follows page-type-specific logic ported
+    from HtmlGenerator::generateNavigationBar(): static chain
+    entries for API reference pages (class, QML type), a
+    navigationParent() walk for generic pages with a 16-item
+    circular reference cutoff, and a fallback to the first group
+    page when no navigation parent exists.
+
+    Sequential links come from the node's pre-populated link map,
+    set by QDocDatabase::updateNavigation() before generation runs.
+*/
+IR::NavigationData extractNavigationData(const PageNode *pn, const HrefResolver *hrefResolver)
+{
+    IR::NavigationData nav;
+    const Config &config = Config::instance();
+    QDocDatabase *qdb = QDocDatabase::qdocDB();
+
+    const QString navDot = CONFIG_NAVIGATION + Config::dot;
+    const QString homepage = config.get(navDot + CONFIG_HOMEPAGE).asString();
+    const QString hometitle = config.get(navDot + CONFIG_HOMETITLE).asString(homepage);
+    const QString landingpage = config.get(navDot + CONFIG_LANDINGPAGE).asString();
+    const QString landingtitle = config.get(navDot + CONFIG_LANDINGTITLE).asString(landingpage);
+    const QString cppclassespage = config.get(navDot + CONFIG_CPPCLASSESPAGE).asString();
+    const QString cppclassestitle = config.get(navDot + CONFIG_CPPCLASSESTITLE).asString("C++ Classes"_L1);
+    const QString qmltypespage = config.get(navDot + CONFIG_QMLTYPESPAGE).asString();
+    const QString qmltypestitle = config.get(navDot + CONFIG_QMLTYPESTITLE).asString("QML Types"_L1);
+
+    const QString pageTitle = pn->title();
+    using CrumbState = IR::NavigationData::CrumbState;
+
+    auto resolveCrumb = [&](const QString &targetName)
+            -> std::pair<QString, CrumbState> {
+        const Node *target = qdb->findNodeForTarget(targetName, pn);
+        if (!target)
+            return {{}, CrumbState::Unresolved};
+        if (target == pn)
+            return {{}, CrumbState::Current};
+        return {resolveHref(hrefResolver, target, pn), CrumbState::Link};
+    };
+
+    if (!homepage.isEmpty()) {
+        auto [href, state] = resolveCrumb(homepage);
+        if (state == CrumbState::Current)
+            return nav;
+        nav.breadcrumbs.append({hometitle, std::move(href), state});
+    }
+
+    if (!landingpage.isEmpty()) {
+        auto [href, state] = resolveCrumb(landingpage);
+        if (state != CrumbState::Current)
+            nav.breadcrumbs.append({landingtitle, std::move(href), state});
+    }
+
+    if (pn->isClassNode()) {
+        if (!cppclassespage.isEmpty() && !cppclassestitle.isEmpty()) {
+            auto [href, state] = resolveCrumb(cppclassespage);
+            nav.breadcrumbs.append({cppclassestitle, std::move(href), state});
+        }
+
+        const auto *moduleNode = qdb->getModuleNode(pn);
+        QString moduleState;
+        if (moduleNode && !moduleNode->state().isEmpty())
+            moduleState = QStringLiteral(" (%1)").arg(moduleNode->state());
+
+        if (!pn->physicalModuleName().isEmpty() && moduleNode
+            && (!moduleState.isEmpty() || moduleNode->title() != cppclassespage)) {
+            nav.breadcrumbs.append({moduleNode->name() + moduleState,
+                                    resolveHref(hrefResolver, moduleNode, pn),
+                                    CrumbState::Link});
+        }
+        nav.breadcrumbs.append({pn->name(), {}, CrumbState::Current});
+    } else if (pn->isQmlType()) {
+        if (!qmltypespage.isEmpty() && !qmltypestitle.isEmpty()) {
+            auto [href, state] = resolveCrumb(qmltypespage);
+            nav.breadcrumbs.append({qmltypestitle, std::move(href), state});
+        }
+
+        const auto *moduleNode = qdb->getModuleNode(pn);
+        QString moduleState;
+        if (moduleNode && !moduleNode->state().isEmpty())
+            moduleState = QStringLiteral(" (%1)").arg(moduleNode->state());
+
+        if (moduleNode
+            && (!moduleState.isEmpty() || moduleNode->title() != qmltypespage)) {
+            nav.breadcrumbs.append({moduleNode->name() + moduleState,
+                                    resolveHref(hrefResolver, moduleNode, pn),
+                                    CrumbState::Link});
+        }
+        nav.breadcrumbs.append({pn->name(), {}, CrumbState::Current});
+    } else {
+        auto currentNode = pn;
+        std::deque<const Node *> navNodes;
+        qsizetype navItems = 0;
+        while (currentNode->navigationParent() && ++navItems < 16) {
+            if (std::find(navNodes.cbegin(), navNodes.cend(),
+                          currentNode->navigationParent()) == navNodes.cend())
+                navNodes.push_front(currentNode->navigationParent());
+            currentNode = currentNode->navigationParent();
+        }
+        if (navNodes.empty()) {
+            const QStringList groups = pn->groupNames();
+            for (const auto &groupName : groups) {
+                const auto *groupNode = qdb->findNodeByNameAndType(
+                        QStringList{groupName}, &Node::isGroup);
+                if (groupNode && !groupNode->title().isEmpty()) {
+                    navNodes.push_front(groupNode);
+                    break;
+                }
+            }
+        }
+        for (const auto *navNode : navNodes) {
+            if (navNode->isPageNode())
+                nav.breadcrumbs.append({navNode->title(),
+                                        resolveHref(hrefResolver, navNode, pn),
+                                        CrumbState::Link});
+        }
+        if (!nav.breadcrumbs.isEmpty())
+            nav.breadcrumbs.append({pageTitle, {}, CrumbState::Current});
+    }
+
+    const auto &linkMap = pn->links();
+    if (linkMap.contains(Node::PreviousLink)) {
+        const auto &linkPair = linkMap[Node::PreviousLink];
+        const Node *target = qdb->findNodeForTarget(linkPair.first, pn);
+        QString href;
+        QString title;
+        if (target && target != pn) {
+            href = resolveHref(hrefResolver, target, pn);
+            title = (linkPair.first == linkPair.second && !target->title().isEmpty())
+                    ? target->title() : linkPair.second;
+        } else {
+            href = linkPair.first;
+            title = linkPair.second;
+        }
+        nav.previousLink = IR::NavigationData::LinkEntry{title, href};
+    }
+    if (linkMap.contains(Node::NextLink)) {
+        const auto &linkPair = linkMap[Node::NextLink];
+        const Node *target = qdb->findNodeForTarget(linkPair.first, pn);
+        QString href;
+        QString title;
+        if (target && target != pn) {
+            href = resolveHref(hrefResolver, target, pn);
+            title = (linkPair.first == linkPair.second && !target->title().isEmpty())
+                    ? target->title() : linkPair.second;
+        } else {
+            href = linkPair.first;
+            title = linkPair.second;
+        }
+        nav.nextLink = IR::NavigationData::LinkEntry{title, href};
+    }
+    if (linkMap.contains(Node::StartLink)) {
+        const auto &linkPair = linkMap[Node::StartLink];
+        const Node *target = qdb->findNodeForTarget(linkPair.first, pn);
+        QString href;
+        QString title;
+        if (target && target != pn) {
+            href = resolveHref(hrefResolver, target, pn);
+            title = (linkPair.first == linkPair.second && !target->title().isEmpty())
+                    ? target->title() : linkPair.second;
+        } else {
+            href = linkPair.first;
+            title = linkPair.second;
+        }
+        nav.startLink = IR::NavigationData::LinkEntry{title, href};
+    }
+
+    const QString formatDot = "HTML"_L1 + Config::dot;
+    nav.tocDepth = config.get(formatDot + "tocdepth"_L1).asInt();
+
+    return nav;
 }
 
 } // namespace NodeExtractor

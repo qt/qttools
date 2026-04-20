@@ -13,6 +13,25 @@ using namespace Qt::Literals;
 
 namespace IR {
 
+static void gatherBodyTocEntries(
+        const QList<ContentBlock> &blocks,
+        QList<NavigationInfo::TocEntry> &out)
+{
+    for (const auto &block : blocks) {
+        if (block.type == BlockType::SectionHeading) {
+            if (!block.attributes.contains("sectionRef"_L1))
+                continue;
+            const QString anchorId = block.attributes.value("sectionRef"_L1).toString();
+            if (anchorId.isEmpty())
+                continue;
+            const int level = block.attributes.value("level"_L1).toInt(3);
+            out.append({block.plainText(), anchorId, level});
+        } else if (block.type == BlockType::Section) {
+            gatherBodyTocEntries(block.children, out);
+        }
+    }
+}
+
 static InlineContent makeTextInline(const QString &text)
 {
     InlineContent ic;
@@ -283,6 +302,61 @@ Document Builder::buildPageIR(PageMetadata pm) const
         // should receive the file extension and compute it here.
 
         ir.cppReferenceInfo = std::move(info);
+    }
+
+    {
+        const auto &src = pm.navigationData;
+        NavigationInfo info;
+        for (const auto &bc : src.breadcrumbs) {
+            NavigationInfo::BreadcrumbEntry entry;
+            entry.title = bc.title;
+            entry.href = bc.href;
+            switch (bc.state) {
+            case NavigationData::CrumbState::Link:
+                entry.state = NavigationInfo::CrumbState::Link;
+                break;
+            case NavigationData::CrumbState::Current:
+                entry.state = NavigationInfo::CrumbState::Current;
+                break;
+            case NavigationData::CrumbState::Unresolved:
+                entry.state = NavigationInfo::CrumbState::Unresolved;
+                break;
+            }
+            info.breadcrumbs.append(std::move(entry));
+        }
+        if (src.previousLink)
+            info.previousLink = NavigationInfo::LinkEntry{
+                    src.previousLink->title, src.previousLink->href};
+        if (src.nextLink)
+            info.nextLink = NavigationInfo::LinkEntry{
+                    src.nextLink->title, src.nextLink->href};
+        if (src.startLink)
+            info.startLink = NavigationInfo::LinkEntry{
+                    src.startLink->title, src.startLink->href};
+        info.tocDepth = src.tocDepth;
+
+        // Assemble TOC entries from page structure (summary sections +
+        // "Detailed Description" divider + body section-headings +
+        // detail sections). Order reflects the rendered page, so templates
+        // can iterate for a top-to-bottom reading of available anchors.
+        for (const auto &s : ir.summarySections) {
+            if (!s.title.isEmpty() && !s.id.isEmpty())
+                info.tocEntries.append({s.title, s.id, 2});
+        }
+        if (ir.cppReferenceInfo && !ir.body.isEmpty())
+            info.tocEntries.append(
+                    {u"Detailed Description"_s, u"details"_s, 2});
+        gatherBodyTocEntries(ir.body, info.tocEntries);
+        for (const auto &s : ir.detailSections) {
+            if (!s.title.isEmpty() && !s.id.isEmpty())
+                info.tocEntries.append({s.title, s.id, 2});
+        }
+
+        const bool hasAnyNavigation = !info.breadcrumbs.isEmpty()
+                || info.previousLink || info.nextLink || info.startLink
+                || !info.tocEntries.isEmpty() || info.tocDepth != -1;
+        if (hasAnyNavigation)
+            ir.navigationInfo = std::move(info);
     }
 
     // Transitional: templates don't yet consume content.blocks.
