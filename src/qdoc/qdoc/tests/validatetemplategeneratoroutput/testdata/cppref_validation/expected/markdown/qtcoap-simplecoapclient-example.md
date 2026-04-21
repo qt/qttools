@@ -25,7 +25,7 @@ To use the application, you need to specify a CoAP server. You have the followin
 - Use the [Californium](https://github.com/eclipse/californium/) plugtest server, which supports most of the CoAP features. You can build it manually or use a ready Docker image, which builds and starts the plugtest server. The steps for using the docker-based server are described below.
 
 
-Using the Docker-based Test Server
+##### Using the Docker-based Test Server
 
 The following command pulls the docker container for the CoAP server from the Docker Hub and starts it:
 ```cpp

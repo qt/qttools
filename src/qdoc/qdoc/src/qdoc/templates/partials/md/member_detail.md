@@ -17,7 +17,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 ```
 
 {% else if block.type == "section-heading" %}
-{% if block.attributes.level == 1 %}# {% else if block.attributes.level == 2 %}## {% else if block.attributes.level == 3 %}### {% else if block.attributes.level == 4 %}#### {% endif %}{{ block.text }}
+{% if block.attributes.level == 1 %}# {% else if block.attributes.level == 2 %}## {% else if block.attributes.level == 3 %}### {% else if block.attributes.level == 4 %}#### {% else if block.attributes.level == 5 %}##### {% else if block.attributes.level == 6 %}###### {% endif %}{{ block.text }}
 
 {% else if block.type == "list" %}
 {% for item in block.children %}
@@ -57,7 +57,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% else if block.type == "section" %}
 {% for child in block.children %}
 {% if child.type == "section-heading" %}
-{% if child.attributes.level == 1 %}# {% else if child.attributes.level == 2 %}## {% else if child.attributes.level == 3 %}### {% else if child.attributes.level == 4 %}#### {% endif %}{{ child.text }}
+{% if child.attributes.level == 1 %}# {% else if child.attributes.level == 2 %}## {% else if child.attributes.level == 3 %}### {% else if child.attributes.level == 4 %}#### {% else if child.attributes.level == 5 %}##### {% else if child.attributes.level == 6 %}###### {% endif %}{{ child.text }}
 
 {% else if child.type == "paragraph" %}
 {% for i in child.inlines %}{% if i.type == "text" %}{{ i.text }}{% else if i.type == "code" %}`{{ i.text }}`{% else if i.type == "bold" %}**{% for c in i.children %}{{ c.text }}{% endfor %}**{% else if i.type == "italic" %}_{% for c in i.children %}{{ c.text }}{% endfor %}_{% else if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ c.text }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ c.text }}{% endfor %}{% endif %}{% else if i.type == "teletype" %}`{% for c in i.children %}{{ c.text }}{% endfor %}`{% else if i.type == "underline" %}<u>{% for c in i.children %}{{ c.text }}{% endfor %}</u>{% else if i.type == "strikethrough" %}~~{% for c in i.children %}{{ c.text }}{% endfor %}~~{% else if i.type == "subscript" %}<sub>{% for c in i.children %}{{ c.text }}{% endfor %}</sub>{% else if i.type == "superscript" %}<sup>{% for c in i.children %}{{ c.text }}{% endfor %}</sup>{% else if i.type == "parameter" %}_{% for c in i.children %}{{ c.text }}{% endfor %}_{% else if i.type == "line-break" %}

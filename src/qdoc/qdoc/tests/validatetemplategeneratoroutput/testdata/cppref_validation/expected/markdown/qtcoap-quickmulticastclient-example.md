@@ -29,7 +29,7 @@ To run the example application, you first need to set up and start at least one 
 - Use the ready Docker image available at Docker Hub, which builds and starts CoAP server based on Californium's [multicast server example](https://github.com/eclipse/californium/tree/2.0.0/demo-apps/cf-helloworld-server).
 
 
-Using the Docker-based Test Server
+##### Using the Docker-based Test Server
 
 The following command pulls the docker container for the CoAP server from the Docker Hub and starts it:
 ```cpp
@@ -127,7 +127,7 @@ namespace QCoapForeignNamespace
 
 To make the custom types available from QML, update the build system files accordingly.
 
-CMake Build
+##### CMake Build
 
 For a [CMake](qtcoap-quicksecureclient-example.md)-based build, add the following to the `CMakeLists.txt`:
 ```cpp
@@ -144,7 +144,7 @@ qt_add_qml_module(quickmulticastclient
 ```
 
 
-qmake Build
+##### qmake Build
 
 For a qmake build, modify the `quickmulticastclient.pro` file in the following way:
 ```cpp

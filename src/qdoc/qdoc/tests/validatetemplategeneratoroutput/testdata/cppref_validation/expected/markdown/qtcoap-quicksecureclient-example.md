@@ -77,7 +77,7 @@ namespace QCoapForeignNamespace
 
 To make the custom types available from QML, update the build system files accordingly.
 
-CMake
+##### CMake
 
 For a [CMake](qtcoap-quicksecureclient-example.md)-based build, add the following to the `CMakeLists.txt`:
 ```cpp
@@ -94,7 +94,7 @@ qt_add_qml_module(quicksecureclient
 ```
 
 
-qmake
+##### qmake
 
 For a qmake build, modify the `quicksecureclient.pro` file in the following way:
 ```cpp
@@ -119,7 +119,7 @@ RESOURCES += qml_resources
 
 Now, when the C++ classes are properly exposed to QML, you can use the new types.
 
-Creating the Client
+##### Creating the Client
 
 `CoapSecureClient` is instantiated from the `Main.qml` file. It handles the `QmlCoapSecureClient::finished()` signal and updates the UI accordingly:
 ```qml
@@ -182,7 +182,7 @@ void QmlCoapSecureClient::setSecurityMode(QtCoap::SecurityMode mode)
 ```
 
 
-Sending a Request
+##### Sending a Request
 
 Click the **Send Request** button to set the security configuration based on the selected security mode and send a `GET` request:
 ```qml
@@ -363,7 +363,7 @@ To run this example, you need to have a secure CoAP server supporting either PSK
 - Use the ready Docker images available at Docker Hub, which build and run the secure CoAP servers suitable for our example. The steps required for using the docker-based CoAP servers are described below.
 
 
-Setting Up a Server For PSK Mode
+##### Setting Up a Server For PSK Mode
 
 The following command pulls the docker container for a secure CoAP server based on [Californium plugtest](https://github.com/eclipse/californium/tree/master/demo-apps/cf-plugtest-server) (which is not secure by default) from the Docker Hub and starts it:
 ```cpp
@@ -374,7 +374,7 @@ docker run --name coap-test-server -d --rm -p 5683:5683/udp -p 5684:5684/udp tqt
 The CoAP test server will be reachable on ports _5683_ (non-secure) and _5684_ (secure). For instructions on retrieving the IP address see [Getting The IP Address](qtcoap-quicksecureclient-example.md).
 To run the example with this server, you need to set the pre-shared key to `secretPSK` and the identity to `Client_identity`.
 
-Setting Up a Server For Certificate Mode
+##### Setting Up a Server For Certificate Mode
 
 The docker image of the secure server using authentication with X.509 certificates is based on the [time server](https://github.com/keith-cullen/FreeCoAP/tree/master/sample/time_server) example from the FreeCoAP library. The following command pulls the container from Docker Hub and starts it:
 ```cpp
@@ -397,7 +397,7 @@ $ docker cp 5e46502df88f:/root/certs ~/
 
 The instructions for getting the container ID are described below.
 
-Getting The IP Address
+##### Getting The IP Address
 
 To find out the IP address of a docker container, first retrieve the container ID by running the `docker ps` command, which will output something like:
 ```cpp
@@ -423,7 +423,7 @@ $ docker inspect 5e46502df88f | grep IPAddress
 ```
 
 
-Terminating a Docker Container
+##### Terminating a Docker Container
 
 To terminate a docker container after usage, use the following command:
 ```cpp
