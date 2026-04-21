@@ -37,6 +37,4 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% endif %}
 {% endfor %}
 {% endif %}
----
-
-*Built with QDoc's template engine.*
+{% include "partials/md/footer.md" %}

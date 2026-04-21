@@ -111,6 +111,4 @@ The {{ title }} namespace is documented in the module [{{ cppRef.fullNamespaceMo
 {% endif %}
 {% endfor %}
 {% endif %}
----
-
-*Built with QDoc's template engine.*
+{% include "partials/md/footer.md" %}
