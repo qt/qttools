@@ -121,7 +121,7 @@ This property was introduced in Qt 6.11.
 ### QCoapClient(QtCoap::SecurityMode securityMode = QtCoap::SecurityMode::NoSecurity, QObject *parent = nullptr)
 
 Constructs a [QCoapClient](qcoapclient.md) object for the given _securityMode_ and sets _parent_ as the parent object.
-The default for _securityMode_ is QtCoap::NoSecurity, which disables security.
+The default for _securityMode_ is [QtCoap::NoSecurity](qtcoap.md#SecurityMode-enum), which disables security.
 <a id="dtor.QCoapClient"></a>
 ### ~QCoapClient()
 
@@ -168,7 +168,7 @@ Discovery path defaults to "/.well-known/core", but can be changed by passing a 
 <a id="discover-1"></a>
 ### QCoapResourceDiscoveryReply * discover(QtCoap::MulticastGroup group = QtCoap::MulticastGroup::AllCoapNodesIPv4, int port = QtCoap::DefaultPort, const QString &discoveryPath = QLatin1String("/.well-known/core"))
 
-Discovers the resources available at the endpoints which have joined the _group_ at the given _port_. Returns a new [QCoapResourceDiscoveryReply](qcoapresourcediscoveryreply.md) object which emits the [QCoapResourceDiscoveryReply::discovered()](qcoapresourcediscoveryreply.md#discovered) signal whenever a response arrives. The _group_ is one of the CoAP multicast group addresses and defaults to QtCoap::AllCoapNodesIPv4.
+Discovers the resources available at the endpoints which have joined the _group_ at the given _port_. Returns a new [QCoapResourceDiscoveryReply](qcoapresourcediscoveryreply.md) object which emits the [QCoapResourceDiscoveryReply::discovered()](qcoapresourcediscoveryreply.md#discovered) signal whenever a response arrives. The _group_ is one of the CoAP multicast group addresses and defaults to [QtCoap::AllCoapNodesIPv4](qtcoap.md#MulticastGroup-enum).
 Discovery path defaults to "/.well-known/core", but can be changed by passing a different path to _discoveryPath_. Discovery is described in [RFC 6690](https://tools.ietf.org/html/rfc6690#section-1.2.1).
 **See also** [get()](qcoapclient.md#get)[post()](qcoapclient.md#post)[put()](qcoapclient.md#put)[deleteResource()](qcoapclient.md#deleteResource)[observe()](qcoapclient.md#observe).
 
@@ -287,7 +287,7 @@ Sets the minimum token size to _tokenSize_ in bytes. For security reasons it is 
 <a id="setSecurityConfiguration"></a>
 ### void setSecurityConfiguration(const QCoapSecurityConfiguration &configuration)
 
-Sets the security configuration parameters from _configuration_. Configuration will be ignored if the QtCoap::NoSecurity mode is used.
+Sets the security configuration parameters from _configuration_. Configuration will be ignored if the [QtCoap::NoSecurity](qtcoap.md#SecurityMode-enum) mode is used.
 > **Note:** This method must be called before the handshake starts. If you need to change the security configuration after establishing a secure connection with the server, the client needs to be disconnected first.
 
 **See also** [disconnect()](qcoapclient.md#disconnect).

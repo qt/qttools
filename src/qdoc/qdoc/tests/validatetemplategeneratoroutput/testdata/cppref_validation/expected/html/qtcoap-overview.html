@@ -65,7 +65,7 @@ client-&gt;put(request, QByteArray(&quot;payload&quot;));
 QCoapResourceDiscoveryReply *discoverReply = client-&gt;discover();
 connect(discoverReply, &amp;QCoapResourceDiscoveryReply::discovered, this, &amp;MyClass::onDiscovered);
 </code></pre>
-        <p>The QCoapResourceDiscoveryReply::discovered will return the list of CoAP resources found in the network.</p>
+        <p>The <a href="qcoapresourcediscoveryreply.html#discovered">QCoapResourceDiscoveryReply::discovered</a> will return the list of CoAP resources found in the network.</p>
         </section>
         <section>
         <h3 id="resource-observation">Resource Observation</h3>
@@ -74,7 +74,7 @@ connect(discoverReply, &amp;QCoapResourceDiscoveryReply::discovered, this, &amp;
         <pre class="cpp" translate="no"><code>QCoapReply *reply = client-&gt;observe(QUrl(&quot;127.0.0.1/temp&quot;));
 connect(reply, &amp;QCoapReply::notified, this, &amp;MyClass::onNotified);
 </code></pre>
-        <p>For Observe requests specifically, you can use the QCoapReply::notified signal to handle notifications from the CoAP server.</p>
+        <p>For Observe requests specifically, you can use the <a href="qcoapreply.html#notified">QCoapReply::notified</a> signal to handle notifications from the CoAP server.</p>
         </section>
         <section>
         <h3 id="blockwise-transfers">Blockwise Transfers</h3>

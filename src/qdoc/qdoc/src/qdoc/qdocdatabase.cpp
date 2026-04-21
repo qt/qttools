@@ -1285,7 +1285,7 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
             return node;
     }
 
-    QStringList targetPath = target.split("::"_L1);
+    QStringList targetPath = Utilities::pathAndFragment(target);
     int flags = SearchBaseClasses | SearchEnumValues;
     QString ref;
     const Node *node = findNodeForTarget(targetPath, relative, genus, ref, flags);

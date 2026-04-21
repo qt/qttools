@@ -61,7 +61,7 @@ connect(discoverReply, &QCoapResourceDiscoveryReply::discovered, this, &MyClass:
 
 ```
 
-The QCoapResourceDiscoveryReply::discovered will return the list of CoAP resources found in the network.
+The [QCoapResourceDiscoveryReply::discovered](qcoapresourcediscoveryreply.md#discovered) will return the list of CoAP resources found in the network.
 
 ### Resource Observation
 
@@ -73,7 +73,7 @@ connect(reply, &QCoapReply::notified, this, &MyClass::onNotified);
 
 ```
 
-For Observe requests specifically, you can use the QCoapReply::notified signal to handle notifications from the CoAP server.
+For Observe requests specifically, you can use the [QCoapReply::notified](qcoapreply.md#notified) signal to handle notifications from the CoAP server.
 
 ### Blockwise Transfers
 
