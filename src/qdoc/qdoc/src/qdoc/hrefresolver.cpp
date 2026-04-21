@@ -138,8 +138,20 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
 {
     if (node == nullptr)
         return HrefSuppressReason::NullNode;
-    if (!node->url().isEmpty())
-        return node->url();
+    if (!node->url().isEmpty()) {
+        const QString url = node->url();
+        // Index-loaded nodes carry URLs whose shape depends on how the
+        // dependency's index was read. When that reader prepends a
+        // relative subdirectory (qdocindexfiles.cpp), the resulting URL
+        // assumes a nested output layout. Under a flat layout, the
+        // prefix points to a directory that does not exist. Strip the
+        // leading path component so the link resolves against a
+        // side-by-side sibling in the flat output. Absolute URLs
+        // (external references carrying a scheme) are preserved.
+        if (!m_config.useOutputSubdirs && !url.contains("://"_L1))
+            return url.section('/'_L1, -1);
+        return url;
+    }
 
     QString fn = fileName(node);
     if (fn.isEmpty())
