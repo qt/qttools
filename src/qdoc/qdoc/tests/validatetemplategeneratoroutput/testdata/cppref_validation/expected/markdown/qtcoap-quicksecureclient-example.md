@@ -26,7 +26,7 @@ _Quick Secure CoAP Client_ demonstrates how to create a secure CoAP client and u
 #### Running the Example
 
 To run the example from [Qt Creator](https://doc.qt.io/qtcreator/), open the **Welcome** mode and select the example from **Examples**. For more information, see [Qt Creator: Tutorial: Build and run](https://doc.qt.io/qtcreator/creator-build-example-application.html).
-To run the example application, you first need to set up a secure CoAP server. You can run the example with any secure CoAP server supporting one of the _pre-shared key (PSK)_ or _certificate_ authentication modes. For more information about setting up a secure CoAP server, see [Setting Up a Secure CoAP Server](qtcoap-quicksecureclient-example.md).
+To run the example application, you first need to set up a secure CoAP server. You can run the example with any secure CoAP server supporting one of the _pre-shared key (PSK)_ or _certificate_ authentication modes. For more information about setting up a secure CoAP server, see [Setting Up a Secure CoAP Server](qtcoap-quicksecureclient-example.md#setting-up-a-secure-coap-server).
 
 #### Exposing C++ Classes to QML
 
@@ -79,7 +79,7 @@ To make the custom types available from QML, update the build system files accor
 
 ##### CMake
 
-For a [CMake](qtcoap-quicksecureclient-example.md)-based build, add the following to the `CMakeLists.txt`:
+For a [CMake](qtcoap-quicksecureclient-example.md#cmake)-based build, add the following to the `CMakeLists.txt`:
 ```cpp
 qt_add_qml_module(quicksecureclient
     URI CoapSecureClientModule
@@ -371,7 +371,7 @@ docker run --name coap-test-server -d --rm -p 5683:5683/udp -p 5684:5684/udp tqt
 
 ```
 
-The CoAP test server will be reachable on ports _5683_ (non-secure) and _5684_ (secure). For instructions on retrieving the IP address see [Getting The IP Address](qtcoap-quicksecureclient-example.md).
+The CoAP test server will be reachable on ports _5683_ (non-secure) and _5684_ (secure). For instructions on retrieving the IP address see [Getting The IP Address](qtcoap-quicksecureclient-example.md#getting-the-ip-address).
 To run the example with this server, you need to set the pre-shared key to `secretPSK` and the identity to `Client_identity`.
 
 ##### Setting Up a Server For Certificate Mode
@@ -382,7 +382,7 @@ docker run --name coap-time-server -d --rm -p 5684:5684/udp tqtc/coap-secure-tim
 
 ```
 
-For instructions on retrieving the IP address see [Getting The IP Address](qtcoap-quicksecureclient-example.md). The CoAP test server will be reachable by the retrieved IP address on port _5684_ and resource path `/time`.
+For instructions on retrieving the IP address see [Getting The IP Address](qtcoap-quicksecureclient-example.md#getting-the-ip-address). The CoAP test server will be reachable by the retrieved IP address on port _5684_ and resource path `/time`.
 To run the example with this server, you need to specify the certificate files required by the server. They are located in the docker container, under `/root/certs` directory. To copy them to a local directory, use the following command:
 ```cpp
 docker cp <container_id>:/root/certs <local_directory_path>

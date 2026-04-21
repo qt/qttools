@@ -1221,7 +1221,8 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
     LinkResolver) to use the same scoped lookup.
 */
 const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *relative,
-                                            Genus genus, const QString &moduleName)
+                                            Genus genus, const QString &moduleName,
+                                            QString *ref)
 {
     if (target.isEmpty())
         return relative;
@@ -1265,8 +1266,12 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
         QStringList nodePath = target.split("::"_L1);
         if (relative && relative->tree()->physicalModuleName() != domain->physicalModuleName())
             relative = nullptr;
-        QString ref;
-        return domain->findNodeForTarget(nodePath, {}, relative, flags, genus, ref);
+        QString localRef;
+        const Node *result =
+                domain->findNodeForTarget(nodePath, {}, relative, flags, genus, localRef);
+        if (result && ref)
+            *ref = localRef;
+        return result;
     }
 
     // Forest-wide search: function signatures, QML dot-paths, then general.
@@ -1287,10 +1292,13 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
 
     QStringList targetPath = Utilities::pathAndFragment(target);
     int flags = SearchBaseClasses | SearchEnumValues;
-    QString ref;
-    const Node *node = findNodeForTarget(targetPath, relative, genus, ref, flags);
-    if (node)
+    QString localRef;
+    const Node *node = findNodeForTarget(targetPath, relative, genus, localRef, flags);
+    if (node) {
+        if (ref)
+            *ref = localRef;
         return node;
+    }
 
     return findPageNodeByTitle(target);
 }

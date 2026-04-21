@@ -291,7 +291,8 @@ public:
     const Node *findTypeNode(const QString &type, const Node *relative, Genus genus);
     const Node *findNodeForTarget(const QString &target, const Node *relative);
     const Node *findNodeForTarget(const QString &target, const Node *relative,
-                                  Genus genus, const QString &moduleName);
+                                  Genus genus, const QString &moduleName,
+                                  QString *ref = nullptr);
     const PageNode *findPageNodeByTitle(const QString &title)
     {
         return m_forest.findPageNodeByTitle(title);

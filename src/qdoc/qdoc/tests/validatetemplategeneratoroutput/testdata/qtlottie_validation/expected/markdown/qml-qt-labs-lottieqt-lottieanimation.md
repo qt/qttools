@@ -29,7 +29,7 @@ The [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) type shows Lottie
 - Only integer frame-mode of a timeline supported (real frame numbers and time are rounded to the nearest integer)
 - Expressions are not supported
 
-For the full list of devations, please see see the [Limitations](qtlottieanimation-index.md) section.
+For the full list of devations, please see see the [Limitations](qtlottieanimation-index.md#limitations) section.
 ## Example Usage
 
 The following example shows a simple usage of the [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) type

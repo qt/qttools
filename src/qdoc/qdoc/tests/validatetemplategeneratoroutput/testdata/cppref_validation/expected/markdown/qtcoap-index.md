@@ -23,7 +23,7 @@ The Qt CoAP module supports:
 
 ## Using the Module
 
-Using a Qt module requires linking against the module library, either directly or through other dependencies. Several build tools have dedicated support for this, including [CMake](https://doc.qt.io/qt-6/cmake-manual.html) and [qmake](qtcoap-quicksecureclient-example.md).
+Using a Qt module requires linking against the module library, either directly or through other dependencies. Several build tools have dedicated support for this, including [CMake](https://doc.qt.io/qt-6/cmake-manual.html) and [qmake](qtcoap-quicksecureclient-example.md#qmake).
 
 ### Building with CMake
 

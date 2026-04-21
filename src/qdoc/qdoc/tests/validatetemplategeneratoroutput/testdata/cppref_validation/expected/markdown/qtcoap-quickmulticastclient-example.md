@@ -129,7 +129,7 @@ To make the custom types available from QML, update the build system files accor
 
 ##### CMake Build
 
-For a [CMake](qtcoap-quicksecureclient-example.md)-based build, add the following to the `CMakeLists.txt`:
+For a [CMake](qtcoap-quicksecureclient-example.md#cmake)-based build, add the following to the `CMakeLists.txt`:
 ```cpp
 qt_add_qml_module(quickmulticastclient
     URI CoapClientModule

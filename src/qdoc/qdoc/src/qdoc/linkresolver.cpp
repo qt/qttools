@@ -152,8 +152,9 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
             link.attributes.value("linkGenus"_L1).toString());
     const QString &moduleName =
             link.attributes.value("linkModule"_L1).toString();
+    QString ref;
     const Node *targetNode =
-            m_qdb->findNodeForTarget(target, relative, genus, moduleName);
+            m_qdb->findNodeForTarget(target, relative, genus, moduleName, &ref);
 
     if (!targetNode) {
         if (link.link->origin == IR::LinkOrigin::Auto) {
@@ -196,6 +197,16 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
         link.href.clear();
         link.link->state = IR::LinkState::Ignored;
         return;
+    }
+
+    // When the target designates a section title or named anchor within the
+    // page, replace any member anchor the URL may already carry with the one
+    // the lookup computed. Mirrors XmlGenerator::getAutoLink().
+    if (!ref.isEmpty()) {
+        const qsizetype hashIndex = url.lastIndexOf(u'#');
+        if (hashIndex != -1)
+            url.truncate(hashIndex);
+        url += u'#' + ref;
     }
 
     link.href = url;
