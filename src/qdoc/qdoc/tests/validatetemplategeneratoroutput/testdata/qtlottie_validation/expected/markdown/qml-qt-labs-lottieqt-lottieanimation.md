@@ -1,3 +1,16 @@
+[Qt.labs.lottieqt](qml-qt-labs-lottieqt-qmlmodule.md)> LottieAnimation
+**Contents**
+
+- [Properties](#properties)
+- [Signals](#signals)
+- [Methods](#methods)
+- [Detailed Description](#details)
+- [Example Usage](#example-usage)
+- [Rendering Performance](#rendering-performance)
+- [Property Documentation](#property-documentation)
+- [Signal Documentation](#signal-documentation)
+- [Method Documentation](#method-documentation)
+
 # LottieAnimation QML Type
 
 A Lottie player for Qt.
@@ -9,6 +22,7 @@ A Lottie player for Qt.
 
 - [List of all members, including inherited members](qml-qt-labs-lottieqt-lottieanimation-members.md)
 
+## Detailed Description
 The [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) type shows Lottie format files.
 [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) is used to load and render Lottie files exported from Adobe After Effects. Currently, only subset of the full Lottie specification is supported. Most notable deviations are:
 - Only Shape layer supported
@@ -222,6 +236,7 @@ Stops the playback and returns to [startFrame](qml-qt-labs-lottieqt-lottieanimat
 ### void togglePause()
 
 Toggles the status of player between playing and paused states.
+
 ---
 
 *Built with QDoc's template engine.*

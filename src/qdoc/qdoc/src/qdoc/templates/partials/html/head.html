@@ -11,4 +11,15 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {%- if stylesheetEnabled %}
     <link rel="stylesheet" href="{{ escape_html(stylesheetName) }}">
 {%- endif %}
+{%- if hasNavigation %}
+{%- if existsIn(navigation, "prevLink") %}
+    <link rel="prev" href="{{ escape_html(navigation.prevLink.href) }}" title="{{ escape_html(navigation.prevLink.title) }}">
+{%- endif %}
+{%- if existsIn(navigation, "nextLink") %}
+    <link rel="next" href="{{ escape_html(navigation.nextLink.href) }}" title="{{ escape_html(navigation.nextLink.title) }}">
+{%- endif %}
+{%- if existsIn(navigation, "startLink") %}
+    <link rel="start" href="{{ escape_html(navigation.startLink.href) }}" title="{{ escape_html(navigation.startLink.title) }}">
+{%- endif %}
+{%- endif %}
 </head>

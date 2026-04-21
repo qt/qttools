@@ -7,6 +7,22 @@
     <link rel="stylesheet" href="qdoc-default.css">
 </head>
 <body>
+    <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb">
+<li><a href="qtcoap-module.html">QtCoap</a></li>
+<li aria-current="page">QCoapOption</li>
+    </ol>
+    </nav>
+    <div class="sidebar-toc">
+    <h3 id="toc">Contents</h3>
+    <ul>
+    <li class="level2"><a href="#public-types">Public Types</a></li>
+    <li class="level2"><a href="#public-functions">Public Functions</a></li>
+    <li class="level2"><a href="#details">Detailed Description</a></li>
+    <li class="level2"><a href="#member-type-documentation">Member Type Documentation</a></li>
+    <li class="level2"><a href="#member-function-documentation">Member Function Documentation</a></li>
+    </ul>
+    </div>
     <header>
     <h1>QCoapOption</h1>
     <p class="subtitle">class QCoapOption</p>
@@ -34,7 +50,7 @@
 
 
     <section class="section-public-types" aria-label="Public Types">
-    <h2>Public Types</h2>
+    <h2 id="public-types">Public Types</h2>
     <table class="alignedsummary">
     <tr>
     <td class="memItemLeft">enum <span class="name"><a href="qcoapoption.html#OptionName-enum">OptionName</a></span> { Invalid, IfMatch, UriHost, Etag, IfNoneMatch, ..., Size1 }</td>
@@ -43,7 +59,7 @@
     </table>
     </section>
     <section class="section-public-functions" aria-label="Public Functions">
-    <h2>Public Functions</h2>
+    <h2 id="public-functions">Public Functions</h2>
     <table class="alignedsummary">
     <tr>
     <td class="memItemLeft"><span class="name"><a href="qcoapoption.html#QCoapOption-2">QCoapOption</a></span>(<span class="type">QCoapOption::OptionName</span> <i>name</i> = Invalid, const <span class="type">QByteArray</span> &amp;<i>opaqueValue</i> = QByteArray())</td>
@@ -116,13 +132,13 @@
     </table>
     </section>
 
-    <h2>Detailed Description</h2>
+    <h2 id="details">Detailed Description</h2>
     <section class="content" aria-label="Description">
         <p>CoAP defines a number of options that can be included in a message. Both requests and responses may include a list of one or more options. For example, the URI in a request is transported in several options, and metadata that would be carried in an HTTP header in HTTP is supplied as options as well.</p>
         <p>An option contains a name, related to an option ID, and a value. The name is one of the values from the <a href="qcoapoption.html#OptionName-enum">OptionName</a> enumeration.</p>
     </section>
 
-    <h2>Member Type Documentation</h2>
+    <h2 id="member-type-documentation">Member Type Documentation</h2>
     <h3 class="fn" id="OptionName-enum">enum <span class="name">QCoapOption::OptionName</span></h3>
         <p>Indicates the name of an option. The value of each ID is as specified by the CoAP standard, with the exception of Invalid. You can refer to <a href="https://tools.ietf.org/html/rfc7252#section-5.10">RFC 7252</a> and <a href="https://tools.ietf.org/html/rfc7959#section-2.1">RFC 7959</a> for more details.</p>
         <div class="table"><table class="valuelist">
@@ -148,7 +164,7 @@
 <tr><td class="topAlign"><code translate="no">ProxyScheme</code></td><td class="topAlign">Proxy-Scheme option.</td></tr>
 <tr><td class="topAlign"><code translate="no">Size1</code></td><td class="topAlign">Size1 option.</td></tr>
         </table></div>
-    <h2>Member Function Documentation</h2>
+    <h2 id="member-function-documentation">Member Function Documentation</h2>
     <h3 class="fn" id="QCoapOption-2"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i> = Invalid, const <span class="type">QByteArray</span> &amp;<i>opaqueValue</i> = QByteArray())</h3>
         <p>Constructs a new CoAP option with the given <i>name</i> and QByteArray <i>opaqueValue</i>. If no parameters are passed, constructs an Invalid object.</p>
     <p><b>See also </b><a href="qcoapoption.html#isValid">isValid()</a>.</p>

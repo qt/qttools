@@ -2,6 +2,7 @@
 Copyright (C) 2026 The Qt Company Ltd.
 SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 -#}
+{% include "partials/md/nav.md" %}
 # {{ fullTitle }}
 
 {% if default(brief, "") != "" %}
@@ -26,6 +27,9 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% if membersPageUrl != "" %}
 - [List of all members, including inherited members]({{ membersPageUrl }})
 
+{% endif %}
+{% if length(content.blocks) > 0 %}
+## Detailed Description
 {% endif %}
 {% include "partials/md/content_blocks.md" %}
 

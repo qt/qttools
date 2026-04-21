@@ -1,3 +1,12 @@
+[Qt CoAP Examples](qtcoap-examples.md)> Simple CoAP Client
+**Contents**
+
+- [Running the Example](#running-the-example)
+- [Setting Up a CoAP Server](#setting-up-a-coap-server)
+- [Using the Docker-based Test Server](#using-the-docker-based-test-server)
+- [Creating a Client](#creating-a-client)
+- [Sending Requests](#sending-requests)
+
 # Simple CoAP Client
 
 Creating an application that communicates with a CoAP server.
@@ -217,6 +226,7 @@ static QString tryToResolveHostName(const QString hostName)
 
 
 ```
+
 
 
 

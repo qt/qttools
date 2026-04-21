@@ -8,6 +8,7 @@ This test validates that two TemplateGenerator instances can produce both HTML a
 | HTML | .html | 
 | Markdown | .md | 
 
+
 ---
 
 *Built with QDoc's template engine.*

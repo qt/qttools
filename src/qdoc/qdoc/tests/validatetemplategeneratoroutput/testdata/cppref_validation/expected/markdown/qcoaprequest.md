@@ -1,3 +1,10 @@
+[QtCoap](qtcoap-module.md)> QCoapRequest
+**Contents**
+
+- [Public Functions](#public-functions)
+- [Detailed Description](#details)
+- [Member Function Documentation](#member-function-documentation)
+
 # QCoapRequest
 
 class QCoapRequest
@@ -32,6 +39,7 @@ The QCoapRequest class holds a CoAP request. This request can be sent with QCoap
 | `QUrl url() const` |  |
 | `QCoapRequest & operator=(const QCoapRequest &other)` |  |
 
+## Detailed Description
 The [QCoapRequest](qcoaprequest.md) contains data needed to make CoAP frames that can be sent to the URL it holds.
 
 ## Member Function Documentation
@@ -97,6 +105,7 @@ Returns the target URI of the request.
 ### QCoapRequest & operator=(const QCoapRequest &other)
 
 Creates a copy of _other_.
+
 ---
 
 *Built with QDoc's template engine.*

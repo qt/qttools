@@ -1,3 +1,12 @@
+[QtCoap](qtcoap-module.md)> QCoapMessage
+**Contents**
+
+- [Public Types](#public-types)
+- [Public Functions](#public-functions)
+- [Detailed Description](#details)
+- [Member Type Documentation](#member-type-documentation)
+- [Member Function Documentation](#member-function-documentation)
+
 # QCoapMessage
 
 class QCoapMessage
@@ -55,6 +64,7 @@ The QCoapMessage class holds information about a CoAP message that can be a requ
 | `QCoapMessage & operator=(QCoapMessage &&other)` |  |
 | `QCoapMessage & operator=(const QCoapMessage &other)` |  |
 
+## Detailed Description
 It holds information such as the message type, message id, token and other ancillary data.
 
 ## Member Type Documentation
@@ -210,6 +220,7 @@ Moves _other_ into this message and returns a reference to this [QCoapMessage](q
 ### QCoapMessage & operator=(const QCoapMessage &other)
 
 Copies the contents of _other_ into this message. Returns a reference to this [QCoapMessage](qcoapmessage.md).
+
 ---
 
 *Built with QDoc's template engine.*

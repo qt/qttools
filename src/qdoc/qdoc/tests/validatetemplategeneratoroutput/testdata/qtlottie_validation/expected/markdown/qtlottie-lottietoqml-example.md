@@ -1,3 +1,8 @@
+**Contents**
+
+- [Overview](#overview)
+- [Assets](#assets)
+
 # lottietoqml Example
 
 An example demonstrating the use of lottietoqml in an application.
@@ -53,6 +58,7 @@ This example contains animated vector images downloaded from the [Lottiefiles li
 - "User Interaction" by Mahendra Bhunwal
 - "User Interface" by Bashir Ahmad
 - "User Authentication" by Musa Adanur
+
 
 
 

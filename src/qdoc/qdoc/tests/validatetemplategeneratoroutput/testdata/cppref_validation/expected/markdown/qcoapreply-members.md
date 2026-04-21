@@ -19,6 +19,7 @@ This is the complete list of members for [QCoapReply](qcoapreply.md), including 
 - [`responseCode() const : QtCoap::ResponseCode`](qcoapreply.md#responseCode)
 - [`url() const : QUrl`](qcoapreply.md#url)
 
+
 ---
 
 *Built with QDoc's template engine.*

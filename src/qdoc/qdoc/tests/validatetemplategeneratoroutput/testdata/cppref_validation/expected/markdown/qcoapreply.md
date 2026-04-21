@@ -1,3 +1,11 @@
+[QtCoap](qtcoap-module.md)> QCoapReply
+**Contents**
+
+- [Public Functions](#public-functions)
+- [Signals](#signals)
+- [Detailed Description](#details)
+- [Member Function Documentation](#member-function-documentation)
+
 # QCoapReply
 
 class QCoapReply
@@ -41,6 +49,7 @@ The QCoapReply class holds the data of a CoAP reply.
 | `void finished(QCoapReply *reply)` |  |
 | `void notified(QCoapReply *reply, const QCoapMessage &message)` |  |
 
+## Detailed Description
 The [QCoapReply](qcoapreply.md) contains data related to a request sent with the [QCoapClient](qcoapclient.md).
 The [finished()](qcoapreply.md#finished) signal is emitted when the response is fully received or when the request fails.
 For _Observe_ requests specifically, the [notified()](qcoapreply.md#notified) signal is emitted whenever a notification is received.
@@ -128,6 +137,7 @@ Returns the response code of the request.
 ### QUrl url() const
 
 Returns the target uri of the associated request.
+
 ---
 
 *Built with QDoc's template engine.*

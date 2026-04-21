@@ -1,3 +1,8 @@
+**Contents**
+
+- [Synopsis](#synopsis)
+- [Description](#description)
+
 # qt_target_qml_from_lottie
 
 Generates QML code based on a Lottie file.
@@ -65,6 +70,7 @@ Optionally, a `COPYRIGHT_STATEMENT` argument can be provided to insert copyright
 
 `TYPE_NAME` is also optional, and can be used to replace all instances of the [Shape](https://doc.qt.io/qt-6/qml-qtquick-shapes-shape.html) type in the generated file with a custom type. This can be useful to make general customizations to all the shapes in the provided Lottie files. The `TYPE_NAME` should refer to a QML type which is available in the `target` QML module.
 The options `CURVE_RENDERER`, `ASYNCHRONOUS_SHAPES`, `OPTIMIZE_PATHS` and `OUTLINE_STROKE_MODE` correspond to the `--curve-renderer`, `--asynchronous-shapes`, `--optimize-paths` and `--outline-stroke-mode` in [lottietoqml](lottietoqml.md) respectively.
+
 
 
 ---

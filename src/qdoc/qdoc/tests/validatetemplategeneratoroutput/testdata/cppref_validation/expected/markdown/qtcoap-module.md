@@ -29,6 +29,7 @@ The [Qt CoAP](qtcoap-index.md) page contains information about how to use the mo
 | [QCoapResource](qcoapresource.md)| The QCoapResource class holds information about a discovered resource. |
 | [QCoapResourceDiscoveryReply](qcoapresourcediscoveryreply.md)| The QCoapResourceDiscoveryReply class holds the data of a CoAP reply for a resource discovery request. |
 | [QCoapSecurityConfiguration](qcoapsecurityconfiguration.md)| The QCoapSecurityConfiguration class holds configuration options during the authentication process. |
+
 ---
 
 *Built with QDoc's template engine.*

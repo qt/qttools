@@ -1,0 +1,28 @@
+{#-
+Copyright (C) 2026 The Qt Company Ltd.
+SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+-#}
+{% if hasNavigation and length(navigation.breadcrumbs) > 0 %}
+    <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb">
+{% for crumb in navigation.breadcrumbs %}
+{% if crumb.state == "link" %}    <li><a href="{{ escape_html(crumb.href) }}">{{ escape_html(crumb.title) }}</a></li>
+{% else if crumb.state == "current" %}    <li aria-current="page">{{ escape_html(crumb.title) }}</li>
+{% else %}    <li>{{ escape_html(crumb.title) }}</li>
+{% endif %}
+{% endfor %}
+    </ol>
+    </nav>
+{% endif %}
+{% if hasNavigation and navigation.tocDepth != 0 and length(navigation.tocEntries) > 0 %}
+    <div class="sidebar-toc">
+    <h3 id="toc">Contents</h3>
+    <ul>
+{% for entry in navigation.tocEntries %}
+{% if entry.level <= navigation.tocDepth or navigation.tocDepth < 0 %}
+    <li class="level{{ entry.level }}"><a href="#{{ escape_html(entry.anchorId) }}">{{ escape_html(entry.title) }}</a></li>
+{% endif %}
+{% endfor %}
+    </ul>
+    </div>
+{% endif %}

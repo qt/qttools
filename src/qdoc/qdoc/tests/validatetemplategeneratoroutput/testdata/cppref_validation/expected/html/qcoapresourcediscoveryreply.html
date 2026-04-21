@@ -7,6 +7,21 @@
     <link rel="stylesheet" href="qdoc-default.css">
 </head>
 <body>
+    <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb">
+<li><a href="qtcoap-module.html">QtCoap</a></li>
+<li aria-current="page">QCoapResourceDiscoveryReply</li>
+    </ol>
+    </nav>
+    <div class="sidebar-toc">
+    <h3 id="toc">Contents</h3>
+    <ul>
+    <li class="level2"><a href="#public-functions">Public Functions</a></li>
+    <li class="level2"><a href="#signals">Signals</a></li>
+    <li class="level2"><a href="#details">Detailed Description</a></li>
+    <li class="level2"><a href="#member-function-documentation">Member Function Documentation</a></li>
+    </ul>
+    </div>
     <header>
     <h1>QCoapResourceDiscoveryReply</h1>
     <p class="subtitle">class QCoapResourceDiscoveryReply</p>
@@ -36,7 +51,7 @@
 
 
     <section class="section-public-functions" aria-label="Public Functions">
-    <h2>Public Functions</h2>
+    <h2 id="public-functions">Public Functions</h2>
     <table class="alignedsummary">
     <tr>
     <td class="memItemLeft"><span class="type">QList</span>&lt;<span class="type">QCoapResource</span>&gt; <span class="name"><a href="qcoapresourcediscoveryreply.html#resources">resources</a></span>() const</td>
@@ -45,7 +60,7 @@
     </table>
     </section>
     <section class="section-signals" aria-label="Signals">
-    <h2>Signals</h2>
+    <h2 id="signals">Signals</h2>
     <table class="alignedsummary">
     <tr>
     <td class="memItemLeft"><span class="type">void</span> <span class="name"><a href="qcoapresourcediscoveryreply.html#discovered">discovered</a></span>(<span class="type">QCoapResourceDiscoveryReply</span> *<i>reply</i>, <span class="type">QList</span>&lt;<span class="type">QCoapResource</span>&gt; <i>resources</i>)</td>
@@ -54,13 +69,13 @@
     </table>
     </section>
 
-    <h2>Detailed Description</h2>
+    <h2 id="details">Detailed Description</h2>
     <section class="content" aria-label="Description">
         <p>This class is used for discovery requests. It emits the <a href="qcoapresourcediscoveryreply.html#discovered">discovered()</a> signal if and when resources are discovered. When using a multicast address for discovery, the <a href="qcoapresourcediscoveryreply.html#discovered">discovered()</a> signal will be emitted once for each response received.</p>
         <aside class="admonition note" role="note"><p><b>Note: </b>A QCoapResourceDiscoveryReply is a QCoapReply that stores also a list of QCoapResources.</p></aside>
     </section>
 
-    <h2>Member Function Documentation</h2>
+    <h2 id="member-function-documentation">Member Function Documentation</h2>
     <h3 class="fn" id="discovered"><code class="details extra" translate="no">[signal]</code> <span class="type">void</span> <span class="name">QCoapResourceDiscoveryReply::discovered</span>(<span class="type">QCoapResourceDiscoveryReply</span> *<i>reply</i>, <span class="type">QList</span>&lt;<span class="type">QCoapResource</span>&gt; <i>resources</i>)</h3>
         <p>This signal is emitted whenever a CoAP resource is discovered.</p>
         <p>The <i>reply</i> parameter contains a pointer to the reply that has just been received, and <i>resources</i> contains a list of resources that were discovered.</p>

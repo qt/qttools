@@ -2,6 +2,7 @@
 Copyright (C) 2026 The Qt Company Ltd.
 SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 -#}
+{% include "partials/md/nav.md" %}
 # {{ title }}
 
 **The following members of {{ default(typeName, "") }} are deprecated.** They're provided to keep old source code working, but we strongly advise against using them in new code.

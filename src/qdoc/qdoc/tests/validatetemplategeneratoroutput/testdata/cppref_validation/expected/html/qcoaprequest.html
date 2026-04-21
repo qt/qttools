@@ -7,6 +7,20 @@
     <link rel="stylesheet" href="qdoc-default.css">
 </head>
 <body>
+    <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb">
+<li><a href="qtcoap-module.html">QtCoap</a></li>
+<li aria-current="page">QCoapRequest</li>
+    </ol>
+    </nav>
+    <div class="sidebar-toc">
+    <h3 id="toc">Contents</h3>
+    <ul>
+    <li class="level2"><a href="#public-functions">Public Functions</a></li>
+    <li class="level2"><a href="#details">Detailed Description</a></li>
+    <li class="level2"><a href="#member-function-documentation">Member Function Documentation</a></li>
+    </ul>
+    </div>
     <header>
     <h1>QCoapRequest</h1>
     <p class="subtitle">class QCoapRequest</p>
@@ -36,7 +50,7 @@
 
 
     <section class="section-public-functions" aria-label="Public Functions">
-    <h2>Public Functions</h2>
+    <h2 id="public-functions">Public Functions</h2>
     <table class="alignedsummary">
     <tr>
     <td class="memItemLeft"><span class="name"><a href="qcoaprequest.html#QCoapRequest-1">QCoapRequest</a></span>(const <span class="type">char</span> *<i>url</i>, <span class="type">QCoapMessage::Type</span> <i>type</i> = Type::NonConfirmable)</td>
@@ -89,12 +103,12 @@
     </table>
     </section>
 
-    <h2>Detailed Description</h2>
+    <h2 id="details">Detailed Description</h2>
     <section class="content" aria-label="Description">
         <p>The <a href="qcoaprequest.html">QCoapRequest</a> contains data needed to make CoAP frames that can be sent to the URL it holds.</p>
     </section>
 
-    <h2>Member Function Documentation</h2>
+    <h2 id="member-function-documentation">Member Function Documentation</h2>
     <h3 class="fn" id="QCoapRequest-1"><code class="details extra" translate="no">[explicit]</code> <span class="name">QCoapRequest::QCoapRequest</span>(const <span class="type">char</span> *<i>url</i>, <span class="type">QCoapMessage::Type</span> <i>type</i> = Type::NonConfirmable)</h3>
         <p>Constructs a <a href="qcoaprequest.html">QCoapRequest</a> from a string literal</p>
     <h3 class="fn" id="QCoapRequest-2"><code class="details extra" translate="no">[explicit]</code> <span class="name">QCoapRequest::QCoapRequest</span>(const <span class="type">QUrl</span> &amp;<i>url</i> = QUrl(), <span class="type">QCoapMessage::Type</span> <i>type</i> = Type::NonConfirmable, const <span class="type">QUrl</span> &amp;<i>proxyUrl</i> = QUrl())</h3>

@@ -1,3 +1,10 @@
+[QtCoap](qtcoap-module.md)> QCoapResource
+**Contents**
+
+- [Public Functions](#public-functions)
+- [Detailed Description](#details)
+- [Member Function Documentation](#member-function-documentation)
+
 # QCoapResource
 
 class QCoapResource
@@ -40,6 +47,7 @@ The QCoapResource class holds information about a discovered resource.
 | `QString title() const` |  |
 | `QCoapResource & operator=(const QCoapResource &other)` |  |
 
+## Detailed Description
 The [QCoapRequest](qcoaprequest.md) contains data as the path and title of the resource and other ancillary information.
 
 ## Member Function Documentation
@@ -165,6 +173,7 @@ Returns the title of the resource.
 ### QCoapResource & operator=(const QCoapResource &other)
 
 Copies _other_ into this resource, making the two resources identical. Returns a reference to this [QCoapResource](qcoapresource.md).
+
 ---
 
 *Built with QDoc's template engine.*

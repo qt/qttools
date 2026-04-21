@@ -33,6 +33,7 @@ This is the complete list of members for [QCoapMessage](qcoapmessage.md), includ
 - [`operator=(QCoapMessage &&) : QCoapMessage &`](qcoapmessage.md#operator-eq)
 - [`operator=(const QCoapMessage &) : QCoapMessage &`](qcoapmessage.md#operator-eq-1)
 
+
 ---
 
 *Built with QDoc's template engine.*

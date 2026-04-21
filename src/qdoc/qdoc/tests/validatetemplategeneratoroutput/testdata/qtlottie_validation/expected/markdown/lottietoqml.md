@@ -1,3 +1,8 @@
+**Contents**
+
+- [Overview](#overview)
+- [Usage](#usage)
+
 # lottietoqml
 
 A tool that converts a Lottie document to a QML file.
@@ -22,6 +27,7 @@ In addition, it supports the following options:
 | –outline-stroke-mode | Stroke the outline (contour) of the filled shape instead of the original path. | 
 | -t, –type-name <string> | In place of Shape, the output will use the type name <string> instead. This is enables using a custom item to override the default behavior of Shape items. | 
 | -v, –view | Display a preview of the Qt Quick item as it will be generated. | 
+
 
 
 

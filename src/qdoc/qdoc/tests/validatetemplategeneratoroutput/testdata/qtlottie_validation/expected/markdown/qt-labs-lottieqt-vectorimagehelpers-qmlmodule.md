@@ -1,3 +1,7 @@
+**Contents**
+
+- [QML Types](#qml-types)
+
 # Qt Lottie Vector Image Helpers QML Types
 
 Provides QML types used by VectorImage and related tools.
@@ -18,6 +22,7 @@ import Qt.labs.lottieqt.VectorImageHelpers
 | Name | Description |
 | --- | --- |
 | [LayerItem](qml-qt-labs-lottieqt-vectorimagehelpers-layeritem.md)| An Item that provides access to its transformation matrix as a property. |
+
 ---
 
 *Built with QDoc's template engine.*

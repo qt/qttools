@@ -1,3 +1,17 @@
+**Contents**
+
+- [Getting Started](#getting-started)
+- [Limitations](#limitations)
+- [General limitations](#general-limitations)
+- [Animation level limitations](#animation-level-limitations)
+- [Layers](#layers)
+- [Shapes](#shapes)
+- [Effects](#effects)
+- [Examples](#examples)
+- [Licenses](#licenses)
+- [Reference](#reference)
+- [Related Information](#related-information)
+
 # Qt Lottie Animation
 
 Display Lottie format vector graphics animations.
@@ -75,6 +89,7 @@ Qt Lottie Animation is available under commercial licenses from [The Qt Company]
 ## Related Information
 
 - [Lottie on GitHub](https://github.com/airbnb/lottie-web)
+
 
 
 

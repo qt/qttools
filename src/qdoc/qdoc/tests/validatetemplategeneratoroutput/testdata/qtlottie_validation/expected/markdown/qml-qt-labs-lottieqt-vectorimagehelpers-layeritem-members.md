@@ -4,6 +4,7 @@ This is the complete list of members for [LayerItem](qml-qt-labs-lottieqt-vector
 
 - [`transformMatrix : matrix4x4`](qml-qt-labs-lottieqt-vectorimagehelpers-layeritem.md#transformMatrix-prop)
 
+
 ---
 
 *Built with QDoc's template engine.*

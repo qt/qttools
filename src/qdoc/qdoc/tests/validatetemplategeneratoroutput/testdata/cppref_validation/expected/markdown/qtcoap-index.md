@@ -1,3 +1,13 @@
+**Contents**
+
+- [Using the Module](#using-the-module)
+- [Building with CMake](#building-with-cmake)
+- [Building with qmake](#building-with-qmake)
+- [Articles and Guides](#articles-and-guides)
+- [Examples](#examples)
+- [Reference](#reference)
+- [Licenses and Attributions](#licenses-and-attributions)
+
 # Qt CoAP
 
 Provides classes and functions to make CoAP programming simple and portable.
@@ -53,6 +63,7 @@ QT += coap
 ## Licenses and Attributions
 
 Qt CoAP is available under commercial licenses from [The Qt Company](https://www.qt.io/). In addition, it is available under the [GNU General Public License, version 3](https://www.gnu.org/licenses/gpl-3.0.html).
+
 
 
 

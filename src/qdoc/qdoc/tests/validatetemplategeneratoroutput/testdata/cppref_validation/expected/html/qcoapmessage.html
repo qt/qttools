@@ -7,6 +7,22 @@
     <link rel="stylesheet" href="qdoc-default.css">
 </head>
 <body>
+    <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb">
+<li><a href="qtcoap-module.html">QtCoap</a></li>
+<li aria-current="page">QCoapMessage</li>
+    </ol>
+    </nav>
+    <div class="sidebar-toc">
+    <h3 id="toc">Contents</h3>
+    <ul>
+    <li class="level2"><a href="#public-types">Public Types</a></li>
+    <li class="level2"><a href="#public-functions">Public Functions</a></li>
+    <li class="level2"><a href="#details">Detailed Description</a></li>
+    <li class="level2"><a href="#member-type-documentation">Member Type Documentation</a></li>
+    <li class="level2"><a href="#member-function-documentation">Member Function Documentation</a></li>
+    </ul>
+    </div>
     <header>
     <h1>QCoapMessage</h1>
     <p class="subtitle">class QCoapMessage</p>
@@ -36,7 +52,7 @@
 
 
     <section class="section-public-types" aria-label="Public Types">
-    <h2>Public Types</h2>
+    <h2 id="public-types">Public Types</h2>
     <table class="alignedsummary">
     <tr>
     <td class="memItemLeft">enum class <span class="name"><a href="qcoapmessage.html#Type-enum">Type</a></span> { Confirmable, NonConfirmable, Acknowledgment, Reset }</td>
@@ -45,7 +61,7 @@
     </table>
     </section>
     <section class="section-public-functions" aria-label="Public Functions">
-    <h2>Public Functions</h2>
+    <h2 id="public-functions">Public Functions</h2>
     <table class="alignedsummary">
     <tr>
     <td class="memItemLeft"><span class="name"><a href="qcoapmessage.html#QCoapMessage">QCoapMessage</a></span>()</td>
@@ -166,12 +182,12 @@
     </table>
     </section>
 
-    <h2>Detailed Description</h2>
+    <h2 id="details">Detailed Description</h2>
     <section class="content" aria-label="Description">
         <p>It holds information such as the message type, message id, token and other ancillary data.</p>
     </section>
 
-    <h2>Member Type Documentation</h2>
+    <h2 id="member-type-documentation">Member Type Documentation</h2>
     <h3 class="fn" id="Type-enum">enum class <span class="name">QCoapMessage::Type</span></h3>
         <p>Indicates the type of the message.</p>
         <div class="table"><table class="valuelist">
@@ -181,7 +197,7 @@
 <tr><td class="topAlign"><code translate="no">Acknowledgment</code></td><td class="topAlign">An Acknowledgment message. A message sent or received in reply to a Confirmable message.</td></tr>
 <tr><td class="topAlign"><code translate="no">Reset</code></td><td class="topAlign">A Reset message. This message type is used in case of errors or to stop the ongoing transmission. (For example, it is used to cancel an observation).</td></tr>
         </table></div>
-    <h2>Member Function Documentation</h2>
+    <h2 id="member-function-documentation">Member Function Documentation</h2>
     <h3 class="fn" id="QCoapMessage"><span class="name">QCoapMessage::QCoapMessage</span>()</h3>
         <p>Constructs a new <a href="qcoapmessage.html">QCoapMessage</a>.</p>
     <h3 class="fn" id="QCoapMessage-1"><span class="name">QCoapMessage::QCoapMessage</span>(const <span class="type">QCoapMessage</span> &amp;<i>other</i>)</h3>

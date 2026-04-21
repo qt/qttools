@@ -1,3 +1,15 @@
+[Qt CoAP Examples](qtcoap-examples.md)> Quick CoAP Multicast Discovery
+**Contents**
+
+- [Running the Example](#running-the-example)
+- [Setting Up a CoAP Server](#setting-up-a-coap-server)
+- [Using the Docker-based Test Server](#using-the-docker-based-test-server)
+- [Exposign C++ Classes to QML](#exposign-c-classes-to-qml)
+- [Adjusting Build Files](#adjusting-build-files)
+- [CMake Build](#cmake-build)
+- [qmake Build](#qmake-build)
+- [Using New QML Types](#using-new-qml-types)
+
 # Quick CoAP Multicast Discovery
 
 Using the CoAP client for a multicast resource discovery with a Qt Quick user interface.
@@ -295,6 +307,7 @@ void QmlCoapMulticastClient::stopDiscovery()
 }
 
 ```
+
 
 
 

@@ -24,6 +24,7 @@ This is the complete list of members for [QCoapResource](qcoapresource.md), incl
 - [`title() const : QString`](qcoapresource.md#title)
 - [`operator=(const QCoapResource &) : QCoapResource &`](qcoapresource.md#operator-eq)
 
+
 ---
 
 *Built with QDoc's template engine.*

@@ -1,3 +1,13 @@
+[QtCoap](qtcoap-module.md)> QCoapClient
+**Contents**
+
+- [Properties](#properties)
+- [Public Functions](#public-functions)
+- [Signals](#signals)
+- [Detailed Description](#details)
+- [Property Documentation](#property-documentation)
+- [Member Function Documentation](#member-function-documentation)
+
 # QCoapClient
 
 class QCoapClient
@@ -63,6 +73,7 @@ The QCoapClient class allows the application to send CoAP requests and receive r
 | `void finished(QCoapReply *reply)` |  |
 | `void responseToMulticastReceived(QCoapReply *reply, const QCoapMessage &message, const QHostAddress &sender)` |  |
 
+## Detailed Description
 The [QCoapClient](qcoapclient.md) class contains signals that get triggered when the reply of a sent request has arrived.
 The application can use a [QCoapClient](qcoapclient.md) to send requests over a CoAP network. It provides functions for standard requests: each returns a [QCoapReply](qcoapreply.md) object, to which the response data shall be delivered; this can be read when the [finished()](qcoapclient.md#finished) signal arrives.
 A simple request can be sent with:
@@ -285,6 +296,7 @@ Sets the security configuration parameters from _configuration_. Configuration w
 ### void setSocketOption(QAbstractSocket::SocketOption option, const QVariant &value)
 
 Sets the QUdpSocket socket _option_ to _value_.
+
 ---
 
 *Built with QDoc's template engine.*

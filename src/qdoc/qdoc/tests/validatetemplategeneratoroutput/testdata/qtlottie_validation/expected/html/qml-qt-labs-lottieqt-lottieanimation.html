@@ -7,6 +7,26 @@
     <link rel="stylesheet" href="qdoc-default.css">
 </head>
 <body>
+    <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb">
+<li><a href="qt-labs-lottieqt-qmlmodule.html">Qt.labs.lottieqt</a></li>
+<li aria-current="page">LottieAnimation</li>
+    </ol>
+    </nav>
+    <div class="sidebar-toc">
+    <h3 id="toc">Contents</h3>
+    <ul>
+    <li class="level2"><a href="#properties">Properties</a></li>
+    <li class="level2"><a href="#signals">Signals</a></li>
+    <li class="level2"><a href="#methods">Methods</a></li>
+    <li class="level2"><a href="#details">Detailed Description</a></li>
+    <li class="level2"><a href="#example-usage">Example Usage</a></li>
+    <li class="level2"><a href="#rendering-performance">Rendering Performance</a></li>
+    <li class="level2"><a href="#property-documentation">Property Documentation</a></li>
+    <li class="level2"><a href="#signal-documentation">Signal Documentation</a></li>
+    <li class="level2"><a href="#method-documentation">Method Documentation</a></li>
+    </ul>
+    </div>
     <header>
     <h1>LottieAnimation QML Type</h1>
     <p class="brief">A Lottie player for Qt.</p>
@@ -25,7 +45,7 @@
     </ul>
 
     <section class="section-properties" aria-label="Properties">
-    <h2>Properties</h2>
+    <h2 id="properties">Properties</h2>
     <ul>
     <li class="fn" translate="no"><b><a href="#autoPlay-prop">autoPlay</a></b>&#160;: bool</li>
     <li class="fn" translate="no"><b><a href="#direction-prop">direction</a></b>&#160;: enumeration</li>
@@ -39,13 +59,13 @@
     </ul>
     </section>
     <section class="section-signals" aria-label="Signals">
-    <h2>Signals</h2>
+    <h2 id="signals">Signals</h2>
     <ul>
     <li class="fn" translate="no"><b><a href="#finished-signal">finished</a></b>()</li>
     </ul>
     </section>
     <section class="section-methods" aria-label="Methods">
-    <h2>Methods</h2>
+    <h2 id="methods">Methods</h2>
     <ul>
     <li class="fn" translate="no"><b><a href="#getDuration-method">getDuration</a></b>(bool&#160;<i>inFrames</i>)</li>
     <li class="fn" translate="no"><b><a href="#gotoAndPlay-method">gotoAndPlay</a></b>(int&#160;<i>frame</i>)</li>
@@ -60,7 +80,7 @@
     </ul>
     </section>
 
-    <h2>Detailed Description</h2>
+    <h2 id="details">Detailed Description</h2>
     <section class="content" aria-label="Description">
         <p>The <a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> type shows Lottie format files.</p>
         <p><a href="qml-qt-labs-lottieqt-lottieanimation.html">LottieAnimation</a> is used to load and render Lottie files exported from Adobe After Effects. Currently, only subset of the full Lottie specification is supported. Most notable deviations are:</p>
@@ -100,7 +120,7 @@
         </section>
     </section>
 
-    <h2>Property Documentation</h2>
+    <h2 id="property-documentation">Property Documentation</h2>
     <h3 class="fn" id="autoPlay-prop"><span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#autoPlay-prop">autoPlay</a></span> : <span class="type">bool</span></h3>
         <p>Defines whether the player will start playing animation automatically after the animation file has been loaded.</p>
         <p>The default value is <code>true</code>.</p>
@@ -160,10 +180,10 @@
     }
 }
 </code></pre>
-    <h2>Signal Documentation</h2>
+    <h2 id="signal-documentation">Signal Documentation</h2>
     <h3 class="fn" id="finished-signal"><span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#finished-signal">finished</a></span>()</h3>
         <p>This signal is emitted when the player has finished playing. In case of looping, the signal is emitted when the last loop has been finished.</p>
-    <h2>Method Documentation</h2>
+    <h2 id="method-documentation">Method Documentation</h2>
     <h3 class="fn" id="getDuration-method"><span class="type">double</span> <span class="name"><a href="qml-qt-labs-lottieqt-lottieanimation.html#getDuration-method">getDuration</a></span>(<span class="type">bool</span> <i>inFrames</i>)</h3>
         <p>Returns the duration of the currently playing asset.</p>
         <p>If a given <i>inFrames</i> is <code>true</code>, the return value is the duration in number of frames. Otherwise, returns the duration in seconds.</p>

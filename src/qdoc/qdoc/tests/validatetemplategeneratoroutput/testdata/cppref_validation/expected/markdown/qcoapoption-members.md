@@ -21,6 +21,7 @@ This is the complete list of members for [QCoapOption](qcoapoption.md), includin
 - [`operator=(const QCoapOption &) : QCoapOption &`](qcoapoption.md#operator-eq-1)
 - [`operator==(const QCoapOption &) const : bool`](qcoapoption.md#operator-eq-eq)
 
+
 ---
 
 *Built with QDoc's template engine.*

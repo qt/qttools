@@ -1,3 +1,11 @@
+[QtCoap](qtcoap-module.md)> QCoapResourceDiscoveryReply
+**Contents**
+
+- [Public Functions](#public-functions)
+- [Signals](#signals)
+- [Detailed Description](#details)
+- [Member Function Documentation](#member-function-documentation)
+
 # QCoapResourceDiscoveryReply
 
 class QCoapResourceDiscoveryReply
@@ -27,6 +35,7 @@ The QCoapResourceDiscoveryReply class holds the data of a CoAP reply for a resou
 | --- | --- |
 | `void discovered(QCoapResourceDiscoveryReply *reply, QList<QCoapResource> resources)` |  |
 
+## Detailed Description
 This class is used for discovery requests. It emits the [discovered()](qcoapresourcediscoveryreply.md#discovered) signal if and when resources are discovered. When using a multicast address for discovery, the [discovered()](qcoapresourcediscoveryreply.md#discovered) signal will be emitted once for each response received.
 > **Note:** A QCoapResourceDiscoveryReply is a QCoapReply that stores also a list of QCoapResources.
 
@@ -44,6 +53,7 @@ The _reply_ parameter contains a pointer to the reply that has just been receive
 ### QList<QCoapResource> resources() const
 
 Returns the list of resources.
+
 ---
 
 *Built with QDoc's template engine.*

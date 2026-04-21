@@ -4,6 +4,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 -#}
 {% include "partials/html/head.html" %}
 <body>
+    {% include "partials/html/nav.html" %}
     <header>
     <h1>{{ fullTitle }}</h1>
     {% if default(brief, "") != "" %}
@@ -15,7 +16,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     {% if length(sections) > 0 %}
     {% for section in sections %}
     <div class="section-{{ section.id }}">
-    <h2>{{ escape_html(section.title) }}</h2>
+    <h2 id="{{ section.id }}">{{ escape_html(section.title) }}</h2>
     {% if length(section.members) > 0 %}
     <table class="alignedsummary">
     {% for member in section.members %}

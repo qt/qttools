@@ -1,3 +1,10 @@
+[QtCoap](qtcoap-module.md)> QCoapPrivateKey
+**Contents**
+
+- [Public Functions](#public-functions)
+- [Detailed Description](#details)
+- [Member Function Documentation](#member-function-documentation)
+
 # QCoapPrivateKey
 
 class QCoapPrivateKey
@@ -32,6 +39,7 @@ The QCoapPrivateKey class provides an interface for managing CoAP security keys.
 | `void swap(QCoapPrivateKey &other)` |  |
 | `QCoapPrivateKey & operator=(const QCoapPrivateKey &other)` |  |
 
+## Detailed Description
 A [QCoapPrivateKey](qcoapprivatekey.md) packages a private key used in negotiating CoAP connections securely. It holds the information required for authentication using `pre-shared` keys and X.509 certificates.
 
 ## Member Function Documentation
@@ -94,6 +102,7 @@ Swaps this private key with _other_. This operation is very fast and never fails
 
 Copies the contents of _other_ into this key, making the two keys identical.
 Returns a reference to this [QCoapPrivateKey](qcoapprivatekey.md).
+
 ---
 
 *Built with QDoc's template engine.*

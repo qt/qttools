@@ -343,7 +343,7 @@ Document Builder::buildPageIR(PageMetadata pm) const
             if (!s.title.isEmpty() && !s.id.isEmpty())
                 info.tocEntries.append({s.title, s.id, 2});
         }
-        if (ir.cppReferenceInfo && !ir.body.isEmpty())
+        if ((ir.cppReferenceInfo || ir.qmlTypeInfo) && !ir.body.isEmpty())
             info.tocEntries.append(
                     {u"Detailed Description"_s, u"details"_s, 2});
         gatherBodyTocEntries(ir.body, info.tocEntries);

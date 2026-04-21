@@ -1,3 +1,8 @@
+**Contents**
+
+- [Types](#types)
+- [Type Documentation](#type-documentation)
+
 # QtCoap
 
 namespace QtCoap
@@ -130,6 +135,7 @@ Specifies the security mode used for securing a CoAP connection, as defined in [
 | `PreSharedKey` | DTLS is enabled. PSK authentication will be used for security.|
 | `RawPublicKey` | DTLS is enabled. An asymmetric key pair without a certificate (a raw public key) will be used for security. This mode is not supported yet.|
 | `Certificate` | DTLS is enabled. An asymmetric key pair with an X.509 certificate will be used for security.|
+
 
 ---
 

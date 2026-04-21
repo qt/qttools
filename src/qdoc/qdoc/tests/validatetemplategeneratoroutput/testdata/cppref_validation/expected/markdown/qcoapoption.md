@@ -1,3 +1,12 @@
+[QtCoap](qtcoap-module.md)> QCoapOption
+**Contents**
+
+- [Public Types](#public-types)
+- [Public Functions](#public-functions)
+- [Detailed Description](#details)
+- [Member Type Documentation](#member-type-documentation)
+- [Member Function Documentation](#member-function-documentation)
+
 # QCoapOption
 
 class QCoapOption
@@ -42,6 +51,7 @@ The QCoapOption class holds data about CoAP options.
 | `QCoapOption & operator=(const QCoapOption &other)` |  |
 | `bool operator==(const QCoapOption &other) const` |  |
 
+## Detailed Description
 CoAP defines a number of options that can be included in a message. Both requests and responses may include a list of one or more options. For example, the URI in a request is transported in several options, and metadata that would be carried in an HTTP header in HTTP is supplied as options as well.
 An option contains a name, related to an option ID, and a value. The name is one of the values from the [OptionName](qcoapoption.md#OptionName-enum) enumeration.
 
@@ -152,6 +162,7 @@ Copies _other_ into this option, making the two options identical. Returns a ref
 ### bool operator==(const QCoapOption &other) const
 
 Returns `true` if this [QCoapOption](qcoapoption.md) and _other_ are equals.
+
 ---
 
 *Built with QDoc's template engine.*

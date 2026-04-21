@@ -23,6 +23,7 @@ This is the complete list of members for [LottieAnimation](qml-qt-labs-lottieqt-
 - [`void stop()`](qml-qt-labs-lottieqt-lottieanimation.md#stop-method)
 - [`void togglePause()`](qml-qt-labs-lottieqt-lottieanimation.md#togglePause-method)
 
+
 ---
 
 *Built with QDoc's template engine.*

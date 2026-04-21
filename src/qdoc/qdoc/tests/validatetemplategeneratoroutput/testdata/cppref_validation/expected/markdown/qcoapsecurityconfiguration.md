@@ -1,3 +1,10 @@
+[QtCoap](qtcoap-module.md)> QCoapSecurityConfiguration
+**Contents**
+
+- [Public Functions](#public-functions)
+- [Detailed Description](#details)
+- [Member Function Documentation](#member-function-documentation)
+
 # QCoapSecurityConfiguration
 
 class QCoapSecurityConfiguration
@@ -36,6 +43,7 @@ The QCoapSecurityConfiguration class holds configuration options during the auth
 | `void swap(QCoapSecurityConfiguration &other)` |  |
 | `QCoapSecurityConfiguration & operator=(const QCoapSecurityConfiguration &other)` |  |
 
+## Detailed Description
 It holds information such as client identity, pre shared key, information about certificates, and so on.
 
 ## Member Function Documentation
@@ -138,6 +146,7 @@ Swaps this security configuration with _other_. This operation is very fast and 
 ### QCoapSecurityConfiguration & operator=(const QCoapSecurityConfiguration &other)
 
 Copies the configuration and state of _other_.
+
 ---
 
 *Built with QDoc's template engine.*

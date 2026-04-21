@@ -36,6 +36,7 @@ This is the complete list of members for [QCoapClient](qcoapclient.md), includin
 - [`setSecurityConfiguration(const QCoapSecurityConfiguration &)`](qcoapclient.md#setSecurityConfiguration)
 - [`setSocketOption(QAbstractSocket::SocketOption, const QVariant &)`](qcoapclient.md#setSocketOption)
 
+
 ---
 
 *Built with QDoc's template engine.*
