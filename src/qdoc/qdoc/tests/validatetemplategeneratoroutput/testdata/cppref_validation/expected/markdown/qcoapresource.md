@@ -115,7 +115,7 @@ Returns the type of the resource.
 Sets the content format of the resource to _contentFormat_. The content format can be one of the content formats defined in [CoAP Content-Formats Registry](https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats).
 > **Note:** CoAP supports common content formats such as XML, JSON, and so on, but these are text based and consequently heavy both in payload and in processing. One of the recommended content formats to use with CoAP is CBOR, which is designed to be used in such contexts.
 
-**See also** [contentFormat()](qcoapresource.md#contentFormat)[QCborStreamWriter](https://doc.qt.io/qt-6/qcborstreamwriter.html)[QCborStreamReader](https://doc.qt.io/qt-6/qcborstreamreader.html).
+**See also** [contentFormat()](qcoapresource.md#contentFormat), [QCborStreamWriter](https://doc.qt.io/qt-6/qcborstreamwriter.html), and [QCborStreamReader](https://doc.qt.io/qt-6/qcborstreamreader.html).
 
 <a id="setHost"></a>
 ### void setHost(const QHostAddress &host)

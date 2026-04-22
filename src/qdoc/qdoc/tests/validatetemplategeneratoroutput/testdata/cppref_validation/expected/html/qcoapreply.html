@@ -140,18 +140,18 @@
     <h3 class="fn" id="aborted"><code class="details extra" translate="no">[signal]</code> <span class="type">void</span> <span class="name">QCoapReply::aborted</span>(const <span class="type">QCoapToken</span> &amp;<i>token</i>)</h3>
         <p>This signal is emitted when the request is aborted or the reply is deleted. Its <i>token</i> parameter is the token of the exchange that has been aborted.</p>
         <aside class="admonition note" role="note"><p><b>Note: </b>If the QCoapReply is deleted while not finished, both aborted() and finished() signal will be emitted immediately before the QCoapReply is destroyed. Given the QCoapReply may have been deleted when receiving the signal, you should not rely on the sender() object to be still valid.</p></aside>
-    <p><b>See also </b><a href="qcoapreply.html#finished">finished()</a><a href="qcoapreply.html#error">error()</a>.</p>
+    <p><b>See also </b><a href="qcoapreply.html#finished">finished()</a> and <a href="qcoapreply.html#error">error()</a>.</p>
     <h3 class="fn" id="error"><code class="details extra" translate="no">[signal]</code> <span class="type">void</span> <span class="name">QCoapReply::error</span>(<span class="type">QCoapReply</span> *<i>reply</i>, <span class="type">QtCoap::Error</span> <i>error</i>)</h3>
         <p>This signal is emitted whenever an error occurs and is followed by the <a href="qcoapreply.html#finished">finished()</a> signal.</p>
         <p>Its <i>reply</i> parameters is the <a href="qcoapreply.html">QCoapReply</a> itself for convenience, and the <i>error</i> parameter is the error received.</p>
-    <p><b>See also </b><a href="qcoapreply.html#finished">finished()</a><a href="qcoapreply.html#aborted">aborted()</a>.</p>
+    <p><b>See also </b><a href="qcoapreply.html#finished">finished()</a> and <a href="qcoapreply.html#aborted">aborted()</a>.</p>
     <h3 class="fn" id="errorReceived"><span class="type">QtCoap::Error</span> <span class="name">QCoapReply::errorReceived</span>() const</h3>
         <p>Returns the error of the reply or QCoapReply::NoError if there is no error.</p>
     <h3 class="fn" id="finished"><code class="details extra" translate="no">[signal]</code> <span class="type">void</span> <span class="name">QCoapReply::finished</span>(<span class="type">QCoapReply</span> *<i>reply</i>)</h3>
         <p>This signal is emitted whenever the corresponding request finished, whether successfully or not. When a resource is observed, this signal will only be emitted once, when the observation ends.</p>
         <p>The <i>reply</i> parameter is the <a href="qcoapreply.html">QCoapReply</a> itself for convenience.</p>
         <aside class="admonition note" role="note"><p><b>Note: </b>If the QCoapReply is deleted while not finished, both aborted() and finished() signal will be emitted immediately before the QCoapReply is destroyed. Given the QCoapReply may have been deleted when receiving the signal, you should not rely on the reply to be still valid.</p></aside>
-    <p><b>See also </b><a href="qcoapclient.html#finished">QCoapClient::finished()</a><a href="qcoapreply.html#isFinished">isFinished()</a><a href="qcoapreply.html#notified">notified()</a><a href="qcoapreply.html#aborted">aborted()</a>.</p>
+    <p><b>See also </b><a href="qcoapclient.html#finished">QCoapClient::finished()</a>, <a href="qcoapreply.html#isFinished">isFinished()</a>, <a href="qcoapreply.html#notified">notified()</a>, and <a href="qcoapreply.html#aborted">aborted()</a>.</p>
     <h3 class="fn" id="isAborted"><span class="type">bool</span> <span class="name">QCoapReply::isAborted</span>() const</h3>
         <p>Returns <code>true</code> if the request has been aborted.</p>
     <h3 class="fn" id="isFinished"><span class="type">bool</span> <span class="name">QCoapReply::isFinished</span>() const</h3>
@@ -168,7 +168,7 @@
     <h3 class="fn" id="notified"><code class="details extra" translate="no">[signal]</code> <span class="type">void</span> <span class="name">QCoapReply::notified</span>(<span class="type">QCoapReply</span> *<i>reply</i>, const <span class="type">QCoapMessage</span> &amp;<i>message</i>)</h3>
         <p>This signal is emitted whenever a notification is received from an observed resource.</p>
         <p>Its <i>message</i> parameter is a <a href="qcoapmessage.html">QCoapMessage</a> containing the payload and the message details. The <i>reply</i> parameter is the <a href="qcoapreply.html">QCoapReply</a> itself for convenience.</p>
-    <p><b>See also </b><a href="qcoapclient.html#finished">QCoapClient::finished()</a><a href="qcoapreply.html#isFinished">isFinished()</a><a href="qcoapreply.html#finished">finished()</a><a href="qcoapreply.html#notified">notified()</a>.</p>
+    <p><b>See also </b><a href="qcoapclient.html#finished">QCoapClient::finished()</a>, <a href="qcoapreply.html#isFinished">isFinished()</a>, <a href="qcoapreply.html#finished">finished()</a>, and <a href="qcoapreply.html#notified">notified()</a>.</p>
     <h3 class="fn" id="request"><span class="type">QCoapRequest</span> <span class="name">QCoapReply::request</span>() const</h3>
         <p>Returns the associated request.</p>
     <h3 class="fn" id="responseCode"><span class="type">QtCoap::ResponseCode</span> <span class="name">QCoapReply::responseCode</span>() const</h3>

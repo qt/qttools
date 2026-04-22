@@ -3,6 +3,8 @@
 
 #include "injabridge.h"
 
+#include "textutils.h"
+
 #include <cmath>
 
 QT_BEGIN_NAMESPACE
@@ -112,6 +114,19 @@ static void registerCallbacks(inja::Environment &env)
 
     env.add_callback("render_signature_spans", 1, [](inja::Arguments &args) {
         return renderSignatureSpans(*args.at(0));
+    });
+
+    // English-list punctuation for templates that iterate over a list of
+    // items. Emit {{ list_separator(loop.index, length(items)) }} after
+    // each item instead of a literal comma or period so the rendered
+    // output matches the legacy HTML generator's prose (for instance
+    // "See also a(), b(), and c." rather than a comma-less concatenation).
+    // loop.index is zero-based in Inja; TextUtils::separator expects the
+    // same convention.
+    env.add_callback("list_separator", 2, [](inja::Arguments &args) {
+        const auto pos = args.at(0)->get<qsizetype>();
+        const auto total = args.at(1)->get<qsizetype>();
+        return TextUtils::separator(pos, total).toStdString();
     });
 
     env.add_callback("escape_md_table", 1, [](inja::Arguments &args) {

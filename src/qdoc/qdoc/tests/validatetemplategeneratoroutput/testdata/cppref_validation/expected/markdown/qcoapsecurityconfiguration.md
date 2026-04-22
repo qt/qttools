@@ -98,7 +98,7 @@ Returns the PSK client identity.
 ### QCoapPrivateKey privateKey() const
 
 Returns the private key assigned to the connection.
-**See also** [setPrivateKey()](qcoapsecurityconfiguration.md#setPrivateKey)[localCertificateChain()](qcoapsecurityconfiguration.md#localCertificateChain).
+**See also** [setPrivateKey()](qcoapsecurityconfiguration.md#setPrivateKey) and [localCertificateChain()](qcoapsecurityconfiguration.md#localCertificateChain).
 
 <a id="setCaCertificates"></a>
 ### void setCaCertificates(const QList<QSslCertificate> &certificates)
@@ -136,7 +136,7 @@ Sets the PSK client identity (to be advised to the server) to _identity_.
 ### void setPrivateKey(const QCoapPrivateKey &key)
 
 Sets the connection's private key to _key_.
-**See also** [privateKey()](qcoapsecurityconfiguration.md#privateKey)[setLocalCertificateChain()](qcoapsecurityconfiguration.md#setLocalCertificateChain).
+**See also** [privateKey()](qcoapsecurityconfiguration.md#privateKey) and [setLocalCertificateChain()](qcoapsecurityconfiguration.md#setLocalCertificateChain).
 
 <a id="swap"></a>
 ### void swap(QCoapSecurityConfiguration &other)

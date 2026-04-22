@@ -142,13 +142,13 @@ Cancels the observation of a resource identified by the _url_.
 ### QCoapReply * deleteResource(const QCoapRequest &request)
 
 Sends the _request_ using the DELETE method and returns a new [QCoapReply](qcoapreply.md) object.
-**See also** [get()](qcoapclient.md#get)[put()](qcoapclient.md#put)[post()](qcoapclient.md#post)[observe()](qcoapclient.md#observe)[discover()](qcoapclient.md#discover).
+**See also** [get()](qcoapclient.md#get), [put()](qcoapclient.md#put), [post()](qcoapclient.md#post), [observe()](qcoapclient.md#observe), and [discover()](qcoapclient.md#discover).
 
 <a id="deleteResource-1"></a>
 ### QCoapReply * deleteResource(const QUrl &url)
 
 Sends a DELETE request to the target _url_.
-**See also** [get()](qcoapclient.md#get)[put()](qcoapclient.md#put)[post()](qcoapclient.md#post)[observe()](qcoapclient.md#observe)[discover()](qcoapclient.md#discover).
+**See also** [get()](qcoapclient.md#get), [put()](qcoapclient.md#put), [post()](qcoapclient.md#post), [observe()](qcoapclient.md#observe), and [discover()](qcoapclient.md#discover).
 
 <a id="disconnect"></a>
 ### void disconnect()
@@ -163,56 +163,56 @@ Closes the open sockets and connections to free the transport.
 
 Discovers the resources available at the given _url_ and returns a new [QCoapResourceDiscoveryReply](qcoapresourcediscoveryreply.md) object which emits the [QCoapResourceDiscoveryReply::discovered()](qcoapresourcediscoveryreply.md#discovered) signal whenever the response arrives.
 Discovery path defaults to "/.well-known/core", but can be changed by passing a different path to _discoveryPath_. Discovery is described in [RFC 6690](https://tools.ietf.org/html/rfc6690#section-1.2.1).
-**See also** [get()](qcoapclient.md#get)[post()](qcoapclient.md#post)[put()](qcoapclient.md#put)[deleteResource()](qcoapclient.md#deleteResource)[observe()](qcoapclient.md#observe).
+**See also** [get()](qcoapclient.md#get), [post()](qcoapclient.md#post), [put()](qcoapclient.md#put), [deleteResource()](qcoapclient.md#deleteResource), and [observe()](qcoapclient.md#observe).
 
 <a id="discover-1"></a>
 ### QCoapResourceDiscoveryReply * discover(QtCoap::MulticastGroup group = QtCoap::MulticastGroup::AllCoapNodesIPv4, int port = QtCoap::DefaultPort, const QString &discoveryPath = QLatin1String("/.well-known/core"))
 
 Discovers the resources available at the endpoints which have joined the _group_ at the given _port_. Returns a new [QCoapResourceDiscoveryReply](qcoapresourcediscoveryreply.md) object which emits the [QCoapResourceDiscoveryReply::discovered()](qcoapresourcediscoveryreply.md#discovered) signal whenever a response arrives. The _group_ is one of the CoAP multicast group addresses and defaults to [QtCoap::AllCoapNodesIPv4](qtcoap.md#MulticastGroup-enum).
 Discovery path defaults to "/.well-known/core", but can be changed by passing a different path to _discoveryPath_. Discovery is described in [RFC 6690](https://tools.ietf.org/html/rfc6690#section-1.2.1).
-**See also** [get()](qcoapclient.md#get)[post()](qcoapclient.md#post)[put()](qcoapclient.md#put)[deleteResource()](qcoapclient.md#deleteResource)[observe()](qcoapclient.md#observe).
+**See also** [get()](qcoapclient.md#get), [post()](qcoapclient.md#post), [put()](qcoapclient.md#put), [deleteResource()](qcoapclient.md#deleteResource), and [observe()](qcoapclient.md#observe).
 
 <a id="error"></a>
 ### void error(QCoapReply *reply, QtCoap::Error error)
 
 This signal is emitted whenever an error occurs. The _reply_ parameter can be `nullptr` if the error is not related to a specific [QCoapReply](qcoapreply.md). The _error_ parameter contains the error code.
-**See also** [finished()](qcoapclient.md#finished)[QCoapReply::error()](qcoapreply.md#error)[QCoapReply::finished()](qcoapreply.md#finished).
+**See also** [finished()](qcoapclient.md#finished), [QCoapReply::error()](qcoapreply.md#error), and [QCoapReply::finished()](qcoapreply.md#finished).
 
 <a id="finished"></a>
 ### void finished(QCoapReply *reply)
 
 This signal is emitted along with the [QCoapReply::finished()](qcoapreply.md#finished) signal whenever a CoAP reply is received, after either a success or an error. The _reply_ parameter will contain a pointer to the reply that has just been received.
-**See also** [error()](qcoapclient.md#error)[QCoapReply::finished()](qcoapreply.md#finished)[QCoapReply::error()](qcoapreply.md#error).
+**See also** [error()](qcoapclient.md#error), [QCoapReply::finished()](qcoapreply.md#finished), and [QCoapReply::error()](qcoapreply.md#error).
 
 <a id="get"></a>
 ### QCoapReply * get(const QCoapRequest &request)
 
 Sends the _request_ using the GET method and returns a new [QCoapReply](qcoapreply.md) object.
-**See also** [post()](qcoapclient.md#post)[put()](qcoapclient.md#put)[deleteResource()](qcoapclient.md#deleteResource)[observe()](qcoapclient.md#observe)[discover()](qcoapclient.md#discover).
+**See also** [post()](qcoapclient.md#post), [put()](qcoapclient.md#put), [deleteResource()](qcoapclient.md#deleteResource), [observe()](qcoapclient.md#observe), and [discover()](qcoapclient.md#discover).
 
 <a id="get-1"></a>
 ### QCoapReply * get(const QUrl &url)
 
 Sends a GET request to _url_ and returns a new [QCoapReply](qcoapreply.md) object.
-**See also** [post()](qcoapclient.md#post)[put()](qcoapclient.md#put)[deleteResource()](qcoapclient.md#deleteResource)[observe()](qcoapclient.md#observe)[discover()](qcoapclient.md#discover).
+**See also** [post()](qcoapclient.md#post), [put()](qcoapclient.md#put), [deleteResource()](qcoapclient.md#deleteResource), [observe()](qcoapclient.md#observe), and [discover()](qcoapclient.md#discover).
 
 <a id="observe"></a>
 ### QCoapReply * observe(const QCoapRequest &request)
 
 Sends a request to observe the target _request_ and returns a new [QCoapReply](qcoapreply.md) object which emits the [QCoapReply::notified()](qcoapreply.md#notified) signal whenever a new notification arrives.
-**See also** [cancelObserve()](qcoapclient.md#cancelObserve)[get()](qcoapclient.md#get)[post()](qcoapclient.md#post)[put()](qcoapclient.md#put)[deleteResource()](qcoapclient.md#deleteResource)[discover()](qcoapclient.md#discover).
+**See also** [cancelObserve()](qcoapclient.md#cancelObserve), [get()](qcoapclient.md#get), [post()](qcoapclient.md#post), [put()](qcoapclient.md#put), [deleteResource()](qcoapclient.md#deleteResource), and [discover()](qcoapclient.md#discover).
 
 <a id="observe-1"></a>
 ### QCoapReply * observe(const QUrl &url)
 
 Sends a request to observe the target _url_ and returns a new [QCoapReply](qcoapreply.md) object which emits the [QCoapReply::notified()](qcoapreply.md#notified) signal whenever a new notification arrives.
-**See also** [cancelObserve()](qcoapclient.md#cancelObserve)[get()](qcoapclient.md#get)[post()](qcoapclient.md#post)[put()](qcoapclient.md#put)[deleteResource()](qcoapclient.md#deleteResource)[discover()](qcoapclient.md#discover).
+**See also** [cancelObserve()](qcoapclient.md#cancelObserve), [get()](qcoapclient.md#get), [post()](qcoapclient.md#post), [put()](qcoapclient.md#put), [deleteResource()](qcoapclient.md#deleteResource), and [discover()](qcoapclient.md#discover).
 
 <a id="post"></a>
 ### QCoapReply * post(const QCoapRequest &request, const QByteArray &data = QByteArray())
 
 Sends the _request_ using the POST method and returns a new [QCoapReply](qcoapreply.md) object. Uses _data_ as the payload for this request. If _data_ is empty, the payload of the _request_ will be used.
-**See also** [get()](qcoapclient.md#get)[put()](qcoapclient.md#put)[deleteResource()](qcoapclient.md#deleteResource)[observe()](qcoapclient.md#observe)[discover()](qcoapclient.md#discover).
+**See also** [get()](qcoapclient.md#get), [put()](qcoapclient.md#put), [deleteResource()](qcoapclient.md#deleteResource), [observe()](qcoapclient.md#observe), and [discover()](qcoapclient.md#discover).
 
 <a id="post-1"></a>
 ### QCoapReply * post(const QCoapRequest &request, QIODevice *device)
@@ -220,19 +220,19 @@ Sends the _request_ using the POST method and returns a new [QCoapReply](qcoapre
 Sends the _request_ using the POST method and returns a new [QCoapReply](qcoapreply.md) object. Uses _device_ content as the payload for this request. A null device is treated as empty content, in which case the payload of the _request_ will be used.
 > **Note:** The device has to be open and readable before calling this function.
 
-**See also** [get()](qcoapclient.md#get)[put()](qcoapclient.md#put)[deleteResource()](qcoapclient.md#deleteResource)[observe()](qcoapclient.md#observe)[discover()](qcoapclient.md#discover).
+**See also** [get()](qcoapclient.md#get), [put()](qcoapclient.md#put), [deleteResource()](qcoapclient.md#deleteResource), [observe()](qcoapclient.md#observe), and [discover()](qcoapclient.md#discover).
 
 <a id="post-2"></a>
 ### QCoapReply * post(const QUrl &url, const QByteArray &data = QByteArray())
 
 Sends a POST request to _url_ and returns a new [QCoapReply](qcoapreply.md) object. Uses _data_ as the payload for this request.
-**See also** [get()](qcoapclient.md#get)[put()](qcoapclient.md#put)[deleteResource()](qcoapclient.md#deleteResource)[observe()](qcoapclient.md#observe)[discover()](qcoapclient.md#discover).
+**See also** [get()](qcoapclient.md#get), [put()](qcoapclient.md#put), [deleteResource()](qcoapclient.md#deleteResource), [observe()](qcoapclient.md#observe), and [discover()](qcoapclient.md#discover).
 
 <a id="put"></a>
 ### QCoapReply * put(const QCoapRequest &request, const QByteArray &data = QByteArray())
 
 Sends the _request_ using the PUT method and returns a new [QCoapReply](qcoapreply.md) object. Uses _data_ as the payload for this request. If _data_ is empty, the payload of the _request_ will be used.
-**See also** [get()](qcoapclient.md#get)[post()](qcoapclient.md#post)[deleteResource()](qcoapclient.md#deleteResource)[observe()](qcoapclient.md#observe)[discover()](qcoapclient.md#discover).
+**See also** [get()](qcoapclient.md#get), [post()](qcoapclient.md#post), [deleteResource()](qcoapclient.md#deleteResource), [observe()](qcoapclient.md#observe), and [discover()](qcoapclient.md#discover).
 
 <a id="put-1"></a>
 ### QCoapReply * put(const QCoapRequest &request, QIODevice *device)
@@ -240,19 +240,19 @@ Sends the _request_ using the PUT method and returns a new [QCoapReply](qcoaprep
 Sends the _request_ using the PUT method and returns a new [QCoapReply](qcoapreply.md) object. Uses _device_ content as the payload for this request. A null device is treated as empty content, in which case the payload of the _request_ will be used.
 > **Note:** The device has to be open and readable before calling this function.
 
-**See also** [get()](qcoapclient.md#get)[post()](qcoapclient.md#post)[deleteResource()](qcoapclient.md#deleteResource)[observe()](qcoapclient.md#observe)[discover()](qcoapclient.md#discover).
+**See also** [get()](qcoapclient.md#get), [post()](qcoapclient.md#post), [deleteResource()](qcoapclient.md#deleteResource), [observe()](qcoapclient.md#observe), and [discover()](qcoapclient.md#discover).
 
 <a id="put-2"></a>
 ### QCoapReply * put(const QUrl &url, const QByteArray &data = QByteArray())
 
 Sends a PUT request to _url_ and returns a new [QCoapReply](qcoapreply.md) object. Uses _data_ as the payload for this request.
-**See also** [get()](qcoapclient.md#get)[post()](qcoapclient.md#post)[deleteResource()](qcoapclient.md#deleteResource)[observe()](qcoapclient.md#observe)[discover()](qcoapclient.md#discover).
+**See also** [get()](qcoapclient.md#get), [post()](qcoapclient.md#post), [deleteResource()](qcoapclient.md#deleteResource), [observe()](qcoapclient.md#observe), and [discover()](qcoapclient.md#discover).
 
 <a id="responseToMulticastReceived"></a>
 ### void responseToMulticastReceived(QCoapReply *reply, const QCoapMessage &message, const QHostAddress &sender)
 
 This signal is emitted when a unicast response to a multicast request arrives. The _reply_ parameter contains a pointer to the reply that has just been received, _message_ contains the payload and the message details, and _sender_ contains the sender address.
-**See also** [error()](qcoapclient.md#error)[QCoapReply::finished()](qcoapreply.md#finished)[QCoapReply::error()](qcoapreply.md#error).
+**See also** [error()](qcoapclient.md#error), [QCoapReply::finished()](qcoapreply.md#finished), and [QCoapReply::error()](qcoapreply.md#error).
 
 <a id="setAckRandomFactor"></a>
 ### void setAckRandomFactor(double ackRandomFactor)

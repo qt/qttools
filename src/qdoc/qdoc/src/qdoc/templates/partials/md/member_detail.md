@@ -125,6 +125,6 @@ This {{ lower(member.nodeType.label) }} was introduced in Qt {{ member.since }}.
 
 {% endif %}
 {% if existsIn(member, "alsoList") and length(member.alsoList) > 0 %}
-**See also** {% for block in member.alsoList %}{% for i in block.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ c.text }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ c.text }}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ i.text }}{% endif %}{% endfor %}{% endfor %}.
+**See also** {% for block in member.alsoList %}{% for i in block.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ c.text }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ c.text }}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ i.text }}{% endif %}{% endfor %}{{ list_separator(loop.index, length(member.alsoList)) }}{% endfor %}{{ "" }}
 
 {% endif %}

@@ -95,5 +95,5 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <p><b>Note:</b> This function is noexcept when {{ escape_html(member.noexceptNote) }}.</p>
     {% endif %}
     {% if existsIn(member, "alsoList") and length(member.alsoList) > 0 %}
-    <p><b>See also </b>{% for block in member.alsoList %}{% for i in block.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% endfor %}.</p>
+    <p><b>See also </b>{% for block in member.alsoList %}{% for i in block.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{{ list_separator(loop.index, length(member.alsoList)) }}{% endfor %}</p>
     {% endif %}

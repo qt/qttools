@@ -70,14 +70,14 @@ Aborts the request immediately and emits the [aborted(const QCoapToken &token)](
 This signal is emitted when the request is aborted or the reply is deleted. Its _token_ parameter is the token of the exchange that has been aborted.
 > **Note:** If the QCoapReply is deleted while not finished, both aborted() and finished() signal will be emitted immediately before the QCoapReply is destroyed. Given the QCoapReply may have been deleted when receiving the signal, you should not rely on the sender() object to be still valid.
 
-**See also** [finished()](qcoapreply.md#finished)[error()](qcoapreply.md#error).
+**See also** [finished()](qcoapreply.md#finished) and [error()](qcoapreply.md#error).
 
 <a id="error"></a>
 ### void error(QCoapReply *reply, QtCoap::Error error)
 
 This signal is emitted whenever an error occurs and is followed by the [finished()](qcoapreply.md#finished) signal.
 Its _reply_ parameters is the [QCoapReply](qcoapreply.md) itself for convenience, and the _error_ parameter is the error received.
-**See also** [finished()](qcoapreply.md#finished)[aborted()](qcoapreply.md#aborted).
+**See also** [finished()](qcoapreply.md#finished) and [aborted()](qcoapreply.md#aborted).
 
 <a id="errorReceived"></a>
 ### QtCoap::Error errorReceived() const
@@ -90,7 +90,7 @@ This signal is emitted whenever the corresponding request finished, whether succ
 The _reply_ parameter is the [QCoapReply](qcoapreply.md) itself for convenience.
 > **Note:** If the QCoapReply is deleted while not finished, both aborted() and finished() signal will be emitted immediately before the QCoapReply is destroyed. Given the QCoapReply may have been deleted when receiving the signal, you should not rely on the reply to be still valid.
 
-**See also** [QCoapClient::finished()](qcoapclient.md#finished)[isFinished()](qcoapreply.md#isFinished)[notified()](qcoapreply.md#notified)[aborted()](qcoapreply.md#aborted).
+**See also** [QCoapClient::finished()](qcoapclient.md#finished), [isFinished()](qcoapreply.md#isFinished), [notified()](qcoapreply.md#notified), and [aborted()](qcoapreply.md#aborted).
 
 <a id="isAborted"></a>
 ### bool isAborted() const
@@ -123,7 +123,7 @@ Returns the method of the associated request.
 
 This signal is emitted whenever a notification is received from an observed resource.
 Its _message_ parameter is a [QCoapMessage](qcoapmessage.md) containing the payload and the message details. The _reply_ parameter is the [QCoapReply](qcoapreply.md) itself for convenience.
-**See also** [QCoapClient::finished()](qcoapclient.md#finished)[isFinished()](qcoapreply.md#isFinished)[finished()](qcoapreply.md#finished)[notified()](qcoapreply.md#notified).
+**See also** [QCoapClient::finished()](qcoapclient.md#finished), [isFinished()](qcoapreply.md#isFinished), [finished()](qcoapreply.md#finished), and [notified()](qcoapreply.md#notified).
 
 <a id="request"></a>
 ### QCoapRequest request() const

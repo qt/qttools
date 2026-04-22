@@ -166,7 +166,7 @@ Sets the message options to _options_.
 Sets the message payload to _payload_. The payload can be represented in one of the content formats defined in [CoAP Content-Formats Registry](https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats).
 > **Note:** CoAP supports common content formats such as XML, JSON, and so on, but these are text based and consequently heavy both in payload and in processing. One of the recommended content formats to use with CoAP is CBOR, which is designed to be used in such contexts.
 
-**See also** [payload()](qcoapmessage.md#payload)[QCborStreamWriter](https://doc.qt.io/qt-6/qcborstreamwriter.html)[QCborStreamReader](https://doc.qt.io/qt-6/qcborstreamreader.html).
+**See also** [payload()](qcoapmessage.md#payload), [QCborStreamWriter](https://doc.qt.io/qt-6/qcborstreamwriter.html), and [QCborStreamReader](https://doc.qt.io/qt-6/qcborstreamreader.html).
 
 <a id="setToken"></a>
 ### void setToken(const QByteArray &token)
