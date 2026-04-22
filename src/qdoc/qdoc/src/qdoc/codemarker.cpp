@@ -11,6 +11,7 @@
 #include "propertynode.h"
 #include "qmlpropertynode.h"
 #include "utilities.h"
+#include "textutils.h"
 
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qobjectdefs.h>
@@ -291,7 +292,7 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
 
 QString CodeMarker::protect(const QString &str)
 {
-    return Utilities::protect(str);
+    return TextUtils::protect(str);
 }
 
 void CodeMarker::appendProtectedString(QString *output, QStringView str)
@@ -302,16 +303,16 @@ void CodeMarker::appendProtectedString(QString *output, QStringView str)
     for (int i = 0; i != n; ++i) {
         switch (data[i].unicode()) {
         case '&':
-            *output += Utilities::samp;
+            *output += TextUtils::samp;
             break;
         case '<':
-            *output += Utilities::slt;
+            *output += TextUtils::slt;
             break;
         case '>':
-            *output += Utilities::sgt;
+            *output += TextUtils::sgt;
             break;
         case '"':
-            *output += Utilities::squot;
+            *output += TextUtils::squot;
             break;
         default:
             *output += data[i];

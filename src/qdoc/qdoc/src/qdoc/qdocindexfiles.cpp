@@ -20,6 +20,7 @@
 #include "inclusionfilter.h"
 #include "location.h"
 #include "utilities.h"
+#include "textutils.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "qmlpropertynode.h"
@@ -846,7 +847,7 @@ void QDocIndexFiles::writeTargets(QXmlStreamWriter &writer, Node *node)
     if (node->doc().hasTargets()) {
         for (const Atom *target : std::as_const(node->doc().targets())) {
             const QString &title = target->string();
-            const QString &name{Utilities::asAsciiPrintable(title)};
+            const QString &name{TextUtils::asAsciiPrintable(title)};
             writer.writeStartElement("target");
             writer.writeAttribute("name", node->isExternalPage() ? title : name);
             if (name != title)
@@ -857,7 +858,7 @@ void QDocIndexFiles::writeTargets(QXmlStreamWriter &writer, Node *node)
     if (node->doc().hasKeywords()) {
         for (const Atom *keyword : std::as_const(node->doc().keywords())) {
             const QString &title = keyword->string();
-            const QString &name{Utilities::asAsciiPrintable(title)};
+            const QString &name{TextUtils::asAsciiPrintable(title)};
             writer.writeStartElement("keyword");
             writer.writeAttribute("name", name);
             if (name != title)

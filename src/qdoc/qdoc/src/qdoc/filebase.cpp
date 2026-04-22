@@ -3,6 +3,8 @@
 
 #include "utilities.h"
 
+#include "textutils.h"
+
 #include "collectionnode.h"
 #include "config.h"
 #include "inclusionfilter.h"
@@ -96,7 +98,7 @@ QString computeFileBase(
     }
 
     base.prepend(prefixFn(node));
-    return asAsciiPrintable(base);
+    return TextUtils::asAsciiPrintable(base);
 }
 
 } // namespace Utilities

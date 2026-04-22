@@ -370,7 +370,7 @@ QJsonObject InheritedMembersIR::toJson() const
 /*!
     \variable IR::SectionIR::id
     Stable ASCII identifier for anchor links, generated from the
-    title via Utilities::asAsciiPrintable().
+    title via TextUtils::asAsciiPrintable().
 */
 
 /*!

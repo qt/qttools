@@ -25,6 +25,7 @@
 #include "tree.h"
 #include "quoter.h"
 #include "utilities.h"
+#include "textutils.h"
 
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
@@ -580,7 +581,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         for (const auto &section : sinceSections) {
             if (!section.members().isEmpty()) {
                 out() << "<li>"
-                      << "<a href=\"#" << Utilities::asAsciiPrintable(section.title()) << "\">"
+                      << "<a href=\"#" << TextUtils::asAsciiPrintable(section.title()) << "\">"
                       << section.title() << "</a></li>\n";
             }
         }
@@ -589,7 +590,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         int index = 0;
         for (const auto &section : sinceSections) {
             if (!section.members().isEmpty()) {
-                out() << "<h3 id=\"" << Utilities::asAsciiPrintable(section.title()) << "\">"
+                out() << "<h3 id=\"" << TextUtils::asAsciiPrintable(section.title()) << "\">"
                       << protectEnc(section.title()) << "</h3>\n";
                 if (index == Sections::SinceClasses)
                     generateCompactList(Generic, relative, ncmap, false, QStringLiteral("Q"));
@@ -1015,7 +1016,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
     case Atom::Keyword:
         break;
     case Atom::Target:
-        out() << "<span id=\"" << Utilities::asAsciiPrintable(atom->string()) << "\"></span>";
+        out() << "<span id=\"" << TextUtils::asAsciiPrintable(atom->string()) << "\"></span>";
         break;
     case Atom::UnhandledFormat:
         out() << "<b class=\"redFont\">&lt;Missing HTML&gt;</b>";
@@ -1093,7 +1094,7 @@ QString HtmlGenerator::groupReferenceText(PageNode* node) {
         text += node->name() + " is part of ";
 
         for (std::vector<CollectionNode *>::size_type index{0}; index < groups_nodes.size(); ++index) {
-            text += link_for_group(groups_nodes[index]) + Utilities::separator(index, groups_nodes.size());
+            text += link_for_group(groups_nodes[index]) + TextUtils::separator(index, groups_nodes.size());
         }
     }
     return text;
@@ -2027,7 +2028,7 @@ void HtmlGenerator::addInheritsToMap(QMap<QString, Text> &requisites, Text *text
                 } else if (cls.m_access == Access::Private) {
                     *text << " (private)";
                 }
-                *text << Utilities::comma(index++, classe->baseClasses().size());
+                *text << TextUtils::comma(index++, classe->baseClasses().size());
             }
         }
         *text << Atom::ParaRight;
@@ -2054,7 +2055,7 @@ void HtmlGenerator::addQmlNativeTypesToMap(QMap<QString, Text> &requisites, Text
 
     for (const auto &item : std::as_const(nativeTypes)) {
         addNodeLink(*text, item);
-        *text << Utilities::comma(index++, nativeTypes.size());
+        *text << TextUtils::comma(index++, nativeTypes.size());
     }
     requisites.insert(nativeTypeText, *text);
 }
@@ -2143,7 +2144,7 @@ void HtmlGenerator::addStatusToMap(const Aggregate *aggregate, QMap<QString, Tex
     if (aggregate->status() == Status::Deprecated)
         spanClass = u"deprecated"_s; // Disregard any version info
     else
-        spanClass = Utilities::asAsciiPrintable(status.value());
+        spanClass = TextUtils::asAsciiPrintable(status.value());
 
     text.clear();
     text << Atom(Atom::String, status.value())

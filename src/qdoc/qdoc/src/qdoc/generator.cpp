@@ -32,6 +32,7 @@
 #include "tokenizer.h"
 #include "typedefnode.h"
 #include "utilities.h"
+#include "textutils.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>
@@ -208,7 +209,7 @@ int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QList<Re
     const QStringList classNames = classMap.keys();
     for (const auto &className : classNames) {
         text << classMap[className];
-        text << Utilities::comma(index++, classNames.size());
+        text << TextUtils::comma(index++, classNames.size());
     }
     return index;
 }
@@ -234,7 +235,7 @@ int Generator::appendSortedQmlNames(Text &text, const Node *base, const QStringL
     int index = 0;
     const auto &names = classMap.keys();
     for (const auto &name : names)
-        text << classMap[name] << Utilities::comma(index++, names.size());
+        text << classMap[name] << TextUtils::comma(index++, names.size());
     return index;
 }
 
@@ -607,7 +608,7 @@ void Generator::generateAlsoList(const Node *node, CodeMarker *marker)
 
         int i = 0;
         for (const auto &also : std::as_const(items))
-            text << also << Utilities::separator(i++, items.size());
+            text << also << TextUtils::separator(i++, items.size());
 
         text << Atom::ParaRight;
         generateText(text, node, marker);
@@ -1483,7 +1484,7 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
                     text << Atom(Atom::Link, pn->name())
                          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << pn->name()
                          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
-                         << Utilities::separator(i, properties.size());
+                         << TextUtils::separator(i, properties.size());
                 }
                 text << u" "_s;
             }
@@ -1840,7 +1841,7 @@ bool Generator::generateComparisonTable(const Node *node)
             const QStringList types{description.firstAtom()->string().split(';'_L1)};
             for (const auto &name : types)
                 text << Atom(Atom::AutoLink, name)
-                     << Utilities::separator(types.indexOf(name), types.size());
+                     << TextUtils::separator(types.indexOf(name), types.size());
             text << Atom::TableItemRight;
 
             if (hasDescriptions) {

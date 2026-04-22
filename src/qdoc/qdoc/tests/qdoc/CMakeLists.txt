@@ -52,6 +52,7 @@ qt_internal_extend_target(tst_QDoc
         ir/catch_member.cpp
         ir/catch_signaturespan.cpp
         ../../src/qdoc/injabridge.cpp
+        ../../src/qdoc/textutils.cpp
         ../../src/qdoc/ir/member.cpp
         ../../src/qdoc/ir/builder.cpp
         ../../src/qdoc/ir/contentbuilder.cpp

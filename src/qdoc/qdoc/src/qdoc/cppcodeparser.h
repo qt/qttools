@@ -8,6 +8,7 @@
 #include "codeparser.h"
 #include "parsererror.h"
 #include "utilities.h"
+#include "textutils.h"
 
 #include <QtCore/qhash.h>
 
@@ -110,7 +111,7 @@ private:
             [index = qsizetype{ 0 }, numberOfCommands = commands.size()](
                     const QString &accumulator, const QString &topic) mutable -> QString {
                 return accumulator + QLatin1String("\\") + topic
-                        + Utilities::separator(index++, numberOfCommands);
+                        + TextUtils::separator(index++, numberOfCommands);
             }) };
 
     doc.location().warning(

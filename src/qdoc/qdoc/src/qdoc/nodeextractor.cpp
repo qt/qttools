@@ -32,6 +32,7 @@
 #include "tree.h"
 #include "typedefnode.h"
 #include "utilities.h"
+#include "textutils.h"
 #include "variablenode.h"
 
 #include "location.h"
@@ -607,7 +608,7 @@ QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate, const Hr
 
         IR::SectionIR irSection;
         irSection.title = section.title();
-        irSection.id = Utilities::asAsciiPrintable(section.title());
+        irSection.id = TextUtils::asAsciiPrintable(section.title());
         irSection.singular = section.singular();
         irSection.plural = section.plural();
 
@@ -667,7 +668,7 @@ QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const Hre
 
         IR::SectionIR irSection;
         irSection.title = section.title();
-        irSection.id = Utilities::asAsciiPrintable(section.title());
+        irSection.id = TextUtils::asAsciiPrintable(section.title());
         irSection.singular = section.singular();
         irSection.plural = section.plural();
 

@@ -27,6 +27,7 @@
 #include "template_declaration.h"
 #include "typedefnode.h"
 #include "utilities.h"
+#include "textutils.h"
 #include "variablenode.h"
 
 #include <QtCore/qlist.h>
@@ -1034,7 +1035,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
         const Atom *next = atom->next();
         QString id{""};
         if (matchAhead(atom, Atom::Target)) {
-            id = Utilities::asAsciiPrintable(next->string());
+            id = TextUtils::asAsciiPrintable(next->string());
             next = next->next();
             ++skipAhead;
         }
@@ -1081,7 +1082,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
         QString id{""};
         bool hasTarget {false};
         if (matchAhead(atom, Atom::Target)) {
-            id = Utilities::asAsciiPrintable(atom->next()->string());
+            id = TextUtils::asAsciiPrintable(atom->next()->string());
             ++skipAhead;
             hasTarget = true;
         }
@@ -1180,14 +1181,14 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
     case Atom::Target:
         // Sometimes, there is a \target just before a section title with the same ID. Only output one xml:id.
         if (matchAhead(atom, Atom::SectionRight) && matchAhead(atom->next(), Atom::SectionLeft)) {
-            QString nextId = Utilities::asAsciiPrintable(
+            QString nextId = TextUtils::asAsciiPrintable(
                     Text::sectionHeading(atom->next()->next()).toString());
-            QString ownId = Utilities::asAsciiPrintable(atom->string());
+            QString ownId = TextUtils::asAsciiPrintable(atom->string());
             if (nextId == ownId)
                 break;
         }
 
-        writeAnchor(Utilities::asAsciiPrintable(atom->string()));
+        writeAnchor(TextUtils::asAsciiPrintable(atom->string()));
         break;
     case Atom::UnhandledFormat:
         m_writer->writeStartElement(dbNamespace, "emphasis");
@@ -2212,7 +2213,7 @@ void DocBookGenerator::generateSortedNames(const ClassNode *cn, const QList<Rela
     int index = 0;
     for (const QString &className : classNames) {
         generateFullName(classMap.value(className), cn);
-        m_writer->writeCharacters(Utilities::comma(index++, classNames.size()));
+        m_writer->writeCharacters(TextUtils::comma(index++, classNames.size()));
     }
 }
 
@@ -2241,7 +2242,7 @@ void DocBookGenerator::generateSortedQmlNames(const Node *base, const QStringLis
         generateFullName(classMap.value(name), base);
         if (name.contains(':'))
             m_writer->writeCharacters(name.section(':', 1));
-        m_writer->writeCharacters(Utilities::comma(index++, names.size()));
+        m_writer->writeCharacters(TextUtils::comma(index++, names.size()));
     }
 }
 
@@ -2293,7 +2294,7 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
             for (const auto &item : std::as_const(nativeTypes)) {
                 generateFullName(item, classe);
                 m_writer->writeCharacters(
-                        Utilities::comma(idx++, nativeTypes.size()));
+                        TextUtils::comma(idx++, nativeTypes.size()));
             }
             generateEndRequisite();
         }
@@ -2316,7 +2317,7 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
                     else if ((*r).m_access == Access::Private)
                         m_writer->writeCharacters(" (private)");
                     m_writer->writeCharacters(
-                            Utilities::comma(index++, classe->baseClasses().size()));
+                            TextUtils::comma(index++, classe->baseClasses().size()));
                 }
                 ++r;
             }
@@ -3564,7 +3565,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
                             m_writer->writeCharacters(" (private)");
                         }
                         m_writer->writeCharacters(
-                                Utilities::comma(index++, classe->baseClasses().size()));
+                                TextUtils::comma(index++, classe->baseClasses().size()));
                     }
                     ++r;
                 }
@@ -4219,7 +4220,7 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
                 for (qsizetype i = 0; i < properties.size(); ++i) {
                     const auto *pn = properties.at(i);
                     generateSimpleLink(linkForNode(pn, nullptr), pn->name());
-                    m_writer->writeCharacters(Utilities::separator(i, properties.size()));
+                    m_writer->writeCharacters(TextUtils::separator(i, properties.size()));
                 }
                 m_writer->writeCharacters(" ");
             }

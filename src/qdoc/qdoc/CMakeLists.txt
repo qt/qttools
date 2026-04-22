@@ -54,6 +54,7 @@ set(qdoclib_sources
     src/qdoc/documentwriter.h
     src/qdoc/outputproducer.h
     src/qdoc/outputproducerregistry.cpp
+    src/qdoc/textutils.cpp
 )
 
 # IR components are only available with template generator

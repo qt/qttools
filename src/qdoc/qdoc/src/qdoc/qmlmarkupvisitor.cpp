@@ -4,6 +4,7 @@
 #include "qmlmarkupvisitor.h"
 
 #include "utilities.h"
+#include "textutils.h"
 
 #include <QtCore/qglobal.h>
 #include <QtCore/qstringlist.h>
@@ -74,7 +75,7 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
         if (extra.trimmed().isEmpty())
             m_output += extra;
         else
-            m_output += Utilities::protect(extra); // text that should probably have been caught by the parser
+            m_output += TextUtils::protect(extra); // text that should probably have been caught by the parser
 
         m_cursor = finish;
         return;
@@ -96,7 +97,7 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
         quint32 j = m_extraLocations[m_extraIndex].offset - 2;
         if (i <= j && j < finish) {
             if (i < j)
-                m_output += Utilities::protect(m_source.mid(i, j - i));
+                m_output += TextUtils::protect(m_source.mid(i, j - i));
 
             quint32 l = m_extraLocations[m_extraIndex].length;
             if (m_extraTypes[m_extraIndex] == Comment) {
@@ -105,10 +106,10 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
                 else
                     l += 2;
                 m_output += "<@comment>"_L1;
-                m_output += Utilities::protect(m_source.mid(j, l));
+                m_output += TextUtils::protect(m_source.mid(j, l));
                 m_output += "</@comment>"_L1;
             } else
-                m_output += Utilities::protect(m_source.mid(j, l));
+                m_output += TextUtils::protect(m_source.mid(j, l));
 
             m_extraIndex++;
             i = j + l;
@@ -120,7 +121,7 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
     if (extra.trimmed().isEmpty())
         m_output += extra;
     else
-        m_output += Utilities::protect(extra); // text that should probably have been caught by the parser
+        m_output += TextUtils::protect(extra); // text that should probably have been caught by the parser
 
     m_cursor = finish;
 }
@@ -140,7 +141,7 @@ void QmlMarkupVisitor::addMarkedUpToken(const QQmlJS::SourceLocation &location,
     m_output += "<@%1"_L1.arg(tagName);
     for (const auto &key : attributes)
         m_output += " %1=\"%2\""_L1.arg(key, attributes[key]);
-    m_output += ">%2</@%3>"_L1.arg(Utilities::protect(sourceText(location)), tagName);
+    m_output += ">%2</@%3>"_L1.arg(TextUtils::protect(sourceText(location)), tagName);
     m_cursor += location.length;
 }
 
@@ -209,7 +210,7 @@ void QmlMarkupVisitor::addVerbatim(QQmlJS::SourceLocation first,
         return;
 
     QString text = m_source.mid(start, finish - start);
-    m_output += Utilities::protect(text);
+    m_output += TextUtils::protect(text);
     m_cursor = finish;
 }
 

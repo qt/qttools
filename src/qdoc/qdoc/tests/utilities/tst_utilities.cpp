@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
 #include "qdoc/utilities.h"
+#include "qdoc/textutils.h"
 
 #include "qdoc/inode.h"
 #include "qdoc/location.h"
@@ -121,7 +122,7 @@ void tst_Utilities::callSeparatorForOneWord()
     QString result;
     for (const auto &word : listOfWords) {
         result.append(word);
-        result.append(Utilities::separator(index++, listOfWords.size()));
+        result.append(TextUtils::separator(index++, listOfWords.size()));
     }
     QCOMPARE(result, expected);
 }
@@ -135,7 +136,7 @@ void tst_Utilities::callSeparatorForMoreThanOneWord()
     QString result;
     for (const auto &word : listOfWords) {
         result.append(word);
-        result.append(Utilities::separator(index++, listOfWords.size()));
+        result.append(TextUtils::separator(index++, listOfWords.size()));
     }
     QCOMPARE(result, expected);
 }
@@ -149,7 +150,7 @@ void tst_Utilities::callCommaForOneWord()
     QString result;
     for (const auto &word : listOfWords) {
         result.append(word);
-        result.append(Utilities::comma(index++, listOfWords.size()));
+        result.append(TextUtils::comma(index++, listOfWords.size()));
     }
     QCOMPARE(result, expected);
 }
@@ -162,7 +163,7 @@ void tst_Utilities::callCommaForTwoWords()
     QString result;
     for (const auto &word : listOfWords) {
         result.append(word);
-        result.append(Utilities::comma(index++, listOfWords.size()));
+        result.append(TextUtils::comma(index++, listOfWords.size()));
     }
     QCOMPARE(result, expected);
 }
@@ -176,7 +177,7 @@ void tst_Utilities::callCommaForThreeWords()
     QString result;
     for (const auto &word : listOfWords) {
         result.append(word);
-        result.append(Utilities::comma(index++, listOfWords.size()));
+        result.append(TextUtils::comma(index++, listOfWords.size()));
     }
     QCOMPARE(result, expected);
 }
@@ -302,27 +303,27 @@ void tst_Utilities::linkForExampleFile_pathWithSpecialChars()
 void tst_Utilities::asAsciiPrintable()
 {
     QString result;
-    result = Utilities::asAsciiPrintable("");
+    result = TextUtils::asAsciiPrintable("");
     QCOMPARE(result, QStringLiteral(""));
-    result = Utilities::asAsciiPrintable(" ");
+    result = TextUtils::asAsciiPrintable(" ");
     QCOMPARE(result, QStringLiteral(""));
-    result = Utilities::asAsciiPrintable("a");
+    result = TextUtils::asAsciiPrintable("a");
     QCOMPARE(result, QStringLiteral("a"));
-    result = Utilities::asAsciiPrintable("a ");
+    result = TextUtils::asAsciiPrintable("a ");
     QCOMPARE(result, QStringLiteral("a"));
-    result = Utilities::asAsciiPrintable(" a");
+    result = TextUtils::asAsciiPrintable(" a");
     QCOMPARE(result, QStringLiteral("a"));
-    result = Utilities::asAsciiPrintable("Hello World");
+    result = TextUtils::asAsciiPrintable("Hello World");
     QCOMPARE(result, QStringLiteral("hello-world"));
-    result = Utilities::asAsciiPrintable("Hello World ");
+    result = TextUtils::asAsciiPrintable("Hello World ");
     QCOMPARE(result, QStringLiteral("hello-world"));
-    result = Utilities::asAsciiPrintable("Hello World-");
+    result = TextUtils::asAsciiPrintable("Hello World-");
     QCOMPARE(result, QStringLiteral("hello-world"));
-    result = Utilities::asAsciiPrintable("myfile.txt");
+    result = TextUtils::asAsciiPrintable("myfile.txt");
     QCOMPARE(result, QStringLiteral("myfile-txt"));
-    result = Utilities::asAsciiPrintable("Only printable!");
+    result = TextUtils::asAsciiPrintable("Only printable!");
     QCOMPARE(result, QStringLiteral("only-printable"));
-    result = Utilities::asAsciiPrintable("Multiple  spaces");
+    result = TextUtils::asAsciiPrintable("Multiple  spaces");
     QCOMPARE(result, QStringLiteral("multiple-spaces"));
 }
 
