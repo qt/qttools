@@ -689,21 +689,33 @@ static void processQdocconfFile(const QString &fileName)
       one.
      */
     qCDebug(lcQdoc, "Generating docs");
+    int producedFormats = 0;
     for (const auto &format : outputFormats) {
         auto *generator = Generator::generatorForFormat(format);
         if (generator) {
             generator->initializeFormat();
             generator->generateDocs();
+            ++producedFormats;
         } else if (auto *producer = OutputProducerRegistry::instance().producerForFormat(format)) {
             // Non-Generator OutputProducer implementation (e.g., TemplateGenerator)
             producer->prepare();
             producer->produce();
             producer->finalize();
+            ++producedFormats;
         } else {
             config.get(CONFIG_OUTPUTFORMATS)
                     .location()
-                    .fatal(QStringLiteral("QDoc: Unknown output format '%1'").arg(format));
+                    .warning(QStringLiteral("QDoc: Unknown output format '%1'; skipping. "
+                                            "Check for typos or ensure the corresponding "
+                                            "generator is enabled in this QDoc build.")
+                                     .arg(format));
         }
+    }
+
+    if (!outputFormats.isEmpty() && producedFormats == 0) {
+        config.get(CONFIG_OUTPUTFORMATS)
+                .location()
+                .fatal(QStringLiteral("QDoc: None of the configured output formats could be produced; aborting"));
     }
 
     generateIndexFile(config);
