@@ -27,9 +27,12 @@ opt_delete_temp_files = True
 def read_cpp_license(path):
     """Read out the license from a C++ source"""
     result = ""
-    for line in path.read_text().splitlines():
-        result += line + "\n"
-        if 'SPDX-License-Identifier' in line:
+    lines = path.read_text().splitlines()
+    for i in range(len(lines)):
+        result += lines[i] + "\n"
+        if 'Qt-Security' in lines[i]:
+            break
+        if 'SPDX-License-Identifier' in lines[i] and not 'Qt-Security' in lines[i+1]:
             break
     return result
 
