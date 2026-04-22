@@ -1,0 +1,23 @@
+project = Qt branded template test
+productname = Qt
+
+locationinfo = false
+
+sources.fileextensions  = "*.qdoc"
+
+sourcedirs = ./src
+
+outputformats = TemplateHTML TemplateMarkdown
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = true
+TemplateHTML.templatedir = ./template
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = md
+TemplateMarkdown.extension = md
+
+warninglimit = 0
+warninglimit.enabled = true

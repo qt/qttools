@@ -195,3 +195,14 @@ comment = ["Generated output files inherit license from QDoc templates",
            "The Qt GPL exception allows tool output to be used in proprietary contexts"]
 SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
 SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"
+
+[[annotations]]
+path = ["src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/template/**.html",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/template/**.css",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/template/**.md"]
+precedence = "override"
+comment = ["Template files in this testdata carry the same license as the shipped qdoc templates",
+           "because the fixture doubles as CI regression guard for the deployed Qt-branded set",
+           "and must stay byte-identical to the qtbase deployment — license headers included."]
+SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"

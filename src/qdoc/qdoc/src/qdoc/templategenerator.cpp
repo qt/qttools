@@ -94,17 +94,29 @@ void TemplateGenerator::prepare()
     if (!extensionConfig.isEmpty())
         m_fileExtension = extensionConfig;
 
-    QString templateDirConfig = config.get(m_format + ".templatedir"_L1).asString();
+    const ConfigVar &templateDirVar = config.get(m_format + ".templatedir"_L1);
+    QString templateDirConfig = templateDirVar.asString();
 
     if (templateDirConfig.isEmpty()) {
         m_templateDir.clear();
     } else if (QDir::isAbsolutePath(templateDirConfig)) {
         m_templateDir = templateDirConfig;
     } else {
-        // Relative path: resolve relative to the qdocconf file's directory,
-        // consistent with how sourcedirs, headerdirs, etc. are resolved.
-        m_templateDir = QDir::cleanPath(
-            QDir(config.currentDir()).absoluteFilePath(templateDirConfig));
+        // Resolve relative to the .qdocconf file that declared the variable,
+        // not the outermost .qdocconf. Reaching the template generator's
+        // config through an include() chain is the common case: qtbase's
+        // qt-module-defaults.qdocconf includes qt-template-generator.qdocconf,
+        // which in turn sets `TemplateHTML.templatedir = template/qt-branded`.
+        // Without per-variable path tracking, that relative path would
+        // resolve against whichever module's top-level qdocconf is being
+        // processed — a different directory per module — and the template
+        // set would never be found. Falling back to the legacy currentDir()
+        // base preserves behaviour for programmatic insertion, where the
+        // variable has no declaring file.
+        const QString base = templateDirVar.path().isEmpty()
+                ? config.currentDir()
+                : templateDirVar.path();
+        m_templateDir = QDir::cleanPath(QDir(base).absoluteFilePath(templateDirConfig));
     }
 
     bool foundTemplates = false;

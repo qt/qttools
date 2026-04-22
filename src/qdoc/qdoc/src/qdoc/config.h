@@ -54,6 +54,16 @@ public:
     [[nodiscard]] int asInt() const;
     [[nodiscard]] const Location &location() const { return m_location; }
 
+    // Returns the directory of the .qdocconf file that declared this variable
+    // (that is, the working directory active when the variable was parsed).
+    // Empty when the variable is undefined or was inserted programmatically.
+    // Used for resolving relative paths so that an included .qdocconf can
+    // refer to files adjacent to itself, not to the outermost .qdocconf.
+    [[nodiscard]] QString path() const
+    {
+        return m_values.isEmpty() ? QString() : m_values.first().m_path;
+    }
+
     ConfigVar() = default;
     ConfigVar(QString name, const QStringList &values, const QString &dir,
               const Location &loc = Location(),
