@@ -18,6 +18,7 @@ TemplateHTML.templatedir = ./template
 TemplateMarkdown.nosubdirs = true
 TemplateMarkdown.outputsubdir = md
 TemplateMarkdown.extension = md
+TemplateMarkdown.templatedir = ./template
 
 warninglimit = 0
 warninglimit.enabled = true
