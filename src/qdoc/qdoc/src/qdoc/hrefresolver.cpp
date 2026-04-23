@@ -143,12 +143,18 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
         // Index-loaded nodes carry URLs whose shape depends on how the
         // dependency's index was read. When that reader prepends a
         // relative subdirectory (qdocindexfiles.cpp), the resulting URL
-        // assumes a nested output layout. Under a flat layout, the
-        // prefix points to a directory that does not exist. Strip the
-        // leading path component so the link resolves against a
-        // side-by-side sibling in the flat output. Absolute URLs
-        // (external references carrying a scheme) are preserved.
-        if (!m_config.useOutputSubdirs && !url.contains("://"_L1))
+        // assumes a nested output layout. Under a flat layout, a
+        // single-segment prefix points to a directory that does not
+        // exist, so strip it to land on a side-by-side sibling. URLs
+        // that escape the current directory (`../<module>/...`) are
+        // legitimate cross-module references: the index reader added
+        // the prefix precisely so the link crosses into the dependency
+        // module's output, and stripping it would collapse the
+        // reference onto the current module. Absolute URLs (external
+        // references carrying a scheme) are preserved.
+        if (!m_config.useOutputSubdirs
+            && !url.contains("://"_L1)
+            && !url.startsWith("../"_L1))
             return url.section('/'_L1, -1);
         return url;
     }
