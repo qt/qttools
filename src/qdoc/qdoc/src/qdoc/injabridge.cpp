@@ -89,6 +89,7 @@ static std::string renderSignatureSpans(const nlohmann::json &spans)
             result += "<a href=\"" + href + "\">" + escapeHtml(text) + "</a>";
         } else if (role == "template-decl") {
             result += R"(<span class="template-decl">)";
+            result += escapeHtml(text);
             if (s.contains("children") && s["children"].is_array()) {
                 for (const auto &c : s["children"]) {
                     if (c.value("role", "") == "type")

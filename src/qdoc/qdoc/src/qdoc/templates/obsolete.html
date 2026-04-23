@@ -10,7 +10,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     </header>
     <main>
     <p><b>The following members of {{ escape_html(default(typeName, "")) }} are deprecated.</b> They're provided to keep old source code working, but we strongly advise against using them in new code.</p>
-    <p>{% if typeHref != "" %}<a href="{{ typeHref }}">{{ escape_html(typeName) }}</a>{% else %}{{ escape_html(typeName) }}{% endif %} reference page</p>
+    <p>{% if typeHref != "" %}<a href="{{ typeHref }}">{{ escape_html(typeName) }}</a>{% else %}{{ escape_html(typeName) }}{% endif %}{{ " " }}reference page</p>
 
     {% if length(sections) > 0 %}
     {% for section in sections %}

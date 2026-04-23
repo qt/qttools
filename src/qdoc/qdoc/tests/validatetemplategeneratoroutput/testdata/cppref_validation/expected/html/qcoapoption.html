@@ -139,7 +139,7 @@
     </section>
 
     <h2 id="member-type-documentation">Member Type Documentation</h2>
-    <h3 class="fn" id="OptionName-enum">enum <span class="name">QCoapOption::OptionName</span></h3>
+    <h3 class="fn" id="OptionName-enum">enum <span class="name">QCoapOption::OptionName</span><a class="plink" href="#OptionName-enum" title="Direct link to this headline"></a></h3>
         <p>Indicates the name of an option. The value of each ID is as specified by the CoAP standard, with the exception of Invalid. You can refer to <a href="https://tools.ietf.org/html/rfc7252#section-5.10">RFC 7252</a> and <a href="https://tools.ietf.org/html/rfc7959#section-2.1">RFC 7959</a> for more details.</p>
         <div class="table"><table class="valuelist">
         <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
@@ -165,43 +165,43 @@
 <tr><td class="topAlign"><code translate="no">Size1</code></td><td class="topAlign">Size1 option.</td></tr>
         </table></div>
     <h2 id="member-function-documentation">Member Function Documentation</h2>
-    <h3 class="fn" id="QCoapOption-2"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i> = Invalid, const <span class="type">QByteArray</span> &amp;<i>opaqueValue</i> = QByteArray())</h3>
+    <h3 class="fn" id="QCoapOption-2"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i> = Invalid, const <span class="type">QByteArray</span> &amp;<i>opaqueValue</i> = QByteArray())<a class="plink" href="#QCoapOption-2" title="Direct link to this headline"></a></h3>
         <p>Constructs a new CoAP option with the given <i>name</i> and QByteArray <i>opaqueValue</i>. If no parameters are passed, constructs an Invalid object.</p>
     <p><b>See also </b><a href="qcoapoption.html#isValid">isValid()</a>.</p>
-    <h3 class="fn" id="QCoapOption-3"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>, const <span class="type">QString</span> &amp;<i>stringValue</i>)</h3>
+    <h3 class="fn" id="QCoapOption-3"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>, const <span class="type">QString</span> &amp;<i>stringValue</i>)<a class="plink" href="#QCoapOption-3" title="Direct link to this headline"></a></h3>
         <p>Constructs a new CoAP option with the given <i>name</i> and the QString <i>stringValue</i>.</p>
     <p><b>See also </b><a href="qcoapoption.html#isValid">isValid()</a>.</p>
-    <h3 class="fn" id="QCoapOption-4"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>, <span class="type">quint32</span> <i>intValue</i>)</h3>
+    <h3 class="fn" id="QCoapOption-4"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>, <span class="type">quint32</span> <i>intValue</i>)<a class="plink" href="#QCoapOption-4" title="Direct link to this headline"></a></h3>
         <p>Constructs a new CoAP option with the given <i>name</i> and the unsigned integer <i>intValue</i>.</p>
     <p><b>See also </b><a href="qcoapoption.html#isValid">isValid()</a>.</p>
-    <h3 class="fn" id="QCoapOption-1"><span class="name">QCoapOption::QCoapOption</span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>)</h3>
+    <h3 class="fn" id="QCoapOption-1"><span class="name">QCoapOption::QCoapOption</span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>)<a class="plink" href="#QCoapOption-1" title="Direct link to this headline"></a></h3>
         <p>Constructs a new CoAP option as a copy of <i>other</i>, making the two options identical.</p>
     <p><b>See also </b><a href="qcoapoption.html#isValid">isValid()</a>.</p>
-    <h3 class="fn" id="QCoapOption"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption</span> &amp;&amp;<i>other</i>)</h3>
+    <h3 class="fn" id="QCoapOption"><span class="name">QCoapOption::QCoapOption</span>(<span class="type">QCoapOption</span> &amp;&amp;<i>other</i>)<a class="plink" href="#QCoapOption" title="Direct link to this headline"></a></h3>
         <p>Move-constructs a <a href="qcoapoption.html">QCoapOption</a>, making it point to the same object as <i>other</i> was pointing to.</p>
-    <h3 class="fn" id="dtor.QCoapOption"><code class="details extra" translate="no">[noexcept]</code> <span class="name">QCoapOption::~QCoapOption</span>()</h3>
+    <h3 class="fn" id="dtor.QCoapOption"><code class="details extra" translate="no">[noexcept]</code> <span class="name">QCoapOption::~QCoapOption</span>()<a class="plink" href="#dtor.QCoapOption" title="Direct link to this headline"></a></h3>
         <p>Destroys the <a href="qcoapoption.html">QCoapOption</a> object.</p>
-    <h3 class="fn" id="isValid"><span class="type">bool</span> <span class="name">QCoapOption::isValid</span>() const</h3>
+    <h3 class="fn" id="isValid"><span class="type">bool</span> <span class="name">QCoapOption::isValid</span>() const<a class="plink" href="#isValid" title="Direct link to this headline"></a></h3>
         <p>Returns <code>true</code> if the option is valid.</p>
-    <h3 class="fn" id="length"><span class="type">int</span> <span class="name">QCoapOption::length</span>() const</h3>
+    <h3 class="fn" id="length"><span class="type">int</span> <span class="name">QCoapOption::length</span>() const<a class="plink" href="#length" title="Direct link to this headline"></a></h3>
         <p>Returns the length of the value of the option.</p>
-    <h3 class="fn" id="name"><span class="type">QCoapOption::OptionName</span> <span class="name">QCoapOption::name</span>() const</h3>
+    <h3 class="fn" id="name"><span class="type">QCoapOption::OptionName</span> <span class="name">QCoapOption::name</span>() const<a class="plink" href="#name" title="Direct link to this headline"></a></h3>
         <p>Returns the name of the option.</p>
-    <h3 class="fn" id="opaqueValue"><span class="type">QByteArray</span> <span class="name">QCoapOption::opaqueValue</span>() const</h3>
+    <h3 class="fn" id="opaqueValue"><span class="type">QByteArray</span> <span class="name">QCoapOption::opaqueValue</span>() const<a class="plink" href="#opaqueValue" title="Direct link to this headline"></a></h3>
         <p>Returns the value of the option.</p>
-    <h3 class="fn" id="stringValue"><span class="type">QString</span> <span class="name">QCoapOption::stringValue</span>() const</h3>
+    <h3 class="fn" id="stringValue"><span class="type">QString</span> <span class="name">QCoapOption::stringValue</span>() const<a class="plink" href="#stringValue" title="Direct link to this headline"></a></h3>
         <p>Returns the QString value of the option.</p>
-    <h3 class="fn" id="swap"><code class="details extra" translate="no">[noexcept]</code> <span class="type">void</span> <span class="name">QCoapOption::swap</span>(<span class="type">QCoapOption</span> &amp;<i>other</i>)</h3>
+    <h3 class="fn" id="swap"><code class="details extra" translate="no">[noexcept]</code> <span class="type">void</span> <span class="name">QCoapOption::swap</span>(<span class="type">QCoapOption</span> &amp;<i>other</i>)<a class="plink" href="#swap" title="Direct link to this headline"></a></h3>
         <p>Swaps this option with <i>other</i>. This operation is very fast and never fails.</p>
-    <h3 class="fn" id="uintValue"><span class="type">quint32</span> <span class="name">QCoapOption::uintValue</span>() const</h3>
+    <h3 class="fn" id="uintValue"><span class="type">quint32</span> <span class="name">QCoapOption::uintValue</span>() const<a class="plink" href="#uintValue" title="Direct link to this headline"></a></h3>
         <p>Returns the integer value of the option.</p>
-    <h3 class="fn" id="operator-not-eq"><span class="type">bool</span> <span class="name">QCoapOption::operator!=</span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>) const</h3>
+    <h3 class="fn" id="operator-not-eq"><span class="type">bool</span> <span class="name">QCoapOption::operator!=</span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>) const<a class="plink" href="#operator-not-eq" title="Direct link to this headline"></a></h3>
         <p>Returns <code>true</code> if this <a href="qcoapoption.html">QCoapOption</a> and <i>other</i> are different.</p>
-    <h3 class="fn" id="operator-eq"><code class="details extra" translate="no">[noexcept]</code> <span class="type">QCoapOption</span> &amp;<span class="name">QCoapOption::operator=</span>(<span class="type">QCoapOption</span> &amp;&amp;<i>other</i>)</h3>
+    <h3 class="fn" id="operator-eq"><code class="details extra" translate="no">[noexcept]</code> <span class="type">QCoapOption</span> &amp;<span class="name">QCoapOption::operator=</span>(<span class="type">QCoapOption</span> &amp;&amp;<i>other</i>)<a class="plink" href="#operator-eq" title="Direct link to this headline"></a></h3>
         <p>Moves <i>other</i> into this option and returns a reference to this <a href="qcoapoption.html">QCoapOption</a>.</p>
-    <h3 class="fn" id="operator-eq-1"><span class="type">QCoapOption</span> &amp;<span class="name">QCoapOption::operator=</span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>)</h3>
+    <h3 class="fn" id="operator-eq-1"><span class="type">QCoapOption</span> &amp;<span class="name">QCoapOption::operator=</span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>)<a class="plink" href="#operator-eq-1" title="Direct link to this headline"></a></h3>
         <p>Copies <i>other</i> into this option, making the two options identical. Returns a reference to this <a href="qcoapoption.html">QCoapOption</a>.</p>
-    <h3 class="fn" id="operator-eq-eq"><span class="type">bool</span> <span class="name">QCoapOption::operator==</span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>) const</h3>
+    <h3 class="fn" id="operator-eq-eq"><span class="type">bool</span> <span class="name">QCoapOption::operator==</span>(const <span class="type">QCoapOption</span> &amp;<i>other</i>) const<a class="plink" href="#operator-eq-eq" title="Direct link to this headline"></a></h3>
         <p>Returns <code>true</code> if this <a href="qcoapoption.html">QCoapOption</a> and <i>other</i> are equals.</p>
     </main>
     <footer>

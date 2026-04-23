@@ -188,7 +188,7 @@
     </section>
 
     <h2 id="member-type-documentation">Member Type Documentation</h2>
-    <h3 class="fn" id="Type-enum">enum class <span class="name">QCoapMessage::Type</span></h3>
+    <h3 class="fn" id="Type-enum">enum class <span class="name">QCoapMessage::Type</span><a class="plink" href="#Type-enum" title="Direct link to this headline"></a></h3>
         <p>Indicates the type of the message.</p>
         <div class="table"><table class="valuelist">
         <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
@@ -198,74 +198,74 @@
 <tr><td class="topAlign"><code translate="no">Reset</code></td><td class="topAlign">A Reset message. This message type is used in case of errors or to stop the ongoing transmission. (For example, it is used to cancel an observation).</td></tr>
         </table></div>
     <h2 id="member-function-documentation">Member Function Documentation</h2>
-    <h3 class="fn" id="QCoapMessage"><span class="name">QCoapMessage::QCoapMessage</span>()</h3>
+    <h3 class="fn" id="QCoapMessage"><span class="name">QCoapMessage::QCoapMessage</span>()<a class="plink" href="#QCoapMessage" title="Direct link to this headline"></a></h3>
         <p>Constructs a new <a href="qcoapmessage.html">QCoapMessage</a>.</p>
-    <h3 class="fn" id="QCoapMessage-1"><span class="name">QCoapMessage::QCoapMessage</span>(const <span class="type">QCoapMessage</span> &amp;<i>other</i>)</h3>
+    <h3 class="fn" id="QCoapMessage-1"><span class="name">QCoapMessage::QCoapMessage</span>(const <span class="type">QCoapMessage</span> &amp;<i>other</i>)<a class="plink" href="#QCoapMessage-1" title="Direct link to this headline"></a></h3>
         <p>Constructs a shallow copy of <i>other</i>.</p>
-    <h3 class="fn" id="dtor.QCoapMessage"><code class="details extra" translate="no">[noexcept]</code> <span class="name">QCoapMessage::~QCoapMessage</span>()</h3>
+    <h3 class="fn" id="dtor.QCoapMessage"><code class="details extra" translate="no">[noexcept]</code> <span class="name">QCoapMessage::~QCoapMessage</span>()<a class="plink" href="#dtor.QCoapMessage" title="Direct link to this headline"></a></h3>
         <p>Destroys the <a href="qcoapmessage.html">QCoapMessage</a>.</p>
-    <h3 class="fn" id="addOption"><span class="type">void</span> <span class="name">QCoapMessage::addOption</span>(const <span class="type">QCoapOption</span> &amp;<i>option</i>)</h3>
+    <h3 class="fn" id="addOption"><span class="type">void</span> <span class="name">QCoapMessage::addOption</span>(const <span class="type">QCoapOption</span> &amp;<i>option</i>)<a class="plink" href="#addOption" title="Direct link to this headline"></a></h3>
         <p>Adds the given CoAP <i>option</i>.</p>
-    <h3 class="fn" id="addOption-1"><span class="type">void</span> <span class="name">QCoapMessage::addOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>, const <span class="type">QByteArray</span> &amp;<i>value</i> = QByteArray())</h3>
+    <h3 class="fn" id="addOption-1"><span class="type">void</span> <span class="name">QCoapMessage::addOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>, const <span class="type">QByteArray</span> &amp;<i>value</i> = QByteArray())<a class="plink" href="#addOption-1" title="Direct link to this headline"></a></h3>
         <p>Adds the CoAP option with the given <i>name</i> and <i>value</i>.</p>
-    <h3 class="fn" id="clearOptions"><span class="type">void</span> <span class="name">QCoapMessage::clearOptions</span>()</h3>
+    <h3 class="fn" id="clearOptions"><span class="type">void</span> <span class="name">QCoapMessage::clearOptions</span>()<a class="plink" href="#clearOptions" title="Direct link to this headline"></a></h3>
         <p>Removes all options.</p>
-    <h3 class="fn" id="hasOption"><span class="type">bool</span> <span class="name">QCoapMessage::hasOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>) const</h3>
+    <h3 class="fn" id="hasOption"><span class="type">bool</span> <span class="name">QCoapMessage::hasOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>) const<a class="plink" href="#hasOption" title="Direct link to this headline"></a></h3>
         <p>Returns <code>true</code> if the message contains at last one option with <i>name</i>.</p>
-    <h3 class="fn" id="messageId"><span class="type">quint16</span> <span class="name">QCoapMessage::messageId</span>() const</h3>
+    <h3 class="fn" id="messageId"><span class="type">quint16</span> <span class="name">QCoapMessage::messageId</span>() const<a class="plink" href="#messageId" title="Direct link to this headline"></a></h3>
         <p>Returns the message id.</p>
     <p><b>See also </b><a href="qcoapmessage.html#setMessageId">setMessageId()</a>.</p>
-    <h3 class="fn" id="option"><span class="type">QCoapOption</span> <span class="name">QCoapMessage::option</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>) const</h3>
+    <h3 class="fn" id="option"><span class="type">QCoapOption</span> <span class="name">QCoapMessage::option</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>) const<a class="plink" href="#option" title="Direct link to this headline"></a></h3>
         <p>Finds and returns the first option with the given <i>name</i>. If there is no such option, returns an invalid <a href="qcoapoption.html">QCoapOption</a> with an empty value.</p>
-    <h3 class="fn" id="optionAt"><span class="type">QCoapOption</span> <span class="name">QCoapMessage::optionAt</span>(<span class="type">int</span> <i>index</i>) const</h3>
+    <h3 class="fn" id="optionAt"><span class="type">QCoapOption</span> <span class="name">QCoapMessage::optionAt</span>(<span class="type">int</span> <i>index</i>) const<a class="plink" href="#optionAt" title="Direct link to this headline"></a></h3>
         <p>Returns the option at <i>index</i> position.</p>
-    <h3 class="fn" id="optionCount"><span class="type">int</span> <span class="name">QCoapMessage::optionCount</span>() const</h3>
+    <h3 class="fn" id="optionCount"><span class="type">int</span> <span class="name">QCoapMessage::optionCount</span>() const<a class="plink" href="#optionCount" title="Direct link to this headline"></a></h3>
         <p>Returns the number of options.</p>
-    <h3 class="fn" id="options">const <span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; &amp;<span class="name">QCoapMessage::options</span>() const</h3>
+    <h3 class="fn" id="options">const <span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; &amp;<span class="name">QCoapMessage::options</span>() const<a class="plink" href="#options" title="Direct link to this headline"></a></h3>
         <p>Returns the list of options.</p>
-    <h3 class="fn" id="options-1"><span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; <span class="name">QCoapMessage::options</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>) const</h3>
+    <h3 class="fn" id="options-1"><span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; <span class="name">QCoapMessage::options</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>) const<a class="plink" href="#options-1" title="Direct link to this headline"></a></h3>
         <p>Finds and returns the list of options with the given <i>name</i>.</p>
-    <h3 class="fn" id="payload"><span class="type">QByteArray</span> <span class="name">QCoapMessage::payload</span>() const</h3>
+    <h3 class="fn" id="payload"><span class="type">QByteArray</span> <span class="name">QCoapMessage::payload</span>() const<a class="plink" href="#payload" title="Direct link to this headline"></a></h3>
         <p>Returns the payload.</p>
     <p><b>See also </b><a href="qcoapmessage.html#setPayload">setPayload()</a>.</p>
-    <h3 class="fn" id="removeOption"><span class="type">void</span> <span class="name">QCoapMessage::removeOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>)</h3>
+    <h3 class="fn" id="removeOption"><span class="type">void</span> <span class="name">QCoapMessage::removeOption</span>(<span class="type">QCoapOption::OptionName</span> <i>name</i>)<a class="plink" href="#removeOption" title="Direct link to this headline"></a></h3>
         <p>Removes all options with the given <i>name</i>. The CoAP protocol allows for the same option to repeat.</p>
-    <h3 class="fn" id="removeOption-1"><span class="type">void</span> <span class="name">QCoapMessage::removeOption</span>(const <span class="type">QCoapOption</span> &amp;<i>option</i>)</h3>
+    <h3 class="fn" id="removeOption-1"><span class="type">void</span> <span class="name">QCoapMessage::removeOption</span>(const <span class="type">QCoapOption</span> &amp;<i>option</i>)<a class="plink" href="#removeOption-1" title="Direct link to this headline"></a></h3>
         <p>Removes the given <i>option</i>.</p>
-    <h3 class="fn" id="setMessageId"><span class="type">void</span> <span class="name">QCoapMessage::setMessageId</span>(<span class="type">quint16</span> <i>id</i>)</h3>
+    <h3 class="fn" id="setMessageId"><span class="type">void</span> <span class="name">QCoapMessage::setMessageId</span>(<span class="type">quint16</span> <i>id</i>)<a class="plink" href="#setMessageId" title="Direct link to this headline"></a></h3>
         <p>Sets the message ID to <i>id</i>.</p>
     <p><b>See also </b><a href="qcoapmessage.html#messageId">messageId()</a>.</p>
-    <h3 class="fn" id="setOptions"><span class="type">void</span> <span class="name">QCoapMessage::setOptions</span>(const <span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; &amp;<i>options</i>)</h3>
+    <h3 class="fn" id="setOptions"><span class="type">void</span> <span class="name">QCoapMessage::setOptions</span>(const <span class="type">QList</span>&lt;<span class="type">QCoapOption</span>&gt; &amp;<i>options</i>)<a class="plink" href="#setOptions" title="Direct link to this headline"></a></h3>
         <p>Sets the message options to <i>options</i>.</p>
-    <h3 class="fn" id="setPayload"><span class="type">void</span> <span class="name">QCoapMessage::setPayload</span>(const <span class="type">QByteArray</span> &amp;<i>payload</i>)</h3>
+    <h3 class="fn" id="setPayload"><span class="type">void</span> <span class="name">QCoapMessage::setPayload</span>(const <span class="type">QByteArray</span> &amp;<i>payload</i>)<a class="plink" href="#setPayload" title="Direct link to this headline"></a></h3>
         <p>Sets the message payload to <i>payload</i>. The payload can be represented in one of the content formats defined in <a href="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats">CoAP Content-Formats Registry</a>.</p>
         <aside class="admonition note" role="note"><p><b>Note: </b>CoAP supports common content formats such as XML, JSON, and so on, but these are text based and consequently heavy both in payload and in processing. One of the recommended content formats to use with CoAP is CBOR, which is designed to be used in such contexts.</p></aside>
     <p><b>See also </b><a href="qcoapmessage.html#payload">payload()</a>, <a href="https://doc.qt.io/qt-6/qcborstreamwriter.html">QCborStreamWriter</a>, and <a href="https://doc.qt.io/qt-6/qcborstreamreader.html">QCborStreamReader</a>.</p>
-    <h3 class="fn" id="setToken"><span class="type">void</span> <span class="name">QCoapMessage::setToken</span>(const <span class="type">QByteArray</span> &amp;<i>token</i>)</h3>
+    <h3 class="fn" id="setToken"><span class="type">void</span> <span class="name">QCoapMessage::setToken</span>(const <span class="type">QByteArray</span> &amp;<i>token</i>)<a class="plink" href="#setToken" title="Direct link to this headline"></a></h3>
         <p>Sets the message token to <i>token</i>.</p>
     <p><b>See also </b><a href="qcoapmessage.html#token">token()</a>.</p>
-    <h3 class="fn" id="setType"><span class="type">void</span> <span class="name">QCoapMessage::setType</span>(const <span class="type">QCoapMessage::Type</span> &amp;<i>type</i>)</h3>
+    <h3 class="fn" id="setType"><span class="type">void</span> <span class="name">QCoapMessage::setType</span>(const <span class="type">QCoapMessage::Type</span> &amp;<i>type</i>)<a class="plink" href="#setType" title="Direct link to this headline"></a></h3>
         <p>Sets the message type to <i>type</i>.</p>
     <p><b>See also </b><a href="qcoapmessage.html#type">type()</a>.</p>
-    <h3 class="fn" id="setVersion"><span class="type">void</span> <span class="name">QCoapMessage::setVersion</span>(<span class="type">quint8</span> <i>version</i>)</h3>
+    <h3 class="fn" id="setVersion"><span class="type">void</span> <span class="name">QCoapMessage::setVersion</span>(<span class="type">quint8</span> <i>version</i>)<a class="plink" href="#setVersion" title="Direct link to this headline"></a></h3>
         <p>Sets the CoAP version to <i>version</i>.</p>
     <p><b>See also </b><a href="qcoapmessage.html#version">version()</a>.</p>
-    <h3 class="fn" id="swap"><code class="details extra" translate="no">[noexcept]</code> <span class="type">void</span> <span class="name">QCoapMessage::swap</span>(<span class="type">QCoapMessage</span> &amp;<i>other</i>)</h3>
+    <h3 class="fn" id="swap"><code class="details extra" translate="no">[noexcept]</code> <span class="type">void</span> <span class="name">QCoapMessage::swap</span>(<span class="type">QCoapMessage</span> &amp;<i>other</i>)<a class="plink" href="#swap" title="Direct link to this headline"></a></h3>
         <p>Swaps this message with <i>other</i>. This operation is very fast and never fails.</p>
-    <h3 class="fn" id="token"><span class="type">QByteArray</span> <span class="name">QCoapMessage::token</span>() const</h3>
+    <h3 class="fn" id="token"><span class="type">QByteArray</span> <span class="name">QCoapMessage::token</span>() const<a class="plink" href="#token" title="Direct link to this headline"></a></h3>
         <p>Returns the message token.</p>
     <p><b>See also </b><a href="qcoapmessage.html#setToken">setToken()</a>.</p>
-    <h3 class="fn" id="tokenLength"><span class="type">quint8</span> <span class="name">QCoapMessage::tokenLength</span>() const</h3>
+    <h3 class="fn" id="tokenLength"><span class="type">quint8</span> <span class="name">QCoapMessage::tokenLength</span>() const<a class="plink" href="#tokenLength" title="Direct link to this headline"></a></h3>
         <p>Returns the token length.</p>
-    <h3 class="fn" id="type"><span class="type">QCoapMessage::Type</span> <span class="name">QCoapMessage::type</span>() const</h3>
+    <h3 class="fn" id="type"><span class="type">QCoapMessage::Type</span> <span class="name">QCoapMessage::type</span>() const<a class="plink" href="#type" title="Direct link to this headline"></a></h3>
         <p>Returns the message type.</p>
     <p><b>See also </b><a href="qcoapmessage.html#setType">setType()</a>.</p>
-    <h3 class="fn" id="version"><span class="type">quint8</span> <span class="name">QCoapMessage::version</span>() const</h3>
+    <h3 class="fn" id="version"><span class="type">quint8</span> <span class="name">QCoapMessage::version</span>() const<a class="plink" href="#version" title="Direct link to this headline"></a></h3>
         <p>Returns the CoAP version.</p>
     <p><b>See also </b><a href="qcoapmessage.html#setVersion">setVersion()</a>.</p>
-    <h3 class="fn" id="operator-eq"><code class="details extra" translate="no">[noexcept]</code> <span class="type">QCoapMessage</span> &amp;<span class="name">QCoapMessage::operator=</span>(<span class="type">QCoapMessage</span> &amp;&amp;<i>other</i>)</h3>
+    <h3 class="fn" id="operator-eq"><code class="details extra" translate="no">[noexcept]</code> <span class="type">QCoapMessage</span> &amp;<span class="name">QCoapMessage::operator=</span>(<span class="type">QCoapMessage</span> &amp;&amp;<i>other</i>)<a class="plink" href="#operator-eq" title="Direct link to this headline"></a></h3>
         <p>Moves <i>other</i> into this message and returns a reference to this <a href="qcoapmessage.html">QCoapMessage</a>.</p>
-    <h3 class="fn" id="operator-eq-1"><span class="type">QCoapMessage</span> &amp;<span class="name">QCoapMessage::operator=</span>(const <span class="type">QCoapMessage</span> &amp;<i>other</i>)</h3>
+    <h3 class="fn" id="operator-eq-1"><span class="type">QCoapMessage</span> &amp;<span class="name">QCoapMessage::operator=</span>(const <span class="type">QCoapMessage</span> &amp;<i>other</i>)<a class="plink" href="#operator-eq-1" title="Direct link to this headline"></a></h3>
         <p>Copies the contents of <i>other</i> into this message. Returns a reference to this <a href="qcoapmessage.html">QCoapMessage</a>.</p>
     </main>
     <footer>

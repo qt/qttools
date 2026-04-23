@@ -2,7 +2,7 @@
 Copyright (C) 2026 The Qt Company Ltd.
 SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 -#}
-    <h3 class="fn" id="{{ member.anchorId }}">{% if existsIn(member, "signatureSpans") %}{{ render_signature_spans(member.signatureSpans) }}{% else %}{{ escape_html(member.synopsis) }}{% endif %}</h3>
+    <h3 class="fn" id="{{ member.anchorId }}">{% if existsIn(member, "signatureSpans") %}{{ render_signature_spans(member.signatureSpans) }}{% else %}{{ escape_html(member.synopsis) }}{% endif %}<a class="plink" href="#{{ member.anchorId }}" title="Direct link to this headline"></a></h3>
     {% if existsIn(member, "body") and length(member.body) > 0 %}
     {% for block in member.body %}
     {% if block.type == "paragraph" %}

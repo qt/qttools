@@ -9,7 +9,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <h1>{{ fullTitle }}</h1>
     {% if hasCppRef %}
     {% if length(cppRef.templateDeclSpans) > 0 or cppRef.typeWord != "" %}
-    <p class="subtitle">{% if length(cppRef.templateDeclSpans) > 0 %}{{ render_signature_spans(cppRef.templateDeclSpans) }} {% endif %}{{ escape_html(cppRef.typeWord) }}{{ " " }}{{ escape_html(title) }}</p>
+    <p class="subtitle">{% if length(cppRef.templateDeclSpans) > 0 %}{{ render_signature_spans(cppRef.templateDeclSpans) }}<br>{% endif %}{{ escape_html(cppRef.typeWord) }}{{ " " }}{{ escape_html(title) }}</p>
     {% endif %}
     {% endif %}
     {% if default(brief, "") != "" %}
@@ -92,9 +92,10 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     {% endif %}
 
     {% if hasCppRef and length(cppRef.comparisonEntries) > 0 %}
+    <p><b>{{ escape_html(title) }} Comparisons</b></p>
     <div class="table">
     <table class="generic">
-    <tr><th>Category</th><th>Type(s)</th><th>Description</th></tr>
+    <tr><th>Category</th><th>Comparable Types</th><th>Description</th></tr>
     {% for entry in cppRef.comparisonEntries %}
     <tr><td>{{ escape_html(entry.category) }}</td><td>{% for t in entry.comparableTypes %}{% if not loop.is_first %}, {% endif %}{{ escape_html(t) }}{% endfor %}</td><td>{{ escape_html(entry.description) }}</td></tr>
     {% endfor %}
