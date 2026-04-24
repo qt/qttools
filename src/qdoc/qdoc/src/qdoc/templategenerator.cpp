@@ -128,7 +128,7 @@ void TemplateGenerator::prepare()
         QDir templateDir(m_templateDir);
         if (templateDir.exists() && !templateDir.entryList(QDir::Files).isEmpty()) {
             foundTemplates = true;
-            qCInfo(lcQDocTemplateGenerator) << "[%1]"_L1.arg(m_format) << "Using template directory:" << m_templateDir;
+            qCDebug(lcQDocTemplateGenerator) << "[%1]"_L1.arg(m_format) << "Using template directory:" << m_templateDir;
         } else if (!templateDir.exists()) {
             qCInfo(lcQDocTemplateGenerator)
                     << "[%1]"_L1.arg(m_format) << "Configured template directory does not exist:" << m_templateDir
@@ -139,7 +139,7 @@ void TemplateGenerator::prepare()
                     << "- will use embedded templates";
         }
     } else {
-        qCInfo(lcQDocTemplateGenerator)
+        qCDebug(lcQDocTemplateGenerator)
                 << "[%1]"_L1.arg(m_format) << "No external template directory configured - will use embedded templates";
     }
 
@@ -744,7 +744,7 @@ void TemplateGenerator::copyAssets()
                 }
             }
             if (count > 0)
-                qCInfo(lcQDocTemplateGenerator) << "[%1]"_L1.arg(m_format) << "Copied" << count << "theme asset(s)";
+                qCDebug(lcQDocTemplateGenerator) << "[%1]"_L1.arg(m_format) << "Copied" << count << "theme asset(s)";
         }
     }
 
