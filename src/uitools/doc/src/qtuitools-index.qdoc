@@ -29,8 +29,6 @@
 
     \include {module-use.qdocinc} {building_with_qmake} {uitools}
 
-    \section1 Licenses and Attributions
-
     \section1 Examples
 
     \list
