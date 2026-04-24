@@ -18,6 +18,7 @@ QT_BEGIN_NAMESPACE
 
 class Node;
 class QmlTypeNode;
+struct OutputContext;
 
 enum class HrefSuppressReason {
     NullNode,
@@ -31,13 +32,8 @@ using HrefResult = std::variant<QString, HrefSuppressReason>;
 
 struct HrefResolverConfig
 {
-    QString project;
-    QString fileExtension;
-    bool useOutputSubdirs{false};
-    bool noLinkErrors{false};
+    const OutputContext *context{nullptr};
     InclusionPolicy inclusionPolicy;
-    std::function<QString(const Node *)> outputPrefixFn;
-    std::function<QString(const Node *)> outputSuffixFn;
     std::function<QString(const QString &)> cleanRefFn;
     std::function<const QmlTypeNode *()> qmlTypeContextFn;
 };

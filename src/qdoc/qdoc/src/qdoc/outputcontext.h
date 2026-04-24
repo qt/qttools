@@ -4,6 +4,7 @@
 #ifndef OUTPUTCONTEXT_H
 #define OUTPUTCONTEXT_H
 
+#include "genustypes.h"
 #include "outputdirectory.h"
 
 #include <QtCore/qhash.h>
@@ -27,8 +28,8 @@ struct OutputContext
 
     [[nodiscard]] static OutputContext fromConfig(const Config &config,
                                                    const QString &format);
-    [[nodiscard]] QString outputPrefix(const QString &nodeType) const;
-    [[nodiscard]] QString outputSuffix(const QString &nodeType) const;
+    [[nodiscard]] QString outputPrefix(Genus genus) const;
+    [[nodiscard]] QString outputSuffix(Genus genus) const;
 };
 
 QT_END_NAMESPACE

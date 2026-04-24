@@ -42,7 +42,6 @@ Q_LOGGING_CATEGORY(lcQDocTemplateGenerator, "qt.qdoc.templategenerator")
 
 using namespace Qt::Literals;
 
-static QString nodeTypeKey(const Node *node);
 static void resolveDocumentLinks(LinkResolver *resolver, IR::Document &ir, const Node *relative);
 
 /*!
@@ -93,6 +92,11 @@ void TemplateGenerator::prepare()
     QString extensionConfig = config.get(m_format + ".extension"_L1).asString();
     if (!extensionConfig.isEmpty())
         m_fileExtension = extensionConfig;
+
+    // Mirror the finalized extension into OutputContext. fromConfig()
+    // can't set it because the extension is a property of the generator,
+    // not the qdocconf.
+    m_context->fileExtension = m_fileExtension;
 
     const ConfigVar &templateDirVar = config.get(m_format + ".templatedir"_L1);
     QString templateDirConfig = templateDirVar.asString();
@@ -164,21 +168,9 @@ void TemplateGenerator::prepare()
 
     copyAssets();
 
-    // Construct link resolvers using OutputContext data.
-    // TemplateGenerator doesn't inherit from Generator, so we use
-    // m_context (OutputContext) which has the same prefix/suffix data.
     HrefResolverConfig hrefConfig;
-    hrefConfig.project = m_context->project;
-    hrefConfig.fileExtension = m_fileExtension;
-    hrefConfig.useOutputSubdirs = m_context->useSubdirs;
-    hrefConfig.noLinkErrors = Generator::noLinkErrors();
+    hrefConfig.context = &*m_context;
     hrefConfig.inclusionPolicy = config.createInclusionPolicy();
-    hrefConfig.outputPrefixFn = [this](const Node *node) {
-        return m_context->outputPrefix(nodeTypeKey(node));
-    };
-    hrefConfig.outputSuffixFn = [this](const Node *node) {
-        return m_context->outputSuffix(nodeTypeKey(node));
-    };
     hrefConfig.cleanRefFn = [](const QString &ref) { return Generator::cleanRef(ref); };
     hrefConfig.qmlTypeContextFn = []() -> const QmlTypeNode * {
         return Generator::qmlTypeContext();
@@ -578,27 +570,6 @@ QString TemplateGenerator::resolveInclude(const QString &name) const
     return {};
 }
 
-/*!
-    \internal
-    Returns the output prefix/suffix key for a node based on its genus.
-
-    This is used to look up configured prefixes and suffixes from OutputContext.
-*/
-static QString nodeTypeKey(const Node *node)
-{
-    if (node->isPageNode()) {
-        switch (node->genus()) {
-        case Genus::QML:
-            return u"QML"_s;
-        case Genus::CPP:
-            return u"CPP"_s;
-        default:
-            break;
-        }
-    }
-    return QString();
-}
-
 static void resolveDocumentLinks(LinkResolver *resolver, IR::Document &ir, const Node *relative)
 {
     if (!ir.body.isEmpty())
@@ -636,9 +607,9 @@ QString TemplateGenerator::fileBase(const Node *node) const
         [this](const Node *n) -> QString {
             if (n->isCollectionNode())
                 return {};
-            return m_context->outputPrefix(nodeTypeKey(n));
+            return m_context->outputPrefix(n->genus());
         },
-        [this](const Node *n) { return m_context->outputSuffix(nodeTypeKey(n)); });
+        [this](const Node *n) { return m_context->outputSuffix(n->genus()); });
 
     const_cast<Node *>(node)->setFileNameBase(result);
     return result;

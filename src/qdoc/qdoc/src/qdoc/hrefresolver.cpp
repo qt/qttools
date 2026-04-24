@@ -7,6 +7,7 @@
 
 #include "anchorid.h"
 #include "inclusionfilter.h"
+#include "outputcontext.h"
 #include "qmltypenode.h"
 #include "tree.h"
 #include "utilities.h"
@@ -20,11 +21,10 @@ QT_BEGIN_NAMESPACE
     \internal
     \brief Configuration for HrefResolver URL computation.
 
-    The \c outputPrefixFn and \c outputSuffixFn callbacks compute the
-    output prefix and suffix for a given node. These correspond to
-    Generator::outputPrefix() and Generator::outputSuffix() in the
-    legacy path. Both should be set; an empty callback produces an
-    empty prefix or suffix.
+    The non-owning \c context pointer is the single source of truth for
+    output layout (project name, file extension, per-genus prefixes and
+    suffixes, subdir usage, diagnostic gating). It must outlive the
+    HrefResolver.
 
     The \c cleanRefFn callback sanitizes anchor references. It
     corresponds to Generator::cleanRef() in the legacy path.
@@ -70,10 +70,11 @@ QString HrefResolver::fileBase(const Node *node) const
     if (it != m_fileBaseCache.constEnd())
         return it.value();
 
+    const OutputContext *ctx = m_config.context;
     QString result = Utilities::computeFileBase(
-            node, m_config.project,
-            m_config.outputPrefixFn,
-            m_config.outputSuffixFn);
+            node, ctx->project,
+            [ctx](const Node *n) { return ctx->outputPrefix(n->genus()); },
+            [ctx](const Node *n) { return ctx->outputSuffix(n->genus()); });
 
     m_fileBaseCache.insert(node, result);
     return result;
@@ -103,7 +104,7 @@ QString HrefResolver::fileName(const Node *node) const
             return base + '.'_L1 + suffix;
     }
 
-    return base + '.'_L1 + m_config.fileExtension;
+    return base + '.'_L1 + m_config.context->fileExtension;
 }
 
 /*!
@@ -131,8 +132,8 @@ QString HrefResolver::anchorForNode(const Node *node) const
 
     This consolidates logic from XmlGenerator::linkForNode() without
     depending on a Generator instance. Cross-module prefixing is
-    applied when useOutputSubdirs is enabled and the node lives in
-    a different tree than the relative node.
+    applied when the OutputContext uses per-module subdirs and the
+    node lives in a different tree than the relative node.
 */
 HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) const
 {
@@ -152,7 +153,7 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
         // module's output, and stripping it would collapse the
         // reference onto the current module. Absolute URLs (external
         // references carrying a scheme) are preserved.
-        if (!m_config.useOutputSubdirs
+        if (!m_config.context->useSubdirs
             && !url.contains("://"_L1)
             && !url.startsWith("../"_L1))
             return url.section('/'_L1, -1);
@@ -173,7 +174,7 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
         if (qmlContext) {
             if (qmlContext->inherits(node->parent())) {
                 fn = fileName(qmlContext);
-            } else if (node->parent()->isInternal() && !m_config.noLinkErrors) {
+            } else if (node->parent()->isInternal() && !m_config.context->noLinkErrors) {
                 node->doc().location().warning(
                         u"Cannot link to property in internal type '%1'"_s
                                 .arg(node->parent()->name()));
@@ -194,7 +195,7 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
     }
 
     if (relative && (node != relative)) {
-        if (m_config.useOutputSubdirs && !node->isExternalPage()
+        if (m_config.context->useSubdirs && !node->isExternalPage()
             && (node->isIndexNode() || node->tree() != relative->tree()))
             link.prepend("../%1/"_L1.arg(node->tree()->physicalModuleName()));
     }

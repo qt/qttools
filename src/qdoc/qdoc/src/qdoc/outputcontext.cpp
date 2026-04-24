@@ -101,21 +101,41 @@ OutputContext OutputContext::fromConfig(const Config &config, const QString &for
     };
 }
 
-/*!
-    Returns the output prefix for the given \a nodeType.
-    Common values: "QML" -> "qml-", "CPP" -> "cpp-".
-*/
-QString OutputContext::outputPrefix(const QString &nodeType) const
+namespace {
+
+QString genusKey(Genus genus)
 {
-    return outputPrefixes.value(nodeType);
+    switch (genus) {
+    case Genus::QML:
+        return u"QML"_s;
+    case Genus::CPP:
+        return u"CPP"_s;
+    default:
+        return {};
+    }
+}
+
+} // namespace
+
+/*!
+    Returns the output prefix for the given \a genus. The configured
+    prefixes are stored against the QDoc-internal \c "QML" and \c "CPP"
+    keys; the Genus-typed interface lets callers avoid handling those
+    string keys (or having to reach for Node) just to answer
+    "what prefix belongs to this page?".
+*/
+QString OutputContext::outputPrefix(Genus genus) const
+{
+    return outputPrefixes.value(genusKey(genus));
 }
 
 /*!
-    Returns the output suffix for the given \a nodeType.
+    Returns the output suffix for the given \a genus. See outputPrefix()
+    for why the interface is Genus-typed.
 */
-QString OutputContext::outputSuffix(const QString &nodeType) const
+QString OutputContext::outputSuffix(Genus genus) const
 {
-    return outputSuffixes.value(nodeType);
+    return outputSuffixes.value(genusKey(genus));
 }
 
 QT_END_NAMESPACE
