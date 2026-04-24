@@ -696,6 +696,9 @@ QUiLoader::~QUiLoader() = default;
     Loads a form from the given \a device and creates a new widget with the
     given \a parentWidget to hold its contents.
 
+    \warning
+    \include security_considerations.qdocinc
+
     \sa createWidget(), errorString()
 */
 QWidget *QUiLoader::load(QIODevice *device, QWidget *parentWidget)
@@ -734,6 +737,9 @@ void QUiLoader::clearPluginPaths()
 /*!
     Adds the given \a path to the list of paths in which the loader will search
     when locating plugins.
+
+    \warning Only set paths that you trust. Allowing untrusted users to create
+    or add content in a specified path may lead to security vulnerabilities.
 
     \sa pluginPaths(), clearPluginPaths()
 */
@@ -862,6 +868,10 @@ QStringList QUiLoader::availableLayouts() const
     Sets the working directory of the loader to \a dir. The loader will look
     for other resources, such as icons and resource files, in paths relative to
     this directory.
+
+    \warning Only set a directory that you trust. Allowing untrusted users to
+    create or add content in the working directory may lead to security
+    vulnerabilities.
 
     \sa workingDirectory()
 */
