@@ -49,6 +49,7 @@ public:
 
 private:
     [[nodiscard]] QString fileBase(const Node *node) const;
+    [[nodiscard]] QString crossModulePrefix(const Node *target, const Node *source) const;
 
     HrefResolverConfig m_config;
     mutable QHash<const Node *, QString> m_fileBaseCache;

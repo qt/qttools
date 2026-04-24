@@ -12,6 +12,7 @@
 #include "tree.h"
 #include "utilities.h"
 
+#include <QtCore/qdir.h>
 #include <QtCore/qfileinfo.h>
 
 QT_BEGIN_NAMESPACE
@@ -130,37 +131,33 @@ QString HrefResolver::anchorForNode(const Node *node) const
     Returns the URL as a QString on success, or an HrefSuppressReason
     explaining why linking should be suppressed.
 
-    This consolidates logic from XmlGenerator::linkForNode() without
-    depending on a Generator instance. Cross-module prefixing is
-    applied when the OutputContext uses per-module subdirs and the
-    node lives in a different tree than the relative node.
+    External URLs (carrying a scheme such as \c http://) pass through
+    unchanged. Every other reference — including URLs loaded from a
+    dependency's \c .index file — is reduced to a bare filename stem
+    and then prefixed with whatever relative path reaches the target
+    module's output directory from the current page's output
+    directory. The prefix is derived from OutputContext and the two
+    nodes' trees, not from a hardcoded \c ../<module>/ pattern, so it
+    comes out correct regardless of whether the qdocconf uses
+    per-module subdirs, a format subdirectory, or both.
 */
 HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) const
 {
     if (node == nullptr)
         return HrefSuppressReason::NullNode;
-    if (!node->url().isEmpty()) {
-        const QString url = node->url();
-        // Index-loaded nodes carry URLs whose shape depends on how the
-        // dependency's index was read. When that reader prepends a
-        // relative subdirectory (qdocindexfiles.cpp), the resulting URL
-        // assumes a nested output layout. Under a flat layout, a
-        // single-segment prefix points to a directory that does not
-        // exist, so strip it to land on a side-by-side sibling. URLs
-        // that escape the current directory (`../<module>/...`) are
-        // legitimate cross-module references: the index reader added
-        // the prefix precisely so the link crosses into the dependency
-        // module's output, and stripping it would collapse the
-        // reference onto the current module. Absolute URLs (external
-        // references carrying a scheme) are preserved.
-        if (!m_config.context->useSubdirs
-            && !url.contains("://"_L1)
-            && !url.startsWith("../"_L1))
-            return url.section('/'_L1, -1);
-        return url;
-    }
 
-    QString fn = fileName(node);
+    const bool hasExplicitUrl = !node->url().isEmpty();
+    if (hasExplicitUrl && node->url().contains("://"_L1))
+        return node->url();
+
+    // An explicit URL arrives with a directory prefix baked in by the
+    // reader that produced it (qdocindexfiles prepends ../<module>/).
+    // That prefix encodes one specific layout's depth assumption and
+    // is wrong for any other layout, so discard it and recompute from
+    // the current output paths below.
+    QString fn = hasExplicitUrl
+            ? node->url().section('/'_L1, -1)
+            : fileName(node);
     if (fn.isEmpty())
         return HrefSuppressReason::NoFileBase;
 
@@ -168,7 +165,8 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
     if (!InclusionFilter::isIncluded(m_config.inclusionPolicy, context))
         return HrefSuppressReason::ExcludedByPolicy;
 
-    if (node->parent() && node->parent()->isQmlType() && node->parent()->isAbstract()) {
+    if (!hasExplicitUrl && node->parent() && node->parent()->isQmlType()
+        && node->parent()->isAbstract()) {
         const QmlTypeNode *qmlContext = m_config.qmlTypeContextFn
                 ? m_config.qmlTypeContextFn() : nullptr;
         if (qmlContext) {
@@ -194,13 +192,44 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
         link += ref;
     }
 
-    if (relative && (node != relative)) {
-        if (m_config.context->useSubdirs && !node->isExternalPage()
-            && (node->isIndexNode() || node->tree() != relative->tree()))
-            link.prepend("../%1/"_L1.arg(node->tree()->physicalModuleName()));
+    if (relative && (node != relative) && !node->isExternalPage()
+        && (node->isIndexNode() || node->tree() != relative->tree())) {
+        link.prepend(crossModulePrefix(node, relative));
     }
 
     return link;
+}
+
+/*!
+    \internal
+    Returns a relative-path prefix (ending in \c /) that reaches \a
+    target's output directory from \a source's output directory, or
+    an empty string when the two share a directory.
+
+    The current page's output directory is the OutputContext's \c
+    outputDir. The target's output directory is derived by locating
+    the current module's name as a segment in that path and swapping
+    in the target module's name. If the current module's name isn't
+    present — a flat layout where multiple modules render into the
+    same directory — source and target share a directory and no
+    prefix is needed.
+*/
+QString HrefResolver::crossModulePrefix(const Node *target, const Node *source) const
+{
+    const QString &sourceDir = m_config.context->outputDir.path();
+    const QString currentSegment = '/'_L1 + source->tree()->physicalModuleName() + '/'_L1;
+    const qsizetype moduleIndex = sourceDir.indexOf(currentSegment);
+    if (moduleIndex < 0)
+        return {};
+
+    const QString targetSegment = '/'_L1 + target->tree()->physicalModuleName() + '/'_L1;
+    QString targetDir = sourceDir;
+    targetDir.replace(moduleIndex, currentSegment.size(), targetSegment);
+
+    const QString relPath = QDir(sourceDir).relativeFilePath(targetDir);
+    if (relPath.isEmpty() || relPath == "."_L1)
+        return {};
+    return relPath + '/'_L1;
 }
 
 QT_END_NAMESPACE
