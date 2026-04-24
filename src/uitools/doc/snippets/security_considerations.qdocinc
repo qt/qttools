@@ -1,0 +1,5 @@
+Only load forms from trusted sources, like the
+\l{The Qt Resource System}{Qt resource system}.
+Loading \c .ui files from untrusted sources can lead to security
+threats in your application, such as denial of service attacks,
+UI deception, or the loading of unexpected plugins.

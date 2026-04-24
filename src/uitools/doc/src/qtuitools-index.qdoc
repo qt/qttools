@@ -29,6 +29,10 @@
 
     \include {module-use.qdocinc} {building_with_qmake} {uitools}
 
+    \section1 Security Considerations
+
+    \include security_considerations.qdocinc
+
     \section1 Examples
 
     \list
