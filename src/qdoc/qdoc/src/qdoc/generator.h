@@ -4,6 +4,7 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
+#include "ir/sorting.h"
 #include "outputproducer.h"
 #include "text.h"
 #include "filesystem/fileresolver.h"
@@ -188,7 +189,7 @@ protected:
 public:
     static Qt::SortOrder sortOrder(const QString &str)
     {
-        return (str == "descending") ? Qt::DescendingOrder : Qt::AscendingOrder;
+        return Sorting::parseSortOrder(str);
     }
 
     static void addNodeLink(Text &text, const QString &nodeRef, const QString &linkText);

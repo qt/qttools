@@ -52,6 +52,8 @@ set(qdoclib_sources
     src/qdoc/boundaries/filesystem/filepath.cpp
     src/qdoc/boundaries/filesystem/resolvedfile.cpp
     src/qdoc/documentwriter.h
+    src/qdoc/ir/sorting.cpp
+    src/qdoc/ir/sorting.h
     src/qdoc/outputproducer.h
     src/qdoc/outputproducerregistry.cpp
     src/qdoc/textutils.cpp
