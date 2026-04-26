@@ -71,6 +71,17 @@ namespace IR {
     \value DefinitionList A definition or value list containing DefinitionTerm and DefinitionDescription pairs.
     \value DefinitionTerm The term or key in a definition list entry.
     \value DefinitionDescription The description or value in a definition list entry.
+    \value ListPlaceholder A short-lived placeholder emitted by the
+           content builder for \\generatelist and \\annotatedlist
+           atoms. The list-expander pass replaces the placeholder with
+           a Catalog subtree before rendering. A placeholder that
+           reaches a template indicates the expansion pass didn't run
+           and the IR isn't resolved.
+    \value Catalog A populated catalog wrapper, emitted by the
+           list-expander pass, containing reused Table, SectionHeading,
+           List, ListItem, and Link children. Renderers dispatch on
+           the block's variant attribute to select the catalog style
+           such as classes index, examples index, or group members.
 */
 
 /*!
@@ -172,6 +183,8 @@ static QString blockTypeId(BlockType type)
     case BlockType::DefinitionList:        return u"definition-list"_s;
     case BlockType::DefinitionTerm:        return u"definition-term"_s;
     case BlockType::DefinitionDescription: return u"definition-description"_s;
+    case BlockType::ListPlaceholder:       return u"list-placeholder"_s;
+    case BlockType::Catalog:               return u"catalog"_s;
     }
     Q_UNREACHABLE();
 }

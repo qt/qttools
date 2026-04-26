@@ -88,7 +88,9 @@ enum class BlockType : unsigned char {
     Raw,
     DefinitionList,
     DefinitionTerm,
-    DefinitionDescription
+    DefinitionDescription,
+    ListPlaceholder,
+    Catalog
 };
 
 struct ContentBlock
