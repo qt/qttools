@@ -62,6 +62,7 @@ qt_internal_extend_target(tst_QDoc
         ../../src/qdoc/ir/contentblock.cpp
         ../../src/qdoc/ir/document.cpp
         ../../src/qdoc/ir/link.cpp
+        ../../src/qdoc/ir/listplaceholder.cpp
         ../../src/qdoc/ir/signaturespan.cpp
         ../../src/qdoc/ir/sorting.cpp
     LIBRARIES

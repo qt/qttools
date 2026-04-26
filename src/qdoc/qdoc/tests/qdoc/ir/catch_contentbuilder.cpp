@@ -1111,52 +1111,6 @@ SCENARIO("ContentBuilder produces HorizontalRule from HR atom",
     }
 }
 
-SCENARIO("ContentBuilder produces Div for AnnotatedList atom",
-         "[IR::ContentBuilder][IR][Misc]")
-{
-    GIVEN("An atom chain with an AnnotatedList atom")
-    {
-        AtomChain chain(Atom::AnnotatedList, u"mygroup"_s);
-
-        WHEN("ContentBuilder processes the chain")
-        {
-            IR::ContentBuilder builder;
-            auto blocks = builder.build(&chain.first);
-
-            THEN("There is one Div block with annotatedList attribute")
-            {
-                REQUIRE(blocks.size() == 1);
-                REQUIRE(blocks[0].type == IR::BlockType::Div);
-                REQUIRE(blocks[0].attributes["annotatedList"_L1].toString()
-                        == u"mygroup"_s);
-            }
-        }
-    }
-}
-
-SCENARIO("ContentBuilder produces Div for GeneratedList atom",
-         "[IR::ContentBuilder][IR][Misc]")
-{
-    GIVEN("An atom chain with a GeneratedList atom")
-    {
-        AtomChain chain(Atom::GeneratedList, u"classes"_s);
-
-        WHEN("ContentBuilder processes the chain")
-        {
-            IR::ContentBuilder builder;
-            auto blocks = builder.build(&chain.first);
-
-            THEN("There is one Div block with generatedList attribute")
-            {
-                REQUIRE(blocks.size() == 1);
-                REQUIRE(blocks[0].type == IR::BlockType::Div);
-                REQUIRE(blocks[0].attributes["generatedList"_L1].toString()
-                        == u"classes"_s);
-            }
-        }
-    }
-}
-
 SCENARIO("ContentBuilder can be reused for multiple build() calls",
          "[IR::ContentBuilder][IR]")
 {
@@ -1895,6 +1849,204 @@ SCENARIO("ContentBuilder captures independent sectionRefs at multiple levels",
                 REQUIRE(outer.attributes["sectionRef"_L1].toString() == u"overview"_s);
                 const auto &inner = blocks[0].children[1].children[0];
                 REQUIRE(inner.attributes["sectionRef"_L1].toString() == u"details"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder emits a typed ListPlaceholder for "
+         "Atom::AnnotatedList",
+         "[IR::ContentBuilder][IR][Atom::AnnotatedList]")
+{
+    GIVEN("An atom chain with a single Atom::AnnotatedList referencing a group")
+    {
+        AtomChain chain(Atom::AnnotatedList, u"my-group"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("There is one ListPlaceholder block")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::ListPlaceholder);
+            }
+
+            THEN("The block carries variant=annotated-group, argument=my-group, "
+                 "and sort=ascending")
+            {
+                const auto &attrs = blocks[0].attributes;
+                REQUIRE(attrs["variant"_L1].toString() == u"annotated-group"_s);
+                REQUIRE(attrs["argument"_L1].toString() == u"my-group"_s);
+                REQUIRE(attrs["sort"_L1].toString() == u"ascending"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder emits annotated-examples ListPlaceholder for "
+         "\\generatelist annotatedexamples",
+         "[IR::ContentBuilder][IR][Atom::GeneratedList]")
+{
+    GIVEN("An atom chain with Atom::GeneratedList argument=annotatedexamples")
+    {
+        AtomChain chain(Atom::GeneratedList, u"annotatedexamples"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The block carries variant=annotated-examples, "
+                 "argument=annotatedexamples, and sort=ascending")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::ListPlaceholder);
+                const auto &attrs = blocks[0].attributes;
+                REQUIRE(attrs["variant"_L1].toString()
+                        == u"annotated-examples"_s);
+                REQUIRE(attrs["argument"_L1].toString()
+                        == u"annotatedexamples"_s);
+                REQUIRE(attrs["sort"_L1].toString() == u"ascending"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder emits annotated-classes ListPlaceholder for "
+         "\\generatelist annotatedclasses with descending sort",
+         "[IR::ContentBuilder][IR][Atom::GeneratedList]")
+{
+    GIVEN("Atom::GeneratedList with first string=annotatedclasses "
+          "and second string=descending")
+    {
+        AtomChain chain(Atom::GeneratedList, u"annotatedclasses"_s, u"descending"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The block carries variant=annotated-classes, "
+                 "argument=annotatedclasses, and sort=descending")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::ListPlaceholder);
+                const auto &attrs = blocks[0].attributes;
+                REQUIRE(attrs["variant"_L1].toString()
+                        == u"annotated-classes"_s);
+                REQUIRE(attrs["argument"_L1].toString()
+                        == u"annotatedclasses"_s);
+                REQUIRE(attrs["sort"_L1].toString() == u"descending"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder emits compact-classes ListPlaceholder for "
+         "\\generatelist classes with and without a root-name filter",
+         "[IR::ContentBuilder][IR][Atom::GeneratedList]")
+{
+    GIVEN("Atom::GeneratedList with first string=classes (no root filter)")
+    {
+        AtomChain chain(Atom::GeneratedList, u"classes"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The block carries variant=compact-classes, "
+                 "argument=classes, sort=ascending, and no rootName")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::ListPlaceholder);
+                const auto &attrs = blocks[0].attributes;
+                REQUIRE(attrs["variant"_L1].toString()
+                        == u"compact-classes"_s);
+                REQUIRE(attrs["argument"_L1].toString() == u"classes"_s);
+                REQUIRE(attrs["sort"_L1].toString() == u"ascending"_s);
+                REQUIRE_FALSE(attrs.contains("rootName"_L1));
+            }
+        }
+    }
+
+    GIVEN("Atom::GeneratedList with first string=\"classes QAbstract\"")
+    {
+        AtomChain chain(Atom::GeneratedList, u"classes QAbstract"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The block carries variant=compact-classes, the original "
+                 "argument=\"classes QAbstract\", sort=ascending, and "
+                 "rootName=QAbstract")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::ListPlaceholder);
+                const auto &attrs = blocks[0].attributes;
+                REQUIRE(attrs["variant"_L1].toString()
+                        == u"compact-classes"_s);
+                REQUIRE(attrs["argument"_L1].toString()
+                        == u"classes QAbstract"_s);
+                REQUIRE(attrs["sort"_L1].toString() == u"ascending"_s);
+                REQUIRE(attrs["rootName"_L1].toString() == u"QAbstract"_s);
+            }
+        }
+    }
+
+    GIVEN("Atom::GeneratedList with first string=\"classes \" "
+          "(trailing whitespace, no root name)")
+    {
+        AtomChain chain(Atom::GeneratedList, u"classes "_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The block carries variant=compact-classes and no rootName, "
+                 "so a malformed argument doesn't degrade into rootName=\"\"")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::ListPlaceholder);
+                const auto &attrs = blocks[0].attributes;
+                REQUIRE(attrs["variant"_L1].toString()
+                        == u"compact-classes"_s);
+                REQUIRE_FALSE(attrs.contains("rootName"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder falls back to Div for unknown \\generatelist variants",
+         "[IR::ContentBuilder][IR][Atom::GeneratedList]")
+{
+    GIVEN("Atom::GeneratedList with an unknown variant string")
+    {
+        AtomChain chain(Atom::GeneratedList, u"obsoleteclasses"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The emitted block is a Div carrying the legacy attribute bag")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Div);
+                REQUIRE(blocks[0].attributes["generatedList"_L1].toString()
+                        == u"obsoleteclasses"_s);
+            }
+
+            THEN("The fallback emits no ListPlaceholder attributes")
+            {
+                REQUIRE_FALSE(blocks[0].attributes.contains("variant"_L1));
+                REQUIRE_FALSE(blocks[0].attributes.contains("argument"_L1));
+                REQUIRE_FALSE(blocks[0].attributes.contains("sort"_L1));
             }
         }
     }

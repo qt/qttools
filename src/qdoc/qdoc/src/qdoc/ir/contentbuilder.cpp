@@ -3,6 +3,9 @@
 
 #include "contentbuilder.h"
 
+#include "listplaceholder.h"
+#include "sorting.h"
+
 #include "../atom.h"
 #include "../tree.h"
 
@@ -32,6 +35,19 @@ static QString genusToString(Genus genus)
     case Genus::DontCare: return {};
     }
     return {};
+}
+
+static QString placeholderSortAttribute(const Atom *atom)
+{
+    // DocParser is the only producer of Atom::AnnotatedList and
+    // Atom::GeneratedList, and both build them with at most two
+    // strings: the command argument at index 0 and the optional
+    // bracketed sort directive at index 1. Reading args.at(1) is
+    // therefore the sort slot, not "the last string."
+    const QStringList &args = atom->strings();
+    const QString directive = args.size() > 1 ? args.at(1) : QString();
+    return Sorting::parseSortOrder(directive) == Qt::DescendingOrder
+            ? u"descending"_s : u"ascending"_s;
 }
 
 namespace IR {
@@ -83,8 +99,13 @@ namespace IR {
         \li ListTagLeft, ListTagRight -- Value list tag items (ListItem
             blocks).
         \li SinceTagLeft, SinceTagRight -- Version tag items (skipped).
-        \li AnnotatedList -- Placeholder Div.
-        \li GeneratedList -- Placeholder Div.
+        \li AnnotatedList -- Typed ListPlaceholder block carrying a
+            \c{ListPlaceholderVariant} discriminator, the group
+            argument, and a parsed sort directive.
+        \li GeneratedList -- Typed ListPlaceholder block for the
+            recognized variants (annotatedexamples, annotatedclasses,
+            classes, classes \e {<rootname>}); a Div fallback retains
+            the legacy attribute bag for unknown variants.
     \endlist
 
     Format-conditional atoms (FormatIf, FormatElse, FormatEndif) are
@@ -482,16 +503,45 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
 
     case Atom::AnnotatedList: {
         QJsonObject attrs;
-        attrs["annotatedList"_L1] = atom->string();
-        openBlock(BlockType::Div, attrs);
+        attrs["variant"_L1] = toString(ListPlaceholderVariant::AnnotatedGroup);
+        attrs["argument"_L1] = atom->string();
+        attrs["sort"_L1] = placeholderSortAttribute(atom);
+        openBlock(BlockType::ListPlaceholder, attrs);
         closeBlock();
         break;
     }
 
     case Atom::GeneratedList: {
+        const QString arg = atom->string();
         QJsonObject attrs;
-        attrs["generatedList"_L1] = atom->string();
-        openBlock(BlockType::Div, attrs);
+        attrs["argument"_L1] = arg;
+        attrs["sort"_L1] = placeholderSortAttribute(atom);
+
+        static constexpr auto classesPrefix = "classes "_L1;
+        if (arg == "annotatedexamples"_L1) {
+            attrs["variant"_L1] = toString(ListPlaceholderVariant::AnnotatedExamples);
+        } else if (arg == "annotatedclasses"_L1) {
+            attrs["variant"_L1] = toString(ListPlaceholderVariant::AnnotatedClasses);
+        } else if (arg == "classes"_L1 || arg.startsWith(classesPrefix)) {
+            attrs["variant"_L1] = toString(ListPlaceholderVariant::CompactClasses);
+            if (arg.startsWith(classesPrefix)) {
+                const QString rootName = arg.sliced(classesPrefix.size()).trimmed();
+                if (!rootName.isEmpty())
+                    attrs["rootName"_L1] = rootName;
+            }
+        } else {
+            // Unknown \generatelist variant: keep the legacy attribute-bag
+            // Div so deferred variants continue to render as they do today.
+            // Remove this branch when those variants acquire their own
+            // ListPlaceholderVariant entries in a follow-up phase.
+            QJsonObject fallback;
+            fallback["generatedList"_L1] = arg;
+            openBlock(BlockType::Div, fallback);
+            closeBlock();
+            break;
+        }
+
+        openBlock(BlockType::ListPlaceholder, attrs);
         closeBlock();
         break;
     }
