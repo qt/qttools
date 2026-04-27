@@ -606,50 +606,51 @@ void QUiLoaderPrivate::setupWidgetMap() const
     \class QUiLoader
     \inmodule QtUiTools
 
-    \brief The QUiLoader class enables standalone applications to
-    dynamically create user interfaces at run-time using the
-    information stored in UI files or specified in plugin paths.
+    \brief Loads and instantiates \QD forms at runtime.
 
-    In addition, you can customize or create your own user interface by
-    deriving your own loader class.
+    Use QUiLoader to dynamically create QWidget-based user interfaces
+    based on the information stored in UI files (created with \QD).
 
-    If you have a custom component or an application that embeds \QD, you can
-    also use the QFormBuilder class provided by the QtDesigner module to create
-    user interfaces from UI files.
-
-    The QUiLoader class provides a collection of functions allowing you to
-    create widgets based on the information stored in UI files (created
-    with \QD) or available in the specified plugin paths. The specified plugin
-    paths can be retrieved using the pluginPaths() function. Similarly, the
-    contents of a UI file can be retrieved using the load() function. For
-    example:
+    The \l load() function reads the content of a UI file, instantiates
+    the widgets described in the file, and returns a pointer to the
+    top-level \l QWidget. This widget can then be shown:
 
     \snippet quiloader/mywidget.cpp 0
 
-    \if !defined(qtforpython)
-    By including the user interface in the form's resources (\c myform.qrc), we
-    ensure that it will be present at run-time:
+    If the instantiation fails, the function returns
+    a \c nullptr; use the \l errorString() function to retrieve a human-readable
+    description of the error that occurred.
 
-    \quotefile quiloader/mywidget.qrc
-    \endif
+    \section2 Loading forms with custom widgets
 
-    The availableWidgets() function returns a QStringList with the class names
-    of the widgets available in the specified plugin paths. To create these
-    widgets, simply use the createWidget() function. For example:
+    If the UI file contains custom widgets implemented in a \QD plugin, loading
+    will fail by default. To work around this, you can subclass \l QUiLoader and
+    override the \l createWidget() function. If this is not possible, you can also
+    let the module load \QD plugins by adding their locations via
+    \l addPluginPath() or the \c QT_PLUGIN_PATH environment variable.
+    See the \l{Creating Custom Widgets for Qt Widgets Designer}
+    page for more details.
+
+    \section2 Loading a particular widget from a UI file
+
+    You can load a specific widget from a UI file, instead of a
+    complete UI file. Use the \l availableWidgets() function to
+    retrieve the names of the available widgets, and the
+    \l createWidget() function to instantiate a specific one. For example:
 
     \snippet quiloader/main.cpp 0
 
-    To make a custom widget available to the loader, you can use the
-    addPluginPath() function; to remove all available widgets, you can call
-    the clearPluginPaths() function.
+    \section2 Customizing the widget creation
 
-    The createAction(), createActionGroup(), createLayout(), and createWidget()
-    functions are used internally by the QUiLoader class whenever it has to
-    create an action, action group, layout, or widget respectively. For that
-    reason, you can subclass the QUiLoader class and reimplement these
-    functions to intervene the process of constructing a user interface. For
-    example, you might want to have a list of the actions created when loading
-    a form or creating a custom widget.
+    The \l createAction(), \l createActionGroup(), \l createLayout(), and
+    \l createWidget() functions are used internally by the QUiLoader class whenever
+    it has to create an action, action group, layout, or widget respectively.
+    You can subclass QUiLoader and reimplement these functions to
+    customize the UI creation workflow. For example, you
+    might want to have a list of the actions created when loading a form or
+    creating a custom widget.
+
+    \section2 Example
 
     For a complete example using the QUiLoader class, see the
     \l{Calculator Builder}.
@@ -693,8 +694,8 @@ QUiLoader::QUiLoader(QObject *parent)
 QUiLoader::~QUiLoader() = default;
 
 /*!
-    Loads a form from the given \a device and creates a new widget with the
-    given \a parentWidget to hold its contents.
+    Instantiates a form from the given \a device. Returns a new QWidget with the
+    given \a parentWidget if successful. Returns \c nullptr otherwise.
 
     \warning
     \include security_considerations.qdocinc
@@ -755,8 +756,8 @@ void QUiLoader::addPluginPath(const QString &path)
     widgets returned by the availableWidgets() function.
 
     The function is also used internally by the QUiLoader class whenever it
-    creates a widget. Hence, you can subclass QUiLoader and reimplement this
-    function to intervene process of constructing a user interface or widget.
+    creates a widget. Therefore, you can subclass QUiLoader and reimplement this
+    function to intervene in the process of constructing a user interface or widget.
     However, in your implementation, ensure that you call QUiLoader's version
     first.
 
@@ -773,8 +774,8 @@ QWidget *QUiLoader::createWidget(const QString &className, QWidget *parent, cons
     specified by \a className.
 
     The function is also used internally by the QUiLoader class whenever it
-    creates a widget. Hence, you can subclass QUiLoader and reimplement this
-    function to intervene process of constructing a user interface or widget.
+    creates a layout. Therefore, you can subclass QUiLoader and reimplement this
+    function to intervene in the process of constructing a user interface or widget.
     However, in your implementation, ensure that you call QUiLoader's version
     first.
 
@@ -790,10 +791,10 @@ QLayout *QUiLoader::createLayout(const QString &className, QObject *parent, cons
     Creates a new action group with the given \a parent and \a name.
 
     The function is also used internally by the QUiLoader class whenever it
-    creates a widget. Hence, you can subclass QUiLoader and reimplement this
-    function to intervene process of constructing a user interface or widget.
-    However, in your implementation, ensure that you call QUiLoader's version
-    first.
+    creates an action group. Therefore, you can subclass QUiLoader and reimplement
+    this function to intervene in the process of constructing a user interface or
+    widget. However, in your implementation, ensure that you call QUiLoader's
+    version first.
 
     \sa createAction(), createWidget(), load()
  */
@@ -807,8 +808,8 @@ QActionGroup *QUiLoader::createActionGroup(QObject *parent, const QString &name)
     Creates a new action with the given \a parent and \a name.
 
     The function is also used internally by the QUiLoader class whenever it
-    creates a widget. Hence, you can subclass QUiLoader and reimplement this
-    function to intervene process of constructing a user interface or widget.
+    creates an action. Therefore, you can subclass QUiLoader and reimplement this
+    function to intervene in the process of constructing a user interface or widget.
     However, in your implementation, ensure that you call QUiLoader's version
     first.
 
@@ -821,8 +822,8 @@ QAction *QUiLoader::createAction(QObject *parent, const QString &name)
 }
 
 /*!
-    Returns a list naming all available widgets that can be built using the
-    createWidget() function, i.e all the widgets specified within the given
+    Returns a list of all available widgets that can be built using the
+    createWidget() function, that is, all the widgets specified within the given
     plugin paths.
 
     \sa pluginPaths(), createWidget()
@@ -845,8 +846,8 @@ QStringList QUiLoader::availableWidgets() const
 
 /*!
     \since 4.5
-    Returns a list naming all available layouts that can be built using the
-    createLayout() function
+    Returns a list of all available layouts that can be built using the
+    createLayout() function.
 
     \sa createLayout()
 */
@@ -912,8 +913,10 @@ void QUiLoader::setLanguageChangeEnabled(bool enabled)
 /*!
     \since 4.5
 
-    Returns true if dynamic retranslation on language change is enabled;
-    returns false otherwise.
+    Returns \c true if dynamic retranslation on language change is enabled;
+    returns \c false otherwise.
+
+    The default is \c false.
 
     \sa setLanguageChangeEnabled()
 */
@@ -946,7 +949,9 @@ void QUiLoader::setTranslationEnabled(bool enabled)
     \internal
     \since 4.5
 
-    Returns true if translation is enabled; returns false otherwise.
+    Returns \c true if translation is enabled; returns \c false otherwise.
+
+    The default is \c true.
 
     \sa setTranslationEnabled()
 */
@@ -958,7 +963,7 @@ bool QUiLoader::isTranslationEnabled() const
 }
 
 /*!
-    Returns a human-readable description of the last error occurred in load().
+    Returns a human-readable description of the last error that occurred in load().
 
     \since 5.0
     \sa load()

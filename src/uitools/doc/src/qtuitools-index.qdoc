@@ -5,17 +5,17 @@
     \page qtuitools-index.html
     \title Qt UI Tools
 
-    \brief Provides classes to handle forms created with \QD.
+    \brief Provides classes to dynamically instantiate UI files created with \QD.
 
-    \QD forms are processed at run-time to produce dynamically generated
-    user interfaces. In order to generate a form at run-time, a resource
-    file containing a UI file is needed.
+    The Qt UI Tools module allows you to instantiate \QD forms (UI files)
+    at run-time. This is an alternative to compiling the form into code using the
+    \l{User Interface Compiler (uic)}. It enables you to adapt the user interface
+    without the need to recompile or restart the application.
 
-    A form loader object, provided by the QUiLoader class, is used to construct
-    the user interface. This user interface can be retrieved from any QIODevice.
-    For example, a QFile object can be used to obtain a form stored in a
-    project's resources. The QUiLoader::load() function takes the user interface
-    description contained in the file and constructs the form widget.
+    UI files can be loaded from various places, such as the application's resources,
+    the local file system, or a trusted network source. Once located,
+    use the \l QUiLoader class and its \l QUiLoader::load() function to
+    instantiate the file.
 
     \section1 Using the Module
 
