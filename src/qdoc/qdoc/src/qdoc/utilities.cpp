@@ -12,9 +12,6 @@
 
 QT_BEGIN_NAMESPACE
 
-Q_LOGGING_CATEGORY(lcQdoc, "qt.qdoc")
-Q_LOGGING_CATEGORY(lcQdocClang, "qt.qdoc.clang")
-
 /*!
     \namespace Utilities
     \internal

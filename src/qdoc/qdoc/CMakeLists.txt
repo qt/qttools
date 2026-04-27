@@ -56,6 +56,7 @@ set(qdoclib_sources
     src/qdoc/ir/sorting.h
     src/qdoc/outputproducer.h
     src/qdoc/outputproducerregistry.cpp
+    src/qdoc/qdoclogging.cpp
     src/qdoc/textutils.cpp
 )
 

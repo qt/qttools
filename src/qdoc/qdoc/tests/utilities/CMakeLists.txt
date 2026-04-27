@@ -15,6 +15,7 @@ qt_internal_add_test(tst_utilities
     SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/tst_utilities.cpp
 
+        ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/qdoclogging.cpp
         ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/utilities.cpp
         ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/textutils.cpp
         ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/config.cpp
