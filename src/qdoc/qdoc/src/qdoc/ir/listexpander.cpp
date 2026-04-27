@@ -80,6 +80,11 @@ InlineContent makeLink(const QString &name, const QString &href)
     InlineContent link;
     link.type = InlineType::Link;
     link.href = href;
+    // The catalog entry source pre-resolves hrefs through HrefResolver,
+    // so the link arrives at the resolver pipeline already complete.
+    // Mark it Resolved so LinkResolver's body walk skips re-resolution
+    // (and skips its assert that every Link inline carries LinkData).
+    link.link = InlineContent::LinkData{ LinkOrigin::Explicit, LinkState::Resolved };
     InlineContent nameInline;
     nameInline.type = InlineType::Text;
     nameInline.text = name;

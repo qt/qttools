@@ -345,6 +345,9 @@ SCENARIO("ListExpander produces a Link inline for entries with a non-empty href"
                 const auto &link = nameCell.inlineContent[0];
                 REQUIRE(link.type == IR::InlineType::Link);
                 REQUIRE(link.href == u"alpha-widget.html"_s);
+                REQUIRE(link.link.has_value());
+                REQUIRE(link.link->origin == IR::LinkOrigin::Explicit);
+                REQUIRE(link.link->state == IR::LinkState::Resolved);
                 REQUIRE(link.children.size() == 1);
                 REQUIRE(link.children[0].type == IR::InlineType::Text);
                 REQUIRE(link.children[0].text == u"AlphaWidget"_s);
