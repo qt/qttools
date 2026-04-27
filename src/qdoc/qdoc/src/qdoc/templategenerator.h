@@ -16,11 +16,12 @@
 QT_BEGIN_NAMESPACE
 
 class Aggregate;
+class CatalogEntrySource;
 class CodeMarker;
 class HrefResolver;
 class LinkResolver;
 class QDocDatabase;
-namespace IR { struct AllMembersIR; struct Document; }
+namespace IR { struct AllMembersIR; struct Document; class ListExpander; }
 
 /*!
     \class TemplateGenerator
@@ -97,6 +98,8 @@ private:
     QString m_fileExtension = QStringLiteral("html");
     std::unique_ptr<HrefResolver> m_hrefResolver;
     std::unique_ptr<LinkResolver> m_linkResolver;
+    std::unique_ptr<CatalogEntrySource> m_catalogSource;
+    std::unique_ptr<IR::ListExpander> m_listExpander;
     bool m_emitStylesheet = false;
     QString m_stylesheetName;
 

@@ -88,6 +88,10 @@ target_link_libraries(QDocLib
         Qt::Core
 )
 
+if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
+    target_compile_definitions(QDocLib PUBLIC QDOC_TEMPLATE_GENERATOR_ENABLED)
+endif()
+
 #####################################################################
 ## qdoc Tool:
 #####################################################################

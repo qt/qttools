@@ -4,6 +4,7 @@
 #include "templategenerator.h"
 
 #include "aggregate.h"
+#include "catalogentrysource.h"
 #include "codemarker.h"
 #include "collectionnode.h"
 #include "config.h"
@@ -15,6 +16,7 @@
 #include "injabridge.h"
 #include "ir/builder.h"
 #include "ir/document.h"
+#include "ir/listexpander.h"
 #include "linkresolver.h"
 #include "node.h"
 #include "nodeextractor.h"
@@ -42,7 +44,8 @@ Q_LOGGING_CATEGORY(lcQDocTemplateGenerator, "qt.qdoc.templategenerator")
 
 using namespace Qt::Literals;
 
-static void resolveDocumentLinks(LinkResolver *resolver, IR::Document &ir, const Node *relative);
+static void processDocumentBlocks(IR::ListExpander *expander, LinkResolver *resolver,
+                                  IR::Document &ir, const Node *relative);
 
 /*!
     \class TemplateGenerator
@@ -181,6 +184,39 @@ void TemplateGenerator::prepare()
     linkConfig.autolinkErrors = Generator::autolinkErrors();
     linkConfig.noLinkErrors = Generator::noLinkErrors();
     m_linkResolver = std::make_unique<LinkResolver>(&m_qdb, *m_hrefResolver, linkConfig);
+
+    m_catalogSource = std::make_unique<CatalogEntrySource>(
+            m_qdb, *m_hrefResolver, config.createInclusionPolicy());
+
+    IR::ListExpanderCallbacks callbacks;
+    callbacks.collectCppClasses =
+            [this](const Node *relative, Qt::SortOrder sortOrder) {
+                return m_catalogSource->collectCppClasses(relative, sortOrder);
+            };
+    callbacks.collectExamplesGrouped =
+            [this](const Node *relative) {
+                return m_catalogSource->collectExamplesGrouped(relative);
+            };
+    callbacks.collectCompactClasses =
+            [this](const Node *relative, const QString &rootName) {
+                return m_catalogSource->collectCompactClasses(relative, rootName);
+            };
+    callbacks.collectGroupMembers =
+            [this](const Node *relative, const QString &groupName,
+                   Qt::SortOrder sortOrder) {
+                return m_catalogSource->collectGroupMembers(
+                        relative, groupName, sortOrder);
+            };
+    callbacks.onEmpty =
+            [](const QString &argument, IR::ListPlaceholderVariant variant) {
+                qCWarning(lcQDocTemplateGenerator)
+                        << "\\generatelist or \\annotatedlist with argument"
+                        << argument << "(variant"
+                        << IR::toString(variant) << ")"
+                        << "expanded to no entries; the catalog renders"
+                        << "as empty.";
+            };
+    m_listExpander = std::make_unique<IR::ListExpander>(std::move(callbacks));
 }
 
 void TemplateGenerator::produce()
@@ -244,8 +280,7 @@ void TemplateGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *m
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));
 
-    if (m_linkResolver)
-        resolveDocumentLinks(m_linkResolver.get(), ir, cn);
+    processDocumentBlocks(m_listExpander.get(), m_linkResolver.get(), ir, cn);
 
     resolveImagePaths(ir);
     renderDocument(ir, "collection"_L1);
@@ -260,8 +295,7 @@ void TemplateGenerator::generateGenericCollectionPage(CollectionNode *cn, CodeMa
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));
 
-    if (m_linkResolver)
-        resolveDocumentLinks(m_linkResolver.get(), ir, cn);
+    processDocumentBlocks(m_listExpander.get(), m_linkResolver.get(), ir, cn);
 
     resolveImagePaths(ir);
     renderDocument(ir, "collection"_L1);
@@ -276,8 +310,7 @@ void TemplateGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
     IR::Builder builder;
     IR::Document ir = builder.buildPageIR(std::move(pm));
 
-    if (m_linkResolver)
-        resolveDocumentLinks(m_linkResolver.get(), ir, pn);
+    processDocumentBlocks(m_listExpander.get(), m_linkResolver.get(), ir, pn);
 
     resolveImagePaths(ir);
     renderDocument(ir, "page"_L1);
@@ -300,8 +333,7 @@ void TemplateGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarke
         ir.cppReferenceInfo->obsoleteMembersUrl =
             fileBase(aggregate) + "-obsolete."_L1 + m_fileExtension;
 
-    if (m_linkResolver)
-        resolveDocumentLinks(m_linkResolver.get(), ir, aggregate);
+    processDocumentBlocks(m_listExpander.get(), m_linkResolver.get(), ir, aggregate);
 
     resolveImagePaths(ir);
     renderDocument(ir, "cppref"_L1);
@@ -326,8 +358,7 @@ void TemplateGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker
     if (allMembers)
         ir.membersPageUrl = fileBase(qcn) + "-members."_L1 + m_fileExtension;
 
-    if (m_linkResolver)
-        resolveDocumentLinks(m_linkResolver.get(), ir, qcn);
+    processDocumentBlocks(m_listExpander.get(), m_linkResolver.get(), ir, qcn);
 
     resolveImagePaths(ir);
     renderDocument(ir, "qmltype"_L1);
@@ -570,18 +601,34 @@ QString TemplateGenerator::resolveInclude(const QString &name) const
     return {};
 }
 
-static void resolveDocumentLinks(LinkResolver *resolver, IR::Document &ir, const Node *relative)
+static void processDocumentBlocks(IR::ListExpander *expander, LinkResolver *resolver,
+                                  IR::Document &ir, const Node *relative)
 {
-    if (!ir.body.isEmpty())
-        resolver->resolve(ir.body, relative);
-    if (ir.cppReferenceInfo && !ir.cppReferenceInfo->threadSafetyAdmonition.isEmpty())
-        resolver->resolve(ir.cppReferenceInfo->threadSafetyAdmonition, relative);
+    // Expansion runs first: the expander materializes catalog subtrees
+    // from ListPlaceholder blocks, with entry hrefs already resolved
+    // through HrefResolver at extraction time. The link resolver then
+    // walks the fully-populated tree on its single pass, picking up
+    // any inline links inside brief content the expander emitted.
+    // Each pass guards itself, so callers don't need to know which
+    // collaborators are present — and so every block-bearing field
+    // gets both passes consistently rather than drifting whenever a
+    // new field is added.
+    auto process = [&](QList<IR::ContentBlock> &blocks) {
+        if (blocks.isEmpty())
+            return;
+        if (expander)
+            expander->expand(blocks, relative);
+        if (resolver)
+            resolver->resolve(blocks, relative);
+    };
+
+    process(ir.body);
+    if (ir.cppReferenceInfo)
+        process(ir.cppReferenceInfo->threadSafetyAdmonition);
     for (auto &section : ir.detailSections) {
         for (auto &member : section.members) {
-            if (!member.body.isEmpty())
-                resolver->resolve(member.body, relative);
-            if (!member.alsoList.isEmpty())
-                resolver->resolve(member.alsoList, relative);
+            process(member.body);
+            process(member.alsoList);
         }
     }
 }

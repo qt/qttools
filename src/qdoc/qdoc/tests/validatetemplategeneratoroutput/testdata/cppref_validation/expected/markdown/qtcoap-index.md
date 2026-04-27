@@ -66,8 +66,6 @@ Qt CoAP is available under commercial licenses from [The Qt Company](https://www
 
 
 
-
-
 ---
 
 *Built with QDoc's template engine.*

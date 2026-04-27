@@ -103,6 +103,37 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
         {% endif %}
         {% endfor %}
         </section>
+    {% else if block.type == "list-placeholder" %}
+        {#- Reaching this branch is an invariant violation: the list-expander pass should
+            have replaced every ListPlaceholder before rendering. The loud marker is
+            intentional — a silent empty Div would let pipeline misconfiguration ship. -#}
+        <div class="qdoc-error" role="alert" style="background:#fcc;padding:0.5rem;border:1px solid #c00;">UNEXPANDED LIST PLACEHOLDER: {% if existsIn(block.attributes, "argument") %}{{ escape_html(block.attributes.argument) }}{% else %}&lt;unknown&gt;{% endif %} (variant: {% if existsIn(block.attributes, "variant") %}{{ escape_html(block.attributes.variant) }}{% else %}&lt;unknown&gt;{% endif %}). The list-expander pass did not run. Pipeline bug.</div>
+    {% else if block.type == "catalog" %}
+        {#- Catalog children re-use the existing block types (section-heading,
+            table, list) but their dispatch is inlined here. Inja 3.5.0 has
+            include/extends/blocks but no macros and no way to swap the iteration
+            scope to child.children, so recursing into the top-level dispatch
+            with a new context isn't expressible. De-duplication would require
+            restructuring the whole content_blocks dispatch into a per-block
+            partial; tracked separately. -#}
+        <section class="catalog catalog-{{ escape_html(block.attributes.variant) }}">
+        {% for child in block.children %}
+        {% if child.type == "section-heading" %}
+        <h{{ child.attributes.level }}{% if existsIn(child.attributes, "id") %}{{ " " }}id="{{ escape_html(child.attributes.id) }}"{% endif %}>{% for i in child.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</h{{ child.attributes.level }}>
+        {% else if child.type == "table" %}
+        <div class="table"><table class="{{ escape_html(child.attributes.style) }}">
+        {% for row in child.rows %}{% if row.type == "table-row" %}<tr valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td>{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</td>{% endif %}{% endfor %}</tr>
+        {% endif %}{% endfor %}
+        </table></div>
+        {% else if child.type == "list" %}
+        <ul>
+        {% for item in child.children %}
+        <li>{% for i in item.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+        {% endfor %}
+        </section>
     {% else %}
         {{ escape_html(block.text) }}
     {% endif %}
