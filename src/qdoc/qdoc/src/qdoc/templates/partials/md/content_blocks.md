@@ -106,6 +106,29 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% else if child.type == "div" %}
 {{ child.text }}
 
+{% else if child.type == "list-placeholder" %}
+> **UNEXPANDED LIST PLACEHOLDER:** {% if existsIn(child.attributes, "argument") %}{{ child.attributes.argument }}{% else %}<unknown>{% endif %} (variant: {% if existsIn(child.attributes, "variant") %}{{ child.attributes.variant }}{% else %}<unknown>{% endif %}). The list-expander pass did not run. Pipeline bug.
+
+{% else if child.type == "catalog" %}
+{% for entry in child.children %}
+{% if entry.type == "section-heading" %}
+{% if entry.attributes.level == 1 %}# {% else if entry.attributes.level == 2 %}## {% else if entry.attributes.level == 3 %}### {% else if entry.attributes.level == 4 %}#### {% else if entry.attributes.level == 5 %}##### {% else if entry.attributes.level == 6 %}###### {% endif %}{% for i in entry.inlines %}{% if i.type == "text" %}{{ i.text }}{% endif %}{% endfor %}
+
+{% else if entry.type == "table" %}
+{{ "\n" }}
+| Name | Description |
+| --- | --- |
+{% for row in entry.rows %}{% if row.type == "table-row" %}| {% for cell in row.cells %}{% if cell.type == "table-cell" %}{% if not loop.is_first %}{{ " " }}| {% endif %}{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_md_table(i.text) }}{% else %}{{ escape_md_table(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}{{ " " }}|
+{% endif %}{% endfor %}
+
+{% else if entry.type == "list" %}
+{% for item in entry.children %}
+- {% for i in item.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ c.text }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ c.text }}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ i.text }}{% else %}{{ i.text }}{% endif %}{% endfor %}{{ "" }}
+{% endfor %}
+
+{% endif %}
+{% endfor %}
+
 {% else %}
 {{ child.text }}
 

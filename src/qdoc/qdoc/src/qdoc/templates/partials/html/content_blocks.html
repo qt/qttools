@@ -98,6 +98,27 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
         </table></div>
         {% else if child.type == "div" %}
         <div>{{ escape_html(child.text) }}</div>
+        {% else if child.type == "list-placeholder" %}
+        <div class="qdoc-error" role="alert" style="background:#fcc;padding:0.5rem;border:1px solid #c00;">UNEXPANDED LIST PLACEHOLDER: {% if existsIn(child.attributes, "argument") %}{{ escape_html(child.attributes.argument) }}{% else %}&lt;unknown&gt;{% endif %} (variant: {% if existsIn(child.attributes, "variant") %}{{ escape_html(child.attributes.variant) }}{% else %}&lt;unknown&gt;{% endif %}). The list-expander pass did not run. Pipeline bug.</div>
+        {% else if child.type == "catalog" %}
+        <section class="catalog catalog-{{ escape_html(child.attributes.variant) }}">
+        {% for entry in child.children %}
+        {% if entry.type == "section-heading" %}
+        <h{{ entry.attributes.level }}{% if existsIn(entry.attributes, "id") %}{{ " " }}id="{{ escape_html(entry.attributes.id) }}"{% endif %}>{% for i in entry.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</h{{ entry.attributes.level }}>
+        {% else if entry.type == "table" %}
+        <div class="table"><table class="{{ escape_html(entry.attributes.style) }}">
+        {% for row in entry.rows %}{% if row.type == "table-row" %}<tr class="{% if is_odd(row.attributes.bodyIndex) %}odd topAlign{% else %}even topAlign{% endif %}" valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td>{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</td>{% endif %}{% endfor %}</tr>
+        {% endif %}{% endfor %}
+        </table></div>
+        {% else if entry.type == "list" %}
+        <ul>
+        {% for item in entry.children %}
+        <li>{% for i in item.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+        {% endfor %}
+        </section>
         {% else %}
         {{ escape_html(child.text) }}
         {% endif %}

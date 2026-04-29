@@ -50,3 +50,32 @@
 
     \annotatedlist catalog_members_group
 */
+
+/*!
+    \page embedded-catalog.html
+    \title Embedded Catalog
+    \brief Catalog directives embedded inside section blocks.
+
+    This page wraps catalog directives in section blocks. The
+    template generator's section dispatch must recurse correctly so
+    every embedded catalog renders as a populated table or list.
+
+    \section1 Group Members in Section
+
+    Surrounding prose appears before the catalog directive so the
+    section block carries multiple children, with the catalog as
+    one of them.
+
+    \annotatedlist catalog_members_group
+
+    Trailing prose verifies that content after the catalog still
+    renders normally, anchoring the catalog as a non-terminal child
+    of the section block.
+
+    \section1 Compact Classes in Section
+
+    A second section confirms that adjacent sections each receive
+    their own catalog dispatch.
+
+    \generatelist classes Beta
+*/
