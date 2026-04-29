@@ -52,7 +52,7 @@ private:
     void generateNavigationBar(const QString &title, const Node *node, CodeMarker *marker,
                                const QString &buildversion, bool tableItems = false);
     void generateHeader(const QString &title, const Node *node = nullptr,
-                        CodeMarker *marker = nullptr);
+                        CodeMarker *marker = nullptr, const QString &keywords = {});
     void generateTitle(const Text &title, const Text &subTitle, SubTitleSize subTitleSize,
                        const Node *relative, CodeMarker *marker);
     void generateTitle(const QString &title, const Text &subTitle, SubTitleSize subTitleSize,

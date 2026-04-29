@@ -294,7 +294,7 @@ void HtmlGenerator::generateExampleFilePage(const PageNode *en, ResolvedFile res
     QString fullTitle = en->fullTitle();
 
     beginSubPage(en, linkForExampleFile(resolved_file.get_query()));
-    generateHeader(fullTitle, en, marker);
+    generateHeader(fullTitle, en, marker, u"auto-generated"_s);
     generateTitle(en->doc().title(), Text() << en->subtitle(), subTitleSize, en, marker);
 
     Text text;
@@ -1296,7 +1296,7 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
     QString rawTitle = aggregate->plainName();
     QString fullTitle = aggregate->plainFullName();
     QString title = rawTitle + " Proxy Page";
-    generateHeader(title, aggregate, marker);
+    generateHeader(title, aggregate, marker, u"auto-generated"_s);
     generateTitle(title, subtitleText, SmallSubTitle, aggregate, marker);
     generateBrief(aggregate, marker);
     for (const auto &section : summarySections) {
@@ -1543,7 +1543,7 @@ void HtmlGenerator::generateGenericCollectionPage(CollectionNode *cn, CodeMarker
     SubTitleSize subTitleSize = LargeSubTitle;
     QString fullTitle = cn->name();
 
-    generateHeader(fullTitle, cn, marker);
+    generateHeader(fullTitle, cn, marker, u"auto-generated"_s);
     generateTitle(fullTitle, Text() << cn->subtitle(), subTitleSize, cn, marker);
 
     Text brief;
@@ -1720,7 +1720,8 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
         out() << "</li>\n";
 }
 
-void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeMarker *marker)
+void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeMarker *marker,
+                                   const QString &metaKeyword)
 {
     out() << "<!DOCTYPE html>\n";
     out() << QString("<html lang=\"%1\">\n").arg(naturalLanguage);
@@ -1735,20 +1736,27 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
               << "\">\n";
     }
 
-    // Write entries from `\meta keywords` as document meta-information
-    if (node) {
+    if (!metaKeyword.isEmpty()) {
+        // If provided, write meta-content keyword(s) as-is
+        out() << "  <meta name=\"keywords\" content=\"%1\">\n"_L1.arg(protectEnc(metaKeyword));
+    } else if (node) {
+        // Otherwise, add entries from `\meta keywords` as a comma-separated list
+        QStringList keywords;
         if (const auto *metaTags = node->doc().metaTagMap()) {
-            QStringList keywords;
             for (const auto &kw : metaTags->values(u"keywords"_s))
                 keywords << kw.split(','_L1, Qt::SkipEmptyParts);
+        }
 
-            if (!keywords.isEmpty()) {
-                std::transform(keywords.begin(), keywords.end(), keywords.begin(),
-                               [](const QString &k) { return k.trimmed(); });
-                out() << "  <meta name=\"keywords\" content=\""
-                      << protectEnc(keywords.join(','_L1))
-                      << "\">\n";
-            }
+        // For API reference pages and examples, also add the Node type string as a keyword
+        if (isApiGenus(node->genus()) || node->isExample())
+            keywords << node->nodeTypeString().toLower().remove(' '_L1);
+
+        if (!keywords.isEmpty()) {
+            std::transform(keywords.begin(), keywords.end(), keywords.begin(),
+                           [](const QString &k) { return k.trimmed(); });
+            keywords.removeDuplicates();
+            out() << "  <meta name=\"keywords\" content=\"" << protectEnc(keywords.join(','_L1))
+                  << "\">\n";
         }
     }
 
@@ -2424,7 +2432,7 @@ QString HtmlGenerator::generateAllMembersFile(const Section &section, CodeMarker
     QString fileName = fileBase(aggregate) + "-members." + fileExtension();
     beginSubPage(aggregate, fileName);
     QString title = "List of All Members for " + aggregate->plainFullName();
-    generateHeader(title, aggregate, marker);
+    generateHeader(title, aggregate, marker, u"auto-generated"_s);
     generateSidebar();
     generateTitle(title, Text(), SmallSubTitle, aggregate, marker);
     out() << "<p>This is the complete list of members for ";
@@ -2454,7 +2462,7 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
     QString fileName = fileBase(aggregate) + "-members." + fileExtension();
     beginSubPage(aggregate, fileName);
     QString title = "List of All Members for " + aggregate->name();
-    generateHeader(title, aggregate, marker);
+    generateHeader(title, aggregate, marker, u"auto-generated"_s);
     generateSidebar();
     generateTitle(title, Text(), SmallSubTitle, aggregate, marker);
     out() << "<p>This is the complete list of members for ";
@@ -2530,7 +2538,7 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
     QString fileName = fileBase(aggregate) + "-obsolete." + fileExtension();
 
     beginSubPage(aggregate, fileName);
-    generateHeader(title, aggregate, marker);
+    generateHeader(title, aggregate, marker, u"auto-generated"_s);
     generateSidebar();
     generateTitle(title, Text(), SmallSubTitle, aggregate, marker);
 
@@ -2576,7 +2584,7 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
     QString fileName = fileBase(aggregate) + "-obsolete." + fileExtension();
 
     beginSubPage(aggregate, fileName);
-    generateHeader(title, aggregate, marker);
+    generateHeader(title, aggregate, marker, u"auto-generated"_s);
     generateSidebar();
     generateTitle(title, Text(), SmallSubTitle, aggregate, marker);
 
