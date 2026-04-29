@@ -5,7 +5,7 @@
             <description>
                 <brief>A container class that collects related non-member functions.</brief>
             </description>
-            <function name="myEquals" href="container.html#myEquals" status="active" access="public" location="testclass.h" documented="true" related="2" meta="plain" hidden-friend="true" noexcept="true" type="bool" signature="bool myEquals(const MyClass &amp;a, const MyClass &amp;b)">
+            <function name="myEquals" href="container.html#myEquals" status="active" access="public" location="testclass.h" documented="true" related="4" meta="plain" hidden-friend="true" noexcept="true" type="bool" signature="bool myEquals(const MyClass &amp;a, const MyClass &amp;b)">
                 <parameter type="const MyClass &amp;" name="a" default=""/>
                 <parameter type="const MyClass &amp;" name="b" default=""/>
                 <description>
@@ -13,7 +13,7 @@
                         <link raw="MyClass" href="myclass.html" type="class">MyClass</link>-specific overload. Returns <teletype type="highlighted">true</teletype> if <argument>a</argument> and <argument>b</argument> have the same internal value.</para>
                 </description>
             </function>
-            <function name="myEquals" href="container.html#myEquals-1" status="active" access="public" location="testclass.h" documented="true" related="3" meta="plain" overload="true" overload-number="1" type="bool" signature="bool myEquals(const T &amp;a, const T &amp;b)">
+            <function name="myEquals" href="container.html#myEquals-1" status="active" access="public" location="testclass.h" documented="true" related="5" meta="plain" overload="true" overload-number="1" type="bool" signature="bool myEquals(const T &amp;a, const T &amp;b)">
                 <parameter type="const T &amp;" name="a" default=""/>
                 <parameter type="const T &amp;" name="b" default=""/>
                 <description>

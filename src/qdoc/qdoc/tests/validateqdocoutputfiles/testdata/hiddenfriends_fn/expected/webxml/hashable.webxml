@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Hashable" href="hashable.html" status="active" access="public" location="hashable.h" documented="true" module="HiddenFriendModule" brief="A class with an out-of-line-defined hidden friend qHash overload">
+            <description>
+                <brief>A class with an out-of-line-defined hidden friend <link raw="qHash" href="hashable.html#qHash" type="function">qHash</link> overload.</brief>
+                <para>Exercises QDoc's resolution of an unqualified <teletype>\fn</teletype> command for a friend declaration that carries no inline body and whose definition lives in a separate translation unit. Mirrors the QShaderVersion <link raw="qHash" href="hashable.html#qHash" type="function">qHash</link> pattern documented under QTBUG-144141.</para>
+            </description>
+            <function name="Hashable" fullname="Hashable::Hashable" href="hashable.html#Hashable" status="active" access="public" location="hashable.h" documented="true" auto-generated="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="Hashable()">
+                <description>
+                    <para>Default-constructs an instance of <teletype>Hashable</teletype>.</para>
+                </description>
+            </function>
+            <function name="qHash" href="hashable.html#qHash" status="active" access="public" location="hashable.h" documented="true" related="0" meta="plain" hidden-friend="true" noexcept="true" type="int" signature="int qHash(Hashable key)">
+                <parameter type="Hashable" name="key" default=""/>
+                <description>
+                    <para>Returns the hash value for <argument>key</argument>.</para>
+                    <para>Equivalent to calling <teletype type="highlighted">qHash(key, 0)</teletype>. Inline forwarding overload co-located with the seeded form.</para>
+                </description>
+            </function>
+            <function name="qHash" href="hashable.html#qHash-1" status="active" access="public" location="hashable.h" documented="true" related="1" meta="plain" hidden-friend="true" noexcept="true" overload="true" overload-number="1" type="int" signature="int qHash(Hashable key, int seed)">
+                <parameter type="Hashable" name="key" default=""/>
+                <parameter type="int" name="seed" default=""/>
+                <description>
+                    <para>Returns the hash value for <argument>key</argument>, using <argument>seed</argument> to seed the calculation.</para>
+                    <para>The friend declaration in hashable.h carries no body; this definition lives in hashable.cpp. QDoc must recognize this as a hidden friend even though no inline body appears in the class.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

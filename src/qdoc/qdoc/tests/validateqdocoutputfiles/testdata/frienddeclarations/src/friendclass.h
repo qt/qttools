@@ -31,8 +31,7 @@ public:
     void publicMethod();
 
 private:
-    // Friend declaration only - NOT a hidden friend
-    // This should NOT create a documentation node under FriendClass
+    // friend declaration with a sibling namespace-scope redeclaration
     friend bool operator!=(const FriendClass &lhs, const FriendClass &rhs);
 
     /*!

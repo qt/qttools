@@ -11,7 +11,7 @@
                     <para>Default-constructs an instance of <teletype>TestClass</teletype>.</para>
                 </description>
             </function>
-            <function name="operator&lt;" href="testclass.html#operator-lt" status="active" access="public" location="testclass.h" documented="true" related="0" meta="plain" hidden-friend="true" type="bool" signature="bool operator&lt;(const TestClass &amp;lhs, const TestClass &amp;rhs)">
+            <function name="operator&lt;" href="testclass.html#operator-lt" status="active" access="public" location="testclass.h" documented="true" related="2" meta="plain" hidden-friend="true" type="bool" signature="bool operator&lt;(const TestClass &amp;lhs, const TestClass &amp;rhs)">
                 <parameter type="const TestClass &amp;" name="lhs" default=""/>
                 <parameter type="const TestClass &amp;" name="rhs" default=""/>
                 <description>
@@ -19,7 +19,7 @@
                     <para>Compares <argument>lhs</argument> and <argument>rhs</argument>. Returns <teletype type="highlighted">true</teletype> if <argument>lhs</argument> is less than <argument>rhs</argument>, <teletype type="highlighted">false</teletype> otherwise.</para>
                 </description>
             </function>
-            <function name="operator==" href="testclass.html#operator-eq-eq" status="active" access="public" location="testclass.h" documented="true" related="1" meta="plain" hidden-friend="true" type="bool" signature="bool operator==(const TestClass &amp;lhs, const TestClass &amp;rhs)">
+            <function name="operator==" href="testclass.html#operator-eq-eq" status="active" access="public" location="testclass.h" documented="true" related="3" meta="plain" hidden-friend="true" type="bool" signature="bool operator==(const TestClass &amp;lhs, const TestClass &amp;rhs)">
                 <parameter type="const TestClass &amp;" name="lhs" default=""/>
                 <parameter type="const TestClass &amp;" name="rhs" default=""/>
                 <description>

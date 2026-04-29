@@ -5,7 +5,7 @@
             <description>
                 <brief>A class with a hidden friend that should be documented on Container's page.</brief>
             </description>
-            <function name="myEquals" href="container.html#myEquals" status="active" access="public" location="testclass.h" documented="true" related="2" meta="plain" hidden-friend="true" noexcept="true" type="bool" signature="bool myEquals(const MyClass &amp;a, const MyClass &amp;b)">
+            <function name="myEquals" href="container.html#myEquals" status="active" access="public" location="testclass.h" documented="true" related="4" meta="plain" hidden-friend="true" noexcept="true" type="bool" signature="bool myEquals(const MyClass &amp;a, const MyClass &amp;b)">
                 <parameter type="const MyClass &amp;" name="a" default=""/>
                 <parameter type="const MyClass &amp;" name="b" default=""/>
                 <description>

@@ -1924,7 +1924,14 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     if (declaration && declaration->getFriendObjectKind() != clang::Decl::FOK_None) {
         fn->setRelatedNonmember(true);
         Q_ASSERT(function_declaration);
-        if (function_declaration->isThisDeclarationADefinition())
+
+        const bool hasNamespaceScopeRedeclaration =
+                std::any_of(function_declaration->redecls_begin(),
+                            function_declaration->redecls_end(),
+                            [](const clang::FunctionDecl *r) {
+                                return r->getFriendObjectKind() == clang::Decl::FOK_None;
+                            });
+        if (!hasNamespaceScopeRedeclaration)
             fn->setHiddenFriend(true);
     }
 }
