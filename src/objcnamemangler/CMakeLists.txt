@@ -1,7 +1,16 @@
 # Copyright (C) 2026 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
+# Check LLVM_ZSTD_MARKER for reasoning
+find_package(WrapZSTD QUIET)
+set(__qt_wrapllvm_CMAKE_DISABLE_FIND_PACKAGE_zstd ${CMAKE_DISABLE_FIND_PACKAGE_zstd})
+if(WrapZSTD_FOUND)
+    set(CMAKE_DISABLE_FIND_PACKAGE_zstd TRUE)
+endif()
+
 qt_find_package(LLVM CONFIG REQUIRED)
+
+set(CMAKE_DISABLE_FIND_PACKAGE_zstd ${__qt_wrapllvm_CMAKE_DISABLE_FIND_PACKAGE_zstd})
 
 llvm_map_components_to_libnames(llvm_libs Support Object)
 

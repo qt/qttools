@@ -21,7 +21,52 @@ if(TARGET WrapLibClang::WrapLibClang)
     set(TEST_libclang "ON" CACHE BOOL "Required libclang version found." FORCE)
 endif()
 
-qt_find_package(LLVM CONFIG)
+# We need the LLVM Support library for the objcnamemangler tool. That target can depend on the
+# zstd::libzstd_shared target. The LLVM package creates the Support target regardless of
+# whether the zstd dependency was found, which leads to cmake generation time errors when trying
+# to link to it. Explicitly check if the dependency exists before enabling the tool feature.
+if(MACOS)
+    # Check LLVM_ZSTD_MARKER for reasoning
+    find_package(WrapZSTD QUIET)
+    set(__qt_wrapllvm_CMAKE_DISABLE_FIND_PACKAGE_zstd ${CMAKE_DISABLE_FIND_PACKAGE_zstd})
+    if(WrapZSTD_FOUND)
+        set(CMAKE_DISABLE_FIND_PACKAGE_zstd TRUE)
+    endif()
+
+    qt_find_package(LLVM CONFIG)
+
+    set(CMAKE_DISABLE_FIND_PACKAGE_zstd ${__qt_wrapllvm_CMAKE_DISABLE_FIND_PACKAGE_zstd})
+endif()
+set(llvm_support_lib_available FALSE)
+if(NOT QT_CONFIGURE_RUNNING AND LLVM_FOUND AND COMMAND llvm_map_components_to_libnames)
+    llvm_map_components_to_libnames(support_target Support)
+    if(support_target AND TARGET "${support_target}")
+        get_target_property(llvm_support_interface_link_libs "${support_target}"
+            INTERFACE_LINK_LIBRARIES)
+        if(zstd::libzstd_shared IN_LIST llvm_support_interface_link_libs)
+            if(TARGET zstd::libzstd_shared)
+                set(llvm_support_lib_available TRUE)
+            else()
+                string(CONCAT llvm_support_lib_missing_message
+                    "The objcnamemangler tool will not be built, due to unmet dependencies. The "
+                    "'LLVM Support' library depends on zstd::libzstd_shared, but the target was "
+                    "not found. If you need the tool, ensure that the zstd CMake package is "
+                    "installed and found."
+                )
+                qt_configure_add_report_entry(
+                    TYPE WARNING MESSAGE "${llvm_support_lib_missing_message}"
+                )
+            endif()
+        else()
+            # Not sure if there's a case where the Support library can not have a dependency on
+            # zstd, but if it doesn't, treat the library as available.
+            set(llvm_support_lib_available TRUE)
+        endif()
+    endif()
+    unset(support_target)
+    unset(llvm_support_interface_link_libs)
+    unset(llvm_support_lib_missing_message)
+endif()
 
 #### Features
 
@@ -116,7 +161,7 @@ qt_feature("fullqthelp" PUBLIC
 )
 qt_feature("objcnamemangler" PRIVATE
     LABEL "Objective-C Name Mangler"
-    CONDITION "${LLVM_FOUND}" AND MACOS
+    CONDITION MACOS AND LLVM_FOUND AND llvm_support_lib_available
 )
 
 qt_configure_add_summary_section(NAME "Qt Tools")
