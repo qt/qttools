@@ -33,6 +33,7 @@
 /*!
     \qmlenum Type::more_values
     \qmlenumeratorsfrom [More] Class::Values
+    \since 1.1
 
     //! Attempt linking to \qmlenum enumerator
     \sa {Type::And}{Type.And}
