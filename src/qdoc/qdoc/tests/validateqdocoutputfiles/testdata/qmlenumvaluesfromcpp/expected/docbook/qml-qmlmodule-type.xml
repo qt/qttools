@@ -154,6 +154,7 @@
 </db:td>
 </db:tr>
 </db:informaltable>
+<db:para>This enumeration was introduced in Qt 1.1.</db:para>
 <db:section>
 <db:title>See Also</db:title>
 <db:para><db:emphasis>See also </db:emphasis>

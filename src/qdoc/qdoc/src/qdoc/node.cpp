@@ -709,7 +709,8 @@ QString Node::nodeTypeString(NodeType t)
         return QLatin1String("group");
     case NodeType::Module:
         return QLatin1String("module");
-
+    case NodeType::QmlEnum:
+        return QLatin1String("enumeration");
     case NodeType::QmlType:
         return QLatin1String("QML type");
     case NodeType::QmlValueType:
