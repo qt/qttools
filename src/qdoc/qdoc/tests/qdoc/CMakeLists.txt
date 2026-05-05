@@ -46,6 +46,7 @@ qt_internal_extend_target(tst_QDoc
         ir/catch_document.cpp
         ir/catch_contentblock.cpp
         ir/catch_link.cpp
+        ir/catch_listexpander.cpp
         ir/catch_atomcontext.cpp
         ir/catch_builder.cpp
         ir/catch_catalogentry.cpp
@@ -62,6 +63,7 @@ qt_internal_extend_target(tst_QDoc
         ../../src/qdoc/ir/contentblock.cpp
         ../../src/qdoc/ir/document.cpp
         ../../src/qdoc/ir/link.cpp
+        ../../src/qdoc/ir/listexpander.cpp
         ../../src/qdoc/ir/listplaceholder.cpp
         ../../src/qdoc/ir/signaturespan.cpp
         ../../src/qdoc/ir/sorting.cpp

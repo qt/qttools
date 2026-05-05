@@ -52,6 +52,30 @@ QString toString(ListPlaceholderVariant variant)
     Q_UNREACHABLE_RETURN({});
 }
 
+/*!
+    \fn std::optional<IR::ListPlaceholderVariant> IR::parseListPlaceholderVariant(
+        QStringView variant)
+    \internal
+
+    Reverse of \c{toString()}: maps the canonical kebab-case string
+    back to a \c{ListPlaceholderVariant}, or \c{std::nullopt} for an
+    unrecognized value. Used by the list-expander pass to dispatch
+    on the placeholder block's \c{variant} attribute without
+    introducing a parallel set of string literals.
+*/
+std::optional<ListPlaceholderVariant> parseListPlaceholderVariant(QStringView variant)
+{
+    if (variant == u"annotated-group")
+        return ListPlaceholderVariant::AnnotatedGroup;
+    if (variant == u"annotated-examples")
+        return ListPlaceholderVariant::AnnotatedExamples;
+    if (variant == u"annotated-classes")
+        return ListPlaceholderVariant::AnnotatedClasses;
+    if (variant == u"compact-classes")
+        return ListPlaceholderVariant::CompactClasses;
+    return std::nullopt;
+}
+
 } // namespace IR
 
 QT_END_NAMESPACE

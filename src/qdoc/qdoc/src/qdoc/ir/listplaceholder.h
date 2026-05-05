@@ -5,6 +5,9 @@
 #define QDOC_IR_LISTPLACEHOLDER_H
 
 #include <QtCore/qstring.h>
+#include <QtCore/qstringview.h>
+
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
@@ -18,6 +21,9 @@ enum class ListPlaceholderVariant : unsigned char {
 };
 
 [[nodiscard]] QString toString(ListPlaceholderVariant variant);
+
+[[nodiscard]] std::optional<ListPlaceholderVariant>
+parseListPlaceholderVariant(QStringView variant);
 
 } // namespace IR
 
