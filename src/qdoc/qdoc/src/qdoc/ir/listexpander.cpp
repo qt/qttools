@@ -37,11 +37,6 @@ using namespace Qt::Literals::StringLiterals;
     dependencies and receives the relative-node pointer purely as
     opaque state forwarded to the callbacks.
 
-    This first commit lands the dispatch skeleton and the
-    annotated-classes variant. The remaining variants
-    (annotated-examples, compact-classes, annotated-group) arrive in
-    the follow-up commit on the same series.
-
     \sa CatalogEntry, CatalogEntryGroup, ListExpanderCallbacks,
         ListPlaceholderVariant
 */
@@ -57,12 +52,28 @@ using namespace Qt::Literals::StringLiterals;
     yields no entries. The driver-wiring commit binds these to
     CatalogEntrySource methods and a \c{qCWarning(lcQdoc)} call; the
     QDocLib expander itself has no knowledge of the bound types
-    beyond the value-semantics CatalogEntry it consumes.
+    beyond the value-semantics CatalogEntry and CatalogEntryGroup it
+    consumes.
 */
 
 namespace IR {
 
 namespace {
+
+ContentBlock makeSectionHeading(int level, const QString &text,
+                                const QString &anchorId)
+{
+    ContentBlock heading;
+    heading.type = BlockType::SectionHeading;
+    heading.attributes["level"_L1] = level;
+    if (!anchorId.isEmpty())
+        heading.attributes["id"_L1] = anchorId;
+    InlineContent textInline;
+    textInline.type = InlineType::Text;
+    textInline.text = text;
+    heading.inlineContent.append(textInline);
+    return heading;
+}
 
 InlineContent makeLink(const QString &name, const QString &href)
 {
@@ -134,6 +145,32 @@ ContentBlock makeAnnotatedTable(const QList<CatalogEntry> &entries)
     return table;
 }
 
+// Emits a flat List of class entries. The legacy compact-classes
+// page bucketed entries into 37 alphabetical paragraphs (0-9, A-Z,
+// _), but that layout is presentation, not structure: the project's
+// IR-philosophy decision (see project decisions, 2026-02-20) keeps
+// format details in templates, not compiled C++. The
+// \c{compact-classes} template partial is responsible for any
+// bucketing it wants to render — this function emits the raw,
+// alphabetized data only.
+ContentBlock makeCompactList(const QList<CatalogEntry> &entries)
+{
+    ContentBlock list;
+    list.type = BlockType::List;
+    list.attributes["style"_L1] = u"bullet"_s;
+
+    for (const CatalogEntry &e : entries) {
+        ContentBlock item;
+        item.type = BlockType::ListItem;
+        if (!e.href.isEmpty())
+            item.inlineContent.append(makeLink(e.name, e.href));
+        else
+            item.inlineContent.append(makeText(e.name));
+        list.children.append(std::move(item));
+    }
+    return list;
+}
+
 ContentBlock makeCatalog(ListPlaceholderVariant variant)
 {
     ContentBlock catalog;
@@ -174,6 +211,77 @@ std::optional<ContentBlock> expandAnnotatedClasses(
     return catalog;
 }
 
+std::optional<ContentBlock> expandAnnotatedExamples(
+        const ListExpanderCallbacks &cb, const ContentBlock &placeholder,
+        const Node *relative)
+{
+    const QString argument = placeholder.attributes.value("argument"_L1).toString();
+    QList<CatalogEntryGroup> groups = cb.collectExamplesGrouped
+            ? cb.collectExamplesGrouped(relative)
+            : QList<CatalogEntryGroup>{};
+
+    ContentBlock catalog = makeCatalog(ListPlaceholderVariant::AnnotatedExamples);
+    for (const CatalogEntryGroup &g : groups) {
+        // Skip groups that came in pre-emptied: the production
+        // CatalogEntrySource drops them, but a less-strict callback
+        // could synthesize a heading-with-empty-table shell. Guard
+        // the contract here so the IR never carries one.
+        if (g.entries.isEmpty())
+            continue;
+        catalog.children.append(makeSectionHeading(2, g.label, g.anchorId));
+        catalog.children.append(makeAnnotatedTable(g.entries));
+    }
+
+    if (catalog.children.isEmpty()) {
+        notifyEmpty(cb, argument, ListPlaceholderVariant::AnnotatedExamples);
+        return std::nullopt;
+    }
+    return catalog;
+}
+
+std::optional<ContentBlock> expandCompactClasses(
+        const ListExpanderCallbacks &cb, const ContentBlock &placeholder,
+        const Node *relative)
+{
+    const QString argument = placeholder.attributes.value("argument"_L1).toString();
+    const QString rootName = placeholder.attributes.value("rootName"_L1).toString();
+
+    QList<CatalogEntry> entries = cb.collectCompactClasses
+            ? cb.collectCompactClasses(relative, rootName)
+            : QList<CatalogEntry>{};
+
+    if (entries.isEmpty()) {
+        notifyEmpty(cb, argument, ListPlaceholderVariant::CompactClasses);
+        return std::nullopt;
+    }
+
+    ContentBlock catalog = makeCatalog(ListPlaceholderVariant::CompactClasses);
+    if (!rootName.isEmpty())
+        catalog.attributes["rootName"_L1] = rootName;
+    catalog.children.append(makeCompactList(entries));
+    return catalog;
+}
+
+std::optional<ContentBlock> expandAnnotatedGroup(
+        const ListExpanderCallbacks &cb, const ContentBlock &placeholder,
+        const Node *relative)
+{
+    const QString argument = placeholder.attributes.value("argument"_L1).toString();
+    QList<CatalogEntry> entries = cb.collectGroupMembers
+            ? cb.collectGroupMembers(relative, argument, readSortOrder(placeholder))
+            : QList<CatalogEntry>{};
+
+    if (entries.isEmpty()) {
+        notifyEmpty(cb, argument, ListPlaceholderVariant::AnnotatedGroup);
+        return std::nullopt;
+    }
+
+    ContentBlock catalog = makeCatalog(ListPlaceholderVariant::AnnotatedGroup);
+    catalog.attributes["argument"_L1] = argument;
+    catalog.children.append(makeAnnotatedTable(entries));
+    return catalog;
+}
+
 std::optional<ContentBlock> expandPlaceholder(
         const ListExpanderCallbacks &cb, const ContentBlock &placeholder,
         const Node *relative)
@@ -187,12 +295,11 @@ std::optional<ContentBlock> expandPlaceholder(
     case ListPlaceholderVariant::AnnotatedClasses:
         return expandAnnotatedClasses(cb, placeholder, relative);
     case ListPlaceholderVariant::AnnotatedExamples:
+        return expandAnnotatedExamples(cb, placeholder, relative);
     case ListPlaceholderVariant::CompactClasses:
+        return expandCompactClasses(cb, placeholder, relative);
     case ListPlaceholderVariant::AnnotatedGroup:
-        // Implemented in the follow-up commit. Until then the
-        // dispatch drops the placeholder; existing legacy generators
-        // continue rendering these atoms via their own pipelines.
-        return std::nullopt;
+        return expandAnnotatedGroup(cb, placeholder, relative);
     }
     Q_UNREACHABLE_RETURN(std::nullopt);
 }

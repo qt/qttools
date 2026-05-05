@@ -29,6 +29,18 @@ struct ListExpanderCallbacks
                                       Qt::SortOrder sortOrder)>
             collectCppClasses;
 
+    std::function<QList<CatalogEntryGroup>(const Node *relative)>
+            collectExamplesGrouped;
+
+    std::function<QList<CatalogEntry>(const Node *relative,
+                                      const QString &rootName)>
+            collectCompactClasses;
+
+    std::function<QList<CatalogEntry>(const Node *relative,
+                                      const QString &groupName,
+                                      Qt::SortOrder sortOrder)>
+            collectGroupMembers;
+
     // Invoked when a placeholder's enumeration produces no entries,
     // so the driver can attribute the warning. The expander itself
     // logs nothing — keeping QDocLib free of driver-layer logging

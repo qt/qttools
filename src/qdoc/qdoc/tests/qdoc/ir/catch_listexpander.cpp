@@ -42,11 +42,25 @@ IR::CatalogEntry makeEntry(const QString &name, const QString &href,
     return entry;
 }
 
-IR::ListExpanderCallbacks callbacksReturning(QList<IR::CatalogEntry> cppClasses = {})
+IR::ListExpanderCallbacks callbacksReturning(
+        QList<IR::CatalogEntry> cppClasses = {},
+        QList<IR::CatalogEntryGroup> examples = {},
+        QList<IR::CatalogEntry> compact = {},
+        QList<IR::CatalogEntry> groupMembers = {})
 {
     IR::ListExpanderCallbacks cb;
     cb.collectCppClasses = [cppClasses](const Node *, Qt::SortOrder) {
         return cppClasses;
+    };
+    cb.collectExamplesGrouped = [examples](const Node *) {
+        return examples;
+    };
+    cb.collectCompactClasses = [compact](const Node *, const QString &) {
+        return compact;
+    };
+    cb.collectGroupMembers = [groupMembers](const Node *, const QString &,
+                                            Qt::SortOrder) {
+        return groupMembers;
     };
     return cb;
 }
@@ -384,6 +398,216 @@ SCENARIO("ListExpander surfaces since and isDeprecated as row attributes",
 
                 REQUIRE_FALSE(rows[2].attributes.contains("since"_L1));
                 REQUIRE_FALSE(rows[2].attributes.contains("deprecated"_L1));
+            }
+        }
+    }
+}
+
+SCENARIO("ListExpander renders annotated-examples groups as heading + table pairs",
+         "[IR::ListExpander][IR]")
+{
+    GIVEN("Two example groups")
+    {
+        IR::CatalogEntryGroup g1;
+        g1.label = u"Qt Core"_s;
+        g1.anchorId = u"qt-core"_s;
+        g1.entries.append(makeEntry(u"Hello"_s, u"hello.html"_s));
+
+        IR::CatalogEntryGroup g2;
+        g2.label = u"Qt Quick"_s;
+        g2.anchorId = u"qt-quick"_s;
+        g2.entries.append(makeEntry(u"Clocks"_s, u"clocks.html"_s));
+        g2.entries.append(makeEntry(u"Game"_s, u"game.html"_s));
+
+        QList<IR::ContentBlock> body;
+        body.append(makePlaceholder(u"annotated-examples"_s, u"annotatedexamples"_s));
+
+        auto cb = callbacksReturning({}, { g1, g2 });
+
+        WHEN("expand runs")
+        {
+            IR::ListExpander expander(std::move(cb));
+            expander.expand(body, nullptr);
+
+            THEN("The Catalog has four children: heading, table, heading, table")
+            {
+                REQUIRE(body.size() == 1);
+                REQUIRE(body[0].type == IR::BlockType::Catalog);
+                REQUIRE(body[0].children.size() == 4);
+                REQUIRE(body[0].children[0].type == IR::BlockType::SectionHeading);
+                REQUIRE(body[0].children[1].type == IR::BlockType::Table);
+                REQUIRE(body[0].children[2].type == IR::BlockType::SectionHeading);
+                REQUIRE(body[0].children[3].type == IR::BlockType::Table);
+            }
+
+            THEN("The first heading carries the first group's label")
+            {
+                const auto &h = body[0].children[0];
+                REQUIRE(h.inlineContent.size() == 1);
+                REQUIRE(h.inlineContent[0].text == u"Qt Core"_s);
+                REQUIRE(h.attributes["id"_L1].toString() == u"qt-core"_s);
+            }
+
+            THEN("The second table holds two rows")
+            {
+                REQUIRE(body[0].children[3].children.size() == 2);
+            }
+        }
+    }
+}
+
+SCENARIO("ListExpander renders compact-classes as a bullet list",
+         "[IR::ListExpander][IR]")
+{
+    GIVEN("A compact-classes placeholder with three entries")
+    {
+        QList<IR::ContentBlock> body;
+        body.append(makePlaceholder(u"compact-classes"_s, u"classes"_s));
+
+        auto cb = callbacksReturning({}, {},
+                { makeEntry(u"A"_s, u"a.html"_s),
+                  makeEntry(u"B"_s, u"b.html"_s),
+                  makeEntry(u"C"_s, u"c.html"_s) });
+
+        WHEN("expand runs")
+        {
+            IR::ListExpander expander(std::move(cb));
+            expander.expand(body, nullptr);
+
+            THEN("The Catalog wraps a List with three ListItem children")
+            {
+                REQUIRE(body.size() == 1);
+                const auto &cat = body[0];
+                REQUIRE(cat.type == IR::BlockType::Catalog);
+                REQUIRE(cat.children.size() == 1);
+                REQUIRE(cat.children[0].type == IR::BlockType::List);
+                REQUIRE(cat.children[0].children.size() == 3);
+                REQUIRE(cat.children[0].children[0].type == IR::BlockType::ListItem);
+            }
+        }
+    }
+}
+
+SCENARIO("ListExpander forwards rootName to the compact-classes callback",
+         "[IR::ListExpander][IR]")
+{
+    GIVEN("A compact-classes placeholder with rootName=QAbstract")
+    {
+        QList<IR::ContentBlock> body;
+        body.append(makePlaceholder(u"compact-classes"_s, u"classes QAbstract"_s,
+                                    u"ascending"_s, u"QAbstract"_s));
+
+        QString receivedRoot;
+        IR::ListExpanderCallbacks cb;
+        cb.collectCompactClasses = [&receivedRoot](const Node *, const QString &r) {
+            receivedRoot = r;
+            return QList<IR::CatalogEntry>{ makeEntry(u"QAbstractButton"_s,
+                                                      u"qabstractbutton.html"_s) };
+        };
+
+        WHEN("expand runs")
+        {
+            IR::ListExpander expander(std::move(cb));
+            expander.expand(body, nullptr);
+
+            THEN("The callback received rootName=QAbstract")
+            {
+                REQUIRE(receivedRoot == u"QAbstract"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ListExpander renders annotated-group with the group argument preserved",
+         "[IR::ListExpander][IR]")
+{
+    GIVEN("An annotated-group placeholder with argument=my-group")
+    {
+        QList<IR::ContentBlock> body;
+        body.append(makePlaceholder(u"annotated-group"_s, u"my-group"_s));
+
+        auto cb = callbacksReturning({}, {}, {},
+                { makeEntry(u"Entry1"_s, u"e1.html"_s) });
+
+        WHEN("expand runs")
+        {
+            IR::ListExpander expander(std::move(cb));
+            expander.expand(body, nullptr);
+
+            THEN("The Catalog carries variant=annotated-group and argument=my-group")
+            {
+                REQUIRE(body.size() == 1);
+                REQUIRE(body[0].type == IR::BlockType::Catalog);
+                REQUIRE(body[0].attributes["variant"_L1].toString()
+                        == u"annotated-group"_s);
+                REQUIRE(body[0].attributes["argument"_L1].toString()
+                        == u"my-group"_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ListExpander skips empty groups inside annotated-examples and "
+         "drops the placeholder when every group came in empty",
+         "[IR::ListExpander][IR]")
+{
+    GIVEN("Two groups: one with an entry, one pre-emptied")
+    {
+        IR::CatalogEntryGroup populated;
+        populated.label = u"Qt Core"_s;
+        populated.anchorId = u"qt-core"_s;
+        populated.entries.append(makeEntry(u"Hello"_s, u"hello.html"_s));
+
+        IR::CatalogEntryGroup empty;
+        empty.label = u"Qt Empty"_s;
+        empty.anchorId = u"qt-empty"_s;
+
+        QList<IR::ContentBlock> body;
+        body.append(makePlaceholder(u"annotated-examples"_s,
+                                    u"annotatedexamples"_s));
+
+        auto cb = callbacksReturning({}, { populated, empty });
+
+        WHEN("expand runs")
+        {
+            IR::ListExpander expander(std::move(cb));
+            expander.expand(body, nullptr);
+
+            THEN("Only the populated group emits a heading + table pair")
+            {
+                REQUIRE(body.size() == 1);
+                REQUIRE(body[0].type == IR::BlockType::Catalog);
+                REQUIRE(body[0].children.size() == 2);
+                REQUIRE(body[0].children[0].type == IR::BlockType::SectionHeading);
+                REQUIRE(body[0].children[1].type == IR::BlockType::Table);
+            }
+        }
+    }
+
+    GIVEN("A single, pre-emptied group and an onEmpty hook")
+    {
+        IR::CatalogEntryGroup empty;
+        empty.label = u"Qt Empty"_s;
+
+        QList<IR::ContentBlock> body;
+        body.append(makePlaceholder(u"annotated-examples"_s,
+                                    u"annotatedexamples"_s));
+
+        bool warned = false;
+        auto cb = callbacksReturning({}, { empty });
+        cb.onEmpty = [&warned](const QString &, IR::ListPlaceholderVariant) {
+            warned = true;
+        };
+
+        WHEN("expand runs")
+        {
+            IR::ListExpander expander(std::move(cb));
+            expander.expand(body, nullptr);
+
+            THEN("The placeholder is dropped and onEmpty is invoked")
+            {
+                REQUIRE(body.isEmpty());
+                REQUIRE(warned);
             }
         }
     }
