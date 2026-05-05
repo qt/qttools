@@ -563,3 +563,86 @@ SCENARIO("Leaf vs container invariant for block elements", "[IR::ContentBlock][I
         }
     }
 }
+
+SCENARIO("Table serialization annotates body rows with bodyIndex",
+         "[IR::ContentBlock][IR][JSON]") {
+    GIVEN("A Table with one header row followed by three body rows") {
+        IR::ContentBlock table;
+        table.type = IR::BlockType::Table;
+
+        IR::ContentBlock header;
+        header.type = IR::BlockType::TableHeaderRow;
+        table.children.append(header);
+
+        for (int i = 0; i < 3; ++i) {
+            IR::ContentBlock row;
+            row.type = IR::BlockType::TableRow;
+            table.children.append(row);
+        }
+
+        WHEN("the Table is serialized to JSON") {
+            QJsonObject json = table.toJson();
+
+            THEN("rows is present and contains all four child rows") {
+                REQUIRE(json.contains("rows"_L1));
+                REQUIRE(json["rows"_L1].toArray().size() == 4);
+            }
+
+            THEN("the header row carries no bodyIndex attribute") {
+                const auto headerJson = json["rows"_L1].toArray().at(0).toObject();
+                REQUIRE(headerJson["type"_L1].toString() == u"table-header-row"_s);
+                const auto attrs = headerJson.value("attributes"_L1).toObject();
+                REQUIRE_FALSE(attrs.contains("bodyIndex"_L1));
+            }
+
+            THEN("body rows carry 1-based bodyIndex counted across body rows only") {
+                const auto rows = json["rows"_L1].toArray();
+                REQUIRE(rows.at(1).toObject()["attributes"_L1]
+                                .toObject()["bodyIndex"_L1].toInt() == 1);
+                REQUIRE(rows.at(2).toObject()["attributes"_L1]
+                                .toObject()["bodyIndex"_L1].toInt() == 2);
+                REQUIRE(rows.at(3).toObject()["attributes"_L1]
+                                .toObject()["bodyIndex"_L1].toInt() == 3);
+            }
+        }
+    }
+
+    GIVEN("A Table with body rows only (no header)") {
+        IR::ContentBlock table;
+        table.type = IR::BlockType::Table;
+        for (int i = 0; i < 2; ++i) {
+            IR::ContentBlock row;
+            row.type = IR::BlockType::TableRow;
+            table.children.append(row);
+        }
+
+        WHEN("the Table is serialized to JSON") {
+            const auto rows = table.toJson()["rows"_L1].toArray();
+
+            THEN("body rows count from 1 (header-free tables behave the same)") {
+                REQUIRE(rows.at(0).toObject()["attributes"_L1]
+                                .toObject()["bodyIndex"_L1].toInt() == 1);
+                REQUIRE(rows.at(1).toObject()["attributes"_L1]
+                                .toObject()["bodyIndex"_L1].toInt() == 2);
+            }
+        }
+    }
+
+    GIVEN("A non-Table parent containing TableRow children") {
+        IR::ContentBlock section;
+        section.type = IR::BlockType::Section;
+        IR::ContentBlock orphan;
+        orphan.type = IR::BlockType::TableRow;
+        section.children.append(orphan);
+
+        WHEN("the parent is serialized to JSON") {
+            const auto children = section.toJson()["children"_L1].toArray();
+
+            THEN("the bodyIndex injection only fires under a Table parent") {
+                const auto attrs = children.at(0).toObject()
+                        .value("attributes"_L1).toObject();
+                REQUIRE_FALSE(attrs.contains("bodyIndex"_L1));
+            }
+        }
+    }
+}

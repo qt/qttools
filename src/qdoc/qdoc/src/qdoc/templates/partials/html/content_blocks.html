@@ -48,7 +48,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
         <div class="table"><table class="{{ block.attributes.style }}"{% if existsIn(block.attributes, "width") %}{{ " " }}style="width: {{ block.attributes.width }}"{% endif %}>
 
         {% for row in block.rows %}{% if row.type == "table-header-row" %}<thead><tr class="qt-style">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<th>{{ escape_html(cell.text) }}</th>{% endif %}{% endfor %}</tr></thead>
-        {% else if row.type == "table-row" %}<tr valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell, "attributes") %}{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
+        {% else if row.type == "table-row" %}<tr class="{% if is_odd(row.attributes.bodyIndex) %}odd topAlign{% else %}even topAlign{% endif %}" valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell, "attributes") %}{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
         {% endif %}{% endfor %}
         </table></div>
     {% else if block.type == "section" %}
@@ -93,7 +93,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
         {% else if child.type == "table" %}
         <div class="table"><table class="{{ child.attributes.style }}"{% if existsIn(child.attributes, "width") %}{{ " " }}style="width: {{ child.attributes.width }}"{% endif %}>
         {% for row in child.rows %}{% if row.type == "table-header-row" %}<thead><tr class="qt-style">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<th>{{ escape_html(cell.text) }}</th>{% endif %}{% endfor %}</tr></thead>
-        {% else if row.type == "table-row" %}<tr valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell, "attributes") %}{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
+        {% else if row.type == "table-row" %}<tr class="{% if is_odd(row.attributes.bodyIndex) %}odd topAlign{% else %}even topAlign{% endif %}" valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell, "attributes") %}{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
         {% endif %}{% endfor %}
         </table></div>
         {% else if child.type == "div" %}
@@ -122,7 +122,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
         <h{{ child.attributes.level }}{% if existsIn(child.attributes, "id") %}{{ " " }}id="{{ escape_html(child.attributes.id) }}"{% endif %}>{% for i in child.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</h{{ child.attributes.level }}>
         {% else if child.type == "table" %}
         <div class="table"><table class="{{ escape_html(child.attributes.style) }}">
-        {% for row in child.rows %}{% if row.type == "table-row" %}<tr valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td>{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</td>{% endif %}{% endfor %}</tr>
+        {% for row in child.rows %}{% if row.type == "table-row" %}<tr class="{% if is_odd(row.attributes.bodyIndex) %}odd topAlign{% else %}even topAlign{% endif %}" valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td>{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</td>{% endif %}{% endfor %}</tr>
         {% endif %}{% endfor %}
         </table></div>
         {% else if child.type == "list" %}

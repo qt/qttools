@@ -151,6 +151,16 @@ static void registerCallbacks(inja::Environment &env)
         }
         return buffer;
     });
+
+    // Parity helper for alternating-row table styling. Templates use
+    // {{ is_odd(loop.index1) }} to choose between "odd" and "even"
+    // class names, matching the legacy HtmlGenerator's tr.odd / tr.even
+    // contract. Implemented as a callback rather than relying on Inja's
+    // expression grammar so the parity check is unambiguous regardless
+    // of which arithmetic operators Inja supports in any given release.
+    env.add_callback("is_odd", 1, [](inja::Arguments &args) {
+        return args.at(0)->get<qsizetype>() % 2 != 0;
+    });
 }
 
 /*!

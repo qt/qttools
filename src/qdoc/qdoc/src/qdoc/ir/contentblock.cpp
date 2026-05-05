@@ -277,15 +277,32 @@ QJsonObject ContentBlock::toJson() const
 
     {
         QJsonArray arr;
-        for (const auto &child : children)
-            arr.append(child.toJson());
-
-        if (type == BlockType::Table)
+        if (type == BlockType::Table) {
+            // Annotate body rows with their 1-based body-row index so
+            // templates can compute alternating-row classes from a
+            // counter that ignores header rows. Counting raw row index
+            // would shift parity by one whenever a header is present.
+            qsizetype bodyIndex = 0;
+            for (const auto &child : children) {
+                QJsonObject childJson = child.toJson();
+                if (child.type == BlockType::TableRow) {
+                    ++bodyIndex;
+                    QJsonObject attrs = childJson.value("attributes"_L1).toObject();
+                    attrs["bodyIndex"_L1] = bodyIndex;
+                    childJson["attributes"_L1] = attrs;
+                }
+                arr.append(childJson);
+            }
             json["rows"_L1] = arr;
-        else if (type == BlockType::TableRow || type == BlockType::TableHeaderRow)
-            json["cells"_L1] = arr;
-        else
-            json["children"_L1] = arr;
+        } else {
+            for (const auto &child : children)
+                arr.append(child.toJson());
+
+            if (type == BlockType::TableRow || type == BlockType::TableHeaderRow)
+                json["cells"_L1] = arr;
+            else
+                json["children"_L1] = arr;
+        }
     }
 
     return json;
