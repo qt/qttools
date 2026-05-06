@@ -5,6 +5,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% if hasNavigation and length(navigation.breadcrumbs) > 1 %}
 {% for crumb in navigation.breadcrumbs %}{% if crumb.state == "link" %}[{{ crumb.title }}]({{ crumb.href }}){% else %}{{ crumb.title }}{% endif %}{% if not loop.is_last %} > {% endif %}{% endfor %}
 
+
 {% endif %}
 {% if hasNavigation and navigation.tocDepth != 0 and length(navigation.tocEntries) > 0 %}
 **Contents**

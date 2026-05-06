@@ -1,4 +1,5 @@
 [QtCoap](qtcoap-module.md)> QCoapClient
+
 **Contents**
 
 - [Properties](#properties)

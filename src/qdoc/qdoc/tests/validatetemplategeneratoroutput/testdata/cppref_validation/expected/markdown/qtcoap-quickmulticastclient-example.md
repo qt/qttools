@@ -1,4 +1,5 @@
 [Qt CoAP Examples](qtcoap-examples.md)> Quick CoAP Multicast Discovery
+
 **Contents**
 
 - [Running the Example](#running-the-example)

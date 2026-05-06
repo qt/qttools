@@ -1,4 +1,5 @@
 [Qt.labs.lottieqt](qml-qt-labs-lottieqt-qmlmodule.md)> LottieAnimation
+
 **Contents**
 
 - [Properties](#properties)

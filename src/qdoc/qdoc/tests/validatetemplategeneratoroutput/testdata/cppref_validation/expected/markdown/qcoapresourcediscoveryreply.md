@@ -1,4 +1,5 @@
 [QtCoap](qtcoap-module.md)> QCoapResourceDiscoveryReply
+
 **Contents**
 
 - [Public Functions](#public-functions)

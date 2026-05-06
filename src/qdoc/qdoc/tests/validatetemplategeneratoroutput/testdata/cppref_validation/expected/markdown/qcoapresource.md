@@ -1,4 +1,5 @@
 [QtCoap](qtcoap-module.md)> QCoapResource
+
 **Contents**
 
 - [Public Functions](#public-functions)

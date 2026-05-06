@@ -1,4 +1,5 @@
 [QtCoap](qtcoap-module.md)> QCoapSecurityConfiguration
+
 **Contents**
 
 - [Public Functions](#public-functions)

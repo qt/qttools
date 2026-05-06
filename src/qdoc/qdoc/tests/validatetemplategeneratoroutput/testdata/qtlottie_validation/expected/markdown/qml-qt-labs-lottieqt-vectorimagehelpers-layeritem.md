@@ -1,4 +1,5 @@
 [Qt.labs.lottieqt.VectorImageHelpers](qml-qt-labs-lottieqt-vectorimagehelpers-qmlmodule.md)> LayerItem
+
 **Contents**
 
 - [Properties](#properties)

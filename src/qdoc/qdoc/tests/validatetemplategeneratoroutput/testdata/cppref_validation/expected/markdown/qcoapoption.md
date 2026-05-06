@@ -1,4 +1,5 @@
 [QtCoap](qtcoap-module.md)> QCoapOption
+
 **Contents**
 
 - [Public Types](#public-types)
