@@ -139,7 +139,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     {% endif %}
     {% endfor %}
     </section>
-    {% else if content.text %}
+    {% else if existsIn(content, "text") %}
     <section class="content" aria-label="Description">
         {{ escape_html(content.text) }}
     </section>

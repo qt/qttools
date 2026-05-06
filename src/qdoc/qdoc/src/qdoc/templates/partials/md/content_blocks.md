@@ -145,7 +145,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 
 {% endif %}
 {% endfor %}
-{% else if content.text %}
+{% else if existsIn(content, "text") %}
 {{ content.text }}
 
 {% endif %}

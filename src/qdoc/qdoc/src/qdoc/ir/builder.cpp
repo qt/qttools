@@ -359,14 +359,20 @@ Document Builder::buildPageIR(PageMetadata pm) const
             ir.navigationInfo = std::move(info);
     }
 
-    // Transitional: templates don't yet consume content.blocks.
+    // Plain-text fallback for templates that render unstructured
+    // content. Structured rendering through content.blocks is the
+    // primary path; this key is only populated when there is text
+    // worth showing, so an empty body never produces a hollow
+    // section wrapper in the rendered output.
     QStringList paragraphs;
     for (const auto &block : ir.body) {
         const QString text = block.plainText();
         if (!text.isEmpty())
             paragraphs.append(text);
     }
-    ir.contentJson["text"_L1] = paragraphs.join("\n\n"_L1);
+    const QString joined = paragraphs.join("\n\n"_L1);
+    if (!joined.isEmpty())
+        ir.contentJson["text"_L1] = joined;
 
     return ir;
 }

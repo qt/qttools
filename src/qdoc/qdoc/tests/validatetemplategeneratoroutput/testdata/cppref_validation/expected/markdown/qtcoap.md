@@ -28,8 +28,6 @@ Contains miscellaneous identifiers used throughout the Qt CoAP module.
 | `enum class SecurityMode` |  |
 
 
-
-
 ## Type Documentation
 
 <a id="Error-enum"></a>
