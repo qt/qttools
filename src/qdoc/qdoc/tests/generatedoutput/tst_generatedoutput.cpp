@@ -45,6 +45,26 @@ private:
 
 void tst_generatedOutput::initTestCase()
 {
+#if (defined(__has_feature) && __has_feature(address_sanitizer)) || defined(__SANITIZE_ADDRESS__)
+    // The QDoc subprocess this test spawns links against a libclang built
+    // without LLVM_USE_SANITIZER=Address. The asymmetric configuration
+    // trips an upstream LLVM defect in BumpPtrAllocator: inline
+    // poison/unpoison calls are gated on a per-translation-unit macro,
+    // so the slow-path StartNewSlab poisons via QDoc's instrumented copy
+    // while downstream consumers inside libclang read those bytes through
+    // compiler-instrumented loads that ASan reports as use-after-poison.
+    // The reports surface across many libclang code paths and include
+    // direct loads that ASan suppression files cannot mask.
+    //
+    // Re-enable this test under ASan once an upstream LLVM fix is rolled
+    // out to the Coin libclang artefact, or once a sanitiser-instrumented
+    // libclang variant replaces the asymmetric configuration. See the
+    // tracking JIRA for the upstream-issue URL and the conditions under
+    // which the skip should be removed.
+    QSKIP("Disabled under AddressSanitizer: upstream LLVM BumpPtrAllocator "
+          "defect (asymmetric instrumentation against an unsanitised libclang).");
+#endif
+
     // Build the path to the QDoc binary the same way moc tests do for moc.
     const auto binpath = QLibraryInfo::path(QLibraryInfo::BinariesPath);
     const auto extension = QSysInfo::productType() == "windows" ? ".exe" : "";
