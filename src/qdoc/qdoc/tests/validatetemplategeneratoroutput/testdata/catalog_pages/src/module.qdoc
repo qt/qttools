@@ -1,0 +1,11 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \module CatalogPagesTest
+    \title CatalogPagesTest C++ Classes
+    \brief Declares the classes demonstrated by the Phase 31.3 catalog fixture.
+
+    This module exists to satisfy the \\inmodule requirement on the
+    \\class blocks below. It carries no other documentation.
+*/

@@ -127,9 +127,10 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% if child.attributes.level == 1 %}# {% else if child.attributes.level == 2 %}## {% else if child.attributes.level == 3 %}### {% else if child.attributes.level == 4 %}#### {% else if child.attributes.level == 5 %}##### {% else if child.attributes.level == 6 %}###### {% endif %}{% for i in child.inlines %}{% if i.type == "text" %}{{ i.text }}{% endif %}{% endfor %}
 
 {% else if child.type == "table" %}
+{{ "\n" }}
 | Name | Description |
 | --- | --- |
-{% for row in child.rows %}{% if row.type == "table-row" %}| {% for cell in row.cells %}{% if cell.type == "table-cell" %}{% if not loop.is_first %} | {% endif %}{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_md_table(i.text) }}{% else %}{{ escape_md_table(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %} |
+{% for row in child.rows %}{% if row.type == "table-row" %}| {% for cell in row.cells %}{% if cell.type == "table-cell" %}{% if not loop.is_first %}{{ " " }}| {% endif %}{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_md_table(i.text) }}{% else %}{{ escape_md_table(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}{{ " " }}|
 {% endif %}{% endfor %}
 
 {% else if child.type == "list" %}

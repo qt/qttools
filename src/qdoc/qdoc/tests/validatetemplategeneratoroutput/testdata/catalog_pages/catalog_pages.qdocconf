@@ -1,0 +1,27 @@
+project = CatalogPages
+productname = Qt
+description = Phase 31.3 fixture exercising \\generatelist and \\annotatedlist across the four priority variants
+
+locationinfo = false
+
+headers.fileextensions = "*.h *.hpp"
+sources.fileextensions = "*.cpp *.qml *.qdoc"
+
+headerdirs  = ./src
+sourcedirs  = ./src
+
+outputformats = TemplateHTML TemplateMarkdown
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+warninglimit = 0
+warninglimit.enabled = true
