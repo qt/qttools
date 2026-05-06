@@ -20,7 +20,7 @@ import Qt.labs.lottieqt
 
 | Name | Description |
 | --- | --- |
-| [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md)| A Lottie player for Qt. |
+| [LottieAnimation](qml-qt-labs-lottieqt-lottieanimation.md) | A Lottie player for Qt. |
 
 ---
 

@@ -34,7 +34,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 | Name | Description |
 | --- | --- |
 {% for entry in collection.namespaces %}
-| {% if entry.href != "" %}[{{ entry.name }}]({{ entry.href }}){% else %}{{ entry.name }}{% endif %} | {{ escape_md_table(entry.brief) }} |
+| {% if entry.href != "" %}[{{ entry.name }}]({{ entry.href }}){% else %}{{ entry.name }}{% endif %}{{ " " }}| {{ escape_md_table(entry.brief) }} |
 {% endfor %}
 {% endif %}
 {% if length(collection.classes) > 0 %}
@@ -44,7 +44,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 | Name | Description |
 | --- | --- |
 {% for entry in collection.classes %}
-| {% if entry.href != "" %}[{{ entry.name }}]({{ entry.href }}){% else %}{{ entry.name }}{% endif %} | {{ escape_md_table(entry.brief) }} |
+| {% if entry.href != "" %}[{{ entry.name }}]({{ entry.href }}){% else %}{{ entry.name }}{% endif %}{{ " " }}| {{ escape_md_table(entry.brief) }} |
 {% endfor %}
 {% endif %}
 {% else %}
@@ -53,7 +53,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 | Name | Description |
 | --- | --- |
 {% for entry in collection.members %}
-| {% if entry.href != "" %}[{{ entry.name }}]({{ entry.href }}){% else %}{{ entry.name }}{% endif %} | {{ escape_md_table(entry.brief) }} |
+| {% if entry.href != "" %}[{{ entry.name }}]({{ entry.href }}){% else %}{{ entry.name }}{% endif %}{{ " " }}| {{ escape_md_table(entry.brief) }} |
 {% endfor %}
 {% endif %}
 {% endif %}

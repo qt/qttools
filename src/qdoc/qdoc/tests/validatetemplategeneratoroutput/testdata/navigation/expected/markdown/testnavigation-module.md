@@ -11,7 +11,7 @@ Test module for navigation fixture.
 
 | Name | Description |
 | --- | --- |
-| [NavWidget](navwidget.md)| A widget for navigation testing. |
+| [NavWidget](navwidget.md) | A widget for navigation testing. |
 
 ---
 
