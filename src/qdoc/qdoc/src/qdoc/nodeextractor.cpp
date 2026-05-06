@@ -278,9 +278,37 @@ IR::CollectionData extractCollectionData(const CollectionNode *cn, const HrefRes
     data.logicalModuleName = cn->logicalModuleName();
     data.logicalModuleVersion = cn->logicalModuleVersion();
     data.qtVariable = cn->qtVariable();
-    data.cmakePackage = cn->cmakePackage();
-    data.cmakeComponent = cn->cmakeComponent();
-    data.cmakeTargetItem = cn->cmakeTargetItem();
+
+    // CMake metadata synthesis. Documenters can declare CMake info
+    // through several command shapes (\cmakepackage, \cmakecomponent,
+    // \cmaketargetitem and the Qt-specific \qtcmakepackage and
+    // \qtcmaketargetitem) that populate different combinations of
+    // the package, component and target fields on the CollectionNode.
+    // Synthesize the package as Qt<major-version> when only a
+    // component is declared, so module pages render coherent
+    // find_package snippets for both the generic and Qt-flavored
+    // command families. The target_link_libraries line is
+    // synthesized only when a component is also available — a bare
+    // package name does not imply a target named package::package,
+    // so packages without a component leave the target empty and
+    // the template suppresses the target_link_libraries clause.
+    // When no field is set, leave the data fields empty so the
+    // template suppresses the CMake row entirely.
+    const QString rawCmakePackage = cn->cmakePackage();
+    const QString rawCmakeComponent = cn->cmakeComponent();
+    const QString rawCmakeTargetItem = cn->cmakeTargetItem();
+    if (!rawCmakePackage.isEmpty() || !rawCmakeComponent.isEmpty()) {
+        const QString package = rawCmakePackage.isEmpty()
+                ? "Qt"_L1 + QString::number(QT_VERSION_MAJOR)
+                : rawCmakePackage;
+        data.cmakePackage = package;
+        data.cmakeComponent = rawCmakeComponent;
+        if (!rawCmakeTargetItem.isEmpty())
+            data.cmakeTargetItem = rawCmakeTargetItem;
+        else if (!rawCmakeComponent.isEmpty())
+            data.cmakeTargetItem = package + "::"_L1 + rawCmakeComponent;
+    }
+
     data.state = cn->state();
 
     data.isModule = cn->isModule();

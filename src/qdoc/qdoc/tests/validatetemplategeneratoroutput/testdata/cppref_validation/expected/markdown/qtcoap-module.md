@@ -4,6 +4,7 @@ Provides classes to use CoAP protocol.
 
 | | |
 | --- | --- |
+| CMake | `find_package(Qt6 REQUIRED COMPONENTS Coap)` `target_link_libraries(mytarget PRIVATE Qt6::Coap)` |
 | qmake | `QT += coap` |
 
 The [Qt CoAP](qtcoap-index.md) page contains information about how to use the module.
