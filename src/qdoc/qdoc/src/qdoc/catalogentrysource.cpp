@@ -240,9 +240,19 @@ QList<IR::CatalogEntry> CatalogEntrySource::collectGroupMembers(
     if (groupName.isEmpty())
         return entries;
 
-    const CollectionNode *cn = m_qdb.getCollectionNode(groupName, NodeType::Group);
+    // TODO: const_cast — mergeCollections mutates a logical read.
+    // Same shape as the TODO at nodeextractor.cpp's cn->members()
+    // iteration; both fall out of an eager merge pass before
+    // generation begins.
+    auto *cn = const_cast<CollectionNode *>(
+            m_qdb.getCollectionNode(groupName, NodeType::Group));
     if (!cn)
         return entries;
+
+    // Without this, cross-module group members don't appear; the
+    // legacy generators do the same merge before reading.
+    m_qdb.mergeCollections(cn);
+    Q_ASSERT(cn->isMerged());
 
     for (const Node *node : cn->members()) {
         auto entry = buildEntry(node, relative, m_hrefResolver,
