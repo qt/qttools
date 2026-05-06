@@ -459,6 +459,87 @@ SCENARIO("ListExpander renders annotated-examples groups as heading + table pair
     }
 }
 
+SCENARIO("ListExpander suppresses the heading for an empty-label "
+         "annotated-examples group",
+         "[IR::ListExpander][IR]")
+{
+    GIVEN("A single group with an empty label and one populated entry")
+    {
+        IR::CatalogEntryGroup unlabeled;
+        unlabeled.label = QString();
+        unlabeled.anchorId = QString();
+        unlabeled.entries.append(makeEntry(u"Hello"_s, u"hello.html"_s));
+
+        QList<IR::ContentBlock> body;
+        body.append(makePlaceholder(u"annotated-examples"_s,
+                                    u"annotatedexamples"_s));
+
+        auto cb = callbacksReturning({}, { unlabeled });
+
+        WHEN("expand runs")
+        {
+            IR::ListExpander expander(std::move(cb));
+            expander.expand(body, nullptr);
+
+            THEN("The Catalog carries only the table — no SectionHeading "
+                 "child is emitted")
+            {
+                REQUIRE(body.size() == 1);
+                REQUIRE(body[0].type == IR::BlockType::Catalog);
+                REQUIRE(body[0].children.size() == 1);
+                REQUIRE(body[0].children[0].type == IR::BlockType::Table);
+            }
+        }
+    }
+}
+
+SCENARIO("ListExpander emits headings only for labeled groups when groups "
+         "are mixed in annotated-examples",
+         "[IR::ListExpander][IR]")
+{
+    GIVEN("Two groups: one labeled, one unlabeled, both with entries")
+    {
+        IR::CatalogEntryGroup labeled;
+        labeled.label = u"Qt Core"_s;
+        labeled.anchorId = u"qt-core"_s;
+        labeled.entries.append(makeEntry(u"Hello"_s, u"hello.html"_s));
+
+        IR::CatalogEntryGroup unlabeled;
+        unlabeled.label = QString();
+        unlabeled.anchorId = QString();
+        unlabeled.entries.append(makeEntry(u"Anonymous"_s,
+                                           u"anonymous.html"_s));
+
+        QList<IR::ContentBlock> body;
+        body.append(makePlaceholder(u"annotated-examples"_s,
+                                    u"annotatedexamples"_s));
+
+        auto cb = callbacksReturning({}, { labeled, unlabeled });
+
+        WHEN("expand runs")
+        {
+            IR::ListExpander expander(std::move(cb));
+            expander.expand(body, nullptr);
+
+            THEN("The Catalog has three children: heading, table, table")
+            {
+                REQUIRE(body.size() == 1);
+                REQUIRE(body[0].children.size() == 3);
+                REQUIRE(body[0].children[0].type == IR::BlockType::SectionHeading);
+                REQUIRE(body[0].children[1].type == IR::BlockType::Table);
+                REQUIRE(body[0].children[2].type == IR::BlockType::Table);
+            }
+
+            THEN("The single heading carries the labeled group's text")
+            {
+                const auto &h = body[0].children[0];
+                REQUIRE(h.inlineContent.size() == 1);
+                REQUIRE(h.inlineContent[0].text == u"Qt Core"_s);
+            }
+        }
+    }
+}
+
 SCENARIO("ListExpander renders compact-classes as a bullet list",
          "[IR::ListExpander][IR]")
 {

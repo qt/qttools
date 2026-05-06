@@ -233,7 +233,14 @@ std::optional<ContentBlock> expandAnnotatedExamples(
         // the contract here so the IR never carries one.
         if (g.entries.isEmpty())
             continue;
-        catalog.children.append(makeSectionHeading(2, g.label, g.anchorId));
+        // Empty-label groups omit the heading and render the table
+        // alone. This matches HtmlGenerator::generateAnnotatedLists,
+        // which has always guarded the <h2> emission against empty
+        // multimap keys: examples bucketed under an empty Tree
+        // indexTitle still appear in the rendered table, but the
+        // headingless slot above them carries no decorative noise.
+        if (!g.label.isEmpty())
+            catalog.children.append(makeSectionHeading(2, g.label, g.anchorId));
         catalog.children.append(makeAnnotatedTable(g.entries));
     }
 
