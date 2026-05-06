@@ -5,158 +5,17 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     {% if length(content.blocks) > 0 %}
     <section class="content" aria-label="Description">
     {% for block in content.blocks %}
-    {% if block.type == "paragraph" %}
-    {#- href is internal-only (QDoc-resolved); link text is user-authored and must be escaped. -#}
-        <p{% if existsIn(block, "attributes") %}{% if existsIn(block.attributes, "class") %}{{ " " }}class="{{ block.attributes.class }}"{% endif %}{% endif %}>{% for i in block.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "bold" %}<b>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</b>{% else if i.type == "italic" %}<i>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</i>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}"{% if existsIn(i, "attributes") %}{% if existsIn(i.attributes, "state") %}{{ " " }}class="{{ i.attributes.state }}"{% endif %}{% endif %}>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "teletype" %}<tt>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</tt>{% else if i.type == "underline" %}<u>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</u>{% else if i.type == "strikethrough" %}<s>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</s>{% else if i.type == "subscript" %}<sub>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</sub>{% else if i.type == "superscript" %}<sup>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</sup>{% else if i.type == "parameter" %}<i>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</i>{% else if i.type == "line-break" %}<br/>{% else if i.type == "image" %}<img{{ " " }}src="{{ escape_html(i.href) }}"{% if existsIn(i, "title") %}{{ " " }}alt="{{ escape_html(i.title) }}"{% endif %}/>{% else if i.type == "keyword" %}<a name="{{ escape_html(i.text) }}"></a>{% else if i.type == "target" %}<a name="{{ escape_html(i.text) }}"></a>{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</p>
-    {% else if block.type == "code-block" %}
-        <pre class="{{ block.attributes.language }}" translate="no"><code>{{ escape_html(block.text) }}</code></pre>
-    {% else if block.type == "section-heading" %}
-        <h{{ block.attributes.level }}{% if existsIn(block.attributes, "sectionRef") %}{{ " " }}id="{{ block.attributes.sectionRef }}"{% endif %}>{{ escape_html(block.text) }}</h{{ block.attributes.level }}>
-    {% else if block.type == "list" %}
-        {% if block.attributes.listType == "numeric" %}<ol>{% else %}<ul>{% endif %}
-        {% for item in block.children %}
-        <li>{% for p in item.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "bold" %}<b>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</b>{% else if i.type == "italic" %}<i>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</i>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "teletype" %}<tt>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</tt>{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}</li>
-        {% endfor %}
-        {% if block.attributes.listType == "numeric" %}</ol>{% else %}</ul>{% endif %}
-    {% else if block.type == "definition-list" %}
-        {% if block.attributes.listType == "value" %}
-        <div class="table"><table class="valuelist">
-        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
-        {% for entry in block.children %}{% if entry.type == "definition-term" %}<tr><td class="topAlign"><code translate="no">{% if existsIn(entry, "children") and length(entry.children) > 0 %}{% for p in entry.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{{ escape_html(i.text) }}{% endfor %}{% endif %}{% endfor %}{% else if existsIn(entry, "inlines") %}{% for i in entry.inlines %}{{ escape_html(i.text) }}{% endfor %}{% else %}{{ escape_html(entry.text) }}{% endif %}</code></td>{% else if entry.type == "definition-description" %}<td class="topAlign">{% if existsIn(entry, "children") and length(entry.children) > 0 %}{% for p in entry.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}{% else if existsIn(entry, "inlines") %}{% for i in entry.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% endif %}</td></tr>
-        {% endif %}{% endfor %}
-        </table></div>
-        {% else %}
-        <dl>
-        {% for entry in block.children %}
-        {% if entry.type == "definition-term" %}<dt>{% if existsIn(entry, "children") and length(entry.children) > 0 %}{% for p in entry.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}{% else if existsIn(entry, "inlines") %}{% for i in entry.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% else %}{{ escape_html(entry.text) }}{% endif %}</dt>
-        {% else if entry.type == "definition-description" %}<dd>{% if existsIn(entry, "children") and length(entry.children) > 0 %}{% for p in entry.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}{% else if existsIn(entry, "inlines") %}{% for i in entry.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% else %}{{ escape_html(entry.text) }}{% endif %}</dd>
-        {% endif %}
-        {% endfor %}
-        </dl>
-        {% endif %}
-    {% else if block.type == "note" %}
-        <aside class="admonition note" role="note"><p><b>Note: </b>{{ escape_html(block.text) }}</p></aside>
-    {% else if block.type == "warning" %}
-        <aside class="admonition warning" role="note"><p><b>Warning: </b>{{ escape_html(block.text) }}</p></aside>
-    {% else if block.type == "important" %}
-        <aside class="admonition important" role="note"><p><b>Important: </b>{{ escape_html(block.text) }}</p></aside>
-    {% else if block.type == "horizontal-rule" %}
-        <hr/>
-    {% else if block.type == "div" %}
-        <div>{{ escape_html(block.text) }}</div>
-    {% else if block.type == "table" %}
-        <div class="table"><table class="{{ block.attributes.style }}"{% if existsIn(block.attributes, "width") %}{{ " " }}style="width: {{ block.attributes.width }}"{% endif %}>
-
-        {% for row in block.rows %}{% if row.type == "table-header-row" %}<thead><tr class="qt-style">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<th>{{ escape_html(cell.text) }}</th>{% endif %}{% endfor %}</tr></thead>
-        {% else if row.type == "table-row" %}<tr class="{% if is_odd(row.attributes.bodyIndex) %}odd topAlign{% else %}even topAlign{% endif %}" valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell, "attributes") %}{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
-        {% endif %}{% endfor %}
-        </table></div>
-    {% else if block.type == "section" %}
+    {% if block.type == "section" %}
         <section>
-        {% for child in block.children %}
-        {% if child.type == "section-heading" %}
-        <h{{ child.attributes.level }}{% if existsIn(child.attributes, "sectionRef") %}{{ " " }}id="{{ child.attributes.sectionRef }}"{% endif %}>{{ escape_html(child.text) }}</h{{ child.attributes.level }}>
-        {% else if child.type == "paragraph" %}
-        <p{% if existsIn(child, "attributes") %}{% if existsIn(child.attributes, "class") %}{{ " " }}class="{{ child.attributes.class }}"{% endif %}{% endif %}>{% for i in child.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "bold" %}<b>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</b>{% else if i.type == "italic" %}<i>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</i>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}"{% if existsIn(i, "attributes") %}{% if existsIn(i.attributes, "state") %}{{ " " }}class="{{ i.attributes.state }}"{% endif %}{% endif %}>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "teletype" %}<tt>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</tt>{% else if i.type == "underline" %}<u>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</u>{% else if i.type == "strikethrough" %}<s>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</s>{% else if i.type == "subscript" %}<sub>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</sub>{% else if i.type == "superscript" %}<sup>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</sup>{% else if i.type == "parameter" %}<i>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</i>{% else if i.type == "line-break" %}<br/>{% else if i.type == "image" %}<img{{ " " }}src="{{ escape_html(i.href) }}"{% if existsIn(i, "title") %}{{ " " }}alt="{{ escape_html(i.title) }}"{% endif %}/>{% else if i.type == "keyword" %}<a name="{{ escape_html(i.text) }}"></a>{% else if i.type == "target" %}<a name="{{ escape_html(i.text) }}"></a>{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</p>
-        {% else if child.type == "code-block" %}
-        <pre class="{{ child.attributes.language }}" translate="no"><code>{{ escape_html(child.text) }}</code></pre>
-        {% else if child.type == "list" %}
-        {% if child.attributes.listType == "numeric" %}<ol>{% else %}<ul>{% endif %}
-        {% for item in child.children %}
-        <li>{% for p in item.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "bold" %}<b>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</b>{% else if i.type == "italic" %}<i>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</i>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "teletype" %}<tt>{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else if c.type == "code" %}<code>{{ escape_html(c.text) }}</code>{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</tt>{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}</li>
-        {% endfor %}
-        {% if child.attributes.listType == "numeric" %}</ol>{% else %}</ul>{% endif %}
-        {% else if child.type == "definition-list" %}
-        {% if child.attributes.listType == "value" %}
-        <div class="table"><table class="valuelist">
-        <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
-        {% for entry in child.children %}{% if entry.type == "definition-term" %}<tr><td class="topAlign"><code translate="no">{% if existsIn(entry, "children") and length(entry.children) > 0 %}{% for p in entry.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{{ escape_html(i.text) }}{% endfor %}{% endif %}{% endfor %}{% else if existsIn(entry, "inlines") %}{% for i in entry.inlines %}{{ escape_html(i.text) }}{% endfor %}{% else %}{{ escape_html(entry.text) }}{% endif %}</code></td>{% else if entry.type == "definition-description" %}<td class="topAlign">{% if existsIn(entry, "children") and length(entry.children) > 0 %}{% for p in entry.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}{% else if existsIn(entry, "inlines") %}{% for i in entry.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% endif %}</td></tr>
-        {% endif %}{% endfor %}
-        </table></div>
-        {% else %}
-        <dl>
-        {% for entry in child.children %}
-        {% if entry.type == "definition-term" %}<dt>{% if existsIn(entry, "children") and length(entry.children) > 0 %}{% for p in entry.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}{% else if existsIn(entry, "inlines") %}{% for i in entry.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% else %}{{ escape_html(entry.text) }}{% endif %}</dt>
-        {% else if entry.type == "definition-description" %}<dd>{% if existsIn(entry, "children") and length(entry.children) > 0 %}{% for p in entry.children %}{% if p.type == "paragraph" %}{% for i in p.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}</a>{% else %}{% for c in i.children %}{{ escape_html(c.text) }}{% endfor %}{% endif %}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}{% else if existsIn(entry, "inlines") %}{% for i in entry.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else if i.type == "code" %}<code>{{ escape_html(i.text) }}</code>{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}{% else %}{{ escape_html(entry.text) }}{% endif %}</dd>
-        {% endif %}
-        {% endfor %}
-        </dl>
-        {% endif %}
-        {% else if child.type == "note" %}
-        <aside class="admonition note" role="note"><p><b>Note: </b>{{ escape_html(child.text) }}</p></aside>
-        {% else if child.type == "warning" %}
-        <aside class="admonition warning" role="note"><p><b>Warning: </b>{{ escape_html(child.text) }}</p></aside>
-        {% else if child.type == "important" %}
-        <aside class="admonition important" role="note"><p><b>Important: </b>{{ escape_html(child.text) }}</p></aside>
-        {% else if child.type == "horizontal-rule" %}
-        <hr/>
-        {% else if child.type == "table" %}
-        <div class="table"><table class="{{ child.attributes.style }}"{% if existsIn(child.attributes, "width") %}{{ " " }}style="width: {{ child.attributes.width }}"{% endif %}>
-        {% for row in child.rows %}{% if row.type == "table-header-row" %}<thead><tr class="qt-style">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<th>{{ escape_html(cell.text) }}</th>{% endif %}{% endfor %}</tr></thead>
-        {% else if row.type == "table-row" %}<tr class="{% if is_odd(row.attributes.bodyIndex) %}odd topAlign{% else %}even topAlign{% endif %}" valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td{% if existsIn(cell, "attributes") %}{% if existsIn(cell.attributes, "colspan") %} colspan="{{ cell.attributes.colspan }}"{% endif %}{% if existsIn(cell.attributes, "rowspan") %} rowspan="{{ cell.attributes.rowspan }}"{% endif %}{% endif %}>{{ escape_html(cell.text) }}</td>{% endif %}{% endfor %}</tr>
-        {% endif %}{% endfor %}
-        </table></div>
-        {% else if child.type == "div" %}
-        <div>{{ escape_html(child.text) }}</div>
-        {% else if child.type == "list-placeholder" %}
-        <div class="qdoc-error" role="alert" style="background:#fcc;padding:0.5rem;border:1px solid #c00;">UNEXPANDED LIST PLACEHOLDER: {% if existsIn(child.attributes, "argument") %}{{ escape_html(child.attributes.argument) }}{% else %}&lt;unknown&gt;{% endif %} (variant: {% if existsIn(child.attributes, "variant") %}{{ escape_html(child.attributes.variant) }}{% else %}&lt;unknown&gt;{% endif %}). The list-expander pass did not run. Pipeline bug.</div>
-        {% else if child.type == "catalog" %}
-        <section class="catalog catalog-{{ escape_html(child.attributes.variant) }}">
-        {% for entry in child.children %}
-        {% if entry.type == "section-heading" %}
-        <h{{ entry.attributes.level }}{% if existsIn(entry.attributes, "id") %}{{ " " }}id="{{ escape_html(entry.attributes.id) }}"{% endif %}>{% for i in entry.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</h{{ entry.attributes.level }}>
-        {% else if entry.type == "table" %}
-        <div class="table"><table class="{{ escape_html(entry.attributes.style) }}">
-        {% for row in entry.rows %}{% if row.type == "table-row" %}<tr class="{% if is_odd(row.attributes.bodyIndex) %}odd topAlign{% else %}even topAlign{% endif %}" valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td>{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</td>{% endif %}{% endfor %}</tr>
-        {% endif %}{% endfor %}
-        </table></div>
-        {% else if entry.type == "list" %}
-        <ul>
-        {% for item in entry.children %}
-        <li>{% for i in item.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-        {% endfor %}
-        </section>
-        {% else %}
-        {{ escape_html(child.text) }}
-        {% endif %}
-        {% endfor %}
-        </section>
-    {% else if block.type == "list-placeholder" %}
-        {#- Reaching this branch is an invariant violation: the list-expander pass should
-            have replaced every ListPlaceholder before rendering. The loud marker is
-            intentional — a silent empty Div would let pipeline misconfiguration ship. -#}
-        <div class="qdoc-error" role="alert" style="background:#fcc;padding:0.5rem;border:1px solid #c00;">UNEXPANDED LIST PLACEHOLDER: {% if existsIn(block.attributes, "argument") %}{{ escape_html(block.attributes.argument) }}{% else %}&lt;unknown&gt;{% endif %} (variant: {% if existsIn(block.attributes, "variant") %}{{ escape_html(block.attributes.variant) }}{% else %}&lt;unknown&gt;{% endif %}). The list-expander pass did not run. Pipeline bug.</div>
-    {% else if block.type == "catalog" %}
-        {#- Catalog children re-use the existing block types (section-heading,
-            table, list) but their dispatch is inlined here. Inja 3.5.0 has
-            include/extends/blocks but no macros and no way to swap the iteration
-            scope to child.children, so recursing into the top-level dispatch
-            with a new context isn't expressible. De-duplication would require
-            restructuring the whole content_blocks dispatch into a per-block
-            partial; tracked separately. -#}
-        <section class="catalog catalog-{{ escape_html(block.attributes.variant) }}">
-        {% for child in block.children %}
-        {% if child.type == "section-heading" %}
-        <h{{ child.attributes.level }}{% if existsIn(child.attributes, "id") %}{{ " " }}id="{{ escape_html(child.attributes.id) }}"{% endif %}>{% for i in child.inlines %}{% if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</h{{ child.attributes.level }}>
-        {% else if child.type == "table" %}
-        <div class="table"><table class="{{ escape_html(child.attributes.style) }}">
-        {% for row in child.rows %}{% if row.type == "table-row" %}<tr class="{% if is_odd(row.attributes.bodyIndex) %}odd topAlign{% else %}even topAlign{% endif %}" valign="top">{% for cell in row.cells %}{% if cell.type == "table-cell" %}<td>{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</td>{% endif %}{% endfor %}</tr>
-        {% endif %}{% endfor %}
-        </table></div>
-        {% else if child.type == "list" %}
-        <ul>
-        {% for item in child.children %}
-        <li>{% for i in item.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}<a href="{{ escape_html(i.href) }}">{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% else %}{{ escape_html(c.text) }}{% endif %}{% endfor %}</a>{% else %}{% for c in i.children %}{% if c.type == "text" %}{{ escape_html(c.text) }}{% endif %}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_html(i.text) }}{% else %}{{ escape_html(i.text) }}{% endif %}{% endfor %}</li>
-        {% endfor %}
-        </ul>
-        {% endif %}
+        {#- Rebind block to each child so the include targets the same
+            dispatch. The loop variable shadows the outer block within
+            the loop body. -#}
+        {% for block in block.children %}
+{% include "partials/html/content_block_dispatch.html" %}
         {% endfor %}
         </section>
     {% else %}
-        {{ escape_html(block.text) }}
+{% include "partials/html/content_block_dispatch.html" %}
     {% endif %}
     {% endfor %}
     </section>

@@ -30,7 +30,6 @@ In addition, it supports the following options:
 
 
 
-
 ---
 
 *Built with QDoc's template engine.*

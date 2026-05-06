@@ -110,7 +110,15 @@ static std::string renderSignatureSpans(const nlohmann::json &spans)
 static void registerCallbacks(inja::Environment &env)
 {
     env.add_callback("escape_html", 1, [](inja::Arguments &args) {
-        return escapeHtml(args.at(0)->get<std::string>());
+        // Accept any JSON value type so templates can wrap attributes
+        // uniformly without branching on type. Numbers and booleans
+        // dump to their canonical printed form (no HTML special chars
+        // in practice, but we still route through escapeHtml so a
+        // future representation change can't introduce them silently).
+        const auto &value = *args.at(0);
+        if (value.is_string())
+            return escapeHtml(value.get<std::string>());
+        return escapeHtml(value.dump());
     });
 
     env.add_callback("render_signature_spans", 1, [](inja::Arguments &args) {
