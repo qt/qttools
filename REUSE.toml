@@ -176,8 +176,10 @@ SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
 SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only"
 
 [[annotations]]
-path = ["src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/examples/**.qdoc",
-        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/examples/**.png"]
+path = ["src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/qtlottie_validation/examples/**.qdoc",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/qtlottie_validation/examples/**.png",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/cppref_validation/examples/**.qdoc",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/cppref_validation/examples/**.png"]
 precedence = "override"
 comment = "Documentation and image files adapted from Qt module examples; GFDL licensing preserved"
 SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."

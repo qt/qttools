@@ -1,0 +1,13 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \example example_one
+    \title Example One
+    \examplecategory CatalogPagesTest
+    \brief The first example documented by the catalog fixture.
+
+    Example One demonstrates the \\generatelist annotatedexamples
+    variant by appearing in the module's example index with a brief
+    description populated from this page.
+*/

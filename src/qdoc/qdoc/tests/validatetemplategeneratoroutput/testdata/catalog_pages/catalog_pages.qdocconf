@@ -7,8 +7,11 @@ locationinfo = false
 headers.fileextensions = "*.h *.hpp"
 sources.fileextensions = "*.cpp *.qml *.qdoc"
 
+macro.examplecategory = "\\meta category {\1}\n\\ingroup category \1"
+
 headerdirs  = ./src
 sourcedirs  = ./src
+exampledirs = ./examples
 
 outputformats = TemplateHTML TemplateMarkdown
 
