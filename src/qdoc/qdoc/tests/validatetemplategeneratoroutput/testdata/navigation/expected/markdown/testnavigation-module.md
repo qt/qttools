@@ -4,10 +4,6 @@
 
 Test module for navigation fixture.
 
-| | |
-| --- | --- |
-| CMake | `find_package( REQUIRED COMPONENTS )` `target_link_libraries(mytarget PRIVATE )` |
-| qmake | `QT += ` |
 
 
 

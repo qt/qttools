@@ -677,7 +677,7 @@ SCENARIO("IR::CollectionInfo with full C++ module metadata", "[IR::CollectionInf
                 REQUIRE(json["state"_L1].toString() == "Technology Preview");
             }
 
-            THEN("CMake/qmake variables are always emitted") {
+            THEN("CMake/qmake fields carry the populated values") {
                 REQUIRE(json.contains("qtVariable"_L1));
                 REQUIRE(json["qtVariable"_L1].toString() == "core");
                 REQUIRE(json["cmakePackage"_L1].toString() == "Qt6");
@@ -755,11 +755,11 @@ SCENARIO("IR::CollectionInfo with minimal data (group)", "[IR::CollectionInfo][I
                 REQUIRE(!json.contains("state"_L1));
             }
 
-            THEN("CMake/qmake variables are always emitted (empty strings)") {
-                REQUIRE(json.contains("qtVariable"_L1));
-                REQUIRE(json["qtVariable"_L1].toString().isEmpty());
-                REQUIRE(json.contains("cmakePackage"_L1));
-                REQUIRE(json["cmakePackage"_L1].toString().isEmpty());
+            THEN("CMake/qmake fields are absent when empty") {
+                REQUIRE(!json.contains("qtVariable"_L1));
+                REQUIRE(!json.contains("cmakePackage"_L1));
+                REQUIRE(!json.contains("cmakeComponent"_L1));
+                REQUIRE(!json.contains("cmakeTargetItem"_L1));
             }
 
             THEN("Members array is populated for group") {

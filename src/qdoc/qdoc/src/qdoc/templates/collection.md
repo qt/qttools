@@ -14,11 +14,11 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 **Status:** {{ collection.state }}
 
 {% endif %}
-{% if collection.isModule %}
+{% if collection.isModule and (existsIn(collection, "cmakePackage") or existsIn(collection, "qtVariable")) %}
 | | |
 | --- | --- |
-{% if collection.cmakePackage %}| CMake | `find_package({{ collection.cmakePackage }} REQUIRED COMPONENTS {{ collection.cmakeComponent }})` `target_link_libraries(mytarget PRIVATE {{ collection.cmakeTargetItem }})` |
-{% endif %}{% if collection.qtVariable %}| qmake | `QT += {{ collection.qtVariable }}` |
+{% if existsIn(collection, "cmakePackage") %}| CMake | `find_package({{ collection.cmakePackage }}{{ " " }}{% if existsIn(collection, "cmakeComponent") %}REQUIRED COMPONENTS {{ collection.cmakeComponent }}{% else %}REQUIRED{% endif %})`{% if existsIn(collection, "cmakeTargetItem") %}{{ " " }}`target_link_libraries(mytarget PRIVATE {{ collection.cmakeTargetItem }})`{% endif %}{{ " " }}|
+{% endif %}{% if existsIn(collection, "qtVariable") %}| qmake | `QT += {{ collection.qtVariable }}` |
 {% endif %}
 {% endif %}
 {% endif %}

@@ -112,10 +112,14 @@ QJsonObject CollectionInfo::toJson() const
     if (!state.isEmpty())
         json["state"_L1] = state;
 
-    json["qtVariable"_L1] = qtVariable;
-    json["cmakePackage"_L1] = cmakePackage;
-    json["cmakeComponent"_L1] = cmakeComponent;
-    json["cmakeTargetItem"_L1] = cmakeTargetItem;
+    if (!qtVariable.isEmpty())
+        json["qtVariable"_L1] = qtVariable;
+    if (!cmakePackage.isEmpty())
+        json["cmakePackage"_L1] = cmakePackage;
+    if (!cmakeComponent.isEmpty())
+        json["cmakeComponent"_L1] = cmakeComponent;
+    if (!cmakeTargetItem.isEmpty())
+        json["cmakeTargetItem"_L1] = cmakeTargetItem;
 
     json["namespaces"_L1] = memberEntriesToJson(namespaces);
     json["classes"_L1] = memberEntriesToJson(classes);

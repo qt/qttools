@@ -17,13 +17,13 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <p><b>Status:</b> {{ escape_html(collection.state) }}</p>
     {% endif %}
 
-    {% if collection.isModule %}
+    {% if collection.isModule and (existsIn(collection, "cmakePackage") or existsIn(collection, "qtVariable")) %}
     <table class="requisites">
-    {% if collection.cmakePackage %}
+    {% if existsIn(collection, "cmakePackage") %}
     <tr><td class="memItemLeft">CMake:</td>
-    <td class="memItemRight"><code>find_package({{ escape_html(collection.cmakePackage) }} REQUIRED COMPONENTS {{ escape_html(collection.cmakeComponent) }})</code><br/><code>target_link_libraries(mytarget PRIVATE {{ escape_html(collection.cmakeTargetItem) }})</code></td></tr>
+    <td class="memItemRight"><code>find_package({{ escape_html(collection.cmakePackage) }}{{ " " }}{% if existsIn(collection, "cmakeComponent") %}REQUIRED COMPONENTS {{ escape_html(collection.cmakeComponent) }}{% else %}REQUIRED{% endif %})</code>{% if existsIn(collection, "cmakeTargetItem") %}<br/><code>target_link_libraries(mytarget PRIVATE {{ escape_html(collection.cmakeTargetItem) }})</code>{% endif %}</td></tr>
     {% endif %}
-    {% if collection.qtVariable %}
+    {% if existsIn(collection, "qtVariable") %}
     <tr><td class="memItemLeft">qmake:</td>
     <td class="memItemRight"><code>QT += {{ escape_html(collection.qtVariable) }}</code></td></tr>
     {% endif %}
