@@ -30,6 +30,6 @@
             <contents name="properties" title="Properties" level="2"/>
         </qmlclass>
         <module name="TestNavigation" href="testnavigation-module.html" status="active" location="testnavmodule.qdoc" documented="true" seen="true" title="TestNavigation" brief="Test module for navigation fixture"/>
-        <qmlmodule name="TestNavigation" href="testnavigation-qmlmodule.html" status="internal" seen="false" title=""/>
+        <qmlmodule name="TestNavigation" href="testnavigation-qmlmodule.html" status="internal-auto" seen="false" title=""/>
     </namespace>
 </INDEX>

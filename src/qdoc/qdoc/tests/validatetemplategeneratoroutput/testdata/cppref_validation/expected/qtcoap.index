@@ -608,9 +608,9 @@
         <page name="https://www.gnu.org/licenses/gpl-3.0.html" href="https://www.gnu.org/licenses/gpl-3.0.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="GNU General Public License, version 3" fulltitle="GNU General Public License, version 3" subtitle=""/>
         <page name="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats" href="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="CoAP Content-Formats Registry" fulltitle="CoAP Content-Formats Registry" subtitle=""/>
         <page name="https://www.qt.io/" href="https://www.qt.io/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="The Qt Company" fulltitle="The Qt Company" subtitle=""/>
-        <group name="category Connectivity" href="category-connectivity.html" status="internal" seen="false" title=""/>
-        <group name="explanations-networkingandconnectivity" href="explanations-networkingandconnectivity.html" status="internal" seen="false" title=""/>
-        <group name="modules" href="modules.html" status="internal" seen="false" title=""/>
+        <group name="category Connectivity" href="category-connectivity.html" status="internal-auto" seen="false" title=""/>
+        <group name="explanations-networkingandconnectivity" href="explanations-networkingandconnectivity.html" status="internal-auto" seen="false" title=""/>
+        <group name="modules" href="modules.html" status="internal-auto" seen="false" title=""/>
         <group name="qtcoap-examples" href="qtcoap-examples.html" status="active" location="examples.qdoc" documented="true" seen="true" title="Qt CoAP Examples" brief="List of Qt CoAP examples"/>
         <module name="QtCoap" href="qtcoap-module.html" status="active" location="qtcoap-module-cpp.qdoc" documented="true" groups="modules" seen="true" title="Qt CoAP C++ Classes" brief="Provides classes to use CoAP protocol"/>
     </namespace>
