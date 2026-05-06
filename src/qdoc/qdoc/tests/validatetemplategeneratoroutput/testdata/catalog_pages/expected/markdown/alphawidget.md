@@ -18,6 +18,8 @@ The first widget documented by the catalog fixture.
 
 - [List of all members, including inherited members](alphawidget-members.md)
 
+AlphaWidget is part of [Catalog Members Group](catalog-members-group.md).
+
 
 ## Public Functions
 

@@ -18,6 +18,8 @@ The second widget documented by the catalog fixture.
 
 - [List of all members, including inherited members](betawidget-members.md)
 
+BetaWidget is part of [Catalog Members Group](catalog-members-group.md).
+
 
 ## Public Functions
 

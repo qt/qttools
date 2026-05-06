@@ -6,6 +6,7 @@
 /*!
     \class AlphaWidget
     \inmodule CatalogPagesTest
+    \ingroup catalog_members_group
     \brief The first widget documented by the catalog fixture.
 
     AlphaWidget is a stand-in class whose only purpose is to show up
@@ -20,6 +21,7 @@
 /*!
     \class BetaWidget
     \inmodule CatalogPagesTest
+    \ingroup catalog_members_group
     \brief The second widget documented by the catalog fixture.
 
     BetaWidget sits between AlphaWidget and GammaWidget in the sorted
@@ -35,6 +37,7 @@
 /*!
     \class GammaWidget
     \inmodule CatalogPagesTest
+    \ingroup catalog_members_group
     \brief The third widget documented by the catalog fixture.
 
     GammaWidget rounds out the three-entry catalog. With three

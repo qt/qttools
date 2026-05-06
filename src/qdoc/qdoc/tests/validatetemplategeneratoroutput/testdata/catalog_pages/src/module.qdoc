@@ -9,3 +9,10 @@
     This module exists to satisfy the \\inmodule requirement on the
     \\class blocks below. It carries no other documentation.
 */
+
+/*!
+    \group catalog_members_group
+    \title Catalog Members Group
+    \brief Named group used by the \\annotatedlist fixture page to
+    exercise the group-members catalog variant.
+*/

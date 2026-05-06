@@ -18,6 +18,8 @@ The third widget documented by the catalog fixture.
 
 - [List of all members, including inherited members](gammawidget-members.md)
 
+GammaWidget is part of [Catalog Members Group](catalog-members-group.md).
+
 
 ## Public Functions
 
