@@ -215,15 +215,15 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         filePath = attributes.value(QLatin1String("filepath")).toString();
         lineNo = attributes.value("lineno").toInt();
     }
-    if (elementName == QLatin1String("namespace")) {
+    if (parent && elementName == QLatin1String("namespace")) {
         auto *namespaceNode = new NamespaceNode(parent, name);
         node = namespaceNode;
         if (!indexUrl.isEmpty())
             location = Location(indexUrl + QLatin1Char('/') + name.toLower() + ".html");
         else if (!indexUrl.isNull())
             location = Location(name.toLower() + ".html");
-    } else if (elementName == QLatin1String("class") || elementName == QLatin1String("struct")
-               || elementName == QLatin1String("union")) {
+    } else if (parent && (elementName == QLatin1String("class") || elementName == QLatin1String("struct")
+               || elementName == QLatin1String("union"))) {
         NodeType type = NodeType::Class;
         if (elementName == QLatin1String("class"))
             type = NodeType::Class;
@@ -246,7 +246,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         if (attributes.value(QLatin1String("abstract")) == QLatin1String("true"))
             abstract = true;
         node->setAbstract(abstract);
-    } else if (elementName == QLatin1String("header")) {
+    } else if (parent && elementName == QLatin1String("header")) {
         node = new HeaderNode(parent, name);
 
         if (attributes.hasAttribute(QLatin1String("location")))
@@ -370,30 +370,30 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
                 exampleNode->appendImage(name);
                 goto done;
             }
+        } else if (parent) {
+            PageNode *pageNode = nullptr;
+            if (subtype == QDocAttrExample)
+                pageNode = new ExampleNode(parent, name);
+            else if (subtype == QDocAttrExternalPage)
+                pageNode = new ExternalPageNode(parent, name);
+            else {
+                pageNode = new PageNode(parent, name);
+                if (subtype == QDocAttrAttribution) pageNode->markAttribution();
+            }
+
+            pageNode->setTitle(attributes.value(QLatin1String("title")).toString());
+
+            if (attributes.hasAttribute(QLatin1String("location")))
+                name = attributes.value(QLatin1String("location")).toString();
+
+            if (!indexUrl.isEmpty())
+                location = Location(indexUrl + QLatin1Char('/') + name);
+            else if (!indexUrl.isNull())
+                location = Location(name);
+
+            node = pageNode;
         }
-        PageNode *pageNode = nullptr;
-        if (subtype == QDocAttrExample)
-            pageNode = new ExampleNode(parent, name);
-        else if (subtype == QDocAttrExternalPage)
-            pageNode = new ExternalPageNode(parent, name);
-        else {
-            pageNode = new PageNode(parent, name);
-            if (subtype == QDocAttrAttribution) pageNode->markAttribution();
-        }
-
-        pageNode->setTitle(attributes.value(QLatin1String("title")).toString());
-
-        if (attributes.hasAttribute(QLatin1String("location")))
-            name = attributes.value(QLatin1String("location")).toString();
-
-        if (!indexUrl.isEmpty())
-            location = Location(indexUrl + QLatin1Char('/') + name);
-        else if (!indexUrl.isNull())
-            location = Location(name);
-
-        node = pageNode;
-
-    } else if (elementName == QLatin1String("enum") || elementName == QLatin1String("qmlenum")) {
+    } else if (parent && (elementName == QLatin1String("enum") || elementName == QLatin1String("qmlenum"))) {
         EnumNode *enumNode;
         if (elementName == QLatin1String("enum"))
             enumNode = new EnumNode(parent, name, attributes.hasAttribute("scoped"));
@@ -427,7 +427,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         node = enumNode;
 
         hasReadChildren = true;
-    } else if (elementName == QLatin1String("typedef")) {
+    } else if (parent && elementName == QLatin1String("typedef")) {
         TypedefNode *typedefNode;
         if (attributes.hasAttribute("aliasedtype"))
             typedefNode = new TypeAliasNode(parent, name, attributes.value(QLatin1String("aliasedtype")).toString());
@@ -449,7 +449,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             location = Location(indexUrl + QLatin1Char('/') + parent->name().toLower() + ".html");
         else if (!indexUrl.isNull())
             location = Location(parent->name().toLower() + ".html");
-    } else if (elementName == QLatin1String("property")) {
+    } else if (parent && elementName == QLatin1String("property")) {
         auto *propNode = new PropertyNode(parent, name);
         node = propNode;
         if (attributes.value(QLatin1String("bindable")) == QLatin1String("true"))
@@ -466,7 +466,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         else if (!indexUrl.isNull())
             location = Location(parent->name().toLower() + ".html");
 
-    } else if (elementName == QLatin1String("function")) {
+    } else if (parent && elementName == QLatin1String("function")) {
         QString t = attributes.value(QLatin1String("meta")).toString();
         bool attached = false;
         FunctionNode::Metaness metaness = FunctionNode::Plain;
@@ -548,7 +548,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             location = Location(parent->name().toLower() + ".html");
 
         hasReadChildren = true;
-    } else if (elementName == QLatin1String("variable")) {
+    } else if (parent && elementName == QLatin1String("variable")) {
         auto *varNode = new VariableNode(parent, name);
         varNode->setLeftType(attributes.value("type").toString());
         varNode->setStatic((attributes.value("static").toString() == "true") ? true : false);
@@ -566,7 +566,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
     } else if (elementName == QLatin1String("contents")) {
         insertTarget(TargetRec::Contents, attributes, current);
         goto done;
-    } else if (elementName == QLatin1String("proxy")) {
+    } else if (parent && elementName == QLatin1String("proxy")) {
         node = new ProxyNode(parent, name);
         if (!indexUrl.isEmpty())
             location = Location(indexUrl + QLatin1Char('/') + name.toLower() + ".html");
@@ -576,7 +576,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         goto done;
     }
 
-    {
+    if (node) {
         if (!href.isEmpty()) {
             node->setUrl(href);
             // Include the index URL if it exists
