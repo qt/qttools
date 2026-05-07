@@ -727,7 +727,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     if (openCommand(cmd)) {
                         enterPara();
                         p1 = getArgument();
-                        appendAtom(Atom(Atom::Link, p1));
+                        appendAtom(LinkAtom(p1, {}, location()));
                         appendAtom(Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK));
                         skipSpacesOrOneEndl();
                     }
@@ -1303,7 +1303,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         if (s_ignoreWords.contains(word) || word.startsWith(QString("__")))
                             appendWord(word);
                         else
-                            appendAtom(Atom(Atom::AutoLink, word));
+                            appendAtom(LinkAtom(Atom::AutoLink, word, {}, location()));
                     } else {
                         appendWord(word);
                     }
@@ -1925,7 +1925,8 @@ void DocParser::parseAlso()
 
         if (!skipMe) {
             Text also;
-            also << Atom(Atom::Link, target) << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+            also << LinkAtom(target, {}, location())
+                 << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
                  << str << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
             m_private->addAlso(also);
         }

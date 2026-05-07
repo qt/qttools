@@ -176,6 +176,8 @@ class LinkAtom : public Atom
 {
 public:
     LinkAtom(const QString &p1, const QString &p2, Location location = Location());
+    LinkAtom(Atom::AtomType type, const QString &p1, const QString &p2,
+             Location location = Location());
     LinkAtom(const LinkAtom &t);
     LinkAtom(Atom *previous, const LinkAtom &t);
     ~LinkAtom() override = default;

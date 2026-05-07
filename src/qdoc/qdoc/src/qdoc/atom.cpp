@@ -386,15 +386,33 @@ QString Atom::linkText() const
 }
 
 /*!
-  The only constructor for LinkAtom. It creates an Atom of
-  type Atom::Link. \a p1 being the link target. \a p2 is the
-  parameters in square brackets. Normally there is just one
-  word in the square brackets, but there can be up to three
-  words separated by spaces. The constructor splits \a p2 on
-  the space character.
+  Constructs a LinkAtom of type Atom::Link. \a p1 is the link target.
+  \a p2 holds the parameters that appeared in square brackets. Normally
+  there is just one word in the square brackets, but there can be up
+  to three words separated by spaces. The constructor splits \a p2 on
+  the space character. \a location identifies where in the source
+  the link directive was written, so downstream consumers can attribute
+  diagnostics back to the originating line.
  */
 LinkAtom::LinkAtom(const QString &p1, const QString &p2, Location location)
     : Atom(Atom::Link, p1),
+      location(location),
+      m_genus(Genus::DontCare),
+      m_domain(nullptr)
+{
+    resolveSquareBracketParams(p2);
+}
+
+/*!
+  Constructs a LinkAtom carrying an explicit atom \a type. This overload
+  exists so DocParser can promote autolink atoms (Atom::AutoLink) to
+  LinkAtom while preserving the type tag that downstream generators
+  dispatch on. \a p1, \a p2, and \a location follow the same semantics
+  as the primary constructor.
+ */
+LinkAtom::LinkAtom(Atom::AtomType type, const QString &p1, const QString &p2,
+                   Location location)
+    : Atom(type, p1),
       location(location),
       m_genus(Genus::DontCare),
       m_domain(nullptr)
@@ -441,7 +459,7 @@ void LinkAtom::resolveSquareBracketParams(const QString &text)
   Standard copy constructor of LinkAtom \a t.
  */
 LinkAtom::LinkAtom(const LinkAtom &t)
-    : Atom(Link, t.string()),
+    : Atom(t.m_type, t.string()),
       location(t.location),
       m_genus(t.m_genus),
       m_domain(t.m_domain),
@@ -456,7 +474,7 @@ LinkAtom::LinkAtom(const LinkAtom &t)
   in the list.
  */
 LinkAtom::LinkAtom(Atom *previous, const LinkAtom &t)
-    : Atom(previous, Link, t.string()),
+    : Atom(previous, t.m_type, t.string()),
       location(t.location),
       m_genus(t.m_genus),
       m_domain(t.m_domain),
