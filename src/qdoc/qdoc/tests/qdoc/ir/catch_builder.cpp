@@ -138,3 +138,75 @@ SCENARIO("Builder has no Node-layer dependencies", "[IR::Builder][IR]") {
         }
     }
 }
+
+namespace {
+
+// Walks a content-block subtree and returns every InlineContent of type
+// Link, in document order. Used to inspect Builder-synthesized links
+// embedded inside generated prose (such as the thread-safety admonition).
+QList<IR::InlineContent> collectLinkInlines(const QList<IR::ContentBlock> &blocks)
+{
+    QList<IR::InlineContent> result;
+    auto walkInlines = [&](auto &&self, const QList<IR::InlineContent> &inlines) -> void {
+        for (const auto &inl : inlines) {
+            if (inl.type == IR::InlineType::Link)
+                result.append(inl);
+            self(self, inl.children);
+        }
+    };
+    auto walkBlocks = [&](auto &&self, const QList<IR::ContentBlock> &bs) -> void {
+        for (const auto &b : bs) {
+            walkInlines(walkInlines, b.inlineContent);
+            self(self, b.children);
+        }
+    };
+    walkBlocks(walkBlocks, blocks);
+    return result;
+}
+
+} // namespace
+
+SCENARIO("Builder synthesizers emit LinkOrigin::Synthesized", "[IR::Builder][IR]") {
+
+    GIVEN("PageMetadata triggering thread-safety admonition synthesis") {
+        IR::PageMetadata pm;
+        pm.title = u"Synth Test"_s;
+        pm.nodeType = NodeType::Class;
+
+        IR::CppReferenceData cpp;
+        cpp.typeWord = u"class"_s;
+        IR::CppReferenceData::ThreadSafetyInfo ts;
+        ts.level = u"non-reentrant"_s;
+        ts.reentrantExceptions.append({u"makeFoo"_s, u"qfoo.html#makeFoo"_s});
+        cpp.threadSafety = ts;
+        pm.cppReferenceData = cpp;
+
+        WHEN("buildPageIR is called") {
+            IR::Builder builder;
+            IR::Document ir = builder.buildPageIR(pm);
+
+            THEN("The synthesized admonition emits Link inlines tagged Synthesized") {
+                REQUIRE(ir.cppReferenceInfo.has_value());
+                const auto &admonition = ir.cppReferenceInfo->threadSafetyAdmonition;
+                REQUIRE_FALSE(admonition.isEmpty());
+
+                const auto links = collectLinkInlines(admonition);
+                REQUIRE(links.size() >= 2);
+
+                bool sawUnresolved = false;
+                bool sawResolved = false;
+                for (const auto &link : links) {
+                    REQUIRE(link.link.has_value());
+                    REQUIRE(link.link->origin == IR::LinkOrigin::Synthesized);
+                    if (link.link->state == IR::LinkState::Unresolved)
+                        sawUnresolved = true;
+                    else if (link.link->state == IR::LinkState::Resolved)
+                        sawResolved = true;
+                }
+
+                REQUIRE(sawUnresolved); // makeTopicLink path
+                REQUIRE(sawResolved);   // makeResolvedLink path
+            }
+        }
+    }
+}

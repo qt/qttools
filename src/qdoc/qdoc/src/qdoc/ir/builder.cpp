@@ -40,22 +40,43 @@ static InlineContent makeTextInline(const QString &text)
     return ic;
 }
 
+/*!
+    \internal
+    Synthesizes an unresolved link inline pointing at \a topicName.
+    Used when a topic page is referenced from Builder-generated prose
+    (such as the thread-safety admonition's pointer at the
+    \c reentrant or \c thread-safe topic page) before that page has
+    been resolved. The resulting link carries
+    \c LinkOrigin::Synthesized so link resolution can attribute any
+    broken-link warning to the page that triggered the synthesis,
+    not to a non-existent author source line.
+*/
 static InlineContent makeTopicLink(const QString &topicName)
 {
     InlineContent ic;
     ic.type = InlineType::Link;
     ic.href = topicName;
-    ic.link = InlineContent::LinkData{LinkOrigin::Explicit, LinkState::Unresolved};
+    ic.link = InlineContent::LinkData{LinkOrigin::Synthesized, LinkState::Unresolved};
     ic.children.append(makeTextInline(topicName));
     return ic;
 }
 
+/*!
+    \internal
+    Synthesizes a pre-resolved link inline pointing at \a href with
+    \a name as its display text. Used for Builder-generated prose
+    that already knows the target URL (such as exception-list items
+    in the thread-safety admonition). The resulting link carries
+    \c LinkOrigin::Synthesized for parity with \c makeTopicLink even
+    though the link is already in \c LinkState::Resolved and bypasses
+    the broken-link path.
+*/
 static InlineContent makeResolvedLink(const QString &name, const QString &href)
 {
     InlineContent ic;
     ic.type = InlineType::Link;
     ic.href = href;
-    ic.link = InlineContent::LinkData{LinkOrigin::Explicit, LinkState::Resolved};
+    ic.link = InlineContent::LinkData{LinkOrigin::Synthesized, LinkState::Resolved};
     ic.children.append(makeTextInline(name));
     return ic;
 }

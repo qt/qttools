@@ -34,7 +34,8 @@ enum class InlineType : unsigned char {
 
 enum class LinkOrigin : unsigned char {
     Auto,
-    Explicit
+    Explicit,
+    Synthesized
 };
 
 enum class LinkState : unsigned char {

@@ -646,3 +646,18 @@ SCENARIO("Table serialization annotates body rows with bodyIndex",
         }
     }
 }
+
+SCENARIO("LinkOrigin enum exposes three variants", "[IR::LinkOrigin][IR]") {
+
+    GIVEN("The LinkOrigin enum") {
+        THEN("Three distinct variants are exposed in stable order") {
+            REQUIRE(static_cast<unsigned char>(IR::LinkOrigin::Auto) == 0);
+            REQUIRE(static_cast<unsigned char>(IR::LinkOrigin::Explicit) == 1);
+            REQUIRE(static_cast<unsigned char>(IR::LinkOrigin::Synthesized) == 2);
+        }
+
+        THEN("The underlying type is unsigned char") {
+            REQUIRE(sizeof(IR::LinkOrigin) == sizeof(unsigned char));
+        }
+    }
+}
