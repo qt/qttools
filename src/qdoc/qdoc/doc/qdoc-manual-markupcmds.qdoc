@@ -1461,17 +1461,17 @@
 
             \badcode
             An URL with a custom link text:
-            \l {http://doc.qt.io/qt-6/} {Qt 6 Documentation}.
+            \l {https://doc.qt.io/qt-6/} {Qt 6 Documentation}.
 
-            An URL without a custom link text: \l {http://doc.qt.io/qt-6/}.
+            An URL without a custom link text: \l {https://doc.qt.io/qt-6/}.
             \endcode
 
             Renders as:
 
             An URL with a custom link text:
-            \l {http://doc.qt.io/qt-6/} {Qt 6 Documentation}.
+            \l {https://doc.qt.io/qt-6/} {Qt 6 Documentation}.
 
-            An URL without a custom link text: \l {http://doc.qt.io/qt-6/}.
+            An URL without a custom link text: \l {https://doc.qt.io/qt-6/}.
 
             See also \l {externalpage-command}{\\externalpage}.
 

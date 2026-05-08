@@ -2434,7 +2434,7 @@
     \badcode
         project     = QtGui
         description = Qt GUI Reference Documentation
-        url         = http://doc.qt.io/qt/
+        url         = https://doc.qt.io/qt/
 
         ...
     \endcode

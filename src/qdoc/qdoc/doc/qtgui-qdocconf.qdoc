@@ -19,7 +19,7 @@ every statement in the qdocconf file.
 
    project                 = QtGui
    description             = Qt GUI Reference Documentation
-   url                     = http://doc.qt.io/qt
+   url                     = https://doc.qt.io/qt
    version                 = $QT_VERSION
 
    examplesinstallpath     = gui
@@ -97,7 +97,7 @@ name of the index file doesn't adopt the uppercase letters of the project name.
 A short description of the project concerned.
 
 \badcode
-   url                     = http://doc.qt.io/qt-5
+   url                     = https://doc.qt.io/qt-5
 \endcode
 
 The \c url variable holds the base url of the project.
