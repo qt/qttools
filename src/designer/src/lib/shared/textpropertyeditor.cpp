@@ -244,9 +244,9 @@ namespace qdesigner_internal {
         case ValidationURL: {
             static const QStringList urlCompletions = {
                 u"about:blank"_s,
-                u"http://"_s,
-                u"http://www."_s,
-                u"http://qt.io"_s,
+                u"https://"_s,
+                u"https://www."_s,
+                u"https://qt.io"_s,
                 u"file://"_s,
                 u"ftp://"_s,
                 u"data:"_s,
