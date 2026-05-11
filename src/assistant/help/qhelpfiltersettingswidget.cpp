@@ -56,8 +56,8 @@ static QMap<QString, QHelpFilterData> subtract(const QMap<QString, QHelpFilterDa
     QMap<QString, QHelpFilterData> result = minuend;
 
     for (auto itSubtrahend = subtrahend.cbegin(); itSubtrahend != subtrahend.cend(); ++itSubtrahend) {
-        auto itResult = result.find(itSubtrahend.key());
-        if (itResult != result.end() && itSubtrahend.value() == itResult.value())
+        auto itResult = result.constFind(itSubtrahend.key());
+        if (itResult != result.constEnd() && itSubtrahend.value() == itResult.value())
             result.erase(itResult);
     }
     return result;
