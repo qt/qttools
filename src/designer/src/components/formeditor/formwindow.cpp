@@ -2233,7 +2233,7 @@ QMenu *FormWindow::createPopupMenu(QWidget *w)
 {
     QMenu *popup = createExtensionTaskMenu(this, w, true);
     if (!popup)
-        popup = new QMenu;
+        popup = new QMenu(w);
     // if w doesn't have a QDesignerTaskMenu as a child create one and make it a child.
     // insert actions from QDesignerTaskMenu
 
