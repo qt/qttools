@@ -4,7 +4,7 @@
 #define BOOKMARKMODEL_H
 
 #include <QtCore/QAbstractItemModel>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 
 #include <QtGui/QIcon>
 
@@ -13,8 +13,6 @@ QT_BEGIN_NAMESPACE
 class BookmarkItem;
 class QMimeData;
 class QTreeView;
-
-typedef QMap<BookmarkItem*, QPersistentModelIndex> ItemModelIndexCache;
 
 class BookmarkModel : public QAbstractItemModel
 {
@@ -70,7 +68,7 @@ private:
     QIcon folderIcon;
     QIcon bookmarkIcon;
     BookmarkItem *rootItem;
-    ItemModelIndexCache cache;
+    QHash<BookmarkItem *, QPersistentModelIndex> cache;
 };
 
 QT_END_NAMESPACE
