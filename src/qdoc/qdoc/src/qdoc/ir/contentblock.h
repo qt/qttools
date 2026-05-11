@@ -56,9 +56,20 @@ struct InlineContent
     QList<InlineContent> children;         //!< Nested inline content
     QJsonObject attributes;                //!< Type-specific metadata
 
+    struct SourceLocation {
+        QString filePath;                      //!< Source file of the originating atom
+        int lineNo { 0 };                      //!< Line number within \c filePath
+    };
+
     struct LinkData {
         LinkOrigin origin { LinkOrigin::Auto };
         LinkState state { LinkState::Unresolved };
+        std::optional<SourceLocation> sourceLocation; //!< Set for author-written links; unset for synthesized links
+
+        LinkData() = default;
+        LinkData(LinkOrigin o, LinkState s,
+                 std::optional<SourceLocation> loc = std::nullopt)
+            : origin{o}, state{s}, sourceLocation{std::move(loc)} {}
     };
     std::optional<LinkData> link;
 

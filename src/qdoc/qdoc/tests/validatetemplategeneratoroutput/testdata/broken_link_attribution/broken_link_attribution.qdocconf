@@ -1,0 +1,31 @@
+project = BrokenLinkAttribution
+description = Test fixture for source-location attribution on broken-link warnings
+productname = Qt
+
+# outputformats MUST be TemplateHTML -- LinkResolver and ContentBuilder live in
+# the template generator stack. The legacy HtmlGenerator goes through a
+# different code path that does not exercise the LD-01 changes (sourceLocation
+# on LinkData).
+outputformats = TemplateHTML
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+
+sources.fileextensions = "*.qdoc"
+
+sourcedirs = src
+
+# Capture warnings to a log file so the test can snapshot-compare attribution.
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+
+# Allow the warnings the fixture intentionally produces.
+warninglimit = 10
+warninglimit.enabled = true
+
+# Disable location info on index files for reproducible output.
+locationinfo = false
+
+# Enable autolink errors so autolink failures produce warnings (not silent).
+autolinkerrors = true

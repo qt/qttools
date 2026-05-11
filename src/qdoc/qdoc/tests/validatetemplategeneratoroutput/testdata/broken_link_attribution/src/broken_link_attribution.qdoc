@@ -1,0 +1,30 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page broken-link-attribution.html
+    \title Broken Link Attribution Test
+    \brief Verifies source-location attribution for broken-link warnings.
+
+    This page contains intentionally broken links to verify that the
+    template generator's link resolver attributes the resulting warnings
+    to the file and line of the originating directive, not to the page
+    or the relative node.
+
+    Test 1 -- explicit bare-form broken link:
+    \l TargetThatDoesNotExist
+
+    Test 2 -- explicit bracketed-form broken link with custom text:
+    \l {SecondMissingTarget} {custom link text}
+
+    Test 3 -- autolink to a non-existent word: AutolinkMissingWord
+    is not a documented entity.
+
+    Test 4 -- paragraph with trailing inlines after a broken link.
+    \l TrailingMissingTarget appears here, followed by additional
+    prose that adds more inline atoms to the same paragraph block.
+    Attribution must point at the broken-link line, not at the page.
+
+    Test 5 -- broken link inside inline formatting: see \b{\l NestedMissingTarget}
+    in this paragraph. Attribution must point at the broken-link line.
+*/

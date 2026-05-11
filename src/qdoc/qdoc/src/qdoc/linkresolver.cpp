@@ -8,6 +8,7 @@
 #include "genustypes.h"
 #include "hrefresolver.h"
 #include "ir/contentblock.h"
+#include "location.h"
 #include "node.h"
 #include "qdocdatabase.h"
 #include "qdoclogging.h"
@@ -157,14 +158,21 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
             m_qdb->findNodeForTarget(target, relative, genus, moduleName, &ref);
 
     if (!targetNode) {
+        const auto reportAt = [&](const QString &message) {
+            if (link.link->sourceLocation) {
+                Location loc(link.link->sourceLocation->filePath);
+                loc.setLineNo(link.link->sourceLocation->lineNo);
+                loc.warning(message);
+            } else if (relative) {
+                relative->doc().location().warning(message);
+            }
+        };
         if (link.link->origin == IR::LinkOrigin::Auto) {
-            if (m_config.autolinkErrors && relative)
-                relative->doc().location().warning(
-                        u"Can't autolink to '%1'"_s.arg(target));
+            if (m_config.autolinkErrors)
+                reportAt(u"Can't autolink to '%1'"_s.arg(target));
         } else {
-            if (!m_config.noLinkErrors && relative)
-                relative->doc().location().warning(
-                        u"Can't link to '%1'"_s.arg(target));
+            if (!m_config.noLinkErrors)
+                reportAt(u"Can't link to '%1'"_s.arg(target));
         }
 
         link.link->state = IR::LinkState::Broken;

@@ -324,6 +324,13 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         link.type = InlineType::Link;
         link.href = atom->string();
         link.link = InlineContent::LinkData{ LinkOrigin::Auto, LinkState::Unresolved };
+        if (atom->isLinkAtom()) {
+            const auto *linkAtom = static_cast<const LinkAtom *>(atom);
+            link.link->sourceLocation = InlineContent::SourceLocation{
+                linkAtom->location.filePath(),
+                linkAtom->location.lineNo()
+            };
+        }
         link.children.append({ InlineType::Text, atom->string(), {}, {}, {}, {}, {} });
         addInline(std::move(link));
         break;
@@ -352,6 +359,12 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
                 link.attributes["linkGenus"_L1] = genusStr;
             if (Tree *domain = mutableAtom->domain())
                 link.attributes["linkModule"_L1] = domain->physicalModuleName();
+
+            const auto *linkAtom = static_cast<const LinkAtom *>(mutableAtom);
+            link.link->sourceLocation = InlineContent::SourceLocation{
+                linkAtom->location.filePath(),
+                linkAtom->location.lineNo()
+            };
         }
 
         pushInlineContainer(std::move(link));

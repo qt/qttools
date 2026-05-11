@@ -1,0 +1,11 @@
+# QDoc Warning Log
+# Project: BrokenLinkAttribution
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/broken_link_attribution.qdoc:15: [BrokenLinkAttribution] (qdoc) warning: Can't link to 'TargetThatDoesNotExist'
+src/broken_link_attribution.qdoc:18: [BrokenLinkAttribution] (qdoc) warning: Can't link to 'SecondMissingTarget'
+src/broken_link_attribution.qdoc:20: [BrokenLinkAttribution] (qdoc) warning: Can't autolink to 'AutolinkMissingWord'
+src/broken_link_attribution.qdoc:24: [BrokenLinkAttribution] (qdoc) warning: Can't link to 'TrailingMissingTarget'
+src/broken_link_attribution.qdoc:28: [BrokenLinkAttribution] (qdoc) warning: Can't link to 'NestedMissingTarget'
