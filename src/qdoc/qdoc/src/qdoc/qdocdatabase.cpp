@@ -1599,8 +1599,10 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
     Tree *domain = nullptr;
 
     if (atom->isLinkAtom()) {
-        domain = atom->domain();
-        genus = atom->genus();
+        if (auto *atomDomain = atom->domain())
+            domain = atomDomain;
+        if (atom->genus() != Genus::DontCare)
+            genus = atom->genus();
     }
 
     if (first.isEmpty())
