@@ -171,7 +171,7 @@ bool OpenPagesWidget::eventFilter(QObject *obj, QEvent *event)
 {
     TRACE_OBJ
     if (obj != this)
-        return QWidget::eventFilter(obj, event);
+        return QTreeView::eventFilter(obj, event);
 
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *ke = static_cast<QKeyEvent*>(event);
@@ -192,7 +192,7 @@ bool OpenPagesWidget::eventFilter(QObject *obj, QEvent *event)
                 emit setCurrentPage(currentIndex());
         }
     }
-    return QWidget::eventFilter(obj, event);
+    return QTreeView::eventFilter(obj, event);
 }
 
 QT_END_NAMESPACE

@@ -76,7 +76,7 @@ bool BookmarkDialog::eventFilter(QObject *object, QEvent *event)
 {
     TRACE_OBJ
     if (object != ui.treeView && object != ui.treeView->viewport())
-        return QWidget::eventFilter(object, event);
+        return QDialog::eventFilter(object, event);
 
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *ke = static_cast<QKeyEvent*>(event);
@@ -93,7 +93,7 @@ bool BookmarkDialog::eventFilter(QObject *object, QEvent *event)
         }
     }
 
-    return QObject::eventFilter(object, event);
+    return QDialog::eventFilter(object, event);
 }
 
 void BookmarkDialog::currentIndexChanged(int row)
