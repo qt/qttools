@@ -1137,7 +1137,7 @@ void MainWindow::registerDocumentation(const QString &component,
     if (!helpEngine.registerDocumentation(absFileName)) {
         QMessageBox::warning(this, tr("Qt Assistant"),
             tr("Could not register file '%1': %2").
-            arg(absFileName).arg(helpEngine.error()));
+            arg(absFileName, helpEngine.error()));
     } else {
         QStringList docInfo;
         docInfo << QFileInfo(absFileName).lastModified().toString(Qt::ISODate)
