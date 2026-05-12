@@ -199,9 +199,6 @@
         \li \\B2QSS
         \li Boot to Qt Software Stack
     \row
-        \li \\B2QST
-        \li Boot to Qt Startup Screen
-    \row
         \li \\IFW
         \li Qt Installer Framework
     \row
