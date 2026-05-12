@@ -67,6 +67,9 @@
     optional since any existing collection file, for example from an older
     release, could be used.
 
+    \note The Qt compressed help files (.qch) should only be loaded
+    from trusted sources.
+
     So, in general, there are four files interacting with the help
     system, two used for generating Qt help and two meant for
     distribution:

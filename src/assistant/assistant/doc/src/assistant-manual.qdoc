@@ -143,6 +143,9 @@
     exit right away displaying a message if the registration was successful
     or not.
 
+    \note The Qt compressed help files (.qch) should only be loaded
+    from trusted sources.
+
     The search indexing will only index your custom *.html, *.htm,
     and *.txt files.
 
