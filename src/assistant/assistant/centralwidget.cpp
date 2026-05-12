@@ -40,7 +40,7 @@ TabBar::TabBar(QWidget *parent)
     : QTabBar(parent)
 {
     TRACE_OBJ
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     setDocumentMode(true);
 #endif
     setMovable(true);

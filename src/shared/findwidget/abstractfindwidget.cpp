@@ -41,7 +41,7 @@ static QIcon afwCreateIconSet(const QString &name)
 {
     QStringList candidates = QStringList()
         << (QString::fromUtf8(":/qt-project.org/shared/images/") + name)
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
         << (QString::fromUtf8(":/qt-project.org/shared/images/mac/") + name);
 #else
         << (QString::fromUtf8(":/qt-project.org/shared/images/win/") + name);
@@ -73,7 +73,7 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
     } else {
         topLayOut = layOut = new QHBoxLayout(this);
     }
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     topLayOut->setSpacing(6);
     topLayOut->setContentsMargins(QMargins());
 #endif

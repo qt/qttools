@@ -123,7 +123,7 @@ void AboutDialog::updateSize()
     const QSize screenSize = screen->availableSize();
     int limit = qMin(screenSize.width()/2, 500);
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     limit = qMin(screenSize.width()/2, 420);
 #endif
 

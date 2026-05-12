@@ -176,7 +176,7 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
     vLayout->setSpacing(0);
 
     QHBoxLayout *hBoxLayout = new QHBoxLayout();
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     hBoxLayout->setContentsMargins({});
     hBoxLayout->setSpacing(0);
 #endif

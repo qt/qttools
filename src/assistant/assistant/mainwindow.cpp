@@ -452,7 +452,7 @@ void MainWindow::setupActions()
 {
     TRACE_OBJ
     QString resourcePath = ":/qt-project.org/assistant/images/"_L1;
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     setUnifiedTitleAndToolBarOnMac(true);
     resourcePath.append("mac"_L1);
 #else
@@ -562,7 +562,7 @@ void MainWindow::setupActions()
         << QKeySequence(Qt::CTRL | Qt::Key_PageUp));
 
     const Qt::Modifier modifier =
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
             Qt::ALT;
 #else
             Qt::CTRL;

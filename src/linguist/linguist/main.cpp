@@ -14,16 +14,16 @@
 #include <QtWidgets/QApplication>
 #include <QtGui/QPixmap>
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
 #include <QtCore/QUrl>
 #include <QtGui/QFileOpenEvent>
-#endif // Q_OS_MAC
+#endif // Q_OS_MACOS
 
 QT_USE_NAMESPACE
 
 using namespace Qt::Literals::StringLiterals;
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
 class ApplicationEventFilter : public QObject
 {
     Q_OBJECT
@@ -62,7 +62,7 @@ private:
     MainWindow *m_mainWindow;
     QStringList m_filesToOpen;
 };
-#endif // Q_OS_MAC
+#endif // Q_OS_MACOS
 
 int main(int argc, char **argv)
 {
@@ -71,10 +71,10 @@ int main(int argc, char **argv)
     QCoreApplication::setApplicationName(u"Qt Linguist"_s);
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     ApplicationEventFilter eventFilter;
     app.installEventFilter(&eventFilter);
-#endif // Q_OS_MAC
+#endif // Q_OS_MACOS
 
 
     QCommandLineParser parser;
@@ -112,9 +112,9 @@ int main(int argc, char **argv)
     app.setApplicationName("Linguist"_L1);
 
     MainWindow mw(parser.isSet(webHelpOption) ? HelpClientType::Web : HelpClientType::Assistant);
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     eventFilter.setMainWindow(&mw);
-#endif // Q_OS_MAC
+#endif // Q_OS_MACOS
     app.installEventFilter(&mw);
     mw.show();
     QApplication::restoreOverrideCursor();
@@ -124,6 +124,6 @@ int main(int argc, char **argv)
     return app.exec();
 }
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
 #include "main.moc"
-#endif // Q_OS_MAC
+#endif // Q_OS_MACOS

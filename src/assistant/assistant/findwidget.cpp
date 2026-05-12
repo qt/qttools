@@ -25,7 +25,7 @@ FindWidget::FindWidget(QWidget *parent)
     QHBoxLayout *hboxLayout = new QHBoxLayout(this);
     QString resourcePath = ":/qt-project.org/assistant/images/"_L1;
 
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     hboxLayout->setContentsMargins({});
     hboxLayout->setSpacing(6);
     resourcePath.append("win"_L1);

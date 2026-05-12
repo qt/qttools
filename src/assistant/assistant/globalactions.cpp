@@ -31,7 +31,7 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
 
     // TODO: Put resource path in misc class
     QString resourcePath = ":/qt-project.org/assistant/images/"_L1;
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     resourcePath.append("mac"_L1);
 #else
     resourcePath.append("win"_L1);
