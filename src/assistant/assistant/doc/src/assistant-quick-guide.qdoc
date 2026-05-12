@@ -229,6 +229,9 @@
     To delete a help file, select a documentation set in the list and click
     \gui{Remove}.
 
+    \note The Qt compressed help files (.qch) should only be loaded
+    from trusted sources.
+
     \section1 Specifying Home Page
 
     To specify the homepage \QA displays when you click the \gui{Home} button,
