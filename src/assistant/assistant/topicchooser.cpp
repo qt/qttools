@@ -12,12 +12,24 @@
 
 #include <QtHelp/QHelpLink>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
-TopicChooser::TopicChooser(QWidget *parent, const QString &keyword, const QList<QHelpLink> &docs)
+using namespace Qt::StringLiterals;
+
+// Sort QHelpLink lists such that deprecated QtLabs entries are last.
+static bool isNotQtLabsUrl(const QHelpLink &hl)
+{
+    return !hl.url.host().contains("qtlabsplatform"_L1);
+}
+
+TopicChooser::TopicChooser(QWidget *parent, const QString &keyword, QList<QHelpLink> docs)
     : QDialog(parent)
     , m_filterModel(new QSortFilterProxyModel(this))
 {
+    std::stable_partition(docs.begin(), docs.end(), isNotQtLabsUrl);
+
     TRACE_OBJ
     ui.setupUi(this);
 
