@@ -18,7 +18,7 @@ class TopicChooser : public QDialog
     Q_OBJECT
 
 public:
-    TopicChooser(QWidget *parent, const QString &keyword, const QList<QHelpLink> &docs);
+    explicit TopicChooser(QWidget *parent, const QString &keyword, QList<QHelpLink> docs);
     ~TopicChooser() override;
 
     QUrl link() const;
