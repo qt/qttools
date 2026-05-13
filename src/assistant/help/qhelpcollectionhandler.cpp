@@ -19,6 +19,9 @@
 #include <QtSql/qsqlerror.h>
 #include <QtSql/qsqlquery.h>
 
+#include <algorithm>
+#include <iterator>
+
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
@@ -2303,6 +2306,35 @@ QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fi
     return linkMap;
 }
 
+struct IndexEntry
+{
+    QString title;
+    QUrl url;
+    QVersionNumber version;
+
+private:
+    friend bool comparesEqual(const IndexEntry &lhs, const IndexEntry &rhs) noexcept
+    {
+        return lhs.title == rhs.title && lhs.url == rhs.url && lhs.version == rhs.version;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(IndexEntry)
+};
+
+static inline bool hasVersion(const IndexEntry &e)
+{
+    return !e.version.isNull();
+}
+
+static bool versionLessThan(const IndexEntry &lhs, const IndexEntry &rhs)
+{
+    return lhs.version < rhs.version;
+}
+
+static QHelpLink toHelpLink(const IndexEntry &e)
+{
+    return { e.url, e.title };
+}
+
 QList<QHelpLink> QHelpCollectionHandler::documentsForField(const QString &fieldName,
         const QString &fieldValue, const QString &filterName) const
 {
@@ -2336,18 +2368,28 @@ QList<QHelpLink> QHelpCollectionHandler::documentsForField(const QString &fieldN
 
     m_query->exec();
 
-    QList<QHelpLink> docList;
+    QList<IndexEntry> entries;
     while (m_query->next()) {
         QString title = m_query->value(0).toString();
         if (title.isEmpty()) // generate a title + corresponding path
             title = fieldValue + " : "_L1 + m_query->value(3).toString();
-
-        const QUrl url = buildQUrl(m_query->value(1).toString(),
+        const QString nameSpace = m_query->value(1).toString();
+        const QUrl url = buildQUrl(nameSpace,
                                    m_query->value(2).toString(),
                                    m_query->value(3).toString(),
                                    m_query->value(4).toString());
-        docList.append(QHelpLink {url, title});
+        IndexEntry newEntry{ title, url, QHelpDBReader::versionHeuristic(nameSpace) };
+        if (!entries.contains(newEntry))
+            entries.emplaceBack(newEntry);
     }
+
+    // Reverse sort by trailing version number on the namespace, newest first
+    if (std::all_of(entries.cbegin(), entries.cend(), hasVersion))
+        std::stable_sort(entries.rbegin(), entries.rend(), versionLessThan);
+
+    QList<QHelpLink> docList;
+    docList.reserve(entries.size());
+    std::transform(entries.cbegin(), entries.cend(), std::back_inserter(docList), toHelpLink);
     return docList;
 }
 
