@@ -138,17 +138,8 @@ static void loadIndexFiles(const QSet<QString> &formats)
 {
     Config &config = Config::instance();
     QDocDatabase *qdb = QDocDatabase::qdocDB();
-    QStringList indexFiles;
-    const QStringList configIndexes{config.get(CONFIG_INDEXES).asStringList()};
+    QStringList indexFiles{config.getCanonicalPathList(CONFIG_INDEXES, Config::Validate)};
     bool warn = !config.get(CONFIG_NOLINKERRORS).asBool();
-
-    for (const auto &index : configIndexes) {
-        QFileInfo fi(index);
-        if (fi.exists() && fi.isFile())
-            indexFiles << index;
-        else if (warn)
-            Location().warning(QString("Index file not found: %1").arg(index));
-    }
 
     config.dependModules() += config.get(CONFIG_DEPENDS).asStringList();
     config.dependModules().removeDuplicates();
