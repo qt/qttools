@@ -158,6 +158,16 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
     QString fn = hasExplicitUrl
             ? node->url().section('/'_L1, -1)
             : fileName(node);
+    // Strip any anchor from an explicit URL: anchorForNode below is the
+    // single source of truth for the final anchor. Without this, members
+    // of cross-tree pages get the baked anchor preserved and a fresh
+    // anchor appended, producing href values like
+    // `qwindow.html#devicePixelRatio#devicePixelRatio`.
+    if (hasExplicitUrl) {
+        const qsizetype hashIndex = fn.indexOf('#'_L1);
+        if (hashIndex >= 0)
+            fn.truncate(hashIndex);
+    }
     if (fn.isEmpty())
         return HrefSuppressReason::NoFileBase;
 
