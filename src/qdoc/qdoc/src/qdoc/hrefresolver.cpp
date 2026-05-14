@@ -171,9 +171,14 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
     if (fn.isEmpty())
         return HrefSuppressReason::NoFileBase;
 
-    const NodeContext context = node->createContext();
-    if (!InclusionFilter::isIncluded(m_config.inclusionPolicy, context))
-        return HrefSuppressReason::ExcludedByPolicy;
+    // Index-loaded nodes carry partial metadata (e.g., a placeholder
+    // Doc), so InclusionFilter can reject upstream-published entities
+    // on synthetic flags. Skip the check for them.
+    if (!node->isIndexNode()) {
+        const NodeContext context = node->createContext();
+        if (!InclusionFilter::isIncluded(m_config.inclusionPolicy, context))
+            return HrefSuppressReason::ExcludedByPolicy;
+    }
 
     if (!hasExplicitUrl && node->parent() && node->parent()->isQmlType()
         && node->parent()->isAbstract()) {
