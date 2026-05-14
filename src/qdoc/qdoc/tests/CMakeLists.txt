@@ -9,4 +9,5 @@ add_subdirectory(validateqdocoutputfiles)
 
 if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     add_subdirectory(validatetemplategeneratoroutput)
+    add_subdirectory(multimoduleconfigurations)
 endif()
