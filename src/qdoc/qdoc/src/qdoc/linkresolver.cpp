@@ -191,9 +191,17 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
         return;
     }
 
-    // Compute URL via HrefResolver.
+    // Compute URL via HrefResolver. Cross-tree references reach LinkResolver
+    // carrying a URL baked at .index-load time using Generator::s_outSubdir,
+    // which is only updated by Generator-derived pipelines (HTML, DocBook).
+    // TemplateGenerator doesn't touch that static, so its baked URLs have the
+    // wrong relative depth for its layout. Route those references through
+    // hrefForNode's strip-and-recompute path so the emitted href matches the
+    // current OutputContext.
     QString url = targetNode->url();
-    if (url.isNull()) {
+    const bool isCrossTreeIndexLoaded = relative && !targetNode->isExternalPage()
+            && (targetNode->isIndexNode() || targetNode->tree() != relative->tree());
+    if (url.isNull() || (isCrossTreeIndexLoaded && !url.isEmpty())) {
         auto result = m_hrefResolver.hrefForNode(targetNode, relative);
         if (std::get_if<HrefSuppressReason>(&result)) {
             link.href.clear();
