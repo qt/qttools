@@ -144,4 +144,21 @@ void CollectionNode::setLogicalModuleInfo(const QStringList &info)
     members.
 */
 
+/*!
+    \variable CollectionNode::m_resolvedPhysicalModuleName
+
+    \internal
+
+    Records the physical module name of the upstream Tree whose content
+    this CollectionNode mirrors. The field is set during
+    QDocDatabase::mergeCollections when a placeholder absorbs title and
+    url from an authoritative version in another Tree, and stays empty
+    when the collection node is itself the source-of-truth.
+
+    HrefResolver consults this in preference to tree()->physicalModuleName()
+    so that cross-module group, module, and qmlmodule references emit
+    layout-aware hrefs based on the content origin rather than the
+    placeholder's location.
+*/
+
 QT_END_NAMESPACE

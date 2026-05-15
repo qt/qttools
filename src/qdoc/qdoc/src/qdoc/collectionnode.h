@@ -81,6 +81,11 @@ public:
     void markSeen() { m_seen = true; }
     void markNotSeen() { m_seen = false; }
 
+    [[nodiscard]] const QString &resolvedPhysicalModuleName() const
+    { return m_resolvedPhysicalModuleName; }
+    void setResolvedPhysicalModuleName(const QString &name)
+    { m_resolvedPhysicalModuleName = name; }
+
 private:
     void setMemberStatus(Node *member);
 
@@ -123,6 +128,7 @@ private:
     QString m_logicalModuleVersionMajor {};
     QString m_logicalModuleVersionMinor {};
     QString m_qtVariable {};
+    QString m_resolvedPhysicalModuleName {};
     QString m_state {};
     QString m_cmakePackage = {};
     QString m_cmakeComponent = {};
