@@ -1,0 +1,34 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+# Consumer module that references entities defined in UpstreamWidgets.
+# Exercises HrefResolver cross-module href emission under both the legacy
+# HTML generator and the new TemplateHTML pipeline. The driver passes
+# `-indexdir <upstream_output_dir>` from the prior upstream_widgets build
+# step, and `depends = upstreamwidgets` makes qdoc load the .index from
+# there.
+
+project = CrossModuleLinks
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions = "*.h *.hpp"
+sources.fileextensions = "*.cpp *.qml *.qdoc"
+
+sourcedirs = ./src/consumer
+headerdirs = ./src/consumer
+
+depends = upstreamwidgets
+
+outputformats = HTML TemplateHTML
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = template-html
+TemplateHTML.extension = html
+
+warninglimit = 0
+warninglimit.enabled = true

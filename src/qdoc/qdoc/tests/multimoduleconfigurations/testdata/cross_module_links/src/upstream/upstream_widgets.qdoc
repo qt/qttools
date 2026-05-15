@@ -1,0 +1,39 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \module UpstreamWidgets
+    \title Upstream Widgets Module
+    \brief Synthetic upstream module for cross-module link fixture coverage.
+*/
+
+/*!
+    \page upstream-widgets-index.html
+    \title Upstream Widgets
+    \brief Landing page for the synthetic upstream module.
+
+    \l UpstreamButton is the entry point for cross-module link tests.
+*/
+
+/*!
+    \page upstreambutton.html
+    \title UpstreamButton
+    \inmodule UpstreamWidgets
+    \ingroup upstream-controls
+    \brief A push-button declared in the upstream module.
+
+    The synthetic UpstreamButton page exists so that the consumer module
+    can reference it via \l UpstreamButton and exercise
+    HrefResolver::crossModulePrefix.
+*/
+
+/*!
+    \group upstream-controls
+    \title Upstream Controls
+    \brief Synthetic group declared in the upstream module.
+
+    Cross-module \\ingroup references from the consumer module must
+    resolve to this group's published page in the upstream module's
+    output, exercising the mergeCollections path that copies status
+    alongside title and url.
+*/

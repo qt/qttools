@@ -1,0 +1,28 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \module ConsumerModule
+    \title Consumer Module
+    \brief Synthetic consumer module referencing UpstreamWidgets entities.
+*/
+
+/*!
+    \page consumer-index.html
+    \title Consumer Module Reference
+    \ingroup upstream-controls
+    \brief Cross-module link rendering coverage under TemplateGenerator.
+
+    This page exercises HrefResolver cross-module hrefs:
+
+    \list
+        \li Bracketed cross-module link: \l {UpstreamButton} {the upstream button}.
+        \li Bare cross-module link: \l UpstreamButton.
+        \li Link to the upstream landing page: \l {Upstream Widgets}.
+    \endlist
+
+    This page is also a member of the cross-module \\ingroup
+    \l {Upstream Controls} group, so that the consumer's "is part of"
+    listing exercises the merge path that copies status from the
+    upstream's group definition.
+*/

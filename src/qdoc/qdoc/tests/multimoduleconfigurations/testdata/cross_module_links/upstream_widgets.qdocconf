@@ -1,0 +1,24 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+# Synthetic upstream module providing entities referenced by the consumer
+# fixture. Built first per build-order.txt so that its .index file is on
+# disk when the consumer module parses `depends = upstreamwidgets`.
+
+project = UpstreamWidgets
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions = "*.h *.hpp"
+sources.fileextensions = "*.cpp *.qml *.qdoc"
+
+sourcedirs = ./src/upstream
+
+outputformats = HTML
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+warninglimit = 0
+warninglimit.enabled = true
