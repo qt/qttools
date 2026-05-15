@@ -21,10 +21,10 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-size_t qHash(const HashString &str)
+size_t qHash(const HashString &str, size_t seed)
 {
     if (str.m_hash & 0x80000000)
-        str.m_hash = qHash(str.m_str) & 0x7fffffff;
+        str.m_hash = qHash(str.m_str, seed) & 0x7fffffff;
     return str.m_hash;
 }
 
@@ -33,12 +33,12 @@ QDebug operator<<(QDebug debug, const HashString &s)
     return debug << s.value();
 }
 
-size_t qHash(const HashStringList &list)
+size_t qHash(const HashStringList &list, size_t seed)
 {
     if (list.m_hash & 0x80000000) {
         uint hash = 0;
         for (const HashString &qs : list.m_list) {
-            hash ^= qHash(qs) ^ 0x6ad9f526;
+            hash ^= qHash(qs, seed) ^ 0x6ad9f526;
             hash = ((hash << 13) & 0x7fffffff) | (hash >> 18);
         }
         list.m_hash = hash;

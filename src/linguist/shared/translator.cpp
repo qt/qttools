@@ -542,9 +542,9 @@ public:
 
 Q_DECLARE_TYPEINFO(TranslatorMessageIdPtr, Q_RELOCATABLE_TYPE);
 
-inline size_t qHash(TranslatorMessageIdPtr tmp)
+inline size_t qHash(TranslatorMessageIdPtr tmp, size_t seed = 0)
 {
-    return qHash(tmp->id());
+    return qHash(tmp->id(), seed);
 }
 
 inline bool operator==(TranslatorMessageIdPtr tmp1, TranslatorMessageIdPtr tmp2)
@@ -560,12 +560,12 @@ public:
 
 Q_DECLARE_TYPEINFO(TranslatorMessageContentPtr, Q_RELOCATABLE_TYPE);
 
-inline size_t qHash(TranslatorMessageContentPtr tmp)
+inline size_t qHash(TranslatorMessageContentPtr tmp, size_t seed = 0)
 {
-    size_t hash = qHash(tmp->context()) ^ qHash(tmp->sourceText());
+    size_t hash = qHash(tmp->context(), seed) ^ qHash(tmp->sourceText(), seed);
     if (!tmp->sourceText().isEmpty())
         // Special treatment for context comments (empty source).
-        hash ^= qHash(tmp->comment());
+        hash ^= qHash(tmp->comment(), seed);
     return hash;
 }
 

@@ -70,9 +70,9 @@ public:
     QString context, source, comment;
 };
 Q_DECLARE_TYPEINFO(TMMKey, Q_RELOCATABLE_TYPE);
-inline size_t qHash(const TMMKey &key)
+inline size_t qHash(const TMMKey &key, size_t seed = 0)
 {
-    return qHash(key.context) ^ qHash(key.source) ^ qHash(key.comment);
+    return qHash(key.context, seed) ^ qHash(key.source, seed) ^ qHash(key.comment, seed);
 }
 
 class Translator

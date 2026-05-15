@@ -23,6 +23,7 @@ struct HashString
 };
 
 QDebug operator<<(QDebug debug, const HashString &s);
+size_t qHash(const HashString &str, size_t seed = 0);
 
 struct HashStringList {
     explicit HashStringList(const QList<HashString> &list) : m_list(list), m_hash(0x80000000) {}
@@ -34,6 +35,7 @@ struct HashStringList {
 };
 
 QDebug operator<<(QDebug debug, const HashStringList &lst);
+size_t qHash(const HashStringList &list, size_t seed = 0);
 
 typedef QList<HashString> NamespaceList;
 
