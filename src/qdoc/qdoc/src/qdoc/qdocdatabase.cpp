@@ -1571,6 +1571,7 @@ void QDocDatabase::mergeCollections(CollectionNode *c)
                 c->markSeen();
                 c->setTitle(cn->title());
                 c->setUrl(cn->url());
+                c->setResolvedPhysicalModuleName(cn->tree()->physicalModuleName());
             }
         }
     }
