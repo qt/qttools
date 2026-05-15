@@ -6,6 +6,7 @@
 #ifdef QDOC_TEMPLATE_GENERATOR_ENABLED
 
 #include "anchorid.h"
+#include "collectionnode.h"
 #include "inclusionfilter.h"
 #include "outputcontext.h"
 #include "qmltypenode.h"
@@ -171,10 +172,22 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
     if (fn.isEmpty())
         return HrefSuppressReason::NoFileBase;
 
+    // A cross-module collection placeholder carries content authored in
+    // another module; its location identity (tree()) points at the
+    // consumer module, but its content-origin identity lives on the
+    // resolvedPhysicalModuleName field set during mergeCollections.
+    // Treat it the same as an index-loaded node: bypass InclusionFilter
+    // and fire the cross-module prefix.
+    const bool isCrossModulePlaceholder = node->isCollectionNode()
+            && !static_cast<const CollectionNode *>(node)
+                       ->resolvedPhysicalModuleName().isEmpty();
+
     // Index-loaded nodes carry partial metadata (e.g., a placeholder
     // Doc), so InclusionFilter can reject upstream-published entities
-    // on synthetic flags. Skip the check for them.
-    if (!node->isIndexNode()) {
+    // on synthetic flags. Skip the check for them. Cross-module
+    // collection placeholders share that semantic without the
+    // isIndexNode flag, so admit them too.
+    if (!node->isIndexNode() && !isCrossModulePlaceholder) {
         const NodeContext context = node->createContext();
         if (!InclusionFilter::isIncluded(m_config.inclusionPolicy, context))
             return HrefSuppressReason::ExcludedByPolicy;
@@ -208,7 +221,8 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
     }
 
     if (relative && (node != relative) && !node->isExternalPage()
-        && (node->isIndexNode() || node->tree() != relative->tree())) {
+        && (node->isIndexNode() || isCrossModulePlaceholder
+            || node->tree() != relative->tree())) {
         link.prepend(crossModulePrefix(node, relative));
     }
 
@@ -237,7 +251,18 @@ QString HrefResolver::crossModulePrefix(const Node *target, const Node *source) 
     if (moduleIndex < 0)
         return {};
 
-    const QString targetSegment = '/'_L1 + target->tree()->physicalModuleName() + '/'_L1;
+    // Cross-module collection placeholders live in the consumer tree but
+    // mirror content from another. Prefer the recorded upstream module
+    // name so the computed prefix reflects the content origin instead of
+    // the placeholder's location.
+    QString targetModuleName;
+    if (target->isCollectionNode()) {
+        const auto *cn = static_cast<const CollectionNode *>(target);
+        targetModuleName = cn->resolvedPhysicalModuleName();
+    }
+    if (targetModuleName.isEmpty())
+        targetModuleName = target->tree()->physicalModuleName();
+    const QString targetSegment = '/'_L1 + targetModuleName + '/'_L1;
     QString targetDir = sourceDir;
     targetDir.replace(moduleIndex, currentSegment.size(), targetSegment);
 
