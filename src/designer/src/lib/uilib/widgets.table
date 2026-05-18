@@ -5,7 +5,7 @@
 
 // widgets
 #if QT_CONFIG(checkbox)
-DECLARE_WIDGET(QCheckBox, "text")
+DECLARE_WIDGET(QCheckBox, "")
 #endif
 #if QT_CONFIG(combobox)
 DECLARE_WIDGET(QComboBox, "")
@@ -62,13 +62,13 @@ DECLARE_WIDGET(QMenuBar, "")
 DECLARE_WIDGET(QProgressBar, "")
 #endif
 #if QT_CONFIG(pushbutton)
-DECLARE_WIDGET(QPushButton, "text")
+DECLARE_WIDGET(QPushButton, "")
 #endif
 #if QT_CONFIG(radiobutton)
-DECLARE_WIDGET(QRadioButton, "text")
+DECLARE_WIDGET(QRadioButton, "")
 #endif
 #if QT_CONFIG(commandlinkbutton)
-DECLARE_WIDGET(QCommandLinkButton, "text")
+DECLARE_WIDGET(QCommandLinkButton, "")
 #endif
 #if QT_CONFIG(scrollbar)
 DECLARE_WIDGET(QScrollBar, "")
@@ -104,7 +104,7 @@ DECLARE_WIDGET(QToolBar, "")
 DECLARE_WIDGET(QToolBox, "")
 #endif
 #if QT_CONFIG(toolbutton)
-DECLARE_WIDGET(QToolButton, "text")
+DECLARE_WIDGET(QToolButton, "")
 #endif
 #if QT_CONFIG(treeview)
 DECLARE_WIDGET(QTreeView, "")

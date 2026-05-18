@@ -244,13 +244,15 @@ void WidgetDataBaseItem::setBaseClassName(const QString &b)
     m_baseClassName = b;
 }
 
-static void addWidgetItem(WidgetDataBase *wdb, const QMetaObject &mo, const char *comment)
+static void addWidgetItem(WidgetDataBase *wdb, const QMetaObject &mo)
 {
     auto *item = new WidgetDataBaseItem(QString::fromUtf8(mo.className()));
     if (auto *base = mo.superClass())
         item->setBaseClassName(QString::fromUtf8(base->className()));
-    if (comment[0])
-        item->setToolTip(QString::fromUtf8(comment));
+#if QT_CONFIG(abstractbutton)
+    if (mo.inherits(&QAbstractButton::staticMetaObject))
+        item->setToolTip(WidgetDataBase::tr("text"));
+#endif
     wdb->append(item);
 }
 
@@ -260,7 +262,7 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
       m_core(core)
 {
 #define DECLARE_LAYOUT(L, C)
-#define DECLARE_WIDGET(W, C) addWidgetItem(this, W::staticMetaObject, C);
+#define DECLARE_WIDGET(W, C) addWidgetItem(this, W::staticMetaObject);
 
 // AXIVION DISABLE Style Qt-Generic-NoIrregularInclude Required functionality
 #include <widgets.table>
