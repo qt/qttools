@@ -244,10 +244,9 @@ void WidgetDataBaseItem::setBaseClassName(const QString &b)
     m_baseClassName = b;
 }
 
-static void addWidgetItem(WidgetDataBase *wdb, const char *name, const QMetaObject &mo,
-                          const char *comment)
+static void addWidgetItem(WidgetDataBase *wdb, const QMetaObject &mo, const char *comment)
 {
-    auto *item = new WidgetDataBaseItem(QString::fromUtf8(name));
+    auto *item = new WidgetDataBaseItem(QString::fromUtf8(mo.className()));
     if (auto *base = mo.superClass())
         item->setBaseClassName(QString::fromUtf8(base->className()));
     if (comment[0])
@@ -261,7 +260,7 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
       m_core(core)
 {
 #define DECLARE_LAYOUT(L, C)
-#define DECLARE_WIDGET(W, C) addWidgetItem(this, #W, W::staticMetaObject, C);
+#define DECLARE_WIDGET(W, C) addWidgetItem(this, W::staticMetaObject, C);
 
 // AXIVION DISABLE Style Qt-Generic-NoIrregularInclude Required functionality
 #include <widgets.table>
