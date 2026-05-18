@@ -150,12 +150,3 @@ DECLARE_WIDGET(QWizardPage, "")
 #if !defined(QT_NO_GRAPHICSVIEW)
 DECLARE_WIDGET(QGraphicsView, "")
 #endif
-
-// layouts
-DECLARE_LAYOUT(QGridLayout, "")
-DECLARE_LAYOUT(QHBoxLayout, "")
-DECLARE_LAYOUT(QStackedLayout, "")
-DECLARE_LAYOUT(QVBoxLayout, "")
-#if QT_CONFIG(formlayout)
-DECLARE_LAYOUT(QFormLayout, "")
-#endif

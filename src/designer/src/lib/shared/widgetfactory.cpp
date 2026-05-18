@@ -392,14 +392,12 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
         if (w) { // symmetry for macro
         }
 
-#define DECLARE_LAYOUT(L, C)
 #define DECLARE_WIDGET(W, C) else if (!qstrcmp(widgetNameC, #W)) { Q_ASSERT(w == 0); w = new W(parentWidget); }
 
 // AXIVION DISABLE Style Qt-Generic-NoIrregularInclude Required functionality
 #include <widgets.table>
 // AXIVION ENABLE Style Qt-Generic-NoIrregularInclude
 
-#undef DECLARE_LAYOUT
 #undef DECLARE_WIDGET
 
         if (w)

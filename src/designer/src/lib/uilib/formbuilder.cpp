@@ -4,6 +4,7 @@
 
 #include "formbuilder.h"
 #include "formbuilderextra_p.h"
+#include "objectutils_p.h"
 #include "ui4_p.h"
 
 #include <QtUiPlugin/customwidget.h>
@@ -159,14 +160,12 @@ QWidget *QFormBuilder::createWidget(const QString &widgetName, QWidget *parentWi
         if (w) { // symmetry for macro
         }
 
-#define DECLARE_LAYOUT(L, C)
 #define DECLARE_WIDGET(W, C) else if (!qstrcmp(widgetNameC, #W)) { Q_ASSERT(w == 0); w = new W(parentWidget); }
 
 // AXVION DISABLE Style Qt-Generic-NoIrregularInclude Required functionality
 #include "widgets.table"
 // AXIVION ENABLE Style Qt-Generic-NoIrregularInclude
 
-#undef DECLARE_LAYOUT
 #undef DECLARE_WIDGET
 
         if (w)
@@ -204,34 +203,15 @@ QWidget *QFormBuilder::createWidget(const QString &widgetName, QWidget *parentWi
 */
 QLayout *QFormBuilder::createLayout(const QString &layoutName, QObject *parent, const QString &name)
 {
-    QLayout *l = nullptr;
-
     auto *parentWidget = qobject_cast<QWidget*>(parent);
     auto *parentLayout = qobject_cast<QLayout*>(parent);
-
     Q_ASSERT(parentWidget || parentLayout);
 
-#define DECLARE_WIDGET(W, C)
-
-#define DECLARE_LAYOUT(L, C) \
-    if (layoutName == QLatin1StringView(#L)) { \
-        Q_ASSERT(l == 0); \
-        l = parentLayout \
-            ? new L() \
-            : new L(parentWidget); \
-    }
-
-#include "widgets.table"
-
-#undef DECLARE_LAYOUT
-#undef DECLARE_WIDGET
-
-    if (l) {
+    QLayout *l = createLayoutInstance(layoutName, parentLayout ? nullptr : parentWidget);
+    if (l)
         l->setObjectName(name);
-    } else {
+    else
         qWarning() << QCoreApplication::translate("QFormBuilder", "The layout type `%1' is not supported.").arg(layoutName);
-    }
-
     return l;
 }
 

@@ -9,6 +9,7 @@
 
 #include <formbuilder.h>
 #include <formbuilderextra_p.h>
+#include <objectutils_p.h>
 #include <textbuilder_p.h>
 #include <ui4_p.h>
 
@@ -593,12 +594,10 @@ void QUiLoaderPrivate::setupWidgetMap() const
         return;
 
 #define DECLARE_WIDGET(a, b) g_widgets()->insert(QLatin1String(#a), true);
-#define DECLARE_LAYOUT(a, b)
 
 #include "widgets.table"
 
 #undef DECLARE_WIDGET
-#undef DECLARE_LAYOUT
 }
 
 /*!
@@ -852,15 +851,11 @@ QStringList QUiLoader::availableWidgets() const
 
 QStringList QUiLoader::availableLayouts() const
 {
-    QStringList rc;
-#define DECLARE_WIDGET(a, b)
-#define DECLARE_LAYOUT(a, b) rc.push_back(QLatin1String(#a));
-
-#include "widgets.table"
-
-#undef DECLARE_WIDGET
-#undef DECLARE_LAYOUT
-    return rc;
+#ifdef QFORMINTERNAL_NAMESPACE
+    return QFormInternal::layoutNames();
+#else
+    return layoutNames();
+#endif
 }
 
 /*!

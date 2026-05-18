@@ -261,14 +261,12 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
     : QDesignerWidgetDataBaseInterface(parent),
       m_core(core)
 {
-#define DECLARE_LAYOUT(L, C)
 #define DECLARE_WIDGET(W, C) addWidgetItem(this, W::staticMetaObject);
 
 // AXIVION DISABLE Style Qt-Generic-NoIrregularInclude Required functionality
 #include <widgets.table>
 // AXIVION ENABLE Style Qt-Generic-NoIrregularInclude
 
-#undef DECLARE_LAYOUT
 #undef DECLARE_WIDGET
 
     const QString msgAbstractClass =

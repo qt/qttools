@@ -10,6 +10,7 @@ qt_internal_add_module(UiTools
         ../designer/src/lib/uilib/abstractformbuilder.cpp ../designer/src/lib/uilib/abstractformbuilder.h
         ../designer/src/lib/uilib/formbuilder.cpp ../designer/src/lib/uilib/formbuilder.h
         ../designer/src/lib/uilib/formbuilderextra.cpp ../designer/src/lib/uilib/formbuilderextra_p.h
+        ../designer/src/lib/uilib/objectutils.cpp ../designer/src/lib/uilib/objectutils_p.h
         ../designer/src/lib/uilib/properties.cpp ../designer/src/lib/uilib/properties_p.h
         ../designer/src/lib/uilib/resourcebuilder.cpp ../designer/src/lib/uilib/resourcebuilder_p.h
         ../designer/src/lib/uilib/textbuilder.cpp ../designer/src/lib/uilib/textbuilder_p.h

@@ -144,6 +144,7 @@ qt_internal_add_module(Designer
         uilib/abstractformbuilder.cpp uilib/abstractformbuilder.h
         uilib/formbuilder.cpp uilib/formbuilder.h
         uilib/formbuilderextra.cpp uilib/formbuilderextra_p.h
+        uilib/objectutils.cpp uilib/objectutils_p.h
         uilib/properties.cpp uilib/properties_p.h
         uilib/resourcebuilder.cpp uilib/resourcebuilder_p.h
         uilib/textbuilder.cpp uilib/textbuilder_p.h
