@@ -24,8 +24,10 @@ namespace QFormInternal
 #endif
 
 QDESIGNER_UILIB_EXPORT QStringList layoutNames();
+QDESIGNER_UILIB_EXPORT QStringList widgetNames();
 
 QDESIGNER_UILIB_EXPORT QLayout *createLayoutInstance(const QString &className, QWidget *parent);
+QDESIGNER_UILIB_EXPORT QWidget *createWidgetInstance(const QString &className, QWidget *parent);
 
 #ifdef QFORMINTERNAL_NAMESPACE
 }

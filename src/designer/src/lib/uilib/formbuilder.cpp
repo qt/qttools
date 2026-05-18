@@ -155,27 +155,18 @@ QWidget *QFormBuilder::createWidget(const QString &widgetName, QWidget *parentWi
             static_cast<QFrame*>(w)->setFrameStyle(QFrame::HLine | QFrame::Sunken);
             break;
         }
-        const QByteArray widgetNameBA = widgetName.toUtf8();
-        const char *widgetNameC = widgetNameBA.constData();
-        if (w) { // symmetry for macro
-        }
-
-#define DECLARE_WIDGET(W, C) else if (!qstrcmp(widgetNameC, #W)) { Q_ASSERT(w == 0); w = new W(parentWidget); }
-
-// AXVION DISABLE Style Qt-Generic-NoIrregularInclude Required functionality
-#include "widgets.table"
-// AXIVION ENABLE Style Qt-Generic-NoIrregularInclude
-
-#undef DECLARE_WIDGET
-
-        if (w)
+        QWidget *newWidget = createWidgetInstance(widgetName, parentWidget);
+        if (newWidget) {
+            Q_ASSERT(w == nullptr);
+            w = newWidget;
             break;
+        }
 
         // try with a registered custom widget
         QDesignerCustomWidgetInterface *factory = d->m_customWidgets.value(widgetName);
         if (factory != nullptr)
             w = factory->createWidget(parentWidget);
-    } while(false);
+    } while (false);
 
     if (w == nullptr) { // Attempt to instantiate base class of promoted/custom widgets
         const QString baseClassName = d->customWidgetBaseClass(widgetName);

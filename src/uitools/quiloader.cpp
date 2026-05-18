@@ -593,11 +593,13 @@ void QUiLoaderPrivate::setupWidgetMap() const
     if (!g_widgets()->isEmpty())
         return;
 
-#define DECLARE_WIDGET(a, b) g_widgets()->insert(QLatin1String(#a), true);
-
-#include "widgets.table"
-
-#undef DECLARE_WIDGET
+#ifdef QFORMINTERNAL_NAMESPACE
+    const QStringList names = QFormInternal::widgetNames();
+#else
+    const QStringList names = widgetNames();
+#endif
+    for (const QString &name : names)
+        g_widgets()->insert(name, true);
 }
 
 /*!
