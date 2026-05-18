@@ -11,7 +11,8 @@
 
 #include "uilib_global.h"
 
-#include <QtCore/qcontainerfwd.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmetaobject.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -25,6 +26,8 @@ namespace QFormInternal
 
 QDESIGNER_UILIB_EXPORT QStringList layoutNames();
 QDESIGNER_UILIB_EXPORT QStringList widgetNames();
+
+QDESIGNER_UILIB_EXPORT QList<const QMetaObject *> widgetMetaObjects();
 
 QDESIGNER_UILIB_EXPORT QLayout *createLayoutInstance(const QString &className, QWidget *parent);
 QDESIGNER_UILIB_EXPORT QWidget *createWidgetInstance(const QString &className, QWidget *parent);

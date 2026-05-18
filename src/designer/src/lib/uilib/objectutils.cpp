@@ -195,6 +195,20 @@ QStringList widgetNames()
     return objectNamesImpl(Widgets());
 }
 
+template <typename ...T>
+static QList<const QMetaObject *> metaObjectsImpl(TypeList<T...>)
+{
+    QList<const QMetaObject *> result;
+    // Fold expression: executes the lambda for each type in the list
+    ( [&result] { result.append(&T::staticMetaObject); }() , ... );
+    return result;
+}
+
+QList<const QMetaObject *> widgetMetaObjects()
+{
+    return metaObjectsImpl(Widgets());
+}
+
 template <typename Base, typename T>
 static Base *createObject(const QString &className, QWidget *parent)
 {

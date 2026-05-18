@@ -3,7 +3,7 @@
 
 #include "widgetdatabase_p.h"
 #include "widgetfactory_p.h"
-#include "spacer_widget_p.h"
+#include "objectutils_p.h"
 #include "abstractlanguage.h"
 #include "pluginmanager_p.h"
 #include "qdesigner_widgetbox_p.h"
@@ -244,13 +244,13 @@ void WidgetDataBaseItem::setBaseClassName(const QString &b)
     m_baseClassName = b;
 }
 
-static void addWidgetItem(WidgetDataBase *wdb, const QMetaObject &mo)
+static void addWidgetItem(WidgetDataBase *wdb, const QMetaObject *mo)
 {
-    auto *item = new WidgetDataBaseItem(QString::fromUtf8(mo.className()));
-    if (auto *base = mo.superClass())
+    auto *item = new WidgetDataBaseItem(QString::fromUtf8(mo->className()));
+    if (auto *base = mo->superClass())
         item->setBaseClassName(QString::fromUtf8(base->className()));
 #if QT_CONFIG(abstractbutton)
-    if (mo.inherits(&QAbstractButton::staticMetaObject))
+    if (mo->inherits(&QAbstractButton::staticMetaObject))
         item->setToolTip(WidgetDataBase::tr("text"));
 #endif
     wdb->append(item);
@@ -261,13 +261,9 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
     : QDesignerWidgetDataBaseInterface(parent),
       m_core(core)
 {
-#define DECLARE_WIDGET(W, C) addWidgetItem(this, W::staticMetaObject);
-
-// AXIVION DISABLE Style Qt-Generic-NoIrregularInclude Required functionality
-#include <widgets.table>
-// AXIVION ENABLE Style Qt-Generic-NoIrregularInclude
-
-#undef DECLARE_WIDGET
+    const QList<const QMetaObject *> metaObjects = widgetMetaObjects();
+    for (const QMetaObject *metaObject : metaObjects)
+        addWidgetItem(this, metaObject);
 
     const QString msgAbstractClass =
         QCoreApplication::translate("WidgetDataBase",
