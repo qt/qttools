@@ -148,7 +148,7 @@ DECLARE_WIDGET(QWizardPage, "")
 #endif
 
 #if !defined(QT_NO_GRAPHICSVIEW)
-DECLARE_WIDGET_1(QGraphicsView, "")
+DECLARE_WIDGET(QGraphicsView, "")
 #endif
 
 // layouts
