@@ -132,10 +132,13 @@ QString HrefResolver::anchorForNode(const Node *node) const
     Returns the URL as a QString on success, or an HrefSuppressReason
     explaining why linking should be suppressed.
 
-    External URLs (carrying a scheme such as \c http://) pass through
-    unchanged. Every other reference — including URLs loaded from a
-    dependency's \c .index file — is reduced to a bare filename stem
-    and then prefixed with whatever relative path reaches the target
+    External pages (declared via \c \\externalpage) pass through
+    unchanged, since their URL points by design at a resource outside
+    the current documentation set. Every other reference — including
+    URLs loaded from a dependency's \c .index file or authored with an
+    explicit \c \\url that names an absolute address such as
+    \c https://doc.qt.io/... — is reduced to a bare filename stem and
+    then prefixed with whatever relative path reaches the target
     module's output directory from the current page's output
     directory. The prefix is derived from OutputContext and the two
     nodes' trees, not from a hardcoded \c ../<module>/ pattern, so it
@@ -148,7 +151,7 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
         return HrefSuppressReason::NullNode;
 
     const bool hasExplicitUrl = !node->url().isEmpty();
-    if (hasExplicitUrl && node->url().contains("://"_L1))
+    if (hasExplicitUrl && node->isExternalPage())
         return node->url();
 
     // An explicit URL arrives with a directory prefix baked in by the
