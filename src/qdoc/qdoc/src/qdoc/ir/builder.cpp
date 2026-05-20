@@ -249,6 +249,7 @@ Document Builder::buildPageIR(PageMetadata pm) const
         info.isModule = src.isModule;
         info.isQmlModule = src.isQmlModule;
         info.isGroup = src.isGroup;
+        info.isConcept = src.isConcept;
         info.noAutoList = src.noAutoList;
 
         for (const auto &entry : src.namespaces)

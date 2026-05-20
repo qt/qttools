@@ -320,6 +320,7 @@ IR::CollectionData extractCollectionData(const CollectionNode *cn, const HrefRes
     data.isModule = cn->isModule();
     data.isQmlModule = cn->isQmlModule();
     data.isGroup = cn->isGroup();
+    data.isConcept = cn->isConcept();
     data.noAutoList = cn->noAutoList();
 
     if (cn->noAutoList())
