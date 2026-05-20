@@ -64,6 +64,7 @@ struct CollectionInfo
     bool isModule { false };
     bool isQmlModule { false };
     bool isGroup { false };
+    bool isConcept { false };
     bool noAutoList { false };
 
     struct MemberEntry {

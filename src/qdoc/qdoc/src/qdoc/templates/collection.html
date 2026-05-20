@@ -51,6 +51,15 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     {% endfor %}
     </table>
     {% endif %}
+    {% else if collection.isConcept %}
+    {% if length(collection.members) > 0 %}
+    <h2 id="users">Used by</h2>
+    <table class="annotated">
+    {% for entry in collection.members %}
+    <tr><td class="tblName">{% if entry.href != "" %}<a href="{{ entry.href }}">{{ escape_html(entry.name) }}</a>{% else %}{{ escape_html(entry.name) }}{% endif %}</td><td class="tblDescr">{{ escape_html(entry.brief) }}</td></tr>
+    {% endfor %}
+    </table>
+    {% endif %}
     {% else %}
     {% if length(collection.members) > 0 %}
     <table class="annotated">

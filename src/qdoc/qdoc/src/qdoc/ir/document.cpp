@@ -89,7 +89,7 @@ static QJsonArray memberEntriesToJson(const QList<CollectionInfo::MemberEntry> &
 /*!
     Converts the CollectionInfo to a QJsonObject for template rendering.
 
-    Type flags (\c isModule, \c isQmlModule, \c isGroup) and \c noAutoList are
+    Type flags (\c isModule, \c isQmlModule, \c isGroup, \c isConcept) and \c noAutoList are
     always emitted so templates can use unconditional checks. CMake/qmake build
     variables are always emitted as empty strings when absent, for template
     safety. Module metadata (\c logicalModuleName, \c logicalModuleVersion,
@@ -103,6 +103,7 @@ QJsonObject CollectionInfo::toJson() const
     json["isModule"_L1] = isModule;
     json["isQmlModule"_L1] = isQmlModule;
     json["isGroup"_L1] = isGroup;
+    json["isConcept"_L1] = isConcept;
     json["noAutoList"_L1] = noAutoList;
 
     if (!logicalModuleName.isEmpty())

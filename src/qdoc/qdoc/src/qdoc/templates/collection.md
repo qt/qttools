@@ -47,6 +47,17 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 | {% if entry.href != "" %}[{{ entry.name }}]({{ entry.href }}){% else %}{{ entry.name }}{% endif %}{{ " " }}| {{ escape_md_table(entry.brief) }} |
 {% endfor %}
 {% endif %}
+{% else if collection.isConcept %}
+{% if length(collection.members) > 0 %}
+
+## Used by
+
+| Name | Description |
+| --- | --- |
+{% for entry in collection.members %}
+| {% if entry.href != "" %}[{{ entry.name }}]({{ entry.href }}){% else %}{{ entry.name }}{% endif %}{{ " " }}| {{ escape_md_table(entry.brief) }} |
+{% endfor %}
+{% endif %}
 {% else %}
 {% if length(collection.members) > 0 %}
 
