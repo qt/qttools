@@ -25,6 +25,12 @@
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
+<db:term><db:link xlink:href="integralbox.xml" xlink:role="class">IntegralBox</db:link></db:term>
+<db:listitem>
+<db:para>A box holding any Integral type.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
 <db:term><db:link xlink:href="requiresexpressionexample.xml" xlink:role="class">RequiresExpressionExample</db:link></db:term>
 <db:listitem>
 <db:para>A class demonstrating requires-expressions for ad-hoc constraints.</db:para>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title/>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Test for C++20 concepts and requires clauses</db:titleabbrev>
+<db:abstract>
+<db:para>A type that satisfies integral arithmetic.</db:para>
+</db:abstract>
+</db:info>
+<db:anchor xml:id="details"/>
+<db:para>The Integral concept is satisfied by any type modelling the built-in integer types: <db:code>char</db:code>, <db:code>short</db:code>, <db:code>int</db:code>, <db:code>long</db:code>, and their <db:code>unsigned</db:code> counterparts.</db:para>
+<db:section xml:id="definition">
+<db:title>Definition</db:title>
+<db:programlisting language="cpp">template &lt;typename T&gt;
+concept Integral = detail::is_integral&lt;T&gt;::value;
+</db:programlisting>
+</db:section>
+</db:article>

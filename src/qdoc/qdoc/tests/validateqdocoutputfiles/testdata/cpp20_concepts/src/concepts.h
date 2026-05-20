@@ -155,3 +155,65 @@ public:
     int getSize(const T& container);
 };
 
+// Real C++20 concept declaration — the source that ConceptSpecializationExpr
+// sub-expressions in the constrained items below resolve to.
+template <typename T>
+concept Integral = detail::is_integral<T>::value;
+
+/*!
+    \concept Integral
+    \inmodule Cpp20Concepts
+    \brief A type that satisfies integral arithmetic.
+
+    The Integral concept is satisfied by any type modelling the built-in
+    integer types: \c {char}, \c {short}, \c {int}, \c {long}, and their
+    \c {unsigned} counterparts.
+
+    \section1 Definition
+
+    \code
+    template <typename T>
+    concept Integral = detail::is_integral<T>::value;
+    \endcode
+*/
+
+/*!
+    \class IntegralBox
+    \inmodule Cpp20Concepts
+    \brief A box holding any Integral type.
+
+    IntegralBox demonstrates the direct concept-on-template-parameter
+    form: the template parameter \a T is constrained by the Integral
+    concept without an explicit \c {requires} clause.
+*/
+template <Integral T>
+class IntegralBox
+{
+public:
+    IntegralBox(T value) : m_value(value) {}
+    T value() const { return m_value; }
+private:
+    T m_value;
+};
+
+/*!
+    \relates Cpp20Concepts
+
+    Sums two values constrained by the Integral concept.
+
+    \a a and \a b must both satisfy the Integral concept; the function
+    uses the template-head requires form to express this.
+*/
+template <typename T> requires Integral<T>
+T sum(T a, T b);
+
+/*!
+    \relates Cpp20Concepts
+
+    Doubles \a value, which must satisfy the Integral concept.
+
+    Uses the constrained-auto syntax (\c {Integral auto}) — the function
+    takes any single-argument type that models Integral.
+*/
+void doubleValue(Integral auto value);
+

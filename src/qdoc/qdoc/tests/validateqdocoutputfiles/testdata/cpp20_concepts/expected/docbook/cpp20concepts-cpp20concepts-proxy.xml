@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Cpp20Concepts</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Test for C++20 concepts and requires clauses</db:titleabbrev>
+<db:abstract>
+<db:para>Test for C++20 concepts and requires clauses.</db:para></db:abstract>
+</db:info>
+<db:section xml:id="function-documentation">
+<db:title>Function Documentation</db:title>
+<db:section xml:id="doubleValue">
+<db:title>template &lt;typename value:auto&gt; void doubleValue(Integral auto <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Doubles <db:code role="parameter">value</db:code>, which must satisfy the Integral concept.</db:para>
+<db:para>Uses the constrained-auto syntax (<db:code>Integral auto</db:code>) — the function takes any single-argument type that models Integral.</db:para>
+</db:section>
+<db:section xml:id="sum">
+<db:title>template &lt;typename T&gt; requires Integral&lt;T&gt; T sum(T <db:emphasis>a</db:emphasis>, T <db:emphasis>b</db:emphasis>)</db:title>
+<db:para>Sums two values constrained by the Integral concept.</db:para>
+<db:para><db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code> must both satisfy the Integral concept; the function uses the template-head requires form to express this.</db:para>
+</db:section>
+</db:section>
+</db:article>
