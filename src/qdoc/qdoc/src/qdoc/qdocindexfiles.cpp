@@ -336,6 +336,13 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         if (attributes.value(QLatin1String("seen")) == QLatin1String("true"))
             collectionNode->markSeen();
         node = collectionNode;
+    } else if (elementName == QLatin1String("concept")) {
+        auto *collectionNode = m_qdb->addConcept(name);
+        collectionNode->setTitle(attributes.value(QLatin1String("title")).toString());
+        collectionNode->setSubtitle(attributes.value(QLatin1String("subtitle")).toString());
+        if (attributes.value(QLatin1String("seen")) == QLatin1String("true"))
+            collectionNode->markSeen();
+        node = collectionNode;
     } else if (elementName == QLatin1String("qmlmodule")) {
         auto *collectionNode = m_qdb->addQmlModule(name);
         const QStringList info = QStringList()
@@ -941,6 +948,9 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     case NodeType::Module:
         nodeName = "module";
         break;
+    case NodeType::Concept:
+        nodeName = "concept";
+        break;
     case NodeType::QmlModule:
         nodeName = "qmlmodule";
         moduleNameAttr = "qml-module-name";
@@ -1133,7 +1143,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     } break;
     case NodeType::Group:
     case NodeType::Module:
-    case NodeType::QmlModule: {
+    case NodeType::QmlModule:
+    case NodeType::Concept: {
         const auto *collectionNode = static_cast<const CollectionNode *>(node);
         writer.writeAttribute("seen", collectionNode->wasSeen() ? "true" : "false");
         writer.writeAttribute("title", collectionNode->title());
@@ -1538,6 +1549,14 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &qmlModules = m_qdb->qmlModules();
             if (!qmlModules.isEmpty()) {
                 for (auto it = qmlModules.constBegin(); it != qmlModules.constEnd(); ++it) {
+                    if (generateIndexSection(writer, it.value(), generator, post))
+                        writer.writeEndElement();
+                }
+            }
+
+            const CNMap &concepts = m_qdb->concepts();
+            if (!concepts.isEmpty()) {
+                for (auto it = concepts.constBegin(); it != concepts.constEnd(); ++it) {
                     if (generateIndexSection(writer, it.value(), generator, post))
                         writer.writeEndElement();
                 }

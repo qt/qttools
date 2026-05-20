@@ -629,6 +629,7 @@ Genus Node::getGenus(NodeType t)
     case NodeType::Struct:
     case NodeType::Union:
     case NodeType::Module:
+    case NodeType::Concept:
     case NodeType::TypeAlias:
     case NodeType::Typedef:
     case NodeType::Property:
@@ -728,6 +729,8 @@ QString Node::nodeTypeString(NodeType t)
         return QLatin1String("group");
     case NodeType::Module:
         return QLatin1String("module");
+    case NodeType::Concept:
+        return QLatin1String("concept");
     case NodeType::QmlEnum:
         return QLatin1String("enumeration");
     case NodeType::QmlType:

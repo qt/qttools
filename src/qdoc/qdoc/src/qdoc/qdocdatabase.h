@@ -186,10 +186,12 @@ public:
     const CNMap &groups() { return primaryTree()->groups(); }
     const CNMap &modules() { return primaryTree()->modules(); }
     const CNMap &qmlModules() { return primaryTree()->qmlModules(); }
+    const CNMap &concepts() { return primaryTree()->concepts(); }
 
     CollectionNode *addGroup(const QString &name) { return primaryTree()->addGroup(name); }
     CollectionNode *addModule(const QString &name) { return primaryTree()->addModule(name); }
     CollectionNode *addQmlModule(const QString &name) { return primaryTree()->addQmlModule(name); }
+    CollectionNode *addConcept(const QString &name) { return primaryTree()->addConcept(name); }
 
     CollectionNode *addToGroup(const QString &name, Node *node)
     {

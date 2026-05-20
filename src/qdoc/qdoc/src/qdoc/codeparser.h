@@ -17,6 +17,7 @@ QT_BEGIN_NAMESPACE
 #define COMMAND_CMAKETARGETITEM QLatin1String("cmaketargetitem")
 #define COMMAND_COMPARES QLatin1String("compares")
 #define COMMAND_COMPARESWITH QLatin1String("compareswith")
+#define COMMAND_CONCEPT QLatin1String("concept")
 #define COMMAND_DEFAULT QLatin1String("default")
 #define COMMAND_DEPRECATED QLatin1String("deprecated") // ### don't document
 #define COMMAND_DONTDOCUMENT QLatin1String("dontdocument")

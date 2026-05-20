@@ -145,6 +145,10 @@ inline constexpr bool isApiGenus(Genus g) {
     \value Proxy The Node subclass is ProxyNode, which represents one or more
            entities that are documented in the current module but which actually
            reside in a different module.
+    \value Concept Represented by CollectionNode tagged with this type.
+           A concept is rendered as a collection page that lists items
+           constrained by it, matching the pattern used by e.g. \c Group and
+           \c Module.
     \omitvalue LastType
 */
 enum class NodeType : unsigned char {
@@ -172,7 +176,8 @@ enum class NodeType : unsigned char {
     QmlValueType,
     SharedComment,
     Collection,
-    Proxy
+    Proxy,
+    Concept
 };
 
 /*!
