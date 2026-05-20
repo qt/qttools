@@ -132,8 +132,21 @@ private:
     const CollectionNode *getCollectionNode(const QString &name, NodeType type)
     {
         for (auto *tree : searchOrder()) {
-            const CollectionNode *cn = tree->getCollection(name, type);
-            if (cn)
+            if (const CollectionNode *cn = tree->getCollection(name, type))
+                return cn;
+        }
+        return nullptr;
+    }
+
+    // Mutating variant for passes that legitimately update collection
+    // membership (such as the concept-users reverse-index pass). Kept
+    // separate from getCollectionNode() so read-only callers keep
+    // their const contract and mutation intent is visible at the call
+    // site.
+    CollectionNode *findMutableCollectionNode(const QString &name, NodeType type)
+    {
+        for (auto *tree : searchOrder()) {
+            if (CollectionNode *cn = tree->getCollection(name, type))
                 return cn;
         }
         return nullptr;
@@ -307,6 +320,10 @@ public:
     {
         return m_forest.getCollectionNode(name, type);
     }
+    CollectionNode *findMutableCollectionNode(const QString &name, NodeType type)
+    {
+        return m_forest.findMutableCollectionNode(name, type);
+    }
     const CollectionNode *getModuleNode(const Node *relative);
 
     FunctionNode *findFunctionNodeForTag(const QString &tag)
@@ -361,6 +378,7 @@ public:
     void resolveNamespaces();
     void resolveProxies();
     void resolveBaseClasses();
+    void resolveConceptUsers();
     void updateNavigation();
 
 private:
