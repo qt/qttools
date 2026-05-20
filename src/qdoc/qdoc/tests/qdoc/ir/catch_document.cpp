@@ -171,7 +171,7 @@ SCENARIO("IR::Document classification metadata", "[IR::Document][IR][Classificat
                 REQUIRE(json["nodeType"_L1].toObject()["id"_L1].toString() == "page");
                 REQUIRE(json["nodeType"_L1].toObject()["label"_L1].toString() == "Page");
                 REQUIRE(json["genus"_L1].toObject()["id"_L1].toString() == "doc");
-                REQUIRE(json["genus"_L1].toObject()["label"_L1].toString() == "Documentation");
+                REQUIRE(json["genus"_L1].toObject()["label"_L1].toString() == "Overview");
             }
         }
     }

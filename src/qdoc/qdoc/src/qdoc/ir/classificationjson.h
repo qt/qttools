@@ -99,7 +99,7 @@ inline std::optional<QJsonObject> genusToJson(Genus g)
     case Genus::QML:
         return classificationObject("qml"_L1, "QML"_L1);
     case Genus::DOC:
-        return classificationObject("doc"_L1, "Documentation"_L1);
+        return classificationObject("doc"_L1, "Overview"_L1);
     case Genus::API:
         return classificationObject("api"_L1, "API"_L1);
     }
