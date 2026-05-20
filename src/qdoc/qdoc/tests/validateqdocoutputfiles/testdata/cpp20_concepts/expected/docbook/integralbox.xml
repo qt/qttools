@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>IntegralBox Class</db:title>
+<db:subtitle>template &lt;typename T&gt; class IntegralBox</db:subtitle>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Test for C++20 concepts and requires clauses</db:titleabbrev>
+<db:abstract>
+<db:para>A box holding any Integral type.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>concepts.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para><db:link xlink:href="integralbox.xml">IntegralBox</db:link> demonstrates the direct concept-on-template-parameter form: the template parameter <db:code role="parameter">T</db:code> is constrained by the Integral concept without an explicit <db:code>requires</db:code> clause.</db:para>
+</db:section>
+</db:article>

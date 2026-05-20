@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- concepts.h -->
+  <meta name="description" content="A type that satisfies integral arithmetic.">
+  <meta name="keywords" content="concept">
+  <title>Integral | Qt 1.0</title>
+</head>
+<body>
+<ul class="breadcrumb">
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#definition">Definition</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<!-- $$$Integral-brief -->
+<p>A type that satisfies integral arithmetic. <a href="#details">More...</a></p>
+<!-- @@@Integral -->
+<!-- $$$Integral-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>The Integral concept is satisfied by any type modelling the built-in integer types: <code translate="no">char</code>, <code translate="no">short</code>, <code translate="no">int</code>, <code translate="no">long</code>, and their <code translate="no">unsigned</code> counterparts.</p>
+<h4 id="definition">Definition</h4>
+<pre class="cpp" translate="no"><code class="cpp"><span class="keyword">template</span> <span class="operator">&lt;</span><span class="keyword">typename</span> T<span class="operator">&gt;</span>
+concept Integral <span class="operator">=</span> detail<span class="operator">::</span>is_integral<span class="operator">&lt;</span>T<span class="operator">&gt;</span><span class="operator">::</span>value;</code></pre>
+</div>
+<!-- @@@Integral -->
+<h2 id="users">Used by</h2>
+<div class="table"><table class="annotated">
+<tr class="odd topAlign"><td class="tblName" translate="no"><p><a href="integralbox.html">IntegralBox</a></p></td><td class="tblDescr"><p>A box holding any Integral type</p></td></tr>
+<tr class="even topAlign"><td class="tblName" translate="no"><p><a href="cpp20concepts-cpp20concepts-proxy.html#sum">Cpp20Concepts::sum()</a></p></td></tr>
+<tr class="odd topAlign"><td class="tblName" translate="no"><p><a href="cpp20concepts-cpp20concepts-proxy.html#doubleValue">Cpp20Concepts::doubleValue()</a></p></td></tr>
+</table></div>
+</body>
+</html>

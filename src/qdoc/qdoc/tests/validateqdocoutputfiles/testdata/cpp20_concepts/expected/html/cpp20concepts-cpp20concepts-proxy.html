@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="keywords" content="auto-generated">
+  <title>Cpp20Concepts Proxy Page | Qt 1.0</title>
+</head>
+<body>
+<ul class="breadcrumb">
+</ul>
+<h1 class="title">Cpp20Concepts Proxy Page</h1>
+<h2 id="functions">Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="cpp20concepts-cpp20concepts-proxy.html#doubleValue" translate="no">doubleValue</a></b>(Integral auto <i>value</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> T </td><td class="memItemRight bottomAlign"><b><a href="cpp20concepts-cpp20concepts-proxy.html#sum" translate="no">sum</a></b>(T <i>a</i>, T <i>b</i>)</td></tr>
+</table></div>
+<div class="func">
+<h2>Function Documentation</h2>
+<!-- $$$doubleValue[overload1]$$$doubleValueIntegralauto -->
+<h3 class="fn" translate="no" id="doubleValue">template &lt;typename value:auto&gt; <span class="type">void</span> <span class="name">doubleValue</span>(<span class="type"><a href="integral.html" translate="no">Integral</a></span> <span class="type">auto</span> <i>value</i>)</h3>
+<p>Doubles <i translate="no">value</i>, which must satisfy the Integral concept.</p>
+<p>Uses the constrained-auto syntax (<code translate="no">Integral auto</code>) &mdash; the function takes any single-argument type that models Integral.</p>
+<!-- @@@doubleValue -->
+<!-- $$$sum[overload1]$$$sumTT -->
+<h3 class="fn" translate="no" id="sum">template &lt;typename T&gt; requires Integral&lt;T&gt; <span class="type">T</span> <span class="name">sum</span>(<span class="type">T</span> <i>a</i>, <span class="type">T</span> <i>b</i>)</h3>
+<p>Sums two values constrained by the Integral concept.</p>
+<p><i translate="no">a</i> and <i translate="no">b</i> must both satisfy the Integral concept; the function uses the template-head requires form to express this.</p>
+<!-- @@@sum -->
+</div>
+</body>
+</html>
