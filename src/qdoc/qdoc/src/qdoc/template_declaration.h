@@ -445,6 +445,7 @@ struct RelaxedTemplateParameter
 struct RelaxedTemplateDeclaration : TemplateDeclarationStorage
 {
     std::optional<std::string> requires_clause;
+    std::vector<std::string> referenced_concepts {};
 
     /*!
      * Returns the number of template parameters that are visible in

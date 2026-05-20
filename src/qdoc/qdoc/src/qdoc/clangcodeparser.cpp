@@ -32,10 +32,12 @@
 
 #include <clang-c/Index.h>
 
+#include <clang/AST/ASTConcept.h>
 #include <clang/AST/Decl.h>
 #include <clang/AST/DeclFriend.h>
 #include <clang/AST/DeclTemplate.h>
 #include <clang/AST/Expr.h>
+#include <clang/AST/ExprConcepts.h>
 #include <clang/AST/Type.h>
 #include <clang/AST/TypeLoc.h>
 #include <clang/Basic/SourceLocation.h>
@@ -302,6 +304,28 @@ static std::string get_expression_as_string(const clang::Expr* expression, const
     default_value = default_value.trimmed();
 
     return default_value.toStdString();
+}
+
+/*
+ * Recursively walks a constraint expression and collects the fully-qualified
+ * name of every concept referenced by a ConceptSpecializationExpr in the
+ * subtree.
+ *
+ * The walker shares the AST traversal context that the existing requires-clause
+ * extraction already runs through, so the cost is one extra recursive descent
+ * per constrained item — no second visitor and no second translation-unit pass.
+ */
+static void collect_concept_references(const clang::Stmt *node,
+                                       std::vector<std::string> &out)
+{
+    if (!node)
+        return;
+    if (const auto *cse = llvm::dyn_cast<clang::ConceptSpecializationExpr>(node)) {
+        if (const auto *concept_decl = cse->getNamedConcept())
+            out.push_back(concept_decl->getQualifiedNameAsString());
+    }
+    for (const clang::Stmt *child : node->children())
+        collect_concept_references(child, out);
 }
 
 /*
@@ -658,6 +682,30 @@ static RelaxedTemplateDeclaration get_template_declaration(const clang::Template
                 }) : std::nullopt),
             std::move(sfinae)
         });
+
+        // Direct concept-on-template-parameter form, such as
+        // \c {template<Sortable T>}. The constraint hangs off the
+        // \c {TemplateTypeParmDecl} rather than appearing in a requires clause.
+        // The constraint's named concept is reachable as a \c {NamedDecl}, so
+        // its qualified name is available via getQualifiedNameAsString().
+        //
+        // Scope note: this extracts the type-template-parameter form only.
+        // A constrained-auto non-type template parameter, such as
+        // \c {template <Integral auto N>}, surfaces as a NonTypeTemplateParmDecl
+        // whose type contains a constrained AutoType, and is not covered here.
+        if (const auto *type_template_parameter =
+                llvm::dyn_cast<clang::TemplateTypeParmDecl>(template_parameter)) {
+            if (type_template_parameter->hasTypeConstraint()) {
+                if (const clang::TypeConstraint *constraint =
+                        type_template_parameter->getTypeConstraint()) {
+                    if (const clang::NamedDecl *concept_decl =
+                            constraint->getNamedConcept()) {
+                        template_declaration_ir.referenced_concepts.push_back(
+                                concept_decl->getQualifiedNameAsString());
+                    }
+                }
+            }
+        }
     }
 
     // Collect the explicit requires clause first, if present.
@@ -665,6 +713,8 @@ static RelaxedTemplateDeclaration get_template_declaration(const clang::Template
     if (const clang::Expr *requires_clause = template_parameters->getRequiresClause()) {
         explicit_requires = QString::fromStdString(get_expression_as_string(
                 requires_clause, template_declaration->getASTContext())).simplified().toStdString();
+        collect_concept_references(requires_clause,
+                                   template_declaration_ir.referenced_concepts);
     }
 
     // Synthesize a requires clause from detected SFINAE constraints.
@@ -694,6 +744,12 @@ static RelaxedTemplateDeclaration get_template_declaration(const clang::Template
             template_declaration_ir.requires_clause = std::move(synthesized);
         else if (!explicit_requires.empty())
             template_declaration_ir.requires_clause = std::move(explicit_requires);
+    }
+
+    {
+        auto &refs = template_declaration_ir.referenced_concepts;
+        std::sort(refs.begin(), refs.end());
+        refs.erase(std::unique(refs.begin(), refs.end()), refs.end());
     }
 
     return template_declaration_ir;
@@ -1861,9 +1917,12 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
         }
     }
 
-    // Extract trailing requires clause.
-    // From Clang 21 we get an AssociatedConstraint struct (upstream commit 49fd0bf35d2e).
-    // Earlier Clang versions return Expr*.
+    // Collect every concept references a function carries (trailing requires
+    // clause, any constrained-auto parameter types).
+    // From Clang 21 we get an AssociatedConstraint struct for the trailing
+    // clause (upstream commit 49fd0bf35d2e); earlier Clang versions return
+    // a bare Expr*.
+    QStringList referenced_concepts;
 #if LIBCLANG_VERSION_MAJOR >= 21
     if (const auto trailing_requires = function_declaration->getTrailingRequiresClause();
         trailing_requires.ConstraintExpr) {
@@ -1871,6 +1930,10 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
             get_expression_as_string(trailing_requires.ConstraintExpr,
                                      function_declaration->getASTContext()));
         fn->setTrailingRequiresClause(requires_str.simplified());
+        std::vector<std::string> refs;
+        collect_concept_references(trailing_requires.ConstraintExpr, refs);
+        for (const auto &ref : refs)
+            referenced_concepts << QString::fromStdString(ref);
     }
 #else
     if (const clang::Expr *trailing_requires = function_declaration->getTrailingRequiresClause()) {
@@ -1878,6 +1941,10 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
             get_expression_as_string(trailing_requires,
                                      function_declaration->getASTContext()));
         fn->setTrailingRequiresClause(requires_str.simplified());
+        std::vector<std::string> refs;
+        collect_concept_references(trailing_requires, refs);
+        for (const auto &ref : refs)
+            referenced_concepts << QString::fromStdString(ref);
     }
 #endif
 
@@ -1908,6 +1975,23 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
                 parameter_type.getCanonicalType(),
                 parameter_declaration->getASTContext()
             )));
+
+        // Constrained-auto parameter form, e.g. \c {void f(Sortable auto x)}.
+        if (const clang::AutoType *auto_type = parameter_type->getContainedAutoType()) {
+            if (auto_type->isConstrained()) {
+                if (const clang::NamedDecl *concept_decl =
+                        auto_type->getTypeConstraintConcept()) {
+                    referenced_concepts << QString::fromStdString(
+                            concept_decl->getQualifiedNameAsString());
+                }
+            }
+        }
+    }
+
+    if (!referenced_concepts.isEmpty()) {
+        referenced_concepts.sort();
+        referenced_concepts.removeDuplicates();
+        fn->setReferencedConcepts(std::move(referenced_concepts));
     }
 
     if (parameters.count() > 0) {

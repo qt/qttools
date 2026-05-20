@@ -87,6 +87,9 @@ public:
     }
     const std::optional<QString>& trailingRequiresClause() const { return m_trailingRequiresClause; }
 
+    void setReferencedConcepts(QStringList refs) { m_referencedConcepts = std::move(refs); }
+    const QStringList &referencedConcepts() const { return m_referencedConcepts; }
+
     [[nodiscard]] bool isCppFunction() const { return m_metaness == Metaness::Plain; } // Is this correct?
     [[nodiscard]] bool isSignal() const { return (m_metaness == Metaness::Signal); }
     [[nodiscard]] bool isSlot() const { return (m_metaness == Metaness::Slot); }
@@ -195,6 +198,7 @@ private:
 
     std::optional<QString> m_noexcept;
     std::optional<QString> m_trailingRequiresClause;
+    QStringList m_referencedConcepts {};
 
     Metaness m_metaness {};
     Virtualness m_virtualness{ NonVirtual };
