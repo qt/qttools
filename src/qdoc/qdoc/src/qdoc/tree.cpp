@@ -1151,6 +1151,8 @@ CNMap *Tree::getCollectionMap(NodeType type)
         return &m_modules;
     case NodeType::QmlModule:
         return &m_qmlModules;
+    case NodeType::Concept:
+        return &m_concepts;
     default:
         break;
     }

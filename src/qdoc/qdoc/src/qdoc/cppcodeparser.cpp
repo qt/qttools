@@ -163,6 +163,15 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         cn->setLocation(doc.startLocation());
         cn->markSeen();
         return cn;
+    } else if (command == COMMAND_CONCEPT) {
+        CollectionNode *cn = database->addConcept(arg.first);
+        // Default the page title to the concept's name. A documented
+        // concept rarely carries a separate \title, yet its reference
+        // page still needs a heading; an authored \title overrides this.
+        cn->setTitle(arg.first);
+        cn->setLocation(doc.startLocation());
+        cn->markSeen();
+        return cn;
     } else if (command == COMMAND_QMLMODULE) {
         QStringList blankSplit = arg.first.split(QLatin1Char(' '));
         CollectionNode *cn = database->addQmlModule(blankSplit[0]);

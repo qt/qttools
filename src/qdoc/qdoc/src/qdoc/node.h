@@ -106,6 +106,7 @@ public:
     [[nodiscard]] bool isHeader() const { return m_nodeType == NodeType::HeaderFile; }
     [[nodiscard]] bool isIndexNode() const { return m_indexNodeFlag; }
     [[nodiscard]] bool isModule() const { return m_nodeType == NodeType::Module; }
+    [[nodiscard]] bool isConcept() const { return m_nodeType == NodeType::Concept; }
     [[nodiscard]] bool isNamespace() const { return m_nodeType == NodeType::Namespace; }
     [[nodiscard]] bool isPage() const { return m_nodeType == NodeType::Page; }
     [[nodiscard]] bool isPreliminary() const { return (m_status == Status::Preliminary); }

@@ -70,6 +70,8 @@ inline std::optional<QJsonObject> nodeTypeToJson(NodeType t)
         return classificationObject("group"_L1, "Group"_L1);
     case NodeType::Module:
         return classificationObject("module"_L1, "Module"_L1);
+    case NodeType::Concept:
+        return classificationObject("concept"_L1, "Concept"_L1);
     case NodeType::QmlType:
         return classificationObject("qml-type"_L1, "QML type"_L1);
     case NodeType::QmlValueType:
