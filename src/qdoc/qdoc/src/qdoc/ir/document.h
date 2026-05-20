@@ -204,7 +204,9 @@ struct Document
     // Identity
     QString title;              // Page title
     QString fullTitle;          // Full qualified title
-    QString url;                // Output file URL (relative)
+    QString url;                // Page URL: canonical absolute when the
+                                // 'url' qdocconf is set; output filename
+                                // (relative) otherwise.
     QString since;              // Version introduced (e.g., "6.8")
     QString deprecatedSince;    // Version deprecated (e.g., "6.5")
     QString brief;              // Brief description

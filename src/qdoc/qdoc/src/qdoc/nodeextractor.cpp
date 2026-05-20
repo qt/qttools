@@ -119,7 +119,13 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hre
         pm.fullTitle = pn->fullTitle();
     }
 
-    pm.url = pn->url();
+    pm.url = hrefResolver->fileName(pn);
+    const QString baseUrl = Config::instance().get(CONFIG_URL).asString();
+    if (!baseUrl.isEmpty() && !pm.url.isEmpty() && !pm.url.contains("://"_L1)) {
+        pm.url = baseUrl
+                + (baseUrl.endsWith(u'/') ? QString{} : QStringLiteral("/"))
+                + pm.url;
+    }
     pm.since = pn->since();
     pm.deprecatedSince = pn->deprecatedSince();
     pm.brief = pn->doc().briefText().toString();

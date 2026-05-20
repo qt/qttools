@@ -1,6 +1,7 @@
 project = Qt branded template test
 productname = Qt
 
+url = https://www.example.org/qdoctest
 locationinfo = false
 
 sources.fileextensions  = "*.qdoc"
