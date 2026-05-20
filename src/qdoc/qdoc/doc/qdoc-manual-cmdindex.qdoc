@@ -31,6 +31,7 @@
     \li \l {codeline-command} {\\codeline}
     \li \l {compares-command} {\\compares}
     \li \l {compareswith-command} {\\compareswith}
+    \li \l {concept-command} {\\concept}
     \li \l {deprecated-command} {\\deprecated}
     \li \l {default-command} {\\default}
     \li \l {details-command} {\\details}

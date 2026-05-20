@@ -201,6 +201,75 @@
     The way QDoc renders this \\class depends on your \c {style.css}
     file.
 
+    \target concept-command
+    \section1 \\concept
+
+    The \\concept command creates a separate page for a C++20 concept
+    and aggregates the documented types and functions whose template
+    constraints reference it. The argument is the concept's
+    fully-qualified name, matching the name Clang reports for the
+    declaration. Concepts at file scope use their bare name; concepts
+    inside a namespace need the full qualified name, such as
+    \c {algorithms::Ordered}.
+
+    A type or function joins a concept's page automatically. When QDoc
+    parses a documented declaration, it inspects the declaration's
+    constraints and registers the declaration with the concepts they
+    reference. No \\ingroup or \\inmodule-style command is required on
+    the constrained item itself.
+
+    QDoc recognises the three syntactic forms of C++20 constraints:
+
+    \list
+        \li An explicit \c {requires} clause, whether it appears in the
+            template head (\c {template <typename T> requires Ordered<T>})
+            or trailing the function signature.
+        \li A constrained \c {auto} parameter
+            (\c {void sort(Ordered auto& range)}).
+        \li A concept written directly on a template parameter
+            (\c {template <Ordered T> class SortedSet}).
+    \endlist
+
+    The \\concept command is typically followed by an \l
+    {inmodule-command} {\\inmodule} command and a \l {brief-command}
+    {\\brief} description. The body of the comment is rendered as the
+    detailed description; \l {sectionOne-command} {\\section1} headings
+    work as they do on any other documentation page.
+
+    \badcode *
+    /\1!
+        \concept Ordered
+        \inmodule Algorithms
+
+        \brief A type that admits a total order.
+
+        The Ordered concept is satisfied by any type that supplies the
+        relational operators \c {<}, \c {<=}, \c {>}, and \c {>=}, and for
+        which those operators induce a strict total order.
+
+        \section1 Definition
+
+        Ordered evaluates to \c true when \c {T} is totally ordered
+        and to \c false otherwise.
+    \1/
+    \endcode
+
+    QDoc generates a reference page for the concept. For the example
+    above, the page is \c {ordered.html}, containing the brief, the
+    detailed description, and a \e {Used by} section listing the
+    documented types and functions included in the generated
+    documentation whose constraints reference \c {Ordered}. Each entry
+    is rendered as a link followed by the \\brief description from the
+    entry's own documentation, in the same shape as the listings on
+    \\group and \\module pages.
+
+    Concept references to undocumented concepts, such as concepts that
+    live in the standard library, are silently ignored. They don't
+    produce a page and don't emit a warning.
+
+    See also \l {group-command} {\\group}, \l {module-command}
+    {\\module}, and \l {inmodule-command} {\\inmodule}.
+
     \target enum-command
     \section1 \\enum
 
