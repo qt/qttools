@@ -923,6 +923,7 @@ void QDocDatabase::resolveStuff()
         primaryTree()->resolveTargets(primaryTreeRoot());
         primaryTree()->resolveCppToQmlLinks();
         primaryTree()->resolveSince(*primaryTreeRoot());
+        resolveConceptUsers();
     }
     if (config.singleExec() && config.generating()) {
         primaryTree()->resolveBaseClasses(primaryTreeRoot());
@@ -930,6 +931,7 @@ void QDocDatabase::resolveStuff()
         primaryTreeRoot()->resolveQmlInheritance();
         primaryTree()->resolveCppToQmlLinks();
         primaryTree()->resolveSince(*primaryTreeRoot());
+        resolveConceptUsers();
     }
     if (!config.preparing()) {
         resolveNamespaces();
@@ -950,6 +952,85 @@ void QDocDatabase::resolveBaseClasses()
             t->root()->resolveQmlInheritance();
         t = m_forest.nextTree();
     }
+}
+
+/*!
+  Gathers the fully-qualified concept names referenced by \a node.
+  Template-head and direct-concept references live on the optional
+  RelaxedTemplateDeclaration carried by the node; trailing-requires
+  and constrained-auto references are accumulated on the FunctionNode.
+ */
+static void collectConceptReferences(const Node *node, QStringList &refs)
+{
+    if (const auto &td = node->templateDecl(); td.has_value()) {
+        for (const auto &name : td->referenced_concepts)
+            refs.append(QString::fromStdString(name));
+    }
+    if (node->isFunction()) {
+        const auto *fn = static_cast<const FunctionNode *>(node);
+        refs += fn->referencedConcepts();
+    }
+}
+
+/*!
+  Walks every documented node under \a parent and registers each constrained
+  item as a member of the concept's CollectionNode for each concept it
+  references.
+
+  Recurses into aggregates so the entire primary tree is covered.
+ */
+static void registerConceptUsersUnder(Aggregate *parent, QDocDatabase &db)
+{
+    for (auto *child : std::as_const(parent->childNodes())) {
+        // A skipped node is not registered as a concept user, but its
+        // documented descendants still are: a documented class nested in an
+        // internal namespace, for example, should still appear in its concept's
+        // "Used by" list. Visibility filtering and recursion are therefore
+        // independent.
+        const bool registerChild =
+                !child->isPrivate() && !child->isInternal() && !child->isDontDocument();
+
+        if (registerChild) {
+            QStringList refs;
+            collectConceptReferences(child, refs);
+            refs.sort();
+            refs.removeDuplicates();
+
+            for (const QString &conceptName : std::as_const(refs)) {
+                // Cross-tree lookup. The forest search order covers the primary
+                // tree plus every dependency-module index tree. A concept
+                // declared in module B and referenced from module A can be
+                // found through the same cross-tree lookup machinery.
+                // Concepts without a \\concept block anywhere in the corpus
+                // return \c{nullptr} and are silently skipped; references to
+                // undocumented concepts (such as std::integral) are common and
+                // not actionable.
+                //
+                // addMember() deduplicates membership centrally, so re-running
+                // this pass is safe and produces a stable "Used by" listing
+                // without per-call guard logic.
+                if (auto *cn = db.findMutableCollectionNode(conceptName, NodeType::Concept))
+                    cn->addMember(child);
+            }
+        }
+
+        if (child->isAggregate())
+            registerConceptUsersUnder(static_cast<Aggregate *>(child), db);
+    }
+}
+
+/*!
+  Builds the concept-to-users reverse index after parsing finishes
+  and before any generator runs. The forward direction — which
+  concepts a constrained declaration references — is captured
+  during the libclang AST pass; this pass turns those isolated
+  references into bidirectional collection membership so concept
+  reference pages can render a \e {Used by} section through the
+  same scaffolding group and module collection pages already use.
+ */
+void QDocDatabase::resolveConceptUsers()
+{
+    registerConceptUsersUnder(primaryTreeRoot(), *this);
 }
 
 /*!
