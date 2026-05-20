@@ -1485,7 +1485,7 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
 
     // Generate brief for C++ modules, status for all modules.
     if (cn->genus() != Genus::DOC && cn->genus() != Genus::DontCare) {
-        if (cn->isModule())
+        if (cn->isModule() || cn->isConcept())
             generateBrief(cn, marker);
         generateStatus(cn, marker);
         generateSince(cn, marker);
@@ -1508,7 +1508,7 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
         }
     }
 
-    if (cn->isModule() && !cn->doc().briefText().isEmpty()) {
+    if ((cn->isModule() || cn->isConcept()) && !cn->doc().briefText().isEmpty()) {
         generateExtractionMark(cn, DetailedDescriptionMark);
         ref = registerRef("details");
         out() << "<div class=\"descr\">\n";
@@ -1527,8 +1527,16 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
     generateExtractionMark(cn, EndMark);
 
     if (!cn->noAutoList()) {
-        if (cn->isGroup() || cn->isQmlModule())
+        if (cn->isConcept()) {
+            const NodeMultiMap users = includedAnnotatedMembers(cn, cn->members());
+            if (!users.isEmpty()) {
+                ref = registerRef("users");
+                out() << "<h2 id=\"" << ref << "\">Used by</h2>\n";
+                generateAnnotatedList(cn, marker, users);
+            }
+        } else if (cn->isGroup() || cn->isQmlModule()) {
             generateAnnotatedList(cn, marker, cn->members());
+        }
     }
     generateFooter(cn);
 }
