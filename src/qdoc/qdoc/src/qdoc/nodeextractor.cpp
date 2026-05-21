@@ -1131,7 +1131,26 @@ static QList<IR::SignatureSpan> buildTemplateDeclSpans(const RelaxedTemplateDecl
         }
 
         switch (param.kind) {
-        case RelaxedTemplateParameter::Kind::TypeTemplateParameter:
+        case RelaxedTemplateParameter::Kind::TypeTemplateParameter: {
+            if (param.concept_name) {
+                const QString fq = QString::fromStdString(*param.concept_name);
+                const QString unqualified = fq.section("::"_L1, -1);
+                // Resolve by the fully-qualified name the concept is registered
+                // under; render the unqualified spelling the author wrote.
+                const Node *conceptNode = findConceptNodeForRelative(relative, fq);
+                IR::SignatureSpan link;
+                link.role = IR::SpanRole::Link;
+                link.text = unqualified;
+                link.href = resolveHref(hrefResolver, conceptNode, relative);
+                declSpan.children.append(link);
+            } else {
+                IR::SignatureSpan kw;
+                kw.role = IR::SpanRole::Text;
+                kw.text = "typename"_L1;
+                declSpan.children.append(kw);
+            }
+            break;
+        }
         case RelaxedTemplateParameter::Kind::TemplateTemplateParameter: {
             IR::SignatureSpan kw;
             kw.role = IR::SpanRole::Text;

@@ -84,3 +84,36 @@ public:
 private:
     T m_value;
 };
+
+namespace traits {
+template <typename T>
+concept Sortable = detail::is_integral<T>::value;
+}
+
+/*!
+    \concept traits::Sortable
+    \inmodule Cpp20Concepts
+    \brief A namespaced concept satisfied by sortable types.
+
+    Sortable lives inside the \c traits namespace, so QDoc records and
+    renders its fully-qualified name.
+*/
+
+/*!
+    \class SortableBox
+    \inmodule Cpp20Concepts
+    \brief A box holding any Sortable type.
+
+    SortableBox demonstrates the direct concept-on-template-parameter form
+    with a namespaced concept: the template parameter spans must resolve
+    \c {traits::Sortable} by its fully-qualified name.
+*/
+template <traits::Sortable T>
+class SortableBox
+{
+public:
+    SortableBox(T value) : m_value(value) {}
+    T value() const { return m_value; }
+private:
+    T m_value;
+};

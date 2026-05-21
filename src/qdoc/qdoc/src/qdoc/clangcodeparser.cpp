@@ -680,7 +680,8 @@ static RelaxedTemplateDeclaration get_template_declaration(const clang::Template
                 std::optional<TemplateDeclarationStorage>(TemplateDeclarationStorage{
                     get_template_declaration(template_template_parameter).parameters
                 }) : std::nullopt),
-            std::move(sfinae)
+            std::move(sfinae),
+            std::nullopt
         });
 
         // Direct concept-on-template-parameter form, such as
@@ -702,6 +703,8 @@ static RelaxedTemplateDeclaration get_template_declaration(const clang::Template
                             constraint->getNamedConcept()) {
                         template_declaration_ir.referenced_concepts.push_back(
                                 concept_decl->getQualifiedNameAsString());
+                        template_declaration_ir.parameters.back().concept_name =
+                                concept_decl->getQualifiedNameAsString();
                     }
                 }
             }

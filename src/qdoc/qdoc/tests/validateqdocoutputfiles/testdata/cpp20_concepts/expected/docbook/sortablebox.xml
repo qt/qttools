@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
 <db:info>
-<db:title>IntegralBox Class</db:title>
-<db:subtitle>template &lt;Integral T&gt; class IntegralBox</db:subtitle>
+<db:title>SortableBox Class</db:title>
+<db:subtitle>template &lt;Sortable T&gt; class SortableBox</db:subtitle>
 <db:productname>Qt</db:productname>
 <db:titleabbrev>Test for C++20 concepts and requires clauses</db:titleabbrev>
 <db:abstract>
-<db:para>A box holding any Integral type.</db:para>
+<db:para>A box holding any Sortable type.</db:para>
 </db:abstract>
 </db:info>
 <db:variablelist>
@@ -19,6 +19,6 @@
 </db:variablelist>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
-<db:para><db:link xlink:href="integralbox.xml">IntegralBox</db:link> demonstrates the direct concept-on-template-parameter form: the template parameter <db:code role="parameter">T</db:code> is constrained by the Integral concept without an explicit <db:code>requires</db:code> clause.</db:para>
+<db:para><db:link xlink:href="sortablebox.xml">SortableBox</db:link> demonstrates the direct concept-on-template-parameter form with a namespaced concept: the parameter <db:code role="parameter">T</db:code> is constrained by <db:code>traits::Sortable</db:code>, so the rendered class subtitle must resolve the fully-qualified concept name rather than the bare <db:code>Sortable</db:code> token.</db:para>
 </db:section>
 </db:article>

@@ -260,6 +260,7 @@ struct RelaxedTemplateParameter
     ValuedDeclaration valued_declaration;
     std::optional<TemplateDeclarationStorage> template_declaration;
     std::optional<SfinaeConstraint> sfinae_constraint;
+    std::optional<std::string> concept_name;
 
     /*
      * Constructs and returns a human-readable representation of this
@@ -395,7 +396,20 @@ struct RelaxedTemplateParameter
         case Kind::TypeTemplateParameter: {
             std::string valued_declaration_string = valued_declaration.to_std_string();
 
-            return std::string("typename") + (is_parameter_pack ? "..." : "")
+            // Direct concept-on-template-parameter form (such as
+            // template <Integral T>): show the concept name instead of
+            // the bare typename keyword. This plain string feeds consumers
+            // that have no concept rendering of their own — the DocBook
+            // plain-text subtitle and template-parameter comparison. The
+            // rich paths (the HTML subtitle atoms and the DocBook autolink
+            // step) build their own linked rendering and bypass this.
+            std::string head = concept_name
+                    ? concept_name->substr(concept_name->rfind("::") == std::string::npos
+                                                   ? 0
+                                                   : concept_name->rfind("::") + 2)
+                    : std::string("typename");
+
+            return head + (is_parameter_pack ? "..." : "")
                     + (valued_declaration_string.empty() ? "" : " ") + valued_declaration_string;
         }
         case Kind::NonTypeTemplateParameter: {

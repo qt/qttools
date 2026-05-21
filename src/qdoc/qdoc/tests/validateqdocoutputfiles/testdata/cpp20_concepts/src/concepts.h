@@ -267,3 +267,23 @@ T pick(T a, T b);
 template <typename T>
 T processConcept(T value) requires Integral<T>;
 
+/*!
+    \class SortableBox
+    \inmodule Cpp20Concepts
+    \brief A box holding any Sortable type.
+
+    SortableBox demonstrates the direct concept-on-template-parameter form
+    with a namespaced concept: the parameter \a T is constrained by
+    \c {traits::Sortable}, so the rendered class subtitle must resolve the
+    fully-qualified concept name rather than the bare \c Sortable token.
+*/
+template <traits::Sortable T>
+class SortableBox
+{
+public:
+    SortableBox(T value) : m_value(value) {}
+    T value() const { return m_value; }
+private:
+    T m_value;
+};
+
