@@ -1791,6 +1791,33 @@ bool DocBookGenerator::generateSince(const Node *node)
 void DocBookGenerator::generateHeader(const Text &title, const QString &subTitle,
                                       const Node *node)
 {
+    generateHeader(title, node);
+
+    if (!subTitle.isEmpty()) {
+        m_writer->writeStartElement(dbNamespace, "subtitle");
+        if (isApiGenus(node->genus()) && m_useITS)
+            m_writer->writeAttribute(itsNamespace, "translate", "no");
+        m_writer->writeCharacters(subTitle);
+        m_writer->writeEndElement(); // subtitle
+        newLine();
+    }
+
+    finishHeader(node);
+}
+
+/*!
+    Generates the opening portion of the DocBook header — \c{<db:info>}
+    and the title element. The caller emits any subtitle (text-only or
+    element-rich) directly into the writer afterwards, then calls
+    finishHeader() to close \c{<db:info>} and write the abstract.
+
+    Class pages with template declarations use this two-step form so the
+    subtitle element can carry \c{<db:link>} elements for concept
+    references — content that wouldn't survive the plain-text subtitle
+    path the 3-argument overload uses.
+*/
+void DocBookGenerator::generateHeader(const Text &title, const Node *node)
+{
     refMap.clear();
 
     // Output the DocBook header.
@@ -1802,16 +1829,16 @@ void DocBookGenerator::generateHeader(const Text &title, const QString &subTitle
     generateText(title, node);
     m_writer->writeEndElement(); // title
     newLine();
+}
 
-    if (!subTitle.isEmpty()) {
-        m_writer->writeStartElement(dbNamespace, "subtitle");
-        if (isApiGenus(node->genus()) && m_useITS)
-            m_writer->writeAttribute(itsNamespace, "translate", "no");
-        m_writer->writeCharacters(subTitle);
-        m_writer->writeEndElement(); // subtitle
-        newLine();
-    }
-
+/*!
+    Emits the tail of the DocBook header — product, edition, titleabbrev,
+    navigation links, and abstract — then closes \c{<db:info>}. Used as
+    the companion to the two-argument \c{generateHeader} overload that
+    leaves the info element open for the caller to emit a rich subtitle.
+*/
+void DocBookGenerator::finishHeader(const Node *node)
+{
     if (!m_productName.isEmpty() || !m_project.isEmpty()) {
         m_writer->writeTextElement(dbNamespace, "productname", m_productName.isEmpty() ?
                 m_project : m_productName);
@@ -3120,16 +3147,10 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
 
     QString title;
     Text titleText;
-    QString subtitleText;
     const QString typeWord{aggregate->typeWord(true)};
     if (aggregate->isNamespace()) {
         title = "%1 %2"_L1.arg(aggregate->plainFullName(), typeWord);
     } else if (aggregate->isClass()) {
-        auto templateDecl = node->templateDecl();
-        if (templateDecl)
-            subtitleText = "%1 %2 %3"_L1.arg((*templateDecl).to_qstring(),
-                                             aggregate->typeWord(false),
-                                             aggregate->plainFullName());
         title = "%1 %2"_L1.arg(aggregate->plainFullName(), typeWord);
     } else if (aggregate->isHeader()) {
         title = aggregate->fullTitle();
@@ -3140,11 +3161,39 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
     // Start producing the DocBook file.
     m_writer = startDocument(node);
 
-    // Info container.
-    if (!titleText.isEmpty())
-        generateHeader(titleText, subtitleText, aggregate);
-    else
-        generateHeader(title, subtitleText, aggregate);
+    // Info container. Class pages with a template declaration emit the
+    // subtitle in two steps so concept references in the template head
+    // can surface as <db:link> elements inside the subtitle text rather
+    // than being flattened to characters.
+    if (aggregate->isClass()) {
+        if (auto templateDecl = node->templateDecl()) {
+            if (!titleText.isEmpty())
+                generateHeader(titleText, aggregate);
+            else
+                generateHeader(Text() << title, aggregate);
+
+            m_writer->writeStartElement(dbNamespace, "subtitle");
+            if (isApiGenus(aggregate->genus()) && m_useITS)
+                m_writer->writeAttribute(itsNamespace, "translate", "no");
+            generateTemplateDecl(&*templateDecl, aggregate);
+            m_writer->writeCharacters(" "_L1 + aggregate->typeWord(false) + " "_L1
+                                      + aggregate->plainFullName());
+            m_writer->writeEndElement(); // subtitle
+            newLine();
+
+            finishHeader(aggregate);
+        } else {
+            if (!titleText.isEmpty())
+                generateHeader(titleText, QString(), aggregate);
+            else
+                generateHeader(title, QString(), aggregate);
+        }
+    } else {
+        if (!titleText.isEmpty())
+            generateHeader(titleText, QString(), aggregate);
+        else
+            generateHeader(title, QString(), aggregate);
+    }
 
     generateRequisites(aggregate);
     generateStatus(aggregate);
@@ -3816,6 +3865,207 @@ void DocBookGenerator::typified(const QString &string, const Node *relative, boo
     m_writer->writeCharacters(result);
 }
 
+/*!
+    \internal
+
+    Emits the requires-clause \a text, wrapping each occurrence of a name
+    in \a concepts in a \c{<db:link>} element pointing at the corresponding
+    documented \\concept page. Concept identifiers consist of letters,
+    digits, and underscores only, so word-boundary regex matches reliably
+    isolate standalone concept tokens. The list is sorted longest first so
+    prefix-sharing concept names (such as \c{Hashable} and
+    \c{HashableContainer}) substitute correctly without overlap.
+
+    If a concept name doesn't resolve to a documented entity through
+    \c{QDocDatabase::findConceptNode}, the bare text is written instead —
+    matching the graceful-degradation behavior of the legacy HTML
+    \c{<@concept>} resolver branch.
+*/
+void DocBookGenerator::generateRequiresClauseText(const QString &text,
+                                                  const QStringList &concepts,
+                                                  const Node *relative)
+{
+    if (concepts.isEmpty()) {
+        m_writer->writeCharacters(text);
+        return;
+    }
+
+    QStringList sorted = concepts;
+    std::sort(sorted.begin(), sorted.end(),
+              [](const QString &a, const QString &b) { return a.size() > b.size(); });
+
+    // Match by the unqualified spelling that appears in the clause text, but
+    // carry the fully-qualified name as the lookup target: concepts register
+    // under their qualified name, so a namespaced reference such as
+    // traits::Sortable resolves only through the qualified target.
+    struct Match { qsizetype offset; qsizetype length; QString name; QString target; };
+    QList<Match> matches;
+    QList<bool> occupied(text.size(), false);
+
+    for (const QString &concept_name : sorted) {
+        const QString unqualified = concept_name.section("::"_L1, -1);
+        const QRegularExpression re("\\b"_L1
+            + QRegularExpression::escape(unqualified) + "\\b"_L1);
+        auto it = re.globalMatch(text);
+        while (it.hasNext()) {
+            const auto m = it.next();
+            const qsizetype start = m.capturedStart();
+            const qsizetype len = m.capturedLength();
+            bool clear = true;
+            for (qsizetype i = start; i < start + len; ++i) {
+                if (occupied[i]) {
+                    clear = false;
+                    break;
+                }
+            }
+            if (!clear)
+                continue;
+            for (qsizetype i = start; i < start + len; ++i)
+                occupied[i] = true;
+            matches.append({start, len, unqualified, concept_name});
+        }
+    }
+
+    std::sort(matches.begin(), matches.end(),
+              [](const Match &a, const Match &b) { return a.offset < b.offset; });
+
+    qsizetype pos = 0;
+    for (const auto &m : matches) {
+        if (m.offset > pos)
+            m_writer->writeCharacters(text.mid(pos, m.offset - pos));
+        const Node *n = m_qdb->findConceptNode(m.target);
+        if (n)
+            generateSimpleLink(linkForNode(n, relative), m.name);
+        else
+            m_writer->writeCharacters(m.name);
+        pos = m.offset + m.length;
+    }
+    if (pos < text.size())
+        m_writer->writeCharacters(text.mid(pos));
+}
+
+/*!
+    \internal
+
+    Emits one template parameter into the current writer position. When the
+    parameter carries a direct concept constraint (such as \c {Integral T}),
+    the unqualified concept name is wrapped in a \c{<db:link>} pointing at
+    the documented concept page; otherwise the plain \c{typename} keyword is
+    written. The shape mirrors \c {CppCodeMarker::formatTemplateParameter},
+    but writes DocBook XML directly rather than producing a marker string.
+*/
+void DocBookGenerator::generateTemplateParameter(const RelaxedTemplateParameter &param,
+                                                 const Node *relative)
+{
+    const auto &decl = param.valued_declaration;
+
+    if (param.template_declaration) {
+        // Template-template parameter: emit the nested template declaration
+        // recursively. The nested declaration is a TemplateDeclarationStorage,
+        // not a RelaxedTemplateDeclaration, so it has no requires_clause or
+        // referenced_concepts to consider.
+        m_writer->writeCharacters("template <"_L1);
+        bool first = true;
+        for (const auto &sub : param.template_declaration->parameters) {
+            if (sub.sfinae_constraint)
+                continue;
+            if (!first)
+                m_writer->writeCharacters(", "_L1);
+            generateTemplateParameter(sub, relative);
+            first = false;
+        }
+        m_writer->writeCharacters("> "_L1);
+    }
+
+    switch (param.kind) {
+    case RelaxedTemplateParameter::Kind::TypeTemplateParameter:
+        if (param.concept_name) {
+            const QString fq = QString::fromStdString(*param.concept_name);
+            const QString unqualified = fq.section("::"_L1, -1);
+            const Node *n = m_qdb->findConceptNode(fq);
+            if (n)
+                generateSimpleLink(linkForNode(n, relative), unqualified);
+            else
+                // No documented concept to link: keep the qualified spelling
+                // the author wrote rather than silently dropping the namespace.
+                m_writer->writeCharacters(fq);
+        } else {
+            m_writer->writeCharacters("typename"_L1);
+        }
+        break;
+    case RelaxedTemplateParameter::Kind::NonTypeTemplateParameter:
+        if (!decl.type.empty())
+            m_writer->writeCharacters(QString::fromStdString(decl.type));
+        break;
+    case RelaxedTemplateParameter::Kind::TemplateTemplateParameter:
+        m_writer->writeCharacters("typename"_L1);
+        break;
+    }
+
+    if (param.is_parameter_pack)
+        m_writer->writeCharacters("..."_L1);
+
+    if (!decl.name.empty()) {
+        m_writer->writeCharacters(" "_L1);
+        m_writer->writeCharacters(QString::fromStdString(decl.name));
+    }
+
+    if (!decl.initializer.empty()) {
+        m_writer->writeCharacters(" = "_L1);
+        m_writer->writeCharacters(QString::fromStdString(decl.initializer));
+    }
+}
+
+/*!
+    \internal
+
+    Emits a full \c {template <...> requires ...} declaration element by
+    element so concept references inside both the parameter list and the
+    requires clause become \c{<db:link>} anchors. Multi-line layout kicks in
+    when the visible parameter count exceeds
+    \c{QDoc::MultilineTemplateParamThreshold}, mirroring
+    \c {RelaxedTemplateDeclaration::to_qstring_multiline()}.
+*/
+void DocBookGenerator::generateTemplateDecl(const RelaxedTemplateDeclaration *templateDecl,
+                                            const Node *relative)
+{
+    if (!templateDecl)
+        return;
+
+    const bool multiline = templateDecl->visibleParameterCount()
+            > QDoc::MultilineTemplateParamThreshold;
+
+    m_writer->writeCharacters("template <"_L1);
+    if (multiline)
+        m_writer->writeCharacters("\n"_L1);
+
+    bool first = true;
+    for (const auto &param : templateDecl->parameters) {
+        if (param.sfinae_constraint)
+            continue;
+        if (!first)
+            m_writer->writeCharacters(multiline ? ",\n"_L1 : ", "_L1);
+        if (multiline)
+            m_writer->writeCharacters("    "_L1);
+        generateTemplateParameter(param, relative);
+        first = false;
+    }
+
+    if (multiline)
+        m_writer->writeCharacters("\n"_L1);
+    m_writer->writeCharacters(">"_L1);
+
+    if (templateDecl->requires_clause && !templateDecl->requires_clause->empty()) {
+        m_writer->writeCharacters(" requires "_L1);
+        QStringList concepts;
+        concepts.reserve(int(templateDecl->referenced_concepts.size()));
+        for (const auto &s : templateDecl->referenced_concepts)
+            concepts.append(QString::fromStdString(s));
+        generateRequiresClauseText(QString::fromStdString(*templateDecl->requires_clause),
+                                   concepts, relative);
+    }
+}
+
 void DocBookGenerator::generateSynopsisName(const Node *node, const Node *relative,
                                             bool generateNameLink)
 {
@@ -3910,10 +4160,11 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
 
         if (style == Section::Details) {
             if (auto templateDecl = func->templateDecl()) {
+                generateTemplateDecl(&*templateDecl, relative);
                 if (templateDecl->visibleParameterCount() > QDoc::MultilineTemplateParamThreshold)
-                    m_writer->writeCharacters(templateDecl->to_qstring_multiline() + QLatin1Char('\n'));
+                    m_writer->writeCharacters("\n"_L1);
                 else
-                    m_writer->writeCharacters(templateDecl->to_qstring() + QLatin1Char(' '));
+                    m_writer->writeCharacters(" "_L1);
             }
         }
 
@@ -3967,12 +4218,15 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
         } else {
             QString synopsis;
             if (func->isRef())
-                synopsis += QStringLiteral(" &");
+                synopsis += " &"_L1;
             else if (func->isRefRef())
-                synopsis += QStringLiteral(" &&");
-            if (const auto &req = func->trailingRequiresClause(); req && !req->isEmpty())
-                synopsis += " requires " + *req;
+                synopsis += " &&"_L1;
             m_writer->writeCharacters(synopsis);
+
+            if (const auto &req = func->trailingRequiresClause(); req && !req->isEmpty()) {
+                m_writer->writeCharacters(" requires "_L1);
+                generateRequiresClauseText(*req, func->referencedConcepts(), relative);
+            }
         }
     } break;
     case NodeType::Enum: {
@@ -4022,10 +4276,11 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
     case NodeType::TypeAlias: {
         if (style == Section::Details) {
             if (auto templateDecl = node->templateDecl()) {
+                generateTemplateDecl(&*templateDecl, relative);
                 if (templateDecl->visibleParameterCount() > QDoc::MultilineTemplateParamThreshold)
-                    m_writer->writeCharacters(templateDecl->to_qstring_multiline() + QLatin1Char('\n'));
+                    m_writer->writeCharacters("\n"_L1);
                 else
-                    m_writer->writeCharacters(templateDecl->to_qstring() + QLatin1Char(' '));
+                    m_writer->writeCharacters(" "_L1);
             }
         }
         m_writer->writeCharacters(namePrefix);

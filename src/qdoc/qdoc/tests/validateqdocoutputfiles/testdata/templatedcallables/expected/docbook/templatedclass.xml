@@ -30,7 +30,7 @@
 <db:title>template &lt;
     typename U,
     int size,
-    template &lt;typename, int &gt; typename Container = std::array
+    template &lt;typename, int&gt; typename Container = std::array
 &gt;
 void TemplatedClass::templated_method_with_defaulted_template_template_parameter(<db:emphasis>Container&lt;U, size&gt;</db:emphasis>)</db:title>
 <db:para>A templated method under a templated class with a defaulted template-template parameter <db:code role="parameter">Container</db:code> and non-type parameter <db:code role="parameter">size</db:code>.</db:para>

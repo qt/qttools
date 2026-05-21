@@ -13,6 +13,9 @@
 #include <QtCore/qhash.h>
 #include <QtCore/qxmlstream.h>
 
+struct RelaxedTemplateDeclaration;
+struct RelaxedTemplateParameter;
+
 QT_BEGIN_NAMESPACE
 
 class Aggregate;
@@ -46,10 +49,16 @@ protected:
     void generateList(const Node *relative, const QString &selector,
                       Qt::SortOrder sortOrder = Qt::AscendingOrder);
     void generateHeader(const Text &title, const QString &subtitle, const Node *node);
+    void generateHeader(const Text &title, const Node *node);
     void generateHeader(const QString &title, const QString &subtitle, const Node *node)
     {
         generateHeader(Text() << title, subtitle, node);
     }
+    void generateHeader(const QString &title, const Node *node)
+    {
+        generateHeader(Text() << title, node);
+    }
+    void finishHeader(const Node *node);
     void closeTextSections();
     void generateFooter();
     void generateDocBookSynopsis(const Node *node);
@@ -117,6 +126,11 @@ private:
 
     void typified(const QString &string, const Node *relative, bool trailingSpace = false,
                   bool generateType = true);
+    void generateTemplateDecl(const RelaxedTemplateDeclaration *templateDecl,
+                              const Node *relative);
+    void generateTemplateParameter(const RelaxedTemplateParameter &param, const Node *relative);
+    void generateRequiresClauseText(const QString &text, const QStringList &concepts,
+                                    const Node *relative);
     void generateLink(const Atom *atom);
     void beginLink(const QString &link, const Node *node, const Node *relative);
     void endLink();
