@@ -13,6 +13,7 @@
 <div class="table"><table class="alignedsummary" translate="no">
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="cpp20concepts-cpp20concepts-proxy.html#doubleValue" translate="no">doubleValue</a></b>(Integral auto <i>value</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> T </td><td class="memItemRight bottomAlign"><b><a href="cpp20concepts-cpp20concepts-proxy.html#pick" translate="no">pick</a></b>(T <i>a</i>, T <i>b</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> T </td><td class="memItemRight bottomAlign"><b><a href="cpp20concepts-cpp20concepts-proxy.html#processConcept" translate="no">processConcept</a></b>(T <i>value</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> T </td><td class="memItemRight bottomAlign"><b><a href="cpp20concepts-cpp20concepts-proxy.html#sum" translate="no">sum</a></b>(T <i>a</i>, T <i>b</i>)</td></tr>
 </table></div>
 <div class="func">
@@ -23,12 +24,16 @@
 <p>Uses the constrained-auto syntax (<code translate="no">Integral auto</code>) &mdash; the function takes any single-argument type that models Integral.</p>
 <!-- @@@doubleValue -->
 <!-- $$$pick[overload1]$$$pickTT -->
-<h3 class="fn" translate="no" id="pick">template &lt;typename T&gt; requires traits::Sortable&lt;T&gt; <span class="type">T</span> <span class="name">pick</span>(<span class="type">T</span> <i>a</i>, <span class="type">T</span> <i>b</i>)</h3>
+<h3 class="fn" translate="no" id="pick">template &lt;typename T&gt; requires traits::<a href="traits-sortable.html" translate="no">Sortable</a>&lt;T&gt; <span class="type">T</span> <span class="name">pick</span>(<span class="type">T</span> <i>a</i>, <span class="type">T</span> <i>b</i>)</h3>
 <p>Picks the larger of <i translate="no">a</i> and <i translate="no">b</i>.</p>
 <p>The template head constrains <i translate="no">T</i> through the namespaced <code translate="no">traits::Sortable</code> concept, exercising qualified-name resolution in the rendered synopsis.</p>
 <!-- @@@pick -->
+<!-- $$$processConcept[overload1]$$$processConceptT -->
+<h3 class="fn" translate="no" id="processConcept">template &lt;typename T&gt; <span class="type">T</span> <span class="name">processConcept</span>(<span class="type">T</span> <i>value</i>) requires <a href="integral.html" translate="no">Integral</a>&lt;T&gt;</h3>
+<p>Doubles <i translate="no">value</i> using a trailing requires clause that names the Integral concept directly. Exercises the trailing-requires autolink on the documented concept rather than on a compound trait expression.</p>
+<!-- @@@processConcept -->
 <!-- $$$sum[overload1]$$$sumTT -->
-<h3 class="fn" translate="no" id="sum">template &lt;typename T&gt; requires Integral&lt;T&gt; <span class="type">T</span> <span class="name">sum</span>(<span class="type">T</span> <i>a</i>, <span class="type">T</span> <i>b</i>)</h3>
+<h3 class="fn" translate="no" id="sum">template &lt;typename T&gt; requires <a href="integral.html" translate="no">Integral</a>&lt;T&gt; <span class="type">T</span> <span class="name">sum</span>(<span class="type">T</span> <i>a</i>, <span class="type">T</span> <i>b</i>)</h3>
 <p>Sums two values constrained by the Integral concept.</p>
 <p><i translate="no">a</i> and <i translate="no">b</i> must both satisfy the Integral concept; the function uses the template-head requires form to express this.</p>
 <!-- @@@sum -->

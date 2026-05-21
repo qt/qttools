@@ -9,7 +9,10 @@
             <parameter type="T" name="a" default=""/>
             <parameter type="T" name="b" default=""/>
         </function>
-        <function name="sum" href="cpp20concepts-cpp20concepts-proxy.html#sum" status="active" access="public" location="concepts.h" documented="true" related="2" meta="plain" type="T" signature="T sum(T a, T b)">
+        <function name="processConcept" href="cpp20concepts-cpp20concepts-proxy.html#processConcept" status="active" access="public" location="concepts.h" documented="true" related="2" meta="plain" trailing_requires="Integral&lt;T&gt;" type="T" signature="T processConcept(T value) requires Integral&lt;T&gt;">
+            <parameter type="T" name="value" default=""/>
+        </function>
+        <function name="sum" href="cpp20concepts-cpp20concepts-proxy.html#sum" status="active" access="public" location="concepts.h" documented="true" related="3" meta="plain" type="T" signature="T sum(T a, T b)">
             <parameter type="T" name="a" default=""/>
             <parameter type="T" name="b" default=""/>
         </function>
@@ -68,7 +71,10 @@
                 <parameter type="T" name="a" default=""/>
                 <parameter type="T" name="b" default=""/>
             </function>
-            <function name="sum" href="cpp20concepts-cpp20concepts-proxy.html#sum" status="active" access="public" location="concepts.h" documented="true" related="2" meta="plain" type="T" signature="T sum(T a, T b)">
+            <function name="processConcept" href="cpp20concepts-cpp20concepts-proxy.html#processConcept" status="active" access="public" location="concepts.h" documented="true" related="2" meta="plain" trailing_requires="Integral&lt;T&gt;" type="T" signature="T processConcept(T value) requires Integral&lt;T&gt;">
+                <parameter type="T" name="value" default=""/>
+            </function>
+            <function name="sum" href="cpp20concepts-cpp20concepts-proxy.html#sum" status="active" access="public" location="concepts.h" documented="true" related="3" meta="plain" type="T" signature="T sum(T a, T b)">
                 <parameter type="T" name="a" default=""/>
                 <parameter type="T" name="b" default=""/>
             </function>

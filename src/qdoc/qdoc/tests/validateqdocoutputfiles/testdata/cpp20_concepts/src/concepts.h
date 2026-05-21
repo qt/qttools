@@ -256,3 +256,14 @@ concept Sortable = detail::is_integral<T>::value;
 template <typename T> requires traits::Sortable<T>
 T pick(T a, T b);
 
+/*!
+    \relates Cpp20Concepts
+
+    Doubles \a value using a trailing requires clause that names the
+    Integral concept directly. Exercises the trailing-requires autolink
+    on the documented concept rather than on a compound trait
+    expression.
+*/
+template <typename T>
+T processConcept(T value) requires Integral<T>;
+

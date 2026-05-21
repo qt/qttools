@@ -3265,6 +3265,7 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
     static const QString funcTag("func");
     static const QString linkTag("link");
     static const QString extrefTag("extref");
+    static const QString conceptTag("concept");
 
     // URL mapping for external references to cppreference.com
     static const QHash<QString, QString> extrefUrls = {
@@ -3308,6 +3309,17 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
                 } else
                     addLink(linkForNode(n, relative), arg, &html);
                 html += QLatin1String("</span>");
+            } else if (parseArg(src, conceptTag, &i, srcSize, &arg, &par1)) {
+                // The target attribute carries the fully-qualified concept
+                // name to look up; the body carries the unqualified text the
+                // reader sees. Resolve by target, render by body.
+                const QString target = par1.isEmpty() ? arg.toString() : par1.toString();
+                par1 = QStringView();
+                const Node *n = m_qdb->findConceptNode(target);
+                if (n)
+                    addLink(linkForNode(n, relative), arg, &html);
+                else
+                    html += arg;
             } else if (parseArg(src, headerTag, &i, srcSize, &arg, &par1)) {
                 par1 = QStringView();
                 if (arg.startsWith(QLatin1Char('&')))

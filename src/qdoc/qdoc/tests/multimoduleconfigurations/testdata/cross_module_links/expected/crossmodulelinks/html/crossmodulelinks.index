@@ -3,7 +3,11 @@
 <INDEX url="" title="CrossModuleLinks Reference Documentation" version="" project="CrossModuleLinks">
     <namespace name="" status="active" access="public" module="crossmodulelinks">
         <namespace name="ConsumerSpace" href="consumerspace.html" status="active" access="public" location="consumer_class.h" documented="true" module="ConsumerModule" brief="Namespace for consumer-defined types in the cross-module link fixture">
-            <class name="ConsumerClass" fullname="ConsumerSpace::ConsumerClass" href="consumerspace-consumerclass.html" status="active" access="public" location="consumer_class.h" documented="true" groups="upstream-controls" module="UpstreamWidgets" brief="A consumer-defined class that joins an upstream-defined group"/>
+            <class name="ConsumerClass" fullname="ConsumerSpace::ConsumerClass" href="consumerspace-consumerclass.html" status="active" access="public" location="consumer_class.h" documented="true" groups="upstream-controls" module="UpstreamWidgets" brief="A consumer-defined class that joins an upstream-defined group">
+                <function name="doStuff" fullname="ConsumerSpace::ConsumerClass::doStuff" href="consumerspace-consumerclass.html#doStuff" status="active" access="public" location="consumer_class.h" documented="true" meta="plain" type="void" signature="void doStuff(T value)">
+                    <parameter type="T" name="value" default=""/>
+                </function>
+            </class>
         </namespace>
         <page name="consumer-index.html" href="consumer-index.html" status="active" location="consumer_module.qdoc" documented="true" groups="upstream-controls" subtype="page" title="Consumer Module Reference" fulltitle="Consumer Module Reference" subtitle="" brief="Cross-module link rendering coverage under TemplateGenerator"/>
         <group name="upstream-controls" href="upstream-controls.html" status="internal-auto" seen="true" title="Upstream Controls"/>

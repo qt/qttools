@@ -15,6 +15,7 @@
 <div class="toc">
 <h3 id="toc">Contents</h3>
 <ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
 <li class="level1"><a href="#details">Detailed Description</a></li>
 </ul>
 </div>
@@ -28,13 +29,25 @@
 <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;consumer_class.h&gt;</code></td></tr>
 </table></div>
 <ul>
+<li><a href="consumerspace-consumerclass-members.html">List of all members, including inherited members</a></li>
 <li>ConsumerClass is part of <a href="upstream-controls.html">Upstream Controls</a>.</li>
 </ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="consumerspace-consumerclass.html#doStuff" translate="no">doStuff</a></b>(T <i>value</i>)</td></tr>
+</table></div>
 <!-- $$$ConsumerClass-description -->
 <div class="descr">
 <h2 id="details">Detailed Description</h2>
 <p>The consumer module parses <span translate="no">\ingroup</span> upstream-controls, which creates a placeholder CollectionNode in the consumer's primary tree. QDocDatabase::mergeCollections then mirrors title and url from the authoritative version that lives in the upstream module's tree. The cross-module href for the &quot;is part of&quot; listing must point at the upstream module's published group page, not at a bare filename in the consumer's output directory.</p>
 </div>
 <!-- @@@ConsumerClass -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$doStuff[overload1]$$$doStuffT -->
+<h3 class="fn" translate="no" id="doStuff">template &lt;typename T&gt; requires <a href="upstreamthing.html" translate="no">UpstreamThing</a>&lt;T&gt; <span class="type">void</span> ConsumerClass::<span class="name">doStuff</span>(<span class="type">T</span> <i>value</i>)</h3>
+<p>Performs cross-module work on <i translate="no">value</i>, which must satisfy the <a href="upstreamthing.html" translate="no">UpstreamThing</a> concept declared in the <a href="upstreamwidgets-module.html" translate="no">UpstreamWidgets</a> dependency module. The rendered method synopsis autolinks <a href="upstreamthing.html" translate="no">UpstreamThing</a> to its documentation in the upstream module via the dependency-index path, exercising cross-module concept autolinking.</p>
+<!-- @@@doStuff -->
+</div>
 </body>
 </html>

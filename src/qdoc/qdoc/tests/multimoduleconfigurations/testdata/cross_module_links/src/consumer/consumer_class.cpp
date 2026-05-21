@@ -29,3 +29,13 @@ ConsumerSpace::ConsumerClass::ConsumerClass() = default;
 void ConsumerSpace::ConsumerClass::operate()
 {
 }
+
+/*!
+    \fn template <typename T> void ConsumerSpace::ConsumerClass::doStuff(T value)
+
+    Performs cross-module work on \a value, which must satisfy the
+    UpstreamThing concept declared in the UpstreamWidgets dependency
+    module. The rendered method synopsis autolinks UpstreamThing to
+    its documentation in the upstream module via the dependency-index
+    path, exercising cross-module concept autolinking.
+*/
