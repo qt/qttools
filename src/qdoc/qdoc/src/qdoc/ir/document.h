@@ -133,6 +133,7 @@ struct CppReferenceInfo
     bool suppressInheritance { false };
 
     QList<SignatureSpan> templateDeclSpans;
+    QList<QString> referencedConcepts;
 
     bool isInnerClass { false };
     bool isNamespace { false };

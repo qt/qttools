@@ -70,6 +70,137 @@ static QString resolveHref(const HrefResolver *resolver, const Node *target, con
     return {};
 }
 
+namespace {
+
+// Locate a documented \concept node by name. Walks the QDocDatabase search
+// order so cross-module references resolve through dependency index trees.
+// The relative node is reserved for relative-node-aware scoping in a future
+// revision; today the lookup is global.
+const Node *findConceptNodeForRelative(const Node *relative, const QString &name)
+{
+    Q_UNUSED(relative);
+    QDocDatabase *qdb = QDocDatabase::qdocDB();
+    if (!qdb)
+        return nullptr;
+    return qdb->findConceptNode(name);
+}
+
+// Tokenize a requires-clause text against a list of documented concept
+// names, emitting a Text/Link/Text/... span sequence into \a out. Mirrors
+// the Text+ExternalRef+Text span pattern used for external references, but
+// uses SpanRole::Link with an HrefResolver-resolved href instead of an
+// external cppreference URL. Used by both the template-head requires
+// clause site (inside buildTemplateDeclSpans) and the trailing requires
+// site (inside buildCppSynopsisSpans).
+//
+// Concept names are matched longest first, so a fully-qualified
+// "ns::Integral" wins against a bare "Integral" when both occur in the
+// same requires clause text. Each matched spelling maps back to its
+// fully-qualified name for lookup, so source text that spells a concept
+// either qualified or unqualified resolves to the same concept page.
+//
+// When no concept name appears in the text, the whole clause is emitted as
+// a single Text span. Concept identifiers are alphanumeric and underscore
+// per the C++ grammar, but the alternation is built through
+// QRegularExpression::escape() for defense in depth.
+void appendRequiresSpansWithLinks(QList<IR::SignatureSpan> &out,
+                                  const QString &requiresText,
+                                  const QStringList &conceptNames,
+                                  const HrefResolver *hrefResolver,
+                                  const Node *relative)
+{
+    auto emitFallback = [&out, &requiresText]() {
+        IR::SignatureSpan req;
+        req.role = IR::SpanRole::Text;
+        req.text = " requires "_L1 + requiresText;
+        out.append(req);
+    };
+
+    if (conceptNames.isEmpty() || requiresText.isEmpty()) {
+        emitFallback();
+        return;
+    }
+
+    QStringList sorted = conceptNames;
+    std::sort(sorted.begin(), sorted.end(),
+              [](const QString &a, const QString &b) { return a.size() > b.size(); });
+
+    // Build a single alternation regex matching any concept name (longest
+    // first) anchored at word boundaries, so longer names take priority and
+    // overlapping matches don't double-emit. Each matched spelling — the
+    // fully-qualified name or its unqualified tail — maps back to the
+    // fully-qualified name the lookup needs.
+    QHash<QString, QString> targetForDisplay;
+    QStringList escapedAlternatives;
+    escapedAlternatives.reserve(sorted.size() * 2);
+    for (const QString &name : sorted) {
+        if (!targetForDisplay.contains(name)) {
+            targetForDisplay.insert(name, name);
+            escapedAlternatives.append(QRegularExpression::escape(name));
+        }
+        const QString tail = name.section("::"_L1, -1);
+        if (tail != name && !targetForDisplay.contains(tail)) {
+            targetForDisplay.insert(tail, name);
+            escapedAlternatives.append(QRegularExpression::escape(tail));
+        }
+    }
+    const QRegularExpression conceptRegex(
+            u"\\b("_s + escapedAlternatives.join(u"|"_s) + u")\\b"_s);
+    if (!conceptRegex.isValid()) {
+        emitFallback();
+        return;
+    }
+
+    auto it = conceptRegex.globalMatch(requiresText);
+    if (!it.hasNext()) {
+        emitFallback();
+        return;
+    }
+
+    // At least one concept matches: emit the " requires " lead-in, then
+    // alternate plain-text runs with concept spans.
+    IR::SignatureSpan lead;
+    lead.role = IR::SpanRole::Text;
+    lead.text = " requires "_L1;
+    out.append(lead);
+
+    qsizetype pos = 0;
+    while (it.hasNext()) {
+        const auto match = it.next();
+        if (match.capturedStart() > pos) {
+            IR::SignatureSpan textSpan;
+            textSpan.role = IR::SpanRole::Text;
+            textSpan.text = requiresText.mid(pos, match.capturedStart() - pos);
+            out.append(textSpan);
+        }
+        const QString matched = match.captured(1);
+        const QString target = targetForDisplay.value(matched, matched);
+        const Node *cn = findConceptNodeForRelative(relative, target);
+        const QString href = cn ? resolveHref(hrefResolver, cn, relative) : QString();
+
+        IR::SignatureSpan span;
+        span.text = matched;
+        if (href.isEmpty()) {
+            // An undocumented concept, or one whose page can't be located,
+            // renders as plain text rather than a dangling link.
+            span.role = IR::SpanRole::Text;
+        } else {
+            span.role = IR::SpanRole::Link;
+            span.href = href;
+        }
+        out.append(span);
+        pos = match.capturedEnd();
+    }
+    if (pos < requiresText.size()) {
+        IR::SignatureSpan tail;
+        tail.role = IR::SpanRole::Text;
+        tail.text = requiresText.mid(pos);
+        out.append(tail);
+    }
+}
+
+}  // namespace
+
 namespace NodeExtractor {
 
 /*!
@@ -370,7 +501,9 @@ IR::CollectionData extractCollectionData(const CollectionNode *cn, const HrefRes
     return data;
 }
 
-static QList<IR::SignatureSpan> buildTemplateDeclSpans(const RelaxedTemplateDeclaration *templateDecl);
+static QList<IR::SignatureSpan> buildTemplateDeclSpans(const RelaxedTemplateDeclaration *templateDecl,
+                                                       const HrefResolver *hrefResolver,
+                                                       const Node *relative);
 
 /*!
     \internal
@@ -501,7 +634,11 @@ IR::CppReferenceData extractCppReferenceData(const Aggregate *aggregate, const H
     }
 
     if (aggregate->templateDecl()) {
-        data.templateDeclSpans = buildTemplateDeclSpans(&*aggregate->templateDecl());
+        const auto &templateDecl = *aggregate->templateDecl();
+        data.templateDeclSpans = buildTemplateDeclSpans(&templateDecl, hrefResolver, aggregate);
+        data.referencedConcepts.reserve(int(templateDecl.referenced_concepts.size()));
+        for (const auto &s : templateDecl.referenced_concepts)
+            data.referencedConcepts.append(QString::fromStdString(s));
     }
 
     const auto selfCategory = aggregate->comparisonCategory();
@@ -966,7 +1103,9 @@ static QList<IR::SignatureSpan> buildExtraSpans(const Node *node, Section::Style
     return spans;
 }
 
-static QList<IR::SignatureSpan> buildTemplateDeclSpans(const RelaxedTemplateDeclaration *templateDecl)
+static QList<IR::SignatureSpan> buildTemplateDeclSpans(const RelaxedTemplateDeclaration *templateDecl,
+                                                       const HrefResolver *hrefResolver,
+                                                       const Node *relative)
 {
     if (!templateDecl)
         return {};
@@ -1055,10 +1194,13 @@ static QList<IR::SignatureSpan> buildTemplateDeclSpans(const RelaxedTemplateDecl
     declSpan.children.append(close);
 
     if (templateDecl->requires_clause && !templateDecl->requires_clause->empty()) {
-        IR::SignatureSpan req;
-        req.role = IR::SpanRole::Text;
-        req.text = " requires "_L1 + QString::fromStdString(*templateDecl->requires_clause);
-        declSpan.children.append(req);
+        const QString reqText = QString::fromStdString(*templateDecl->requires_clause);
+        QStringList conceptNames;
+        conceptNames.reserve(int(templateDecl->referenced_concepts.size()));
+        for (const auto &s : templateDecl->referenced_concepts)
+            conceptNames.append(QString::fromStdString(s));
+        appendRequiresSpansWithLinks(declSpan.children, reqText, conceptNames,
+                                     hrefResolver, relative);
     }
 
     return { declSpan };
@@ -1069,7 +1211,6 @@ static QList<IR::SignatureSpan> buildCppSynopsisSpans(const Node *node,
                                                        const Node *relative,
                                                        Section::Style style)
 {
-    Q_UNUSED(hrefResolver);
     QList<IR::SignatureSpan> spans;
 
     auto appendText = [&spans](const QString &text) {
@@ -1140,7 +1281,7 @@ static QList<IR::SignatureSpan> buildCppSynopsisSpans(const Node *node,
 
         if (style == Section::Details) {
             if (auto templateDecl = node->templateDecl()) {
-                auto tmplSpans = buildTemplateDeclSpans(&*templateDecl);
+                auto tmplSpans = buildTemplateDeclSpans(&*templateDecl, hrefResolver, relative);
                 spans.append(tmplSpans);
                 appendText(" "_L1);
             }
@@ -1224,7 +1365,8 @@ static QList<IR::SignatureSpan> buildCppSynopsisSpans(const Node *node,
             else if (func->isRefRef())
                 appendText(" &&"_L1);
             if (const auto &req = func->trailingRequiresClause(); req && !req->isEmpty())
-                appendText(" requires "_L1 + *req);
+                appendRequiresSpansWithLinks(spans, *req, func->referencedConcepts(),
+                                             hrefResolver, relative);
         }
         break;
     }
@@ -1273,7 +1415,7 @@ static QList<IR::SignatureSpan> buildCppSynopsisSpans(const Node *node,
     case NodeType::TypeAlias: {
         if (style == Section::Details) {
             if (auto templateDecl = node->templateDecl()) {
-                auto tmplSpans = buildTemplateDeclSpans(&*templateDecl);
+                auto tmplSpans = buildTemplateDeclSpans(&*templateDecl, hrefResolver, relative);
                 spans.append(tmplSpans);
                 appendText(" "_L1);
             }

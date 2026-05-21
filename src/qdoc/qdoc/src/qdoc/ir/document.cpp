@@ -187,6 +187,11 @@ QJsonObject CppReferenceInfo::toJson() const
         templateDeclArr.append(span.toJson());
     json["templateDeclSpans"_L1] = templateDeclArr;
 
+    QJsonArray refConceptsArr;
+    for (const QString &name : referencedConcepts)
+        refConceptsArr.append(name);
+    json["referencedConcepts"_L1] = refConceptsArr;
+
     json["isInnerClass"_L1] = isInnerClass;
     json["isNamespace"_L1] = isNamespace;
     json["isHeader"_L1] = isHeader;
