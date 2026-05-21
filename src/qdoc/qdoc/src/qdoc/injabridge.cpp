@@ -9,6 +9,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::Literals;
+
 static std::string escapeHtml(const std::string &input)
 {
     std::string buffer;
@@ -38,13 +40,30 @@ static std::string escapeHtml(const std::string &input)
     return buffer;
 }
 
-static std::string renderSignatureSpans(const nlohmann::json &spans)
+// Render a single link span for either output surface. HTML escapes both the
+// visible text and the href; a span with no usable href degrades to plain text
+// rather than a dangling link. Markdown emits a bracket-paren link with the
+// text and URL as-is: the concept names and generated hrefs in scope here carry
+// no Markdown-special characters, and general Markdown escaping is out of scope.
+static std::string renderLinkSpan(const std::string &text, const std::string &href,
+                                  bool hasHref, bool isMarkdown)
+{
+    if (isMarkdown)
+        return hasHref ? "[" + text + "](" + href + ")" : text;
+    if (hasHref)
+        return "<a href=\"" + escapeHtml(href) + "\">" + escapeHtml(text) + "</a>";
+    return escapeHtml(text);
+}
+
+static std::string renderSignatureSpans(const nlohmann::json &spans, const QString &format)
 {
     if (!spans.is_array()) {
         qWarning("render_signature_spans: expected JSON array, got %s",
                  spans.type_name());
         return {};
     }
+
+    const bool isMarkdown = format.contains("markdown"_L1, Qt::CaseInsensitive);
 
     std::string result;
     for (const auto &s : spans) {
@@ -92,14 +111,23 @@ static std::string renderSignatureSpans(const nlohmann::json &spans)
             result += escapeHtml(text);
             if (s.contains("children") && s["children"].is_array()) {
                 for (const auto &c : s["children"]) {
-                    if (c.value("role", "") == "type")
-                        result += R"(<span class="type">)" + escapeHtml(c.value("text", ""))
+                    const auto childRole = c.value("role", "");
+                    const auto childText = c.value("text", "");
+                    const bool childHasHref = c.contains("href");
+                    const auto childHref = c.value("href", "");
+                    if (childRole == "type") {
+                        result += R"(<span class="type">)" + escapeHtml(childText)
                                 + "</span>";
-                    else
-                        result += escapeHtml(c.value("text", ""));
+                    } else if (childRole == "link") {
+                        result += renderLinkSpan(childText, childHref, childHasHref, isMarkdown);
+                    } else {
+                        result += escapeHtml(childText);
+                    }
                 }
             }
             result += "</span>";
+        } else if (role == "link") {
+            result += renderLinkSpan(text, href, hasHref, isMarkdown);
         } else {
             result += escapeHtml(text);
         }
@@ -107,14 +135,14 @@ static std::string renderSignatureSpans(const nlohmann::json &spans)
     return result;
 }
 
-static void registerCallbacks(inja::Environment &env)
+static void registerCallbacks(inja::Environment &env, const QString &format)
 {
     env.add_callback("escape_html", 1, [](inja::Arguments &args) {
         return escapeHtml(args.at(0)->get<std::string>());
     });
 
-    env.add_callback("render_signature_spans", 1, [](inja::Arguments &args) {
-        return renderSignatureSpans(*args.at(0));
+    env.add_callback("render_signature_spans", 1, [format](inja::Arguments &args) {
+        return renderSignatureSpans(*args.at(0), format);
     });
 
     // English-list punctuation for templates that iterate over a list of
@@ -285,7 +313,8 @@ nlohmann::json InjaBridge::toInjaJson(const QJsonArray &array)
 
     Returns the rendered template as a QString.
 */
-QString InjaBridge::render(const QString &templateStr, const QJsonObject &data)
+QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
+                           const QString &format)
 {
     inja::Environment env;
     // Replace Inja's default "##" line statement prefix, which conflicts
@@ -295,7 +324,7 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data)
     env.set_line_statement("%!");
     env.set_trim_blocks(true);
     env.set_lstrip_blocks(true);
-    registerCallbacks(env);
+    registerCallbacks(env, format);
     nlohmann::json jsonData = toInjaJson(data);
 
     std::string templateUtf8 = templateStr.toUtf8().toStdString();
@@ -320,13 +349,14 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data)
     Returns the rendered template as a QString.
 */
 QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
-                           const IncludeCallback &includeCallback)
+                           const IncludeCallback &includeCallback,
+                           const QString &format)
 {
     inja::Environment env;
     env.set_line_statement("%!");
     env.set_trim_blocks(true);
     env.set_lstrip_blocks(true);
-    registerCallbacks(env);
+    registerCallbacks(env, format);
     env.set_search_included_templates_in_files(false);
     env.set_include_callback(
             [&includeCallback, &env](const std::filesystem::path & /*path*/,
@@ -355,13 +385,14 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
 
     Returns the rendered template as a QString.
 */
-QString InjaBridge::renderFile(const QString &templatePath, const QJsonObject &data)
+QString InjaBridge::renderFile(const QString &templatePath, const QJsonObject &data,
+                               const QString &format)
 {
     inja::Environment env;
     env.set_line_statement("%!");
     env.set_trim_blocks(true);
     env.set_lstrip_blocks(true);
-    registerCallbacks(env);
+    registerCallbacks(env, format);
     nlohmann::json jsonData = toInjaJson(data);
 
     std::string pathUtf8 = templatePath.toUtf8().toStdString();

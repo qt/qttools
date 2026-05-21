@@ -34,10 +34,13 @@ public:
     static nlohmann::json toInjaJson(const QJsonObject &obj);
     static nlohmann::json toInjaJson(const QJsonArray &array);
 
-    static QString render(const QString &templateStr, const QJsonObject &data);
     static QString render(const QString &templateStr, const QJsonObject &data,
-                          const IncludeCallback &includeCallback);
-    static QString renderFile(const QString &templatePath, const QJsonObject &data);
+                          const QString &format = {});
+    static QString render(const QString &templateStr, const QJsonObject &data,
+                          const IncludeCallback &includeCallback,
+                          const QString &format = {});
+    static QString renderFile(const QString &templatePath, const QJsonObject &data,
+                              const QString &format = {});
 
 private:
     InjaBridge() = default;

@@ -431,7 +431,7 @@ void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &te
     json["stylesheetName"_L1] = m_stylesheetName;
 
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
-    QString rendered = InjaBridge::render(templateContent, json, includeCallback);
+    QString rendered = InjaBridge::render(templateContent, json, includeCallback, m_format);
 
     if (m_writer && m_writer->isOpen())
         m_writer->write(rendered);
@@ -481,7 +481,7 @@ void TemplateGenerator::renderJson(const QJsonObject &json, const QString &templ
         enrichedJson["hasNavigation"_L1] = false;
 
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
-    QString rendered = InjaBridge::render(templateContent, enrichedJson, includeCallback);
+    QString rendered = InjaBridge::render(templateContent, enrichedJson, includeCallback, m_format);
 
     if (m_writer && m_writer->isOpen())
         m_writer->write(rendered);
