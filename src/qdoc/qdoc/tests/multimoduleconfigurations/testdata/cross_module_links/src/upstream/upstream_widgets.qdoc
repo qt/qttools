@@ -37,3 +37,15 @@
     output, exercising the mergeCollections path that copies status
     alongside title and url.
 */
+
+/*!
+    \concept UpstreamThing
+    \inmodule UpstreamWidgets
+    \brief A synthetic concept declared in the upstream module.
+
+    UpstreamThing exists so the consumer module can reference it from
+    a constrained item, exercising cross-module concept autolinking
+    via the dependency-index path. The actual C++ concept declaration
+    is not required for QDoc — \\concept registers a documentation
+    entity regardless of whether the corresponding C++ source exists.
+*/

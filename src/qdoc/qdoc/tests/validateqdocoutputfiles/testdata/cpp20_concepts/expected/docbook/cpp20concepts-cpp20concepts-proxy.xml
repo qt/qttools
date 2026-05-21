@@ -19,6 +19,10 @@
 <db:para>Picks the larger of <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
 <db:para>The template head constrains <db:code role="parameter">T</db:code> through the namespaced <db:code>traits::Sortable</db:code> concept, exercising qualified-name resolution in the rendered synopsis.</db:para>
 </db:section>
+<db:section xml:id="processConcept">
+<db:title>template &lt;typename T&gt; T processConcept(T <db:emphasis>value</db:emphasis>) requires Integral&lt;T&gt;</db:title>
+<db:para>Doubles <db:code role="parameter">value</db:code> using a trailing requires clause that names the Integral concept directly. Exercises the trailing-requires autolink on the documented concept rather than on a compound trait expression.</db:para>
+</db:section>
 <db:section xml:id="sum">
 <db:title>template &lt;typename T&gt; requires Integral&lt;T&gt; T sum(T <db:emphasis>a</db:emphasis>, T <db:emphasis>b</db:emphasis>)</db:title>
 <db:para>Sums two values constrained by the Integral concept.</db:para>
