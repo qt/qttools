@@ -3995,7 +3995,7 @@ void DocBookGenerator::generateTemplateParameter(const RelaxedTemplateParameter 
         break;
     case RelaxedTemplateParameter::Kind::NonTypeTemplateParameter:
         if (!decl.type.empty())
-            m_writer->writeCharacters(QString::fromStdString(decl.type));
+            typified(QString::fromStdString(decl.type), relative, false, true);
         break;
     case RelaxedTemplateParameter::Kind::TemplateTemplateParameter:
         m_writer->writeCharacters("typename"_L1);
@@ -4012,7 +4012,12 @@ void DocBookGenerator::generateTemplateParameter(const RelaxedTemplateParameter 
 
     if (!decl.initializer.empty()) {
         m_writer->writeCharacters(" = "_L1);
-        m_writer->writeCharacters(QString::fromStdString(decl.initializer));
+        if (param.kind == RelaxedTemplateParameter::Kind::TypeTemplateParameter
+            || param.kind == RelaxedTemplateParameter::Kind::TemplateTemplateParameter) {
+            typified(QString::fromStdString(decl.initializer), relative, false, true);
+        } else {
+            m_writer->writeCharacters(QString::fromStdString(decl.initializer));
+        }
     }
 }
 
