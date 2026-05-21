@@ -284,6 +284,7 @@ Document Builder::buildPageIR(PageMetadata pm) const
         info.suppressInheritance = src.suppressInheritance;
 
         info.templateDeclSpans = src.templateDeclSpans;
+        info.referencedConcepts = src.referencedConcepts;
 
         info.isInnerClass = src.isInnerClass;
         info.isNamespace = src.isNamespace;
