@@ -44,6 +44,7 @@
                 <parameter type="T &amp;" name="container" default=""/>
             </function>
         </class>
+        <class name="SortableBox" href="sortablebox.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A box holding any Sortable type"/>
         <class name="TrailingRequiresExample" href="trailingrequiresexample.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A class demonstrating functions with trailing requires clauses">
             <function name="combine" fullname="TrailingRequiresExample::combine" href="trailingrequiresexample.html#combine" status="active" access="public" location="concepts.h" documented="true" meta="plain" trailing_requires="(sizeof(T) &lt;= 4)" type="T" signature="T combine(T a, T b) requires (sizeof(T) &lt;= 4)">
                 <parameter type="T" name="a" default=""/>

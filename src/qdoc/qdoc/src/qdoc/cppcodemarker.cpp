@@ -126,7 +126,14 @@ QString CppCodeMarker::formatTemplateParameter(const RelaxedTemplateParameter &p
     // declaration used 'class' or 'typename'. This would require parser changes.
     switch (param.kind) {
     case RelaxedTemplateParameter::Kind::TypeTemplateParameter:
-        result += "typename"_L1;
+        if (param.concept_name) {
+            const QString fq = QString::fromStdString(*param.concept_name);
+            const QString unqualified = fq.section("::"_L1, -1);
+            result += "<@concept target=\""_L1 + fq + "\">"_L1
+                    + unqualified + "</@concept>"_L1;
+        } else {
+            result += "typename"_L1;
+        }
         break;
     case RelaxedTemplateParameter::Kind::NonTypeTemplateParameter:
         if (!decl.type.empty())

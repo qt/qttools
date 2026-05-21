@@ -15,7 +15,9 @@
                 <parameter type="T" name="b" default=""/>
             </function>
         </class>
+        <class name="SortableBox" href="sortablebox.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A box holding any Sortable type"/>
         <module name="Cpp20Concepts" href="cpp20concepts-module.html" status="active" location="concepts.h" documented="true" seen="true" title="C++20 Concepts Test Module" brief="A module for testing C++20 concept autolinking in synopses"/>
         <concept name="Integral" href="integral.html" status="active" location="concepts.h" documented="true" seen="true" title="Integral" module="Cpp20Concepts" brief="A type that satisfies integral arithmetic"/>
+        <concept name="traits::Sortable" href="traits-sortable.html" status="active" location="concepts.h" documented="true" seen="true" title="traits::Sortable" module="Cpp20Concepts" brief="A namespaced concept satisfied by sortable types"/>
     </namespace>
 </INDEX>

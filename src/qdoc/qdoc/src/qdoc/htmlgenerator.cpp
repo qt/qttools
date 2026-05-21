@@ -64,6 +64,141 @@ static void addLink(const QString &linkTarget, QStringView nestedStuff, QString 
     }
 }
 
+// Forward declaration: parameter emission may recurse into nested
+// template-template parameter declarations.
+static void appendTemplateParametersAtoms(Text &out, const TemplateDeclarationStorage &storage);
+
+// Emits one template parameter as an atom chain. Concept references on
+// type-template parameters become Atom::AutoLink so the autolink resolver
+// picks them up (same path the ancestor names in nested-type subtitles use).
+static void appendTemplateParameterAtoms(Text &out, const RelaxedTemplateParameter &param)
+{
+    const auto &decl = param.valued_declaration;
+
+    // Template-template parameters carry a nested template declaration that
+    // appears before the parameter kind keyword (such as
+    // "template <typename> typename X").
+    if (param.template_declaration) {
+        appendTemplateParametersAtoms(out, *param.template_declaration);
+        out << " "_L1;
+    }
+
+    switch (param.kind) {
+    case RelaxedTemplateParameter::Kind::TypeTemplateParameter:
+        if (param.concept_name) {
+            const QString fq = QString::fromStdString(*param.concept_name);
+            // Autolink the fully-qualified name so a namespaced concept
+            // resolves. Atom::AutoLink carries a single string, so the
+            // displayed text is the qualified name; the marker-based paths
+            // that can split target from display render the short spelling.
+            out << Atom(Atom::AutoLink, fq);
+        } else {
+            out << "typename"_L1;
+        }
+        break;
+    case RelaxedTemplateParameter::Kind::NonTypeTemplateParameter:
+        if (!decl.type.empty())
+            out << Atom(Atom::AutoLink, QString::fromStdString(decl.type));
+        break;
+    case RelaxedTemplateParameter::Kind::TemplateTemplateParameter:
+        out << "typename"_L1;
+        break;
+    }
+
+    if (param.is_parameter_pack)
+        out << "..."_L1;
+
+    if (!decl.name.empty())
+        out << " "_L1 << QString::fromStdString(decl.name);
+}
+
+static void appendTemplateParametersAtoms(Text &out, const TemplateDeclarationStorage &storage)
+{
+    out << "template <"_L1;
+
+    bool first = true;
+    for (const auto &param : storage.parameters) {
+        if (param.sfinae_constraint)
+            continue;
+        if (!first)
+            out << ", "_L1;
+        first = false;
+        appendTemplateParameterAtoms(out, param);
+    }
+
+    out << ">"_L1;
+}
+
+// Appends the rendered form of \a templateDecl to \a out as an atom chain.
+// Concept references — both direct-on-parameter (concept_name) and inside the
+// requires clause (referenced_concepts) — are emitted as Atom::AutoLink atoms.
+// The resolver links a concept named by a simple identifier (the common case);
+// a namespace-qualified name renders as faithful text but does not link, the
+// limit of a single-string autolink atom that can't separate target from
+// display.
+static void appendTemplateDeclAtoms(Text &out, const RelaxedTemplateDeclaration &templateDecl)
+{
+    appendTemplateParametersAtoms(out, templateDecl);
+
+    if (!templateDecl.requires_clause || templateDecl.requires_clause->empty())
+        return;
+
+    out << " requires "_L1;
+    const QString text = QString::fromStdString(*templateDecl.requires_clause);
+
+    QStringList concepts;
+    concepts.reserve(int(templateDecl.referenced_concepts.size()));
+    for (const auto &s : templateDecl.referenced_concepts)
+        concepts.append(QString::fromStdString(s));
+
+    if (concepts.isEmpty()) {
+        out << text;
+        return;
+    }
+
+    // Longest-first so prefix-shared concept names disambiguate; the bitmap
+    // tracks already-claimed character ranges so a shorter name can't match
+    // inside a longer one's span.
+    std::sort(concepts.begin(), concepts.end(),
+              [](const QString &a, const QString &b) { return a.size() > b.size(); });
+
+    struct Match { qsizetype offset; qsizetype length; QString name; };
+    QList<Match> matches;
+    QList<bool> occupied(text.size(), false);
+
+    for (const QString &concept_name : concepts) {
+        const QString unqualified = concept_name.section("::"_L1, -1);
+        QRegularExpression re("\\b"_L1 + QRegularExpression::escape(unqualified) + "\\b"_L1);
+        auto it = re.globalMatch(text);
+        while (it.hasNext()) {
+            const auto m = it.next();
+            const qsizetype start = m.capturedStart();
+            const qsizetype len = m.capturedLength();
+            bool clear = true;
+            for (qsizetype i = start; i < start + len; ++i)
+                if (occupied[i]) { clear = false; break; }
+            if (!clear)
+                continue;
+            for (qsizetype i = start; i < start + len; ++i)
+                occupied[i] = true;
+            matches.append({start, len, unqualified});
+        }
+    }
+
+    std::sort(matches.begin(), matches.end(),
+              [](const Match &a, const Match &b) { return a.offset < b.offset; });
+
+    qsizetype pos = 0;
+    for (const auto &m : matches) {
+        if (m.offset > pos)
+            out << text.mid(pos, m.offset - pos);
+        out << Atom(Atom::AutoLink, m.name);
+        pos = m.offset + m.length;
+    }
+    if (pos < text.size())
+        out << text.mid(pos);
+}
+
 /*!
     Extends the `class` HTML attribute generated for \a node.
     Returns \a classSet string extended with `internal` for
@@ -1133,8 +1268,10 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     Text subtitleText;
     // Generate a subtitle if there are parents to link to, or a template declaration
     if (aggregate->parent()->isInAPI() || templateDecl) {
-        if (templateDecl)
-            subtitleText << "%1 "_L1.arg((*templateDecl).to_qstring());
+        if (templateDecl) {
+            appendTemplateDeclAtoms(subtitleText, *templateDecl);
+            subtitleText << " "_L1;
+        }
         subtitleText << aggregate->typeWord(false) << " "_L1;
         auto ancestors = fullTitle.split("::"_L1);
         ancestors.pop_back();

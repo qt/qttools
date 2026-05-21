@@ -10,7 +10,7 @@
 <db:section xml:id="function-documentation">
 <db:title>Function Documentation</db:title>
 <db:section xml:id="doubleValue">
-<db:title>template &lt;typename value:auto&gt; void doubleValue(Integral auto <db:emphasis>value</db:emphasis>)</db:title>
+<db:title>template &lt;Integral value:auto&gt; void doubleValue(Integral auto <db:emphasis>value</db:emphasis>)</db:title>
 <db:para>Doubles <db:code role="parameter">value</db:code>, which must satisfy the Integral concept.</db:para>
 <db:para>Uses the constrained-auto syntax (<db:code>Integral auto</db:code>) — the function takes any single-argument type that models Integral.</db:para>
 </db:section>
