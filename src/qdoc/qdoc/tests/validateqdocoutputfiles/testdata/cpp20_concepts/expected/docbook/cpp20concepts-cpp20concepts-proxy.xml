@@ -10,21 +10,21 @@
 <db:section xml:id="function-documentation">
 <db:title>Function Documentation</db:title>
 <db:section xml:id="doubleValue">
-<db:title>template &lt;Integral value:auto&gt; void doubleValue(Integral auto <db:emphasis>value</db:emphasis>)</db:title>
+<db:title>template &lt;<db:link xlink:href="integral.xml">Integral</db:link> value:auto&gt; void doubleValue(Integral auto <db:emphasis>value</db:emphasis>)</db:title>
 <db:para>Doubles <db:code role="parameter">value</db:code>, which must satisfy the Integral concept.</db:para>
 <db:para>Uses the constrained-auto syntax (<db:code>Integral auto</db:code>) — the function takes any single-argument type that models Integral.</db:para>
 </db:section>
 <db:section xml:id="pick">
-<db:title>template &lt;typename T&gt; requires traits::Sortable&lt;T&gt; T pick(T <db:emphasis>a</db:emphasis>, T <db:emphasis>b</db:emphasis>)</db:title>
+<db:title>template &lt;typename T&gt; requires traits::<db:link xlink:href="traits-sortable.xml">Sortable</db:link>&lt;T&gt; T pick(T <db:emphasis>a</db:emphasis>, T <db:emphasis>b</db:emphasis>)</db:title>
 <db:para>Picks the larger of <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
 <db:para>The template head constrains <db:code role="parameter">T</db:code> through the namespaced <db:code>traits::Sortable</db:code> concept, exercising qualified-name resolution in the rendered synopsis.</db:para>
 </db:section>
 <db:section xml:id="processConcept">
-<db:title>template &lt;typename T&gt; T processConcept(T <db:emphasis>value</db:emphasis>) requires Integral&lt;T&gt;</db:title>
+<db:title>template &lt;typename T&gt; T processConcept(T <db:emphasis>value</db:emphasis>) requires <db:link xlink:href="integral.xml">Integral</db:link>&lt;T&gt;</db:title>
 <db:para>Doubles <db:code role="parameter">value</db:code> using a trailing requires clause that names the Integral concept directly. Exercises the trailing-requires autolink on the documented concept rather than on a compound trait expression.</db:para>
 </db:section>
 <db:section xml:id="sum">
-<db:title>template &lt;typename T&gt; requires Integral&lt;T&gt; T sum(T <db:emphasis>a</db:emphasis>, T <db:emphasis>b</db:emphasis>)</db:title>
+<db:title>template &lt;typename T&gt; requires <db:link xlink:href="integral.xml">Integral</db:link>&lt;T&gt; T sum(T <db:emphasis>a</db:emphasis>, T <db:emphasis>b</db:emphasis>)</db:title>
 <db:para>Sums two values constrained by the Integral concept.</db:para>
 <db:para><db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code> must both satisfy the Integral concept; the function uses the template-head requires form to express this.</db:para>
 </db:section>

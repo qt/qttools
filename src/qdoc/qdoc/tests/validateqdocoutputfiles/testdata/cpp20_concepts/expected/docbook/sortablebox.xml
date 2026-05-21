@@ -2,7 +2,7 @@
 <db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
 <db:info>
 <db:title>SortableBox Class</db:title>
-<db:subtitle>template &lt;Sortable T&gt; class SortableBox</db:subtitle>
+<db:subtitle>template &lt;<db:link xlink:href="traits-sortable.xml">Sortable</db:link> T&gt; class SortableBox</db:subtitle>
 <db:productname>Qt</db:productname>
 <db:titleabbrev>Test for C++20 concepts and requires clauses</db:titleabbrev>
 <db:abstract>
