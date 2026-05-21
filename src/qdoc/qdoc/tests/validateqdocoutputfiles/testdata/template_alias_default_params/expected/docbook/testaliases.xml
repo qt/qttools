@@ -22,12 +22,12 @@
 <db:section xml:id="type-documentation">
 <db:title>Type Documentation</db:title>
 <db:section xml:id="Bar-typedef">
-<db:title>[alias] template &lt;typename T, int N = 5&gt; TestAliases::Bar</db:title>
+<db:title>[alias] template &lt;typename T, <db:type>int</db:type> N = 5&gt; TestAliases::Bar</db:title>
 <db:para>Template alias with multiple parameters and defaults.</db:para>
 <db:para>This type alias has both a type parameter and a non-type parameter with a default value.</db:para>
 </db:section>
 <db:section xml:id="Foo-typedef">
-<db:title>[alias] template &lt;int N = 1&gt; TestAliases::Foo</db:title>
+<db:title>[alias] template &lt;<db:type>int</db:type> N = 1&gt; TestAliases::Foo</db:title>
 <db:para>Template alias with default parameter. This should match correctly.</db:para>
 <db:para>This type alias demonstrates QDoc's ability to handle template aliases with default parameter values.</db:para>
 </db:section>

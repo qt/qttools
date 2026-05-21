@@ -22,36 +22,36 @@
 <db:section xml:id="function-documentation">
 <db:title>Function Documentation</db:title>
 <db:section xml:id="templated_function_with_defaulted_non_type_template_parameter">
-<db:title>template &lt;char Category = 'A'&gt; void templated_function_with_defaulted_non_type_template_parameter()</db:title>
+<db:title>template &lt;<db:type>char</db:type> Category = 'A'&gt; void templated_function_with_defaulted_non_type_template_parameter()</db:title>
 <db:para>A templated function with a defaulted non-type template parameter <db:code role="parameter">Category</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_defaulted_template_template_parameter">
 <db:title>template &lt;
     typename T,
-    int size,
-    template &lt;typename, int&gt; typename Container = std::array
+    <db:type>int</db:type> size,
+    template &lt;typename, <db:type>int</db:type>&gt; typename Container = <db:type>std::array</db:type>
 &gt;
 void templated_function_with_defaulted_template_template_parameter(<db:emphasis>Container&lt;T, size&gt;</db:emphasis>)</db:title>
 <db:para>A templated function with a defaulted template-template parameter <db:code role="parameter">Container</db:code> and non-type parameter <db:code role="parameter">size</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_defaulted_type_template_parameter">
-<db:title>template &lt;typename T = char&gt; void templated_function_with_defaulted_type_template_parameter(<db:emphasis>T</db:emphasis>)</db:title>
+<db:title>template &lt;typename T = <db:type>char</db:type>&gt; void templated_function_with_defaulted_type_template_parameter(<db:emphasis>T</db:emphasis>)</db:title>
 <db:para>A templated function with a defaulted type template parameter.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_fixed_size_array_parameter">
-<db:title>template &lt;unsigned int Size&gt; void templated_function_with_fixed_size_array_parameter(const char (&amp;<db:emphasis>data</db:emphasis>)[Size])</db:title>
+<db:title>template &lt;<db:type>unsigned</db:type> <db:type>int</db:type> Size&gt; void templated_function_with_fixed_size_array_parameter(const char (&amp;<db:emphasis>data</db:emphasis>)[Size])</db:title>
 <db:para>A templated function with a reference-to-array parameter <db:code role="parameter">data</db:code> with a size given by <db:code role="parameter">Size</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_non_type_template_parameter">
-<db:title>template &lt;char Category&gt; void templated_function_with_non_type_template_parameter()</db:title>
+<db:title>template &lt;<db:type>char</db:type> Category&gt; void templated_function_with_non_type_template_parameter()</db:title>
 <db:para>A templated function with a non-defaulted non-type template parameter <db:code role="parameter">Category</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_non_type_template_parameter_pack">
-<db:title>template &lt;unsigned int... Weights&gt; void templated_function_with_non_type_template_parameter_pack()</db:title>
+<db:title>template &lt;<db:type>unsigned</db:type> <db:type>int</db:type>... Weights&gt; void templated_function_with_non_type_template_parameter_pack()</db:title>
 <db:para>A templated function with a non-type template parameter pack <db:code role="parameter">Weights</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_placeholder_non_type_template_parameter">
-<db:title>template &lt;auto Iterator&gt; void templated_function_with_placeholder_non_type_template_parameter()</db:title>
+<db:title>template &lt;<db:type>auto</db:type> Iterator&gt; void templated_function_with_placeholder_non_type_template_parameter()</db:title>
 <db:para>A templated function with a placeholder non-type template parameter <db:code role="parameter">Iterator</db:code>.</db:para>
 </db:section>
 <db:section xml:id="templated_function_with_template_template_parameter">
