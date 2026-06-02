@@ -7,7 +7,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 
 {% if hasCppRef %}
 {% if length(cppRef.templateDeclSpans) > 0 or cppRef.typeWord != "" %}
-{% if length(cppRef.templateDeclSpans) > 0 %}{{ render_signature_spans(cppRef.templateDeclSpans) }} {% endif %}{{ cppRef.typeWord }}{{ " " }}{{ title }}
+{% if length(cppRef.templateDeclSpans) > 0 %}{{ render_signature_spans(cppRef.templateDeclSpans) }}{{ " " }}{% endif %}{{ cppRef.typeWord }}{{ " " }}{{ title }}
 
 {% endif %}
 {% endif %}
