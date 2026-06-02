@@ -2660,27 +2660,37 @@ void HtmlGenerator::generateClassHierarchy(const Node *relative, NodeMultiMap &c
   Outputs an annotated list of the nodes in \a unsortedNodes.
   A two-column table is output.
  */
+NodeMultiMap HtmlGenerator::includedAnnotatedMembers(const Node *relative,
+                                                     const NodeList &nodes) const
+{
+    NodeMultiMap included;
+    if (relative == nullptr)
+        return included;
+
+    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+    for (auto *node : nodes) {
+        const NodeContext context = node->createContext();
+        if (InclusionFilter::isIncluded(policy, context) && !node->isDeprecated())
+            included.insert(node->fullName(relative), node);
+    }
+    return included;
+}
+
 void HtmlGenerator::generateAnnotatedList(const Node *relative, CodeMarker *marker,
                                           const NodeList &unsortedNodes, Qt::SortOrder sortOrder)
 {
-    if (unsortedNodes.isEmpty() || relative == nullptr)
-        return;
+    generateAnnotatedList(relative, marker, includedAnnotatedMembers(relative, unsortedNodes),
+                          sortOrder);
+}
 
-    NodeMultiMap nmm;
-    bool allInternal = true;
-    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
-    for (auto *node : unsortedNodes) {
-        const NodeContext context = node->createContext();
-        if (InclusionFilter::isIncluded(policy, context) && !node->isDeprecated()) {
-            allInternal = false;
-            nmm.insert(node->fullName(relative), node);
-        }
-    }
-    if (allInternal)
+void HtmlGenerator::generateAnnotatedList(const Node *relative, CodeMarker *marker,
+                                          const NodeMultiMap &nodeMap, Qt::SortOrder sortOrder)
+{
+    if (nodeMap.isEmpty())
         return;
     out() << "<div class=\"table\"><table class=\"annotated\">\n";
     int row = 0;
-    NodeList nodes = nmm.values();
+    NodeList nodes = nodeMap.values();
 
     if (sortOrder == Qt::DescendingOrder)
         std::sort(nodes.rbegin(), nodes.rend(), Node::nodeSortKeyOrNameLessThan);
