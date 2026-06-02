@@ -1848,18 +1848,18 @@
 
     qhp.QtQuick.subprojects.qmltypes.title = QML Types
     qhp.QtQuick.subprojects.qmltypes.indexTitle = Qt Quick QML Types
-    qhp.QtQuick.subprojects.qmltypes.selectors = qmlclass
+    qhp.QtQuick.subprojects.qmltypes.selectors = qmltype
     qhp.QtQuick.subprojects.qmltypes.sortPages = true
 
     qhp.QtQuick.subprojects.classes.title = Classes
     qhp.QtQuick.subprojects.classes.title = C++ Classes
     qhp.QtQuick.subprojects.classes.indexTitle = Qt Quick C++ Classes
-    qhp.QtQuick.subprojects.classes.selectors = class fake:headerfile
+    qhp.QtQuick.subprojects.classes.selectors = class headerfile
     qhp.QtQuick.subprojects.classes.sortPages = true
 
     qhp.QtQuick.subprojects.examples.title = Examples
     qhp.QtQuick.subprojects.examples.indexTitle = Qt Quick Examples and Tutorials
-    qhp.QtQuick.subprojects.examples.selectors = fake:example
+    qhp.QtQuick.subprojects.examples.selectors = example
     \endcode
 
     The documentation set may include one or more subprojects, which are added
@@ -1882,36 +1882,31 @@
     \header \li Selector             \li Description
     \row    \li \c namespace         \li Namespaces
     \row    \li \c class             \li Classes
-    \row    \li \c qmltype           \li QML Types
-    \row    \li \c qmlclass          \li Alias for \c qmltype.
+    \row    \li \c example           \li Examples
+    \row    \li \c externalpage      \li External page entries
+    \row    \li \c function          \li Functions
+    \row    \li \c headerfile        \li Header files
+    \row    \li \c page              \li Overview pages
+    \row    \li \c property          \li C++ properties
+    \row    \li \c typedef           \li C++ typedef types
+    \row    \li \c typealias         \li C++ type aliases
+    \row    \li \c variable          \li C++ variables
+    \row    \li \c qmlproperty       \li QML properties
+    \row    \li \c qmltype           \li QML types
+    \row    \li \c qmlvaluetype      \li QML value types
     \row    \li \c module[:name]     \li C++ modules or members of the module
                                          with a specified name.
     \row    \li \c qmlmodule[:name]  \li QML modules or members of the module
                                          with a specified name.
-    \row    \li \c doc[:subtype]     \li Documentation pages with a specified
-                                         \c subtype. Multiple subtypes can be
-                                         listed as a comma-separated list.
-    \row    \li \c fake              \li Alias for \c doc.
     \row    \li \c group[:groupname] \li Documentation pages for members of a
                                          specified group, as added using the
                                          \l {ingroup-command}
                                          {\\ingroup} groupname command.
                                          Multiple group names can be listed as
                                          a comma-separated list.
-                                         (Introduced in QDoc 5.6).
     \row    \li \c none              \li Selects nothing; only a link to the
                                          \c indexTitle is generated.
                                          (Introduced in QDoc 6.9).
-    \endtable
-
-    Available subtypes for the \c doc selector:
-
-    \table
-    \header \li Subtype              \li Description
-    \row    \li \c example           \li Examples
-    \row    \li \c headerfile        \li Header files
-    \row    \li \c page              \li Documentation pages defined with the
-                                         \l {page-command} {\\page} command.
     \endtable
 
     For example, the following configuration would select example pages and
@@ -1921,7 +1916,7 @@
     qhp.QtQuickControls.subprojects = examples
     qhp.QtQuickControls.subprojects.examples.title = Examples and Tutorials
     qhp.QtQuickControls.subprojects.examples.indexTitle = Qt Quick Controls Examples
-    qhp.QtQuickControls.subprojects.examples.selectors = doc:example group:tutorials
+    qhp.QtQuickControls.subprojects.examples.selectors = example group:tutorials
     qhp.QtQuickControls.subprojects.examples.sortPages = true
     \endcode
 

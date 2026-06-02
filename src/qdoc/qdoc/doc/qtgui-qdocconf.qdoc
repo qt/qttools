@@ -180,7 +180,7 @@ the Assistant's sidebar, is named "C++ Classes" and its index is the page
 titled "QT GUI C++ Classes".
 
 \badcode
-   qhp.QtGui.subprojects.classes.selectors = class fake:headerfile
+   qhp.QtGui.subprojects.classes.selectors = class headerfile
 \endcode
 
 Lists all C++ classes and header files.
