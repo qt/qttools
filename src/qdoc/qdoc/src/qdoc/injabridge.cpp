@@ -55,6 +55,28 @@ static std::string renderLinkSpan(const std::string &text, const std::string &hr
     return escapeHtml(text);
 }
 
+// Render a span subtree as native Markdown. Any span carrying an href — a
+// concept link, a linked type, an external reference — becomes a Markdown
+// link; every other role contributes its text and recurses into its children,
+// so structural roles (type, name, template-decl, the [signal]/[slot] tags)
+// stay plain text instead of HTML markup. Markdown-special characters in the
+// signature text are not escaped here; see the Markdown-first-class follow-up.
+static std::string renderSpanMarkdown(const nlohmann::json &s)
+{
+    const auto text = s.value("text", "");
+    const auto href = s.value("href", "");
+    const bool hasHref = s.contains("href") && !href.empty();
+    if (hasHref)
+        return renderLinkSpan(text, href, hasHref, /*isMarkdown=*/true);
+
+    std::string result = text;
+    if (s.contains("children") && s["children"].is_array()) {
+        for (const auto &c : s["children"])
+            result += renderSpanMarkdown(c);
+    }
+    return result;
+}
+
 static std::string renderSignatureSpans(const nlohmann::json &spans, const QString &format)
 {
     if (!spans.is_array()) {
@@ -67,6 +89,10 @@ static std::string renderSignatureSpans(const nlohmann::json &spans, const QStri
 
     std::string result;
     for (const auto &s : spans) {
+        if (isMarkdown) {
+            result += renderSpanMarkdown(s);
+            continue;
+        }
         const auto role = s.value("role", "");
         const auto text = s.value("text", "");
         const bool hasHref = s.contains("href");

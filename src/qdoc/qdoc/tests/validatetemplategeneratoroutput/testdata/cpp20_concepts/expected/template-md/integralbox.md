@@ -6,7 +6,7 @@
 
 # IntegralBox
 
-<span class="template-decl">template&lt;typename T&gt;</span>class IntegralBox
+template<typename T> class IntegralBox
 
 A box holding any Integral type.
 
