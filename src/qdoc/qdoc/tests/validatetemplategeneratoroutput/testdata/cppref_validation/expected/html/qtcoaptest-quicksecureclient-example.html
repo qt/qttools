@@ -43,7 +43,7 @@
         <section>
         <h4 id="running-the-example">Running the Example</h4>
         <p>To run the example from <a href="https://doc.qt.io/qtcreator/">Qt Creator</a>, open the <b>Welcome</b> mode and select the example from <b>Examples</b>. For more information, see <a href="https://doc.qt.io/qtcreator/creator-build-example-application.html">Qt Creator: Tutorial: Build and run</a>.</p>
-        <p>To run the example application, you first need to set up a secure CoAP server. You can run the example with any secure CoAP server supporting one of the <i>pre-shared key (PSK)</i> or <i>certificate</i> authentication modes. For more information about setting up a secure CoAP server, see <a href="qtcoap-quicksecureclient-example.html#setting-up-a-secure-coap-server">Setting Up a Secure CoAP Server</a>.</p>
+        <p>To run the example application, you first need to set up a secure CoAP server. You can run the example with any secure CoAP server supporting one of the <i>pre-shared key (PSK)</i> or <i>certificate</i> authentication modes. For more information about setting up a secure CoAP server, see <a href="qtcoaptest-quicksecureclient-example.html#setting-up-a-secure-coap-server">Setting Up a Secure CoAP Server</a>.</p>
         </section>
         <section>
         <h4 id="exposing-c-classes-to-qml">Exposing C++ Classes to QML</h4>
@@ -90,7 +90,7 @@ private:
         </section>
         <section>
         <h5 id="cmake">CMake</h5>
-        <p>For a <a href="qtcoap-quicksecureclient-example.html#cmake">CMake</a>-based build, add the following to the <code>CMakeLists.txt</code>:</p>
+        <p>For a <a href="qtcoaptest-quicksecureclient-example.html#cmake">CMake</a>-based build, add the following to the <code>CMakeLists.txt</code>:</p>
         <pre class="cpp" translate="no"><code>qt_add_qml_module(quicksecureclient
     URI CoapSecureClientModule
     SOURCES
@@ -342,7 +342,7 @@ FilePicker {
         <p>The following command pulls the docker container for a secure CoAP server based on <a href="https://github.com/eclipse/californium/tree/master/demo-apps/cf-plugtest-server">Californium plugtest</a> (which is not secure by default) from the Docker Hub and starts it:</p>
         <pre class="cpp" translate="no"><code>docker run --name coap-test-server -d --rm -p 5683:5683/udp -p 5684:5684/udp tqtc/coap-californium-test-server:3.8.0
 </code></pre>
-        <p>The CoAP test server will be reachable on ports <i>5683</i> (non-secure) and <i>5684</i> (secure). For instructions on retrieving the IP address see <a href="qtcoap-quicksecureclient-example.html#getting-the-ip-address">Getting The IP Address</a>.</p>
+        <p>The CoAP test server will be reachable on ports <i>5683</i> (non-secure) and <i>5684</i> (secure). For instructions on retrieving the IP address see <a href="qtcoaptest-quicksecureclient-example.html#getting-the-ip-address">Getting The IP Address</a>.</p>
         <p>To run the example with this server, you need to set the pre-shared key to <code>secretPSK</code> and the identity to <code>Client_identity</code>.</p>
         </section>
         <section>
@@ -350,7 +350,7 @@ FilePicker {
         <p>The docker image of the secure server using authentication with X.509 certificates is based on the <a href="https://github.com/keith-cullen/FreeCoAP/tree/master/sample/time_server">time server</a> example from the FreeCoAP library. The following command pulls the container from Docker Hub and starts it:</p>
         <pre class="cpp" translate="no"><code>docker run --name coap-time-server -d --rm -p 5684:5684/udp tqtc/coap-secure-time-server:freecoap
 </code></pre>
-        <p>For instructions on retrieving the IP address see <a href="qtcoap-quicksecureclient-example.html#getting-the-ip-address">Getting The IP Address</a>. The CoAP test server will be reachable by the retrieved IP address on port <i>5684</i> and resource path <code>/time</code>.</p>
+        <p>For instructions on retrieving the IP address see <a href="qtcoaptest-quicksecureclient-example.html#getting-the-ip-address">Getting The IP Address</a>. The CoAP test server will be reachable by the retrieved IP address on port <i>5684</i> and resource path <code>/time</code>.</p>
         <p>To run the example with this server, you need to specify the certificate files required by the server. They are located in the docker container, under <code>/root/certs</code> directory. To copy them to a local directory, use the following command:</p>
         <pre class="cpp" translate="no"><code>docker cp &lt;container_id&gt;:/root/certs &lt;local_directory_path&gt;
 </code></pre>
