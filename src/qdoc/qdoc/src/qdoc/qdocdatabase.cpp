@@ -865,6 +865,15 @@ void QDocDatabase::findAllLegaleseTexts(Aggregate *node)
  */
 
 /*!
+  \fn const CollectionNode *QDocDatabase::findConceptNode(const QString &name)
+
+  Non-creating, cross-tree lookup. findConcept()/findCollection() fabricate a
+  placeholder on a miss, which would shadow a dependency-module concept with an
+  empty primary-tree node and emit a dangling local href. getCollectionNode()
+  searches the same forest order without that side effect.
+ */
+
+/*!
   Find the \a key in the map of new class maps, and return a
   reference to the value, which is a NodeMap. If \a key is not
   found, return a reference to an empty NodeMap.
