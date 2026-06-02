@@ -77,6 +77,10 @@ private:
                                 const NodeMultiMap &nodeMap);
     void generateAnnotatedList(const Node *relative, CodeMarker *marker, const NodeList &nodes,
                                Qt::SortOrder sortOrder = Qt::AscendingOrder);
+    void generateAnnotatedList(const Node *relative, CodeMarker *marker, const NodeMultiMap &nodeMap,
+                               Qt::SortOrder sortOrder = Qt::AscendingOrder);
+    [[nodiscard]] NodeMultiMap includedAnnotatedMembers(const Node *relative,
+                                                        const NodeList &nodes) const;
     void generateCompactList(ListType listType, const Node *relative, const NodeMultiMap &classMap,
                              bool includeAlphabet, const QString &commonPrefix);
     void generateFunctionIndex(const Node *relative);
