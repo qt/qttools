@@ -250,8 +250,10 @@ static void addWidgetItem(WidgetDataBase *wdb, const QMetaObject *mo)
     if (auto *base = mo->superClass())
         item->setBaseClassName(QString::fromUtf8(base->className()));
 #if QT_CONFIG(abstractbutton)
-    if (mo->inherits(&QAbstractButton::staticMetaObject))
+    if (mo->inherits(&QAbstractButton::staticMetaObject)) {
+        //: Widget Box ToolTip of QAbstractButton-derived classes
         item->setToolTip(WidgetDataBase::tr("text"));
+    }
 #endif
     wdb->append(item);
 }
