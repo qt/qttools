@@ -439,9 +439,12 @@ void Aggregate::normalizeOverloads()
             });
             // Set overload numbers only if the functions are documented.
             // They are not visible if undocumented.
+            // Only set overload numbers within the context of the parent, to
+            // avoid renumbering from occurring if the function has been
+            // adopted by multiple parents.
             signed short n{0};
             for (auto *fn : map_it) {
-                if (fn->hasDoc())
+                if (fn->hasDoc() && fn->parent() == this)
                     fn->setOverloadNumber(n++);
             }
         }
