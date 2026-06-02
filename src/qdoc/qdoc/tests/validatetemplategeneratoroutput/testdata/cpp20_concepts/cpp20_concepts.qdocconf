@@ -1,0 +1,24 @@
+project = Cpp20Concepts
+productname = Qt
+description = TemplateGenerator validation for C++20 concept pages
+version = 1.0
+
+locationinfo = false
+
+{headerdirs,sourcedirs} = ./src
+documentationinheaders = true
+headers.fileextensions = "*.h"
+
+outputformats = TemplateHTML TemplateMarkdown
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = template-html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = template-md
+TemplateMarkdown.extension = md
+
+warninglimit = 0
+warninglimit.enabled = true
