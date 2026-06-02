@@ -304,6 +304,10 @@ public:
     const FunctionNode *findFunctionNode(const QString &target, const Node *relative,
                                          Genus genus);
     const Node *findTypeNode(const QString &type, const Node *relative, Genus genus);
+    const CollectionNode *findConceptNode(const QString &name)
+    {
+        return m_forest.getCollectionNode(name, NodeType::Concept);
+    }
     const Node *findNodeForTarget(const QString &target, const Node *relative);
     const Node *findNodeForTarget(const QString &target, const Node *relative,
                                   Genus genus, const QString &moduleName,
