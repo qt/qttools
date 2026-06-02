@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QDOCINDEX>
-<INDEX url="" title="QtCoap Reference Documentation" version="" project="QtCoap">
-    <namespace name="" status="active" access="public" module="qtcoap">
+<INDEX url="" title="QtCoapTest Reference Documentation" version="" project="QtCoapTest">
+    <namespace name="" status="active" access="public" module="qtcoaptest">
         <namespace name="QtCoap" href="qtcoap.html" status="active" access="public" location="qcoapnamespace.h" documented="true" module="QtCoap" brief="Contains miscellaneous identifiers used throughout the Qt CoAP module">
             <keyword name="qtcoap-namespace" title="{QtCoap Namespace}"/>
             <enum name="Error" fullname="QtCoap::Error" href="qtcoap.html#Error-enum" status="active" access="public" location="qcoapnamespace.h" documented="true" scoped="true">
@@ -533,7 +533,7 @@
             <keyword name="reentrant"/>
             <keyword name="thread-safe"/>
         </page>
-        <page name="quickmulticastclient" href="qtcoap-quickmulticastclient-example.html" status="active" location="quickmulticastclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Quick CoAP Multicast Discovery" fulltitle="Quick CoAP Multicast Discovery" subtitle="" brief="Using the CoAP client for a multicast resource discovery with a Qt Quick user interface">
+        <page name="quickmulticastclient" href="qtcoaptest-quickmulticastclient-example.html" status="active" location="quickmulticastclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Quick CoAP Multicast Discovery" fulltitle="Quick CoAP Multicast Discovery" subtitle="" brief="Using the CoAP client for a multicast resource discovery with a Qt Quick user interface">
             <contents name="running-the-example" title="Running the Example" level="1"/>
             <contents name="setting-up-a-coap-server" title="Setting Up a CoAP Server" level="1"/>
             <contents name="using-the-docker-based-test-server" title="Using the Docker-based Test Server" level="2"/>
@@ -542,14 +542,14 @@
             <contents name="cmake-build" title="CMake Build" level="2"/>
             <contents name="qmake-build" title="qmake Build" level="2"/>
             <contents name="using-new-qml-types" title="Using New QML Types" level="1"/>
-            <page name="quickmulticastclient/qmlcoapmulticastclient.cpp" href="qtcoap-quickmulticastclient-qmlcoapmulticastclient-cpp.html" status="active" subtype="file" title="" fulltitle="qmlcoapmulticastclient.cpp Example File" subtitle="quickmulticastclient/qmlcoapmulticastclient.cpp"/>
-            <page name="quickmulticastclient/qmlcoapmulticastclient.h" href="qtcoap-quickmulticastclient-qmlcoapmulticastclient-h.html" status="active" subtype="file" title="" fulltitle="qmlcoapmulticastclient.h Example File" subtitle="quickmulticastclient/qmlcoapmulticastclient.h"/>
-            <page name="quickmulticastclient/main.cpp" href="qtcoap-quickmulticastclient-main-cpp.html" status="active" subtype="file" title="" fulltitle="main.cpp Example File" subtitle="quickmulticastclient/main.cpp"/>
-            <page name="quickmulticastclient/CMakeLists.txt" href="qtcoap-quickmulticastclient-cmakelists-txt.html" status="active" subtype="file" title="" fulltitle="CMakeLists.txt Example File" subtitle="quickmulticastclient/CMakeLists.txt"/>
-            <page name="quickmulticastclient/qmldir" href="qtcoap-quickmulticastclient-qmldir.html" status="active" subtype="file" title="" fulltitle="qmldir Example File" subtitle="quickmulticastclient/qmldir"/>
-            <page name="quickmulticastclient/quickmulticastclient.pro" href="qtcoap-quickmulticastclient-quickmulticastclient-pro.html" status="active" subtype="file" title="" fulltitle="quickmulticastclient.pro Example File" subtitle="quickmulticastclient/quickmulticastclient.pro"/>
+            <page name="quickmulticastclient/qmlcoapmulticastclient.cpp" href="qtcoaptest-quickmulticastclient-qmlcoapmulticastclient-cpp.html" status="active" subtype="file" title="" fulltitle="qmlcoapmulticastclient.cpp Example File" subtitle="quickmulticastclient/qmlcoapmulticastclient.cpp"/>
+            <page name="quickmulticastclient/qmlcoapmulticastclient.h" href="qtcoaptest-quickmulticastclient-qmlcoapmulticastclient-h.html" status="active" subtype="file" title="" fulltitle="qmlcoapmulticastclient.h Example File" subtitle="quickmulticastclient/qmlcoapmulticastclient.h"/>
+            <page name="quickmulticastclient/main.cpp" href="qtcoaptest-quickmulticastclient-main-cpp.html" status="active" subtype="file" title="" fulltitle="main.cpp Example File" subtitle="quickmulticastclient/main.cpp"/>
+            <page name="quickmulticastclient/CMakeLists.txt" href="qtcoaptest-quickmulticastclient-cmakelists-txt.html" status="active" subtype="file" title="" fulltitle="CMakeLists.txt Example File" subtitle="quickmulticastclient/CMakeLists.txt"/>
+            <page name="quickmulticastclient/qmldir" href="qtcoaptest-quickmulticastclient-qmldir.html" status="active" subtype="file" title="" fulltitle="qmldir Example File" subtitle="quickmulticastclient/qmldir"/>
+            <page name="quickmulticastclient/quickmulticastclient.pro" href="qtcoaptest-quickmulticastclient-quickmulticastclient-pro.html" status="active" subtype="file" title="" fulltitle="quickmulticastclient.pro Example File" subtitle="quickmulticastclient/quickmulticastclient.pro"/>
         </page>
-        <page name="quicksecureclient" href="qtcoap-quicksecureclient-example.html" status="active" location="quicksecureclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Quick Secure CoAP Client" fulltitle="Quick Secure CoAP Client" subtitle="" brief="Securing the CoAP client and using it with a Qt Quick user interface">
+        <page name="quicksecureclient" href="qtcoaptest-quicksecureclient-example.html" status="active" location="quicksecureclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Quick Secure CoAP Client" fulltitle="Quick Secure CoAP Client" subtitle="" brief="Securing the CoAP client and using it with a Qt Quick user interface">
             <contents name="running-the-example" title="Running the Example" level="1"/>
             <contents name="exposing-c-classes-to-qml" title="Exposing C++ Classes to QML" level="1"/>
             <contents name="adjusting-build-files" title="Adjusting Build Files" level="1"/>
@@ -563,28 +563,28 @@
             <contents name="setting-up-a-server-for-certificate-mode" title="Setting Up a Server For Certificate Mode" level="2"/>
             <contents name="getting-the-ip-address" title="Getting The IP Address" level="2"/>
             <contents name="terminating-a-docker-container" title="Terminating a Docker Container" level="2"/>
-            <page name="quicksecureclient/qmlcoapsecureclient.cpp" href="qtcoap-quicksecureclient-qmlcoapsecureclient-cpp.html" status="active" subtype="file" title="" fulltitle="qmlcoapsecureclient.cpp Example File" subtitle="quicksecureclient/qmlcoapsecureclient.cpp"/>
-            <page name="quicksecureclient/qmlcoapsecureclient.h" href="qtcoap-quicksecureclient-qmlcoapsecureclient-h.html" status="active" subtype="file" title="" fulltitle="qmlcoapsecureclient.h Example File" subtitle="quicksecureclient/qmlcoapsecureclient.h"/>
-            <page name="quicksecureclient/main.cpp" href="qtcoap-quicksecureclient-main-cpp.html" status="active" subtype="file" title="" fulltitle="main.cpp Example File" subtitle="quicksecureclient/main.cpp"/>
-            <page name="quicksecureclient/CMakeLists.txt" href="qtcoap-quicksecureclient-cmakelists-txt.html" status="active" subtype="file" title="" fulltitle="CMakeLists.txt Example File" subtitle="quicksecureclient/CMakeLists.txt"/>
-            <page name="quicksecureclient/qmldir" href="qtcoap-quicksecureclient-qmldir.html" status="active" subtype="file" title="" fulltitle="qmldir Example File" subtitle="quicksecureclient/qmldir"/>
-            <page name="quicksecureclient/quicksecureclient.pro" href="qtcoap-quicksecureclient-quicksecureclient-pro.html" status="active" subtype="file" title="" fulltitle="quicksecureclient.pro Example File" subtitle="quicksecureclient/quicksecureclient.pro"/>
+            <page name="quicksecureclient/qmlcoapsecureclient.cpp" href="qtcoaptest-quicksecureclient-qmlcoapsecureclient-cpp.html" status="active" subtype="file" title="" fulltitle="qmlcoapsecureclient.cpp Example File" subtitle="quicksecureclient/qmlcoapsecureclient.cpp"/>
+            <page name="quicksecureclient/qmlcoapsecureclient.h" href="qtcoaptest-quicksecureclient-qmlcoapsecureclient-h.html" status="active" subtype="file" title="" fulltitle="qmlcoapsecureclient.h Example File" subtitle="quicksecureclient/qmlcoapsecureclient.h"/>
+            <page name="quicksecureclient/main.cpp" href="qtcoaptest-quicksecureclient-main-cpp.html" status="active" subtype="file" title="" fulltitle="main.cpp Example File" subtitle="quicksecureclient/main.cpp"/>
+            <page name="quicksecureclient/CMakeLists.txt" href="qtcoaptest-quicksecureclient-cmakelists-txt.html" status="active" subtype="file" title="" fulltitle="CMakeLists.txt Example File" subtitle="quicksecureclient/CMakeLists.txt"/>
+            <page name="quicksecureclient/qmldir" href="qtcoaptest-quicksecureclient-qmldir.html" status="active" subtype="file" title="" fulltitle="qmldir Example File" subtitle="quicksecureclient/qmldir"/>
+            <page name="quicksecureclient/quicksecureclient.pro" href="qtcoaptest-quicksecureclient-quicksecureclient-pro.html" status="active" subtype="file" title="" fulltitle="quicksecureclient.pro Example File" subtitle="quicksecureclient/quicksecureclient.pro"/>
         </page>
-        <page name="simplecoapclient" href="qtcoap-simplecoapclient-example.html" status="active" location="simplecoapclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Simple CoAP Client" fulltitle="Simple CoAP Client" subtitle="" brief="Creating an application that communicates with a CoAP server">
+        <page name="simplecoapclient" href="qtcoaptest-simplecoapclient-example.html" status="active" location="simplecoapclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Simple CoAP Client" fulltitle="Simple CoAP Client" subtitle="" brief="Creating an application that communicates with a CoAP server">
             <contents name="running-the-example" title="Running the Example" level="1"/>
             <contents name="setting-up-a-coap-server" title="Setting Up a CoAP Server" level="1"/>
             <contents name="using-the-docker-based-test-server" title="Using the Docker-based Test Server" level="2"/>
             <contents name="creating-a-client" title="Creating a Client" level="1"/>
             <contents name="sending-requests" title="Sending Requests" level="1"/>
-            <page name="simplecoapclient/mainwindow.cpp" href="qtcoap-simplecoapclient-mainwindow-cpp.html" status="active" subtype="file" title="" fulltitle="mainwindow.cpp Example File" subtitle="simplecoapclient/mainwindow.cpp"/>
-            <page name="simplecoapclient/mainwindow.h" href="qtcoap-simplecoapclient-mainwindow-h.html" status="active" subtype="file" title="" fulltitle="mainwindow.h Example File" subtitle="simplecoapclient/mainwindow.h"/>
-            <page name="simplecoapclient/mainwindow.ui" href="qtcoap-simplecoapclient-mainwindow-ui.html" status="active" subtype="file" title="" fulltitle="mainwindow.ui Example File" subtitle="simplecoapclient/mainwindow.ui"/>
-            <page name="simplecoapclient/optiondialog.cpp" href="qtcoap-simplecoapclient-optiondialog-cpp.html" status="active" subtype="file" title="" fulltitle="optiondialog.cpp Example File" subtitle="simplecoapclient/optiondialog.cpp"/>
-            <page name="simplecoapclient/optiondialog.h" href="qtcoap-simplecoapclient-optiondialog-h.html" status="active" subtype="file" title="" fulltitle="optiondialog.h Example File" subtitle="simplecoapclient/optiondialog.h"/>
-            <page name="simplecoapclient/optiondialog.ui" href="qtcoap-simplecoapclient-optiondialog-ui.html" status="active" subtype="file" title="" fulltitle="optiondialog.ui Example File" subtitle="simplecoapclient/optiondialog.ui"/>
-            <page name="simplecoapclient/main.cpp" href="qtcoap-simplecoapclient-main-cpp.html" status="active" subtype="file" title="" fulltitle="main.cpp Example File" subtitle="simplecoapclient/main.cpp"/>
-            <page name="simplecoapclient/CMakeLists.txt" href="qtcoap-simplecoapclient-cmakelists-txt.html" status="active" subtype="file" title="" fulltitle="CMakeLists.txt Example File" subtitle="simplecoapclient/CMakeLists.txt"/>
-            <page name="simplecoapclient/simplecoapclient.pro" href="qtcoap-simplecoapclient-simplecoapclient-pro.html" status="active" subtype="file" title="" fulltitle="simplecoapclient.pro Example File" subtitle="simplecoapclient/simplecoapclient.pro"/>
+            <page name="simplecoapclient/mainwindow.cpp" href="qtcoaptest-simplecoapclient-mainwindow-cpp.html" status="active" subtype="file" title="" fulltitle="mainwindow.cpp Example File" subtitle="simplecoapclient/mainwindow.cpp"/>
+            <page name="simplecoapclient/mainwindow.h" href="qtcoaptest-simplecoapclient-mainwindow-h.html" status="active" subtype="file" title="" fulltitle="mainwindow.h Example File" subtitle="simplecoapclient/mainwindow.h"/>
+            <page name="simplecoapclient/mainwindow.ui" href="qtcoaptest-simplecoapclient-mainwindow-ui.html" status="active" subtype="file" title="" fulltitle="mainwindow.ui Example File" subtitle="simplecoapclient/mainwindow.ui"/>
+            <page name="simplecoapclient/optiondialog.cpp" href="qtcoaptest-simplecoapclient-optiondialog-cpp.html" status="active" subtype="file" title="" fulltitle="optiondialog.cpp Example File" subtitle="simplecoapclient/optiondialog.cpp"/>
+            <page name="simplecoapclient/optiondialog.h" href="qtcoaptest-simplecoapclient-optiondialog-h.html" status="active" subtype="file" title="" fulltitle="optiondialog.h Example File" subtitle="simplecoapclient/optiondialog.h"/>
+            <page name="simplecoapclient/optiondialog.ui" href="qtcoaptest-simplecoapclient-optiondialog-ui.html" status="active" subtype="file" title="" fulltitle="optiondialog.ui Example File" subtitle="simplecoapclient/optiondialog.ui"/>
+            <page name="simplecoapclient/main.cpp" href="qtcoaptest-simplecoapclient-main-cpp.html" status="active" subtype="file" title="" fulltitle="main.cpp Example File" subtitle="simplecoapclient/main.cpp"/>
+            <page name="simplecoapclient/CMakeLists.txt" href="qtcoaptest-simplecoapclient-cmakelists-txt.html" status="active" subtype="file" title="" fulltitle="CMakeLists.txt Example File" subtitle="simplecoapclient/CMakeLists.txt"/>
+            <page name="simplecoapclient/simplecoapclient.pro" href="qtcoaptest-simplecoapclient-simplecoapclient-pro.html" status="active" subtype="file" title="" fulltitle="simplecoapclient.pro Example File" subtitle="simplecoapclient/simplecoapclient.pro"/>
         </page>
         <page name="https://coap.technology/" href="https://coap.technology/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="CoAP" fulltitle="CoAP" subtitle=""/>
         <page name="https://datatracker.ietf.org/doc/html/rfc7252" href="https://datatracker.ietf.org/doc/html/rfc7252" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7252" fulltitle="RFC 7252" subtitle=""/>

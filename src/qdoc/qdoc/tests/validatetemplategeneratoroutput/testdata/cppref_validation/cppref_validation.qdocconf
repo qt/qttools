@@ -1,4 +1,4 @@
-project = QtCoap
+project = QtCoapTest
 productname = Qt
 
 locationinfo = false
