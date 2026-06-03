@@ -217,3 +217,42 @@ T sum(T a, T b);
 */
 void doubleValue(Integral auto value);
 
+// Namespaced concept — exercises fully-qualified concept resolution in
+// synopsis autolinking. The constraint user below references it through
+// its requires clause, so the rendered signature must link the
+// qualified name back to the concept's reference page.
+namespace traits {
+template <typename T>
+concept Sortable = detail::is_integral<T>::value;
+}
+
+/*!
+    \concept traits::Sortable
+    \inmodule Cpp20Concepts
+    \brief A namespaced concept satisfied by sortable types.
+
+    Sortable lives inside the \c traits namespace, so QDoc records and
+    renders its fully-qualified name.
+
+    \section1 Definition
+
+    \code
+    namespace traits {
+    template <typename T>
+    concept Sortable = detail::is_integral<T>::value;
+    }
+    \endcode
+*/
+
+/*!
+    \relates Cpp20Concepts
+
+    Picks the larger of \a a and \a b.
+
+    The template head constrains \a T through the namespaced
+    \c {traits::Sortable} concept, exercising qualified-name resolution
+    in the rendered synopsis.
+*/
+template <typename T> requires traits::Sortable<T>
+T pick(T a, T b);
+

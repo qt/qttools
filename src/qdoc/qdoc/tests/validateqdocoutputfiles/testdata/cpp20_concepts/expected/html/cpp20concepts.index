@@ -5,7 +5,11 @@
         <function name="doubleValue" href="cpp20concepts-cpp20concepts-proxy.html#doubleValue" status="active" access="public" location="concepts.h" documented="true" related="0" meta="plain" type="void" signature="void doubleValue(Integral auto value)">
             <parameter type="Integral auto" name="value" default=""/>
         </function>
-        <function name="sum" href="cpp20concepts-cpp20concepts-proxy.html#sum" status="active" access="public" location="concepts.h" documented="true" related="1" meta="plain" type="T" signature="T sum(T a, T b)">
+        <function name="pick" href="cpp20concepts-cpp20concepts-proxy.html#pick" status="active" access="public" location="concepts.h" documented="true" related="1" meta="plain" type="T" signature="T pick(T a, T b)">
+            <parameter type="T" name="a" default=""/>
+            <parameter type="T" name="b" default=""/>
+        </function>
+        <function name="sum" href="cpp20concepts-cpp20concepts-proxy.html#sum" status="active" access="public" location="concepts.h" documented="true" related="2" meta="plain" type="T" signature="T sum(T a, T b)">
             <parameter type="T" name="a" default=""/>
             <parameter type="T" name="b" default=""/>
         </function>
@@ -53,11 +57,18 @@
         <concept name="Integral" href="integral.html" status="active" location="concepts.h" documented="true" seen="true" title="Integral" module="Cpp20Concepts" brief="A type that satisfies integral arithmetic">
             <contents name="definition" title="Definition" level="1"/>
         </concept>
+        <concept name="traits::Sortable" href="traits-sortable.html" status="active" location="concepts.h" documented="true" seen="true" title="traits::Sortable" module="Cpp20Concepts" brief="A namespaced concept satisfied by sortable types">
+            <contents name="definition" title="Definition" level="1"/>
+        </concept>
         <proxy name="Cpp20Concepts" href="cpp20concepts-cpp20concepts-proxy.html" status="active" access="public">
             <function name="doubleValue" href="cpp20concepts-cpp20concepts-proxy.html#doubleValue" status="active" access="public" location="concepts.h" documented="true" related="0" meta="plain" type="void" signature="void doubleValue(Integral auto value)">
                 <parameter type="Integral auto" name="value" default=""/>
             </function>
-            <function name="sum" href="cpp20concepts-cpp20concepts-proxy.html#sum" status="active" access="public" location="concepts.h" documented="true" related="1" meta="plain" type="T" signature="T sum(T a, T b)">
+            <function name="pick" href="cpp20concepts-cpp20concepts-proxy.html#pick" status="active" access="public" location="concepts.h" documented="true" related="1" meta="plain" type="T" signature="T pick(T a, T b)">
+                <parameter type="T" name="a" default=""/>
+                <parameter type="T" name="b" default=""/>
+            </function>
+            <function name="sum" href="cpp20concepts-cpp20concepts-proxy.html#sum" status="active" access="public" location="concepts.h" documented="true" related="2" meta="plain" type="T" signature="T sum(T a, T b)">
                 <parameter type="T" name="a" default=""/>
                 <parameter type="T" name="b" default=""/>
             </function>
