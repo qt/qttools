@@ -342,7 +342,12 @@ void Aggregate::resolveRelates()
 {
     auto *database = QDocDatabase::qdocDB();
 
-    for (auto *node : m_children) {
+    // An unresolved \relates target makes this loop create a ProxyNode parented
+    // to this aggregate. Node's constructor adds it to \c{m_children}, mutating
+    // the very list being iterated. Iterate over a \c{const} copy instead, as
+    // the new ProxyNode doesn't need relates resolution itself.
+    const NodeList children = m_children;
+    for (auto *node : children) {
         if (node->genus() != Genus::CPP)
             continue;
 
