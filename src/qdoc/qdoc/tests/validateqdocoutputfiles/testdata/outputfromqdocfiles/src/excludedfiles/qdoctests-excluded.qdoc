@@ -1,0 +1,11 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page qdoctests-excluded.html
+    \title Excluded Page
+
+    This page is excluded from processing via a wildcard entry in
+    the \c {excludefiles} configuration variable. It should not
+    appear in the generated output.
+*/

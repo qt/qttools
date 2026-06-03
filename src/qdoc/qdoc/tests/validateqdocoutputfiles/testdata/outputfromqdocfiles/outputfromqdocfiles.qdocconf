@@ -35,6 +35,11 @@ DocBook.usedocbookextensions = true
 sources = ./src/qdoctests-outputfromqdocfiles.qdoc \
           ./src/qdoctests-outputfromqdocmanuallikefiles.qdoc
 
+# Verify that wildcard patterns in excludefiles work (QTBUG-147136):
+# qdoctests-excluded.qdoc is discovered via sourcedirs but excluded by the wildcard.
+sourcedirs = ./src/excludedfiles
+excludefiles = *excluded*
+
 exampledirs = ./src/snippets
 
 macro.beginqdoc = "\\c {/*!}"
