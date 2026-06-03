@@ -1379,7 +1379,8 @@ bool Config::isFileExcluded(const QString &fileName, const QSet<QString> &exclud
 {
     for (const QString &entry : excludedFiles) {
         if (entry.contains(QLatin1Char('*')) || entry.contains(QLatin1Char('?'))) {
-            QRegularExpression re(QRegularExpression::wildcardToRegularExpression(entry));
+            QRegularExpression re(QRegularExpression::wildcardToRegularExpression(entry,
+                                  QRegularExpression::UnanchoredWildcardConversion));
             if (re.match(fileName).hasMatch())
                 return true;
         }
