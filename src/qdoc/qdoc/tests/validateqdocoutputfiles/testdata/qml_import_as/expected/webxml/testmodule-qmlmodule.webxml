@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <qmlmodule name="TestModule" qml-module-name="TestModule" qml-module-version="1.0" href="testmodule-qmlmodule.html" status="active" location="modules.qdoc" documented="true" seen="true" title="Test Module QML Types" brief="Test module for import as bug reproduction">
+            <description>
+                <brief>Test module for import as bug reproduction.</brief>
+            </description>
+        </qmlmodule>
+    </document>
 </WebXML>

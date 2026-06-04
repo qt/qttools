@@ -1,4 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="QDocTest" href="qdoctest-module.html" status="active" documented="true" seen="true" title="QDocTest Module">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="QDocTests" href="qdoctests.html" type="namespace"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>The QDocTests namespace contains classes for testing QDoc.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="QDocTests::Numbers" href="qdoctests-numbers.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>The Numbers class provides functions for manipulating numbers.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <para>The <link raw="QDocTest" href="qdoctest-module.html" type="module">QDocTest</link> module provides classes for testing QDoc.</para>
+            </description>
+        </module>
+    </document>
 </WebXML>

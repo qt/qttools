@@ -1,4 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="CompletelyHidden" href="completelyhidden-module.html" status="active" location="hiddenfriendsclass.h" documented="true" seen="true" title="" brief="Nothing to see here">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%"/>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="HiddenFriendsClass" href="hiddenfriendsclass.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A test class demonstrating hidden friend functions.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>Nothing to see here.</brief>
+            </description>
+        </module>
+    </document>
 </WebXML>

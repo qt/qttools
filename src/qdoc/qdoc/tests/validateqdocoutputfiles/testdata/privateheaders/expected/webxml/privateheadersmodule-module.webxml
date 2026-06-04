@@ -1,4 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="PrivateHeadersModule" href="privateheadersmodule-module.html" status="active" location="publicclass.h" documented="true" seen="true" title="" brief="Test module for private header processing">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%"/>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="PublicClass::PrivateData" href="publicclass-privatedata.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Private implementation class for PublicClass.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="PrivateOnlyClass" href="privateonlyclass.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A class that exists only in private headers.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="PublicClass" href="publicclass.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A public class that should always be documented.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>Test module for private header processing.</brief>
+            </description>
+        </module>
+    </document>
 </WebXML>

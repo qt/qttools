@@ -1,4 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="NoShowInternalModule" href="noshowinternalmodule-module.html" status="active" location="internalclass.h" documented="true" seen="true" title="" brief="Test module for showinternal functionality">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="NoShowInternalNamespace" href="noshowinternalnamespace-sub-noshowinternal.html" type="namespace"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A namespace that's visible.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="InternalClass" href="internalclass.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A test class demonstrating showinternal functionality.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>Test module for showinternal functionality.</brief>
+            </description>
+        </module>
+    </document>
 </WebXML>

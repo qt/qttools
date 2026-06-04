@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <concept name="Integral" href="integral.html" status="active" location="concepts.h" documented="true" seen="true" title="Integral" module="Cpp20Concepts" brief="A type that satisfies integral arithmetic">
+            <contents name="definition" title="Definition" level="1"/>
+            <description>
+                <brief>A type that satisfies integral arithmetic.</brief>
+                <para>The Integral concept is satisfied by any type modelling the built-in integer types: <teletype type="highlighted">char</teletype>, <teletype type="highlighted">short</teletype>, <teletype type="highlighted">int</teletype>, <teletype type="highlighted">long</teletype>, and their <teletype type="highlighted">unsigned</teletype> counterparts.</para>
+                <section id="definition">
+                    <heading level="1">Definition</heading>
+                    <code>template &lt;typename T&gt;
+concept Integral = detail::is_integral&lt;T&gt;::value;</code>
+                </section>
+            </description>
+        </concept>
+    </document>
 </WebXML>

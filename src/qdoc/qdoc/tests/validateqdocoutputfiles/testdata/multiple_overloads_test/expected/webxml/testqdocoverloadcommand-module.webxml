@@ -1,4 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="TestQDocOverloadCommand" href="testqdocoverloadcommand-module.html" status="active" documented="true" seen="true" title="" brief="A test module">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%"/>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TestDate" href="testdate.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Test class simulating QDate.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TestDateTime" href="testdatetime.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Test class simulating QDateTime.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TestOverloads" href="testoverloads.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Demonstrates multiple overloads and the \overload primary feature.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TestPositionDependent" href="testpositiondependent.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Test class to verify position-dependent primary overload behavior.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TestTime" href="testtime.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Test class simulating QTime.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>A test module.</brief>
+            </description>
+        </module>
+    </document>
 </WebXML>

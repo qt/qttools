@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="TestModule" href="testmodule-module.html" status="active" documented="true" seen="true" title="Test Module" brief="A test module for internal file patterns">
+            <description>
+                <generatedlist contents="classesbymodule"/>
+                <brief>A test module for internal file patterns.</brief>
+            </description>
+        </module>
+    </document>
 </WebXML>

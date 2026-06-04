@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <qmlmodule name="Test.Empty" qml-module-name="Test.Empty" qml-module-version="1.0" href="test-empty-qmlmodule.html" status="active" location="type.qdoc" documented="true" seen="true" title="No QML Types Here" brief="A QML module with no member types">
+            <description>
+                <brief>A QML module with no member types.</brief>
+            </description>
+        </qmlmodule>
+    </document>
 </WebXML>

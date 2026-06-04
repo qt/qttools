@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="Module" href="module-module.html" status="active" documented="true" seen="true" title="">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%"/>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="Class" href="class.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para></para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+            </description>
+        </module>
+    </document>
 </WebXML>

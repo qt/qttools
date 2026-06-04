@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <qmlmodule name="Test.NoVer" qml-module-name="Test.NoVer" href="test-nover-qmlmodule.html" status="active" location="type.qdoc" since="1.1" documented="true" seen="true" title="Versionless QML Module" brief="QML Types for the Test module without version">
+            <description>
+                <brief>QML Types for the Test module without version.</brief>
+            </description>
+        </qmlmodule>
+    </document>
 </WebXML>

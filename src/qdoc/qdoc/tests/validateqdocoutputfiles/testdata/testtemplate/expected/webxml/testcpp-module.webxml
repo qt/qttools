@@ -1,4 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="TestCPP" href="testcpp-module.html" status="active" since="2.0" documented="true" seen="true" title="QDoc Test C++ Classes" brief="A test module page">
+            <contents name="linking-to-function-like-things" title="Linking to function-like things" level="1"/>
+            <contents name="section" title="section()" level="2"/>
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="CrossModuleRef" href="crossmoduleref.html" type="namespace"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Namespace that has documented functions in multiple modules.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TestQDoc" href="testqdoc.html" type="namespace"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A namespace.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="Bar" href="bar.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Another class template.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="Baz" href="baz.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Class template template.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="Foo" href="foo.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Class template.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="Outer::Inner" href="outer-inner.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Nested class template inside Outer.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="Outer" href="outer.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Outer class template for testing nested template parameter visibility.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TestQDoc::Test::Struct" href="testqdoc-test-struct.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Templated struct.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TestQDoc::Test" href="testqdoc-test.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A class in a namespace.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TestQDoc::TestDerived" href="testqdoc-testderived.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A class in a namespace, derived from Test.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TestQDoc::Vec" href="testqdoc-vec.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Type alias that has its own reference.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>A test module page.</brief>
+                <para>
+                    <bold>Note:</bold> This is just a test. /* Look, Ma! {I'm made of arguments!} */</para>
+                <section id="linking-to-function-like-things">
+                    <heading level="1">Linking to function-like things</heading>
+                    <list type="bullet">
+                        <item>
+                            <para>
+                                <link raw="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" type="function">someFunctionDefaultArg()</link></para>
+                        </item>
+                        <item>
+                            <para>
+                                <link raw="QDOCTEST_MACRO2()" href="testqdoc-test.html#QDOCTEST_MACRO2" type="function">QDOCTEST_MACRO2()</link></para>
+                        </item>
+                        <item>
+                            <para>
+                                <link raw="TestQDoc::Test::QDOCTEST_MACRO2(int &amp;x)" href="testqdoc-test.html#QDOCTEST_MACRO2" type="function">QDOCTEST_MACRO2(int &amp;x)</link></para>
+                        </item>
+                        <item>
+                            <para>
+                                <link raw="section()" href="testcpp-module.html#section" type="module">section()</link></para>
+                        </item>
+                        <item>
+                            <para>
+                                <link raw="section()" href="testcpp-module.html#section" type="module">section() is a section title</link></para>
+                        </item>
+                    </list>
+                </section>
+                <section id="section">
+                    <heading level="2">section()</heading>
+                </section>
+            </description>
+        </module>
+    </document>
 </WebXML>
