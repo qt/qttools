@@ -219,6 +219,7 @@ const QString Config::dot = QLatin1String(".");
 bool Config::m_debug = false;
 bool Config::m_atomsDump = false;
 bool Config::generateExamples = true;
+bool Config::parseCppComments = true;
 QString Config::overrideOutputDir;
 QString Config::installDir;
 QSet<QString> Config::overrideOutputFormats;
@@ -445,6 +446,11 @@ void Config::load(const QString &fileName)
 
     if (!m_parser.isSet(m_parser.showInternalOption) && !qEnvironmentVariableIsSet("QDOC_SHOW_INTERNAL"))
         m_showInternal = m_configVars.value(CONFIG_SHOWINTERNAL).asBool();
+
+    // Store a hint for whether C++ documentation comments need to be parsed
+    // (moduleheader defined as empty == project contains no C++ documentation)
+    const auto &moduleHeader = m_configVars.value(CONFIG_MODULEHEADER).asString();
+    parseCppComments = !moduleHeader.isEmpty() || moduleHeader.isNull();
 }
 
 /*!
