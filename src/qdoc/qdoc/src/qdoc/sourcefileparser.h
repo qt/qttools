@@ -31,11 +31,13 @@ inline TaggedSourceFile tag_source_file(const QString& path) {
     QString extension{QFileInfo(path).suffix()};
 
     const bool inHeaders = Config::instance().get(CONFIG_DOCUMENTATIONINHEADERS).asBool();
+    const bool parseCpp = Config::instance().parseCppComments;
 
     if (inHeaders && cpp_header_extensions.contains(extension)) {
         return TaggedSourceFile{ path, CppHeaderSourceFile{} };
     } else if (cpp_file_extensions.contains(extension)) {
-        return TaggedSourceFile{ path, CppSourceFile{} };
+        return parseCpp ? TaggedSourceFile{ path, CppSourceFile{} }
+                        : TaggedSourceFile{ path, QDocSourceFile{} };
     } else if (qdoc_file_extensions.contains(extension))
         return TaggedSourceFile{ path, QDocSourceFile{} };
     else if (javascript_file_extensions.contains(extension)) return TaggedSourceFile{path, JsSourceFile{}};

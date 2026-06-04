@@ -4,6 +4,7 @@
 #include "puredocparser.h"
 
 #include "qdocdatabase.h"
+#include "inclusionfilter.h"
 #include "tokenizer.h"
 
 #include <cerrno>
@@ -56,9 +57,11 @@ std::vector<UntiedDocumentation> PureDocParser::processQdocComments(QFile& input
         // Doc constructor parses the comment.
         Doc doc(start_loc, end_loc, comment, commands, CppCodeParser::topic_commands);
         if (doc.topicsUsed().isEmpty()) {
-            doc.location().warning(QStringLiteral("This qdoc comment contains no topic command "
-                                                  "(e.g., '\\%1', '\\%2').")
-                                           .arg(COMMAND_MODULE, COMMAND_PAGE));
+            const auto policy = Config::instance().createInclusionPolicy();
+            if (InclusionFilter::processInternalDocs(policy) || !doc.isInternal())
+                doc.location().warning(QStringLiteral("This qdoc comment contains no topic command "
+                                                      "(e.g., '\\%1', '\\%2').")
+                                               .arg(COMMAND_MODULE, COMMAND_PAGE));
             continue;
         }
 

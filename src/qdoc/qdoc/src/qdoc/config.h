@@ -179,6 +179,7 @@ public:
     static const QString dot;
 
     static bool generateExamples;
+    static bool parseCppComments;
     static QString installDir;
     static QString overrideOutputDir;
     static QSet<QString> overrideOutputFormats;
