@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <qmlmodule name="UIComponents" qml-module-name="UIComponents" qml-module-version="1.0" href="uicomponents-qmlmodule.html" status="active" location="examples.qdoc" documented="true" seen="true" title="UI Components" brief="Basic set of UI components">
+            <description>
+                <brief>Basic set of UI components.</brief>
+                <para>This is a listing of a list of UI components implemented by QML types. These files are available for general import and they are based on the Qt Quick Code Samples.</para>
+                <para>This module is part of the <link raw="componentset" href="test-componentset-example.html" type="page" page="QML Documentation Example">UIComponents</link> example.</para>
+            </description>
+        </qmlmodule>
+    </document>
 </WebXML>

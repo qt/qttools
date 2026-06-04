@@ -1,4 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="SfinaeModule" href="sfinaemodule-module.html" status="active" location="sfinae_constraints.qdoc" documented="true" seen="true" title="SFINAE Module" brief="A test module for SFINAE constraint detection">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="QDocTests" href="qdoctests.html" type="namespace"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Test namespace for QDoc tests.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="QDocTests::SfinaeContainer" href="qdoctests-sfinaecontainer.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A container with SFINAE-constrained member functions.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>A test module for SFINAE constraint detection.</brief>
+            </description>
+        </module>
+    </document>
 </WebXML>

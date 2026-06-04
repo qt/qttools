@@ -1,4 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="QDocTests" href="qdoctests-module.html" status="active" documented="true" seen="true" title="" brief="Module contains test classes for QDoc">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="QDocTests" href="qdoctests.html" type="namespace"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>The QDocTests namespace contains test classes for QDoc.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="QDocTests::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A test class for compiler-generated member functions.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>The <link raw="QDocTests" href="qdoctests-module.html" type="module">QDocTests</link> module contains test classes for QDoc.</brief>
+                <para>The <link raw="QDocTests" href="qdoctests-module.html" type="module">QDocTests</link> module contains test classes for QDoc.</para>
+            </description>
+        </module>
+    </document>
 </WebXML>

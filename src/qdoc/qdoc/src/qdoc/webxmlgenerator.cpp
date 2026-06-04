@@ -149,8 +149,11 @@ void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer, Node *node
     auto qdocIndexFiles = QDocIndexFiles::qdocIndexFiles();
     if (qdocIndexFiles) {
         qdocIndexFiles->generateIndexSections(writer, node, this, this);
-        // generateIndexSections does nothing for groups, so handle them explicitly
-        if (node->isGroup())
+        // generateIndexSections returns early for collection nodes (groups,
+        // modules, QML modules, concepts) so their member listings can be
+        // written last in an index file. When rendering a single collection
+        // page, that leaves the document empty, so emit the section explicitly.
+        if (node->isCollectionNode())
             std::ignore = qdocIndexFiles->generateIndexSection(writer, node, this, this);
     }
 }

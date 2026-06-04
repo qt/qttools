@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <qmlmodule name="QmlModule" qml-module-name="QmlModule" href="qmlmodule-qmlmodule.html" status="active" location="qmltype.qdoc" documented="true" seen="true" title="">
+            <description/>
+        </qmlmodule>
+    </document>
 </WebXML>

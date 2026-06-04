@@ -1,4 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="TestModule" href="testmodule-module.html" status="active" location="testmodule.qdoc" documented="true" seen="true" title="Test Module" brief="Module for testing reimplemented member visibility">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%"/>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="BaseDevice" href="basedevice.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Base class demonstrating reimplemented member visibility.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="NetworkDevice" href="networkdevice.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Derived class that reimplements base class methods.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>Module for testing reimplemented member visibility.</brief>
+                <para>This module contains classes that demonstrate the reimplemented member visibility in QDoc when showinternal is disabled.</para>
+            </description>
+        </module>
+    </document>
 </WebXML>

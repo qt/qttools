@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <concept name="traits::Sortable" href="traits-sortable.html" status="active" location="concepts.h" documented="true" seen="true" title="traits::Sortable" module="Cpp20Concepts" brief="A namespaced concept satisfied by sortable types">
+            <contents name="definition" title="Definition" level="1"/>
+            <description>
+                <brief>A namespaced concept satisfied by sortable types.</brief>
+                <para>Sortable lives inside the <teletype type="highlighted">traits</teletype> namespace, so QDoc records and renders its fully-qualified name.</para>
+                <section id="definition">
+                    <heading level="1">Definition</heading>
+                    <code>namespace traits {
+template &lt;typename T&gt;
+concept Sortable = detail::is_integral&lt;T&gt;::value;
+}</code>
+                </section>
+            </description>
+        </concept>
+    </document>
 </WebXML>

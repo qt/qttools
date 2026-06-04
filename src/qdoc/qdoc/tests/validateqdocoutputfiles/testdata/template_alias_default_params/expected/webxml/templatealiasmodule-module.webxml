@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="TemplateAliasModule" href="templatealiasmodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" title="Template Alias Test Module" brief="Test module for template aliases with default parameters">
+            <description>
+                <generatedlist contents="classesbymodule"/>
+                <brief>Test module for template aliases with default parameters.</brief>
+            </description>
+        </module>
+    </document>
 </WebXML>

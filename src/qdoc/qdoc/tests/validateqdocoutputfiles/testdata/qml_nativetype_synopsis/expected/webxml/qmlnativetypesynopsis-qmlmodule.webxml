@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <qmlmodule name="QmlNativeTypeSynopsis" qml-module-name="QmlNativeTypeSynopsis" href="qmlnativetypesynopsis-qmlmodule.html" status="active" documented="true" seen="true" title="">
+            <description/>
+        </qmlmodule>
+    </document>
 </WebXML>

@@ -1,4 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="HiddenFriendModule" href="hiddenfriendmodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" title="" brief="Test module for hidden friend fn syntax">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%"/>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="Container" href="container.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A container class that collects related non-member functions.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="Hashable" href="hashable.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A class with an out-of-line-defined hidden friend qHash overload.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="MyClass" href="myclass.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A class with a hidden friend that should be documented on Container's page.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TestClass" href="testclass.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A class with hidden friends documented using unqualified fn syntax.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>Test module for hidden friend fn syntax.</brief>
+            </description>
+        </module>
+    </document>
 </WebXML>

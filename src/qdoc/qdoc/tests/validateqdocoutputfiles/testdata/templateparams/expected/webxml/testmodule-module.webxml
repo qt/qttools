@@ -1,4 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="TestModule" href="testmodule-module.html" status="active" documented="true" seen="true" title="Test Module" brief="A test module for template parameter documentation">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%"/>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="Container" href="container.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A container with key-value pairs.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="FullyDocumented" href="fullydocumented.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A template class with all parameters documented.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="PartiallyDocumented" href="partiallydocumented.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A template class missing documentation for U.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="WrongParamDocumented" href="wrongparamdocumented.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A template class with a typo in the documented parameter name.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>A test module for template parameter documentation.</brief>
+            </description>
+        </module>
+    </document>
 </WebXML>

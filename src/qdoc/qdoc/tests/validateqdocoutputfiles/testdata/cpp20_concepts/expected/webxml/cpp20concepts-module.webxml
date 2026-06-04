@@ -1,4 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
-    <document/>
+    <document>
+        <module name="Cpp20Concepts" href="cpp20concepts-module.html" status="active" location="concepts.h" documented="true" seen="true" title="C++20 Concepts Test Module" brief="A module for testing C++20 concepts documentation">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%"/>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="ConceptExample" href="conceptexample.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A class demonstrating functions with requires clauses.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="ConstrainedContainer" href="constrainedcontainer.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A container template with a requires clause on the class itself.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="IntegralBox" href="integralbox.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A box holding any Integral type.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="RequiresExpressionExample" href="requiresexpressionexample.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A class demonstrating requires-expressions for ad-hoc constraints.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="SortableBox" href="sortablebox.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A box holding any Sortable type.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TrailingRequiresExample" href="trailingrequiresexample.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A class demonstrating functions with trailing requires clauses.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>A module for testing C++20 concepts documentation.</brief>
+            </description>
+        </module>
+    </document>
 </WebXML>
