@@ -733,9 +733,7 @@ namespace qdesigner_internal {
         }
         arguments << fileName;
 
-        // AXIVION DISABLE Style Qt-Security-QProcessStart: False positive, path is absolute
         uic.start(binary, arguments);
-        // AXIVION ENABLE Style Qt-Security-QProcessStart
 
         if (!uic.waitForStarted()) {
             errorMessage = QApplication::translate("Designer", "Unable to launch %1: %2").

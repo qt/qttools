@@ -120,9 +120,7 @@ bool AssistantClient::ensureRunning(QString *errorMessage)
     // run
     QStringList args{u"-enableRemoteControl"_s};
 
-    // AXIVION DISABLE Style Qt-Security-QProcessStart: False positive, path is absolute
     m_process->start(app, args);
-    // AXIVION ENABLE Style Qt-Security-QProcessStart
 
     if (!m_process->waitForStarted()) {
         *errorMessage = QCoreApplication::translate("AssistantClient", "Unable to launch assistant (%1).").arg(app);
