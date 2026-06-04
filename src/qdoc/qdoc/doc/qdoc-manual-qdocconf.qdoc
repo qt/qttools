@@ -178,6 +178,7 @@
     \li \l {outputformats-variable} {outputformats}
     \li \l {outputprefixes-variable} {outputprefixes}
     \li \l {outputsuffixes-variable} {outputsuffixes}
+    \li \l {parsecppcomments-variable} {parsecppcomments}
     \li \l {preliminary-variable} {preliminary}
     \li \l {productname-variable} {productname}
     \li \l {project-variable} {project}
@@ -1229,16 +1230,17 @@
     correctly. The \c moduleheader variable provides an
     alternative file name for QDoc to search for.
 
-    If the project contains no C++ documentation, QDoc should be
-    instructed to skip generating a PCH by setting \c moduleheader
-    to an empty string:
+    For projects that contain no C++ documentation, use the
+    \qdocvar {parsecppcomments} variable to disable
+    C++ parsing. Setting \c moduleheader to an empty string has the same
+    effect, and is supported for backwards compatibility:
 
     \badcode
     # No C++ code to document in this project
     moduleheader =
     \endcode
 
-    See also \l includepaths and \l project.
+    See also \qdocvar {parsecppcomments}, \l includepaths, and \l project.
 
     \target naturallanguage-variable
     \section1 naturallanguage
@@ -1561,6 +1563,32 @@
     Likewise, for a C++ class \e QFoobar, QDoc generates \c qfoobar-tp.html.
 
     The \c outputsuffixes variable was introduced in QDoc 5.6.
+
+    \target parsecppcomments-variable
+    \section1 parsecppcomments
+
+    The \c parsecppcomments variable controls whether QDoc parses C++
+    source files using the Clang-based C++ parser.
+
+    When set to \c false, QDoc skips Clang parsing and PCH generation for
+    the project, and processes \c .cpp files using the pure documentation
+    parser instead. This is useful for projects that document only QML APIs,
+    where the C++ source files contain QDoc comments but no C++ entities to
+    document.
+
+    The default value is \c true.
+
+    \code [text]
+    parsecppcomments = false
+    \endcode
+
+    \note Setting \qdocvar {moduleheader} to an empty string has the same
+    effect, and is supported for backwards compatibility. \c parsecppcomments
+    is the preferred way to express this intent.
+
+    The \c parsecppcomments variable was introduced to QDoc in Qt 6.12.
+
+    See also \qdocvar {moduleheader}.
 
     \target qhp-variable
     \section1 qhp

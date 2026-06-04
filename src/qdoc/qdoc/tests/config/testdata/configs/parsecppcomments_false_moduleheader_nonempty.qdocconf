@@ -1,0 +1,3 @@
+project = TestProject
+parsecppcomments = false
+moduleheader = QtFoo
