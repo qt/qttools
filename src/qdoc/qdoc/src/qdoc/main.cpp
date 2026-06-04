@@ -604,7 +604,7 @@ static void processQdocconfFile(const QString &fileName)
     Doc::initialize(file_resolver);
 
     std::optional<PCHFile> pch = std::nullopt;
-    if (config.dualExec() || config.preparing()) {
+    if (Config::parseCppComments && (config.dualExec() || config.preparing())) {
         const QString moduleHeader = config.get(CONFIG_MODULEHEADER).asString();
         pch = buildPCH(
             QDocDatabase::qdocDB(),

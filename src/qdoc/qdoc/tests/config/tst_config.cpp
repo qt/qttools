@@ -23,6 +23,7 @@ private slots:
     void expandVars();
     void sourceLink();
     void showInternalPrecedence();
+    void parseCppCommentsPrecedence();
     void internalFilePatterns();
     void internalFilePatternsMatching();
     void internalFilePatternsPathMatching();
@@ -253,6 +254,51 @@ void::tst_Config::showInternalPrecedence()
 
         QCOMPARE(config.showInternal(), true);
         QCOMPARE(config.get(CONFIG_SHOWINTERNAL).asBool(), true);
+    }
+}
+
+void tst_Config::parseCppCommentsPrecedence()
+{
+    // Test 1: Neither parsecppcomments nor moduleheader set; C++ parsing enabled by default
+    {
+        auto &config = initConfig("/testdata/configs/parsecppcomments_default.qdocconf");
+        QVERIFY(config.parseCppComments);
+    }
+
+    // Test 2: moduleheader set to empty; C++ parsing disabled (legacy behavior)
+    {
+        auto &config = initConfig("/testdata/configs/parsecppcomments_moduleheader_empty.qdocconf");
+        QVERIFY(!config.parseCppComments);
+    }
+
+    // Test 3: moduleheader set to a non-empty value; C++ parsing enabled
+    {
+        auto &config = initConfig("/testdata/configs/parsecppcomments_moduleheader_nonempty.qdocconf");
+        QVERIFY(config.parseCppComments);
+    }
+
+    // Test 4: parsecppcomments explicitly set to false; C++ parsing disabled
+    {
+        auto &config = initConfig("/testdata/configs/parsecppcomments_false.qdocconf");
+        QVERIFY(!config.parseCppComments);
+    }
+
+    // Test 5: parsecppcomments explicitly set to true; C++ parsing enabled
+    {
+        auto &config = initConfig("/testdata/configs/parsecppcomments_true.qdocconf");
+        QVERIFY(config.parseCppComments);
+    }
+
+    // Test 6: parsecppcomments=true takes precedence over empty moduleheader
+    {
+        auto &config = initConfig("/testdata/configs/parsecppcomments_true_moduleheader_empty.qdocconf");
+        QVERIFY(config.parseCppComments);
+    }
+
+    // Test 7: parsecppcomments=false takes precedence over non-empty moduleheader
+    {
+        auto &config = initConfig("/testdata/configs/parsecppcomments_false_moduleheader_nonempty.qdocconf");
+        QVERIFY(!config.parseCppComments);
     }
 }
 

@@ -74,6 +74,7 @@ QString ConfigStrings::OUTPUTDIR = QStringLiteral("outputdir");
 QString ConfigStrings::OUTPUTFORMATS = QStringLiteral("outputformats");
 QString ConfigStrings::OUTPUTPREFIXES = QStringLiteral("outputprefixes");
 QString ConfigStrings::OUTPUTSUFFIXES = QStringLiteral("outputsuffixes");
+QString ConfigStrings::PARSECPPCOMMENTS = QStringLiteral("parsecppcomments");
 QString ConfigStrings::PRELIMINARY = QStringLiteral("preliminary");
 QString ConfigStrings::PRODUCTNAME = QStringLiteral("productname");
 QString ConfigStrings::PROJECT = QStringLiteral("project");
@@ -447,10 +448,15 @@ void Config::load(const QString &fileName)
     if (!m_parser.isSet(m_parser.showInternalOption) && !qEnvironmentVariableIsSet("QDOC_SHOW_INTERNAL"))
         m_showInternal = m_configVars.value(CONFIG_SHOWINTERNAL).asBool();
 
-    // Store a hint for whether C++ documentation comments need to be parsed
-    // (moduleheader defined as empty == project contains no C++ documentation)
-    const auto &moduleHeader = m_configVars.value(CONFIG_MODULEHEADER).asString();
-    parseCppComments = !moduleHeader.isEmpty() || moduleHeader.isNull();
+    // Determine whether C++ documentation comments need to be parsed.
+    // The explicit 'parsecppcomments' variable takes precedence; otherwise
+    // an empty 'moduleheader' is the legacy way to signal no C++ documentation.
+    if (m_configVars.contains(CONFIG_PARSECPPCOMMENTS)) {
+        parseCppComments = m_configVars.value(CONFIG_PARSECPPCOMMENTS).asBool();
+    } else {
+        const auto &moduleHeader = m_configVars.value(CONFIG_MODULEHEADER).asString();
+        parseCppComments = !moduleHeader.isEmpty() || moduleHeader.isNull();
+    }
 }
 
 /*!

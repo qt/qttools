@@ -338,6 +338,7 @@ struct ConfigStrings
     static QString OUTPUTFORMATS;
     static QString OUTPUTPREFIXES;
     static QString OUTPUTSUFFIXES;
+    static QString PARSECPPCOMMENTS;
     static QString PRELIMINARY;
     static QString PRODUCTNAME;
     static QString PROJECT;
@@ -431,6 +432,7 @@ struct ConfigStrings
 #define CONFIG_OUTPUTFORMATS ConfigStrings::OUTPUTFORMATS
 #define CONFIG_OUTPUTPREFIXES ConfigStrings::OUTPUTPREFIXES
 #define CONFIG_OUTPUTSUFFIXES ConfigStrings::OUTPUTSUFFIXES
+#define CONFIG_PARSECPPCOMMENTS ConfigStrings::PARSECPPCOMMENTS
 #define CONFIG_PRELIMINARY ConfigStrings::PRELIMINARY
 #define CONFIG_PRODUCTNAME ConfigStrings::PRODUCTNAME
 #define CONFIG_PROJECT ConfigStrings::PROJECT
