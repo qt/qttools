@@ -1,0 +1,26 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+project = TableCellContent
+productname = Qt
+description = Fixture exercising lists and inline images inside table cells
+
+locationinfo = false
+
+sources.fileextensions = "*.qdoc"
+
+sourcedirs = ./src
+imagedirs = ./src/images
+
+outputformats = TemplateHTML TemplateMarkdown
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+warninglimit = 0
+warninglimit.enabled = true

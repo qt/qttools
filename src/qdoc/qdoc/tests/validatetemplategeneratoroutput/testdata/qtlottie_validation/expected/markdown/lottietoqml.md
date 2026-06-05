@@ -21,11 +21,11 @@ In addition, it supports the following options:
 | Option | Description | 
 |--- |--- |
 | –copyright-statement <string> | Adds <string> as a comment at the beginning of the generated file. | 
-| -c, –curve-renderer | Enables the curve renderer backend for Qt Quick Shapes. This enables smooth, antialiased shapes in the scene without multi-sampling, but at some extra cost. | 
-| -a, --asynchronous-shapes | Enables the {QtQuick.Shapes::Shape::asynchronous}{asynchronous} mode on all Shape elements in the generated scene. This may improve CPU utilization and responsiveness. | 
+| -c, –curve-renderer | Enables the curve renderer backend for [Qt Quick Shapes](https://doc.qt.io/qt-6/qtquick-shapes-qmlmodule.html). This enables smooth, antialiased shapes in the scene without multi-sampling, but at some extra cost. | 
+| -a, --asynchronous-shapes | Enables the {QtQuick.Shapes::Shape::asynchronous}{asynchronous} mode on all [Shape](https://doc.qt.io/qt-6/qml-qtquick-shapes-shape.html) elements in the generated scene. This may improve CPU utilization and responsiveness. | 
 | -p, –optimize-paths | Enables optimization of paths before committing them to the QML file, potentially making them faster to load and render later. | 
 | –outline-stroke-mode | Stroke the outline (contour) of the filled shape instead of the original path. | 
-| -t, –type-name <string> | In place of Shape, the output will use the type name <string> instead. This is enables using a custom item to override the default behavior of Shape items. | 
+| -t, –type-name <string> | In place of [Shape](https://doc.qt.io/qt-6/qml-qtquick-shapes-shape.html), the output will use the type name <string> instead. This is enables using a custom item to override the default behavior of [Shape](https://doc.qt.io/qt-6/qml-qtquick-shapes-shape.html) items. | 
 | -v, –view | Display a preview of the Qt Quick item as it will be generated. | 
 
 
