@@ -118,7 +118,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {{ "\n" }}
 | Name | Description |
 | --- | --- |
-{% for row in entry.rows %}{% if row.type == "table-row" %}| {% for cell in row.cells %}{% if cell.type == "table-cell" %}{% if not loop.is_first %}{{ " " }}| {% endif %}{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_md_table(i.text) }}{% else %}{{ escape_md_table(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}{{ " " }}|
+{% for row in entry.rows %}{% if row.type == "table-row" %}| {% for cell in row.cells %}{% if cell.type == "table-cell" %}{% if not loop.is_first %}{{ " " }}| {% endif %}{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}{% endif %}{% else if i.type == "image" %}{% if existsIn(i, "href") %}![{% if existsIn(i, "title") %}{{ i.title }}{% endif %}]({{ i.href }}){% endif %}{% else if i.type == "text" %}{{ escape_md_table(i.text) }}{% else %}{{ escape_md_table(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}{{ " " }}|
 {% endif %}{% endfor %}
 
 {% else if entry.type == "list" %}
@@ -153,7 +153,7 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {{ "\n" }}
 | Name | Description |
 | --- | --- |
-{% for row in child.rows %}{% if row.type == "table-row" %}| {% for cell in row.cells %}{% if cell.type == "table-cell" %}{% if not loop.is_first %}{{ " " }}| {% endif %}{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}{% endif %}{% else if i.type == "text" %}{{ escape_md_table(i.text) }}{% else %}{{ escape_md_table(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}{{ " " }}|
+{% for row in child.rows %}{% if row.type == "table-row" %}| {% for cell in row.cells %}{% if cell.type == "table-cell" %}{% if not loop.is_first %}{{ " " }}| {% endif %}{% for i in cell.inlines %}{% if i.type == "link" %}{% if existsIn(i, "href") %}[{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}]({{ i.href }}){% else %}{% for c in i.children %}{{ escape_md_table(c.text) }}{% endfor %}{% endif %}{% else if i.type == "image" %}{% if existsIn(i, "href") %}![{% if existsIn(i, "title") %}{{ i.title }}{% endif %}]({{ i.href }}){% endif %}{% else if i.type == "text" %}{{ escape_md_table(i.text) }}{% else %}{{ escape_md_table(i.text) }}{% endif %}{% endfor %}{% endif %}{% endfor %}{{ " " }}|
 {% endif %}{% endfor %}
 
 {% else if child.type == "list" %}

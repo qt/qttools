@@ -11,7 +11,7 @@
 
     \table
     \header
-        \li Icon
+        \li Icon \inlineimage test-image.png
         \li Steps
     \row
         \li \inlineimage test-image.png
