@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Fixture exercising lists and inline images inside table cells" version="" project="TableCellContent">
+    <namespace name="" status="active" access="public" module="tablecellcontent">
+        <page name="table-cell-content.html" href="table-cell-content.html" status="active" location="table_cell_content.qdoc" documented="true" subtype="page" title="Table Cell Content" fulltitle="Table Cell Content" subtitle="" brief="Lists and inline images inside table cells"/>
+    </namespace>
+</INDEX>

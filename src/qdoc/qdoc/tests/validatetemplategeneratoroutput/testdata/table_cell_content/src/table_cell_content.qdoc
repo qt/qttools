@@ -1,0 +1,26 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page table-cell-content.html
+    \title Table Cell Content
+    \brief Lists and inline images inside table cells.
+
+    The first row's cells hold only an inline image; later cells hold
+    bulleted lists, one item carrying an inline image.
+
+    \table
+    \header
+        \li Icon
+        \li Steps
+    \row
+        \li \inlineimage test-image.png
+        \li \inlineimage test-image.png
+    \row
+        \li Setup
+        \li \list
+                \li Download the package
+                \li Install it \inlineimage test-image.png
+            \endlist
+    \endtable
+*/
