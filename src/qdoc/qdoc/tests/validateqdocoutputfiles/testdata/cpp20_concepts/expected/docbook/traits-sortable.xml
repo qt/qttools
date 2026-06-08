@@ -6,8 +6,10 @@
 <db:titleabbrev>Test for C++20 concepts and requires clauses</db:titleabbrev>
 <db:abstract>
 <db:para>A namespaced concept satisfied by sortable types.</db:para>
+<db:para>This concept was introduced in Qt 1.0.</db:para>
 </db:abstract>
 </db:info>
+<db:para>This concept was introduced in Qt 1.0.</db:para>
 <db:anchor xml:id="details"/>
 <db:para>Sortable lives inside the <db:code>traits</db:code> namespace, so QDoc records and renders its fully-qualified name.</db:para>
 <db:section xml:id="definition">

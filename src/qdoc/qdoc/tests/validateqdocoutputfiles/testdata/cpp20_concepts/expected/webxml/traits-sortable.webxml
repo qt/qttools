@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <concept name="traits::Sortable" href="traits-sortable.html" status="active" location="concepts.h" documented="true" seen="true" title="traits::Sortable" module="Cpp20Concepts" brief="A namespaced concept satisfied by sortable types">
+        <concept name="traits::Sortable" href="traits-sortable.html" status="active" location="concepts.h" since="1.0" documented="true" seen="true" title="traits::Sortable" module="Cpp20Concepts" brief="A namespaced concept satisfied by sortable types">
             <contents name="definition" title="Definition" level="1"/>
             <description>
                 <brief>A namespaced concept satisfied by sortable types.</brief>
