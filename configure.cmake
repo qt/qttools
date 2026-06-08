@@ -146,12 +146,12 @@ qt_feature("qtattributionsscanner" PRIVATE
 qt_feature("qtdiag" PRIVATE
     LABEL "qtdiag"
     PURPOSE "qtdiag outputs information about the Qt installation it was built with."
-    CONDITION QT_FEATURE_commandlineparser AND TARGET Qt::Gui AND NOT ANDROID AND NOT QNX AND NOT UIKIT AND NOT WASM
+    CONDITION QT_FEATURE_commandlineparser AND TARGET Qt::Gui AND NOT ANDROID AND NOT QNX AND NOT UIKIT AND NOT WASM AND NOT OHOS
 )
 qt_feature("qtplugininfo" PRIVATE
     LABEL "qtplugininfo"
     PURPOSE "qtplugininfo dumps metadata about Qt plugins in JSON format."
-    CONDITION QT_FEATURE_commandlineparser AND QT_FEATURE_library AND (android_app OR NOT ANDROID)
+    CONDITION QT_FEATURE_commandlineparser AND QT_FEATURE_library AND (android_app OR NOT ANDROID) AND NOT OHOS
 )
 qt_feature("fullqthelp" PUBLIC
     LABEL "fullqthelp"

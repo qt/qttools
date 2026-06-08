@@ -6,6 +6,19 @@ if(TARGET WrapLibClang::WrapLibClang)
     return()
 endif()
 
+# Bail out when targeting HarmonyOS. The OHOS variable is only set by the SDK's
+# cross-toolchain file, so this is reached exclusively for OHOS device builds.
+# The LLVM that ships with the HarmonyOS SDK is broken (find_package(LLVM) fails
+# on missing files), and QDoc is a host tool that is not built for the device
+# anyway, so there is no point in probing for LLVM here.
+#
+# Set QT_FORCE_FIND_PACKAGE_LLVM_ON_OHOS to override this, e.g. when a working
+# LLVM is available via LLVM_INSTALL_DIR.
+if(OHOS AND NOT QT_FORCE_FIND_PACKAGE_LLVM_ON_OHOS)
+    set(WrapLibClang_FOUND FALSE)
+    return()
+endif()
+
 if(DEFINED ENV{LLVM_INSTALL_DIR})
     set(__qt_wrap_clang_backup_prefix "${CMAKE_PREFIX_PATH}")
     list(PREPEND CMAKE_PREFIX_PATH "$ENV{LLVM_INSTALL_DIR}")
