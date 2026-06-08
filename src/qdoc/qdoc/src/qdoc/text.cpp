@@ -268,12 +268,8 @@ Text Text::subText(const Atom *begin, const Atom *end)
 
 void Text::clear()
 {
-    while (m_first != nullptr) {
-        Atom *atom = m_first;
-        m_first = m_first->next();
-        delete atom;
-    }
-    m_first = nullptr;
+    while (m_first)
+        delete std::exchange(m_first, m_first->next());
     m_last = nullptr;
 }
 
