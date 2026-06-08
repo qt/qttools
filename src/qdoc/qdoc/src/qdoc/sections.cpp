@@ -134,6 +134,7 @@ SectionVector makeSinceSections()
         { "New Type Aliases"_L1,            ""_L1, ""_L1, ""_L1, Section::Details },
         { "New Properties"_L1,              ""_L1, ""_L1, ""_L1, Section::Details },
         { "New Variables"_L1,               ""_L1, ""_L1, ""_L1, Section::Details },
+        { "New Concepts"_L1,                ""_L1, ""_L1, ""_L1, Section::Details },
         { "New QML Types"_L1,               ""_L1, ""_L1, ""_L1, Section::Details },
         { "New QML Enumeration Types"_L1,   ""_L1, ""_L1, ""_L1, Section::Details },
         { "New QML Properties"_L1,          ""_L1, ""_L1, ""_L1, Section::Details },
@@ -488,6 +489,9 @@ Sections::Sections(const NodeMultiMap &nsmap)
             break;
         case NodeType::QmlEnum:
             m_sinceSections[SinceQmlEnumTypes].appendMember(node);
+            break;
+        case NodeType::Concept:
+            m_sinceSections[SinceConcepts].appendMember(node);
             break;
         default:
             break;

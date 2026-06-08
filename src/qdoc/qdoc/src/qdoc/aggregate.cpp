@@ -805,6 +805,9 @@ void Aggregate::findAllSince()
             } else if (node->isQmlProperty()) {
                 // Insert QML properties into the since map.
                 nsmap.insert(node->name(), node);
+            } else if (node->isConcept()) {
+                // Insert concepts with a qualified name
+                nsmap.insert(node->qualifyWithParentName(), node);
             } else {
                 // Insert external documents into the general since map.
                 QString name = node->qualifyWithParentName();

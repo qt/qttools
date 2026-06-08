@@ -230,6 +230,7 @@ concept Sortable = detail::is_integral<T>::value;
     \concept traits::Sortable
     \inmodule Cpp20Concepts
     \brief A namespaced concept satisfied by sortable types.
+    \since 1.0
 
     Sortable lives inside the \c traits namespace, so QDoc records and
     renders its fully-qualified name.

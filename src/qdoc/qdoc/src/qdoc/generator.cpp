@@ -2451,6 +2451,8 @@ QString Generator::typeString(const Node *node, bool plural)
         return plural ? "modules"_L1 : "module"_L1;
     case NodeType::Variable:
         return plural ? "variables"_L1 : "variable"_L1;
+    case NodeType::Concept:
+        return plural ? "concepts"_L1 : "concept"_L1;
     case NodeType::SharedComment: {
         const auto *shared = static_cast<const SharedCommentNode *>(node);
         if (shared->isPropertyGroup())
