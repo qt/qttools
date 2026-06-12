@@ -64,7 +64,8 @@ static QStringList getResources(const QString &resourceFile, QMakeVfs *vfs)
         return QStringList();
     QString content;
     QString errStr;
-    if (vfs->readFile(vfs->idForFileName(resourceFile, QMakeVfs::VfsCumulative), &content, &errStr)
+    if (vfs->readFile(vfs->idForFileName(resourceFile, QMakeVfs::VfsCumulative), &content, &errStr,
+                      true)
         != QMakeVfs::ReadOk) {
         qWarning("Pro-JSON-generator error: Cannot read %s: %s", qPrintable(resourceFile),
                  qPrintable(errStr));

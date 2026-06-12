@@ -63,7 +63,7 @@ static bool readFileContent(const QString &filePath, QString *content, QString *
     QByteArray ba;
     if (!readFileContent(filePath, &ba, errorString))
         return false;
-    *content = QString::fromLocal8Bit(ba);
+    *content = QString::fromUtf8(ba);
     return true;
 }
 

@@ -55,7 +55,7 @@ public:
     int idForFileName(const QString &fn, VfsFlags flags);
     QString fileNameForId(int id);
     bool writeFile(int id, QIODevice::OpenMode mode, VfsFlags flags, const QString &contents, QString *errStr);
-    ReadResult readFile(int id, QString *contents, QString *errStr);
+    ReadResult readFile(int id, QString *contents, QString *errStr, bool utf8 = false);
     bool exists(const QString &fn, QMakeVfs::VfsFlags flags);
 
 #ifndef PROEVALUATOR_FULL
