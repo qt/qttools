@@ -162,7 +162,8 @@ bool QMakeVfs::writeFile(int id, QIODevice::OpenMode mode, VfsFlags flags,
 #endif
 }
 
-QMakeVfs::ReadResult QMakeVfs::readFile(int id, QString *contents, QString *errStr)
+QMakeVfs::ReadResult QMakeVfs::readFile(int id, QString *contents, QString *errStr,
+                                        bool utf8)
 {
 #ifndef PROEVALUATOR_FULL
 # ifdef PROEVALUATOR_THREAD_SAFE
@@ -203,7 +204,7 @@ QMakeVfs::ReadResult QMakeVfs::readFile(int id, QString *contents, QString *errS
         *errStr = fL1S("Unexpected UTF-8 BOM");
         return ReadOtherError;
     }
-    *contents = QString::fromLocal8Bit(bcont);
+    *contents = utf8 ? QString::fromUtf8(bcont) : QString::fromLocal8Bit(bcont);
     return ReadOk;
 }
 

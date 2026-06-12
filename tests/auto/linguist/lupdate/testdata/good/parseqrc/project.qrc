@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/">
     <file>main.js</file>
+    <file>café.js</file>
 </qresource>
 </RCC>
