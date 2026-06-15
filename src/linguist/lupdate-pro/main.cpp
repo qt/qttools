@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     QTranslator translator;
     QTranslator qtTranslator;
     QString sysLocale = QLocale::system().name();
-    QString resourceDir = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
+    QString resourceDir = QLibraryInfo::paths(QLibraryInfo::TranslationsPath).value(0);
     if (translator.load("linguist_"_L1 + sysLocale, resourceDir)
         && qtTranslator.load("qt_"_L1 + sysLocale, resourceDir)) {
         app.installTranslator(&translator);

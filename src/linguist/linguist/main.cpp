@@ -96,7 +96,7 @@ int main(int argc, char **argv)
     parser.process(app);
 
     QString resourceDir = parser.isSet(resourceDirOption)
-            ? parser.value(resourceDirOption) : QLibraryInfo::path(QLibraryInfo::TranslationsPath);
+            ? parser.value(resourceDirOption) : QLibraryInfo::paths(QLibraryInfo::TranslationsPath).value(0);
 
     QTranslator translator;
     QTranslator qtTranslator;

@@ -156,7 +156,7 @@ int main(int argc, char **argv)
 #ifndef Q_OS_WIN32
     QTranslator translator;
     QTranslator qtTranslator;
-    QString resourceDir = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
+    QString resourceDir = QLibraryInfo::paths(QLibraryInfo::TranslationsPath).value(0);
     if (translator.load("linguist_en"_L1, resourceDir)
         && qtTranslator.load("qt_en"_L1, resourceDir)) {
         app.installTranslator(&translator);
