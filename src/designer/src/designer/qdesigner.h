@@ -31,7 +31,7 @@ struct Options;
 struct Options
 {
     QStringList files;
-    QString resourceDir{QLibraryInfo::path(QLibraryInfo::TranslationsPath)};
+    QString resourceDir{QLibraryInfo::paths(QLibraryInfo::TranslationsPath).value(0)};
     QStringList pluginPaths;
     std::optional<QVersionNumber> qtVersion;
     bool server{false};
