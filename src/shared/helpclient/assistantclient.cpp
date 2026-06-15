@@ -67,7 +67,7 @@ bool AssistantClient::isRunning() const
 
 QString AssistantClient::binary()
 {
-    QString app = QLibraryInfo::path(QLibraryInfo::BinariesPath) + QDir::separator();
+    QString app = QLibraryInfo::paths(QLibraryInfo::BinariesPath).value(0) + QDir::separator();
 #if !defined(Q_OS_MACOS)
     app += "assistant"_L1;
 #else
