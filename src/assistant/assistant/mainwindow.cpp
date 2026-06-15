@@ -359,7 +359,7 @@ static const char *docs[] = {
 static QStringList newQtDocumentation()
 {
     QStringList result;
-    const QDir docDirectory(QLibraryInfo::path(QLibraryInfo::DocumentationPath));
+    const QDir docDirectory(QLibraryInfo::paths(QLibraryInfo::DocumentationPath).value(0));
     const QFileInfoList entries = docDirectory.entryInfoList(QStringList(QStringLiteral("*.qch")),
                                                              QDir::Files, QDir::Name);
     if (!entries.isEmpty()) {

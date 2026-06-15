@@ -224,11 +224,13 @@ void setupTranslation(const QString &fileName, const QString &dir)
 void setupTranslations()
 {
     TRACE_OBJ
-    const QString &resourceDir
-        = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
-    setupTranslation("assistant"_L1, resourceDir);
-    setupTranslation("qt"_L1, resourceDir);
-    setupTranslation("qt_help"_L1, resourceDir);
+    const QStringList resourceDirs
+            = QLibraryInfo::paths(QLibraryInfo::TranslationsPath);
+    for (const QString &resourceDir : resourceDirs) {
+        setupTranslation("assistant"_L1, resourceDir);
+        setupTranslation("qt"_L1, resourceDir);
+        setupTranslation("qt_help"_L1, resourceDir);
+    }
 }
 
 } // Anonymous namespace.

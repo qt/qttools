@@ -40,7 +40,7 @@ void QtDocInstaller::installDocs()
 void QtDocInstaller::run()
 {
     TRACE_OBJ
-    m_qchDir.setPath(QLibraryInfo::path(QLibraryInfo::DocumentationPath));
+    m_qchDir.setPath(QLibraryInfo::paths(QLibraryInfo::DocumentationPath).value(0));
     m_qchFiles = m_qchDir.entryList(QStringList() << "*.qch"_L1);
 
     bool changes = false;
