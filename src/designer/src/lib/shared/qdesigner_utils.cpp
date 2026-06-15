@@ -705,10 +705,18 @@ namespace qdesigner_internal {
         static constexpr auto uicBinary =
             QOperatingSystemVersion::currentType() != QOperatingSystemVersion::Windows
             ? "/uic"_L1 : "/uic.exe"_L1;
-        QString binary = QLibraryInfo::path(QLibraryInfo::LibraryExecutablesPath) + uicBinary;
+        QString binary = [] {
+            const QStringList paths = QLibraryInfo::paths(QLibraryInfo::LibraryExecutablesPath);
+            for (const QString &path : paths) {
+                const QString candidate = path + uicBinary;
+                if (QFile::exists(candidate))
+                    return candidate;
+            }
+            return QString();
+        }();
         // In a PySide6 installation, there is no libexec directory; uic.exe is
         // in the main wheel directory next to designer.exe.
-        if (!QFileInfo::exists(binary))
+        if (binary.isEmpty())
             binary = QCoreApplication::applicationDirPath() + uicBinary;
         if (!QFileInfo::exists(binary)) {
             errorMessage = QApplication::translate("Designer", "%1 does not exist.").
