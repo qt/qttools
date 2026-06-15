@@ -298,7 +298,7 @@ generateProjectDescription(const QStringList &proFiles, const QStringList &trans
     ProFileGlobals option;
     option.qmake_abslocation = QString::fromLocal8Bit(qgetenv("QMAKE"));
     if (option.qmake_abslocation.isEmpty()) {
-        option.qmake_abslocation = QLibraryInfo::path(QLibraryInfo::BinariesPath) + "/qmake"_L1;
+        option.qmake_abslocation = QLibraryInfo::paths(QLibraryInfo::BinariesPath).value(0) + "/qmake"_L1;
     }
     option.debugLevel = proDebug;
     option.initProperties();
