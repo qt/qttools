@@ -914,13 +914,13 @@ CppCodeParser::processTopicArgs(const UntiedDocumentation &untied)
         Node *node = nullptr;
         if (args.size() == 1) {
             if (topic == COMMAND_FN) {
-                const InclusionPolicy policy = Config::instance().createInclusionPolicy();
-                if (InclusionFilter::processInternalDocs(policy) || !doc.isInternal()) {
-                    auto result = fn_parser(doc.location(), args[0].first, args[0].second, untied.context);
-                    if (auto *error = std::get_if<FnMatchError>(&result))
+                auto result = fn_parser(doc.location(), args[0].first, args[0].second, untied.context);
+                if (auto *error = std::get_if<FnMatchError>(&result)) {
+                    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+                    if (!doc.isInternal() || InclusionFilter::processInternalDocs(policy))
                         errors.emplace_back(*error);
-                    else
-                        node = std::get<Node*>(result);
+                } else {
+                    node = std::get<Node*>(result);
                 }
             } else if (topic == COMMAND_MACRO) {
                 node = parseMacroArg(doc.location(), args[0].first);
@@ -941,13 +941,13 @@ CppCodeParser::processTopicArgs(const UntiedDocumentation &untied)
             for (const auto &arg : std::as_const(args)) {
                 node = nullptr;
                 if (topic == COMMAND_FN) {
-                    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
-                    if (InclusionFilter::processInternalDocs(policy) || !doc.isInternal()) {
-                        auto result = fn_parser(doc.location(), arg.first, arg.second, untied.context);
-                        if (auto *error = std::get_if<FnMatchError>(&result))
+                    auto result = fn_parser(doc.location(), arg.first, arg.second, untied.context);
+                    if (auto *error = std::get_if<FnMatchError>(&result)) {
+                        const InclusionPolicy policy = Config::instance().createInclusionPolicy();
+                        if (!doc.isInternal() || InclusionFilter::processInternalDocs(policy))
                             errors.emplace_back(*error);
-                        else
-                            node = std::get<Node*>(result);
+                    } else {
+                        node = std::get<Node*>(result);
                     }
                 } else if (topic == COMMAND_MACRO) {
                     node = parseMacroArg(doc.location(), arg.first);

@@ -17,6 +17,7 @@ public:
 signals:
     void dataChanged(int value);
     void dataChanged(const QString &value);
+    void internalStateChanged();
 
 public slots:
     void process(int value);
