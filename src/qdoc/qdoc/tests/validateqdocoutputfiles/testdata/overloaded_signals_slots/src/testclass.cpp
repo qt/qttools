@@ -47,3 +47,11 @@
 
     Processes a string \a value.
 */
+
+/*!
+    \fn void TestClass::internalStateChanged()
+    \internal
+
+    A signal marked as internal; generates neither
+    a warning nor documentation.
+*/

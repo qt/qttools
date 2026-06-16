@@ -5,4 +5,4 @@
 #
 
 src/testclass.h:20: [OverloadedSignalsSlots] (qdoc) warning: No documentation for 'TestClass::documentMe()'
-src/testclass.h:25: [OverloadedSignalsSlots] (qdoc) warning: No documentation for 'TestClass::processDocs(const QString &doc)'
+src/testclass.h:26: [OverloadedSignalsSlots] (qdoc) warning: No documentation for 'TestClass::processDocs(const QString &doc)'
