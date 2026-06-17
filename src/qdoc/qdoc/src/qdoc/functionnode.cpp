@@ -283,6 +283,10 @@ void FunctionNode::setOverloadNumber(signed short number)
 QString FunctionNode::kindString() const
 {
     switch (m_metaness) {
+    case Metaness::Signal:
+        return "signal";
+    case Metaness::Slot:
+        return "slot";
     case Metaness::QmlSignal:
         return "QML signal";
     case Metaness::QmlSignalHandler:
