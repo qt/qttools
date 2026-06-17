@@ -725,8 +725,9 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 const InclusionPolicy policy = Config::instance().createInclusionPolicy();
                 const NodeContext context = node->createContext();
                 if (!fn->isIgnored() && InclusionFilter::requiresDocumentation(policy, context)) // undocumented functions added by Q_OBJECT
-                    node->location().warning(QStringLiteral("No documentation for '%1'")
-                                                     .arg(node->plainSignature()));
+                    node->location().warning(
+                            QStringLiteral("No documentation for %1 '%2'")
+                                    .arg(fn->kindString(), node->plainSignature()));
             }
         } else if (!node->isWrapper() && !node->isMarkedReimp()) {
             // Don't require documentation of things defined in Q_GADGET
