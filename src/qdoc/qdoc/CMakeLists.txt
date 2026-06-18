@@ -216,6 +216,9 @@ qt_internal_add_tool(${target_name}
         LIBCLANG_VERSION_MAJOR=${QT_LIB_CLANG_VERSION_MAJOR}
 )
 
+# For QT_HOST_PATH/non-tools builds, this call must follow immediately after qt_internal_add_tool.
+qt_internal_return_unless_building_tools()
+
 # Template generator dependencies
 if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     qt_internal_extend_target(${target_name}
@@ -347,7 +350,6 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     )
 endif()
 
-qt_internal_return_unless_building_tools()
 
 # If libclangTooling.a is not built with -fPIE enabled we cannot link it to qdoc.
 # TODO: Re-enable PIE once clang is built with PIE in provisioning.
