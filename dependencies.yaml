@@ -1,10 +1,10 @@
 dependencies:
   ../qtactiveqt:
-    ref: 2efea416af45b48535e5572d4b575eb6dd6cd853
+    ref: b06b21fb3185c45b41326da33591ad7ea32b2d1a
     required: false
   ../qtbase:
-    ref: 04ef1ccdfd52e6c07acb992a8c17b608ba55c6da
+    ref: b2faa16b1f035eea4f1a23dd90ab608c4b275ae6
     required: true
   ../qtdeclarative:
-    ref: 7dd9115eb75ad099a2e13e0da3414b926372fe08
+    ref: 07bf129e3708caa66ef8884d0ed2179d197fdc50
     required: false
