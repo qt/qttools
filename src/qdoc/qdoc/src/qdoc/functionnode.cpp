@@ -503,16 +503,16 @@ QString FunctionNode::signature(Node::SignatureOptions options) const
 
   These are the member function names added by macros.  Usually they
   are not documented, but they can be documented, so this test avoids
-  reporting an error if they are not documented.
+  reporting a warning if they are not documented.
 
   But maybe we should generate a standard text for each of them?
  */
 bool FunctionNode::isIgnored() const
 {
     if (!hasDoc()) {
-        if (name().startsWith(QLatin1String("qt_")) || name() == QLatin1String("metaObject")
-            || name() == QLatin1String("tr") || name() == QLatin1String("trUtf8")
-            || name() == QLatin1String("d_func")) {
+        if (name().startsWith(QLatin1String("qt_")) || name().startsWith(QLatin1String("_q_"))
+            || name() == QLatin1String("metaObject") || name() == QLatin1String("tr")
+            || name() == QLatin1String("trUtf8") || name() == QLatin1String("d_func")) {
             return true;
         }
         QString s = signature(Node::SignatureReturnType);

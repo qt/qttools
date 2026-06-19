@@ -22,6 +22,9 @@ signals:
 public slots:
     void process(int value);
     void process(const QString &value);
+
+private Q_SLOTS:
+    void _q_doProcess();
 };
 
 #endif // TESTCLASS_H
