@@ -12,6 +12,9 @@
                     <para>Constructs a <link raw="TestClass" href="testclass.html" type="class">TestClass</link> with the given <argument>parent</argument>.</para>
                 </description>
             </function>
+            <function name="_q_doProcess" fullname="TestClass::_q_doProcess" href="testclass.html#underscore.q_doProcess" status="internal-auto" access="private" location="testclass.h" meta="slot" type="void" signature="void _q_doProcess()">
+                <description/>
+            </function>
             <function name="dataChanged" fullname="TestClass::dataChanged" href="testclass.html#dataChanged" status="active" access="public" location="testclass.h" documented="true" meta="signal" type="void" signature="void dataChanged(const QString &amp;value)">
                 <parameter type="const QString &amp;" name="value" default=""/>
                 <description>

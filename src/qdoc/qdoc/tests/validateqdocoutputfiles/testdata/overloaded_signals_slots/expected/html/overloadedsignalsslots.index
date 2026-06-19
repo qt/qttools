@@ -6,6 +6,7 @@
             <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" meta="constructor" explicit="true" signature="TestClass(QObject *parent)">
                 <parameter type="QObject *" name="parent" default="nullptr"/>
             </function>
+            <function name="_q_doProcess" fullname="TestClass::_q_doProcess" href="testclass.html#underscore.q_doProcess" status="internal-auto" access="private" location="testclass.h" meta="slot" type="void" signature="void _q_doProcess()"/>
             <function name="dataChanged" fullname="TestClass::dataChanged" href="testclass.html#dataChanged" status="active" access="public" location="testclass.h" documented="true" meta="signal" type="void" signature="void dataChanged(const QString &amp;value)">
                 <parameter type="const QString &amp;" name="value" default=""/>
             </function>

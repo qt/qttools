@@ -55,3 +55,6 @@
     A signal marked as internal; generates neither
     a warning nor documentation.
 */
+
+// Undocumented signal with a _q_ prefix; should not generate a warning
+void TestClass::_q_doProcess() { }
