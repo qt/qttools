@@ -248,8 +248,7 @@ function(qt6_mangle_objc_symbols target)
     add_custom_command(TARGET ${target} POST_BUILD
         ${commands}
         VERBATIM
-        COMMENT "Mangling Objective-C symbols in namespace '${arg_NAMESPACE}' "
-                "${comment_suffix}"
+        COMMENT "Mangling Objective-C symbols in namespace '${arg_NAMESPACE}' ${comment_suffix}"
     )
 endfunction()
 
