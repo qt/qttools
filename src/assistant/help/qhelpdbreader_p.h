@@ -23,6 +23,7 @@
 QT_BEGIN_NAMESPACE
 
 class QSqlQuery;
+class QVersionNumber;
 
 class QHelpDBReader : public QObject
 {
@@ -82,6 +83,8 @@ public:
     QStringList filterAttributes(const QString &filterName = {}) const;
 
     QVariant metaData(const QString &name) const;
+
+    static QVersionNumber versionHeuristic(const QString &namespaceName);
 
 private:
     QString quote(const QString &string) const;

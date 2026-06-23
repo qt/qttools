@@ -8,6 +8,7 @@
 #include <QtCore/qfile.h>
 #include <QtCore/qmap.h>
 #include <QtCore/qvariant.h>
+#include <QtCore/qversionnumber.h>
 #include <QtSql/qsqldatabase.h>
 #include <QtSql/qsqlerror.h>
 #include <QtSql/qsqlquery.h>
@@ -96,16 +97,24 @@ QString QHelpDBReader::version() const
     return versionString;
 }
 
-QString QHelpDBReader::qtVersionHeuristic() const
+struct VersionData
 {
-    const QString nameSpace = namespaceName();
+    QString tail;
+    int major = -1;
+    int minor = -1;
+    int patch = -1;
+};
+
+static VersionData getVersionData(const QString &nameSpace)
+{
+    VersionData result;
     if (!nameSpace.startsWith("org.qt-project."_L1))
-        return {};
+        return result;
 
     // We take the namespace tail, starting from the last letter in namespace name.
     // We drop any non digit characters.
     const QChar dot(u'.');
-    QString tail;
+    QString &tail = result.tail;
     for (int i = nameSpace.size(); i > 0; --i) {
         const QChar c = nameSpace.at(i - 1);
         if (c.isDigit() || c == dot)
@@ -131,22 +140,31 @@ QString QHelpDBReader::qtVersionHeuristic() const
     while (tail.endsWith(dot))
         tail.chop(1);
 
-    if (tail.count(dot) == 0) {
-        if (tail.size() > 5)
-            return tail;
-
+    if (tail.size() >= 3 && tail.size() <= 5 && tail.count(dot) == 0) {
         // When we have 3 digits, we split it like: ABC -> A.B.C
         // When we have 4 digits, we split it like: ABCD -> A.BC.D
         // When we have 5 digits, we split it like: ABCDE -> A.BC.DE
-        const int major = tail.left(1).toInt();
-        const int minor = tail.size() == 3
-                ? tail.mid(1, 1).toInt() : tail.mid(1, 2).toInt();
-        const int patch = tail.size() == 5
-                ? tail.right(2).toInt() : tail.right(1).toInt();
-
-        return QString::fromUtf8("%1.%2.%3").arg(major).arg(minor).arg(patch);
+        QStringView tail{result.tail};
+        result.major = tail.left(1).toInt();
+        result.minor = tail.size() == 3 ? tail.mid(1, 1).toInt() : tail.mid(1, 2).toInt();
+        result.patch = tail.size() == 5 ? tail.right(2).toInt() : tail.right(1).toInt();
     }
-    return tail;
+    return result;
+}
+
+QString QHelpDBReader::qtVersionHeuristic() const
+{
+    VersionData version = getVersionData(namespaceName());
+    return version.major >= 0
+            ? QString::number(version.major) + u'.' + QString::number(version.minor) + u'.' + QString::number(version.patch)
+            : version.tail;
+}
+
+QVersionNumber QHelpDBReader::versionHeuristic(const QString &namespaceName)
+{
+    VersionData version = getVersionData(namespaceName);
+    return version.major >= 0 ? QVersionNumber{version.major, version.minor, version.patch}
+                              : QVersionNumber::fromString(version.tail);
 }
 
 static bool isAttributeUsed(QSqlQuery *query, const QString &tableName, int attributeId)
