@@ -29,3 +29,6 @@ logwarnings.disablecliargs = true
 # Accept two warnings for undocumented signal and slot
 warninglimit = 2
 warninglimit.enabled = true
+
+# clear the list of ignored warnings
+spurious =

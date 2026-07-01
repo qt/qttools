@@ -20,3 +20,6 @@ preliminary.description = "This \1 is under development and is subject to change
 
 locationinfo = true
 falsehoods = 0
+
+# TODO: Remove once all related warnings in the code base are cleared
+spurious = "No documentation for (signal|slot) .*"
