@@ -20,14 +20,14 @@ find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 \ingroup cmake-commands-qtlinguisttools
 
 \title qt_add_translation
-\keyword qt6_add_translation
+\keyword qt_add_translation()
 
 \summary {Compiles Qt Linguist .ts files into .qm files.}
 
 \include cmake-find-package-linguisttools.qdocinc
 
 \warning This function is deprecated. Consider using the target-based
-functions \l{qt6_add_lrelease} or \l{qt6_add_translations} instead.
+functions \l qt_add_lrelease() or \l qt_add_translations() instead.
 
 \section1 Synopsis
 
@@ -75,14 +75,14 @@ sub-directory:
 \ingroup cmake-commands-qtlinguisttools
 
 \title qt_create_translation
-\keyword qt6_create_translation
+\keyword qt_create_translation()
 
 \summary {Sets up the Qt Linguist translation toolchain.}
 
 \include cmake-find-package-linguisttools.qdocinc
 
 \warning This function is deprecated. Consider using the target-based
-functions \l{qt6_add_lupdate} or \l{qt6_add_translations} instead.
+functions \l qt_add_lupdate() or \l qt_add_translations() instead.
 
 \section1 Synopsis
 
@@ -129,7 +129,7 @@ files in the build directory:
 \ingroup cmake-commands-qtlinguisttools
 
 \title qt_add_lupdate
-\keyword qt6_add_lupdate
+\keyword qt_add_lupdate()
 
 \summary {Add targets to generate or update Qt Linguist .ts files.}
 
@@ -176,14 +176,14 @@ With the \c{SOURCE_TARGETS} argument you can specify a list of targets that
 contain sources with translatable strings. If \c{SOURCE_TARGETS} is not
 specified, you can specify \c{SOURCES}, which is described below. If neither
 \c{SOURCE_TARGETS} nor \c{SOURCES} is given, the command
-\l{qt6_collect_translation_source_targets}{qt_collect_translation_source_targets}
+\l qt_collect_translation_source_targets()
 is called to retrieve the list of targets.
 
 The \c{.ts} files must be specified with the argument \c{TS_FILES}.
 
 This function is designed to be used in conjunction with
-\l{qt6_add_lrelease}{qt_add_lrelease}.  See also the convenience wrapper
-\l{qt6_add_translations}{qt_add_translations}.
+\l qt_add_lrelease().  See also the convenience wrapper
+\l qt_add_translations().
 
 //! [sources-and-include-dirs]
 \section1 Sources and Include Directories
@@ -253,7 +253,7 @@ qt_add_lupdate(
 \ingroup cmake-commands-qtlinguisttools
 
 \title qt_add_lrelease
-\keyword qt6_add_lrelease
+\keyword qt_add_lrelease()
 
 \summary {Add targets to transform Qt Linguist .ts files into .qm files.}
 
@@ -304,8 +304,8 @@ specified with the \c LRELEASE_TARGET option.
 The \c{.ts} files must be specified with the argument \c{TS_FILES}.
 
 This function is designed to be used in conjunction with
-\l{qt6_add_lupdate}{qt_add_lupdate}.  See also the convenience wrapper
-\l{qt6_add_translations}{qt_add_translations}.
+\l qt_add_lupdate().  See also the convenience wrapper
+\l qt_add_translations().
 
 \section1 Options
 
@@ -440,7 +440,7 @@ qt_add_lrelease(
 \ingroup cmake-commands-qtlinguisttools
 
 \title qt_add_translations
-\keyword qt6_add_translations
+\keyword qt_add_translations()
 
 \summary {Add targets to update and transform Qt Linguist .ts files into .qm files.}
 
@@ -497,7 +497,7 @@ target directory scope requires at least CMake version 3.18.
 
 Creates targets for updating Qt Linguist \c{.ts} files and for transforming them
 into \c{.qm} files. This function is a convenience wrapper around
-\l{qt6_add_lupdate}{qt_add_lupdate} and \l{qt6_add_lrelease}{qt_add_lrelease}
+\l qt_add_lupdate() and \l qt_add_lrelease()
 and aims to offer the most common usage of both functions with one call.
 
 The parameter \c TARGETS specifies a list of targets that intend to load the
@@ -509,7 +509,7 @@ targets that contain sources with translatable strings. From the sources of
 these targets, \c{.ts} files will be created.
 
 If \c SOURCE_TARGETS is not given, targets are automatically gathered by calling
-\l{qt6_collect_translation_source_targets}{qt_collect_translation_source_targets}
+\l qt_collect_translation_source_targets()
 at the end of the directory scope of \c{PROJECT_SOURCE_DIR}. This functionality
 requires CMake 3.19 or newer. This functionality can be turned off with the
 argument \c{IMMEDIATE_CALL}.
@@ -531,7 +531,7 @@ details.
 
 The paths of the \c{.ts} files that are used as input for \c qt_add_translations
 can be automatically determined if \l{QT_I18N_TRANSLATED_LANGUAGES} has been
-set. This variable can be conveniently set with \l qt_standard_project_setup.
+set. This variable can be conveniently set with \l qt_standard_project_setup().
 
 The following project setup is usually enough:
 
@@ -691,7 +691,7 @@ Add a German and a French translation to the target \c{frogger} using
 This will create the \c{.ts} files \c{frogger_de.ts} and \c{frogger_fr.ts} in
 the source directory. \l lupdate sees the source files of all targets that are
 eligible for translation, according to the rules of \l
-qt_collect_translation_source_targets.
+qt_collect_translation_source_targets().
 
 The \c{.qm} files that are created from the \c{.ts} files
 are embedded in the \c frogger_game target under the resource prefix \c{"i18n"}.
@@ -796,7 +796,7 @@ qt_add_translations(frogger
 \ingroup cmake-commands-qtlinguisttools
 
 \title qt_collect_translation_source_targets
-\keyword qt6_collect_translation_source_targets
+\keyword qt_collect_translation_source_targets()
 
 \summary {Collects targets that are eligible for translation.}
 

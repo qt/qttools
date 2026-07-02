@@ -26,7 +26,7 @@ following CMake directory properties:
 
 Set this directory property to \c ON to exclude all targets in the directory and
 its subdirectories from translation. The command
-\l{qt6_collect_translation_source_targets}{qt_collect_translation_source_targets}
+\l qt_collect_translation_source_targets()
 will skip such targets.
 
 To exclude a single target, use the target property \l{target property
@@ -82,7 +82,7 @@ following CMake target properties:
 \cmakepropertysince 6.7
 
 Set this target property to \c ON to exclude it from translation. The command
-\l{qt6_collect_translation_source_targets}{qt_collect_translation_source_targets}
+\l qt_collect_translation_source_targets()
 will skip such targets.
 
 To exclude all targets under a subdirectory, use the directory property
@@ -130,7 +130,7 @@ directory.
 
 \snippet cmake-macros/examples.cmake exclude sources from i18n
 
-\sa qt_add_lupdate
+\sa qt_add_lupdate()
 \sa {target property QT_EXCLUDE_FROM_TRANSLATION}
 \sa {directory property QT_EXCLUDE_FROM_TRANSLATION}
 */
