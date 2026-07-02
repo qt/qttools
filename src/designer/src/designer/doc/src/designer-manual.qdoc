@@ -1957,7 +1957,7 @@ pixmap property in the property editor.
     \snippet calculatorform/CMakeLists.txt 1
 
     In specific cases, such as the example below where the include directive
-    uses a relative path, \l{qt6_add_ui}{qt_add_ui} can be used to generate the
+    uses a relative path, \l qt_add_ui() can be used to generate the
     \c{ui_calculatorform.h} file instead of relying on
     \l{CMake AUTOUIC Documentation}{AUTOUIC}.
 
