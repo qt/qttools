@@ -1580,6 +1580,10 @@
                 {\\headerfile} command.
 
             \endlist
+
+            If you only want the function name to appear in the link, you
+            can use the following syntax: \c {\l{QWidget::}{sizeHint()}}.
+
         \li an example. The target link is the example title or a relative path
             used in an \l {example-command} {\\example} command:
 
@@ -1638,17 +1642,19 @@
 
     For the one-parameter version, the braces can often be omitted.
 
+    \target qdoc-automatic-linking
+    \section2 Automatic linking
+
     QDoc also tries to make a link out of any word that doesn't
     resemble a normal English word, for example, Qt class names or
     functions, like QWidget or QWidget::sizeHint(). In these cases,
     the \\l command can actually be omitted, but by using the command,
     you ensure that QDoc will emit a warning if it cannot find the
-    link target. In addition, if you only want the function name to
-    appear in the link, you can use the following syntax:
+    link target.
 
-    \list
-        \li \c {\l {QWidget::} {sizeHint()}}
-    \endlist
+    If auto-linking produces an unwanted link for a word that
+    happens to match a link target, you can suppress it with the
+    \l {ignorewords-variable} {ignorewords} configuration variable.
 
     \section2 Fixing Ambiguous Links
 
