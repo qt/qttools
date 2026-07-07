@@ -1,5 +1,6 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
+// Qt-Security score:significant reason:default
 
 #ifndef IMAGEDIALOG_H
 #define IMAGEDIALOG_H
