@@ -135,9 +135,14 @@ static inline QDesigner::ParseArgumentsResult
     parser.setApplicationDescription(u"Qt Widgets Designer " QT_VERSION_STR "\n\nUI designer for QWidget-based applications."_s);
     const QCommandLineOption helpOption = parser.addHelpOption();
     parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
-    const QCommandLineOption tcpServerOption(u"server"_s, u"TCP Server mode"_s);
+    const QCommandLineOption localSocketClientOption(u"local-client"_s,
+                                                     u"Local socket client mode"_s,
+                                                     u"server_name"_s);
+    parser.addOption(localSocketClientOption);
+    const QCommandLineOption tcpServerOption(u"server"_s, u"TCP Server mode (deprecated)"_s);
     parser.addOption(tcpServerOption);
-    const QCommandLineOption tcpClientOption(u"client"_s, u"TCP Client mode"_s, u"port"_s);
+    const QCommandLineOption tcpClientOption(u"client"_s, u"TCP Client mode (deprecated)"_s,
+                                             u"port"_s);
     parser.addOption(tcpClientOption);
     const QCommandLineOption webHelpOption(u"web-help"_s, u"Use the Web documentation"_s);
     parser.addOption(webHelpOption);
@@ -175,7 +180,9 @@ static inline QDesigner::ParseArgumentsResult
     if (parser.isSet(u"help-all"_s))
         parser.process(QCoreApplication::arguments()); // exits
     options->server = parser.isSet(tcpServerOption);
-    if (parser.isSet(tcpClientOption)) {
+    if (parser.isSet(localSocketClientOption)) {
+        options->localSocketServerName = parser.value(localSocketClientOption);
+    } else if (parser.isSet(tcpClientOption)) {
         bool ok = false;
         options->tcpClientPort = parser.value(tcpClientOption).toUShort(&ok);
         if (!ok) {
@@ -212,7 +219,9 @@ QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
         return result;
     }
     // initialize the sub components
-    if (options.tcpClientPort)
+    if (!options.localSocketServerName.isEmpty())
+        m_client = new QDesignerLocalSocketClient(options.localSocketServerName, this);
+    else if (options.tcpClientPort != 0)
         m_client = new QDesignerTcpClient(options.tcpClientPort, this);
     if (options.server) {
         auto *server = new QDesignerTcpServer();

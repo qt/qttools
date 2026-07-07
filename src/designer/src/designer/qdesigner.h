@@ -32,6 +32,7 @@ struct Options
     QString resourceDir{QLibraryInfo::paths(QLibraryInfo::TranslationsPath).value(0)};
     QStringList pluginPaths;
     std::optional<QVersionNumber> qtVersion;
+    QString localSocketServerName;
     bool server{false};
     quint16 tcpClientPort{0};
     bool enableInternalDynamicProperties{false};
