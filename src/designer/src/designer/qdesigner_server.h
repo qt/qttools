@@ -8,9 +8,11 @@
 
 QT_BEGIN_NAMESPACE
 
+class QLocalSocket;
 class QTcpServer;
 class QTcpSocket;
 
+// ### FIXME Qt 7: Remove
 class QDesignerTcpServer : public QObject
 {
     Q_OBJECT
@@ -32,6 +34,21 @@ private:
     QTcpSocket *m_socket = nullptr;
 };
 
+class QDesignerLocalSocketClient : public QObject
+{
+    Q_OBJECT
+public:
+    explicit QDesignerLocalSocketClient(const QString &serverName, QObject *parent = nullptr);
+    ~QDesignerLocalSocketClient() override;
+
+private slots:
+    void readFromSocket();
+
+private:
+    QLocalSocket *m_socket;
+};
+
+// ### FIXME Qt 7: Remove
 class QDesignerTcpClient : public QObject
 {
     Q_OBJECT

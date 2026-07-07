@@ -7,6 +7,7 @@
 #include <QtGui/qevent.h>
 
 #include <QtNetwork/qhostaddress.h>
+#include <QtNetwork/qlocalsocket.h>
 #include <QtNetwork/qtcpserver.h>
 #include <QtNetwork/qtcpsocket.h>
 
@@ -78,6 +79,24 @@ void QDesignerTcpServer::handleNewConnection()
         connect(m_socket, &QTcpSocket::readyRead, this, &QDesignerTcpServer::readFromClient);
         connect(m_socket, &QTcpSocket::disconnected, this, &QDesignerTcpServer::socketClosed);
     }
+}
+
+QDesignerLocalSocketClient::QDesignerLocalSocketClient(const QString &serverName, QObject *parent)
+    : QObject(parent), m_socket(new QLocalSocket(this))
+{
+    m_socket->connectToServer(serverName, QIODevice::ReadOnly);
+    connect(m_socket, &QLocalSocket::readyRead, this, &QDesignerLocalSocketClient::readFromSocket);
+}
+
+QDesignerLocalSocketClient::~QDesignerLocalSocketClient()
+{
+    m_socket->close();
+    m_socket->flush();
+}
+
+void QDesignerLocalSocketClient::readFromSocket()
+{
+    readFiles(m_socket);
 }
 
 QDesignerTcpClient::QDesignerTcpClient(quint16 port, QObject *parent)
