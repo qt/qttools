@@ -32,20 +32,20 @@ static void readFiles(QIODevice *device)
     }
 }
 
-QDesignerServer::QDesignerServer(QObject *parent) : QObject(parent), m_server(new QTcpServer(this))
+QDesignerTcpServer::QDesignerTcpServer(QObject *parent) : QObject(parent), m_server(new QTcpServer(this))
 {
     if (m_server->listen(QHostAddress::LocalHost, 0))
-        connect(m_server, &QTcpServer::newConnection, this, &QDesignerServer::handleNewConnection);
+        connect(m_server, &QTcpServer::newConnection, this, &QDesignerTcpServer::handleNewConnection);
 }
 
-QDesignerServer::~QDesignerServer() = default;
+QDesignerTcpServer::~QDesignerTcpServer() = default;
 
-quint16 QDesignerServer::serverPort() const
+quint16 QDesignerTcpServer::serverPort() const
 {
     return m_server ? m_server->serverPort() : 0;
 }
 
-void QDesignerServer::sendOpenRequest(int port, const QStringList &files)
+void QDesignerTcpServer::sendOpenRequest(int port, const QStringList &files)
 {
     auto *sSocket = new QTcpSocket();
     sSocket->connectToHost(QHostAddress::LocalHost, port);
@@ -60,40 +60,40 @@ void QDesignerServer::sendOpenRequest(int port, const QStringList &files)
     delete sSocket;
 }
 
-void QDesignerServer::readFromClient()
+void QDesignerTcpServer::readFromClient()
 {
     readFiles(m_socket);
 }
 
-void QDesignerServer::socketClosed()
+void QDesignerTcpServer::socketClosed()
 {
     m_socket = nullptr;
 }
 
-void QDesignerServer::handleNewConnection()
+void QDesignerTcpServer::handleNewConnection()
 {
     // no need for more than one connection
     if (m_socket == nullptr) {
         m_socket = m_server->nextPendingConnection();
-        connect(m_socket, &QTcpSocket::readyRead, this, &QDesignerServer::readFromClient);
-        connect(m_socket, &QTcpSocket::disconnected, this, &QDesignerServer::socketClosed);
+        connect(m_socket, &QTcpSocket::readyRead, this, &QDesignerTcpServer::readFromClient);
+        connect(m_socket, &QTcpSocket::disconnected, this, &QDesignerTcpServer::socketClosed);
     }
 }
 
-QDesignerClient::QDesignerClient(quint16 port, QObject *parent)
+QDesignerTcpClient::QDesignerTcpClient(quint16 port, QObject *parent)
     : QObject(parent), m_socket(new QTcpSocket(this))
 {
     m_socket->connectToHost(QHostAddress::LocalHost, port);
-    connect(m_socket, &QTcpSocket::readyRead, this, &QDesignerClient::readFromSocket);
+    connect(m_socket, &QTcpSocket::readyRead, this, &QDesignerTcpClient::readFromSocket);
 }
 
-QDesignerClient::~QDesignerClient()
+QDesignerTcpClient::~QDesignerTcpClient()
 {
     m_socket->close();
     m_socket->flush();
 }
 
-void QDesignerClient::readFromSocket()
+void QDesignerTcpClient::readFromSocket()
 {
     readFiles(m_socket);
 }
