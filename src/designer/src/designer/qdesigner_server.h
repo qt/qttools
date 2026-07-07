@@ -11,12 +11,12 @@ QT_BEGIN_NAMESPACE
 class QTcpServer;
 class QTcpSocket;
 
-class QDesignerServer: public QObject
+class QDesignerTcpServer : public QObject
 {
     Q_OBJECT
 public:
-    explicit QDesignerServer(QObject *parent = nullptr);
-    ~QDesignerServer() override;
+    explicit QDesignerTcpServer(QObject *parent = nullptr);
+    ~QDesignerTcpServer() override;
 
     quint16 serverPort() const;
 
@@ -32,12 +32,12 @@ private:
     QTcpSocket *m_socket = nullptr;
 };
 
-class QDesignerClient: public QObject
+class QDesignerTcpClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit QDesignerClient(quint16 port, QObject *parent = nullptr);
-    ~QDesignerClient() override;
+    explicit QDesignerTcpClient(quint16 port, QObject *parent = nullptr);
+    ~QDesignerTcpClient() override;
 
 private slots:
     void readFromSocket();

@@ -113,11 +113,6 @@ QDesignerWorkbench *QDesigner::workbench() const
     return m_workbench;
 }
 
-QDesignerServer *QDesigner::server() const
-{
-    return m_server;
-}
-
 static void showHelp(QCommandLineParser &parser, const QString &errorMessage = QString())
 {
     QString text;
@@ -140,13 +135,10 @@ static inline QDesigner::ParseArgumentsResult
     parser.setApplicationDescription(u"Qt Widgets Designer " QT_VERSION_STR "\n\nUI designer for QWidget-based applications."_s);
     const QCommandLineOption helpOption = parser.addHelpOption();
     parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
-    const QCommandLineOption serverOption(u"server"_s,
-                                          u"Server mode"_s);
-    parser.addOption(serverOption);
-    const QCommandLineOption clientOption(u"client"_s,
-                                          u"Client mode"_s,
-                                          u"port"_s);
-    parser.addOption(clientOption);
+    const QCommandLineOption tcpServerOption(u"server"_s, u"TCP Server mode"_s);
+    parser.addOption(tcpServerOption);
+    const QCommandLineOption tcpClientOption(u"client"_s, u"TCP Client mode"_s, u"port"_s);
+    parser.addOption(tcpClientOption);
     const QCommandLineOption webHelpOption(u"web-help"_s, u"Use the Web documentation"_s);
     parser.addOption(webHelpOption);
     const QCommandLineOption pythonHelpOption(u"python-help"_s, u"Use the Python documentation"_s);
@@ -182,10 +174,10 @@ static inline QDesigner::ParseArgumentsResult
     // so, call process() to display it.
     if (parser.isSet(u"help-all"_s))
         parser.process(QCoreApplication::arguments()); // exits
-    options->server = parser.isSet(serverOption);
-    if (parser.isSet(clientOption)) {
+    options->server = parser.isSet(tcpServerOption);
+    if (parser.isSet(tcpClientOption)) {
         bool ok = false;
-        options->clientPort = parser.value(clientOption).toUShort(&ok);
+        options->tcpClientPort = parser.value(tcpClientOption).toUShort(&ok);
         if (!ok) {
             *errorMessage = u"Non-numeric argument specified for -client"_s;
             return QDesigner::ParseArgumentsError;
@@ -220,11 +212,12 @@ QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
         return result;
     }
     // initialize the sub components
-    if (options.clientPort)
-        m_client = new QDesignerClient(options.clientPort, this);
+    if (options.tcpClientPort)
+        m_client = new QDesignerTcpClient(options.tcpClientPort, this);
     if (options.server) {
-        m_server = new QDesignerServer();
-        printf("%d\n", m_server->serverPort());
+        auto *server = new QDesignerTcpServer();
+        m_server = server;
+        printf("%d\n", server->serverPort());
         fflush(stdout);
     }
     if (options.enableInternalDynamicProperties)
