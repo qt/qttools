@@ -111,8 +111,9 @@ void FindWidget::setPalette(bool found)
 {
     TRACE_OBJ
     QPalette palette = editFind->palette();
-    palette.setColor(QPalette::Active, QPalette::Base, found ? Qt::white
-        : QColor(255, 102, 102));
+    palette.setColor(QPalette::Active, QPalette::Base,
+                     found ? QApplication::palette().color(QPalette::Active, QPalette::Base)
+                           : QColor(255, 102, 102));
     editFind->setPalette(palette);
 }
 
