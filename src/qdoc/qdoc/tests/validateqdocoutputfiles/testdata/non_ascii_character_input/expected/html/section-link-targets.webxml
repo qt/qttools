@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="section-link-targets.html" href="section-link-targets.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="Section Link Targets" fulltitle="Section Link Targets" subtitle="">
+        <page name="section-link-targets.html" href="section-link-targets.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="Section Link Targets" fulltitle="Section Link Targets">
             <contents name="c-section-target" title="C# section target" level="1"/>
             <contents name="another-c-section-target" title="Another C# section target" level="1"/>
             <description>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="another-page-with-an-image-at-the-top.html" href="another-page-with-an-image-at-the-top.html" status="active" location="line_comment_adventures.qdoc" documented="true" subtype="page" title="This page starts with an image" fulltitle="This page starts with an image" subtitle="" brief="This page has an image right at the top">
+        <page name="another-page-with-an-image-at-the-top.html" href="another-page-with-an-image-at-the-top.html" status="active" location="line_comment_adventures.qdoc" documented="true" subtype="page" title="This page starts with an image" fulltitle="This page starts with an image" brief="This page has an image right at the top">
             <description>
                 <brief>This page has an image right at the top.</brief>
                 <image href="images/leonardo-da-vinci.png"/>

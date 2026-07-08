@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <struct name="Struct" href="struct.html" status="active" access="public" location="trailing_backslashes.h" documented="true" module="TrailingBackslashes">
+        <struct name="Struct" href="struct.html" status="active" access="public" location="trailing_backslashes.h" documented="true" includefile="trailing_backslashes.h" module="TrailingBackslashes">
             <description/>
             <function name="MultipleTrailingSlashes" fullname="Struct::MultipleTrailingSlashes" href="struct.html#MultipleTrailingSlashes" status="active" access="public" location="trailing_backslashes.h" documented="true" meta="plain" type="void" signature="void MultipleTrailingSlashes()">
                 <keyword name="two-slashes-here" title="two slashes here"/>

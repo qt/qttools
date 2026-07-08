@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="BaseDevice" href="basedevice.html" status="active" access="public" location="basedevice.h" documented="true" module="TestModule" brief="Base class demonstrating reimplemented member visibility">
+        <class name="BaseDevice" href="basedevice.html" status="active" access="public" location="basedevice.h" documented="true" includefile="basedevice.h" module="TestModule" brief="Base class demonstrating reimplemented member visibility">
             <description>
                 <brief>Base class demonstrating reimplemented member visibility.</brief>
                 <para>This class provides virtual methods that will be reimplemented in derived classes, with some marked as internal.</para>

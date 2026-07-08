@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Test for multi-line template signature rendering" version="1.0" project="MultilineTemplates">
     <namespace name="" status="active" access="public" module="multilinetemplates">
-        <class name="ComplexTemplateClass" href="complextemplateclass.html" status="active" access="public" location="complextemplates.h" documented="true" module="MultilineTemplates" brief="A class with functions that have complex template signatures">
+        <class name="ComplexTemplateClass" href="complextemplateclass.html" status="active" access="public" location="complextemplates.h" documented="true" includefile="complextemplates.h" module="MultilineTemplates" brief="A class with functions that have complex template signatures">
             <function name="complexDefaults" fullname="ComplexTemplateClass::complexDefaults" href="complextemplateclass.html#complexDefaults" status="active" access="public" location="complextemplates.h" documented="true" meta="plain" type="void" signature="void complexDefaults(SetupHandler setup, DoneHandler done)">
                 <parameter type="SetupHandler" name="setup" default="SetupHandler()"/>
                 <parameter type="DoneHandler" name="done" default="DoneHandler()"/>
@@ -23,7 +23,7 @@
                 <parameter type="Pred" name="pred" default=""/>
             </function>
         </class>
-        <class name="SimpleTemplateClass" href="simpletemplateclass.html" status="active" access="public" location="complextemplates.h" documented="true" module="MultilineTemplates" brief="A class with simple template signatures for comparison">
+        <class name="SimpleTemplateClass" href="simpletemplateclass.html" status="active" access="public" location="complextemplates.h" documented="true" includefile="complextemplates.h" module="MultilineTemplates" brief="A class with simple template signatures for comparison">
             <function name="oneParam" fullname="SimpleTemplateClass::oneParam" href="simpletemplateclass.html#oneParam" status="active" access="public" location="complextemplates.h" documented="true" meta="plain" type="void" signature="void oneParam(T value)">
                 <parameter type="T" name="value" default=""/>
             </function>

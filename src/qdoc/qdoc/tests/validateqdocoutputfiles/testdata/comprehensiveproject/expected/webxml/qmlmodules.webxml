@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="qmlmodules.html" href="qmlmodules.html" status="active" location="modules.qdoc" documented="true" subtype="page" title="QML Modules" fulltitle="QML Modules" subtitle="">
+        <page name="qmlmodules.html" href="qmlmodules.html" status="active" location="modules.qdoc" documented="true" subtype="page" title="QML Modules" fulltitle="QML Modules">
             <contents name="qml-types" title="QML types" level="1"/>
             <contents name="qml-value-types" title="QML value types" level="1"/>
             <description>

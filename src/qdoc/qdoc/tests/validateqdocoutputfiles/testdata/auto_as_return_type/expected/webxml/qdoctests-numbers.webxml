@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Numbers" fullname="QDocTests::Numbers" href="qdoctests-numbers.html" status="active" access="public" location="numbers.h" documented="true" module="QDocTest" brief="Functions for manipulating numbers">
+        <class name="Numbers" fullname="QDocTests::Numbers" href="qdoctests-numbers.html" status="active" access="public" location="numbers.h" documented="true" includefile="numbers.h" module="QDocTest" brief="Functions for manipulating numbers">
             <description>
                 <brief>The Numbers class provides functions for manipulating numbers.</brief>
             </description>

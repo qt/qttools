@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="FriendModule" href="friendmodule-module.html" status="active" location="friendclass.h" documented="true" seen="true" title="" brief="Test module for friend declarations">
+        <module name="FriendModule" href="friendmodule-module.html" status="active" location="friendclass.h" documented="true" seen="true" brief="Test module for friend declarations">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>

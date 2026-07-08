@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="PublicClass" href="publicclass.html" status="active" access="public" location="publicclass.h" documented="true" module="PrivateHeadersModule" brief="A public class that should always be documented">
+        <class name="PublicClass" href="publicclass.html" status="active" access="public" location="publicclass.h" documented="true" includefile="publicclass.h" module="PrivateHeadersModule" brief="A public class that should always be documented">
             <description>
                 <brief>A public class that should always be documented.</brief>
                 <para>This class is in the public header and should always appear in documentation regardless of showinternal setting.</para>

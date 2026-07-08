@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="TestCarPrivate" href="testcarprivate-module.html" status="active" since="6.6.6" documented="true" seen="true" title="">
+        <module name="TestCarPrivate" href="testcarprivate-module.html" status="active" since="6.6.6" documented="true" cmakecomponent="TestCar" cmaketargetitem="Qt6::TestCarPrivate" qtvariable="testcar-private" seen="true">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>

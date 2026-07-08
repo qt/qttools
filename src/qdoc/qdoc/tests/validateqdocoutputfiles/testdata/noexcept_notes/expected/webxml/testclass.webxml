@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTest">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" module="QDocTest">
             <description/>
             <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" meta="constructor" signature="TestClass()">
                 <description>

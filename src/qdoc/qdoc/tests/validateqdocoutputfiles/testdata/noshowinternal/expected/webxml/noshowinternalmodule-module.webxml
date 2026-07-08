@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="NoShowInternalModule" href="noshowinternalmodule-module.html" status="active" location="internalclass.h" documented="true" seen="true" title="" brief="Test module for showinternal functionality">
+        <module name="NoShowInternalModule" href="noshowinternalmodule-module.html" status="active" location="internalclass.h" documented="true" seen="true" brief="Test module for showinternal functionality">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="SortableBox" href="sortablebox.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A box holding any Sortable type">
+        <class name="SortableBox" href="sortablebox.html" status="active" access="public" location="concepts.h" documented="true" includefile="concepts.h" module="Cpp20Concepts" brief="A box holding any Sortable type">
             <description>
                 <brief>A box holding any Sortable type.</brief>
                 <para>

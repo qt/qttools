@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="a-page-with-a-line-comment-in-the-see-also-command.html" href="a-page-with-a-line-comment-in-the-see-also-command.html" status="active" location="line_comment_adventures.qdoc" documented="true" subtype="page" title="The source for this page has a line comment in its sa command" fulltitle="The source for this page has a line comment in its sa command" subtitle="">
+        <page name="a-page-with-a-line-comment-in-the-see-also-command.html" href="a-page-with-a-line-comment-in-the-see-also-command.html" status="active" location="line_comment_adventures.qdoc" documented="true" subtype="page" title="The source for this page has a line comment in its sa command" fulltitle="The source for this page has a line comment in its sa command">
             <description>
                 <para>QDoc's <teletype>\sa</teletype> command doesn't respect QDoc's line comments.</para>
                 <see-also>

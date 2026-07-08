@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TrailingRequiresExample" href="trailingrequiresexample.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A class demonstrating functions with trailing requires clauses">
+        <class name="TrailingRequiresExample" href="trailingrequiresexample.html" status="active" access="public" location="concepts.h" documented="true" includefile="concepts.h" module="Cpp20Concepts" brief="A class demonstrating functions with trailing requires clauses">
             <description>
                 <brief>A class demonstrating functions with trailing requires clauses.</brief>
                 <para>Trailing requires clauses appear after the function declaration, rather than after the template parameter list.</para>

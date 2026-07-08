@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="toc-test.html" href="toc-test.html" status="active" location="toc.qdoc" documented="true" subtype="page" title="TOC" fulltitle="TOC" subtitle="">
+        <page name="toc-test.html" href="toc-test.html" status="active" location="toc.qdoc" documented="true" subtype="page" title="TOC" fulltitle="TOC">
             <description>
                 <generatedlist contents="group3"/>
                 <list type="bullet">

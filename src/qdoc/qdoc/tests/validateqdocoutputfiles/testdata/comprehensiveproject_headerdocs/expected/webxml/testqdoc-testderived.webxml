@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" bases="TestQDoc::Test" module="TestCPP" brief="A class in a namespace, derived from Test">
+        <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" includefile="testcpp.h" bases="TestQDoc::Test" module="TestCPP" brief="A class in a namespace, derived from Test">
             <description>
                 <brief>A class in a namespace, derived from <link raw="Test" href="testqdoc-test.html" type="class">Test</link>.</brief>
             </description>

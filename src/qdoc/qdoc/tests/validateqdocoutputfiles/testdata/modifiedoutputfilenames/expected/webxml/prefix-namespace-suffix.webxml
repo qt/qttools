@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <namespace name="Namespace" href="prefix-namespace-suffix.html" status="active" access="public" location="test.h" documented="true" module="CppModule">
+        <namespace name="Namespace" href="prefix-namespace-suffix.html" status="active" access="public" location="test.h" documented="true" includefile="test.h" module="CppModule" whereDocumented="ModifiedOutputFilenames">
             <description/>
-            <class name="Class" fullname="Namespace::Class" href="prefix-namespace-class-suffix.html" status="active" access="public" location="test.h" documented="true" module="CppModule">
+            <class name="Class" fullname="Namespace::Class" href="prefix-namespace-class-suffix.html" status="active" access="public" location="test.h" documented="true" includefile="test.h" module="CppModule">
                 <description/>
             </class>
         </namespace>

@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Member Section Anchors Reference Documentation" version="" project="Member Section Anchors">
     <namespace name="" status="active" access="public" module="member section anchors">
-        <class name="MemberSectionAnchors" href="membersectionanchors.html" status="active" access="public" location="member_section_anchors.h" documented="true" module="MemberSectionAnchorsModule" brief="A class with repeated section titles">
+        <class name="MemberSectionAnchors" href="membersectionanchors.html" status="active" access="public" location="member_section_anchors.h" documented="true" includefile="member_section_anchors.h" module="MemberSectionAnchorsModule" brief="A class with repeated section titles">
             <target name="heading-target-target" title="Heading Target"/>
             <target name="before-heading" title="Before Heading"/>
             <target name="separate-heading-target" title="Separate Heading"/>

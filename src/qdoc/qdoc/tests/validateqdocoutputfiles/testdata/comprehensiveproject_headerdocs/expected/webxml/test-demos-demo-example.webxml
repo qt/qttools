@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="demos/demo" href="test-demos-demo-example.html" status="active" location="demo.qdoc" documented="true" subtype="example" title="Demo" fulltitle="Demo" subtitle="">
+        <page name="demos/demo" href="test-demos-demo-example.html" status="active" location="demo.qdoc" documented="true" subtype="example" title="Demo" fulltitle="Demo">
             <description>
                 <image href="images/leonardo-da-vinci.png"/>
                 <code>    if (n &gt; 1'000)

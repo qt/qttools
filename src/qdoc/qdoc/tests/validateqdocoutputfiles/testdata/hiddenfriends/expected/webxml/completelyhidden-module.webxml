@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="CompletelyHidden" href="completelyhidden-module.html" status="active" location="hiddenfriendsclass.h" documented="true" seen="true" title="" brief="Nothing to see here">
+        <module name="CompletelyHidden" href="completelyhidden-module.html" status="active" location="hiddenfriendsclass.h" documented="true" seen="true" brief="Nothing to see here">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking" subtitle="">
+        <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking">
             <keyword name="indexedkeyword" title="indexedKeyword"/>
             <contents name="testqdoc" title="TestQDoc" level="1"/>
             <contents name="someprop" title="someProp" level="1"/>

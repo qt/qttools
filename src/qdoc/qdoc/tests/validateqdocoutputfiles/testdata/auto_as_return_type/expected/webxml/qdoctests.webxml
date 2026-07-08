@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="numbers.h" documented="true" module="QDocTest" brief="Contains classes for testing QDoc">
+        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="numbers.h" documented="true" includefile="numbers.h" module="QDocTest" brief="Contains classes for testing QDoc" whereDocumented="auto as return type">
             <description>
                 <brief>The <link raw="QDocTests" href="qdoctests.html" type="namespace">QDocTests</link> namespace contains classes for testing QDoc.</brief>
             </description>
-            <class name="Numbers" fullname="QDocTests::Numbers" href="qdoctests-numbers.html" status="active" access="public" location="numbers.h" documented="true" module="QDocTest" brief="Functions for manipulating numbers">
+            <class name="Numbers" fullname="QDocTests::Numbers" href="qdoctests-numbers.html" status="active" access="public" location="numbers.h" documented="true" includefile="numbers.h" module="QDocTest" brief="Functions for manipulating numbers">
                 <description>
                     <brief>The Numbers class provides functions for manipulating numbers.</brief>
                 </description>

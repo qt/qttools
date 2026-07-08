@@ -57,6 +57,8 @@ private:
     void generateIndexSections(QXmlStreamWriter &writer, Node *node,
                                const Generator *generator, IndexSectionWriter *post = nullptr);
     QString appendAttributesToSignature(const FunctionNode *fn) const noexcept;
+    SharedCommentNode *getSharedCommentNode(const QString &sharedName,
+        const QString &fullName, Node *node, bool assign = false);
 
 private:
     static QDocIndexFiles *s_qdocIndexFiles;

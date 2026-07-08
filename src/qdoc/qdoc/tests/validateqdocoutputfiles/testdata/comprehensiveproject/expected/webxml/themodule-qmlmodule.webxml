@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <qmlmodule name="TheModule" qml-module-name="TheModule" href="themodule-qmlmodule.html" status="active" location="properties.qdoc" documented="true" seen="true" title="">
+        <qmlmodule name="TheModule" qml-module-name="TheModule" href="themodule-qmlmodule.html" status="active" location="properties.qdoc" documented="true" seen="true">
             <description/>
         </qmlmodule>
     </document>

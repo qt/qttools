@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Outer" href="outer.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Template for testing nested template parameter visibility">
+        <class name="Outer" href="outer.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" includefile="testtemplate.h" module="TestCPP" brief="Template for testing nested template parameter visibility">
             <description>
                 <brief>Outer class template for testing nested template parameter visibility.</brief>
                 <para>

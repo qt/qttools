@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="QDocTests" href="qdoctests-module.html" status="active" documented="true" seen="true" title="" brief="Module contains test classes for QDoc">
+        <module name="QDocTests" href="qdoctests-module.html" status="active" documented="true" seen="true" brief="Module contains test classes for QDoc">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>

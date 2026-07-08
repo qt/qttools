@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Class" href="class.html" status="active" access="public" location="class.h" documented="true" module="Module">
+        <class name="Class" href="class.html" status="active" access="public" location="class.h" documented="true" includefile="class.h" module="Module">
             <description/>
             <enum name="MoreValues" fullname="Class::MoreValues" href="class.html#MoreValues-enum" status="active" access="public" location="class.h" documented="true" scoped="true">
                 <value name="Something" value="0"/>

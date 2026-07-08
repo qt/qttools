@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="InternalClass" href="internalclass.html" status="active" access="public" location="internalclass.h" documented="true" module="NoShowInternalModule" brief="A test class demonstrating showinternal functionality">
+        <class name="InternalClass" href="internalclass.html" status="active" access="public" location="internalclass.h" documented="true" includefile="internalclass.h" module="NoShowInternalModule" brief="A test class demonstrating showinternal functionality">
             <description>
                 <brief>A test class demonstrating showinternal functionality.</brief>
                 <para>This class contains a mix of regular and internal documentation. Regular members should always appear, while internal members should only appear when showinternal is enabled.</para>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <header name="publicclass_p.h" href="publicclass-p-h.html" status="internal" location="publicclass_p.h" documented="true" module="PrivateHeadersModule" title="Private header" fulltitle="publicclass_p.h - Private header" subtitle="">
+        <header name="publicclass_p.h" href="publicclass-p-h.html" status="internal" location="publicclass_p.h" documented="true" includefile="publicclass_p.h" module="PrivateHeadersModule" title="Private header" fulltitle="publicclass_p.h - Private header" subtitle="">
             <description/>
             <function name="internalPrivateHeaderFunction" href="publicclass-p-h.html#internalPrivateHeaderFunction" status="internal" access="public" location="publicclass_p.h" documented="true" related="0" meta="plain" type="void" brief="Internal global function in private header" signature="void internalPrivateHeaderFunction()">
                 <description>

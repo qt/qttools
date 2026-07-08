@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <namespace name="TestAliases" href="testaliases.html" status="active" access="public" location="test.h" documented="true" module="TemplateAliasModule" brief="Namespace containing template alias tests">
+        <namespace name="TestAliases" href="testaliases.html" status="active" access="public" location="test.h" documented="true" includefile="test.h" module="TemplateAliasModule" brief="Namespace containing template alias tests" whereDocumented="TemplateAliasDefaultParams">
             <description>
                 <brief>Namespace containing template alias tests.</brief>
             </description>

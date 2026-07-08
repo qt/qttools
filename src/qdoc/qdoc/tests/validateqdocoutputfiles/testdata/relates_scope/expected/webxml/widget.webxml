@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Widget" href="widget.html" status="active" access="public" location="widget.h" documented="true" module="RelatesScope" brief="A class that documents related non-members from namespace Ns">
+        <class name="Widget" href="widget.html" status="active" access="public" location="widget.h" documented="true" includefile="widget.h" module="RelatesScope" brief="A class that documents related non-members from namespace Ns">
             <description>
                 <brief>A class that documents related non-members from namespace Ns.</brief>
             </description>

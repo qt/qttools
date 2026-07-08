@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="PrivateOnlyClass" href="privateonlyclass.html" status="internal" access="public" location="publicclass_p.h" documented="true" module="PrivateHeadersModule" brief="A class that exists only in private headers">
+        <class name="PrivateOnlyClass" href="privateonlyclass.html" status="internal" access="public" location="publicclass_p.h" documented="true" includefile="publicclass_p.h" module="PrivateHeadersModule" brief="A class that exists only in private headers">
             <description>
                 <brief>A class that exists only in private headers.</brief>
                 <para>This entire class is defined in a private header and marked internal. It should only appear when both showinternal is enabled AND private headers are being processed by QDoc.</para>

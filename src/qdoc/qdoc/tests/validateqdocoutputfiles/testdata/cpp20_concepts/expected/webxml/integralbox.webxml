@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="IntegralBox" href="integralbox.html" status="active" access="public" location="concepts.h" documented="true" module="Cpp20Concepts" brief="A box holding any Integral type">
+        <class name="IntegralBox" href="integralbox.html" status="active" access="public" location="concepts.h" documented="true" includefile="concepts.h" module="Cpp20Concepts" brief="A box holding any Integral type">
             <description>
                 <brief>A box holding any Integral type.</brief>
                 <para>

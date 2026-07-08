@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="crash.html" href="crash.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="" fulltitle="" subtitle="">
+        <page name="crash.html" href="crash.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page">
             <description>
                 <para></para>
             </description>

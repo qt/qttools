@@ -2,8 +2,8 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="auto as return type Reference Documentation" version="" project="auto as return type">
     <namespace name="" status="active" access="public" module="auto as return type">
-        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="numbers.h" documented="true" module="QDocTest" brief="Contains classes for testing QDoc">
-            <class name="Numbers" fullname="QDocTests::Numbers" href="qdoctests-numbers.html" status="active" access="public" location="numbers.h" documented="true" module="QDocTest" brief="Functions for manipulating numbers">
+        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="numbers.h" documented="true" includefile="numbers.h" module="QDocTest" brief="Contains classes for testing QDoc" whereDocumented="auto as return type">
+            <class name="Numbers" fullname="QDocTests::Numbers" href="qdoctests-numbers.html" status="active" access="public" location="numbers.h" documented="true" includefile="numbers.h" module="QDocTest" brief="Functions for manipulating numbers">
                 <function name="add" fullname="QDocTests::Numbers::add" href="qdoctests-numbers.html#add" status="active" access="public" location="numbers.h" documented="true" meta="plain" type="T" brief="Adds two numbers of the same underlying type" signature="T add(T a, T b)">
                     <parameter type="T" name="a" default=""/>
                     <parameter type="T" name="b" default=""/>

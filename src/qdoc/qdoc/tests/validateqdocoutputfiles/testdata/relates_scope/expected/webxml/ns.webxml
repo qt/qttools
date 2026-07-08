@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <namespace name="Ns" href="ns.html" status="active" access="public" location="widget.h" documented="true" module="RelatesScope" brief="A namespace whose members are documented with Widget">
+        <namespace name="Ns" href="ns.html" status="active" access="public" location="widget.h" documented="true" includefile="widget.h" module="RelatesScope" brief="A namespace whose members are documented with Widget" whereDocumented="RelatesScope">
             <description>
                 <brief>A namespace whose members are documented with Widget.</brief>
             </description>

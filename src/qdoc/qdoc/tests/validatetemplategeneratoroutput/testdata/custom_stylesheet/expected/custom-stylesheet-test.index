@@ -2,6 +2,6 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Custom stylesheet test Reference Documentation" version="" project="Custom stylesheet test">
     <namespace name="" status="active" access="public" module="custom stylesheet test">
-        <page name="custom-stylesheet-test.html" href="custom-stylesheet-test.html" status="active" location="custom_stylesheet.qdoc" documented="true" subtype="page" title="Custom Stylesheet Test" fulltitle="Custom Stylesheet Test" subtitle="" brief="Tests that the stylesheetName config key works"/>
+        <page name="custom-stylesheet-test.html" href="custom-stylesheet-test.html" status="active" location="custom_stylesheet.qdoc" documented="true" subtype="page" title="Custom Stylesheet Test" fulltitle="Custom Stylesheet Test" brief="Tests that the stylesheetName config key works"/>
     </namespace>
 </INDEX>

@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Test for improved multi-property signal documentation" version="" project="MultiSignalTest">
     <namespace name="" status="active" access="public" module="multisignaltest">
-        <class name="TestAction" href="testaction.html" status="active" access="public" location="testaction.h" documented="true" bases="QObject" module="TestModule" brief="A test class to demonstrate improved multi-property signal documentation">
+        <class name="TestAction" href="testaction.html" status="active" access="public" location="testaction.h" documented="true" includefile="testaction.h" bases="QObject" module="TestModule" brief="A test class to demonstrate improved multi-property signal documentation">
             <function name="TestAction" fullname="TestAction::TestAction" href="testaction.html#TestAction" status="active" access="public" location="testaction.h" documented="true" meta="constructor" explicit="true" signature="TestAction(QObject *parent)">
                 <parameter type="QObject *" name="parent" default="nullptr"/>
             </function>
@@ -45,6 +45,6 @@
                 <notifier name="changed"/>
             </property>
         </class>
-        <module name="TestModule" href="testmodule-module.html" status="active" documented="true" seen="true" title="" brief="A test module"/>
+        <module name="TestModule" href="testmodule-module.html" status="active" documented="true" seen="true" brief="A test module"/>
     </namespace>
 </INDEX>

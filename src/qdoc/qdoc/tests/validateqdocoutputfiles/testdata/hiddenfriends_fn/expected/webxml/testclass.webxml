@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="HiddenFriendModule" brief="A class with hidden friends documented using unqualified fn syntax">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" module="HiddenFriendModule" brief="A class with hidden friends documented using unqualified fn syntax">
             <description>
                 <brief>A class with hidden friends documented using unqualified fn syntax.</brief>
                 <para>This class tests that hidden friends can be documented using fn commands without requiring the class prefix.</para>

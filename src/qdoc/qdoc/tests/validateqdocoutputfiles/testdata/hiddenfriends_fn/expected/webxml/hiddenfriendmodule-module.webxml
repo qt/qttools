@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="HiddenFriendModule" href="hiddenfriendmodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" title="" brief="Test module for hidden friend fn syntax">
+        <module name="HiddenFriendModule" href="hiddenfriendmodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" brief="Test module for hidden friend fn syntax">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>

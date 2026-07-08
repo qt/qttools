@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="HiddenFriendsClass" href="hiddenfriendsclass.html" status="active" access="public" location="hiddenfriendsclass.h" documented="true" module="CompletelyHidden" brief="A test class demonstrating hidden friend functions">
+        <class name="HiddenFriendsClass" href="hiddenfriendsclass.html" status="active" access="public" location="hiddenfriendsclass.h" documented="true" includefile="hiddenfriendsclass.h" module="CompletelyHidden" brief="A test class demonstrating hidden friend functions">
             <description>
                 <brief>A test class demonstrating hidden friend functions.</brief>
                 <para>This class contains hidden friend functions declared in the private section. These should appear in documentation regardless of includeprivate setting because they have public visibility through ADL.</para>

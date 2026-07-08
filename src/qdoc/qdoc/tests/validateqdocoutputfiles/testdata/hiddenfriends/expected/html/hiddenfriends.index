@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Test case for hidden friend functions" version="" project="HiddenFriends">
     <namespace name="" status="active" access="public" module="hiddenfriends">
-        <class name="HiddenFriendsClass" href="hiddenfriendsclass.html" status="active" access="public" location="hiddenfriendsclass.h" documented="true" module="CompletelyHidden" brief="A test class demonstrating hidden friend functions">
+        <class name="HiddenFriendsClass" href="hiddenfriendsclass.html" status="active" access="public" location="hiddenfriendsclass.h" documented="true" includefile="hiddenfriendsclass.h" module="CompletelyHidden" brief="A test class demonstrating hidden friend functions">
             <function name="HiddenFriendsClass" fullname="HiddenFriendsClass::HiddenFriendsClass" href="hiddenfriendsclass.html#HiddenFriendsClass" status="active" access="public" location="hiddenfriendsclass.h" documented="true" meta="constructor" brief="Public constructor" signature="HiddenFriendsClass()"/>
             <function name="operator==" href="hiddenfriendsclass.html#operator-eq-eq" status="active" access="public" location="hiddenfriendsclass.h" documented="true" related="0" meta="plain" hidden-friend="true" type="bool" brief="Hidden friend equality operator" signature="bool operator==(const HiddenFriendsClass &amp;lhs, const HiddenFriendsClass &amp;rhs)">
                 <parameter type="const HiddenFriendsClass &amp;" name="lhs" default=""/>
@@ -15,6 +15,6 @@
                 <parameter type="HiddenFriendsClass &amp;" name="b" default=""/>
             </function>
         </class>
-        <module name="CompletelyHidden" href="completelyhidden-module.html" status="active" location="hiddenfriendsclass.h" documented="true" seen="true" title="" brief="Nothing to see here"/>
+        <module name="CompletelyHidden" href="completelyhidden-module.html" status="active" location="hiddenfriendsclass.h" documented="true" seen="true" brief="Nothing to see here"/>
     </namespace>
 </INDEX>

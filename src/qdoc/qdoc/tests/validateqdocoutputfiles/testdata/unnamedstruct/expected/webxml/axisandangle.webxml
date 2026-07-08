@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <struct name="AxisAndAngle" href="axisandangle.html" status="active" access="public" location="templatestruct.h" documented="true" module="UnnamedStructModule">
+        <struct name="AxisAndAngle" href="axisandangle.html" status="active" access="public" location="templatestruct.h" documented="true" includefile="templatestruct.h" module="UnnamedStructModule">
             <description>
                 <para>Test struct similar to QQuaternion::AxisAndAngle to reproduce the bug. Contains multiple anonymous types to force Clang path-based naming.</para>
                 <para>

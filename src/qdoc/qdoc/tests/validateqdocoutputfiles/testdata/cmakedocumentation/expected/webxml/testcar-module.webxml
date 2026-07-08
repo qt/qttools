@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="TestCar" href="testcar-module.html" status="active" since="6.6.6" documented="true" seen="true" title="">
+        <module name="TestCar" href="testcar-module.html" status="active" since="6.6.6" documented="true" cmakecomponent="TestCar" qtvariable="testcar" seen="true">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>

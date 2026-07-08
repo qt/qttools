@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="AbstractClass" href="abstractclass.html" status="active" access="public" location="abstractclass.h" documented="true" module="WassilyKandinsky" brief="A test class with private pure virtual methods">
+        <class name="AbstractClass" href="abstractclass.html" status="active" access="public" location="abstractclass.h" documented="true" includefile="abstractclass.h" module="WassilyKandinsky" brief="A test class with private pure virtual methods">
             <description>
                 <brief>A test class with private pure virtual methods.</brief>
                 <para>This class demonstrates the corner case of private pure virtual methods. These methods are private but must still be implemented by derived classes.</para>

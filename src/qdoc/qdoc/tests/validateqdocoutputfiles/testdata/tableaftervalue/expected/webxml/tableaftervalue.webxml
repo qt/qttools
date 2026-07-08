@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TableAfterValue" href="tableaftervalue.html" status="active" access="public" location="table-after-value.h" documented="true" module="Test" brief="Test that the \table command can follow a \value command">
+        <class name="TableAfterValue" href="tableaftervalue.html" status="active" access="public" location="table-after-value.h" documented="true" includefile="table-after-value.h" module="Test" brief="Test that the \table command can follow a \value command">
             <contents name="background-for-this-test-content" title="Background for this test content" level="1"/>
             <description>
                 <brief>Test that the <teletype>\table</teletype> command can follow a <teletype>\value</teletype> command.</brief>

@@ -2,8 +2,8 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Explicitly defaulted functions Reference Documentation" version="" project="Explicitly defaulted functions">
     <namespace name="" status="active" access="public" module="explicitly defaulted functions">
-        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTests" brief="Contains test classes for QDoc">
-            <class name="DeletedCopyCtorTest" fullname="QDocTests::DeletedCopyCtorTest" href="qdoctests-deletedcopyctortest.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTests" brief="A test class with a deleted copy constructor">
+        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" module="QDocTests" brief="Contains test classes for QDoc" whereDocumented="Explicitly defaulted functions">
+            <class name="DeletedCopyCtorTest" fullname="QDocTests::DeletedCopyCtorTest" href="qdoctests-deletedcopyctortest.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" module="QDocTests" brief="A test class with a deleted copy constructor">
                 <function name="DeletedCopyCtorTest" fullname="QDocTests::DeletedCopyCtorTest::DeletedCopyCtorTest" href="qdoctests-deletedcopyctortest.html#DeletedCopyCtorTest" status="active" access="public" location="testclass.h" documented="true" auto-generated="true" meta="copy-constructor" deleted="true" signature="DeletedCopyCtorTest(const QDocTests::DeletedCopyCtorTest &amp;)">
                     <parameter type="const QDocTests::DeletedCopyCtorTest &amp;" name="" default=""/>
                 </function>
@@ -17,7 +17,7 @@
                 </function>
                 <function name="someMethod" fullname="QDocTests::DeletedCopyCtorTest::someMethod" href="qdoctests-deletedcopyctortest.html#someMethod" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" signature="void someMethod()"/>
             </class>
-            <class name="ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTests" brief="A test class for explicitly defaulted special member functions">
+            <class name="ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" module="QDocTests" brief="A test class for explicitly defaulted special member functions">
                 <function name="ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest::ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html#ExplicitlyDefaultedTest" status="active" access="public" location="testclass.h" documented="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="ExplicitlyDefaultedTest()"/>
                 <function name="ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest::ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html#ExplicitlyDefaultedTest-1" status="active" access="public" location="testclass.h" documented="true" meta="move-constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" overload="true" overload-number="1" signature="ExplicitlyDefaultedTest(QDocTests::ExplicitlyDefaultedTest &amp;&amp;other)">
                     <parameter type="QDocTests::ExplicitlyDefaultedTest &amp;&amp;" name="other" default=""/>
@@ -33,7 +33,7 @@
                 </function>
                 <function name="~ExplicitlyDefaultedTest" fullname="QDocTests::ExplicitlyDefaultedTest::~ExplicitlyDefaultedTest" href="qdoctests-explicitlydefaultedtest.html#dtor.ExplicitlyDefaultedTest" status="active" access="public" location="testclass.h" documented="true" meta="destructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="~ExplicitlyDefaultedTest()"/>
             </class>
-            <class name="UnnamedParameterTest" fullname="QDocTests::UnnamedParameterTest" href="qdoctests-unnamedparametertest.html" status="active" access="public" location="testclass.h" documented="true" module="QDocTests" brief="A test class with unnamed parameters in assignment operators">
+            <class name="UnnamedParameterTest" fullname="QDocTests::UnnamedParameterTest" href="qdoctests-unnamedparametertest.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" module="QDocTests" brief="A test class with unnamed parameters in assignment operators">
                 <function name="UnnamedParameterTest" fullname="QDocTests::UnnamedParameterTest::UnnamedParameterTest" href="qdoctests-unnamedparametertest.html#UnnamedParameterTest" status="active" access="public" location="testclass.h" documented="true" auto-generated="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="UnnamedParameterTest()"/>
                 <function name="operator=" fullname="QDocTests::UnnamedParameterTest::operator=" href="qdoctests-unnamedparametertest.html#operator-eq" status="active" access="public" location="testclass.h" documented="true" auto-generated="true" meta="move-assign" constexpr="true" explicitly-defaulted="true" noexcept="true" type="QDocTests::UnnamedParameterTest &amp;" signature="QDocTests::UnnamedParameterTest &amp; operator=(QDocTests::UnnamedParameterTest &amp;&amp;)">
                     <parameter type="QDocTests::UnnamedParameterTest &amp;&amp;" name="" default=""/>
@@ -43,6 +43,6 @@
                 </function>
             </class>
         </namespace>
-        <module name="QDocTests" href="qdoctests-module.html" status="active" documented="true" seen="true" title="" brief="Module contains test classes for QDoc"/>
+        <module name="QDocTests" href="qdoctests-module.html" status="active" documented="true" seen="true" brief="Module contains test classes for QDoc"/>
     </namespace>
 </INDEX>

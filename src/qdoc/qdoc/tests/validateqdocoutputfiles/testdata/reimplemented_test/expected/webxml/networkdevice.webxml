@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="NetworkDevice" href="networkdevice.html" status="active" access="public" location="networkdevice.h" documented="true" bases="BaseDevice" module="TestModule" brief="Derived class that reimplements base class methods">
+        <class name="NetworkDevice" href="networkdevice.html" status="active" access="public" location="networkdevice.h" documented="true" includefile="networkdevice.h" bases="BaseDevice" module="TestModule" brief="Derived class that reimplements base class methods">
             <description>
                 <brief>Derived class that reimplements base class methods.</brief>
                 <para>This class demonstrates the reimplemented member visibility issue. Some reimplemented functions should appear in &quot;Reimplemented Functions&quot; sections even when the base class method is marked as internal.</para>

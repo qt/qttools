@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <namespace name="CrossModuleRef" href="crossmoduleref.html" status="active" access="public" location="testcpp.h" since="3.0" documented="true" module="TestCPP" brief="Namespace that has documented functions in multiple modules">
+        <namespace name="CrossModuleRef" href="crossmoduleref.html" status="active" access="public" location="testcpp.h" since="3.0" documented="true" includefile="testcpp.h" module="TestCPP" brief="Namespace that has documented functions in multiple modules" whereDocumented="TestTemplate">
             <description>
                 <brief>Namespace that has documented functions in multiple modules.</brief>
             </description>

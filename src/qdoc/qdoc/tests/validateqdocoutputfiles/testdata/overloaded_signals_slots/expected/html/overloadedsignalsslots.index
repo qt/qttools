@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Test for overloaded signals and slots documentation" version="1.0" project="OverloadedSignalsSlots">
     <namespace name="" status="active" access="public" module="overloadedsignalsslots">
-        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" bases="QObject" module="OverloadedSignalsSlots" brief="Test class for overloaded signals and slots">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" bases="QObject" module="OverloadedSignalsSlots" brief="Test class for overloaded signals and slots">
             <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" meta="constructor" explicit="true" signature="TestClass(QObject *parent)">
                 <parameter type="QObject *" name="parent" default="nullptr"/>
             </function>

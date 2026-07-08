@@ -3,11 +3,11 @@
 <INDEX url="" title="Test case for private header processing with showinternal" version="" project="PrivateHeaders">
     <namespace name="" status="active" access="public" module="privateheaders">
         <function name="internalPrivateHeaderFunction" href="publicclass-p-h.html#internalPrivateHeaderFunction" status="internal" access="public" location="publicclass_p.h" documented="true" related="0" meta="plain" type="void" brief="Internal global function in private header" signature="void internalPrivateHeaderFunction()"/>
-        <class name="PrivateOnlyClass" href="privateonlyclass.html" status="internal" access="public" location="publicclass_p.h" documented="true" module="PrivateHeadersModule" brief="A class that exists only in private headers">
+        <class name="PrivateOnlyClass" href="privateonlyclass.html" status="internal" access="public" location="publicclass_p.h" documented="true" includefile="publicclass_p.h" module="PrivateHeadersModule" brief="A class that exists only in private headers">
             <function name="PrivateOnlyClass" fullname="PrivateOnlyClass::PrivateOnlyClass" href="privateonlyclass.html#PrivateOnlyClass" status="internal" access="public" location="publicclass_p.h" documented="true" meta="constructor" brief="Constructor of private-only class" signature="PrivateOnlyClass()"/>
             <function name="privateClassMethod" fullname="PrivateOnlyClass::privateClassMethod" href="privateonlyclass.html#privateClassMethod" status="internal" access="public" location="publicclass_p.h" documented="true" meta="plain" type="void" brief="Internal method in private class" signature="void privateClassMethod()"/>
         </class>
-        <class name="PublicClass" href="publicclass.html" status="active" access="public" location="publicclass.h" documented="true" module="PrivateHeadersModule" brief="A public class that should always be documented">
+        <class name="PublicClass" href="publicclass.html" status="active" access="public" location="publicclass.h" documented="true" includefile="publicclass.h" module="PrivateHeadersModule" brief="A public class that should always be documented">
             <function name="PublicClass" fullname="PublicClass::PublicClass" href="publicclass.html#PublicClass" status="active" access="public" location="publicclass.h" documented="true" meta="constructor" brief="Public constructor" signature="PublicClass()"/>
             <function name="internalPublicFunction" fullname="PublicClass::internalPublicFunction" href="publicclass.html#internalPublicFunction" status="internal" access="public" location="publicclass.h" documented="true" meta="plain" type="void" brief="Internal public function" signature="void internalPublicFunction()"/>
             <function name="publicFunction" fullname="PublicClass::publicFunction" href="publicclass.html#publicFunction" status="active" access="public" location="publicclass.h" documented="true" meta="plain" type="void" brief="Public function" signature="void publicFunction()"/>
@@ -47,10 +47,10 @@
             <variable name="d" fullname="PublicClass::d" href="publicclass.html#d-var" status="internal-auto" access="private" location="publicclass.h" type="PublicClass::PrivateData *" static="false"/>
             <variable name="testStructInstance" fullname="PublicClass::testStructInstance" href="publicclass.html#testStructInstance-var" status="internal-auto" access="private" location="publicclass.h" type="struct PublicClass::TestStruct" static="false"/>
         </class>
-        <header name="publicclass_p.h" href="publicclass-p-h.html" status="internal" location="publicclass_p.h" documented="true" module="PrivateHeadersModule" title="Private header" fulltitle="publicclass_p.h - Private header" subtitle="">
+        <header name="publicclass_p.h" href="publicclass-p-h.html" status="internal" location="publicclass_p.h" documented="true" includefile="publicclass_p.h" module="PrivateHeadersModule" title="Private header" fulltitle="publicclass_p.h - Private header" subtitle="">
             <function name="internalPrivateHeaderFunction" href="publicclass-p-h.html#internalPrivateHeaderFunction" status="internal" access="public" location="publicclass_p.h" documented="true" related="0" meta="plain" type="void" brief="Internal global function in private header" signature="void internalPrivateHeaderFunction()"/>
         </header>
-        <module name="PrivateHeaders" href="privateheaders-module.html" status="internal-auto" seen="false" title=""/>
-        <module name="PrivateHeadersModule" href="privateheadersmodule-module.html" status="active" location="publicclass.h" documented="true" seen="true" title="" brief="Test module for private header processing"/>
+        <module name="PrivateHeaders" href="privateheaders-module.html" status="internal-auto" seen="false"/>
+        <module name="PrivateHeadersModule" href="privateheadersmodule-module.html" status="active" location="publicclass.h" documented="true" seen="true" brief="Test module for private header processing"/>
     </namespace>
 </INDEX>

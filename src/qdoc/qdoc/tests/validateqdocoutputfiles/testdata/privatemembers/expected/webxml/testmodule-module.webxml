@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="TestModule" href="testmodule-module.html" status="active" location="testclass.h" documented="true" seen="true" title="" brief="Jsut another test case">
+        <module name="TestModule" href="testmodule-module.html" status="active" location="testclass.h" documented="true" seen="true" brief="Jsut another test case">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>

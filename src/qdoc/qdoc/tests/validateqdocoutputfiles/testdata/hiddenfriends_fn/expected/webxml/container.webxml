@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Container" href="container.html" status="active" access="public" location="testclass.h" documented="true" module="HiddenFriendModule" brief="A container class that collects related non-member functions">
+        <class name="Container" href="container.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" module="HiddenFriendModule" brief="A container class that collects related non-member functions">
             <description>
                 <brief>A container class that collects related non-member functions.</brief>
             </description>

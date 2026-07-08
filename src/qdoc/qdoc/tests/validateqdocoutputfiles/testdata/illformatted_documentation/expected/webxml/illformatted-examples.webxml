@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="illformatted-examples.html" href="illformatted-examples.html" status="active" location="illformatted-examples.qdoc" documented="true" groups="all-examples" subtype="page" title="Test generated output for illformatted examples" fulltitle="Test generated output for illformatted examples" subtitle="" brief="Demonstrate correctness for example generation">
+        <page name="illformatted-examples.html" href="illformatted-examples.html" status="active" location="illformatted-examples.qdoc" documented="true" groups="all-examples" subtype="page" title="Test generated output for illformatted examples" fulltitle="Test generated output for illformatted examples" brief="Demonstrate correctness for example generation">
             <contents name="qml-examples" title="QML Examples" level="1"/>
             <contents name="c-examples" title="C++ Examples" level="1"/>
             <description>

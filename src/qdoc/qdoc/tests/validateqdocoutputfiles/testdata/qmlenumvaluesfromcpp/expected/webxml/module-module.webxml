@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="Module" href="module-module.html" status="active" documented="true" seen="true" title="">
+        <module name="Module" href="module-module.html" status="active" documented="true" seen="true">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>

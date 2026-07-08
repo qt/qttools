@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="FriendClass" href="friendclass.html" status="active" access="public" location="friendclass.h" documented="true" module="FriendModule" brief="A class with friend declaration and hidden friend">
+        <class name="FriendClass" href="friendclass.html" status="active" access="public" location="friendclass.h" documented="true" includefile="friendclass.h" module="FriendModule" brief="A class with friend declaration and hidden friend">
             <description>
                 <brief>A class with friend declaration and hidden friend.</brief>
                 <para>This class has both a friend declaration (without inline definition) and a hidden friend (with inline definition).</para>

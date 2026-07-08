@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="trademark-test.html" href="trademark-test.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Testing the \tm command" fulltitle="Testing the \tm command" subtitle="">
+        <page name="trademark-test.html" href="trademark-test.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Testing the \tm command" fulltitle="Testing the \tm command">
             <contents name="acme-corp" title=" Acme corp" level="1"/>
             <description>
                 <para>Acme™ is a trademark.</para>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="TestModule" brief="A test class demonstrating private member documentation">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" module="TestModule" brief="A test class demonstrating private member documentation">
             <description>
                 <brief>A test class demonstrating private member documentation.</brief>
                 <para>This class contains documented members at all three access levels: public, protected, and private. It is used to test the includeprivate configuration option.</para>

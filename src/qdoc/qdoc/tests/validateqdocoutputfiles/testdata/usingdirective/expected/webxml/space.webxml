@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <namespace name="Space" href="space.html" status="active" access="public" location="space.h" documented="true" module="UsingDirective" brief="A namespace...in space">
+        <namespace name="Space" href="space.html" status="active" access="public" location="space.h" documented="true" includefile="space.h" module="UsingDirective" brief="A namespace...in space" whereDocumented="UsingDirective">
             <description>
                 <brief>A namespace...in space.</brief>
             </description>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="CppModule" href="cppmodule-module-suffix.html" status="active" documented="true" seen="true" title="">
+        <module name="CppModule" href="cppmodule-module-suffix.html" status="active" documented="true" seen="true">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="PrivateHeadersModule" href="privateheadersmodule-module.html" status="active" location="publicclass.h" documented="true" seen="true" title="" brief="Test module for private header processing">
+        <module name="PrivateHeadersModule" href="privateheadersmodule-module.html" status="active" location="publicclass.h" documented="true" seen="true" brief="Test module for private header processing">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>
