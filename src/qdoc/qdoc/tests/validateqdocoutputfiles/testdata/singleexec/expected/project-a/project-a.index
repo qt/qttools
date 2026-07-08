@@ -2,6 +2,6 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Project-A Reference Documentation" version="" project="Project-A">
     <namespace name="" status="active" access="public" module="project-a">
-        <page name="a.html" href="a.html" status="active" location="a.qdoc" documented="true" subtype="page" title="A" fulltitle="A" subtitle=""/>
+        <page name="a.html" href="a.html" status="active" location="a.qdoc" documented="true" subtype="page" title="A" fulltitle="A"/>
     </namespace>
 </INDEX>

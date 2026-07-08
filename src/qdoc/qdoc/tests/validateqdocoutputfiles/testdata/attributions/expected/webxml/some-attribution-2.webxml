@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="some-attribution-2.html" href="some-attribution-2.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Attribution-2 (duplicate)" fulltitle="Attribution-2 (duplicate)" subtitle="" brief="Public Domain">
+        <page name="some-attribution-2.html" href="some-attribution-2.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Attribution-2 (duplicate)" fulltitle="Attribution-2 (duplicate)" brief="Public Domain">
             <description>
                 <brief>Public Domain</brief>
                 <para>Duplicated attribution page without <teletype>\attribution</teletype>.</para>

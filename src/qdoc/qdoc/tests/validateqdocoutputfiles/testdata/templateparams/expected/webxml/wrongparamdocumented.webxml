@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="WrongParamDocumented" href="wrongparamdocumented.html" status="active" access="public" location="templateparams.h" documented="true" module="TestModule" brief="A template class with a typo in the documented parameter name">
+        <class name="WrongParamDocumented" href="wrongparamdocumented.html" status="active" access="public" location="templateparams.h" documented="true" includefile="templateparams.h" module="TestModule" brief="A template class with a typo in the documented parameter name">
             <description>
                 <brief>A template class with a typo in the documented parameter name.</brief>
                 <para>

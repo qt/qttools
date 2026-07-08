@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Hashable" href="hashable.html" status="active" access="public" location="hashable.h" documented="true" module="HiddenFriendModule" brief="A class with an out-of-line-defined hidden friend qHash overload">
+        <class name="Hashable" href="hashable.html" status="active" access="public" location="hashable.h" documented="true" includefile="hashable.h" module="HiddenFriendModule" brief="A class with an out-of-line-defined hidden friend qHash overload">
             <description>
                 <brief>A class with an out-of-line-defined hidden friend <link raw="qHash" href="hashable.html#qHash" type="function">qHash</link> overload.</brief>
                 <para>Exercises QDoc's resolution of an unqualified <teletype>\fn</teletype> command for a friend declaration that carries no inline body and whose definition lives in a separate translation unit. Mirrors the QShaderVersion <link raw="qHash" href="hashable.html#qHash" type="function">qHash</link> pattern documented under QTBUG-144141.</para>

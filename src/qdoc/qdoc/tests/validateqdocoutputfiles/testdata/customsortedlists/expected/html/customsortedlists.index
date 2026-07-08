@@ -2,16 +2,16 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="CustomSortedLists Reference Documentation" version="" project="CustomSortedLists">
     <namespace name="" status="active" access="public" module="customsortedlists">
-        <page name="a.html" href="a.html" status="active" location="test.qdoc" documented="true" groups="list" subtype="page" title="A" fulltitle="A" subtitle="" brief="A"/>
-        <page name="b.html" href="b.html" status="active" location="test.qdoc" documented="true" groups="list" subtype="page" title="B" fulltitle="B" subtitle="" brief="B"/>
-        <page name="c.html" href="c.html" status="active" location="test.qdoc" documented="true" groups="list" sortkey="B" subtype="page" title="Second!" fulltitle="Second!" subtitle="" brief="Sort key: B"/>
-        <page name="d.html" href="d.html" status="active" location="test.qdoc" documented="true" groups="list" sortkey="A" subtype="page" title="First!" fulltitle="First!" subtitle="" brief="Sort key: A"/>
-        <page name="lists.html" href="lists.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Assorted lists" fulltitle="Assorted lists" subtitle="">
+        <page name="a.html" href="a.html" status="active" location="test.qdoc" documented="true" groups="list" subtype="page" title="A" fulltitle="A" brief="A"/>
+        <page name="b.html" href="b.html" status="active" location="test.qdoc" documented="true" groups="list" subtype="page" title="B" fulltitle="B" brief="B"/>
+        <page name="c.html" href="c.html" status="active" location="test.qdoc" documented="true" groups="list" sortkey="B" subtype="page" title="Second!" fulltitle="Second!" brief="Sort key: B"/>
+        <page name="d.html" href="d.html" status="active" location="test.qdoc" documented="true" groups="list" sortkey="A" subtype="page" title="First!" fulltitle="First!" brief="Sort key: A"/>
+        <page name="lists.html" href="lists.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Assorted lists" fulltitle="Assorted lists">
             <contents name="generatelist" title="\generatelist" level="1"/>
             <contents name="descending" title="descending" level="2"/>
             <contents name="annotatedlist" title="\annotatedlist" level="1"/>
             <contents name="annotatedlist-descending-3" title="descending" level="2"/>
         </page>
-        <group name="list" href="list.html" status="internal-auto" seen="false" title=""/>
+        <group name="list" href="list.html" status="internal-auto" seen="false"/>
     </namespace>
 </INDEX>

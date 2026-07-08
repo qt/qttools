@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="compilergeneratedmemberfunctions.h" documented="true" module="QDocTests" brief="Contains test classes for QDoc">
+        <namespace name="QDocTests" href="qdoctests.html" status="active" access="public" location="compilergeneratedmemberfunctions.h" documented="true" includefile="compilergeneratedmemberfunctions.h" module="QDocTests" brief="Contains test classes for QDoc" whereDocumented="Compiler generated member functions">
             <description>
                 <brief>The <link raw="QDocTests" href="qdoctests-module.html" type="module">QDocTests</link> namespace contains test classes for QDoc.</brief>
                 <para>The <link raw="QDocTests" href="qdoctests-module.html" type="module">QDocTests</link> namespace contains test classes for QDoc.</para>
             </description>
-            <class name="CompilerGeneratedMemberFunctions" fullname="QDocTests::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html" status="active" access="public" location="compilergeneratedmemberfunctions.h" documented="true" module="QDocTests" brief="A test class for compiler-generated member functions">
+            <class name="CompilerGeneratedMemberFunctions" fullname="QDocTests::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html" status="active" access="public" location="compilergeneratedmemberfunctions.h" documented="true" includefile="compilergeneratedmemberfunctions.h" module="QDocTests" brief="A test class for compiler-generated member functions">
                 <description>
                     <brief>A test class for compiler-generated member functions.</brief>
                     <para>This class is used to test the documentation of compiler-generated member functions.</para>

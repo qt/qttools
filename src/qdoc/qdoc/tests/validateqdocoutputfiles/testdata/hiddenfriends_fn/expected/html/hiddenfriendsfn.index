@@ -2,48 +2,48 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Test case for documenting hidden friends with unqualified fn syntax" version="" project="HiddenFriendsFn">
     <namespace name="" status="active" access="public" module="hiddenfriendsfn">
-        <function name="myEquals" href="container.html#myEquals-1" status="active" access="public" location="testclass.h" documented="true" related="0" meta="plain" overload="true" overload-number="1" type="bool" signature="bool myEquals(const T &amp;a, const T &amp;b)">
+        <function name="myEquals" href="container.html#myEquals-1" status="active" access="public" location="testclass.h" documented="true" related="5" meta="plain" overload="true" overload-number="1" type="bool" signature="bool myEquals(const T &amp;a, const T &amp;b)">
             <parameter type="const T &amp;" name="a" default=""/>
             <parameter type="const T &amp;" name="b" default=""/>
         </function>
-        <class name="Container" href="container.html" status="active" access="public" location="testclass.h" documented="true" module="HiddenFriendModule" brief="A container class that collects related non-member functions">
-            <function name="myEquals" href="container.html#myEquals" status="active" access="public" location="testclass.h" documented="true" related="1" meta="plain" hidden-friend="true" noexcept="true" type="bool" signature="bool myEquals(const MyClass &amp;a, const MyClass &amp;b)">
+        <class name="Container" href="container.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" module="HiddenFriendModule" brief="A container class that collects related non-member functions">
+            <function name="myEquals" href="container.html#myEquals" status="active" access="public" location="testclass.h" documented="true" related="4" meta="plain" hidden-friend="true" noexcept="true" type="bool" signature="bool myEquals(const MyClass &amp;a, const MyClass &amp;b)">
                 <parameter type="const MyClass &amp;" name="a" default=""/>
                 <parameter type="const MyClass &amp;" name="b" default=""/>
             </function>
-            <function name="myEquals" href="container.html#myEquals-1" status="active" access="public" location="testclass.h" documented="true" related="0" meta="plain" overload="true" overload-number="1" type="bool" signature="bool myEquals(const T &amp;a, const T &amp;b)">
+            <function name="myEquals" href="container.html#myEquals-1" status="active" access="public" location="testclass.h" documented="true" related="5" meta="plain" overload="true" overload-number="1" type="bool" signature="bool myEquals(const T &amp;a, const T &amp;b)">
                 <parameter type="const T &amp;" name="a" default=""/>
                 <parameter type="const T &amp;" name="b" default=""/>
             </function>
         </class>
-        <class name="Hashable" href="hashable.html" status="active" access="public" location="hashable.h" documented="true" module="HiddenFriendModule" brief="A class with an out-of-line-defined hidden friend qHash overload">
+        <class name="Hashable" href="hashable.html" status="active" access="public" location="hashable.h" documented="true" includefile="hashable.h" module="HiddenFriendModule" brief="A class with an out-of-line-defined hidden friend qHash overload">
             <function name="Hashable" fullname="Hashable::Hashable" href="hashable.html#Hashable" status="active" access="public" location="hashable.h" documented="true" auto-generated="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="Hashable()"/>
-            <function name="qHash" href="hashable.html#qHash" status="active" access="public" location="hashable.h" documented="true" related="2" meta="plain" hidden-friend="true" noexcept="true" type="int" signature="int qHash(Hashable key)">
+            <function name="qHash" href="hashable.html#qHash" status="active" access="public" location="hashable.h" documented="true" related="0" meta="plain" hidden-friend="true" noexcept="true" type="int" signature="int qHash(Hashable key)">
                 <parameter type="Hashable" name="key" default=""/>
             </function>
-            <function name="qHash" href="hashable.html#qHash-1" status="active" access="public" location="hashable.h" documented="true" related="3" meta="plain" hidden-friend="true" noexcept="true" overload="true" overload-number="1" type="int" signature="int qHash(Hashable key, int seed)">
+            <function name="qHash" href="hashable.html#qHash-1" status="active" access="public" location="hashable.h" documented="true" related="1" meta="plain" hidden-friend="true" noexcept="true" overload="true" overload-number="1" type="int" signature="int qHash(Hashable key, int seed)">
                 <parameter type="Hashable" name="key" default=""/>
                 <parameter type="int" name="seed" default=""/>
             </function>
         </class>
-        <class name="MyClass" href="myclass.html" status="active" access="public" location="testclass.h" documented="true" module="HiddenFriendModule" brief="A class with a hidden friend that should be documented on Container's page">
-            <function name="myEquals" href="container.html#myEquals" status="active" access="public" location="testclass.h" documented="true" related="1" meta="plain" hidden-friend="true" noexcept="true" type="bool" signature="bool myEquals(const MyClass &amp;a, const MyClass &amp;b)">
+        <class name="MyClass" href="myclass.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" module="HiddenFriendModule" brief="A class with a hidden friend that should be documented on Container's page">
+            <function name="myEquals" href="container.html#myEquals" status="active" access="public" location="testclass.h" documented="true" related="4" meta="plain" hidden-friend="true" noexcept="true" type="bool" signature="bool myEquals(const MyClass &amp;a, const MyClass &amp;b)">
                 <parameter type="const MyClass &amp;" name="a" default=""/>
                 <parameter type="const MyClass &amp;" name="b" default=""/>
             </function>
         </class>
-        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" module="HiddenFriendModule" brief="A class with hidden friends documented using unqualified fn syntax">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" module="HiddenFriendModule" brief="A class with hidden friends documented using unqualified fn syntax">
             <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" auto-generated="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="TestClass()"/>
-            <function name="operator&lt;" href="testclass.html#operator-lt" status="active" access="public" location="testclass.h" documented="true" related="4" meta="plain" hidden-friend="true" type="bool" signature="bool operator&lt;(const TestClass &amp;lhs, const TestClass &amp;rhs)">
+            <function name="operator&lt;" href="testclass.html#operator-lt" status="active" access="public" location="testclass.h" documented="true" related="2" meta="plain" hidden-friend="true" type="bool" signature="bool operator&lt;(const TestClass &amp;lhs, const TestClass &amp;rhs)">
                 <parameter type="const TestClass &amp;" name="lhs" default=""/>
                 <parameter type="const TestClass &amp;" name="rhs" default=""/>
             </function>
-            <function name="operator==" href="testclass.html#operator-eq-eq" status="active" access="public" location="testclass.h" documented="true" related="5" meta="plain" hidden-friend="true" type="bool" signature="bool operator==(const TestClass &amp;lhs, const TestClass &amp;rhs)">
+            <function name="operator==" href="testclass.html#operator-eq-eq" status="active" access="public" location="testclass.h" documented="true" related="3" meta="plain" hidden-friend="true" type="bool" signature="bool operator==(const TestClass &amp;lhs, const TestClass &amp;rhs)">
                 <parameter type="const TestClass &amp;" name="lhs" default=""/>
                 <parameter type="const TestClass &amp;" name="rhs" default=""/>
             </function>
             <function name="publicMethod" fullname="TestClass::publicMethod" href="testclass.html#publicMethod" status="active" access="public" location="testclass.h" documented="true" meta="plain" type="void" brief="Public member function" signature="void publicMethod()"/>
         </class>
-        <module name="HiddenFriendModule" href="hiddenfriendmodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" title="" brief="Test module for hidden friend fn syntax"/>
+        <module name="HiddenFriendModule" href="hiddenfriendmodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" brief="Test module for hidden friend fn syntax"/>
     </namespace>
 </INDEX>

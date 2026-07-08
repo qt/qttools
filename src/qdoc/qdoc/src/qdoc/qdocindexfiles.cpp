@@ -596,6 +596,23 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
     }
 
     if (node) {
+        // Read attributes for the requisites table.
+        if (node->isCollectionNode()) {
+            auto *cn = static_cast<CollectionNode *>(node);
+            if (attributes.hasAttribute(QLatin1String("cmakepackage")))
+                cn->setCMakePackage(attributes.value(QLatin1String("cmakepackage")).toString());
+            if (attributes.hasAttribute(QLatin1String("cmakecomponent")))
+                cn->setCMakeComponent(attributes.value(QLatin1String("cmakecomponent")).toString());
+            if (attributes.hasAttribute(QLatin1String("cmaketargetitem")))
+                cn->setCMakeTargetItem(attributes.value(QLatin1String("cmaketargetitem")).toString());
+            if (attributes.hasAttribute(QLatin1String("qtvariable")))
+                cn->setQtVariable(attributes.value(QLatin1String("qtvariable")).toString());
+        }
+        if (node->isAggregate() && attributes.hasAttribute(QLatin1String("includefile"))) {
+            auto *agg = static_cast<Aggregate *>(node);
+            agg->setIncludeFile(attributes.value(QLatin1String("includefile")).toString());
+        }
+
         if (!href.isEmpty()) {
             node->setUrl(href);
             // Include the index URL if it exists
@@ -832,6 +849,16 @@ int QDocIndexFiles::indexForNode(Node *node)
 }
 
 /*!
+    Write an attribute to the current element using the \a writer for the
+    attribute with the given \a name if the \a value is not an empty string.
+*/
+static void writeNonEmpty(QXmlStreamWriter &writer, const QString &name, const QString &value)
+{
+    if (!value.isEmpty())
+        writer.writeAttribute(name, value);
+}
+
+/*!
     Adopts the related non-member node identified by \a index to the
     parent \a adoptiveParent. Returns \c true if successful.
 */
@@ -1018,8 +1045,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         writer.writeAttribute(baseNameAttr, qmlFullBaseName);
     else if (!baseNameAttr.isEmpty()) {
         const auto &qmlBase = static_cast<QmlTypeNode *>(node)->qmlBaseName();
-        if (!qmlBase.isEmpty())
-            writer.writeAttribute(baseNameAttr, qmlBase);
+        writeNonEmpty(writer, baseNameAttr, qmlBase);
     }
 
     QString href;
@@ -1035,8 +1061,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         if (p && p->isQmlType() && p->isAbstract())
             href.clear();
     }
-    if (!href.isEmpty())
-        writer.writeAttribute("href", href);
+    writeNonEmpty(writer, "href", href);
 
     writer.writeAttribute("status", getStatusString(node->status()));
     if (!node->isTextPageNode() && !node->isCollectionNode() && !node->isHeader()) {
@@ -1045,8 +1070,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             writer.writeAttribute("abstract", "true");
     }
     const Location &declLocation = node->declLocation();
-    if (!declLocation.fileName().isEmpty())
-        writer.writeAttribute("location", declLocation.fileName());
+    writeNonEmpty(writer, "location", declLocation.fileName());
     if (m_storeLocationInfo && !declLocation.filePath().isEmpty()) {
         writer.writeAttribute("filepath", declLocation.filePath());
         writer.writeAttribute("lineno", QString("%1").arg(declLocation.lineNo()));
@@ -1055,8 +1079,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     if (node->isRelatedNonmember())
         writer.writeAttribute("related", QString::number(indexForNode(node)));
 
-    if (!node->since().isEmpty())
-        writer.writeAttribute("since", node->since());
+    writeNonEmpty(writer, "since", node->since());
 
     if (node->hasDoc())
         writer.writeAttribute("documented", "true");
@@ -1068,6 +1091,21 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
    if (const auto *metamap = node->doc().metaTagMap(); metamap)
         if (const auto sortKey = metamap->value("sortkey"); !sortKey.isEmpty())
             writer.writeAttribute("sortkey", sortKey);
+
+    // Write attributes for the requisites table.
+    if (node->isCollectionNode() && node->isModule()) {
+        auto *cn = static_cast<CollectionNode *>(node);
+        writeNonEmpty(writer, "cmakepackage", cn->cmakePackage());
+        writeNonEmpty(writer, "cmakecomponent", cn->cmakeComponent());
+        writeNonEmpty(writer, "cmaketargetitem", cn->cmakeTargetItem());
+        writeNonEmpty(writer, "qtvariable", cn->qtVariable());
+    }
+
+    if (node->isAggregate() && node->genus() == Genus::CPP && (!node->parent() || !node->parent()->isClassNode())) {
+        auto *agg = static_cast<Aggregate *>(node);
+        if (agg->includeFile())
+            writer.writeAttribute("includefile", *agg->includeFile());
+    }
 
     QString brief = node->doc().trimmedBriefText(node->name()).toString();
     switch (node->nodeType()) {
@@ -1090,39 +1128,41 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             baseStringsAsList.sort();
             writer.writeAttribute("bases", baseStringsAsList.join(QLatin1Char(',')));
         }
-        if (!node->physicalModuleName().isEmpty())
-            writer.writeAttribute("module", node->physicalModuleName());
-        if (!brief.isEmpty())
-            writer.writeAttribute("brief", brief);
+        writeNonEmpty(writer, "module", node->physicalModuleName());
+        writeNonEmpty(writer, "brief", brief);
         if (auto category = node->comparisonCategory(); category != ComparisonCategory::None)
             writer.writeAttribute("comparison_category", comparisonCategoryAsString(category));
     } break;
     case NodeType::HeaderFile: {
         const auto *headerNode = static_cast<const HeaderNode *>(node);
-        if (!headerNode->physicalModuleName().isEmpty())
-            writer.writeAttribute("module", headerNode->physicalModuleName());
-        if (!brief.isEmpty())
-            writer.writeAttribute("brief", brief);
+        writeNonEmpty(writer, "module", headerNode->physicalModuleName());
+        writeNonEmpty(writer, "brief", brief);
         writer.writeAttribute("title", headerNode->title());
         writer.writeAttribute("fulltitle", headerNode->fullTitle());
         writer.writeAttribute("subtitle", headerNode->subtitle());
     } break;
     case NodeType::Namespace: {
         const auto *namespaceNode = static_cast<const NamespaceNode *>(node);
-        if (!namespaceNode->physicalModuleName().isEmpty())
-            writer.writeAttribute("module", namespaceNode->physicalModuleName());
-        if (!brief.isEmpty())
-            writer.writeAttribute("brief", brief);
+        writeNonEmpty(writer, "module", namespaceNode->physicalModuleName());
+        writeNonEmpty(writer, "brief", brief);
+        writeNonEmpty(writer, "whereDocumented", namespaceNode->whereDocumented());
     } break;
     case NodeType::QmlValueType:
     case NodeType::QmlType: {
         const auto *qmlTypeNode = static_cast<const QmlTypeNode *>(node);
+        writeNonEmpty(writer, "title", qmlTypeNode->title());
+        writeNonEmpty(writer, "fulltitle", qmlTypeNode->fullTitle());
+        writeNonEmpty(writer, "subtitle", qmlTypeNode->subtitle());
         if (qmlTypeNode->isSingleton())
             writer.writeAttribute("singleton", "true");
         if (qmlTypeNode->isUncreatable())
             writer.writeAttribute("uncreatable", "true");
-        if (!brief.isEmpty())
-            writer.writeAttribute("brief", brief);
+        writeNonEmpty(writer, "brief", brief);
+        if (ClassNode *cn = qmlTypeNode->classNode()) {
+            writer.writeAttribute("class", cn->fullDocumentName());
+            if (cn->access() != Access::Public || cn->status() == Status::Internal)
+                m_basesList.append(std::pair<ClassNode *, QString>(cn, cn->fullName()));
+        }
     } break;
     case NodeType::Page:
     case NodeType::Example:
@@ -1135,11 +1175,10 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             writer.writeAttribute("subtype", (static_cast<PageNode*>(node)->isAttribution() ? "attribution" : "page"));
 
         const auto *pageNode = static_cast<const PageNode *>(node);
-        writer.writeAttribute("title", pageNode->title());
-        writer.writeAttribute("fulltitle", pageNode->fullTitle());
-        writer.writeAttribute("subtitle", pageNode->subtitle());
-        if (!brief.isEmpty())
-            writer.writeAttribute("brief", brief);
+        writeNonEmpty(writer, "title", pageNode->title());
+        writeNonEmpty(writer, "fulltitle", pageNode->fullTitle());
+        writeNonEmpty(writer, "subtitle", pageNode->subtitle());
+        writeNonEmpty(writer, "brief", brief);
     } break;
     case NodeType::Group:
     case NodeType::Module:
@@ -1147,13 +1186,10 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     case NodeType::Concept: {
         const auto *collectionNode = static_cast<const CollectionNode *>(node);
         writer.writeAttribute("seen", collectionNode->wasSeen() ? "true" : "false");
-        writer.writeAttribute("title", collectionNode->title());
-        if (!collectionNode->subtitle().isEmpty())
-            writer.writeAttribute("subtitle", collectionNode->subtitle());
-        if (!collectionNode->physicalModuleName().isEmpty())
-            writer.writeAttribute("module", collectionNode->physicalModuleName());
-        if (!brief.isEmpty())
-            writer.writeAttribute("brief", brief);
+        writeNonEmpty(writer, "title", collectionNode->title());
+        writeNonEmpty(writer, "subtitle", collectionNode->subtitle());
+        writeNonEmpty(writer, "module", collectionNode->physicalModuleName());
+        writeNonEmpty(writer, "brief", brief);
     } break;
     case NodeType::QmlProperty: {
         auto *qmlPropertyNode = static_cast<QmlPropertyNode *>(node);
@@ -1162,8 +1198,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         writer.writeAttribute("writable", qmlPropertyNode->isReadOnly() ? "false" : "true");
         if (qmlPropertyNode->isRequired())
             writer.writeAttribute("required", "true");
-        if (!brief.isEmpty())
-            writer.writeAttribute("brief", brief);
+        writeNonEmpty(writer, "brief", brief);
     } break;
     case NodeType::Property: {
         const auto *propertyNode = static_cast<const PropertyNode *>(node);
@@ -1179,8 +1214,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
 
         writer.writeAttribute("dataType", propertyNode->dataType());
 
-        if (!brief.isEmpty())
-            writer.writeAttribute("brief", brief);
+        writeNonEmpty(writer, "brief", brief);
         // Property access function names
         for (qsizetype i{0}; i < (qsizetype)PropertyNode::FunctionRole::NumFunctionRoles; ++i) {
             auto role{(PropertyNode::FunctionRole)i};
@@ -1195,8 +1229,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         const auto *variableNode = static_cast<const VariableNode *>(node);
         writer.writeAttribute("type", variableNode->dataType());
         writer.writeAttribute("static", variableNode->isStatic() ? "true" : "false");
-        if (!brief.isEmpty())
-            writer.writeAttribute("brief", brief);
+        writeNonEmpty(writer, "brief", brief);
     } break;
     case NodeType::QmlEnum:
     case NodeType::Enum: {
@@ -1213,8 +1246,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             writer.writeAttribute("name", item.name());
             if (node->isEnumType(Genus::CPP))
                 writer.writeAttribute("value", item.value());
-            if (!item.since().isEmpty())
-                writer.writeAttribute("since", item.since());
+            writeNonEmpty(writer, "since", item.since());
             writer.writeEndElement(); // value
         }
     } break;
@@ -1312,16 +1344,14 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
     if (fullName != objName)
         writer.writeAttribute("fullname", fullName);
     const QString href = m_gen->fullDocumentLocation(fn);
-    if (!href.isEmpty())
-        writer.writeAttribute("href", href);
+    writeNonEmpty(writer, "href", href);
     if (fn->threadSafeness() != Node::UnspecifiedSafeness)
         writer.writeAttribute("threadsafety", getThreadSafenessString(fn->threadSafeness()));
     writer.writeAttribute("status", getStatusString(fn->status()));
     writer.writeAttribute("access", getAccessString(fn->access()));
 
     const Location &declLocation = fn->declLocation();
-    if (!declLocation.fileName().isEmpty())
-        writer.writeAttribute("location", declLocation.fileName());
+    writeNonEmpty(writer, "location", declLocation.fileName());
     if (m_storeLocationInfo && !declLocation.filePath().isEmpty()) {
         writer.writeAttribute("filepath", declLocation.filePath());
         writer.writeAttribute("lineno", QString("%1").arg(declLocation.lineNo()));
@@ -1333,8 +1363,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         writer.writeAttribute("auto-generated", "true");
     if (fn->isRelatedNonmember())
         writer.writeAttribute("related", QString::number(indexForNode(fn)));
-    if (!fn->since().isEmpty())
-        writer.writeAttribute("since", fn->since());
+    writeNonEmpty(writer, "since", fn->since());
 
     const QString brief = fn->doc().trimmedBriefText(fn->name()).toString();
     writer.writeAttribute("meta", fn->metanessString());
@@ -1363,7 +1392,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
 
         if (auto noexcept_info = fn->getNoexcept()) {
             writer.writeAttribute("noexcept", "true");
-            if (!(*noexcept_info).isEmpty()) writer.writeAttribute("noexcept_expression", *noexcept_info);
+            writeNonEmpty(writer, "noexcept_expression", *noexcept_info);
         }
 
         if (const auto &trailing_requires = fn->trailingRequiresClause(); trailing_requires && !trailing_requires->isEmpty())
@@ -1406,8 +1435,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         writer.writeAttribute("declaredtype", declared_return_type.value());
 
     if (fn->isCppNode()) {
-        if (!brief.isEmpty())
-            writer.writeAttribute("brief", brief);
+        writeNonEmpty(writer, "brief", brief);
 
         /*
         Note: The "signature" attribute is written to the
@@ -1595,7 +1623,10 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
         return;
 
     qCDebug(lcQdoc) << "Writing index file:" << fileName;
-    m_relatedNodes.clear();
+
+    // Use the bases list to record private base classes when generating.
+    m_basesList.clear();
+
     QXmlStreamWriter writer(&file);
     writer.setAutoFormatting(true);
     writer.writeStartDocument();
@@ -1608,8 +1639,7 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
     writer.writeAttribute("project", Config::instance().get(CONFIG_PROJECT).asString());
 
     root_ = m_qdb->primaryTreeRoot();
-    if (!root_->tree()->indexTitle().isEmpty())
-        writer.writeAttribute("indexTitle", root_->tree()->indexTitle());
+    writeNonEmpty(writer, "indexTitle", root_->tree()->indexTitle());
 
     generateIndexSections(writer, root_, m_gen, nullptr);
 

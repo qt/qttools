@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="csharp-test.html" href="csharp-test.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="C# Title Test" fulltitle="C# Title Test" subtitle="">
+        <page name="csharp-test.html" href="csharp-test.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="C# Title Test" fulltitle="C# Title Test">
             <description/>
         </page>
     </document>

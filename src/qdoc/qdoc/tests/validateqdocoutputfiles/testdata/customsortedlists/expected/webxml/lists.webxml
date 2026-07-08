@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="lists.html" href="lists.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Assorted lists" fulltitle="Assorted lists" subtitle="">
+        <page name="lists.html" href="lists.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Assorted lists" fulltitle="Assorted lists">
             <contents name="generatelist" title="\generatelist" level="1"/>
             <contents name="descending" title="descending" level="2"/>
             <contents name="annotatedlist" title="\annotatedlist" level="1"/>

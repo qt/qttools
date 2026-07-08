@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Third" href="third.html" status="active" access="public" location="aaa.h" documented="true" module="TestModule">
+        <class name="Third" href="third.html" status="active" access="public" location="aaa.h" documented="true" includefile="aaa.h" module="TestModule">
             <description>
                 <para>This is a third class</para>
             </description>

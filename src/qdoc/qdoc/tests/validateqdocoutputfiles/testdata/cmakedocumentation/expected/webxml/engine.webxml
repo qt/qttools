@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Engine" href="engine.html" status="active" access="public" location="car.h" since="6.6.6" documented="true" module="TestCarPrivate" brief="Represents a model of an engine">
+        <class name="Engine" href="engine.html" status="active" access="public" location="car.h" since="6.6.6" documented="true" includefile="car.h" module="TestCarPrivate" brief="Represents a model of an engine">
             <description>
                 <brief>Represents a model of an engine.</brief>
             </description>

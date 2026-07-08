@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <header name="&lt;TestHeader&gt;" href="testheader.html" status="active" documented="true" groups="headers,tests" module="TestCPP" brief="A header file" title="Test Header" fulltitle="&lt;TestHeader&gt; - Test Header" subtitle="">
+        <header name="&lt;TestHeader&gt;" href="testheader.html" status="active" documented="true" groups="headers,tests" includefile="TestHeader" module="TestCPP" brief="A header file" title="Test Header" fulltitle="&lt;TestHeader&gt; - Test Header" subtitle="">
             <description>
                 <brief>A header file.</brief>
             </description>

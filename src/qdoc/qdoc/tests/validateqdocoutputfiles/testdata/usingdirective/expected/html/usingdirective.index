@@ -5,11 +5,11 @@
         <function name="spaceFun" href="space.html#spaceFun" status="active" access="public" location="space.h" documented="true" related="0" meta="plain" type="void" signature="void spaceFun(Space::spacename space)">
             <parameter type="Space::spacename" name="space" default=""/>
         </function>
-        <namespace name="Space" href="space.html" status="active" access="public" location="space.h" documented="true" module="UsingDirective" brief="A namespace...in space">
+        <namespace name="Space" href="space.html" status="active" access="public" location="space.h" documented="true" includefile="space.h" module="UsingDirective" brief="A namespace...in space" whereDocumented="UsingDirective">
             <function name="spaceFun" href="space.html#spaceFun" status="active" access="public" location="space.h" documented="true" related="0" meta="plain" type="void" signature="void spaceFun(Space::spacename space)">
                 <parameter type="Space::spacename" name="space" default=""/>
             </function>
         </namespace>
-        <module name="UsingDirective" href="usingdirective-module.html" status="internal-auto" seen="false" title=""/>
+        <module name="UsingDirective" href="usingdirective-module.html" status="internal-auto" seen="false"/>
     </namespace>
 </INDEX>

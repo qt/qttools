@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="link-test.html" href="link-test.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="Test Links to Titles and Sections" fulltitle="Test Links to Titles and Sections" subtitle="">
+        <page name="link-test.html" href="link-test.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="Test Links to Titles and Sections" fulltitle="Test Links to Titles and Sections">
             <description>
                 <list type="bullet">
                     <item>

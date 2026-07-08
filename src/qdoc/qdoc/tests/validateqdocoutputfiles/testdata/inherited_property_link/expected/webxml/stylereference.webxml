@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="stylereference.html" href="stylereference.html" status="active" location="stylereference.qdoc" documented="true" subtype="page" title="Style Reference" fulltitle="Style Reference" subtitle="">
+        <page name="stylereference.html" href="stylereference.html" status="active" location="stylereference.qdoc" documented="true" subtype="page" title="Style Reference" fulltitle="Style Reference">
             <contents name="common-properties" title="Common Properties" level="1"/>
             <contents name="color" title="color" level="2"/>
             <description>

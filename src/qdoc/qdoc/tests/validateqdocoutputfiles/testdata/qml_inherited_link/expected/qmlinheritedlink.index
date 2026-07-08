@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="QmlInheritedLink Reference Documentation" version="" project="QmlInheritedLink">
     <namespace name="" status="active" access="public" module="qmlinheritedlink">
-        <page name="qml-naming-reference.html" href="qml-naming-reference.html" status="active" location="reference.qdoc" documented="true" subtype="page" title="QML Naming Reference" fulltitle="QML Naming Reference" subtitle="">
+        <page name="qml-naming-reference.html" href="qml-naming-reference.html" status="active" location="reference.qdoc" documented="true" subtype="page" title="QML Naming Reference" fulltitle="QML Naming Reference">
             <contents name="name-properties" title="Name Properties" level="1"/>
             <contents name="name" title="name" level="2"/>
             <contents name="width" title="width" level="2"/>

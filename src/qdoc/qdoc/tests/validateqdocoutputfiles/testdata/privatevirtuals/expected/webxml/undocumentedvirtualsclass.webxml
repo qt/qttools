@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="UndocumentedVirtualsClass" href="undocumentedvirtualsclass.html" status="active" access="public" location="undocumentedclass.h" documented="true" module="WassilyKandinsky" brief="A test class with undocumented and internal pure virtual methods">
+        <class name="UndocumentedVirtualsClass" href="undocumentedvirtualsclass.html" status="active" access="public" location="undocumentedclass.h" documented="true" includefile="undocumentedclass.h" module="WassilyKandinsky" brief="A test class with undocumented and internal pure virtual methods">
             <description>
                 <brief>A test class with undocumented and internal pure virtual methods.</brief>
                 <para>This class tests edge cases of undocumented and internal private pure virtuals.</para>

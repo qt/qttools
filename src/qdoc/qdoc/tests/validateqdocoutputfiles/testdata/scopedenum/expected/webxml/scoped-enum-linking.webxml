@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="scoped-enum-linking.html" href="scoped-enum-linking.html" status="active" location="scopedenum.qdoc" documented="true" subtype="page" title="Enum Linking" fulltitle="Enum Linking" subtitle="">
+        <page name="scoped-enum-linking.html" href="scoped-enum-linking.html" status="active" location="scopedenum.qdoc" documented="true" subtype="page" title="Enum Linking" fulltitle="Enum Linking">
             <description>
                 <para>Linking to <link raw="TestQDoc::Test::ScopedEnum::All" href="testqdoc-test.html#ScopedEnum-enum" type="enum" enum="TestQDoc::Test::ScopedEnum">All</link>.</para>
                 <para>

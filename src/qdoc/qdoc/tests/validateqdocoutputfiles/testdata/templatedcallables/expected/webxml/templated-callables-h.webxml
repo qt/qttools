@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <header name="&lt;templated_callables.h&gt;" href="templated-callables-h.html" status="active" documented="true" module="TestQDoc" title="&lt;templated_callables.h&gt;" fulltitle="&lt;templated_callables.h&gt;" subtitle="">
+        <header name="&lt;templated_callables.h&gt;" href="templated-callables-h.html" status="active" documented="true" includefile="templated_callables.h" module="TestQDoc" title="&lt;templated_callables.h&gt;" fulltitle="&lt;templated_callables.h&gt;" subtitle="">
             <description>
                 <para>Containing headers for the tested free functions.</para>
             </description>

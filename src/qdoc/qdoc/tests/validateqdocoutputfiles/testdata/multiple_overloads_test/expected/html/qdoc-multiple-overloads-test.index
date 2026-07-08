@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="QDoc multiple overloads test Reference Documentation" version="" project="QDoc multiple overloads test">
     <namespace name="" status="active" access="public" module="qdoc multiple overloads test">
-        <class name="TestDate" href="testdate.html" status="active" access="public" location="testoverloads.h" documented="true" module="TestQDocOverloadCommand" brief="Test class simulating QDate">
+        <class name="TestDate" href="testdate.html" status="active" access="public" location="testoverloads.h" documented="true" includefile="testoverloads.h" module="TestQDocOverloadCommand" brief="Test class simulating QDate">
             <function name="toString" fullname="TestDate::toString" href="testdate.html#toString" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" type="void" signature="void toString() const"/>
             <function name="toString" fullname="TestDate::toString" href="testdate.html#toString-1" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" overload="true" overload-number="1" type="void" signature="void toString(const char *formatString) const">
                 <parameter type="const char *" name="formatString" default=""/>
@@ -11,7 +11,7 @@
                 <parameter type="int" name="format" default=""/>
             </function>
         </class>
-        <class name="TestDateTime" href="testdatetime.html" status="active" access="public" location="testoverloads.h" documented="true" module="TestQDocOverloadCommand" brief="Test class simulating QDateTime">
+        <class name="TestDateTime" href="testdatetime.html" status="active" access="public" location="testoverloads.h" documented="true" includefile="testoverloads.h" module="TestQDocOverloadCommand" brief="Test class simulating QDateTime">
             <function name="toString" fullname="TestDateTime::toString" href="testdatetime.html#toString" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" type="void" signature="void toString() const"/>
             <function name="toString" fullname="TestDateTime::toString" href="testdatetime.html#toString-1" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" overload="true" overload-number="1" type="void" signature="void toString(const char *formatString) const">
                 <parameter type="const char *" name="formatString" default=""/>
@@ -20,7 +20,7 @@
                 <parameter type="int" name="format" default=""/>
             </function>
         </class>
-        <class name="TestOverloads" href="testoverloads.html" status="active" access="public" location="testoverloads.h" documented="true" module="TestQDocOverloadCommand" brief="Demonstrates multiple overloads and the \overload primary feature">
+        <class name="TestOverloads" href="testoverloads.html" status="active" access="public" location="testoverloads.h" documented="true" includefile="testoverloads.h" module="TestQDocOverloadCommand" brief="Demonstrates multiple overloads and the \overload primary feature">
             <contents name="list-start-value-tests" title="List Start Value Tests" level="1"/>
             <function name="failOnWarning" fullname="TestOverloads::failOnWarning" href="testoverloads.html#failOnWarning" status="active" access="public" location="testoverloads.h" documented="true" since="6.11" meta="plain" static="true" type="void" signature="void failOnWarning(const RegularExpression &amp;messagePattern)">
                 <parameter type="const RegularExpression &amp;" name="messagePattern" default=""/>
@@ -56,7 +56,7 @@
             </function>
             <function name="testFullyQualified" fullname="TestOverloads::testFullyQualified" href="testoverloads.html#testFullyQualified" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" static="true" type="void" signature="void testFullyQualified()"/>
         </class>
-        <class name="TestPositionDependent" href="testpositiondependent.html" status="active" access="public" location="testoverloads.h" documented="true" module="TestQDocOverloadCommand" brief="Test class to verify position-dependent primary overload behavior">
+        <class name="TestPositionDependent" href="testpositiondependent.html" status="active" access="public" location="testoverloads.h" documented="true" includefile="testoverloads.h" module="TestQDocOverloadCommand" brief="Test class to verify position-dependent primary overload behavior">
             <function name="convert" fullname="TestPositionDependent::convert" href="testpositiondependent.html#convert" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" type="void" signature="void convert(int value, bool flag) const">
                 <parameter type="int" name="value" default=""/>
                 <parameter type="bool" name="flag" default=""/>
@@ -66,7 +66,7 @@
                 <parameter type="const char *" name="text" default=""/>
             </function>
         </class>
-        <class name="TestTime" href="testtime.html" status="active" access="public" location="testoverloads.h" documented="true" module="TestQDocOverloadCommand" brief="Test class simulating QTime">
+        <class name="TestTime" href="testtime.html" status="active" access="public" location="testoverloads.h" documented="true" includefile="testoverloads.h" module="TestQDocOverloadCommand" brief="Test class simulating QTime">
             <function name="toString" fullname="TestTime::toString" href="testtime.html#toString" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" type="void" signature="void toString() const"/>
             <function name="toString" fullname="TestTime::toString" href="testtime.html#toString-1" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" overload="true" overload-number="1" type="void" signature="void toString(const char *formatString) const">
                 <parameter type="const char *" name="formatString" default=""/>
@@ -75,6 +75,6 @@
                 <parameter type="int" name="format" default=""/>
             </function>
         </class>
-        <module name="TestQDocOverloadCommand" href="testqdocoverloadcommand-module.html" status="active" documented="true" seen="true" title="" brief="A test module"/>
+        <module name="TestQDocOverloadCommand" href="testqdocoverloadcommand-module.html" status="active" documented="true" seen="true" brief="A test module"/>
     </namespace>
 </INDEX>

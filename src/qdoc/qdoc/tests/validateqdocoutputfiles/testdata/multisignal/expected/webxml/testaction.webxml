@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TestAction" href="testaction.html" status="active" access="public" location="testaction.h" documented="true" bases="QObject" module="TestModule" brief="A test class to demonstrate improved multi-property signal documentation">
+        <class name="TestAction" href="testaction.html" status="active" access="public" location="testaction.h" documented="true" includefile="testaction.h" bases="QObject" module="TestModule" brief="A test class to demonstrate improved multi-property signal documentation">
             <description>
                 <brief>A test class to demonstrate improved multi-property signal documentation.</brief>
                 <para>This class has properties with different notification patterns.</para>

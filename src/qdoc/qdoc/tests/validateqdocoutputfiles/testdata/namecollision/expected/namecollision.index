@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="NameCollision Reference Documentation" version="" project="NameCollision">
     <namespace name="" status="active" access="public" module="namecollision">
-        <page name="index.html" href="index.html" status="active" location="overview.qdoc" documented="true" subtype="page" title="Name Collision Test" fulltitle="Name Collision Test" subtitle="">
+        <page name="index.html" href="index.html" status="active" location="overview.qdoc" documented="true" subtype="page" title="Name Collision Test" fulltitle="Name Collision Test">
             <contents name="all-qml-types" title="All QML Types" level="1"/>
         </page>
         <qmlclass name="Circle" qml-module-name="QtQuick.Shapes" qml-base-type="QtQuick.Shapes::Shape" fullname="QtQuick.Shapes.Circle" href="qml-qtquick-shapes-circle.html" status="active" access="public" location="shapes.qdoc" documented="true" brief="A circular shape"/>

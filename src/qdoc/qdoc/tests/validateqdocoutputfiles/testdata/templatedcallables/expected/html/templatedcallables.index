@@ -27,7 +27,7 @@
         <function name="templated_function_with_type_template_parameter_pack" href="templated-callables-h.html#templated_function_with_type_template_parameter_pack" status="active" access="public" location="templated_callables.h" documented="true" related="10" meta="plain" type="void" signature="void templated_function_with_type_template_parameter_pack(Ts...)">
             <parameter type="Ts..." name="" default=""/>
         </function>
-        <class name="TemplatedClass" href="templatedclass.html" status="active" access="public" location="templated_callables.h" documented="true" module="TestQDoc">
+        <class name="TemplatedClass" href="templatedclass.html" status="active" access="public" location="templated_callables.h" documented="true" includefile="templated_callables.h" module="TestQDoc">
             <function name="templated_method_with_defaulted_non_type_template_parameter" fullname="TemplatedClass::templated_method_with_defaulted_non_type_template_parameter" href="templatedclass.html#templated_method_with_defaulted_non_type_template_parameter" status="active" access="public" location="templated_callables.h" documented="true" meta="plain" type="void" signature="void templated_method_with_defaulted_non_type_template_parameter()"/>
             <function name="templated_method_with_defaulted_template_template_parameter" fullname="TemplatedClass::templated_method_with_defaulted_template_template_parameter" href="templatedclass.html#templated_method_with_defaulted_template_template_parameter" status="active" access="public" location="templated_callables.h" documented="true" meta="plain" type="void" signature="void templated_method_with_defaulted_template_template_parameter(Container&lt;U, size&gt;)">
                 <parameter type="Container&lt;U, size&gt;" name="" default=""/>
@@ -51,7 +51,7 @@
                 <parameter type="Ts..." name="" default=""/>
             </function>
         </class>
-        <header name="&lt;templated_callables.h&gt;" href="templated-callables-h.html" status="active" documented="true" module="TestQDoc" title="&lt;templated_callables.h&gt;" fulltitle="&lt;templated_callables.h&gt;" subtitle="">
+        <header name="&lt;templated_callables.h&gt;" href="templated-callables-h.html" status="active" documented="true" includefile="templated_callables.h" module="TestQDoc" title="&lt;templated_callables.h&gt;" fulltitle="&lt;templated_callables.h&gt;" subtitle="">
             <function name="templated_function_with_defaulted_non_type_template_parameter" href="templated-callables-h.html#templated_function_with_defaulted_non_type_template_parameter" status="active" access="public" location="templated_callables.h" documented="true" related="0" meta="plain" type="void" signature="void templated_function_with_defaulted_non_type_template_parameter()"/>
             <function name="templated_function_with_defaulted_template_template_parameter" href="templated-callables-h.html#templated_function_with_defaulted_template_template_parameter" status="active" access="public" location="templated_callables.h" documented="true" related="1" meta="plain" type="void" signature="void templated_function_with_defaulted_template_template_parameter(Container&lt;T, size&gt;)">
                 <parameter type="Container&lt;T, size&gt;" name="" default=""/>
@@ -78,6 +78,6 @@
                 <parameter type="Ts..." name="" default=""/>
             </function>
         </header>
-        <module name="TestQDoc" href="testqdoc-module.html" status="internal-auto" seen="false" title=""/>
+        <module name="TestQDoc" href="testqdoc-module.html" status="internal-auto" seen="false"/>
     </namespace>
 </INDEX>

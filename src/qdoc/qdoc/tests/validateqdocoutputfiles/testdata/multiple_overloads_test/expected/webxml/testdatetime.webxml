@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TestDateTime" href="testdatetime.html" status="active" access="public" location="testoverloads.h" documented="true" module="TestQDocOverloadCommand" brief="Test class simulating QDateTime">
+        <class name="TestDateTime" href="testdatetime.html" status="active" access="public" location="testoverloads.h" documented="true" includefile="testoverloads.h" module="TestQDocOverloadCommand" brief="Test class simulating QDateTime">
             <description>
                 <brief>Test class simulating QDateTime.</brief>
                 <para>This class tests whether QDoc incorrectly reports &quot;Multiple primary overloads&quot; when different classes have methods with the same name, using shared comment nodes.</para>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="trademarks.html" href="trademarks.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Trademarks" fulltitle="Trademarks" subtitle="" brief="A page that documents trademarks">
+        <page name="trademarks.html" href="trademarks.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Trademarks" fulltitle="Trademarks" brief="A page that documents trademarks">
             <keyword name="trademark"/>
             <description>
                 <brief>A page that documents trademarks.</brief>

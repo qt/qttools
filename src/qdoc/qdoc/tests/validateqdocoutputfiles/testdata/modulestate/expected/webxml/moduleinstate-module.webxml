@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="ModuleInState" href="moduleinstate-module.html" status="active" location="module_in_a_state.qdoc" documented="true" seen="true" title="">
+        <module name="ModuleInState" href="moduleinstate-module.html" status="active" location="module_in_a_state.qdoc" documented="true" seen="true">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>

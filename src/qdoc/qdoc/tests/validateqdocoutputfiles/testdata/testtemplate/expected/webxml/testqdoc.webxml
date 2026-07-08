@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="A namespace">
+        <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" includefile="TestCPP" module="TestCPP" brief="A namespace" whereDocumented="TestTemplate">
             <contents name="usage" title="Usage" level="1"/>
             <description>
                 <brief>A namespace.</brief>
@@ -13,7 +13,7 @@
             <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" signature="QDOCTEST_MACRO">
                 <description/>
             </function>
-            <class threadsafety="reentrant" name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
+            <class threadsafety="reentrant" name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" groups="cpptypes,testgroup" includefile="testcpp.h" module="TestCPP" brief="A class in a namespace">
                 <description>
                     <brief>A class in a namespace.</brief>
                 </description>
@@ -143,7 +143,7 @@
                     </description>
                 </typedef>
             </class>
-            <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" bases="TestQDoc::Test" module="TestCPP" brief="A class in a namespace, derived from Test">
+            <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" includefile="testcpp.h" bases="TestQDoc::Test" module="TestCPP" brief="A class in a namespace, derived from Test">
                 <description>
                     <brief>A class in a namespace, derived from <link raw="Test" href="testqdoc-test.html" type="class">Test</link>.</brief>
                 </description>
@@ -171,7 +171,7 @@
                     </description>
                 </typedef>
             </class>
-            <class name="Vec" fullname="TestQDoc::Vec" href="testqdoc-vec.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Type alias that has its own reference">
+            <class name="Vec" fullname="TestQDoc::Vec" href="testqdoc-vec.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" includefile="testcpp.h" module="TestCPP" brief="Type alias that has its own reference">
                 <description>
                     <brief>Type alias that has its own reference.</brief>
                     <para>

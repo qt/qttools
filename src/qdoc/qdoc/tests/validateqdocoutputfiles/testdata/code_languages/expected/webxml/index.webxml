@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="index.html" href="index.html" status="active" location="index.qdoc" documented="true" subtype="page" title="Code Languages" fulltitle="Code Languages" subtitle="">
+        <page name="index.html" href="index.html" status="active" location="index.qdoc" documented="true" subtype="page" title="Code Languages" fulltitle="Code Languages">
             <contents name="code-blocks" title="Code blocks" level="1"/>
             <contents name="snippets" title="Snippets" level="1"/>
             <contents name="quoting-whole-files" title="Quoting whole files" level="1"/>

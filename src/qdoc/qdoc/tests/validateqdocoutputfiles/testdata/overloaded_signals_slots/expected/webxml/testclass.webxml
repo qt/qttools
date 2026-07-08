@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" bases="QObject" module="OverloadedSignalsSlots" brief="Test class for overloaded signals and slots">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" bases="QObject" module="OverloadedSignalsSlots" brief="Test class for overloaded signals and slots">
             <description>
                 <brief>Test class for overloaded signals and slots.</brief>
                 <para>This class tests QDoc's generation of connection snippets for overloaded signals and slots.</para>

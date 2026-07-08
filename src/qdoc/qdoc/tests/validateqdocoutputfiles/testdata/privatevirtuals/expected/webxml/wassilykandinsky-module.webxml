@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <module name="WassilyKandinsky" href="wassilykandinsky-module.html" status="active" location="abstractclass.h" documented="true" seen="true" title="" brief="Father of abstract art">
+        <module name="WassilyKandinsky" href="wassilykandinsky-module.html" status="active" location="abstractclass.h" documented="true" seen="true" brief="Father of abstract art">
             <description>
                 <generatedlist contents="classesbymodule">
                     <section>

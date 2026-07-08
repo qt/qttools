@@ -2,8 +2,8 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Auto-generated SMF documentation Reference Documentation" version="" project="Auto-generated SMF documentation">
     <namespace name="" status="active" access="public" module="auto-generated smf documentation">
-        <namespace name="AutoDocTests" href="autodoctests.html" status="active" access="public" location="autogentest.h" documented="true" module="AutoDocTests" brief="Contains test classes for auto-generated documentation">
-            <class name="AutoGenSmfTest" fullname="AutoDocTests::AutoGenSmfTest" href="autodoctests-autogensmftest.html" status="active" access="public" location="autogentest.h" documented="true" module="AutoDocTests" brief="A test class with explicitly defaulted SMFs and no explicit documentation">
+        <namespace name="AutoDocTests" href="autodoctests.html" status="active" access="public" location="autogentest.h" documented="true" includefile="autogentest.h" module="AutoDocTests" brief="Contains test classes for auto-generated documentation" whereDocumented="Auto-generated SMF documentation">
+            <class name="AutoGenSmfTest" fullname="AutoDocTests::AutoGenSmfTest" href="autodoctests-autogensmftest.html" status="active" access="public" location="autogentest.h" documented="true" includefile="autogentest.h" module="AutoDocTests" brief="A test class with explicitly defaulted SMFs and no explicit documentation">
                 <function name="AutoGenSmfTest" fullname="AutoDocTests::AutoGenSmfTest::AutoGenSmfTest" href="autodoctests-autogensmftest.html#AutoGenSmfTest" status="active" access="public" location="autogentest.h" documented="true" auto-generated="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="AutoGenSmfTest()"/>
                 <function name="AutoGenSmfTest" fullname="AutoDocTests::AutoGenSmfTest::AutoGenSmfTest" href="autodoctests-autogensmftest.html#AutoGenSmfTest-1" status="active" access="public" location="autogentest.h" documented="true" auto-generated="true" meta="move-constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" overload="true" overload-number="1" signature="AutoGenSmfTest(AutoDocTests::AutoGenSmfTest &amp;&amp;other)">
                     <parameter type="AutoDocTests::AutoGenSmfTest &amp;&amp;" name="other" default=""/>
@@ -19,7 +19,7 @@
                 </function>
                 <function name="~AutoGenSmfTest" fullname="AutoDocTests::AutoGenSmfTest::~AutoGenSmfTest" href="autodoctests-autogensmftest.html#dtor.AutoGenSmfTest" status="active" access="public" location="autogentest.h" documented="true" auto-generated="true" meta="destructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="~AutoGenSmfTest()"/>
             </class>
-            <class name="DeletedSmfTest" fullname="AutoDocTests::DeletedSmfTest" href="autodoctests-deletedsmftest.html" status="active" access="public" location="autogentest.h" documented="true" module="AutoDocTests" brief="A test class with deleted SMFs and no explicit documentation">
+            <class name="DeletedSmfTest" fullname="AutoDocTests::DeletedSmfTest" href="autodoctests-deletedsmftest.html" status="active" access="public" location="autogentest.h" documented="true" includefile="autogentest.h" module="AutoDocTests" brief="A test class with deleted SMFs and no explicit documentation">
                 <function name="DeletedSmfTest" fullname="AutoDocTests::DeletedSmfTest::DeletedSmfTest" href="autodoctests-deletedsmftest.html#DeletedSmfTest" status="active" access="public" location="autogentest.h" documented="true" auto-generated="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="DeletedSmfTest()"/>
                 <function name="DeletedSmfTest" fullname="AutoDocTests::DeletedSmfTest::DeletedSmfTest" href="autodoctests-deletedsmftest.html#DeletedSmfTest-1" status="active" access="public" location="autogentest.h" documented="true" auto-generated="true" meta="move-constructor" deleted="true" overload="true" overload-number="1" signature="DeletedSmfTest(AutoDocTests::DeletedSmfTest &amp;&amp;other)">
                     <parameter type="AutoDocTests::DeletedSmfTest &amp;&amp;" name="other" default=""/>
@@ -34,11 +34,11 @@
                     <parameter type="const AutoDocTests::DeletedSmfTest &amp;" name="other" default=""/>
                 </function>
             </class>
-            <class name="VirtualDtorTest" fullname="AutoDocTests::VirtualDtorTest" href="autodoctests-virtualdtortest.html" status="active" access="public" location="autogentest.h" documented="true" module="AutoDocTests" brief="A test class with a virtual destructor">
+            <class name="VirtualDtorTest" fullname="AutoDocTests::VirtualDtorTest" href="autodoctests-virtualdtortest.html" status="active" access="public" location="autogentest.h" documented="true" includefile="autogentest.h" module="AutoDocTests" brief="A test class with a virtual destructor">
                 <function name="VirtualDtorTest" fullname="AutoDocTests::VirtualDtorTest::VirtualDtorTest" href="autodoctests-virtualdtortest.html#VirtualDtorTest" status="active" access="public" location="autogentest.h" documented="true" auto-generated="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="VirtualDtorTest()"/>
                 <function name="~VirtualDtorTest" fullname="AutoDocTests::VirtualDtorTest::~VirtualDtorTest" href="autodoctests-virtualdtortest.html#dtor.VirtualDtorTest" status="active" access="public" location="autogentest.h" documented="true" auto-generated="true" meta="destructor" virtual="virtual" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="~VirtualDtorTest()"/>
             </class>
         </namespace>
-        <module name="AutoDocTests" href="autodoctests-module.html" status="active" documented="true" seen="true" title="" brief="Module contains test classes for auto-generated SMF documentation"/>
+        <module name="AutoDocTests" href="autodoctests-module.html" status="active" documented="true" seen="true" brief="Module contains test classes for auto-generated SMF documentation"/>
     </namespace>
 </INDEX>

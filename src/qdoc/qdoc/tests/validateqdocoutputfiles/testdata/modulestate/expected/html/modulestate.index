@@ -2,11 +2,11 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="ModuleState Reference Documentation" version="" project="ModuleState">
     <namespace name="" status="active" access="public" module="modulestate">
-        <class name="BoringClass" href="boringclass.html" status="active" access="public" location="classes_in_stateful_module.h" documented="true" module="ModuleInState"/>
-        <class name="ExcitingClass" href="excitingclass.html" status="active" access="public" location="classes_in_stateful_module.h" documented="true" module="ModuleInState">
+        <class name="BoringClass" href="boringclass.html" status="active" access="public" location="classes_in_stateful_module.h" documented="true" includefile="classes_in_stateful_module.h" module="ModuleInState"/>
+        <class name="ExcitingClass" href="excitingclass.html" status="active" access="public" location="classes_in_stateful_module.h" documented="true" includefile="classes_in_stateful_module.h" module="ModuleInState">
             <contents name="what-makes-excitingclass-more-exciting-than-boringclass" title="What makes ExcitingClass more exciting than BoringClass?" level="1"/>
         </class>
-        <module name="ModuleInState" href="moduleinstate-module.html" status="active" location="module_in_a_state.qdoc" documented="true" seen="true" title=""/>
-        <module name="WIPModule" href="wipmodule-module.html" status="internal" location="module_in_a_state.qdoc" documented="true" seen="true" title=""/>
+        <module name="ModuleInState" href="moduleinstate-module.html" status="active" location="module_in_a_state.qdoc" documented="true" seen="true"/>
+        <module name="WIPModule" href="wipmodule-module.html" status="internal" location="module_in_a_state.qdoc" documented="true" seen="true"/>
     </namespace>
 </INDEX>

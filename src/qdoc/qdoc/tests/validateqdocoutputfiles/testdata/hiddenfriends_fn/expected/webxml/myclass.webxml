@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="MyClass" href="myclass.html" status="active" access="public" location="testclass.h" documented="true" module="HiddenFriendModule" brief="A class with a hidden friend that should be documented on Container's page">
+        <class name="MyClass" href="myclass.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" module="HiddenFriendModule" brief="A class with a hidden friend that should be documented on Container's page">
             <description>
                 <brief>A class with a hidden friend that should be documented on Container's page.</brief>
             </description>

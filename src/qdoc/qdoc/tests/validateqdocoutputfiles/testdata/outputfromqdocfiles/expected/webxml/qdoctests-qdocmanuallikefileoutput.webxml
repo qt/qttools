@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="qdoctests-qdocmanuallikefileoutput.html" href="qdoctests-qdocmanuallikefileoutput.html" status="active" location="qdoctests-outputfromqdocmanuallikefiles.qdoc" documented="true" subtype="page" title="Document Navigation" fulltitle="Document Navigation" subtitle="">
+        <page name="qdoctests-qdocmanuallikefileoutput.html" href="qdoctests-qdocmanuallikefileoutput.html" status="active" location="qdoctests-outputfromqdocmanuallikefiles.qdoc" documented="true" subtype="page" title="Document Navigation" fulltitle="Document Navigation">
             <target name="previouspage-command"/>
             <contents name="commands" title="Commands" level="1"/>
             <contents name="previouspage" title="\previouspage" level="2"/>

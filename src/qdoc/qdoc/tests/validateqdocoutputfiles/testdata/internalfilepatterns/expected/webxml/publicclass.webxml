@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="PublicClass" href="publicclass.html" status="active" access="public" location="publicclass.h" documented="true" module="InternalFilePatterns" brief="A public class for testing">
+        <class name="PublicClass" href="publicclass.html" status="active" access="public" location="publicclass.h" documented="true" includefile="publicclass.h" module="InternalFilePatterns" brief="A public class for testing">
             <description>
                 <brief>A public class for testing.</brief>
             </description>

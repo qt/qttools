@@ -9,7 +9,7 @@
             <parameter type="int" name="a" default=""/>
             <parameter type="bool" name="b" default=""/>
         </function>
-        <class name="Globals" href="globals.html" status="active" access="public" location="global.h" documented="true" module="TestGlobals">
+        <class name="Globals" href="globals.html" status="active" access="public" location="global.h" documented="true" includefile="global.h" module="TestGlobals">
             <function name="foo" href="globals.html#foo" status="active" access="public" location="global.h" documented="true" related="0" meta="plain" type="int" signature="int foo(int a)">
                 <parameter type="int" name="a" default=""/>
             </function>
@@ -18,6 +18,6 @@
                 <parameter type="bool" name="b" default=""/>
             </function>
         </class>
-        <module name="TestGlobals" href="testglobals-module.html" status="active" location="global.qdoc" documented="true" seen="true" title=""/>
+        <module name="TestGlobals" href="testglobals-module.html" status="active" location="global.qdoc" documented="true" seen="true"/>
     </namespace>
 </INDEX>

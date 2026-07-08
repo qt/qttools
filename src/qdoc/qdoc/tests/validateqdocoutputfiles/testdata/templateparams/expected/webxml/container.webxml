@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Container" href="container.html" status="active" access="public" location="templateparams.h" documented="true" module="TestModule" brief="A container with key-value pairs">
+        <class name="Container" href="container.html" status="active" access="public" location="templateparams.h" documented="true" includefile="templateparams.h" module="TestModule" brief="A container with key-value pairs">
             <description>
                 <brief>A container with key-value pairs.</brief>
                 <para>

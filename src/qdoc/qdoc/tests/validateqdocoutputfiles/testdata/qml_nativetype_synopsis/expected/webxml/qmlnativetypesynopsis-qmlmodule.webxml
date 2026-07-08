@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <qmlmodule name="QmlNativeTypeSynopsis" qml-module-name="QmlNativeTypeSynopsis" href="qmlnativetypesynopsis-qmlmodule.html" status="active" documented="true" seen="true" title="">
+        <qmlmodule name="QmlNativeTypeSynopsis" qml-module-name="QmlNativeTypeSynopsis" href="qmlnativetypesynopsis-qmlmodule.html" status="active" documented="true" seen="true">
             <description/>
         </qmlmodule>
     </document>

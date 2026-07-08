@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <struct name="First" href="first.html" status="active" access="public" location="bbb.h" documented="true" module="TestModule">
+        <struct name="First" href="first.html" status="active" access="public" location="bbb.h" documented="true" includefile="bbb.h" module="TestModule">
             <description>
                 <para>This is a first class</para>
             </description>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="FullyDocumented" href="fullydocumented.html" status="active" access="public" location="templateparams.h" documented="true" module="TestModule" brief="A template class with all parameters documented">
+        <class name="FullyDocumented" href="fullydocumented.html" status="active" access="public" location="templateparams.h" documented="true" includefile="templateparams.h" module="TestModule" brief="A template class with all parameters documented">
             <description>
                 <brief>A template class with all parameters documented.</brief>
                 <para>

@@ -2,6 +2,6 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Test Reference Documentation" version="" project="Test">
     <namespace name="" status="active" access="public" module="test">
-        <page name="index.html" href="index.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Images" fulltitle="Images" subtitle=""/>
+        <page name="index.html" href="index.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Images" fulltitle="Images"/>
     </namespace>
 </INDEX>

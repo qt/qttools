@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="CompilerGeneratedMemberFunctions" fullname="QDocTests::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html" status="active" access="public" location="compilergeneratedmemberfunctions.h" documented="true" module="QDocTests" brief="A test class for compiler-generated member functions">
+        <class name="CompilerGeneratedMemberFunctions" fullname="QDocTests::CompilerGeneratedMemberFunctions" href="qdoctests-compilergeneratedmemberfunctions.html" status="active" access="public" location="compilergeneratedmemberfunctions.h" documented="true" includefile="compilergeneratedmemberfunctions.h" module="QDocTests" brief="A test class for compiler-generated member functions">
             <description>
                 <brief>A test class for compiler-generated member functions.</brief>
                 <para>This class is used to test the documentation of compiler-generated member functions.</para>

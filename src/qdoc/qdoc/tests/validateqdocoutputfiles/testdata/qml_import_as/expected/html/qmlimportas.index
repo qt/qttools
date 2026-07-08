@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="QmlImportAs Reference Documentation" version="" project="QmlImportAs">
     <namespace name="" status="active" access="public" module="qmlimportas">
-        <page name="import-as-test.html" href="import-as-test.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Import As Test" fulltitle="Import As Test" subtitle="" brief="Demonstrating import ... as ... statements">
+        <page name="import-as-test.html" href="import-as-test.html" status="active" location="test.qdoc" documented="true" subtype="page" title="Import As Test" fulltitle="Import As Test" brief="Demonstrating import ... as ... statements">
             <contents name="problem-description" title="Problem Description" level="1"/>
             <contents name="comparison-with-non-aliased-qualified-types" title="Comparison with Non-Aliased Qualified Types" level="1"/>
             <contents name="mixed-module-import-patterns" title="Mixed Module Import Patterns" level="1"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TemplatedClass" href="templatedclass.html" status="active" access="public" location="templated_callables.h" documented="true" module="TestQDoc">
+        <class name="TemplatedClass" href="templatedclass.html" status="active" access="public" location="templated_callables.h" documented="true" includefile="templated_callables.h" module="TestQDoc">
             <description>
                 <para>Containing record for the tested methods. <argument>T</argument> is the class template parameter.</para>
             </description>

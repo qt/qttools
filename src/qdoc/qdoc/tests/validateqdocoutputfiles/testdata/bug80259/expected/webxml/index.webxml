@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="index.html" href="index.html" status="active" location="index.qdoc" documented="true" subtype="page" title="doc index" fulltitle="doc index" subtitle="">
+        <page name="index.html" href="index.html" status="active" location="index.qdoc" documented="true" subtype="page" title="doc index" fulltitle="doc index">
             <description>
                 <generatedlist contents="classesbymodule TestModule"/>
             </description>

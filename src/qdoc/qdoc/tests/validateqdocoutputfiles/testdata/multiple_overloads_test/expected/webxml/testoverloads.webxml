@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TestOverloads" href="testoverloads.html" status="active" access="public" location="testoverloads.h" documented="true" module="TestQDocOverloadCommand" brief="Demonstrates multiple overloads and the \overload primary feature">
+        <class name="TestOverloads" href="testoverloads.html" status="active" access="public" location="testoverloads.h" documented="true" includefile="testoverloads.h" module="TestQDocOverloadCommand" brief="Demonstrates multiple overloads and the \overload primary feature">
             <contents name="list-start-value-tests" title="List Start Value Tests" level="1"/>
             <description>
                 <brief>Demonstrates multiple overloads and the <teletype>\overload</teletype> primary feature.</brief>

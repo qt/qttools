@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Widget" href="widget.html" status="active" access="public" location="widget.h" documented="true" module="TestModule" brief="Base widget class">
+        <class name="Widget" href="widget.html" status="active" access="public" location="widget.h" documented="true" includefile="widget.h" module="TestModule" brief="Base widget class">
             <description>
                 <brief>Base widget class.</brief>
             </description>

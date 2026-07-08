@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="cmaketest" href="test-cmaketest-example.html" status="active" location="cmaketest.qdoc" documented="true" subtype="example" title="CMake Example Project" fulltitle="CMake Example Project" subtitle="">
+        <page name="cmaketest" href="test-cmaketest-example.html" status="active" location="cmaketest.qdoc" documented="true" subtype="example" title="CMake Example Project" fulltitle="CMake Example Project">
             <description>
                 <image href="images/leonardo-da-vinci.png"/>
                 <para>Files:</para>

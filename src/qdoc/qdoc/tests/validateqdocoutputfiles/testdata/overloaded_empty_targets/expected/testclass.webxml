@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" bases="QObject" module="OverloadedEmptyTargets" brief="Test class for empty link target configuration">
+        <class name="TestClass" href="testclass.html" status="active" access="public" location="testclass.h" documented="true" includefile="testclass.h" bases="QObject" module="OverloadedEmptyTargets" brief="Test class for empty link target configuration">
             <description>
                 <brief>Test class for empty link target configuration.</brief>
                 <para>This class tests that QDoc handles empty overloadedsignalstarget and overloadedslotstarget configuration values without crashing.</para>

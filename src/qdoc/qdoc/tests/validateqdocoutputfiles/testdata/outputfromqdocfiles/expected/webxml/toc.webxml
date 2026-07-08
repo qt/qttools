@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="toc.html" href="toc.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Table of Contents" fulltitle="Table of Contents" subtitle="">
+        <page name="toc.html" href="toc.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Table of Contents" fulltitle="Table of Contents">
             <description>
                 <relation href="qdoctests-qdocfileoutput-linking.html" type="page" meta="previous" description="Testing QDoc's link command"/>
                 <list type="bullet">

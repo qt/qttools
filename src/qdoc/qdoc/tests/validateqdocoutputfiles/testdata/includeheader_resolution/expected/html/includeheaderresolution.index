@@ -2,18 +2,18 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Test automatic include header resolution" version="" project="IncludeHeaderResolution">
     <namespace name="" status="active" access="public" module="includeheaderresolution">
-        <class name="ActualClass" href="actualclass.html" status="active" access="public" location="actualclass.h" documented="true" module="IncludeHeaderModule" brief="A class without a convenience header">
+        <class name="ActualClass" href="actualclass.html" status="active" access="public" location="actualclass.h" documented="true" includefile="actualclass.h" module="IncludeHeaderModule" brief="A class without a convenience header">
             <function name="ActualClass" fullname="ActualClass::ActualClass" href="actualclass.html#ActualClass" status="active" access="public" location="actualclass.h" documented="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" brief="Default constructor" signature="ActualClass()"/>
             <function name="doSomething" fullname="ActualClass::doSomething" href="actualclass.html#doSomething" status="active" access="public" location="actualclass.h" documented="true" meta="plain" type="void" brief="A simple function" signature="void doSomething()"/>
         </class>
-        <class name="ConvenienceClass" href="convenienceclass.html" status="active" access="public" location="convenienceclass.h" documented="true" module="IncludeHeaderModule" brief="A class with a convenience header">
+        <class name="ConvenienceClass" href="convenienceclass.html" status="active" access="public" location="convenienceclass.h" documented="true" includefile="ConvenienceClass" module="IncludeHeaderModule" brief="A class with a convenience header">
             <function name="ConvenienceClass" fullname="ConvenienceClass::ConvenienceClass" href="convenienceclass.html#ConvenienceClass" status="active" access="public" location="convenienceclass.h" documented="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" brief="Default constructor" signature="ConvenienceClass()"/>
             <function name="doSomethingConvenient" fullname="ConvenienceClass::doSomethingConvenient" href="convenienceclass.html#doSomethingConvenient" status="active" access="public" location="convenienceclass.h" documented="true" meta="plain" type="void" brief="A simple function" signature="void doSomethingConvenient()"/>
         </class>
-        <class name="SubdirClass" href="subdirclass.html" status="active" access="public" location="subdirclass.h" documented="true" module="IncludeHeaderModule" brief="A class in a subdirectory">
+        <class name="SubdirClass" href="subdirclass.html" status="active" access="public" location="subdirclass.h" documented="true" includefile="subdirclass.h" module="IncludeHeaderModule" brief="A class in a subdirectory">
             <function name="SubdirClass" fullname="SubdirClass::SubdirClass" href="subdirclass.html#SubdirClass" status="active" access="public" location="subdirclass.h" documented="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" brief="Default constructor" signature="SubdirClass()"/>
             <function name="doSubdirThing" fullname="SubdirClass::doSubdirThing" href="subdirclass.html#doSubdirThing" status="active" access="public" location="subdirclass.h" documented="true" meta="plain" type="void" brief="A simple function" signature="void doSubdirThing()"/>
         </class>
-        <module name="IncludeHeaderModule" href="includeheadermodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" title="" brief="Test module for include header resolution"/>
+        <module name="IncludeHeaderModule" href="includeheadermodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" brief="Test module for include header resolution"/>
     </namespace>
 </INDEX>

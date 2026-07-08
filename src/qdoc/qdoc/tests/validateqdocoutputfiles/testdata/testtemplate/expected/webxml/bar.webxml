@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Bar" href="bar.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Another class template">
+        <class name="Bar" href="bar.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" includefile="testtemplate.h" module="TestCPP" brief="Another class template">
             <description>
                 <brief>Another class template.</brief>
                 <para>

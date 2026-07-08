@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="linkparentheses.html" href="linkparentheses.html" status="active" documented="true" subtype="page" title="Test Page for Link Parentheses Issue" fulltitle="Test Page for Link Parentheses Issue" subtitle="">
+        <page name="linkparentheses.html" href="linkparentheses.html" status="active" documented="true" subtype="page" title="Test Page for Link Parentheses Issue" fulltitle="Test Page for Link Parentheses Issue">
             <description>
                 <para>This page tests the fix for QTBUG-69756 where parentheses in link text cause premature link termination.</para>
                 <para>Test cases:</para>

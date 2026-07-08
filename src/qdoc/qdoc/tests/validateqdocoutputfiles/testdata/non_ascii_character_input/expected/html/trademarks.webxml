@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="trademarks.html" href="trademarks.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="Trademark Test" fulltitle="Trademark Test" subtitle="">
+        <page name="trademarks.html" href="trademarks.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="Trademark Test" fulltitle="Trademark Test">
             <contents name="example1-f18e807d" title="Example1™" level="1"/>
             <contents name="linking" title="Linking" level="1"/>
             <description>
