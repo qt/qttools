@@ -2,3 +2,4 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 add_subdirectory(qtattributionsscanner)
+add_subdirectory(designer/servertest)
