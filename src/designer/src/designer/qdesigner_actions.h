@@ -141,7 +141,6 @@ private:
 
 
     QString m_backupPath;
-    QString m_backupTmpPath;
 
     QTimer* m_backupTimer;
 
