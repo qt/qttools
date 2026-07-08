@@ -7,6 +7,7 @@
 #include "qdesigner_settings.h"
 
 #include <QtCore/qobject.h>
+#include <QtCore/qmap.h>
 #include <QtCore/qpointer.h>
 
 #include <memory>
@@ -76,6 +77,7 @@ public:
     void setWindowListSeparatorVisible(bool visible);
 
     bool openForm(QWidget *parent);
+    QMap<QString, QString> pendingBackups() const;
 
     QString uiExtension() const;
 
