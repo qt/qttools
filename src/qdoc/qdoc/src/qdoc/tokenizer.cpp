@@ -458,8 +458,8 @@ int Tokenizer::getToken()
                 if (m_numPreprocessorSkipping == 0
                     && !(m_tokLoc.fileName().endsWith(".qdoc")
                          || m_tokLoc.fileName().endsWith(".js"))) {
-                    m_tokLoc.warning(QStringLiteral("Hostile character 0x%1 in C++ source")
-                                             .arg((uchar)m_ch, 1, 16));
+                    m_tokLoc.report(QStringLiteral("Hostile character 0x%1 in C++ source")
+                                            .arg((uchar)m_ch, 1, 16));
                 }
                 m_ch = getChar();
             }

@@ -33,7 +33,8 @@ DocBook.outputsubdir      = docbook
 DocBook.usedocbookextensions = true
 
 sources = ./src/qdoctests-outputfromqdocfiles.qdoc \
-          ./src/qdoctests-outputfromqdocmanuallikefiles.qdoc
+          ./src/qdoctests-outputfromqdocmanuallikefiles.qdoc \
+          ./src/test_in.cpp
 
 exampledirs = ./src/snippets
 
