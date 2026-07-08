@@ -786,7 +786,7 @@ void QDesignerWorkbench::closeAllToolWindows()
 
 bool QDesignerWorkbench::readInBackup()
 {
-    const QMap<QString, QString> backupFileMap = QDesignerSettings(m_core).backup();
+    const QMap<QString, QString> backupFileMap = m_actionManager->pendingBackups();
     if (backupFileMap.isEmpty())
         return false;
 

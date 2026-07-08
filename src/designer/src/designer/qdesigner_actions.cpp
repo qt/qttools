@@ -8,6 +8,7 @@
 #include "qdesigner.h"
 #include "qdesigner_workbench.h"
 #include "qdesigner_formwindow.h"
+#include "qdesigner_settings.h"
 #include "mainwindow.h"
 #include "newform.h"
 #include "versiondialog.h"
@@ -709,6 +710,19 @@ void QDesignerActions::saveFormAsTemplate()
         SaveFormAsTemplate dlg(core(), fw, fw->window());
         dlg.exec();
     }
+}
+
+QMap<QString, QString> QDesignerActions::pendingBackups() const
+{
+    QMap<QString, QString> result = QDesignerSettings(m_core).backup();
+    for (auto it = result.begin(); it != result.end();) {
+        it.value() = QDir::cleanPath(it.value());
+        if (it.value().startsWith(m_backupPath) && QFile::exists(it.value()))
+            ++it;
+        else
+            it = result.erase(it);
+    }
+    return result;
 }
 
 void QDesignerActions::notImplementedYet()
