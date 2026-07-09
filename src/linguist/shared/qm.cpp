@@ -448,6 +448,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
 
     // for squeezed but non-file data, this is what needs to be deleted
     const uchar *messageArray = nullptr;
+    uint messageLength = 0;
     const uchar *offsetArray = nullptr;
     uint offsetLength = 0;
 
@@ -475,6 +476,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
             //qDebug() << "HASHES: " << blockLen << QByteArray((const char *)data, blockLen).toHex();
         } else if (tag == Messages) {
             messageArray = data;
+            messageLength = blockLen;
             //qDebug() << "MESSAGES: " << blockLen << QByteArray((const char *)data, blockLen).toHex();
         } else if (tag == Dependencies) {
             QStringList dependencies;
@@ -510,19 +512,39 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
     QString context, sourcetext, comment;
     QStringList translations;
 
+    // Message records are addressed by offsets read from the (untrusted) file.
+    // Every read below must stay within [messageArray, messageArrayEnd); the
+    // block scan above guarantees messageArrayEnd never exceeds the file buffer.
+    const uchar *const messageArrayEnd = messageArray + messageLength;
+    const auto bytesAvailable = [&](const uchar *p) -> qsizetype {
+        return (p >= messageArray && p < messageArrayEnd) ? messageArrayEnd - p : 0;
+    };
+
     for (const uchar *start = offsetArray; start != offsetArray + (numItems << 3); start += 8) {
         //quint32 hash = read32(start);
         quint32 ro = read32(start + 4);
         //qDebug() << "\nHASH:" << hash;
+        if (!messageArray || ro >= messageLength) {
+            cd.appendError("QM-Format error: message offset out of range"_L1);
+            return false;
+        }
         const uchar *m = messageArray + ro;
 
         for (;;) {
+            if (bytesAvailable(m) < 1) {
+                cd.appendError("QM-Format error: message record truncated"_L1);
+                return false;
+            }
             uchar tag = read8(m++);
             //qDebug() << "Tag:" << tag << " ADDR: " << m;
             switch(tag) {
             case Tag_End:
                 goto end;
             case Tag_Translation: {
+                if (bytesAvailable(m) < 4) {
+                    cd.appendError("QM-Format error: message record truncated"_L1);
+                    return false;
+                }
                 int len = read32(m);
                 m += 4;
 
@@ -533,24 +555,41 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
                     return false;
                 }
                 QString str;
-                if (len != -1)
+                if (len != -1) {
+                    if (len < 0 || bytesAvailable(m) < len) {
+                        cd.appendError("QM-Format error: translation length out of range"_L1);
+                        return false;
+                    }
                     str = QString((const QChar *)m, len / 2);
-                if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
-                    for (int i = 0; i < str.size(); ++i)
-                        str[i] = QChar((str.at(i).unicode() >> 8) +
-                            ((str.at(i).unicode() << 8) & 0xff00));
+                    if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
+                        for (int i = 0; i < str.size(); ++i)
+                            str[i] = QChar((str.at(i).unicode() >> 8)
+                                           + ((str.at(i).unicode() << 8) & 0xff00));
+                    }
                 }
                 translations << str;
                 m += len;
                 break;
             }
             case Tag_Obsolete1:
+                if (bytesAvailable(m) < 4) {
+                    cd.appendError("QM-Format error: message record truncated"_L1);
+                    return false;
+                }
                 m += 4;
                 //qDebug() << "OBSOLETE";
                 break;
             case Tag_SourceText: {
+                if (bytesAvailable(m) < 4) {
+                    cd.appendError("QM-Format error: message record truncated"_L1);
+                    return false;
+                }
                 quint32 len = read32(m);
                 m += 4;
+                if (len > quint32(bytesAvailable(m))) {
+                    cd.appendError("QM-Format error: source length out of range"_L1);
+                    return false;
+                }
                 //qDebug() << "SOURCE LEN: " << len;
                 //qDebug() << "SOURCE: " << QByteArray((const char*)m, len);
                 fromBytes((const char*)m, len, &sourcetext, &utf8Fail);
@@ -558,8 +597,16 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
                 break;
             }
             case Tag_Context: {
+                if (bytesAvailable(m) < 4) {
+                    cd.appendError("QM-Format error: message record truncated"_L1);
+                    return false;
+                }
                 quint32 len = read32(m);
                 m += 4;
+                if (len > quint32(bytesAvailable(m))) {
+                    cd.appendError("QM-Format error: context length out of range"_L1);
+                    return false;
+                }
                 //qDebug() << "CONTEXT LEN: " << len;
                 //qDebug() << "CONTEXT: " << QByteArray((const char*)m, len);
                 fromBytes((const char*)m, len, &context, &utf8Fail);
@@ -567,8 +614,16 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
                 break;
             }
             case Tag_Comment: {
+                if (bytesAvailable(m) < 4) {
+                    cd.appendError("QM-Format error: message record truncated"_L1);
+                    return false;
+                }
                 quint32 len = read32(m);
                 m += 4;
+                if (len > quint32(bytesAvailable(m))) {
+                    cd.appendError("QM-Format error: comment length out of range"_L1);
+                    return false;
+                }
                 //qDebug() << "COMMENT LEN: " << len;
                 //qDebug() << "COMMENT: " << QByteArray((const char*)m, len);
                 fromBytes((const char*)m, len, &comment, &utf8Fail);
