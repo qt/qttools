@@ -208,8 +208,6 @@ void  ActionModel::setItems(QDesignerFormEditorInterface *core, QAction *action,
 
 QMimeData *ActionModel::mimeData(const QModelIndexList &indexes ) const
 {
-    ActionRepositoryMimeData::ActionList actionList;
-
     QSet<QAction*> actions;
     for (const QModelIndex &index : indexes)
         if (QStandardItem *item = itemFromIndex(index))
