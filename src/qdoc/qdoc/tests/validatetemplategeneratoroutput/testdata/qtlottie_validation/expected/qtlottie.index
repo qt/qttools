@@ -2,16 +2,16 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="QtLottie Reference Documentation" version="" project="QtLottie">
     <namespace name="" status="active" access="public" module="qtlottie">
-        <page name="lottietoqml.html" href="lottietoqml.html" status="active" location="lottietoqml.qdoc" documented="true" subtype="page" title="lottietoqml" fulltitle="lottietoqml" subtitle="" brief="A tool that converts a Lottie document to a QML file">
+        <page name="lottietoqml.html" href="lottietoqml.html" status="active" location="lottietoqml.qdoc" documented="true" subtype="page" title="lottietoqml" fulltitle="lottietoqml" brief="A tool that converts a Lottie document to a QML file">
             <contents name="overview" title="Overview" level="1"/>
             <contents name="usage" title="Usage" level="1"/>
         </page>
-        <page name="qt_target_qml_from_lottie.html" href="qt-target-qml-from-lottie.html" status="active" location="qt_target_qml_from_lottie.qdoc" documented="true" groups="cmake-commands-qtlottie" subtype="page" title="qt_target_qml_from_lottie" fulltitle="qt_target_qml_from_lottie" subtitle="" brief="Generates QML code based on a Lottie file">
+        <page name="qt_target_qml_from_lottie.html" href="qt-target-qml-from-lottie.html" status="active" location="qt_target_qml_from_lottie.qdoc" documented="true" groups="cmake-commands-qtlottie" subtype="page" title="qt_target_qml_from_lottie" fulltitle="qt_target_qml_from_lottie" brief="Generates QML code based on a Lottie file">
             <keyword name="qt6-target-qml-from-lottie" title="qt6_target_qml_from_lottie"/>
             <contents name="synopsis" title="Synopsis" level="1"/>
             <contents name="description" title="Description" level="1"/>
         </page>
-        <page name="qtlottieanimation-index.html" href="qtlottieanimation-index.html" status="active" location="qtlottie.qdoc" documented="true" subtype="page" title="Qt Lottie Animation" fulltitle="Qt Lottie Animation" subtitle="" brief="Display Lottie format vector graphics animations">
+        <page name="qtlottieanimation-index.html" href="qtlottieanimation-index.html" status="active" location="qtlottie.qdoc" documented="true" subtype="page" title="Qt Lottie Animation" fulltitle="Qt Lottie Animation" brief="Display Lottie format vector graphics animations">
             <contents name="getting-started" title="Getting Started" level="1"/>
             <contents name="limitations" title="Limitations" level="1"/>
             <contents name="general-limitations" title="General limitations" level="2"/>
@@ -24,28 +24,28 @@
             <contents name="reference" title="Reference" level="1"/>
             <contents name="related-information" title="Related Information" level="1"/>
         </page>
-        <page name="lottietoqml" href="qtlottie-lottietoqml-example.html" status="active" location="lottietoqmlexample.qdoc" documented="true" groups="category Graphics,qtlottieexamples" subtype="example" title="lottietoqml Example" fulltitle="lottietoqml Example" subtitle="" brief="An example demonstrating the use of lottietoqml in an application">
+        <page name="lottietoqml" href="qtlottie-lottietoqml-example.html" status="active" location="lottietoqmlexample.qdoc" documented="true" groups="category Graphics,qtlottieexamples" subtype="example" title="lottietoqml Example" fulltitle="lottietoqml Example" brief="An example demonstrating the use of lottietoqml in an application">
             <contents name="overview" title="Overview" level="1"/>
             <contents name="assets" title="Assets" level="1"/>
         </page>
-        <page name="qtlottieviewer" href="qtlottie-qtlottieviewer-example.html" status="active" location="qtlottieviewerexample.qdoc" documented="true" groups="category Graphics,qtlottieexamples" subtype="example" title="qtlottieviewer Example" fulltitle="qtlottieviewer Example" subtitle="" brief="An example demonstrating the use of Qt LottieAnimation in an application">
+        <page name="qtlottieviewer" href="qtlottie-qtlottieviewer-example.html" status="active" location="qtlottieviewerexample.qdoc" documented="true" groups="category Graphics,qtlottieexamples" subtype="example" title="qtlottieviewer Example" fulltitle="qtlottieviewer Example" brief="An example demonstrating the use of Qt LottieAnimation in an application">
             <contents name="overview" title="Overview" level="1"/>
         </page>
-        <page name="https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html#versionless-commands" href="https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html#versionless-commands" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Versionless commands" fulltitle="Versionless commands" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/licensing.html" href="https://doc.qt.io/qt-6/licensing.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Qt Licensing" fulltitle="Qt Licensing" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qml-qtquick-shapes-shape.html" href="https://doc.qt.io/qt-6/qml-qtquick-shapes-shape.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Shape" fulltitle="Shape" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qml-qtquick-vectorimage.html" href="https://doc.qt.io/qt-6/qml-qtquick-vectorimage.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="VectorImage" fulltitle="VectorImage" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qpainter.html" href="https://doc.qt.io/qt-6/qpainter.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QPainter" fulltitle="QPainter" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qquickpainteditem.html" href="https://doc.qt.io/qt-6/qquickpainteditem.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QQuickPaintedItem" fulltitle="QQuickPaintedItem" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qt-add-qml-module.html" href="https://doc.qt.io/qt-6/qt-add-qml-module.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="qt_add_qml_module()" fulltitle="qt_add_qml_module()" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qtquick-module.html" href="https://doc.qt.io/qt-6/qtquick-module.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Qt Quick" fulltitle="Qt Quick" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qtquick-shapes-qmlmodule.html" href="https://doc.qt.io/qt-6/qtquick-shapes-qmlmodule.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Qt Quick Shapes" fulltitle="Qt Quick Shapes" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/svgtoqml.html" href="https://doc.qt.io/qt-6/svgtoqml.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="svgtoqml" fulltitle="svgtoqml" subtitle=""/>
-        <page name="https://github.com/airbnb/lottie-web" href="https://github.com/airbnb/lottie-web" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Lottie Source" fulltitle="Lottie Source" subtitle=""/>
-        <page name="https://lottie.github.io/lottie-spec/1.0/" href="https://lottie.github.io/lottie-spec/1.0/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Lottie Specification" fulltitle="Lottie Specification" subtitle=""/>
-        <page name="https://lottiefiles.com/plugins/after-effects" href="https://lottiefiles.com/plugins/after-effects" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Lottie" fulltitle="Lottie" subtitle=""/>
-        <page name="https://www.gnu.org/licenses/gpl-3.0.html" href="https://www.gnu.org/licenses/gpl-3.0.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="GNU General Public License, version 3" fulltitle="GNU General Public License, version 3" subtitle=""/>
-        <page name="https://www.qt.io/company" href="https://www.qt.io/company" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="The Qt Company" fulltitle="The Qt Company" subtitle=""/>
+        <page name="https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html#versionless-commands" href="https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html#versionless-commands" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Versionless commands" fulltitle="Versionless commands"/>
+        <page name="https://doc.qt.io/qt-6/licensing.html" href="https://doc.qt.io/qt-6/licensing.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Qt Licensing" fulltitle="Qt Licensing"/>
+        <page name="https://doc.qt.io/qt-6/qml-qtquick-shapes-shape.html" href="https://doc.qt.io/qt-6/qml-qtquick-shapes-shape.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Shape" fulltitle="Shape"/>
+        <page name="https://doc.qt.io/qt-6/qml-qtquick-vectorimage.html" href="https://doc.qt.io/qt-6/qml-qtquick-vectorimage.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="VectorImage" fulltitle="VectorImage"/>
+        <page name="https://doc.qt.io/qt-6/qpainter.html" href="https://doc.qt.io/qt-6/qpainter.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QPainter" fulltitle="QPainter"/>
+        <page name="https://doc.qt.io/qt-6/qquickpainteditem.html" href="https://doc.qt.io/qt-6/qquickpainteditem.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QQuickPaintedItem" fulltitle="QQuickPaintedItem"/>
+        <page name="https://doc.qt.io/qt-6/qt-add-qml-module.html" href="https://doc.qt.io/qt-6/qt-add-qml-module.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="qt_add_qml_module()" fulltitle="qt_add_qml_module()"/>
+        <page name="https://doc.qt.io/qt-6/qtquick-module.html" href="https://doc.qt.io/qt-6/qtquick-module.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Qt Quick" fulltitle="Qt Quick"/>
+        <page name="https://doc.qt.io/qt-6/qtquick-shapes-qmlmodule.html" href="https://doc.qt.io/qt-6/qtquick-shapes-qmlmodule.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Qt Quick Shapes" fulltitle="Qt Quick Shapes"/>
+        <page name="https://doc.qt.io/qt-6/svgtoqml.html" href="https://doc.qt.io/qt-6/svgtoqml.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="svgtoqml" fulltitle="svgtoqml"/>
+        <page name="https://github.com/airbnb/lottie-web" href="https://github.com/airbnb/lottie-web" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Lottie Source" fulltitle="Lottie Source"/>
+        <page name="https://lottie.github.io/lottie-spec/1.0/" href="https://lottie.github.io/lottie-spec/1.0/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Lottie Specification" fulltitle="Lottie Specification"/>
+        <page name="https://lottiefiles.com/plugins/after-effects" href="https://lottiefiles.com/plugins/after-effects" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Lottie" fulltitle="Lottie"/>
+        <page name="https://www.gnu.org/licenses/gpl-3.0.html" href="https://www.gnu.org/licenses/gpl-3.0.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="GNU General Public License, version 3" fulltitle="GNU General Public License, version 3"/>
+        <page name="https://www.qt.io/company" href="https://www.qt.io/company" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="The Qt Company" fulltitle="The Qt Company"/>
         <qmlclass name="Item" href="qml-item.html" status="active" access="public" location="Item.qdoc" documented="true" brief="Represents an Item"/>
         <qmlclass name="LayerItem" qml-module-name="Qt.labs.lottieqt.VectorImageHelpers" fullname="Qt.labs.lottieqt.VectorImageHelpers.LayerItem" href="qml-qt-labs-lottieqt-vectorimagehelpers-layeritem.html" status="active" access="public" location="qquicklayeritem.qdoc" since="6.10" documented="true" brief="An Item that provides access to its transformation matrix as a property">
             <qmlproperty name="transformMatrix" fullname="Qt.labs.lottieqt.VectorImageHelpers.LayerItem.transformMatrix" href="qml-qt-labs-lottieqt-vectorimagehelpers-layeritem.html#transformMatrix-prop" status="active" access="public" location="qquicklayeritem.qdoc" documented="true" type="matrix4x4" attached="false" writable="true"/>
@@ -84,11 +84,11 @@
             <qmlproperty name="startFrame" fullname="Qt.labs.lottieqt.LottieAnimation.startFrame" href="qml-qt-labs-lottieqt-lottieanimation.html#startFrame-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="int" attached="false" writable="false"/>
             <qmlproperty name="status" fullname="Qt.labs.lottieqt.LottieAnimation.status" href="qml-qt-labs-lottieqt-lottieanimation.html#status-prop" status="active" access="public" location="qlottieanimation.qdoc" documented="true" type="enumeration" attached="false" writable="true"/>
         </qmlclass>
-        <group name="category Graphics" href="category-graphics.html" status="internal-auto" seen="false" title=""/>
-        <group name="cmake-commands-qtlottie" href="cmake-commands-qtlottie.html" status="internal-auto" seen="false" title=""/>
-        <group name="qmlmodules" href="qmlmodules.html" status="internal-auto" seen="false" title=""/>
-        <group name="qtlottieexamples" href="qtlottieexamples.html" status="internal-auto" seen="false" title=""/>
-        <qmlmodule name="QDoc.Test" href="qdoc-test-qmlmodule.html" status="internal-auto" seen="false" title=""/>
+        <group name="category Graphics" href="category-graphics.html" status="internal-auto" seen="false"/>
+        <group name="cmake-commands-qtlottie" href="cmake-commands-qtlottie.html" status="internal-auto" seen="false"/>
+        <group name="qmlmodules" href="qmlmodules.html" status="internal-auto" seen="false"/>
+        <group name="qtlottieexamples" href="qtlottieexamples.html" status="internal-auto" seen="false"/>
+        <qmlmodule name="QDoc.Test" href="qdoc-test-qmlmodule.html" status="internal-auto" seen="false"/>
         <qmlmodule name="Qt.labs.lottieqt" qml-module-name="Qt.labs.lottieqt" qml-module-version="1.0" href="qt-labs-lottieqt-qmlmodule.html" status="active" location="qtlottie.qdoc" documented="true" groups="qmlmodules" seen="true" title="Qt Lottie Animation QML Types" brief="Provides QML types to display Lottie graphics and animations">
             <contents name="qml-types" title="QML Types" level="1"/>
         </qmlmodule>

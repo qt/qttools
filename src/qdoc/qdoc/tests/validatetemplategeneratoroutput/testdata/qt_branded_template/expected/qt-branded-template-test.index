@@ -2,6 +2,6 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="https://www.example.org/qdoctest" title="Qt branded template test Reference Documentation" version="" project="Qt branded template test">
     <namespace name="" status="active" access="public" module="qt branded template test">
-        <page name="index.html" href="index.html" status="active" location="index.qdoc" documented="true" subtype="page" title="Qt Branded Template Example" fulltitle="Qt Branded Template Example" subtitle="" brief="Exercises the Qt-branded page template with toolbar and CDN logo"/>
+        <page name="index.html" href="index.html" status="active" location="index.qdoc" documented="true" subtype="page" title="Qt Branded Template Example" fulltitle="Qt Branded Template Example" brief="Exercises the Qt-branded page template with toolbar and CDN logo"/>
     </namespace>
 </INDEX>

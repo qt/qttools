@@ -2,6 +2,6 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Dual format output test Reference Documentation" version="" project="Dual format output test">
     <namespace name="" status="active" access="public" module="dual format output test">
-        <page name="readme" href="readme.html" status="active" location="README.qdoc" documented="true" subtype="page" title="README" fulltitle="README" subtitle="" brief="A test page for dual-format output"/>
+        <page name="readme" href="readme.html" status="active" location="README.qdoc" documented="true" subtype="page" title="README" fulltitle="README" brief="A test page for dual-format output"/>
     </namespace>
 </INDEX>

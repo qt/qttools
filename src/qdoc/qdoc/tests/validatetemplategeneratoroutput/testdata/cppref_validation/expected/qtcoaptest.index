@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="QtCoapTest Reference Documentation" version="" project="QtCoapTest">
     <namespace name="" status="active" access="public" module="qtcoaptest">
-        <namespace name="QtCoap" href="qtcoap.html" status="active" access="public" location="qcoapnamespace.h" documented="true" module="QtCoap" brief="Contains miscellaneous identifiers used throughout the Qt CoAP module">
+        <namespace name="QtCoap" href="qtcoap.html" status="active" access="public" location="qcoapnamespace.h" documented="true" includefile="qcoapnamespace.h" module="QtCoap" brief="Contains miscellaneous identifiers used throughout the Qt CoAP module" whereDocumented="QtCoapTest">
             <keyword name="qtcoap-namespace" title="{QtCoap Namespace}"/>
             <enum name="Error" fullname="QtCoap::Error" href="qtcoap.html#Error-enum" status="active" access="public" location="qcoapnamespace.h" documented="true" scoped="true">
                 <value name="Ok" value="0"/>
@@ -79,7 +79,7 @@
                 <value name="Certificate" value="3"/>
             </enum>
         </namespace>
-        <class threadsafety="reentrant" name="QCoapClient" href="qcoapclient.html" status="active" access="public" location="qcoapclient.h" documented="true" bases="QObject" module="QtCoap" brief="Allows the application to send CoAP requests and receive replies">
+        <class threadsafety="reentrant" name="QCoapClient" href="qcoapclient.html" status="active" access="public" location="qcoapclient.h" documented="true" includefile="QCoapClient" bases="QObject" module="QtCoap" brief="Allows the application to send CoAP requests and receive replies">
             <function name="QCoapClient" fullname="QCoapClient::QCoapClient" href="qcoapclient.html#QCoapClient" status="active" access="public" location="qcoapclient.h" documented="true" meta="constructor" explicit="true" signature="QCoapClient(QtCoap::SecurityMode securityMode, QObject *parent)">
                 <parameter type="QtCoap::SecurityMode" name="securityMode" default="QtCoap::SecurityMode::NoSecurity"/>
                 <parameter type="QObject *" name="parent" default="nullptr"/>
@@ -193,7 +193,7 @@
                 <notifier name="bindInterfaceChanged"/>
             </property>
         </class>
-        <class threadsafety="reentrant" name="QCoapMessage" href="qcoapmessage.html" status="active" access="public" location="qcoapmessage.h" documented="true" module="QtCoap" brief="Holds information about a CoAP message that can be a request or a reply">
+        <class threadsafety="reentrant" name="QCoapMessage" href="qcoapmessage.html" status="active" access="public" location="qcoapmessage.h" documented="true" includefile="QCoapMessage" module="QtCoap" brief="Holds information about a CoAP message that can be a request or a reply">
             <function name="QCoapMessage" fullname="QCoapMessage::QCoapMessage" href="qcoapmessage.html#QCoapMessage" status="active" access="public" location="qcoapmessage.h" documented="true" meta="constructor" signature="QCoapMessage()"/>
             <function name="QCoapMessage" fullname="QCoapMessage::QCoapMessage" href="qcoapmessage.html#QCoapMessage-1" status="active" access="public" location="qcoapmessage.h" documented="true" meta="copy-constructor" overload="true" overload-number="1" signature="QCoapMessage(const QCoapMessage &amp;other)">
                 <parameter type="const QCoapMessage &amp;" name="other" default=""/>
@@ -267,7 +267,7 @@
                 <value name="Reset" value="3"/>
             </enum>
         </class>
-        <class threadsafety="reentrant" name="QCoapOption" href="qcoapoption.html" status="active" access="public" location="qcoapoption.h" documented="true" module="QtCoap" brief="Holds data about CoAP options">
+        <class threadsafety="reentrant" name="QCoapOption" href="qcoapoption.html" status="active" access="public" location="qcoapoption.h" documented="true" includefile="QCoapOption" module="QtCoap" brief="Holds data about CoAP options">
             <function name="QCoapOption" fullname="QCoapOption::QCoapOption" href="qcoapoption.html#QCoapOption" status="active" access="public" location="qcoapoption.h" documented="true" meta="move-constructor" signature="QCoapOption(QCoapOption &amp;&amp;other)">
                 <parameter type="QCoapOption &amp;&amp;" name="other" default=""/>
             </function>
@@ -331,7 +331,7 @@
                 <value name="Size1" value="60"/>
             </enum>
         </class>
-        <class name="QCoapPrivateKey" href="qcoapprivatekey.html" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" module="QtCoap" brief="Interface for managing CoAP security keys">
+        <class name="QCoapPrivateKey" href="qcoapprivatekey.html" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" includefile="QCoapPrivateKey" module="QtCoap" brief="Interface for managing CoAP security keys">
             <function name="QCoapPrivateKey" fullname="QCoapPrivateKey::QCoapPrivateKey" href="qcoapprivatekey.html#QCoapPrivateKey" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="constructor" signature="QCoapPrivateKey()"/>
             <function name="QCoapPrivateKey" fullname="QCoapPrivateKey::QCoapPrivateKey" href="qcoapprivatekey.html#QCoapPrivateKey-1" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="move-constructor" noexcept="true" overload="true" overload-number="1" signature="QCoapPrivateKey(QCoapPrivateKey &amp;&amp;other)">
                 <parameter type="QCoapPrivateKey &amp;&amp;" name="other" default=""/>
@@ -362,7 +362,7 @@
             </function>
             <function name="~QCoapPrivateKey" fullname="QCoapPrivateKey::~QCoapPrivateKey" href="qcoapprivatekey.html#dtor.QCoapPrivateKey" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="destructor" noexcept="true" signature="~QCoapPrivateKey()"/>
         </class>
-        <class threadsafety="reentrant" name="QCoapReply" href="qcoapreply.html" status="active" access="public" location="qcoapreply.h" documented="true" bases="QIODevice" module="QtCoap" brief="Holds the data of a CoAP reply">
+        <class threadsafety="reentrant" name="QCoapReply" href="qcoapreply.html" status="active" access="public" location="qcoapreply.h" documented="true" includefile="QCoapReply" bases="QIODevice" module="QtCoap" brief="Holds the data of a CoAP reply">
             <function name="abortRequest" fullname="QCoapReply::abortRequest" href="qcoapreply.html#abortRequest" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" type="void" signature="void abortRequest()"/>
             <function name="aborted" fullname="QCoapReply::aborted" href="qcoapreply.html#aborted" status="active" access="public" location="qcoapreply.h" documented="true" meta="signal" type="void" signature="void aborted(const QCoapToken &amp;token)">
                 <parameter type="const QCoapToken &amp;" name="token" default=""/>
@@ -390,7 +390,7 @@
             <function name="url" fullname="QCoapReply::url" href="qcoapreply.html#url" status="active" access="public" location="qcoapreply.h" documented="true" meta="plain" const="true" type="QUrl" signature="QUrl url() const"/>
             <function name="~QCoapReply" fullname="QCoapReply::~QCoapReply" href="qcoapreply.html#dtor.QCoapReply" status="active" access="public" location="qcoapreply.h" documented="true" meta="destructor" virtual="virtual" override="true" noexcept="true" signature="~QCoapReply() override"/>
         </class>
-        <class threadsafety="reentrant" name="QCoapRequest" href="qcoaprequest.html" status="active" access="public" location="qcoaprequest.h" documented="true" bases="QCoapMessage" module="QtCoap" brief="Holds a CoAP request. This request can be sent with QCoapClient">
+        <class threadsafety="reentrant" name="QCoapRequest" href="qcoaprequest.html" status="active" access="public" location="qcoaprequest.h" documented="true" includefile="QCoapRequest" bases="QCoapMessage" module="QtCoap" brief="Holds a CoAP request. This request can be sent with QCoapClient">
             <function name="QCoapRequest" fullname="QCoapRequest::QCoapRequest" href="qcoaprequest.html#QCoapRequest" status="active" access="public" location="qcoaprequest.h" documented="true" meta="copy-constructor" signature="QCoapRequest(const QCoapRequest &amp;other)">
                 <parameter type="const QCoapRequest &amp;" name="other" default=""/>
             </function>
@@ -419,7 +419,7 @@
             <function name="url" fullname="QCoapRequest::url" href="qcoaprequest.html#url" status="active" access="public" location="qcoaprequest.h" documented="true" meta="plain" const="true" type="QUrl" signature="QUrl url() const"/>
             <function name="~QCoapRequest" fullname="QCoapRequest::~QCoapRequest" href="qcoaprequest.html#dtor.QCoapRequest" status="active" access="public" location="qcoaprequest.h" documented="true" meta="destructor" noexcept="true" signature="~QCoapRequest()"/>
         </class>
-        <class threadsafety="reentrant" name="QCoapResource" href="qcoapresource.html" status="active" access="public" location="qcoapresource.h" documented="true" module="QtCoap" brief="Holds information about a discovered resource">
+        <class threadsafety="reentrant" name="QCoapResource" href="qcoapresource.html" status="active" access="public" location="qcoapresource.h" documented="true" includefile="QCoapResource" module="QtCoap" brief="Holds information about a discovered resource">
             <function name="QCoapResource" fullname="QCoapResource::QCoapResource" href="qcoapresource.html#QCoapResource" status="active" access="public" location="qcoapresource.h" documented="true" meta="constructor" signature="QCoapResource()"/>
             <function name="QCoapResource" fullname="QCoapResource::QCoapResource" href="qcoapresource.html#QCoapResource-1" status="active" access="public" location="qcoapresource.h" documented="true" meta="copy-constructor" overload="true" overload-number="1" signature="QCoapResource(const QCoapResource &amp;other)">
                 <parameter type="const QCoapResource &amp;" name="other" default=""/>
@@ -464,14 +464,14 @@
             <function name="title" fullname="QCoapResource::title" href="qcoapresource.html#title" status="active" access="public" location="qcoapresource.h" documented="true" meta="plain" const="true" type="QString" signature="QString title() const"/>
             <function name="~QCoapResource" fullname="QCoapResource::~QCoapResource" href="qcoapresource.html#dtor.QCoapResource" status="active" access="public" location="qcoapresource.h" documented="true" meta="destructor" noexcept="true" signature="~QCoapResource()"/>
         </class>
-        <class threadsafety="reentrant" name="QCoapResourceDiscoveryReply" href="qcoapresourcediscoveryreply.html" status="active" access="public" location="qcoapresourcediscoveryreply.h" documented="true" bases="QCoapReply" module="QtCoap" brief="Holds the data of a CoAP reply for a resource discovery request">
+        <class threadsafety="reentrant" name="QCoapResourceDiscoveryReply" href="qcoapresourcediscoveryreply.html" status="active" access="public" location="qcoapresourcediscoveryreply.h" documented="true" includefile="QCoapResourceDiscoveryReply" bases="QCoapReply" module="QtCoap" brief="Holds the data of a CoAP reply for a resource discovery request">
             <function name="discovered" fullname="QCoapResourceDiscoveryReply::discovered" href="qcoapresourcediscoveryreply.html#discovered" status="active" access="public" location="qcoapresourcediscoveryreply.h" documented="true" meta="signal" type="void" signature="void discovered(QCoapResourceDiscoveryReply *reply, QList&lt;QCoapResource&gt; resources)">
                 <parameter type="QCoapResourceDiscoveryReply *" name="reply" default=""/>
                 <parameter type="QList&lt;QCoapResource&gt;" name="resources" default=""/>
             </function>
             <function name="resources" fullname="QCoapResourceDiscoveryReply::resources" href="qcoapresourcediscoveryreply.html#resources" status="active" access="public" location="qcoapresourcediscoveryreply.h" documented="true" meta="plain" const="true" type="QList&lt;QCoapResource&gt;" signature="QList&lt;QCoapResource&gt; resources() const"/>
         </class>
-        <class name="QCoapSecurityConfiguration" href="qcoapsecurityconfiguration.html" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" module="QtCoap" brief="Holds configuration options during the authentication process">
+        <class name="QCoapSecurityConfiguration" href="qcoapsecurityconfiguration.html" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" includefile="QCoapSecurityConfiguration" module="QtCoap" brief="Holds configuration options during the authentication process">
             <function name="QCoapSecurityConfiguration" fullname="QCoapSecurityConfiguration::QCoapSecurityConfiguration" href="qcoapsecurityconfiguration.html#QCoapSecurityConfiguration" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="constructor" signature="QCoapSecurityConfiguration()"/>
             <function name="QCoapSecurityConfiguration" fullname="QCoapSecurityConfiguration::QCoapSecurityConfiguration" href="qcoapsecurityconfiguration.html#QCoapSecurityConfiguration-1" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="move-constructor" noexcept="true" overload="true" overload-number="1" signature="QCoapSecurityConfiguration(QCoapSecurityConfiguration &amp;&amp;other)">
                 <parameter type="QCoapSecurityConfiguration &amp;&amp;" name="other" default=""/>
@@ -511,7 +511,7 @@
             </function>
             <function name="~QCoapSecurityConfiguration" fullname="QCoapSecurityConfiguration::~QCoapSecurityConfiguration" href="qcoapsecurityconfiguration.html#dtor.QCoapSecurityConfiguration" status="active" access="public" location="qcoapsecurityconfiguration.h" documented="true" meta="destructor" noexcept="true" signature="~QCoapSecurityConfiguration()"/>
         </class>
-        <page name="qtcoap-index.html" href="qtcoap-index.html" status="active" location="qtcoap-index.qdoc" documented="true" subtype="page" title="Qt CoAP" fulltitle="Qt CoAP" subtitle="" brief="Provides classes and functions to make CoAP programming simple and portable">
+        <page name="qtcoap-index.html" href="qtcoap-index.html" status="active" location="qtcoap-index.qdoc" documented="true" subtype="page" title="Qt CoAP" fulltitle="Qt CoAP" brief="Provides classes and functions to make CoAP programming simple and portable">
             <contents name="using-the-module" title="Using the Module" level="1"/>
             <contents name="building-with-cmake" title="Building with CMake" level="2"/>
             <contents name="building-with-qmake" title="Building with qmake" level="2"/>
@@ -520,7 +520,7 @@
             <contents name="reference" title="Reference" level="1"/>
             <contents name="licenses-and-attributions" title="Licenses and Attributions" level="1"/>
         </page>
-        <page name="qtcoap-overview.html" href="qtcoap-overview.html" status="active" location="qtcoap-overview.qdoc" documented="true" groups="explanations-networkingandconnectivity" subtype="page" title="Qt CoAP Overview" fulltitle="Qt CoAP Overview" subtitle="" brief="Provides insight into the CoAP protocol and the Qt CoAP module">
+        <page name="qtcoap-overview.html" href="qtcoap-overview.html" status="active" location="qtcoap-overview.qdoc" documented="true" groups="explanations-networkingandconnectivity" subtype="page" title="Qt CoAP Overview" fulltitle="Qt CoAP Overview" brief="Provides insight into the CoAP protocol and the Qt CoAP module">
             <contents name="messaging-model" title="Messaging Model" level="1"/>
             <contents name="using-the-qt-coap-api" title="Using the Qt CoAP API" level="1"/>
             <contents name="supported-features" title="Supported Features" level="1"/>
@@ -529,11 +529,11 @@
             <contents name="blockwise-transfers" title="Blockwise Transfers" level="2"/>
             <contents name="security" title="Security" level="2"/>
         </page>
-        <page name="threads-reentrancy.html" href="threads-reentrancy.html" status="active" location="threads-reentrancy.qdoc" documented="true" subtype="page" title="Reentrancy and Thread-Safety" fulltitle="Reentrancy and Thread-Safety" subtitle="" brief="Definitions of reentrant and thread-safe used in Qt documentation">
+        <page name="threads-reentrancy.html" href="threads-reentrancy.html" status="active" location="threads-reentrancy.qdoc" documented="true" subtype="page" title="Reentrancy and Thread-Safety" fulltitle="Reentrancy and Thread-Safety" brief="Definitions of reentrant and thread-safe used in Qt documentation">
             <keyword name="reentrant"/>
             <keyword name="thread-safe"/>
         </page>
-        <page name="quickmulticastclient" href="qtcoaptest-quickmulticastclient-example.html" status="active" location="quickmulticastclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Quick CoAP Multicast Discovery" fulltitle="Quick CoAP Multicast Discovery" subtitle="" brief="Using the CoAP client for a multicast resource discovery with a Qt Quick user interface">
+        <page name="quickmulticastclient" href="qtcoaptest-quickmulticastclient-example.html" status="active" location="quickmulticastclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Quick CoAP Multicast Discovery" fulltitle="Quick CoAP Multicast Discovery" brief="Using the CoAP client for a multicast resource discovery with a Qt Quick user interface">
             <contents name="running-the-example" title="Running the Example" level="1"/>
             <contents name="setting-up-a-coap-server" title="Setting Up a CoAP Server" level="1"/>
             <contents name="using-the-docker-based-test-server" title="Using the Docker-based Test Server" level="2"/>
@@ -549,7 +549,7 @@
             <page name="quickmulticastclient/qmldir" href="qtcoaptest-quickmulticastclient-qmldir.html" status="active" subtype="file" title="" fulltitle="qmldir Example File" subtitle="quickmulticastclient/qmldir"/>
             <page name="quickmulticastclient/quickmulticastclient.pro" href="qtcoaptest-quickmulticastclient-quickmulticastclient-pro.html" status="active" subtype="file" title="" fulltitle="quickmulticastclient.pro Example File" subtitle="quickmulticastclient/quickmulticastclient.pro"/>
         </page>
-        <page name="quicksecureclient" href="qtcoaptest-quicksecureclient-example.html" status="active" location="quicksecureclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Quick Secure CoAP Client" fulltitle="Quick Secure CoAP Client" subtitle="" brief="Securing the CoAP client and using it with a Qt Quick user interface">
+        <page name="quicksecureclient" href="qtcoaptest-quicksecureclient-example.html" status="active" location="quicksecureclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Quick Secure CoAP Client" fulltitle="Quick Secure CoAP Client" brief="Securing the CoAP client and using it with a Qt Quick user interface">
             <contents name="running-the-example" title="Running the Example" level="1"/>
             <contents name="exposing-c-classes-to-qml" title="Exposing C++ Classes to QML" level="1"/>
             <contents name="adjusting-build-files" title="Adjusting Build Files" level="1"/>
@@ -570,7 +570,7 @@
             <page name="quicksecureclient/qmldir" href="qtcoaptest-quicksecureclient-qmldir.html" status="active" subtype="file" title="" fulltitle="qmldir Example File" subtitle="quicksecureclient/qmldir"/>
             <page name="quicksecureclient/quicksecureclient.pro" href="qtcoaptest-quicksecureclient-quicksecureclient-pro.html" status="active" subtype="file" title="" fulltitle="quicksecureclient.pro Example File" subtitle="quicksecureclient/quicksecureclient.pro"/>
         </page>
-        <page name="simplecoapclient" href="qtcoaptest-simplecoapclient-example.html" status="active" location="simplecoapclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Simple CoAP Client" fulltitle="Simple CoAP Client" subtitle="" brief="Creating an application that communicates with a CoAP server">
+        <page name="simplecoapclient" href="qtcoaptest-simplecoapclient-example.html" status="active" location="simplecoapclient.qdoc" documented="true" groups="category Connectivity,qtcoap-examples" subtype="example" title="Simple CoAP Client" fulltitle="Simple CoAP Client" brief="Creating an application that communicates with a CoAP server">
             <contents name="running-the-example" title="Running the Example" level="1"/>
             <contents name="setting-up-a-coap-server" title="Setting Up a CoAP Server" level="1"/>
             <contents name="using-the-docker-based-test-server" title="Using the Docker-based Test Server" level="2"/>
@@ -586,32 +586,32 @@
             <page name="simplecoapclient/CMakeLists.txt" href="qtcoaptest-simplecoapclient-cmakelists-txt.html" status="active" subtype="file" title="" fulltitle="CMakeLists.txt Example File" subtitle="simplecoapclient/CMakeLists.txt"/>
             <page name="simplecoapclient/simplecoapclient.pro" href="qtcoaptest-simplecoapclient-simplecoapclient-pro.html" status="active" subtype="file" title="" fulltitle="simplecoapclient.pro Example File" subtitle="simplecoapclient/simplecoapclient.pro"/>
         </page>
-        <page name="https://coap.technology/" href="https://coap.technology/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="CoAP" fulltitle="CoAP" subtitle=""/>
-        <page name="https://datatracker.ietf.org/doc/html/rfc7252" href="https://datatracker.ietf.org/doc/html/rfc7252" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7252" fulltitle="RFC 7252" subtitle=""/>
-        <page name="https://datatracker.ietf.org/doc/html/rfc7252#section-4.2" href="https://datatracker.ietf.org/doc/html/rfc7252#section-4.2" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7252 - Section 4.2" fulltitle="RFC 7252 - Section 4.2" subtitle=""/>
-        <page name="https://datatracker.ietf.org/doc/html/rfc7390" href="https://datatracker.ietf.org/doc/html/rfc7390" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7390" fulltitle="RFC 7390" subtitle=""/>
-        <page name="https://datatracker.ietf.org/doc/html/rfc7390#section-2.5" href="https://datatracker.ietf.org/doc/html/rfc7390#section-2.5" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7390 - Section 2.5" fulltitle="RFC 7390 - Section 2.5" subtitle=""/>
-        <page name="https://datatracker.ietf.org/doc/html/rfc7641" href="https://datatracker.ietf.org/doc/html/rfc7641" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7641" fulltitle="RFC 7641" subtitle=""/>
-        <page name="https://datatracker.ietf.org/doc/html/rfc7959" href="https://datatracker.ietf.org/doc/html/rfc7959" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7959" fulltitle="RFC 7959" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/cmake-manual.html" href="https://doc.qt.io/qt-6/cmake-manual.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="CMake Documentation" fulltitle="CMake Documentation" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html" href="https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Build with CMake" fulltitle="Build with CMake" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qcborstreamreader.html" href="https://doc.qt.io/qt-6/qcborstreamreader.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QCborStreamReader" fulltitle="QCborStreamReader" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qcborstreamwriter.html" href="https://doc.qt.io/qt-6/qcborstreamwriter.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QCborStreamWriter" fulltitle="QCborStreamWriter" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qnetworkinterface.html#isValid" href="https://doc.qt.io/qt-6/qnetworkinterface.html#isValid" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QNetworkInterface::isValid()" fulltitle="QNetworkInterface::isValid()" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qobject.html#Q_INVOKABLE" href="https://doc.qt.io/qt-6/qobject.html#Q_INVOKABLE" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Q_INVOKABLE" fulltitle="Q_INVOKABLE" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qobject.html#Q_PROPERTY" href="https://doc.qt.io/qt-6/qobject.html#Q_PROPERTY" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Q_PROPERTY" fulltitle="Q_PROPERTY" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qqmlengine.html#QML_ANONYMOUS" href="https://doc.qt.io/qt-6/qqmlengine.html#QML_ANONYMOUS" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QML_ANONYMOUS" fulltitle="QML_ANONYMOUS" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qqmlengine.html#QML_NAMED_ELEMENT" href="https://doc.qt.io/qt-6/qqmlengine.html#QML_NAMED_ELEMENT" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QML_NAMED_ELEMENT" fulltitle="QML_NAMED_ELEMENT" subtitle=""/>
-        <page name="https://doc.qt.io/qt-6/qtqml-cppintegration-definetypes.html" href="https://doc.qt.io/qt-6/qtqml-cppintegration-definetypes.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Defining QML Types from C++" fulltitle="Defining QML Types from C++" subtitle=""/>
-        <page name="https://doc.qt.io/qtcreator/" href="https://doc.qt.io/qtcreator/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Qt Creator Documentation" fulltitle="Qt Creator Documentation" subtitle=""/>
-        <page name="https://doc.qt.io/qtcreator/creator-build-example-application.html" href="https://doc.qt.io/qtcreator/creator-build-example-application.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Qt Creator: Tutorial: Build and run" fulltitle="Qt Creator: Tutorial: Build and run" subtitle=""/>
-        <page name="https://www.gnu.org/licenses/gpl-3.0.html" href="https://www.gnu.org/licenses/gpl-3.0.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="GNU General Public License, version 3" fulltitle="GNU General Public License, version 3" subtitle=""/>
-        <page name="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats" href="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="CoAP Content-Formats Registry" fulltitle="CoAP Content-Formats Registry" subtitle=""/>
-        <page name="https://www.qt.io/" href="https://www.qt.io/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="The Qt Company" fulltitle="The Qt Company" subtitle=""/>
-        <group name="category Connectivity" href="category-connectivity.html" status="internal-auto" seen="false" title=""/>
-        <group name="explanations-networkingandconnectivity" href="explanations-networkingandconnectivity.html" status="internal-auto" seen="false" title=""/>
-        <group name="modules" href="modules.html" status="internal-auto" seen="false" title=""/>
+        <page name="https://coap.technology/" href="https://coap.technology/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="CoAP" fulltitle="CoAP"/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc7252" href="https://datatracker.ietf.org/doc/html/rfc7252" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7252" fulltitle="RFC 7252"/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc7252#section-4.2" href="https://datatracker.ietf.org/doc/html/rfc7252#section-4.2" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7252 - Section 4.2" fulltitle="RFC 7252 - Section 4.2"/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc7390" href="https://datatracker.ietf.org/doc/html/rfc7390" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7390" fulltitle="RFC 7390"/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc7390#section-2.5" href="https://datatracker.ietf.org/doc/html/rfc7390#section-2.5" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7390 - Section 2.5" fulltitle="RFC 7390 - Section 2.5"/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc7641" href="https://datatracker.ietf.org/doc/html/rfc7641" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7641" fulltitle="RFC 7641"/>
+        <page name="https://datatracker.ietf.org/doc/html/rfc7959" href="https://datatracker.ietf.org/doc/html/rfc7959" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="RFC 7959" fulltitle="RFC 7959"/>
+        <page name="https://doc.qt.io/qt-6/cmake-manual.html" href="https://doc.qt.io/qt-6/cmake-manual.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="CMake Documentation" fulltitle="CMake Documentation"/>
+        <page name="https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html" href="https://doc.qt.io/qt-6/cmake-qt5-and-qt6-compatibility.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Build with CMake" fulltitle="Build with CMake"/>
+        <page name="https://doc.qt.io/qt-6/qcborstreamreader.html" href="https://doc.qt.io/qt-6/qcborstreamreader.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QCborStreamReader" fulltitle="QCborStreamReader"/>
+        <page name="https://doc.qt.io/qt-6/qcborstreamwriter.html" href="https://doc.qt.io/qt-6/qcborstreamwriter.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QCborStreamWriter" fulltitle="QCborStreamWriter"/>
+        <page name="https://doc.qt.io/qt-6/qnetworkinterface.html#isValid" href="https://doc.qt.io/qt-6/qnetworkinterface.html#isValid" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QNetworkInterface::isValid()" fulltitle="QNetworkInterface::isValid()"/>
+        <page name="https://doc.qt.io/qt-6/qobject.html#Q_INVOKABLE" href="https://doc.qt.io/qt-6/qobject.html#Q_INVOKABLE" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Q_INVOKABLE" fulltitle="Q_INVOKABLE"/>
+        <page name="https://doc.qt.io/qt-6/qobject.html#Q_PROPERTY" href="https://doc.qt.io/qt-6/qobject.html#Q_PROPERTY" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Q_PROPERTY" fulltitle="Q_PROPERTY"/>
+        <page name="https://doc.qt.io/qt-6/qqmlengine.html#QML_ANONYMOUS" href="https://doc.qt.io/qt-6/qqmlengine.html#QML_ANONYMOUS" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QML_ANONYMOUS" fulltitle="QML_ANONYMOUS"/>
+        <page name="https://doc.qt.io/qt-6/qqmlengine.html#QML_NAMED_ELEMENT" href="https://doc.qt.io/qt-6/qqmlengine.html#QML_NAMED_ELEMENT" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="QML_NAMED_ELEMENT" fulltitle="QML_NAMED_ELEMENT"/>
+        <page name="https://doc.qt.io/qt-6/qtqml-cppintegration-definetypes.html" href="https://doc.qt.io/qt-6/qtqml-cppintegration-definetypes.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Defining QML Types from C++" fulltitle="Defining QML Types from C++"/>
+        <page name="https://doc.qt.io/qtcreator/" href="https://doc.qt.io/qtcreator/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Qt Creator Documentation" fulltitle="Qt Creator Documentation"/>
+        <page name="https://doc.qt.io/qtcreator/creator-build-example-application.html" href="https://doc.qt.io/qtcreator/creator-build-example-application.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="Qt Creator: Tutorial: Build and run" fulltitle="Qt Creator: Tutorial: Build and run"/>
+        <page name="https://www.gnu.org/licenses/gpl-3.0.html" href="https://www.gnu.org/licenses/gpl-3.0.html" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="GNU General Public License, version 3" fulltitle="GNU General Public License, version 3"/>
+        <page name="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats" href="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="CoAP Content-Formats Registry" fulltitle="CoAP Content-Formats Registry"/>
+        <page name="https://www.qt.io/" href="https://www.qt.io/" status="active" location="external-resources.qdoc" documented="true" subtype="externalpage" title="The Qt Company" fulltitle="The Qt Company"/>
+        <group name="category Connectivity" href="category-connectivity.html" status="internal-auto" seen="false"/>
+        <group name="explanations-networkingandconnectivity" href="explanations-networkingandconnectivity.html" status="internal-auto" seen="false"/>
+        <group name="modules" href="modules.html" status="internal-auto" seen="false"/>
         <group name="qtcoap-examples" href="qtcoap-examples.html" status="active" location="examples.qdoc" documented="true" seen="true" title="Qt CoAP Examples" brief="List of Qt CoAP examples"/>
-        <module name="QtCoap" href="qtcoap-module.html" status="active" location="qtcoap-module-cpp.qdoc" documented="true" groups="modules" seen="true" title="Qt CoAP C++ Classes" brief="Provides classes to use CoAP protocol"/>
+        <module name="QtCoap" href="qtcoap-module.html" status="active" location="qtcoap-module-cpp.qdoc" documented="true" groups="modules" cmakecomponent="Coap" qtvariable="coap" seen="true" title="Qt CoAP C++ Classes" brief="Provides classes to use CoAP protocol"/>
     </namespace>
 </INDEX>

@@ -2,6 +2,6 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Test fixture for source-location attribution on broken-link warnings" version="" project="BrokenLinkAttribution">
     <namespace name="" status="active" access="public" module="brokenlinkattribution">
-        <page name="broken-link-attribution.html" href="broken-link-attribution.html" status="active" location="broken_link_attribution.qdoc" documented="true" subtype="page" title="Broken Link Attribution Test" fulltitle="Broken Link Attribution Test" subtitle="" brief="Verifies source-location attribution for broken-link warnings"/>
+        <page name="broken-link-attribution.html" href="broken-link-attribution.html" status="active" location="broken_link_attribution.qdoc" documented="true" subtype="page" title="Broken Link Attribution Test" fulltitle="Broken Link Attribution Test" brief="Verifies source-location attribution for broken-link warnings"/>
     </namespace>
 </INDEX>
