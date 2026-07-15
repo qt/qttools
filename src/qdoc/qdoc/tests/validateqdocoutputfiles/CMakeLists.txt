@@ -14,6 +14,8 @@ endif()
 qt_internal_add_test(tst_validateQdocOutputFiles
     SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/tst_validateqdocoutputfiles.cpp
+    LIBRARIES
+        Qt6::Qml
 )
 
 # Write relevant Qt include path to a file, to be read in by QDoc
