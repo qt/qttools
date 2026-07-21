@@ -367,7 +367,7 @@ To run this example, you need to have a secure CoAP server supporting either PSK
 ##### Setting Up a Server For PSK Mode
 
 The following command pulls the docker container for a secure CoAP server based on [Californium plugtest](https://github.com/eclipse/californium/tree/master/demo-apps/cf-plugtest-server) (which is not secure by default) from the Docker Hub and starts it:
-```cpp
+```text
 docker run --name coap-test-server -d --rm -p 5683:5683/udp -p 5684:5684/udp tqtc/coap-californium-test-server:3.8.0
 
 ```
@@ -378,20 +378,20 @@ To run the example with this server, you need to set the pre-shared key to `secr
 ##### Setting Up a Server For Certificate Mode
 
 The docker image of the secure server using authentication with X.509 certificates is based on the [time server](https://github.com/keith-cullen/FreeCoAP/tree/master/sample/time_server) example from the FreeCoAP library. The following command pulls the container from Docker Hub and starts it:
-```cpp
+```text
 docker run --name coap-time-server -d --rm -p 5684:5684/udp tqtc/coap-secure-time-server:freecoap
 
 ```
 
 For instructions on retrieving the IP address see [Getting The IP Address](qtcoaptest-quicksecureclient-example.md#getting-the-ip-address). The CoAP test server will be reachable by the retrieved IP address on port _5684_ and resource path `/time`.
 To run the example with this server, you need to specify the certificate files required by the server. They are located in the docker container, under `/root/certs` directory. To copy them to a local directory, use the following command:
-```cpp
+```text
 docker cp <container_id>:/root/certs <local_directory_path>
 
 ```
 
 For example:
-```cpp
+```text
 $ docker cp 5e46502df88f:/root/certs ~/
 
 ```
@@ -401,7 +401,7 @@ The instructions for getting the container ID are described below.
 ##### Getting The IP Address
 
 To find out the IP address of a docker container, first retrieve the container ID by running the `docker ps` command, which will output something like:
-```cpp
+```text
 $ docker ps
 CONTAINER ID        IMAGE
 5e46502df88f        tqtc/coap-californium-test-server:3.8.0
@@ -409,13 +409,13 @@ CONTAINER ID        IMAGE
 ```
 
 Then you can obtain the IP address with the following command:
-```cpp
+```text
 docker inspect <container_id> | grep IPAddress
 
 ```
 
 For example:
-```cpp
+```text
 $ docker inspect 5e46502df88f | grep IPAddress
 ...
 "IPAddress": "172.17.0.2",
@@ -427,7 +427,7 @@ $ docker inspect 5e46502df88f | grep IPAddress
 ##### Terminating a Docker Container
 
 To terminate a docker container after usage, use the following command:
-```cpp
+```text
 docker stop <container_id>
 
 ```

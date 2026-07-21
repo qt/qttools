@@ -48,16 +48,16 @@
         <section>
         <h5 id="using-the-docker-based-test-server">Using the Docker-based Test Server</h5>
         <p>The following command pulls the docker container for the CoAP server from the Docker Hub and starts it:</p>
-        <pre class="cpp" translate="no"><code>docker run --name coap-multicast-server -d --rm --net=host tqtc/coap-multicast-test-server:californium-2.0.0
+        <pre class="text" translate="no"><code>docker run --name coap-multicast-server -d --rm --net=host tqtc/coap-multicast-test-server:californium-2.0.0
 </code></pre>
         <aside class="admonition note" role="note"><p><b>Note: </b>You can run more than one multicast CoAP servers (on the same host or other hosts in the network) by passing a different --name to the command above.</p></aside>
         <p>To terminate the docker container after usage, first obtain the container&apos;s ID by executing the <code>docker ps</code> command. The output will look like this:</p>
-        <pre class="cpp" translate="no"><code>$ docker ps
+        <pre class="text" translate="no"><code>$ docker ps
 CONTAINER ID   IMAGE
 8b991fae7789   tqtc/coap-multicast-test-server:californium-2.0.0
 </code></pre>
         <p>After that, use this ID to stop the container:</p>
-        <pre class="cpp" translate="no"><code>docker stop &lt;container_id&gt;
+        <pre class="text" translate="no"><code>docker stop &lt;container_id&gt;
 </code></pre>
         </section>
         <section>

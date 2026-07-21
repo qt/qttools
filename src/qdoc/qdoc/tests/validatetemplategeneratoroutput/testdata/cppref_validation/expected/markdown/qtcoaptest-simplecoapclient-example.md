@@ -29,13 +29,13 @@ To use the application, you need to specify a CoAP server. You have the followin
 ##### Using the Docker-based Test Server
 
 The following command pulls the docker container for the CoAP server from the Docker Hub and starts it:
-```cpp
+```text
 docker run --name coap-test-server -d --rm -p 5683:5683/udp -p 5684:5684/udp tqtc/coap-californium-test-server:3.8.0
 
 ```
 
 To find out the IP address of the docker container, first retrieve the container ID by running `docker ps`, which will output something like:
-```cpp
+```text
 $ docker ps
 CONTAINER ID        IMAGE
 5e46502df88f        tqtc/coap-californium-test-server:3.8.0
@@ -43,13 +43,13 @@ CONTAINER ID        IMAGE
 ```
 
 Then you can obtain the IP address with the following command:
-```cpp
+```text
 docker inspect <container_id> | grep IPAddress
 
 ```
 
 For example:
-```cpp
+```text
 $ docker inspect 5e46502df88f | grep IPAddress
 ...
 "IPAddress": "172.17.0.2",
@@ -59,7 +59,7 @@ $ docker inspect 5e46502df88f | grep IPAddress
 
 The CoAP test server will be reachable by the retrieved IP address on ports _5683_ (non-secure) and _5684_ (secure).
 To terminate the docker container after usage, use the following command:
-```cpp
+```text
 docker stop <container_id>
 
 ```

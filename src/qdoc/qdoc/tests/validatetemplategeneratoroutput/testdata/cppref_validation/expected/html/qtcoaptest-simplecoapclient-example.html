@@ -45,25 +45,25 @@
         <section>
         <h5 id="using-the-docker-based-test-server">Using the Docker-based Test Server</h5>
         <p>The following command pulls the docker container for the CoAP server from the Docker Hub and starts it:</p>
-        <pre class="cpp" translate="no"><code>docker run --name coap-test-server -d --rm -p 5683:5683/udp -p 5684:5684/udp tqtc/coap-californium-test-server:3.8.0
+        <pre class="text" translate="no"><code>docker run --name coap-test-server -d --rm -p 5683:5683/udp -p 5684:5684/udp tqtc/coap-californium-test-server:3.8.0
 </code></pre>
         <p>To find out the IP address of the docker container, first retrieve the container ID by running <code>docker ps</code>, which will output something like:</p>
-        <pre class="cpp" translate="no"><code>$ docker ps
+        <pre class="text" translate="no"><code>$ docker ps
 CONTAINER ID        IMAGE
 5e46502df88f        tqtc/coap-californium-test-server:3.8.0
 </code></pre>
         <p>Then you can obtain the IP address with the following command:</p>
-        <pre class="cpp" translate="no"><code>docker inspect &lt;container_id&gt; | grep IPAddress
+        <pre class="text" translate="no"><code>docker inspect &lt;container_id&gt; | grep IPAddress
 </code></pre>
         <p>For example:</p>
-        <pre class="cpp" translate="no"><code>$ docker inspect 5e46502df88f | grep IPAddress
+        <pre class="text" translate="no"><code>$ docker inspect 5e46502df88f | grep IPAddress
 ...
 &quot;IPAddress&quot;: &quot;172.17.0.2&quot;,
 ...
 </code></pre>
         <p>The CoAP test server will be reachable by the retrieved IP address on ports <i>5683</i> (non-secure) and <i>5684</i> (secure).</p>
         <p>To terminate the docker container after usage, use the following command:</p>
-        <pre class="cpp" translate="no"><code>docker stop &lt;container_id&gt;
+        <pre class="text" translate="no"><code>docker stop &lt;container_id&gt;
 </code></pre>
         <p>The <code>&lt;container_id&gt;</code> here is the same as retrieved by the <code>docker ps</code> command.</p>
         </section>
