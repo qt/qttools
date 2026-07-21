@@ -2250,15 +2250,15 @@ pixmap property in the property editor.
 
     To demonstrate, we use the Qt Widgets animation easing example.
 
-    The application consists of one source file, \c easing.py, a UI
-    file \c form.ui, a resource file \c  easing.qrc and the project
-    file, \c{easing.pyproject} file in the YAML format:
+    The application consists of one source file, \c easing.py, a UI file
+    \c form.ui and the project file, \c{pyproject.toml}, in the TOML format:
 
     \code
-    {
-        "files": ["easing.qrc", "ui_form.py", "easing.py", "easing_rc.py",
-                  "form.ui"]
-    }
+    [project]
+    name = "Easing Example"
+
+    [tool.pyside6-project]
+    files = ["easing.py", "form.ui"]
     \endcode
 
     The UI file is converted to Python code building the form using the
@@ -2306,23 +2306,23 @@ pixmap property in the property editor.
     It is demonstrated by the uiloader example:
 
     \code
-    from PySide2.QtUiTools import QUiLoader
+    from PySide6.QtUiTools import QUiLoader
 
     if __name__ == '__main__':
         # Some code to obtain the form file name, ui_file_name
         app = QApplication(sys.argv)
         ui_file = QFile(ui_file_name)
-        if not ui_file.open(QIODevice.ReadOnly):
-            print("Cannot open {}: {}".format(ui_file_name, ui_file.errorString()))
+        if not ui_file.open(QIODevice.OpenModeFlag.ReadOnly):
+            print(f"Cannot open {ui_file_name}: {ui_file.errorString()}")
             sys.exit(-1)
         loader = QUiLoader()
         widget = loader.load(ui_file, None)
         ui_file.close()
-        if not widget:
+        if widget is None:
             print(loader.errorString())
             sys.exit(-1)
         widget.show()
-        sys.exit(app.exec_())
+        sys.exit(app.exec())
     \endcode
 
     \section1 Resource imports
@@ -2387,7 +2387,7 @@ pixmap property in the property editor.
     by matching the form file path against the path components.
 
     If \c {--python-paths} is not given, the environment variable
-    \c PYTHONPATH is by default checked.
+    \c PYTHONPATH is checked by default.
 */
 
 /*!
