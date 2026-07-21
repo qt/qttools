@@ -70,7 +70,7 @@
     \snippet textfinder/textfinder.h 0
 
     The slot \c{on_findButton_clicked()} is a slot named according to the
-    \l{Using a Designer UI File in Your Application#Automatic Connections}
+    \l{Using a Qt Widgets Designer UI File in Your Application#Automatic Connections}
     {Automatic Connection} naming convention required
     by \c uic.
 
@@ -148,7 +148,7 @@
     \snippet textfinder/main.cpp 0
 
     There are various approaches to include forms into applications. Using
-    \l QUiLoader is just one of them. See \l{Using a Designer UI File in Your
+    \l QUiLoader is just one of them. See \l{Using a Qt Widgets Designer UI File in Your
     Application} for more information on the other approaches available.
 
     \sa {Calculator Builder}

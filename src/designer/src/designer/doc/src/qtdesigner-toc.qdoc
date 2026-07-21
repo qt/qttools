@@ -28,8 +28,8 @@
     \li \l {Creating Main Windows in Qt Widgets Designer}{Creating Main Windows}
     \li \l {Editing Resources with Qt Widgets Designer}{Editing Resources}
     \li \l {Using Stylesheets with Qt Widgets Designer}{Using Stylesheets}
-    \li \l {Using a Designer UI File in Your C++ Application}
-    \li \l {Using a Designer UI File in Your Qt for Python Application}
+    \li \l {Using a Qt Widgets Designer UI File in Your C++ Application}
+    \li \l {Using a Qt Widgets Designer UI File in Your Qt for Python Application}
     \li \l {Customizing Qt Widgets Designer Forms}
     \li \l {Using Custom Widgets with Qt Widgets Designer}{Using Custom Widgets}
     \li \l {Creating Custom Widgets for Qt Widgets Designer}
