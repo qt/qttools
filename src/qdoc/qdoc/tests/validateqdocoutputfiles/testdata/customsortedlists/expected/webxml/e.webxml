@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="e.html" href="e.html" status="active" location="test.qdoc" documented="true" groups="list" sortkey="C" subtype="page" title="Identifier brief" fulltitle="Identifier brief" brief="qt_add_qml_module registers a QML module">
+            <description>
+                <brief>qt_add_qml_module registers a QML module.</brief>
+            </description>
+        </page>
+    </document>
+</WebXML>

@@ -187,7 +187,7 @@
                 <parameter type="const QVariant &amp;" name="value" default=""/>
             </function>
             <function name="~QCoapClient" fullname="QCoapClient::~QCoapClient" href="qcoapclient.html#dtor.QCoapClient" status="active" access="public" location="qcoapclient.h" documented="true" meta="destructor" virtual="virtual" noexcept="true" signature="~QCoapClient()"/>
-            <property name="bindInterface" fullname="QCoapClient::bindInterface" href="qcoapclient.html#bindInterface-prop" status="active" access="public" location="qcoapclient.h" since="6.11" documented="true" dataType="QNetworkInterface" brief="The network interface to be used by the socket">
+            <property name="bindInterface" fullname="QCoapClient::bindInterface" href="qcoapclient.html#bindInterface-prop" status="active" access="public" location="qcoapclient.h" since="6.11" documented="true" dataType="QNetworkInterface" brief="the network interface to be used by the socket">
                 <getter name="bindInterface"/>
                 <setter name="setBindInterface"/>
                 <notifier name="bindInterfaceChanged"/>
