@@ -1,0 +1,29 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page qt-widgets-designer-security-considerations.html
+    \title Qt Widgets Designer Security Considerations
+
+    \QD is a \l{Using Qt's Developer Tools Securely}{developer tool} that treats its
+    input as trusted and is not a security boundary.
+
+    When you use \QD, be aware of the following risks:
+
+    \list
+    \li \QD loads \l{How to Create Qt Plugins}{plugins} to provide
+        \l{Creating and Using Components for Qt Widgets Designer}{custom widgets}
+        and \l{Creating Custom Widget Extensions}{extensions}. The plugins
+        are located in subdirectories named \c designer under the
+        \l{Deploying Plugins}{standard plugin directories}. This can lead to
+        arbitrary code execution on your machine.
+    \li \c .ui files loaded by \QD might contain relative and absolute file system
+        paths. As a result, \QD could read arbitrary files, exposing confidential
+        data.
+    \endlist
+
+    We therefore recommend you only load \c .ui files and plugins you created
+    yourself, or that come from sources you trust.
+
+    \sa {Using Qt's Developer Tools Securely}
+*/
