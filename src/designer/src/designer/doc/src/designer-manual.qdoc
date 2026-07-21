@@ -55,8 +55,8 @@
         \li  \l{Creating Main Windows in Qt Widgets Designer}
         \li  \l{Editing Resources with Qt Widgets Designer}
         \li  \l{Using Stylesheets with Qt Widgets Designer}
-        \li  \l{Using a Designer UI File in Your C++ Application}
-        \li  \l{Using a Designer UI File in Your Qt for Python Application}
+        \li  \l{Using a Qt Widgets Designer UI File in Your C++ Application}
+        \li  \l{Using a Qt Widgets Designer UI File in Your Qt for Python Application}
     \li Advanced Use
     \list
         \li  \l{Customizing Qt Widgets Designer Forms}
@@ -1784,7 +1784,7 @@ pixmap property in the property editor.
 /*!
     \page designer-stylesheet.html
     \previouspage Editing Resources with Qt Widgets Designer
-    \nextpage Using a Designer UI File in Your C++ Application
+    \nextpage Using a Qt Widgets Designer UI File in Your C++ Application
 
     \title Using Stylesheets with Qt Widgets Designer
 
@@ -1814,10 +1814,10 @@ pixmap property in the property editor.
 /*!
     \page designer-using-a-ui-file.html
     \previouspage Using Stylesheets with Qt Widgets Designer
-    \nextpage Using a Designer UI File in Your Qt for Python Application
+    \nextpage Using a Qt Widgets Designer UI File in Your Qt for Python Application
 
-    \keyword Using a Designer UI File in Your Application
-    \title Using a Designer UI File in Your C++ Application
+    \keyword Using a Qt Widgets Designer UI File in Your Application
+    \title Using a Qt Widgets Designer UI File in Your C++ Application
 
     Qt Widgets Designer UI files represent the widget tree of the form in XML format. The
     forms can be processed:
@@ -2241,10 +2241,10 @@ pixmap property in the property editor.
 
 /*!
     \page designer-using-a-ui-file-python.html
-    \previouspage Using a Designer UI File in Your C++ Application
+    \previouspage Using a Qt Widgets Designer UI File in Your C++ Application
     \nextpage Using Custom Widgets with Qt Widgets Designer
 
-    \title Using a Designer UI File in Your Qt for Python Application
+    \title Using a Qt Widgets Designer UI File in Your Qt for Python Application
 
     \section1 Converting the Form to Python Code
 
@@ -2392,7 +2392,7 @@ pixmap property in the property editor.
 
 /*!
     \page designer-customizing-forms.html
-    \previouspage Using a Designer UI File in Your Qt for Python Application
+    \previouspage Using a Qt Widgets Designer UI File in Your Qt for Python Application
     \nextpage Using Custom Widgets with Qt Widgets Designer
 
     \title Customizing Qt Widgets Designer Forms
@@ -2406,7 +2406,7 @@ pixmap property in the property editor.
     default layout, are stored along with the form's components. These settings
     are used when the \l uic generates the form's C++ code. For more
     information on how to use forms in your application, see the
-    \l{Using a Designer UI File in Your C++ Application} section.
+    \l{Using a Qt Widgets Designer UI File in Your C++ Application} section.
 
 
     \section1 Modifying the Form Settings
