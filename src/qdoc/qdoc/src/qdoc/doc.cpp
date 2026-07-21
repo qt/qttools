@@ -154,6 +154,7 @@ Text Doc::trimmedBriefText(const QString &className) const
         }
 
         QStringList w = briefStr.split(QLatin1Char(' '));
+        const qsizetype originalWordCount = w.size();
         if (!w.isEmpty() && w.first() == "Returns") {
         } else {
             if (!w.isEmpty() && w.first() == "The")
@@ -180,7 +181,8 @@ Text Doc::trimmedBriefText(const QString &className) const
         if (whats.endsWith(QLatin1Char('.')))
             whats.truncate(whats.size() - 1);
 
-        if (!whats.isEmpty())
+        // If filler words are stripped, capitalize the sentence start.
+        if (!whats.isEmpty() && w.size() != originalWordCount)
             whats[0] = whats[0].toUpper();
 
         // ### move this once \brief is abolished for properties

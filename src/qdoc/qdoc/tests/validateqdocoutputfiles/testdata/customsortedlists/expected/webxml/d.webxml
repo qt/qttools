@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="d.html" href="d.html" status="active" location="test.qdoc" documented="true" groups="list" sortkey="A" subtype="page" title="First!" fulltitle="First!" brief="Sort key: A">
+        <page name="d.html" href="d.html" status="active" location="test.qdoc" documented="true" groups="list" sortkey="A" subtype="page" title="First!" fulltitle="First!" brief="sort key: A">
             <description>
                 <brief>sort key: A</brief>
             </description>
