@@ -2585,8 +2585,13 @@ QString DocParser::getOptionalArgument()
  */
 QString DocParser::getRestOfLine()
 {
-    auto lineHasTrailingBackslash = [this](bool trailingBackslash) -> bool {
-        while (m_position < m_inputLength && m_input[m_position] != '\n') {
+    auto atLineEnd = [this]() -> bool {
+        return m_position >= m_inputLength || m_input[m_position] == '\n'
+                || m_input[m_position] == '\r';
+    };
+
+    auto lineHasTrailingBackslash = [this, &atLineEnd](bool trailingBackslash) -> bool {
+        while (!atLineEnd()) {
             if (m_input[m_position] == '\\' && !trailingBackslash) {
                 trailingBackslash = true;
                 ++m_position;
@@ -2616,11 +2621,18 @@ QString DocParser::getRestOfLine()
             return_simplified_string = true;
         }
 
-        if (m_position < m_inputLength)
+        if (m_position < m_inputLength && m_input[m_position] == '\r')
+            ++m_position;
+        if (m_position < m_inputLength && m_input[m_position] == '\n')
             ++m_position;
 
         if (!trailing_backslash)
             break;
+
+        while (m_position < m_inputLength
+               && (m_input[m_position] == '\r' || m_input[m_position] == '\n'))
+            ++m_position;
+
         start_position = m_position;
     }
 

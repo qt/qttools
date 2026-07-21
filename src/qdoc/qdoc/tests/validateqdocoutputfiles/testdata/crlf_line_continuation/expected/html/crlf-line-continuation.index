@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="CRLF line continuation Reference Documentation" version="" project="CRLF line continuation">
+    <namespace name="" status="active" access="public" module="crlf line continuation">
+        <page name="crlf-line-continuation.html" href="crlf-line-continuation.html" status="active" location="crlf_line_continuation.qdoc" documented="true" subtype="page" title="CRLF line continuation" fulltitle="CRLF line continuation" brief="Exercises getRestOfLine() line continuation on CRLF sources"/>
+    </namespace>
+</INDEX>

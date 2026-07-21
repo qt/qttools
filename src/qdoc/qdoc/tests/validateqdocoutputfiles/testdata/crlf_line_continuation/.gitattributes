@@ -1,0 +1,6 @@
+# The CRLF line endings in this fixture are the purpose of this test; they
+$ create the conditions where a carriage return before a continuation backslash
+# must be parsed correctly to ensure uniform behavior across Unix and Windows
+# systems. Marking the source -text stops Git from normalizing the CRLF bytes
+# on commit or checkout, so the bytes survive on every platform.
+src/crlf_line_continuation.qdoc -text
