@@ -2033,6 +2033,28 @@ Inspect the in-place source annotations marked with
  \uicontrol{Apply Translations} to insert the AI-generated translations into
  the TS file.
 
+ \section1 Security considerations
+
+ AI translation sends data over the network to the server you configure. Before
+ using it, consider the following:
+
+ \list
+     \li \b{Keep confidential strings off remote servers.} Qt Linguist sends the
+         source strings to translate, and any \uicontrol Context you provide, to
+         the configured server. Use only a server you trust, and prefer a local
+         LLM server.
+     \li \b{Review AI-generated translations before applying them.} Qt Linguist
+         inserts the server's translations as-is. Treat them as untrusted
+         content and review them in the \uicontrol{Translation Log} before
+         choosing \uicontrol{Apply Translations}, as they may contain
+         unexpected markup or format specifiers.
+     \li \b{Prefer HTTPS for remote servers.} Qt Linguist sends the API key as a
+         bearer token in the request. If the \uicontrol{Server URL} uses \c http
+         instead of \c https, anyone on the network path can read the key and
+         source text in cleartext. Use \c https for any server that is not
+         running on your local machine.
+ \endlist
+
  \section1 Recommended models
 
  The following models are recommended for translation tasks, balancing quality,
