@@ -187,6 +187,30 @@ QString protect(const QString &str)
     return marked;
 }
 
+/*!
+    \internal
+    Reports whether \a text ends with sentence-ending punctuation, ignoring
+    trailing whitespace. Returns true when the last non-whitespace character
+    is '.', '!', or '?', and also when \a text is empty or whitespace only,
+    so that a missing description raises no complaint.
+
+    The caller (\c DocParser) warns only when this returns false, which is why
+    an empty description reports true. The heuristic is deliberately simple:
+    a closing paren or quote following a terminator (such as "(deprecated.)")
+    is not accommodated, because the ticket accepts a plain check.
+ */
+bool endsWithSentenceTerminator(QStringView text)
+{
+    while (!text.isEmpty() && text.back().isSpace())
+        text.chop(1);
+
+    if (text.isEmpty())
+        return true;
+
+    const QChar last = text.back();
+    return last == '.'_L1 || last == '!'_L1 || last == '?'_L1;
+}
+
 } // namespace TextUtils
 
 QT_END_NAMESPACE
