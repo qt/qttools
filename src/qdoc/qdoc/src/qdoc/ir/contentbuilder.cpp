@@ -299,7 +299,7 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         if (atom->type() == Atom::Qml) {
             attrs["language"_L1] = u"qml"_s;
         } else if (atom->type() == Atom::CodeBad) {
-            attrs["language"_L1] = u"cpp"_s;
+            attrs["language"_L1] = u"text"_s;
             attrs["bad"_L1] = true;
         } else if (atom->count() >= 2 && !atom->string(1).isEmpty()) {
             attrs["language"_L1] = atom->string(1);

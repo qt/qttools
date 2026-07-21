@@ -8,7 +8,7 @@
 Generates QML code based on a Lottie file.
 
 The command is defined in the `LottieTools` component of the `Qt6` package, which can be loaded like this:
-```cpp
+```text
 find_package(Qt6 REQUIRED COMPONENTS LottieTools)
 
 ```
@@ -16,7 +16,7 @@ find_package(Qt6 REQUIRED COMPONENTS LottieTools)
 This command was introduced in Qt 6.11.
 ## Synopsis
 
-```cpp
+```text
 qt_target_qml_from_lottie(target
                           [CURVE_RENDERER]
                           [ASYNCHRONOUS_SHAPES]

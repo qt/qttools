@@ -44,7 +44,7 @@ client->put(request, QByteArray("payload"));
 
 CoAP discovery requests are used to query the resources available on an endpoint or in the complete network. This is really important for M2M applications, where there are no humans in the loop. For example, for home or building automation, there is a need for local clients and servers to find and interact with each other without human intervention. Resource discovery allows clients to learn about the endpoints available in the network.
 Qt CoAP supports discovery requests to a single endpoint and to multicast groups. For example, a discovery request to `/.well-known/core`, which is the default resource discovery entry point, may return something like:
-```cpp
+```text
 RES: 2.05 Content
 </sensors/temp>;rt="temperature-c";if="sensor";obs,
 </sensors/light>;rt="light-lux";if="sensor",

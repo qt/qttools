@@ -913,11 +913,11 @@ SCENARIO("ContentBuilder produces CodeBlock from CodeBad atom with bad attribute
             IR::ContentBuilder builder;
             auto blocks = builder.build(&chain.first);
 
-            THEN("There is one CodeBlock with language=cpp and bad=true")
+            THEN("There is one CodeBlock with language=text and bad=true")
             {
                 REQUIRE(blocks.size() == 1);
                 REQUIRE(blocks[0].type == IR::BlockType::CodeBlock);
-                REQUIRE(blocks[0].attributes["language"_L1].toString() == u"cpp"_s);
+                REQUIRE(blocks[0].attributes["language"_L1].toString() == u"text"_s);
                 REQUIRE(blocks[0].attributes["bad"_L1].toBool() == true);
             }
         }
