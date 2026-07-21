@@ -1,0 +1,17 @@
+project = CRLF line continuation
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions  = "*.h *.hpp"
+sources.fileextensions  = "*.cpp *.qml *.qdoc"
+
+headerdirs  = ./src
+sourcedirs  = ./src
+imagedirs   = ./src/images
+
+warninglimit = 0
+warninglimit.enabled = true
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html

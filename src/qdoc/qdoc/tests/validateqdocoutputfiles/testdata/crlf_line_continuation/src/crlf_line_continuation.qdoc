@@ -1,0 +1,20 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page crlf-line-continuation.html
+    \title CRLF line continuation
+    \brief Exercises getRestOfLine() line continuation on CRLF sources.
+
+    This page is authored with Windows (CRLF) line endings. The image alt
+    text below ends a physical line with a continuation backslash and is
+    then followed by a blank line before the continued text. On CRLF
+    sources the carriage return sitting before the newline used to be
+    folded into the scanned text, which dropped the leading words of the
+    argument. QDoc must join the argument identically to a Unix-line-ending
+    source.
+
+    \image sample.png head part of the alt text \
+
+    tail part of the alt text.
+*/
