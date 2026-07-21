@@ -65,6 +65,7 @@
         \li  \l{Creating Custom Widget Extensions}
         \li  \l{Qt Widgets Designer's UI File Format}
     \endlist
+    \li \l{Qt Widgets Designer Security Considerations}
     \endlist
 */
 
