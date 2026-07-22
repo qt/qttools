@@ -1362,6 +1362,20 @@
     stored in a \c{snippets} directory inside the documentation
     directory (for example, \c{$QTDIR/doc/src/snippets}).
 
+    \note QDoc resolves a relative snippet path against the directories
+    configured by the \l {exampledirs-variable}{exampledirs} and
+    \l {imagedirs-variable}{imagedirs} variables (plus any \c{doc/images}
+    directories found beneath the example directories). It does \e not search
+    \c{sourcedirs} or \c{headerdirs}, so snippet files that live in a separate
+    tree from your examples must still be reachable from \c{exampledirs} or
+    \c{imagedirs}. The \l {quotefile-command}{\\quotefile} and
+    \l {quotefromfile-command}{\\quotefromfile} commands resolve their files the
+    same way.
+
+    QDoc uses the first matching file it finds. When the same relative path
+    exists under more than one search directory, QDoc consults the directories
+    in lexicographic path order, so one file can shadow another.
+
     For example, the following documentation references a snippet in a
     file residing in a subdirectory of the documentation directory:
 
