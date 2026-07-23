@@ -26,8 +26,9 @@
 
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
-#include <QtCore/qpair.h>
 #include <QtCore/qstringlist.h>
+
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 

@@ -31,10 +31,11 @@
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
 #include <QtCore/qobject.h>
-#include <QtCore/qpair.h>
 #include <QtCore/qpoint.h>
 #include <QtCore/qpointer.h>
 #include <QtCore/qrect.h>
+
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 

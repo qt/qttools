@@ -25,11 +25,12 @@
 #include <QtGui/qvalidator.h>
 #include <QtGui/qundostack.h>
 
-#include <QtCore/qpair.h>
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qregularexpression.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qdebug.h>
+
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 

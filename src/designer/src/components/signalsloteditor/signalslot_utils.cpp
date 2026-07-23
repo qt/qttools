@@ -13,7 +13,7 @@
 #include <QtDesigner/qextensionmanager.h>
 #include <QtDesigner/abstractlanguage.h>
 
-#include <QtCore/qpair.h>
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 

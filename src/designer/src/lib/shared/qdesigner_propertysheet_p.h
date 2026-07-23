@@ -22,7 +22,6 @@
 #include <QtDesigner/qextensionmanager.h>
 
 #include <QtCore/qvariant.h>
-#include <QtCore/qpair.h>
 
 #include <QtCore/qpointer.h>
 
