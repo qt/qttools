@@ -17,11 +17,13 @@
 #include <QtWidgets/qstylefactory.h>
 #include <QtWidgets/qfiledialog.h>
 #include <QtWidgets/qmessagebox.h>
-#include <QtCore/qpair.h>
+
 #include <QtCore/qlist.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qshareddata.h>
+
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 

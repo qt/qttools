@@ -20,9 +20,10 @@
 #include <QtCore/qvariant.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qlist.h>
-#include <QtCore/qpair.h>
 #include <QtCore/qpointer.h>
 #include <QtCore/qsharedpointer.h>
+
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 

@@ -61,7 +61,6 @@
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qmetaobject.h>
-#include <QtCore/qpair.h>
 #include <QtCore/qqueue.h>
 #include <QtCore/qvariant.h>
 #include <QtCore/qxmlstream.h>
@@ -71,6 +70,7 @@
 #include <algorithm>
 #include <iterator>
 #include <memory>
+#include <utility>
 
 Q_DECLARE_METATYPE(QWidgetList)
 

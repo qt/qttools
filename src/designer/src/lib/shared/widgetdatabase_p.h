@@ -23,8 +23,9 @@
 #include <QtGui/qicon.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qvariant.h>
-#include <QtCore/qpair.h>
 #include <QtCore/qstringlist.h>
+
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 
