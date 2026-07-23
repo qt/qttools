@@ -555,6 +555,15 @@ QString NewFormWidget::currentTemplate(QString *ptrToErrorMessage)
     return contents;
 }
 
+bool NewFormWidget::isEmbeddedGroupBoxVisible() const
+{
+    return m_ui->embeddedGroup->isVisible();
 }
+void NewFormWidget::setEmbeddedGroupBoxVisible(bool v)
+{
+    m_ui->embeddedGroup->setVisible(v);
+}
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

@@ -44,6 +44,7 @@ class QDESIGNER_SHARED_EXPORT NewFormWidget : public QDesignerNewFormWidgetInter
 {
     Q_OBJECT
     Q_DISABLE_COPY_MOVE(NewFormWidget)
+    Q_PROPERTY(bool embeddedGroupBoxVisible READ isEmbeddedGroupBoxVisible WRITE setEmbeddedGroupBoxVisible)
 
 public:
     using DeviceProfileList = QList<qdesigner_internal::DeviceProfile>;
@@ -53,6 +54,9 @@ public:
 
     bool hasCurrentTemplate() const override;
     QString currentTemplate(QString *errorMessage = nullptr) override;
+
+    bool isEmbeddedGroupBoxVisible() const;
+    void setEmbeddedGroupBoxVisible(bool v);
 
     // Convenience for implementing file dialogs with preview
     static QImage grabForm(QDesignerFormEditorInterface *core,
