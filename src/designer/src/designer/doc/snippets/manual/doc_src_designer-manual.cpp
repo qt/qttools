@@ -13,7 +13,7 @@ void on_<object name>_<signal name>(<signal parameters>);
 
 //! [7]
 class MyExtension: public QObject,
-                   public QdesignerContainerExtension
+                   public QDesignerContainerExtension
 {
     Q_OBJECT
     Q_INTERFACE(QDesignerContainerExtension)
