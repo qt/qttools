@@ -3,7 +3,6 @@
 
 #include <QCoreApplication>
 #include <QCommandLineParser>
-#include <QMap>
 #include <QString>
 
 #include "translator.h"
@@ -23,6 +22,30 @@ static void printOut(const QString &out)
 {
     QTextStream stream(stdout);
     stream << out;
+}
+
+// These descriptions intentionally mirror the (translated) warning texts in
+// WarningModel::addWarning() in the Linguist GUI. The GUI needs translatable
+// strings while this console tool does not, so the two sets are kept separate.
+static QString checkDescription(Validator::ErrorType type)
+{
+    switch (type) {
+    case Validator::SuperfluousAccelerator:
+        return u"Accelerator possibly superfluous in translation"_s;
+    case Validator::MissingAccelerator:
+        return u"Accelerator possibly missing in translation"_s;
+    case Validator::SurroundingWhitespaceDiffers:
+        return u"Translation does not have the same surrounding whitespace as the source text"_s;
+    case Validator::PunctuationDiffers:
+        return u"Translation does not end with the same punctuation as the source text"_s;
+    case Validator::PlaceMarkersDiffer:
+        return u"Translation does not refer to the same place markers as the source text"_s;
+    case Validator::NumerusMarkerMissing:
+        return u"Translation does not contain the necessary %n/%Ln place marker"_s;
+    case Validator::IgnoredPhrasebook:
+        return u"A phrase book suggestion was ignored"_s;
+    }
+    return u"Unknown error"_s;
 }
 
 int main(int argc, char **argv)
@@ -118,7 +141,6 @@ int main(int argc, char **argv)
     QLocale::Language targetLang;
     QLocale::Territory targetTerritory;
     QList<bool> countRefNeeds;
-    QMap<Validator::ErrorType, QString> errors;
 
     tor.languageAndTerritory(tor.sourceLanguageCode(), &sourceLang, nullptr);
     tor.languageAndTerritory(tor.languageCode(), &targetLang, &targetTerritory);
@@ -126,13 +148,6 @@ int main(int argc, char **argv)
     if (checks.placeMarker && !getCountNeed(targetLang, targetTerritory, countRefNeeds, nullptr)) {
         printErr("Could not get numerus info");
         ok = false;
-    }
-
-    for (const TranslatorMessage &msg : tor.messages()) {
-        if (msg.isTranslated() && (checkFinished || msg.type() != TranslatorMessage::Finished)) {
-            Validator validator = Validator::fromSource(msg.sourceText(), checks, sourceLang, {});
-            errors.insert(validator.validate(msg.translations(), msg, targetLang, countRefNeeds));
-        }
     }
 
     QTextStream stream(stderr);
@@ -147,13 +162,38 @@ int main(int argc, char **argv)
         }
     }
 
-    for (const QString &trs : errors)
-        stream << "Validation error for translation '%1'\n"_L1.arg(trs);
+    int errorCount = 0;
+    for (const TranslatorMessage &msg : tor.messages()) {
+        if (!msg.isTranslated() || (!checkFinished && msg.type() == TranslatorMessage::Finished))
+            continue;
 
-    printOut("Finished batch checks.");
+        Validator validator = Validator::fromSource(msg.sourceText(), checks, sourceLang, {});
+        const QList<Validator::Error> errors =
+                validator.validate(msg.translations(), msg, targetLang, countRefNeeds);
+        if (errors.isEmpty())
+            continue;
 
-    if (!errors.empty())
+        QString location = msg.fileName();
+        if (!location.isEmpty()) {
+            if (msg.lineNumber() >= 0)
+                location += ":"_L1 + QString::number(msg.lineNumber());
+            location += ": "_L1;
+        }
+
+        for (const Validator::Error &error : errors) {
+            stream << location << checkDescription(error.type) << u'\n';
+            if (!msg.context().isEmpty())
+                stream << "    Context:     "_L1 << msg.context() << u'\n';
+            stream << "    Source:      "_L1 << msg.sourceText() << u'\n';
+            stream << "    Translation: "_L1 << error.message << u'\n';
+            ++errorCount;
+        }
+    }
+
+    if (errorCount > 0)
         ok = false;
+
+    printOut(u"Finished batch checks. Found %1 validation error(s).\n"_s.arg(errorCount));
 
     return ok ? 0 : 1;
 }

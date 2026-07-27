@@ -7,8 +7,6 @@
 #  include "phrase.h"
 #endif
 
-#include <QMap>
-
 QT_USE_NAMESPACE
 
 using namespace Qt::Literals::StringLiterals;
@@ -164,13 +162,12 @@ Validator Validator::fromSource(const QString &source, const Checks &checks,
     return v;
 }
 
-QMap<Validator::ErrorType, QString> Validator::validate(QStringList translations,
-                                                        const TranslatorMessage &msg,
-                                                        const QLocale::Language &locale,
-                                                        QList<bool> countRefNeeds)
+QList<Validator::Error> Validator::validate(QStringList translations, const TranslatorMessage &msg,
+                                            const QLocale::Language &locale,
+                                            QList<bool> countRefNeeds)
 {
     int i = 0;
-    QMap<ErrorType, QString> errors;
+    QList<Error> errors;
     for (QStringView translation : std::as_const(translations)) {
         while (!translation.isEmpty()) {
             auto sep = translation.indexOf(Translator::BinaryVariantSeparator);
@@ -178,8 +175,8 @@ QMap<Validator::ErrorType, QString> Validator::validate(QStringList translations
                 sep = translation.size();
             const QString trans = translation.first(sep).toString();
 
-            const bool needsRef = msg.isPlural() && countRefNeeds.at(i);
-            errors.insert(validateTranslation(trans, locale, needsRef));
+            const bool needsRef = msg.isPlural() && i < countRefNeeds.size() && countRefNeeds.at(i);
+            errors.append(validateTranslation(trans, locale, needsRef));
             translation.slice(std::min(sep + 1, translation.size()));
         }
         i++;
@@ -187,27 +184,28 @@ QMap<Validator::ErrorType, QString> Validator::validate(QStringList translations
     return errors;
 }
 
-QMap<Validator::ErrorType, QString> Validator::validateTranslation(const QString &translation,
-                                                                   const QLocale::Language &locale,
-                                                                   bool needsRef)
+QList<Validator::Error> Validator::validateTranslation(const QString &translation,
+                                                       const QLocale::Language &locale,
+                                                       bool needsRef)
 {
-    QMap<ErrorType, QString> errors;
+    QList<Error> errors;
     if (m_haveMnemonic && *m_haveMnemonic != haveMnemonic(translation))
-        errors.insert(*m_haveMnemonic ? MissingAccelerator : SuperfluousAccelerator, translation);
+        errors.append(
+                { *m_haveMnemonic ? MissingAccelerator : SuperfluousAccelerator, translation });
     if (m_placeMarkerCounts) {
         if (*m_placeMarkerCounts != countPlaceMarkers(translation))
-            errors.insert(PlaceMarkersDiffer, translation);
+            errors.append({ PlaceMarkersDiffer, translation });
         if (needsRef && !translation.contains(QLatin1String("%n"))
             && !translation.contains(QLatin1String("%Ln")))
-            errors.insert(NumerusMarkerMissing, translation);
+            errors.append({ NumerusMarkerMissing, translation });
     }
     if (m_ending && *m_ending != ending(translation, locale))
-        errors.insert(PunctuationDiffers, translation);
+        errors.append({ PunctuationDiffers, translation });
 
     if (m_leadingWhiteSpace
         && (*m_leadingWhiteSpace != leadingWhitespace(translation)
             || *m_trailingWhiteSpace != trailingWhitespace(translation)))
-        errors.insert(SurroundingWhitespaceDiffers, translation);
+        errors.append({ SurroundingWhitespaceDiffers, translation });
 #ifndef LINGUIST_CONSOLE_APPLICATION
     if (m_matchingPhraseTargets) {
         const QString ftranslation = friendlyString(translation);
@@ -221,7 +219,7 @@ QMap<Validator::ErrorType, QString> Validator::validateTranslation(const QString
                 }
             }
             if (!found)
-                errors.insert(IgnoredPhrasebook, itr.key());
+                errors.append({ IgnoredPhrasebook, itr.key() });
         }
     }
 #endif

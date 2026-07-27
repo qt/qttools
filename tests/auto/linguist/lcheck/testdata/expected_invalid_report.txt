@@ -1,3 +1,12 @@
-Validation error for translation 'Text nicht &gefunden '
-Validation error for translation 'Text nicht &gefunden '
-Validation error for translation 'Text gefunden %1'
+finddialog.cpp:111: Accelerator possibly superfluous in translation
+Context:     FindDialog
+Source:      Text not found
+Translation: Text nicht &gefunden
+finddialog.cpp:111: Translation does not have the same surrounding whitespace as the source text
+Context:     FindDialog
+Source:      Text not found
+Translation: Text nicht &gefunden
+finddialog.cpp:114: Translation does not refer to the same place markers as the source text
+Context:     FindDialog
+Source:      Text found
+Translation: Text gefunden %1
