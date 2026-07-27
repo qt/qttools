@@ -6,7 +6,6 @@
 
 #include <QHash>
 #include <QLocale>
-#include <QMap>
 #include <QString>
 
 #ifndef LINGUIST_CONSOLE_APPLICATION
@@ -48,17 +47,23 @@ struct Validator
 
     enum Ending { End_None, End_FullStop, End_Interrobang, End_Colon, End_Ellipsis };
 
+    struct Error
+    {
+        ErrorType type;
+        QString message;
+    };
+
     static Validator fromSource(const QString &source, const Checks &checks,
                                 const QLocale::Language &locale,
                                 const QHash<QString, QList<Phrase *>> &phrases);
 
-    QMap<ErrorType, QString> validate(QStringList translations, const TranslatorMessage &msg,
-                                      const QLocale::Language &locale, QList<bool> countRefNeeds);
+    QList<Error> validate(QStringList translations, const TranslatorMessage &msg,
+                          const QLocale::Language &locale, QList<bool> countRefNeeds);
 
 private:
     Validator() = default;
-    QMap<ErrorType, QString> validateTranslation(const QString &translation,
-                                                 const QLocale::Language &locale, bool needsRef);
+    QList<Error> validateTranslation(const QString &translation, const QLocale::Language &locale,
+                                     bool needsRef);
     std::optional<bool> m_haveMnemonic;
     std::optional<QString> m_leadingWhiteSpace;
     std::optional<QString> m_trailingWhiteSpace;

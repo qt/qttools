@@ -28,6 +28,9 @@ private:
 private slots:
     void invalidTranslations();
     void validTranslations();
+    void allViolationsReported();
+    void allPluralViolationsReported();
+    void disabledPlaceMarkerWithPluralDoesNotCrash();
     void checkFinished_defaultDisabled();
     void checkFinished_enabled();
     void disableAcceleratorCheck();
@@ -101,7 +104,7 @@ QStringList tst_lcheck::extractValidationLines(const QByteArray &ba)
     QStringList actual;
     for (const QString &line : out.split('\n')) {
         const QString trimmed = line.trimmed();
-        if (trimmed.startsWith("Validation error for translation '"_L1))
+        if (!trimmed.isEmpty())
             actual << trimmed;
     }
     return actual;
@@ -115,8 +118,8 @@ void tst_lcheck::invalidTranslations()
     QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
     QCOMPARE(proc.exitCode(), 1);
     auto stderrOutput = proc.readAllStandardError();
-    QVERIFY(stderrOutput.contains("Validation error for translation 'Text nicht &gefunden '"));
-    QVERIFY(stderrOutput.contains("Validation error for translation 'Text gefunden %1'"));
+    QVERIFY(stderrOutput.contains("Translation: Text nicht &gefunden"));
+    QVERIFY(stderrOutput.contains("Translation: Text gefunden %1"));
 }
 
 void tst_lcheck::validTranslations()
@@ -127,7 +130,54 @@ void tst_lcheck::validTranslations()
     QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
     QCOMPARE(proc.exitCode(), 0);
     const QByteArray err = proc.readAllStandardError();
-    QVERIFY(!err.contains("Validation error for translation '"));
+    QVERIFY(!err.contains("Translation: "));
+}
+
+// Regression test for QTBUG-148562: all violations of the same check across
+// multiple messages must be reported, not collapsed into one.
+void tst_lcheck::allViolationsReported()
+{
+    QProcess proc;
+    proc.start(lcheck, { dataDir + "multiple_same_check_de.ts" });
+    QVERIFY(proc.waitForFinished());
+    QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
+    QCOMPARE(proc.exitCode(), 1);
+
+    const QByteArray err = proc.readAllStandardError();
+    QCOMPARE(static_cast<int>(err.count("Translation does not end with the same punctuation")), 3);
+    QVERIFY(err.contains("Translation: Hallo"));
+    QVERIFY(err.contains("Translation: Tschuess"));
+    QVERIFY(err.contains("Translation: Willkommen"));
+}
+
+// Regression test for QTBUG-148562: all numerus forms of a plural message that
+// fail the same check must be reported.
+void tst_lcheck::allPluralViolationsReported()
+{
+    QProcess proc;
+    proc.start(lcheck, { dataDir + "plural_same_check_de.ts" });
+    QVERIFY(proc.waitForFinished());
+    QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
+    QCOMPARE(proc.exitCode(), 1);
+
+    const QByteArray err = proc.readAllStandardError();
+    QCOMPARE(static_cast<int>(err.count("Translation does not end with the same punctuation")), 2);
+    QVERIFY(err.contains("Translation: %n Datei"));
+    QVERIFY(err.contains("Translation: %n Dateien"));
+}
+
+// --no-place-marker skips gathering numerus info, leaving countRefNeeds empty.
+// A plural message must not make the validator index that empty list.
+void tst_lcheck::disabledPlaceMarkerWithPluralDoesNotCrash()
+{
+    QProcess proc;
+    proc.start(lcheck, { "--no-place-marker", dataDir + "plural_same_check_de.ts" });
+    QVERIFY(proc.waitForFinished());
+    QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
+    QCOMPARE(proc.exitCode(), 1);
+    QCOMPARE(static_cast<int>(proc.readAllStandardError().count(
+                     "Translation does not end with the same punctuation")),
+             2);
 }
 
 void tst_lcheck::checkFinished_defaultDisabled()
@@ -139,8 +189,8 @@ void tst_lcheck::checkFinished_defaultDisabled()
     QCOMPARE(proc.exitCode(), 0);
 
     const QByteArray err = proc.readAllStandardError();
-    QVERIFY(!err.contains("Validation error for translation 'Text nicht gefunden '"));
-    QVERIFY(!err.contains("Validation error for translation 'Beenden'"));
+    QVERIFY(!err.contains("Translation: Text nicht gefunden"));
+    QVERIFY(!err.contains("Translation: Beenden"));
 }
 
 void tst_lcheck::checkFinished_enabled()
@@ -152,8 +202,8 @@ void tst_lcheck::checkFinished_enabled()
     QCOMPARE(proc.exitCode(), 1);
 
     const QByteArray err = proc.readAllStandardError();
-    QVERIFY(err.contains("Validation error for translation 'Text nicht gefunden '"));
-    QVERIFY(err.contains("Validation error for translation 'Beenden'"));
+    QVERIFY(err.contains("Translation: Text nicht gefunden"));
+    QVERIFY(err.contains("Translation: Beenden"));
 }
 
 void tst_lcheck::disableAcceleratorCheck()
@@ -164,7 +214,7 @@ void tst_lcheck::disableAcceleratorCheck()
         QVERIFY(proc.waitForFinished());
         QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
         QCOMPARE(proc.exitCode(), 1);
-        QVERIFY(proc.readAllStandardError().contains("Validation error for translation 'Beenden'"));
+        QVERIFY(proc.readAllStandardError().contains("Translation: Beenden"));
     }
     {
         QProcess proc;
@@ -183,7 +233,7 @@ void tst_lcheck::disableWhitespaceCheck()
         QVERIFY(proc.waitForFinished());
         QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
         QCOMPARE(proc.exitCode(), 1);
-        QVERIFY(proc.readAllStandardError().contains("Validation error for translation 'Bereit '"));
+        QVERIFY(proc.readAllStandardError().contains("Translation: Bereit "));
     }
     {
         QProcess proc;
@@ -202,7 +252,7 @@ void tst_lcheck::disablePunctuationCheck()
         QVERIFY(proc.waitForFinished());
         QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
         QCOMPARE(proc.exitCode(), 1);
-        QVERIFY(proc.readAllStandardError().contains("Validation error for translation 'Bereit'"));
+        QVERIFY(proc.readAllStandardError().contains("Translation: Bereit"));
     }
     {
         QProcess proc;
@@ -221,8 +271,7 @@ void tst_lcheck::disablePlaceMarkerCheck()
         QVERIFY(proc.waitForFinished());
         QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
         QCOMPARE(proc.exitCode(), 1);
-        QVERIFY(proc.readAllStandardError().contains(
-                "Validation error for translation 'Gefunden %1 Elemente'"));
+        QVERIFY(proc.readAllStandardError().contains("Translation: Gefunden %1 Elemente"));
     }
     {
         QProcess proc;
@@ -246,7 +295,7 @@ void tst_lcheck::outputToFile_optionWritesReport()
     QCOMPARE(proc.exitCode(), 1);
 
     const QByteArray err = proc.readAllStandardError();
-    QVERIFY(!err.contains("Validation error for translation '"));
+    QVERIFY(!err.contains("Translation: "));
 
     QFile f(report);
     QVERIFY(f.open(QIODevice::ReadOnly | QIODevice::Text));

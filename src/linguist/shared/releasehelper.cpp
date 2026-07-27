@@ -56,21 +56,21 @@ bool releaseTranslator(Translator &tor, const QString &qmFileName, ConversionDat
         QList<bool> countRefNeeds;
         tor.languageAndTerritory(tor.sourceLanguageCode(), &sourceLang, nullptr);
         tor.languageAndTerritory(tor.languageCode(), &targetLang, &targetTerritory);
-        QMap<Validator::ErrorType, QString> errors;
+        QList<Validator::Error> errors;
         if (getCountNeed(targetLang, targetTerritory, countRefNeeds, nullptr))
             for (const TranslatorMessage &msg : tor.messages()) {
                 if (msg.isTranslated() && msg.type() != TranslatorMessage::Finished) {
                     Validator validator =
                             Validator::fromSource(msg.sourceText(), checks, sourceLang, {});
-                    errors.insert(
+                    errors.append(
                             validator.validate(msg.translations(), msg, targetLang, countRefNeeds));
                 }
             }
         else
             printErr("Could not get numerus info"_L1);
         if (cd.isVerbose())
-            for (const QString &trs : errors)
-                printErr("Validation error for translation '%1'"_L1.arg(trs));
+            for (const Validator::Error &error : errors)
+                printErr("Validation error for translation '%1'\n"_L1.arg(error.message));
         if (!errors.empty())
             return false;
     }

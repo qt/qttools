@@ -2676,8 +2676,9 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
             const auto errors =
                     validator.validate(m->translations(), m->message(), m_dataModel->language(mi),
                                        m_dataModel->model(mi)->countRefNeeds());
+            danger = !errors.isEmpty();
             if (verbose)
-                for (const auto &[error, message] : errors.asKeyValueRange())
+                for (const auto &[error, message] : errors)
                     m_errorsView->addError(mi, error, message);
         }
 
