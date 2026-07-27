@@ -39,6 +39,8 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QFrame>
+#include <QHBoxLayout>
 #include <QHeaderView>
 #include <QInputDialog>
 #include <QItemDelegate>
@@ -49,6 +51,7 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QPushButton>
 #include <QRegularExpression>
 #include <QScreen>
 #include <QShortcut>
@@ -59,6 +62,7 @@
 #include <QTextStream>
 #include <QToolBar>
 #include <QUrl>
+#include <QVBoxLayout>
 #include <QWhatsThis>
 
 #if QT_CONFIG(printsupport)
@@ -67,23 +71,8 @@
 #endif
 
 using namespace Qt::Literals::StringLiterals;
-namespace {
-
-static bool hasUiFormPreview(const QString &fileName)
-{
-    return fileName.endsWith(".ui"_L1) || fileName.endsWith(".jui"_L1);
-}
-
-#ifndef Q_OS_WASM
-static bool hasQmlFormPreview(const QString &fileName, bool qmlPreviewChecked)
-{
-    return fileName.endsWith(QLatin1String(".qml")) && qmlPreviewChecked;
-}
-#endif // Q_OS_WASM
 
 static const int MessageMS = 2500;
-
-} // namespace
 
 QT_BEGIN_NAMESPACE
 
@@ -357,11 +346,30 @@ MainWindow::MainWindow(HelpClientType helpClientType)
     m_sourceAndFormDock->setWidget(m_sourceAndFormView);
     m_uiFormPreviewView = new UiFormPreviewView(0, m_dataModel);
     m_sourceCodeView = new SourceCodeView(0);
+
+    // Show the source code with an inline banner that offers to turn on the
+    // (by default off) preview for the referenced form or QML file.
+    m_sourceCodeContainer = new QWidget;
+    QVBoxLayout *sourceCodeLayout = new QVBoxLayout(m_sourceCodeContainer);
+    sourceCodeLayout->setContentsMargins(0, 0, 0, 0);
+    sourceCodeLayout->setSpacing(0);
+    m_previewBanner = new QFrame;
+    m_previewBanner->setFrameShape(QFrame::StyledPanel);
+    QHBoxLayout *bannerLayout = new QHBoxLayout(m_previewBanner);
+    m_previewBannerLabel = new QLabel;
+    QPushButton *showPreviewButton = new QPushButton(tr("Show preview"));
+    bannerLayout->addWidget(m_previewBannerLabel, 1);
+    bannerLayout->addWidget(showPreviewButton, 0);
+    m_previewBanner->hide();
+    connect(showPreviewButton, &QPushButton::clicked, this, &MainWindow::enablePreviewFromBanner);
+    sourceCodeLayout->addWidget(m_previewBanner);
+    sourceCodeLayout->addWidget(m_sourceCodeView, 1);
+
 #ifndef Q_OS_WASM
     m_qmlFormPreviewView = new QmlFormPreviewView(m_dataModel);
     m_sourceAndFormView->addWidget(m_qmlFormPreviewView);
 #endif // Q_OS_WASM
-    m_sourceAndFormView->addWidget(m_sourceCodeView);
+    m_sourceAndFormView->addWidget(m_sourceCodeContainer);
     m_sourceAndFormView->addWidget(m_uiFormPreviewView);
 
     // Set up errors dock widget
@@ -1612,10 +1620,10 @@ void MainWindow::translationChanged(const MultiDataIndex &index)
     updateDanger(index, true);
 
     MessageItem *m = m_dataModel->messageItem(index);
-    if (hasUiFormPreview(m->fileName()))
+    if (hasUiFormPreview(index.model(), m->fileName()))
         m_uiFormPreviewView->setSourceContext(index.model(), m);
 #ifndef Q_OS_WASM
-    else if (hasQmlFormPreview(m->fileName(), m_ui.actionQmlPreview->isChecked()))
+    else if (hasQmlFormPreview(index.model(), m->fileName()))
         if (!m_qmlFormPreviewView->setSourceContext(index.model(), m))
             m_ui.actionQmlPreview->setChecked(false);
 #endif // Q_OS_WASM
@@ -1632,11 +1640,10 @@ void MainWindow::updateTranslation(const QStringList &translations)
         return;
 
     m->setTranslations(translations);
-    if (!m->fileName().isEmpty() && hasUiFormPreview(m->fileName()))
+    if (hasUiFormPreview(m_currentIndex.model(), m->fileName()))
         m_uiFormPreviewView->setSourceContext(m_currentIndex.model(), m);
 #ifndef Q_OS_WASM
-    else if (!m->fileName().isEmpty()
-             && hasQmlFormPreview(m->fileName(), m_ui.actionQmlPreview->isChecked()))
+    else if (hasQmlFormPreview(m_currentIndex.model(), m->fileName()))
         if (!m_qmlFormPreviewView->setSourceContext(m_currentIndex.model(), m))
             m_ui.actionQmlPreview->setChecked(false);
 #endif // Q_OS_WASM
@@ -2073,6 +2080,7 @@ void MainWindow::setupMenuBar()
 #else
     m_ui.actionQmlPreview->setVisible(false);
 #endif // Q_OS_WASM
+    connect(m_ui.actionFormPreview, &QAction::triggered, this, &MainWindow::toggleFormPreview);
     connect(m_ui.actionVisualizeWhitespace, &QAction::triggered,
             this, &MainWindow::toggleVisualizeWhitespace);
     connect(m_ui.actionIncreaseZoom, &QAction::triggered,
@@ -2178,28 +2186,81 @@ void MainWindow::doUpdateLatestModel(int model)
 
 void MainWindow::updateSourceView(int model, MessageItem *item)
 {
+    // A preview allowed for a single file expires as soon as a message that
+    // uses another file is shown, so that the user is asked again.
+    const QString shownPath = item ? previewFilePath(model, item->fileName()) : QString();
+    if (shownPath != m_uiPreviewOnceFile)
+        m_uiPreviewOnceFile.clear();
+    if (shownPath != m_qmlPreviewOnceFile)
+        m_qmlPreviewOnceFile.clear();
+
     if (item && !item->fileName().isEmpty()) {
-        if (hasUiFormPreview(item->fileName())) {
+        if (hasUiFormPreview(model, item->fileName())) {
             m_sourceAndFormView->setCurrentWidget(m_uiFormPreviewView);
             m_uiFormPreviewView->setSourceContext(model, item);
 #ifndef Q_OS_WASM
-        } else if (hasQmlFormPreview(item->fileName(), m_ui.actionQmlPreview->isChecked())
+        } else if (hasQmlFormPreview(model, item->fileName())
                    && m_qmlFormPreviewView->setSourceContext(model, item)) {
             m_sourceAndFormView->setCurrentWidget(m_qmlFormPreviewView);
 #endif // Q_OS_WASM
         } else {
 #ifndef Q_OS_WASM
-            m_ui.actionQmlPreview->setChecked(false);
+            // Leave the QML preview off for this file. It is either not turned
+            // on, or it is but the file could not be rendered.
+            if (item->fileName().endsWith(".qml"_L1)) {
+                m_ui.actionQmlPreview->setChecked(false);
+                m_qmlPreviewOnceFile.clear();
+            }
 #endif // Q_OS_WASM
-            m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
+            m_sourceAndFormView->setCurrentWidget(m_sourceCodeContainer);
+            updatePreviewBanner(item->fileName());
             QDir dir = QFileInfo(m_dataModel->srcFileName(model)).dir();
             QString fileName = QDir::cleanPath(dir.absoluteFilePath(item->fileName()));
             m_sourceCodeView->setSourceContext(fileName, item->lineNumber());
         }
     } else {
-        m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
+        m_sourceAndFormView->setCurrentWidget(m_sourceCodeContainer);
+        updatePreviewBanner(QString());
         m_sourceCodeView->setSourceContext(QString(), 0);
     }
+}
+
+// Offer to turn on the preview for a form or QML file. Only called while the
+// source code is shown, that is, while the file is not previewed, so it is
+// enough to look at the file type here.
+void MainWindow::updatePreviewBanner(const QString &fileName)
+{
+    if (fileName.endsWith(".ui"_L1) || fileName.endsWith(".jui"_L1)) {
+        m_previewBannerLabel->setText(tr("This is a Qt Widgets Designer form."));
+        m_previewBanner->show();
+#ifndef Q_OS_WASM
+    } else if (fileName.endsWith(".qml"_L1)) {
+        m_previewBannerLabel->setText(tr("This is a QML file."));
+        m_previewBanner->show();
+#endif // Q_OS_WASM
+    } else {
+        m_previewBanner->hide();
+    }
+}
+
+// Only reachable while the banner is shown, that is, while the file is not
+// previewed, so triggering the action turns the preview on.
+void MainWindow::enablePreviewFromBanner()
+{
+    MessageItem *item = (m_currentIndex.model() >= 0 && m_currentIndex.isValid())
+            ? m_dataModel->messageItem(m_currentIndex)
+            : nullptr;
+    if (!item)
+        return;
+    const QString fileName = item->fileName();
+#ifndef Q_OS_WASM
+    if (fileName.endsWith(".qml"_L1)) {
+        m_ui.actionQmlPreview->trigger();
+        return;
+    }
+#endif // Q_OS_WASM
+    if (fileName.endsWith(".ui"_L1) || fileName.endsWith(".jui"_L1))
+        m_ui.actionFormPreview->trigger();
 }
 
 // Note for *AboutToShow: Due to the delayed nature, only actions without shortcuts
@@ -2795,15 +2856,118 @@ void MainWindow::showStatistics()
     updateStatistics();
 }
 
+void MainWindow::refreshFormPreview()
+{
+    MessageItem *item = (m_currentIndex.model() >= 0 && m_currentIndex.isValid())
+            ? m_dataModel->messageItem(m_currentIndex)
+            : nullptr;
+    updateSourceView(m_currentIndex.model(), item);
+}
+
+// The file the preview loads, resolved the same way as the preview views do.
+// The location in a translation file is relative to that file, so the same
+// location in another translation file might name another form.
+QString MainWindow::previewFilePath(int model, const QString &fileName) const
+{
+    if (model < 0 || fileName.isEmpty())
+        return QString();
+    const QDir dir = QFileInfo(m_dataModel->srcFileName(model)).dir();
+    return QDir::cleanPath(dir.absoluteFilePath(fileName));
+}
+
+bool MainWindow::hasUiFormPreview(int model, const QString &fileName) const
+{
+    if (!fileName.endsWith(".ui"_L1) && !fileName.endsWith(".jui"_L1))
+        return false;
+    if (m_ui.actionFormPreview->isChecked())
+        return true;
+    const QString path = previewFilePath(model, fileName);
+    return !path.isEmpty() && path == m_uiPreviewOnceFile;
+}
+
+#ifndef Q_OS_WASM
+bool MainWindow::hasQmlFormPreview(int model, const QString &fileName) const
+{
+    if (!fileName.endsWith(".qml"_L1))
+        return false;
+    if (m_ui.actionQmlPreview->isChecked())
+        return true;
+    const QString path = previewFilePath(model, fileName);
+    return !path.isEmpty() && path == m_qmlPreviewOnceFile;
+}
+#endif // Q_OS_WASM
+
+// Ask before turning on a preview, because it loads and renders a file that the
+// translation file refers to. Returns whether the preview may be shown, and
+// records the choice: for the session the action stays checked, for a single
+// file the action is unchecked and only that file is previewed.
+bool MainWindow::askPreviewActivation(bool isQml)
+{
+    QAction *action = isQml ? m_ui.actionQmlPreview : m_ui.actionFormPreview;
+    MessageItem *item = (m_currentIndex.model() >= 0 && m_currentIndex.isValid())
+            ? m_dataModel->messageItem(m_currentIndex)
+            : nullptr;
+    const QString fileName = item ? item->fileName() : QString();
+    // Previewing once only makes sense if such a file is currently selected.
+    const bool canPreviewOnce = isQml
+            ? fileName.endsWith(".qml"_L1)
+            : (fileName.endsWith(".ui"_L1) || fileName.endsWith(".jui"_L1));
+
+    const QString text = isQml
+            ? tr("The QML preview loads and renders QML files where the current message "
+                 "is used. This can execute code embedded in the QML, and may cause "
+                 "crashes or other unexpected behavior.\n\n"
+                 "Activate the preview only for sources you trust.\n\n"
+                 "Do you want to activate the preview?")
+            : tr("The UI form preview loads and renders Qt Widgets Designer forms where "
+                 "the current message is used. This can execute code embedded in the UI "
+                 "file, and may cause crashes or other unexpected behavior.\n\n"
+                 "Activate the preview only for sources you trust.\n\n"
+                 "Do you want to activate the preview?");
+
+    QMessageBox box(QMessageBox::Warning, tr("Qt Linguist"), text, QMessageBox::NoButton, this);
+    QPushButton *dontPreview = box.addButton(tr("Do Not Preview"), QMessageBox::RejectRole);
+    QPushButton *forSession = box.addButton(tr("Preview for Session"), QMessageBox::AcceptRole);
+    QPushButton *once =
+            canPreviewOnce ? box.addButton(tr("Preview Once"), QMessageBox::AcceptRole) : nullptr;
+    box.setDefaultButton(once ? once : dontPreview);
+    box.exec();
+
+    if (box.clickedButton() == forSession)
+        return true;
+    action->setChecked(false);
+    QString &onceFile = isQml ? m_qmlPreviewOnceFile : m_uiPreviewOnceFile;
+    if (once && box.clickedButton() == once) {
+        onceFile = previewFilePath(m_currentIndex.model(), fileName);
+        return true;
+    }
+    onceFile.clear();
+    return false;
+}
+
 #ifndef Q_OS_WASM
 void MainWindow::toggleQmlPreview()
 {
-    if (m_ui.actionQmlPreview->isChecked())
-        m_sourceAndFormView->setCurrentWidget(m_qmlFormPreviewView);
-    else
-        m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
+    if (m_ui.actionQmlPreview->isChecked()) {
+        if (askPreviewActivation(true))
+            showSourceCodeDock();
+    } else {
+        m_qmlPreviewOnceFile.clear();
+    }
+    refreshFormPreview();
 }
 #endif // Q_OS_WASM
+
+void MainWindow::toggleFormPreview()
+{
+    if (m_ui.actionFormPreview->isChecked()) {
+        if (askPreviewActivation(false))
+            showSourceCodeDock();
+    } else {
+        m_uiPreviewOnceFile.clear();
+    }
+    refreshFormPreview();
+}
 
 void MainWindow::toggleVisualizeWhitespace()
 {

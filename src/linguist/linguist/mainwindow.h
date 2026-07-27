@@ -23,6 +23,7 @@ QT_BEGIN_NAMESPACE
 class QPixmap;
 class QAction;
 class QDialog;
+class QFrame;
 class QLabel;
 class QMenu;
 class QPrinter;
@@ -144,6 +145,8 @@ private slots:
 #ifndef Q_OS_WASM
     void toggleQmlPreview();
 #endif // Q_OS_WASM
+    void toggleFormPreview();
+    void enablePreviewFromBanner();
     void toggleVisualizeWhitespace();
     void onWhatsThis();
     void updatePhraseDicts();
@@ -184,6 +187,14 @@ private:
     void doShowTranslationSettings(int model);
     void doUpdateLatestModel(int model);
     void updateSourceView(int model, MessageItem *item);
+    void updatePreviewBanner(const QString &fileName);
+    void refreshFormPreview();
+    bool askPreviewActivation(bool isQml);
+    QString previewFilePath(int model, const QString &fileName) const;
+    bool hasUiFormPreview(int model, const QString &fileName) const;
+#ifndef Q_OS_WASM
+    bool hasQmlFormPreview(int model, const QString &fileName) const;
+#endif // Q_OS_WASM
     void updatePhraseBookActions();
     void updatePhraseDictInternal(int model);
     void releaseInternal(int model);
@@ -218,6 +229,12 @@ private:
     QStackedWidget *m_sourceAndFormView;
     QTabWidget *m_contextAndLabelView;
     SourceCodeView *m_sourceCodeView;
+    QWidget *m_sourceCodeContainer;
+    QFrame *m_previewBanner;
+    QLabel *m_previewBannerLabel;
+    // Files the user allowed to preview once, without turning on the action.
+    QString m_uiPreviewOnceFile;
+    QString m_qmlPreviewOnceFile;
     UiFormPreviewView *m_uiFormPreviewView;
 #ifndef Q_OS_WASM
     QmlFormPreviewView *m_qmlFormPreviewView;
