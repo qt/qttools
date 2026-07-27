@@ -30,8 +30,6 @@ qt_internal_add_test(tst_QDoc
         ../../src/qdoc/genustypes.h
         parameters/catch_parameter.cpp
         ../../src/qdoc/parameter.cpp
-        textutils/catch_textutils.cpp
-        ../../src/qdoc/textutils.cpp
     INCLUDE_DIRECTORIES
         ../../src/
     LIBRARIES
@@ -58,6 +56,7 @@ qt_internal_extend_target(tst_QDoc
         ir/catch_sorting.cpp
         ../../src/qdoc/injabridge.cpp
         ../../src/qdoc/qdoclogging.cpp
+        ../../src/qdoc/textutils.cpp
         ../../src/qdoc/ir/member.cpp
         ../../src/qdoc/ir/builder.cpp
         ../../src/qdoc/ir/catalogentry.cpp

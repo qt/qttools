@@ -8,7 +8,6 @@
 #include "editdistance.h"
 #include "macro.h"
 #include "openedlist.h"
-#include "textutils.h"
 #include "tokenizer.h"
 
 #include <QtCore/qfile.h>
@@ -1104,24 +1103,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         // to treat potential arguments as a new text paragraph.
                         if (m_position < m_inputLength
                             && (cmdStr == QLatin1String("obsolete")
-                                || cmdStr == QLatin1String("deprecated"))) {
-                            qsizetype descriptionStart = m_position;
-                            while (descriptionStart < m_inputLength
-                                   && m_input[descriptionStart].isSpace())
-                                ++descriptionStart;
-                            if (descriptionStart < m_inputLength) {
-                                QStringView description = QStringView{m_input}.sliced(
-                                        descriptionStart, m_inputLength - descriptionStart);
-                                if (!TextUtils::endsWithSentenceTerminator(description))
-                                    location().warning(
-                                            "The text following '\\%1' does not "
-                                                           "end with sentence-ending punctuation. "
-                                                           "It is appended to a generated "
-                                                           "sentence; end it with '.', '!', "
-                                                           "or '?'"_L1.arg(cmdStr));
-                            }
+                                || cmdStr == QLatin1String("deprecated")))
                             m_input[m_position] = '\n';
-                        }
                         else
                             arg = getMetaCommandArgument(cmdStr);
                         m_private->m_metaCommandMap[cmdStr].append(ArgPair(arg, bracketedArg));

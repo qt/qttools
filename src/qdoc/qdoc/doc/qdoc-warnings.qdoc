@@ -803,24 +803,6 @@
     issue warnings that are false positives. Resolve all warnings of this type
     before fixing other warnings.
 
-    \section1 The text following '\\<command>' does not end with sentence-ending punctuation
-
-    The optional text that follows the \\deprecated or \\obsolete command
-    becomes part of the deprecation notice in the generated documentation.
-    QDoc renders it after a generated sentence, such as "We strongly advise
-    against using it in new code." If the text doesn't end a sentence, the
-    notice reads as broken grammar:
-
-    \badcode *
-        \deprecated [6.13] Use setTimeZone() instead
-    \endcode
-
-    To resolve this warning, end the text with '.', '!', or '?':
-
-    \badcode *
-        \deprecated [6.13] Use setTimeZone() instead.
-    \endcode
-
     \section1 This page title exists in more than one file
 
     The \l {title-command}{\\title} command sets the title for a page.

@@ -32,8 +32,6 @@ QString asAsciiPrintable(const QString &name);
 // HTML-escapes &, <, >, and " in the input string.
 QString protect(const QString &string);
 
-bool endsWithSentenceTerminator(QStringView text);
-
 using namespace Qt::Literals::StringLiterals;
 
 static constexpr QLatin1StringView samp = "&amp;"_L1;
