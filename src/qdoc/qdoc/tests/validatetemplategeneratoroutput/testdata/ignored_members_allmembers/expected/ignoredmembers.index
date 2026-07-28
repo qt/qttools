@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="TemplateGenerator all-members list honours FunctionNode::isIgnored()" version="1.0" project="IgnoredMembers">
+    <namespace name="" status="active" access="public" module="ignoredmembers">
+        <class name="Widget" href="widget.html" status="active" access="public" location="widget.h" documented="true" includefile="widget.h" module="IgnoredMembers" brief="A widget whose all-members list must skip ignorable members">
+            <function name="repaint" fullname="Widget::repaint" href="widget.html#repaint" status="active" access="public" location="widget.h" documented="true" meta="plain" type="void" signature="void repaint()"/>
+        </class>
+        <module name="IgnoredMembers" href="ignoredmembers-module.html" status="active" location="widget.h" documented="true" seen="true" title="Ignored Members Test Module" brief="A module for testing that ignorable members stay off the all-members list"/>
+    </namespace>
+</INDEX>

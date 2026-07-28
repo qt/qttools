@@ -1749,6 +1749,9 @@ static IR::AllMembersIR extractCppAllMembersIR(const Aggregate *aggregate, const
         const NodeContext context = node->createContext();
         if (!InclusionFilter::isIncluded(policy, context))
             continue;
+        if (node->isFunction()
+            && static_cast<const FunctionNode *>(node)->isIgnored())
+            continue;
 
         IR::AllMemberEntry entry;
         entry.signatureSpans = buildSignatureSpans(node, hrefResolver, aggregate, Section::AllMembers);
