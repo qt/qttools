@@ -1,0 +1,17 @@
+project = ListCommentArgument
+description = "Test that a //! comment after \list is not read as a list style"
+
+sources.fileextensions = "*.qdoc"
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
+
+outputformats = HTML
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+sourcedirs = ./src

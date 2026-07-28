@@ -1,0 +1,16 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page list-comment-argument-test.html
+    \title List Comment Argument Test
+
+    This page verifies that a \c{//!} comment placed between \\list and its
+    first \\li is not mistaken for the optional list-style argument.
+
+    \list
+    //! Comment
+    \li First item
+    \li Second item
+    \endlist
+*/
