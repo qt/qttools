@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test that a //! comment after list is not read as a list style" version="" project="ListCommentArgument">
+    <namespace name="" status="active" access="public" module="listcommentargument">
+        <page name="list-comment-argument-test.html" href="list-comment-argument-test.html" status="active" location="test.qdoc" documented="true" subtype="page" title="List Comment Argument Test" fulltitle="List Comment Argument Test"/>
+    </namespace>
+</INDEX>

@@ -2560,8 +2560,11 @@ QStringList DocParser::getMacroArguments(const QString &name, const Macro &macro
 QString DocParser::getOptionalArgument()
 {
     skipSpacesOrOneEndl();
-    if (m_position + 1 < m_input.size() && m_input[m_position] == '\\'
-        && m_input[m_position + 1].isLetterOrNumber()) {
+    const bool nextIsCommand = m_position + 1 < m_input.size() && m_input[m_position] == '\\'
+            && m_input[m_position + 1].isLetterOrNumber();
+    const bool nextIsComment = m_position + 2 < m_input.size() && m_input[m_position] == '/'
+            && m_input[m_position + 1] == '/' && m_input[m_position + 2] == '!';
+    if (nextIsCommand || nextIsComment) {
         return QString();
     } else {
         return getArgument();
