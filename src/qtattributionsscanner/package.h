@@ -9,9 +9,15 @@
 
 struct Package {
     QString id; // Usually a lowercase, no-spaces version of the name. Mandatory.
+
+    enum class Origin { InSource, Provisioned } origin = Origin::InSource;
+
     QString path; // Source directory. Optional.
                   // Default is the directory of the qt_attribution.json file.
+                  // Used only if origin is InSource.
     QStringList files; // Files in path. Optional.
+                       // Used only if origin is InSource.
+
     QString name; // Descriptive name of the package. Will be used as the title. Mandatory.
     QString qdocModule; // QDoc module where the documentation should be included. Mandatory.
     QString qtUsage; // How the package is used in Qt. Any way to disable? Mandatory.

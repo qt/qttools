@@ -18,6 +18,8 @@ static QJsonObject generate(Package package)
     QJsonObject obj;
 
     obj.insert(u"Id"_s, package.id);
+    obj.insert(u"Origin"_s,
+               (package.origin == Package::Origin::InSource) ? u"InSource"_s : u"Provisioned"_s);
     obj.insert(u"Path"_s, package.path);
     obj.insert(u"Files"_s, package.files.join(QLatin1Char(' ')));
     obj.insert(u"QDocModule"_s, package.qdocModule);
