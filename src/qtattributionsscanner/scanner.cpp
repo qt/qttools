@@ -95,6 +95,15 @@ bool validatePackage(Package &p, Checks checks, LogLevel logLevel)
         }
     }
 
+    if (p.origin == Package::Origin::Provisioned && !p.files.isEmpty()) {
+        std::cerr << qPrintable(tr("File %1: Do not set property 'Files' if property "
+                                   "'Origin' is set to 'Provisioned'.")
+                                        .arg(QDir::toNativeSeparators(filePath)))
+                  << std::endl;
+
+        validPackage = false;
+    }
+
     if (!(checks & Check::Paths))
         return validPackage;
 
@@ -308,6 +317,19 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
             // unique, albeit some linters may kvetch.
         } else if (key == "Id"_L1) {
             p.id = value;
+        } else if (key == "Origin"_L1) {
+            if (value == "InSource"_L1) {
+                p.origin = Package::Origin::InSource;
+            } else if (value == "Provisioned"_L1) {
+                p.origin = Package::Origin::Provisioned;
+            } else {
+                std::cerr << qPrintable(tr("File %1: Expected either 'InSource' or 'Provisioned'"
+                                           " as value of 'Origin'.")
+                                                .arg(QDir::toNativeSeparators(filePath)))
+                          << std::endl;
+                validPackage = false;
+                continue;
+            }
         } else if (key == "Homepage"_L1) {
             p.homepage = value;
         } else if (key == "Version"_L1) {

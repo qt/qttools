@@ -84,18 +84,20 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
     if (!package.qtUsage.isEmpty())
         out << package.qtUsage << "\n\n";
 
-    QStringList sourcePaths;
-    if (package.files.isEmpty()) {
-        sourcePaths << baseDir.relativeFilePath(package.path);
-    } else {
-        const QDir packageDir(package.path);
-        for (const QString &filePath: package.files) {
-            const QString absolutePath = packageDir.absoluteFilePath(filePath);
-            sourcePaths << baseDir.relativeFilePath(absolutePath);
+    if (package.origin == Package::Origin::InSource) {
+        QStringList sourcePaths;
+        if (package.files.isEmpty()) {
+            sourcePaths << baseDir.relativeFilePath(package.path);
+        } else {
+            const QDir packageDir(package.path);
+            for (const QString &filePath : package.files) {
+                const QString absolutePath = packageDir.absoluteFilePath(filePath);
+                sourcePaths << baseDir.relativeFilePath(absolutePath);
+            }
         }
-    }
 
-    out << "The sources can be found in " << languageJoin(sourcePaths) << ".\n\n";
+        out << "The sources can be found in " << languageJoin(sourcePaths) << ".\n\n";
+    }
 
     const bool hasPackageVersion = !package.version.isEmpty();
     const bool hasPackageDownloadLocation = !package.downloadLocation.isEmpty();

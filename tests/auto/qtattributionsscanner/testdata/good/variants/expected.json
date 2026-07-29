@@ -15,6 +15,7 @@
         ],
         "LicenseId": "",
         "Name": "Variants Test",
+        "Origin": "InSource",
         "PURL": [],
         "PackageComment": "",
         "Path": "%{PWD}",

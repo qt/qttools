@@ -27,6 +27,7 @@ Usage",
     ],
     "DownloadLocation": "www.qt.io/$<VERSION>/qt-$<VERSION_DASHED>",
     "SecurityCritical": true,
+    "Origin": "Provisioned",
     "LicenseId": "xxx",
     "LicenseFile": "../../../../../../LICENSES/BSD-3-Clause.txt",
     "PackageComment": "just a test package"

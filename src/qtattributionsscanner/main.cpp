@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     a.setApplicationName(u"Qt Attributions Scanner"_s);
-    a.setApplicationVersion(u"1.3"_s);
+    a.setApplicationVersion(u"1.4"_s);
 
     QCommandLineParser parser;
     parser.setApplicationDescription(tr("Processes attribution files in Qt sources."));

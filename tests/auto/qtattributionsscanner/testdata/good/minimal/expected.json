@@ -12,6 +12,7 @@
         "LicenseFile": "",
         "LicenseId": "",
         "Name": "Minimal",
+        "Origin": "InSource",
         "PURL": ["pkg:github/qt/qtbase@test-version"],
         "PackageComment": "",
         "Path": "%{PWD}",
