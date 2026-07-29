@@ -15,6 +15,7 @@
         ],
 	 "LicenseId": "Id1 AND Id2",
         "Name": "Local Test",
+        "Origin": "InSource",
         "PURL": [],
         "PackageComment": "",
         "Path": "%{PWD}",
