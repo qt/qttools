@@ -225,7 +225,7 @@ public:
     [[nodiscard]] const QString &deprecatedSince() const { return m_deprecatedSince; }
 
     [[nodiscard]] const QMap<LinkType, std::pair<QString, QString>> &links() const { return m_linkMap; }
-    void setLink(LinkType linkType, const QString &link, const QString &desc);
+    void setLink(LinkType linkType, QString link, QString desc);
 
     [[nodiscard]] Access access() const { return m_access; }
     [[nodiscard]] const Location &declLocation() const { return m_declLocation; }

@@ -784,12 +784,9 @@ bool Node::fromFlagValue(FlagValue fv, bool defaultValue)
   The pair is composed from \a link and \a desc. The
   \a linkType is the map index the pair is filed under.
  */
-void Node::setLink(LinkType linkType, const QString &link, const QString &desc)
+void Node::setLink(LinkType linkType, QString link, QString desc)
 {
-    std::pair<QString, QString> linkPair;
-    linkPair.first = std::move(link);
-    linkPair.second = std::move(desc);
-    m_linkMap[linkType] = std::move(linkPair);
+    m_linkMap[linkType] = std::make_pair(std::move(link), std::move(desc));
 }
 
 /*!
