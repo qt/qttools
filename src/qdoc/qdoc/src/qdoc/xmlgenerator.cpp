@@ -15,6 +15,8 @@
 #include "qdocdatabase.h"
 #include "typedefnode.h"
 
+#include <type_traits>
+
 using namespace Qt::Literals::StringLiterals;
 
 QT_BEGIN_NAMESPACE
@@ -382,8 +384,23 @@ QString XmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const 
                                   Genus genus)
 {
     QString ref;
+    *node = nullptr;
 
-    *node = m_qdb->findNodeForAtom(atom, relative, ref, genus);
+    // If there is an overlap between the requested genus and the parent node's genus,
+    // search for nodes with the common genus first. This helps to find more relevant
+    // targets in situations where identically-titled nodes are available.
+    if (genus != Genus::DontCare && relative && relative->genus() != Genus::DontCare) {
+        using GenusValue = std::underlying_type_t<Genus>;
+        const Genus common = static_cast<Genus>(
+            static_cast<GenusValue>(genus) &
+            static_cast<GenusValue>(relative->genus())
+        );
+        if (common != Genus::DontCare)
+            *node = m_qdb->findNodeForAtom(atom, relative, ref, common);
+    }
+
+    if (!(*node))
+        *node = m_qdb->findNodeForAtom(atom, relative, ref, genus);
     if (!(*node))
         return QString();
 
