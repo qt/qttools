@@ -128,6 +128,14 @@
 
     Returns the path to the include file that \l uic uses when
     creating code for the custom widget.
+
+    For custom widgets used in C++ and \e{Qt for Python}, use prefixes
+    to specify language-specific information in the returned string
+    as shown below:
+
+    \badcode
+    "C++:myheader.h,Python:MyModule"
+    \endcode
 */
 
 /*!
