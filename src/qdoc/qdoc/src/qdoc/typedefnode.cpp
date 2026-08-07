@@ -12,6 +12,9 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
+  Sets the enum associated with the typedef to the node specified by \a enume.
+  This is used to associate a flag type with the enum values that represent
+  individual flags.
  */
 void TypedefNode::setAssociatedEnum(const EnumNode *enume)
 {
