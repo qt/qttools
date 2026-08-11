@@ -75,7 +75,6 @@ public:
         QByteArray text;
         QByteArray comment;
         QByteArray prefix;
-        bool utf8 = false;
 
         yyTok = getToken();
         while (yyTok != Tok_Eof) {
@@ -108,7 +107,6 @@ public:
                 break;
             case Tok_tr:
             case Tok_trUtf8: {
-                utf8 = true;
                 yyTok = getToken();
                 const int lineNo = yyCurLineNo;
                 if (match(Tok_LeftParen) && matchString(&text)) {
@@ -149,7 +147,7 @@ public:
                 bool plural{};
                 const int lineNo = yyCurLineNo;
                 MetaStrings metaBackup = std::move(metaStrings);
-                if (parseTranslate(&text, &context, &comment, &utf8, &plural)) {
+                if (parseTranslate(&text, &context, &comment, &plural)) {
                     TranslatorMessage message(QString::fromUtf8(context), QString::fromUtf8(text),
                                               QString::fromUtf8(comment), {}, yyFileName, lineNo,
                                               {}, TranslatorMessage::Unfinished, plural);
@@ -543,43 +541,6 @@ private:
         return ok;
     }
 
-    bool matchEncoding(bool *utf8)
-    {
-        // Remove any leading module paths.
-        if (yyTok == Tok_Ident && yyIdent == "PySide6") {
-            yyTok = getToken();
-
-            if (yyTok != Tok_Dot)
-                return false;
-
-            yyTok = getToken();
-        }
-
-        if (yyTok == Tok_Ident && (yyIdent == "QtGui" || yyIdent == "QtCore")) {
-            yyTok = getToken();
-
-            if (yyTok != Tok_Dot)
-                return false;
-
-            yyTok = getToken();
-        }
-
-        if (yyTok == Tok_Ident) {
-            if (yyIdent == "QApplication" || yyIdent == "QGuiApplication"
-                || yyIdent == "QCoreApplication") {
-                yyTok = getToken();
-
-                if (yyTok == Tok_Dot)
-                    yyTok = getToken();
-            }
-
-            *utf8 = QByteArray(yyIdent).endsWith("UTF8");
-            yyTok = getToken();
-            return true;
-        }
-        return false;
-    }
-
     bool matchStringOrNone(QByteArray *s)
     {
         bool matches = matchString(s);
@@ -591,7 +552,7 @@ private:
     }
 
     /*
-     * match any expression that can return a number, which can be
+     * Skip any expression that can return a number, which can be
      * 1. Literal number (e.g. '11')
      * 2. simple identifier (e.g. 'm_count')
      * 3. simple function call (e.g. 'size()')
@@ -600,43 +561,31 @@ private:
      * size(2,4)
      * list().size()
      * list(a,b).size(2,4)
-     * etc...
+     * etc. (modeled after cpp CppParser::skipExpression()).
      */
-    bool matchExpression()
+    bool skipExpression()
     {
         if (match(Tok_Integer))
             return true;
 
         int parenlevel = 0;
-        while (match(Tok_Ident) || parenlevel > 0) {
-            if (yyTok == Tok_RightParen) {
-                if (parenlevel == 0)
-                    break;
+        while (parenlevel >= 0) {
+            yyTok = getToken();
+            if (yyTok == Tok_RightParen)
                 --parenlevel;
-                yyTok = getToken();
-            } else if (yyTok == Tok_LeftParen) {
-                yyTok = getToken();
-                if (yyTok == Tok_RightParen) {
-                    yyTok = getToken();
-                } else {
-                    ++parenlevel;
-                }
-            } else if (yyTok == Tok_Ident) {
-                continue;
-            } else if (parenlevel == 0) {
+            else if (yyTok == Tok_LeftParen)
+                ++parenlevel;
+            else if (yyTok == Tok_Eof)
                 return false;
-            }
         }
         return true;
     }
 
-    bool parseTranslate(QByteArray *text, QByteArray *context, QByteArray *comment, bool *utf8,
-                        bool *plural)
+    bool parseTranslate(QByteArray *text, QByteArray *context, QByteArray *comment, bool *plural)
     {
         text->clear();
         context->clear();
         comment->clear();
-        *utf8 = false;
         *plural = false;
 
         yyTok = getToken();
@@ -671,23 +620,8 @@ private:
         if (match(Tok_RightParen))
             return true;
 
-        // look for optional encoding information
-        if (matchEncoding(utf8)) {
-            if (match(Tok_RightParen))
-                return true;
-
-            // not a comma or a right paren, illegal syntax
-            if (!match(Tok_Comma))
-                return false;
-
-            // python accepts trailing commas within parenthesis, so allow a comma with nothing
-            // after
-            if (match(Tok_RightParen))
-                return true;
-        }
-
         // Must be a plural expression
-        if (!matchExpression())
+        if (!skipExpression())
             return false;
 
         *plural = true;
