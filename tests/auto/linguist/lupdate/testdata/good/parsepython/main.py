@@ -65,6 +65,20 @@ class Window(QMainWindow):
         QCoreApplication.translate("CONTEXT", "EVEN MORE TEXT", "A COMMENT WITH PLURALIZATION", 42)
         QCoreApplication.translate("CONTEXT", "YET MORE TEXT",
                                    "A COMMENT WITH PLURALIZATION AND A TRAILING COMMA", 42,)
+        count = 42
+        QCoreApplication.translate("CONTEXT", "EVEN MORE TEXT",
+                                   "A COMMENT WITH PLURALIZATION/VARIABLE", count)
+        QCoreApplication.translate("CONTEXT", "YET MORE TEXT",
+                                   "A COMMENT WITH PLURALIZATION AND A TRAILING COMMA/VARIABLE",
+                                   count,)
+        # Complex expression
+        a = 10
+        b = 12
+        QCoreApplication.translate("CONTEXT", "ANOTHER TEXT",
+                                   "A COMMENT WITH PLURALIZATION/EXPRESSION", min(a, b))
+        QCoreApplication.translate("CONTEXT", "ANOTHER TEXT",
+                                   "A COMMENT WITH PLURALIZATION AND A TRAILING COMMA/EXPRESSION",
+                                    min(a, b),)
 
     def test_translate_fail(self):
         QCoreApplication.translate("CONTEXT", "SOME TEXT, SHOULD NOT BE EXTRACTED",
