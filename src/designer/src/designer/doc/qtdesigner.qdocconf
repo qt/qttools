@@ -42,7 +42,7 @@ exampledirs             = ../../../../../examples/designer \
 
 imagedirs               = images
 
-depends                 += qtdoc qtgui qtwidgets qtcore qtuitools qtquick qtcmake qmake
+depends                 += qtdoc qtgui qtwidgets qtcore qtuitools qtqml qtquick qtcmake qmake
 
 # Auto-generate navigation linking based on "Qt Widgets Designer module topics":
 navigation.toctitles = "Qt Widgets Designer module topics"
