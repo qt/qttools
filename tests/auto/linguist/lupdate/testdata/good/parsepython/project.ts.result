@@ -4,24 +4,24 @@
 <context>
     <name>CONTEXT</name>
     <message>
-        <location filename="main.py" line="41"/>
+        <location filename="main.py" line="62"/>
         <source>SOME TEXT, NO COMMENT, TRAILING COMMA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="44"/>
+        <location filename="main.py" line="63"/>
         <source>SOME TEXT</source>
         <comment>A COMMENT, NO TRAILING COMMA</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="48"/>
+        <location filename="main.py" line="64"/>
         <source>SOME MORE TEXT</source>
         <comment>A COMMENT WITH A TRAILING COMMA</comment>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="main.py" line="52"/>
+        <location filename="main.py" line="65"/>
         <source>EVEN MORE TEXT</source>
         <comment>A COMMENT WITH PLURALIZATION</comment>
         <translation type="unfinished">
@@ -29,7 +29,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="main.py" line="57"/>
+        <location filename="main.py" line="66"/>
         <source>YET MORE TEXT</source>
         <comment>A COMMENT WITH PLURALIZATION AND A TRAILING COMMA</comment>
         <translation type="unfinished">
@@ -40,7 +40,7 @@
 <context>
     <name>NestedClass</name>
     <message>
-        <location filename="main.py" line="71"/>
+        <location filename="main.py" line="76"/>
         <source>Nested Message</source>
         <translation type="unfinished"></translation>
     </message>
@@ -48,102 +48,145 @@
 <context>
     <name>Window</name>
     <message>
-        <location filename="main.py" line="17"/>
+        <location filename="main.py" line="21"/>
         <source>&amp;File</source>
         <extracomment>File menu</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="quit_id">
-        <location filename="main.py" line="19"/>
+        <location filename="main.py" line="23"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="20"/>
+        <location filename="main.py" line="24"/>
         <source>CTRL+Q</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="22"/>
+        <location filename="main.py" line="26"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="23"/>
+        <location filename="main.py" line="27"/>
         <source>About Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="main.py" line="37"/>
+        <location filename="main.py" line="48"/>
         <source>%n language(s) selected</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
     </message>
     <message>
-        <location filename="main.py" line="74"/>
+        <location filename="main.py" line="52"/>
+        <source>SOME TR TEXT, NO COMMENT, TRAILING COMMA</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.py" line="53"/>
+        <source>SOME TR TEXT</source>
+        <comment>A COMMENT, NO TRAILING COMMA</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.py" line="54"/>
+        <source>EVEN MORE TR TEXT</source>
+        <comment>A COMMENT WITH PLURALIZATION</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.py" line="55"/>
+        <source>YET MORE TR TEXT</source>
+        <comment>A COMMENT WITH PLURALIZATION AND A TRAILING COMMA</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.py" line="57"/>
+        <source>EVEN MORE TR TEXT</source>
+        <comment>A COMMENT WITH PLURALIZATION/VARIABLE</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.py" line="58"/>
+        <source>YET MORE TR TEXT</source>
+        <comment>A COMMENT WITH PLURALIZATION/VARIABLE AND A TRAILING COMMA</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="main.py" line="79"/>
         <source>Window Message</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="75"/>
+        <location filename="main.py" line="80"/>
         <source>An f-string\</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="76"/>
+        <location filename="main.py" line="81"/>
         <source>A raw strin\g</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="77"/>
+        <location filename="main.py" line="82"/>
         <source>A raw strin\gcontinued\</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="78"/>
+        <location filename="main.py" line="83"/>
         <source>A raw string with escaped quote&quot;bla</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="id_1">
-        <location filename="main.py" line="83"/>
+        <location filename="main.py" line="88"/>
         <source>msg1</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="id_2">
-        <location filename="main.py" line="85"/>
+        <location filename="main.py" line="90"/>
         <source>msg2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="87"/>
+        <location filename="main.py" line="92"/>
         <source>msg3</source>
         <extracomment>Extra comment 3</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="89"/>
+        <location filename="main.py" line="94"/>
         <source>msg4</source>
         <extracomment>Extra comment 4</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="90"/>
+        <location filename="main.py" line="95"/>
         <source></source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="91"/>
+        <location filename="main.py" line="96"/>
         <source>prefix&#xa0;&#xa0;postfix</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="92"/>
+        <location filename="main.py" line="97"/>
         <source>before&#xa0;middle&#xa0;after</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="93"/>
+        <location filename="main.py" line="98"/>
         <source>before&#xa0;&#xa0;middle<byte value="x1f"/>&#xa0;&#xa0;after</source>
         <translation type="unfinished"></translation>
     </message>
