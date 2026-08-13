@@ -11,11 +11,11 @@ find_package(Qt6 REQUIRED COMPONENTS Core ToolsTools)
 add_executable(test_objc_binary test.m)
 target_link_libraries(test_objc_binary PRIVATE Qt6::Core)
 
-# Test qt6_mangle_objc_symbols with QT_NAMESPACE mode
+# Test qt6_mangle_objc_symbols with USE_QT_NAMESPACE_AS_OLD mode
 # The Qt namespace will be read from Qt::Core's QT_NAMESPACE property
 # and the replacement will be padded with underscores if needed
 qt6_mangle_objc_symbols(test_objc_binary
-    QT_NAMESPACE
-    NAMESPACE_REPLACEMENT "MyNS"
+    USE_QT_NAMESPACE_AS_OLD
+    NEW_NAMESPACE "MyNS"
     CODESIGN
 )

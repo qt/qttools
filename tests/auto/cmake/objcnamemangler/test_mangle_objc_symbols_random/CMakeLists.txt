@@ -11,8 +11,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core ToolsTools)
 add_executable(test_objc_binary test.m)
 target_link_libraries(test_objc_binary PRIVATE objc)
 
-# Test qt6_mangle_objc_symbols with GENERATE_RANDOM_NAMESPACE
+# Test qt6_mangle_objc_symbols with GENERATE_RANDOM_NEW_NAMESPACE
 qt6_mangle_objc_symbols(test_objc_binary
-    NAMESPACE "QtCore"
-    GENERATE_RANDOM_NAMESPACE
+    OLD_NAMESPACE "QtCore"
+    GENERATE_RANDOM_NEW_NAMESPACE
 )
