@@ -1,0 +1,26 @@
+include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
+
+project                 = QtObjCNameMangler
+description             = Qt Objective-C Name Mangler Manual
+moduleheader            =
+
+qhp.projects            = QtObjCNameMangler
+
+qhp.QtObjCNameMangler.file                = qtobjcnamemangler.qhp
+qhp.QtObjCNameMangler.namespace           = org.qt-project.qtobjcnamemangler.$QT_VERSION_TAG
+qhp.QtObjCNameMangler.virtualFolder       = qtobjcnamemangler
+qhp.QtObjCNameMangler.indexTitle          = Qt Objective-C Name Mangler Manual
+
+qhp.QtObjCNameMangler.subprojects         = manual
+qhp.QtObjCNameMangler.subprojects.manual.title = Manual
+qhp.QtObjCNameMangler.subprojects.manual.indexTitle = Qt Objective-C Name Mangler Manual
+qhp.QtObjCNameMangler.subprojects.manual.type = manual
+
+sourcedirs              = .
+
+depends                 += qtdoc qtcore qmake qtcmake
+
+navigation.landingpage = "Qt Objective-C Name Mangler Manual"
+
+# Enforce zero documentation warnings
+warninglimit = 0

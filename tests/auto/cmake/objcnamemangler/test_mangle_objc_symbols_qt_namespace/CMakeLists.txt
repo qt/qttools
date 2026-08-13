@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(test_mangle_objc_symbols_qt_namespace LANGUAGES CXX OBJCXX)
 
-find_package(Qt6 REQUIRED COMPONENTS Core ToolsTools)
+find_package(Qt6 REQUIRED COMPONENTS Core BuildTools)
 
 # Build a simple Objective-C++ test binary that uses Qt
 add_executable(test_objc_binary test.m)

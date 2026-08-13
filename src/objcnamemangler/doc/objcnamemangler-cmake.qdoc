@@ -1,0 +1,154 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+\group cmake-commands-qtbuildtools
+\title CMake Commands in Qt6 BuildTools
+
+The following CMake commands are defined when Qt6::BuildTools is loaded, for instance
+with
+
+\code
+find_package(Qt6 REQUIRED COMPONENTS BuildTools)
+\endcode
+
+\sa{CMake Command Reference}
+*/
+
+/*!
+\page qttools-cmake-qt-mangle-objc-symbols.html
+\ingroup cmake-commands-qtbuildtools
+
+\title qt_mangle_objc_symbols
+\keyword qt_mangle_objc_symbols()
+
+\summary {Mangles Objective-C class and category names in a target's binary.}
+
+The command is defined in the \c BuildTools component of the \c Qt6 package.
+Load the package with:
+
+\code
+find_package(Qt6 REQUIRED COMPONENTS BuildTools)
+\endcode
+
+\cmakecommandsince 6.12
+\preliminarycmakecommand
+
+\section1 Synopsis
+
+\badcode
+qt_mangle_objc_symbols(target
+    (OLD_NAMESPACE namespace | USE_QT_NAMESPACE_AS_OLD)
+    (NEW_NAMESPACE replacement | GENERATE_RANDOM_NEW_NAMESPACE)
+    [EXCLUDE_CLASSES class...]
+    [QUIET]
+    [CODESIGN]
+    [CODESIGN_IDENTITY identity]
+)
+\endcode
+
+\versionlessCMakeCommandsNote qt6_mangle_objc_symbols()
+
+\section1 Description
+
+Mangles Objective-C class and category names in the \c target binary by
+replacing the specified namespace with either a provided replacement string
+or a unique random string of the same length.
+
+This is useful when statically linking multiple libraries that each embed
+their own copy of the Objective-C runtime information for the same class
+names, which would otherwise clash at load time.
+
+This command adds a \c POST_BUILD step to \c target. Note that this step
+potentially invalidates code signatures, so custom codesigning needs to be
+installed after the name mangling (for example, using the \c CODESIGN
+option). The \c POST_BUILD step:
+
+\list 1
+    \li Mangles Objective-C symbols by replacing the namespace.
+    \li Optionally re-signs the binary if \c CODESIGN is specified.
+\endlist
+
+The replacement string must be the same length as the original namespace for
+binary safety. When \c GENERATE_RANDOM_NEW_NAMESPACE is used, a random string
+of the same length is automatically generated. When using
+\c USE_QT_NAMESPACE_AS_OLD with \c NEW_NAMESPACE, if the replacement is
+shorter than the Qt namespace, it will be padded with underscores; if longer,
+a warning will be issued and the replacement will be truncated.
+
+Objective-C symbol mangling is only supported on Apple platforms. On other
+platforms, this command issues a warning (unless \c QUIET is given) and does
+nothing.
+
+\section1 Arguments
+
+\c target is the target whose binary will be patched.
+
+\c OLD_NAMESPACE is the namespace prefix to replace, for example
+\c{"AcmeApp"} or \c{"MyNamespace"}.
+
+\c USE_QT_NAMESPACE_AS_OLD uses the Qt namespace read from
+\c{Qt::Core}'s \c QT_NAMESPACE property instead of an explicit
+\c OLD_NAMESPACE.
+
+\c NEW_NAMESPACE is the replacement string. With \c OLD_NAMESPACE, it must be
+the same length as \c OLD_NAMESPACE. With \c USE_QT_NAMESPACE_AS_OLD, it will
+be padded with underscores if shorter, or truncated with a warning if
+longer.
+
+\c GENERATE_RANDOM_NEW_NAMESPACE generates a random replacement string
+instead of an explicit \c NEW_NAMESPACE.
+
+\c EXCLUDE_CLASSES lists class names to exclude from mangling. May be
+specified multiple times.
+
+\c QUIET suppresses output from the mangler tool.
+
+\c CODESIGN re-signs the binary after mangling (macOS only).
+
+\c CODESIGN_IDENTITY sets the code signing identity to use. Defaults to
+\c{"-"} for ad-hoc signing.
+
+\section1 Examples
+
+With an explicit replacement:
+
+\badcode
+qt_mangle_objc_symbols(MyApp
+    OLD_NAMESPACE "AcmeApp"
+    NEW_NAMESPACE "ACMEAPP"
+    CODESIGN
+)
+\endcode
+
+With a random namespace:
+
+\badcode
+qt_mangle_objc_symbols(MyApp
+    OLD_NAMESPACE "AcmeApp"
+    GENERATE_RANDOM_NEW_NAMESPACE
+    CODESIGN
+)
+\endcode
+
+With excluded classes:
+
+\badcode
+qt_mangle_objc_symbols(MyApp
+    OLD_NAMESPACE "AcmeApp"
+    NEW_NAMESPACE "ACMEAPP"
+    EXCLUDE_CLASSES AcmeApp_Internal AcmeApp_Private
+    CODESIGN
+)
+\endcode
+
+Using the Qt namespace from \c{Qt::Core}:
+
+\badcode
+qt_mangle_objc_symbols(MyApp
+    USE_QT_NAMESPACE_AS_OLD
+    NEW_NAMESPACE "MyNS"
+    CODESIGN
+)
+\endcode
+*/
