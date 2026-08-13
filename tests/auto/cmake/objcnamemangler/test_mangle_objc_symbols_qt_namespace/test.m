@@ -7,7 +7,7 @@
 #import <QtCore/QDebug>
 
 // This test uses a generic class name that would typically have a Qt namespace prefix
-// In QT_NAMESPACE mode, the function will read the actual namespace from Qt::Core
+// In USE_QT_NAMESPACE_AS_OLD mode, the function will read the actual namespace from Qt::Core
 __attribute__((objc_root_class))
 @interface QtNamespace_TestClass
 + (id)new;

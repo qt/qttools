@@ -13,7 +13,7 @@ target_link_libraries(test_objc_binary PRIVATE objc)
 
 # Test qt6_mangle_objc_symbols with CODESIGN option
 qt6_mangle_objc_symbols(test_objc_binary
-    NAMESPACE "_Suffix"
-    NAMESPACE_REPLACEMENT "_SUFFIX"
+    OLD_NAMESPACE "_Suffix"
+    NEW_NAMESPACE "_SUFFIX"
     CODESIGN
 )

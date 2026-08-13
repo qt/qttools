@@ -13,8 +13,8 @@ target_link_libraries(test_objc_binary PRIVATE objc)
 
 # Test qt6_mangle_objc_symbols with QUIET option
 qt6_mangle_objc_symbols(test_objc_binary
-    NAMESPACE "TestClass"
-    NAMESPACE_REPLACEMENT "TestKlass"
+    OLD_NAMESPACE "TestClass"
+    NEW_NAMESPACE "TestKlass"
     QUIET
     CODESIGN
 )
