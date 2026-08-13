@@ -1,79 +1,11 @@
 # Copyright (C) 2026 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-#[[
-    qt6_mangle_objc_symbols(<target>
-        (OLD_NAMESPACE <namespace> | USE_QT_NAMESPACE_AS_OLD)
-        (NEW_NAMESPACE <replacement> | GENERATE_RANDOM_NEW_NAMESPACE)
-        [EXCLUDE_CLASSES <class>...]
-        [QUIET]
-        [CODESIGN]
-        [CODESIGN_IDENTITY <identity>]
-    )
-
-    Mangles Objective-C class and category names in the target binary by replacing
-    the specified namespace with either a provided replacement string or a unique
-    random string of the same length.
-
-    Arguments:
-    - target: The target whose binary will be patched
-    - OLD_NAMESPACE: The namespace prefix to replace (e.g., "QtCore", "MyNamespace")
-    - USE_QT_NAMESPACE_AS_OLD: Use the Qt namespace from Qt::Core's QT_NAMESPACE property
-    - NEW_NAMESPACE: The replacement string. With OLD_NAMESPACE mode, must be
-                     same length as OLD_NAMESPACE. With USE_QT_NAMESPACE_AS_OLD mode, will be
-                     padded with underscores if shorter or truncated if longer.
-    - GENERATE_RANDOM_NEW_NAMESPACE: If specified, generates a random replacement string
-    - EXCLUDE_CLASSES: List of class names to exclude from mangling
-                       (can be specified multiple times)
-    - QUIET: Suppress output from the mangler tool
-    - CODESIGN: Re-sign the binary after mangling (macOS only)
-    - CODESIGN_IDENTITY: Code signing identity to use
-                         (default: "-" for ad-hoc signing)
-
-    Example usage:
-        # With explicit replacement:
-        qt6_mangle_objc_symbols(MyApp
-            OLD_NAMESPACE "QtCore"
-            NEW_NAMESPACE "QTCore"
-            CODESIGN
-        )
-
-        # With random namespace:
-        qt6_mangle_objc_symbols(MyApp
-            OLD_NAMESPACE "QtCore"
-            GENERATE_RANDOM_NEW_NAMESPACE
-            CODESIGN
-        )
-
-        # With excluded classes:
-        qt6_mangle_objc_symbols(MyApp
-            OLD_NAMESPACE "QtCore"
-            NEW_NAMESPACE "QTCore"
-            EXCLUDE_CLASSES QtCore_Internal QtCore_Private
-            CODESIGN
-        )
-
-        # Using Qt namespace from Qt::Core:
-        qt6_mangle_objc_symbols(MyApp
-            USE_QT_NAMESPACE_AS_OLD
-            NEW_NAMESPACE "MyNS"
-            CODESIGN
-        )
-
-    This function adds a POST_BUILD step to the target. Note that this step
-    potentially invalidates code signatures, so custom codesigning needs to be
-    installed after the name mangling (e.g., using the CODESIGN option). The
-    POST_BUILD step:
-    1. Mangles Objective-C symbols by replacing the namespace
-    2. Optionally re-signs the binary if CODESIGN is specified
-
-    Note: The replacement string must be the same length as the original
-    namespace for binary safety. When GENERATE_RANDOM_NEW_NAMESPACE is used, a random
-    string of the same length is automatically generated. When using USE_QT_NAMESPACE_AS_OLD
-    with NEW_NAMESPACE, if the replacement is shorter than the Qt namespace,
-    it will be padded with underscores; if longer, a warning will be issued and the
-    replacement will be truncated.
-#]]
+# Mangles Objective-C class and category names in a target's binary. See the
+# qt_mangle_objc_symbols() CMake command reference for full documentation.
+#
+# This function is currently in Technology Preview.
+# Its signature and behavior might change.
 function(qt6_mangle_objc_symbols target)
     set(options
         GENERATE_RANDOM_NEW_NAMESPACE
