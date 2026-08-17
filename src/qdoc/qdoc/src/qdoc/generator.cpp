@@ -2326,9 +2326,9 @@ QString Generator::typeString(const Node *node, bool plural)
         }
         return plural ? "functions"_L1 : "function"_L1;
     }
-    case NodeType::Property:
     case NodeType::QmlEnum:
         return plural ? "enumerations"_L1 : "enumeration"_L1;
+    case NodeType::Property:
     case NodeType::QmlProperty:
         return plural ? "properties"_L1 : "property"_L1;
     case NodeType::Module:
