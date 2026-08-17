@@ -6,6 +6,8 @@
 
 #include <QtCore/qstringlist.h>
 
+#include <vector>
+
 QT_BEGIN_NAMESPACE
 
 class Translator;
