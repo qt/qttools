@@ -1684,8 +1684,8 @@ const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative)
     // in its own right or a QML path. Break the path where path separators
     // for C++ or QML occur.
     QStringList pieces;
-    for (auto piece : path.split("."_L1)) {
-        for (auto inner : piece.split("::"_L1)) {
+    for (auto &piece : path.split("."_L1)) {
+        for (auto &inner : piece.split("::"_L1)) {
             pieces.append(inner);
         }
     }
