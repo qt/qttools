@@ -9,10 +9,11 @@
 
 #include <catch/catch.hpp>
 
-#include <vector>
-#include <random>
 #include <algorithm>
+#include <iterator>
 #include <numeric>
+#include <random>
+#include <vector>
 
 namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
     namespace QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE {
