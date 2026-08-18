@@ -9,7 +9,6 @@
 
 #include <QtWidgets/qapplication.h>
 
-#include <QtCore/qlibraryinfo.h>
 #include <QtCore/qpointer.h>
 #include <QtCore/qversionnumber.h>
 
@@ -30,7 +29,7 @@ struct Options;
 struct Options
 {
     QStringList files;
-    QString resourceDir{QLibraryInfo::paths(QLibraryInfo::TranslationsPath).value(0)};
+    QString resourceDir;
     QStringList pluginPaths;
     std::optional<QVersionNumber> qtVersion;
     QString localSocketServerName;
