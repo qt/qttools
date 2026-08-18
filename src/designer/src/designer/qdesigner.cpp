@@ -20,6 +20,7 @@
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
+#include <QtCore/qlibraryinfo.h>
 #include <QtCore/qlocale.h>
 #include <QtCore/qtextstream.h>
 #include <QtCore/qtimer.h>
@@ -209,6 +210,18 @@ static inline QDesigner::ParseArgumentsResult
     return QDesigner::ParseArgumentsSuccess;
 }
 
+#if QT_CONFIG(translation)
+static bool loadTranslation(const QStringList &trPaths, std::unique_ptr<QTranslator> &tr,
+                            const QString &catalog)
+{
+    for (const QString &trPath : trPaths) {
+        if (tr->load(QLocale(), catalog, u"_"_s, trPath))
+            return true;
+    }
+    return false;
+}
+#endif // QT_CONFIG(translation)
+
 QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
 {
     QString errorMessage;
@@ -233,13 +246,18 @@ QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
     if (options.enableInternalDynamicProperties)
         QDesignerPropertySheet::setInternalDynamicPropertiesEnabled(true);
 
-    std::unique_ptr<QTranslator> designerTranslator(new QTranslator(this));
-    if (designerTranslator->load(QLocale(), u"designer"_s, u"_"_s, options.resourceDir)) {
+#if QT_CONFIG(translation)
+    const QStringList &trPaths = options.resourceDir.isEmpty()
+            ? QLibraryInfo::paths(QLibraryInfo::TranslationsPath)
+            : QStringList{ options.resourceDir };
+    auto designerTranslator = std::make_unique<QTranslator>(this);
+    auto qtTranslator = std::make_unique<QTranslator>(this);
+    if (loadTranslation(trPaths, designerTranslator, u"designer"_s)
+        && loadTranslation(trPaths, qtTranslator, u"qtbase"_s)) {
         installTranslator(designerTranslator.release());
-        std::unique_ptr<QTranslator> qtTranslator(new QTranslator(this));
-        if (qtTranslator->load(QLocale(), u"qt"_s, u"_"_s, options.resourceDir))
-            installTranslator(qtTranslator.release());
+        installTranslator(qtTranslator.release());
     }
+#endif // QT_CONFIG(translation)
 
     m_workbench = new QDesignerWorkbench(options);
 
