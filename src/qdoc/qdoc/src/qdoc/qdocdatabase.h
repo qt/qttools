@@ -12,6 +12,7 @@
 #include "tree.h"
 
 #include <QtCore/qdebug.h>
+#include <QtCore/qflags.h>
 #include <QtCore/qmap.h>
 #include <QtCore/qstring.h>
 
@@ -31,6 +32,8 @@ enum FindFlag {
     IgnoreModules = 0x8,
     QmlAttachedProperties = 0x10
 };
+Q_DECLARE_FLAGS(FindFlags, FindFlag)
+Q_DECLARE_OPERATORS_FOR_FLAGS(FindFlags)
 
 class QDocForest
 {
@@ -243,7 +246,7 @@ public:
     static NodeMultiMapMap &newEnumValueMaps() { return s_newEnumValueMaps; }
     static NodeMultiMapMap &newSinceMaps() { return s_newSinceMaps; }
 
-    const Node *findQmlNode(const QString &path, const Node *relative);
+    const Node *findQmlNode(const QString &path, const Node *relative, FindFlags flags);
 
 private:
     void findAllClasses(Aggregate *node) { node->findAllClasses(); }
