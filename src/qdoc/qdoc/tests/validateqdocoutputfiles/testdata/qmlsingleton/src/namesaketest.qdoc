@@ -1,0 +1,21 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmltype Namesake
+    \nativetype NamesakeObject
+    \inqmlmodule Test
+    \brief A singleton, because its native type NamesakeObject has QML_SINGLETON.
+*/
+
+/*!
+    \qmltype NamesakeObject
+    \nativetype PlainObject
+    \inqmlmodule Test
+    \brief Not a singleton, despite sharing its name with the C++ class NamesakeObject.
+
+    The QML type name and C++ class names live in separate namespaces, so a QML
+    type may share its name with an unrelated C++ class. The singleton attribute
+    must be taken from the \\nativetype (PlainObject, which is not a singleton),
+    never from the same-named class NamesakeObject, which is one.
+*/

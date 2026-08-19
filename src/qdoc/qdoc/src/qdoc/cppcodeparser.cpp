@@ -82,6 +82,33 @@ CppCodeParser::CppCodeParser(FnCommandParser&& parser)
 }
 
 /*!
+  Takes the singleton or uncreatable attribute of \a qmlType from its native type
+  \a classNode. Attributes given explicitly in the QML documentation win, so a type
+  documented as \\qmlsingletontype or \\qmluncreatabletype is left alone.
+ */
+static void setQmlAttributesFromNativeType(QmlTypeNode *qmlType, const ClassNode *classNode)
+{
+    if (qmlType->isSingleton() || qmlType->isUncreatable())
+        return;
+
+    if (classNode->isQmlSingleton())
+        qmlType->setSingleton();
+    else if (classNode->isQmlUncreatable())
+        qmlType->setUncreatable();
+}
+
+/*!
+  Returns \c true if \a doc names the native type of a QML type explicitly, using
+  either \\nativetype or the deprecated \\instantiates.
+ */
+static bool hasNativeTypeCommand(const Doc &doc)
+{
+    const QSet<QString> metaCommands = doc.metaCommandsUsed();
+    return metaCommands.contains(COMMAND_QMLNATIVETYPE)
+            || metaCommands.contains(COMMAND_QMLINSTANTIATES);
+}
+
+/*!
   Process the topic \a command found in the \a doc with argument \a arg.
  */
 Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
@@ -209,15 +236,16 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
             qcn->setSingleton();
         else if (command == COMMAND_QMLUNCREATABLETYPE)
             qcn->setUncreatable();
-        else if (command == COMMAND_QMLTYPE && !qcn->isSingleton() && !qcn->isUncreatable()) {
+        else if (command == COMMAND_QMLTYPE && !hasNativeTypeCommand(doc)) {
+            // If the native type is named explicitly, the attributes are taken from it in
+            // processQmlNativeTypeCommand(). Without such a command, guess the native type
+            // by matching the QML type name against a class of the same name. QML type
+            // names live in a different namespace than C++ class names, so the guess may
+            // well hit an unrelated class.
             // TODO: Replace name-based matching with QML_ELEMENT/QML_NAMED_ELEMENT macro
             // detection and automatically setting the native type relationship.
-            if (auto classNode = database->findClassNode(arg.first.split(u"::"_s))) {
-                if (classNode->isQmlSingleton())
-                    qcn->setSingleton();
-                else if (classNode->isQmlUncreatable())
-                    qcn->setUncreatable();
-            }
+            if (auto classNode = database->findClassNode(arg.first.split(u"::"_s)))
+                setQmlAttributesFromNativeType(qcn, classNode);
         }
         return qcn;
     } else if (command == COMMAND_QMLENUM) {
@@ -1074,6 +1102,7 @@ void CppCodeParser::processQmlNativeTypeCommand(Node *node, const QString &cmd, 
 
     qmlNode->setClassNode(classNode);
     classNode->insertQmlNativeType(qmlNode);
+    setQmlAttributesFromNativeType(qmlNode, classNode);
 }
 
 namespace {
