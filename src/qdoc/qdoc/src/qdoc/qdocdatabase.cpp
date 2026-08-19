@@ -3,6 +3,7 @@
 
 #include "qdocdatabase.h"
 
+#include "aggregate.h"
 #include "atom.h"
 #include "collectionnode.h"
 #include "functionnode.h"
@@ -1664,67 +1665,86 @@ void QDocDatabase::mergeCollections(CollectionNode *c)
     Returns the node to a piece of QML API documentation that corresponds to
     the given \a path, or \c nullptr if the path cannot be resolved.
     The \a relative node specifies where the link or reference was used.
+    The \a flags let the caller specify or restrict the types of nodes to
+    find or prioritize, such as attached properties instead of regular
+    properties.
 
-    This doesn't handle the use of fragments to refer to elements in the
-    target documentation.
+    This function doesn't handle the use of fragments to refer to elements in
+    the target documentation.
 */
-const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative)
+const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative, FindFlags flags)
 {
-    // Since path contains a dot, assume that it is either a QML module
-    // in its own right or a QML path. Break the path where path separators
-    // for C++ or QML occur.
     QStringList pieces;
-    for (auto &piece : path.split("."_L1)) {
-        for (auto &inner : piece.split("::"_L1)) {
-            pieces.append(inner);
-        }
-    }
+    for (const QString &piece : path.split('.'_L1))
+        pieces.append(piece.split("::"_L1));
 
     // Try to resolve a leading QML module name.
-    QString modName{""};
-    QString tryName{""};
-    const Node *modNode{nullptr};
-    int i;
-
-    for (i = 0; i < pieces.count(); i++) {
-        tryName += pieces.at(i);
-        const Node *node = findNodeByNameAndType(QStringList(tryName), &Node::isQmlModule);
-
-        if (node) {
-            modName = tryName;
-            modNode = node;
-        } else
+    QString candidateName;
+    const Node *moduleNode = nullptr;
+    qsizetype modulePrefixSize = 0;
+    for (; modulePrefixSize < pieces.size(); ++modulePrefixSize) {
+        candidateName += pieces.at(modulePrefixSize);
+        const Node *node = findNodeByNameAndType({candidateName}, &Node::isQmlModule);
+        if (!node)
             break;
 
-        tryName += "."_L1;
+        moduleNode = node;
+        candidateName += '.'_L1;
     }
 
-    // No more pieces to check, so return what we have.
-    if (i == pieces.count())
-        return modNode;
+    if (modulePrefixSize == pieces.size())
+        return moduleNode;
 
-    QmlTypeNode *qtn{nullptr};
-
-    if (modNode) {
-        pieces = pieces.mid(i);
-        qtn = findQmlType(modName, pieces.takeFirst(), relative);
+    QmlTypeNode *qmlType = nullptr;
+    if (moduleNode) {
+        pieces.remove(0, modulePrefixSize);
+        qmlType = findQmlType(moduleNode->name(), pieces.takeFirst(), relative);
     } else
-        qtn = findQmlType(pieces.takeFirst(), relative);
+        qmlType = findQmlType(pieces.takeFirst(), relative);
 
-    // Return a null pointer or the leaf node.
-    if (!qtn || pieces.isEmpty())
-        return qtn;
+    if (!qmlType || pieces.isEmpty())
+        return qmlType;
 
-    auto propertyName = pieces.join("."_L1);
-    QmlPropertyNode *qmlProperty = qtn->hasQmlProperty(propertyName);
+    const auto searchType = flags.testFlag(QmlAttachedProperties)
+            ? Aggregate::AttachedProperties : Aggregate::UnattachedProperties;
+    const auto findProperty = [searchType](const QmlTypeNode *type, const QString &name)
+            -> const QmlPropertyNode * {
+        const QmlPropertyNode *property = type->hasQmlProperty(name, searchType);
+        if (!property && searchType == Aggregate::UnattachedProperties)
+            property = type->hasQmlProperty(name, Aggregate::AttachedProperties);
+        return property;
+    };
 
-    if (qmlProperty)
-        return qmlProperty;
+    // Consume a property only when its type can be followed. Otherwise the
+    // remaining name may be a documented group such as "values.integer".
+    while (pieces.size() > 1) {
+        const QmlPropertyNode *property = findProperty(qmlType, pieces.first());
+        if (!property)
+            break;
 
-    // Fall back on a general search for a member with the name.
-    // This will intentionally fail for functions if there is a dot
-    // in the name.
-    return qtn->findChildNode(propertyName, Genus::QML);
+        QmlTypeNode *const nextType = moduleNode
+                ? findQmlType(moduleNode->name(), property->dataType(), relative)
+                : findQmlType(property->dataType(), relative);
+        if (!nextType)
+            break;
+
+        qmlType = nextType;
+        pieces.removeFirst();
+    }
+
+    if (path.endsWith("()"_L1)) {
+        if (flags.testFlag(QmlAttachedProperties) || pieces.size() != 1)
+            return nullptr;
+        return qmlType->findFunctionChild(pieces.first().chopped(2), Parameters());
+    }
+
+    const QString memberName = pieces.join('.'_L1);
+    if (const QmlPropertyNode *property = findProperty(qmlType, memberName))
+        return property;
+
+    if (flags.testFlag(QmlAttachedProperties))
+        return nullptr;
+    return qmlType->findChildNode(memberName, Genus::QML);
 }
 
 /*!
@@ -1747,15 +1767,17 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
 
     Tree *domain = nullptr;
 
-    if (atom->isLinkAtom()) {
+    if (atom->isLinkAtom() || atom->type() == Atom::Link) {
         if (auto *atomDomain = atom->domain())
             domain = atomDomain;
         if (atom->genus() != Genus::DontCare)
             genus = atom->genus();
 
-        if (!first.contains("://"_L1) && !first.contains(" "_L1) && !first.endsWith(".html"_L1) && first.contains("."_L1)) {
-            const Node *found = findQmlNode(first, relative);
-            if (found) return found;
+        if (!first.contains("://"_L1) && !first.contains(' '_L1)
+            && !first.endsWith(".html"_L1) && first.contains('.'_L1)) {
+            const auto flags = FindFlags::fromInt(a->flags());
+            if (const Node *found = findQmlNode(first, relative, flags))
+                return found;
         }
     }
 

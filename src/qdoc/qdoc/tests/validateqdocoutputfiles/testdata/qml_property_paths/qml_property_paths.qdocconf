@@ -1,0 +1,9 @@
+project = QmlPropertyPaths
+locationinfo = false
+sourcedirs = src
+sources.fileextensions = "*.qdoc"
+outputformats = HTML
+HTML.nosubdirs = true
+# Deliberate invalid paths must remain plain text in the golden output.
+warninglimit = 5
+warninglimit.enabled = true

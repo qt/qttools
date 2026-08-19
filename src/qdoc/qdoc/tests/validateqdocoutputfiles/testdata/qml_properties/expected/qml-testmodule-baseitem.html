@@ -17,6 +17,8 @@
 <h3 id="toc">Contents</h3>
 <ul>
 <li class="level1"><a href="#properties">Properties</a></li>
+<li class="level1"><a href="#attached-properties">Attached Properties</a></li>
+<li class="level1"><a href="#methods">Methods</a></li>
 <li class="level1"><a href="#details">Detailed Description</a></li>
 </ul>
 </div>
@@ -33,6 +35,7 @@
 </ul>
 <h2 id="properties">Properties</h2>
 <ul>
+<li class="fn" translate="no"><b><a href="qml-testmodule-baseitem.html#fullName-prop" translate="no">fullName</a></b> : string</li>
 <li class="fn" translate="no"><b><a href="qml-testmodule-baseitem.html#name-prop" translate="no">name</a></b> : string <code class="summary extra" translate="no">(since 1.0)</code></li>
 <li class="fn" translate="no"><b><a href="qml-testmodule-baseitem.html#size-prop" translate="no">size</a></b> <code class="summary extra" translate="no">(since 1.1)</code><ul>
 <li class="fn" translate="no"><b><a href="qml-testmodule-baseitem.html#size.height-prop" translate="no">size.height</a></b> : int <code class="summary extra" translate="no">(since 1.1)</code></li>
@@ -46,15 +49,28 @@
 </ul>
 </li>
 </ul>
+<h2 id="attached-properties">Attached Properties</h2>
+<ul>
+<li class="fn" translate="no"><b><a href="qml-testmodule-baseitem.html#name-attached-prop" translate="no">name</a></b> : string</li>
+</ul>
+<h2 id="methods">Methods</h2>
+<ul>
+<li class="fn" translate="no">string <b><a href="qml-testmodule-baseitem.html#fullName-method" translate="no">fullName</a></b>()</li>
+</ul>
 <!-- $$$BaseItem-description -->
 <h2 id="details">Detailed Description</h2>
 <p>BaseItem provides common properties for derived types.</p>
 <!-- @@@BaseItem -->
 <h2>Property Documentation</h2>
+<!-- $$$fullName -->
+<h3 class="fn qml-member qml-property" translate="no" id="fullName-prop"><span class="name">fullName</span> : <span class="type">string</span></h3>
+<p>Shadows the method of the same name.</p>
+<!-- @@@fullName -->
 <!-- $$$name -->
 <h3 class="fn qml-member qml-property" translate="no" id="name-prop"><span class="name">name</span> : <span class="type">string</span> <code class="details extra" translate="no">[since 1.0]</code></h3>
 <p>The name property of the item.</p>
 <p>This property holds the name identifier for the item.</p>
+<p>See the identically-named attached property: <a href="qml-testmodule-baseitem.html#name-attached-prop" translate="no">name</a>.</p>
 <p>This property was introduced in 1.0.</p>
 <!-- @@@name -->
 <!-- $$$size -->
@@ -76,5 +92,16 @@
 <p>A collection of values.</p>
 <p>These properties were introduced in 1.2.</p>
 <!-- @@@values -->
+<h2>Attached Property Documentation</h2>
+<!-- $$$name -->
+<h3 class="fn qml-member qml-property" translate="no" id="name-attached-prop"><span class="name">BaseItem.name</span> : <span class="type">string</span> <code class="details extra" translate="no">[attached]</code></h3>
+<p>This attached property is here to test searching for properties with non-unique names.</p>
+<p>This link should go to the identically-named regular property: <a href="qml-testmodule-baseitem.html#name-prop" translate="no">name</a>.</p>
+<!-- @@@name -->
+<h2>Method Documentation</h2>
+<!-- $$$fullName[overload1]$$$fullName -->
+<h3 class="fn qml-member qml-method" translate="no" id="fullName-method"><span class="type">string</span> <span class="name">fullName</span>()</h3>
+<p>Returns the full name of the item.</p>
+<!-- @@@fullName -->
 </body>
 </html>

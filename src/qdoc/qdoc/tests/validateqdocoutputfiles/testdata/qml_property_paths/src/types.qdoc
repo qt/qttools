@@ -1,0 +1,62 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule TestModule
+    \title QML Property Paths
+    \brief Controls for complete QML property paths.
+
+    \list
+    \li Regular property: \l BaseItem.name
+    \li Attached property: \l [attached] BaseItem.name
+    \li Unique attached property: \l BaseItem.tag
+    \li Object property: \l BaseItem.child.name
+    \li Deep object property: \l TestModule.BaseItem.child.child.name
+    \li Grouped property: \l BaseItem.values.integer
+    \li Group after dereferencing: \l BaseItem.child.values.integer
+    \li Method: \l {BaseItem.method()}
+    \li Method after dereferencing: \l {BaseItem.child.method()}
+    \li Invalid primitive tail: \l BaseItem.name.missing
+    \li Invalid deep tail: \l BaseItem.child.name.missing
+    \li Invalid object tail: \l BaseItem.child.missing
+    \li Invalid method tail: \l {BaseItem.name.missing()}
+    \li Missing attached property: \l [attached] BaseItem.child
+    \endlist
+*/
+
+/*!
+    \qmltype BaseItem
+    \inqmlmodule TestModule
+    \brief A type with object and grouped properties.
+*/
+
+/*!
+    \qmlattachedproperty string BaseItem::name
+    \brief An attached name declared before the regular name.
+*/
+
+/*!
+    \qmlproperty string BaseItem::name
+    \brief A primitive name.
+*/
+
+/*!
+    \qmlattachedproperty string BaseItem::tag
+    \brief An attached property without a regular namesake.
+*/
+
+/*!
+    \qmlproperty BaseItem BaseItem::child
+    \brief An object-typed property.
+*/
+
+/*!
+    \qmlpropertygroup BaseItem::values
+    \qmlproperty int BaseItem::values.integer
+    \brief A grouped primitive property.
+*/
+
+/*!
+    \qmlmethod void BaseItem::method()
+    \brief A method.
+*/

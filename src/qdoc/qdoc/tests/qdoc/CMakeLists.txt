@@ -20,6 +20,7 @@ qt_internal_add_test(tst_QDoc
         boundaries/filesystem/catch_directorypath.cpp
         filesystem/catch_fileresolver.cpp
         node/catch_genustypes.cpp
+        node/catch_findflags.cpp
         inclusion/catch_inclusionstrategytests.cpp
         outputproducerregistry/catch_outputproducerregistry.cpp
         ../../src/qdoc/boundaries/filesystem/filepath.cpp

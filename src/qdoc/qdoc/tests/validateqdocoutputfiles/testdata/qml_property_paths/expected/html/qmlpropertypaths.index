@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QmlPropertyPaths Reference Documentation" version="" project="QmlPropertyPaths">
+    <namespace name="" status="active" access="public" module="qmlpropertypaths">
+        <qmlclass name="BaseItem" qml-module-name="TestModule" fullname="TestModule.BaseItem" href="qml-testmodule-baseitem.html" status="active" access="public" location="types.qdoc" documented="true" brief="A type with object and grouped properties">
+            <function name="method" fullname="TestModule.BaseItem.method" href="qml-testmodule-baseitem.html#method-method" status="active" access="public" location="types.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <qmlproperty name="child" fullname="TestModule.BaseItem.child" href="qml-testmodule-baseitem.html#child-prop" status="active" access="public" location="types.qdoc" documented="true" type="BaseItem" attached="false" writable="true" brief="An object-typed property"/>
+            <qmlproperty name="name" fullname="TestModule.BaseItem.name" href="qml-testmodule-baseitem.html#name-attached-prop" status="active" access="public" location="types.qdoc" documented="true" type="string" attached="true" writable="true" brief="An attached name declared before the regular name"/>
+            <qmlproperty name="name" fullname="TestModule.BaseItem.name" href="qml-testmodule-baseitem.html#name-prop" status="active" access="public" location="types.qdoc" documented="true" type="string" attached="false" writable="true" brief="A primitive name"/>
+            <qmlproperty name="tag" fullname="TestModule.BaseItem.tag" href="qml-testmodule-baseitem.html#tag-attached-prop" status="active" access="public" location="types.qdoc" documented="true" type="string" attached="true" writable="true" brief="An attached property without a regular namesake"/>
+            <qmlproperty name="values.integer" fullname="TestModule.BaseItem.values.integer" href="qml-testmodule-baseitem.html#values.integer-prop" status="active" access="public" location="types.qdoc" documented="true" type="int" attached="false" writable="true" brief="A grouped primitive property"/>
+        </qmlclass>
+        <qmlmodule name="TestModule" qml-module-name="TestModule" href="testmodule-qmlmodule.html" status="active" location="types.qdoc" documented="true" seen="true" title="QML Property Paths" brief="Controls for complete QML property paths"/>
+    </namespace>
+</INDEX>

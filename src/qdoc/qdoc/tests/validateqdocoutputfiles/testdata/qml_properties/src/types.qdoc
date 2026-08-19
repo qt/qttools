@@ -14,6 +14,12 @@
     \li \l{TestModule.BaseItem.name}
     \li \l{TestModule::}{BaseItem.name}
     \li \l{TestModule.BaseItem::}{name}
+    \li \l[attached]{TestModule.BaseItem.name} (attached)
+    \li \l[attached]{TestModule::}{BaseItem.name} (attached)
+    \li \l[attached]{TestModule.BaseItem::}{name} (attached)
+    \li \l{TestModule.BaseItem.size}
+    \li \l{TestModule::}{BaseItem.size}
+    \li \l{TestModule.BaseItem::}{size}
     \li \l{TestModule.BaseItem.size.width}
     \li \l{TestModule::}{BaseItem.size.width}
     \li \l{TestModule.BaseItem::}{size.width}
@@ -37,6 +43,11 @@
     \li \l{TestModule::}{BaseItem.values.boolean}
     \li \l{TestModule.BaseItem::}{values.boolean}
     \li \l{TestModule.BaseItem.values::}{boolean}
+    \li \l{TestModule.BaseItem.fullName()}
+    \li \l{TestModule::}{BaseItem.fullName()}
+    \li \l{TestModule.BaseItem::}{fullName()}
+    \li \l{TestModule::}{BaseItem.fullName}
+    \li \l{TestModule.BaseItem::}{fullName}
     \endlist
 
     QML syntax, without the module name:
@@ -44,6 +55,10 @@
     \list
     \li \l{BaseItem.name}
     \li \l{BaseItem::}{name}
+    \li \l[attached]{BaseItem.name} (attached)
+    \li \l[attached]{BaseItem::}{name} (attached)
+    \li \l{BaseItem.size}
+    \li \l{BaseItem::}{size}
     \li \l{BaseItem.size.width}
     \li \l{BaseItem::}{size.width}
     \li \l{BaseItem.size::}{width}
@@ -61,12 +76,18 @@
     \li \l{BaseItem.values.boolean}
     \li \l{BaseItem::}{values.boolean}
     \li \l{BaseItem.values::}{boolean}
+    \li \l{BaseItem.fullName()}
+    \li \l{BaseItem::}{fullName()}
+    \li \l{BaseItem.fullName}
+    \li \l{BaseItem::}{fullName}
     \endlist
 
     Links without braces in the source text:
 
     \list
     \li \l TestModule.BaseItem.name
+    \li \l [attached] TestModule.BaseItem.name (attached)
+    \li \l TestModule.BaseItem.size
     \li \l TestModule.BaseItem.size.width
     \li \l TestModule.BaseItem.size.height
     \li \l TestModule.BaseItem.values
@@ -74,12 +95,16 @@
     \li \l TestModule.BaseItem.values.floating
     \li \l TestModule.BaseItem.values.boolean
     \li \l BaseItem.name
+    \li \l [attached] BaseItem.name (attached)
+    \li \l BaseItem.size
     \li \l BaseItem.size.width
     \li \l BaseItem.size.height
     \li \l BaseItem.values
     \li \l BaseItem.values.integer
     \li \l BaseItem.values.floating
     \li \l BaseItem.values.boolean
+    \li \l TestModule.BaseItem.fullName()
+    \li \l TestModule.BaseItem.fullName
     \endlist
 
     \section1 Types
@@ -101,6 +126,18 @@
     \since 1.0
 
     This property holds the name identifier for the item.
+
+    See the identically-named attached property: \l [attached] name.
+*/
+
+/*!
+    \qmlattachedproperty string BaseItem::name
+
+    This attached property is here to test searching for properties with
+    non-unique names.
+
+    This link should go to the identically-named regular property:
+    \l name.
 */
 
 /*!
@@ -117,4 +154,16 @@
     \qmlproperty bool BaseItem::values.boolean
     \brief A collection of values.
     \since 1.2
+*/
+
+/*!
+    \qmlmethod string BaseItem::fullName()
+
+    Returns the full name of the item.
+*/
+
+/*!
+    \qmlproperty string BaseItem::fullName
+
+    Shadows the method of the same name.
 */

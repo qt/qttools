@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- types.qdoc -->
+  <meta name="description" content="Controls for complete QML property paths.">
+  <meta name="keywords" content="qmlmodule">
+  <title>QML Property Paths | QmlPropertyPaths</title>
+</head>
+<body>
+<ul class="breadcrumb">
+</ul>
+<div class="sidebar"><div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">QML Property Paths</h1>
+<!-- $$$TestModule-description -->
+<div class="descr" id="details">
+<ul>
+<li>Regular property: <a href="qml-testmodule-baseitem.html#name-prop" translate="no">BaseItem.name</a></li>
+<li>Attached property: <a href="qml-testmodule-baseitem.html#name-attached-prop" translate="no">BaseItem.name</a></li>
+<li>Unique attached property: <a href="qml-testmodule-baseitem.html#tag-attached-prop" translate="no">BaseItem.tag</a></li>
+<li>Object property: <a href="qml-testmodule-baseitem.html#name-prop" translate="no">BaseItem.child.name</a></li>
+<li>Deep object property: <a href="qml-testmodule-baseitem.html#name-prop" translate="no">TestModule.BaseItem.child.child.name</a></li>
+<li>Grouped property: <a href="qml-testmodule-baseitem.html#values.integer-prop" translate="no">BaseItem.values.integer</a></li>
+<li>Group after dereferencing: <a href="qml-testmodule-baseitem.html#values.integer-prop" translate="no">BaseItem.child.values.integer</a></li>
+<li>Method: <a href="qml-testmodule-baseitem.html#method-method" translate="no">BaseItem.method</a>()</li>
+<li>Method after dereferencing: <a href="qml-testmodule-baseitem.html#method-method" translate="no">BaseItem.child.method</a>()</li>
+<li>Invalid primitive tail: BaseItem.name.missing</li>
+<li>Invalid deep tail: BaseItem.child.name.missing</li>
+<li>Invalid object tail: BaseItem.child.missing</li>
+<li>Invalid method tail: BaseItem.name.missing()</li>
+<li>Missing attached property: BaseItem.child</li>
+</ul>
+</div>
+<!-- @@@TestModule -->
+<div class="table"><table class="annotated">
+<tr class="odd topAlign"><td class="tblName" translate="no"><p><a href="qml-testmodule-baseitem.html">BaseItem</a></p></td><td class="tblDescr"><p>A type with object and grouped properties</p></td></tr>
+</table></div>
+</body>
+</html>
