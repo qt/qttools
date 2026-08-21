@@ -16,7 +16,7 @@ qhp.QtUiTools.file                = qtuitools.qhp
 qhp.QtUiTools.namespace           = org.qt-project.qtuitools.$QT_VERSION_TAG
 qhp.QtUiTools.virtualFolder       = qtuitools
 qhp.QtUiTools.indexTitle          = Qt UI Tools
-qhp.QtHelp.indexRoot           =
+qhp.QtUiTools.indexRoot           =
 
 qhp.QtUiTools.subprojects         = examples classes
 
