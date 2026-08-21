@@ -7,11 +7,21 @@
 
 #if 0
 #  pragma qt_class(QFormBuilder)
-#  pragma qt_sync_skip_header_check
 #endif
 
-#include "uilib_global.h"
-#include "abstractformbuilder.h"
+#if defined(QT_BUILD_UITOOLS_LIB)
+#  if 0
+#    pragma qt_sync_suspend_processing
+#  endif
+#  include "uilib_global.h"
+#  include "abstractformbuilder.h"
+#  if 0
+#    pragma qt_sync_resume_processing
+#  endif
+#else
+#  include <QtDesigner/uilib_global.h>
+#  include <QtDesigner/abstractformbuilder.h>
+#endif
 
 QT_BEGIN_NAMESPACE
 

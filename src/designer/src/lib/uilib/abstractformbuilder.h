@@ -5,11 +5,17 @@
 #ifndef ABSTRACTFORMBUILDER_H
 #define ABSTRACTFORMBUILDER_H
 
-#if 0
-#  pragma qt_sync_skip_header_check
+#if defined(QT_BUILD_UITOOLS_LIB)
+#  if 0
+#    pragma qt_sync_suspend_processing
+#  endif
+#  include "uilib_global.h"
+#  if 0
+#    pragma qt_sync_resume_processing
+#  endif
+#else
+#  include <QtDesigner/uilib_global.h>
 #endif
-
-#include "uilib_global.h"
 
 #include <QtCore/qlist.h>
 #include <QtCore/qhash.h>
