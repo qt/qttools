@@ -13,6 +13,7 @@
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "quoter.h"
+#include "sharedcommentnode.h"
 #include "utilities.h"
 #include "textutils.h"
 
@@ -163,11 +164,16 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
 {
     Q_ASSERT(marker_);
 
+    // The index walk doesn't visit shared comment nodes; capture the prose here
+    const Doc &effectiveDoc = (node->doc().body().isEmpty() && node->isSharingComment())
+            ? node->sharedCommentNode()->doc()
+            : node->doc();
+
     writer.writeStartElement("description");
     if (Config::instance().get(CONFIG_LOCATIONINFO).asBool()) {
-        writer.writeAttribute("path", node->doc().location().filePath());
-        writer.writeAttribute("line", QString::number(node->doc().location().lineNo()));
-        writer.writeAttribute("column", QString::number(node->doc().location().columnNo()));
+        writer.writeAttribute("path", effectiveDoc.location().filePath());
+        writer.writeAttribute("line", QString::number(effectiveDoc.location().lineNo()));
+        writer.writeAttribute("column", QString::number(effectiveDoc.location().columnNo()));
     }
 
     if (node->isTextPageNode())
@@ -203,11 +209,11 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
 
     m_inLink = m_inSectionHeading = m_hasQuotingInformation = false;
 
-    const Atom *atom = node->doc().body().firstAtom();
+    const Atom *atom = effectiveDoc.body().firstAtom();
     while (atom)
         atom = addAtomElements(writer, atom, node, marker_);
 
-    QList<Text> alsoList = node->doc().alsoList();
+    QList<Text> alsoList = effectiveDoc.alsoList();
     supplementAlsoList(node, alsoList);
 
     if (!alsoList.isEmpty()) {

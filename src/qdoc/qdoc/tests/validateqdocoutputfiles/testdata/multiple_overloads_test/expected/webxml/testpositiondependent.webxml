@@ -9,10 +9,16 @@
             <function name="convert" fullname="TestPositionDependent::convert" href="testpositiondependent.html#convert" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" type="void" signature="void convert(int value, bool flag) const">
                 <parameter type="int" name="value" default=""/>
                 <parameter type="bool" name="flag" default=""/>
-                <description/>
+                <description>
+                    <para>Converts data. The <argument>value</argument> and <argument>flag</argument> parameters control the conversion.</para>
+                    <para>NOTE: The <teletype>\fn</teletype> commands are intentionally in reverse sort order. The first <teletype>\fn</teletype> has 2 parameters, the second has 0. By natural sorting, convert() would come first (fewer parameters). But with position-dependent behavior, convert(int, bool) should be the primary because it's the FIRST <teletype>\fn</teletype> command in this shared comment block.</para>
+                </description>
             </function>
             <function name="convert" fullname="TestPositionDependent::convert" href="testpositiondependent.html#convert-1" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" overload="true" overload-number="1" type="void" signature="void convert() const">
-                <description/>
+                <description>
+                    <para>Converts data. The <argument>value</argument> and <argument>flag</argument> parameters control the conversion.</para>
+                    <para>NOTE: The <teletype>\fn</teletype> commands are intentionally in reverse sort order. The first <teletype>\fn</teletype> has 2 parameters, the second has 0. By natural sorting, <link raw="convert()" href="testpositiondependent.html#convert" type="function">convert()</link> would come first (fewer parameters). But with position-dependent behavior, convert(int, bool) should be the primary because it's the FIRST <teletype>\fn</teletype> command in this shared comment block.</para>
+                </description>
             </function>
             <function name="convert" fullname="TestPositionDependent::convert" href="testpositiondependent.html#convert-2" status="active" access="public" location="testoverloads.h" documented="true" meta="plain" const="true" overload="true" overload-number="2" type="void" signature="void convert(const char *text) const">
                 <parameter type="const char *" name="text" default=""/>

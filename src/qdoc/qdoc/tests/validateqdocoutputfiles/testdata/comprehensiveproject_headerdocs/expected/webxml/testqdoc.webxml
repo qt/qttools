@@ -20,11 +20,17 @@
             </function>
             <function name="QDOCTEST_SHARED_MACRO_A" href="testqdoc.html#QDOCTEST_SHARED_MACRO_A" status="active" access="public" documented="true" related="2" since="Test 1.4" meta="macrowithparams" signature="QDOCTEST_SHARED_MACRO_A(x)">
                 <parameter type="" name="x" default=""/>
-                <description/>
+                <description>
+                    <para>These macros perform simple arithmetic operations on <argument>x</argument>. QDOCTEST_SHARED_MACRO_A increments the value by 1. <link raw="QDOCTEST_SHARED_MACRO_B" href="testqdoc.html#QDOCTEST_SHARED_MACRO_B" type="function">QDOCTEST_SHARED_MACRO_B</link> decrements the value by 1.</para>
+                    <para>These macros share documentation to test plural form in <teletype type="highlighted">\since</teletype> text.</para>
+                </description>
             </function>
             <function name="QDOCTEST_SHARED_MACRO_B" href="testqdoc.html#QDOCTEST_SHARED_MACRO_B" status="active" access="public" documented="true" related="3" since="Test 1.4" meta="macrowithparams" signature="QDOCTEST_SHARED_MACRO_B(x)">
                 <parameter type="" name="x" default=""/>
-                <description/>
+                <description>
+                    <para>These macros perform simple arithmetic operations on <argument>x</argument>. <link raw="QDOCTEST_SHARED_MACRO_A" href="testqdoc.html#QDOCTEST_SHARED_MACRO_A" type="function">QDOCTEST_SHARED_MACRO_A</link> increments the value by 1. QDOCTEST_SHARED_MACRO_B decrements the value by 1.</para>
+                    <para>These macros share documentation to test plural form in <teletype type="highlighted">\since</teletype> text.</para>
+                </description>
             </function>
             <class threadsafety="reentrant" name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="1.1" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
                 <description>
@@ -123,11 +129,15 @@
                     </description>
                 </function>
                 <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload" status="active" access="protected" location="testcpp.h" documented="true" meta="plain" type="void" signature="void overload()">
-                    <description/>
+                    <description>
+                        <para>Overloads that share a documentation comment, optionally taking a parameter <argument>b</argument>.</para>
+                    </description>
                 </function>
                 <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload-1" status="active" access="protected" location="testcpp.h" documented="true" since="Test 1.2" meta="plain" overload="true" overload-number="1" type="void" signature="void overload(bool b)">
                     <parameter type="bool" name="b" default=""/>
-                    <description/>
+                    <description>
+                        <para>Overloads that share a documentation comment, optionally taking a parameter <argument>b</argument>.</para>
+                    </description>
                 </function>
                 <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" since="Test 1.0" meta="plain" type="int" signature="int someFunction(int, int v)">
                     <parameter type="int" name="" default=""/>
