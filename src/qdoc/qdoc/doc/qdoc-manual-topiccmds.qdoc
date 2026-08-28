@@ -698,6 +698,38 @@
     \1/
     \endcode
 
+    \target qmlattachedmethod-command
+    \section1 \\qmlattachedmethod
+
+    The \\qmlattachedmethod command is for documenting a method that is attached
+    to some QML type (\l{Attached Properties and Attached Signal Handlers}
+    {Attached Properties}). The \\qmlattachedmethod command is used just like
+    the \l{qmlmethod-command} {\\qmlmethod} command.
+
+    The argument is the rest of the line, and must be the complete method
+    signature, starting with the return type, followed by the QML type
+    name where the method is declared, the \c{::} qualifier, and finally
+    the method name with its parameter types and names enclosed in
+    parentheses. If a method takes no arguments, use \c{()}.
+
+    For example, to document an attached method named \c show() for the
+    \c ToolTip type:
+
+    \code [text] *
+    /\1!
+        \qmlattachedmethod void QtQuick.Controls::ToolTip::show(string text, int timeout = -1)
+
+        This attached method shows the shared tool tip with \a text for
+        \a timeout milliseconds. You can attach the method to any item.
+    \1/
+    \endcode
+
+    QDoc includes this documentation on the QML reference page for the
+    \l [QML] {ToolTip} type.
+
+    \note Like \l{qmlproperty-command}{\\qmlproperty}, \\qmlattachedmethod
+          accepts a QML module identifier as part of its argument.
+
     \target qmlattachedproperty-command
     \section1 \\qmlattachedproperty
 
