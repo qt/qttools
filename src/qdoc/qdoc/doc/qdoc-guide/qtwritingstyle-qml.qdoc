@@ -13,6 +13,7 @@ file. The C++ classes must also be documented
 documented with the QML \l{topic-commands}{topic commands}:
 
 \list
+\li \l{qmlattachedmethod-command}{\\qmlattachedmethod}
 \li \l{qmlattachedproperty-command}{\\qmlattachedproperty}
 \li \l{qmlattachedsignal-command}{\\qmlattachedsignal}
 \li \l{qmlvaluetype-command}{\\qmlvaluetype}

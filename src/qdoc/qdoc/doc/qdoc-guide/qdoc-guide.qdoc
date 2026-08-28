@@ -452,6 +452,7 @@
 
     A list of QML related QDoc commands:
     \list
+    \li \l{qmlattachedmethod-command}{\\qmlattachedmethod}
     \li \l{qmlattachedproperty-command}{\\qmlattachedproperty}
     \li \l{qmlattachedsignal-command}{\\qmlattachedsignal}
     \li \l{qmlvaluetype-command}{\\qmlvaluetype}
