@@ -48,6 +48,7 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Inja
     REQUIRED_VARS Inja_INCLUDE_DIR
     FAIL_MESSAGE "Inja template engine not found. Install via:
+    APT:      apt install inja-dev
     Homebrew: brew install inja
     Conan:    conan install inja/3.5.0
     vcpkg:    vcpkg install inja"
