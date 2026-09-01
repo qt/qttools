@@ -83,6 +83,7 @@ public:
     static const QString &imagesOutputDir() { return s_imagesOutDir; }
     static void terminate();
     static const QStringList &outputFileNames() { return s_outFileNames; }
+    static const QStringList &exampleImageFileNames() { return s_exampleImageFileNames; }
     static bool noLinkErrors() { return s_noLinkErrors; }
     static bool autolinkErrors() { return s_autolinkErrors; }
     static QString defaultModuleName() { return s_project; }
@@ -206,6 +207,7 @@ private:
     static QString s_imagesOutDir;
     static QString s_outSubdir;
     static QStringList s_outFileNames;
+    static QStringList s_exampleImageFileNames;
     static QSet<QString> s_outputFormats;
     static QSet<QString> s_trademarks;
     static QHash<QString, QString> s_outputPrefixes;

@@ -59,6 +59,7 @@ QString Generator::s_outDir;
 QString Generator::s_imagesOutDir;
 QString Generator::s_outSubdir;
 QStringList Generator::s_outFileNames;
+QStringList Generator::s_exampleImageFileNames;
 QSet<QString> Generator::s_trademarks;
 QSet<QString> Generator::s_outputFormats;
 QHash<QString, QString> Generator::s_outputPrefixes;
@@ -961,7 +962,7 @@ void Generator::addImageToCopy(const ExampleNode *en, const ResolvedFile& resolv
     // Understand if we really need this information and where it should
     // belong, considering that it should be part of whichever system
     // would actually store the file itself.
-    s_outFileNames << prefix.mid(1) + "/" + resolved_file.get_query();
+    s_exampleImageFileNames << prefix.mid(1) + "/" + resolved_file.get_query();
 
     const OutputDirectory outDir =
             OutputDirectory::ensure(s_outDir, en->location());
@@ -2041,6 +2042,7 @@ void Generator::initializeFormat()
 {
     Config &config = Config::instance();
     s_outFileNames.clear();
+    s_exampleImageFileNames.clear();
     s_useOutputSubdirs = true;
     if (config.get(format() + Config::dot + "nosubdirs").asBool())
         resetUseOutputSubdirs();

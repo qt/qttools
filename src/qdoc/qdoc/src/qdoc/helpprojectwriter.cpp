@@ -795,6 +795,8 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     // other files (images and extras) included in the project
     QSet<QString> files =
             QSet<QString>(m_gen->outputFileNames().cbegin(), m_gen->outputFileNames().cend());
+    files.unite(QSet<QString>(m_gen->exampleImageFileNames().cbegin(),
+                              m_gen->exampleImageFileNames().cend()));
     files.unite(project.m_files);
     files.unite(project.m_extraFiles);
     QStringList sortedFiles = files.values();
