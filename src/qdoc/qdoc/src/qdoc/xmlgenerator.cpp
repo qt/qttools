@@ -390,11 +390,7 @@ QString XmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const 
     // search for nodes with the common genus first. This helps to find more relevant
     // targets in situations where identically-titled nodes are available.
     if (genus != Genus::DontCare && relative && relative->genus() != Genus::DontCare) {
-        using GenusValue = std::underlying_type_t<Genus>;
-        const Genus common = static_cast<Genus>(
-            static_cast<GenusValue>(genus) &
-            static_cast<GenusValue>(relative->genus())
-        );
+        const Genus common = commonGenusType(genus, relative->genus());
         if (common != Genus::DontCare)
             *node = m_qdb->findNodeForAtom(atom, relative, ref, common);
     }

@@ -59,6 +59,17 @@ enum class Genus : unsigned char {
 };
 
 /*!
+    \brief Returns a genus type with any common bits between two compared genus types.
+    \relates genustypes.h
+*/
+inline constexpr Genus commonGenusType(Genus searchMask, Genus candidate)
+{
+    using Underlying = std::underlying_type_t<Genus>;
+    return static_cast<Genus>(static_cast<Underlying>(searchMask) & static_cast<Underlying>(candidate));
+}
+
+
+/*!
     \brief Determines if two genuses share any common bits.
     \relates genustypes.h
 
