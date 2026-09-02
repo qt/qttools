@@ -557,7 +557,7 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
 
     const TargetRec *result = nullptr;
     if (!prioritizeHierarchy) {
-        result = findUnambiguousTarget(path.join(QLatin1String("::")), genus);
+        result = findUnambiguousTarget(path.join(QLatin1String("::")), genus, start);
         if (result) {
             ref = result->m_ref;
             if (node = set_ref_from_target(result->m_node); node) {
@@ -605,7 +605,7 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
 
     // If we prioritized hierarchy but found nothing, try global targets as fallback
     if (prioritizeHierarchy) {
-        result = findUnambiguousTarget(path.join(QLatin1String("::")), genus);
+        result = findUnambiguousTarget(path.join(QLatin1String("::")), genus, start);
         if (result) {
             ref = result->m_ref;
             if (node = set_ref_from_target(result->m_node); node) {
@@ -1029,17 +1029,29 @@ void Tree::addToPageNodeByTitleMap(Node *node) {
 
 /*!
   Searches for a \a target anchor, matching the given \a genus, and returns
-  the associated TargetRec instance.
+  the associated TargetRec instance. Finds the best target based on its priority
+  unless a closely related target is found instead. Keyword targets are preferred
+  over closely related targets.
  */
-const TargetRec *Tree::findUnambiguousTarget(const QString &target, Genus genus) const
+const TargetRec *Tree::findUnambiguousTarget(const QString &target, Genus genus, const Node *start) const
 {
-    auto findBestCandidate = [&](const TargetMap &tgtMap, const QString &key) {
+    // Nodes that are the same, children or parents are closely related.
+    auto closelyRelated = [&](const Node *n1, const Node *n2) {
+        if (!n1 || !n2)
+            return false;
+        return (n1 == n2) || (n1->parent() == n2) || (n1 == n2->parent());
+    };
+
+    auto findBestCandidate = [&](const TargetMap &tgtMap, const QString &key, const Node *start) {
         TargetRec *best = nullptr;
         auto [it, end] = tgtMap.equal_range(key);
         while (it != end) {
             TargetRec *candidate = it.value();
             if ((genus == Genus::DontCare) || (hasCommonGenusType(genus, candidate->genus()))) {
-                if (!best || (candidate->m_priority < best->m_priority))
+                // Record the first candidate or one based on its priority, or a closely related
+                // target if the best match is not a keyword.
+                if (!best || (candidate->m_priority < best->m_priority) ||
+                    (best->m_type != TargetRec::Keyword && closelyRelated(candidate->m_node, start)))
                     best = candidate;
             }
             ++it;
@@ -1047,9 +1059,9 @@ const TargetRec *Tree::findUnambiguousTarget(const QString &target, Genus genus)
         return best;
     };
 
-    TargetRec *bestTarget = findBestCandidate(m_nodesByTargetTitle, target);
+    TargetRec *bestTarget = findBestCandidate(m_nodesByTargetTitle, target, start);
     if (!bestTarget)
-        bestTarget = findBestCandidate(m_nodesByTargetRef, TextUtils::asAsciiPrintable(target));
+        bestTarget = findBestCandidate(m_nodesByTargetRef, TextUtils::asAsciiPrintable(target), start);
 
     return bestTarget;
 }

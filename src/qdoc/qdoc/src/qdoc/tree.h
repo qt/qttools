@@ -115,7 +115,7 @@ private: // The rest of the class is private.
     void addKeywordsToTargetMaps(Node *node);
     void addTargetsToTargetMap(Node *node);
 
-    const TargetRec *findUnambiguousTarget(const QString &target, Genus genus) const;
+    const TargetRec *findUnambiguousTarget(const QString &target, Genus genus, const Node *start) const;
     [[nodiscard]] const PageNode *findPageNodeByTitle(const QString &title) const;
 
     void resolveBaseClasses(Aggregate *n);
