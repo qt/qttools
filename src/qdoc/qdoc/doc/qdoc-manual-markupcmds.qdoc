@@ -3497,7 +3497,7 @@
     The command must stand on its own line. See \l {Qt Quick Controls QML Types}
     for an example. The page is generated from \c {qtquickcontrols2-qmlmodule.qdoc}.
     There you will find a QDoc comment containing the \c{\qmlmodule} command for
-    the QtQuick.Controls module. The same comment contains a \c {\noautolist}
+    the \l QtQuick.Controls module. The same comment contains a \c {\noautolist}
     command to disable automatic list generation, and a \l {generatelist-command}
     {\\generatelist} to list the QML types in a specific section of the document.
 
