@@ -223,7 +223,7 @@ Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *n
     // the topic nodes - which need to be written to index before the related
     // SCN.
     if (isPropertyGroup) {
-        // The first node in `nodes` is the group property;
+        // The first node in `nodes` is the grouped property;
         // create SCN with the same name
         QString group{nodes.takeFirst()->name()};
         auto *scn = new SharedCommentNode(static_cast<QmlTypeNode*>(parent),
