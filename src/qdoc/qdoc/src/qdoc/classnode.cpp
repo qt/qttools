@@ -341,9 +341,8 @@ void ClassNode::removePrivateAndInternalBases()
         ClassNode *bc = m_bases.at(i).m_node;
         if (bc == nullptr)
             bc = QDocDatabase::qdocDB()->findClassNode(m_bases.at(i).m_path);
-        if (bc != nullptr
-            && (bc->isPrivate() || bc->isInternal() || bc->isDontDocument()
-                || found.contains(bc))) {
+        if (bc != nullptr && !found.contains(bc)
+            && (bc->isPrivate() || bc->isInternal() || bc->isDontDocument())) {
             RelatedClass rc = m_bases.at(i);
             m_bases.removeAt(i);
             m_ignoredBases.append(rc);
