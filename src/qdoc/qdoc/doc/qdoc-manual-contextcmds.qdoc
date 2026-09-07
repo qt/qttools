@@ -44,7 +44,7 @@
       \li \l {previouspage-command}{\\previouspage}
       \li \l {qmlabstract-command} {\\qmlabstract}
       \li \l {qmldefault-command} {\\qmldefault}
-      \li \qdoccmd qmlenumeratorsfrom (Since QDoc 6.8)
+      \li \l {qmlenumeratorsfrom-command} {\\qmlenumeratorsfrom} (Since QDoc 6.8)
       \li \l {qtcmakepackage-command} {\\qtcmakepackage}
       \li \l {qtcmaketargetitem-command} {\\qtcmaketargetitem}
       \li \l {readonly-command} {\\readonly}
