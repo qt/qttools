@@ -45,6 +45,8 @@ private slots:
     void parseExistingForms();
     void aggregateAliasKeepsItsName_data();
     void aggregateAliasKeepsItsName();
+    void rejectEmbeddedWhitespace_data();
+    void rejectEmbeddedWhitespace();
 };
 
 void tst_QDesignerMetaFlags::toString_data()
@@ -139,6 +141,19 @@ void tst_QDesignerMetaFlags::parseExistingForms_data()
     QTest::newRow("no alias involved")
         << u"Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop"_s
         << int(Qt::AlignHCenter | Qt::AlignTop);
+
+    QTest::newRow("wrapped, QTBUG-149632")
+        << u"\n      Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignVCenter\n     "_s
+        << rightVCenter;
+    QTest::newRow("wrapped with CRLF")
+        << u"\r\n      Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop\r\n     "_s
+        << leftTop;
+    QTest::newRow("tab padded")
+        << u"\tQt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop\t"_s << leftTop;
+    QTest::newRow("spaces around separator")
+        << u"Qt::AlignmentFlag::AlignLeft | Qt::AlignmentFlag::AlignTop"_s << leftTop;
+    QTest::newRow("wrapped, unqualified")
+        << u"\n   Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop\n  "_s << leftTop;
 }
 
 void tst_QDesignerMetaFlags::parseExistingForms()
@@ -186,6 +201,37 @@ void tst_QDesignerMetaFlags::aggregateAliasKeepsItsName()
     bool ok = false;
     QCOMPARE(int(flags.parseFlags(expected, &ok)), value);
     QVERIFY(ok);
+}
+
+// uic accepts plain spaces within a value, but no other whitespace, since it
+// would end up verbatim in the generated C++ or Python code. Reject the same
+// values here so that Qt Widgets Designer does not load a form that uic
+// refuses to compile.
+void tst_QDesignerMetaFlags::rejectEmbeddedWhitespace_data()
+{
+    QTest::addColumn<QString>("serialized");
+
+    QTest::newRow("newline after separator")
+        << u"Qt::AlignmentFlag::AlignLeft |\n      Qt::AlignmentFlag::AlignTop"_s;
+    QTest::newRow("newline before separator")
+        << u"Qt::AlignmentFlag::AlignLeft\n      | Qt::AlignmentFlag::AlignTop"_s;
+    QTest::newRow("CRLF around separator")
+        << u"Qt::AlignmentFlag::AlignLeft\r\n|\r\nQt::AlignmentFlag::AlignTop"_s;
+    QTest::newRow("tab around separator")
+        << u"Qt::AlignmentFlag::AlignLeft\t|\tQt::AlignmentFlag::AlignTop"_s;
+    QTest::newRow("newline within a flag")
+        << u"Qt::AlignmentFlag::\nAlignLeft|Qt::AlignmentFlag::AlignTop"_s;
+}
+
+void tst_QDesignerMetaFlags::rejectEmbeddedWhitespace()
+{
+    QFETCH(QString, serialized);
+
+    const DesignerMetaFlags flags = alignmentFlags();
+
+    bool ok = true;
+    QCOMPARE(int(flags.parseFlags(serialized, &ok)), 0);
+    QVERIFY(!ok);
 }
 
 QTEST_APPLESS_MAIN(tst_QDesignerMetaFlags)
