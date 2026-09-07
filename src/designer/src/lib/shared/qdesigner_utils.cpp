@@ -179,7 +179,8 @@ namespace qdesigner_internal
     {
         QStringList rc;
         const uint v = static_cast<uint>(ivalue);
-        for (auto it = keyToValueMap().begin(), end = keyToValueMap().end(); it != end; ++it)  {
+        const auto &map = canonicalKeyToValueMap();
+        for (auto it = map.begin(), end = map.end(); it != end; ++it)  {
             const uint itemValue = it->second;
             // Check for equality first as flag values can be 0 or -1, too. Takes preference over a bitwise flag
             if (v == itemValue) {

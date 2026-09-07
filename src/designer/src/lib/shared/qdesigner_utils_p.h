@@ -88,11 +88,14 @@ public:
 protected:
     void appendQualifiedName(const QString &key, SerializationMode sm, QString &target) const;
 
+    const KeyToValueMap &canonicalKeyToValueMap() const { return m_canonicalKeyToValueMap; }
+
 private:
     QString m_enumName;
     QString m_scope;
     QString m_separator;
     KeyToValueMap m_keyToValueMap;
+    KeyToValueMap m_canonicalKeyToValueMap;
     QStringList m_keys;
 };
 
@@ -108,6 +111,13 @@ template <class IntType>
 void MetaEnum<IntType>::addKey(IntType value, const QString &name)
 {
     m_keyToValueMap.insert({name, value});
+    const bool singleBit = value != 0 && (value & (value - IntType(1))) == 0;
+    const auto &m = m_canonicalKeyToValueMap;
+    if (!singleBit
+        || std::none_of(m.cbegin(), m.cend(),
+                        [value](const auto &e) { return e.second == value; })) {
+        m_canonicalKeyToValueMap.insert({name, value});
+    }
     m_keys.append(name);
 }
 
