@@ -29,6 +29,7 @@
 #include <QtGui/qicon.h>
 #include <QtGui/qpixmap.h>
 
+#include <algorithm>
 #include <map>
 
 QT_BEGIN_NAMESPACE
@@ -90,6 +91,12 @@ protected:
 
     const KeyToValueMap &canonicalKeyToValueMap() const { return m_canonicalKeyToValueMap; }
 
+    // Trim the value as a whole and tell whether what remains is free of
+    // whitespace other than plain spaces. uic rejects newlines and tabs within
+    // a value since they would end up verbatim in the generated code, so
+    // accepting them here would load forms that fail to build.
+    static bool trimValue(QStringView *value);
+
 private:
     QString m_enumName;
     QString m_scope;
@@ -139,6 +146,7 @@ QString MetaEnum<IntType>::valueToKey(IntType value, bool *ok) const
 template <class IntType>
 IntType MetaEnum<IntType>::keyToValue(QStringView key, bool *ok) const
 {
+    key = key.trimmed(); // Spaces around the flag separator
     const auto lastSep = key.lastIndexOf(m_separator);
     if (lastSep != -1)
         key = key.sliced(lastSep + m_separator.size());
@@ -147,6 +155,14 @@ IntType MetaEnum<IntType>::keyToValue(QStringView key, bool *ok) const
     if (ok)
         *ok = found;
     return found ? it->second : IntType(0);
+}
+
+template <class IntType>
+bool MetaEnum<IntType>::trimValue(QStringView *value)
+{
+    *value = value->trimmed();
+    return std::none_of(value->cbegin(), value->cend(),
+                        [](QChar c) { return c.isSpace() && c != u' '; });
 }
 
 template <class IntType>
@@ -176,7 +192,7 @@ public:
     QString messageParseFailed(const QString &s) const;
 
     // parse a string (ignorant of scopes)
-    int parseEnum(const QString &s, bool *ok = nullptr) const { return keyToValue(s, ok); }
+    int parseEnum(const QString &s, bool *ok = nullptr) const;
 };
 
 // -------------- DesignerMetaFlags: Meta type for flags.

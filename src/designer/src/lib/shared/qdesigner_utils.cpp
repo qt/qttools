@@ -168,6 +168,17 @@ namespace qdesigner_internal
                                            "'%1' could not be converted to an enumeration value of type '%2'.")
                                            .arg(s, enumName());
     }
+
+    int DesignerMetaEnum::parseEnum(const QString &s, bool *ok) const
+    {
+        QStringView value{s};
+        if (!trimValue(&value)) {
+            if (ok)
+                *ok = false;
+            return 0;
+        }
+        return keyToValue(value, ok);
+    }
     // -------------- DesignerMetaFlags
     DesignerMetaFlags::DesignerMetaFlags(const QString &enumName, const QString &scope,
                                          const QString &separator) :
@@ -215,14 +226,20 @@ namespace qdesigner_internal
 
     int DesignerMetaFlags::parseFlags(const QString &s, bool *ok) const
     {
-        if (s.isEmpty()) {
+        QStringView value{s};
+        if (!trimValue(&value)) {
+            if (ok)
+                *ok = false;
+            return 0;
+        }
+        if (value.isEmpty()) {
             if (ok)
                 *ok = true;
             return 0;
         }
         uint flags = 0;
         bool valueOk = true;
-        const auto keys = QStringView{s}.split(u'|');
+        const auto keys = value.split(u'|');
         for (const auto &key : keys) {
             const uint flagValue = keyToValue(key, &valueOk);
             if (!valueOk) {
