@@ -65,7 +65,7 @@ Text &Text::operator<<(const Atom &atom)
 
 /*!
   Special output operator for LinkAtom. It makes a copy of
-  the LinkAtom \a atom and connects the cop;y to the list
+  the LinkAtom \a atom and connects the copy to the list
   in this Text.
  */
 Text &Text::operator<<(const LinkAtom &atom)
@@ -82,7 +82,10 @@ Text &Text::operator<<(const Text &text)
 {
     const Atom *atom = text.firstAtom();
     while (atom != nullptr) {
-        operator<<(*atom);
+        if (atom->isLinkAtom())
+            operator<<(*static_cast<const LinkAtom *>(atom));
+        else
+            operator<<(*atom);
         atom = atom->next();
     }
     return *this;
