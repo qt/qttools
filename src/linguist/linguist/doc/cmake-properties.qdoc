@@ -55,6 +55,7 @@ set_directory_properties(PROPERTIES QT_EXCLUDE_FROM_TRANSLATION ON)
 \endcode
 
 \sa QT_EXCLUDE_SOURCES_FROM_TRANSLATION
+\sa {Setting CMake variables and properties}
 */
 
 
@@ -101,6 +102,7 @@ qt_add_translations(myapp)
 \endcode
 
 \sa QT_EXCLUDE_SOURCES_FROM_TRANSLATION
+\sa {Setting CMake variables and properties}
 */
 
 
@@ -133,4 +135,5 @@ directory.
 \sa qt_add_lupdate()
 \sa {target property QT_EXCLUDE_FROM_TRANSLATION}
 \sa {directory property QT_EXCLUDE_FROM_TRANSLATION}
+\sa {Setting CMake variables and properties}
 */
