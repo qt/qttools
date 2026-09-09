@@ -318,12 +318,17 @@ void HtmlGenerator::initializeGenerator()
 
     /*
       The help file write should be allocated once and only once
-      per qdoc execution.
+      per QDoc execution, and only for output formats that write
+      a help project file.
      */
-    if (m_helpProjectWriter)
+    if (!generatesHelpProject()) {
+        delete m_helpProjectWriter;
+        m_helpProjectWriter = nullptr;
+    } else if (m_helpProjectWriter) {
         m_helpProjectWriter->reset(m_project.toLower() + ".qhp", this);
-    else
+    } else {
         m_helpProjectWriter = new HelpProjectWriter(m_project.toLower() + ".qhp", this);
+    }
 
     if (!m_manifestWriter)
         m_manifestWriter = new ManifestWriter();
@@ -405,7 +410,8 @@ void HtmlGenerator::generateDocs()
         );
 
     if (!config->preparing()) {
-        m_helpProjectWriter->generate();
+        if (m_helpProjectWriter)
+            m_helpProjectWriter->generate();
         m_manifestWriter->generateManifestFiles();
         TOCWriter tocWriter(this, m_project);
         const QString &rootTitle = m_landingpage.isEmpty() ? m_homepage : m_landingpage;
@@ -834,7 +840,8 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
             out() << "\" />";
 
             // TODO: [uncentralized-output-directory-structure]
-            m_helpProjectWriter->addExtraFile(imgPath);
+            if (m_helpProjectWriter)
+                m_helpProjectWriter->addExtraFile(imgPath);
             setImageFileName(relative, imgPath);
         }
 

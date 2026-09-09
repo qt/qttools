@@ -45,6 +45,9 @@ protected:
     void generateGenericCollectionPage(CollectionNode *cn, CodeMarker *marker) override;
     [[nodiscard]] QString fileExtension() const override;
 
+    //! Returns \c true if this generator writes a Qt help project (.qhp) file.
+    [[nodiscard]] virtual bool generatesHelpProject() const { return true; }
+
 private:
     enum SubTitleSize { SmallSubTitle, LargeSubTitle };
     enum ExtractionMarkType { BriefMark, DetailedDescriptionMark, MemberMark, EndMark };
