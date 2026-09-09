@@ -179,8 +179,8 @@ static const clang::Decl* get_cursor_declaration(CXCursor cursor) {
  */
 /*
  * Ensures that bare "(unnamed)" or "(anonymous)" markers in \a typeName
- * include the record keyword (struct, union, class). With
- * AnonymousTagLocations disabled, some LLVM versions omit the keyword
+ * include the record keyword (struct, union, class). Without
+ * anonymous tag locations, some LLVM versions omit the keyword
  * for some or all anonymous scopes. This function recovers the correct
  * keyword for each scope from the RecordDecl hierarchy.
  *
@@ -254,7 +254,11 @@ static std::string ensureAnonymousTagKeyword(std::string typeName, clang::QualTy
 
 static std::string get_fully_qualified_type_name(clang::QualType type, const clang::ASTContext& declaration_context) {
     auto policy = declaration_context.getPrintingPolicy();
+#if LIBCLANG_VERSION_MAJOR >= 23
+    policy.AnonymousTagNameStyle = llvm::to_underlying(clang::PrintingPolicy::AnonymousTagMode::Plain);
+#else
     policy.AnonymousTagLocations = false;
+#endif
     std::string result = clang::TypeName::getFullyQualifiedName(type, declaration_context, policy);
     return ensureAnonymousTagKeyword(std::move(result), type);
 }
