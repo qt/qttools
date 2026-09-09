@@ -6,7 +6,6 @@
 #include "aggregate.h"
 #include "collectionnode.h"
 #include "config.h"
-#include "helpprojectwriter.h"
 #include "inclusionfilter.h"
 #include "indexserializationcontext.h"
 #include "node.h"

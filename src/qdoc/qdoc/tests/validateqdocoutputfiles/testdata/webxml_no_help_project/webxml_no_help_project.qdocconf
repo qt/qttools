@@ -1,0 +1,16 @@
+project = WebXmlOnly
+locationinfo = false
+headers.fileextensions = "*.h"
+sources.fileextensions = "*.qdoc"
+headerdirs = ./src
+sourcedirs = ./src
+outputformats = WebXML
+HTML.outputsubdir = html
+WebXML.outputsubdir = webxml
+qhp.projects = WebXmlOnly
+qhp.WebXmlOnly.file = webxmlonly.qhp
+qhp.WebXmlOnly.namespace = org.qt-project.webxmlonly
+qhp.WebXmlOnly.virtualFolder = webxmlonly
+qhp.WebXmlOnly.indexTitle = WebXML Only
+warninglimit = 0
+warninglimit.enabled = true

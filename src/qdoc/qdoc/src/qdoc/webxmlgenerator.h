@@ -34,6 +34,8 @@ protected:
     void generateDocumentation(Node *node) override;
     void generateExampleFilePage(const PageNode *en, ResolvedFile file, CodeMarker *marker = nullptr) override;
     [[nodiscard]] QString fileExtension() const override;
+    //! WebXML is an intermediate format; no help project file is written.
+    [[nodiscard]] bool generatesHelpProject() const override { return false; }
 
     virtual const Atom *addAtomElements(QXmlStreamWriter &writer, const Atom *atom,
                                         const Node *relative, CodeMarker *marker);

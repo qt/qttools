@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="webxml-only.html" href="webxml-only.html" status="active" location="page.qdoc" documented="true" subtype="page" title="WebXML Only" fulltitle="WebXML Only" brief="An intermediate document without a help project">
+            <description>
+                <brief>An intermediate document without a help project.</brief>
+                <para>WebXML output must not create an HTML help project.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>
