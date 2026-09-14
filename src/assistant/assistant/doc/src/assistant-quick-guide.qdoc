@@ -229,8 +229,41 @@
     To delete a help file, select a documentation set in the list and click
     \gui{Remove}.
 
-    \note The Qt compressed help files (.qch) should only be loaded
-    from trusted sources.
+    \section1 Security Considerations
+
+    A compressed help file is a database that can hold documents of any type,
+    and \QA processes those documents on your behalf. \QA is not designed or
+    hardened to handle malicious content. Therefore, only install
+    help files that come from a source that you trust, such as your Qt
+    installation or the vendor of an application that you installed. Treat a
+    .qch file that you download from the web, receive by email, or find in a
+    shared folder with the same caution as an executable from the same
+    source.
+
+    In particular, be aware of the following:
+
+    \list
+        \li \QA opens a help file as an SQLite database and indexes the
+            documents in it for full text search as soon as you install it,
+            which is before you view any page from the file.
+        \li \QA renders the HTML, style sheets, and images in the file with
+            its built-in renderer. This renderer is not hardened,
+            and misses many of the security features of a modern HTML5 renderer.
+            It might therefore crash or misbehave for some documents.
+        \li If you activate a link that points outside the help file, such as
+            an \c http or \c mailto link, \QA passes the address to the
+            operating system, which opens it in your web browser or mail
+            client. Documentation that appears to be local can therefore
+            direct you to any address on the internet.
+        \li If you activate a link to a document that \QA cannot display
+            itself, such as a PDF file, \QA writes the document to a
+            temporary file and asks the operating system to open it with the
+            application that is registered for that file type.
+    \endlist
+
+    The same considerations apply to the help collection file (.qhc) that you
+    pass to \QA on the command line, because the collection file determines
+    which help files \QA loads.
 
     \section1 Specifying Home Page
 
