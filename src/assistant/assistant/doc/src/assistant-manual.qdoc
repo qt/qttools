@@ -20,6 +20,10 @@
     documentation to the set of documents displayed in the \QA main view. For
     detailed information about all \QA functions, see \l{Using Qt Assistant}.
 
+    \warning Only load and view help files that come from a source
+    that you trust. Viewing a help file from an untrusted source is a security
+    risk. For more information, see \l{Security Considerations}.
+
     You can use \QA as the help viewer in your applications. You can display
     your own documentation and customize \QA to look and feel like part of your
     application. You can change the window title or icon, as well as menu texts
@@ -143,8 +147,10 @@
     exit right away displaying a message if the registration was successful
     or not.
 
-    \note The Qt compressed help files (.qch) should only be loaded
-    from trusted sources.
+    \warning Only register compressed help files (.qch) that come from a
+    source that you trust. Registering and viewing a help file from an
+    untrusted source is a security risk. For more information, see
+    \l{Security Considerations}.
 
     The search indexing will only index your custom *.html, *.htm,
     and *.txt files.
