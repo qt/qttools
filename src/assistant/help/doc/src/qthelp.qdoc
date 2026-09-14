@@ -67,8 +67,10 @@
     optional since any existing collection file, for example from an older
     release, could be used.
 
-    \note The Qt compressed help files (.qch) should only be loaded
-    from trusted sources.
+    \warning Only register compressed help files (.qch) that come from a
+    source that you trust. Registering and viewing a help file from an
+    untrusted source is a security risk. For more information, see
+    \l{qthelp-security-considerations}{Security Considerations}.
 
     So, in general, there are four files interacting with the help
     system, two used for generating Qt help and two meant for
@@ -176,6 +178,44 @@
 
    For further information on how to use the API, have a look at
     the QHelpEngine class reference.
+
+    \target qthelp-security-considerations
+    \section1 Security Considerations
+
+    A compressed help file is a database that can hold documents of any type,
+    and the help system processes those documents on behalf of the user. The
+    Qt Help module is not designed or hardened to handle malicious
+    content. Therefore, only register help files that come from a source that
+    you trust, such as your Qt installation or the vendor of an application
+    that you installed. Treat a .qch file that you download from the web,
+    receive by email, or find in a shared folder with the same caution as an
+    executable from the same source.
+
+    In particular, be aware of the following:
+
+    \list
+        \li A help file is opened as an SQLite database, and QHelpSearchEngine
+            indexes the documents in it for full text search as soon as the
+            file is registered, which is before any page from it is displayed.
+        \li The documents are rendered by whichever class your application
+            uses for that purpose, such as QTextBrowser. Such a renderer is
+            not hardened, and misses many of the security features of a modern
+            HTML5 renderer. It might therefore crash or misbehave for some
+            documents.
+        \li A help file can contain links that point outside the file, such as
+            \c http or \c mailto links. If your application passes such an
+            address to QDesktopServices::openUrl(), the operating system opens
+            it in the web browser or mail client of the user. Documentation
+            that appears to be local can therefore direct the user to any
+            address on the internet.
+        \li A help file can contain documents of a type that your application
+            cannot display itself. If your application writes such a document
+            to a temporary file and lets the operating system open it, the
+            help file determines which application is launched.
+    \endlist
+
+    The same considerations apply to the help collection file (.qhc), because
+    the collection file determines which help files are loaded.
 */
 
 /*!
