@@ -139,19 +139,15 @@ namespace qdesigner_internal
     }
 
 
-    QString DesignerMetaEnum::toString(int value, SerializationMode sm, bool *ok) const
+    std::optional<QString> DesignerMetaEnum::toString(int value, SerializationMode sm) const
     {
         // find value
-        bool valueOk;
-        const QString item = valueToKey(value, &valueOk);
-        if (ok)
-            *ok = valueOk;
-
-        if (!valueOk)
-            return item;
+        const auto item = valueToKey(value);
+        if (!item)
+            return std::nullopt;
 
         QString qualifiedItem;
-        appendQualifiedName(item, sm, qualifiedItem);
+        appendQualifiedName(*item, sm, qualifiedItem);
         return qualifiedItem;
     }
 
@@ -169,15 +165,12 @@ namespace qdesigner_internal
                                            .arg(s, enumName());
     }
 
-    int DesignerMetaEnum::parseEnum(const QString &s, bool *ok) const
+    std::optional<int> DesignerMetaEnum::parseEnum(const QString &s) const
     {
         QStringView value{s};
-        if (!trimValue(&value)) {
-            if (ok)
-                *ok = false;
-            return 0;
-        }
-        return keyToValue(value, ok);
+        if (!trimValue(&value))
+            return std::nullopt;
+        return keyToValue(value);
     }
     // -------------- DesignerMetaFlags
     DesignerMetaFlags::DesignerMetaFlags(const QString &enumName, const QString &scope,
@@ -224,32 +217,21 @@ namespace qdesigner_internal
     }
 
 
-    int DesignerMetaFlags::parseFlags(const QString &s, bool *ok) const
+    std::optional<int> DesignerMetaFlags::parseFlags(const QString &s) const
     {
         QStringView value{s};
-        if (!trimValue(&value)) {
-            if (ok)
-                *ok = false;
+        if (!trimValue(&value))
+            return std::nullopt;
+        if (value.isEmpty())
             return 0;
-        }
-        if (value.isEmpty()) {
-            if (ok)
-                *ok = true;
-            return 0;
-        }
         uint flags = 0;
-        bool valueOk = true;
         const auto keys = value.split(u'|');
         for (const auto &key : keys) {
-            const uint flagValue = keyToValue(key, &valueOk);
-            if (!valueOk) {
-                flags = 0;
-                break;
-            }
-            flags |= flagValue;
+            const auto flagValue = keyToValue(key);
+            if (!flagValue)
+                return std::nullopt;
+            flags |= *flagValue;
         }
-        if (ok)
-            *ok = valueOk;
         return static_cast<int>(flags);
     }
 

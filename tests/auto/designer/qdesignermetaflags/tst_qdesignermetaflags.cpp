@@ -93,9 +93,9 @@ void tst_QDesignerMetaFlags::toString()
     const auto sm = static_cast<DesignerMetaFlags::SerializationMode>(mode);
     const QString actual = flags.toString(value, sm);
 
-    bool ok = false;
-    QCOMPARE(int(flags.parseFlags(actual, &ok)), value);
-    QVERIFY(ok);
+    const auto parsed = flags.parseFlags(actual);
+    QVERIFY(parsed);
+    QCOMPARE(*parsed, value);
 
     QCOMPARE(actual, expected);
 }
@@ -163,15 +163,15 @@ void tst_QDesignerMetaFlags::parseExistingForms()
 
     const DesignerMetaFlags flags = alignmentFlags();
 
-    bool ok = false;
-    QCOMPARE(int(flags.parseFlags(serialized, &ok)), expected);
-    QVERIFY(ok);
+    const auto parsed = flags.parseFlags(serialized);
+    QVERIFY(parsed);
+    QCOMPARE(*parsed, expected);
 
     for (auto sm : {DesignerMetaFlags::FullyQualified, DesignerMetaFlags::Qualified}) {
         const QString rewritten = flags.toString(expected, sm);
-        bool rewrittenOk = false;
-        QCOMPARE(int(flags.parseFlags(rewritten, &rewrittenOk)), expected);
-        QVERIFY(rewrittenOk);
+        const auto reparsed = flags.parseFlags(rewritten);
+        QVERIFY(reparsed);
+        QCOMPARE(*reparsed, expected);
     }
 }
 
@@ -198,9 +198,9 @@ void tst_QDesignerMetaFlags::aggregateAliasKeepsItsName()
     const DesignerMetaFlags flags = dockWidgetAreaFlags();
     QCOMPARE(flags.toString(value, DesignerMetaFlags::FullyQualified), expected);
 
-    bool ok = false;
-    QCOMPARE(int(flags.parseFlags(expected, &ok)), value);
-    QVERIFY(ok);
+    const auto parsed = flags.parseFlags(expected);
+    QVERIFY(parsed);
+    QCOMPARE(*parsed, value);
 }
 
 // uic accepts plain spaces within a value, but no other whitespace, since it
@@ -229,9 +229,7 @@ void tst_QDesignerMetaFlags::rejectEmbeddedWhitespace()
 
     const DesignerMetaFlags flags = alignmentFlags();
 
-    bool ok = true;
-    QCOMPARE(int(flags.parseFlags(serialized, &ok)), 0);
-    QVERIFY(!ok);
+    QVERIFY(!flags.parseFlags(serialized));
 }
 
 QTEST_APPLESS_MAIN(tst_QDesignerMetaFlags)

@@ -31,6 +31,7 @@
 
 #include <algorithm>
 #include <map>
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
@@ -75,9 +76,9 @@ public:
     MetaEnum() = default;
     void addKey(IntType value, const QString &name);
 
-    QString valueToKey(IntType value, bool *ok = nullptr) const;
+    std::optional<QString> valueToKey(IntType value) const;
     // Ignorant of scopes.
-    IntType keyToValue(QStringView key, bool *ok = nullptr) const;
+    std::optional<IntType> keyToValue(QStringView key) const;
 
     const QString &enumName() const  { return m_enumName; }
     const QString &scope() const     { return m_scope; }
@@ -129,32 +130,26 @@ void MetaEnum<IntType>::addKey(IntType value, const QString &name)
 }
 
 template <class IntType>
-QString MetaEnum<IntType>::valueToKey(IntType value, bool *ok) const
+std::optional<QString> MetaEnum<IntType>::valueToKey(IntType value) const
 {
-    QString rc;
     for (auto it = m_keyToValueMap.begin(), end = m_keyToValueMap.end(); it != end; ++it)  {
-        if (it->second == value) {
-            rc = it->first;
-            break;
-        }
+        if (it->second == value)
+            return it->first;
     }
-    if (ok)
-        *ok = !rc.isEmpty();
-    return rc;
+    return std::nullopt;
 }
 
 template <class IntType>
-IntType MetaEnum<IntType>::keyToValue(QStringView key, bool *ok) const
+std::optional<IntType> MetaEnum<IntType>::keyToValue(QStringView key) const
 {
     key = key.trimmed(); // Spaces around the flag separator
     const auto lastSep = key.lastIndexOf(m_separator);
     if (lastSep != -1)
         key = key.sliced(lastSep + m_separator.size());
     const auto it = m_keyToValueMap.find(key);
-    const bool found = it != m_keyToValueMap.end();
-    if (ok)
-        *ok = found;
-    return found ? it->second : IntType(0);
+    if (it == m_keyToValueMap.end())
+        return std::nullopt;
+    return it->second;
 }
 
 template <class IntType>
@@ -186,13 +181,13 @@ public:
     DesignerMetaEnum(const QString &name, const QString &scope, const QString &separator);
     DesignerMetaEnum() = default;
 
-    QString toString(int value, SerializationMode sm, bool *ok = nullptr) const;
+    std::optional<QString> toString(int value, SerializationMode sm) const;
 
     QString messageToStringFailed(int value) const;
     QString messageParseFailed(const QString &s) const;
 
     // parse a string (ignorant of scopes)
-    int parseEnum(const QString &s, bool *ok = nullptr) const;
+    std::optional<int> parseEnum(const QString &s) const;
 };
 
 // -------------- DesignerMetaFlags: Meta type for flags.
@@ -211,7 +206,7 @@ public:
 
     QString messageParseFailed(const QString &s) const;
     // parse a string (ignorant of scopes)
-    int parseFlags(const QString &s, bool *ok = nullptr) const;
+    std::optional<int> parseFlags(const QString &s) const;
 };
 
 // -------------- EnumValue: Returned by the property sheet for enumerations
