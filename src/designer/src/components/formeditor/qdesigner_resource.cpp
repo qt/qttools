@@ -952,10 +952,10 @@ static bool readDomEnumerationValue(const DomProperty *p,
         const QVariant sheetValue = sheet->property(index);
         if (sheetValue.canConvert<PropertySheetFlagValue>()) {
             const PropertySheetFlagValue f = qvariant_cast<PropertySheetFlagValue>(sheetValue);
-            bool ok = false;
-            v = f.metaFlags.parseFlags(p->elementSet(), &ok);
-            if (!ok)
+            const auto flags = f.metaFlags.parseFlags(p->elementSet());
+            if (!flags)
                 designerWarning(f.metaFlags.messageParseFailed(p->elementSet()));
+            v = flags.value_or(0);
             return true;
         }
     }
@@ -964,10 +964,10 @@ static bool readDomEnumerationValue(const DomProperty *p,
         const QVariant sheetValue = sheet->property(index);
         if (sheetValue.canConvert<PropertySheetEnumValue>()) {
             const PropertySheetEnumValue e = qvariant_cast<PropertySheetEnumValue>(sheetValue);
-            bool ok = false;
-            v = e.metaEnum.parseEnum(p->elementEnum(), &ok);
-            if (!ok)
+            const auto value = e.metaEnum.parseEnum(p->elementEnum());
+            if (!value)
                 designerWarning(e.metaEnum.messageParseFailed(p->elementEnum()));
+            v = value.value_or(0);
             return true;
         }
     }
@@ -2049,12 +2049,11 @@ DomProperty *QDesignerResource::createProperty(QObject *object, const QString &p
         const PropertySheetEnumValue e = qvariant_cast<PropertySheetEnumValue>(value);
         const auto mode = d->m_fullyQualifiedEnums
                           ? DesignerMetaEnum::FullyQualified : DesignerMetaEnum::Qualified;
-        bool ok;
-        const QString id = e.metaEnum.toString(e.value, mode, &ok);
-        if (!ok)
+        const auto id = e.metaEnum.toString(e.value, mode);
+        if (!id) {
             designerWarning(e.metaEnum.messageToStringFailed(e.value));
-        if (id.isEmpty())
             return nullptr;
+        }
 
         DomProperty *p = new DomProperty;
         // check if we have a standard cpp set function
@@ -2068,7 +2067,7 @@ DomProperty *QDesignerResource::createProperty(QObject *object, const QString &p
         } else {
             p->setAttributeName(propertyName);
         }
-        p->setElementEnum(id);
+        p->setElementEnum(*id);
         return applyProperStdSetAttribute(object, propertyName, p);
     }
     if (value.canConvert<PropertySheetStringValue>()) {

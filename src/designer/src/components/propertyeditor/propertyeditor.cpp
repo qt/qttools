@@ -761,7 +761,7 @@ void PropertyEditor::updateBrowserValue(QtVariantProperty *property, const QVari
     const int type = property->propertyType();
     if (type == QtVariantPropertyManager::enumTypeId()) {
         const PropertySheetEnumValue e = qvariant_cast<PropertySheetEnumValue>(v);
-        v = e.metaEnum.keys().indexOf(e.metaEnum.valueToKey(e.value));
+        v = e.metaEnum.keys().indexOf(e.metaEnum.valueToKey(e.value).value_or(QString{}));
     } else if (type == DesignerPropertyManager::designerFlagTypeId()) {
         const PropertySheetFlagValue f = qvariant_cast<PropertySheetFlagValue>(v);
         v = QVariant(f.value);
@@ -1009,7 +1009,7 @@ void PropertyEditor::setObject(QObject *object)
                         const PropertySheetFlagValue f = qvariant_cast<PropertySheetFlagValue>(value);
                         QList<std::pair<QString, uint>> flags;
                         for (const QString &name : f.metaFlags.keys()) {
-                            const uint val = f.metaFlags.keyToValue(name);
+                            const uint val = *f.metaFlags.keyToValue(name);
                             flags.append({name, val});
                         }
                         m_updatingBrowser = true;
@@ -1209,9 +1209,9 @@ void PropertyEditor::slotValueChanged(QtProperty *property, const QVariant &valu
         PropertySheetEnumValue e = qvariant_cast<PropertySheetEnumValue>(m_propertySheet->property(m_propertySheet->indexOf(property->propertyName())));
         const int val = value.toInt();
         const QString valName = varProp->attributeValue(m_strings.m_enumNamesAttribute).toStringList().at(val);
-        bool ok = false;
-        e.value = e.metaEnum.parseEnum(valName, &ok);
-        Q_ASSERT(ok);
+        const auto value = e.metaEnum.parseEnum(valName);
+        Q_ASSERT(value);
+        e.value = *value;
         QVariant v;
         v.setValue(e);
         emitPropertyValueChanged(property->propertyName(), v, true);

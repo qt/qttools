@@ -172,10 +172,10 @@ static bool readDomEnumerationValue(const DomProperty *p,
         const QVariant sheetValue = sheet->property(index);
         if (sheetValue.canConvert<PropertySheetFlagValue>()) {
             const PropertySheetFlagValue f = qvariant_cast<PropertySheetFlagValue>(sheetValue);
-            bool ok = false;
-            v = f.metaFlags.parseFlags(p->elementSet(), &ok);
-            if (!ok)
+            const auto flags = f.metaFlags.parseFlags(p->elementSet());
+            if (!flags)
                 designerWarning(f.metaFlags.messageParseFailed(p->elementSet()));
+            v = flags.value_or(0);
             return true;
         }
     }
@@ -187,10 +187,10 @@ static bool readDomEnumerationValue(const DomProperty *p,
         const QVariant sheetValue = sheet->property(index);
         if (sheetValue.canConvert<PropertySheetEnumValue>()) {
             const PropertySheetEnumValue e = qvariant_cast<PropertySheetEnumValue>(sheetValue);
-            bool ok = false;
-            v = e.metaEnum.parseEnum(p->elementEnum(), &ok);
-            if (!ok)
+            const auto value = e.metaEnum.parseEnum(p->elementEnum());
+            if (!value)
                 designerWarning(e.metaEnum.messageParseFailed(p->elementEnum()));
+            v = value.value_or(0);
             return true;
         }
     }
