@@ -97,6 +97,22 @@ bool QHelpCollectionHandler::openCollectionFile()
     if (m_query)
         return true;
 
+    if (m_readOnly) {
+        // Opening a database creates the file when it doesn't exist, and an empty
+        // file gets no tables, as these are only created in fully writable mode.
+        // Either way the collection is unusable, so report it here instead of
+        // silently leaving an empty file behind and failing on first access.
+        const QFileInfo fi(m_collectionFile);
+        if (!fi.exists()) {
+            emit error(tr("The collection file \"%1\" does not exist.").arg(m_collectionFile));
+            return false;
+        }
+        if (fi.size() == 0) {
+            emit error(tr("The collection file \"%1\" is empty.").arg(m_collectionFile));
+            return false;
+        }
+    }
+
     m_connectionName = QHelpGlobal::uniquifyConnectionName("QHelpCollectionHandler"_L1, this);
     {
         QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE"_L1, m_connectionName);
