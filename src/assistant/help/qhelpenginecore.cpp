@@ -259,6 +259,10 @@ QHelpFilterEngine *QHelpEngineCore::filterEngine() const
     explicitly because getter functions which depend on a correctly
     set up help engine do that themselves.
 
+    In read-only mode, the collection file must already exist and be
+    non-empty, since it is never created or modified. Otherwise, this
+    function fails and error() returns a description of the problem.
+
     \note \c{qsqlite4.dll} needs to be deployed with the application as the
     help system uses the sqlite driver when loading help collections.
 */

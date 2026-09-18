@@ -5,6 +5,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QFileInfo>
 #include <QtCore/QScopeGuard>
+#include <QtCore/QTemporaryDir>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 
@@ -18,6 +19,9 @@ private slots:
     void init();
 
     void setupData();
+    void setupDataMissingCollectionFile();
+    void setupDataEmptyCollectionFile();
+    void setupDataReadOnlyLocation();
     void collectionFile();
     void setCollectionFile();
     void copyCollectionFile();
@@ -72,6 +76,80 @@ void tst_QHelpEngineCore::setupData()
 {
     QHelpEngineCore help(m_colFile, 0);
     QCOMPARE(help.setupData(), true);
+}
+
+void tst_QHelpEngineCore::setupDataMissingCollectionFile()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString colFile = dir.filePath(QLatin1String("missing.qhc"));
+
+    QHelpEngineCore help(colFile, nullptr);
+    QVERIFY(help.isReadOnly());
+    QVERIFY(!help.setupData());
+    QVERIFY(!help.error().isEmpty());
+    // A read-only engine must not create the collection file.
+    QVERIFY(!QFile::exists(colFile));
+}
+
+void tst_QHelpEngineCore::setupDataEmptyCollectionFile()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString colFile = dir.filePath(QLatin1String("empty.qhc"));
+    {
+        QFile file(colFile);
+        QVERIFY(file.open(QIODevice::WriteOnly));
+    }
+
+    QHelpEngineCore help(colFile, nullptr);
+    QVERIFY(help.isReadOnly());
+    QVERIFY(!help.setupData());
+    QVERIFY(!help.error().isEmpty());
+}
+
+void tst_QHelpEngineCore::setupDataReadOnlyLocation()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString colFile = dir.filePath(QLatin1String("collection.qhc"));
+    QVERIFY(QFile::copy(m_path + "/data/collection.qhc", colFile));
+
+    // Mimic a documentation set installed into a read-only location: neither the
+    // collection file nor the directory holding it may be written to (QTBUG-72174).
+    // Note that data/collection.qhc is in the old format, without the index tables,
+    // so the engine must not attempt to add them here.
+    QFile::setPermissions(colFile, QFile::ReadOwner);
+    QFile::setPermissions(dir.path(), QFile::ReadOwner | QFile::ExeOwner);
+    // Let QTemporaryDir remove its contents again when going out of scope.
+    const auto permissionGuard = qScopeGuard([&dir, &colFile] {
+        QFile::setPermissions(dir.path(),
+                              QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
+        QFile::setPermissions(colFile, QFile::ReadOwner | QFile::WriteOwner);
+    });
+
+    // Not every platform and file system enforces the permissions set above, and
+    // the superuser bypasses them altogether. Check for what the test relies on
+    // instead of guessing from the platform or from the user id.
+    QFile probe(dir.filePath(QLatin1String("probe")));
+    if (probe.open(QIODevice::WriteOnly)) {
+        probe.close();
+        probe.remove();
+        QSKIP("The read-only permissions are not enforced in this environment.");
+    }
+
+    const qint64 sizeBefore = QFileInfo(colFile).size();
+    const QStringList entriesBefore = QDir(dir.path()).entryList(QDir::Files, QDir::Name);
+
+    QHelpEngineCore help(colFile, nullptr);
+    QVERIFY(help.isReadOnly());
+    QVERIFY(help.setupData());
+    QVERIFY(help.error().isEmpty());
+    QVERIFY(!help.registeredDocumentations().isEmpty());
+
+    // The collection file must be left untouched, without any journal file next to it.
+    QCOMPARE(QFileInfo(colFile).size(), sizeBefore);
+    QCOMPARE(QDir(dir.path()).entryList(QDir::Files, QDir::Name), entriesBefore);
 }
 
 void tst_QHelpEngineCore::collectionFile()

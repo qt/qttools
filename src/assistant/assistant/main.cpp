@@ -271,6 +271,9 @@ static ExitStatus preliminarySetup(CmdLineParser *cmd)
         return ExitFailure;
     }
     QHelpEngineCore cachedCollection(cachedCollectionFile);
+    // The cached collection is written to below (and by the help engine wrapper),
+    // and it needs to be created on the first run.
+    cachedCollection.setReadOnly(false);
     if (!cachedCollection.setupData()) {
         cmd->showMessage(QCoreApplication::translate("Assistant",
                          "Error reading collection file '%1': %2.")
