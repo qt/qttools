@@ -1,0 +1,10 @@
+project = ExternC
+productname = Qt
+
+{sourcedirs,headerdirs} = .
+
+locationinfo         = false
+warninglimit         = 0
+warninglimit.enabled = true
+
+documentationinheaders = true

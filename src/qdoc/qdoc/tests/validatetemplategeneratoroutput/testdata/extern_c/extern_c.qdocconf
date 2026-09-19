@@ -1,0 +1,19 @@
+project = ExternC
+locationinfo = false
+
+headers.fileextensions = "*.h"
+sources.fileextensions = "*.qdoc"
+documentationinheaders = true
+headerdirs = ./src
+sourcedirs = ./src
+
+outputformats = TemplateHTML TemplateMarkdown
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+warninglimit = 0
+warninglimit.enabled = true
