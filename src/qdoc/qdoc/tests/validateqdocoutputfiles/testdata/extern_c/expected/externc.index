@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="ExternC Reference Documentation" version="" project="ExternC">
+    <namespace name="" status="active" access="public" module="externc">
+        <function name="c_function" href="a-h.html#c_function" status="active" access="public" location="a.h" documented="true" related="0" meta="plain" type="int" brief="C function that returns a number for param" signature="int c_function(char *param)">
+            <parameter type="char *" name="param" default=""/>
+        </function>
+        <header name="a.h" href="a-h.html" status="active" location="a.h" documented="true" includefile="a.h" module="ExternC" title="a.h" fulltitle="a.h" subtitle="">
+            <function name="c_function" href="a-h.html#c_function" status="active" access="public" location="a.h" documented="true" related="0" meta="plain" type="int" brief="C function that returns a number for param" signature="int c_function(char *param)">
+                <parameter type="char *" name="param" default=""/>
+            </function>
+        </header>
+        <module name="ExternC" href="externc-module.html" status="internal-auto" seen="false"/>
+    </namespace>
+</INDEX>

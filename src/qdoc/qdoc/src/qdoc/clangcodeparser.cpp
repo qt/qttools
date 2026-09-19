@@ -1600,6 +1600,8 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         QScopedValueRollback<Aggregate *> setParent(parent_, ns);
         return visitChildren(cursor);
     }
+    case CXCursor_LinkageSpec:
+        return visitChildren(cursor);
     case CXCursor_FunctionTemplate:
         Q_FALLTHROUGH();
     case CXCursor_FunctionDecl:
