@@ -11,7 +11,11 @@
 
 #include <QtWidgets/qboxlayout.h>
 #include <QtWidgets/qformlayout.h>
+#include <QtWidgets/qmainwindow.h>
+#include <QtWidgets/qmenubar.h>
+#include <QtWidgets/qscrollarea.h>
 #include <QtWidgets/qsplitter.h>
+#include <QtWidgets/qstatusbar.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qrect.h>
@@ -170,6 +174,39 @@ LayoutInfo::Type LayoutInfo::laidoutWidgetType(const QDesignerFormEditorInterfac
     }
 
     return NoLayout;
+}
+
+// Containers position their internal children ("pages") themselves, so that
+// setting their geometry has no effect (QTBUG-2801). Most of them use an
+// internal layout, which is covered by laidoutWidgetType(); the remaining
+// cases are handled here.
+static bool isContainerPositionedChild(QWidget *widget)
+{
+    QWidget *parent = widget->parentWidget();
+    if (parent == nullptr)
+        return false;
+
+    // QMainWindow lays out the menu and the status bar outside of
+    // QMainWindowLayout's items.
+    if (qobject_cast<const QMainWindow *>(parent) != nullptr) {
+        return qobject_cast<const QMenuBar *>(widget) != nullptr
+            || qobject_cast<const QStatusBar *>(widget) != nullptr;
+    }
+
+    // Scroll areas (QScrollArea itself, but also the ones QToolBox uses for
+    // its pages) resize their widget unless told otherwise.
+    if (const auto *scrollArea = qobject_cast<const QScrollArea *>(parent->parentWidget())) {
+        return scrollArea->viewport() == parent && scrollArea->widget() == widget
+            && scrollArea->widgetResizable();
+    }
+
+    return false;
+}
+
+bool LayoutInfo::isGeometryControlledByParent(const QDesignerFormEditorInterface *core,
+                                              QWidget *widget)
+{
+    return isWidgetLaidout(core, widget) || isContainerPositionedChild(widget);
 }
 
 QLayout *LayoutInfo::internalLayout(const QWidget *widget)

@@ -1627,7 +1627,7 @@ bool QDesignerResource::checkProperty(QObject *obj, const QString &prop) const
          if (m_selected && m_selected == check_widget)
              return true;
 
-        return !LayoutInfo::isWidgetLaidout(core(), check_widget);
+        return !LayoutInfo::isGeometryControlledByParent(core(), check_widget);
     }
 
     if (check_widget && !checkContainerProperty(check_widget, prop))

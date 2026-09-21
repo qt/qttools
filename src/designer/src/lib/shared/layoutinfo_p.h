@@ -59,6 +59,9 @@ public:
 
     static Type laidoutWidgetType(const QDesignerFormEditorInterface *core, QWidget *widget, bool *isManaged = nullptr, QLayout **layout = nullptr);
     static bool inline isWidgetLaidout(const QDesignerFormEditorInterface *core, QWidget *widget) { return laidoutWidgetType(core, widget) != NoLayout; }
+    // Is the geometry of the widget determined by its parent widget, be it by
+    // a layout or by a container positioning its internal children?
+    static bool isGeometryControlledByParent(const QDesignerFormEditorInterface *core, QWidget *widget);
 
     static QLayout *managedLayout(const QDesignerFormEditorInterface *core, const QWidget *widget);
     static QLayout *managedLayout(const QDesignerFormEditorInterface *core, QLayout *layout);
