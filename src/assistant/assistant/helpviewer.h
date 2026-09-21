@@ -46,6 +46,8 @@ public:
     void reload();
     void setSource(const QUrl &url);
 
+    void doSetFocus();
+
 #if QT_CONFIG(printer)
     void print(QPrinter *printer);
 #endif
