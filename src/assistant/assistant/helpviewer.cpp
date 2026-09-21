@@ -353,6 +353,11 @@ void HelpViewer::setSource(const QUrl &url)
     doSetSource(url, false);
 }
 
+void HelpViewer::doSetFocus()
+{
+    d->m_viewer->setFocus();
+}
+
 void HelpViewer::doSetSource(const QUrl &url, bool reload)
 {
     if (launchWithExternalApp(url))

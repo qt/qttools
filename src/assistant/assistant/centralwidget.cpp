@@ -458,7 +458,7 @@ void CentralWidget::find(const QString &ttf, bool forward, bool incremental)
 void CentralWidget::activateTab()
 {
     TRACE_OBJ
-    currentHelpViewer()->setFocus();
+    currentHelpViewer()->doSetFocus();
 }
 
 void CentralWidget::showTextSearch()
