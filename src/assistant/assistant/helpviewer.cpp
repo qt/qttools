@@ -5,6 +5,7 @@
 #include "helpviewerimpl.h"
 
 #include "helpenginewrapper.h"
+#include "openpagesmanager.h"
 #include "tracer.h"
 
 #include <QtCore/QFileInfo>
@@ -23,6 +24,7 @@
 #include <QtGui/QStyleHints>
 #include <QtGui/QWheelEvent>
 
+#include <QtWidgets/QMenu>
 #include <QtWidgets/QScrollBar>
 #include <QtWidgets/QVBoxLayout>
 
@@ -35,6 +37,16 @@ QT_BEGIN_NAMESPACE
 using namespace Qt::StringLiterals;
 
 const int kMaxHistoryItems = 20;
+constexpr bool kHasClipboard = QT_CONFIG(clipboard);
+
+static void setClipboardText(const QString &text)
+{
+#if QT_CONFIG(clipboard)
+    QGuiApplication::clipboard()->setText(text);
+#else
+    Q_UNUSED(text)
+#endif
+}
 
 const struct ExtensionMap {
     const char *extension;
@@ -198,12 +210,15 @@ public:
     void setSourceInternal(const QUrl &url, int *vscroll = nullptr, bool reload = false);
     void incrementZoom(int steps);
     void applyZoom(int percentage);
+    void openInNewPage(const QUrl &url);
+    void showContextMenu(const QPoint &pos, const QUrl &link);
 
     HelpViewer *q = nullptr;
     QLiteHtmlWidget *m_viewer = nullptr;
     std::vector<HistoryItem> m_backItems;
     std::vector<HistoryItem> m_forwardItems;
     int m_fontZoom = 100; // zoom percentage
+    QUrl m_highlightedLink;
 };
 
 HelpViewerPrivate::HistoryItem HelpViewerPrivate::currentHistoryItem() const
@@ -267,6 +282,31 @@ void HelpViewerPrivate::applyZoom(int percentage)
     m_viewer->setZoomFactor(newZoom / 100.0);
 }
 
+void HelpViewerPrivate::openInNewPage(const QUrl &url)
+{
+    if (!url.isEmpty() && url.isValid())
+        OpenPagesManager::instance()->createPage(url);
+}
+
+void HelpViewerPrivate::showContextMenu(const QPoint &pos, const QUrl &link)
+{
+    QMenu menu;
+    if (!link.isEmpty() && link.isValid()) {
+        menu.addAction(HelpViewer::tr("Open Link"), q, [this, link] { q->setSource(link); });
+        menu.addAction(HelpViewer::tr("Open Link in New Tab\tCtrl+LMB"), q,
+                       [this, link] { openInNewPage(link); });
+        if (kHasClipboard) {
+            menu.addAction(HelpViewer::tr("Copy &Link Location"), q,
+                           [link] { setClipboardText(link.toString()); });
+        }
+    } else if (kHasClipboard && !q->selectedText().isEmpty()) {
+        menu.addAction(HelpViewer::tr("Copy"), q, [this] { setClipboardText(q->selectedText()); });
+    } else {
+        menu.addAction(HelpViewer::tr("Reload"), q, &HelpViewer::reload);
+    }
+    menu.exec(m_viewer->viewport()->mapToGlobal(pos));
+}
+
 HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
     : QWidget(parent)
     , d(new HelpViewerPrivate)
@@ -278,8 +318,18 @@ HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
     d->m_viewer->viewport()->installEventFilter(this);
     const int zoomPercentage = zoom == 0 ? 100 : zoom * 100;
     d->applyZoom(zoomPercentage);
-    connect(d->m_viewer, &QLiteHtmlWidget::linkClicked, this, &HelpViewer::setSource);
-    connect(d->m_viewer, &QLiteHtmlWidget::linkHighlighted, this, &HelpViewer::highlighted);
+    connect(d->m_viewer, &QLiteHtmlWidget::linkClicked, this, [this](const QUrl &url) {
+        if (QGuiApplication::keyboardModifiers() & Qt::ControlModifier)
+            d->openInNewPage(url);
+        else
+            setSource(url);
+    });
+    connect(d->m_viewer, &QLiteHtmlWidget::linkHighlighted, this, [this](const QUrl &url) {
+        d->m_highlightedLink = url;
+        emit highlighted(url);
+    });
+    connect(d->m_viewer, &QLiteHtmlWidget::contextMenuRequested, this,
+            [this](const QPoint &pos, const QUrl &link) { d->showContextMenu(pos, link); });
 #if QT_CONFIG(clipboard)
     connect(d->m_viewer, &QLiteHtmlWidget::copyAvailable, this, &HelpViewer::copyAvailable);
 #endif
@@ -462,6 +512,15 @@ bool HelpViewer::eventFilter(QObject *src, QEvent *event)
             const int deltaY = we->angleDelta().y();
             if (deltaY != 0)
                 d->incrementZoom(deltaY / 120);
+            return true;
+        }
+    } else if (event->type() == QEvent::MouseButtonRelease) {
+        // Ctrl+LMB is handled when the link is clicked, as litehtml only reacts on the left button.
+        auto me = static_cast<QMouseEvent *>(event);
+        if (me->button() == Qt::MiddleButton && !d->m_highlightedLink.isEmpty()
+            && d->m_highlightedLink.isValid()) {
+            me->accept();
+            d->openInNewPage(d->m_highlightedLink);
             return true;
         }
     }
