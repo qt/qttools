@@ -47,6 +47,9 @@ Text &Text::operator<<(const QString &string)
 
 Text &Text::operator<<(const Atom &atom)
 {
+    if (atom.isLinkAtom())
+        return operator<<(static_cast<const LinkAtom&>(atom));
+
     if (atom.count() < 2) {
         if (m_first == nullptr) {
             m_first = new Atom(atom.type(), atom.string());
@@ -82,10 +85,7 @@ Text &Text::operator<<(const Text &text)
 {
     const Atom *atom = text.firstAtom();
     while (atom != nullptr) {
-        if (atom->isLinkAtom())
-            operator<<(*static_cast<const LinkAtom *>(atom));
-        else
-            operator<<(*atom);
+        operator<<(*atom);
         atom = atom->next();
     }
     return *this;

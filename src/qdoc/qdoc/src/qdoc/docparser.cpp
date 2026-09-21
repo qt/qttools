@@ -1952,10 +1952,6 @@ void DocParser::appendAtom(const Atom& atom) {
     m_private->m_text << atom;
 }
 
-void DocParser::appendAtom(const LinkAtom& atom) {
-    m_private->m_text << atom;
-}
-
 void DocParser::appendChar(QChar ch)
 {
     if (m_private->m_text.lastAtom()->type() != Atom::String)
