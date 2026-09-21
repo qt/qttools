@@ -3,12 +3,9 @@
 
 #include "atom.h"
 
-#include "genustypes.h"
 #include "qdocdatabase.h"
 
 #include <QtCore/qregularexpression.h>
-
-#include <cstdio>
 
 QT_BEGIN_NAMESPACE
 
