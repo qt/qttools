@@ -1581,11 +1581,16 @@ bool QDesignerPropertySheet::isEnabled(int index) const
     if (isFakeProperty(index))
         return true;
 
-    // Grey out geometry of laid-out widgets (including splitter)
+    // Grey out geometry of laid-out widgets (including splitter) and of the
+    // internal children of containers, whose geometry the container controls
+    // (QTBUG-2801). The main container is an exception: it is laid out by an
+    // internal layout of the form window, but its geometry is the form's size.
     if (propertyType(index) == PropertyGeometry && d->m_object->isWidgetType()) {
-        bool isManaged;
-        const qdesigner_internal::LayoutInfo::Type lt = qdesigner_internal::LayoutInfo::laidoutWidgetType(d->m_core, qobject_cast<QWidget *>(d->m_object), &isManaged);
-        return !isManaged || lt == qdesigner_internal::LayoutInfo::NoLayout;
+        auto *widget = static_cast<QWidget *>(d->m_object.data());
+        auto *fw = QDesignerFormWindowInterface::findFormWindow(widget);
+        if (fw != nullptr && fw->mainContainer() == widget)
+            return true;
+        return !qdesigner_internal::LayoutInfo::isGeometryControlledByParent(d->m_core, widget);
     }
 
     if (d->m_info.value(index).visible)
