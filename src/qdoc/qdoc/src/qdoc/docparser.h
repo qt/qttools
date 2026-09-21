@@ -64,7 +64,6 @@ private:
     void endSection(int unit, int endCmd);
     void parseAlso();
     void appendAtom(const Atom&);
-    void appendAtom(const LinkAtom&);
     void appendChar(QChar ch);
     void appendWord(const QString &word);
     void appendEscapedIdentifier();
