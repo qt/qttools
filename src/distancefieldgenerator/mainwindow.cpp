@@ -332,7 +332,7 @@ void MainWindow::save()
 
             TableRecord qtdfRecord;
             qtdfRecord.offset = qToBigEndian(currentOffset);
-            qtdfRecord.length = qToBigEndian(qtdf.size());
+            qtdfRecord.length = qToBigEndian(quint32(qtdf.size()));
             qtdfRecord.tag = qFromBigEndian(QFont::Tag("qtdf").value());
             quint32 checkSum = 0;
             const quint32 *start = reinterpret_cast<const quint32 *>(qtdf.constData());
