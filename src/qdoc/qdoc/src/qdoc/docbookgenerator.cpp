@@ -37,7 +37,9 @@
 #include <QtCore/qregularexpression.h>
 #include <QtCore/qversionnumber.h>
 
+#include <algorithm>
 #include <cctype>
+#include <iterator>
 
 QT_BEGIN_NAMESPACE
 
@@ -1395,17 +1397,26 @@ void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeLis
         m_writer->writeAttribute("role", selector);
         newLine();
 
-        NodeList members{nodeList};
+        NodeList members;
+        members.reserve(nodeList.size());
+        std::copy_if(nodeList.cbegin(), nodeList.cend(), std::back_inserter(members),
+                     [&policy](const Node *n) {
+                         const NodeContext context = n->createContext();
+                         return InclusionFilter::isIncluded(policy, context) && !n->isDeprecated();
+                     });
+
         if (sortOrder == Qt::DescendingOrder)
             std::sort(members.rbegin(), members.rend(), Node::nodeSortKeyOrNameLessThan);
         else
             std::sort(members.begin(), members.end(), Node::nodeSortKeyOrNameLessThan);
-        const InclusionPolicy policy = Config::instance().createInclusionPolicy();
-        for (const auto &node : std::as_const(members)) {
-            const NodeContext context = node->createContext();
-            if (!InclusionFilter::isIncluded(policy, context) || node->isDeprecated())
-                continue;
 
+        // Multiple nodes may share a documentation page; list each page only once.
+        auto sameLocation = [this](const Node *a, const Node *b) {
+            return fullDocumentLocation(a) == fullDocumentLocation(b);
+        };
+        members.erase(std::unique(members.begin(), members.end(), sameLocation), members.end());
+
+        for (const auto &node : std::as_const(members)) {
             if (noItemsHaveTitle) {
                 m_writer->writeStartElement(dbNamespace, "listitem");
                 newLine();
