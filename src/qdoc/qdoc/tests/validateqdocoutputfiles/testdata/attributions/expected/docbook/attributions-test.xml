@@ -7,5 +7,18 @@
 <db:abstract>
 <db:para>Attributions Reference Documentation.</db:para></db:abstract>
 </db:info>
-<db:para/>
+<db:variablelist role="annotatedattributions">
+<db:varlistentry>
+<db:term><db:link xlink:href="some-attribution-1.xml" xlink:role="page">Attribution-1</db:link></db:term>
+<db:listitem>
+<db:para>WTFPL License version 2</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="some-attribution-2.xml" xlink:role="page">Attribution-2</db:link></db:term>
+<db:listitem>
+<db:para>Public Domain</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
 </db:article>
