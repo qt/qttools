@@ -33,6 +33,7 @@
 #include <QtCore/qversionnumber.h>
 #include <QtCore/qregularexpression.h>
 
+#include <algorithm>
 #include <cctype>
 #include <deque>
 #include <utility>
@@ -2848,6 +2849,12 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative, CodeMarker *mark
         std::sort(nodes.rbegin(), nodes.rend(), Node::nodeSortKeyOrNameLessThan);
     else
         std::sort(nodes.begin(), nodes.end(), Node::nodeSortKeyOrNameLessThan);
+
+    // Multiple nodes may share a documentation page; list each page only once.
+    auto sameLocation = [this](const Node *a, const Node *b) {
+        return fullDocumentLocation(a) == fullDocumentLocation(b);
+    };
+    nodes.erase(std::unique(nodes.begin(), nodes.end(), sameLocation), nodes.end());
 
     for (const auto *node : std::as_const(nodes)) {
         if (++row % 2 == 1)
