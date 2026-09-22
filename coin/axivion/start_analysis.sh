@@ -28,19 +28,37 @@ done <<EOF
 $(grep -rl "$MAGIC" "$ROOT_DIR")
 EOF
 
+if [ -z "$INCLUDE_FILES" ]; then
+    echo "No Security Critical files found; running analysis with an explicit fallback sentinel."
+    INCLUDE_FILES="__NO_FILES_FOUND__"
+fi
+
 export INCLUDE_FILES
 
-for MODULE in qtassistant qtdesigner qthelp qtuitools linguist; do
+# qtassistant/qtdesigner picked up their plugins (previously uncovered);
+# linguist picked up the lupdate/lrelease/lconvert/lcheck/ltext2id tool family
+# (previously uncovered); qtdoctools and qttoolsmisc are new modules for
+# binaries that had no coverage at all before. Modules that are HEADER_MODULE
+# in CMake (Linguist, UiPlugin, Tools, QDocCatchConversionsPrivate,
+# QDocCatchGeneratorsPrivate) produce no binary and so have nothing to add.
+for MODULE in qtassistant qtdesigner qthelp qtuitools linguist qtdoctools qttoolsmisc; do
     export MODULE
     export PLUGINS=""
     export IRNAME=build/$MODULE.ir
     if [ "$MODULE" == "qtassistant" ]
     then
-        export TARGET_NAME="build/bin/assistant.ir"
+        TARGET_NAME="build/bin/assistant.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/qhelpgenerator.ir"
+        TARGET_NAME="$TARGET_NAME:build/plugins/help/lib*.so*.ir"
+        export TARGET_NAME
         export PACKAGE="Add-ons"
     elif [ "$MODULE" == "qtdesigner" ]
     then
-        export TARGET_NAME="build/bin/designer.ir"
+        TARGET_NAME="build/bin/designer.ir"
+        TARGET_NAME="$TARGET_NAME:build/lib/libQt6Designer.so.*.ir"
+        TARGET_NAME="$TARGET_NAME:build/lib/libQt6DesignerComponentsPrivate.so.*.ir"
+        TARGET_NAME="$TARGET_NAME:build/plugins/designer/lib*.so*.ir"
+        export TARGET_NAME
         export PACKAGE="Add-ons"
     elif [ "$MODULE" == "qthelp" ]
     then
@@ -52,7 +70,36 @@ for MODULE in qtassistant qtdesigner qthelp qtuitools linguist; do
         export PACKAGE="Add-ons"
     elif [ "$MODULE" == "linguist" ]
     then
-        export TARGET_NAME="build/bin/linguist.ir"
+        TARGET_NAME="build/bin/linguist.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/lupdate.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/lupdate-pro.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/lrelease.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/lrelease-pro.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/lconvert.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/lcheck.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/ltext2id.ir"
+        export TARGET_NAME
+        export PACKAGE="Add-ons"
+    elif [ "$MODULE" == "qtdoctools" ]
+    then
+        # qdoc and its supporting command-line tools
+        TARGET_NAME="build/bin/qdoc.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/qtattributionsscanner.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/objcnamemangler.ir"
+        export TARGET_NAME
+        export PACKAGE="Add-ons"
+    elif [ "$MODULE" == "qttoolsmisc" ]
+    then
+        # Standalone qttools app binaries with no better home
+        TARGET_NAME="build/bin/qtdiag.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/pixeltool.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/qdbus.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/qdbusviewer.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/kmap2qmap.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/qev.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/qdistancefieldgenerator.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/qtplugininfo.ir"
+        export TARGET_NAME
         export PACKAGE="Add-ons"
     fi
     axivion_ci "$@"
