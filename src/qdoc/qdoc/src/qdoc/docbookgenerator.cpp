@@ -415,8 +415,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
         } else if (atom->string() == QLatin1String("annotatedexamples")
                 || atom->string() == QLatin1String("annotatedattributions")) {
             const NodeMultiMap things = atom->string() == QLatin1String("annotatedexamples")
-                                        ? m_qdb->getAttributions()
-                                        : m_qdb->getExamples();
+                                        ? m_qdb->getExamples()
+                                        : m_qdb->getAttributions();
             generateAnnotatedLists(relative, things, atom->string());
             hasGeneratedSomething = !things.isEmpty();
         } else if (atom->string() == QLatin1String("classes")
