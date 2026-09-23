@@ -49,8 +49,8 @@ public:
 
     struct TimeStamp
     {
-        int namespaceId = -1;
-        int folderId = -1;
+        qint64 namespaceId = -1;
+        qint64 folderId = -1;
         QString fileName;
         qint64 size = 0;
         QDateTime timeStamp;
@@ -141,10 +141,10 @@ public:
     QVariant customValue(const QString &key, const QVariant &defaultValue) const;
     bool setCustomValue(const QString &key, const QVariant &value);
 
-    int registerNamespace(const QString &nspace, const QString &fileName);
-    int registerVirtualFolder(const QString &folderName, int namespaceId);
-    int registerComponent(const QString &componentName, int namespaceId);
-    bool registerVersion(const QString &version, int namespaceId);
+    qint64 registerNamespace(const QString &nspace, const QString &fileName);
+    qint64 registerVirtualFolder(const QString &folderName, qint64 namespaceId);
+    qint64 registerComponent(const QString &componentName, qint64 namespaceId);
+    bool registerVersion(const QString &version, qint64 namespaceId);
 
     QList<QHelpLink> documentsForIdentifier(const QString &id, const QString &filterName) const;
     QList<QHelpLink> documentsForKeyword(const QString &keyword, const QString &filterName) const;
@@ -185,11 +185,11 @@ private:
     bool registerIndexAndNamespaceFilterTables(const QString &nameSpace,
                                                bool createDefaultVersionFilter = false);
     void createVersionFilter(const QString &version);
-    bool registerFilterAttributes(const QList<QStringList> &attributeSets, int nsId);
-    bool registerFileAttributeSets(const QList<QStringList> &attributeSets, int nsId);
+    bool registerFilterAttributes(const QList<QStringList> &attributeSets, qint64 nsId);
+    bool registerFileAttributeSets(const QList<QStringList> &attributeSets, qint64 nsId);
     bool registerIndexTable(const QHelpDBReader::IndexTable &indexTable,
-                            int nsId, int vfId, const QString &fileName);
-    bool unregisterIndexTable(int nsId, int vfId);
+                            qint64 nsId, qint64 vfId, const QString &fileName);
+    bool unregisterIndexTable(qint64 nsId, qint64 vfId);
     QString absoluteDocPath(const QString &fileName) const;
     bool isTimeStampCorrect(const TimeStamp &timeStamp) const;
     bool hasTimeStampInfo(const QString &nameSpace) const;
