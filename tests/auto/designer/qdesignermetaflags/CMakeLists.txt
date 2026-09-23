@@ -18,3 +18,8 @@ qt_internal_add_test(tst_qdesignermetaflags
         Qt::Widgets
         Qt::DesignerPrivate
 )
+
+qt_internal_extend_target(tst_qdesignermetaflags CONDITION NOT QT_BUILD_SHARED_LIBS
+    DEFINES
+        QT_DESIGNER_STATIC
+)
