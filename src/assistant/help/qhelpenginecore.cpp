@@ -600,6 +600,11 @@ QUrl QHelpEngineCore::findFile(const QUrl &url) const
     Returns the data of the file specified by \a url. If the
     file does not exist, an empty QByteArray is returned.
 
+    The data is returned exactly as it is stored in the help file, without
+    any filtering. Treat it as untrusted content: the caller is responsible
+    for displaying it in a suitably restricted environment. For more
+    information, see \l{qthelp-security-considerations}{Security Considerations}.
+
     \sa findFile()
 */
 QByteArray QHelpEngineCore::fileData(const QUrl &url) const
