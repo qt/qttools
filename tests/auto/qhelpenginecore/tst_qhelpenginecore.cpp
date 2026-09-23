@@ -3,6 +3,7 @@
 #include <QtTest/QtTest>
 
 #include <QtCore/QUrl>
+#include <QtCore/QByteArray>
 #include <QtCore/QDataStream>
 #include <QtCore/QFileInfo>
 #include <QtCore/QScopeGuard>
@@ -12,6 +13,8 @@
 
 #include <QtHelp/QHelpContentItem>
 #include <QtHelp/QHelpEngineCore>
+#include <QtHelp/QHelpFilterData>
+#include <QtHelp/QHelpFilterEngine>
 
 using namespace Qt::StringLiterals;
 
@@ -26,6 +29,8 @@ private slots:
     void setupDataMissingCollectionFile();
     void setupDataEmptyCollectionFile();
     void setupDataReadOnlyLocation();
+    void setupDataInvalidCollectionFile();
+    void readOnlyWrites();
     void collectionFile();
     void setCollectionFile();
     void copyCollectionFile();
@@ -161,6 +166,83 @@ void tst_QHelpEngineCore::setupDataReadOnlyLocation()
     // The collection file must be left untouched, without any journal file next to it.
     QCOMPARE(QFileInfo(colFile).size(), sizeBefore);
     QCOMPARE(QDir(dir.path()).entryList(QDir::Files, QDir::Name), entriesBefore);
+}
+
+void tst_QHelpEngineCore::setupDataInvalidCollectionFile()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString colFile = dir.filePath(QLatin1String("invalid.qhc"));
+    // A documentation file is an SQLite database, but not a collection file.
+    QVERIFY(QFile::copy(m_path + "/data/test.qch", colFile));
+
+    QHelpEngineCore help(colFile, nullptr);
+    QVERIFY(help.isReadOnly());
+    QVERIFY(!help.setupData());
+    QVERIFY(!help.error().isEmpty());
+}
+
+void tst_QHelpEngineCore::readOnlyWrites()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString colFile = dir.filePath(QLatin1String("collection.qhc"));
+    {
+        QHelpEngineCore c(colFile);
+        c.setReadOnly(false);
+        QVERIFY(c.setupData());
+        QVERIFY(c.registerDocumentation(m_path + "/data/qmake-3.3.8.qch"));
+        QVERIFY(c.addCustomFilter("Custom Filter", {"qmake"}));
+        QVERIFY(c.filterEngine()->setFilterData("Filter", {}));
+        QVERIFY(c.setCustomValue("Key", 1));
+    }
+
+    const auto readFile = [&colFile] {
+        QFile file(colFile);
+        return file.open(QIODevice::ReadOnly) ? file.readAll() : QByteArray();
+    };
+    const QByteArray contentsBefore = readFile();
+    QVERIFY(!contentsBefore.isEmpty());
+    const QStringList entriesBefore = QDir(dir.path()).entryList(QDir::Files, QDir::Name);
+
+    {
+        QHelpEngineCore c(colFile);
+        QVERIFY(c.isReadOnly());
+        QVERIFY(c.setupData());
+
+        QVERIFY(!c.registerDocumentation(m_path + "/data/linguist-3.3.8.qch"));
+        QVERIFY(!c.error().isEmpty());
+        QVERIFY(!c.unregisterDocumentation("trolltech.com.3-3-8.qmake"));
+        QVERIFY(!c.error().isEmpty());
+        QVERIFY(!c.addCustomFilter("Another Filter", {"qt"}));
+        QVERIFY(!c.error().isEmpty());
+        QVERIFY(!c.removeCustomFilter("Custom Filter"));
+        QVERIFY(!c.error().isEmpty());
+        QVERIFY(!c.filterEngine()->setFilterData("Another Filter", {}));
+        QVERIFY(!c.error().isEmpty());
+        QVERIFY(!c.filterEngine()->removeFilter("Filter"));
+        QVERIFY(!c.error().isEmpty());
+        QVERIFY(!c.setCustomValue("Key", 2));
+        QVERIFY(!c.error().isEmpty());
+        QVERIFY(!c.removeCustomValue("Key"));
+        QVERIFY(!c.error().isEmpty());
+        QCOMPARE(c.customValue("Key").toInt(), 1);
+
+        // Changing the filters works, but only in memory.
+        QVERIFY(c.filterEngine()->setActiveFilter("Filter"));
+        QCOMPARE(c.filterEngine()->activeFilter(), QString("Filter"));
+        c.setCurrentFilter("Custom Filter");
+        QCOMPARE(c.currentFilter(), QString("Custom Filter"));
+
+        // No journal file is created next to the collection file.
+        QCOMPARE(QDir(dir.path()).entryList(QDir::Files, QDir::Name), entriesBefore);
+    }
+    QCOMPARE(readFile(), contentsBefore);
+
+    QHelpEngineCore c(colFile);
+    QVERIFY(c.setupData());
+    QCOMPARE(c.filterEngine()->activeFilter(), QString());
+    QCOMPARE(c.currentFilter(), QString());
 }
 
 void tst_QHelpEngineCore::collectionFile()
@@ -488,6 +570,7 @@ void tst_QHelpEngineCore::customFilters()
 void tst_QHelpEngineCore::removeCustomFilter()
 {
     QHelpEngineCore help(m_colFile, 0);
+    help.setReadOnly(false);
     QCOMPARE(help.setupData(), true);
     help.removeCustomFilter("Custom Filter 1");
     QStringList custom = help.customFilters();
@@ -514,6 +597,7 @@ void tst_QHelpEngineCore::removeCustomFilterFailure()
     };
 
     QHelpEngineCore help(m_colFile, 0);
+    help.setReadOnly(false);
     QCOMPARE(help.setupData(), true);
     // Makes removing the filter attributes of the filter fail.
     QCOMPARE(execQuery("DROP TABLE FilterTable"), 0);
@@ -525,6 +609,7 @@ void tst_QHelpEngineCore::removeCustomFilterFailure()
 void tst_QHelpEngineCore::addCustomFilter()
 {
     QHelpEngineCore help(m_colFile, 0);
+    help.setReadOnly(false);
     QCOMPARE(help.setupData(), true);
     help.addCustomFilter("Qt Tools", QStringList() << "tools" << "qt");
     QStringList custom = help.customFilters();
@@ -555,6 +640,7 @@ void tst_QHelpEngineCore::currentFilter()
 void tst_QHelpEngineCore::setCurrentFilter()
 {
     QHelpEngineCore help(m_colFile, 0);
+    help.setReadOnly(false);
     QCOMPARE(help.setupData(), true);
     QCOMPARE(help.currentFilter(), QString("unfiltered"));
     help.setCurrentFilter("qmake Manual");
@@ -633,6 +719,7 @@ void tst_QHelpEngineCore::customValue()
 void tst_QHelpEngineCore::setCustomValue()
 {
     QHelpEngineCore help(m_colFile, 0);
+    help.setReadOnly(false);
     QCOMPARE(help.setupData(), true);
     QCOMPARE(help.setCustomValue("Test", 3), true);
     QCOMPARE(help.customValue("Test").toInt(), 3);

@@ -97,6 +97,16 @@ bool QHelpCollectionHandler::isDBOpened() const
     return false;
 }
 
+bool QHelpCollectionHandler::isDBWritable()
+{
+    if (!isDBOpened())
+        return false;
+    if (!m_readOnly)
+        return true;
+    emit error(tr("The collection file \"%1\" is opened in read-only mode.").arg(m_collectionFile));
+    return false;
+}
+
 void QHelpCollectionHandler::closeDB()
 {
     if (!m_query)
@@ -113,10 +123,9 @@ bool QHelpCollectionHandler::openCollectionFile()
         return true;
 
     if (m_readOnly) {
-        // Opening a database creates the file when it doesn't exist, and an empty
-        // file gets no tables, as these are only created in fully writable mode.
-        // Either way the collection is unusable, so report it here instead of
-        // silently leaving an empty file behind and failing on first access.
+        // A missing or empty file has no tables, as these are only created in
+        // fully writable mode. Either way the collection is unusable, so report
+        // it here with a clearer message than the failures further below.
         const QFileInfo fi(m_collectionFile);
         if (!fi.exists()) {
             emit error(tr("The collection file \"%1\" does not exist.").arg(m_collectionFile));
@@ -137,6 +146,8 @@ bool QHelpCollectionHandler::openCollectionFile()
             return false;
         }
 
+        if (m_readOnly)
+            db.setConnectOptions("QSQLITE_OPEN_READONLY"_L1);
         db.setDatabaseName(collectionFile());
         if (db.open())
             m_query.reset(new QSqlQuery(db));
@@ -162,8 +173,29 @@ bool QHelpCollectionHandler::openCollectionFile()
         return false;
     }
 
-    if (m_readOnly)
+    if (m_readOnly) {
+        // Nothing is created in read-only mode, so the tables every collection
+        // file has must already exist. Older collection files lack the index
+        // tables, which are only added in fully writable mode.
+        const QStringList tables = {
+            "NamespaceTable"_L1,
+            "FolderTable"_L1,
+            "FilterAttributeTable"_L1,
+            "FilterNameTable"_L1,
+            "FilterTable"_L1,
+            "SettingsTable"_L1
+        };
+        const QString queryString = "SELECT COUNT(*) FROM sqlite_master WHERE TYPE=\'table\' "
+                                    "AND (Name=\'"_L1 + tables.join("\' OR Name=\'"_L1) + "\')"_L1;
+        if (!m_query->exec(queryString) || !m_query->next()
+                || m_query->value(0).toInt() != tables.size()) {
+            closeDB();
+            emit error(tr("The collection file \"%1\" is not a valid help collection file.")
+                       .arg(m_collectionFile));
+            return false;
+        }
         return true;
+    }
 
     m_query->exec("PRAGMA synchronous=OFF"_L1);
     m_query->exec("PRAGMA cache_size=3000"_L1);
@@ -697,7 +729,7 @@ QHelpFilterData QHelpCollectionHandler::filterData(const QString &filterName) co
 bool QHelpCollectionHandler::setFilterData(const QString &filterName,
                                            const QHelpFilterData &filterData)
 {
-    if (!removeFilter(filterName))
+    if (!isDBWritable() || !removeFilter(filterName))
         return false;
 
     m_query->prepare("INSERT INTO Filter VALUES (NULL, ?)"_L1);
@@ -741,6 +773,9 @@ bool QHelpCollectionHandler::setFilterData(const QString &filterName,
 
 bool QHelpCollectionHandler::removeFilter(const QString &filterName)
 {
+    if (!isDBWritable())
+        return false;
+
     m_query->prepare("SELECT FilterId FROM Filter WHERE Name = ?"_L1);
     m_query->bindValue(0, filterName);
     if (!m_query->exec())
@@ -771,7 +806,7 @@ bool QHelpCollectionHandler::removeFilter(const QString &filterName)
 
 bool QHelpCollectionHandler::removeCustomFilter(const QString &filterName)
 {
-    if (!isDBOpened() || filterName.isEmpty())
+    if (!isDBWritable() || filterName.isEmpty())
         return false;
 
     int filterNameId = -1;
@@ -804,7 +839,7 @@ bool QHelpCollectionHandler::removeCustomFilter(const QString &filterName)
 bool QHelpCollectionHandler::addCustomFilter(const QString &filterName,
                                              const QStringList &attributes)
 {
-    if (!isDBOpened() || filterName.isEmpty())
+    if (!isDBWritable() || filterName.isEmpty())
         return false;
 
     int nameId = -1;
@@ -921,7 +956,7 @@ QHelpCollectionHandler::FileInfoList QHelpCollectionHandler::registeredDocumenta
 
 bool QHelpCollectionHandler::registerDocumentation(const QString &fileName)
 {
-    if (!isDBOpened())
+    if (!isDBWritable())
         return false;
 
     QHelpDBReader reader(fileName, QHelpGlobal::uniquifyConnectionName(
@@ -971,7 +1006,7 @@ bool QHelpCollectionHandler::registerDocumentation(const QString &fileName)
 
 bool QHelpCollectionHandler::unregisterDocumentation(const QString &namespaceName)
 {
-    if (!isDBOpened())
+    if (!isDBWritable())
         return false;
 
     m_query->prepare("SELECT Id FROM NamespaceTable WHERE Name = ?"_L1);
@@ -1653,7 +1688,7 @@ QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForF
 
 bool QHelpCollectionHandler::removeCustomValue(const QString &key)
 {
-    if (!isDBOpened())
+    if (!isDBWritable())
         return false;
 
     m_query->prepare("DELETE FROM SettingsTable WHERE Key=?"_L1);
@@ -1688,7 +1723,7 @@ QVariant QHelpCollectionHandler::customValue(const QString &key,
 bool QHelpCollectionHandler::setCustomValue(const QString &key,
                                             const QVariant &value)
 {
-    if (!isDBOpened())
+    if (!isDBWritable())
         return false;
 
     m_query->prepare("SELECT Value FROM SettingsTable WHERE Key=?"_L1);

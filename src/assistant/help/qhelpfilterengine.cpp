@@ -234,6 +234,9 @@ QString QHelpFilterEngine::activeFilter() const
 /*!
     Changes the currently active filter to \a filterName.
 
+    The active filter is saved in the help collection file, unless
+    the help engine is in \l {QHelpEngineCore::}{readOnly} mode.
+
     Returns \c true if changing the filter succeeded, otherwise
     returns \c false.
 */
@@ -249,7 +252,9 @@ bool QHelpFilterEngine::setActiveFilter(const QString &filterName)
         return false;
 
     d->m_currentFilter = filterName;
-    d->m_collectionHandler->setCustomValue(QLatin1StringView(ActiveFilter), d->m_currentFilter);
+    // A read-only collection keeps the active filter in memory only.
+    if (!d->m_collectionHandler->isReadOnly())
+        d->m_collectionHandler->setCustomValue(QLatin1StringView(ActiveFilter), d->m_currentFilter);
     emit filterActivated(d->m_currentFilter);
     return true;
 }
