@@ -880,6 +880,8 @@ bool QHelpCollectionHandler::registerDocumentation(const QString &fileName)
         return false;
     }
 
+    Transaction transaction(m_connectionName);
+
     const int nsId = registerNamespace(ns, fileName);
     if (nsId < 1)
         return false;
@@ -897,7 +899,7 @@ bool QHelpCollectionHandler::registerDocumentation(const QString &fileName)
     if (!registerIndexTable(reader.indexTable(), nsId, vfId, registeredDocumentation(ns).fileName))
         return false;
 
-    return true;
+    return transaction.commit();
 }
 
 bool QHelpCollectionHandler::unregisterDocumentation(const QString &namespaceName)
