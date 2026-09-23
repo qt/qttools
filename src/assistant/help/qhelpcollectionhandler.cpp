@@ -45,13 +45,17 @@ public:
             m_db.rollback();
     }
 
-    void commit()
+    [[nodiscard]] bool commit()
     {
         if (!m_inTransaction)
-            return;
+            return true;
 
-        m_db.commit();
+        // On failure, the transaction stays open and is rolled back in the destructor.
+        if (!m_db.commit())
+            return false;
+
         m_inTransaction = false;
+        return true;
     }
 
 private:
@@ -227,7 +231,10 @@ bool QHelpCollectionHandler::openCollectionFile()
             return false;
         }
     }
-    transaction.commit();
+    if (!transaction.commit()) {
+        emit error(tr("Cannot unregister index tables in file %1.").arg(collectionFile()));
+        return false;
+    }
 
     for (const QHelpCollectionHandler::FileInfo &info : docList) {
         if (!hasTimeStampInfo(info.namespaceName)
@@ -2140,8 +2147,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
     if (!m_query->exec())
         return false;
 
-    transaction.commit();
-    return true;
+    return transaction.commit();
 }
 
 bool QHelpCollectionHandler::unregisterIndexTable(int nsId, int vfId)
