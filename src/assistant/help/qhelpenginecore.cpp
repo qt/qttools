@@ -819,7 +819,9 @@ static void requestContentHelper(QPromise<ContentResult> &promise, const Content
             if (contents.isEmpty())
                 continue;
 
-            QList<QHelpContentItem *> stack;
+            // Holds the chain of the current item's ancestors together with their depths.
+            // Depths are strictly increasing, but not necessarily contiguous.
+            QList<std::pair<int, QHelpContentItem *>> stack;
             QDataStream s(contents);
             while (true) {
                 int depth = 0;
@@ -844,24 +846,19 @@ static void requestContentHelper(QPromise<ContentResult> &promise, const Content
 // 3. When the previous depth was N, the next depth must be in range [0, N+1] inclusively.
 //    If next item's depth is M > N+1, we insert the item as its depth is N+1.
 
-                if (depth <= 0) {
-                    stack.clear();
-                } else if (depth < stack.size()) {
-                    stack = stack.sliced(0, depth);
-                } else if (depth > stack.size()) {
-                    // Fill the gaps with the last item from the stack (or with the root).
-                    // This branch handles the case when depths are broken, e.g. 0, 2, 2, 1.
-                    // In this case, the 1st item is a root, and 2nd - 4th are all direct
-                    // children of the 1st.
-                    QHelpContentItem *substituteItem =
-                            stack.isEmpty() ? rootItem.get() : stack.constLast();
-                    while (depth > stack.size())
-                        stack.append(substituteItem);
-                }
+                // The parent is the last item on the stack with a depth lower than the item's
+                // depth (or the root). When depths are broken, e.g. 0, 2, 2, 1, the gaps are
+                // implicitly filled with that parent. In this case, the 1st item is a root,
+                // and 2nd - 4th are all direct children of the 1st.
+                // Don't materialize the gaps, as the depth comes from untrusted data.
+                depth = qMax(depth, 0);
+                while (!stack.isEmpty() && stack.constLast().first >= depth)
+                    stack.removeLast();
 
                 const QUrl url = constructUrl(namespaceName, folderName, link);
-                QHelpContentItem *parent = stack.isEmpty() ? rootItem.get() : stack.constLast();
-                stack.push_back(createContentItem(title, url, parent));
+                QHelpContentItem *parent = stack.isEmpty() ? rootItem.get()
+                                                           : stack.constLast().second;
+                stack.push_back({depth, createContentItem(title, url, parent)});
             }
         }
     }
