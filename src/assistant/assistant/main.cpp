@@ -80,7 +80,10 @@ QString indexFilesFolder(const QString &collectionFile)
     QString indexFilesFolder = ".fulltextsearch"_L1;
     if (!collectionFile.isEmpty()) {
         QFileInfo fi(collectionFile);
-        indexFilesFolder = u'.' + fi.fileName().left(fi.fileName().lastIndexOf(".qhc"_L1));
+        const QString fileName = fi.fileName();
+        // Keep in sync with QHelpSearchEngineCorePrivate::indexFilesFolder().
+        const QString baseName = fileName.endsWith(".qhc"_L1) ? fileName.chopped(4) : QString();
+        indexFilesFolder = u'.' + (baseName.isEmpty() ? fileName + ".fulltextsearch"_L1 : baseName);
     }
     return indexFilesFolder;
 }
@@ -149,9 +152,8 @@ bool removeSearchIndex(const QString &collectionFile)
     if (!dir.exists())
         return false;
 
-    const QStringList &list = dir.entryList(QDir::Files | QDir::Hidden);
-    for (const QString &item : list)
-        dir.remove(item);
+    // Remove only the database created by QHelpSearchIndexWriter.
+    dir.remove("fts"_L1);
     return true;
 }
 

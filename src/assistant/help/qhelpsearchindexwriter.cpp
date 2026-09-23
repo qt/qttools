@@ -53,7 +53,6 @@ public:
 private:
     void init(bool reindex);
     bool hasDB();
-    void clearLegacyIndex();
 
     const QString m_dbDir;
     QString m_uniqueId;
@@ -70,7 +69,6 @@ private:
 Writer::Writer(const QString &path)
     : m_dbDir(path)
 {
-    clearLegacyIndex();
     QDir().mkpath(m_dbDir);
     m_uniqueId = QHelpGlobal::uniquifyConnectionName("QHelpWriter"_L1, this);
     m_db = QSqlDatabase::addDatabase("QSQLITE"_L1, m_uniqueId);
@@ -116,22 +114,6 @@ bool Writer::hasDB()
     query.prepare("SELECT id FROM info LIMIT 1"_L1);
     query.exec();
     return query.next();
-}
-
-void Writer::clearLegacyIndex()
-{
-    // Clear old legacy clucene index.
-    // More important in case of Creator, since
-    // the index folder is common for all Creator versions
-    QDir dir(m_dbDir);
-    if (!dir.exists())
-        return;
-
-    const QStringList &list = dir.entryList(QDir::Files | QDir::Hidden);
-    if (!list.contains(QLatin1StringView(FTS_DB_NAME))) {
-        for (const QString &item : list)
-            dir.remove(item);
-    }
 }
 
 void Writer::init(bool reindex)
