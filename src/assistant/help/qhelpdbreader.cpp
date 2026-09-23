@@ -456,16 +456,22 @@ QStringList QHelpDBReader::filterAttributes(const QString &filterName) const
     return lst;
 }
 
-QMultiMap<QString, QByteArray> QHelpDBReader::filesData(const QStringList &filterAttributes,
-                                                        const QString &extensionFilter) const
+void QHelpDBReader::filesData(const QStringList &filterAttributes,
+                              const QStringList &extensionFilters,
+                              const std::function<bool(const QString &fileName,
+                                                       const QByteArray &data)> &handler) const
 {
     if (!m_query)
-        return {};
+        return;
 
     QString query;
     QString extension;
-    if (!extensionFilter.isEmpty())
-        extension = "AND FileNameTable.Name LIKE \'%.%1\'"_L1.arg(extensionFilter);
+    if (!extensionFilters.isEmpty()) {
+        QStringList conditions;
+        for (const QString &extensionFilter : extensionFilters)
+            conditions.append("FileNameTable.Name LIKE \'%.%1\'"_L1.arg(extensionFilter));
+        extension = "AND (%1)"_L1.arg(conditions.join(" OR "_L1));
+    }
 
     if (filterAttributes.isEmpty()) {
         query =
@@ -500,11 +506,18 @@ QMultiMap<QString, QByteArray> QHelpDBReader::filesData(const QStringList &filte
                             .arg(quote(filterAttributes.at(i)), extension));
         }
     }
+    // Don't let the query cache the already fetched rows, so that only one file is held
+    // in memory at a time.
+    m_query->setForwardOnly(true);
     m_query->exec(query);
-    QMultiMap<QString, QByteArray> result;
-    while (m_query->next())
-        result.insert(m_query->value(0).toString(), qUncompress(m_query->value(1).toByteArray()));
-    return result;
+    while (m_query->next()) {
+        if (!handler(m_query->value(0).toString(),
+                     qUncompress(m_query->value(1).toByteArray()))) {
+            break;
+        }
+    }
+    m_query->finish();
+    m_query->setForwardOnly(false);
 }
 
 QVariant QHelpDBReader::metaData(const QString &name) const
