@@ -344,7 +344,8 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
     // reindex fileId references
     for (auto it = idToIndexItem.cbegin(), end = idToIndexItem.cend(); it != end; ++it) {
         IndexItem item = it.value();
-        item.fileId = originalFileIdToNewFileId.value(item.fileId);
+        // An unknown file id is kept invalid, it's rejected when registering the index.
+        item.fileId = originalFileIdToNewFileId.value(item.fileId, -1);
         table.indexItems.append(item);
     }
 

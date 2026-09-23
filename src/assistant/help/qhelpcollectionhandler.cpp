@@ -2059,6 +2059,13 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
     indexAnchors.reserve(indexSize);
 
     for (const QHelpDBReader::IndexItem &item : indexTable.indexItems) {
+        // The file id is an index into the fileItems of this documentation. Anything else
+        // would make the keyword point to a file of other documentation.
+        if (item.fileId < 0 || item.fileId >= fileSize) {
+            emit error(tr("Invalid file reference for keyword '%1' in '%2'.")
+                           .arg(item.name, fileName));
+            return false;
+        }
         indexNames.append(item.name);
         indexIdentifiers.append(item.identifier);
         indexNamespaceIds.append(nsId);
