@@ -212,6 +212,22 @@
             cannot display itself. If your application writes such a document
             to a temporary file and lets the operating system open it, the
             help file determines which application is launched.
+        \li QHelpEngineCore::fileData() returns the documents exactly as they
+            are stored in the help file, without any filtering. The HTML, CSS,
+            and JavaScript it returns are untrusted content, and your
+            application is responsible for displaying them in a suitably
+            restricted environment.
+        \li All registered documentation is addressed through the single
+            \c qthelp URL scheme, whatever help file it comes from. A renderer
+            that follows web security rules, such as a web engine, might
+            therefore treat all \c{qthelp://} URLs as one origin. In that case,
+            a script in one help file can read and modify the documents of
+            every other registered help file, and can access any interface
+            that your application exposes to the rendered pages. Registering
+            one untrusted help file thus exposes all other registered help
+            files as well. If you build a help viewer on a web engine, consider
+            giving each help file namespace its own origin, and do not expose
+            application interfaces to the rendered pages.
     \endlist
 
     The same considerations apply to the help collection file (.qhc), because
