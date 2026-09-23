@@ -2212,7 +2212,7 @@ bool QHelpCollectionHandler::unregisterIndexTable(int nsId, int vfId)
         return false;
 
     if (!m_query->next())
-        return false;
+        return true; // the component mapping is already removed
 
     const int componentId = m_query->value(0).toInt();
 
