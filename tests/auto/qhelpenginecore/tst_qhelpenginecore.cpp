@@ -33,6 +33,7 @@ private slots:
     void namespaceName();
     void registeredDocumentations();
     void registerDocumentation();
+    void registerDocumentationFailure();
     void unregisterDocumentation();
     void unregisterDocumentationWithoutFolder();
     void documentationFileName();
@@ -292,6 +293,41 @@ void tst_QHelpEngineCore::registerDocumentation()
             QFAIL("Query error!");
     }
     QSqlDatabase::removeDatabase("testdb");
+}
+
+void tst_QHelpEngineCore::registerDocumentationFailure()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString colFile = dir.filePath("register.qhc");
+
+    QHelpEngineCore c(colFile);
+    c.setReadOnly(false);
+    QVERIFY(c.setupData());
+
+    const auto execQuery = [&colFile](const QString &statement) {
+        const QString connectionName = "registerDocumentationFailure";
+        int result = -1;
+        {
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+            db.setDatabaseName(colFile);
+            if (db.open()) {
+                QSqlQuery query(db);
+                if (query.exec(statement))
+                    result = query.next() ? query.value(0).toInt() : 0;
+            }
+        }
+        QSqlDatabase::removeDatabase(connectionName);
+        return result;
+    };
+    // Makes the registration fail after the namespace was added.
+    QCOMPARE(execQuery("DROP TABLE TimeStampTable"), 0);
+
+    QCOMPARE(c.registerDocumentation(m_path + "/data/qmake-3.3.8.qch"), false);
+    QVERIFY(c.registeredDocumentations().isEmpty());
+    QCOMPARE(execQuery("SELECT COUNT(*) FROM NamespaceTable"), 0);
+    QCOMPARE(execQuery("SELECT COUNT(*) FROM FolderTable"), 0);
+    QCOMPARE(execQuery("SELECT COUNT(*) FROM FileNameTable"), 0);
 }
 
 void tst_QHelpEngineCore::unregisterDocumentation()
