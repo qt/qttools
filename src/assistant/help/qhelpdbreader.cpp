@@ -192,6 +192,10 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
     if (!m_query)
         return table;
 
+    // Don't let the queries cache the already fetched rows, as all the data is copied
+    // into the table anyway.
+    m_query->setForwardOnly(true);
+
     QMap<int, QString> attributeIds;
     m_query->exec("SELECT DISTINCT Id, Name FROM FilterAttributeTable ORDER BY Id"_L1);
     while (m_query->next())
@@ -351,6 +355,8 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
         for (int attributeId : std::as_const(usedAttributeIds))
             table.usedFilterAttributes.append(attributeIds.value(attributeId));
     }
+    m_query->finish();
+    m_query->setForwardOnly(false);
     return table;
 }
 
