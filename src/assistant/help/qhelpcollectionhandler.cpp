@@ -918,11 +918,6 @@ bool QHelpCollectionHandler::unregisterDocumentation(const QString &namespaceNam
 
     const int nsId = m_query->value(0).toInt();
 
-    m_query->prepare("DELETE FROM NamespaceTable WHERE Id = ?"_L1);
-    m_query->bindValue(0, nsId);
-    if (!m_query->exec())
-        return false;
-
     m_query->prepare("SELECT Id FROM FolderTable WHERE NamespaceId = ?"_L1);
     m_query->bindValue(0, nsId);
     m_query->exec();
@@ -934,6 +929,8 @@ bool QHelpCollectionHandler::unregisterDocumentation(const QString &namespaceNam
 
     const int vfId = m_query->value(0).toInt();
 
+    Transaction transaction(m_connectionName);
+
     m_query->prepare("DELETE FROM NamespaceTable WHERE Id = ?"_L1);
     m_query->bindValue(0, nsId);
     if (!m_query->exec())
@@ -944,7 +941,7 @@ bool QHelpCollectionHandler::unregisterDocumentation(const QString &namespaceNam
     if (!m_query->exec())
         return false;
 
-    if (!unregisterIndexTable(nsId, vfId))
+    if (!unregisterIndexTable(nsId, vfId) || !transaction.commit())
         return false;
 
     scheduleVacuum();

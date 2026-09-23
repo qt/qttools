@@ -13,6 +13,8 @@
 #include <QtHelp/QHelpContentItem>
 #include <QtHelp/QHelpEngineCore>
 
+using namespace Qt::StringLiterals;
+
 class tst_QHelpEngineCore : public QObject
 {
     Q_OBJECT
@@ -33,6 +35,7 @@ private slots:
     void registerDocumentation();
     void registerDocumentationFailure();
     void unregisterDocumentation();
+    void unregisterDocumentationWithoutFolder();
     void documentationFileName();
 
     void customFilters();
@@ -337,6 +340,51 @@ void tst_QHelpEngineCore::unregisterDocumentation()
     c.unregisterDocumentation("trolltech.com.3-3-8.qmake");
     QCOMPARE(c.registeredDocumentations().size(), 2);
     QCOMPARE(c.unregisterDocumentation("noexisting"), false);
+}
+
+void tst_QHelpEngineCore::unregisterDocumentationWithoutFolder()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString colFile = dir.filePath("unregister.qhc");
+    const QString ns = "trolltech.com.3-3-8.qmake";
+    const QString orphanNs = "orphan.namespace";
+
+    {
+        QHelpEngineCore c(colFile);
+        c.setReadOnly(false);
+        QVERIFY(c.setupData());
+        QVERIFY(c.registerDocumentation(m_path + "/data/qmake-3.3.8.qch"));
+    }
+
+    const auto execQuery = [&colFile](const QString &statement) {
+        const QString connectionName = "unregisterDocumentationWithoutFolder";
+        int result = -1;
+        {
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+            db.setDatabaseName(colFile);
+            if (db.open()) {
+                QSqlQuery query(db);
+                if (query.exec(statement))
+                    result = query.next() ? query.value(0).toInt() : 0;
+            }
+        }
+        QSqlDatabase::removeDatabase(connectionName);
+        return result;
+    };
+    // A namespace left behind by a registration that failed before adding its folder.
+    QCOMPARE(execQuery("INSERT INTO NamespaceTable VALUES(NULL, '%1', 'orphan.qch')"_L1
+                       .arg(orphanNs)), 0);
+    const int fileCount = execQuery("SELECT COUNT(*) FROM FileNameTable");
+    QVERIFY(fileCount > 0);
+
+    QHelpEngineCore c(colFile);
+    c.setReadOnly(false);
+    QVERIFY(c.setupData());
+    QCOMPARE(c.unregisterDocumentation(orphanNs), false);
+    QCOMPARE(execQuery("SELECT COUNT(*) FROM NamespaceTable"), 2);
+    QCOMPARE(execQuery("SELECT COUNT(*) FROM FileNameTable"), fileCount);
+    QCOMPARE(c.registeredDocumentations(), QStringList(ns));
 }
 
 void tst_QHelpEngineCore::documentationFileName()
