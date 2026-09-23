@@ -1184,14 +1184,24 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
 
     const QString originalVersion = namespaceVersion(fileInfo.namespaceName);
 
+    // Otherwise, fall back to the highest available version, with ties broken by name,
+    // so that the result doesn't depend on the order of rows in the collection file.
+    QString fallbackNamespace;
+    QVersionNumber fallbackVersion;
     for (const QString &ns : std::as_const(namespaceList)) {
         const QString nsVersion = namespaceVersion(ns);
         if (originalVersion == nsVersion)
             return ns;
-    }
 
-    // TODO: still, we may like to return the ns for the highest available version
-    return namespaceList.first();
+        const QVersionNumber version = QVersionNumber::fromString(nsVersion);
+        const int compare = QVersionNumber::compare(version, fallbackVersion);
+        if (fallbackNamespace.isEmpty() || compare > 0
+            || (compare == 0 && ns < fallbackNamespace)) {
+            fallbackNamespace = ns;
+            fallbackVersion = version;
+        }
+    }
+    return fallbackNamespace;
 }
 
 QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
@@ -1239,14 +1249,24 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
 
     const QString originalVersion = namespaceVersion(fileInfo.namespaceName);
 
+    // Otherwise, fall back to the highest available version, with ties broken by name,
+    // so that the result doesn't depend on the order of rows in the collection file.
+    QString fallbackNamespace;
+    QVersionNumber fallbackVersion;
     for (const QString &ns : std::as_const(namespaceList)) {
         const QString nsVersion = namespaceVersion(ns);
         if (originalVersion == nsVersion)
             return ns;
-    }
 
-    // TODO: still, we may like to return the ns for the highest available version
-    return namespaceList.first();
+        const QVersionNumber version = QVersionNumber::fromString(nsVersion);
+        const int compare = QVersionNumber::compare(version, fallbackVersion);
+        if (fallbackNamespace.isEmpty() || compare > 0
+            || (compare == 0 && ns < fallbackNamespace)) {
+            fallbackNamespace = ns;
+            fallbackVersion = version;
+        }
+    }
+    return fallbackNamespace;
 }
 
 QStringList QHelpCollectionHandler::files(const QString &namespaceName,
