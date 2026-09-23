@@ -3,12 +3,14 @@
 #include <QtTest/QtTest>
 
 #include <QtCore/QUrl>
+#include <QtCore/QDataStream>
 #include <QtCore/QFileInfo>
 #include <QtCore/QScopeGuard>
 #include <QtCore/QTemporaryDir>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 
+#include <QtHelp/QHelpContentItem>
 #include <QtHelp/QHelpEngineCore>
 
 class tst_QHelpEngineCore : public QObject
@@ -50,6 +52,9 @@ private slots:
     void setAutoSaveFilter();
 
     void metaData();
+
+    void requestContentDepths_data();
+    void requestContentDepths();
 
 private:
     QString m_path;
@@ -475,6 +480,88 @@ void tst_QHelpEngineCore::metaData()
         QString("Digia Plc and/or its subsidiary(-ies)"));
     QCOMPARE(QHelpEngineCore::metaData(m_path + "/data/test.qch", "notExisting").isValid(),
         false);
+}
+
+void tst_QHelpEngineCore::requestContentDepths_data()
+{
+    QTest::addColumn<QList<int>>("depths");
+    QTest::addColumn<QString>("expectedTree");
+
+    // Items are titled A, B, C, ... in order. The tree is written as title(children).
+    QTest::newRow("valid") << QList<int>{0, 1, 2, 1, 0} << "A(B(C),D),E";
+    QTest::newRow("gap") << QList<int>{0, 2, 2, 1} << "A(B,C,D)";
+    QTest::newRow("first-deep") << QList<int>{2, 0} << "A,B";
+    QTest::newRow("first-deep-children") << QList<int>{2, 3, 1} << "A(B),C";
+    QTest::newRow("negative") << QList<int>{0, 1, -5, 1} << "A(B),C(D)";
+    QTest::newRow("gap-back-into-gap") << QList<int>{0, 3, 2} << "A(B,C)";
+    QTest::newRow("gap-then-deeper") << QList<int>{0, 3, 4, 1, 2} << "A(B(C),D(E))";
+    QTest::newRow("gap-inside") << QList<int>{0, 1, 3, 2} << "A(B(C,D))";
+    QTest::newRow("gap-inside2") << QList<int>{0, 1, 3, 1} << "A(B(C),D)";
+    QTest::newRow("huge") << QList<int>{0, std::numeric_limits<int>::max(), 1} << "A(B,C)";
+    QTest::newRow("huge-nested") << QList<int>{0, 1, std::numeric_limits<int>::max(), 2}
+                                 << "A(B(C,D))";
+    QTest::newRow("huge-first") << QList<int>{std::numeric_limits<int>::max(), 1} << "A,B";
+}
+
+static QString childrenToString(const QHelpContentItem *item)
+{
+    QStringList children;
+    for (int i = 0; i < item->childCount(); ++i) {
+        const QHelpContentItem *child = item->child(i);
+        QString str = child->title();
+        if (child->childCount())
+            str += u'(' + childrenToString(child) + u')';
+        children.append(str);
+    }
+    return children.join(u',');
+}
+
+void tst_QHelpEngineCore::requestContentDepths()
+{
+    QFETCH(QList<int>, depths);
+    QFETCH(QString, expectedTree);
+
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString qchFile = dir.filePath("test.qch");
+    QVERIFY(QFile::copy(m_path + "/data/test.qch", qchFile));
+    QVERIFY(QFile::setPermissions(qchFile, QFile::WriteUser | QFile::ReadUser));
+
+    QByteArray contents;
+    {
+        QDataStream s(&contents, QIODevice::WriteOnly);
+        for (int i = 0; i < depths.size(); ++i) {
+            const QString title(QChar(u'A' + i));
+            s << depths.at(i) << QString(title + ".html") << title;
+        }
+    }
+
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "depthsdb");
+        const auto cleanup = qScopeGuard([&db] {
+            db.close();
+            db = {};
+            QSqlDatabase::removeDatabase("depthsdb");
+        });
+        db.setDatabaseName(qchFile);
+        QVERIFY(db.open());
+        QSqlQuery query(db);
+        QVERIFY(query.exec("DELETE FROM ContentsTable WHERE Id != 1"));
+        QVERIFY(query.prepare("UPDATE ContentsTable SET Data = ? WHERE Id = 1"));
+        query.addBindValue(contents);
+        QVERIFY(query.exec());
+    }
+
+    QHelpEngineCore help(dir.filePath("collection.qhc"));
+    help.setReadOnly(false);
+    help.setUsesFilterEngine(true);
+    QVERIFY(help.setupData());
+    QVERIFY(help.registerDocumentation(qchFile));
+
+    const std::shared_ptr<QHelpContentItem> root = help.requestContent({}).result();
+    QVERIFY(root);
+    QCOMPARE(childrenToString(root.get()), expectedTree);
 }
 
 QTEST_MAIN(tst_QHelpEngineCore)
