@@ -729,15 +729,19 @@ bool QHelpCollectionHandler::removeCustomFilter(const QString &filterName)
         return false;
     }
 
+    Transaction transaction(m_connectionName);
+
     m_query->prepare("DELETE FROM FilterTable WHERE NameId=?"_L1);
     m_query->bindValue(0, filterNameId);
-    m_query->exec();
+    if (!m_query->exec())
+        return false;
 
     m_query->prepare("DELETE FROM FilterNameTable WHERE Id=?"_L1);
     m_query->bindValue(0, filterNameId);
-    m_query->exec();
+    if (!m_query->exec())
+        return false;
 
-    return true;
+    return transaction.commit();
 }
 
 bool QHelpCollectionHandler::addCustomFilter(const QString &filterName,
@@ -763,10 +767,13 @@ bool QHelpCollectionHandler::addCustomFilter(const QString &filterName,
         idsToInsert.removeAll(attributeName);
     }
 
+    Transaction transaction(m_connectionName);
+
     for (const QString &id : std::as_const(idsToInsert)) {
         m_query->prepare("INSERT INTO FilterAttributeTable VALUES(NULL, ?)"_L1);
         m_query->bindValue(0, id);
-        m_query->exec();
+        if (!m_query->exec())
+            return false;
         attributeMap.insert(id, m_query->lastInsertId().toInt());
     }
 
@@ -784,7 +791,8 @@ bool QHelpCollectionHandler::addCustomFilter(const QString &filterName,
 
     m_query->prepare("DELETE FROM FilterTable WHERE NameId=?"_L1);
     m_query->bindValue(0, nameId);
-    m_query->exec();
+    if (!m_query->exec())
+        return false;
 
     for (const QString &att : attributes) {
         m_query->prepare("INSERT INTO FilterTable VALUES(?, ?)"_L1);
@@ -793,7 +801,7 @@ bool QHelpCollectionHandler::addCustomFilter(const QString &filterName,
         if (!m_query->exec())
             return false;
     }
-    return true;
+    return transaction.commit();
 }
 
 QHelpCollectionHandler::FileInfo QHelpCollectionHandler::registeredDocumentation(

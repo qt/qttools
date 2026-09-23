@@ -36,6 +36,7 @@ private slots:
 
     void customFilters();
     void removeCustomFilter();
+    void removeCustomFilterFailure();
     void addCustomFilter();
     void filterAttributes();
     void currentFilter();
@@ -336,6 +337,33 @@ void tst_QHelpEngineCore::removeCustomFilter()
     QStringList custom = help.customFilters();
     QCOMPARE(custom.size(), 3);
     QCOMPARE((bool)custom.contains("Custom Filter 1"), false);
+}
+
+void tst_QHelpEngineCore::removeCustomFilterFailure()
+{
+    const auto execQuery = [this](const QString &statement) {
+        const QString connectionName = "removeCustomFilterFailure";
+        int result = -1;
+        {
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+            db.setDatabaseName(m_colFile);
+            if (db.open()) {
+                QSqlQuery query(db);
+                if (query.exec(statement))
+                    result = query.next() ? query.value(0).toInt() : 0;
+            }
+        }
+        QSqlDatabase::removeDatabase(connectionName);
+        return result;
+    };
+
+    QHelpEngineCore help(m_colFile, 0);
+    QCOMPARE(help.setupData(), true);
+    // Makes removing the filter attributes of the filter fail.
+    QCOMPARE(execQuery("DROP TABLE FilterTable"), 0);
+
+    QCOMPARE(help.removeCustomFilter("Custom Filter 1"), false);
+    QVERIFY(help.customFilters().contains("Custom Filter 1"));
 }
 
 void tst_QHelpEngineCore::addCustomFilter()
