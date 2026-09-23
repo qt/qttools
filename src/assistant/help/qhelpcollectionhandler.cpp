@@ -27,6 +27,16 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
+// Stored as PRAGMA user_version. Increase when the format of the collection
+// file changes in an incompatible way. Collection files without a version
+// (0) were created before the version was introduced.
+static constexpr int CollectionSchemaVersion = 1;
+
+static QString writeSchemaVersionStatement()
+{
+    return "PRAGMA user_version = "_L1 + QString::number(CollectionSchemaVersion);
+}
+
 class Transaction
 {
 public:
@@ -138,6 +148,20 @@ bool QHelpCollectionHandler::openCollectionFile()
         }
     }
 
+    if (!m_query->exec("PRAGMA user_version"_L1) || !m_query->next()) {
+        closeDB();
+        emit error(tr("Cannot read the version of collection file %1.").arg(collectionFile()));
+        return false;
+    }
+
+    const int schemaVersion = m_query->value(0).toInt();
+    if (schemaVersion > CollectionSchemaVersion) {
+        closeDB();
+        emit error(tr("The collection file \"%1\" was created by a newer version of Qt Help.")
+                   .arg(m_collectionFile));
+        return false;
+    }
+
     if (m_readOnly)
         return true;
 
@@ -192,6 +216,12 @@ bool QHelpCollectionHandler::openCollectionFile()
 
         // Old tables exist, index tables didn't, recreate index tables only in this case
         indexAndNamespaceFilterTablesMissing = tablesExist;
+    }
+
+    if (schemaVersion < CollectionSchemaVersion
+            && !m_query->exec(writeSchemaVersionStatement())) {
+        emit error(tr("Cannot write the version of collection file %1.").arg(collectionFile()));
+        return false;
     }
 
     const FileInfoList &docList = registeredDocumentations();
@@ -354,8 +384,10 @@ bool QHelpCollectionHandler::copyCollectionFile(const QString &fileName)
 
         Transaction transaction(connectionName);
 
-        if (!createTables(&copyQuery) || !recreateIndexAndNamespaceFilterTables(&copyQuery))
+        if (!createTables(&copyQuery) || !recreateIndexAndNamespaceFilterTables(&copyQuery)
+                || !copyQuery.exec(writeSchemaVersionStatement())) {
             return false;
+        }
 
         const QString &oldBaseDir = QFileInfo(collectionFile()).absolutePath();
         const QFileInfo newColFi(colFile);

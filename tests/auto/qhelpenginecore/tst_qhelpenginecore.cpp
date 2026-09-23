@@ -29,6 +29,7 @@ private slots:
     void collectionFile();
     void setCollectionFile();
     void copyCollectionFile();
+    void collectionSchemaVersion();
 
     void namespaceName();
     void registeredDocumentations();
@@ -237,6 +238,77 @@ void tst_QHelpEngineCore::copyCollectionFile()
         delete m_query;
     }
     QSqlDatabase::removeDatabase("testdb");
+}
+
+void tst_QHelpEngineCore::collectionSchemaVersion()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const auto execQuery = [](const QString &colFile, const QString &statement) {
+        const QString connectionName = "collectionSchemaVersion";
+        int result = -1;
+        {
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+            db.setDatabaseName(colFile);
+            if (db.open()) {
+                QSqlQuery query(db);
+                if (query.exec(statement))
+                    result = query.next() ? query.value(0).toInt() : 0;
+            }
+        }
+        QSqlDatabase::removeDatabase(connectionName);
+        return result;
+    };
+
+    // A new collection file gets the current version.
+    const QString newColFile = dir.filePath("new.qhc");
+    {
+        QHelpEngineCore c(newColFile);
+        c.setReadOnly(false);
+        QVERIFY(c.setupData());
+        QVERIFY(c.registerDocumentation(m_path + "/data/qmake-3.3.8.qch"));
+    }
+    QCOMPARE(execQuery(newColFile, "PRAGMA user_version"), 1);
+
+    // A collection file without a version is upgraded.
+    QCOMPARE(execQuery(m_colFile, "PRAGMA user_version"), 0);
+    {
+        QHelpEngineCore c(m_colFile);
+        c.setReadOnly(false);
+        QVERIFY(c.setupData());
+        QCOMPARE(c.registeredDocumentations().size(), 3);
+
+        // A copy gets the current version.
+        const QString copiedColFile = dir.filePath("copy.qhc");
+        QVERIFY(c.copyCollectionFile(copiedColFile));
+        QCOMPARE(execQuery(copiedColFile, "PRAGMA user_version"), 1);
+    }
+    QCOMPARE(execQuery(m_colFile, "PRAGMA user_version"), 1);
+
+    // A collection file of a newer version is refused.
+    const QString newerColFile = dir.filePath("newer.qhc");
+    QVERIFY(QFile::copy(newColFile, newerColFile));
+    QCOMPARE(execQuery(newerColFile, "PRAGMA user_version = 2"), 0);
+    for (const bool readOnly : {false, true}) {
+        QHelpEngineCore c(newerColFile);
+        c.setReadOnly(readOnly);
+        QCOMPARE(c.setupData(), false);
+        QVERIFY(!c.error().isEmpty());
+    }
+
+    // Missing tables of a collection file of the current version are recreated.
+    QCOMPARE(execQuery(newColFile, "DROP TABLE VersionFilter"), 0);
+    {
+        QHelpEngineCore c(newColFile);
+        c.setReadOnly(false);
+        QVERIFY(c.setupData());
+        QCOMPARE(c.registeredDocumentations().size(), 1);
+    }
+    QCOMPARE(execQuery(newColFile, "SELECT COUNT(*) FROM sqlite_master "
+                                   "WHERE type = 'table' AND name = 'VersionFilter'"), 1);
+    QVERIFY(execQuery(newColFile, "SELECT COUNT(*) FROM FileNameTable") > 0);
+    QCOMPARE(execQuery(newColFile, "PRAGMA user_version"), 1);
 }
 
 void tst_QHelpEngineCore::namespaceName()
