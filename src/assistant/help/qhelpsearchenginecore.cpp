@@ -30,8 +30,11 @@ public:
         QString indexFilesFolder = ".fulltextsearch"_L1;
         if (m_helpEngine && !m_helpEngine->collectionFile().isEmpty()) {
             const QFileInfo fi(m_helpEngine->collectionFile());
+            const QString fileName = fi.fileName();
+            // Only strip a real .qhc suffix, otherwise e.g. "ssh" would map onto "~/.ssh".
+            const QString baseName = fileName.endsWith(".qhc"_L1) ? fileName.chopped(4) : QString();
             indexFilesFolder = fi.absolutePath() + QDir::separator() + u'.'
-                    + fi.fileName().left(fi.fileName().lastIndexOf(".qhc"_L1));
+                    + (baseName.isEmpty() ? fileName + ".fulltextsearch"_L1 : baseName);
         }
         return indexFilesFolder;
     }
