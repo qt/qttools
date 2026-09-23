@@ -346,8 +346,15 @@ void QHelpSearchIndexWriter::run()
 
     Writer writer(indexPath);
 
-    while (!writer.tryInit(reindex))
+    while (!writer.tryInit(reindex)) {
+        lock.relock();
+        if (m_cancel) {
+            emit indexingFinished();
+            return;
+        }
+        lock.unlock();
         sleep(1);
+    }
 
     const QStringList &registeredDocs = engine.registeredDocumentations();
     QMap<QString, QDateTime> indexMap = readIndexMap(engine);
