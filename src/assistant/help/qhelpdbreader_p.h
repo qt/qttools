@@ -20,6 +20,8 @@
 #include <QtCore/qobject.h>
 #include <QtCore/qstringlist.h>
 
+#include <functional>
+
 QT_BEGIN_NAMESPACE
 
 class QSqlQuery;
@@ -75,8 +77,11 @@ public:
     QString version() const;
     IndexTable indexTable() const;
     QList<QStringList> filterAttributeSets() const;
-    QMultiMap<QString, QByteArray> filesData(const QStringList &filterAttributes,
-                                             const QString &extensionFilter = {}) const;
+    // Calls the handler for each matching file, decompressing one file at a time.
+    // Stops when the handler returns false. The handler must not use this reader.
+    void filesData(const QStringList &filterAttributes, const QStringList &extensionFilters,
+                   const std::function<bool(const QString &fileName,
+                                            const QByteArray &data)> &handler) const;
     QByteArray fileData(const QString &virtualFolder, const QString &filePath) const;
 
     QStringList customFilters() const;

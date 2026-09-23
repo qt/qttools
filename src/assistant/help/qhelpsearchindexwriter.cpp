@@ -428,30 +428,18 @@ void QHelpSearchIndexWriter::run()
         for (const QStringList &attributes : attributeSets) {
             const QString &attributesString = attributes.join(u'|');
 
-            const auto htmlFiles = reader.filesData(attributes, "html"_L1);
-            const auto htmFiles = reader.filesData(attributes, "htm"_L1);
-            const auto txtFiles = reader.filesData(attributes, "txt"_L1);
-
-            auto files = htmlFiles;
-            files.unite(htmFiles);
-            files.unite(txtFiles);
-
-            for (auto it = files.cbegin(), end = files.cend(); it != end ; ++it) {
+            bool canceled = false;
+            reader.filesData(attributes, {"html"_L1, "htm"_L1, "txt"_L1},
+                             [&](const QString &file, const QByteArray &data) {
                 lock.relock();
                 if (m_cancel) {
-                    // store what we have done so far
-                    writeIndexMap(&engine, indexMap);
-                    writer.endTransaction();
-                    emit indexingFinished();
-                    return;
+                    canceled = true;
+                    return false;
                 }
                 lock.unlock();
 
-                const QString &file = it.key();
-                const QByteArray &data = it.value();
-
                 if (data.isEmpty())
-                    continue;
+                    return true;
 
                 QUrl url;
                 url.setScheme("qthelp"_L1);
@@ -464,7 +452,7 @@ void QHelpSearchIndexWriter::run()
                 const QString &fullFileName = url.toString();
                 if (!fullFileName.endsWith(".html"_L1) && !fullFileName.endsWith(".htm"_L1)
                     && !fullFileName.endsWith(".txt"_L1)) {
-                    continue;
+                    return true;
                 }
 
                 QTextStream s(data);
@@ -474,7 +462,7 @@ void QHelpSearchIndexWriter::run()
 
                 const QString &text = s.readAll();
                 if (text.isEmpty())
-                    continue;
+                    return true;
 
                 QString title;
                 QString contents;
@@ -494,6 +482,15 @@ void QHelpSearchIndexWriter::run()
                 }
 
                 writer.insertDoc(namespaceName, attributesString, fullFileName, title, contents);
+                return true;
+            });
+
+            if (canceled) {
+                // store what we have done so far
+                writeIndexMap(&engine, indexMap);
+                writer.endTransaction();
+                emit indexingFinished();
+                return;
             }
         }
         writer.flush();
