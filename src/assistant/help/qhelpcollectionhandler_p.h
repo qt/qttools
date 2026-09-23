@@ -52,7 +52,7 @@ public:
         int namespaceId = -1;
         int folderId = -1;
         QString fileName;
-        int size = 0;
+        qint64 size = 0;
         QDateTime timeStamp;
     };
 

@@ -207,7 +207,7 @@ bool QHelpCollectionHandler::openCollectionFile()
         timeStamp.namespaceId = m_query->value(0).toInt();
         timeStamp.folderId    = m_query->value(1).toInt();
         timeStamp.fileName    = m_query->value(2).toString();
-        timeStamp.size        = m_query->value(3).toInt();
+        timeStamp.size        = m_query->value(3).toLongLong();
         timeStamp.timeStamp   = m_query->value(4).toDateTime();
         timeStamps.append(timeStamp);
     }
