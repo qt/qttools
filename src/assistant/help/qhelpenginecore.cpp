@@ -105,10 +105,10 @@ bool QHelpEngineCorePrivate::setup()
 
     The core help engine has two modes:
     \list
-        \li Read-only mode, where the help collection file is not changed
-            unless explicitly requested. This also works if the
-            collection file is in a read-only location,
-            and is the default.
+        \li Read-only mode, where the help collection file is never changed.
+            Functions that would modify it fail and return \c false.
+            This also works if the collection file is in a read-only
+            location, and is the default.
         \li Fully writable mode, which requires the help collection
             file to be writable.
     \endlist
@@ -216,7 +216,12 @@ void QHelpEngineCore::setCollectionFile(const QString &fileName)
     In this case, some functionality won't be accessible,
     like registering additional documentation, filter editing,
     or any action that would require changes to the
-    collection file. Setting it to \c false enables the full
+    collection file. The collection file is opened in read-only
+    mode, and functions that would change it, such as
+    registerDocumentation(), addCustomFilter() or setCustomValue(),
+    fail and return \c false. The active filter is kept in memory
+    only and is not saved in the collection file.
+    Setting it to \c false enables the full
     functionality of the help engine.
 
     By default, this property is \c true.
@@ -466,7 +471,8 @@ QStringList QHelpEngineCore::filterAttributes(const QString &filterName) const
 
     Setting this property will save the new custom filter permanently in the
     help collection file. To set a custom filter without saving it
-    permanently, disable the auto save filter mode.
+    permanently, disable the auto save filter mode. In \l readOnly
+    mode, the filter is never saved.
 
     \sa autoSaveFilter()
 */
@@ -489,7 +495,7 @@ void QHelpEngineCore::setCurrentFilter(const QString &filterName)
     if (!d->setup() || filterName == d->currentFilter)
         return;
     d->currentFilter = filterName;
-    if (d->autoSaveFilter)
+    if (d->autoSaveFilter && !d->readOnly)
         d->collectionHandler->setCustomValue("CurrentFilter"_L1, d->currentFilter);
     emit currentFilterChanged(d->currentFilter);
 }
@@ -750,6 +756,7 @@ QString QHelpEngineCore::error() const
     If QHelpEngineCore is in auto save filter mode, the current filter is
     automatically saved when it is changed by the QHelpFilterEngine::setActiveFilter()
     function. The filter is saved persistently in the help collection file.
+    In \l readOnly mode, the filter is never saved.
 
     By default, this mode is on.
 */

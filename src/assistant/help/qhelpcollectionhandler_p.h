@@ -156,6 +156,7 @@ public:
     QStringList namespacesForFilter(const QString &filterName) const;
 
     void setReadOnly(bool readOnly) { m_readOnly = readOnly; }
+    bool isReadOnly() const { return m_readOnly; }
 
     static QUrl buildQUrl(const QString &ns, const QString &folder,
                           const QString &relFileName, const QString &anchor);
@@ -177,6 +178,7 @@ private:
                                        const QString &filterName) const;
 
     bool isDBOpened() const;
+    bool isDBWritable();
     bool createTables(QSqlQuery *query);
     void closeDB();
     bool recreateIndexAndNamespaceFilterTables(QSqlQuery *query);
