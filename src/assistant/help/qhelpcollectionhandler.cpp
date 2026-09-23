@@ -11,6 +11,7 @@
 #include <QtCore/qdatastream.h>
 #include <QtCore/qdatetime.h>
 #include <QtCore/qdir.h>
+#include <QtCore/qfile.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qset.h>
 #include <QtCore/qtimer.h>
@@ -346,70 +347,87 @@ bool QHelpCollectionHandler::copyCollectionFile(const QString &fileName)
         return false;
     }
 
-    QSqlQuery copyQuery(db);
-    copyQuery.exec("PRAGMA synchronous=OFF"_L1);
-    copyQuery.exec("PRAGMA cache_size=3000"_L1);
+    const auto copyTables = [&] {
+        QSqlQuery copyQuery(db);
+        copyQuery.exec("PRAGMA synchronous=OFF"_L1);
+        copyQuery.exec("PRAGMA cache_size=3000"_L1);
 
-    if (!createTables(&copyQuery) || !recreateIndexAndNamespaceFilterTables(&copyQuery)) {
+        Transaction transaction(connectionName);
+
+        if (!createTables(&copyQuery) || !recreateIndexAndNamespaceFilterTables(&copyQuery))
+            return false;
+
+        const QString &oldBaseDir = QFileInfo(collectionFile()).absolutePath();
+        const QFileInfo newColFi(colFile);
+        m_query->exec("SELECT Name, FilePath FROM NamespaceTable"_L1);
+        while (m_query->next()) {
+            copyQuery.prepare("INSERT INTO NamespaceTable VALUES(NULL, ?, ?)"_L1);
+            copyQuery.bindValue(0, m_query->value(0).toString());
+            QString oldFilePath = m_query->value(1).toString();
+            if (!QDir::isAbsolutePath(oldFilePath))
+                oldFilePath = oldBaseDir + u'/' + oldFilePath;
+            copyQuery.bindValue(1, newColFi.absoluteDir().relativeFilePath(oldFilePath));
+            if (!copyQuery.exec())
+                return false;
+        }
+
+        m_query->exec("SELECT NamespaceId, Name FROM FolderTable"_L1);
+        while (m_query->next()) {
+            copyQuery.prepare("INSERT INTO FolderTable VALUES(NULL, ?, ?)"_L1);
+            copyQuery.bindValue(0, m_query->value(0).toString());
+            copyQuery.bindValue(1, m_query->value(1).toString());
+            if (!copyQuery.exec())
+                return false;
+        }
+
+        m_query->exec("SELECT Name FROM FilterAttributeTable"_L1);
+        while (m_query->next()) {
+            copyQuery.prepare("INSERT INTO FilterAttributeTable VALUES(NULL, ?)"_L1);
+            copyQuery.bindValue(0, m_query->value(0).toString());
+            if (!copyQuery.exec())
+                return false;
+        }
+
+        m_query->exec("SELECT Name FROM FilterNameTable"_L1);
+        while (m_query->next()) {
+            copyQuery.prepare("INSERT INTO FilterNameTable VALUES(NULL, ?)"_L1);
+            copyQuery.bindValue(0, m_query->value(0).toString());
+            if (!copyQuery.exec())
+                return false;
+        }
+
+        m_query->exec("SELECT NameId, FilterAttributeId FROM FilterTable"_L1);
+        while (m_query->next()) {
+            copyQuery.prepare("INSERT INTO FilterTable VALUES(?, ?)"_L1);
+            copyQuery.bindValue(0, m_query->value(0).toInt());
+            copyQuery.bindValue(1, m_query->value(1).toInt());
+            if (!copyQuery.exec())
+                return false;
+        }
+
+        m_query->exec("SELECT Key, Value FROM SettingsTable"_L1);
+        while (m_query->next()) {
+            if (m_query->value(0).toString() == "FTS5IndexedNamespaces"_L1)
+                continue;
+            copyQuery.prepare("INSERT INTO SettingsTable VALUES(?, ?)"_L1);
+            copyQuery.bindValue(0, m_query->value(0).toString());
+            copyQuery.bindValue(1, m_query->value(1));
+            if (!copyQuery.exec())
+                return false;
+        }
+
+        return transaction.commit();
+    };
+
+    const bool copied = copyTables();
+    db.close();
+    db = QSqlDatabase();
+    QSqlDatabase::removeDatabase(connectionName);
+    if (!copied) {
+        QFile::remove(colFile);
         emit error(tr("Cannot copy collection file: %1").arg(colFile));
         return false;
     }
-
-    const QString &oldBaseDir = QFileInfo(collectionFile()).absolutePath();
-    const QFileInfo newColFi(colFile);
-    m_query->exec("SELECT Name, FilePath FROM NamespaceTable"_L1);
-    while (m_query->next()) {
-        copyQuery.prepare("INSERT INTO NamespaceTable VALUES(NULL, ?, ?)"_L1);
-        copyQuery.bindValue(0, m_query->value(0).toString());
-        QString oldFilePath = m_query->value(1).toString();
-        if (!QDir::isAbsolutePath(oldFilePath))
-            oldFilePath = oldBaseDir + u'/' + oldFilePath;
-        copyQuery.bindValue(1, newColFi.absoluteDir().relativeFilePath(oldFilePath));
-        copyQuery.exec();
-    }
-
-    m_query->exec("SELECT NamespaceId, Name FROM FolderTable"_L1);
-    while (m_query->next()) {
-        copyQuery.prepare("INSERT INTO FolderTable VALUES(NULL, ?, ?)"_L1);
-        copyQuery.bindValue(0, m_query->value(0).toString());
-        copyQuery.bindValue(1, m_query->value(1).toString());
-        copyQuery.exec();
-    }
-
-    m_query->exec("SELECT Name FROM FilterAttributeTable"_L1);
-    while (m_query->next()) {
-        copyQuery.prepare("INSERT INTO FilterAttributeTable VALUES(NULL, ?)"_L1);
-        copyQuery.bindValue(0, m_query->value(0).toString());
-        copyQuery.exec();
-    }
-
-    m_query->exec("SELECT Name FROM FilterNameTable"_L1);
-    while (m_query->next()) {
-        copyQuery.prepare("INSERT INTO FilterNameTable VALUES(NULL, ?)"_L1);
-        copyQuery.bindValue(0, m_query->value(0).toString());
-        copyQuery.exec();
-    }
-
-    m_query->exec("SELECT NameId, FilterAttributeId FROM FilterTable"_L1);
-    while (m_query->next()) {
-        copyQuery.prepare("INSERT INTO FilterTable VALUES(?, ?)"_L1);
-        copyQuery.bindValue(0, m_query->value(0).toInt());
-        copyQuery.bindValue(1, m_query->value(1).toInt());
-        copyQuery.exec();
-    }
-
-    m_query->exec("SELECT Key, Value FROM SettingsTable"_L1);
-    while (m_query->next()) {
-        if (m_query->value(0).toString() == "FTS5IndexedNamespaces"_L1)
-            continue;
-        copyQuery.prepare("INSERT INTO SettingsTable VALUES(?, ?)"_L1);
-        copyQuery.bindValue(0, m_query->value(0).toString());
-        copyQuery.bindValue(1, m_query->value(1));
-        copyQuery.exec();
-    }
-
-    copyQuery.clear();
-    QSqlDatabase::removeDatabase(connectionName);
     return true;
 }
 
