@@ -492,7 +492,7 @@ void QHelpSearchIndexWriter::run()
                 if (fullFileName.endsWith(".txt"_L1)) {
                     title = fullFileName.mid(fullFileName.lastIndexOf(u'/') + 1);
                     contents = text.toHtmlEscaped();
-#if QT_CONFIG(fullqthelp)
+#if QT_CONFIG(fullqthelp) && QT_CONFIG(texthtmlparser)
                 } else {
                     QTextDocument doc;
                     doc.setHtml(text);
