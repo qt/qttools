@@ -36,9 +36,11 @@ public:
     void setLinkColor(const QColor &color)
     {
         m_linkColor = color;
+#if QT_CONFIG(cssparser)
         const QString sheet = QString::fromLatin1("a { text-decoration: underline; color: %1 }")
                                       .arg(m_linkColor.name());
         document()->setDefaultStyleSheet(sheet);
+#endif
     }
 
     void showResultPage(const QList<QHelpSearchResult> &results, bool isIndexing)
