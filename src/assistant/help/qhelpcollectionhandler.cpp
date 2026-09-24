@@ -1967,8 +1967,10 @@ qint64 QHelpCollectionHandler::registerVirtualFolder(const QString &folderName, 
         emit error(tr("Cannot register virtual folder '%1'.").arg(folderName));
         return -1;
     }
-    if (registerComponent(folderName, namespaceId) < 0)
+    if (registerComponent(folderName, namespaceId) < 0) {
+        emit error(tr("Cannot register component '%1'.").arg(folderName));
         return -1;
+    }
     return virtualId;
 }
 
@@ -2037,6 +2039,11 @@ bool QHelpCollectionHandler::registerIndexAndNamespaceFilterTables(
     const qint64 vfId = m_query->value(0).toLongLong();
     const QString vfName = m_query->value(1).toString();
 
+    // Drop the index which may be left over for this documentation, e.g. when its time stamp
+    // was missing or broken, so that it isn't registered twice.
+    if (!unregisterIndexTable(nsId, vfId))
+        return false;
+
     const QString absFileName = absoluteDocPath(fileName);
     QHelpDBReader reader(absFileName, QHelpGlobal::uniquifyConnectionName(
                              fileName, this), this);
@@ -2077,6 +2084,11 @@ void QHelpCollectionHandler::createVersionFilter(const QString &version)
 bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable &indexTable,
                                                 qint64 nsId, qint64 vfId, const QString &fileName)
 {
+    const auto fail = [this, &fileName] {
+        emit error(tr("Cannot register index tables of documentation %1.").arg(fileName));
+        return false;
+    };
+
     Transaction transaction(m_connectionName);
 
     QMap<QString, QVariantList> filterAttributeToNewFileId;
@@ -2092,7 +2104,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
     const std::optional<qint64> maxFileIdOpt
             = readMaxId(m_query.get(), "FileNameTable"_L1, "FileId"_L1, fileSize);
     if (!maxFileIdOpt)
-        return false;
+        return fail();
 
     const qint64 maxFileId = *maxFileIdOpt;
     QVariantList fileIds;
@@ -2115,7 +2127,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
     m_query->addBindValue(fileIds);
     m_query->addBindValue(fileTitles);
     if (!m_query->execBatch())
-        return false;
+        return fail();
 
     for (auto it = filterAttributeToNewFileId.cbegin(),
          end = filterAttributeToNewFileId.cend(); it != end; ++it) {
@@ -2123,7 +2135,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         m_query->prepare("SELECT Id From FilterAttributeTable WHERE Name = ?"_L1);
         m_query->bindValue(0, filterAttribute);
         if (!m_query->exec() || !m_query->next())
-            return false;
+            return fail();
 
         const qint64 attributeId = m_query->value(0).toLongLong();
 
@@ -2135,7 +2147,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         m_query->addBindValue(attributeIds);
         m_query->addBindValue(it.value());
         if (!m_query->execBatch())
-            return false;
+            return fail();
     }
 
     QMap<QString, QVariantList> filterAttributeToNewIndexId;
@@ -2157,7 +2169,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
     const std::optional<qint64> maxIndexIdOpt
             = readMaxId(m_query.get(), "IndexTable"_L1, "Id"_L1, indexSize);
     if (!maxIndexIdOpt)
-        return false;
+        return fail();
 
     const qint64 maxIndexId = *maxIndexIdOpt;
     int newIndexId = 0;
@@ -2189,7 +2201,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
     m_query->addBindValue(indexFileIds);
     m_query->addBindValue(indexAnchors);
     if (!m_query->execBatch())
-        return false;
+        return fail();
 
     for (auto it = filterAttributeToNewIndexId.cbegin(),
          end = filterAttributeToNewIndexId.cend(); it != end; ++it) {
@@ -2197,7 +2209,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         m_query->prepare("SELECT Id From FilterAttributeTable WHERE Name = ?"_L1);
         m_query->bindValue(0, filterAttribute);
         if (!m_query->exec() || !m_query->next())
-            return false;
+            return fail();
 
         const qint64 attributeId = m_query->value(0).toLongLong();
 
@@ -2209,7 +2221,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         m_query->addBindValue(attributeIds);
         m_query->addBindValue(it.value());
         if (!m_query->execBatch())
-            return false;
+            return fail();
     }
 
     QMap<QString, QVariantList> filterAttributeToNewContentsId;
@@ -2225,7 +2237,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
     const std::optional<qint64> maxContentsIdOpt
             = readMaxId(m_query.get(), "ContentsTable"_L1, "Id"_L1, contentsSize);
     if (!maxContentsIdOpt)
-        return false;
+        return fail();
 
     const qint64 maxContentsId = *maxContentsIdOpt;
     int newContentsId = 0;
@@ -2246,7 +2258,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
     m_query->addBindValue(contentsNsIds);
     m_query->addBindValue(contentsData);
     if (!m_query->execBatch())
-        return false;
+        return fail();
 
     for (auto it = filterAttributeToNewContentsId.cbegin(),
          end = filterAttributeToNewContentsId.cend(); it != end; ++it) {
@@ -2254,7 +2266,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         m_query->prepare("SELECT Id From FilterAttributeTable WHERE Name = ?"_L1);
         m_query->bindValue(0, filterAttribute);
         if (!m_query->exec() || !m_query->next())
-            return false;
+            return fail();
 
         const qint64 attributeId = m_query->value(0).toLongLong();
 
@@ -2266,7 +2278,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         m_query->addBindValue(attributeIds);
         m_query->addBindValue(it.value());
         if (!m_query->execBatch())
-            return false;
+            return fail();
     }
 
     QVariantList filterNsIds;
@@ -2277,7 +2289,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         m_query->prepare("SELECT Id From FilterAttributeTable WHERE Name = ?"_L1);
         m_query->bindValue(0, filterAttribute);
         if (!m_query->exec() || !m_query->next())
-            return false;
+            return fail();
 
         filterAttributeIds.append(m_query->value(0).toLongLong());
     }
@@ -2287,7 +2299,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
     m_query->addBindValue(filterNsIds);
     m_query->addBindValue(filterAttributeIds);
     if (!m_query->execBatch())
-        return false;
+        return fail();
 
     m_query->prepare("INSERT INTO TimeStampTable "
                      "(NamespaceId, FolderId, FilePath, Size, TimeStamp) "
@@ -2307,9 +2319,11 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
     }
     m_query->addBindValue(lastModified);
     if (!m_query->exec())
-        return false;
+        return fail();
 
-    return transaction.commit();
+    if (!transaction.commit())
+        return fail();
+    return true;
 }
 
 bool QHelpCollectionHandler::unregisterIndexTable(qint64 nsId, qint64 vfId)
