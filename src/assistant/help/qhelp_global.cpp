@@ -33,11 +33,13 @@ QString QHelpGlobal::documentTitle(const QString &content)
         const int end = content.indexOf("</title>"_L1, 0, Qt::CaseInsensitive);
         if ((end - start) > 0) {
             title = content.mid(start, end - start);
+#if QT_CONFIG(texthtmlparser)
             if (Qt::mightBeRichText(title) || title.contains(u'&')) {
                 QTextDocument doc;
                 doc.setHtml(title);
                 title = doc.toPlainText();
             }
+#endif
         }
     }
     return title;

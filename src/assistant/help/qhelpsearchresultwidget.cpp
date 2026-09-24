@@ -78,7 +78,11 @@ public:
         }
 
         str << "</body></html>";
+#if QT_CONFIG(texthtmlparser)
         setHtml(htmlFile);
+#else
+        setPlainText(htmlFile);
+#endif
     }
 
 signals:
