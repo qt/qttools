@@ -115,6 +115,7 @@ public:
 
     friend class LinkAtom;
 
+    Atom &operator=(const Atom &) = delete;
     explicit Atom(AtomType type, const QString &string = "") : m_type(type), m_strs(string) { }
 
     Atom(AtomType type, const QString &p1, const QString &p2) : m_type(type), m_strs(p1)
