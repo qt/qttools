@@ -16,8 +16,7 @@ using namespace Qt::Literals::StringLiterals;
     Helper to build an Atom chain and manage memory.
 
     The first atom is stack-allocated; subsequent atoms are heap-allocated
-    and owned by this struct. The chain is linked via the Atom(previous, type, string)
-    constructor.
+    and owned by this struct.
 */
 struct AtomChain
 {
@@ -39,7 +38,8 @@ struct AtomChain
     Atom *append(Atom::AtomType type, const QString &str = {})
     {
         Atom *prev = owned.isEmpty() ? &first : owned.last();
-        auto *a = new Atom(prev, type, str);
+        auto *a = new Atom(type, str);
+        prev->setNext(a);
         owned.append(a);
         return a;
     }
@@ -47,7 +47,8 @@ struct AtomChain
     Atom *append(Atom::AtomType type, const QString &p1, const QString &p2)
     {
         Atom *prev = owned.isEmpty() ? &first : owned.last();
-        auto *a = new Atom(prev, type, p1, p2);
+        auto *a = new Atom(type, p1, p2);
+        prev->setNext(a);
         owned.append(a);
         return a;
     }

@@ -23,7 +23,6 @@ public:
     Text &operator<<(Atom::AtomType atomType);
     Text &operator<<(const QString &string);
     Text &operator<<(const Atom &atom);
-    Text &operator<<(const LinkAtom &atom);
     Text &operator<<(const Text &text);
     void stripFirstAtom();
     void stripLastAtom();
