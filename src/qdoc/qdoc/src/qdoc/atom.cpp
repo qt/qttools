@@ -257,6 +257,17 @@ static const struct
 */
 
 /*!
+  Creates and returns a detached copy of this Atom.
+*/
+Atom *Atom::clone() const
+{
+    if (count() < 2)
+        return new Atom(type(), string());
+
+    return new Atom(type(), string(), string(1));
+}
+
+/*!
     Starting from this Atom, searches the linked list for the
     atom of specified type \a t and returns it. Returns \nullptr
     if no such atom is found.
@@ -463,6 +474,14 @@ LinkAtom::LinkAtom(const LinkAtom &t)
       m_squareBracketParams(t.m_squareBracketParams)
 {
     // nothing
+}
+
+/*!
+  Creates and returns a detached copy of this LinkAtom.
+*/
+LinkAtom *LinkAtom::clone() const
+{
+    return new LinkAtom(*this);
 }
 
 /*!

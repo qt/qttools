@@ -47,22 +47,15 @@ Text &Text::operator<<(const QString &string)
 
 Text &Text::operator<<(const Atom &atom)
 {
-    if (atom.isLinkAtom())
-        return operator<<(static_cast<const LinkAtom&>(atom));
+    Atom *copy = atom.clone();
 
-    if (atom.count() < 2) {
-        if (m_first == nullptr) {
-            m_first = new Atom(atom.type(), atom.string());
-            m_last = m_first;
-        } else
-            m_last = new Atom(m_last, atom.type(), atom.string());
+    if (m_first == nullptr) {
+        m_first = copy;
     } else {
-        if (m_first == nullptr) {
-            m_first = new Atom(atom.type(), atom.string(), atom.string(1));
-            m_last = m_first;
-        } else
-            m_last = new Atom(m_last, atom.type(), atom.string(), atom.string(1));
+        m_last->setNext(copy);
     }
+
+    m_last = copy;
     return *this;
 }
 

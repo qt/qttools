@@ -138,6 +138,7 @@ public:
     }
 
     virtual ~Atom() = default;
+    virtual Atom *clone() const;
 
     void appendChar(QChar ch) { m_strs[0] += ch; }
     void concatenateString(const QString &string) { m_strs[0] += string; }
@@ -181,6 +182,7 @@ public:
     LinkAtom(const LinkAtom &t);
     LinkAtom(Atom *previous, const LinkAtom &t);
     ~LinkAtom() override = default;
+    LinkAtom *clone() const override;
 
     [[nodiscard]] bool isLinkAtom() const override { return true; }
     Genus genus() override
