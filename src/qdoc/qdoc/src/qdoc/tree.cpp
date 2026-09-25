@@ -20,6 +20,8 @@
 #include "utilities.h"
 #include "textutils.h"
 
+#include <utility>
+
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
@@ -1028,30 +1030,51 @@ void Tree::addToPageNodeByTitleMap(Node *node) {
 }
 
 /*!
-  Searches for a \a target anchor, matching the given \a genus, and returns
-  the associated TargetRec instance. Finds the best target based on its priority
-  unless a closely related target is found instead. Keyword targets are preferred
-  over closely related targets.
+  Finds a target anchor that matches \a target and \a genus. Returns the
+  associated TargetRec instance, or nullptr if no match is found.
+
+  Searches target titles first. If no matching title is found, searches
+  target references.
+
+  For each search, selects a matching target in the following order:
+  \list 1
+      \li Keyword targets.
+      \li Targets whose node is \a start, its parent, or one of its children.
+      \li Other targets.
+  \endlist
+
+  Within each category, prefers targets with lower numeric priority values.
+  If multiple targets have the same rank, returns the first one encountered.
  */
 const TargetRec *Tree::findUnambiguousTarget(const QString &target, Genus genus, const Node *start) const
 {
     // Nodes that are the same, children or parents are closely related.
-    auto closelyRelated = [&](const Node *n1, const Node *n2) {
+    auto closelyRelated = [](const Node *n1, const Node *n2) {
         if (!n1 || !n2)
             return false;
         return (n1 == n2) || (n1->parent() == n2) || (n1 == n2->parent());
     };
 
-    auto findBestCandidate = [&](const TargetMap &tgtMap, const QString &key, const Node *start) {
+    enum class TargetCategory { Keyword, Nearby, Other };
+
+    auto rank = [&](const TargetRec *candidate) {
+        auto category = TargetCategory::Other;
+        if (candidate->m_type == TargetRec::Keyword) {
+            category = TargetCategory::Keyword;
+        } else if (closelyRelated(candidate->m_node, start)) {
+            category = TargetCategory::Nearby;
+        }
+
+        return std::pair{category, candidate->m_priority};
+    };
+
+    auto findBestCandidate = [&](const TargetMap &tgtMap, const QString &key) {
         TargetRec *best = nullptr;
         auto [it, end] = tgtMap.equal_range(key);
         while (it != end) {
             TargetRec *candidate = it.value();
-            if ((genus == Genus::DontCare) || (hasCommonGenusType(genus, candidate->genus()))) {
-                // Record the first candidate or one based on its priority, or a closely related
-                // target if the best match is not a keyword.
-                if (!best || (candidate->m_priority < best->m_priority) ||
-                    (best->m_type != TargetRec::Keyword && closelyRelated(candidate->m_node, start)))
+            if ((genus == Genus::DontCare) || hasCommonGenusType(genus, candidate->genus())) {
+                if (!best || rank(candidate) < rank(best))
                     best = candidate;
             }
             ++it;
@@ -1059,9 +1082,9 @@ const TargetRec *Tree::findUnambiguousTarget(const QString &target, Genus genus,
         return best;
     };
 
-    TargetRec *bestTarget = findBestCandidate(m_nodesByTargetTitle, target, start);
+    TargetRec *bestTarget = findBestCandidate(m_nodesByTargetTitle, target);
     if (!bestTarget)
-        bestTarget = findBestCandidate(m_nodesByTargetRef, TextUtils::asAsciiPrintable(target), start);
+        bestTarget = findBestCandidate(m_nodesByTargetRef, TextUtils::asAsciiPrintable(target));
 
     return bestTarget;
 }
