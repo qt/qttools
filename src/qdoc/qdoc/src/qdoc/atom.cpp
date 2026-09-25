@@ -223,20 +223,6 @@ static const struct
   in a list.
 */
 
-/*! \fn Atom(Atom *previous, AtomType type, const QString &string)
-
-  Constructs an atom of the specified \a type with the single
-  parameter \a string and inserts the new atom into the list
-  after the \a previous atom.
-*/
-
-/*! \fn Atom::Atom(Atom *previous, AtomType type, const QString &p1, const QString &p2)
-
-  Constructs an atom of the specified \a type with the two
-  parameters \a p1 and \a p2 and inserts the new atom into
-  the list after the \a previous atom.
-*/
-
 /*! \fn void Atom::appendChar(QChar ch)
 
   Appends \a ch to the string parameter of this atom.
@@ -482,21 +468,6 @@ LinkAtom::LinkAtom(const LinkAtom &t)
 LinkAtom *LinkAtom::clone() const
 {
     return new LinkAtom(*this);
-}
-
-/*!
-  Special copy constructor of LinkAtom \a t, where
-  where the new LinkAtom will not be the first one
-  in the list.
- */
-LinkAtom::LinkAtom(Atom *previous, const LinkAtom &t)
-    : Atom(previous, t.m_type, t.string()),
-      location(t.location),
-      m_genus(t.m_genus),
-      m_domain(t.m_domain),
-      m_squareBracketParams(t.m_squareBracketParams)
-{
-    previous->m_next = this;
 }
 
 int LinkAtom::flags() const

@@ -123,20 +123,6 @@ public:
             m_strs << p2;
     }
 
-    Atom(Atom *previous, AtomType type, const QString &string)
-        : m_next(previous->m_next), m_type(type), m_strs(string)
-    {
-        previous->m_next = this;
-    }
-
-    Atom(Atom *previous, AtomType type, const QString &p1, const QString &p2)
-        : m_next(previous->m_next), m_type(type), m_strs(p1)
-    {
-        if (!p2.isEmpty())
-            m_strs << p2;
-        previous->m_next = this;
-    }
-
     virtual ~Atom() = default;
     virtual Atom *clone() const;
 
@@ -180,7 +166,6 @@ public:
     LinkAtom(Atom::AtomType type, const QString &p1, const QString &p2,
              Location location = Location());
     LinkAtom(const LinkAtom &t);
-    LinkAtom(Atom *previous, const LinkAtom &t);
     ~LinkAtom() override = default;
     LinkAtom *clone() const override;
 

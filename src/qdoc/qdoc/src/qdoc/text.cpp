@@ -59,21 +59,6 @@ Text &Text::operator<<(const Atom &atom)
     return *this;
 }
 
-/*!
-  Special output operator for LinkAtom. It makes a copy of
-  the LinkAtom \a atom and connects the copy to the list
-  in this Text.
- */
-Text &Text::operator<<(const LinkAtom &atom)
-{
-    if (m_first == nullptr) {
-        m_first = new LinkAtom(atom);
-        m_last = m_first;
-    } else
-        m_last = new LinkAtom(m_last, atom);
-    return *this;
-}
-
 Text &Text::operator<<(const Text &text)
 {
     const Atom *atom = text.firstAtom();
