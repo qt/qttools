@@ -6,6 +6,8 @@
 #include "codechunk.h"
 #include "tokenizer.h"
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 QRegularExpression Parameters::s_varComment(R"(^/\*\s*([a-zA-Z_0-9]+)\s*\*/$)");
@@ -519,15 +521,9 @@ QString Parameters::generateNameList() const
  */
 bool Parameters::match(const Parameters &parameters) const
 {
-    if (count() != parameters.count())
-        return false;
-    if (count() == 0)
-        return true;
-    for (int i = 0; i < count(); i++) {
-        if (parameters.at(i).type() != m_parameters.at(i).type())
-            return false;
-    }
-    return true;
+    return std::equal(m_parameters.cbegin(), m_parameters.cend(), parameters.m_parameters.cbegin(),
+                      parameters.m_parameters.cend(),
+                      [](const Parameter &a, const Parameter &b) { return a.type() == b.type(); });
 }
 
 QT_END_NAMESPACE
