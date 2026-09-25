@@ -173,7 +173,7 @@ protected:
     QStringList m_strs {};
 };
 
-class LinkAtom : public Atom
+class LinkAtom final : public Atom
 {
 public:
     LinkAtom(const QString &p1, const QString &p2, Location location = Location());
