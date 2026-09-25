@@ -119,15 +119,11 @@ SCENARIO("Copying a Text preserves LinkAtom metadata", "[Text][Atom]")
 }
 
 /*
- * The scenarios below characterize the copy behavior Text::operator<< has
- * today, including its two-string cap and empty-second-string drop. They
- * pin the pre-clone() semantics so that introducing a virtual clone()
- * (Core Guidelines C.130) is provably behavior-preserving; a deliberate
- * change to how many strings survive a copy must then show up as an
- * explicit diff to these assertions instead of riding along unnoticed.
+ * Verify that copying an Atom into a Text preserves its complete string
+ * state. In particular, empty string entries and strings beyond the second
+ * one are part of the Atom's state and must survive the copy.
  */
-SCENARIO("Characterization: copying atoms into a Text caps the surviving strings",
-         "[Text][Atom][characterization]")
+SCENARIO("Copying atoms into a Text preserves their string state", "[Text][Atom]")
 {
     GIVEN("An atom constructed without a string") {
         Atom bare(Atom::ParaLeft);
@@ -191,10 +187,11 @@ SCENARIO("Characterization: copying atoms into a Text caps the surviving strings
             Text text;
             text << tagged;
 
-            THEN("The empty second string is dropped by the copy") {
+            THEN("The empty second string survives the copy") {
                 REQUIRE(text.firstAtom() != nullptr);
-                REQUIRE(text.firstAtom()->count() == 1);
+                REQUIRE(text.firstAtom()->count() == 2);
                 CHECK(text.firstAtom()->string() == QStringLiteral("first"));
+                CHECK(text.firstAtom()->string(1).isEmpty());
             }
         }
     }
@@ -208,11 +205,12 @@ SCENARIO("Characterization: copying atoms into a Text caps the surviving strings
             Text text;
             text << tagged;
 
-            THEN("Only the first two strings survive the copy") {
+            THEN("All strings survive the copy") {
                 REQUIRE(text.firstAtom() != nullptr);
-                REQUIRE(text.firstAtom()->count() == 2);
+                REQUIRE(text.firstAtom()->count() == 3);
                 CHECK(text.firstAtom()->string() == QStringLiteral("first"));
                 CHECK(text.firstAtom()->string(1) == QStringLiteral("second"));
+                CHECK(text.firstAtom()->string(2) == QStringLiteral("third"));
             }
         }
     }
@@ -226,12 +224,13 @@ SCENARIO("Characterization: copying atoms into a Text caps the surviving strings
             Text text;
             text << static_cast<const Atom &>(link);
 
-            THEN("The metadata survives but only the first string does") {
+            THEN("The metadata and complete string state survive the copy") {
                 REQUIRE(text.firstAtom() != nullptr);
                 REQUIRE(text.firstAtom()->isLinkAtom());
                 CHECK(text.firstAtom()->genus() == Genus::QML);
-                REQUIRE(text.firstAtom()->count() == 1);
+                REQUIRE(text.firstAtom()->count() == 2);
                 CHECK(text.firstAtom()->string() == QStringLiteral("Widget"));
+                CHECK(text.firstAtom()->string(1) == QStringLiteral("extra"));
             }
         }
     }

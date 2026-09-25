@@ -123,6 +123,7 @@ public:
         if (!p2.isEmpty())
             m_strs << p2;
     }
+    Atom(const Atom &other) : m_type(other.m_type), m_strs(other.m_strs) {}
 
     virtual ~Atom() = default;
     virtual Atom *clone() const;
@@ -166,7 +167,7 @@ public:
     LinkAtom(const QString &p1, const QString &p2, Location location = Location());
     LinkAtom(Atom::AtomType type, const QString &p1, const QString &p2,
              Location location = Location());
-    LinkAtom(const LinkAtom &t);
+    LinkAtom(const LinkAtom&) = default;
     ~LinkAtom() override = default;
     LinkAtom *clone() const override;
 
