@@ -247,10 +247,7 @@ static const struct
 */
 Atom *Atom::clone() const
 {
-    if (count() < 2)
-        return new Atom(type(), string());
-
-    return new Atom(type(), string(), string(1));
+    return new Atom(*this);
 }
 
 /*!
@@ -447,19 +444,6 @@ void LinkAtom::resolveSquareBracketParams(const QString &text)
         }
         break;
     }
-}
-
-/*!
-  Standard copy constructor of LinkAtom \a t.
- */
-LinkAtom::LinkAtom(const LinkAtom &t)
-    : Atom(t.m_type, t.string()),
-      location(t.location),
-      m_genus(t.m_genus),
-      m_domain(t.m_domain),
-      m_squareBracketParams(t.m_squareBracketParams)
-{
-    // nothing
 }
 
 /*!
