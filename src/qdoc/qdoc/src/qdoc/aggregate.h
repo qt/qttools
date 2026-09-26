@@ -46,7 +46,7 @@ public:
 
     [[nodiscard]] qsizetype count() const { return m_children.size(); }
     [[nodiscard]] const NodeList &childNodes() const { return m_children; }
-    [[nodiscard]] NodeList nonfunctionList() const;
+    [[nodiscard]] NodeList nonFunctionChildren() const;
     [[nodiscard]] NodeList::ConstIterator constBegin() const { return m_children.constBegin(); }
     [[nodiscard]] NodeList::ConstIterator constEnd() const { return m_children.constEnd(); }
 
