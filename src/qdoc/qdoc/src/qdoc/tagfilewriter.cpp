@@ -37,7 +37,7 @@ TagFileWriter::TagFileWriter() : m_qdb(QDocDatabase::qdocDB()) { }
  */
 void TagFileWriter::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggregate *parent)
 {
-    const auto &nonFunctionList = const_cast<Aggregate *>(parent)->nonfunctionList();
+    const auto nonFunctionList = parent->nonfunctionList();
     for (const auto *node : nonFunctionList) {
         if (!node->url().isNull() || node->isPrivate())
             continue;
