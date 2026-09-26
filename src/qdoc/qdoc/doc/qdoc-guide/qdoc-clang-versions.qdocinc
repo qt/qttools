@@ -1,0 +1,11 @@
+    \table
+    \header
+        \li Qt version
+        \li Supported Clang versions
+    \row \li 6.8 \li 17.0.6 - 18.1
+    \row \li 6.9 \li 17.0.6 - 21.1
+    \row \li 6.10 \li 17.0.6 - 21.1
+    \row \li 6.11 \li 17.0.6 - 21.1
+    \row \li 6.12 \li 17.0.6 - 23.1
+    \row \li 6.13 \li 17.0.6 - 23.1
+    \endtable

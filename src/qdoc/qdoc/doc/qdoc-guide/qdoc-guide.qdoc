@@ -604,8 +604,20 @@
     QDoc uses Clang when parsing C++ files as well as function signatures in
     \l {fn-command} {\\fn} commands. Clang is part of
     \l {https://llvm.org/}{the LLVM Compiler Infrastructure Project}.
-    If you're going to build QDoc from source, you must install
-    \l{https://clang.llvm.org}{Clang 17.0} or later.
+    If you're going to build QDoc from source, install a version of
+    \l{https://clang.llvm.org}{Clang} that your Qt release supports.
+
+    \section1 Supported Clang Versions
+
+    QDoc supports the Clang versions listed for each Qt release, as shown
+    in the table below. QDoc includes a custom implementation of parts of
+    the Clang AST. Each new Clang version must be validated against that
+    implementation before QDoc supports it. Clang versions outside the
+    listed range are not supported. Starting with Qt 6.12, QDoc rejects
+    unsupported Clang versions at configure time, and QDoc is not built.
+    For best results, use the latest supported Clang version.
+
+    \include qdoc-guide/qdoc-clang-versions.qdocinc
 
     \section1 Installation Options
 
