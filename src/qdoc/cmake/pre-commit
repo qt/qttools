@@ -1,0 +1,14 @@
+#!/bin/sh
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+#
+# Regenerate the QDoc manual's supported-Clang-versions table row when
+# QDocConfiguration.cmake is modified.
+#
+# Install from the repository root:
+#   ln -s ../../src/qdoc/cmake/pre-commit .git/hooks/pre-commit
+
+if git diff --cached --name-only | grep -q "QDocConfiguration\.cmake$\|\.cmake\.conf$"; then
+    cmake -P src/qdoc/cmake/GenerateQdocClangVersions.cmake || exit 1
+    git add src/qdoc/qdoc/doc/qdoc-guide/qdoc-clang-versions.qdocinc
+fi
