@@ -3,13 +3,20 @@
 
 #include <QtTest/QtTest>
 
+#include <algorithm>
 #include <utility>
+
+// Whether a fixture's qdoc run is expected to succeed, or to fail gracefully by
+// reporting the failing page, skipping it, and exiting non-zero without crashing.
+enum class ExpectedExitCode { Zero, NonZero };
 
 class tst_validateTemplateGeneratorOutput : public QObject
 {
     Q_OBJECT
 private:
-    void runQDocProcess(const QStringList &arguments);
+    void runQDocProcess(const QStringList &arguments,
+                        ExpectedExitCode expectedExitCode = ExpectedExitCode::Zero,
+                        const QStringList &requiredStandardErrorText = {});
     std::optional<QByteArray> gitDiffDirectories(const QString &actualPath,
                                                  const QString &expectedPath);
 
@@ -98,7 +105,9 @@ void tst_validateTemplateGeneratorOutput::init()
     }
 }
 
-void tst_validateTemplateGeneratorOutput::runQDocProcess(const QStringList &arguments)
+void tst_validateTemplateGeneratorOutput::runQDocProcess(
+        const QStringList &arguments, ExpectedExitCode expectedExitCode,
+        const QStringList &requiredStandardErrorText)
 {
     QProcess qdocProcess;
     qdocProcess.setProcessEnvironment(s_environment);
@@ -113,12 +122,34 @@ void tst_validateTemplateGeneratorOutput::runQDocProcess(const QStringList &argu
 
     qdocProcess.start();
     qdocProcess.waitForFinished();
+
+    const QString errors = qdocProcess.readAllStandardError();
+
+    const bool missingRequiredText =
+            std::any_of(requiredStandardErrorText.cbegin(), requiredStandardErrorText.cend(),
+                        [&errors](const QString &required) { return !errors.contains(required); });
+
+    if (!errors.isEmpty() && (qdocProcess.exitCode() != 0 || missingRequiredText))
+        qInfo().nospace() << "Received errors:\n" << qUtf8Printable(errors);
+
+    for (const QString &required : requiredStandardErrorText) {
+        const QString message =
+                QStringLiteral("qdoc's standard error doesn't contain the required text: ")
+                + required;
+        QVERIFY2(errors.contains(required), qPrintable(message));
+    }
+
+    if (expectedExitCode == ExpectedExitCode::NonZero) {
+        QVERIFY2(qdocProcess.exitStatus() == QProcess::NormalExit,
+                 "qdoc crashed; a graceful non-zero exit was expected");
+        QVERIFY2(qdocProcess.exitCode() != 0,
+                 "qdoc exited 0, but this fixture expects a non-zero exit after skipping a page");
+        return;
+    }
+
     if (qdocProcess.exitCode() == 0)
         return;
 
-    QString errors = qdocProcess.readAllStandardError();
-    if (!errors.isEmpty())
-        qInfo().nospace() << "Received errors:\n" << qUtf8Printable(errors);
     if (!QTest::currentTestFailed())
         failQDoc(QProcess::UnknownError);
 }
@@ -153,6 +184,8 @@ void tst_validateTemplateGeneratorOutput::qdocProjects_data()
     QTest::addColumn<QString>("qdocconf");
     QTest::addColumn<QString>("expectedPath");
     QTest::addColumn<QString>("extraArgs");
+    QTest::addColumn<ExpectedExitCode>("expectedExitCode");
+    QTest::addColumn<QStringList>("requiredStandardErrorText");
 
     QDirIterator qdocconfit(m_testDataDirectory, QStringList { u"*.qdocconf"_s },
                             QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
@@ -167,13 +200,41 @@ void tst_validateTemplateGeneratorOutput::qdocProjects_data()
         else
             extraArgs.clear();
 
+        // A fixture opts into "graceful non-zero exit expected" by dropping an
+        // expect-nonzero-exit marker file in its directory, mirroring how
+        // args.txt opts into extra arguments.
+        const ExpectedExitCode expectedExitCode =
+                QFileInfo::exists(configFile.dir().absolutePath() + u"/expect-nonzero-exit"_s)
+                ? ExpectedExitCode::NonZero
+                : ExpectedExitCode::Zero;
+
+        // A fixture asserts on qdoc's diagnostics by listing one required
+        // standard-error substring per line in an expect-stderr-contains file.
+        // Surrounding whitespace is ignored, and so are blank lines and lines
+        // that start with '#', which let the file explain itself in the same
+        // self-documenting style as the marker above.
+        QStringList requiredStandardErrorText;
+        QFile requiredText{configFile.dir().absolutePath() + u"/expect-stderr-contains"_s};
+        if (requiredText.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream stream{&requiredText};
+            while (!stream.atEnd()) {
+                const QString line = stream.readLine();
+                const QStringView trimmed = QStringView{line}.trimmed();
+                if (trimmed.isEmpty() || trimmed.startsWith(u'#'))
+                    continue;
+                requiredStandardErrorText << trimmed.toString();
+            }
+        }
+
         const QString testName =
                 configFile.dir().dirName() + u'/' + configFile.fileName();
 
         QTest::newRow(testName.toUtf8().constData())
                 << configFile.absoluteFilePath()
                 << configFile.dir().absolutePath() + "/expected/"
-                << extraArgs;
+                << extraArgs
+                << expectedExitCode
+                << requiredStandardErrorText;
     }
 }
 
@@ -182,6 +243,8 @@ void tst_validateTemplateGeneratorOutput::qdocProjects()
     QFETCH(const QString, qdocconf);
     QFETCH(const QString, expectedPath);
     QFETCH(const QString, extraArgs);
+    QFETCH(const ExpectedExitCode, expectedExitCode);
+    QFETCH(const QStringList, requiredStandardErrorText);
 
     QString actualPath{m_outputDir->path()};
     if (regenerate) {
@@ -195,7 +258,12 @@ void tst_validateTemplateGeneratorOutput::qdocProjects()
     if (!extraArgs.isEmpty())
         arguments << extraArgs;
 
-    runQDocProcess(arguments);
+    runQDocProcess(arguments, expectedExitCode, requiredStandardErrorText);
+
+    // A failed expectation about the run itself is the real failure; don't bury
+    // it under a diff of output that was never meant to be compared.
+    if (QTest::currentTestFailed())
+        return;
 
     if (regenerate) {
         const QString message = "Regenerated expected output files for" + qdocconf;
