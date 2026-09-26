@@ -1517,6 +1517,13 @@ void QDocIndexFiles::generateFunctionSections(QXmlStreamWriter &writer, Aggregat
     }
 }
 
+static NodeList sortedNonFunctionChildren(const Aggregate *aggregate)
+{
+    auto children = aggregate->nonFunctionChildren();
+    std::sort(children.begin(), children.end(), Node::nodeLessThan);
+    return children;
+}
+
 /*!
   Generate index sections for the child nodes of the given \a node
   using the \a writer specified. The \a generator is used to compute
@@ -1545,8 +1552,8 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             auto *aggregate = static_cast<Aggregate *>(node);
             // First write the function children, then write the nonfunction children.
             generateFunctionSections(writer, aggregate);
-            const auto nonFunctionList = aggregate->nonfunctionList();
-            for (auto *node : nonFunctionList)
+            auto nonFunctionChildren = sortedNonFunctionChildren(aggregate);
+            for (auto *node : nonFunctionChildren)
                 generateIndexSections(writer, node, generator, post);
         }
 
@@ -1594,7 +1601,8 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
                 if (generateIndexSection(writer, p, generator, post)) {
                     auto aggregate = static_cast<Aggregate *>(p);
                     generateFunctionSections(writer, aggregate);
-                    for (auto *n : aggregate->nonfunctionList())
+                    auto nonFunctionChildren = sortedNonFunctionChildren(aggregate);
+                    for (auto *n : nonFunctionChildren)
                         generateIndexSections(writer, n, generator, post);
                     writer.writeEndElement();
                 }

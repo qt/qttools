@@ -457,11 +457,14 @@ void Aggregate::normalizeOverloads()
 }
 
 /*!
-  Returns a copy of the list of child nodes of this aggregate
-  that are not function nodes. The list is sorted using
-  \l Node::nodeLessThan().
+  Returns a copy of the child nodes of this aggregate that are
+  not function nodes, in the order they appear in the child list.
+  Consumers that need a specific presentation order must sort
+  the result themselves.
+
+  \sa childNodes()
  */
-NodeList Aggregate::nonfunctionList() const
+NodeList Aggregate::nonFunctionChildren() const
 {
     NodeList result = m_children;
     result.erase(
@@ -470,7 +473,6 @@ NodeList Aggregate::nonfunctionList() const
                                return node->isFunction();
                            }),
             result.end());
-    std::sort(result.begin(), result.end(), Node::nodeLessThan);
     return result;
 }
 

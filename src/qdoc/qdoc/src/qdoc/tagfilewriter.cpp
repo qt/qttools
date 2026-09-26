@@ -16,6 +16,8 @@
 #include "qdocdatabase.h"
 #include "typedefnode.h"
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 /*!
@@ -37,8 +39,10 @@ TagFileWriter::TagFileWriter() : m_qdb(QDocDatabase::qdocDB()) { }
  */
 void TagFileWriter::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggregate *parent)
 {
-    const auto nonFunctionList = parent->nonfunctionList();
-    for (const auto *node : nonFunctionList) {
+    auto nonFunctionChildren = parent->nonFunctionChildren();
+    std::sort(nonFunctionChildren.begin(), nonFunctionChildren.end(),
+               Node::nodeLessThan);
+    for (const auto *node : nonFunctionChildren) {
         if (!node->url().isNull() || node->isPrivate())
             continue;
 
