@@ -29,6 +29,26 @@ This test follows the same structure as `tst_validateQdocOutputFiles`:
 
 The test will automatically discover and run your new test case.
 
+## Optional Per-Fixture Files
+
+Drop any of these files in a test project's directory to opt into extra
+behavior. They're all optional; a fixture that doesn't need them omits them.
+
+- `args.txt`: Extra arguments to pass to QDoc, one per line. The harness hands
+  the file to QDoc as an `@file` argument.
+- `expect-nonzero-exit`: The run is expected to exit non-zero because QDoc
+  reported a failing page, skipped it, and continued. The test then requires
+  a non-zero exit: if QDoc exits 0, the test fails. A crash still fails the
+  test. The file's contents are free-form prose explaining why the fixture
+  expects the failure.
+- `expect-stderr-contains`: Required standard-error substrings, one per line.
+  The test fails if any of them is missing from what QDoc wrote to standard
+  error. Surrounding whitespace on a line is ignored, and so are blank lines
+  and lines whose first non-space character is `#`, so the file can document
+  itself. Assert only on the parts
+  of a diagnostic that QDoc owns; text that comes from a third-party library
+  shifts between versions and makes the fixture brittle.
+
 ## Regenerating Expected Output
 
 To regenerate expected output for all test cases:
