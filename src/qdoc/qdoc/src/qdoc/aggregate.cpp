@@ -457,29 +457,21 @@ void Aggregate::normalizeOverloads()
 }
 
 /*!
-  Returns a const reference to the list of child nodes of this
-  aggregate that are not function nodes. The list is sorted using
+  Returns a copy of the list of child nodes of this aggregate
+  that are not function nodes. The list is sorted using
   \l Node::nodeLessThan().
-
-  \warning Only call this function after the node tree is fully
-  constructed (all parsing is done).
  */
-const NodeList &Aggregate::nonfunctionList()
+NodeList Aggregate::nonfunctionList() const
 {
-    if (!m_nonfunctionList.isEmpty())
-        return m_nonfunctionList;
-
-    m_nonfunctionList = m_children;
-    // Erase functions
-    m_nonfunctionList.erase(
-        std::remove_if(m_nonfunctionList.begin(), m_nonfunctionList.end(),
-            [](const Node* node) {
-                return node->isFunction();
-            }),
-        m_nonfunctionList.end());
-    // Sort based on node properties
-    std::sort(m_nonfunctionList.begin(), m_nonfunctionList.end(), Node::nodeLessThan);
-    return m_nonfunctionList;
+    NodeList result = m_children;
+    result.erase(
+            std::remove_if(result.begin(), result.end(),
+                           [](const Node *node) {
+                               return node->isFunction();
+                           }),
+            result.end());
+    std::sort(result.begin(), result.end(), Node::nodeLessThan);
+    return result;
 }
 
 /*! \fn bool Aggregate::isAggregate() const

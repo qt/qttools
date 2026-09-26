@@ -1545,7 +1545,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             auto *aggregate = static_cast<Aggregate *>(node);
             // First write the function children, then write the nonfunction children.
             generateFunctionSections(writer, aggregate);
-            const auto &nonFunctionList = aggregate->nonfunctionList();
+            const auto nonFunctionList = aggregate->nonfunctionList();
             for (auto *node : nonFunctionList)
                 generateIndexSections(writer, node, generator, post);
         }

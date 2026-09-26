@@ -46,7 +46,7 @@ public:
 
     [[nodiscard]] qsizetype count() const { return m_children.size(); }
     [[nodiscard]] const NodeList &childNodes() const { return m_children; }
-    const NodeList &nonfunctionList();
+    [[nodiscard]] NodeList nonfunctionList() const;
     [[nodiscard]] NodeList::ConstIterator constBegin() const { return m_children.constBegin(); }
     [[nodiscard]] NodeList::ConstIterator constEnd() const { return m_children.constEnd(); }
 
@@ -117,7 +117,6 @@ private:
     std::optional<QString> m_includeFile{};
     NodeList m_enumChildren {};
     NodeMultiMap m_nonfunctionMap {};
-    NodeList m_nonfunctionList {};
 };
 
 QT_END_NAMESPACE
