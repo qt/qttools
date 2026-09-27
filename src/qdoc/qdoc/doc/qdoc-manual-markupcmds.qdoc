@@ -1709,17 +1709,17 @@
     it still go to the C++ namespace? Qdoc generated that link from
     this link command:
 
-    \list
-        \li \c {\l {Qt} {Qt C++ namespace}}
-    \endlist
+    \code [text]
+        \l {Qt} {Qt C++ namespace}
+    \endcode
 
     Now suppose we want to link to the \l [QML] {Qt} {Qt QML type}.
     At the time QDoc generated this HTML page, that link was also
     correct, but we had to use this link command:
 
-    \list
-        \li \c {\l [QML] {Qt} {Qt QML type}}
-    \endlist
+    \code [text]
+        \l [QML] {Qt} {Qt QML type}
+    \endcode
 
     The \e {QML} in \e {square brackets} tells QDoc to accept a
     matching target only if the target is on a QML page. Qdoc actually
@@ -1735,9 +1735,10 @@
     \section2 What arguments can appear in square brackets?
 
     A link command with square bracket argument has the following syntax:
-    \list
-    \c {\l [QML|CPP|DOC|attached|QtModuleName] {link target} {link text}}
-    \endlist
+
+    \code [text]
+    \l [QML|CPP|DOC|attached|QtModuleName] {link target} {link text}
+    \endcode
 
     The \e {square bracket} argument is only allowed in the \c {\l
     (link)} command. The example above shows how \c QML is used as the
@@ -1757,9 +1758,9 @@
     following link will force QDoc to ignore the Qt QML type and continue
     searching until it matches the Qt C++ namespace.
 
-    \list
-        \li \c {\l [CPP] {Qt} {Qt C++ namespace}}
-    \endlist
+    \code [text]
+        \l [CPP] {Qt} {Qt C++ namespace}
+    \endcode
 
     If the link target is neither a C++ nor a QML entity, \c {DOC} can
     be used as the \e {square bracket} argument to prevent QDoc from
@@ -1772,9 +1773,9 @@
     the QML type named Qt is located in the QtQml module, we can write
     the link command like this:
 
-    \list
-        \li \c {\l [QtQml] {Qt} {Qt QML type}}
-    \endlist
+    \code [text]
+        \l [QtQml] {Qt} {Qt QML type}
+    \endcode
 
     When a module name is used as the \e {square bracket} argument,
     QDoc will search for the link target in that module only. This
@@ -1784,9 +1785,9 @@
     combined, separated by a blank, so something like this is also
     allowed:
 
-    \list
-        \li \c {\l [CPP QtQml] {Window} {C++ class Window}}
-    \endlist
+    \code [text]
+        \l [CPP QtQml] {Window} {C++ class Window}
+    \endcode
 
     As of this writing, there were no cases where combining the two
     was required.
@@ -1806,7 +1807,7 @@
     argument. If the line ends with a comma, you can continue
     the list on the next line. The general syntax is:
 
-    \code
+    \code [text]
     \sa {the first link}, {the second link},
         {the third link}, ...
     \endcode
