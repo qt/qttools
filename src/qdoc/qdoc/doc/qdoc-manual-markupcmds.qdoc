@@ -1568,7 +1568,7 @@
                 titles that contain it. Instead, it must be escaped using a
                 backslash:
 
-                \badcode
+                \code [text]
                     \l {Using Qt with C\\#}
                 \endcode
 
@@ -1576,7 +1576,7 @@
                 before it is supplied to the link command.
 
             \li an anchor defined with a \l {target-command}{\\target} command:
-                \badcode
+                \code [text]
                     \target assertions
 
                     Assertions make some statement about the text at the
@@ -1626,7 +1626,7 @@
         \li an example. The target link is the example title or a relative path
             used in an \l {example-command} {\\example} command:
 
-                \badcode *
+                \code [text] *
                 /\1!
                     \example widgets/imageviewer
                     \title ImageViewer Example
@@ -1647,7 +1647,7 @@
 
     For example, if you have documentation like:
 
-    \badcode *
+    \code [text] *
     /\1!
         \target assertions
 
@@ -1664,7 +1664,7 @@
 
     You can simplify this as follows:
 
-    \badcode *
+    \code [text] *
     /\1!
         \target assertions
 
@@ -1859,7 +1859,7 @@
     required around the target name, but they may be required when the
     target name is used in a link command. See below.
 
-    \badcode *
+    \code [text] *
     /\1!
         \target capturing parentheses
         \section1 Capturing Text
@@ -2158,7 +2158,7 @@
     {header-command} {\\header} command which is a special kind of row
     that has a special format.
 
-    \badcode *
+    \code [text] *
     /\1!
        \table
        \header
@@ -2185,7 +2185,7 @@
     You can also make cells span several rows and columns. For
     example:
 
-    \badcode *
+    \code [text] *
     /\1!
        \table
        \header
@@ -2218,7 +2218,7 @@
     A header cell's text is centered within the table cell and
     rendered using a bold font.
 
-    \badcode *
+    \code [text] *
     /\1!
        \table
        \header
@@ -2249,7 +2249,7 @@
     shades of grey, making it easier to distinguish the rows from each
     other. The cells' contents is left aligned.
 
-    \badcode *
+    \code [text] *
     /\1!
        \table
        \header
@@ -2339,7 +2339,7 @@
     list always contains one or more items. Lists can be nested. For
     example:
 
-    \badcode *
+    \code [text] *
     /\1!
         \list
             \li Qt Reference Documentation: Getting Started
@@ -2361,7 +2361,7 @@
     The \\list command takes an optional argument providing
     alternative appearances for the list items.
 
-    \badcode *
+    \code [text] *
     /\1!
        \list
            \li How to Learn Qt
@@ -2412,7 +2412,7 @@
     simply provide the number or character you want to start at. For
     example:
 
-    \badcode *
+    \code [text] *
     /\1!
        \list G
            \li How to Learn Qt
@@ -2439,7 +2439,7 @@
     If the command is used within a table, you can also specify
     how many rows or columns the item should span.
 
-    \badcode *
+    \code [text] *
     /\1!
        \table
        \header
@@ -2485,7 +2485,7 @@
     \b{<blockquote>} and \b{</blockquote>} in the html output,
     e.g.:
 
-    \badcode *
+    \code [text] *
     /\1!
       Although the prospect of a significantly broader market is
       good news for Firstlogic, the notion also posed some
@@ -2503,7 +2503,7 @@
 
     The text in the \b{\\quotation} block will appear in the generated HTML as:
 
-    \badcode
+    \code [text]
     <blockquote>
       <p>As our solutions were being adopted into new environments,
       we saw an escalating need for easier integration with a wider
@@ -2565,7 +2565,7 @@
 
     For example the boolean QWidget::isWindow property:
 
-    \badcode *
+    \code [text] *
     /\1!
        \property QWidget::isActiveWindow
        \brief Whether this widget's window is the active window.
@@ -2582,7 +2582,7 @@
 
     and the QWidget::geometry property
 
-    \badcode *
+    \code [text] *
     /\1!
        \property QWidget::geometry
        \brief The geometry of the widget relative to its parent and
@@ -2601,7 +2601,7 @@
     When the \\brief command is used to describe a class, we recommend
     using a complete sentence like this:
 
-    \badcode
+    \code [text]
     The <classname> class is|provides|contains|specifies...
     \endcode
 
@@ -2609,7 +2609,7 @@
     the brief statement will be the first paragraph of the detailed
     description.
 
-    \badcode *
+    \code [text] *
     /\1!
        \class PreviewWindow
        \brief The PreviewWindow class is a custom widget
@@ -2629,7 +2629,7 @@
 
     Using \\brief in a \l{namespace-command}{\\namespace}:
 
-    \badcode *
+    \code [text] *
     /\1!
        \namespace Qt
 
@@ -2640,7 +2640,7 @@
 
     Using \\brief in a \l{headerfile-command}{\\headerfile}:
 
-    \badcode *
+    \code [text] *
     /\1!
        \headerfile <QtGlobal>
        \title Global Qt Declarations
@@ -2667,7 +2667,7 @@
     An example of a license agreement enclosed in \\legalese
     and \\endlegalese:
 
-    \badcode *
+    \code [text] *
     /\1!
         \legalese
             Copyright 1996 Daniel Dardailler.
@@ -2692,7 +2692,7 @@
 
     It will appear in the generated HTML as:
 
-    \badcode
+    \code [text]
     <div class="LegaleseLeft">
        <p>Copyright 1996 Daniel Dardailler.</p>
        <p>Permission to use, copy, modify, distribute, and sell
@@ -2735,7 +2735,7 @@
     The \\warning command prepends "Warning:" to the command's
     argument, in bold font.
 
-    \badcode *
+    \code [text] *
     /\1!
        Qt::HANDLE is a platform-specific handle type
        for system objects. This is  equivalent to
@@ -2766,7 +2766,7 @@
     group, each member listed with its \e {brief} text. Below is an
     example from the Qt Reference Documentation:
 
-    \badcode *
+    \code [text] *
     /\1!
        ...
        \section1 Drag and Drop Classes
@@ -2796,7 +2796,7 @@
     and namespaces. This information will then appear in a table at the top of
     the class or namespace documentation page. For example:
 
-    \badcode *
+    \code [text] *
     /*!
         \namespace Foo
         \inheaderfile Bar
@@ -2830,7 +2830,7 @@
     and namespaces. This information will then appear in a table at the top of
     the class or namespace documentation page. For example:
 
-    \badcode *
+    \code [text] *
     /*!
         \namespace Foo
         \inheaderfile Bar
@@ -2866,7 +2866,7 @@
     \l{module-command}{\\module} and \l{cmakecomponent}{\\cmakecomponent}
     commands. For example:
 
-    \badcode *
+    \code [text] *
     /*!
         \namespace Foo
         \inheaderfile Bar
@@ -2902,7 +2902,7 @@
     and namespaces. This information will then appear in a table at the top of
     the class or namespace documentation page. For example:
 
-    \badcode *
+    \code [text] *
     /*!
         \namespace Foo
         \inheaderfile Bar
@@ -2948,7 +2948,7 @@
     {\\ingroup} command or entities that match one of the arguments
     listed below. An example from the Qt Reference Documentation:
 
-    \badcode *
+    \code [text] *
     /\1!
        \page classes.html
        \title All Classes
@@ -2974,7 +2974,7 @@
     order, based on user-visible name or title. Since QDoc 6.8, the default
     sort order can be modified:
 
-    \badcode
+    \code [text]
         \generatelist [descending] changelogs
     \endcode
 
@@ -2987,7 +2987,7 @@
     Since QDoc 6.8, a custom sort key can be assigned to one or
     more group members using the \qdoccmd meta command:
 
-    \badcode
+    \code [text]
         \meta sortkey {sort key}
     \endcode
 
@@ -3062,7 +3062,7 @@
     documentation. This command is used to generate the
     \e {All Classes} page this way:
 
-    \badcode *
+    \code [text] *
     /\1!
         \page classes.html
         \title All Classes
@@ -3090,7 +3090,7 @@
 
     For example, this command can be used on a module page as follows:
 
-    \badcode *
+    \code [text] *
     /\1!
         \page phonon-module.html
         \module Phonon
@@ -3131,7 +3131,7 @@
     only to generate the \e {Qt function index} page
     this way:
 
-    \badcode *
+    \code [text] *
     /\1!
         \page functions.html
         \title All Functions
@@ -3161,7 +3161,7 @@
     {\\group} pages. Qt uses it to generate the \e {overviews} page
     this way:
 
-    \badcode *
+    \code [text] *
     /\1!
         \page overviews.html
 
@@ -3184,7 +3184,7 @@
     group. For example, the page for the \e {Programming with Qt}
     page is generated this way:
 
-    \badcode *
+    \code [text] *
     /\1!
         \group qt-basic-concepts
         \title Programming with Qt
@@ -3219,7 +3219,7 @@
     The command reads the rest of the line and parses it as an C++ #if
     statement.
 
-    \badcode *
+    \code [text] *
     /\1!
        \if defined(opensourceedition)
 
@@ -3236,7 +3236,7 @@
     the \l {defines-variable} {defines} variable in the configuration
     file to make QDoc process the code within #ifdef and #endif:
 
-    \badcode
+    \code [text]
     defines = opensourceedition
     \endcode
 
@@ -3302,7 +3302,7 @@
     \l{2-argument-form}{two argument form} below. Here is an example
     of the one argument form:
 
-    \badcode *
+    \code [text] *
     /\1!
         \page corefeatures.html
         \title Core Features
@@ -3324,7 +3324,7 @@
     have multiple snippets to be included, you can put them all in a
     single file and surround each one with:
 
-    \badcode
+    \code [text]
     //! [snippet-id1]
 
     QDoc commands and text...
@@ -3340,7 +3340,7 @@
 
     Then you can use the two-argument form of the command:
 
-    \badcode
+    \code [text]
         \include examples/signalandslots.qdocinc snippet-id2
         \include examples/objectmodel.qdocinc another-snippet-id
     \endcode
@@ -3369,7 +3369,7 @@
 
     For example, given the following snippet in a file \c includes.qdocinc:
 
-    \badcode
+    \code [text]
     //! [usage]
     To enable \e{\1}, select \uicontrol {\2} > \uicontrol Enable.
     //! [usage]
@@ -3377,7 +3377,7 @@
 
     Then, the following \\include line:
 
-    \badcode
+    \code [text]
     \include includes.qdocinc {usage} {detailed output} {Verbose}
     \endcode
 
@@ -3396,7 +3396,7 @@
     Each argument should be enclosed in curly brackets, as shown in this
     example:
 
-    \badcode *
+    \code [text] *
     /\1!
         \example demos/coffee
         \title Coffee Machine
@@ -3421,7 +3421,7 @@
     or \c {\meta {tags} {tag1,[tag2,...]}}.
     For example:
 
-    \badcode *
+    \code [text] *
     /\1!
         \example helloworld
         \title Hello World Example
@@ -3437,7 +3437,7 @@
     Marking an example \e broken will exclude it from the generated manifest
     file, effectively removing it from Qt Creator's Welcome mode.
 
-    \badcode
+    \code [text]
     \meta {tag} {broken}
     \endcode
 
@@ -3447,7 +3447,7 @@
     location of an installed example. This value overrides the one that is set
     using the \c examplesinstallpath configuration variable.
 
-    \badcode *
+    \code [text] *
     /\1!
         \example helloworld
         \title Hello World Example
@@ -3463,7 +3463,7 @@
     for a \l {class-command}{\\class} or a \l {qmltype-command}{\\qmltype}. This
     description will then appear in a table at the top of the type reference page.
 
-    \badcode *
+    \code [text] *
     /\1!
         \class QNativeInterface::QAndroidApplication
         \meta {status} {Android-specific}
@@ -3514,7 +3514,7 @@
     delimit parts of the documentation that you want QDoc to skip. For
     example:
 
-    \badcode *
+    \code [text] *
     /\1!
         \table
         \row
@@ -3566,7 +3566,7 @@
     inclusions to the documented API in a specified version. Example
     usage:
 
-    \badcode * \QtMajorVersion \QtMinorVersion \QtVer
+    \code [text] * \QtMajorVersion \QtMinorVersion \QtVer
     /\1!
        \page newclasses\2\3.html
        \title New Classes and Functions in \4
