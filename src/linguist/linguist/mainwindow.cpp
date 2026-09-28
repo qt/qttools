@@ -1302,8 +1302,10 @@ void MainWindow::closePhraseBook(QAction *action)
 void MainWindow::editPhraseBook(QAction *action)
 {
     PhraseBook *pb = m_phraseBookMenu[PhraseEditMenu].value(action);
-    PhraseBookBox box(pb, this);
-    box.exec();
+    QAutoPointer<PhraseBookBox> box{new PhraseBookBox(pb, this)};
+    box->exec();
+    if (!box)
+        return; // if `box` was deleted, then *this was, too
 
     updatePhraseDicts();
 }
