@@ -8,6 +8,7 @@
 #include "tracer.h"
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QMimeDatabase>
 #include <QtCore/QStringBuilder>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QXmlStreamReader>
@@ -18,6 +19,7 @@
 #include <QtGui/QClipboard>
 #endif
 #include <QtGui/QGuiApplication>
+#include <QtGui/QImageReader>
 #include <QtGui/QStyleHints>
 #include <QtGui/QWheelEvent>
 
@@ -228,7 +230,14 @@ void HelpViewerPrivate::setSourceInternal(const QUrl &url, int *vscroll, bool re
         // support dark themes, and start with light palette.
         // We override this if we find Qt's dark style
         setLight(q);
-        m_viewer->setHtml(QString::fromUtf8(getData(resolvedUrl, q)));
+        QMimeDatabase mimeDb;
+        const QMimeType mimeType = mimeDb.mimeTypeForFile(url.fileName(),
+                                                          QMimeDatabase::MatchExtension);
+        if (QImageReader::supportedMimeTypes().contains(mimeType.name().toUtf8()))
+            m_viewer->setHtml(QString("<img src=\"%1\"/>").arg(QString::fromUtf8(url.toEncoded())));
+        else
+            m_viewer->setHtml(QString::fromUtf8(getData(resolvedUrl, q)));
+
     }
     if (vscroll)
         m_viewer->verticalScrollBar()->setValue(*vscroll);
