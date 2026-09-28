@@ -2930,19 +2930,23 @@ bool MainWindow::askPreviewActivation(bool isQml)
                  "Activate the preview only for sources you trust.\n\n"
                  "Do you want to activate the preview?");
 
-    QMessageBox box(QMessageBox::Warning, tr("Qt Linguist"), text, QMessageBox::NoButton, this);
-    QPushButton *dontPreview = box.addButton(tr("Do Not Preview"), QMessageBox::RejectRole);
-    QPushButton *forSession = box.addButton(tr("Preview for Session"), QMessageBox::AcceptRole);
+    QAutoPointer<QMessageBox> box{new QMessageBox(QMessageBox::Warning,
+                                                  tr("Qt Linguist"), text,
+                                                  QMessageBox::NoButton, this)};
+    QPushButton *dontPreview = box->addButton(tr("Do Not Preview"), QMessageBox::RejectRole);
+    QPushButton *forSession = box->addButton(tr("Preview for Session"), QMessageBox::AcceptRole);
     QPushButton *once =
-            canPreviewOnce ? box.addButton(tr("Preview Once"), QMessageBox::AcceptRole) : nullptr;
-    box.setDefaultButton(once ? once : dontPreview);
-    box.exec();
+            canPreviewOnce ? box->addButton(tr("Preview Once"), QMessageBox::AcceptRole) : nullptr;
+    box->setDefaultButton(once ? once : dontPreview);
+    box->exec();
+    if (!box)
+        return false; // if box was deleted, then so was *this
 
-    if (box.clickedButton() == forSession)
+    if (box->clickedButton() == forSession)
         return true;
     action->setChecked(false);
     QString &onceFile = isQml ? m_qmlPreviewOnceFile : m_uiPreviewOnceFile;
-    if (once && box.clickedButton() == once) {
+    if (once && box->clickedButton() == once) {
         onceFile = previewFilePath(m_currentIndex.model(), fileName);
         return true;
     }
