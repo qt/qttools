@@ -1419,18 +1419,18 @@ QString MainWindow::description()
 
 void MainWindow::about()
 {
-    QMessageBox box(this);
-    box.setTextFormat(Qt::RichText);
+    QAutoPointer<QMessageBox> box{new QMessageBox(this)};
+    box->setTextFormat(Qt::RichText);
     QString version = tr("Version %1");
     version = version.arg(QLatin1String(QT_VERSION_STR));
 
-    box.setText(QStringLiteral("<center><img src=\":/images/icons/linguist-128-32.png\"/></img><p>%1</p></center>"
-                               "<p>%2</p>"
-                               "<p>Copyright (C) The Qt Company Ltd.</p>").arg(version, description()));
+    box->setText("<center><img src=\":/images/icons/linguist-128-32.png\"/></img><p>%1</p></center>"
+                 "<p>%2</p>"
+                 "<p>Copyright (C) The Qt Company Ltd.</p>"_L1.arg(version, description()));
 
-    box.setWindowTitle(QApplication::translate("AboutDialog", "Qt Linguist"));
-    box.setIcon(QMessageBox::NoIcon);
-    box.exec();
+    box->setWindowTitle(QApplication::translate("AboutDialog", "Qt Linguist"));
+    box->setIcon(QMessageBox::NoIcon);
+    box->exec();
 }
 
 void MainWindow::aboutQt()
