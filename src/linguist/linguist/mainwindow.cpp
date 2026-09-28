@@ -30,7 +30,10 @@
 #include "validator.h"
 
 #include <QAction>
+
 #include <QApplication>
+#include <QtWidgets/private/qdialog_p.h> // QAutoPointer
+
 #include <QBitmap>
 #include <QCloseEvent>
 #include <QDebug>
@@ -933,8 +936,8 @@ QPrinter *MainWindow::printer()
 void MainWindow::print()
 {
     int pageNum = 0;
-    QPrintDialog dlg(printer(), this);
-    if (dlg.exec()) {
+    QAutoPointer<QPrintDialog> dlg{new QPrintDialog(printer(), this)};
+    if (dlg->exec()) {
         QApplication::setOverrideCursor(Qt::WaitCursor);
         printer()->setDocName(m_dataModel->condensedSrcFileNames(true));
         statusBar()->showMessage(tr("Printing..."));
@@ -1013,7 +1016,7 @@ void MainWindow::print()
         pout.flushLine(true);
         QApplication::restoreOverrideCursor();
         statusBar()->showMessage(tr("Printing completed"), MessageMS);
-    } else {
+    } else if (dlg) {
         statusBar()->showMessage(tr("Printing aborted"), MessageMS);
     }
 }
@@ -1313,8 +1316,8 @@ void MainWindow::printPhraseBook(QAction *action)
 
     int pageNum = 0;
 
-    QPrintDialog dlg(printer(), this);
-    if (dlg.exec()) {
+    QAutoPointer<QPrintDialog> dlg{new QPrintDialog(printer(), this)};
+    if (dlg->exec()) {
         printer()->setDocName(phraseBook->fileName());
         statusBar()->showMessage(tr("Printing..."));
         PrintOut pout(printer());
@@ -1338,7 +1341,7 @@ void MainWindow::printPhraseBook(QAction *action)
         }
         pout.flushLine(true);
         statusBar()->showMessage(tr("Printing completed"), MessageMS);
-    } else {
+    } else if (dlg) {
         statusBar()->showMessage(tr("Printing aborted"), MessageMS);
     }
 }

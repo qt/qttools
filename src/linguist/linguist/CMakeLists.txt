@@ -77,7 +77,7 @@ qt_internal_add_app(linguist
         Qt::Gui
         Qt::GuiPrivate
         Qt::UiToolsPrivate
-        Qt::Widgets
+        Qt::WidgetsPrivate
         Qt::Network
 )
 
