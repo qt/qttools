@@ -8,6 +8,7 @@
 #include <QtCore/qlogging.h>
 
 #include <cmath>
+#include <functional>
 #include <utility>
 
 QT_BEGIN_NAMESPACE
@@ -35,19 +36,6 @@ public:
 
 private:
     InjaBridge::RenderContext m_previous;
-};
-
-} // namespace
-
-#else
-namespace {
-
-// Builds with exceptions don't report through qdocFatalTemplateRenderError(),
-// so there's no render context to track.
-class RenderContextScope
-{
-public:
-    explicit RenderContextScope(const InjaBridge::RenderContext &) { }
 };
 
 } // namespace
@@ -80,6 +68,24 @@ QString InjaBridge::renderErrorText(const RenderContext &context, const QString 
                                                        QString::fromUtf8(what))));
 }
 #endif // !QDOC_TEMPLATE_LIBS_THROW
+
+static QString renderWithPolicy(const InjaBridge::RenderContext &context,
+                                const std::function<QString()> &render)
+{
+#if QDOC_TEMPLATE_LIBS_THROW
+    // Everything the operation can throw is caught here, and the run
+    // terminates with the diagnostic for the render in progress.
+    try {
+        return render();
+    } catch (const std::exception &e) {
+        qFatal("%s", qPrintable(InjaBridge::renderErrorText(context,
+                                                           QString::fromUtf8(e.what()))));
+    }
+#else
+    const RenderContextScope scope(context);
+    return render();
+#endif
+}
 
 static std::string escapeHtml(const std::string &input)
 {
@@ -307,12 +313,14 @@ static void registerCallbacks(inja::Environment &env, const QString &format)
 
     \note Inja and nlohmann::json may report template or data errors, such as
     a user template accessing an IR field that a given page does not carry.
-    Where the template libraries run without exceptions, such an error can't
-    cross the library boundary, so both libraries' error-reporting entry
-    points are redirected to a diagnostic that names the failing format,
-    page, and template, along with the error the engine reported, before the
-    run terminates. Where they run with exceptions, the error propagates to
-    the caller.
+    Such an error terminates the run with a diagnostic that names the failing
+    format, page, and template, along with the error the engine reported:
+    where the toolchain and the template libraries run with exceptions, the
+    render methods catch the error at the render boundary; where they run
+    without exceptions, the error cannot cross the library boundary, so both
+    libraries' error-reporting entry points are redirected to the same
+    diagnostic. A failure thus reads the same in both modes, and it is
+    diagnosable rather than a bare abort.
 
     All render methods register template callbacks:
     \list
@@ -441,23 +449,21 @@ nlohmann::json InjaBridge::toInjaJson(const QJsonArray &array)
 QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
                            const RenderContext &context)
 {
-    const RenderContextScope scope(context);
-
-    inja::Environment env;
-    // Replace Inja's default "##" line statement prefix, which conflicts
-    // with Markdown headings. "%!" echoes Jinja2's "%" (statement) and
-    // QDoc's "!" (documentation marker), and is inert in both HTML and
-    // Markdown.
-    env.set_line_statement("%!");
-    env.set_trim_blocks(true);
-    env.set_lstrip_blocks(true);
-    registerCallbacks(env, context.format);
-    nlohmann::json jsonData = toInjaJson(data);
-
-    std::string templateUtf8 = templateStr.toUtf8().toStdString();
-    std::string resultUtf8 = env.render(templateUtf8, jsonData);
-
-    return QString::fromUtf8(resultUtf8.c_str());
+    auto render = [&] {
+        inja::Environment env;
+        // Replace Inja's default "##" line statement prefix, which conflicts
+        // with Markdown headings. "%!" echoes Jinja2's "%" (statement) and
+        // QDoc's "!" (documentation marker), and is inert in both HTML and
+        // Markdown.
+        env.set_line_statement("%!");
+        env.set_trim_blocks(true);
+        env.set_lstrip_blocks(true);
+        registerCallbacks(env, context.format);
+        nlohmann::json jsonData = toInjaJson(data);
+        std::string templateUtf8 = templateStr.toUtf8().toStdString();
+        return QString::fromUtf8(env.render(templateUtf8, jsonData).c_str());
+    };
+    return renderWithPolicy(context, render);
 }
 
 /*!
@@ -480,30 +486,28 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
 QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
                            const IncludeCallback &includeCallback, const RenderContext &context)
 {
-    const RenderContextScope scope(context);
+    auto render = [&] {
+        inja::Environment env;
+        env.set_line_statement("%!");
+        env.set_trim_blocks(true);
+        env.set_lstrip_blocks(true);
+        registerCallbacks(env, context.format);
+        env.set_search_included_templates_in_files(false);
+        env.set_include_callback(
+                [&includeCallback, &env](const std::filesystem::path & /*path*/,
+                                         const std::string &name) -> inja::Template {
+                    QString content = includeCallback(QString::fromStdString(name));
+                    if (content.isEmpty()) {
+                        INJA_THROW(inja::FileError("include not found: '" + name + "'"));
+                    }
+                    return env.parse(content.toUtf8().toStdString());
+                });
 
-    inja::Environment env;
-    env.set_line_statement("%!");
-    env.set_trim_blocks(true);
-    env.set_lstrip_blocks(true);
-    registerCallbacks(env, context.format);
-    env.set_search_included_templates_in_files(false);
-    env.set_include_callback(
-            [&includeCallback, &env](const std::filesystem::path & /*path*/,
-                                     const std::string &name) -> inja::Template {
-                QString content = includeCallback(QString::fromStdString(name));
-                if (content.isEmpty()) {
-                    INJA_THROW(
-                            inja::FileError("include not found: '" + name + "'"));
-                }
-                return env.parse(content.toUtf8().toStdString());
-            });
-
-    nlohmann::json jsonData = toInjaJson(data);
-    std::string templateUtf8 = templateStr.toUtf8().toStdString();
-    std::string resultUtf8 = env.render(templateUtf8, jsonData);
-
-    return QString::fromUtf8(resultUtf8.c_str());
+        nlohmann::json jsonData = toInjaJson(data);
+        std::string templateUtf8 = templateStr.toUtf8().toStdString();
+        return QString::fromUtf8(env.render(templateUtf8, jsonData).c_str());
+    };
+    return renderWithPolicy(context, render);
 }
 
 /*!
@@ -520,19 +524,17 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
 QString InjaBridge::renderFile(const QString &templatePath, const QJsonObject &data,
                                const RenderContext &context)
 {
-    const RenderContextScope scope(context);
-
-    inja::Environment env;
-    env.set_line_statement("%!");
-    env.set_trim_blocks(true);
-    env.set_lstrip_blocks(true);
-    registerCallbacks(env, context.format);
-    nlohmann::json jsonData = toInjaJson(data);
-
-    std::string pathUtf8 = templatePath.toUtf8().toStdString();
-    std::string resultUtf8 = env.render_file(pathUtf8, jsonData);
-
-    return QString::fromUtf8(resultUtf8.c_str());
+    auto render = [&] {
+        inja::Environment env;
+        env.set_line_statement("%!");
+        env.set_trim_blocks(true);
+        env.set_lstrip_blocks(true);
+        registerCallbacks(env, context.format);
+        nlohmann::json jsonData = toInjaJson(data);
+        std::string pathUtf8 = templatePath.toUtf8().toStdString();
+        return QString::fromUtf8(env.render_file(pathUtf8, jsonData).c_str());
+    };
+    return renderWithPolicy(context, render);
 }
 
 QT_END_NAMESPACE
