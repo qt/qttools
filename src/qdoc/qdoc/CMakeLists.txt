@@ -192,8 +192,14 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     )
 endif()
 
+# The template generator's upstream dependencies use exceptions for error handling
+if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
+    set(qdoc_exceptions EXCEPTIONS)
+endif()
+
 qt_internal_add_tool(${target_name}
     REQUIRED_FOR_DOCS
+    ${qdoc_exceptions}
     TARGET_DESCRIPTION "Qt Documentation Compiler"
     TOOLS_TARGET Tools
     USER_FACING
