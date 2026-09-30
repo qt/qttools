@@ -12,6 +12,7 @@
 
 #include <QtCore/QStringList>
 
+#include <functional>
 #include <memory>
 #include <optional>
 
@@ -50,8 +51,10 @@ namespace IR { struct AllMembersIR; struct Document; class ListExpander; }
 class TemplateGenerator : public OutputProducer, public DocumentationHandler
 {
 public:
+    using RenderFailureHandler = std::function<void(const QString &message)>;
+
     explicit TemplateGenerator(FileResolver &fileResolver, QDocDatabase &qdb,
-                               const QString &format = QString());
+                               const QString &format, RenderFailureHandler reportFailure);
     ~TemplateGenerator() override;
 
     // === OutputProducer interface ===
@@ -96,6 +99,7 @@ private:
     FileResolver &m_fileResolver;
     QDocDatabase &m_qdb;
     QString m_format;
+    RenderFailureHandler m_reportFailure;
     std::unique_ptr<FileDocumentWriter> m_writer;
     QStringList m_documentNames;
     std::optional<OutputContext> m_context;

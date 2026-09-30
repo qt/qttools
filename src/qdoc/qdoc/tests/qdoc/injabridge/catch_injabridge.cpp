@@ -12,8 +12,15 @@
 #include <QTemporaryFile>
 
 #include <optional>
+#include <variant>
 
 using namespace Qt::Literals::StringLiterals;
+
+static QString expectRendered(InjaBridge::RenderResult result)
+{
+    REQUIRE(std::holds_alternative<QString>(result));
+    return std::get<QString>(result);
+}
 
 SCENARIO("Converting QJsonValue to nlohmann::json", "[InjaBridge][JSON]") {
 
@@ -183,7 +190,7 @@ SCENARIO("Rendering templates with InjaBridge", "[InjaBridge][Template]") {
         data["name"_L1] = "World"_L1;
 
         WHEN("Rendering the template") {
-            QString result = InjaBridge::render(template_str, data);
+            QString result = expectRendered(InjaBridge::render(template_str, data));
 
             THEN("The template is rendered with the provided data") {
                 REQUIRE(result == "Hello, World!");
@@ -197,7 +204,7 @@ SCENARIO("Rendering templates with InjaBridge", "[InjaBridge][Template]") {
         WHEN("Rendering with show=true") {
             QJsonObject data_true{};
             data_true["show"_L1] = true;
-            QString result_true = InjaBridge::render(template_str, data_true);
+            QString result_true = expectRendered(InjaBridge::render(template_str, data_true));
 
             THEN("The conditional content is shown") {
                 REQUIRE(result_true == "Visible");
@@ -207,7 +214,7 @@ SCENARIO("Rendering templates with InjaBridge", "[InjaBridge][Template]") {
         WHEN("Rendering with show=false") {
             QJsonObject data_false{};
             data_false["show"_L1] = false;
-            QString result_false = InjaBridge::render(template_str, data_false);
+            QString result_false = expectRendered(InjaBridge::render(template_str, data_false));
 
             THEN("The conditional content is hidden") {
                 REQUIRE(result_false == "");
@@ -225,7 +232,7 @@ SCENARIO("Rendering templates with InjaBridge", "[InjaBridge][Template]") {
         data["items"_L1] = items;
 
         WHEN("Rendering the template") {
-            QString result = InjaBridge::render(template_str, data);
+            QString result = expectRendered(InjaBridge::render(template_str, data));
 
             THEN("The loop is expanded correctly") {
                 REQUIRE(result == "ABC");
@@ -249,7 +256,7 @@ SCENARIO("Rendering template files with InjaBridge", "[InjaBridge][Template][Fil
         data["age"_L1] = 30;
 
         WHEN("Rendering the template file") {
-            QString result = InjaBridge::renderFile(temp_file.fileName(), data);
+            QString result = expectRendered(InjaBridge::renderFile(temp_file.fileName(), data));
 
             THEN("The template file is rendered with the provided data") {
                 // Whole-number doubles are converted to int64_t so that
@@ -268,7 +275,8 @@ SCENARIO("An empty included template renders no content", "[InjaBridge][Template
         return std::nullopt;
     };
 
-    REQUIRE(InjaBridge::render("A{% include \"empty\" %}B"_L1, QJsonObject{ }, include) == "AB"_L1);
+    REQUIRE(expectRendered(InjaBridge::render("A{% include \"empty\" %}B"_L1,
+                                              QJsonObject{ }, include)) == "AB"_L1);
 }
 
 SCENARIO("escape_html escapes special characters in text nodes",
@@ -279,8 +287,8 @@ SCENARIO("escape_html escapes special characters in text nodes",
         data["text"_L1] = "5 < 10 & 10 > 5 with \"quotes\" and 'apostrophes'"_L1;
 
         WHEN("Rendering through escape_html") {
-            QString result = InjaBridge::render(
-                    "{{ escape_html(text) }}"_L1, data);
+            QString result = expectRendered(InjaBridge::render(
+                    "{{ escape_html(text) }}"_L1, data));
 
             THEN("All five characters are escaped") {
                 REQUIRE(result
@@ -299,8 +307,8 @@ SCENARIO("escape_html prevents code block breakout",
         data["code"_L1] = "x</code><script>alert(1)</script>"_L1;
 
         WHEN("Rendering inside a code element") {
-            QString result = InjaBridge::render(
-                    "<code>{{ escape_html(code) }}</code>"_L1, data);
+            QString result = expectRendered(InjaBridge::render(
+                    "<code>{{ escape_html(code) }}</code>"_L1, data));
 
             THEN("The closing tag and script are neutralized") {
                 REQUIRE(result
@@ -322,9 +330,9 @@ SCENARIO("escape_html escapes user-authored link text",
         data["label"_L1] = "Click \"here\" & learn <more>"_L1;
 
         WHEN("Rendering a link element") {
-            QString result = InjaBridge::render(
+            QString result = expectRendered(InjaBridge::render(
                     "<a href=\"{{ escape_html(href) }}\">"
-                    "{{ escape_html(label) }}</a>"_L1, data);
+                    "{{ escape_html(label) }}</a>"_L1, data));
 
             THEN("The internal href passes through unchanged and link text is escaped") {
                 REQUIRE(result
@@ -335,3 +343,40 @@ SCENARIO("escape_html escapes user-authored link text",
     }
 }
 
+SCENARIO("Template render failures are values", "[InjaBridge][Template][Failure]")
+{
+    const InjaBridge::RenderContext context{ "html"_L1, "page.html"_L1,
+                                              "/templates/page.html"_L1 };
+
+    SECTION("An Inja render error returns the missing field")
+    {
+        const auto result = InjaBridge::render("{{ missing }}"_L1, QJsonObject{ }, context);
+        REQUIRE(std::holds_alternative<InjaBridge::RenderFailure>(result));
+        REQUIRE(std::get<InjaBridge::RenderFailure>(result).message.contains("missing"_L1));
+    }
+
+    SECTION("A JSON callback type error returns the library message")
+    {
+        const auto result = InjaBridge::render("{{ escape_html(42) }}"_L1,
+                                               QJsonObject{ }, context);
+        REQUIRE(std::holds_alternative<InjaBridge::RenderFailure>(result));
+        REQUIRE(std::get<InjaBridge::RenderFailure>(result).message.contains("type"_L1));
+    }
+
+    SECTION("An absent include returns a failure")
+    {
+        const InjaBridge::IncludeCallback absent =
+                [](const QString &) -> std::optional<QString> { return std::nullopt; };
+        const auto result = InjaBridge::render("{% include \"missing\" %}"_L1,
+                                               QJsonObject{ }, absent, context);
+        REQUIRE(std::holds_alternative<InjaBridge::RenderFailure>(result));
+        REQUIRE(std::get<InjaBridge::RenderFailure>(result).message.contains("missing"_L1));
+    }
+
+    SECTION("Empty output remains a successful render")
+    {
+        const auto result = InjaBridge::render(""_L1, QJsonObject{ }, context);
+        REQUIRE(std::holds_alternative<QString>(result));
+        REQUIRE(std::get<QString>(result).isEmpty());
+    }
+}

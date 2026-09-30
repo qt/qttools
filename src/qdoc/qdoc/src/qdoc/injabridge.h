@@ -37,6 +37,7 @@ QT_END_NAMESPACE
 
 #include <functional>
 #include <optional>
+#include <variant>
 
 QT_BEGIN_NAMESPACE
 
@@ -52,19 +53,26 @@ public:
         QString templatePath;
     };
 
+    struct RenderFailure
+    {
+        QString message;
+    };
+
+    using RenderResult = std::variant<QString, RenderFailure>;
+
     static QString renderErrorText(const RenderContext &context, const QString &message);
 
     static nlohmann::json toInjaJson(const QJsonValue &value);
     static nlohmann::json toInjaJson(const QJsonObject &obj);
     static nlohmann::json toInjaJson(const QJsonArray &array);
 
-    static QString render(const QString &templateStr, const QJsonObject &data,
-                          const RenderContext &context = { });
-    static QString render(const QString &templateStr, const QJsonObject &data,
-                          const IncludeCallback &includeCallback,
-                          const RenderContext &context = { });
-    static QString renderFile(const QString &templatePath, const QJsonObject &data,
-                              const RenderContext &context = { });
+    static RenderResult render(const QString &templateStr, const QJsonObject &data,
+                               const RenderContext &context = { });
+    static RenderResult render(const QString &templateStr, const QJsonObject &data,
+                               const IncludeCallback &includeCallback,
+                               const RenderContext &context = { });
+    static RenderResult renderFile(const QString &templatePath, const QJsonObject &data,
+                                   const RenderContext &context = { });
 
 private:
     InjaBridge() = default;
