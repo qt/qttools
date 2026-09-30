@@ -69,17 +69,15 @@ QString InjaBridge::renderErrorText(const RenderContext &context, const QString 
 }
 #endif // !QDOC_TEMPLATE_LIBS_THROW
 
-static QString renderWithPolicy(const InjaBridge::RenderContext &context,
-                                const std::function<QString()> &render)
+static InjaBridge::RenderResult renderWithPolicy(const InjaBridge::RenderContext &context,
+                                                 const std::function<QString()> &render)
 {
 #if QDOC_TEMPLATE_LIBS_THROW
-    // Everything the operation can throw is caught here, and the run
-    // terminates with the diagnostic for the render in progress.
+    Q_UNUSED(context);
     try {
         return render();
     } catch (const std::exception &e) {
-        qFatal("%s", qPrintable(InjaBridge::renderErrorText(context,
-                                                           QString::fromUtf8(e.what()))));
+        return InjaBridge::RenderFailure{ QString::fromUtf8(e.what()) };
     }
 #else
     const RenderContextScope scope(context);
@@ -313,14 +311,10 @@ static void registerCallbacks(inja::Environment &env, const QString &format)
 
     \note Inja and nlohmann::json may report template or data errors, such as
     a user template accessing an IR field that a given page does not carry.
-    Such an error terminates the run with a diagnostic that names the failing
-    format, page, and template, along with the error the engine reported:
-    where the toolchain and the template libraries run with exceptions, the
-    render methods catch the error at the render boundary; where they run
-    without exceptions, the error cannot cross the library boundary, so both
-    libraries' error-reporting entry points are redirected to the same
-    diagnostic. A failure thus reads the same in both modes, and it is
-    diagnosable rather than a bare abort.
+    With exceptions, the render methods return a RenderFailure so the caller
+    can report the error and continue with later pages. Without exceptions,
+    both libraries' error-reporting entry points terminate the run with the
+    same contextual diagnostic.
 
     All render methods register template callbacks:
     \list
@@ -363,6 +357,23 @@ static void registerCallbacks(inja::Environment &env, const QString &format)
 
     This is the absolute path of an override in the configured template
     directory or the Qt resource path of a built-in template.
+*/
+
+/*!
+    \struct InjaBridge::RenderFailure
+    \brief Carries the error reported by the template engine.
+*/
+
+/*!
+    \variable InjaBridge::RenderFailure::message
+    \brief The error message reported by the template engine.
+*/
+
+/*!
+    \typedef InjaBridge::RenderResult
+    \brief A rendered string or a template render failure.
+
+    An empty string is a successful result.
 */
 
 /*!
@@ -444,10 +455,10 @@ nlohmann::json InjaBridge::toInjaJson(const QJsonArray &array)
     the JSON data to use for rendering. \a context identifies the render for
     error reporting; see \l RenderContext.
 
-    Returns the rendered template as a QString.
+    Returns the rendered template or a render failure.
 */
-QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
-                           const RenderContext &context)
+InjaBridge::RenderResult InjaBridge::render(const QString &templateStr, const QJsonObject &data,
+                                            const RenderContext &context)
 {
     auto render = [&] {
         inja::Environment env;
@@ -474,17 +485,18 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
     callback so that templates can use \c{{% include "name" %}} directives.
     The \a includeCallback receives the include name and returns the partial's
     content. An empty string is a valid partial; no value means the include
-    wasn't found and raises a fatal error.
+    wasn't found and reports a render failure.
 
     This enables Inja's include mechanism to work with Qt's resource system,
     where \c{std::ifstream} cannot open \c{:/} paths.
 
     \a context identifies the render for error reporting; see \l RenderContext.
 
-    Returns the rendered template as a QString.
+    Returns the rendered template or a render failure.
 */
-QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
-                           const IncludeCallback &includeCallback, const RenderContext &context)
+InjaBridge::RenderResult InjaBridge::render(const QString &templateStr, const QJsonObject &data,
+                                            const IncludeCallback &includeCallback,
+                                            const RenderContext &context)
 {
     auto render = [&] {
         inja::Environment env;
@@ -518,10 +530,11 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
 
     \a context identifies the render for error reporting; see \l RenderContext.
 
-    Returns the rendered template as a QString.
+    Returns the rendered template or a render failure.
 */
-QString InjaBridge::renderFile(const QString &templatePath, const QJsonObject &data,
-                               const RenderContext &context)
+InjaBridge::RenderResult InjaBridge::renderFile(const QString &templatePath,
+                                                const QJsonObject &data,
+                                                const RenderContext &context)
 {
     auto render = [&] {
         inja::Environment env;

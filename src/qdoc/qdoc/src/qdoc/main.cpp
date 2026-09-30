@@ -499,10 +499,15 @@ static void processQdocconfFile(const QString &fileName)
               });
     std::vector<std::unique_ptr<TemplateGenerator>> templateGenerators;
     templateGenerators.reserve(configuredFormats.size());
+    const auto reportTemplateRenderFailure = [](const QString &message) {
+        Location{}.error(message);
+        Location::increaseErrorCount();
+    };
     for (const auto &fmt : configuredFormats) {
         if (fmt.startsWith("template"_L1, Qt::CaseInsensitive))
             templateGenerators.push_back(
-                    std::make_unique<TemplateGenerator>(file_resolver, *QDocDatabase::qdocDB(), fmt));
+                    std::make_unique<TemplateGenerator>(file_resolver, *QDocDatabase::qdocDB(),
+                                                        fmt, reportTemplateRenderFailure));
     }
 #endif
 

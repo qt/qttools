@@ -31,6 +31,7 @@
 
 #include <optional>
 #include <utility>
+#include <variant>
 
 #include <QtCore/qdir.h>
 #include <QtCore/qdiriterator.h>
@@ -72,6 +73,20 @@ static std::optional<LoadedTemplate> loadTemplate(const QString &templateDir, co
     return read(":/qdoc/templates/"_L1 + name);
 }
 
+static void writeOrDiscardRenderResult(FileDocumentWriter *writer,
+                                       const InjaBridge::RenderContext &context,
+                                       const InjaBridge::RenderResult &result,
+                                       const TemplateGenerator::RenderFailureHandler &reportFailure)
+{
+    if (const auto *failure = std::get_if<InjaBridge::RenderFailure>(&result)) {
+        reportFailure(InjaBridge::renderErrorText(context, failure->message));
+        if (writer)
+            writer->discardDocument();
+    } else if (writer && writer->isOpen()) {
+        writer->write(std::get<QString>(result));
+    }
+}
+
 /*!
     \class TemplateGenerator
     \internal
@@ -97,11 +112,17 @@ static std::optional<LoadedTemplate> loadTemplate(const QString &templateDir, co
         IR::Builder
 */
 
+/*!
+    Constructs a producer for \a format using \a fileResolver and \a qdb.
+    The required \a reportFailure callback reports a render diagnostic and
+    records that the QDoc run must exit non-zero.
+*/
 TemplateGenerator::TemplateGenerator(FileResolver &fileResolver, QDocDatabase &qdb,
-                                     const QString &format)
+                                     const QString &format, RenderFailureHandler reportFailure)
     : m_fileResolver(fileResolver)
     , m_qdb(qdb)
     , m_format(format.isEmpty() ? u"template"_s : format)
+    , m_reportFailure(std::move(reportFailure))
 {
     OutputProducerRegistry::instance().registerProducer(this);
 }
@@ -455,10 +476,8 @@ void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &te
     const InjaBridge::RenderContext context{ m_format, currentDocumentName(), loaded->path };
 
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
-    QString rendered = InjaBridge::render(loaded->content, json, includeCallback, context);
-
-    if (m_writer && m_writer->isOpen())
-        m_writer->write(rendered);
+    const auto result = InjaBridge::render(loaded->content, json, includeCallback, context);
+    writeOrDiscardRenderResult(m_writer.get(), context, result, m_reportFailure);
 }
 
 /*!
@@ -489,10 +508,8 @@ void TemplateGenerator::renderJson(const QJsonObject &json, const QString &templ
     const InjaBridge::RenderContext context{ m_format, currentDocumentName(), loaded->path };
 
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
-    QString rendered = InjaBridge::render(loaded->content, enrichedJson, includeCallback, context);
-
-    if (m_writer && m_writer->isOpen())
-        m_writer->write(rendered);
+    const auto result = InjaBridge::render(loaded->content, enrichedJson, includeCallback, context);
+    writeOrDiscardRenderResult(m_writer.get(), context, result, m_reportFailure);
 }
 
 /*!
