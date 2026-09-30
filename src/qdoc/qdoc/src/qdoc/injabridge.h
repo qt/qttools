@@ -4,16 +4,30 @@
 #ifndef INJABRIDGE_H
 #define INJABRIDGE_H
 
-#include <QtCore/qlogging.h>
+#include <QtCore/qglobal.h>
 
-// Override Inja's default error handling before including inja.hpp.
-// Inja's throw.hpp guards INJA_THROW with #ifndef, so defining it first
-// takes precedence. Without this override, -fno-exceptions causes a bare
-// std::abort() with no diagnostic output. With it, qFatal() logs the
-// error message (including source location) before terminating.
-#define INJA_THROW(exception) \
-    qFatal("Inja template error: %s", (exception).what())
+#if !defined(QT_NO_EXCEPTIONS) && !defined(INJA_NOEXCEPTION) && !defined(JSON_NOEXCEPTION) \
+        && (__EXCEPTIONS || _CPPUNWIND)
+#  define QDOC_TEMPLATE_LIBS_THROW 1
+#else
+#  define QDOC_TEMPLATE_LIBS_THROW 0
+#endif
 
+#if !QDOC_TEMPLATE_LIBS_THROW
+// Preserve the failing render's context when library errors cannot
+// reach a catch boundary.
+QT_BEGIN_NAMESPACE
+[[noreturn]] void qdocFatalTemplateRenderError(const char *what);
+QT_END_NAMESPACE
+
+#  define INJA_THROW(exception) \
+      QT_PREPEND_NAMESPACE(qdocFatalTemplateRenderError)((exception).what())
+#  define JSON_THROW_USER(exception) \
+      QT_PREPEND_NAMESPACE(qdocFatalTemplateRenderError)((exception).what())
+#endif
+
+// nlohmann::json comes in through inja; both redefinitions above must
+// precede this include.
 #include <inja/inja.hpp>
 
 #include <QJsonObject>
@@ -36,6 +50,8 @@ public:
         QString page;
         QString templatePath;
     };
+
+    static QString renderErrorText(const RenderContext &context, const QString &message);
 
     static nlohmann::json toInjaJson(const QJsonValue &value);
     static nlohmann::json toInjaJson(const QJsonObject &obj);

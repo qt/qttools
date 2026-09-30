@@ -5,11 +5,81 @@
 
 #include "textutils.h"
 
+#include <QtCore/qlogging.h>
+
 #include <cmath>
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::Literals;
+
+#if !QDOC_TEMPLATE_LIBS_THROW
+namespace {
+
+InjaBridge::RenderContext activeRenderContext;
+
+// Makes a render's context the one qdocFatalTemplateRenderError() reports
+// while that render runs, and restores the enclosing render's context when
+// a nested render returns.
+class RenderContextScope
+{
+    Q_DISABLE_COPY_MOVE(RenderContextScope)
+
+public:
+    explicit RenderContextScope(const InjaBridge::RenderContext &context)
+        : m_previous(std::exchange(activeRenderContext, context))
+    {
+    }
+    ~RenderContextScope() { activeRenderContext = std::move(m_previous); }
+
+private:
+    InjaBridge::RenderContext m_previous;
+};
+
+} // namespace
+
+#else
+namespace {
+
+// Builds with exceptions don't report through qdocFatalTemplateRenderError(),
+// so there's no render context to track.
+class RenderContextScope
+{
+public:
+    explicit RenderContextScope(const InjaBridge::RenderContext &) { }
+};
+
+} // namespace
+#endif // !QDOC_TEMPLATE_LIBS_THROW
+
+/*!
+    \brief Formats \a message with the failing render's \a context.
+*/
+QString InjaBridge::renderErrorText(const RenderContext &context, const QString &message)
+{
+    const auto name = [](const QString &value) { return value.isEmpty() ? u"<unknown>"_s : value; };
+    return u"Failed to render page '"_s + name(context.page) + u"' with template '"_s
+            + name(context.templatePath) + u"' in format '"_s + name(context.format) + u"': "_s
+            + message;
+}
+
+#if !QDOC_TEMPLATE_LIBS_THROW
+/*!
+    \internal
+    The error-reporting entry point for template library errors in a
+    no-exceptions build. The header redefines INJA_THROW and
+    JSON_THROW_USER, the error-reporting entry points of Inja and
+    nlohmann::json, to this function before including the libraries, so
+    a library error terminates the run with the diagnostic for the
+    render in progress instead of a bare abort.
+*/
+[[noreturn]] void qdocFatalTemplateRenderError(const char *what)
+{
+    qFatal("%s", qPrintable(InjaBridge::renderErrorText(activeRenderContext,
+                                                       QString::fromUtf8(what))));
+}
+#endif // !QDOC_TEMPLATE_LIBS_THROW
 
 static std::string escapeHtml(const std::string &input)
 {
@@ -235,12 +305,14 @@ static void registerCallbacks(inja::Environment &env, const QString &format)
     them as integers (e.g., "30" not "30.0"). Fractional values pass through
     as doubles.
 
-    \note Inja and nlohmann::json may report template or data errors. QDoc is
-    built with exceptions disabled (\c{-fno-exceptions}), so such errors are
-    treated as fatal and will terminate the process. A custom \c INJA_THROW
-    override in the header ensures that error details (including source
-    location) are logged via \c qFatal() before termination, rather than
-    calling \c std::abort() silently.
+    \note Inja and nlohmann::json may report template or data errors, such as
+    a user template accessing an IR field that a given page does not carry.
+    Where the template libraries run without exceptions, such an error can't
+    cross the library boundary, so both libraries' error-reporting entry
+    points are redirected to a diagnostic that names the failing format,
+    page, and template, along with the error the engine reported, before the
+    run terminates. Where they run with exceptions, the error propagates to
+    the caller.
 
     All render methods register template callbacks:
     \list
@@ -369,6 +441,8 @@ nlohmann::json InjaBridge::toInjaJson(const QJsonArray &array)
 QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
                            const RenderContext &context)
 {
+    const RenderContextScope scope(context);
+
     inja::Environment env;
     // Replace Inja's default "##" line statement prefix, which conflicts
     // with Markdown headings. "%!" echoes Jinja2's "%" (statement) and
@@ -406,6 +480,8 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
 QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
                            const IncludeCallback &includeCallback, const RenderContext &context)
 {
+    const RenderContextScope scope(context);
+
     inja::Environment env;
     env.set_line_statement("%!");
     env.set_trim_blocks(true);
@@ -444,6 +520,8 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
 QString InjaBridge::renderFile(const QString &templatePath, const QJsonObject &data,
                                const RenderContext &context)
 {
+    const RenderContextScope scope(context);
+
     inja::Environment env;
     env.set_line_statement("%!");
     env.set_trim_blocks(true);
