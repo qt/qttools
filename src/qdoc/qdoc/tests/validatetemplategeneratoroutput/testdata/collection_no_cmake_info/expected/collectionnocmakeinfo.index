@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Regression test: a missing collection IR field skips the module page, while a later page and the index are written." version="" project="CollectionNoCmakeInfo">
+    <namespace name="" status="active" access="public" module="collectionnocmakeinfo">
+        <page name="collection-no-cmake-info-continues.html" href="collection-no-cmake-info-continues.html" status="active" location="page.qdoc" documented="true" subtype="page" title="The Run Continues After a Skipped Page" fulltitle="The Run Continues After a Skipped Page" brief="A page that renders after the collection page is skipped"/>
+        <module name="CollectionNoCmakeInfo" href="collectionnocmakeinfo-module.html" status="active" location="module.qdoc" documented="true" seen="true" title="Collection Without CMake Info" brief="A module whose qdocconf sets no CMake or qmake package info"/>
+    </namespace>
+</INDEX>

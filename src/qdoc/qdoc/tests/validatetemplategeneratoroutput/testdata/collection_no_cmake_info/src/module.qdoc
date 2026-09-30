@@ -1,0 +1,13 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \module CollectionNoCmakeInfo
+    \title Collection Without CMake Info
+    \brief A module whose qdocconf sets no CMake or qmake package info.
+
+    This module intentionally omits \c{\\cmakepackage}, \c{\\cmakecomponent},
+    and \c{\\qtvariable} to reproduce the IR field absence that previously
+    caused an Inja render_error (surfaced as SIGABRT) in the TemplateGenerator
+    when rendering collection pages for modules such as QtQuickTest.
+*/

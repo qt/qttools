@@ -1,0 +1,15 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page collection-no-cmake-info-continues.html
+    \title The Run Continues After a Skipped Page
+    \brief A page that renders after the collection page is skipped.
+
+    This page exists to prove that qdoc keeps going after the module's
+    collection page fails to render. The generator reports the failure, skips
+    that one page, and carries on with the rest of the run, so this page still
+    reaches the output directory. If a regression turned the render failure
+    back into an aborted run, this page would be missing and the fixture's
+    diff against the expected output would catch it.
+*/
