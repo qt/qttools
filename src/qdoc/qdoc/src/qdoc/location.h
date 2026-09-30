@@ -61,6 +61,7 @@ public:
     static void terminate();
     static void information(const QString &message);
     static void internalError(const QString &hint);
+    static void increaseErrorCount();
     static int exitCode();
 
 private:
@@ -90,6 +91,7 @@ private:
 
     static int s_tabSize;
     static int s_warningCount;
+    static int s_errorCount;
     static int s_warningLimit;
     static QString s_programName;
     static QString s_project;

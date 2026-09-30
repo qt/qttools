@@ -22,6 +22,7 @@ QT_BEGIN_NAMESPACE
 
 int Location::s_tabSize;
 int Location::s_warningCount = 0;
+int Location::s_errorCount = 0;
 int Location::s_warningLimit = -1;
 QString Location::s_programName;
 QString Location::s_project;
@@ -276,22 +277,32 @@ void Location::error(const QString &message, const QString &details) const
 }
 
 /*!
-  Returns the error code QDoc should exit with; EXIT_SUCCESS
-  or the number of documentation warnings if they exceeded
-  the limit set by warninglimit configuration variable.
+  Records a failure that must make the process exit non-zero, independently
+  of the warning limit. The count persists across qdocconf files in one run.
+ */
+void Location::increaseErrorCount()
+{
+    ++s_errorCount;
+}
+
+/*!
+  Returns the error code QDoc should exit with. A recorded failure takes
+  precedence over the warning limit.
  */
 int Location::exitCode()
 {
-    if (s_warningLimit < 0 || s_warningCount <= s_warningLimit)
-        return EXIT_SUCCESS;
+    if (s_warningLimit >= 0 && s_warningCount > s_warningLimit) {
+        Location().emitMessage(
+                Error,
+                QStringLiteral("Documentation warnings (%1) exceeded the limit (%2) for '%3'.")
+                        .arg(QString::number(s_warningCount), QString::number(s_warningLimit),
+                             s_project),
+                QString());
+        if (s_errorCount == 0)
+            return s_warningCount;
+    }
 
-    Location().emitMessage(
-            Error,
-            QStringLiteral("Documentation warnings (%1) exceeded the limit (%2) for '%3'.")
-                    .arg(QString::number(s_warningCount), QString::number(s_warningLimit),
-                         s_project),
-            QString());
-    return s_warningCount;
+    return s_errorCount > 0 ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 /*!
