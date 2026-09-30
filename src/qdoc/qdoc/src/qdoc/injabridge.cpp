@@ -260,6 +260,32 @@ static void registerCallbacks(inja::Environment &env, const QString &format)
 */
 
 /*!
+    \struct InjaBridge::RenderContext
+    \brief Identifies the render a template error belongs to.
+
+    A \c RenderContext carries the \c format, \c page, and
+    \c templatePath of one render call.
+*/
+
+/*!
+    \variable InjaBridge::RenderContext::format
+    \brief The output format being rendered.
+*/
+
+/*!
+    \variable InjaBridge::RenderContext::page
+    \brief The output file name of the page being rendered.
+*/
+
+/*!
+    \variable InjaBridge::RenderContext::templatePath
+    \brief The location the template was loaded from.
+
+    This is the absolute path of an override in the configured template
+    directory or the Qt resource path of a built-in template.
+*/
+
+/*!
     \brief Converts a QJsonValue, \a value, to nlohmann::json.
 
     Handles all QJsonValue types: Null, Bool, Double, String, Array, Object,
@@ -335,12 +361,13 @@ nlohmann::json InjaBridge::toInjaJson(const QJsonArray &array)
     is automatically converted from QJsonObject to nlohmann::json.
 
     The Inja template string, \a templateStr, supports Jinja2 syntax. \a data is
-    the JSON data to use for rendering.
+    the JSON data to use for rendering. \a context identifies the render for
+    error reporting; see \l RenderContext.
 
     Returns the rendered template as a QString.
 */
 QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
-                           const QString &format)
+                           const RenderContext &context)
 {
     inja::Environment env;
     // Replace Inja's default "##" line statement prefix, which conflicts
@@ -350,7 +377,7 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
     env.set_line_statement("%!");
     env.set_trim_blocks(true);
     env.set_lstrip_blocks(true);
-    registerCallbacks(env, format);
+    registerCallbacks(env, context.format);
     nlohmann::json jsonData = toInjaJson(data);
 
     std::string templateUtf8 = templateStr.toUtf8().toStdString();
@@ -372,17 +399,18 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
     This enables Inja's include mechanism to work with Qt's resource system,
     where \c{std::ifstream} cannot open \c{:/} paths.
 
+    \a context identifies the render for error reporting; see \l RenderContext.
+
     Returns the rendered template as a QString.
 */
 QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
-                           const IncludeCallback &includeCallback,
-                           const QString &format)
+                           const IncludeCallback &includeCallback, const RenderContext &context)
 {
     inja::Environment env;
     env.set_line_statement("%!");
     env.set_trim_blocks(true);
     env.set_lstrip_blocks(true);
-    registerCallbacks(env, format);
+    registerCallbacks(env, context.format);
     env.set_search_included_templates_in_files(false);
     env.set_include_callback(
             [&includeCallback, &env](const std::filesystem::path & /*path*/,
@@ -409,16 +437,18 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
     which holds the absolute path to the template file. The file should use
     Inja/Jinja2 syntax.  \a data is the JSON data to use for rendering.
 
+    \a context identifies the render for error reporting; see \l RenderContext.
+
     Returns the rendered template as a QString.
 */
 QString InjaBridge::renderFile(const QString &templatePath, const QJsonObject &data,
-                               const QString &format)
+                               const RenderContext &context)
 {
     inja::Environment env;
     env.set_line_statement("%!");
     env.set_trim_blocks(true);
     env.set_lstrip_blocks(true);
-    registerCallbacks(env, format);
+    registerCallbacks(env, context.format);
     nlohmann::json jsonData = toInjaJson(data);
 
     std::string pathUtf8 = templatePath.toUtf8().toStdString();
@@ -428,4 +458,3 @@ QString InjaBridge::renderFile(const QString &templatePath, const QJsonObject &d
 }
 
 QT_END_NAMESPACE
-

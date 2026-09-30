@@ -30,17 +30,24 @@ class InjaBridge
 public:
     using IncludeCallback = std::function<QString(const QString &name)>;
 
+    struct RenderContext
+    {
+        QString format;
+        QString page;
+        QString templatePath;
+    };
+
     static nlohmann::json toInjaJson(const QJsonValue &value);
     static nlohmann::json toInjaJson(const QJsonObject &obj);
     static nlohmann::json toInjaJson(const QJsonArray &array);
 
     static QString render(const QString &templateStr, const QJsonObject &data,
-                          const QString &format = {});
+                          const RenderContext &context = { });
     static QString render(const QString &templateStr, const QJsonObject &data,
                           const IncludeCallback &includeCallback,
-                          const QString &format = {});
+                          const RenderContext &context = { });
     static QString renderFile(const QString &templatePath, const QJsonObject &data,
-                              const QString &format = {});
+                              const RenderContext &context = { });
 
 private:
     InjaBridge() = default;
@@ -49,5 +56,3 @@ private:
 QT_END_NAMESPACE
 
 #endif // INJABRIDGE_H
-
-
