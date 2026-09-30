@@ -29,6 +29,7 @@
 #include "tree.h"
 #include "utilities.h"
 
+#include <optional>
 #include <utility>
 
 #include <QtCore/qdir.h>
@@ -46,6 +47,34 @@ using namespace Qt::Literals;
 
 static void processDocumentBlocks(IR::ListExpander *expander, LinkResolver *resolver,
                                   IR::Document &ir, const Node *relative);
+
+struct LoadedTemplate
+{
+    QString path;
+    QString content;
+};
+
+enum class EmptyOverridePolicy { Use, TryResource };
+
+static std::optional<LoadedTemplate> loadTemplate(const QString &templateDir, const QString &name,
+                                                  EmptyOverridePolicy emptyOverridePolicy)
+{
+    auto read = [](QString path) -> std::optional<LoadedTemplate> {
+        QFile file(path);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            return std::nullopt;
+        return LoadedTemplate{ std::move(path), QString::fromUtf8(file.readAll()) };
+    };
+
+    if (!templateDir.isEmpty()) {
+        auto loaded = read(templateDir + '/'_L1 + name);
+        if (loaded
+            && (emptyOverridePolicy == EmptyOverridePolicy::Use || !loaded->content.isEmpty()))
+            return loaded;
+    }
+
+    return read(":/qdoc/templates/"_L1 + name);
+}
 
 /*!
     \class TemplateGenerator
@@ -400,27 +429,10 @@ QString TemplateGenerator::fileExtension() const
 void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &templateBaseName)
 {
     const QString templateFileName = templateBaseName + '.'_L1 + m_fileExtension;
-    QString templateContent;
+    const auto loaded =
+            loadTemplate(m_templateDir, templateFileName, EmptyOverridePolicy::TryResource);
 
-    if (!m_templateDir.isEmpty()) {
-        QString templatePath = m_templateDir + '/'_L1 + templateFileName;
-        QFile templateFile(templatePath);
-
-        if (templateFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            templateContent = QString::fromUtf8(templateFile.readAll());
-            templateFile.close();
-        }
-    }
-
-    if (templateContent.isEmpty()) {
-        QFile resourceFile(":/qdoc/templates/"_L1 + templateFileName);
-        if (resourceFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            templateContent = QString::fromUtf8(resourceFile.readAll());
-            resourceFile.close();
-        }
-    }
-
-    if (templateContent.isEmpty())
+    if (!loaded || loaded->content.isEmpty())
         qFatal("TemplateGenerator[%s]: No template file found for extension '%s'. "
                "Ensure '%s.%s' exists in the configured template directory or in resources.",
                qPrintable(m_format), qPrintable(m_fileExtension),
@@ -431,7 +443,7 @@ void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &te
     json["stylesheetName"_L1] = m_stylesheetName;
 
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
-    QString rendered = InjaBridge::render(templateContent, json, includeCallback, m_format);
+    QString rendered = InjaBridge::render(loaded->content, json, includeCallback, m_format);
 
     if (m_writer && m_writer->isOpen())
         m_writer->write(rendered);
@@ -448,27 +460,10 @@ void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &te
 void TemplateGenerator::renderJson(const QJsonObject &json, const QString &templateBaseName)
 {
     const QString templateFileName = templateBaseName + '.'_L1 + m_fileExtension;
-    QString templateContent;
+    const auto loaded =
+            loadTemplate(m_templateDir, templateFileName, EmptyOverridePolicy::TryResource);
 
-    if (!m_templateDir.isEmpty()) {
-        QString templatePath = m_templateDir + '/'_L1 + templateFileName;
-        QFile templateFile(templatePath);
-
-        if (templateFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            templateContent = QString::fromUtf8(templateFile.readAll());
-            templateFile.close();
-        }
-    }
-
-    if (templateContent.isEmpty()) {
-        QFile resourceFile(":/qdoc/templates/"_L1 + templateFileName);
-        if (resourceFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            templateContent = QString::fromUtf8(resourceFile.readAll());
-            resourceFile.close();
-        }
-    }
-
-    if (templateContent.isEmpty())
+    if (!loaded || loaded->content.isEmpty())
         qFatal("TemplateGenerator[%s]: No template file found for '%s'. "
                "Ensure '%s.%s' exists in the configured template directory or in resources.",
                qPrintable(m_format), qPrintable(templateBaseName),
@@ -481,7 +476,7 @@ void TemplateGenerator::renderJson(const QJsonObject &json, const QString &templ
         enrichedJson["hasNavigation"_L1] = false;
 
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
-    QString rendered = InjaBridge::render(templateContent, enrichedJson, includeCallback, m_format);
+    QString rendered = InjaBridge::render(loaded->content, enrichedJson, includeCallback, m_format);
 
     if (m_writer && m_writer->isOpen())
         m_writer->write(rendered);
@@ -588,17 +583,8 @@ void TemplateGenerator::generateObsoleteMembersPage(const Aggregate *aggregate)
 */
 QString TemplateGenerator::resolveInclude(const QString &name) const
 {
-    if (!m_templateDir.isEmpty()) {
-        QFile file(m_templateDir + '/'_L1 + name);
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-            return QString::fromUtf8(file.readAll());
-    }
-
-    QFile resourceFile(":/qdoc/templates/"_L1 + name);
-    if (resourceFile.open(QIODevice::ReadOnly | QIODevice::Text))
-        return QString::fromUtf8(resourceFile.readAll());
-
-    return {};
+    const auto loaded = loadTemplate(m_templateDir, name, EmptyOverridePolicy::Use);
+    return loaded ? loaded->content : QString();
 }
 
 static void processDocumentBlocks(IR::ListExpander *expander, LinkResolver *resolver,
