@@ -54,10 +54,7 @@ struct LoadedTemplate
     QString content;
 };
 
-enum class EmptyOverridePolicy { Use, TryResource };
-
-static std::optional<LoadedTemplate> loadTemplate(const QString &templateDir, const QString &name,
-                                                  EmptyOverridePolicy emptyOverridePolicy)
+static std::optional<LoadedTemplate> loadTemplate(const QString &templateDir, const QString &name)
 {
     auto read = [](QString path) -> std::optional<LoadedTemplate> {
         QFile file(path);
@@ -68,8 +65,7 @@ static std::optional<LoadedTemplate> loadTemplate(const QString &templateDir, co
 
     if (!templateDir.isEmpty()) {
         auto loaded = read(templateDir + '/'_L1 + name);
-        if (loaded
-            && (emptyOverridePolicy == EmptyOverridePolicy::Use || !loaded->content.isEmpty()))
+        if (loaded)
             return loaded;
     }
 
@@ -444,10 +440,9 @@ QString TemplateGenerator::fileExtension() const
 void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &templateBaseName)
 {
     const QString templateFileName = templateBaseName + '.'_L1 + m_fileExtension;
-    const auto loaded =
-            loadTemplate(m_templateDir, templateFileName, EmptyOverridePolicy::TryResource);
+    const auto loaded = loadTemplate(m_templateDir, templateFileName);
 
-    if (!loaded || loaded->content.isEmpty())
+    if (!loaded)
         qFatal("TemplateGenerator[%s]: No template file found for extension '%s'. "
                "Ensure '%s.%s' exists in the configured template directory or in resources.",
                qPrintable(m_format), qPrintable(m_fileExtension),
@@ -477,10 +472,9 @@ void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &te
 void TemplateGenerator::renderJson(const QJsonObject &json, const QString &templateBaseName)
 {
     const QString templateFileName = templateBaseName + '.'_L1 + m_fileExtension;
-    const auto loaded =
-            loadTemplate(m_templateDir, templateFileName, EmptyOverridePolicy::TryResource);
+    const auto loaded = loadTemplate(m_templateDir, templateFileName);
 
-    if (!loaded || loaded->content.isEmpty())
+    if (!loaded)
         qFatal("TemplateGenerator[%s]: No template file found for '%s'. "
                "Ensure '%s.%s' exists in the configured template directory or in resources.",
                qPrintable(m_format), qPrintable(templateBaseName),
@@ -597,13 +591,15 @@ void TemplateGenerator::generateObsoleteMembersPage(const Aggregate *aggregate)
     Inja's include mechanism to work with Qt resources, where
     \c{std::ifstream} can't open \c{:/} paths.
 
-    Returns the file content as a QString, or an empty QString if the file
-    isn't found in either location.
+    Returns the file content, including an empty file, or no value if the
+    include isn't found in either location.
 */
-QString TemplateGenerator::resolveInclude(const QString &name) const
+std::optional<QString> TemplateGenerator::resolveInclude(const QString &name) const
 {
-    const auto loaded = loadTemplate(m_templateDir, name, EmptyOverridePolicy::Use);
-    return loaded ? loaded->content : QString();
+    const auto loaded = loadTemplate(m_templateDir, name);
+    if (!loaded)
+        return std::nullopt;
+    return loaded->content;
 }
 
 static void processDocumentBlocks(IR::ListExpander *expander, LinkResolver *resolver,
