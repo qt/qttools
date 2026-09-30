@@ -621,7 +621,7 @@ void QUiLoaderPrivate::setupWidgetMap() const
     a \c nullptr; use the \l errorString() function to retrieve a human-readable
     description of the error that occurred.
 
-    \section2 Loading forms with custom widgets
+    \section1 Loading forms with custom widgets
 
     If the UI file contains custom widgets implemented in a \QD plugin, loading
     will fail by default. To work around this, you can subclass \l QUiLoader and
@@ -631,7 +631,7 @@ void QUiLoaderPrivate::setupWidgetMap() const
     See the \l{Creating Custom Widgets for Qt Widgets Designer}
     page for more details.
 
-    \section2 Loading a particular widget from a UI file
+    \section1 Loading a particular widget from a UI file
 
     You can load a specific widget from a UI file, instead of a
     complete UI file. Use the \l availableWidgets() function to
@@ -640,7 +640,7 @@ void QUiLoaderPrivate::setupWidgetMap() const
 
     \snippet quiloader/main.cpp 0
 
-    \section2 Customizing the widget creation
+    \section1 Customizing the widget creation
 
     The \l createAction(), \l createActionGroup(), \l createLayout(), and
     \l createWidget() functions are used internally by the QUiLoader class whenever
@@ -650,7 +650,7 @@ void QUiLoaderPrivate::setupWidgetMap() const
     might want to have a list of the actions created when loading a form or
     creating a custom widget.
 
-    \section2 Example
+    \section1 Example
 
     For a complete example using the QUiLoader class, see the
     \l{Calculator Builder}.
