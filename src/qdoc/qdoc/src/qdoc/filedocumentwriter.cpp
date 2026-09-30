@@ -117,6 +117,23 @@ void FileDocumentWriter::endDocument()
     m_currentFileName.clear();
 }
 
+/*!
+    Closes and removes the current document after its render fails.
+    Safe to call when no document is open.
+*/
+void FileDocumentWriter::discardDocument()
+{
+    m_stream.reset();
+    if (m_file) {
+        m_file->close();
+        if (!m_file->remove())
+            Location{}.error(u"Cannot remove failed output file '%1': %2"_s
+                                     .arg(m_file->fileName(), m_file->errorString()));
+        m_file.reset();
+    }
+    m_currentFileName.clear();
+}
+
 void FileDocumentWriter::write(QStringView content)
 {
     if (m_stream)
