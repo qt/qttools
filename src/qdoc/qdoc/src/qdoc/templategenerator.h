@@ -85,7 +85,7 @@ private:
     void generateObsoleteMembersPage(const Aggregate *aggregate);
 
     // Include resolution for Inja {% include %} directives.
-    [[nodiscard]] QString resolveInclude(const QString &name) const;
+    [[nodiscard]] std::optional<QString> resolveInclude(const QString &name) const;
 
     // Filename computation (adapted from Generator)
     [[nodiscard]] QString fileBase(const Node *node) const;

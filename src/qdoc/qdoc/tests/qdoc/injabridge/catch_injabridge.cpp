@@ -11,6 +11,8 @@
 #include <QString>
 #include <QTemporaryFile>
 
+#include <optional>
+
 using namespace Qt::Literals::StringLiterals;
 
 SCENARIO("Converting QJsonValue to nlohmann::json", "[InjaBridge][JSON]") {
@@ -256,6 +258,17 @@ SCENARIO("Rendering template files with InjaBridge", "[InjaBridge][Template][Fil
             }
         }
     }
+}
+
+SCENARIO("An empty included template renders no content", "[InjaBridge][Template][Include]")
+{
+    const InjaBridge::IncludeCallback include = [](const QString &name) -> std::optional<QString> {
+        if (name == "empty"_L1)
+            return QString();
+        return std::nullopt;
+    };
+
+    REQUIRE(InjaBridge::render("A{% include \"empty\" %}B"_L1, QJsonObject{ }, include) == "AB"_L1);
 }
 
 SCENARIO("escape_html escapes special characters in text nodes",

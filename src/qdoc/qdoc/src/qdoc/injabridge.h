@@ -36,13 +36,14 @@ QT_END_NAMESPACE
 #include <QString>
 
 #include <functional>
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
 class InjaBridge
 {
 public:
-    using IncludeCallback = std::function<QString(const QString &name)>;
+    using IncludeCallback = std::function<std::optional<QString>(const QString &name)>;
 
     struct RenderContext
     {

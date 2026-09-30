@@ -473,8 +473,8 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
     This overload configures the Inja environment with a custom include
     callback so that templates can use \c{{% include "name" %}} directives.
     The \a includeCallback receives the include name and returns the partial's
-    content as a QString. If the callback returns an empty string, the include
-    is treated as missing and a fatal error is raised.
+    content. An empty string is a valid partial; no value means the include
+    wasn't found and raises a fatal error.
 
     This enables Inja's include mechanism to work with Qt's resource system,
     where \c{std::ifstream} cannot open \c{:/} paths.
@@ -496,11 +496,10 @@ QString InjaBridge::render(const QString &templateStr, const QJsonObject &data,
         env.set_include_callback(
                 [&includeCallback, &env](const std::filesystem::path & /*path*/,
                                          const std::string &name) -> inja::Template {
-                    QString content = includeCallback(QString::fromStdString(name));
-                    if (content.isEmpty()) {
+                    const auto content = includeCallback(QString::fromStdString(name));
+                    if (!content)
                         INJA_THROW(inja::FileError("include not found: '" + name + "'"));
-                    }
-                    return env.parse(content.toUtf8().toStdString());
+                    return env.parse(content->toUtf8().toStdString());
                 });
 
         nlohmann::json jsonData = toInjaJson(data);
