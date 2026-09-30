@@ -10,6 +10,8 @@
 #include "outputcontext.h"
 #include "filesystem/fileresolver.h"
 
+#include <QtCore/QStringList>
+
 #include <memory>
 #include <optional>
 
@@ -77,6 +79,8 @@ private:
     // Render phase: Format IR according to templates.
     void renderDocument(const IR::Document &ir, const QString &templateBaseName);
     void renderJson(const QJsonObject &json, const QString &templateBaseName);
+
+    [[nodiscard]] QString currentDocumentName() const;
     void generateMemberListingPage(const Node *node, const IR::AllMembersIR &allMembers);
     void generateObsoleteMembersPage(const Aggregate *aggregate);
 
@@ -93,6 +97,7 @@ private:
     QDocDatabase &m_qdb;
     QString m_format;
     std::unique_ptr<FileDocumentWriter> m_writer;
+    QStringList m_documentNames;
     std::optional<OutputContext> m_context;
     QString m_templateDir;
     QString m_fileExtension = QStringLiteral("html");

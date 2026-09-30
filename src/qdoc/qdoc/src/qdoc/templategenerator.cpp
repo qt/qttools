@@ -239,14 +239,29 @@ QString TemplateGenerator::format() const
 
 void TemplateGenerator::beginDocument(const QString &outputFileName)
 {
+    m_documentNames.append(outputFileName);
     if (m_writer)
         m_writer->beginDocument(outputFileName);
 }
 
 void TemplateGenerator::endDocument()
 {
+    m_documentNames.removeLast();
     if (m_writer)
         m_writer->endDocument();
+}
+
+/*!
+    \internal
+
+    Returns the output page name recorded by the most recent beginDocument()
+    that has not yet ended, or QString() outside a document. Unlike the
+    writer's current file name, it survives the writer failing to open
+    the file, so a render error still names the attempted page.
+*/
+QString TemplateGenerator::currentDocumentName() const
+{
+    return m_documentNames.isEmpty() ? QString() : m_documentNames.constLast();
 }
 
 QString TemplateGenerator::fileName(const Node *node) const
