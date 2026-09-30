@@ -28,6 +28,7 @@ public:
     void beginDocument(const QString &fileName);
 
     void endDocument();
+    void discardDocument();
 
     void write(QStringView content) override;
     void writeLine(QStringView content) override;
