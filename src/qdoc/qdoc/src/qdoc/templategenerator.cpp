@@ -466,8 +466,10 @@ void TemplateGenerator::renderDocument(const IR::Document &ir, const QString &te
     json["stylesheetEnabled"_L1] = m_emitStylesheet;
     json["stylesheetName"_L1] = m_stylesheetName;
 
+    const InjaBridge::RenderContext context{ m_format, currentDocumentName(), loaded->path };
+
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
-    QString rendered = InjaBridge::render(loaded->content, json, includeCallback, m_format);
+    QString rendered = InjaBridge::render(loaded->content, json, includeCallback, context);
 
     if (m_writer && m_writer->isOpen())
         m_writer->write(rendered);
@@ -499,8 +501,10 @@ void TemplateGenerator::renderJson(const QJsonObject &json, const QString &templ
     if (!enrichedJson.contains("hasNavigation"_L1))
         enrichedJson["hasNavigation"_L1] = false;
 
+    const InjaBridge::RenderContext context{ m_format, currentDocumentName(), loaded->path };
+
     auto includeCallback = [this](const QString &name) { return resolveInclude(name); };
-    QString rendered = InjaBridge::render(loaded->content, enrichedJson, includeCallback, m_format);
+    QString rendered = InjaBridge::render(loaded->content, enrichedJson, includeCallback, context);
 
     if (m_writer && m_writer->isOpen())
         m_writer->write(rendered);
@@ -845,4 +849,3 @@ void TemplateGenerator::copyAssets()
 }
 
 QT_END_NAMESPACE
-
