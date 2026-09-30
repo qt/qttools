@@ -1,0 +1,7 @@
+This fixture renders an unguarded user template that accesses collection IR
+fields (cmakePackage, qtVariable, namespaces, classes) which a module with no
+CMake or qmake info doesn't carry. The TemplateGenerator reports the render
+failure, skips the collection page, and continues the run, so qdoc exits
+non-zero by design. The presence of this marker tells the harness to treat that
+non-zero exit as the expected outcome and still diff the pages that were
+written (the later page and index) against expected/.

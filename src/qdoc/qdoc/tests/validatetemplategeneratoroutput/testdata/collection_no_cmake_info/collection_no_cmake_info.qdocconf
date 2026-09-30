@@ -1,0 +1,21 @@
+project     = CollectionNoCmakeInfo
+description = Regression test: a missing collection IR field skips the module \
+              page, while a later page and the index are written.
+
+locationinfo = false
+
+headers.fileextensions = "*.h"
+sources.fileextensions = "*.qdoc"
+
+headerdirs = ./src
+sourcedirs = ./src
+
+outputformats = TemplateMarkdown
+
+TemplateMarkdown.nosubdirs    = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension    = md
+TemplateMarkdown.templatedir  = ./template
+
+warninglimit = 0
+warninglimit.enabled = true

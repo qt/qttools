@@ -1,0 +1,12 @@
+# The render failure must name the skipped page, the resolved template path,
+# the output format, and the IR field the template asked for. The first three
+# are QDoc's diagnostic context; the field name comes from the engine error.
+#
+# Nothing below asserts on Inja's own wording or on the reported line and
+# column. Both belong to the template engine: the wording changes with the
+# Inja version, and the position changes whenever this fixture's template is
+# edited. Pinning them here would make the fixture fail for reasons that have
+# nothing to do with QDoc.
+Failed to render page 'collectionnocmakeinfo-module.md'
+template/collection.md' in format 'TemplateMarkdown'
+cmakePackage
