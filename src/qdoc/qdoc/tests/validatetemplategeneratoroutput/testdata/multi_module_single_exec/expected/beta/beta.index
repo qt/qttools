@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Beta Reference Documentation" version="" project="Beta">
+    <namespace name="" status="active" access="public" module="beta">
+        <page name="beta.html" href="beta.html" status="active" location="beta.qdoc" documented="true" subtype="page" title="Beta Page" fulltitle="Beta Page" brief="A page from the second module of a single-exec run"/>
+    </namespace>
+</INDEX>

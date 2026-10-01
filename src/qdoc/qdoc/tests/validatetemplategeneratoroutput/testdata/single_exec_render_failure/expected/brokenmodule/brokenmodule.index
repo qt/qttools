@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Regression test: a broken template fails the module page once, while a later page and the index are still written in a single-exec run." version="" project="BrokenModule">
+    <namespace name="" status="active" access="public" module="brokenmodule">
+        <page name="still-renders.html" href="still-renders.html" status="active" location="page.qdoc" documented="true" subtype="page" title="The Run Continues" fulltitle="The Run Continues" brief="A page that renders after the module page's render failure"/>
+        <module name="BrokenModule" href="brokenmodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" title="Broken Module" brief="A module whose collection template is deliberately broken"/>
+    </namespace>
+</INDEX>

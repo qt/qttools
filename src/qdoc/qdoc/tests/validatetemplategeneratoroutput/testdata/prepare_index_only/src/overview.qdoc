@@ -1,0 +1,12 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page overview.html
+    \title Overview
+    \brief A page the prepare pass must not render.
+
+    The prepare pass produces the index file for cross-module linking and
+    must not write documentation pages or copy output assets such as the
+    stylesheet configured for this project.
+*/

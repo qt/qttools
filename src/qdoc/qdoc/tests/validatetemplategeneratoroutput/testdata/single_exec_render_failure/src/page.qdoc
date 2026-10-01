@@ -1,0 +1,12 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page still-renders.html
+    \title The Run Continues
+    \brief A page that renders after the module page's render failure.
+
+    This page exists to prove that a single-exec run keeps going after a
+    failed page: the generator reports the failure, skips that page, and
+    the rest of the run still reaches the output directory.
+*/

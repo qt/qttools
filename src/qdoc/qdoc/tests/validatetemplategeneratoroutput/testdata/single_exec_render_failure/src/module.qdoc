@@ -1,0 +1,12 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \module BrokenModule
+    \title Broken Module
+    \brief A module whose collection template is deliberately broken.
+
+    The fixture-local collection template references an IR field that does
+    not exist, so rendering this page fails. QDoc must report the failure,
+    discard the page, and keep going with the rest of the run.
+*/

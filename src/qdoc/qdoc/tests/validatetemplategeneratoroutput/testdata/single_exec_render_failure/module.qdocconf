@@ -1,0 +1,22 @@
+project     = BrokenModule
+description = Regression test: a broken template fails the module page once, \
+              while a later page and the index are still written in a \
+              single-exec run.
+
+locationinfo = false
+
+headers.fileextensions = "*.h"
+sources.fileextensions = "*.qdoc"
+
+headerdirs = ./src
+sourcedirs = ./src
+
+outputformats = TemplateMarkdown
+
+TemplateMarkdown.nosubdirs    = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension    = md
+TemplateMarkdown.templatedir  = ./template
+
+warninglimit = 0
+warninglimit.enabled = true

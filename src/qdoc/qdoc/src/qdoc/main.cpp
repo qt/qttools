@@ -693,10 +693,11 @@ static void processQdocconfFile(const QString &fileName)
             generator->generateDocs();
             ++producedFormats;
         } else if (auto *producer = OutputProducerRegistry::instance().producerForFormat(format)) {
-            // Non-Generator OutputProducer implementation (e.g., TemplateGenerator)
-            producer->prepare();
-            producer->produce();
-            producer->finalize();
+            if (!config.preparing()) {
+                producer->prepare();
+                producer->produce();
+                producer->finalize();
+            }
             ++producedFormats;
         } else {
             config.get(CONFIG_OUTPUTFORMATS)

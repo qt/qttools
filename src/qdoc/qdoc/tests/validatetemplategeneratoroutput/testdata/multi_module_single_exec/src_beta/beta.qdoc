@@ -1,0 +1,11 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page beta.html
+    \title Beta Page
+    \brief A page from the second module of a single-exec run.
+
+    This module's index file and page both come from the single-exec run:
+    the index from the prepare pass, the page from the generate pass.
+*/

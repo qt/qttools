@@ -1,0 +1,9 @@
+# A deliberately broken collection template must fail the module page's
+# render exactly once in a single-exec run: once, because the prepare pass
+# no longer renders pages, and the run still reports it and exits non-zero.
+#
+# Nothing below asserts on Inja's own wording or on the template's absolute
+# path, both of which are environment- or version-dependent.
+Failed to render page 'brokenmodule-module.md'
+template/collection.md' in format 'TemplateMarkdown'
+definitelyMissingField
