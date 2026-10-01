@@ -1792,6 +1792,8 @@ void DocParser::endSection(int, int) // (int unit, int endCmd)
     double quotes, if they wrap the string.
  */
 void DocParser::cmd_image(int cmd) {
+    const Location imageLocation = location(); // Setup before any consuming parser operation
+
     Atom::AtomType imageAtom{};
     switch (cmd) {
     case CMD_IMAGE: {
@@ -1825,11 +1827,13 @@ void DocParser::cmd_image(int cmd) {
         }
     }
 
-    if (!hasAltTextArgument && imageText.isEmpty() && Config::instance().reportMissingAltTextForImages())
-        location().report(QStringLiteral("\\%1 %2 is without a textual description, "
-                                         "QDoc will not generate an alt text for the image.")
-                                  .arg(cmdName(cmd))
-                                  .arg(imageFileName));
+    if (!hasAltTextArgument && imageText.isEmpty()
+        && Config::instance().reportMissingAltTextForImages()) {
+        imageLocation.report(
+                "\\%1 %2 is without a textual description, "
+                "QDoc will not generate an alt text for the image."_L1.arg(cmdName(cmd))
+                        .arg(imageFileName));
+    }
     appendAtom(Atom(imageAtom, imageFileName));
     appendAtom(Atom(Atom::ImageText, imageText));
 }
