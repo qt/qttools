@@ -320,21 +320,31 @@ void Location::fatal(const QString &message, const QString &details) const
 }
 
 /*!
-  Writes \a message and \a details to stderr as a formatted
-  report message.
+  Writes \a message and \a details to \c{stderr} as an informational
+  report. Includes the project name and, when available, the file
+  name and line number.
 
-  A report does not include any filename/line number information.
-  Recurring reports with an identical \a message are ignored.
+  Suppresses repeated messages at the same file and line during a
+  QDoc run. Reports without a source location are deduplicated
+  separately by message.
 
-  A report is generated only in \e generate or \e {single-exec}
-  phase. In \e {prepare} phase, this function does nothing.
+  Emits reports only in the \e generate or \e{single-exec} phase.
+  Reports do not count toward the warning limit or affect the exit
+  code.
  */
 void Location::report(const QString &message, const QString &details) const
 {
     const auto &config = Config::instance();
-    if ((!config.preparing() || config.singleExec()) && !s_reports.contains(message)) {
-        emitMessage(Report, message, details);
-        s_reports << message;
+    if (!config.preparing() || config.singleExec()) {
+        // Separate the fields to avoid ambiguous deduplication keys.
+        // Produces e.g. /path/file.qdoc<NUL>33<NUL>Missing alt text
+        QString key = message;
+        if (!isEmpty())
+            key = filePath() + QChar(0) + QString::number(lineNo()) + QChar(0) + message;
+        if (!s_reports.contains(key)) {
+            emitMessage(Report, message, details);
+            s_reports.insert(key);
+        }
     }
 }
 
@@ -522,7 +532,7 @@ void Location::internalError(const QString &hint)
 /*!
   Formats \a message and \a details into a single string
   and outputs that string to \c stderr. \a type specifies
-  whether the \a message is an error or a warning.
+  whether the \a message is an error, warning, or report.
  */
 void Location::emitMessage(MessageType type, const QString &message, const QString &details) const
 {
@@ -543,19 +553,19 @@ void Location::emitMessage(MessageType type, const QString &message, const QStri
         else if (type == Warning) {
             result.prepend(QStringLiteral(": warning: "));
             ++s_warningCount;
-        }
+        } else if (type == Report)
+            result.prepend("qdoc: '%1': "_L1.arg(s_project));
     } else {
         if (type == Error)
             result.prepend(": [%1] (qdoc) error: "_L1.arg(s_project));
         else if (type == Warning) {
             result.prepend(": [%1] (qdoc) warning: "_L1.arg(s_project));
             ++s_warningCount;
-        }
+        } else if (type == Report)
+            result.prepend(": [%1] (qdoc) report: "_L1.arg(s_project));
     }
-    if (type != Report)
+    if (type != Report || !isEmpty())
         result.prepend(toString());
-    else
-        result.prepend("qdoc: '%1': "_L1.arg(s_project));
     fprintf(stderr, "%s\n", result.toLatin1().data());
     fflush(stderr);
 
