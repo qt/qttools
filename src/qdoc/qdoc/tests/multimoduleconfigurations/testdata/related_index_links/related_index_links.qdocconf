@@ -1,0 +1,34 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+# Consumer module: loads the producer's generated .index file in a fresh
+# qdoc process (the driver passes `-indexdir <upstream_output_dir>` from
+# the prior upstream_related build step, and `depends` makes qdoc load the
+# index from there). The landing page links to every related non-member
+# the producer documents; the expected output proves that each link
+# resolves to the corresponding anchor on the producer's Widget page.
+
+project = RelatedIndexLinks
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions = "*.h *.hpp"
+sources.fileextensions = "*.cpp *.qml *.qdoc"
+
+sourcedirs = ./src/consumer
+headerdirs = ./src/consumer
+
+depends = upstreamrelated
+
+outputformats = HTML TemplateHTML
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = template-html
+TemplateHTML.extension = html
+
+warninglimit = 0
+warninglimit.enabled = true

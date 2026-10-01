@@ -1,0 +1,33 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+# Producer module: documents Widget, a class whose related non-members are
+# declared in namespace Ns (Mode, TimerId, Handle, and the two makeHandle
+# overloads) and in the global scope (GlobalId).
+#
+# WebXML is enabled deliberately: it produces index sections per page and
+# allocates related="N" identifiers before the final .index file is
+# written. The canonical .index numbering must not depend on that earlier
+# traversal (QTBUG-151066).
+
+project = UpstreamRelated
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions = "*.h"
+sources.fileextensions = "*.cpp *.qdoc"
+
+sourcedirs = ./src/producer
+headerdirs = ./src/producer
+
+outputformats = HTML WebXML
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+WebXML.nosubdirs = true
+WebXML.outputsubdir = webxml
+
+warninglimit = 0
+warninglimit.enabled = true

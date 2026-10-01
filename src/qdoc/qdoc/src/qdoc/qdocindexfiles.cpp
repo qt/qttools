@@ -1595,7 +1595,18 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
         return;
 
     qCDebug(lcQdoc) << "Writing index file:" << fileName;
+
+    // Use the bases list to record private base classes when generating.
+    m_basesList.clear();
+    /*
+      The related="N" numbers must equal the position of the related non-member
+      in the document, so that a reader can re-adopt it. A generator that
+      produces index sections per page (WebXML) runs before this and leaves
+      allocation state in m_relatedNodes, so clear it here to restore
+      canonical first-occurrence numbering.
+     */
     m_relatedNodes.clear();
+
     QXmlStreamWriter writer(&file);
     writer.setAutoFormatting(true);
     writer.writeStartDocument();

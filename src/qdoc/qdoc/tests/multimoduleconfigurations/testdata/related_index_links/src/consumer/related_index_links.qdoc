@@ -1,0 +1,29 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \module RelatedIndexLinks
+    \title Related Index Links Module
+    \brief Synthetic consumer module for the related-node index round-trip fixture.
+*/
+
+/*!
+    \page related-index-links-index.html
+    \title Related Index Links
+    \brief Landing page linking to every related non-member published by UpstreamRelated.
+
+    This page exercises index round-trip resolution (QTBUG-151066): the
+    consumer loads the producer's generated .index file in a fresh qdoc
+    process, and every related non-member must be re-adopted correctly so
+    that each link below resolves to the corresponding anchor on the
+    producer's Widget documentation page, without warnings:
+
+    \list
+        \li \l Ns::Mode
+        \li \l Ns::TimerId
+        \li \l Ns::Handle
+        \li \l Ns::makeHandle(const char*)
+        \li \l Ns::makeHandle(int)
+        \li \l GlobalId
+    \endlist
+*/

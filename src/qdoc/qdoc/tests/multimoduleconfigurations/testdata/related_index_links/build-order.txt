@@ -1,0 +1,11 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+# The upstream module documents a class whose related non-members are
+# declared in a namespace and in the global scope. It is built first so
+# that its generated .index file is on disk when the consumer module
+# (built last) parses `depends = upstreamrelated`. The consumer loads the
+# index in a fresh qdoc process, which must re-adopt every related
+# non-member with canonical first-occurrence numbering (QTBUG-151066).
+upstream_related
+related_index_links
