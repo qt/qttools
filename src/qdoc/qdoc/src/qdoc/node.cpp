@@ -1146,6 +1146,16 @@ void Node::setDeprecated(const QString &sinceVersion)
   when this function can be called safely and why it is called.
 */
 
+/*! \fn void Node::setDeclarationParent(Aggregate *n)
+  Sets the node's declaration parent pointer to \a n, the aggregate
+  in whose C++ scope the node was declared. This pointer is set when
+  the node is adopted by the \c relates command, whose target becomes
+  the node's documentation parent. It is \c null unless the node was
+  adopted from another aggregate.
+
+  \sa declarationParent()
+*/
+
 /*! \fn void Node::setIndexNodeFlag(bool isIndexNode = true)
   Sets a flag in this Node that indicates the node was created
   for something in an index file. This is important to know
@@ -1273,7 +1283,21 @@ void Node::setDeprecated(const QString &sinceVersion)
  */
 
 /*! \fn Aggregate *Node::parent() const
-  Returns the node's parent pointer.
+  Returns the node's parent pointer, that is, the aggregate under which
+  the node is documented. For a related nonmember adopted by the
+  \c relates command, this is the related aggregate, which may differ
+  from the aggregate in whose C++ scope the node was declared.
+
+  \sa declarationParent()
+*/
+
+/*! \fn Aggregate *Node::declarationParent() const
+  Returns the aggregate in whose C++ scope the node was declared, or
+  \c null if the node was not adopted by the \c relates command. Use
+  this, rather than parent(), to qualify names with the node's
+  declaration scope.
+
+  \sa parent()
 */
 
 /*! \fn const QString &Node::name() const

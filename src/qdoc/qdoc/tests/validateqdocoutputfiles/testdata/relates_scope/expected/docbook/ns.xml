@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Ns Namespace</db:title>
+<db:productname>RelatesScope</db:productname>
+<db:titleabbrev>Test case for related non-members declared in a namespace (QTBUG-150820)</db:titleabbrev>
+<db:abstract>
+<db:para>A namespace whose members are documented with Widget.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>widget.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="type-documentation">
+<db:title>Type Documentation</db:title>
+<db:section xml:id="Handle-typedef">
+<db:title>[alias] Handle</db:title>
+<db:para>A type alias declared in namespace Ns.</db:para>
+</db:section>
+<db:section xml:id="Mode-enum">
+<db:title>enum Mode</db:title>
+<db:para>An unscoped enum declared in namespace Ns.</db:para>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Value</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="ns.xml">Ns</db:link></db:emphasis>::Fast</db:code></db:para>
+</db:td>
+<db:td><db:code>0</db:code></db:td>
+<db:td>
+<db:para>Fast mode.</db:para>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="ns.xml">Ns</db:link></db:emphasis>::Slow</db:code></db:para>
+</db:td>
+<db:td><db:code>1</db:code></db:td>
+<db:td>
+<db:para>Slow mode.</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+<db:section xml:id="TimerId-enum">
+<db:title>enum TimerId</db:title>
+<db:para>A scoped enum declared in namespace Ns.</db:para>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Value</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="ns.xml">Ns</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="">TimerId</db:link></db:emphasis>::Invalid</db:code></db:para>
+</db:td>
+<db:td><db:code>0</db:code></db:td>
+<db:td>
+<db:para>An invalid ID.</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+</db:section>
+<db:section xml:id="function-documentation">
+<db:title>Function Documentation</db:title>
+<db:section xml:id="makeHandle">
+<db:title>Ns::Handle makeHandle(const char *<db:emphasis>name</db:emphasis>)</db:title>
+<db:bridgehead renderas="sect2" xml:id="makeHandle-1">Ns::Handle makeHandle(int <db:emphasis>id</db:emphasis>)</db:bridgehead>
+<db:para>Returns a handle for <db:code role="parameter">id</db:code> or <db:code role="parameter">name</db:code>. These functions are declared in namespace Ns and share a documentation comment.</db:para>
+</db:section>
+</db:section>
+</db:article>

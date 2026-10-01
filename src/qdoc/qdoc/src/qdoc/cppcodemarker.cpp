@@ -538,7 +538,11 @@ QString CppCodeMarker::markedUpName(const Node *node)
 
 QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *relative)
 {
-    const auto *node = relative->parent();
+    // A related nonmember is documented under the related class, but its
+    // values are qualified with the C++ scope in which the enum was
+    // declared, so start the scope walk from the declaration parent.
+    const auto *node = relative->declarationParent() ? relative->declarationParent()
+                                                     : relative->parent();
 
     const NativeEnum *nativeEnum{nullptr};
     if (auto *ne_if = dynamic_cast<const NativeEnumInterface *>(relative))

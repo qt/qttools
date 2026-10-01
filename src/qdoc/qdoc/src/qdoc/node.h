@@ -180,6 +180,7 @@ public:
     void setTemplateDecl(std::optional<RelaxedTemplateDeclaration> t) { m_templateDecl = t; }
     void setReconstitutedBrief(const QString &t) { m_reconstitutedBrief = t; }
     void setParent(Aggregate *n) { m_parent = n; }
+    void setDeclarationParent(Aggregate *n) { m_declarationParent = n; }
     void setIndexNodeFlag(bool isIndexNode = true) { m_indexNodeFlag = isIndexNode; }
     void setHadDoc() { m_hadDoc = true; }
     void setComparisonCategory(const ComparisonCategory &category) { m_comparisonCategory = category; }
@@ -208,6 +209,7 @@ public:
     virtual void markReadOnly(bool) {}
 
     [[nodiscard]] Aggregate *parent() const { return m_parent; }
+    [[nodiscard]] Aggregate *declarationParent() const { return m_declarationParent; }
     [[nodiscard]] const QString &name() const override { return m_name; }
     [[nodiscard]] QString physicalModuleName() const { return m_physicalModuleName; }
     [[nodiscard]] QString url() const { return m_url; }
@@ -291,6 +293,7 @@ private:
     bool m_hadDoc : 1;
 
     Aggregate *m_parent { nullptr };
+    Aggregate *m_declarationParent { nullptr };
     SharedCommentNode *m_sharedCommentNode { nullptr };
     QString m_name {};
     Location m_declLocation {};

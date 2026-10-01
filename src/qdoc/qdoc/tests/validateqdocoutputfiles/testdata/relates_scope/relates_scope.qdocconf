@@ -1,0 +1,22 @@
+project = RelatesScope
+description = Test case for related non-members declared in a namespace (QTBUG-150820)
+
+outputformats = HTML WebXML DocBook
+
+{HTML.nosubdirs,DocBook.nosubdirs} = true
+HTML.outputsubdir                  = html
+WebXML.nosubdirs                   = true
+WebXML.outputsubdir                = webxml
+DocBook.outputsubdir               = docbook
+
+locationinfo = false
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
