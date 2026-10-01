@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <module name="RelatesScope" href="relatesscope-module.html" status="active" documented="true" seen="true" title="Relates Scope Module" brief="Related non-members declared outside the global namespace">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="Ns" href="ns.html" type="namespace"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A namespace whose members are documented with Widget.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="Widget" href="widget.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A class that documents related non-members from namespace Ns.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>Related non-members declared outside the global namespace.</brief>
+            </description>
+        </module>
+    </document>
+</WebXML>

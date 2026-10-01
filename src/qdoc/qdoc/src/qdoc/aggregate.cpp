@@ -555,11 +555,17 @@ void Aggregate::addChild(Node *child)
   list and in its searchable data structures. But the child is
   also added to the child list and searchable data structures
   of this Aggregate.
+
+  The child's former parent is remembered as its declaration parent,
+  so that its C++ scope keeps reflecting where it was declared
+  rather than where it is documented.
  */
 void Aggregate::adoptChild(Node *child)
 {
     if (child->parent() != this) {
         m_children.append(child);
+        if (!child->declarationParent())
+            child->setDeclarationParent(child->parent());
         child->setParent(this);
         if (child->isFunction()) {
             m_functionMap[child->name()].emplace_back(static_cast<FunctionNode *>(child));

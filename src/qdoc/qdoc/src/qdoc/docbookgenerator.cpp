@@ -4340,7 +4340,11 @@ void DocBookGenerator::generateEnumValue(const QString &enumValue, const Node *r
     // From CppCodeMarker::markedUpEnumValue, simplifications from Generator::plainCode (removing
     // <@op>). With respect to CppCodeMarker::markedUpEnumValue, the order of generation of parents
     // must be reversed so that they are processed in the order
-    const auto *node = relative->parent();
+    // A related nonmember is documented under the related class, but its values are qualified
+    // with the C++ scope in which the enum was declared, so start the scope walk from the
+    // declaration parent.
+    const auto *node = relative->declarationParent() ? relative->declarationParent()
+                                                     : relative->parent();
 
     const NativeEnum *nativeEnum{nullptr};
     if (auto *ne_if = dynamic_cast<const NativeEnumInterface *>(relative))

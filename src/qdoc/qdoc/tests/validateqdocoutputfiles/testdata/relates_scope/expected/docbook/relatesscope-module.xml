@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Relates Scope Module</db:title>
+<db:productname>RelatesScope</db:productname>
+<db:titleabbrev>Test case for related non-members declared in a namespace (QTBUG-150820)</db:titleabbrev>
+<db:abstract>
+<db:para>Related non-members declared outside the global namespace.</db:para>
+</db:abstract>
+</db:info>
+<db:para>Related non-members declared outside the global namespace.</db:para>
+<db:section xml:id="namespaces">
+<db:title>Namespaces</db:title>
+<db:variablelist role="namespaces">
+<db:varlistentry>
+<db:term><db:link xlink:href="ns.xml" xlink:role="namespace">Ns</db:link></db:term>
+<db:listitem>
+<db:para>A namespace whose members are documented with Widget.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:variablelist role="classes">
+<db:varlistentry>
+<db:term><db:link xlink:href="widget.xml" xlink:role="class">Widget</db:link></db:term>
+<db:listitem>
+<db:para>A class that documents related non-members from namespace Ns.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+</db:article>

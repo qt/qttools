@@ -1,0 +1,20 @@
+project = RelatesScope
+description = Test case for related non-members declared in a namespace (QTBUG-150820)
+
+outputformats = TemplateHTML
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = template-html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+locationinfo = false
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true

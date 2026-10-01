@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for related non-members declared in a namespace (QTBUG-150820)" version="" project="RelatesScope">
+    <namespace name="" status="active" access="public" module="relatesscope">
+        <namespace name="Ns" href="ns.html" status="active" access="public" location="widget.h" documented="true" module="RelatesScope" brief="A namespace whose members are documented with Widget">
+            <function name="makeHandle" href="widget.html#makeHandle" status="active" access="public" location="widget.h" documented="true" related="0" meta="plain" type="Ns::Handle" signature="Ns::Handle makeHandle(const char *name)">
+                <parameter type="const char *" name="name" default=""/>
+            </function>
+            <function name="makeHandle" href="widget.html#makeHandle-1" status="active" access="public" location="widget.h" documented="true" related="1" meta="plain" overload="true" overload-number="1" type="Ns::Handle" signature="Ns::Handle makeHandle(int id)">
+                <parameter type="int" name="id" default=""/>
+            </function>
+            <enum name="Mode" href="widget.html#Mode-enum" status="active" access="public" location="widget.h" related="2" documented="true">
+                <value name="Fast" value="0"/>
+                <value name="Slow" value="1"/>
+            </enum>
+            <enum name="TimerId" href="widget.html#TimerId-enum" status="active" access="public" location="widget.h" related="3" documented="true" scoped="true">
+                <value name="Invalid" value="0"/>
+            </enum>
+            <typedef name="Handle" href="widget.html#Handle-typedef" status="active" access="public" location="widget.h" related="4" documented="true" aliasedtype="int"/>
+        </namespace>
+        <class name="Widget" href="widget.html" status="active" access="public" location="widget.h" documented="true" module="RelatesScope" brief="A class that documents related non-members from namespace Ns">
+            <function name="Widget" fullname="Widget::Widget" href="widget.html#Widget" status="active" access="public" location="widget.h" documented="true" meta="constructor" signature="Widget()"/>
+            <function name="makeHandle" href="widget.html#makeHandle" status="active" access="public" location="widget.h" documented="true" related="0" meta="plain" type="Ns::Handle" signature="Ns::Handle makeHandle(const char *name)">
+                <parameter type="const char *" name="name" default=""/>
+            </function>
+            <function name="makeHandle" href="widget.html#makeHandle-1" status="active" access="public" location="widget.h" documented="true" related="1" meta="plain" overload="true" overload-number="1" type="Ns::Handle" signature="Ns::Handle makeHandle(int id)">
+                <parameter type="int" name="id" default=""/>
+            </function>
+            <enum name="GlobalId" href="widget.html#GlobalId-enum" status="active" access="public" location="widget.h" related="5" documented="true" scoped="true">
+                <value name="None" value="0"/>
+            </enum>
+            <enum name="Mode" href="widget.html#Mode-enum" status="active" access="public" location="widget.h" related="2" documented="true">
+                <value name="Fast" value="0"/>
+                <value name="Slow" value="1"/>
+            </enum>
+            <enum name="TimerId" href="widget.html#TimerId-enum" status="active" access="public" location="widget.h" related="3" documented="true" scoped="true">
+                <value name="Invalid" value="0"/>
+            </enum>
+            <typedef name="Handle" href="widget.html#Handle-typedef" status="active" access="public" location="widget.h" related="4" documented="true" aliasedtype="int"/>
+        </class>
+        <enum name="GlobalId" href="widget.html#GlobalId-enum" status="active" access="public" location="widget.h" related="5" documented="true" scoped="true">
+            <value name="None" value="0"/>
+        </enum>
+        <module name="RelatesScope" href="relatesscope-module.html" status="active" documented="true" seen="true" title="Relates Scope Module" brief="Related non-members declared outside the global namespace"/>
+    </namespace>
+</INDEX>

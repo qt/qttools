@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <namespace name="Ns" href="ns.html" status="active" access="public" location="widget.h" documented="true" module="RelatesScope" brief="A namespace whose members are documented with Widget">
+            <description>
+                <brief>A namespace whose members are documented with Widget.</brief>
+            </description>
+            <function name="makeHandle" href="widget.html#makeHandle" status="active" access="public" location="widget.h" documented="true" related="0" meta="plain" type="Ns::Handle" signature="Ns::Handle makeHandle(const char *name)">
+                <parameter type="const char *" name="name" default=""/>
+                <description>
+                    <para>Returns a handle for <argument>id</argument> or <argument>name</argument>. These functions are declared in namespace Ns and share a documentation comment.</para>
+                </description>
+            </function>
+            <function name="makeHandle" href="widget.html#makeHandle-1" status="active" access="public" location="widget.h" documented="true" related="1" meta="plain" overload="true" overload-number="1" type="Ns::Handle" signature="Ns::Handle makeHandle(int id)">
+                <parameter type="int" name="id" default=""/>
+                <description>
+                    <para>Returns a handle for <argument>id</argument> or <argument>name</argument>. These functions are declared in namespace Ns and share a documentation comment.</para>
+                </description>
+            </function>
+            <enum name="Mode" href="widget.html#Mode-enum" status="active" access="public" location="widget.h" related="3" documented="true">
+                <value name="Fast" value="0"/>
+                <value name="Slow" value="1"/>
+                <description>
+                    <para>An unscoped enum declared in namespace Ns.</para>
+                    <list type="enum">
+                        <definition>
+                            <term>Ns::Fast</term>Fast</definition>
+                        <item>
+                            <para>Fast mode.</para>
+                        </item>
+                        <definition>
+                            <term>Ns::Slow</term>Slow</definition>
+                        <item>
+                            <para>Slow mode.</para>
+                        </item>
+                    </list>
+                </description>
+            </enum>
+            <enum name="TimerId" href="widget.html#TimerId-enum" status="active" access="public" location="widget.h" related="4" documented="true" scoped="true">
+                <value name="Invalid" value="0"/>
+                <description>
+                    <para>A scoped enum declared in namespace Ns.</para>
+                    <list type="enum">
+                        <definition>
+                            <term>Ns::TimerId::Invalid</term>Invalid</definition>
+                        <item>
+                            <para>An invalid ID.</para>
+                        </item>
+                    </list>
+                </description>
+            </enum>
+            <typedef name="Handle" href="widget.html#Handle-typedef" status="active" access="public" location="widget.h" related="5" documented="true" aliasedtype="int">
+                <description>
+                    <para>A type alias declared in namespace Ns.</para>
+                </description>
+            </typedef>
+        </namespace>
+    </document>
+</WebXML>
