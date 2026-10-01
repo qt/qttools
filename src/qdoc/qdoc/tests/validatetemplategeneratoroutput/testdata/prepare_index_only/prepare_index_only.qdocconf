@@ -1,0 +1,19 @@
+project = Prepare Index Only
+productname = Qt
+
+locationinfo = false
+
+sources.fileextensions = "*.qdoc"
+
+sourcedirs = ./src
+
+outputformats = TemplateHTML
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = true
+TemplateHTML.stylesheetname = prepare-index-only.css
+
+warninglimit = 0
+warninglimit.enabled = true

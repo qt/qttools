@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Prepare Index Only Reference Documentation" version="" project="Prepare Index Only">
+    <namespace name="" status="active" access="public" module="prepare index only">
+        <page name="overview.html" href="overview.html" status="active" location="overview.qdoc" documented="true" subtype="page" title="Overview" fulltitle="Overview" brief="A page the prepare pass must not render"/>
+    </namespace>
+</INDEX>

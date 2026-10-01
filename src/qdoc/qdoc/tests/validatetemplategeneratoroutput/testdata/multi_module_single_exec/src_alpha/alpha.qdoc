@@ -1,0 +1,12 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page alpha.html
+    \title Alpha Page
+    \brief A page from the first module of a single-exec run.
+
+    A single-exec run prepares every module first and then generates the
+    output, so this page must still be written even though the prepare
+    pass no longer renders pages.
+*/

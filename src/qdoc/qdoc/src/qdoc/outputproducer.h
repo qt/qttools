@@ -20,6 +20,14 @@ QT_BEGIN_NAMESPACE
 
     Implementations are selected using their format() identifier.
 
+    A producer instance owns exactly one output run: one format, one
+    qdocconf, one QDoc pass. The driver constructs a fresh instance for each
+    run and invokes the full prepare()/produce()/finalize() lifecycle only
+    while Config::generating(). During the prepare pass (a dual-exec
+    -prepare run, or the prepare half of a -single-exec run) the driver skips
+    the lifecycle entirely, so an implementation must not rely on state
+    carried across passes.
+
     \sa Generator, TemplateGenerator
 */
 class OutputProducer

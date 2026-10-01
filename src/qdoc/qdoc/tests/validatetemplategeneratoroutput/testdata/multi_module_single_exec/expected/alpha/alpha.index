@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Alpha Reference Documentation" version="" project="Alpha">
+    <namespace name="" status="active" access="public" module="alpha">
+        <page name="alpha.html" href="alpha.html" status="active" location="alpha.qdoc" documented="true" subtype="page" title="Alpha Page" fulltitle="Alpha Page" brief="A page from the first module of a single-exec run"/>
+    </namespace>
+</INDEX>
