@@ -176,6 +176,15 @@ SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
 SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only"
 
 [[annotations]]
+path = ["src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/args.txt",
+        "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/**/expect-*"]
+precedence = "override"
+comment = ["extra QDoc arguments and expected-outcome markers read by the test runner",
+           "Licensing for those files is test licensing"]
+SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only"
+
+[[annotations]]
 path = ["src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/qtlottie_validation/examples/**.qdoc",
         "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/qtlottie_validation/examples/**.png",
         "src/qdoc/qdoc/tests/validatetemplategeneratoroutput/testdata/cppref_validation/examples/**.qdoc",
