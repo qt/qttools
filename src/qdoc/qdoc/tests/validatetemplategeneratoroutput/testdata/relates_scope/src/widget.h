@@ -15,6 +15,13 @@ enum Mode { Fast, Slow };
 using Handle = int;
 Handle makeHandle(int id);
 Handle makeHandle(const char *name);
+
+class Gadget
+{
+public:
+    enum Level { Low, High };
+    enum class Grade { A, B };
+};
 }
 
 enum class GlobalId { None };

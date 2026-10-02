@@ -76,10 +76,10 @@ It holds information such as the message type, message id, token and other ancil
 Indicates the type of the message.
 | Constant | Description |
 | --- | --- |
-| `Confirmable` | A Confirmable message. The destination endpoint needs to acknowledge the message.|
-| `NonConfirmable` | A Non-Confirmable message. The destination endpoint does not need to acknowledge the message.|
-| `Acknowledgment` | An Acknowledgment message. A message sent or received in reply to a Confirmable message.|
-| `Reset` | A Reset message. This message type is used in case of errors or to stop the ongoing transmission. (For example, it is used to cancel an observation).|
+| `QCoapMessage::Type::Confirmable` | A Confirmable message. The destination endpoint needs to acknowledge the message.|
+| `QCoapMessage::Type::NonConfirmable` | A Non-Confirmable message. The destination endpoint does not need to acknowledge the message.|
+| `QCoapMessage::Type::Acknowledgment` | An Acknowledgment message. A message sent or received in reply to a Confirmable message.|
+| `QCoapMessage::Type::Reset` | A Reset message. This message type is used in case of errors or to stop the ongoing transmission. (For example, it is used to cancel an observation).|
 
 ## Member Function Documentation
 

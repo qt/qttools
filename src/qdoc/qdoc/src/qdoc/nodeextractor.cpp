@@ -896,6 +896,39 @@ static QString threadSafenessString(Node::ThreadSafeness ts)
 
 /*!
     \internal
+    Replace the text of each constant in the value tables of \a blocks with
+    the value qualified to the enum's declaration scope, so that the
+    template generators display the same constant names as the HTML, WebXML,
+    and DocBook generators. Value tables of non-enum nodes, such as
+    enumeration properties, keep their authored spelling.
+*/
+static void qualifyEnumValueTerms(const EnumNode *en, QList<IR::ContentBlock> &blocks)
+{
+    for (auto &block : blocks) {
+        if (block.type == IR::BlockType::DefinitionList
+                && block.attributes.value(QLatin1String("listType"))
+                       == QLatin1String(ATOM_LIST_VALUE)) {
+            for (auto &entry : block.children) {
+                if (entry.type != IR::BlockType::DefinitionTerm || entry.inlineContent.isEmpty())
+                    continue;
+                QString raw;
+                for (const IR::InlineContent &content : entry.inlineContent)
+                    raw += content.plainText();
+                const QString qualified = en->qualifiedValueName(raw);
+                if (qualified != raw) {
+                    IR::InlineContent text;
+                    text.type = IR::InlineType::Text;
+                    text.text = qualified;
+                    entry.inlineContent = { text };
+                }
+            }
+        }
+        qualifyEnumValueTerms(en, block.children);
+    }
+}
+
+/*!
+    \internal
     Build a MemberIR from a single Node.
 
     Extracts identity, classification, and type-specific data from the node.
@@ -945,8 +978,8 @@ IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver,
     } else if (node->isEnumType()) {
         const auto *en = static_cast<const EnumNode *>(node);
         member.signature = en->isScoped()
-            ? QStringLiteral("enum class %1").arg(en->name())
-            : QStringLiteral("enum %1").arg(en->name());
+            ? "enum class %1"_L1.arg(en->name())
+            : "enum %1"_L1.arg(en->name());
 
         for (const auto &item : en->items()) {
             IR::EnumValueIR ev;
@@ -1002,6 +1035,8 @@ IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver,
             IR::ContentBuilder contentBuilder(IR::BriefHandling::Include, 0,
                                               diagnosticHandlerFor(node));
             member.body = contentBuilder.build(firstAtom);
+            if (node->isEnumType())
+                qualifyEnumValueTerms(static_cast<const EnumNode *>(node), member.body);
         }
 
         const QList<Text> &alsoTexts = node->doc().alsoList();

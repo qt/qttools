@@ -192,10 +192,10 @@
         <p>Indicates the type of the message.</p>
         <div class="table"><table class="valuelist">
         <tr><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
-<tr><td class="topAlign"><code translate="no">Confirmable</code></td><td class="topAlign">A Confirmable message. The destination endpoint needs to acknowledge the message.</td></tr>
-<tr><td class="topAlign"><code translate="no">NonConfirmable</code></td><td class="topAlign">A Non-Confirmable message. The destination endpoint does not need to acknowledge the message.</td></tr>
-<tr><td class="topAlign"><code translate="no">Acknowledgment</code></td><td class="topAlign">An Acknowledgment message. A message sent or received in reply to a Confirmable message.</td></tr>
-<tr><td class="topAlign"><code translate="no">Reset</code></td><td class="topAlign">A Reset message. This message type is used in case of errors or to stop the ongoing transmission. (For example, it is used to cancel an observation).</td></tr>
+<tr><td class="topAlign"><code translate="no">QCoapMessage::Type::Confirmable</code></td><td class="topAlign">A Confirmable message. The destination endpoint needs to acknowledge the message.</td></tr>
+<tr><td class="topAlign"><code translate="no">QCoapMessage::Type::NonConfirmable</code></td><td class="topAlign">A Non-Confirmable message. The destination endpoint does not need to acknowledge the message.</td></tr>
+<tr><td class="topAlign"><code translate="no">QCoapMessage::Type::Acknowledgment</code></td><td class="topAlign">An Acknowledgment message. A message sent or received in reply to a Confirmable message.</td></tr>
+<tr><td class="topAlign"><code translate="no">QCoapMessage::Type::Reset</code></td><td class="topAlign">A Reset message. This message type is used in case of errors or to stop the ongoing transmission. (For example, it is used to cancel an observation).</td></tr>
         </table></div>
     <h2 id="member-function-documentation">Member Function Documentation</h2>
     <h3 class="fn" id="QCoapMessage"><span class="name">QCoapMessage::QCoapMessage</span>()<a class="plink" href="#QCoapMessage" title="Direct link to this headline"></a></h3>

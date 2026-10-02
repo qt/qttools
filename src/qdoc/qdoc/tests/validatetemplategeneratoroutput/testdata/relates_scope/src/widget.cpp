@@ -69,3 +69,28 @@ Widget::Widget() {}
 
     \value None No ID.
 */
+
+/*!
+    \class Ns::Gadget
+    \inmodule RelatesScope
+
+    A class declared in namespace Ns whose enums are documented on its own page.
+*/
+
+/*!
+    \enum Ns::Gadget::Level
+
+    An unscoped enum declared in a class inside a namespace.
+
+    \value Low A low level.
+    \value High A high level.
+*/
+
+/*!
+    \enum Ns::Gadget::Grade
+
+    A scoped enum declared in a class inside a namespace.
+
+    \value A Grade A.
+    \value B Grade B.
+*/
