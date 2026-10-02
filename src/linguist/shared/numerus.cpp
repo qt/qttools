@@ -98,7 +98,7 @@ static const char * const arabicForms[] =
 static const char * const tagalogForms[] =
     { "Singular", "Plural (consonant-ended)", "Plural (vowel-ended)", 0 };
 
-#define EOL QLocale::C
+static constexpr auto EOL = QLocale::C;
 
 static const QLocale::Language japaneseStyleLanguages[] = {
     QLocale::Bislama,
