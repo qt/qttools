@@ -1,0 +1,31 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule QmlScope
+*/
+
+/*!
+    \qmltype Thing
+    \inqmlmodule QmlScope
+*/
+
+/*!
+    \qmlenum Thing::Status
+
+    A QML enum with and without explicitly prefixed values.
+
+    \value Idle A status without an explicit prefix.
+    \value Thing.Active A status with an explicit prefix.
+*/
+
+/*!
+    \qmlenum Thing::Mode
+    \qmlenumeratorsfrom [Mode] Ns::Mode
+
+    A QML enum backed by a native C++ enum, with and without explicitly
+    prefixed values.
+
+    \value Fast A value without an explicit prefix.
+    \value Mode.Slow A value with an explicit prefix.
+*/

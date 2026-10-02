@@ -4,9 +4,14 @@
 #include "enumnode.h"
 
 #include "aggregate.h"
+#include "nativeenum.h"
 #include "typedefnode.h"
 
+#include <QtCore/QStringList>
+
 QT_BEGIN_NAMESPACE
+
+using namespace Qt::StringLiterals;
 
 /*!
   \class EnumNode
@@ -77,6 +82,50 @@ void EnumNode::setFlagsType(TypedefNode *typedefNode)
 {
     m_flagsType = typedefNode;
     typedefNode->setAssociatedEnum(this);
+}
+
+/*!
+  Returns the display name of the enumeration value \a enumValue for use in
+  the constant column of a value table: the value as documented, qualified
+  with the scope in which this enum was declared. A related nonmember is
+  documented under the related class, but its values keep the C++ scope in
+  which the enum was declared, so the scope walk starts from the
+  declaration parent. This mirrors the naming of
+  CppCodeMarker::markedUpEnumValue (HTML, WebXML) and
+  DocBookGenerator::generateEnumValue (DocBook), minus the markup, so that
+  the template generators show the same constant names.
+*/
+QString EnumNode::qualifiedValueName(const QString &enumValue) const
+{
+    const auto *node = declarationParent() ? declarationParent() : parent();
+
+    const NativeEnum *nativeEnum{nullptr};
+    if (auto *ne_if = dynamic_cast<const NativeEnumInterface *>(this))
+        nativeEnum = ne_if->nativeEnum();
+
+    if (nativeEnum && nativeEnum->enumNode()
+            && !enumValue.startsWith("%1."_L1.arg(nativeEnum->prefix())))
+        return "%1.%2"_L1.arg(nativeEnum->prefix(), enumValue);
+
+    // Respect existing prefixes in \value arguments of \qmlenum topics.
+    if (isEnumType(Genus::QML)
+            && enumValue.section(' ', 0, 0).contains('.'_L1))
+        return enumValue;
+
+    QStringList parts;
+    const auto *self = static_cast<const Node *>(this);
+    while (!node->isHeader() && node->parent()) {
+        parts.prepend(node->name());
+        if (node->parent() == self || node->parent()->name().isEmpty())
+            break;
+        node = node->parent();
+    }
+    if (isScoped())
+        parts.append(name());
+
+    parts.append(enumValue);
+    const auto &delim = (genus() == Genus::QML) ? "."_L1 : "::"_L1;
+    return parts.join(delim);
 }
 
 QT_END_NAMESPACE

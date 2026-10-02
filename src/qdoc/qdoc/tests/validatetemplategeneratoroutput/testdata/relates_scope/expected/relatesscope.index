@@ -9,6 +9,16 @@
             <function name="makeHandle" href="widget.html#makeHandle-1" status="active" access="public" location="widget.h" documented="true" related="1" meta="plain" overload="true" overload-number="1" type="Ns::Handle" signature="Ns::Handle makeHandle(int id)">
                 <parameter type="int" name="id" default=""/>
             </function>
+            <class name="Gadget" fullname="Ns::Gadget" href="ns-gadget.html" status="active" access="public" location="widget.h" documented="true" includefile="widget.h" module="RelatesScope">
+                <enum name="Grade" fullname="Ns::Gadget::Grade" href="ns-gadget.html#Grade-enum" status="active" access="public" location="widget.h" documented="true" scoped="true">
+                    <value name="A" value="0"/>
+                    <value name="B" value="1"/>
+                </enum>
+                <enum name="Level" fullname="Ns::Gadget::Level" href="ns-gadget.html#Level-enum" status="active" access="public" location="widget.h" documented="true">
+                    <value name="Low" value="0"/>
+                    <value name="High" value="1"/>
+                </enum>
+            </class>
             <enum name="Mode" href="widget.html#Mode-enum" status="active" access="public" location="widget.h" related="2" documented="true">
                 <value name="Fast" value="0"/>
                 <value name="Slow" value="1"/>
@@ -41,6 +51,17 @@
         <enum name="GlobalId" href="widget.html#GlobalId-enum" status="active" access="public" location="widget.h" related="5" documented="true" scoped="true">
             <value name="None" value="0"/>
         </enum>
+        <qmlclass name="Thing" qml-module-name="QmlScope" fullname="QmlScope.Thing" href="qml-qmlscope-thing.html" status="active" access="public" location="qmlscope.qdoc" documented="true">
+            <qmlenum name="Mode" fullname="QmlScope.Thing.Mode" href="qml-qmlscope-thing.html#Mode-enum" status="active" access="public" location="qmlscope.qdoc" documented="true">
+                <value name="Fast"/>
+                <value name="Mode.Slow"/>
+            </qmlenum>
+            <qmlenum name="Status" fullname="QmlScope.Thing.Status" href="qml-qmlscope-thing.html#Status-enum" status="active" access="public" location="qmlscope.qdoc" documented="true">
+                <value name="Idle"/>
+                <value name="Thing.Active"/>
+            </qmlenum>
+        </qmlclass>
         <module name="RelatesScope" href="relatesscope-module.html" status="active" documented="true" seen="true" title="Relates Scope Module" brief="Related non-members declared outside the global namespace"/>
+        <qmlmodule name="QmlScope" qml-module-name="QmlScope" href="qmlscope-qmlmodule.html" status="active" location="qmlscope.qdoc" documented="true" seen="true"/>
     </namespace>
 </INDEX>

@@ -64,26 +64,26 @@ An option contains a name, related to an option ID, and a value. The name is one
 Indicates the name of an option. The value of each ID is as specified by the CoAP standard, with the exception of Invalid. You can refer to [RFC 7252](https://tools.ietf.org/html/rfc7252#section-5.10) and [RFC 7959](https://tools.ietf.org/html/rfc7959#section-2.1) for more details.
 | Constant | Description |
 | --- | --- |
-| `Invalid` | An invalid option.|
-| `IfMatch` | If-Match option.|
-| `UriHost` | Uri-Host option.|
-| `Etag` | Etag option.|
-| `IfNoneMatch` | If-None-Match option.|
-| `Observe` | Observe option.|
-| `UriPort` | Uri-Port option.|
-| `LocationPath` | Location-path option.|
-| `UriPath` | Uri-Path option.|
-| `ContentFormat` | Content-Format option.|
-| `MaxAge` | Max-Age option.|
-| `UriQuery` | Uri-Query option.|
-| `Accept` | Accept option.|
-| `LocationQuery` | Location-Query option.|
-| `Block2` | Block2 option.|
-| `Block1` | Block1 option.|
-| `Size2` | Size2 option.|
-| `ProxyUri` | Proxy-Uri option.|
-| `ProxyScheme` | Proxy-Scheme option.|
-| `Size1` | Size1 option.|
+| `QCoapOption::Invalid` | An invalid option.|
+| `QCoapOption::IfMatch` | If-Match option.|
+| `QCoapOption::UriHost` | Uri-Host option.|
+| `QCoapOption::Etag` | Etag option.|
+| `QCoapOption::IfNoneMatch` | If-None-Match option.|
+| `QCoapOption::Observe` | Observe option.|
+| `QCoapOption::UriPort` | Uri-Port option.|
+| `QCoapOption::LocationPath` | Location-path option.|
+| `QCoapOption::UriPath` | Uri-Path option.|
+| `QCoapOption::ContentFormat` | Content-Format option.|
+| `QCoapOption::MaxAge` | Max-Age option.|
+| `QCoapOption::UriQuery` | Uri-Query option.|
+| `QCoapOption::Accept` | Accept option.|
+| `QCoapOption::LocationQuery` | Location-Query option.|
+| `QCoapOption::Block2` | Block2 option.|
+| `QCoapOption::Block1` | Block1 option.|
+| `QCoapOption::Size2` | Size2 option.|
+| `QCoapOption::ProxyUri` | Proxy-Uri option.|
+| `QCoapOption::ProxyScheme` | Proxy-Scheme option.|
+| `QCoapOption::Size1` | Size1 option.|
 
 ## Member Function Documentation
 

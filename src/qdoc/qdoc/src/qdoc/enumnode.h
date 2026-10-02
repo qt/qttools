@@ -33,6 +33,8 @@ public:
     bool isScoped() const { return m_isScoped; }
     bool isAnonymous() const { return m_isAnonymous; }
 
+    QString qualifiedValueName(const QString &enumValue) const;
+
     const QList<EnumItem> &items() const { return m_items; }
     Access itemAccess(const QString &name) const;
     const TypedefNode *flagsType() const { return m_flagsType; }
