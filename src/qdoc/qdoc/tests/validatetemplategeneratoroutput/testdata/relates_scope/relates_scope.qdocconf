@@ -1,5 +1,5 @@
 project = RelatesScope
-description = Test case for related non-members declared in a namespace (QTBUG-150820)
+description = Test case for enum value naming: related, nested, and QML enums
 
 outputformats = TemplateHTML
 TemplateHTML.nosubdirs = true

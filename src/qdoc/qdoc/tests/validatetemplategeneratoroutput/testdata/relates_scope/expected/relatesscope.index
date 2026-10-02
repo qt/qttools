@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QDOCINDEX>
-<INDEX url="" title="Test case for related non-members declared in a namespace (QTBUG-150820)" version="" project="RelatesScope">
+<INDEX url="" title="Test case for enum value naming: related, nested, and QML enums" version="" project="RelatesScope">
     <namespace name="" status="active" access="public" module="relatesscope">
         <namespace name="Ns" href="ns.html" status="active" access="public" location="widget.h" documented="true" includefile="widget.h" module="RelatesScope" brief="A namespace whose members are documented with Widget" whereDocumented="RelatesScope">
             <function name="makeHandle" href="widget.html#makeHandle" status="active" access="public" location="widget.h" documented="true" related="0" meta="plain" type="Ns::Handle" signature="Ns::Handle makeHandle(const char *name)">
