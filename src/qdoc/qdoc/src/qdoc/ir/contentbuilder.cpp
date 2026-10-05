@@ -96,6 +96,9 @@ namespace IR {
         \li InlineImage -- Inline image within a paragraph.
         \li ImageText -- Alt text consumed by the preceding Image or
             InlineImage handler.
+        \li CaptionLeft, CaptionRight -- Caption content as a Paragraph
+            block with a figCaption class attribute (the legacy HTML
+            figCaption semantics), typically following an Image.
         \li ListTagLeft, ListTagRight -- Value list tag items (ListItem
             blocks).
         \li SinceTagLeft, SinceTagRight -- Version tag items (skipped).
@@ -673,6 +676,17 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
     }
 
     case Atom::ImageText:
+        break;
+
+    case Atom::CaptionLeft: {
+        QJsonObject attrs;
+        attrs["class"_L1] = u"figCaption"_s;
+        openBlock(BlockType::Paragraph, attrs);
+        break;
+    }
+
+    case Atom::CaptionRight:
+        closeBlock();
         break;
 
     case Atom::SinceTagLeft:

@@ -8,5 +8,43 @@
 
     This paragraph contains an \inlineimage test-image.png {inline alt text} within the text flow.
 
+    A block image followed by a caption with formatted pieces:
+
     \image test-image.png Block image alt text
+    \caption Block image caption with \b{bold} text, \c{code},
+             and a \l{page-with-images.html}{\b{nested} link}.
+
+    An uncaptained image:
+
+    \image test-image.png Uncaptained image alt text
+
+    A list item containing a block image and a caption:
+
+    \list
+    \li The first item
+        \image test-image.png List item image
+        \caption \b{Bold} list caption with \c{code} and a \l{page-with-images.html}{link}.
+    \endlist
+
+    A table cell containing a block image and a caption:
+
+    \table
+    \row
+        \li Cell text
+        \li \image test-image.png Cell image
+            \caption \b{Bold} cell caption with \c{code}.
+    \endtable
+
+    A value list in the shape of the QEasingCurve value documentation:
+
+    \value FirstCurve     \image test-image.png {Graph of a
+                           FirstCurve function}
+                          \caption
+                          Easing curve for a first function: accelerating
+                          from zero velocity.
+    \value SecondCurve    \image test-image.png {Graph of a
+                           SecondCurve function}
+                          \caption
+                          Easing curve for a second function: decelerating
+                          to zero velocity.
 */

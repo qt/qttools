@@ -9,9 +9,13 @@ sources.fileextensions = "*.qdoc"
 sourcedirs = ./src
 imagedirs = ./src/images
 
-outputformats = template
-template.nosubdirs = true
-template.outputsubdir = template
+outputformats = TemplateHTML TemplateMarkdown
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
 
 warninglimit = 0
 warninglimit.enabled = true
