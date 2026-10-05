@@ -78,6 +78,7 @@ namespace IR {
         \li ListItemNumber -- List start number metadata.
         \li NoteLeft, NoteRight -- Note admonition blocks.
         \li WarningLeft, WarningRight -- Warning admonition blocks.
+        \li ImportantLeft, ImportantRight -- Important admonition blocks.
         \li BriefLeft, BriefRight -- Brief exclusion (skipped by default,
             or emitted as Paragraph with BriefHandling::Include).
         \li Link, NavLink -- Explicit links with unresolved target.
@@ -505,6 +506,14 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         break;
 
     case Atom::WarningRight:
+        closeBlock();
+        break;
+
+    case Atom::ImportantLeft:
+        openBlock(BlockType::Important);
+        break;
+
+    case Atom::ImportantRight:
         closeBlock();
         break;
 
