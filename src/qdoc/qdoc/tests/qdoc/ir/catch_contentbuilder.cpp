@@ -1083,6 +1083,83 @@ SCENARIO("ContentBuilder builds a Warning block",
     }
 }
 
+SCENARIO("ContentBuilder builds an Important block",
+         "[IR::ContentBuilder][IR][Admonition]")
+{
+    GIVEN("An atom chain with ImportantLeft/ImportantRight wrapping a paragraph")
+    {
+        AtomChain chain(Atom::ImportantLeft);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"This is really important."_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::ImportantRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("There is one Important block containing a Paragraph")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Important);
+                REQUIRE(blocks[0].children.size() == 1);
+                REQUIRE(blocks[0].children[0].type == IR::BlockType::Paragraph);
+                REQUIRE(blocks[0].children[0].inlineContent[0].text
+                        == u"This is really important."_s);
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder keeps rich inlines on a single-line Important block",
+         "[IR::ContentBuilder][IR][Admonition]")
+{
+    GIVEN("An atom chain for a one-line \\important with bold and link inlines")
+    {
+        AtomChain chain(Atom::ImportantLeft);
+        chain.append(Atom::String, u"Stop: "_s);
+        chain.append(Atom::FormattingLeft, ATOM_FORMATTING_BOLD);
+        chain.append(Atom::String, u"important"_s);
+        chain.append(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
+        chain.append(Atom::String, u" data: "_s);
+        chain.append(Atom::Link, u"details.html"_s);
+        chain.append(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
+        chain.append(Atom::String, u"details"_s);
+        chain.append(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+        chain.append(Atom::String, u" docs."_s);
+        chain.append(Atom::ImportantRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            IR::ContentBuilder builder;
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The Important block carries the inlines directly, without a paragraph wrapper")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::Important);
+                REQUIRE(blocks[0].children.isEmpty());
+
+                const auto &inlines = blocks[0].inlineContent;
+                REQUIRE(inlines.size() == 5);
+                REQUIRE(inlines[0].type == IR::InlineType::Text);
+                REQUIRE(inlines[0].text == u"Stop: "_s);
+                REQUIRE(inlines[1].type == IR::InlineType::Bold);
+                REQUIRE(inlines[1].children.size() == 1);
+                REQUIRE(inlines[1].children[0].text == u"important"_s);
+                REQUIRE(inlines[2].type == IR::InlineType::Text);
+                REQUIRE(inlines[3].type == IR::InlineType::Link);
+                REQUIRE(inlines[3].href == u"details.html"_s);
+                REQUIRE(inlines[3].children.size() == 1);
+                REQUIRE(inlines[3].children[0].text == u"details"_s);
+                REQUIRE(inlines[4].type == IR::InlineType::Text);
+                REQUIRE(inlines[4].text == u" docs."_s);
+            }
+        }
+    }
+}
+
 SCENARIO("ContentBuilder produces HorizontalRule from HR atom",
          "[IR::ContentBuilder][IR][Misc]")
 {

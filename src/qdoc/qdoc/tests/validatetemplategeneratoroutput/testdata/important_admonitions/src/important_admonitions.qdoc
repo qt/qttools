@@ -1,0 +1,32 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page important-admonitions.html
+    \title Important Admonitions
+    \brief Important admonitions keep their inline content.
+
+    A top-level admonition with a \b{formatted} phrase and a
+    \l{important-admonitions.html}{link}.
+
+    \important This is really important with a \b{formatted} phrase and a
+    \l{important-admonitions.html}{link}.
+
+    \list
+    \li Item with an admonition:
+        \important Nested important with a \b{formatted} phrase and a
+        \l{important-admonitions.html}{link}.
+    \endlist
+
+    \section2 In a Section
+
+    Section text before.
+
+    \important In a section, with a \b{bold} word.
+
+    \table
+    \row
+        \li Cell with admonition:
+            \important Cell important with a \l{important-admonitions.html}{link}.
+    \endtable
+*/
