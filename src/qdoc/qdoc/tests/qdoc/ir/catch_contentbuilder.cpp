@@ -9,6 +9,7 @@
 #include <QJsonArray>
 #include <QList>
 #include <QString>
+#include <QStringList>
 
 using namespace Qt::Literals::StringLiterals;
 
@@ -1760,6 +1761,229 @@ SCENARIO("ContentBuilder handles block-level Image without ImageText",
                 REQUIRE(img.type == IR::InlineType::Image);
                 REQUIRE(img.href == u"bg.png"_s);
                 REQUIRE(img.title.isEmpty());
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder renders a caption after a block image as a figCaption paragraph",
+         "[IR::ContentBuilder][IR][Image][Caption]")
+{
+    GIVEN("An atom chain: Image -> ImageText -> CaptionLeft -> formatted caption -> CaptionRight")
+    {
+        AtomChain chain(Atom::Image, u"qeasingcurve-linear.png"_s);
+        chain.append(Atom::ImageText, u"Graph of a linear function."_s);
+        chain.append(Atom::CaptionLeft);
+        chain.append(Atom::String, u"Easing curve for a "_s);
+        chain.append(Atom::FormattingLeft, u"bold"_s);
+        chain.append(Atom::String, u"quadratic"_s);
+        chain.append(Atom::FormattingRight, u"bold"_s);
+        chain.append(Atom::String, u" function: "_s);
+        chain.append(Atom::C, u"t^2"_s);
+        chain.append(Atom::String, u" see "_s);
+        chain.append(Atom::Link, u"qeasingcurve.html"_s);
+        chain.append(Atom::FormattingLeft, u"link"_s);
+        chain.append(Atom::FormattingLeft, u"bold"_s);
+        chain.append(Atom::String, u"the graph"_s);
+        chain.append(Atom::FormattingRight, u"bold"_s);
+        chain.append(Atom::String, u" page"_s);
+        chain.append(Atom::FormattingRight, u"link"_s);
+        chain.append(Atom::String, u"."_s);
+        chain.append(Atom::CaptionRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            QStringList warnings;
+            IR::ContentBuilder builder(
+                    IR::BriefHandling::Include, 0,
+                    [&warnings](QtMsgType type, const QString &message) {
+                        if (type == QtWarningMsg)
+                            warnings.append(message);
+                    });
+            auto blocks = builder.build(&chain.first);
+
+            THEN("A centered image paragraph is followed by exactly one figCaption paragraph")
+            {
+                REQUIRE(blocks.size() == 2);
+
+                const auto &imagePara = blocks[0];
+                REQUIRE(imagePara.type == IR::BlockType::Paragraph);
+                REQUIRE(imagePara.attributes["class"_L1].toString() == u"centerAlign"_s);
+                REQUIRE(imagePara.inlineContent.size() == 1);
+                REQUIRE(imagePara.inlineContent[0].type == IR::InlineType::Image);
+                REQUIRE(imagePara.inlineContent[0].href == u"qeasingcurve-linear.png"_s);
+                REQUIRE(imagePara.inlineContent[0].title
+                        == u"Graph of a linear function."_s);
+
+                const auto &caption = blocks[1];
+                REQUIRE(caption.type == IR::BlockType::Paragraph);
+                REQUIRE(caption.attributes["class"_L1].toString() == u"figCaption"_s);
+                REQUIRE(caption.inlineContent.size() == 7);
+                REQUIRE(caption.inlineContent[0].type == IR::InlineType::Text);
+                REQUIRE(caption.inlineContent[1].type == IR::InlineType::Bold);
+                REQUIRE(caption.inlineContent[1].children.size() == 1);
+                REQUIRE(caption.inlineContent[1].children[0].text
+                        == u"quadratic"_s);
+                REQUIRE(caption.inlineContent[2].type == IR::InlineType::Text);
+                REQUIRE(caption.inlineContent[3].type == IR::InlineType::Code);
+                REQUIRE(caption.inlineContent[3].text == u"t^2"_s);
+                REQUIRE(caption.inlineContent[4].type == IR::InlineType::Text);
+                REQUIRE(caption.inlineContent[5].type == IR::InlineType::Link);
+                REQUIRE(caption.inlineContent[5].href == u"qeasingcurve.html"_s);
+                REQUIRE(caption.inlineContent[5].children.size() == 2);
+                REQUIRE(caption.inlineContent[5].children[0].type
+                        == IR::InlineType::Bold);
+                REQUIRE(caption.inlineContent[5].children[1].text
+                        == u" page"_s);
+                REQUIRE(caption.inlineContent[6].type == IR::InlineType::Text);
+            }
+
+            THEN("No content is dropped")
+            {
+                REQUIRE(warnings.isEmpty());
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder keeps an image and caption inside a list item",
+         "[IR::ContentBuilder][IR][Image][Caption][List]")
+{
+    GIVEN("An atom chain: ListLeft -> ListItemLeft -> para + Image + ImageText + caption")
+    {
+        AtomChain chain(Atom::ListLeft, u"bullet"_s);
+        chain.append(Atom::ListItemNumber, u"1"_s);
+        chain.append(Atom::ListItemLeft, u"bullet"_s);
+        chain.append(Atom::ParaLeft);
+        chain.append(Atom::String, u"The first item"_s);
+        chain.append(Atom::ParaRight);
+        chain.append(Atom::Image, u"curve.png"_s);
+        chain.append(Atom::ImageText, u"List item image"_s);
+        chain.append(Atom::CaptionLeft);
+        chain.append(Atom::FormattingLeft, u"bold"_s);
+        chain.append(Atom::String, u"Bold"_s);
+        chain.append(Atom::FormattingRight, u"bold"_s);
+        chain.append(Atom::String, u" list caption with "_s);
+        chain.append(Atom::C, u"code"_s);
+        chain.append(Atom::String, u"."_s);
+        chain.append(Atom::CaptionRight);
+        chain.append(Atom::ListItemRight, u"bullet"_s);
+        chain.append(Atom::ListRight, u"bullet"_s);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            QStringList warnings;
+            IR::ContentBuilder builder(
+                    IR::BriefHandling::Include, 0,
+                    [&warnings](QtMsgType type, const QString &message) {
+                        if (type == QtWarningMsg)
+                            warnings.append(message);
+                    });
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The list item holds the image and caption as nested paragraphs")
+            {
+                REQUIRE(blocks.size() == 1);
+                REQUIRE(blocks[0].type == IR::BlockType::List);
+                REQUIRE(blocks[0].children.size() == 1);
+
+                const auto &item = blocks[0].children[0];
+                REQUIRE(item.type == IR::BlockType::ListItem);
+                REQUIRE(item.children.size() == 3);
+
+                REQUIRE(item.children[0].type == IR::BlockType::Paragraph);
+                REQUIRE(item.children[0].inlineContent.size() == 1);
+                REQUIRE(item.children[0].inlineContent[0].text
+                        == u"The first item"_s);
+
+                REQUIRE(item.children[1].type == IR::BlockType::Paragraph);
+                REQUIRE(item.children[1].attributes["class"_L1].toString()
+                        == u"centerAlign"_s);
+                REQUIRE(item.children[1].inlineContent.size() == 1);
+                REQUIRE(item.children[1].inlineContent[0].type
+                        == IR::InlineType::Image);
+                REQUIRE(item.children[1].inlineContent[0].href
+                        == u"curve.png"_s);
+
+                REQUIRE(item.children[2].type == IR::BlockType::Paragraph);
+                REQUIRE(item.children[2].attributes["class"_L1].toString()
+                        == u"figCaption"_s);
+                REQUIRE(item.children[2].inlineContent.size() == 4);
+                REQUIRE(item.children[2].inlineContent[0].type
+                        == IR::InlineType::Bold);
+                REQUIRE(item.children[2].inlineContent[2].type
+                        == IR::InlineType::Code);
+            }
+
+            THEN("No content is dropped")
+            {
+                REQUIRE(warnings.isEmpty());
+            }
+        }
+    }
+}
+
+SCENARIO("ContentBuilder keeps an image and caption after a value list entry",
+         "[IR::ContentBuilder][IR][Image][Caption][DefinitionList]")
+{
+    GIVEN("An atom chain in the shape of a \\value entry with an image and caption")
+    {
+        AtomChain chain(Atom::ListLeft, u"value"_s);
+        chain.append(Atom::ListTagLeft, u"value"_s);
+        chain.append(Atom::String, u"FirstCurve"_s);
+        chain.append(Atom::ListTagRight, u"value"_s);
+        chain.append(Atom::ListItemLeft, u"value"_s);
+        chain.append(Atom::ListItemRight, u"value"_s);
+        chain.append(Atom::ListRight, u"value"_s);
+        chain.append(Atom::Image, u"qeasingcurve-linear.png"_s);
+        chain.append(Atom::ImageText, u"Graph of a linear function."_s);
+        chain.append(Atom::CaptionLeft);
+        chain.append(Atom::String,
+                     u"Easing curve for a linear (t) function: velocity is constant."_s);
+        chain.append(Atom::CaptionRight);
+
+        WHEN("ContentBuilder processes the chain")
+        {
+            QStringList warnings;
+            IR::ContentBuilder builder(
+                    IR::BriefHandling::Include, 0,
+                    [&warnings](QtMsgType type, const QString &message) {
+                        if (type == QtWarningMsg)
+                            warnings.append(message);
+                    });
+            auto blocks = builder.build(&chain.first);
+
+            THEN("The image and caption follow the value list as top-level blocks")
+            {
+                REQUIRE(blocks.size() == 3);
+
+                REQUIRE(blocks[0].type == IR::BlockType::DefinitionList);
+                REQUIRE(blocks[0].attributes["listType"_L1].toString()
+                        == u"value"_s);
+                REQUIRE(blocks[0].children.size() == 2);
+                REQUIRE(blocks[0].children[0].type == IR::BlockType::DefinitionTerm);
+                REQUIRE(blocks[0].children[1].type
+                        == IR::BlockType::DefinitionDescription);
+
+                REQUIRE(blocks[1].type == IR::BlockType::Paragraph);
+                REQUIRE(blocks[1].attributes["class"_L1].toString()
+                        == u"centerAlign"_s);
+                REQUIRE(blocks[1].inlineContent.size() == 1);
+                REQUIRE(blocks[1].inlineContent[0].type == IR::InlineType::Image);
+                REQUIRE(blocks[1].inlineContent[0].href
+                        == u"qeasingcurve-linear.png"_s);
+
+                REQUIRE(blocks[2].type == IR::BlockType::Paragraph);
+                REQUIRE(blocks[2].attributes["class"_L1].toString()
+                        == u"figCaption"_s);
+                REQUIRE(blocks[2].inlineContent.size() == 1);
+                REQUIRE(blocks[2].inlineContent[0].text
+                        == u"Easing curve for a linear (t) function: velocity is constant."_s);
+            }
+
+            THEN("No content is dropped")
+            {
+                REQUIRE(warnings.isEmpty());
             }
         }
     }
