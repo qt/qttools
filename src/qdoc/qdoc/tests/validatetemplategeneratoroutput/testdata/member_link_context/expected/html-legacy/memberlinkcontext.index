@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test fixture for member link resolution in the authored member context" version="" project="MemberLinkContext">
+    <namespace name="" status="active" access="public" module="memberlinkcontext">
+        <class name="MemberLinkContext" href="memberlinkcontext.html" status="active" access="public" location="member_link_context.h" documented="true" includefile="member_link_context.h" module="MemberLink" brief="A class that carries the member link context test cases">
+            <function name="alpha" fullname="MemberLinkContext::alpha" href="memberlinkcontext.html#alpha" status="active" access="public" location="member_link_context.h" documented="true" meta="plain" type="void" signature="void alpha()">
+                <target name="member-detail"/>
+            </function>
+            <function name="beta" fullname="MemberLinkContext::beta" href="memberlinkcontext.html#beta" status="active" access="public" location="member_link_context.h" documented="true" meta="plain" type="void" signature="void beta()">
+                <target name="member-detail"/>
+            </function>
+            <function name="sharedOne" fullname="MemberLinkContext::sharedOne" href="memberlinkcontext.html#sharedOne" status="active" access="public" location="member_link_context.h" documented="true" meta="plain" type="void" signature="void sharedOne()"/>
+            <function name="sharedTwo" fullname="MemberLinkContext::sharedTwo" href="memberlinkcontext.html#sharedTwo" status="active" access="public" location="member_link_context.h" documented="true" meta="plain" type="void" signature="void sharedTwo()"/>
+        </class>
+        <page name="member_link_context.html" href="member-link-context.html" status="active" location="member_link_context.qdoc" documented="true" subtype="page" title="Member Link Context" fulltitle="Member Link Context" brief="Overview of the member link context fixture">
+            <keyword name="beta"/>
+        </page>
+        <qmlclass name="SignalOrigins" qml-module-name="MemberLinkQml" fullname="MemberLinkQml.SignalOrigins" href="qml-memberlinkqml-signalorigins.html" status="active" access="public" location="member_link_context.qdoc" documented="true" brief="A QML type that carries the duplicate signal anchor cases">
+            <function name="activated" fullname="MemberLinkQml.SignalOrigins.activated" href="qml-memberlinkqml-signalorigins.html#activated-signal" status="active" access="public" location="member_link_context.qdoc" documented="true" meta="qmlsignal">
+                <target name="signal-detail"/>
+            </function>
+            <function name="activated" fullname="MemberLinkQml.SignalOrigins.activated" href="qml-memberlinkqml-signalorigins.html#activated-signal" status="active" access="public" location="member_link_context.qdoc" documented="true" meta="qmlsignal" attached="true">
+                <target name="signal-detail"/>
+            </function>
+        </qmlclass>
+        <module name="MemberLink" href="memberlink-module.html" status="active" location="member_link_context.qdoc" documented="true" seen="true" title="Member Link Context" brief="A module that documents the member link context fixture class"/>
+        <qmlmodule name="MemberLinkQml" qml-module-name="MemberLinkQml" href="memberlinkqml-qmlmodule.html" status="active" location="member_link_context.qdoc" documented="true" seen="true" title="Member Link QML" brief="A QML module that documents the signal origin fixture type"/>
+    </namespace>
+</INDEX>

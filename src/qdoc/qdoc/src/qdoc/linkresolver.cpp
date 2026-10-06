@@ -51,27 +51,39 @@ LinkResolver::LinkResolver(QDocDatabase *qdb, const HrefResolver &hrefResolver,
 
 /*!
     Walks \a blocks and resolves all unresolved Link inlines in place.
-    The \a relative node provides context for relative URL computation
-    and warning emission.
+
+    \a context.semantic is the node whose documentation the content was
+    authored in: for a page body that is the page node; for a detail
+    member body or see-also list that is the authored member, or the
+    SharedCommentNode for copied shared comment text. Node lookup,
+    deprecated-link suppression, and warning attribution use it. A null
+    semantic falls back to \a context.page, the output page node.
+
+    \a context.page is the output page node that renders the content.
+    URL computation through HrefResolver and cross-module relative URLs
+    use it, so rendered hrefs always stay relative to the rendered page
+    even when the semantic context is a member inside that page.
 
     This must be called after ContentBuilder produces the block tree
     and before rendering.
 */
-void LinkResolver::resolve(QList<IR::ContentBlock> &blocks, const Node *relative)
+void LinkResolver::resolve(QList<IR::ContentBlock> &blocks, Context context)
 {
+    if (!context.semantic)
+        context.semantic = context.page;
     for (auto &block : blocks)
-        resolveBlock(block, relative);
+        resolveBlock(block, context);
 }
 
 /*!
     Resolves links within a single \a block by processing its inline
     content and recursing into child blocks.
 */
-void LinkResolver::resolveBlock(IR::ContentBlock &block, const Node *relative)
+void LinkResolver::resolveBlock(IR::ContentBlock &block, const Context &context)
 {
-    resolveInlines(block.inlineContent, relative);
+    resolveInlines(block.inlineContent, context);
     for (auto &child : block.children)
-        resolveBlock(child, relative);
+        resolveBlock(child, context);
 }
 
 /*!
@@ -79,11 +91,11 @@ void LinkResolver::resolveBlock(IR::ContentBlock &block, const Node *relative)
     into children of all inline elements since Link inlines can contain
     nested formatting (such as Bold or Italic).
 */
-void LinkResolver::resolveInlines(QList<IR::InlineContent> &inlines, const Node *relative)
+void LinkResolver::resolveInlines(QList<IR::InlineContent> &inlines, const Context &context)
 {
     for (auto &inline_ : inlines) {
         if (inline_.type == IR::InlineType::Link && !inline_.href.isEmpty())
-            resolveLink(inline_, relative);
+            resolveLink(inline_, context);
 
         if (isBrokenAutolink(inline_)) {
             qCDebug(lcQdoc) << "Autolink degraded to text:" << inline_.href;
@@ -97,7 +109,7 @@ void LinkResolver::resolveInlines(QList<IR::InlineContent> &inlines, const Node 
         }
 
         if (!inline_.children.isEmpty())
-            resolveInlines(inline_.children, relative);
+            resolveInlines(inline_.children, context);
     }
 }
 
@@ -108,22 +120,25 @@ void LinkResolver::resolveInlines(QList<IR::InlineContent> &inlines, const Node 
     \list
     \li External URLs (http, https, ftp, file, mailto) are marked without
         node lookup.
-    \li Node lookup uses genus and module metadata from ContentBuilder
-        when available. Explicit links carry genus scoping (CPP, QML) and
+    \li Node lookup uses the \a context.semantic node as the search
+        context, and genus and module metadata from ContentBuilder when
+        available. Explicit links carry genus scoping (CPP, QML) and
         module names for tree-scoped search. Autolinks fall back to
         forest-wide search with DontCare genus.
-    \li Deprecated node links are suppressed when the relative node isn't
+    \li Deprecated node links are suppressed when the semantic node isn't
         deprecated.
-    \li HrefResolver returns an HrefResult variant: a URL on success, or
-        an HrefSuppressReason (self-link, policy exclusion, etc.) that
-        maps to LinkState::Suppressed.
+    \li HrefResolver computes the URL relative to the \a context.page node
+        and returns an HrefResult variant: a URL on success, or an
+        HrefSuppressReason (self-link, policy exclusion, etc.) that maps
+        to LinkState::Suppressed.
     \li Unresolvable links emit warnings controlled by LinkResolverConfig.
     \endlist
 
-    The \a relative node provides context for URL computation and
-    warning source location.
+    The \a context.semantic node provides the context for node lookup,
+    deprecation behavior, and warning source location; the \a context.page
+    node provides the context for URL computation.
 */
-void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
+void LinkResolver::resolveLink(IR::InlineContent &link, const Context &context)
 {
     Q_ASSERT(link.link.has_value());
 
@@ -155,7 +170,7 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
             link.attributes.value("linkModule"_L1).toString();
     QString ref;
     const Node *targetNode =
-            m_qdb->findNodeForTarget(target, relative, genus, moduleName, &ref);
+            m_qdb->findNodeForTarget(target, context.semantic, genus, moduleName, &ref);
 
     if (!targetNode) {
         const auto reportAt = [&](const QString &message) {
@@ -163,8 +178,8 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
                 Location loc(link.link->sourceLocation->filePath);
                 loc.setLineNo(link.link->sourceLocation->lineNo);
                 loc.warning(message);
-            } else if (relative) {
-                relative->doc().location().warning(message);
+            } else if (context.semantic) {
+                context.semantic->doc().location().warning(message);
             }
         };
         if (link.link->origin == IR::LinkOrigin::Auto) {
@@ -184,25 +199,26 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Node *relative)
     // non-deprecated content, unless the link originates from within
     // the deprecated node's own documentation (parent check mirrors
     // HtmlGenerator::generateBody's inline deprecation logic).
-    if (targetNode->isDeprecated() && relative
-        && relative->parent() != targetNode && !relative->isDeprecated()) {
+    if (targetNode->isDeprecated() && context.semantic
+        && context.semantic->parent() != targetNode && !context.semantic->isDeprecated()) {
         link.href.clear();
         link.link->state = IR::LinkState::Suppressed;
         return;
     }
 
-    // Compute URL via HrefResolver. Cross-tree references reach LinkResolver
-    // carrying a URL baked at .index-load time using Generator::s_outSubdir,
-    // which is only updated by Generator-derived pipelines (HTML, DocBook).
-    // TemplateGenerator doesn't touch that static, so its baked URLs have the
-    // wrong relative depth for its layout. Route those references through
-    // hrefForNode's strip-and-recompute path so the emitted href matches the
-    // current OutputContext.
+    // Compute URL via HrefResolver relative to the rendered page.
+    // Cross-tree references reach LinkResolver carrying a URL baked at
+    // .index-load time using Generator::s_outSubdir, which is only
+    // updated by Generator-derived pipelines (HTML, DocBook).
+    // TemplateGenerator doesn't touch that static, so its baked URLs have
+    // the wrong relative depth for its layout. Route those references
+    // through hrefForNode's strip-and-recompute path so the emitted href
+    // matches the current OutputContext.
     QString url = targetNode->url();
-    const bool isCrossTreeIndexLoaded = relative && !targetNode->isExternalPage()
-            && (targetNode->isIndexNode() || targetNode->tree() != relative->tree());
+    const bool isCrossTreeIndexLoaded = context.page && !targetNode->isExternalPage()
+            && (targetNode->isIndexNode() || targetNode->tree() != context.page->tree());
     if (url.isNull() || (isCrossTreeIndexLoaded && !url.isEmpty())) {
-        auto result = m_hrefResolver.hrefForNode(targetNode, relative);
+        auto result = m_hrefResolver.hrefForNode(targetNode, context.page);
         if (std::get_if<HrefSuppressReason>(&result)) {
             link.href.clear();
             link.link->state = IR::LinkState::Suppressed;

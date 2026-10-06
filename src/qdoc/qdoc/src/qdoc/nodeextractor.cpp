@@ -37,6 +37,7 @@
 
 #include "location.h"
 
+#include <QHash>
 #include <QRegularExpression>
 
 #include <deque>
@@ -204,6 +205,25 @@ void appendRequiresSpansWithLinks(QList<IR::SignatureSpan> &out,
 namespace NodeExtractor {
 
 /*!
+  \internal
+  \typealias NodeExtractor::SemanticOrigins
+
+  Page-local, never serialized: for each emitted detail section, one entry
+  per emitted member in the same order, pointing at the node on which that
+  member's detail documentation was authored. For a regular member the
+  origin is the member itself; for a member of a SharedCommentNode group it
+  is the SharedCommentNode, because the copied body and see-also text was
+  authored in that comment. A member without an anchorId maps to nullptr,
+  which the link resolver treats as "resolve in page context".
+
+  The list is paired with the extracted detail-section and member order
+  rather than keyed by anchorId: emitted anchors are not unique, so two
+  members (such as a QML type's regular and attached signal of the same
+  name) can share one anchorId. The pairing travels beside the IR values,
+  not inside them.
+*/
+
+/*!
     \internal
     Extract page-level metadata from a PageNode into a value-type struct.
 
@@ -221,8 +241,14 @@ namespace NodeExtractor {
     The caller (TemplateGenerator) invokes this before passing the
     result to IR::Builder, ensuring Builder never includes PageNode
     or other Node subclass headers.
+
+    \a origins, when non-null, is populated alongside detail extraction
+    with a page-local origin paired with each emitted detail member, in
+    section and member order, for the template post-processing that
+    resolves links in the authored member context.
 */
-IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hrefResolver)
+IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hrefResolver,
+                                     SemanticOrigins *origins)
 {
     Q_ASSERT_X(pn, "NodeExtractor::extractPageMetadata",
                "PageNode pointer must be non-null");
@@ -293,7 +319,7 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hre
     if (pn->isAggregate()) {
         const auto *aggregate = static_cast<const Aggregate *>(pn);
         pm.summarySections = extractSummarySections(aggregate, hrefResolver);
-        pm.detailSections = extractDetailSections(aggregate, hrefResolver);
+        pm.detailSections = extractDetailSections(aggregate, hrefResolver, origins);
     }
 
     if (pn->isQmlType()) {
@@ -827,8 +853,18 @@ QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate, const Hr
     documentation including body content, anchor IDs, and metadata.
     SharedCommentNode groups share a single documentation body across
     their children, with each child getting its own anchorId and synopsis.
+
+    \a origins, when non-null, receives one entry per emitted detail
+    member, paired with the member order of each emitted section: the
+    node the member's detail documentation was authored on — the member
+    itself, or the SharedCommentNode for copied shared text. A member
+    without an anchorId maps to nullptr; its content resolves in page
+    context. Emitted anchors are not unique (a QML type's regular and
+    attached signal of the same name share one), so the pairing is
+    positional rather than keyed by anchorId.
 */
-QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const HrefResolver *hrefResolver)
+QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const HrefResolver *hrefResolver,
+                                           SemanticOrigins *origins)
 {
     Sections sections(aggregate);
     const auto &sv = sections.detailsSections();
@@ -843,6 +879,10 @@ QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const Hre
         irSection.id = TextUtils::asAsciiPrintable(section.title());
         irSection.singular = section.singular();
         irSection.plural = section.plural();
+
+        // Paired with irSection.members: the node each member's detail
+        // documentation was authored on (nullptr without an anchor).
+        QList<const Node *> sectionOrigins;
 
         for (const auto *member : section.members()) {
             if (member->isSharedCommentNode()) {
@@ -870,13 +910,20 @@ QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const Hre
                     IR::MemberIR irMember = extractMemberIR(child, hrefResolver, aggregate, MemberExtractionLevel::Detail);
                     irMember.body = sharedBody;
                     irMember.alsoList = sharedAlso;
+                    // The copied text was authored in the shared comment,
+                    // not on the child; resolve it in that context.
+                    sectionOrigins.append(irMember.anchorId.isEmpty() ? nullptr : scn);
                     irSection.members.append(irMember);
                 }
             } else {
-                irSection.members.append(extractMemberIR(member, hrefResolver, aggregate, MemberExtractionLevel::Detail));
+                IR::MemberIR irMember = extractMemberIR(member, hrefResolver, aggregate, MemberExtractionLevel::Detail);
+                sectionOrigins.append(irMember.anchorId.isEmpty() ? nullptr : member);
+                irSection.members.append(irMember);
             }
         }
 
+        if (origins)
+            origins->append(std::move(sectionOrigins));
         result.append(irSection);
     }
     return result;
