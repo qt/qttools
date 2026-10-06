@@ -1,0 +1,43 @@
+project = MemberLinkContext
+description = Test fixture for member link resolution in the authored member context
+productname = Qt
+
+# Output in a stable layout so the snapshot comparison is deterministic.
+locationinfo = false
+
+headers.fileextensions  = "*.h"
+sources.fileextensions  = "*.qdoc"
+
+documentationinheaders = true
+
+headerdirs  = src
+sourcedirs  = src
+
+# Legacy HTML renders the same fixture in the same run. The template
+# output must match its link destinations and anchors; the git-diff
+# against the checked-in snapshots enforces that in CI.
+outputformats = HTML TemplateHTML TemplateMarkdown
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html-legacy
+HTML.extension = html
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+# Snapshot the diagnostics: one warning per format for the genuinely
+# broken member link, each attributed to its authored file and line.
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+
+# Allow the warnings the fixture intentionally produces without failing
+# the run; the golden log pins their exact count and attribution.
+warninglimit = 10
+warninglimit.enabled = true

@@ -47,15 +47,28 @@ struct LinkResolverConfig
 class LinkResolver
 {
 public:
+    /*!
+        Context for a resolve() pass.
+
+        \c semantic is the node whose documentation the content was
+        authored in; \c page is the output page node that renders the
+        content. See resolve() for the role each plays.
+    */
+    struct Context
+    {
+        const Node *semantic { nullptr };
+        const Node *page { nullptr };
+    };
+
     LinkResolver(QDocDatabase *qdb, const HrefResolver &hrefResolver,
                  const LinkResolverConfig &config);
 
-    void resolve(QList<IR::ContentBlock> &blocks, const Node *relative);
+    void resolve(QList<IR::ContentBlock> &blocks, Context context);
 
 private:
-    void resolveBlock(IR::ContentBlock &block, const Node *relative);
-    void resolveInlines(QList<IR::InlineContent> &inlines, const Node *relative);
-    void resolveLink(IR::InlineContent &link, const Node *relative);
+    void resolveBlock(IR::ContentBlock &block, const Context &context);
+    void resolveInlines(QList<IR::InlineContent> &inlines, const Context &context);
+    void resolveLink(IR::InlineContent &link, const Context &context);
 
     QDocDatabase *m_qdb;
     const HrefResolver &m_hrefResolver;

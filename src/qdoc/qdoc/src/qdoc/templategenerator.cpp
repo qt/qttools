@@ -46,7 +46,8 @@ Q_LOGGING_CATEGORY(lcQDocTemplateGenerator, "qt.qdoc.templategenerator")
 using namespace Qt::Literals;
 
 static void processDocumentBlocks(IR::ListExpander *expander, LinkResolver *resolver,
-                                  IR::Document &ir, const Node *relative);
+                                  IR::Document &ir, const Node *page,
+                                  const NodeExtractor::SemanticOrigins *origins = nullptr);
 
 struct LoadedTemplate
 {
@@ -364,7 +365,11 @@ void TemplateGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarke
 {
     Q_UNUSED(marker);
 
-    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(aggregate, m_hrefResolver.get());
+    // Page-local, never serialized: the origin paired with each emitted
+    // detail member, for link resolution in the authored member context.
+    NodeExtractor::SemanticOrigins origins;
+    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(aggregate, m_hrefResolver.get(),
+                                                             &origins);
     auto allMembers = NodeExtractor::extractAllMembersIR(aggregate, m_hrefResolver.get());
 
     IR::Builder builder;
@@ -377,7 +382,7 @@ void TemplateGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarke
         ir.cppReferenceInfo->obsoleteMembersUrl =
             fileBase(aggregate) + "-obsolete."_L1 + m_fileExtension;
 
-    processDocumentBlocks(m_listExpander.get(), m_linkResolver.get(), ir, aggregate);
+    processDocumentBlocks(m_listExpander.get(), m_linkResolver.get(), ir, aggregate, &origins);
 
     resolveImagePaths(ir);
     renderDocument(ir, "cppref"_L1);
@@ -393,7 +398,11 @@ void TemplateGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker
 {
     Q_UNUSED(marker);
 
-    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(qcn, m_hrefResolver.get());
+    // Page-local, never serialized: the origin paired with each emitted
+    // detail member, for link resolution in the authored member context.
+    NodeExtractor::SemanticOrigins origins;
+    IR::PageMetadata pm = NodeExtractor::extractPageMetadata(qcn, m_hrefResolver.get(),
+                                                             &origins);
     auto allMembers = NodeExtractor::extractAllMembersIR(qcn, m_hrefResolver.get());
 
     IR::Builder builder;
@@ -402,7 +411,7 @@ void TemplateGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker
     if (allMembers)
         ir.membersPageUrl = fileBase(qcn) + "-members."_L1 + m_fileExtension;
 
-    processDocumentBlocks(m_listExpander.get(), m_linkResolver.get(), ir, qcn);
+    processDocumentBlocks(m_listExpander.get(), m_linkResolver.get(), ir, qcn, &origins);
 
     resolveImagePaths(ir);
     renderDocument(ir, "qmltype"_L1);
@@ -602,34 +611,63 @@ QString TemplateGenerator::resolveInclude(const QString &name) const
     return loaded ? loaded->content : QString();
 }
 
+/*!
+  \internal
+
+  Expansion runs first: the expander materializes catalog subtrees
+  from ListPlaceholder blocks, with entry hrefs already resolved
+  through HrefResolver at extraction time. The link resolver then
+  walks the fully-populated tree on its single pass, picking up
+  any inline links inside brief content the expander emitted.
+  Each pass guards itself, so callers don't need to know which
+  collaborators are present — and so every block-bearing field
+  gets both passes consistently rather than drifting whenever a
+  new field is added.
+
+  The resolver receives two roles: \a page, the output page node,
+  stays the URL and catalog context (hrefs must remain relative to
+  the rendered page); \a semantic is the node whose documentation
+  the content was authored in. Page-level fields keep \a page for
+  both, while detail member content resolves against the member
+  that carries it.
+*/
 static void processDocumentBlocks(IR::ListExpander *expander, LinkResolver *resolver,
-                                  IR::Document &ir, const Node *relative)
+                                  IR::Document &ir, const Node *page,
+                                  const NodeExtractor::SemanticOrigins *origins)
 {
-    // Expansion runs first: the expander materializes catalog subtrees
-    // from ListPlaceholder blocks, with entry hrefs already resolved
-    // through HrefResolver at extraction time. The link resolver then
-    // walks the fully-populated tree on its single pass, picking up
-    // any inline links inside brief content the expander emitted.
-    // Each pass guards itself, so callers don't need to know which
-    // collaborators are present — and so every block-bearing field
-    // gets both passes consistently rather than drifting whenever a
-    // new field is added.
-    auto process = [&](QList<IR::ContentBlock> &blocks) {
+    auto process = [&](QList<IR::ContentBlock> &blocks, const Node *semantic) {
         if (blocks.isEmpty())
             return;
         if (expander)
-            expander->expand(blocks, relative);
+            expander->expand(blocks, page);
         if (resolver)
-            resolver->resolve(blocks, relative);
+            resolver->resolve(blocks, { semantic, page });
     };
 
-    process(ir.body);
+    process(ir.body, page);
     if (ir.cppReferenceInfo)
-        process(ir.cppReferenceInfo->threadSafetyAdmonition);
-    for (auto &section : ir.detailSections) {
-        for (auto &member : section.members) {
-            process(member.body);
-            process(member.alsoList);
+        process(ir.cppReferenceInfo->threadSafetyAdmonition, page);
+    // The origins list, when present, is paired with the detail sections
+    // and members built alongside it; the IR keeps that order.
+    Q_ASSERT(!origins || origins->size() == ir.detailSections.size());
+    for (int s = 0; s < ir.detailSections.size(); ++s) {
+        auto &section = ir.detailSections[s];
+        Q_ASSERT(!origins || origins->at(s).size() == section.members.size());
+        for (int m = 0; m < section.members.size(); ++m) {
+            auto &member = section.members[m];
+            // A detail member's body and see-also content is authored on a
+            // node other than the output page: the member itself, or the
+            // SharedCommentNode for copied shared text. The paired origin
+            // keeps that authorship context; a member with a nullptr
+            // origin (no anchor) falls back to the output page in
+            // LinkResolver::resolve().
+            const Node *semantic = page;
+            if (origins
+                    && s < origins->size()
+                    && m < origins->at(s).size())
+                semantic = origins->at(s).at(m);
+            process(member.body, semantic);
+            process(member.alsoList, semantic);
         }
     }
 }
