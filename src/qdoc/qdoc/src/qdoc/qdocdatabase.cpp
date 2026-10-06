@@ -913,6 +913,10 @@ const NodeMultiMap &QDocDatabase::getSinceMap(const QString &key)
   Performs several housekeeping tasks prior to generating the
   documentation. These tasks create required data structures
   and resolve links.
+
+  The order of operations is important in some cases. For example,
+  the call to removePrivateAndInternalBases must follow the call to
+  markUndocumentedChildrenInternal to ensure correct behavior.
  */
 void QDocDatabase::resolveStuff()
 {
@@ -924,10 +928,10 @@ void QDocDatabase::resolveStuff()
         primaryTreeRoot()->resolveRelates();
         primaryTreeRoot()->normalizeOverloads();
         primaryTree()->markDontDocumentNodes();
-        primaryTree()->removePrivateAndInternalBases(primaryTreeRoot());
         primaryTree()->resolveProperties();
         primaryTree()->validatePropertyDocumentation(primaryTreeRoot());
         primaryTreeRoot()->markUndocumentedChildrenInternal();
+        primaryTree()->removePrivateAndInternalBases(primaryTreeRoot());
         primaryTreeRoot()->resolveQmlInheritance();
         primaryTree()->resolveTargets(primaryTreeRoot());
         primaryTree()->resolveCppToQmlLinks();

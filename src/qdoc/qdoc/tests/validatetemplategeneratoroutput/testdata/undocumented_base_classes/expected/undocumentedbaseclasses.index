@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="UndocumentedBaseClasses Reference Documentation" version="" project="UndocumentedBaseClasses">
+    <namespace name="" status="active" access="public" module="undocumentedbaseclasses">
+        <class name="OnlyUndocumentedRoot" href="onlyundocumentedroot.html" status="active" access="public" location="bases.h" documented="true" module="UndocumentedBaseClasses" brief="A documented class derived only from an undocumented base"/>
+        <class name="PublicBase" href="publicbase.html" status="active" access="public" location="bases.h" documented="true" module="UndocumentedBaseClasses" brief="A documented public base class"/>
+        <class name="ViaExplicit" href="viaexplicit.html" status="active" access="public" location="bases.h" documented="true" bases="PublicBase" module="UndocumentedBaseClasses" brief="A documented class derived from an explicitly internal base"/>
+        <class name="ViaUndocumented" href="viaundocumented.html" status="active" access="public" location="bases.h" documented="true" bases="PublicBase" module="UndocumentedBaseClasses" brief="A documented class derived from an undocumented base"/>
+        <module name="UndocumentedBaseClasses" href="undocumentedbaseclasses-module.html" status="active" location="bases.h" documented="true" seen="true" title="Undocumented Base Classes" brief="A test module for inheritance list pruning"/>
+    </namespace>
+</INDEX>

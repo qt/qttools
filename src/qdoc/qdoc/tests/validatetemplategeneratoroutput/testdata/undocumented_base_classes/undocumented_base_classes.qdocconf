@@ -1,0 +1,20 @@
+project = UndocumentedBaseClasses
+
+locationinfo = false
+
+headers.fileextensions  = "*.h *.hpp"
+sources.fileextensions  = "*.cpp *.qml *.qdoc"
+
+headerdirs  = ./src
+sourcedirs  = ./src
+
+# Documentation is in headers
+documentationinheaders = indeed
+
+outputformats = template
+template.nosubdirs = true
+template.outputsubdir = template
+template.extension = md
+
+warninglimit = 0
+warninglimit.enabled = true

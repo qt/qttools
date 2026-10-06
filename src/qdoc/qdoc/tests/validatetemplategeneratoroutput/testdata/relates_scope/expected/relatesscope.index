@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Test case for enum value naming: related, nested, and QML enums" version="" project="RelatesScope">
     <namespace name="" status="active" access="public" module="relatesscope">
-        <namespace name="Ns" href="ns.html" status="active" access="public" location="widget.h" documented="true" includefile="widget.h" module="RelatesScope" brief="A namespace whose members are documented with Widget" whereDocumented="RelatesScope">
+        <namespace name="Ns" href="ns.html" status="active" access="public" location="widget.h" documented="true" module="RelatesScope" brief="A namespace whose members are documented with Widget">
             <function name="makeHandle" href="widget.html#makeHandle" status="active" access="public" location="widget.h" documented="true" related="0" meta="plain" type="Ns::Handle" signature="Ns::Handle makeHandle(const char *name)">
                 <parameter type="const char *" name="name" default=""/>
             </function>
@@ -18,7 +18,7 @@
             </enum>
             <typedef name="Handle" href="widget.html#Handle-typedef" status="active" access="public" location="widget.h" related="4" documented="true" aliasedtype="int"/>
         </namespace>
-        <class name="Widget" href="widget.html" status="active" access="public" location="widget.h" documented="true" includefile="widget.h" module="RelatesScope" brief="A class that documents related non-members from namespace Ns">
+        <class name="Widget" href="widget.html" status="active" access="public" location="widget.h" documented="true" module="RelatesScope" brief="A class that documents related non-members from namespace Ns">
             <function name="Widget" fullname="Widget::Widget" href="widget.html#Widget" status="active" access="public" location="widget.h" documented="true" meta="constructor" signature="Widget()"/>
             <function name="makeHandle" href="widget.html#makeHandle" status="active" access="public" location="widget.h" documented="true" related="0" meta="plain" type="Ns::Handle" signature="Ns::Handle makeHandle(const char *name)">
                 <parameter type="const char *" name="name" default=""/>
