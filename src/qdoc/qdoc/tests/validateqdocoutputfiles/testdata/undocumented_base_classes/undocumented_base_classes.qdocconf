@@ -1,0 +1,20 @@
+project = UndocumentedBaseClasses
+
+outputformats             = HTML
+HTML.nosubdirs            = true
+HTML.outputsubdir = html
+
+locationinfo = false
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+# Documentation is in headers
+documentationinheaders = indeed
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
