@@ -219,21 +219,16 @@ else()
 endif()
 target_sources(Designer PRIVATE ${ui_sources_processed})
 
-# Resources:
-set(ClamshellPhone_resource_files
-    "../../../shared/deviceskin/skins/ClamshellPhone.skin"
-)
-
 qt_internal_add_resource(Designer "ClamshellPhone"
     PREFIX
         "/skins"
     BASE
         "../../../shared/deviceskin/skins"
     FILES
-        ${ClamshellPhone_resource_files}
-)
-set(SmartPhone2_resource_files
-    "../../../shared/deviceskin/skins/SmartPhone2.skin"
+        "../../../shared/deviceskin/skins/ClamshellPhone.skin/ClamshellPhone.skin"
+        "../../../shared/deviceskin/skins/ClamshellPhone.skin/ClamshellPhone1-5-closed.png"
+        "../../../shared/deviceskin/skins/ClamshellPhone.skin/ClamshellPhone1-5-pressed.png"
+        "../../../shared/deviceskin/skins/ClamshellPhone.skin/ClamshellPhone1-5.png"
 )
 
 qt_internal_add_resource(Designer "SmartPhone2"
@@ -242,10 +237,9 @@ qt_internal_add_resource(Designer "SmartPhone2"
     BASE
         "../../../shared/deviceskin/skins"
     FILES
-        ${SmartPhone2_resource_files}
-)
-set(SmartPhone_resource_files
-    "../../../shared/deviceskin/skins/SmartPhone.skin"
+        "../../../shared/deviceskin/skins/SmartPhone2.skin/SmartPhone2-pressed.png"
+        "../../../shared/deviceskin/skins/SmartPhone2.skin/SmartPhone2.png"
+        "../../../shared/deviceskin/skins/SmartPhone2.skin/SmartPhone2.skin"
 )
 
 qt_internal_add_resource(Designer "SmartPhone"
@@ -254,10 +248,9 @@ qt_internal_add_resource(Designer "SmartPhone"
     BASE
         "../../../shared/deviceskin/skins"
     FILES
-        ${SmartPhone_resource_files}
-)
-set(SmartPhoneWithButtons_resource_files
-    "../../../shared/deviceskin/skins/SmartPhoneWithButtons.skin"
+        "../../../shared/deviceskin/skins/SmartPhone.skin/SmartPhone-pressed.png"
+        "../../../shared/deviceskin/skins/SmartPhone.skin/SmartPhone.png"
+        "../../../shared/deviceskin/skins/SmartPhone.skin/SmartPhone.skin"
 )
 
 qt_internal_add_resource(Designer "SmartPhoneWithButtons"
@@ -266,10 +259,9 @@ qt_internal_add_resource(Designer "SmartPhoneWithButtons"
     BASE
         "../../../shared/deviceskin/skins"
     FILES
-        ${SmartPhoneWithButtons_resource_files}
-)
-set(TouchscreenPhone_resource_files
-    "../../../shared/deviceskin/skins/TouchscreenPhone.skin"
+        "../../../shared/deviceskin/skins/SmartPhoneWithButtons.skin/SmartPhoneWithButtons-pressed.png"
+        "../../../shared/deviceskin/skins/SmartPhoneWithButtons.skin/SmartPhoneWithButtons.png"
+        "../../../shared/deviceskin/skins/SmartPhoneWithButtons.skin/SmartPhoneWithButtons.skin"
 )
 
 qt_internal_add_resource(Designer "TouchscreenPhone"
@@ -278,10 +270,9 @@ qt_internal_add_resource(Designer "TouchscreenPhone"
     BASE
         "../../../shared/deviceskin/skins"
     FILES
-        ${TouchscreenPhone_resource_files}
-)
-set(PortableMedia_resource_files
-    "../../../shared/deviceskin/skins/PortableMedia.skin"
+        "../../../shared/deviceskin/skins/TouchscreenPhone.skin/TouchscreenPhone-pressed.png"
+        "../../../shared/deviceskin/skins/TouchscreenPhone.skin/TouchscreenPhone.png"
+        "../../../shared/deviceskin/skins/TouchscreenPhone.skin/TouchscreenPhone.skin"
 )
 
 qt_internal_add_resource(Designer "PortableMedia"
@@ -290,10 +281,9 @@ qt_internal_add_resource(Designer "PortableMedia"
     BASE
         "../../../shared/deviceskin/skins"
     FILES
-        ${PortableMedia_resource_files}
-)
-set(S60-QVGA-Candybar_resource_files
-    "../../../shared/deviceskin/skins/S60-QVGA-Candybar.skin"
+        "../../../shared/deviceskin/skins/PortableMedia.skin/PortableMedia.skin"
+        "../../../shared/deviceskin/skins/PortableMedia.skin/portablemedia-pressed.png"
+        "../../../shared/deviceskin/skins/PortableMedia.skin/portablemedia.png"
 )
 
 qt_internal_add_resource(Designer "S60-QVGA-Candybar"
@@ -302,10 +292,9 @@ qt_internal_add_resource(Designer "S60-QVGA-Candybar"
     BASE
         "../../../shared/deviceskin/skins"
     FILES
-        ${S60-QVGA-Candybar_resource_files}
-)
-set(S60-nHD-Touchscreen_resource_files
-    "../../../shared/deviceskin/skins/S60-nHD-Touchscreen.skin"
+        "../../../shared/deviceskin/skins/S60-QVGA-Candybar.skin/S60-QVGA-Candybar-down.png"
+        "../../../shared/deviceskin/skins/S60-QVGA-Candybar.skin/S60-QVGA-Candybar.png"
+        "../../../shared/deviceskin/skins/S60-QVGA-Candybar.skin/S60-QVGA-Candybar.skin"
 )
 
 qt_internal_add_resource(Designer "S60-nHD-Touchscreen"
@@ -314,8 +303,11 @@ qt_internal_add_resource(Designer "S60-nHD-Touchscreen"
     BASE
         "../../../shared/deviceskin/skins"
     FILES
-        ${S60-nHD-Touchscreen_resource_files}
+        "../../../shared/deviceskin/skins/S60-nHD-Touchscreen.skin/S60-nHD-Touchscreen-down.png"
+        "../../../shared/deviceskin/skins/S60-nHD-Touchscreen.skin/S60-nHD-Touchscreen.png"
+        "../../../shared/deviceskin/skins/S60-nHD-Touchscreen.skin/S60-nHD-Touchscreen.skin"
 )
+
 set(findwidget_resource_files
     "../../../shared/findwidget/images/mac/closetab.png"
     "../../../shared/findwidget/images/mac/next.png"
