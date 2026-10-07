@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="MemberLinkHierarchy Reference Documentation" version="" project="MemberLinkHierarchy">
+    <namespace name="" status="active" access="public" module="memberlinkhierarchy">
+        <class name="Base" href="base.html" status="active" access="public" location="shapes.h" documented="true" module="MemberLinks" brief="A base class">
+            <function name="color" fullname="Base::color" href="base.html#color" status="active" access="public" location="shapes.h" documented="true" meta="plain" const="true" type="int" signature="int color() const"/>
+        </class>
+        <class name="Derived" href="derived.html" status="active" access="public" location="shapes.h" documented="true" bases="Base" module="MemberLinks" brief="A class derived from Base">
+            <function name="fill" fullname="Derived::fill" href="derived.html#fill" status="active" access="public" location="shapes.h" documented="true" meta="plain" type="void" signature="void fill()"/>
+            <function name="paint" fullname="Derived::paint" href="derived.html#paint" status="active" access="public" location="shapes.h" documented="true" meta="plain" type="void" signature="void paint()"/>
+            <function name="sibling" fullname="Derived::sibling" href="derived.html#sibling" status="active" access="public" location="shapes.h" documented="true" meta="plain" type="void" signature="void sibling()"/>
+            <function name="stroke" fullname="Derived::stroke" href="derived.html#stroke" status="active" access="public" location="shapes.h" documented="true" meta="plain" type="void" signature="void stroke()"/>
+            <enum name="ReportMode" fullname="Derived::ReportMode" href="derived.html#ReportMode-enum" status="active" access="public" location="shapes.h" documented="true">
+                <value name="MemberLinks" value="0"/>
+                <value name="Warning" value="1"/>
+            </enum>
+        </class>
+        <page name="controls.html" href="controls.html" status="active" location="pages.qdoc" documented="true" subtype="page" title="Controls" fulltitle="Controls" subtitle=""/>
+        <page name="keywords.html" href="keywords.html" status="active" location="pages.qdoc" documented="true" subtype="page" title="Keywords" fulltitle="Keywords" subtitle="">
+            <keyword name="color"/>
+            <keyword name="sibling"/>
+            <keyword name="size"/>
+            <keyword name="elsewhere"/>
+        </page>
+        <qmlclass name="Gadget" qml-module-name="MemberLinksQml" fullname="MemberLinksQml.Gadget" href="qml-memberlinksqml-gadget.html" status="active" access="public" location="gadget.qdoc" documented="true" brief="A QML type">
+            <function name="resize" fullname="MemberLinksQml.Gadget.resize" href="qml-memberlinksqml-gadget.html#resize-method" status="active" access="public" location="gadget.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <qmlproperty name="capacity" fullname="MemberLinksQml.Gadget.capacity" href="qml-memberlinksqml-gadget.html#capacity-prop" status="active" access="public" location="gadget.qdoc" documented="true" type="int" attached="false" writable="true"/>
+            <qmlproperty name="size" fullname="MemberLinksQml.Gadget.size" href="qml-memberlinksqml-gadget.html#size-prop" status="active" access="public" location="gadget.qdoc" documented="true" type="int" attached="false" writable="true"/>
+        </qmlclass>
+        <module name="MemberLinks" href="memberlinks-module.html" status="active" documented="true" seen="true" title="Member Links" brief="Tests links in member documentation that also match global keywords"/>
+        <qmlmodule name="MemberLinksQml" qml-module-name="MemberLinksQml" href="memberlinksqml-qmlmodule.html" status="active" location="gadget.qdoc" documented="true" seen="true" title="Member Links QML Types" brief="Tests links in QML member documentation that also match global keywords"/>
+    </namespace>
+</INDEX>

@@ -1,0 +1,16 @@
+project = MemberLinkHierarchy
+outputformats = HTML DocBook
+locationinfo = false
+warninglimit = 0
+warninglimit.enabled = true
+
+sourcedirs = src
+headerdirs = src
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook

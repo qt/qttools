@@ -552,10 +552,15 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
       base classes/types) over global target maps. This allows inherited members to
       take precedence over unrelated global targets such as section titles in other
       documentation pages. See QTBUG-72107 and QTBUG-141606.
+
+      Documentation authored on a member of a class or QML type, such as a function
+      body or a shared comment, is in the same context as the type's own body, so
+      the member's parent decides.
     */
-    const bool prioritizeHierarchy = start &&
-                                     ((start->isClassNode() && (genus == Genus::CPP || genus == Genus::DontCare)) ||
-                                      (start->isQmlType() && (genus == Genus::QML || genus == Genus::DontCare)));
+    const Node *scope = (start && !start->isAggregate()) ? start->parent() : start;
+    const bool prioritizeHierarchy = scope &&
+                                     ((scope->isClassNode() && (genus == Genus::CPP || genus == Genus::DontCare)) ||
+                                      (scope->isQmlType() && (genus == Genus::QML || genus == Genus::DontCare)));
 
     const TargetRec *result = nullptr;
     if (!prioritizeHierarchy) {
