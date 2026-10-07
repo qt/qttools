@@ -1,0 +1,54 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule Repro
+    \title Deprecated Link Repro
+    \brief A QML module that documents the deprecated-target link cases.
+*/
+
+/*!
+    \qmltype OldOwner
+    \inqmlmodule Repro
+    \brief A deprecated QML type whose method remains individually active.
+    \deprecated [6.12]
+
+    Page-body control: OldPeer and \l OldPeer.
+*/
+
+/*!
+    \qmlmethod void OldOwner::probe()
+    \brief An individually active method on a deprecated type.
+
+    Automatic: OldPeer.
+
+    Explicit: \l OldPeer.
+
+    \sa OldPeer
+*/
+
+/*!
+    \qmltype OldPeer
+    \inqmlmodule Repro
+    \brief A deprecated QML type that serves as the link target.
+    \deprecated [6.12]
+*/
+
+/*!
+    \qmltype ActiveOwner
+    \inqmlmodule Repro
+    \brief An active QML type whose method links to a deprecated type.
+
+    Page-body control: OldPeer and \l OldPeer.
+*/
+
+/*!
+    \qmlmethod void ActiveOwner::probe()
+    \brief An individually active method on an active type.
+
+    Automatic: OldPeer.
+
+    Explicit: \l OldPeer.
+
+    \sa OldPeer
+*/

@@ -1,0 +1,38 @@
+project = DeprecatedTargetLinks
+description = Test fixture for deprecation-aware link suppression in template output
+productname = Qt
+
+# Output in a stable layout so the snapshot comparison is deterministic.
+locationinfo = false
+
+headers.fileextensions  = "*.h"
+sources.fileextensions  = "*.qdoc"
+
+documentationinheaders = true
+
+headerdirs  = src
+sourcedirs  = src
+
+# Legacy HTML renders the same fixture in the same run. The template
+# output must match its link destinations: automatic links to deprecated
+# targets degrade to plain text in all formats, while explicit links stay
+# clickable. The git-diff against the checked-in snapshots enforces that
+# in CI.
+outputformats = HTML TemplateHTML TemplateMarkdown
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html-legacy
+HTML.extension = html
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+# Fail the run on any warning; the fixture is expected to be clean.
+warninglimit = 0
+warninglimit.enabled = true

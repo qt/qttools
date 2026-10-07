@@ -125,8 +125,8 @@ void LinkResolver::resolveInlines(QList<IR::InlineContent> &inlines, const Conte
         available. Explicit links carry genus scoping (CPP, QML) and
         module names for tree-scoped search. Autolinks fall back to
         forest-wide search with DontCare genus.
-    \li Deprecated node links are suppressed when the semantic node isn't
-        deprecated.
+    \li Deprecated targets suppress autolinks when the semantic node isn't
+        deprecated; explicit \\l and \\sa links keep the author's reference.
     \li HrefResolver computes the URL relative to the \a context.page node
         and returns an HrefResult variant: a URL on success, or an
         HrefSuppressReason (self-link, policy exclusion, etc.) that maps
@@ -195,11 +195,11 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Context &context)
         return;
     }
 
-    // Deprecated node suppression: don't link to deprecated nodes from
-    // non-deprecated content, unless the link originates from within
-    // the deprecated node's own documentation (parent check mirrors
-    // HtmlGenerator::generateBody's inline deprecation logic).
-    if (targetNode->isDeprecated() && context.semantic
+    // Deprecated node suppression: autolinks to deprecated nodes are
+    // suppressed when the semantic node isn't deprecated, unless the link
+    // originates from within the deprecated node's own documentation
+    if (link.link->origin == IR::LinkOrigin::Auto
+        && targetNode->isDeprecated() && context.semantic
         && context.semantic->parent() != targetNode && !context.semantic->isDeprecated()) {
         link.href.clear();
         link.link->state = IR::LinkState::Suppressed;

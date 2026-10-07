@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test fixture for deprecation-aware link suppression in template output" version="" project="DeprecatedTargetLinks">
+    <namespace name="" status="active" access="public" module="deprecatedtargetlinks">
+        <qmlclass name="ActiveOwner" qml-module-name="Repro" fullname="Repro.ActiveOwner" href="qml-repro-activeowner.html" status="active" access="public" location="deprecated_target_links.qdoc" documented="true" brief="An active QML type whose method links to a deprecated type">
+            <function name="probe" fullname="Repro.ActiveOwner.probe" href="qml-repro-activeowner.html#probe-method" status="active" access="public" location="deprecated_target_links.qdoc" documented="true" meta="qmlmethod" type="void"/>
+        </qmlclass>
+        <qmlclass name="OldOwner" qml-module-name="Repro" fullname="Repro.OldOwner" href="qml-repro-oldowner.html" status="deprecated" access="public" location="deprecated_target_links.qdoc" documented="true" brief="A deprecated QML type whose method remains individually active">
+            <function name="probe" fullname="Repro.OldOwner.probe" href="qml-repro-oldowner.html#probe-method" status="active" access="public" location="deprecated_target_links.qdoc" documented="true" meta="qmlmethod" type="void"/>
+        </qmlclass>
+        <qmlclass name="OldPeer" qml-module-name="Repro" fullname="Repro.OldPeer" href="qml-repro-oldpeer.html" status="deprecated" access="public" location="deprecated_target_links.qdoc" documented="true" brief="A deprecated QML type that serves as the link target"/>
+        <qmlmodule name="Repro" qml-module-name="Repro" href="repro-qmlmodule.html" status="active" location="deprecated_target_links.qdoc" documented="true" seen="true" title="Deprecated Link Repro" brief="A QML module that documents the deprecated-target link cases"/>
+    </namespace>
+</INDEX>
