@@ -233,15 +233,16 @@ std::pair<QString, QString> XmlGenerator::getTableWidthAttr(const Atom *atom)
   Registers an anchor reference and returns a unique
   and cleaned copy of the reference (the one that should be
   used in the output).
-  To ensure unicity throughout the document, this method
-  uses the \a refMap cache.
+  To keep references unique throughout the document, this method
+  uses the \a refMap cache. Anchor IDs are case-sensitive, so refs
+  that differ only in case remain distinct.
  */
 QString XmlGenerator::registerRef(const QString &ref, bool xmlCompliant)
 {
     QString cleanRef = Generator::cleanRef(ref, xmlCompliant);
 
     for (;;) {
-        QString &prevRef = refMap[cleanRef.toLower()];
+        QString &prevRef = refMap[cleanRef];
         if (prevRef.isEmpty()) {
             // This reference has never been met before for this document: register it.
             prevRef = ref;

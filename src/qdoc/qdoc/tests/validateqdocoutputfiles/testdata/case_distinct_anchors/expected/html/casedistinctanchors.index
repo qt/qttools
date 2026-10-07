@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="CaseDistinctAnchors Reference Documentation" version="" project="CaseDistinctAnchors">
+    <namespace name="" status="active" access="public" module="casedistinctanchors">
+        <function name="bar" href="bar.html#bar" status="active" access="public" location="foo.h" documented="true" related="0" meta="plain" type="int" signature="int bar(const Bar &amp;value)">
+            <parameter type="const Bar &amp;" name="value" default=""/>
+        </function>
+        <function name="foo" href="foo.html#foo" status="active" access="public" location="foo.h" documented="true" related="1" meta="plain" type="int" signature="int foo(const Foo &amp;value)">
+            <parameter type="const Foo &amp;" name="value" default=""/>
+        </function>
+        <class name="Bar" href="bar.html" status="active" access="public" location="foo.h" documented="true" module="CaseDistinctAnchors">
+            <function name="Bar" fullname="Bar::Bar" href="bar.html#Bar" status="active" access="public" location="foo.h" documented="true" meta="constructor" signature="Bar()"/>
+            <function name="bar" href="bar.html#bar" status="active" access="public" location="foo.h" documented="true" related="0" meta="plain" type="int" signature="int bar(const Bar &amp;value)">
+                <parameter type="const Bar &amp;" name="value" default=""/>
+            </function>
+            <function name="old" fullname="Bar::old" href="bar-obsolete.html#old" status="deprecated" access="public" location="foo.h" documented="true" meta="plain" type="void" signature="void old()"/>
+        </class>
+        <class name="Foo" href="foo.html" status="active" access="public" location="foo.h" documented="true" module="CaseDistinctAnchors">
+            <function name="Foo" fullname="Foo::Foo" href="foo.html#Foo" status="active" access="public" location="foo.h" documented="true" meta="constructor" signature="Foo()"/>
+            <function name="foo" href="foo.html#foo" status="active" access="public" location="foo.h" documented="true" related="1" meta="plain" type="int" signature="int foo(const Foo &amp;value)">
+                <parameter type="const Foo &amp;" name="value" default=""/>
+            </function>
+            <function name="old" fullname="Foo::old" href="foo-obsolete.html#old" status="deprecated" access="public" location="foo.h" documented="true" meta="plain" type="void" signature="void old()"/>
+        </class>
+        <page name="other.html" href="other.html" status="active" location="other.qdoc" documented="true" subtype="page" title="Other" fulltitle="Other" subtitle=""/>
+        <module name="CaseDistinctAnchors" href="casedistinctanchors-module.html" status="active" location="foo.h" documented="true" seen="true" title="Case Distinct Anchors"/>
+    </namespace>
+</INDEX>

@@ -1,0 +1,9 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page other.html
+    \title Other
+    Call \l foo() to compute a value for a Foo.
+    Call \l bar() to compute a value for a Bar.
+*/
