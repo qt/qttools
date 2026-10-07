@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Derived Class</db:title>
+<db:productname>MemberLinkHierarchy</db:productname>
+<db:titleabbrev>MemberLinkHierarchy Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A class derived from Base.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>shapes.h</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherits</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="base.xml" xlink:role="class">Base</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>The class body links to <db:link xlink:href="derived.xml#sibling">sibling</db:link> and the inherited <db:link xlink:href="base.xml#color">color</db:link>.</db:para>
+</db:section>
+<db:section xml:id="member-type-documentation">
+<db:title>Member Type Documentation</db:title>
+<db:section xml:id="ReportMode-enum">
+<db:title>enum Derived::ReportMode</db:title>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Value</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="derived.xml">Derived</db:link></db:emphasis>::MemberLinks</db:code></db:para>
+</db:td>
+<db:td><db:code>0</db:code></db:td>
+<db:td>
+<db:para>Reports through the <db:link xlink:href="memberlinks-module.xml">MemberLinks</db:link> module.</db:para>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="derived.xml">Derived</db:link></db:emphasis>::Warning</db:code></db:para>
+</db:td>
+<db:td><db:code>1</db:code></db:td>
+<db:td>
+<db:para>Reports a warning.</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="fill">
+<db:title>void Derived::fill()</db:title>
+<db:bridgehead renderas="sect2" xml:id="stroke">void Derived::stroke()</db:bridgehead>
+<db:para>Shared documentation that links to <db:link xlink:href="derived.xml#sibling">sibling</db:link>.</db:para>
+</db:section>
+<db:section xml:id="paint">
+<db:title>void Derived::paint()</db:title>
+<db:para>Paints with <db:link xlink:href="base.xml#color">color</db:link>, then calls <db:link xlink:href="derived.xml#sibling">sibling</db:link>. Unrelated to <db:link xlink:href="keywords.xml">elsewhere</db:link>.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="derived.xml#sibling">sibling</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="sibling">
+<db:title>void Derived::sibling()</db:title>
+<db:para>A sibling of <db:link xlink:href="derived.xml#paint">paint</db:link>().</db:para>
+</db:section>
+</db:section>
+</db:article>

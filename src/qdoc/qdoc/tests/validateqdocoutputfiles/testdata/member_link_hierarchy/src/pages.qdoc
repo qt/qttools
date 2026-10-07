@@ -1,0 +1,21 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page keywords.html
+    \title Keywords
+
+    \keyword color
+    \keyword sibling
+    \keyword size
+    \keyword elsewhere
+
+    Global keywords whose names match members of Derived and Gadget.
+*/
+
+/*!
+    \page controls.html
+    \title Controls
+
+    Links to \l color and \l size from a page resolve to the keywords.
+*/

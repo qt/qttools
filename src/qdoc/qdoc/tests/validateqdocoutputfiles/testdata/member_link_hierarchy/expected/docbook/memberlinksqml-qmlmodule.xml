@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Member Links QML Types</db:title>
+<db:productname>MemberLinkHierarchy</db:productname>
+<db:titleabbrev>MemberLinkHierarchy Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Tests links in QML member documentation that also match global keywords.</db:para>
+</db:abstract>
+</db:info>
+<db:anchor xml:id="details"/>
+<db:variablelist role="members">
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-memberlinksqml-gadget.xml" xlink:role="">Gadget</db:link></db:term>
+<db:listitem>
+<db:para>A QML type.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:article>

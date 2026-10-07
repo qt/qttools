@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Gadget QML Type</db:title>
+<db:productname>MemberLinkHierarchy</db:productname>
+<db:titleabbrev>MemberLinkHierarchy Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A QML type.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import MemberLinksQml</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>The type body links to <db:link xlink:href="qml-memberlinksqml-gadget.xml#size-prop">size</db:link>.</db:para>
+</db:section>
+<db:section xml:id="property-documentation">
+<db:title>Property Documentation</db:title>
+<db:section xml:id="capacity-prop">
+<db:title>capacity : int</db:title>
+<db:para>The capacity of the gadget, never larger than <db:link xlink:href="qml-memberlinksqml-gadget.xml#size-prop">size</db:link>.</db:para>
+</db:section>
+<db:section xml:id="size-prop">
+<db:title>size : int</db:title>
+<db:para>The size of the gadget.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="method-documentation">
+<db:title>Method Documentation</db:title>
+<db:section xml:id="resize-method">
+<db:title>void resize()</db:title>
+<db:para>Changes <db:link xlink:href="qml-memberlinksqml-gadget.xml#size-prop">size</db:link>.</db:para>
+</db:section>
+</db:section>
+</db:article>
