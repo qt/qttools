@@ -36,9 +36,11 @@ struct LinkResolverConfig
     using QDocDatabase for node lookup and HrefResolver for URL computation.
 
     External URLs (http, https, ftp, file, mailto) are detected and marked
-    without node lookup. Links to deprecated nodes from non-deprecated
-    content are suppressed. Suppressed links carry a diagnostic linkState
-    string identifying the reason (policy exclusion, self-reference, etc.).
+    without node lookup. Autolinks to deprecated nodes from non-deprecated
+    content are suppressed; explicit \\l and \\sa links keep the author's
+    reference, matching legacy HTML. Suppressed links carry a diagnostic
+    linkState string identifying the reason (policy exclusion,
+    self-reference, etc.).
     Unresolvable links emit warnings controlled by the injected
     LinkResolverConfig.
 
