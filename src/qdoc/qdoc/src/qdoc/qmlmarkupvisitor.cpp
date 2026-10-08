@@ -235,7 +235,7 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::UiPublicMember *member)
         addVerbatim(member->readonlyToken());
         addVerbatim(member->propertyToken());
         addVerbatim(member->typeModifierToken);
-        addMarkedUpToken(member->typeToken, "type"_L1);
+        addMarkedUpToken(member->memberType->firstSourceLocation(), "type"_L1);
         addMarkedUpToken(member->identifierToken, "name"_L1);
         addVerbatim(member->colonToken);
         if (member->binding)
@@ -245,8 +245,7 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::UiPublicMember *member)
     } else {
         addVerbatim(member->propertyToken());
         addVerbatim(member->typeModifierToken);
-        addMarkedUpToken(member->typeToken, "type"_L1);
-        // addVerbatim(member->identifierToken());
+        addMarkedUpToken(member->identifierToken, "type"_L1);
         QQmlJS::AST::Node::accept(member->parameters, this);
     }
     addVerbatim(member->semicolonToken);
@@ -727,7 +726,7 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::Catch *c)
 {
     addMarkedUpToken(c->catchToken, "keyword"_L1);
     addVerbatim(c->lparenToken);
-    addMarkedUpToken(c->identifierToken, "name"_L1);
+    addMarkedUpToken(c->patternElement->identifierToken, "name"_L1);
     addVerbatim(c->rparenToken);
     return false;
 }
