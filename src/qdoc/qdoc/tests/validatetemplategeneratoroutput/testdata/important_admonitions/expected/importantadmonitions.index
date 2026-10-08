@@ -2,7 +2,7 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="Fixture exercising important admonitions in all supported positions" version="" project="ImportantAdmonitions">
     <namespace name="" status="active" access="public" module="importantadmonitions">
-        <page name="important-admonitions.html" href="important-admonitions.html" status="active" location="important_admonitions.qdoc" documented="true" subtype="page" title="Important Admonitions" fulltitle="Important Admonitions" brief="Important admonitions keep their inline content">
+        <page name="important-admonitions.html" href="important-admonitions.html" status="active" location="important_admonitions.qdoc" documented="true" subtype="page" title="Important Admonitions" fulltitle="Important Admonitions" subtitle="" brief="Important admonitions keep their inline content">
             <contents name="in-a-section" title="In a Section" level="2"/>
         </page>
     </namespace>

@@ -37,12 +37,12 @@ That link is authored in the page body, so it must keep resolving in the page co
 <a id="alpha"></a>
 ### void alpha()
 
-Alpha does its own work. The other member, [beta](memberlinkcontext.md#beta), does related work.
+Alpha does its own work. The other member, [beta](member-link-context.md), does related work.
 # Alpha Notes
 
 Follow [member-detail](memberlinkcontext.md#alpha-notes).
 
-**See also** [beta](memberlinkcontext.md#beta) and [member-detail](memberlinkcontext.md#alpha-notes).
+**See also** [beta](member-link-context.md) and [member-detail](memberlinkcontext.md#alpha-notes).
 
 <a id="beta"></a>
 ### void beta()
@@ -57,11 +57,11 @@ Follow [member-detail](memberlinkcontext.md#beta-notes).
 <a id="sharedOne"></a>
 ### void sharedOne()
 
-Both shared operations do the same work. They refer to [beta](memberlinkcontext.md#beta) from the shared comment that documents the pair.
+Both shared operations do the same work. They refer to [beta](member-link-context.md) from the shared comment that documents the pair.
 <a id="sharedTwo"></a>
 ### void sharedTwo()
 
-Both shared operations do the same work. They refer to [beta](memberlinkcontext.md#beta) from the shared comment that documents the pair.
+Both shared operations do the same work. They refer to [beta](member-link-context.md) from the shared comment that documents the pair.
 
 ---
 
