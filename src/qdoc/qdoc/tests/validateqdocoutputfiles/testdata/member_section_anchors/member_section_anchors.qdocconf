@@ -1,0 +1,13 @@
+project = Member Section Anchors
+productname = Qt
+locationinfo = false
+warninglimit = 0
+warninglimit.enabled = true
+headers.fileextensions = "*.h"
+sources.fileextensions = "*.qdoc"
+headerdirs = ./src
+sourcedirs = ./src
+outputformats = HTML
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+macro.constraints = "\\section1 Constraints\n\n"

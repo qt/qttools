@@ -11,6 +11,7 @@
 
 #include <QtCore/qhash.h>
 #include <QtCore/qregularexpression.h>
+#include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -105,6 +106,7 @@ private:
                           const Node *actualNode = nullptr);
     void generateSourceLink(const Node *node);
     void generateDetailedMember(const Node *node, const PageNode *relative, CodeMarker *marker);
+    QString memberHeadingRef(const Node *node);
     void generateLink(const Atom *atom);
 
     void emitGroupHeader(const SharedCommentNode *scn);
@@ -157,6 +159,8 @@ private:
     QString m_footer {};
     QString m_address {};
     bool m_noNavigationBar { false };
+    QString m_recentSectionRef {};
+    QSet<QString> m_emittedMemberRefs {};
     QString m_project {};
     QString m_productName {};
     QString m_projectDescription {};

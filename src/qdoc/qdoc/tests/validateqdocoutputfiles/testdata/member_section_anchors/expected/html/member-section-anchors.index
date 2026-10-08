@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Member Section Anchors Reference Documentation" version="" project="Member Section Anchors">
+    <namespace name="" status="active" access="public" module="member section anchors">
+        <class name="MemberSectionAnchors" href="membersectionanchors.html" status="active" access="public" location="member_section_anchors.h" documented="true" module="MemberSectionAnchorsModule" brief="A class with repeated section titles">
+            <target name="heading-target-target" title="Heading Target"/>
+            <target name="before-heading" title="Before Heading"/>
+            <target name="separate-heading-target" title="Separate Heading"/>
+            <contents name="options-section" title="Options" level="1"/>
+            <contents name="heading-target" title="Heading Target" level="1"/>
+            <contents name="before-heading" title="Before Heading" level="1"/>
+            <contents name="separate-heading" title="Separate Heading" level="1"/>
+            <function name="first" fullname="MemberSectionAnchors::first" href="membersectionanchors.html#first" status="active" access="public" location="member_section_anchors.h" documented="true" meta="plain" type="void" signature="void first()"/>
+            <function name="options" fullname="MemberSectionAnchors::options" href="membersectionanchors.html#options" status="active" access="public" location="member_section_anchors.h" documented="true" meta="plain" type="void" signature="void options()"/>
+            <function name="second" fullname="MemberSectionAnchors::second" href="membersectionanchors.html#second" status="active" access="public" location="member_section_anchors.h" documented="true" meta="plain" type="void" signature="void second()"/>
+        </class>
+        <module name="MemberSectionAnchorsModule" href="membersectionanchorsmodule-module.html" status="active" location="member_section_anchors.qdoc" documented="true" seen="true" title="Member Section Anchors Module" brief="Tests unique anchors on a class page"/>
+    </namespace>
+</INDEX>

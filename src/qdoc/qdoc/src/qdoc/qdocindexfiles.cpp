@@ -858,7 +858,8 @@ void QDocIndexFiles::writeTargets(QXmlStreamWriter &writer, Node *node)
     if (node->doc().hasTargets()) {
         for (const Atom *target : std::as_const(node->doc().targets())) {
             const QString &title = target->string();
-            const QString &name{TextUtils::asAsciiPrintable(title)};
+            const QString name = target->count() >= 2 ? target->string(1)
+                                                      : TextUtils::asAsciiPrintable(title);
             writer.writeStartElement("target");
             writer.writeAttribute("name", node->isExternalPage() ? title : name);
             if (name != title)

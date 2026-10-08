@@ -1,0 +1,54 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \module MemberSectionAnchorsModule
+    \title Member Section Anchors Module
+    \brief Tests unique anchors on a class page.
+*/
+
+/*!
+    \class MemberSectionAnchors
+    \inmodule MemberSectionAnchorsModule
+    \brief A class with repeated section titles.
+
+    \section1 Options
+
+    The class options.
+
+    \section1 Heading Target
+    \target Heading Target
+
+    A target sharing the section heading's location.
+
+    \target Before Heading
+    \section1 Before Heading
+
+    A target preceding its section heading.
+
+    \section1 Separate Heading
+
+    A distinct section with a target elsewhere in its body.
+
+    \target Separate Heading
+    The separate \l{Separate Heading} target must not reuse the heading's id.
+*/
+
+/*!
+    \fn void MemberSectionAnchors::first()
+    \constraints
+
+    Constraints for the first member.
+*/
+
+/*!
+    \fn void MemberSectionAnchors::second()
+    \constraints
+
+    Constraints for the second member.
+*/
+
+/*!
+    \fn void MemberSectionAnchors::options()
+    Describes the options.
+*/

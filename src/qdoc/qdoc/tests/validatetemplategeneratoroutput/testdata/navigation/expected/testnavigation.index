@@ -22,7 +22,7 @@
         </page>
         <page name="qml-types.html" href="qml-types.html" status="active" location="qmltypespage.qdoc" documented="true" subtype="page" title="QML Types" fulltitle="QML Types" subtitle="" brief="Collection page linked from QML type breadcrumbs"/>
         <page name="subpage.html" href="subpage.html" status="active" location="subpage.qdoc" documented="true" subtype="page" title="Sub Page" fulltitle="Sub Page" subtitle="" brief="A sub-page that exercises sequential links">
-            <contents name="details" title="Details" level="1"/>
+            <contents name="details-section" title="Details" level="1"/>
             <contents name="more-information" title="More Information" level="1"/>
         </page>
         <qmlclass name="NavItem" href="qml-navitem.html" status="active" access="public" location="qmltype.qdoc" documented="true" brief="A QML navigation item">
