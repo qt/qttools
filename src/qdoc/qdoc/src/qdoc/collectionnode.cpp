@@ -72,7 +72,7 @@ void CollectionNode::setMemberStatus(Node *member)
 bool CollectionNode::hasNamespaces() const
 {
     return std::any_of(m_members.cbegin(), m_members.cend(), [](const Node *member) {
-        return member->isClassNode() && member->isInAPI();
+        return member->isNamespace() && member->isInAPI();
     });
 }
 
