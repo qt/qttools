@@ -3,7 +3,23 @@
     <document>
         <module name="TemplateAliasModule" href="templatealiasmodule-module.html" status="active" location="module.qdoc" documented="true" seen="true" title="Template Alias Test Module" brief="Test module for template aliases with default parameters">
             <description>
-                <generatedlist contents="classesbymodule"/>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="TestAliases" href="testaliases.html" type="namespace"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>Namespace containing template alias tests.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
                 <brief>Test module for template aliases with default parameters.</brief>
             </description>
         </module>
