@@ -460,6 +460,10 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
     static bool in_para = false;
     Genus genus = Genus::DontCare;
 
+    if (!m_inSectionHeading && atom->type() != Atom::Target
+        && atom->type() != Atom::SectionHeadingRight)
+        m_recentSectionRef.clear();
+
     switch (atom->type()) {
     case Atom::AutoLink: {
         QString name = atom->string();
@@ -1053,8 +1057,9 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         break;
     case Atom::SectionHeadingLeft: {
         int unit = atom->string().toInt() + hOffset(relative);
+        m_recentSectionRef = Tree::refForAtom(atom);
         out() << "<h" + QString::number(unit) + QLatin1Char(' ') << "id=\""
-              << Tree::refForAtom(atom) << "\">";
+              << m_recentSectionRef << "\">";
         m_inSectionHeading = true;
         break;
     }
@@ -1158,9 +1163,17 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         break;
     case Atom::Keyword:
         break;
-    case Atom::Target:
-        out() << "<span id=\"" << TextUtils::asAsciiPrintable(atom->string()) << "\"></span>";
+    case Atom::Target: {
+        const QString ref = atom->count() == 2 ? atom->string(1)
+                                               : TextUtils::asAsciiPrintable(atom->string());
+        const Atom *next = atom;
+        while (next->next(Atom::SectionRight))
+            next = next->next();
+        const Atom *section = next->next(Atom::SectionLeft);
+        if (ref != m_recentSectionRef && (!section || Tree::refForAtom(section) != ref))
+            out() << "<span id=\"" << ref << "\"></span>";
         break;
+    }
     case Atom::UnhandledFormat:
         out() << "<b class=\"redFont\">&lt;Missing HTML&gt;</b>";
         break;
@@ -1968,6 +1981,8 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
 
     m_navigationLinks.clear();
     refMap.clear();
+    m_recentSectionRef.clear();
+    m_emittedMemberRefs.clear();
 
     if (node && !node->links().empty()) {
         std::pair<QString, QString> linkPair;
@@ -3706,20 +3721,35 @@ void HtmlGenerator::generateSourceLink(const Node *node)
             .arg(srcUrl, description, srcLink.linkText);
 }
 
+QString HtmlGenerator::memberHeadingRef(const Node *node)
+{
+    // Distinct related members can be rendered on the same page even when
+    // their canonical links lead to different owning pages.
+    const QString base = refForNode(node);
+    QString ref = base;
+    for (int n = 2; m_emittedMemberRefs.contains(ref); ++n)
+        ref = base + '-'_L1 + QString::number(n);
+    m_emittedMemberRefs.insert(ref);
+    return ref;
+}
+
 void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *relative,
-                                           CodeMarker *marker)
+                                            CodeMarker *marker)
 {
     const EnumNode *etn;
     generateExtractionMark(node, MemberMark);
-    QString nodeRef = nullptr;
     if (node->isSharedCommentNode()) {
         const auto *scn = reinterpret_cast<const SharedCommentNode *>(node);
         const QList<Node *> &collective = scn->collective();
         if (collective.size() > 1)
             out() << "<div class=\"fngroup\">\n";
+        QSet<const Node *> emitted;
         for (const auto *sharedNode : collective) {
+            if (emitted.contains(sharedNode))
+                continue;
+            emitted.insert(sharedNode);
             out() << headingStart.arg(getClassAttr(sharedNode, "fn fngroupitem"_L1),
-                                      refForNode(sharedNode));
+                                      memberHeadingRef(sharedNode));
             generateSynopsis(sharedNode, relative, marker, Section::Details);
             generateSourceLink(sharedNode);
             out() << headingEnd;
@@ -3729,14 +3759,14 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
         out() << '\n';
     } else {
         if (node->isEnumType(Genus::CPP) && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
-            out() << headingStart.arg(getClassAttr(node, "flags"_L1), refForNode(node));
+            out() << headingStart.arg(getClassAttr(node, "flags"_L1), memberHeadingRef(node));
             generateSynopsis(etn, relative, marker, Section::Details);
             out() << "<br/>";
             generateSynopsis(etn->flagsType(), relative, marker, Section::Details);
             generateSourceLink(node);
             out() << headingEnd;
         } else {
-            out() << headingStart.arg(getClassAttr(node, "fn"_L1), refForNode(node));
+            out() << headingStart.arg(getClassAttr(node, "fn"_L1), memberHeadingRef(node));
             generateSynopsis(node, relative, marker, Section::Details);
             generateSourceLink(node);
             out() << headingEnd;

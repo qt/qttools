@@ -2,7 +2,7 @@
 
 **Contents**
 
-- [Details](#details)
+- [Details](#details-section)
 - [More Information](#more-information)
 
 # Sub Page

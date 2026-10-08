@@ -3,6 +3,7 @@
 
 #include "tree.h"
 
+#include "anchorid.h"
 #include "classnode.h"
 #include "collectionnode.h"
 #include "config.h"
@@ -15,6 +16,7 @@
 #include "location.h"
 #include "node.h"
 #include "qdocdatabase.h"
+#include "sharedcommentnode.h"
 #include "text.h"
 #include "typedefnode.h"
 #include "utilities.h"
@@ -905,6 +907,8 @@ void Tree::resolveTargets(Aggregate *root)
     }
 }
 
+static const Atom *nextSection(const Atom *a);
+
 /*!
     \internal
 
@@ -914,10 +918,28 @@ void Tree::addTargetsToTargetMap(Node *node) {
     if (!node || !node->doc().hasTargets())
         return;
 
+    QSet<QString> usedRefs;
+    for (const Atom *heading : node->doc().tableOfContents())
+        usedRefs.insert(refForAtom(heading));
+    if (node->isPageNode())
+        usedRefs.insert("details"_L1);
+
     for (Atom *i : std::as_const(node->doc().targets())) {
-        const QString ref = refForAtom(i);
+        QString ref = refForAtom(i);
         const QString title = i->string();
         if (!ref.isEmpty() && !title.isEmpty()) {
+            const QString rawRef = TextUtils::asAsciiPrintable(title);
+            // A target elsewhere on the page must not reuse a section's id.
+            // A target tied to the following section already shares its anchor.
+            if (i->count() == 1 && usedRefs.contains(rawRef)
+                && (!nextSection(i) || ref != rawRef)) {
+                const QString base = rawRef + "-target"_L1;
+                ref = base;
+                for (int n = 2; usedRefs.contains(ref); ++n)
+                    ref = base + '-'_L1 + QString::number(n);
+                i->append(ref);
+            }
+            usedRefs.insert(ref);
             QString key = TextUtils::asAsciiPrintable(title);
             auto *target = new TargetRec(std::move(ref), TargetRec::Target, node, 2);
             m_nodesByTargetRef.insert(key, target);
@@ -973,6 +995,14 @@ void Tree::populateTocSectionTargetMap(Node *node) {
     QStack<Atom *> tocLevels;
     QSet<QString> anchors;
 
+    // Member documentation is rendered on its parent's page.
+    QString memberRef = node->isPageNode() ? QString() : computeAnchorId(node);
+    if (node->isSharedCommentNode() && memberRef.isEmpty()) {
+        const auto *shared = static_cast<const SharedCommentNode *>(node);
+        if (!shared->collective().isEmpty())
+            memberRef = computeAnchorId(shared->collective().first());
+    }
+
     qsizetype index = 0;
 
     for (Atom *atom: std::as_const(node->doc().tableOfContents())) {
@@ -986,6 +1016,48 @@ void Tree::populateTocSectionTargetMap(Node *node) {
         if (ref.isEmpty() || title.isEmpty())
             continue;
 
+        if (!memberRef.isEmpty() && node->parent() && node->parent()->isAggregate()) {
+            const auto *page = static_cast<const Aggregate *>(node->parent());
+            bool collides = false;
+            for (const Node *sibling : page->childNodes()) {
+                if (sibling == node)
+                    continue;
+                for (const Atom *heading : sibling->doc().tableOfContents()) {
+                    if (TextUtils::asAsciiPrintable(Text::sectionHeading(heading).toString()) == ref) {
+                        collides = true;
+                        break;
+                    }
+                }
+                if (collides)
+                    break;
+            }
+            if (collides)
+                ref = memberRef + '-'_L1 + ref;
+        } else if (node->isAggregate()) {
+            // A class section can otherwise shadow a member's link target.
+            const auto *aggregate = static_cast<const Aggregate *>(node);
+            for (const Node *child : aggregate->childNodes()) {
+                if (computeAnchorId(child) == ref) {
+                    ref += "-section"_L1;
+                    break;
+                }
+            }
+        }
+
+        // Legacy HTML reserves these ids for its page details and signal
+        // summary, independently of the section titles in the source text.
+        if (ref == "details"_L1 && node->isPageNode()) {
+            ref += "-section"_L1;
+        } else if (ref == "signals"_L1 && node->isAggregate()) {
+            const auto *aggregate = static_cast<const Aggregate *>(node);
+            for (const Node *child : aggregate->childNodes()) {
+                if (child->isFunction() && static_cast<const FunctionNode *>(child)->isSignal()) {
+                    ref += "-section"_L1;
+                    break;
+                }
+            }
+        }
+
         if (anchors.contains(ref)) {
             QStringList refParts;
             for (const auto tocLevel : tocLevels)
@@ -996,7 +1068,7 @@ void Tree::populateTocSectionTargetMap(Node *node) {
         }
 
         anchors.insert(ref);
-        if (atom->next(Atom::SectionHeadingLeft))
+        if (atom->next(Atom::SectionHeadingLeft) && atom->next()->count() == 1)
             atom->next()->append(ref);
         ++index;
 
@@ -1146,12 +1218,14 @@ QString Tree::refForAtom(const Atom *atom)
         atom = atom->next();
         [[fallthrough]];
     case Atom::SectionHeadingLeft:
-        if (atom->count() == 2)
+        if (atom->count() >= 2)
             return atom->string(1);
         return TextUtils::asAsciiPrintable(Text::sectionHeading(atom).toString());
     case Atom::Target:
         [[fallthrough]];
     case Atom::Keyword:
+        if (atom->count() >= 2)
+            return atom->string(1);
         if (const auto *section = nextSection(atom))
             return refForAtom(section);
         return TextUtils::asAsciiPrintable(atom->string());
