@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TestAction Class</db:title>
+<db:productname>MultiSignalTest</db:productname>
+<db:titleabbrev>Test for improved multi-property signal documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test class to demonstrate improved multi-property signal documentation.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TestAction</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherits</db:term>
+<db:listitem>
+<db:para/>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class has properties with different notification patterns.</db:para>
+</db:section>
+<db:section xml:id="property-documentation">
+<db:title>Property Documentation</db:title>
+<db:section xml:id="checkable-prop">
+<db:title>checkable : bool</db:title>
+<db:para>This property holds whether the action is checkable</db:para>
+<db:para>This property determines if the action can be toggled.</db:para>
+<db:para>
+<db:emphasis role="bold">Access functions:
+</db:emphasis>
+</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:type>bool</db:type> <db:emphasis role="bold"><db:link xlink:href="">isCheckable</db:link></db:emphasis>() const</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:type>void</db:type> <db:emphasis role="bold"><db:link xlink:href="">setCheckable</db:link></db:emphasis>(<db:type>bool</db:type> <db:emphasis>checkable</db:emphasis>)</db:para>
+</db:listitem>
+</db:itemizedlist>
+<db:para>
+<db:emphasis role="bold">Notifier signal:
+</db:emphasis>
+</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:type>void</db:type> <db:emphasis role="bold"><db:link xlink:href="testaction.xml#singlePropertySignal">singlePropertySignal</db:link></db:emphasis>()</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="enabled-prop">
+<db:title>enabled : bool</db:title>
+<db:para>This property holds whether the action is enabled</db:para>
+<db:para>This property determines if the action can be triggered.</db:para>
+<db:para>
+<db:emphasis role="bold">Access functions:
+</db:emphasis>
+</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:type>bool</db:type> <db:emphasis role="bold"><db:link xlink:href="">isEnabled</db:link></db:emphasis>() const</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:type>void</db:type> <db:emphasis role="bold"><db:link xlink:href="">setEnabled</db:link></db:emphasis>(<db:type>bool</db:type> <db:emphasis>enabled</db:emphasis>)</db:para>
+</db:listitem>
+</db:itemizedlist>
+<db:para>
+<db:emphasis role="bold">Notifier signal:
+</db:emphasis>
+</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:type>void</db:type> <db:emphasis role="bold"><db:link xlink:href="testaction.xml#changed">changed</db:link></db:emphasis>()</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="text-prop">
+<db:title>text : QString</db:title>
+<db:para>This property holds the action's display text</db:para>
+<db:para>This property holds the text that is displayed for the action.</db:para>
+<db:para>
+<db:emphasis role="bold">Access functions:
+</db:emphasis>
+</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:type>QString</db:type> <db:emphasis role="bold"><db:link xlink:href="">text</db:link></db:emphasis>() const</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:type>void</db:type> <db:emphasis role="bold"><db:link xlink:href="">setText</db:link></db:emphasis>(const <db:type>QString</db:type> &amp;<db:emphasis>text</db:emphasis>)</db:para>
+</db:listitem>
+</db:itemizedlist>
+<db:para>
+<db:emphasis role="bold">Notifier signal:
+</db:emphasis>
+</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:type>void</db:type> <db:emphasis role="bold"><db:link xlink:href="testaction.xml#changed">changed</db:link></db:emphasis>()</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="visible-prop">
+<db:title>visible : bool</db:title>
+<db:para>This property holds whether the action is visible</db:para>
+<db:para>This property determines if the action is shown in UI.</db:para>
+<db:para>
+<db:emphasis role="bold">Access functions:
+</db:emphasis>
+</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:type>bool</db:type> <db:emphasis role="bold"><db:link xlink:href="">isVisible</db:link></db:emphasis>() const</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:type>void</db:type> <db:emphasis role="bold"><db:link xlink:href="">setVisible</db:link></db:emphasis>(<db:type>bool</db:type> <db:emphasis>visible</db:emphasis>)</db:para>
+</db:listitem>
+</db:itemizedlist>
+<db:para>
+<db:emphasis role="bold">Notifier signal:
+</db:emphasis>
+</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:type>void</db:type> <db:emphasis role="bold"><db:link xlink:href="testaction.xml#changed">changed</db:link></db:emphasis>()</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="TestAction">
+<db:title>[explicit] TestAction::TestAction(QObject *<db:emphasis>parent</db:emphasis> = nullptr)</db:title>
+<db:para>Constructs a <db:link xlink:href="testaction.xml">TestAction</db:link> with the given <db:code role="parameter">parent</db:code>.</db:para>
+</db:section>
+<db:section xml:id="changed">
+<db:title>[signal] void TestAction::changed()</db:title>
+<db:para>This signal is emitted when certain properties of the action change. The properties that trigger this signal are enabled, visible, and text.</db:para>
+<db:note>
+<db:para>Notifier signal for properties <db:link xlink:href="testaction.xml#enabled-prop">enabled</db:link>, <db:link xlink:href="testaction.xml#text-prop">text</db:link>, and <db:link xlink:href="testaction.xml#visible-prop">visible</db:link>. </db:para>
+</db:note>
+</db:section>
+<db:section xml:id="singlePropertySignal">
+<db:title>[signal] void TestAction::singlePropertySignal()</db:title>
+<db:para>This signal is emitted when the checkable property changes.</db:para>
+<db:note>
+<db:para>Notifier signal for property <db:link xlink:href="testaction.xml#checkable-prop">checkable</db:link>. </db:para>
+</db:note>
+</db:section>
+</db:section>
+</db:article>

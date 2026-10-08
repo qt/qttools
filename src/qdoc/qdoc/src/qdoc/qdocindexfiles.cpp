@@ -249,8 +249,8 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             location = Location(indexUrl + QLatin1Char('/') + name);
         else if (!indexUrl.isNull())
             location = Location(name);
-    } else if (elementName == QLatin1String("qmlclass") || elementName == QLatin1String("qmlvaluetype")
-               || elementName == QLatin1String("qmlbasictype")) {
+    } else if (parent && ((elementName == QLatin1String("qmlclass") || elementName == QLatin1String("qmlvaluetype")
+                           || elementName == QLatin1String("qmlbasictype")))) {
         auto *qmlTypeNode = new QmlTypeNode(parent, name,
                     elementName == QLatin1String("qmlclass") ? Node::QmlType : Node::QmlValueType);
         qmlTypeNode->setTitle(attributes.value(QLatin1String("title")).toString());
@@ -272,7 +272,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         else if (!indexUrl.isNull())
             location = Location(name);
         node = qmlTypeNode;
-    } else if (elementName == QLatin1String("qmlproperty")) {
+    } else if (parent && elementName == QLatin1String("qmlproperty")) {
         QString type = attributes.value(QLatin1String("type")).toString();
         bool attached = false;
         if (attributes.value(QLatin1String("attached")) == QLatin1String("true"))
@@ -421,6 +421,10 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         auto *fn = new FunctionNode(metaness, parent, name, attached);
 
         fn->setReturnType(attributes.value(QLatin1String("type")).toString());
+
+        const auto &declaredTypeAttr = attributes.value(QLatin1String("declaredtype"));
+        if (!declaredTypeAttr.isEmpty())
+            fn->setDeclaredReturnType(declaredTypeAttr.toString());
 
         if (fn->isCppNode()) {
             fn->setVirtualness(attributes.value(QLatin1String("virtual")).toString());
@@ -1267,6 +1271,10 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
     const auto return_type = fn->returnType();
     if (!return_type.isEmpty())
         writer.writeAttribute("type", return_type);
+
+    const auto &declared_return_type = fn->declaredReturnType();
+    if (declared_return_type.has_value())
+        writer.writeAttribute("declaredtype", declared_return_type.value());
 
     if (fn->isCppNode()) {
         if (!brief.isEmpty())

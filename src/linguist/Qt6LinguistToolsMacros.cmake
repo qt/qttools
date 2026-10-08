@@ -318,7 +318,7 @@ set(lupdate_subproject_count ${targets_length})
         set(sources "$<FILTER:$<TARGET_PROPERTY:${target},SOURCES>,EXCLUDE,${exclude_ts}>")
         set(excluded "$<TARGET_PROPERTY:${target},QT_EXCLUDE_SOURCES_FROM_TRANSLATION>")
         set(autogen_build_dir_genex "$<TARGET_PROPERTY:${target},AUTOGEN_BUILD_DIR>")
-        set(default_autogen_build_dir "$<TARGET_PROPERTY:${target},BINARY_DIR>/${target}_autogen")
+        _qt_internal_get_target_autogen_build_dir("${target}" default_autogen_build_dir)
         set(autogen_dir "$<IF:$<BOOL:${autogen_build_dir_genex}>,${autogen_build_dir_genex},${default_autogen_build_dir}>")
         string(APPEND content "
 set(lupdate_subproject${n}_source_dir \"$<TARGET_PROPERTY:${target},SOURCE_DIR>\")

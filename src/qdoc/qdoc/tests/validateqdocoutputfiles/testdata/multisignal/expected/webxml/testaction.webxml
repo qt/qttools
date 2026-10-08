@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="TestAction" href="testaction.html" status="active" access="public" location="testaction.h" documented="true" bases="QObject" module="TestModule" brief="A test class to demonstrate improved multi-property signal documentation">
+            <description>
+                <brief>A test class to demonstrate improved multi-property signal documentation.</brief>
+                <para>This class has properties with different notification patterns.</para>
+            </description>
+            <function name="TestAction" fullname="TestAction::TestAction" href="testaction.html#TestAction" status="active" access="public" location="testaction.h" documented="true" meta="constructor" explicit="true" signature="TestAction(QObject *parent)">
+                <parameter type="QObject *" name="parent" default="nullptr"/>
+                <description>
+                    <para>Constructs a <link raw="TestAction" href="testaction.html" type="class">TestAction</link> with the given <argument>parent</argument>.</para>
+                </description>
+            </function>
+            <function name="changed" fullname="TestAction::changed" href="testaction.html#changed" status="active" access="public" location="testaction.h" documented="true" meta="signal" associated-property="enabled,text,visible" type="void" signature="void changed()">
+                <description>
+                    <para>This signal is emitted when certain properties of the action change. The properties that trigger this signal are enabled, visible, and text.</para>
+                </description>
+            </function>
+            <function name="isCheckable" fullname="TestAction::isCheckable" href="testaction.html#checkable-prop" status="active" access="public" location="testaction.h" meta="plain" const="true" associated-property="checkable" type="bool" signature="bool isCheckable() const">
+                <description/>
+            </function>
+            <function name="isEnabled" fullname="TestAction::isEnabled" href="testaction.html#enabled-prop" status="active" access="public" location="testaction.h" meta="plain" const="true" associated-property="enabled" type="bool" signature="bool isEnabled() const">
+                <description/>
+            </function>
+            <function name="isVisible" fullname="TestAction::isVisible" href="testaction.html#visible-prop" status="active" access="public" location="testaction.h" meta="plain" const="true" associated-property="visible" type="bool" signature="bool isVisible() const">
+                <description/>
+            </function>
+            <function name="setCheckable" fullname="TestAction::setCheckable" href="testaction.html#checkable-prop" status="active" access="public" location="testaction.h" meta="plain" associated-property="checkable" type="void" signature="void setCheckable(bool checkable)">
+                <parameter type="bool" name="checkable" default=""/>
+                <description>
+                    <see-also>isCheckable()</see-also>
+                </description>
+            </function>
+            <function name="setEnabled" fullname="TestAction::setEnabled" href="testaction.html#enabled-prop" status="active" access="public" location="testaction.h" meta="plain" associated-property="enabled" type="void" signature="void setEnabled(bool enabled)">
+                <parameter type="bool" name="enabled" default=""/>
+                <description>
+                    <see-also>isEnabled()</see-also>
+                </description>
+            </function>
+            <function name="setText" fullname="TestAction::setText" href="testaction.html#text-prop" status="active" access="public" location="testaction.h" meta="plain" associated-property="text" type="void" signature="void setText(const QString &amp;text)">
+                <parameter type="const QString &amp;" name="text" default=""/>
+                <description>
+                    <see-also>text()</see-also>
+                </description>
+            </function>
+            <function name="setVisible" fullname="TestAction::setVisible" href="testaction.html#visible-prop" status="active" access="public" location="testaction.h" meta="plain" associated-property="visible" type="void" signature="void setVisible(bool visible)">
+                <parameter type="bool" name="visible" default=""/>
+                <description>
+                    <see-also>isVisible()</see-also>
+                </description>
+            </function>
+            <function name="singlePropertySignal" fullname="TestAction::singlePropertySignal" href="testaction.html#singlePropertySignal" status="active" access="public" location="testaction.h" documented="true" meta="signal" associated-property="checkable" type="void" signature="void singlePropertySignal()">
+                <description>
+                    <para>This signal is emitted when the checkable property changes.</para>
+                </description>
+            </function>
+            <function name="text" fullname="TestAction::text" href="testaction.html#text-prop" status="active" access="public" location="testaction.h" meta="plain" const="true" associated-property="text" type="QString" signature="QString text() const">
+                <description>
+                    <see-also>setText()</see-also>
+                </description>
+            </function>
+            <property name="checkable" fullname="TestAction::checkable" href="testaction.html#checkable-prop" status="active" access="public" location="testaction.h" documented="true" brief="Whether the action is checkable">
+                <getter name="isCheckable"/>
+                <setter name="setCheckable"/>
+                <notifier name="singlePropertySignal"/>
+                <description>
+                    <brief>This property holds whether the action is checkable.</brief>
+                    <para>This property determines if the action can be toggled.</para>
+                </description>
+            </property>
+            <property name="enabled" fullname="TestAction::enabled" href="testaction.html#enabled-prop" status="active" access="public" location="testaction.h" documented="true" brief="Whether the action is enabled">
+                <getter name="isEnabled"/>
+                <setter name="setEnabled"/>
+                <notifier name="changed"/>
+                <description>
+                    <brief>This property holds whether the action is enabled.</brief>
+                    <para>This property determines if the action can be triggered.</para>
+                </description>
+            </property>
+            <property name="text" fullname="TestAction::text" href="testaction.html#text-prop" status="active" access="public" location="testaction.h" documented="true" brief="The action's display text">
+                <getter name="text"/>
+                <setter name="setText"/>
+                <notifier name="changed"/>
+                <description>
+                    <brief>This property holds the action's display text.</brief>
+                    <para>This property holds the text that is displayed for the action.</para>
+                </description>
+            </property>
+            <property name="visible" fullname="TestAction::visible" href="testaction.html#visible-prop" status="active" access="public" location="testaction.h" documented="true" brief="Whether the action is visible">
+                <getter name="isVisible"/>
+                <setter name="setVisible"/>
+                <notifier name="changed"/>
+                <description>
+                    <brief>This property holds whether the action is visible.</brief>
+                    <para>This property determines if the action is shown in UI.</para>
+                </description>
+            </property>
+        </class>
+    </document>
+</WebXML>
