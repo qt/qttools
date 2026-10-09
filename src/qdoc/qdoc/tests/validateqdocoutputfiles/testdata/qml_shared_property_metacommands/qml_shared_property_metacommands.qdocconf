@@ -1,0 +1,16 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+project = SharedPropertyMetacommands
+locationinfo = false
+# One "Ignored '\overload'" warning per documented property.
+warninglimit = 4
+warninglimit.enabled = true
+
+moduleheader =
+sourcedirs = src
+sources.fileextensions = "*.qdoc"
+
+outputformats = HTML
+HTML.nosubdirs = true
+HTML.outputsubdir = html

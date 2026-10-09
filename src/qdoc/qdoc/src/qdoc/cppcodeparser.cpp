@@ -329,8 +329,6 @@ std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedD
                 qpn->setLocation(doc.startLocation());
                 qpn->setGenus(Genus::QML);
 
-                tied.emplace_back(TiedDocumentation{doc, qpn});
-
                 sharedNodes << qpn;
             }
         } else {
@@ -355,9 +353,13 @@ std::vector<TiedDocumentation> CppCodeParser::processQmlProperties(const UntiedD
 
         tied.emplace_back(TiedDocumentation{doc, scn});
 
-        for (const auto n : sharedNodes)
+        for (const auto n : sharedNodes) {
+            n->setDoc(doc);
             scn->append(n);
+        }
         scn->sort();
+    } else if (!sharedNodes.isEmpty()) {
+        tied.emplace_back(TiedDocumentation{doc, sharedNodes.first()});
     }
 
     return tied;

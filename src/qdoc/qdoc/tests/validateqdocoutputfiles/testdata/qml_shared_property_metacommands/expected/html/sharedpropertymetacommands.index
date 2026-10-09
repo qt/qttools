@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="SharedPropertyMetacommands Reference Documentation" version="" project="SharedPropertyMetacommands">
+    <namespace name="" status="active" access="public" module="sharedpropertymetacommands">
+        <qmlclass name="Widget" qml-module-name="Metacommands" fullname="Metacommands.Widget" href="qml-metacommands-widget.html" status="active" access="public" location="types.qdoc" documented="true" brief="A type whose properties share documentation">
+            <qmlproperty name="font.family" inpropertygroup="Metacommands.Widget.font" fullname="Metacommands.Widget.font.family" href="qml-metacommands-widget.html#font.family-prop" status="active" access="public" location="types.qdoc" documented="true" type="string" attached="false" writable="false"/>
+            <qmlproperty name="font.pixelSize" inpropertygroup="Metacommands.Widget.font" fullname="Metacommands.Widget.font.pixelSize" href="qml-metacommands-widget.html#font.pixelSize-prop" status="active" access="public" location="types.qdoc" documented="true" type="int" attached="false" writable="false"/>
+            <qmlproperty name="height" fullname="Metacommands.Widget.height" href="qml-metacommands-widget.html#height-prop" status="active" access="public" location="types.qdoc" documented="true" type="int" attached="false" writable="false"/>
+            <qmlproperty name="width" fullname="Metacommands.Widget.width" href="qml-metacommands-widget.html#width-prop" status="active" access="public" location="types.qdoc" documented="true" type="int" attached="false" writable="false"/>
+            <qmlproperty name="font" propertygroup="true" fullname="Metacommands.Widget.font" href="qml-metacommands-widget.html#font-prop" status="active" access="public" location="types.qdoc" documented="true"/>
+        </qmlclass>
+        <qmlmodule name="Metacommands" qml-module-name="Metacommands" href="metacommands-qmlmodule.html" status="active" location="types.qdoc" documented="true" seen="true" title="Metacommands QML Types" brief="Types whose properties share documentation"/>
+    </namespace>
+</INDEX>
