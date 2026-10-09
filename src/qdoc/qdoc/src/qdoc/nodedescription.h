@@ -13,6 +13,12 @@ class Node;
 namespace NodeText
 {
 
+enum class GrammaticalNumber
+{
+    Singular,
+    Plural
+};
+
 QString typeString(const Node *, bool plural = false);
 
 } // namespace NodeText
