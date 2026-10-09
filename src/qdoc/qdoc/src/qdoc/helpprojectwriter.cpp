@@ -17,6 +17,7 @@
 #include "location.h"
 #include "node.h"
 #include "nodecontext.h"
+#include "nodedescription.h"
 #include "outputdirectory.h"
 #include "qdocdatabase.h"
 #include "typedefnode.h"
@@ -512,7 +513,7 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     case NodeType::Union:
     case NodeType::QmlType:
     case NodeType::QmlValueType: {
-        QString typeStr = m_gen->typeString(node);
+        QString typeStr = NodeText::typeString(node);
         if (!typeStr.isEmpty())
             typeStr[0] = typeStr[0].toTitleCase();
         writer.writeStartElement("section");

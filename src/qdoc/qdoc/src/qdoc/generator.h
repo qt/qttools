@@ -69,7 +69,6 @@ public:
     virtual void initializeGenerator();
     virtual void initializeFormat();
     virtual void terminateGenerator();
-    virtual QString typeString(const Node *node, bool plural = false);
 
     QString fullDocumentLocation(const Node *node) const;
     QString linkForExampleFile(const QString &path, const QString &fileExt = QString()) const;
