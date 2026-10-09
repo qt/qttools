@@ -1268,21 +1268,24 @@ std::optional<QString> formatStatus(const Node *node, QDocDatabase *qdb)
 
 void Generator::generateSince(const Node *node, CodeMarker *marker)
 {
-    if (!node->since().isEmpty()) {
-        Text text;
-        if (node->isSharedCommentNode()) {
-            const auto &collective = static_cast<const SharedCommentNode *>(node)->collective();
-            QString typeStr = NodeText::nodeTypeDescription(
-                    collective.first(), collective.size() > 1 ? NodeText::GrammaticalNumber::Plural
-                                                              : NodeText::GrammaticalNumber::Singular);
-            text << Atom::ParaLeft << "These " << typeStr << " were introduced in "
-                 << formatSince(node) << "." << Atom::ParaRight;
-        } else {
-            text << Atom::ParaLeft << "This " << NodeText::nodeTypeDescription(node) << " was introduced in "
-                 << formatSince(node) << "." << Atom::ParaRight;
-        }
-        generateText(text, node, marker);
-    }
+    if (node->since().isEmpty())
+        return;
+
+    const auto *shared = node->isSharedCommentNode()
+            ? static_cast<const SharedCommentNode *>(node) : nullptr;
+    const bool plural = shared && shared->collective().size() > 1;
+    const Node *described = plural ? shared->collective().first() : node;
+    const auto number = plural ? NodeText::GrammaticalNumber::Plural
+                               : NodeText::GrammaticalNumber::Singular;
+
+    Text text;
+    text << Atom::ParaLeft
+         << (plural ? "These "_L1 : "This "_L1)
+         << NodeText::nodeTypeDescription(described, number)
+         << (plural ? " were "_L1 : " was "_L1)
+         << "introduced in " << formatSince(node) << "." << Atom::ParaRight;
+
+    generateText(text, node, marker);
 }
 
 void Generator::generateNoexceptNote(const Node *node, CodeMarker *marker)
