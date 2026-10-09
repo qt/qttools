@@ -1285,30 +1285,38 @@ void Generator::generateSince(const Node *node, CodeMarker *marker)
     }
 }
 
-void Generator::generateNoexceptNote(const Node* node, CodeMarker* marker) {
-    std::vector<const Node*> nodes;
+void Generator::generateNoexceptNote(const Node *node, CodeMarker *marker)
+{
+    std::vector<const Node *> nodes;
     if (node->isSharedCommentNode()) {
-        auto shared_node = static_cast<const SharedCommentNode*>(node);
-        nodes.reserve(shared_node->collective().size());
-        nodes.insert(nodes.begin(), shared_node->collective().begin(), shared_node->collective().end());
-    } else nodes.push_back(node);
+        const auto &collective = static_cast<const SharedCommentNode *>(node)->collective();
+        nodes.assign(collective.begin(), collective.end());
+    } else {
+        nodes.push_back(node);
+    }
 
-    std::size_t counter{1};
-    for (const Node* node : nodes) {
-        if (node->isFunction(Genus::CPP)) {
-            if (const auto &exception_info = static_cast<const FunctionNode*>(node)->getNoexcept(); exception_info && !(*exception_info).isEmpty()) {
-                Text text;
-                text << Atom::NoteLeft
-                        << (nodes.size() > 1 ? QString::fromStdString(" ("s + std::to_string(counter) + ")"s) : QString::fromStdString("This ") + NodeText::nodeTypeDescription(node))
-                        << " is noexcept when "
-                        << Atom(Atom::C, marker->markedUpCode(*exception_info, nullptr, Location()))
-                        << " is " << Atom(Atom::C, "true") << "."
-                    << Atom::NoteRight;
-                generateText(text, node, marker);
-            }
-        }
+    std::size_t position = 0;
+    for (const Node *member : nodes) {
+        ++position;
+        if (!member->isFunction(Genus::CPP))
+            continue;
 
-        ++counter;
+        const auto &noexceptExpr = static_cast<const FunctionNode *>(member)->getNoexcept();
+        if (!noexceptExpr || noexceptExpr->isEmpty())
+            continue;
+
+        QString subject;
+        if (nodes.size() > 1)
+            subject = " ("_L1 + QString::number(position) + ")"_L1;
+        else
+            subject = "This "_L1 + NodeText::nodeTypeDescription(member);
+
+        Text text;
+        text << Atom::NoteLeft << subject
+             << " is noexcept when "
+             << Atom(Atom::C, marker->markedUpCode(*noexceptExpr, nullptr, Location()))
+             << " is " << Atom(Atom::C, "true") << "." << Atom::NoteRight;
+        generateText(text, member, marker);
     }
 }
 
