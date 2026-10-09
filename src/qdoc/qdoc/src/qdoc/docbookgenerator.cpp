@@ -1776,24 +1776,24 @@ void DocBookGenerator::generateBrief(const Node *node)
 
 bool DocBookGenerator::generateSince(const Node *node)
 {
-    // From Generator::generateSince.
-    if (!node->since().isEmpty()) {
-        m_writer->writeStartElement(dbNamespace, "para");
-        if (node->isSharedCommentNode()) {
-            const auto &collective = static_cast<const SharedCommentNode *>(node)->collective();
-            QString typeStr = collective.size() > 1 ? NodeText::nodeTypeDescription(collective.first()) + "s" : NodeText::nodeTypeDescription(node);
-            m_writer->writeCharacters("These " + typeStr + " were introduced in ");
-        } else {
-            m_writer->writeCharacters("This " + NodeText::nodeTypeDescription(node) + " was introduced in ");
-        }
-        m_writer->writeCharacters(formatSince(node) + ".");
-        m_writer->writeEndElement(); // para
-        newLine();
+    if (node->since().isEmpty())
+        return false;
 
-        return true;
-    }
+    const auto *shared = node->isSharedCommentNode()
+            ? static_cast<const SharedCommentNode *>(node) : nullptr;
+    const bool plural = shared && shared->collective().size() > 1;
+    const Node *described = plural ? shared->collective().first() : node;
+    const auto number = plural ? NodeText::GrammaticalNumber::Plural
+                               : NodeText::GrammaticalNumber::Singular;
 
-    return false;
+    m_writer->writeStartElement(dbNamespace, "para");
+    m_writer->writeCharacters((plural ? "These "_L1 : "This "_L1)
+                              + NodeText::nodeTypeDescription(described, number)
+                              + (plural ? " were introduced in "_L1 : " was introduced in "_L1)
+                              + formatSince(node) + "."_L1);
+    m_writer->writeEndElement(); // para
+    newLine();
+    return true;
 }
 
 /*!
