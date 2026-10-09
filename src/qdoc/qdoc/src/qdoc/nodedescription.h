@@ -19,11 +19,10 @@ enum class GrammaticalNumber
     Plural
 };
 
-QString typeString(const Node *, bool plural = false);
+QString nodeTypeDescription(const Node *node, GrammaticalNumber number = GrammaticalNumber::Singular);
 
 } // namespace NodeText
 
 QT_END_NAMESPACE
 
 #endif // NODEDESCRIPTION_H
-

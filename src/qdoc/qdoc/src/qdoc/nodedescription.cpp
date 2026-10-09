@@ -30,63 +30,66 @@ namespace NodeText {
 /*!
   \internal
 
-  Returns a human-readable description of \a node's type, using the plural
-  form when \a plural is true.
+  Returns a human-readable description of \a node's type in the specified
+  grammatical \a number. The default is Singular because most callers
+  describe one node.
+
+  \sa NodeText::GrammaticalNumber
 */
-QString typeString(const Node *node, bool plural)
+QString nodeTypeDescription(const Node *node, GrammaticalNumber number)
 {
     switch (node->nodeType()) {
     case NodeType::Namespace:
-        return plural ? "namespaces"_L1 : "namespace"_L1;
+        return number == GrammaticalNumber::Singular ? "namespace"_L1 : "namespaces"_L1;
     case NodeType::Class:
-        return plural ? "classes"_L1 : "class"_L1;
+        return number == GrammaticalNumber::Singular ? "class"_L1 : "classes"_L1;
     case NodeType::Struct:
-        return plural ? "structs"_L1 : "struct"_L1;
+        return number == GrammaticalNumber::Singular ? "struct"_L1 : "structs"_L1;
     case NodeType::Union:
-        return plural ? "unions"_L1 : "union"_L1;
+        return number == GrammaticalNumber::Singular ? "union"_L1 : "unions"_L1;
     case NodeType::QmlType:
     case NodeType::QmlValueType:
-        return plural ? "types"_L1 : "type"_L1;
+        return number == GrammaticalNumber::Singular ? "type"_L1 : "types"_L1;
     case NodeType::Page:
         return "documentation"_L1;
     case NodeType::Enum:
-        return plural ? "enums"_L1 : "enum"_L1;
+        return number == GrammaticalNumber::Singular ? "enum"_L1 : "enums"_L1;
     case NodeType::Typedef:
     case NodeType::TypeAlias:
-        return plural ? "typedefs"_L1 : "typedef"_L1;
+        return number == GrammaticalNumber::Singular ? "typedef"_L1 : "typedefs"_L1;
     case NodeType::Function: {
         const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
         case Metaness::QmlSignal:
-            return plural ? "signals"_L1 : "signal"_L1;
+            return number == GrammaticalNumber::Singular ? "signal"_L1 : "signals"_L1;
         case Metaness::QmlSignalHandler:
-            return plural ? "signal handlers"_L1 : "signal handler"_L1;
+            return number == GrammaticalNumber::Singular ? "signal handler"_L1 : "signal handlers"_L1;
         case Metaness::QmlMethod:
-            return plural ? "methods"_L1 : "method"_L1;
+            return number == GrammaticalNumber::Singular ? "method"_L1 : "methods"_L1;
         case Metaness::MacroWithParams:
         case Metaness::MacroWithoutParams:
-            return plural ? "macros"_L1 : "macro"_L1;
+            return number == GrammaticalNumber::Singular ? "macro"_L1 : "macros"_L1;
         default:
             break;
         }
-        return plural ? "functions"_L1 : "function"_L1;
+        return number == GrammaticalNumber::Singular ? "function"_L1 : "functions"_L1;
     }
     case NodeType::QmlEnum:
-        return plural ? "enumerations"_L1 : "enumeration"_L1;
+        return number == GrammaticalNumber::Singular ? "enumeration"_L1 : "enumerations"_L1;
     case NodeType::Property:
     case NodeType::QmlProperty:
-        return plural ? "properties"_L1 : "property"_L1;
+        return number == GrammaticalNumber::Singular ? "property"_L1 : "properties"_L1;
     case NodeType::Module:
     case NodeType::QmlModule:
-        return plural ? "modules"_L1 : "module"_L1;
+        return number == GrammaticalNumber::Singular ? "module"_L1 : "modules"_L1;
     case NodeType::Variable:
-        return plural ? "variables"_L1 : "variable"_L1;
+        return number == GrammaticalNumber::Singular ? "variable"_L1 : "variables"_L1;
     case NodeType::Concept:
-        return plural ? "concepts"_L1 : "concept"_L1;
+        return number == GrammaticalNumber::Singular ? "concept"_L1 : "concepts"_L1;
     case NodeType::SharedComment: {
         const auto *shared = static_cast<const SharedCommentNode *>(node);
         if (shared->isPropertyGroup())
-            return plural ? "property groups"_L1 : "property group"_L1;
+            return number == GrammaticalNumber::Singular ? "property group"_L1 : "property groups"_L1;
         const auto &collective = shared->collective();
         return collective.first()->nodeTypeString();
     }
@@ -98,4 +101,3 @@ QString typeString(const Node *node, bool plural)
 } // namespace NodeText
 
 QT_END_NAMESPACE
-
