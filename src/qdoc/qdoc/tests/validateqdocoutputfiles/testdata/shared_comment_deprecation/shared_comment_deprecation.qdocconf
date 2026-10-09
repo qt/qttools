@@ -1,0 +1,17 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+project = SharedCommentDeprecation
+version = 6.8
+locationinfo = false
+warninglimit = 0
+warninglimit.enabled = true
+
+moduleheader =
+sourcedirs = src
+sources.fileextensions = "*.qdoc"
+
+outputformats = HTML DocBook
+{HTML.nosubdirs,DocBook.nosubdirs} = true
+HTML.outputsubdir = html
+DocBook.outputsubdir = docbook

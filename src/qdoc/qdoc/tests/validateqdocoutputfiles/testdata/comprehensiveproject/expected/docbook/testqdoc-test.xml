@@ -476,7 +476,7 @@
 <db:section xml:id="operator-2b-2b">
 <db:title its:translate="no">[deprecated] TestQDoc::Test &amp;Test::operator++()</db:title>
 <db:bridgehead renderas="sect2" xml:id="operator--" its:translate="no">[deprecated] TestQDoc::Test &amp;Test::operator--()</db:bridgehead>
-<db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
+<db:para>These functions are deprecated. We strongly advise against using them in new code.</db:para>
 </db:section>
 </db:section>
 </db:section>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Widget QML Type</db:title>
+<db:productname>SharedCommentDeprecation</db:productname>
+<db:titleabbrev>SharedCommentDeprecation Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A type whose members share deprecated documentation.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import Deprecations</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="method-documentation">
+<db:title>Method Documentation</db:title>
+<db:section xml:id="show-method">
+<db:title>[until 7.0] void show()</db:title>
+<db:bridgehead renderas="sect2">[until 7.0] void hide()</db:bridgehead><db:para>These methods are scheduled for deprecation in version 7.0.</db:para>
+<db:para>Shows or hides the widget.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="obsolete">
+<db:title>Obsolete Members for Widget</db:title>
+<db:para><db:emphasis role="bold">The following members of QML type <db:link xlink:href="qml-deprecations-widget.xml">Widget</db:link> are deprecated.</db:emphasis> We strongly advise against using them in new code.</db:para>
+<db:section xml:id="obsolete-property-documentation">
+<db:title>Obsolete Property Documentation</db:title>
+<db:section xml:id="font-prop">
+<db:title>font group</db:title>
+<db:bridgehead renderas="sect2" xml:id="font.family-prop">[deprecated in 6.5] font.family : string</db:bridgehead>
+<db:bridgehead renderas="sect2" xml:id="font.pixelSize-prop">[deprecated in 6.5] font.pixelSize : int</db:bridgehead>
+<db:para>This property group is deprecated since 6.5. We strongly advise against using it in new code.</db:para>
+<db:para>The font the widget uses.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="obsolete-method-documentation">
+<db:title>Obsolete Method Documentation</db:title>
+<db:section xml:id="open-method">
+<db:title>[deprecated in 6.5] void open()</db:title>
+<db:bridgehead renderas="sect2">[deprecated in 6.5] void close()</db:bridgehead><db:para>These methods are deprecated since 6.5. We strongly advise against using them in new code.</db:para>
+<db:para>Opens or closes the widget.</db:para>
+</db:section>
+</db:section>
+</db:section>
+</db:article>
