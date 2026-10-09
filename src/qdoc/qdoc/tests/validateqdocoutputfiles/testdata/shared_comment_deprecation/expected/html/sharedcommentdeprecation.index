@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="SharedCommentDeprecation Reference Documentation" version="6.8" project="SharedCommentDeprecation">
+    <namespace name="" status="active" access="public" module="sharedcommentdeprecation">
+        <qmlclass name="Widget" qml-module-name="Deprecations" fullname="Deprecations.Widget" href="qml-deprecations-widget.html" status="active" access="public" location="widget.qdoc" documented="true" brief="A type whose members share deprecated documentation">
+            <function name="close" fullname="Deprecations.Widget.close" href="qml-deprecations-widget-obsolete.html#close-method" status="deprecated" access="public" location="widget.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <function name="hide" fullname="Deprecations.Widget.hide" href="qml-deprecations-widget.html#hide-method" status="active" access="public" location="widget.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <function name="open" fullname="Deprecations.Widget.open" href="qml-deprecations-widget-obsolete.html#open-method" status="deprecated" access="public" location="widget.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <function name="show" fullname="Deprecations.Widget.show" href="qml-deprecations-widget.html#show-method" status="active" access="public" location="widget.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <qmlproperty name="font.family" inpropertygroup="Deprecations.Widget.font" fullname="Deprecations.Widget.font.family" href="qml-deprecations-widget-obsolete.html#font.family-prop" status="deprecated" access="public" location="widget.qdoc" documented="true" type="string" attached="false" writable="true"/>
+            <qmlproperty name="font.pixelSize" inpropertygroup="Deprecations.Widget.font" fullname="Deprecations.Widget.font.pixelSize" href="qml-deprecations-widget-obsolete.html#font.pixelSize-prop" status="deprecated" access="public" location="widget.qdoc" documented="true" type="int" attached="false" writable="true"/>
+            <qmlproperty name="font" propertygroup="true" fullname="Deprecations.Widget.font" href="qml-deprecations-widget-obsolete.html#font-prop" status="deprecated" access="public" location="widget.qdoc" documented="true"/>
+        </qmlclass>
+        <qmlmodule name="Deprecations" qml-module-name="Deprecations" href="deprecations-qmlmodule.html" status="active" location="widget.qdoc" documented="true" seen="true" title="Deprecations QML Types" brief="Types with deprecated shared documentation"/>
+    </namespace>
+</INDEX>

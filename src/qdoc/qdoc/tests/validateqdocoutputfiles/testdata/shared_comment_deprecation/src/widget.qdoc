@@ -1,0 +1,39 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \qmlmodule Deprecations
+    \title Deprecations QML Types
+    \brief Types with deprecated shared documentation.
+*/
+
+/*!
+    \qmltype Widget
+    \inqmlmodule Deprecations
+    \brief A type whose members share deprecated documentation.
+*/
+
+/*!
+    \qmlmethod void Widget::open()
+    \qmlmethod void Widget::close()
+    \deprecated [6.5]
+
+    Opens or closes the widget.
+*/
+
+/*!
+    \qmlmethod void Widget::show()
+    \qmlmethod void Widget::hide()
+    \deprecated [7.0]
+
+    Shows or hides the widget.
+*/
+
+/*!
+    \qmlpropertygroup Widget::font
+    \qmlproperty string Widget::font.family
+    \qmlproperty int Widget::font.pixelSize
+    \deprecated [6.5]
+
+    The font the widget uses.
+*/

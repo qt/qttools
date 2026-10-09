@@ -2521,6 +2521,13 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
 bool DocBookGenerator::generateStatus(const Node *node)
 {
     // From Generator::generateStatus.
+    const auto *shared = node->isSharedCommentNode()
+            ? static_cast<const SharedCommentNode *>(node) : nullptr;
+    const bool plural = shared && !shared->isPropertyGroup() && shared->collective().size() > 1;
+    const QString subject = plural
+            ? "These "_L1 + typeString(shared->collective().first(), true) + " are"_L1
+            : "This "_L1 + typeString(node) + " is"_L1;
+
     switch (node->status()) {
     case Status::Active:
         // Output the module 'state' description if set.
@@ -2540,8 +2547,8 @@ bool DocBookGenerator::generateStatus(const Node *node)
         }
         if (const auto &version = node->deprecatedSince(); !version.isEmpty()) {
             m_writer->writeStartElement(dbNamespace, "para");
-            m_writer->writeCharacters("This " + typeString(node)
-                                      + " is scheduled for deprecation in version "
+            m_writer->writeCharacters(subject
+                                      + " scheduled for deprecation in version "
                                       + version + ".");
             m_writer->writeEndElement(); // para
             newLine();
@@ -2567,14 +2574,15 @@ bool DocBookGenerator::generateStatus(const Node *node)
             m_writer->writeStartElement(dbNamespace, "emphasis");
             m_writer->writeAttribute("role", "bold");
         }
-        m_writer->writeCharacters("This " + typeString(node) + " is deprecated");
+        m_writer->writeCharacters(subject + " deprecated");
         if (const QString &version = node->deprecatedSince(); !version.isEmpty()) {
             m_writer->writeCharacters(" since ");
             if (node->isQmlNode() && !node->logicalModuleName().isEmpty())
                 m_writer->writeCharacters(node->logicalModuleName() + " ");
             m_writer->writeCharacters(version);
         }
-        m_writer->writeCharacters(". We strongly advise against using it in new code.");
+        m_writer->writeCharacters(". We strongly advise against using "
+                                  + (plural ? "them"_L1 : "it"_L1) + " in new code.");
         if (node->isAggregate())
             m_writer->writeEndElement(); // emphasis
         m_writer->writeEndElement(); // para

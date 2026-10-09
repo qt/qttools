@@ -1313,6 +1313,15 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
 {
     Text text;
 
+    // A property group is one documented entity; other shared comments
+    // with several members describe each of them.
+    const auto *shared = node->isSharedCommentNode()
+            ? static_cast<const SharedCommentNode *>(node) : nullptr;
+    const bool plural = shared && !shared->isPropertyGroup() && shared->collective().size() > 1;
+    const QString subject = plural
+            ? "These "_L1 + typeString(shared->collective().first(), true) + " are"_L1
+            : "This "_L1 + typeString(node) + " is"_L1;
+
     switch (node->status()) {
     case Status::Active:
         // Output the module 'state' description if set.
@@ -1327,8 +1336,8 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
             }
         }
         if (const auto &version = node->deprecatedSince(); !version.isEmpty()) {
-            text << Atom::ParaLeft << "This " << typeString(node)
-                 << " is scheduled for deprecation in version "
+            text << Atom::ParaLeft << subject
+                 << " scheduled for deprecation in version "
                  << version << "." << Atom::ParaRight;
         }
         break;
@@ -1345,7 +1354,7 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
         text << Atom::ParaLeft;
         if (node->isAggregate())
             text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD);
-        text << "This " << typeString(node) << " is deprecated";
+        text << subject << " deprecated";
         if (const QString &version = node->deprecatedSince(); !version.isEmpty()) {
             text << " since ";
             if (node->isQmlNode() && !node->logicalModuleName().isEmpty())
@@ -1353,7 +1362,8 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
             text << version;
         }
 
-        text << ". We strongly advise against using it in new code.";
+        text << ". We strongly advise against using " << (plural ? "them" : "it")
+             << " in new code.";
         if (node->isAggregate())
             text << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
         text << Atom::ParaRight;
