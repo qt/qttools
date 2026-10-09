@@ -140,6 +140,7 @@ set(qdoc_sources
     src/qdoc/nativeenum.cpp
     src/qdoc/node.cpp
     src/qdoc/nodecontext.h
+    src/qdoc/nodedescription.cpp
     src/qdoc/openedlist.cpp
     src/qdoc/outputcontext.cpp
     src/qdoc/outputdirectory.cpp
