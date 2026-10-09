@@ -20,6 +20,14 @@ using namespace Qt::StringLiterals;
 namespace NodeText {
 
 /*!
+  \enum NodeText::GrammaticalNumber
+  \brief Specifies the singular or plural form of a node type description.
+
+  \value Singular Use the singular form.
+  \value Plural Use the plural form.
+*/
+
+/*!
   \internal
 
   Returns a human-readable description of \a node's type, using the plural
