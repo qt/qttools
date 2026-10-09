@@ -30,6 +30,7 @@ public:
     {
         return !name().isEmpty() && !m_collective.isEmpty() && (m_collective.at(0)->isQmlProperty());
     }
+    [[nodiscard]] QString logicalModuleName() const override;
     [[nodiscard]] qsizetype count() const { return m_collective.size(); }
     void append(Node *node)
     {

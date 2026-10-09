@@ -18,6 +18,15 @@ SharedCommentNode::SharedCommentNode(QmlTypeNode *parent, int count, QString &gr
 }
 
 /*!
+  Returns the logical module name of the parent, as for the
+  QML methods and properties that the shared comment documents.
+ */
+QString SharedCommentNode::logicalModuleName() const
+{
+    return parent()->logicalModuleName();
+}
+
+/*!
   Searches the shared comment node's member nodes for function
   nodes. Each function node's overload flag is set.
 

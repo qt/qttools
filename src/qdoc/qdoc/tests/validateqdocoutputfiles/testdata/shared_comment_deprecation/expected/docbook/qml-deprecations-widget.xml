@@ -36,7 +36,7 @@
 <db:title>font group</db:title>
 <db:bridgehead renderas="sect2" xml:id="font.family-prop">[deprecated in 6.5] font.family : string</db:bridgehead>
 <db:bridgehead renderas="sect2" xml:id="font.pixelSize-prop">[deprecated in 6.5] font.pixelSize : int</db:bridgehead>
-<db:para>This property group is deprecated since 6.5. We strongly advise against using it in new code.</db:para>
+<db:para>This property group is deprecated since Deprecations 6.5. We strongly advise against using it in new code.</db:para>
 <db:para>The font the widget uses.</db:para>
 </db:section>
 </db:section>
@@ -44,7 +44,7 @@
 <db:title>Obsolete Method Documentation</db:title>
 <db:section xml:id="open-method">
 <db:title>[deprecated in 6.5] void open()</db:title>
-<db:bridgehead renderas="sect2">[deprecated in 6.5] void close()</db:bridgehead><db:para>These methods are deprecated since 6.5. We strongly advise against using them in new code.</db:para>
+<db:bridgehead renderas="sect2">[deprecated in 6.5] void close()</db:bridgehead><db:para>These methods are deprecated since Deprecations 6.5. We strongly advise against using them in new code.</db:para>
 <db:para>Opens or closes the widget.</db:para>
 </db:section>
 </db:section>
