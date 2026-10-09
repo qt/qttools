@@ -513,7 +513,7 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     case NodeType::Union:
     case NodeType::QmlType:
     case NodeType::QmlValueType: {
-        QString typeStr = NodeText::typeString(node);
+        QString typeStr = NodeText::nodeTypeDescription(node);
         if (!typeStr.isEmpty())
             typeStr[0] = typeStr[0].toTitleCase();
         writer.writeStartElement("section");

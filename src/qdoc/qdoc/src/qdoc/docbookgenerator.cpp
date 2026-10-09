@@ -1781,10 +1781,10 @@ bool DocBookGenerator::generateSince(const Node *node)
         m_writer->writeStartElement(dbNamespace, "para");
         if (node->isSharedCommentNode()) {
             const auto &collective = static_cast<const SharedCommentNode *>(node)->collective();
-            QString typeStr = collective.size() > 1 ? NodeText::typeString(collective.first()) + "s" : NodeText::typeString(node);
+            QString typeStr = collective.size() > 1 ? NodeText::nodeTypeDescription(collective.first()) + "s" : NodeText::nodeTypeDescription(node);
             m_writer->writeCharacters("These " + typeStr + " were introduced in ");
         } else {
-            m_writer->writeCharacters("This " + NodeText::typeString(node) + " was introduced in ");
+            m_writer->writeCharacters("This " + NodeText::nodeTypeDescription(node) + " was introduced in ");
         }
         m_writer->writeCharacters(formatSince(node) + ".");
         m_writer->writeEndElement(); // para
@@ -2526,8 +2526,8 @@ bool DocBookGenerator::generateStatus(const Node *node)
             ? static_cast<const SharedCommentNode *>(node) : nullptr;
     const bool plural = shared && !shared->isPropertyGroup() && shared->collective().size() > 1;
     const QString subject = plural
-            ? "These "_L1 + NodeText::typeString(shared->collective().first(), true) + " are"_L1
-            : "This "_L1 + NodeText::typeString(node) + " is"_L1;
+            ? "These "_L1 + NodeText::nodeTypeDescription(shared->collective().first(), NodeText::GrammaticalNumber::Plural) + " are"_L1
+            : "This "_L1 + NodeText::nodeTypeDescription(node) + " is"_L1;
 
     switch (node->status()) {
     case Status::Active:
@@ -2536,7 +2536,7 @@ bool DocBookGenerator::generateStatus(const Node *node)
             const QString &state = static_cast<const CollectionNode*>(node)->state();
             if (!state.isEmpty()) {
                 m_writer->writeStartElement(dbNamespace, "para");
-                m_writer->writeCharacters("This " + NodeText::typeString(node) + " is in ");
+                m_writer->writeCharacters("This " + NodeText::nodeTypeDescription(node) + " is in ");
                 m_writer->writeStartElement(dbNamespace, "emphasis");
                 m_writer->writeCharacters(state);
                 m_writer->writeEndElement(); // emphasis
@@ -2564,7 +2564,7 @@ bool DocBookGenerator::generateStatus(const Node *node)
                 Config::instance()
                         .get(CONFIG_PRELIMINARY + Config::dot + CONFIG_DESCRIPTION)
                         .asString()
-                        .replace('\1'_L1, NodeText::typeString(node)));
+                        .replace('\1'_L1, NodeText::nodeTypeDescription(node)));
         m_writer->writeEndElement(); // emphasis
         m_writer->writeEndElement(); // para
         newLine();
@@ -2680,7 +2680,7 @@ bool DocBookGenerator::generateThreadSafeness(const Node *node)
         m_writer->writeStartElement(dbNamespace, "warning");
         newLine();
         m_writer->writeStartElement(dbNamespace, "para");
-        m_writer->writeCharacters("This " + NodeText::typeString(node) + " is not ");
+        m_writer->writeCharacters("This " + NodeText::nodeTypeDescription(node) + " is not ");
         generateSimpleLink(linkReentrant, "reentrant");
         m_writer->writeCharacters(".");
         m_writer->writeEndElement(); // para
@@ -2694,7 +2694,7 @@ bool DocBookGenerator::generateThreadSafeness(const Node *node)
         m_writer->writeStartElement(dbNamespace, "para");
 
         if (node->isAggregate()) {
-            m_writer->writeCharacters("All functions in this " + NodeText::typeString(node) + " are ");
+            m_writer->writeCharacters("All functions in this " + NodeText::nodeTypeDescription(node) + " are ");
             if (ts == Node::ThreadSafe)
                 generateSimpleLink(linkThreadSafe, "thread-safe");
             else
@@ -2751,7 +2751,7 @@ bool DocBookGenerator::generateThreadSafeness(const Node *node)
                 }
             }
         } else {
-            m_writer->writeCharacters("This " + NodeText::typeString(node) + " is ");
+            m_writer->writeCharacters("This " + NodeText::nodeTypeDescription(node) + " is ");
             if (ts == Node::ThreadSafe)
                 generateSimpleLink(linkThreadSafe, "thread-safe");
             else
