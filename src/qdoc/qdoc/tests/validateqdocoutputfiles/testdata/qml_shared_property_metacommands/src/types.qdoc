@@ -1,0 +1,33 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \qmlmodule Metacommands
+    \title Metacommands QML Types
+    \brief Types whose properties share documentation.
+*/
+
+/*!
+    \qmltype Widget
+    \inqmlmodule Metacommands
+    \brief A type whose properties share documentation.
+*/
+
+/*!
+    \qmlproperty int Widget::width
+    \qmlproperty int Widget::height
+    \readonly
+    \overload
+
+    The size of the widget.
+*/
+
+/*!
+    \qmlpropertygroup Widget::font
+    \qmlproperty string Widget::font.family
+    \qmlproperty int Widget::font.pixelSize
+    \readonly
+    \overload
+
+    The font the widget uses.
+*/
