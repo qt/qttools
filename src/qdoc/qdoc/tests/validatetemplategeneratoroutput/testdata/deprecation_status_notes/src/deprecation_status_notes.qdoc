@@ -43,13 +43,54 @@
 /*!
     \qmltype NewGadget
     \inqmlmodule DeprecationNotes
-    \brief A QML type with one deprecated method and one scheduled property.
+    \brief A QML type with deprecated and scheduled members.
+*/
+
+/*!
+    \qmltype InternalBase
+    \inqmlmodule DeprecationNotes
+    \qmlabstract
+    \internal
+    \brief An internal abstract base with a deprecated property.
+*/
+
+/*!
+    \qmlproperty int InternalBase::retired
+    \brief An inherited deprecated property.
+    \deprecated [6.5]
+
+    Inherited property body.
+*/
+
+/*!
+    \qmltype OnlyInherited
+    \inqmlmodule DeprecationNotes
+    \inherits InternalBase
+    \brief A concrete type whose only deprecated members are inherited.
 */
 
 /*!
     \qmlmethod void NewGadget::close()
     \brief Closes the gadget.
     \deprecated [6.5]
+*/
+
+/*!
+    \qmlproperty string NewGadget::serialNumber
+    \brief The gadget serial number.
+    \deprecated [6.5]
+
+    The serial number the gadget reports. New code should use the
+    platform-assigned identifier instead.
+*/
+
+/*!
+    \qmlsignal void NewGadget::broke()
+    \brief Emitted when the gadget breaks.
+    \deprecated [6.10]
+
+    Notifies listeners that the gadget broke. New code should track the
+    status property instead.
 */
 
 /*!

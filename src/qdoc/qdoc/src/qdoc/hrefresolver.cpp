@@ -34,6 +34,9 @@ QT_BEGIN_NAMESPACE
     The \c qmlTypeContextFn callback returns the current QML type
     being documented, enabling property inheritance resolution for
     abstract QML types. An empty callback disables this resolution.
+    hrefForNode() prefers the \c relative page when it is a QML type,
+    because that page is the member's rendered documentation owner and
+    the callback may hold stale state from another generator.
 */
 
 /*!
@@ -56,29 +59,42 @@ HrefResolver::HrefResolver(const HrefResolverConfig &config)
 
     This mirrors Generator::fileBase() but uses an external QHash cache
     instead of const_cast on the Node.
+
+    Like HtmlGenerator::fileBase(), the stem of a deprecated
+    non-aggregate node (a member or a page) carries an "-obsolete"
+    suffix. Deprecated members are documented on their aggregate's
+    obsolete sub-page, so links to them must use the suffixed name to
+    resolve there. Aggregates keep their own page name.
 */
 QString HrefResolver::fileBase(const Node *node) const
 {
+    const bool obsoleteFileBase = !node->isAggregate() && node->isDeprecated();
+
     if (!node->isPageNode() && !node->isCollectionNode()) {
         node = node->parent();
         if (!node)
             return {};
     }
 
-    if (node->hasFileNameBase())
-        return node->fileNameBase();
+    QString result;
+    if (node->hasFileNameBase()) {
+        result = node->fileNameBase();
+    } else {
+        auto it = m_fileBaseCache.constFind(node);
+        if (it != m_fileBaseCache.constEnd()) {
+            result = it.value();
+        } else {
+            const OutputContext *ctx = m_config.context;
+            result = Utilities::computeFileBase(
+                    node, ctx->project,
+                    [ctx](const Node *n) { return ctx->outputPrefix(n->genus()); },
+                    [ctx](const Node *n) { return ctx->outputSuffix(n->genus()); });
+            m_fileBaseCache.insert(node, result);
+        }
+    }
 
-    auto it = m_fileBaseCache.constFind(node);
-    if (it != m_fileBaseCache.constEnd())
-        return it.value();
-
-    const OutputContext *ctx = m_config.context;
-    QString result = Utilities::computeFileBase(
-            node, ctx->project,
-            [ctx](const Node *n) { return ctx->outputPrefix(n->genus()); },
-            [ctx](const Node *n) { return ctx->outputSuffix(n->genus()); });
-
-    m_fileBaseCache.insert(node, result);
+    if (obsoleteFileBase)
+        result += "-obsolete"_L1;
     return result;
 }
 
@@ -198,11 +214,32 @@ HrefResult HrefResolver::hrefForNode(const Node *node, const Node *relative) con
 
     if (!hasExplicitUrl && node->parent() && node->parent()->isQmlType()
         && node->parent()->isAbstract()) {
-        const QmlTypeNode *qmlContext = m_config.qmlTypeContextFn
-                ? m_config.qmlTypeContextFn() : nullptr;
+        // The legacy generators record the QML type they are generating in
+        // Generator's mutable state and expose it through qmlTypeContextFn.
+        // Template generators never establish that state, so prefer the
+        // page being rendered when it is a QML type, and fall back to the
+        // callback for contexts the callback owns (for instance legacy
+        // cross-format runs).
+        const QmlTypeNode *qmlContext = nullptr;
+        if (relative && relative->isQmlType())
+            qmlContext = static_cast<const QmlTypeNode *>(relative);
+        else if (m_config.qmlTypeContextFn)
+            qmlContext = m_config.qmlTypeContextFn();
         if (qmlContext) {
             if (qmlContext->inherits(node->parent())) {
                 fn = fileName(qmlContext);
+                // fileBase() gives a deprecated member an "-obsolete"
+                // suffix so it resolves to the type's obsolete sub-page.
+                // The remap above replaced that stem with the type's main
+                // page name, so re-apply the suffix when the member is
+                // deprecated and the target is a computed name rather than
+                // an explicit \url.
+                if (!node->isAggregate() && node->isDeprecated()
+                        && qmlContext->url().isEmpty()) {
+                    const QString ext = '.'_L1 + m_config.context->fileExtension;
+                    fn.chop(ext.length());
+                    fn += "-obsolete"_L1 + ext;
+                }
             } else if (node->parent()->isInternal() && !m_config.context->noLinkErrors) {
                 node->doc().location().warning(
                         u"Cannot link to property in internal type '%1'"_s

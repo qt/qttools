@@ -221,6 +221,7 @@ Document Builder::buildPageIR(PageMetadata pm) const
         info.importStatement = src.importStatement;
         info.isSingleton = src.isSingleton;
         info.isValueType = src.isValueType;
+        info.hasObsoleteMembers = src.hasObsoleteMembers;
 
         if (src.inherits) {
             info.inherits = QmlTypeInfo::InheritsInfo{

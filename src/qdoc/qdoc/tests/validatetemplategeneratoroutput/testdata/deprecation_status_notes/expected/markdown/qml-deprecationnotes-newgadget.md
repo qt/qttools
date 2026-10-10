@@ -7,13 +7,15 @@
 
 # NewGadget QML Type
 
-A QML type with one deprecated method and one scheduled property.
+A QML type with deprecated and scheduled members.
 
 | | |
 | --- | --- |
 | Import Statement | `import DeprecationNotes` |
 
 - [List of all members, including inherited members](qml-deprecationnotes-newgadget-members.md)
+
+- [Obsolete members](qml-deprecationnotes-newgadget-obsolete.md)
 
 
 

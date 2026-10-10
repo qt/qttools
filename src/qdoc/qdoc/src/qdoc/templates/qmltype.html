@@ -52,6 +52,12 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     <li><a href="{{ membersPageUrl }}">List of all members, including inherited members</a></li>
     </ul>
     {% endif %}
+    {% if hasQmlType and qmlType.hasObsoleteMembers %}
+
+    <ul>
+    <li><a href="{{ qmlType.obsoleteMembersUrl }}">Obsolete members</a></li>
+    </ul>
+    {% endif %}
 
     {% if length(sections) > 0 %}
     {% for section in sections %}

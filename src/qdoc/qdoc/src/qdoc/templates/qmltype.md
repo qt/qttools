@@ -35,6 +35,10 @@ This {{ typeNoun }} is scheduled for deprecation in version {{ deprecatedSince }
 - [List of all members, including inherited members]({{ membersPageUrl }})
 
 {% endif %}
+{% if hasQmlType and qmlType.hasObsoleteMembers %}
+- [Obsolete members]({{ qmlType.obsoleteMembersUrl }})
+
+{% endif %}
 {% if length(content.blocks) > 0 %}
 ## Detailed Description
 {% endif %}
