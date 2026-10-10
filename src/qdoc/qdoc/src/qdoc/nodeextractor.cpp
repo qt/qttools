@@ -391,6 +391,12 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hre
     Populates import statement, inheritance chain, inherited-by list,
     native C++ type link, and singleton/value-type flags. InclusionFilter
     is applied to match the legacy generator's visibility filtering.
+
+    hasObsoleteMembers reports whether any section holds deprecated
+    members, the same check the legacy QML generator applies before
+    generating its obsolete sub-page. The check walks the section
+    distribution rather than only direct children so members inherited
+    from an abstract base type count as well.
 */
 IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn, const HrefResolver *hrefResolver)
 {
@@ -459,6 +465,11 @@ IR::QmlTypeData extractQmlTypeData(const QmlTypeNode *qcn, const HrefResolver *h
         if (InclusionFilter::isIncluded(policy, context))
             data.nativeType = IR::QmlTypeData::NativeTypeInfo{cn->name(), resolveHref(hrefResolver, cn, qcn)};
     }
+
+    SectionPtrVector obsoleteSummary;
+    SectionPtrVector obsoleteDetail;
+    Sections sections(qcn);
+    data.hasObsoleteMembers = sections.hasObsoleteMembers(&obsoleteSummary, &obsoleteDetail);
 
     return data;
 }
@@ -1661,8 +1672,18 @@ static QList<IR::SignatureSpan> buildCppSynopsisSpans(const Node *node,
     return spans;
 }
 
+/*!
+    \internal
+    Build the signature spans for a QML member.
+
+    \a relative is the rendered documentation owner: the QML type whose
+    page the signature appears on. Inherited members resolve their name
+    link against that owner rather than the declaring type, because an
+    internal base type generates no page of its own.
+*/
 static QList<IR::SignatureSpan> buildQmlItemSpans(const Node *node,
-                                                   const HrefResolver *hrefResolver)
+                                                   const HrefResolver *hrefResolver,
+                                                   const Node *relative)
 {
     QList<IR::SignatureSpan> spans;
 
@@ -1688,7 +1709,7 @@ static QList<IR::SignatureSpan> buildQmlItemSpans(const Node *node,
     IR::SignatureSpan nameSpan;
     nameSpan.role = IR::SpanRole::Name;
     nameSpan.text = node->name();
-    nameSpan.href = resolveHref(hrefResolver, node, node->parent());
+    nameSpan.href = resolveHref(hrefResolver, node, relative);
 
     if (node->isQmlProperty()) {
         const auto *pn = static_cast<const QmlPropertyNode *>(node);
@@ -1764,7 +1785,7 @@ QList<IR::SignatureSpan> buildSignatureSpans(const Node *node,
                                              Section::Style style)
 {
     if (node->isQmlNode() && !node->isEnumType())
-        return buildQmlItemSpans(node, hrefResolver);
+        return buildQmlItemSpans(node, hrefResolver, relative);
     return buildCppSynopsisSpans(node, hrefResolver, relative, style);
 }
 
@@ -1793,7 +1814,7 @@ static IR::AllMembersIR extractQmlAllMembersIR(const QmlTypeNode *qcn, const Hre
 
     std::function<IR::AllMemberEntry(Node *)> buildEntry = [&](Node *node) -> IR::AllMemberEntry {
         IR::AllMemberEntry entry;
-        entry.signatureSpans = buildQmlItemSpans(node, hrefResolver);
+        entry.signatureSpans = buildQmlItemSpans(node, hrefResolver, qcn);
         entry.signature = plainTextFromSpans(entry.signatureSpans);
         entry.href = resolveHref(hrefResolver, node, qcn);
 

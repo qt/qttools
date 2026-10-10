@@ -407,6 +407,10 @@ void TemplateGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker
     if (allMembers)
         ir.membersPageUrl = fileBase(qcn) + "-members."_L1 + m_fileExtension;
 
+    if (ir.qmlTypeInfo && ir.qmlTypeInfo->hasObsoleteMembers)
+        ir.qmlTypeInfo->obsoleteMembersUrl =
+            fileBase(qcn) + "-obsolete."_L1 + m_fileExtension;
+
     processDocumentBlocks(m_listExpander.get(), m_linkResolver.get(), ir, qcn, &origins);
 
     resolveImagePaths(ir);
@@ -414,6 +418,9 @@ void TemplateGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker
 
     if (allMembers)
         generateMemberListingPage(qcn, *allMembers);
+
+    if (ir.qmlTypeInfo && ir.qmlTypeInfo->hasObsoleteMembers)
+        generateObsoleteMembersPage(qcn);
 }
 
 void TemplateGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
@@ -679,25 +686,36 @@ static void processDocumentBlocks(IR::ListExpander *expander, LinkResolver *reso
 
     This handles caching and adapts the TemplateGenerator's OutputContext-based
     prefix/suffix lookup to the shared interface.
+
+    Like the legacy generators, the output name of a deprecated
+    non-aggregate node (a member or a page) carries an "-obsolete"
+    suffix, so links computed through HrefResolver resolve to the file
+    this generator writes. Aggregates keep their own page name.
 */
 QString TemplateGenerator::fileBase(const Node *node) const
 {
+    const bool obsoleteFileBase = !node->isAggregate() && node->isDeprecated();
+
     if (!node->isPageNode() && !node->isCollectionNode())
         node = node->parent();
 
-    if (node->hasFileNameBase())
-        return node->fileNameBase();
+    QString result;
+    if (node->hasFileNameBase()) {
+        result = node->fileNameBase();
+    } else {
+        result = Utilities::computeFileBase(
+                node, m_context->project,
+                [this](const Node *n) -> QString {
+                    if (n->isCollectionNode())
+                        return {};
+                    return m_context->outputPrefix(n->genus());
+                },
+                [this](const Node *n) { return m_context->outputSuffix(n->genus()); });
+        const_cast<Node *>(node)->setFileNameBase(result);
+    }
 
-    QString result = Utilities::computeFileBase(
-        node, m_context->project,
-        [this](const Node *n) -> QString {
-            if (n->isCollectionNode())
-                return {};
-            return m_context->outputPrefix(n->genus());
-        },
-        [this](const Node *n) { return m_context->outputSuffix(n->genus()); });
-
-    const_cast<Node *>(node)->setFileNameBase(result);
+    if (obsoleteFileBase)
+        result += "-obsolete"_L1;
     return result;
 }
 

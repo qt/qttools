@@ -53,10 +53,11 @@ namespace IR {
 /*!
     Converts the QmlTypeInfo to a QJsonObject for template rendering.
 
-    Always emits \c isSingleton and \c isValueType. The \c importStatement,
-    \c inherits, \c inheritedBy, and \c nativeType fields are omitted when
-    they don't have values. Templates should use \c{existsIn()} to guard
-    access to optional fields.
+    Always emits \c isSingleton, \c isValueType, and \c hasObsoleteMembers.
+    The \c importStatement, \c inherits, \c inheritedBy, and \c nativeType
+    fields are omitted when they don't have values. The
+    \c obsoleteMembersUrl field is omitted when empty; templates should use
+    \c{existsIn()} to guard access to those optional fields.
 */
 QJsonObject QmlTypeInfo::toJson() const
 {
@@ -92,6 +93,10 @@ QJsonObject QmlTypeInfo::toJson() const
         obj["href"_L1] = nativeType->href;
         json["nativeType"_L1] = obj;
     }
+
+    json["hasObsoleteMembers"_L1] = hasObsoleteMembers;
+    if (!obsoleteMembersUrl.isEmpty())
+        json["obsoleteMembersUrl"_L1] = obsoleteMembersUrl;
 
     return json;
 }

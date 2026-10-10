@@ -27,6 +27,7 @@ struct QmlTypeData
     QString importStatement;
     bool isSingleton { false };
     bool isValueType { false };
+    bool hasObsoleteMembers { false };
 
     struct InheritsInfo {
         QString name;
