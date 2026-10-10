@@ -5,6 +5,13 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 <a id="{{ member.anchorId }}"></a>
 ### {{ member.synopsis }}
 
+{% if member.status.id == "deprecated" %}
+This {{ member.typeNoun }} is deprecated{% if existsIn(member, "deprecatedSince") %}{{ " " }}since {{ member.deprecatedSinceQualified }}{% endif %}. We strongly advise against using it in new code.
+
+{% else if member.status.id == "active" and existsIn(member, "deprecatedSince") %}
+This {{ member.typeNoun }} is scheduled for deprecation in version {{ member.deprecatedSince }}.
+
+{% endif %}
 {% if existsIn(member, "body") and length(member.body) > 0 %}
 {% for block in member.body %}
 {% if block.type == "paragraph" %}

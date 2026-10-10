@@ -14,6 +14,8 @@ A deprecated QML type whose method remains individually active.
 | --- | --- |
 | Import Statement | `import Repro` |
 
+**This type is deprecated since Repro 6.12. We strongly advise against using it in new code.**
+
 - [List of all members, including inherited members](qml-repro-oldowner-members.md)
 
 ## Detailed Description

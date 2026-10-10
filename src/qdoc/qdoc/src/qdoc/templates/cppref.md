@@ -33,6 +33,13 @@ The {{ title }} namespace is documented in the module [{{ cppRef.fullNamespaceMo
 {% endif %}
 {% endif %}
 
+{% if status.id == "deprecated" %}
+**This {{ typeNoun }} is deprecated{% if default(deprecatedSince, "") != "" %}{{ " " }}since {{ deprecatedSinceQualified }}{% endif %}. We strongly advise against using it in new code.**
+
+{% else if status.id == "active" and default(deprecatedSince, "") != "" %}
+This {{ typeNoun }} is scheduled for deprecation in version {{ deprecatedSince }}.
+
+{% endif %}
 {% if hasCppRef and cppRef.isInnerClass %}
 {% if default(since, "") != "" %}
 | Key | Value |

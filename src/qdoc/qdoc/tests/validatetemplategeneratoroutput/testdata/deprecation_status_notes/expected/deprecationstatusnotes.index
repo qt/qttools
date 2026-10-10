@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test fixture for deprecation status sentences in template output" version="6.12" project="DeprecationStatusNotes">
+    <namespace name="" status="active" access="public" module="deprecationstatusnotes">
+        <namespace name="LegacyNotes" href="legacynotes.html" status="deprecated" access="public" location="deprecation_status_notes.h" documented="true" includefile="deprecation_status_notes.h" module="DeprecationStatusNotes" brief="A namespace deprecated in 6.5" whereDocumented="DeprecationStatusNotes"/>
+        <class name="ActiveThing" href="activething.html" status="active" access="public" location="deprecation_status_notes.h" documented="true" includefile="deprecation_status_notes.h" module="DeprecationStatusNotes" brief="A class with one deprecated and one scheduled function">
+            <function name="oldOperation" fullname="ActiveThing::oldOperation" href="activething-obsolete.html#oldOperation" status="deprecated" access="public" location="deprecation_status_notes.h" documented="true" meta="plain" type="void" brief="An operation that was deprecated in 6.5" signature="void oldOperation()"/>
+            <function name="scheduledOperation" fullname="ActiveThing::scheduledOperation" href="activething.html#scheduledOperation" status="active" access="public" location="deprecation_status_notes.h" documented="true" meta="plain" type="void" brief="An operation scheduled for deprecation in 6.66" signature="void scheduledOperation()"/>
+        </class>
+        <class name="DeprecatedThing" href="deprecatedthing.html" status="deprecated" access="public" location="deprecation_status_notes.h" documented="true" includefile="deprecation_status_notes.h" module="DeprecationStatusNotes" brief="A class that was deprecated in 6.5"/>
+        <class name="LegacyThing" href="legacything.html" status="deprecated" access="public" location="deprecation_status_notes.h" documented="true" includefile="deprecation_status_notes.h" module="DeprecationStatusNotes" brief="A class deprecated without a version">
+            <function name="currentOperation" fullname="LegacyThing::currentOperation" href="legacything.html#currentOperation" status="active" access="public" location="deprecation_status_notes.h" documented="true" meta="plain" type="void" brief="An operation that is fully current" signature="void currentOperation()"/>
+            <function name="oldOperation" fullname="LegacyThing::oldOperation" href="legacything-obsolete.html#oldOperation" status="deprecated" access="public" location="deprecation_status_notes.h" documented="true" meta="plain" type="void" brief="An operation deprecated without a version" signature="void oldOperation()"/>
+        </class>
+        <class name="PendingThing" href="pendingthing.html" status="active" access="public" location="deprecation_status_notes.h" documented="true" includefile="deprecation_status_notes.h" module="DeprecationStatusNotes" brief="A class scheduled for deprecation in 6.66"/>
+        <qmlclass name="LegacyGadget" qml-module-name="DeprecationNotes" fullname="DeprecationNotes.LegacyGadget" href="qml-deprecationnotes-legacygadget.html" status="deprecated" access="public" location="deprecation_status_notes.qdoc" documented="true" brief="A QML type deprecated without a version"/>
+        <qmlclass name="NewGadget" qml-module-name="DeprecationNotes" fullname="DeprecationNotes.NewGadget" href="qml-deprecationnotes-newgadget.html" status="active" access="public" location="deprecation_status_notes.qdoc" documented="true" brief="A QML type with one deprecated method and one scheduled property">
+            <function name="close" fullname="DeprecationNotes.NewGadget.close" href="qml-deprecationnotes-newgadget-obsolete.html#close-method" status="deprecated" access="public" location="deprecation_status_notes.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <qmlproperty name="level" fullname="DeprecationNotes.NewGadget.level" href="qml-deprecationnotes-newgadget.html#level-prop" status="active" access="public" location="deprecation_status_notes.qdoc" documented="true" type="int" attached="false" writable="true" brief="Gadget level"/>
+        </qmlclass>
+        <qmlclass name="OldGadget" qml-module-name="DeprecationNotes" fullname="DeprecationNotes.OldGadget" href="qml-deprecationnotes-oldgadget.html" status="deprecated" access="public" location="deprecation_status_notes.qdoc" documented="true" brief="A QML type that was deprecated in 6.5"/>
+        <qmlclass name="PendingGadget" qml-module-name="DeprecationNotes" fullname="DeprecationNotes.PendingGadget" href="qml-deprecationnotes-pendinggadget.html" status="active" access="public" location="deprecation_status_notes.qdoc" documented="true" brief="A QML type scheduled for deprecation in 6.66">
+            <function name="update" fullname="DeprecationNotes.PendingGadget.update" href="qml-deprecationnotes-pendinggadget.html#update-method" status="active" access="public" location="deprecation_status_notes.qdoc" documented="true" meta="qmlmethod" type="void"/>
+        </qmlclass>
+        <module name="DeprecationStatusNotes" href="deprecationstatusnotes-module.html" status="active" location="deprecation_status_notes.h" documented="true" seen="true" title="Deprecation Status Notes" brief="A module documenting the deprecation status sentence cases"/>
+        <qmlmodule name="DeprecationNotes" qml-module-name="DeprecationNotes" href="deprecationnotes-qmlmodule.html" status="active" location="deprecation_status_notes.qdoc" documented="true" seen="true" title="Deprecation Notes QML Types" brief="Types covering the deprecation status sentence cases"/>
+    </namespace>
+</INDEX>

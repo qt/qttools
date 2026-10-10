@@ -43,6 +43,10 @@ struct MemberIR {
     Access access { Access::Public };
     Status status { Status::Active };
 
+    QString deprecatedSince;
+    QString typeNoun;
+    QString deprecatedSinceQualified;
+
     QList<ParameterIR> parameters;
     int overloadNumber { 0 };
     bool isPrimaryOverload { true };

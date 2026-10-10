@@ -8,6 +8,8 @@ A deprecated QML type that serves as the link target.
 | --- | --- |
 | Import Statement | `import Repro` |
 
+**This type is deprecated since Repro 6.12. We strongly advise against using it in new code.**
+
 
 
 

@@ -20,6 +20,13 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
 {% endif %}
 {% endif %}
 
+{% if status.id == "deprecated" %}
+**This {{ typeNoun }} is deprecated{% if default(deprecatedSince, "") != "" %}{{ " " }}since {{ deprecatedSinceQualified }}{% endif %}. We strongly advise against using it in new code.**
+
+{% else if status.id == "active" and default(deprecatedSince, "") != "" %}
+This {{ typeNoun }} is scheduled for deprecation in version {{ deprecatedSince }}.
+
+{% endif %}
 {% if hasQmlType %}{% if qmlType.isSingleton %}
 > **Note:** This type is a QML singleton. The type isn't creatable and only a single instance exists.
 
