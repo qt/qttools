@@ -28,6 +28,29 @@ namespace IR {
 */
 
 /*!
+    \variable IR::Document::typeNoun
+
+    Lowercase description of the page type, used in status sentences.
+    For example, "class", "namespace", or "type".
+
+    Present only when a deprecation status sentence applies to the page.
+    Omitted otherwise so pages without a sentence are unaffected.
+ */
+
+/*!
+    \variable IR::Document::deprecatedSinceQualified
+
+    Qualified version string of the form "module version", used in
+    deprecated status sentences.
+    For QML types this is the QML module name and version, such as
+    "QtQml 6.5". For all other nodes it equals \l deprecatedSince.
+
+    Present only when a deprecation status sentence applies and
+    \l deprecatedSince is non-empty. Omitted otherwise so pages without
+    a sentence are unaffected.
+ */
+
+/*!
     Converts the QmlTypeInfo to a QJsonObject for template rendering.
 
     Always emits \c isSingleton and \c isValueType. The \c importStatement,
@@ -381,6 +404,10 @@ QJsonObject Document::toJson() const
         json["since"_L1] = since;
     if (!deprecatedSince.isEmpty())
         json["deprecatedSince"_L1] = deprecatedSince;
+    if (!typeNoun.isEmpty())
+        json["typeNoun"_L1] = typeNoun;
+    if (!deprecatedSinceQualified.isEmpty())
+        json["deprecatedSinceQualified"_L1] = deprecatedSinceQualified;
     if (!brief.isEmpty())
         json["brief"_L1] = brief;
 

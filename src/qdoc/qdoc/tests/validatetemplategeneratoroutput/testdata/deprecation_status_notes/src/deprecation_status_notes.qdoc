@@ -1,0 +1,59 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule DeprecationNotes
+    \title Deprecation Notes QML Types
+    \brief Types covering the deprecation status sentence cases.
+*/
+
+/*!
+    \qmltype OldGadget
+    \inqmlmodule DeprecationNotes
+    \brief A QML type that was deprecated in 6.5.
+    \deprecated [6.5]
+*/
+
+/*!
+    \qmltype PendingGadget
+    \inqmlmodule DeprecationNotes
+    \brief A QML type scheduled for deprecation in 6.66.
+    \deprecated [6.66]
+
+    The type remains fully functional until 6.66.
+*/
+
+/*!
+    \qmlmethod void PendingGadget::update()
+    \brief An operation scheduled for deprecation in 6.66.
+    \deprecated [6.66]
+
+    The operation that new QML code should stop calling.
+*/
+
+/*!
+    \qmltype LegacyGadget
+    \inqmlmodule DeprecationNotes
+    \brief A QML type deprecated without a version.
+    \deprecated
+
+    The type still works, but new code should avoid it.
+*/
+
+/*!
+    \qmltype NewGadget
+    \inqmlmodule DeprecationNotes
+    \brief A QML type with one deprecated method and one scheduled property.
+*/
+
+/*!
+    \qmlmethod void NewGadget::close()
+    \brief Closes the gadget.
+    \deprecated [6.5]
+*/
+
+/*!
+    \qmlproperty int NewGadget::level
+    \brief The gadget level.
+    \deprecated [6.66]
+*/

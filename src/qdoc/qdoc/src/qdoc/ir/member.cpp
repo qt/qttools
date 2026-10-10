@@ -163,6 +163,29 @@ QJsonObject EnumValueIR::toJson() const
 */
 
 /*!
+    \variable IR::MemberIR::deprecatedSince
+    Version the member was deprecated in, or the version in which a
+    scheduled deprecation takes place. Empty when no deprecation
+    status sentence applies.
+*/
+
+/*!
+    \variable IR::MemberIR::typeNoun
+    Human-readable noun for the member's node type (such as
+    "function", "property", or "method"), used to build the
+    deprecation status sentence. Empty when no status sentence
+    applies.
+*/
+
+/*!
+    \variable IR::MemberIR::deprecatedSinceQualified
+    The deprecation version prefixed with the QML module name for QML
+    members that have a logical module name (such as "QtQuick 6.5");
+    otherwise the plain \c deprecatedSince. Empty when no status
+    sentence applies or when there is no version.
+*/
+
+/*!
     \variable IR::MemberIR::parameters
     Parameter list for function members. Empty for non-functions.
 */
@@ -241,6 +264,12 @@ QJsonObject MemberIR::toJson() const
         json["nodeType"_L1] = *t;
     json["status"_L1] = statusToJson(status);
     json["access"_L1] = accessToJson(access);
+    if (!deprecatedSince.isEmpty())
+        json["deprecatedSince"_L1] = deprecatedSince;
+    if (!typeNoun.isEmpty())
+        json["typeNoun"_L1] = typeNoun;
+    if (!deprecatedSinceQualified.isEmpty())
+        json["deprecatedSinceQualified"_L1] = deprecatedSinceQualified;
 
     json["overloadNumber"_L1] = overloadNumber;
     json["isPrimaryOverload"_L1] = isPrimaryOverload;

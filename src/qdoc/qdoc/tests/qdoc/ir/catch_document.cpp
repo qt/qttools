@@ -372,6 +372,92 @@ SCENARIO("IR::Document deprecatedSince field serialization", "[IR::Document][IR]
     }
 }
 
+SCENARIO("IR::Document deprecation status sentence fields", "[IR::Document][IR][JSON][deprecation]") {
+
+    GIVEN("An IR::Document for a deprecated C++ class") {
+        IR::Document ir;
+        ir.nodeType = NodeType::Class;
+        ir.genus = Genus::CPP;
+        ir.status = Status::Deprecated;
+        ir.title = "DeprecatedThing"_L1;
+        ir.typeNoun = "class"_L1;
+        ir.deprecatedSince = "6.5"_L1;
+        ir.deprecatedSinceQualified = "6.5"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("All three status sentence fields are present") {
+                REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "deprecated");
+                REQUIRE(json["deprecatedSince"_L1].toString() == "6.5");
+                REQUIRE(json["typeNoun"_L1].toString() == "class");
+                REQUIRE(json["deprecatedSinceQualified"_L1].toString() == "6.5");
+            }
+        }
+    }
+
+    GIVEN("An IR::Document for a deprecated QML type with a qualified version") {
+        IR::Document ir;
+        ir.nodeType = NodeType::QmlType;
+        ir.genus = Genus::QML;
+        ir.status = Status::Deprecated;
+        ir.title = "OldGadget"_L1;
+        ir.typeNoun = "type"_L1;
+        ir.deprecatedSince = "6.5"_L1;
+        ir.deprecatedSinceQualified = "DeprecationNotes 6.5"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("The qualified version keeps the QML module name") {
+                REQUIRE(json["deprecatedSince"_L1].toString() == "6.5");
+                REQUIRE(json["deprecatedSinceQualified"_L1].toString() == "DeprecationNotes 6.5");
+                REQUIRE(json["typeNoun"_L1].toString() == "type");
+            }
+        }
+    }
+
+    GIVEN("An IR::Document for an active type scheduled for deprecation") {
+        IR::Document ir;
+        ir.nodeType = NodeType::QmlType;
+        ir.genus = Genus::QML;
+        ir.status = Status::Active;
+        ir.title = "NewGadget"_L1;
+        ir.typeNoun = "type"_L1;
+        ir.deprecatedSince = "6.10"_L1;
+        ir.deprecatedSinceQualified = "6.10"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("The status sentence fields are present for a scheduled deprecation") {
+                REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "active");
+                REQUIRE(json["deprecatedSince"_L1].toString() == "6.10");
+                REQUIRE(json["typeNoun"_L1].toString() == "type");
+                REQUIRE(json["deprecatedSinceQualified"_L1].toString() == "6.10");
+            }
+        }
+    }
+
+    GIVEN("An IR::Document for an active type without deprecation fields") {
+        IR::Document ir;
+        ir.nodeType = NodeType::Class;
+        ir.genus = Genus::CPP;
+        ir.status = Status::Active;
+        ir.title = "ActiveThing"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = ir.toJson();
+
+            THEN("None of the status sentence fields are serialized") {
+                REQUIRE(!json.contains("deprecatedSince"_L1));
+                REQUIRE(!json.contains("typeNoun"_L1));
+                REQUIRE(!json.contains("deprecatedSinceQualified"_L1));
+            }
+        }
+    }
+}
+
 SCENARIO("IR::Document complete workflow", "[IR::Document][IR][Integration]") {
 
     GIVEN("A fully populated IR::Document") {

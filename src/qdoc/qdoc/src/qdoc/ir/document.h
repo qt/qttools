@@ -211,6 +211,10 @@ struct Document
                                 // (relative) otherwise.
     QString since;              // Version introduced (e.g., "6.8")
     QString deprecatedSince;    // Version deprecated (e.g., "6.5")
+    QString typeNoun;           // Noun for the deprecation status sentence
+                                // (e.g., "class"), empty when no sentence applies
+    QString deprecatedSinceQualified; // Module-qualified deprecation version
+                                       // for QML nodes, empty when no sentence applies
     QString brief;              // Brief description
 
     // Content

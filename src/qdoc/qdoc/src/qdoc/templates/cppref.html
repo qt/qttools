@@ -58,6 +58,11 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     </table>
     {% endif %}
 
+    {% if status.id == "deprecated" %}
+    <p><b>This {{ typeNoun }} is deprecated{% if default(deprecatedSince, "") != "" %}{{ " " }}since {{ escape_html(deprecatedSinceQualified) }}{% endif %}. We strongly advise against using it in new code.</b></p>
+    {% else if status.id == "active" and default(deprecatedSince, "") != "" %}
+    <p>This {{ typeNoun }} is scheduled for deprecation in version {{ escape_html(deprecatedSince) }}.</p>
+    {% endif %}
     {% if hasCppRef and cppRef.isInnerClass %}
     {% if default(since, "") != "" %}
     <table class="requisites">

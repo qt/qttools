@@ -196,6 +196,8 @@ struct PageMetadata
     QString url;
     QString since;
     QString deprecatedSince;
+    QString typeNoun;
+    QString deprecatedSinceQualified;
     QString brief;
 
     QList<ContentBlock> body;

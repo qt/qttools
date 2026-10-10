@@ -17,6 +17,7 @@
 #include "hrefresolver.h"
 #include "inclusionfilter.h"
 #include "namespacenode.h"
+#include "nodedescription.h"
 #include "ir/contentbuilder.h"
 #include "ir/signaturespan.h"
 #include "pagenode.h"
@@ -41,6 +42,7 @@
 #include <QRegularExpression>
 
 #include <deque>
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
@@ -72,6 +74,42 @@ static QString resolveHref(const HrefResolver *resolver, const Node *target, con
 }
 
 namespace {
+
+struct DeprecationData
+{
+    QString deprecatedSince;
+    QString typeNoun;
+    QString deprecatedSinceQualified;
+};
+
+/*!
+    \internal
+
+    Returns the deprecation sentence data for \a node if the node is
+    deprecated or active with a nonempty deprecation version. Otherwise,
+    returns \c{std::nullopt}.
+
+    The result contains the type noun and the plain deprecation version.
+    For a QML node with a logical module name, \c{deprecatedSinceQualified}
+    prefixes the nonempty version with the module name. For other nodes,
+    it contains the plain version. Deprecated sentences use this qualified
+    version; scheduled sentences use the plain \c{deprecatedSince} version.
+
+    A deprecated node without a version still returns sentence data with
+    a type noun and two empty version strings.
+*/
+std::optional<DeprecationData> extractDeprecationData(const Node *node)
+{
+    const auto status = node->status();
+    const auto &version = node->deprecatedSince();
+    if (status != Status::Deprecated && (status != Status::Active || version.isEmpty()))
+        return std::nullopt;
+
+    DeprecationData data{version, NodeText::nodeTypeDescription(node), version};
+    if (!version.isEmpty() && node->isQmlNode() && !node->logicalModuleName().isEmpty())
+        data.deprecatedSinceQualified = node->logicalModuleName() + ' '_L1 + version;
+    return data;
+}
 
 // Locate a documented \concept node by name. Walks the QDocDatabase search
 // order so cross-module references resolve through dependency index trees.
@@ -285,6 +323,10 @@ IR::PageMetadata extractPageMetadata(const PageNode *pn, const HrefResolver *hre
     }
     pm.since = pn->since();
     pm.deprecatedSince = pn->deprecatedSince();
+    if (const auto deprecation = extractDeprecationData(pn)) {
+        pm.typeNoun = deprecation->typeNoun;
+        pm.deprecatedSinceQualified = deprecation->deprecatedSinceQualified;
+    }
     pm.brief = pn->doc().briefText().toString();
 
     const Text &bodyText = pn->doc().body();
@@ -1001,6 +1043,11 @@ IR::MemberIR extractMemberIR(const Node *node, const HrefResolver *hrefResolver,
     member.nodeType = node->nodeType();
     member.access = node->access();
     member.status = node->status();
+    if (const auto deprecation = extractDeprecationData(node)) {
+        member.deprecatedSince = deprecation->deprecatedSince;
+        member.typeNoun = deprecation->typeNoun;
+        member.deprecatedSinceQualified = deprecation->deprecatedSinceQualified;
+    }
 
     if (node->isFunction()) {
         const auto *fn = static_cast<const FunctionNode *>(node);

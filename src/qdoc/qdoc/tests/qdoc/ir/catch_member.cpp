@@ -982,3 +982,97 @@ SCENARIO("SectionIR in detailSections serializes correctly in Document", "[IR::D
         }
     }
 }
+
+SCENARIO("MemberIR deprecation status fields serialize conditionally", "[IR::MemberIR][IR][deprecation]") {
+
+    GIVEN("A MemberIR for a deprecated function with a version") {
+        IR::MemberIR member;
+        member.name = "oldOperation"_L1;
+        member.fullName = "ActiveThing::oldOperation"_L1;
+        member.signature = "void oldOperation()"_L1;
+        member.href = "#oldOperation"_L1;
+        member.nodeType = NodeType::Function;
+        member.status = Status::Deprecated;
+        member.deprecatedSince = "6.5"_L1;
+        member.typeNoun = "function"_L1;
+        member.deprecatedSinceQualified = "6.5"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("All three status sentence fields are present") {
+                REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "deprecated");
+                REQUIRE(json["deprecatedSince"_L1].toString() == "6.5");
+                REQUIRE(json["typeNoun"_L1].toString() == "function");
+                REQUIRE(json["deprecatedSinceQualified"_L1].toString() == "6.5");
+            }
+        }
+    }
+
+    GIVEN("A MemberIR for a deprecated QML method with a qualified version") {
+        IR::MemberIR member;
+        member.name = "close"_L1;
+        member.fullName = "NewGadget::close"_L1;
+        member.signature = "close()"_L1;
+        member.href = "#close"_L1;
+        member.nodeType = NodeType::Function;
+        member.status = Status::Deprecated;
+        member.deprecatedSince = "6.5"_L1;
+        member.typeNoun = "method"_L1;
+        member.deprecatedSinceQualified = "DeprecationNotes 6.5"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("The qualified version keeps the QML module name") {
+                REQUIRE(json["deprecatedSince"_L1].toString() == "6.5");
+                REQUIRE(json["deprecatedSinceQualified"_L1].toString() == "DeprecationNotes 6.5");
+                REQUIRE(json["typeNoun"_L1].toString() == "method");
+            }
+        }
+    }
+
+    GIVEN("A MemberIR for a property scheduled for deprecation") {
+        IR::MemberIR member;
+        member.name = "level"_L1;
+        member.fullName = "NewGadget::level"_L1;
+        member.signature = "level : int"_L1;
+        member.href = "#level-prop"_L1;
+        member.nodeType = NodeType::QmlProperty;
+        member.status = Status::Active;
+        member.deprecatedSince = "6.10"_L1;
+        member.typeNoun = "property"_L1;
+        member.deprecatedSinceQualified = "6.10"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("The status sentence fields are present for an active member with a version") {
+                REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "active");
+                REQUIRE(json["deprecatedSince"_L1].toString() == "6.10");
+                REQUIRE(json["typeNoun"_L1].toString() == "property");
+                REQUIRE(json["deprecatedSinceQualified"_L1].toString() == "6.10");
+            }
+        }
+    }
+
+    GIVEN("A MemberIR for an active member without deprecation fields") {
+        IR::MemberIR member;
+        member.name = "doWork"_L1;
+        member.fullName = "ActiveThing::doWork"_L1;
+        member.signature = "void doWork()"_L1;
+        member.href = "#doWork"_L1;
+        member.nodeType = NodeType::Function;
+        member.status = Status::Active;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("None of the status sentence fields are serialized") {
+                REQUIRE(!json.contains("deprecatedSince"_L1));
+                REQUIRE(!json.contains("typeNoun"_L1));
+                REQUIRE(!json.contains("deprecatedSinceQualified"_L1));
+            }
+        }
+    }
+}

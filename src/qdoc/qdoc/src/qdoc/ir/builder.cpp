@@ -207,6 +207,8 @@ Document Builder::buildPageIR(PageMetadata pm) const
     ir.url = std::move(pm.url);
     ir.since = std::move(pm.since);
     ir.deprecatedSince = std::move(pm.deprecatedSince);
+    ir.typeNoun = std::move(pm.typeNoun);
+    ir.deprecatedSinceQualified = std::move(pm.deprecatedSinceQualified);
     ir.brief = std::move(pm.brief);
 
     ir.body = std::move(pm.body);
