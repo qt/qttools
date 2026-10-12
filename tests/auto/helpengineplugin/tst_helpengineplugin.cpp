@@ -45,7 +45,6 @@ void tst_HelpEnginePlugin::documentationForItem_data()
                 QQmlJS::Dom::DomEnvironment::Option::SingleThreaded
                         | QQmlJS::Dom::DomEnvironment::Option::NoDependencies,
                 option);
-        envPtr->loadBuiltins();
         envPtr->loadFile(FileToLoad::fromMemory(envPtr, filePath, code),
                          [&file](Path, const DomItem &, const DomItem &newIt) {
                              file = newIt.fileObject();
