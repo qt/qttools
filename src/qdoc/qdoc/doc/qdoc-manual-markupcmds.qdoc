@@ -3516,11 +3516,9 @@
     The \\raw command and the corresponding
     \\endraw command delimit a block of raw mark-up language code.
 
-    \warning Avoid using this command if possible. If you are trying to
-    generate special table or list behavior, try to get the behavior you want
-    using the \l {span-command} {\\span} and \l {div-command} {\\div}
-    commands in your \l {table-command} {\\table} or \l {list-command}
-    {\\list}.
+    \warning Avoid using this command for new documentation. Use QDoc commands
+    such as \\table and \\list for content whenever possible. Raw HTML ties
+    the content to one output format and can bypass normal escaping.
 
     The command takes an argument specifying the code's format.
 
@@ -3530,8 +3528,8 @@
     For example, "\\raw HTML" will only generate code when QDoc
     generates HTML documentation.
 
-    \note You can often achieve the intended purpose by using QDoc commands,
-    while reducing the chance of mistakes or content becoming unmaintained.
+    Existing documentation may still use this command for format-specific
+    markup. When changing such documentation, prefer portable QDoc markup.
 
     \target sincelist-command
     \section1 \\sincelist
