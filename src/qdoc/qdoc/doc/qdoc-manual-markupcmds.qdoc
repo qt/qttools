@@ -2793,33 +2793,25 @@
     \target cmakepackage-command
     \section1 \\cmakepackage
 
-    Use the \\cmakepackage command to add CMake package information to classes
-    and namespaces. This information will then appear in a table at the top of
-    the class or namespace documentation page. For example:
+    Use the \\cmakepackage command in a \\module comment to set the package name
+    for the module's CMake usage information. For example:
 
     \code [text] *
     /*!
-        \namespace Foo
-        \inheaderfile Bar
+        \module Foo
         \cmakepackage Baz
-        \brief A namespace.
-
-        ...
     \1/
     \endcode
 
-    QDoc will output this as
+    QDoc includes these commands in the module's requisites:
 
-    \quotation
-        \raw HTML
-            <h1 class="title">Foo Namespace</h1>
-            <p>A namespace. <a>More...</a></p>
-            <div class="table"><table class="alignedsummary">
-            <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;Bar&gt;</span></td></tr>
-            <tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Baz REQUIRED)<br/>target_link_libraries(mytarget PRIVATE Baz::Baz)</td></tr>
-            </table></div>
-        \endraw
-    \endquotation
+    \code [text]
+    find_package(Baz REQUIRED)
+    target_link_libraries(mytarget PRIVATE Baz::Baz)
+    \endcode
+
+    When no component or target item is specified, QDoc uses the package name
+    for both parts of the target name.
 
     \e{See also} \l{module-command}{\\module} and
     \l{cmakecomponent}{\\cmakecomponent}}
@@ -2827,33 +2819,25 @@
     \target cmakecomponent-command
     \section1 \\cmakecomponent
 
-    Use the \\cmakecomponent command to add CMake component information to classes
-    and namespaces. This information will then appear in a table at the top of
-    the class or namespace documentation page. For example:
+    Use the \\cmakecomponent command in a \\module comment to set the CMake
+    component used to find and link the module. For example:
 
     \code [text] *
     /*!
-        \namespace Foo
-        \inheaderfile Bar
+        \module Foo
         \cmakecomponent Baz
-        \brief A namespace.
-
-        ...
     \1/
     \endcode
 
-    QDoc will output this as
+    QDoc uses \c{Qt6} as the package name when no \\cmakepackage is specified:
 
-    \quotation
-        \raw HTML
-            <h1 class="title">Foo Namespace</h1>
-            <p>A namespace. <a>More...</a></p>
-            <div class="table"><table class="alignedsummary">
-            <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;Bar&gt;</span></td></tr>
-            <tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Qt6 REQUIRED COMPONENTS Baz)<br/>target_link_libraries(mytarget PRIVATE Qt6::Baz)</td></tr>
-            </table></div>
-        \endraw
-    \endquotation
+    \code [text]
+    find_package(Qt6 REQUIRED COMPONENTS Baz)
+    target_link_libraries(mytarget PRIVATE Qt6::Baz)
+    \endcode
+
+    Specify \\cmakepackage as well if the component belongs to a different
+    package.
 
     \e{See also} \l{module-command}{\\module} and
     \l{cmakepackage}{\\cmakepackage}}
@@ -2861,36 +2845,25 @@
     \target cmaketargetitem-command
     \section1 \\cmaketargetitem
 
-    Use the \\cmaketargetitem command to override the \e {item} part of the
-    CMake \c{target_link_libraries} information that's added to classes and
-    namespaces. The command must be used in conjunction with the
-    \l{module-command}{\\module} and \l{cmakecomponent}{\\cmakecomponent}
-    commands. For example:
+    Use the \\cmaketargetitem command in a \\module comment to override the
+    target passed to \c{target_link_libraries}. Set a CMake package or
+    component as well, so QDoc can generate the CMake requisites. For example:
 
     \code [text] *
     /*!
-        \namespace Foo
-        \inheaderfile Bar
+        \module Foo
         \cmakecomponent Baz
         \cmaketargetitem Qt6::BazPrivate
-        \brief A namespace.
-
-        ...
     \1/
     \endcode
 
-    QDoc will output this as
+    The package lookup stays the same, but QDoc uses the specified target
+    instead of \c{Qt6::Baz}:
 
-    \quotation
-        \raw HTML
-            <h1 class="title">Foo Namespace</h1>
-            <p>A namespace. <a>More...</a></p>
-            <div class="table"><table class="alignedsummary">
-            <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;Bar&gt;</span></td></tr>
-            <tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Qt6 REQUIRED COMPONENTS Baz)<br/>target_link_libraries(mytarget PRIVATE Qt6::BazPrivate)</td></tr>
-            </table></div>
-        \endraw
-    \endquotation
+    \code [text]
+    find_package(Qt6 REQUIRED COMPONENTS Baz)
+    target_link_libraries(mytarget PRIVATE Qt6::BazPrivate)
+    \endcode
 
     \e{See also} \l{module-command}{\\module} and
     \l{cmakecomponent}{\\cmakecomponent}}
@@ -2899,43 +2872,43 @@
     \target qtcmakepackage-command
     \section1 \\qtcmakepackage
 
-    Use the \\qtcmakepackage command to add CMake package information to classes
-    and namespaces. This information will then appear in a table at the top of
-    the class or namespace documentation page. For example:
+    Use the \\qtcmakepackage command in a \\module comment to set a component of
+    the default Qt package. It is equivalent to \\cmakecomponent for this
+    purpose. For example:
 
     \code [text] *
     /*!
-        \namespace Foo
-        \inheaderfile Bar
+        \module Foo
         \qtcmakepackage Baz
-        \brief A namespace.
-
-        ...
     \1/
     \endcode
 
-    QDoc will output this as
+    QDoc uses the Qt package and generates both the lookup and link commands:
 
-    \quotation
-        \raw HTML
-            <h1 class="title">Foo Namespace</h1>
-            <p>A namespace. <a>More...</a></p>
-            <div class="table"><table class="alignedsummary">
-            <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;Bar&gt;</span></td></tr>
-            <tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Qt6 REQUIRED COMPONENTS Baz)</td></tr>
-            </table></div>
-        \endraw
-    \endquotation
+    \code [text]
+    find_package(Qt6 REQUIRED COMPONENTS Baz)
+    target_link_libraries(mytarget PRIVATE Qt6::Baz)
+    \endcode
 
 
     \target qtcmaketargetitem-command
     \section1 \\qtcmaketargetitem
 
-    Use the \\qtcmaketargetitem command to override the \e {item} part of the
-    CMake \c{target_link_libraries} information that's added to classes and
-    namespaces. The command must be used in conjunction with the
-    \l{module-command}{\\module} and \l{qtcmakepackage}{\\qtcmakepackage}
-    commands.
+    Use the \\qtcmaketargetitem command in a \\module comment to override the
+    target used by \c{target_link_libraries} within the Qt package. Unlike
+    \\cmaketargetitem, its argument is the target name without the \c{Qt6::}
+    prefix. Set a CMake package or component as well. For example:
+
+    \code [text] *
+    /\1!
+        \module Foo
+        \qtcmakepackage Baz
+        \qtcmaketargetitem BazPrivate
+    \1/
+    \endcode
+
+    QDoc generates \c{find_package(Qt6 REQUIRED COMPONENTS Baz)} and links
+    against \c{Qt6::BazPrivate}.
 
     \e{See also} \l{module-command}{\\module} and
     \l{qtcmakepackage}{\\qtcmakepackage}}
