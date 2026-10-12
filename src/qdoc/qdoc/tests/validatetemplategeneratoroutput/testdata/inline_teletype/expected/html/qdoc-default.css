@@ -1,0 +1,399 @@
+/*
+    Copyright (C) 2026 The Qt Company Ltd.
+    SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+*/
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #222;
+    background: #fff;
+}
+
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 3rem;
+}
+
+header {
+    max-width: 800px;
+    margin: 0 auto;
+    border-bottom: 1px solid #ddd;
+    padding: 0.75rem 1.5rem;
+}
+
+footer {
+    max-width: 800px;
+    margin: 0 auto;
+    border-top: 1px solid #ddd;
+    padding: 1rem 1.5rem;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+nav {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+nav a {
+    margin-right: 1rem;
+}
+
+nav.breadcrumb-nav {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem 0;
+}
+
+ol.breadcrumb {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    color: #666;
+}
+
+ol.breadcrumb li {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+}
+
+ol.breadcrumb li + li::before {
+    content: "\203A";
+    color: #aaa;
+    margin-right: 0.5rem;
+}
+
+ol.breadcrumb li a {
+    margin-right: 0;
+}
+
+ol.breadcrumb li[aria-current="page"] {
+    color: #222;
+    font-weight: 500;
+}
+
+div.sidebar-toc {
+    max-width: 800px;
+    margin: 1rem auto 0;
+    padding: 0.75rem 1.25rem;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+div.sidebar-toc h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #666;
+    margin: 0 0 0.5rem;
+    border-bottom: none;
+    padding: 0;
+}
+
+div.sidebar-toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+div.sidebar-toc li {
+    margin: 0.2rem 0;
+    line-height: 1.4;
+}
+
+div.sidebar-toc li.level2 { padding-left: 0; }
+div.sidebar-toc li.level3 { padding-left: 1rem; }
+div.sidebar-toc li.level4 { padding-left: 2rem; }
+div.sidebar-toc li.level5 { padding-left: 3rem; }
+div.sidebar-toc li.level6 { padding-left: 4rem; }
+
+nav.page-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0 1rem;
+    margin: 0 0 0.5rem;
+    font-size: 0.9rem;
+}
+
+nav.page-nav a {
+    margin-right: 0;
+}
+
+nav.page-nav a.nav-prev {
+    margin-right: auto;
+}
+
+nav.page-nav a.nav-next {
+    margin-left: auto;
+    text-align: right;
+}
+
+h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.75rem;
+    line-height: 1.25;
+}
+
+h2 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin: 2rem 0 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid #eee;
+}
+
+h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+}
+
+p {
+    margin: 0 0 0.75rem;
+}
+
+a {
+    color: #0055a8;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+code, tt {
+    font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: #f5f5f5;
+    padding: 0.15em 0.35em;
+    border-radius: 3px;
+}
+
+pre {
+    font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    overflow-x: auto;
+    margin: 0 0 1rem;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+}
+
+ul, ol {
+    margin: 0 0 0.75rem;
+    padding-left: 1.5rem;
+}
+
+li {
+    margin-bottom: 0.25rem;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0 0 1rem;
+    font-size: 0.95rem;
+}
+
+th, td {
+    text-align: left;
+    padding: 0.4rem 0.75rem;
+}
+
+th {
+    font-weight: 600;
+    border-bottom: 2px solid #ccc;
+}
+
+td {
+    border-bottom: 1px solid #eee;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 1.5rem 0;
+}
+
+section.content {
+    margin: 1rem 0;
+}
+
+p.brief {
+    font-style: italic;
+    color: #444;
+    margin-bottom: 1rem;
+}
+
+table.alignedsummary {
+    border: none;
+}
+
+table.alignedsummary td {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0.35rem 0.5rem;
+    vertical-align: top;
+}
+
+td.memItemLeft {
+    white-space: nowrap;
+    padding-right: 1.5rem;
+    font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+}
+
+td.memItemRight {
+    width: 100%;
+    color: #555;
+}
+
+table.requisites {
+    border: none;
+    width: auto;
+    margin: 0.5rem 0 1rem;
+}
+
+table.requisites td {
+    border: none;
+    padding: 0.2rem 0.5rem;
+    vertical-align: top;
+}
+
+table.requisites td.memItemLeft {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 600;
+    color: #333;
+}
+
+table.annotated {
+    border: none;
+}
+
+table.annotated td {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0.35rem 0.5rem;
+    vertical-align: top;
+}
+
+td.tblName {
+    white-space: nowrap;
+    padding-right: 1.5rem;
+}
+
+td.tblDescr {
+    width: 100%;
+    color: #555;
+}
+
+tr.qt-style th {
+    background: #f5f5f5;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #ccc;
+}
+
+div.table {
+    margin: 0 0 1rem;
+    overflow-x: auto;
+}
+
+h3.fn {
+    font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+    font-weight: 600;
+    background: #f8f8f8;
+    border: 1px solid #e8e8e8;
+    border-radius: 3px;
+    padding: 0.5rem 0.75rem;
+    margin: 2rem 0 0.75rem;
+    overflow-x: auto;
+}
+
+li.fn {
+    font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    margin-bottom: 0.35rem;
+}
+
+aside.admonition {
+    border-left: 4px solid #aaa;
+    padding: 0.5rem 1rem;
+    margin: 0.75rem 0;
+    background: #fafafa;
+    border-radius: 0 3px 3px 0;
+}
+
+aside.admonition.note {
+    border-left-color: #4a90d9;
+}
+
+aside.admonition.warning {
+    border-left-color: #d97706;
+    background: #fffcf5;
+}
+
+aside.admonition.important {
+    border-left-color: #d93025;
+    background: #fef7f6;
+}
+
+aside.admonition p {
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    body {
+        font-size: 0.95rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    div.table {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    pre {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+}
