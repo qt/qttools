@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Inline teletype test Reference Documentation" version="" project="Inline teletype test">
+    <namespace name="" status="active" access="public" module="inline teletype test">
+        <page name="inlineteletype" href="inlineteletype.html" status="active" location="inlineteletype.qdoc" documented="true" subtype="page" title="Inline Teletype" fulltitle="Inline Teletype" brief="A test page for inline code and teletype rendering">
+            <contents name="section-context" title="Section context" level="1"/>
+        </page>
+    </namespace>
+</INDEX>

@@ -1,0 +1,31 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page inlineteletype
+    \title Inline Teletype
+    \brief A test page for inline code and teletype rendering.
+
+    Top-level paragraph with \c{some code} and \tt{some teletype}.
+
+    \section1 Section context
+
+    Paragraph inside a section with \c{some code} and \tt{some teletype}.
+
+    \list
+    \li List item with \c{some code} and \tt{some teletype}.
+    \endlist
+
+    \table
+    \header
+        \li Label
+        \li Content
+    \row
+        \li Cell
+        \li \list
+                \li \c{some code} and \tt{some teletype}
+            \endlist
+    \endtable
+
+    \important Important admonition with \c{some code} and \tt{some teletype}.
+*/
