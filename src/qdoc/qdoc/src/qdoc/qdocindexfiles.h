@@ -13,7 +13,7 @@ QT_BEGIN_NAMESPACE
 
 class Atom;
 class FunctionNode;
-class Generator;
+struct IndexSerializationContext;
 class QDocDatabase;
 class WebXMLGenerator;
 class QXmlStreamReader;
@@ -66,18 +66,18 @@ private:
     void writeTargets(QXmlStreamWriter &writer, Node *node);
 
     void generateIndex(const QString &fileName, const QString &url, const QString &title,
-                       const Generator *hrefGenerator);
+                       const IndexSerializationContext &context);
     void generateFunctionSection(QXmlStreamWriter &writer, FunctionNode *fn,
-                                 const Generator *generator, WriteState &state,
+                                 const IndexSerializationContext &context, WriteState &state,
                                  IndexSectionWriter *post);
     void generateFunctionSections(QXmlStreamWriter &writer, Aggregate *aggregate,
-                                  const Generator *generator, WriteState &state,
+                                  const IndexSerializationContext &context, WriteState &state,
                                   IndexSectionWriter *post);
     bool generateIndexSection(QXmlStreamWriter &writer, Node *node,
-                              const Generator *generator, WriteState &state,
+                              const IndexSerializationContext &context, WriteState &state,
                               IndexSectionWriter *post = nullptr);
     void generateIndexSections(QXmlStreamWriter &writer, Node *node,
-                               const Generator *generator, WriteState &state,
+                               const IndexSerializationContext &context, WriteState &state,
                                IndexSectionWriter *post = nullptr);
     QString appendAttributesToSignature(const FunctionNode *fn) const noexcept;
     SharedCommentNode *getSharedCommentNode(const QString &sharedName,
@@ -86,7 +86,6 @@ private:
 private:
     static QDocIndexFiles *s_qdocIndexFiles;
     QDocDatabase *m_qdb {};
-    bool m_storeLocationInfo;
 };
 
 QT_END_NAMESPACE

@@ -21,7 +21,7 @@ typedef QMultiMap<Text, const Node *> TextToNodeMap;
 
 class Atom;
 class FunctionNode;
-class Generator;
+struct IndexSerializationContext;
 class QDocDatabase;
 
 enum FindFlag {
@@ -363,7 +363,7 @@ public:
 
     void readIndexes(const QStringList &indexFiles);
     void generateIndex(const QString &fileName, const QString &url, const QString &title,
-                       const Generator *hrefGenerator);
+                       const IndexSerializationContext &context);
 
     void processForest();
 

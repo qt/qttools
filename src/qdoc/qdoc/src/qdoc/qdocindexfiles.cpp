@@ -18,6 +18,7 @@
 #include "genustypes.h"
 #include "headernode.h"
 #include "inclusionfilter.h"
+#include "indexserializationcontext.h"
 #include "location.h"
 #include "utilities.h"
 #include "textutils.h"
@@ -110,7 +111,6 @@ QDocIndexFiles *QDocIndexFiles::s_qdocIndexFiles = nullptr;
 QDocIndexFiles::QDocIndexFiles()
 {
     m_qdb = QDocDatabase::qdocDB();
-    m_storeLocationInfo = Config::instance().get(CONFIG_LOCATIONINFO).asBool();
 }
 
 /*!
@@ -960,15 +960,18 @@ void QDocIndexFiles::writeTargets(QXmlStreamWriter &writer, Node *node)
   specified, returning true if an element was written, and returning
   false if an element is not written.
 
-  The \a generator is used to compute document locations for hrefs.
+  The \a context supplies document locations and, for inline example entries,
+  example-file locations, along with inclusion and source-location policy.
+  The \a state numbers related nodes across the current output operation.
+  If supplied, \a post extends the section before it closes.
 
   \note Function nodes are processed in generateFunctionSection()
  */
 bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
-                                          const Generator *generator, WriteState &state,
+                                          const IndexSerializationContext &context, WriteState &state,
                                           IndexSectionWriter *post)
 {
-    Q_ASSERT(generator);
+    Q_ASSERT(context.documentLocation);
     /*
       Don't include index nodes in a new index file.
      */
@@ -1100,7 +1103,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         QString fullName = node->fullDocumentName();
         if (fullName != objName)
             writer.writeAttribute("fullname", fullName);
-        href = generator->fullDocumentLocation(node);
+        href = context.documentLocation(node);
     } else
         href = node->name();
     if (node->isQmlNode()) {
@@ -1118,7 +1121,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     }
     const Location &declLocation = node->declLocation();
     writeNonEmpty(writer, "location", declLocation.fileName());
-    if (m_storeLocationInfo && !declLocation.filePath().isEmpty()) {
+    if (context.storeLocationInfo && !declLocation.filePath().isEmpty()) {
         writer.writeAttribute("filepath", declLocation.filePath());
         writer.writeAttribute("lineno", QString("%1").arg(declLocation.lineNo()));
     }
@@ -1331,18 +1334,17 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             }
         }
     }
-    // WebXMLGenerator - skip the nested <page> elements for example
-    // files/images, as the generator produces them separately
-    if (node->isExample() && generator->format() != QLatin1String("WebXML")) {
+    // Some callers serialize example files and images separately.
+    if (node->isExample()
+        && context.exampleEntries == IndexSerializationContext::ExampleEntries::Inline) {
+        Q_ASSERT(context.exampleFileLocation);
         const auto *exampleNode = static_cast<const ExampleNode *>(node);
-        const QString project = Generator::defaultModuleName();
-        const QString fileExt = generator->fileExtension();
         const auto &files = exampleNode->files();
         const auto &images = exampleNode->images();
         for (const QString &file : files) {
             writer.writeStartElement("page");
             writer.writeAttribute("name", file);
-            writer.writeAttribute("href", Utilities::linkForExampleFile(file, project, fileExt));
+            writer.writeAttribute("href", context.exampleFileLocation(file));
             writer.writeAttribute("status", "active");
             writer.writeAttribute("subtype", "file");
             writer.writeAttribute("title", "");
@@ -1353,7 +1355,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         for (const QString &file : images) {
             writer.writeStartElement("page");
             writer.writeAttribute("name", file);
-            writer.writeAttribute("href", Utilities::linkForExampleFile(file, project, fileExt));
+            writer.writeAttribute("href", context.exampleFileLocation(file));
             writer.writeAttribute("status", "active");
             writer.writeAttribute("subtype", "image");
             writer.writeAttribute("title", "");
@@ -1370,16 +1372,16 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
 }
 
 /*!
-  This function writes a <function> element for \a fn to the
-  index file using \a writer.
+  Writes a <function> element for \a fn using \a writer. The \a context
+  supplies its href and inclusion policy, \a state numbers related nodes,
+  and \a post, if supplied, extends the element before it closes.
  */
 void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionNode *fn,
-                                           const Generator *generator, WriteState &state,
+                                           const IndexSerializationContext &context, WriteState &state,
                                            IndexSectionWriter *post)
 {
-    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
-    const NodeContext context = fn->createContext();
-    if (!InclusionFilter::isPubliclyVisible(policy, context))
+    const NodeContext nodeContext = fn->createContext();
+    if (!InclusionFilter::isPubliclyVisible(context.inclusionPolicy, nodeContext))
         return;
 
     const QString objName = fn->name();
@@ -1389,7 +1391,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
     const QString fullName = fn->fullDocumentName();
     if (fullName != objName)
         writer.writeAttribute("fullname", fullName);
-    const QString href = generator->fullDocumentLocation(fn);
+    const QString href = context.documentLocation(fn);
     writeNonEmpty(writer, "href", href);
     if (fn->threadSafeness() != Node::UnspecifiedSafeness)
         writer.writeAttribute("threadsafety", getThreadSafenessString(fn->threadSafeness()));
@@ -1398,7 +1400,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
 
     const Location &declLocation = fn->declLocation();
     writeNonEmpty(writer, "location", declLocation.fileName());
-    if (m_storeLocationInfo && !declLocation.filePath().isEmpty()) {
+    if (context.storeLocationInfo && !declLocation.filePath().isEmpty()) {
         writer.writeAttribute("filepath", declLocation.filePath());
         writer.writeAttribute("lineno", QString("%1").arg(declLocation.lineNo()));
     }
@@ -1551,15 +1553,19 @@ QString QDocIndexFiles::appendAttributesToSignature(const FunctionNode *fn) cons
   If a function element represents an overload, it has an
   \c overload attribute set to \c true and an \c {overload-number}
   attribute set to the function's overload number.
+
+  The \a context supplies publication locations and inclusion policy.
+  The \a state preserves related-node numbering across the aggregate;
+  \a post, if supplied, extends each function element.
  */
 void QDocIndexFiles::generateFunctionSections(QXmlStreamWriter &writer, Aggregate *aggregate,
-                                            const Generator *generator, WriteState &state,
+                                            const IndexSerializationContext &context, WriteState &state,
                                             IndexSectionWriter *post)
 {
     for (auto functions : std::as_const(aggregate->functionMap())) {
         std::for_each(functions.begin(), functions.end(),
-            [this, &writer, generator, &state, post](FunctionNode *fn) {
-                generateFunctionSection(writer, fn, generator, state, post);
+            [this, &writer, &context, &state, post](FunctionNode *fn) {
+                generateFunctionSection(writer, fn, context, state, post);
             }
         );
     }
@@ -1573,15 +1579,17 @@ static NodeList sortedNonFunctionChildren(const Aggregate *aggregate)
 }
 
 /*!
-  Generate index sections for the child nodes of the given \a node
-  using the \a writer specified. The \a generator is used to compute
-  document locations for hrefs.
+  Generates a section for \a node and recursively serializes its children
+  using \a writer. The \a context supplies publication locations and
+  inclusion policy. The \a state preserves related-node numbering and
+  identifies the primary root whose traversal ends with collection and
+  proxy sections. If supplied, \a post extends each section.
 */
 void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
-                                           const Generator *generator, WriteState &state,
+                                           const IndexSerializationContext &context, WriteState &state,
                                            IndexSectionWriter *post)
 {
-    Q_ASSERT(generator);
+    Q_ASSERT(context.documentLocation);
 
     /*
       Note that groups, modules, QML modules, and proxies are written
@@ -1591,19 +1599,18 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
         node->isQmlModule() || node->isProxyNode())
         return;
 
-    const InclusionPolicy policy = Config::instance().createInclusionPolicy();
-    const NodeContext context = node->createContext();
-    if (!InclusionFilter::isPubliclyVisible(policy, context))
+    const NodeContext nodeContext = node->createContext();
+    if (!InclusionFilter::isPubliclyVisible(context.inclusionPolicy, nodeContext))
         return;
 
-    if (generateIndexSection(writer, node, generator, state, post)) {
+    if (generateIndexSection(writer, node, context, state, post)) {
         if (node->isAggregate()) {
             auto *aggregate = static_cast<Aggregate *>(node);
             // First write the function children, then write the nonfunction children.
-            generateFunctionSections(writer, aggregate, generator, state, post);
+            generateFunctionSections(writer, aggregate, context, state, post);
             auto nonFunctionChildren = sortedNonFunctionChildren(aggregate);
             for (auto *node : nonFunctionChildren)
-                generateIndexSections(writer, node, generator, state, post);
+                generateIndexSections(writer, node, context, state, post);
         }
 
         if (node == state.root) {
@@ -1617,7 +1624,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &groups = m_qdb->groups();
             if (!groups.isEmpty()) {
                 for (auto it = groups.constBegin(); it != groups.constEnd(); ++it) {
-                    if (generateIndexSection(writer, it.value(), generator, state, post))
+                    if (generateIndexSection(writer, it.value(), context, state, post))
                         writer.writeEndElement();
                 }
             }
@@ -1625,7 +1632,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &modules = m_qdb->modules();
             if (!modules.isEmpty()) {
                 for (auto it = modules.constBegin(); it != modules.constEnd(); ++it) {
-                    if (generateIndexSection(writer, it.value(), generator, state, post))
+                    if (generateIndexSection(writer, it.value(), context, state, post))
                         writer.writeEndElement();
                 }
             }
@@ -1633,7 +1640,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &qmlModules = m_qdb->qmlModules();
             if (!qmlModules.isEmpty()) {
                 for (auto it = qmlModules.constBegin(); it != qmlModules.constEnd(); ++it) {
-                    if (generateIndexSection(writer, it.value(), generator, state, post))
+                    if (generateIndexSection(writer, it.value(), context, state, post))
                         writer.writeEndElement();
                 }
             }
@@ -1641,18 +1648,18 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &concepts = m_qdb->concepts();
             if (!concepts.isEmpty()) {
                 for (auto it = concepts.constBegin(); it != concepts.constEnd(); ++it) {
-                    if (generateIndexSection(writer, it.value(), generator, state, post))
+                    if (generateIndexSection(writer, it.value(), context, state, post))
                         writer.writeEndElement();
                 }
             }
 
             for (auto *p : m_qdb->primaryTree()->proxies()) {
-                if (generateIndexSection(writer, p, generator, state, post)) {
+                if (generateIndexSection(writer, p, context, state, post)) {
                     auto aggregate = static_cast<Aggregate *>(p);
-                    generateFunctionSections(writer, aggregate, generator, state, post);
+                    generateFunctionSections(writer, aggregate, context, state, post);
                     auto nonFunctionChildren = sortedNonFunctionChildren(aggregate);
                     for (auto *n : nonFunctionChildren)
-                        generateIndexSections(writer, n, generator, state, post);
+                        generateIndexSections(writer, n, context, state, post);
                     writer.writeEndElement();
                 }
             }
@@ -1666,13 +1673,14 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
   Writes a qdoc module index in XML to a file named \a fileName.
   \a url is the \c url attribute of the <INDEX> element.
   \a title is the \c title attribute of the <INDEX> element.
-  \a hrefGenerator is the generator to use for computing document locations
-  and file extensions. Must not be null.
+  \a context supplies publication locations, the project identity, and
+  serialization policy. A fresh write state keeps this export's related-node
+  numbering independent of earlier output.
  */
 void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
-                                   const QString &title, const Generator *hrefGenerator)
+                                   const QString &title, const IndexSerializationContext &context)
 {
-    Q_ASSERT(hrefGenerator);
+    Q_ASSERT(context.documentLocation);
 
     QFile file(fileName);
     if (!file.open(QFile::WriteOnly | QFile::Text))
@@ -1693,11 +1701,11 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
     writer.writeAttribute("url", url);
     writer.writeAttribute("title", title);
     writer.writeAttribute("version", m_qdb->version());
-    writer.writeAttribute("project", Config::instance().get(CONFIG_PROJECT).asString());
+    writer.writeAttribute("project", context.project);
 
     writeNonEmpty(writer, "indexTitle", state.root->tree()->indexTitle());
 
-    generateIndexSections(writer, state.root, hrefGenerator, state);
+    generateIndexSections(writer, state.root, context, state);
 
     writer.writeEndElement(); // INDEX
     writer.writeEndElement(); // QDOCINDEX

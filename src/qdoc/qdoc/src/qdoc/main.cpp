@@ -10,6 +10,7 @@
 #include "docbookgenerator.h"
 #include "htmlgenerator.h"
 #include "inclusionpolicy.h"
+#include "indexserializationcontext.h"
 #include "outputproducer.h"
 #include "location.h"
 #include "outputproducerregistry.h"
@@ -335,11 +336,27 @@ static void generateIndexFile(const Config &config)
     const QString indexFileName = fileBase + ".index"_L1;
     const QString indexPath = outputDir.absoluteFilePath(indexFileName);
 
-    // Index files use HTML-style hrefs (e.g., "qstring.html#append"),
-    // so we pass the HTML generator for correct file extension handling.
+    // Adapt the legacy HTML location rules at the orchestration boundary.
     auto *htmlGenerator = Generator::generatorForFormat(u"HTML"_s);
+    if (!htmlGenerator) {
+        qCWarning(lcQdoc) << "Cannot generate index file: no href generator available"
+                             " (HTML generator missing)";
+        return;
+    }
 
-    QDocDatabase::qdocDB()->generateIndex(indexPath, url, description, htmlGenerator);
+    IndexSerializationContext context;
+    context.documentLocation = [htmlGenerator](const Node *node) {
+        return htmlGenerator->fullDocumentLocation(node);
+    };
+    context.exampleFileLocation = [module = Generator::defaultModuleName(),
+                                   extension = htmlGenerator->fileExtension()](const QString &file) {
+        return Utilities::linkForExampleFile(file, module, extension);
+    };
+    context.inclusionPolicy = config.createInclusionPolicy();
+    context.project = project;
+    context.storeLocationInfo = config.get(CONFIG_LOCATIONINFO).asBool();
+
+    QDocDatabase::qdocDB()->generateIndex(indexPath, url, description, context);
 }
 
 /*!
