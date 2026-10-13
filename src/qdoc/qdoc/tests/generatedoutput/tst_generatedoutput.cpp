@@ -3,6 +3,7 @@
 #include <QProcess>
 #include <QTemporaryDir>
 #include <QDirIterator>
+#include <QXmlStreamReader>
 #include <QtTest>
 
 using namespace Qt::StringLiterals;
@@ -25,6 +26,7 @@ private slots:
     void inheritedQmlPropertyGroups();
     void crossModuleLinking();
     void indexLinking();
+    void indexReadWriteState();
     void singleExec();
     void preparePhase();
     void generatePhase();
@@ -237,6 +239,40 @@ void tst_generatedOutput::crossModuleLinking()
                    "crossmodule/testtype-members.html "
                    "crossmodule/crossmoduleref-sub-crossmodule.html",
                    indexDir.toLatin1().data());
+}
+
+void tst_generatedOutput::indexReadWriteState()
+{
+    QStringList args{ "-outputdir"_L1, m_outputDir.path(),
+                      QFINDTESTDATA("testdata/indexreadwritestate/indexreadwritestate.qdocconf") };
+    if (!m_extraParams.isEmpty())
+        args << m_extraParams;
+    runQDocProcess(args);
+    if (QTest::currentTestFailed())
+        return;
+
+    QFile file(m_outputDir.filePath("webxml/local.webxml"_L1));
+    QVERIFY(file.open(QIODevice::ReadOnly));
+    QXmlStreamReader reader(&file);
+    bool foundHelper = false;
+    bool foundDependencyLink = false;
+    while (!reader.atEnd()) {
+        reader.readNext();
+        if (reader.isStartElement() && reader.name() == "link"_L1
+            && reader.attributes().value("href"_L1) == "dependency.html#importedHelper"_L1) {
+            foundDependencyLink = true;
+        }
+        if (!reader.isStartElement() || reader.name() != "function"_L1
+            || reader.attributes().value("name"_L1) != "helper"_L1) {
+            continue;
+        }
+        // Imported related nodes must not occupy the writer's numbering slots.
+        QCOMPARE(reader.attributes().value("related"_L1).toString(), "0"_L1);
+        foundHelper = true;
+    }
+    QVERIFY2(!reader.hasError(), qPrintable(reader.errorString()));
+    QVERIFY(foundHelper);
+    QVERIFY(foundDependencyLink);
 }
 
 void tst_generatedOutput::singleExec()

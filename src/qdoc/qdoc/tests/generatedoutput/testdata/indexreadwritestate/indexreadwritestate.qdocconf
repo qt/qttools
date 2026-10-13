@@ -1,0 +1,17 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+project = IndexReadWriteState
+locationinfo = false
+headers.fileextensions = "*.h"
+sources.fileextensions = "*.cpp"
+headerdirs = src
+sourcedirs = src
+indexes = dependency.index
+outputformats = HTML WebXML
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+WebXML.nosubdirs = true
+WebXML.outputsubdir = webxml
+warninglimit = 0
+warninglimit.enabled = true

@@ -29,6 +29,7 @@ WebXMLGenerator::WebXMLGenerator(FileResolver& file_resolver) : HtmlGenerator(fi
 
 void WebXMLGenerator::initializeGenerator()
 {
+    m_indexWriteState = {};
     HtmlGenerator::initializeGenerator();
 }
 
@@ -149,13 +150,14 @@ void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer, Node *node
     marker_ = CodeMarker::markerForFileName(node->location().filePath());
     auto qdocIndexFiles = QDocIndexFiles::qdocIndexFiles();
     if (qdocIndexFiles) {
-        qdocIndexFiles->generateIndexSections(writer, node, this, this);
+        qdocIndexFiles->generateIndexSections(writer, node, this, m_indexWriteState, this);
         // generateIndexSections returns early for collection nodes (groups,
         // modules, QML modules, concepts) so their member listings can be
         // written last in an index file. When rendering a single collection
         // page, that leaves the document empty, so emit the section explicitly.
         if (node->isCollectionNode())
-            std::ignore = qdocIndexFiles->generateIndexSection(writer, node, this, this);
+            std::ignore = qdocIndexFiles->generateIndexSection(writer, node, this,
+                                                              m_indexWriteState, this);
     }
 }
 
