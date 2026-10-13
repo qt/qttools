@@ -113,10 +113,8 @@ public:
     bool visit(QQmlJS::AST::DebuggerStatement *) override;
 
 private:
-    typedef QHash<QString, QString> StringHash;
     void addExtra(quint32 start, quint32 finish);
-    void addMarkedUpToken(const QQmlJS::SourceLocation &location, const QString &text,
-                          const StringHash &attributes = StringHash());
+    void addMarkedUpToken(const QQmlJS::SourceLocation &location, const QString &text);
     void addVerbatim(QQmlJS::SourceLocation first,
                      QQmlJS::SourceLocation last = QQmlJS::SourceLocation());
     QString sourceText(const QQmlJS::SourceLocation &location);
