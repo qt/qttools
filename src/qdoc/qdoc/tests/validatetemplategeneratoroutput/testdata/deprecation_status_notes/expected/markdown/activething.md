@@ -1,4 +1,4 @@
-[DeprecationStatusNotes](deprecationstatusnotes-module.md)> ActiveThing
+[Deprecation Status Notes](deprecationstatusnotes-module.md)> ActiveThing
 
 **Contents**
 

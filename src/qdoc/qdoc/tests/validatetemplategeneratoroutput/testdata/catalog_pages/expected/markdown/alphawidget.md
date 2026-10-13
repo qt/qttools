@@ -1,4 +1,4 @@
-[CatalogPagesTest](catalogpagestest-module.md)> AlphaWidget
+[CatalogPagesTest C++ Classes](catalogpagestest-module.md)> AlphaWidget
 
 **Contents**
 

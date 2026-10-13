@@ -1,4 +1,4 @@
-[TestModule](testmodule-qmlmodule.md)> Panel
+[Test Module](testmodule-qmlmodule.md)> Panel
 
 **Contents**
 

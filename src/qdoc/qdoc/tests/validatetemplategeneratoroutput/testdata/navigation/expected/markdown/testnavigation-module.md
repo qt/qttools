@@ -1,6 +1,6 @@
-[Home](navigation-test-home.md)> [Landing](navigation-landing.md)> TestNavigation
+[Home](navigation-test-home.md)> [Landing](navigation-landing.md)> Test Navigation C++ Classes
 
-# TestNavigation
+# Test Navigation C++ Classes
 
 Test module for navigation fixture.
 

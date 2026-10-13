@@ -1,4 +1,4 @@
-[DeprecationNotes](deprecationnotes-qmlmodule.md)> PendingGadget
+[Deprecation Notes QML Types](deprecationnotes-qmlmodule.md)> PendingGadget
 
 **Contents**
 

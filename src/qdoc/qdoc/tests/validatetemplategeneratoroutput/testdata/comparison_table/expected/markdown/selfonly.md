@@ -1,4 +1,4 @@
-[ComparisonTable](comparisontable-module.md)> SelfOnly
+[Comparison Table](comparisontable-module.md)> SelfOnly
 
 # SelfOnly
 

@@ -1,4 +1,4 @@
-[Home](navigation-test-home.md)> [Landing](navigation-landing.md)> [QML Types](qml-types.md)> NavItem
+[Home](navigation-test-home.md)> [Landing](navigation-landing.md)> [QML Types](qml-types.md)> [TestNavigation](qml-testnavigation-qmlmodule.md)> NavItem
 
 **Contents**
 
@@ -12,11 +12,12 @@ A QML navigation item.
 
 | | |
 | --- | --- |
+| Import Statement | `import TestNavigation` |
 
 ## Detailed Description
 ## Usage
 
-[NavItem](qml-navitem.md) provides navigation within QML applications.
+[NavItem](qml-testnavigation-navitem.md) provides navigation within QML applications.
 
 ### Properties
 

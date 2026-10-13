@@ -1,4 +1,4 @@
-[DeprecationStatusNotes](deprecationstatusnotes-module.md)> DeprecatedThing
+[Deprecation Status Notes](deprecationstatusnotes-module.md)> DeprecatedThing
 
 # DeprecatedThing
 

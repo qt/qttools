@@ -1,4 +1,4 @@
-[TestModule](testmodule-qmlmodule.md)> Panel
+[QML Link Criteria](testmodule-qmlmodule.md)> Panel
 
 **Contents**
 

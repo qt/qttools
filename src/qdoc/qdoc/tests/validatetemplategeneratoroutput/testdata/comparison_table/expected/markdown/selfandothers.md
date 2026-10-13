@@ -1,4 +1,4 @@
-[ComparisonTable](comparisontable-module.md)> SelfAndOthers
+[Comparison Table](comparisontable-module.md)> SelfAndOthers
 
 # SelfAndOthers
 

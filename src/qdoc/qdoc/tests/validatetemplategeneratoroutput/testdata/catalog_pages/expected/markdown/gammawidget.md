@@ -1,4 +1,4 @@
-[CatalogPagesTest](catalogpagestest-module.md)> GammaWidget
+[CatalogPagesTest C++ Classes](catalogpagestest-module.md)> GammaWidget
 
 **Contents**
 

@@ -1,4 +1,4 @@
-[MemberLinkQml](memberlinkqml-qmlmodule.md)> SignalOrigins
+[Member Link QML](memberlinkqml-qmlmodule.md)> SignalOrigins
 
 **Contents**
 

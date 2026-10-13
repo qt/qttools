@@ -1,4 +1,4 @@
-[IgnoredMembers](ignoredmembers-module.md)> Widget
+[Ignored Members Test Module](ignoredmembers-module.md)> Widget
 
 **Contents**
 
