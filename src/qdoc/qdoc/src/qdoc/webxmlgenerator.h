@@ -56,6 +56,7 @@ private:
     QString quoteCommand {};
     std::optional<QXmlStreamWriter> currentWriter;
     bool m_supplement { false };
+    QDocIndexFiles::WriteState m_indexWriteState;
 };
 
 QT_END_NAMESPACE

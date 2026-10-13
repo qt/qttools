@@ -44,22 +44,70 @@ enum QDocAttr {
     QDocAttrAttribution
 };
 
-static Node *root_ = nullptr;
-static IndexSectionWriter *post_ = nullptr;
-static QHash<QString, SharedCommentNode *> sharedDocNodes_;
-
 /*!
   \class QDocIndexFiles
 
-  This class handles qdoc index files.
+  This class imports QDoc index files and serializes index sections for
+  module indexes and WebXML output.
  */
+
+/*!
+  \struct QDocIndexFiles::ReadState
+  \internal
+  \brief Holds state for one index file import.
+
+  A new state is created for each file. Deferred base-class resolution,
+  related nodes, and shared documentation remain isolated from other imports.
+*/
+
+/*!
+  \variable QDocIndexFiles::ReadState::project
+  \brief The project name declared by the imported index.
+*/
+
+/*!
+  \variable QDocIndexFiles::ReadState::bases
+  \brief Classes and their base-class names awaiting resolution.
+*/
+
+/*!
+  \variable QDocIndexFiles::ReadState::relatedNodes
+  \brief Related non-member nodes used to resolve references during import.
+*/
+
+/*!
+  \variable QDocIndexFiles::ReadState::sharedDocNodes
+  \brief Shared documentation nodes keyed by property group name.
+*/
+
+/*!
+  \struct QDocIndexFiles::WriteState
+  \internal
+  \brief Holds state for one index file export.
+
+  A standalone index export creates a fresh state. WebXML owns a separate
+  state across the pages it serializes. Neither inherits related-node
+  numbering from an earlier import or output operation.
+*/
+
+/*!
+  \variable QDocIndexFiles::WriteState::root
+  \brief The primary tree root whose traversal completes an index export.
+
+  WebXML leaves this null because it serializes individual pages.
+*/
+
+/*!
+  \variable QDocIndexFiles::WriteState::relatedNodes
+  \brief Related non-member nodes numbered across this serialization operation.
+*/
 
 QDocIndexFiles *QDocIndexFiles::s_qdocIndexFiles = nullptr;
 
 /*!
   Constructs the singleton QDocIndexFiles.
  */
-QDocIndexFiles::QDocIndexFiles() : m_gen(nullptr)
+QDocIndexFiles::QDocIndexFiles()
 {
     m_qdb = QDocDatabase::qdocDB();
     m_storeLocationInfo = Config::instance().get(CONFIG_LOCATIONINFO).asBool();
@@ -71,7 +119,6 @@ QDocIndexFiles::QDocIndexFiles() : m_gen(nullptr)
 QDocIndexFiles::~QDocIndexFiles()
 {
     m_qdb = nullptr;
-    m_gen = nullptr;
 }
 
 /*!
@@ -108,11 +155,11 @@ void QDocIndexFiles::readIndexes(const QStringList &indexFiles)
 }
 
 /*!
-  Reads and parses the index file at \a path.
+  Reads and parses the index file at \a path, with a fresh import state.
  */
 void QDocIndexFiles::readIndexFile(const QString &path)
 {
-    sharedDocNodes_.clear();
+    ReadState state;
 
     QFile file(path);
     if (!file.open(QFile::ReadOnly)) {
@@ -144,12 +191,10 @@ void QDocIndexFiles::readIndexFile(const QString &path)
         QDir installDir(path.section('/', 0, -3) + '/' + Generator::outputSubdir());
         indexUrl = installDir.relativeFilePath(path).section('/', 0, -2);
     }
-    m_project = attrs.value(QLatin1String("project")).toString();
+    state.project = attrs.value(QLatin1String("project")).toString();
     QString indexTitle = attrs.value(QLatin1String("indexTitle")).toString();
-    m_basesList.clear();
-    m_relatedNodes.clear();
 
-    NamespaceNode *root = m_qdb->newIndexTree(m_project);
+    NamespaceNode *root = m_qdb->newIndexTree(state.project);
     if (!root) {
         qWarning() << "Issue parsing index tree" << path;
         return;
@@ -160,20 +205,22 @@ void QDocIndexFiles::readIndexFile(const QString &path)
     // Scan all elements in the XML file, constructing a map that contains
     // base classes for each class found.
     while (reader.readNextStartElement()) {
-        readIndexSection(reader, root, indexUrl);
+        readIndexSection(reader, root, indexUrl, state);
     }
 
     // Now that all the base classes have been found for this index,
     // arrange them into an inheritance hierarchy.
-    resolveIndex();
+    resolveIndex(state);
 }
 
 /*!
-  Read a <section> element from the index file and create the
-  appropriate node(s).
+  Reads an element from the index file and creates the appropriate nodes
+  under \a current. The \a indexUrl supplies imported link locations;
+  \a state retains deferred relationships and shared documentation for this
+  file's remaining elements.
  */
 void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
-                                      const QString &indexUrl)
+                                      const QString &indexUrl, ReadState &state)
 {
     QXmlStreamAttributes attributes = reader.attributes();
     QStringView elementName = reader.name();
@@ -192,17 +239,17 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         bool isIntTypeRelatedValue = false;
         int relatedIndex = attributes.value(QLatin1String("related")).toInt(&isIntTypeRelatedValue);
         if (isIntTypeRelatedValue) {
-            if (adoptRelatedNode(parent, relatedIndex)) {
+            if (adoptRelatedNode(parent, relatedIndex, state)) {
                 reader.skipCurrentElement();
                 return;
             }
         } else {
             QList<Node *>::iterator nodeIterator =
-                    std::find_if(m_relatedNodes.begin(), m_relatedNodes.end(), [&](const Node *relatedNode) {
+                    std::find_if(state.relatedNodes.begin(), state.relatedNodes.end(), [&](const Node *relatedNode) {
                         return (name == relatedNode->name() &&  href == relatedNode->url().section(QLatin1Char('/'), -1));
                     });
 
-            if (nodeIterator != m_relatedNodes.end() && parent) {
+            if (nodeIterator != state.relatedNodes.end() && parent) {
                 parent->adoptChild(*nodeIterator);
                 reader.skipCurrentElement();
                 return;
@@ -236,7 +283,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         if (attributes.hasAttribute(QLatin1String("bases"))) {
             QString bases = attributes.value(QLatin1String("bases")).toString();
             if (!bases.isEmpty())
-                m_basesList.append(
+                state.bases.append(
                         std::pair<ClassNode *, QString>(static_cast<ClassNode *>(node), bases));
         }
         if (!indexUrl.isEmpty())
@@ -309,10 +356,10 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         if (!propertyGroup.isEmpty()) {
             // Handle the relevant property group by obtaining or creating a
             // shared comment node.
-            SharedCommentNode *scn = sharedDocNodes_.value(propertyGroup);
+            SharedCommentNode *scn = state.sharedDocNodes.value(propertyGroup);
             if (!scn) {
                 scn = new SharedCommentNode(static_cast<QmlTypeNode *>(parent), 0, propertyGroup.split(".").last());
-                sharedDocNodes_[propertyGroup] = scn;
+                state.sharedDocNodes[propertyGroup] = scn;
             }
             if (node) {
                 // Regular properties are appended to the shared comment node.
@@ -630,7 +677,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
 
         if (attributes.hasAttribute(QLatin1String("related"))) {
             node->setRelatedNonmember(true);
-            m_relatedNodes << node;
+            state.relatedNodes << node;
         }
 
         if (attributes.hasAttribute(QLatin1String("threadsafety"))) {
@@ -713,9 +760,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             bool useParent = (elementName == QLatin1String("namespace") && name.isEmpty());
             while (reader.readNextStartElement()) {
                 if (useParent)
-                    readIndexSection(reader, parent, indexUrl);
+                    readIndexSection(reader, parent, indexUrl, state);
                 else
-                    readIndexSection(reader, node, indexUrl);
+                    readIndexSection(reader, node, indexUrl, state);
             }
         }
     }
@@ -752,8 +799,8 @@ void QDocIndexFiles::insertTarget(TargetRec::TargetType type,
 }
 
 /*!
-  This function tries to resolve class inheritance immediately
-  after the index file is read. It is not always possible to
+  This function tries to resolve class inheritance recorded in \a state
+  immediately after its index file is read. It is not always possible to
   resolve a class inheritance at this point, because the base
   class might be in an index file that hasn't been read yet, or
   it might be in one of the header files that will be read for
@@ -765,9 +812,9 @@ void QDocIndexFiles::insertTarget(TargetRec::TargetType type,
   I don't think this is completely correct because it always
   sets the access to public.
  */
-void QDocIndexFiles::resolveIndex()
+void QDocIndexFiles::resolveIndex(ReadState &state)
 {
-    for (const auto &pair : std::as_const(m_basesList)) {
+    for (const auto &pair : std::as_const(state.bases)) {
         const QStringList bases = pair.second.split(QLatin1Char(','));
         for (const auto &base : bases) {
             QStringList basePath = base.split(QString("::"));
@@ -778,8 +825,6 @@ void QDocIndexFiles::resolveIndex()
                 pair.first->addUnresolvedBaseClass(Access::Public, basePath);
         }
     }
-    // No longer needed.
-    m_basesList.clear();
 }
 
 static QString getAccessString(Access t)
@@ -836,14 +881,16 @@ static QString getThreadSafenessString(Node::ThreadSafeness t)
 }
 
 /*!
-    Returns the index of \a node in the list of related non-member nodes.
+    Returns the index of \a node in \a state's related non-member list,
+    adding it if necessary. The numbering lasts for this serialization
+    operation.
 */
-int QDocIndexFiles::indexForNode(Node *node)
+int QDocIndexFiles::indexForNode(Node *node, WriteState &state)
 {
-    qsizetype i = m_relatedNodes.indexOf(node);
+    qsizetype i = state.relatedNodes.indexOf(node);
     if (i == -1) {
-        i = m_relatedNodes.size();
-        m_relatedNodes << node;
+        i = state.relatedNodes.size();
+        state.relatedNodes << node;
     }
     return i;
 }
@@ -860,11 +907,12 @@ static void writeNonEmpty(QXmlStreamWriter &writer, const QString &name, const Q
 
 /*!
     Adopts the related non-member node identified by \a index to the
-    parent \a adoptiveParent. Returns \c true if successful.
+    parent \a adoptiveParent. Looks up the index in the current import's
+    \a state. Returns \c true if successful.
 */
-bool QDocIndexFiles::adoptRelatedNode(Aggregate *adoptiveParent, int index)
+bool QDocIndexFiles::adoptRelatedNode(Aggregate *adoptiveParent, int index, ReadState &state)
 {
-    Node *related = m_relatedNodes.value(index);
+    Node *related = state.relatedNodes.value(index);
 
     if (adoptiveParent && related) {
         adoptiveParent->adoptChild(related);
@@ -917,12 +965,10 @@ void QDocIndexFiles::writeTargets(QXmlStreamWriter &writer, Node *node)
   \note Function nodes are processed in generateFunctionSection()
  */
 bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
-                                          const Generator *generator, IndexSectionWriter *post)
+                                          const Generator *generator, WriteState &state,
+                                          IndexSectionWriter *post)
 {
     Q_ASSERT(generator);
-    m_gen = generator;
-
-    post_ = nullptr;
     /*
       Don't include index nodes in a new index file.
      */
@@ -1054,7 +1100,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         QString fullName = node->fullDocumentName();
         if (fullName != objName)
             writer.writeAttribute("fullname", fullName);
-        href = m_gen->fullDocumentLocation(node);
+        href = generator->fullDocumentLocation(node);
     } else
         href = node->name();
     if (node->isQmlNode()) {
@@ -1078,7 +1124,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     }
 
     if (node->isRelatedNonmember())
-        writer.writeAttribute("related", QString::number(indexForNode(node)));
+        writer.writeAttribute("related", QString::number(indexForNode(node, state)));
 
     writeNonEmpty(writer, "since", node->since());
 
@@ -1161,8 +1207,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         writeNonEmpty(writer, "brief", brief);
         if (ClassNode *cn = qmlTypeNode->classNode()) {
             writer.writeAttribute("class", cn->fullDocumentName());
-            if (cn->access() != Access::Public || cn->status() == Status::Internal)
-                m_basesList.append(std::pair<ClassNode *, QString>(cn, cn->fullName()));
         }
     } break;
     case NodeType::Page:
@@ -1289,10 +1333,10 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     }
     // WebXMLGenerator - skip the nested <page> elements for example
     // files/images, as the generator produces them separately
-    if (node->isExample() && m_gen->format() != QLatin1String("WebXML")) {
+    if (node->isExample() && generator->format() != QLatin1String("WebXML")) {
         const auto *exampleNode = static_cast<const ExampleNode *>(node);
         const QString project = Generator::defaultModuleName();
-        const QString fileExt = m_gen->fileExtension();
+        const QString fileExt = generator->fileExtension();
         const auto &files = exampleNode->files();
         const auto &images = exampleNode->images();
         for (const QString &file : files) {
@@ -1322,7 +1366,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     if (post)
         post->append(writer, node);
 
-    post_ = post;
     return true;
 }
 
@@ -1330,7 +1373,9 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
   This function writes a <function> element for \a fn to the
   index file using \a writer.
  */
-void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionNode *fn)
+void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionNode *fn,
+                                           const Generator *generator, WriteState &state,
+                                           IndexSectionWriter *post)
 {
     const InclusionPolicy policy = Config::instance().createInclusionPolicy();
     const NodeContext context = fn->createContext();
@@ -1344,7 +1389,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
     const QString fullName = fn->fullDocumentName();
     if (fullName != objName)
         writer.writeAttribute("fullname", fullName);
-    const QString href = m_gen->fullDocumentLocation(fn);
+    const QString href = generator->fullDocumentLocation(fn);
     writeNonEmpty(writer, "href", href);
     if (fn->threadSafeness() != Node::UnspecifiedSafeness)
         writer.writeAttribute("threadsafety", getThreadSafenessString(fn->threadSafeness()));
@@ -1363,7 +1408,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
     if (fn->hasDoc() && fn->doc().isAutoGenerated())
         writer.writeAttribute("auto-generated", "true");
     if (fn->isRelatedNonmember())
-        writer.writeAttribute("related", QString::number(indexForNode(fn)));
+        writer.writeAttribute("related", QString::number(indexForNode(fn, state)));
     writeNonEmpty(writer, "since", fn->since());
 
     const QString brief = fn->doc().trimmedBriefText(fn->name()).toString();
@@ -1463,8 +1508,8 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
     writeTargets(writer, fn);
 
     // Append to the section if the callback object was set
-    if (post_)
-        post_->append(writer, fn);
+    if (post)
+        post->append(writer, fn);
 
     writer.writeEndElement(); // function
 }
@@ -1507,12 +1552,14 @@ QString QDocIndexFiles::appendAttributesToSignature(const FunctionNode *fn) cons
   \c overload attribute set to \c true and an \c {overload-number}
   attribute set to the function's overload number.
  */
-void QDocIndexFiles::generateFunctionSections(QXmlStreamWriter &writer, Aggregate *aggregate)
+void QDocIndexFiles::generateFunctionSections(QXmlStreamWriter &writer, Aggregate *aggregate,
+                                            const Generator *generator, WriteState &state,
+                                            IndexSectionWriter *post)
 {
     for (auto functions : std::as_const(aggregate->functionMap())) {
         std::for_each(functions.begin(), functions.end(),
-            [this,&writer](FunctionNode *fn) {
-                generateFunctionSection(writer, fn);
+            [this, &writer, generator, &state, post](FunctionNode *fn) {
+                generateFunctionSection(writer, fn, generator, state, post);
             }
         );
     }
@@ -1531,7 +1578,8 @@ static NodeList sortedNonFunctionChildren(const Aggregate *aggregate)
   document locations for hrefs.
 */
 void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
-                                           const Generator *generator, IndexSectionWriter *post)
+                                           const Generator *generator, WriteState &state,
+                                           IndexSectionWriter *post)
 {
     Q_ASSERT(generator);
 
@@ -1548,17 +1596,17 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
     if (!InclusionFilter::isPubliclyVisible(policy, context))
         return;
 
-    if (generateIndexSection(writer, node, generator, post)) {
+    if (generateIndexSection(writer, node, generator, state, post)) {
         if (node->isAggregate()) {
             auto *aggregate = static_cast<Aggregate *>(node);
             // First write the function children, then write the nonfunction children.
-            generateFunctionSections(writer, aggregate);
+            generateFunctionSections(writer, aggregate, generator, state, post);
             auto nonFunctionChildren = sortedNonFunctionChildren(aggregate);
             for (auto *node : nonFunctionChildren)
-                generateIndexSections(writer, node, generator, post);
+                generateIndexSections(writer, node, generator, state, post);
         }
 
-        if (node == root_) {
+        if (node == state.root) {
             /*
               We wait until the end of the index file to output the group, module,
               QML module, and proxy nodes. By outputting them at the end, when we read
@@ -1569,7 +1617,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &groups = m_qdb->groups();
             if (!groups.isEmpty()) {
                 for (auto it = groups.constBegin(); it != groups.constEnd(); ++it) {
-                    if (generateIndexSection(writer, it.value(), generator, post))
+                    if (generateIndexSection(writer, it.value(), generator, state, post))
                         writer.writeEndElement();
                 }
             }
@@ -1577,7 +1625,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &modules = m_qdb->modules();
             if (!modules.isEmpty()) {
                 for (auto it = modules.constBegin(); it != modules.constEnd(); ++it) {
-                    if (generateIndexSection(writer, it.value(), generator, post))
+                    if (generateIndexSection(writer, it.value(), generator, state, post))
                         writer.writeEndElement();
                 }
             }
@@ -1585,7 +1633,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &qmlModules = m_qdb->qmlModules();
             if (!qmlModules.isEmpty()) {
                 for (auto it = qmlModules.constBegin(); it != qmlModules.constEnd(); ++it) {
-                    if (generateIndexSection(writer, it.value(), generator, post))
+                    if (generateIndexSection(writer, it.value(), generator, state, post))
                         writer.writeEndElement();
                 }
             }
@@ -1593,18 +1641,18 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &concepts = m_qdb->concepts();
             if (!concepts.isEmpty()) {
                 for (auto it = concepts.constBegin(); it != concepts.constEnd(); ++it) {
-                    if (generateIndexSection(writer, it.value(), generator, post))
+                    if (generateIndexSection(writer, it.value(), generator, state, post))
                         writer.writeEndElement();
                 }
             }
 
             for (auto *p : m_qdb->primaryTree()->proxies()) {
-                if (generateIndexSection(writer, p, generator, post)) {
+                if (generateIndexSection(writer, p, generator, state, post)) {
                     auto aggregate = static_cast<Aggregate *>(p);
-                    generateFunctionSections(writer, aggregate);
+                    generateFunctionSections(writer, aggregate, generator, state, post);
                     auto nonFunctionChildren = sortedNonFunctionChildren(aggregate);
                     for (auto *n : nonFunctionChildren)
-                        generateIndexSections(writer, n, generator, post);
+                        generateIndexSections(writer, n, generator, state, post);
                     writer.writeEndElement();
                 }
             }
@@ -1625,7 +1673,6 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
                                    const QString &title, const Generator *hrefGenerator)
 {
     Q_ASSERT(hrefGenerator);
-    m_gen = hrefGenerator;
 
     QFile file(fileName);
     if (!file.open(QFile::WriteOnly | QFile::Text))
@@ -1633,16 +1680,9 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
 
     qCDebug(lcQdoc) << "Writing index file:" << fileName;
 
-    // Use the bases list to record private base classes when generating.
-    m_basesList.clear();
-    /*
-      The related="N" numbers must equal the position of the related non-member
-      in the document, so that a reader can re-adopt it. A generator that
-      produces index sections per page (WebXML) runs before this and leaves
-      allocation state in m_relatedNodes, so clear it here to restore
-      canonical first-occurrence numbering.
-     */
-    m_relatedNodes.clear();
+    // Related-node numbering belongs to this export, not earlier WebXML output.
+    WriteState state;
+    state.root = m_qdb->primaryTreeRoot();
 
     QXmlStreamWriter writer(&file);
     writer.setAutoFormatting(true);
@@ -1655,10 +1695,9 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
     writer.writeAttribute("version", m_qdb->version());
     writer.writeAttribute("project", Config::instance().get(CONFIG_PROJECT).asString());
 
-    root_ = m_qdb->primaryTreeRoot();
-    writeNonEmpty(writer, "indexTitle", root_->tree()->indexTitle());
+    writeNonEmpty(writer, "indexTitle", state.root->tree()->indexTitle());
 
-    generateIndexSections(writer, root_, m_gen, nullptr);
+    generateIndexSections(writer, state.root, hrefGenerator, state);
 
     writer.writeEndElement(); // INDEX
     writer.writeEndElement(); // QDOCINDEX
