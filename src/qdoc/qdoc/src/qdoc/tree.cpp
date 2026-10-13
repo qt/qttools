@@ -661,7 +661,8 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
     /*
       If the path has been matched, then if there is a target,
       try to match the target. If there is a target, but you
-      can't match it at the end of the path, give up; return 0.
+      can't match it at the end of the path, give up; return
+      \nullptr.
      */
     if (idx == path.size()) {
         if (!target.isEmpty()) {
