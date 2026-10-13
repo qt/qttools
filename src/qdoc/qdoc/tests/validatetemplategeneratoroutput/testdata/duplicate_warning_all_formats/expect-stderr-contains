@@ -1,0 +1,3 @@
+# Asserts the broken link was reported (exactly once; the log snapshot and
+# the warning limit assert the count).
+Can't link to 'TargetThatDoesNotExist'

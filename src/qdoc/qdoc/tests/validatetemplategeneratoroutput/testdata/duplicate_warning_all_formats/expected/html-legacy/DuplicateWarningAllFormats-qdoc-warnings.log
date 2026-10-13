@@ -1,0 +1,7 @@
+# QDoc Warning Log
+# Project: DuplicateWarningAllFormats
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/duplicate_warning_all_formats.qdoc:9: [DuplicateWarningAllFormats] (qdoc) warning: Can't link to 'TargetThatDoesNotExist'

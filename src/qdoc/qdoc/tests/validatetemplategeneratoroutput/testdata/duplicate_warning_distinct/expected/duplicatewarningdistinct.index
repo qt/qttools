@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Warnings that differ in line or message are all reported, while an exactly repeated signature is reported once." version="" project="DuplicateWarningDistinct">
+    <namespace name="" status="active" access="public" module="duplicatewarningdistinct">
+        <page name="warning-distinct.html" href="warning-distinct.html" status="active" location="duplicate_warning_distinct.qdoc" documented="true" subtype="page" title="Distinct Warnings" fulltitle="Distinct Warnings" brief="A page whose warnings differ in line or message"/>
+    </namespace>
+</INDEX>

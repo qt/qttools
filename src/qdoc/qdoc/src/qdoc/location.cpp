@@ -28,6 +28,7 @@ QString Location::s_programName;
 QString Location::s_project;
 QString Location::s_projectRoot;
 QSet<QString> Location::s_reports;
+QSet<QString> Location::s_emittedWarnings;
 QRegularExpression *Location::s_spuriousRegExp = nullptr;
 std::unique_ptr<QFile> Location::s_warningLogFile;
 std::unique_ptr<QTextStream> Location::s_warningLogStream;
@@ -256,6 +257,11 @@ QString Location::fileSuffix() const
   Writes \a message and \a details to stderr as a formatted
   warning message. Does not write the message if qdoc is in
   the Prepare phase.
+
+  A warning whose source location (including the include
+  stack), project, message, and details are all identical to
+  one already reported in this project run is not emitted
+  again. The warning is thereby logged and counted only once.
  */
 void Location::warning(const QString &message, const QString &details) const
 {
@@ -374,6 +380,7 @@ void Location::initialize()
 
     if (!config.singleExec())
         s_warningCount = 0;
+    s_emittedWarnings.clear();
     if (qEnvironmentVariableIsSet("QDOC_ENABLE_WARNINGLIMIT")
         || config.get(CONFIG_WARNINGLIMIT + Config::dot + "enabled").asBool())
         s_warningLimit = config.get(CONFIG_WARNINGLIMIT).asInt();
@@ -505,6 +512,8 @@ void Location::terminate()
     delete s_spuriousRegExp;
     s_spuriousRegExp = nullptr;
 
+    s_emittedWarnings.clear();
+
     s_warningLogStream.reset();
     s_warningLogFile.reset();
 }
@@ -533,6 +542,14 @@ void Location::internalError(const QString &hint)
   Formats \a message and \a details into a single string
   and outputs that string to \c stderr. \a type specifies
   whether the \a message is an error, warning, or report.
+
+  Each output format validates the same content in one project run, so an
+  identical warning can be encountered once per format. Only the first
+  encounter is emitted, logged, and counted. The key includes the complete
+  location string (including the include stack), the project, the message,
+  and the details. These fields are separated by \c{QChar(0)} to avoid
+  ambiguous boundaries (cf. report()). Errors and reports are never
+  suppressed.
  */
 void Location::emitMessage(MessageType type, const QString &message, const QString &details) const
 {
@@ -541,6 +558,14 @@ void Location::emitMessage(MessageType type, const QString &message, const QStri
                                              QRegularExpression::AnchorAtOffsetMatchOption);
         if (match.hasMatch() && match.capturedLength() == message.size())
             return;
+    }
+
+    if (type == Warning) {
+        const QString key = toString() + QChar(0) + s_project + QChar(0)
+                            + message + QChar(0) + details;
+        if (s_emittedWarnings.contains(key))
+            return;
+        s_emittedWarnings.insert(key);
     }
 
     QString result = message;

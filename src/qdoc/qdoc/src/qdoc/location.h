@@ -98,6 +98,7 @@ private:
     static QString s_projectRoot;
     static QRegularExpression *s_spuriousRegExp;
     static QSet<QString> s_reports;
+    static QSet<QString> s_emittedWarnings;
     static std::unique_ptr<QFile> s_warningLogFile;
     static std::unique_ptr<QTextStream> s_warningLogStream;
 };

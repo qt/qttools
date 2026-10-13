@@ -1,0 +1,7 @@
+# QDoc Warning Log
+# Project: DuplicateWarningRenderFailure
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/page.qdoc:9: [DuplicateWarningRenderFailure] (qdoc) warning: Can't link to 'MissingTarget'

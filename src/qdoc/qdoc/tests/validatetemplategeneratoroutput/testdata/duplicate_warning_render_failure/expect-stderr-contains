@@ -1,0 +1,8 @@
+# The broken template must fail the render in the one format that uses it,
+# and the failure must stay visible even though the run also contains a
+# duplicated warning.
+Failed to render page
+in format 'TemplateMarkdown'
+definitelyMissingField
+# The duplicated link warning is still reported.
+Can't link to 'MissingTarget'

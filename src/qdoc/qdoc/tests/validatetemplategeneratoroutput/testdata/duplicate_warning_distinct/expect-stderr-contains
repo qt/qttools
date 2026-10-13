@@ -1,0 +1,5 @@
+# Both warning messages must be present; the log snapshot asserts that the
+# repeated same-line signature appears once and each distinct warning
+# appears once.
+Can't link to 'DistinctTarget'
+Can't link to 'OtherTarget'

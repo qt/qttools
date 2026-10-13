@@ -1,0 +1,30 @@
+project = DuplicateWarningFirst
+description = First project of a two-project single-exec run. Both projects \
+              contain the same broken link, so the run reports two warnings \
+              (one per project) and exceeds the limit of one.
+productname = Qt
+
+locationinfo = false
+
+sourcedirs = src/first
+
+outputformats = HTML TemplateHTML TemplateMarkdown
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html-legacy
+HTML.extension = html
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+# In a single-exec run the warning count accumulates across the projects of
+# the master list: one warning per project, two in total, exceeding the
+# limit of one.
+warninglimit = 1
+warninglimit.enabled = true

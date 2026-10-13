@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="A broken template fails the render of one format while the other formats complete. The format-specific failure must stay visible next to the once-reported duplicated warning." version="" project="DuplicateWarningRenderFailure">
+    <namespace name="" status="active" access="public" module="duplicatewarningrenderfailure">
+        <page name="page.html" href="page.html" status="active" location="page.qdoc" documented="true" subtype="page" title="Page" fulltitle="Page" brief="A page with a single broken link"/>
+        <module name="DupRenderFailure" href="duprenderfailure-module.html" status="active" location="module.qdoc" documented="true" seen="true" title="Dup Render Failure Module" brief="A module that triggers the collection template"/>
+    </namespace>
+</INDEX>

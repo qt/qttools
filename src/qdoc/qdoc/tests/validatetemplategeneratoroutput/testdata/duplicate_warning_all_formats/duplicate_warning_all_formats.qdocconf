@@ -1,0 +1,38 @@
+project = DuplicateWarningAllFormats
+description = One broken link rendered by the legacy HTML and both template \
+              generators in a single run. The identical warning must be \
+              emitted, logged, and counted once, so the run stays within the \
+              limit.
+productname = Qt
+
+locationinfo = false
+
+sources.fileextensions = "*.qdoc"
+sourcedirs = src
+
+outputformats = HTML TemplateHTML TemplateMarkdown
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html-legacy
+HTML.extension = html
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+# The three generators each validate the same broken link. The run must see
+# one warning, not three: a limit of one fails the run if the warning is
+# reported more than once.
+warninglimit = 1
+warninglimit.enabled = true
+
+# Capture the warning in a log file for a snapshot comparison; relative
+# paths keep the golden independent of the checkout location.
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true

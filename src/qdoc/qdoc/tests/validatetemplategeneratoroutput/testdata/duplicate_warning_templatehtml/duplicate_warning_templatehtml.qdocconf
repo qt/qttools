@@ -1,0 +1,25 @@
+project = DuplicateWarningTemplateHtml
+description = One broken link with the TemplateHTML generator alone; the \
+              warning must be reported once and count once toward the limit.
+productname = Qt
+
+locationinfo = false
+
+sources.fileextensions = "*.qdoc"
+sourcedirs = src
+
+outputformats = TemplateHTML
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+# Allow exactly the one warning the fixture intentionally produces.
+warninglimit = 1
+warninglimit.enabled = true
+
+# Capture the warning in a log file for a snapshot comparison; relative
+# paths keep the golden independent of the checkout location.
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true

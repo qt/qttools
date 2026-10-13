@@ -1,0 +1,7 @@
+# QDoc Warning Log
+# Project: DuplicateWarningTemplateHtml
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/duplicate_warning_templatehtml.qdoc:9: [DuplicateWarningTemplateHtml] (qdoc) warning: Can't link to 'TargetThatDoesNotExist'
