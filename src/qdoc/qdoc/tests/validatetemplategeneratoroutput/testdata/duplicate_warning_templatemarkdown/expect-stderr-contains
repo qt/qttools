@@ -1,0 +1,3 @@
+# Asserts the broken link was still reported by the TemplateMarkdown
+# generator.
+Can't link to 'TargetThatDoesNotExist'

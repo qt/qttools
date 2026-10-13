@@ -1,0 +1,35 @@
+project = DuplicateWarningRenderFailure
+description = A broken template fails the render of one format while the \
+              other formats complete. The format-specific failure must stay \
+              visible next to the once-reported duplicated warning.
+productname = Qt
+
+locationinfo = false
+
+sources.fileextensions = "*.qdoc"
+sourcedirs = src
+
+outputformats = HTML TemplateHTML TemplateMarkdown
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html-legacy
+HTML.extension = html
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+TemplateMarkdown.templatedir = ./template
+
+# The page's broken link is one warning. The render failure is an error,
+# not a warning, and fails the run.
+warninglimit = 1
+warninglimit.enabled = true
+
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true

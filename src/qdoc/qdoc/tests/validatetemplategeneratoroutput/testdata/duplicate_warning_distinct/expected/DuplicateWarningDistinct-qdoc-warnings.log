@@ -1,0 +1,9 @@
+# QDoc Warning Log
+# Project: DuplicateWarningDistinct
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/duplicate_warning_distinct.qdoc:9: [DuplicateWarningDistinct] (qdoc) warning: Can't link to 'DistinctTarget'
+src/duplicate_warning_distinct.qdoc:11: [DuplicateWarningDistinct] (qdoc) warning: Can't link to 'DistinctTarget'
+src/duplicate_warning_distinct.qdoc:13: [DuplicateWarningDistinct] (qdoc) warning: Can't link to 'OtherTarget'

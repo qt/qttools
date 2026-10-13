@@ -1,0 +1,27 @@
+project = DuplicateWarningDistinct
+description = Warnings that differ in line or message are all reported, \
+              while an exactly repeated signature is reported once.
+productname = Qt
+
+locationinfo = false
+
+sources.fileextensions = "*.qdoc"
+sourcedirs = src
+
+outputformats = TemplateHTML
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+# The page contains four broken-link encounters: two on one line with the
+# same target (one warning), the same target on another line (one warning),
+# and a different target (one warning). Three warnings in total.
+warninglimit = 3
+warninglimit.enabled = true
+
+# Capture the warnings in a log file for a snapshot comparison; relative
+# paths keep the golden independent of the checkout location.
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true

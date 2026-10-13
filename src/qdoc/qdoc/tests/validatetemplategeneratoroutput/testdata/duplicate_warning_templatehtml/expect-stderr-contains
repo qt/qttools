@@ -1,0 +1,2 @@
+# Asserts the broken link was still reported by the TemplateHTML generator.
+Can't link to 'TargetThatDoesNotExist'

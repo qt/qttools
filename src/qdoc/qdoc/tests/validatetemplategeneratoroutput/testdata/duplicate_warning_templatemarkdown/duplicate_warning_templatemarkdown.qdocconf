@@ -1,0 +1,24 @@
+project = DuplicateWarningTemplateMarkdown
+description = One broken link with the TemplateMarkdown generator alone; the \
+              warning must be reported once and count once toward the limit.
+productname = Qt
+
+locationinfo = false
+
+sources.fileextensions = "*.qdoc"
+sourcedirs = src
+
+outputformats = TemplateMarkdown
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+# Allow exactly the one warning the fixture intentionally produces.
+warninglimit = 1
+warninglimit.enabled = true
+
+# Capture the warning in a log file for a snapshot comparison; relative
+# paths keep the golden independent of the checkout location.
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="One broken link with the TemplateHTML generator alone; the warning must be reported once and count once toward the limit." version="" project="DuplicateWarningTemplateHtml">
+    <namespace name="" status="active" access="public" module="duplicatewarningtemplatehtml">
+        <page name="warning-dup.html" href="warning-dup.html" status="active" location="duplicate_warning_templatehtml.qdoc" documented="true" subtype="page" title="Warning Deduplication" fulltitle="Warning Deduplication" brief="A page with a single broken link"/>
+    </namespace>
+</INDEX>

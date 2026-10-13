@@ -1,0 +1,5 @@
+# Both projects contain the same broken link. Each project must report its
+# own copy of the warning, even though the signature is otherwise
+# identical, and the accumulated count (two) exceeds the limit of one.
+Can't link to 'TargetThatDoesNotExist'
+Documentation warnings (2) exceeded the limit (1)

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Second project of a two-project single-exec run. Both projects contain the same broken link, so the run reports two warnings (one per project) and exceeds the limit of one." version="" project="DuplicateWarningSecond">
+    <namespace name="" status="active" access="public" module="duplicatewarningsecond">
+        <page name="second.html" href="second.html" status="active" location="second.qdoc" documented="true" subtype="page" title="Second Project Page" fulltitle="Second Project Page" brief="A page with a single broken link"/>
+    </namespace>
+</INDEX>
