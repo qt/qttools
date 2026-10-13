@@ -127,8 +127,7 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
 }
 
 void QmlMarkupVisitor::addMarkedUpToken(const QQmlJS::SourceLocation &location,
-                                        const QString &tagName,
-                                        const QHash<QString, QString> &attributes)
+                                        const QString &tagName)
 {
     if (!location.isValid())
         return;
@@ -138,10 +137,7 @@ void QmlMarkupVisitor::addMarkedUpToken(const QQmlJS::SourceLocation &location,
     else if (m_cursor > location.offset)
         return;
 
-    m_output += "<@%1"_L1.arg(tagName);
-    for (const auto &key : attributes)
-        m_output += " %1=\"%2\""_L1.arg(key, attributes[key]);
-    m_output += ">%2</@%3>"_L1.arg(TextUtils::protect(sourceText(location)), tagName);
+    m_output += "<@%1>%2</@%1>"_L1.arg(tagName, TextUtils::protect(sourceText(location)));
     m_cursor += location.length;
 }
 
