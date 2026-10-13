@@ -1,4 +1,4 @@
-[Cpp20Concepts](cpp20concepts-module.md)> IntegralCalculator
+[C++20 Concepts Test Module](cpp20concepts-module.md)> IntegralCalculator
 
 **Contents**
 

@@ -1,4 +1,4 @@
-[DeprecationNotes](deprecationnotes-qmlmodule.md)> OnlyInherited
+[Deprecation Notes QML Types](deprecationnotes-qmlmodule.md)> OnlyInherited
 
 # OnlyInherited QML Type
 

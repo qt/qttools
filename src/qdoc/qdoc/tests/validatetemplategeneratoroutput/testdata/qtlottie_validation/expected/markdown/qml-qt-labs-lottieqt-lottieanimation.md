@@ -1,4 +1,4 @@
-[Qt.labs.lottieqt](qml-qt-labs-lottieqt-qmlmodule.md)> LottieAnimation
+[Qt Lottie Animation QML Types](qml-qt-labs-lottieqt-qmlmodule.md)> LottieAnimation
 
 **Contents**
 

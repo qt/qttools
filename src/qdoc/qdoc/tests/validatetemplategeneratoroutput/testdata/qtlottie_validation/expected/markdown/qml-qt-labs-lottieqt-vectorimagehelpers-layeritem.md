@@ -1,4 +1,4 @@
-[Qt.labs.lottieqt.VectorImageHelpers](qml-qt-labs-lottieqt-vectorimagehelpers-qmlmodule.md)> LayerItem
+[Qt Lottie Vector Image Helpers QML Types](qml-qt-labs-lottieqt-vectorimagehelpers-qmlmodule.md)> LayerItem
 
 **Contents**
 

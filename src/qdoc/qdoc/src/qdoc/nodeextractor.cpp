@@ -2072,7 +2072,8 @@ IR::NavigationData extractNavigationData(const PageNode *pn, const HrefResolver 
     }
 
     if (pn->isClassNode()) {
-        if (!cppclassespage.isEmpty() && !cppclassestitle.isEmpty()) {
+        const bool hasClassesCrumb = !cppclassespage.isEmpty() && !cppclassestitle.isEmpty();
+        if (hasClassesCrumb) {
             auto [href, state] = resolveCrumb(cppclassespage);
             nav.breadcrumbs.append({cppclassestitle, std::move(href), state});
         }
@@ -2084,13 +2085,16 @@ IR::NavigationData extractNavigationData(const PageNode *pn, const HrefResolver 
 
         if (!pn->physicalModuleName().isEmpty() && moduleNode
             && (!moduleState.isEmpty() || moduleNode->title() != cppclassespage)) {
-            nav.breadcrumbs.append({moduleNode->name() + moduleState,
+            const QString moduleText = hasClassesCrumb || moduleNode->title().isEmpty()
+                    ? moduleNode->name() : moduleNode->title();
+            nav.breadcrumbs.append({moduleText + moduleState,
                                     resolveHref(hrefResolver, moduleNode, pn),
                                     CrumbState::Link});
         }
         nav.breadcrumbs.append({pn->name(), {}, CrumbState::Current});
     } else if (pn->isQmlType()) {
-        if (!qmltypespage.isEmpty() && !qmltypestitle.isEmpty()) {
+        const bool hasTypesCrumb = !qmltypespage.isEmpty() && !qmltypestitle.isEmpty();
+        if (hasTypesCrumb) {
             auto [href, state] = resolveCrumb(qmltypespage);
             nav.breadcrumbs.append({qmltypestitle, std::move(href), state});
         }
@@ -2102,7 +2106,9 @@ IR::NavigationData extractNavigationData(const PageNode *pn, const HrefResolver 
 
         if (moduleNode
             && (!moduleState.isEmpty() || moduleNode->title() != qmltypespage)) {
-            nav.breadcrumbs.append({moduleNode->name() + moduleState,
+            const QString moduleText = hasTypesCrumb || moduleNode->title().isEmpty()
+                    ? moduleNode->name() : moduleNode->title();
+            nav.breadcrumbs.append({moduleText + moduleState,
                                     resolveHref(hrefResolver, moduleNode, pn),
                                     CrumbState::Link});
         }

@@ -1,4 +1,4 @@
-[ConsumerModule](consumermodule-qmlmodule.md)> Button
+[Consumer Module](consumermodule-qmlmodule.md)> Button
 
 **Contents**
 

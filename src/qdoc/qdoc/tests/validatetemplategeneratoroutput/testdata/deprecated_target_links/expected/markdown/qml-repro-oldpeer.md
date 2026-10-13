@@ -1,4 +1,4 @@
-[Repro](repro-qmlmodule.md)> OldPeer
+[Deprecated Link Repro](repro-qmlmodule.md)> OldPeer
 
 # OldPeer QML Type
 

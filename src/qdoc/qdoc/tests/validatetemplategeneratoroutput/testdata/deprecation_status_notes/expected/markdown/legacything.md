@@ -1,4 +1,4 @@
-[DeprecationStatusNotes](deprecationstatusnotes-module.md)> LegacyThing
+[Deprecation Status Notes](deprecationstatusnotes-module.md)> LegacyThing
 
 **Contents**
 

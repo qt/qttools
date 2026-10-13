@@ -1,4 +1,4 @@
-[QtCoap](qtcoap-module.md)> QCoapSecurityConfiguration
+[Qt CoAP C++ Classes](qtcoap-module.md)> QCoapSecurityConfiguration
 
 **Contents**
 

@@ -1,4 +1,4 @@
-[TestModule](qml-testmodule-qmlmodule.md)> Layout
+[Test Module](qml-testmodule-qmlmodule.md)> Layout
 
 **Contents**
 

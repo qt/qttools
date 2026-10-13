@@ -1746,7 +1746,10 @@ QString HtmlGenerator::fileExtension() const
     \row    \li types    \li navigation.cppclassespage (C++)\br
                              navigation.qmltypespage (QML)   \li Types only
     \row    \li module   \li n/a (automatic)                 \li Module page if different
-                                                                 from previous item
+                                                                 from previous item; labeled
+                                                                 with the module name after
+                                                                 a types item, otherwise
+                                                                 with the module title
     \row    \li page     \li n/a                             \li Current page title
   \endtable
 
@@ -1801,24 +1804,31 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
         addNavItem(m_landingpage, m_landingtitle);
 
     if (node->isClassNode()) {
-        if (!m_cppclassespage.isEmpty() && !m_cppclassestitle.isEmpty())
+        const bool hasClassesItem = !m_cppclassespage.isEmpty() && !m_cppclassestitle.isEmpty();
+        if (hasClassesItem)
             addNavItem(m_cppclassespage, m_cppclassestitle);
         if (!node->physicalModuleName().isEmpty()) {
             // Add explicit link to the \module page if:
             //   - It's not the C++ classes page that's already added, OR
             //   - It has a \modulestate associated with it
-            if (moduleNode && (!moduleState.isEmpty() || moduleNode->title() != m_cppclassespage))
-                addNavItemNode(moduleNode, moduleNode->name() + moduleState);
+            if (moduleNode && (!moduleState.isEmpty() || moduleNode->title() != m_cppclassespage)) {
+                const QString moduleText = hasClassesItem || moduleNode->title().isEmpty()
+                        ? moduleNode->name() : moduleNode->title();
+                addNavItemNode(moduleNode, moduleText + moduleState);
+            }
         }
         navigationbar << Atom(itemLeft) << Atom(Atom::String, node->name()) << Atom(itemRight);
     } else if (node->isQmlType()) {
-        if (!m_qmltypespage.isEmpty() && !m_qmltypestitle.isEmpty())
+        const bool hasTypesItem = !m_qmltypespage.isEmpty() && !m_qmltypestitle.isEmpty();
+        if (hasTypesItem)
             addNavItem(m_qmltypespage, m_qmltypestitle);
         // Add explicit link to the \qmlmodule page if:
         //   - It's not the QML types page that's already added, OR
         //   - It has a \modulestate associated with it
         if (moduleNode && (!moduleState.isEmpty() || moduleNode->title() != m_qmltypespage)) {
-            addNavItemNode(moduleNode, moduleNode->name() + moduleState);
+            const QString moduleText = hasTypesItem || moduleNode->title().isEmpty()
+                    ? moduleNode->name() : moduleNode->title();
+            addNavItemNode(moduleNode, moduleText + moduleState);
         }
         navigationbar << Atom(itemLeft) << Atom(Atom::String, node->name()) << Atom(itemRight);
     } else {

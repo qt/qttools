@@ -1,4 +1,4 @@
-[CatalogPagesTest](catalogpagestest-module.md)> BetaWidget
+[CatalogPagesTest C++ Classes](catalogpagestest-module.md)> BetaWidget
 
 **Contents**
 

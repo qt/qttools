@@ -25,11 +25,11 @@
             <contents name="details-section" title="Details" level="1"/>
             <contents name="more-information" title="More Information" level="1"/>
         </page>
-        <qmlclass name="NavItem" href="qml-navitem.html" status="active" access="public" location="qmltype.qdoc" documented="true" brief="A QML navigation item">
+        <qmlclass name="NavItem" qml-module-name="TestNavigation" fullname="TestNavigation.NavItem" href="qml-testnavigation-navitem.html" status="active" access="public" location="qmltype.qdoc" documented="true" brief="A QML navigation item">
             <contents name="usage" title="Usage" level="1"/>
             <contents name="properties" title="Properties" level="2"/>
         </qmlclass>
-        <module name="TestNavigation" href="testnavigation-module.html" status="active" location="testnavmodule.qdoc" documented="true" seen="true" title="TestNavigation" brief="Test module for navigation fixture"/>
-        <qmlmodule name="TestNavigation" href="testnavigation-qmlmodule.html" status="internal-auto" seen="false"/>
+        <module name="TestNavigation" href="testnavigation-module.html" status="active" location="testnavmodule.qdoc" documented="true" seen="true" title="Test Navigation C++ Classes" brief="Test module for navigation fixture"/>
+        <qmlmodule name="TestNavigation" qml-module-name="TestNavigation" href="testnavigation-qmlmodule.html" status="active" location="testnavmodule.qdoc" documented="true" seen="true" title="Test Navigation QML Types" brief="Test QML module for navigation fixture"/>
     </namespace>
 </INDEX>

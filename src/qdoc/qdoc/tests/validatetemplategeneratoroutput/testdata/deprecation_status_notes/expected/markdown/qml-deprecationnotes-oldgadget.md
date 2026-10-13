@@ -1,4 +1,4 @@
-[DeprecationNotes](deprecationnotes-qmlmodule.md)> OldGadget
+[Deprecation Notes QML Types](deprecationnotes-qmlmodule.md)> OldGadget
 
 # OldGadget QML Type
 

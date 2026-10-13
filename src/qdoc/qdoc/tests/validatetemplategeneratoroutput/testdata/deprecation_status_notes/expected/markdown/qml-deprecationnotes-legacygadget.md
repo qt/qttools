@@ -1,4 +1,4 @@
-[DeprecationNotes](deprecationnotes-qmlmodule.md)> LegacyGadget
+[Deprecation Notes QML Types](deprecationnotes-qmlmodule.md)> LegacyGadget
 
 **Contents**
 

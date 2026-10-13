@@ -1,4 +1,4 @@
-[MemberLink](memberlink-module.md)> MemberLinkContext
+[Member Link Context](memberlink-module.md)> MemberLinkContext
 
 **Contents**
 

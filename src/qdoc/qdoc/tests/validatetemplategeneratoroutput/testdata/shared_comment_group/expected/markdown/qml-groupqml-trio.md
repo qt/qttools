@@ -1,4 +1,4 @@
-[GroupQml](groupqml-qmlmodule.md)> Trio
+[Group QML](groupqml-qmlmodule.md)> Trio
 
 **Contents**
 

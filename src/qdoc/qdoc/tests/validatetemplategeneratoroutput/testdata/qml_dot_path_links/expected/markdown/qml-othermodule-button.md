@@ -1,4 +1,4 @@
-[OtherModule](othermodule-qmlmodule.md)> Button
+[Other Module](othermodule-qmlmodule.md)> Button
 
 **Contents**
 

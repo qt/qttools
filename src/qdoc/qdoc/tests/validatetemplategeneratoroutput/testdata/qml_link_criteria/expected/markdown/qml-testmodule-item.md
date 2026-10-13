@@ -1,4 +1,4 @@
-[TestModule](testmodule-qmlmodule.md)> Item
+[QML Link Criteria](testmodule-qmlmodule.md)> Item
 
 **Contents**
 

@@ -1,4 +1,4 @@
-[UndocumentedBaseClasses](undocumentedbaseclasses-module.md)> PublicBase
+[Undocumented Base Classes](undocumentedbaseclasses-module.md)> PublicBase
 
 # PublicBase
 

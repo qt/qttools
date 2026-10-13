@@ -1,4 +1,4 @@
-[QtCoap](qtcoap-module.md)> QCoapClient
+[Qt CoAP C++ Classes](qtcoap-module.md)> QCoapClient
 
 **Contents**
 

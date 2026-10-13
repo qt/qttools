@@ -1,4 +1,4 @@
-[UndocumentedBaseClasses](undocumentedbaseclasses-module.md)> OnlyUndocumentedRoot
+[Undocumented Base Classes](undocumentedbaseclasses-module.md)> OnlyUndocumentedRoot
 
 # OnlyUndocumentedRoot
 

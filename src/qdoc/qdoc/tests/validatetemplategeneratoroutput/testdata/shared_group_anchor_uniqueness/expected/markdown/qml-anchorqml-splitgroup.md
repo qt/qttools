@@ -1,4 +1,4 @@
-[AnchorQml](anchorqml-qmlmodule.md)> SplitGroup
+[Anchor QML](anchorqml-qmlmodule.md)> SplitGroup
 
 **Contents**
 

@@ -1,4 +1,4 @@
-[AnchorQml](anchorqml-qmlmodule.md)> RootAndGroup
+[Anchor QML](anchorqml-qmlmodule.md)> RootAndGroup
 
 **Contents**
 

@@ -1,4 +1,4 @@
-[DeprecationStatusNotes](deprecationstatusnotes-module.md)> PendingThing
+[Deprecation Status Notes](deprecationstatusnotes-module.md)> PendingThing
 
 **Contents**
 

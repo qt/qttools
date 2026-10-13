@@ -1,4 +1,4 @@
-[UndocumentedBaseClasses](undocumentedbaseclasses-module.md)> ViaUndocumented
+[Undocumented Base Classes](undocumentedbaseclasses-module.md)> ViaUndocumented
 
 # ViaUndocumented
 

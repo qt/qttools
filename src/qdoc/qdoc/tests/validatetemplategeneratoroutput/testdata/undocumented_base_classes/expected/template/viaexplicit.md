@@ -1,4 +1,4 @@
-[UndocumentedBaseClasses](undocumentedbaseclasses-module.md)> ViaExplicit
+[Undocumented Base Classes](undocumentedbaseclasses-module.md)> ViaExplicit
 
 # ViaExplicit
 

@@ -1,4 +1,4 @@
-[OtherModule](othermodule-qmlmodule.md)> Layout
+[Other Module](othermodule-qmlmodule.md)> Layout
 
 **Contents**
 

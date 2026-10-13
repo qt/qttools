@@ -1,4 +1,4 @@
-[ConsumerQml](consumerqml-qmlmodule.md)> Widget
+[Consumer QML](consumerqml-qmlmodule.md)> Widget
 
 **Contents**
 

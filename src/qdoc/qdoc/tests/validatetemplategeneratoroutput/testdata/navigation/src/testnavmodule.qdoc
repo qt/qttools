@@ -3,6 +3,12 @@
 
 /*!
     \module TestNavigation
-    \title TestNavigation
+    \title Test Navigation C++ Classes
     \brief Test module for navigation fixture.
+*/
+
+/*!
+    \qmlmodule TestNavigation
+    \title Test Navigation QML Types
+    \brief Test QML module for navigation fixture.
 */
