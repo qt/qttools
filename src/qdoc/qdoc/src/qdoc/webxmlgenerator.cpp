@@ -7,6 +7,7 @@
 #include "collectionnode.h"
 #include "config.h"
 #include "inclusionfilter.h"
+#include "indexserializationcontext.h"
 #include "node.h"
 #include "nodecontext.h"
 #include "propertynode.h"
@@ -147,15 +148,23 @@ void WebXMLGenerator::generateExampleFilePage(const PageNode *en, ResolvedFile r
 void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer, Node *node)
 {
     marker_ = CodeMarker::markerForFileName(node->location().filePath());
+    const Config &config = Config::instance();
+    IndexSerializationContext context;
+    context.documentLocation = [this](const Node *target) {
+        return fullDocumentLocation(target);
+    };
+    context.inclusionPolicy = config.createInclusionPolicy();
+    context.storeLocationInfo = config.get(CONFIG_LOCATIONINFO).asBool();
+    context.exampleEntries = IndexSerializationContext::ExampleEntries::Separate;
     auto qdocIndexFiles = QDocIndexFiles::qdocIndexFiles();
     if (qdocIndexFiles) {
-        qdocIndexFiles->generateIndexSections(writer, node, this, m_indexWriteState, this);
+        qdocIndexFiles->generateIndexSections(writer, node, context, m_indexWriteState, this);
         // generateIndexSections returns early for collection nodes (groups,
         // modules, QML modules, concepts) so their member listings can be
         // written last in an index file. When rendering a single collection
         // page, that leaves the document empty, so emit the section explicitly.
         if (node->isCollectionNode())
-            std::ignore = qdocIndexFiles->generateIndexSection(writer, node, this,
+            std::ignore = qdocIndexFiles->generateIndexSection(writer, node, context,
                                                               m_indexWriteState, this);
     }
 }

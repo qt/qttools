@@ -1,0 +1,61 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \struct IndexSerializationContext
+    \internal
+    \brief Supplies publication locations and policy to the index section serializer.
+
+    The caller owns this context for the duration of serialization. Index
+    export and WebXML supply separate contexts; the serializer does not choose
+    a generator or derive an href from an output extension. Caller-provided
+    locations may still come from a legacy generator during migration.
+*/
+
+/*!
+    \enum IndexSerializationContext::ExampleEntries
+    \internal
+
+    Controls whether example file and image entries appear inside their
+    example section.
+
+    \value Inline Write nested entries and resolve their hrefs through
+                  exampleFileLocation.
+    \value Separate Omit nested entries; the caller writes them separately.
+*/
+
+/*!
+    \variable IndexSerializationContext::documentLocation
+    Returns the complete href for a document node, including its fragment.
+    The serializer writes the href without changing its path or fragment.
+    This callback must remain valid throughout serialization.
+*/
+
+/*!
+    \variable IndexSerializationContext::exampleFileLocation
+    Returns a complete href for an example file or image. Required when
+    exampleEntries is Inline and an example contains files or images.
+    This callback must remain valid throughout serialization.
+*/
+
+/*!
+    \variable IndexSerializationContext::inclusionPolicy
+    Filters serialized nodes and functions independently of the renderer.
+*/
+
+/*!
+    \variable IndexSerializationContext::project
+    The project name written to the INDEX element. WebXML sections do not
+    use this value.
+*/
+
+/*!
+    \variable IndexSerializationContext::exampleEntries
+    Selects whether example files and images are nested in the section or
+    written separately by the caller.
+*/
+
+/*!
+    \variable IndexSerializationContext::storeLocationInfo
+    Includes declaration file paths and line numbers when available.
+*/

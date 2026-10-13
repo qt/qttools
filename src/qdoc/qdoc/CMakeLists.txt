@@ -133,6 +133,7 @@ set(qdoc_sources
     src/qdoc/inclusionfilter.h
     src/qdoc/inclusionflags.h
     src/qdoc/inclusionpolicy.h
+    src/qdoc/indexserializationcontext.h
     src/qdoc/location.cpp
     src/qdoc/main.cpp
     src/qdoc/manifestwriter.cpp
