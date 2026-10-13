@@ -1,0 +1,11 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \page qml-signal.html
+    \title QML Signal Declaration
+
+    \qml
+    Item { signal triggered() }
+    \endqml
+*/
