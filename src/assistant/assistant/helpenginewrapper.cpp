@@ -712,7 +712,7 @@ void HelpEngineWrapperPrivate::checkDocFilesWatched()
     const int docFilesCount = m_helpEngine->registeredDocumentations().size();
     if (watchedFilesCount != docFilesCount) {
         qWarning("Strange: Have %d docs, but %d are being watched",
-                 watchedFilesCount, docFilesCount);
+                 docFilesCount, watchedFilesCount);
     }
 }
 
