@@ -937,6 +937,16 @@ bool QHelpCollectionHandler::registerDocumentation(const QString &fileName)
         return false;
     }
 
+    // A file holds exactly one namespace. A registration of the same file under
+    // a different namespace is stale (e.g. the file was regenerated for another
+    // version), so drop it. Files at other paths are never affected.
+    const QString absFileName = QFileInfo(fileName).absoluteFilePath();
+    const auto &registered = registeredDocumentations();
+    for (const FileInfo &info : registered) {
+        if (info.namespaceName != ns && absoluteDocPath(info.fileName) == absFileName)
+            unregisterDocumentation(info.namespaceName);
+    }
+
     Transaction transaction(m_connectionName);
 
     const int nsId = registerNamespace(ns, fileName);
