@@ -69,6 +69,7 @@ signals:
 private:
     HelpEngineWrapperPrivate(const QString &collectionFile);
 
+    void removeStaleDocumentation();
     void initFileSystemWatchers();
     void checkDocFilesWatched();
     void qchFileChanged(const QString &fileName, bool fromTimeout);
@@ -684,7 +685,25 @@ HelpEngineWrapperPrivate::HelpEngineWrapperPrivate(const QString &collectionFile
     TRACE_OBJ
     m_helpEngine->setReadOnly(false);
     m_helpEngine->setUsesFilterEngine(true);
+    removeStaleDocumentation();
     initFileSystemWatchers();
+}
+
+/*
+ * A qch file holds exactly one namespace. If a file was regenerated for another
+ * version, the registered namespace no longer matches the file's own one.
+ * Files that can't be read (e.g. missing) are left registered.
+ */
+void HelpEngineWrapperPrivate::removeStaleDocumentation()
+{
+    TRACE_OBJ
+    const auto &docs = m_helpEngine->registeredDocumentations();
+    for (const QString &ns : docs) {
+        const QString fileNs = QHelpEngineCore::namespaceName(
+                m_helpEngine->documentationFileName(ns));
+        if (!fileNs.isEmpty() && fileNs != ns)
+            m_helpEngine->unregisterDocumentation(ns);
+    }
 }
 
 void HelpEngineWrapperPrivate::initFileSystemWatchers()
