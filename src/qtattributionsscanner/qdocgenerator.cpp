@@ -72,6 +72,10 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
             << ".html \n";
     }
 
+    // Suppress a potential QDoc warning by marking an attribution as an auxiliary
+    // page that's not required to be included in a TOC.
+    out << "\\meta {toc} {nonessential}\n";
+
     out << "\\target " << package.id << "\n\n";
     out << "\\title " << package.name;
     if (!package.version.isEmpty())
