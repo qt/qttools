@@ -58,11 +58,12 @@ endfunction()
 
 # Internal helper: Register a QDoc warning with automatic suppression.
 # Warnings are suppressed when the user explicitly disabled QDoc via -no-feature-qdoc.
-function(_qdoc_add_configure_warning MESSAGE CONDITION)
+# The condition is passed unquoted, because the evaluator expects one token per list element.
+function(_qdoc_add_configure_warning MESSAGE)
     qt_configure_add_report_entry(
         TYPE WARNING
         MESSAGE "${MESSAGE}"
-        CONDITION (${CONDITION}) AND NOT QDOC_EXPLICITLY_DISABLED
+        CONDITION ( ${ARGN} ) AND NOT QDOC_EXPLICITLY_DISABLED
     )
 endfunction()
 
@@ -74,11 +75,12 @@ function(qdoc_register_configure_warnings)
     qdoc_generate_clang_version_warning_message(_clang_version_warning)
 
     _qdoc_add_configure_warning("${_clang_warning}"
-        "NOT QT_FEATURE_clang")
+        NOT QT_FEATURE_clang)
     _qdoc_add_configure_warning("${_qmlprivate_warning}"
-        "NOT TARGET Qt::QmlPrivate")
+        NOT TARGET Qt::QmlPrivate)
     _qdoc_add_configure_warning("${_missing_features_warning}"
-        "NOT QT_FEATURE_commandlineparser OR NOT QT_FEATURE_thread")
+        NOT QT_FEATURE_commandlineparser OR NOT QT_FEATURE_thread)
+    # Expanded now, because a top-level build evaluates conditions outside qttools' scope.
     _qdoc_add_configure_warning("${_clang_version_warning}"
-        "QT_LIB_CLANG_VERSION VERSION_LESS QDOC_MINIMUM_CLANG_VERSION")
+        QT_FEATURE_clang AND QT_LIB_CLANG_VERSION VERSION_LESS ${QDOC_MINIMUM_CLANG_VERSION})
 endfunction()
