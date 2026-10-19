@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="old-page.html" href="old-page.html" status="deprecated" location="deprecatedpage.qdoc" documented="true" subtype="page" title="Old Page" fulltitle="Old Page">
+            <keyword name="old-keyword" title="Old Keyword"/>
+            <description>
+                <para>This page is deprecated.</para>
+                <para>This page documents something deprecated.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>

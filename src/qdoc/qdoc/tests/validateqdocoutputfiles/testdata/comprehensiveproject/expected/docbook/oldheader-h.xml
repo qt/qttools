@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:info>
+<db:title its:translate="no">&lt;oldheader.h&gt; - Old Header</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para><db:emphasis role="bold">This documentation is deprecated since 6.0. We strongly advise against using it in new code.</db:emphasis></db:para>
+<db:para>This documentation was introduced in Qt 2.0.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist its:translate="no">
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>oldheader.h</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Since</db:term>
+<db:listitem>
+<db:para>Qt 2.0</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Status</db:term>
+<db:listitem>
+<db:para>Deprecated since 6.0</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:para><db:emphasis role="bold">This documentation is deprecated since 6.0. We strongly advise against using it in new code.</db:emphasis></db:para>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This header file is deprecated.</db:para>
+<db:para>This header file documents something deprecated.</db:para>
+</db:section>
+</db:article>

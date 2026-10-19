@@ -1,0 +1,23 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \page old-page.html
+    \title Old Page
+    \keyword Old Keyword
+
+    \deprecated [6.0] This page is deprecated.
+
+    This page documents something deprecated.
+*/
+
+/*!
+    \headerfile <oldheader.h>
+    \inmodule TestCPP
+    \title Old Header
+    \keyword Old Header Keyword
+
+    \deprecated [6.0] This header file is deprecated.
+
+    This header file documents something deprecated.
+*/
