@@ -60,6 +60,8 @@ public:
     class IndexTable
     {
     public:
+        // Set when the tables were read, so that missing tables aren't mistaken for empty ones.
+        bool valid = false;
         QList<IndexItem> indexItems;
         QList<FileItem> fileItems;
         QList<ContentsItem> contentsItems;
