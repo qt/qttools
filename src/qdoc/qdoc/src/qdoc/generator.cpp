@@ -565,11 +565,8 @@ QString Generator::fullDocumentLocation(const Node *node) const
         break;
     }
 
-    if (!node->isClassNode() && !node->isNamespace()) {
-        if (node->isDeprecated())
-            parentName.replace(QLatin1Char('.') + fileExtension(),
-                               "-obsolete." + fileExtension());
-    }
+    if (!node->isPageNode() && node->isDeprecated())
+        parentName.replace(u'.' + fileExtension(), "-obsolete."_L1 + fileExtension());
 
     return parentName.toLower() + anchorRef;
 }

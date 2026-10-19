@@ -121,6 +121,9 @@
         <class name="DontLinkToMe" href="dontlinktome.html" status="ignored" access="public" location="testcpp.h" since="2.0" documented="true" includefile="testcpp.h" module="TestCPP" brief="Class that does not generate documentation"/>
         <class name="SeenClass" href="seenclass.html" status="active" access="public" location="dont.h" since="2.0" documented="true" includefile="dont.h" module="TestCPP" brief="A public but undocumented class"/>
         <class name="UnseenClass" href="unseenclass.html" status="ignored" access="public" location="dont.h" since="2.0" documented="true" includefile="dont.h" module="TestCPP" brief="A public but undocumented class"/>
+        <header name="&lt;oldheader.h&gt;" href="oldheader-h.html" status="deprecated" location="deprecatedpage.qdoc" since="2.0" documented="true" includefile="oldheader.h" module="TestCPP" title="Old Header" fulltitle="&lt;oldheader.h&gt; - Old Header" subtitle="">
+            <keyword name="old-header-keyword" title="Old Header Keyword"/>
+        </header>
         <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking">
             <keyword name="indexedkeyword" title="indexedKeyword"/>
             <contents name="testqdoc" title="TestQDoc" level="1"/>
@@ -131,6 +134,9 @@
         <page name="obsolete-classes.html" href="obsolete-classes.html" status="active" location="classlists.qdoc" documented="true" groups="deprecated-classes" subtype="page" title="Obsolete Classes" fulltitle="Obsolete Classes">
             <contents name="classes-with-obsolete-members" title="Classes with obsolete members" level="1"/>
             <contents name="testqdoc" title="TestQDoc" level="2"/>
+        </page>
+        <page name="old-page.html" href="old-page-obsolete.html" status="deprecated" location="deprecatedpage.qdoc" documented="true" subtype="page" title="Old Page" fulltitle="Old Page">
+            <keyword name="old-keyword" title="Old Keyword"/>
         </page>
         <page name="qmlmodules.html" href="qmlmodules.html" status="active" location="modules.qdoc" documented="true" subtype="page" title="QML Modules" fulltitle="QML Modules">
             <contents name="qml-types" title="QML types" level="1"/>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <header name="&lt;oldheader.h&gt;" href="oldheader-h.html" status="deprecated" location="deprecatedpage.qdoc" since="2.0" documented="true" includefile="oldheader.h" module="TestCPP" title="Old Header" fulltitle="&lt;oldheader.h&gt; - Old Header" subtitle="">
+            <keyword name="old-header-keyword" title="Old Header Keyword"/>
+            <description>
+                <para>This header file is deprecated.</para>
+                <para>This header file documents something deprecated.</para>
+            </description>
+        </header>
+    </document>
+</WebXML>
