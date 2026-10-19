@@ -153,6 +153,7 @@ private slots:
     void registerNonDocumentationFile();
     void registerMalformedDocumentation_data();
     void registerMalformedDocumentation();
+    void registerFileNotFoundEntry();
     void registerIdsExhausted_data();
     void registerIdsExhausted();
 
@@ -570,6 +571,29 @@ void tst_QHelpCollectionHandler::registerMalformedDocumentation()
 
     // A failed registration leaves nothing behind.
     QCOMPARE(rowCounts(colFile), countsBefore);
+}
+
+void tst_QHelpCollectionHandler::registerFileNotFoundEntry()
+{
+    // The help generator writes an entry with no folder and no name for the keywords
+    // referencing files which aren't part of the documentation, and makes them point at it.
+    const QString qchFile = documentationFile(
+            {u"INSERT INTO FileNameTable (FolderId, Name, FileId, Title) "
+              "VALUES (0, '', 1000, '')"_s,
+             u"UPDATE IndexTable SET FileId = 1000 WHERE Name = 'bar'"_s});
+    QVERIFY(!qchFile.isEmpty());
+    const QString colFile = emptyCollectionFile();
+    QVERIFY(!colFile.isEmpty());
+
+    QHelpEngineCore c(colFile);
+    c.setReadOnly(false);
+    QVERIFY(c.setupData());
+    QVERIFY(c.registerDocumentation(qchFile));
+    QVERIFY(c.error().isEmpty());
+    QCOMPARE(c.registeredDocumentations(), QStringList(DocNamespace));
+    // The keyword without a target is left out, the other ones are registered.
+    QCOMPARE(c.documentsForKeyword(TestKeyword).size(), 0);
+    QCOMPARE(c.documentsForKeyword(u"einstein"_s).size(), 1);
 }
 
 void tst_QHelpCollectionHandler::registerIdsExhausted_data()

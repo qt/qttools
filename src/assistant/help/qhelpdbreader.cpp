@@ -7,6 +7,7 @@
 
 #include <QtCore/qfile.h>
 #include <QtCore/qmap.h>
+#include <QtCore/qset.h>
 #include <QtCore/qvariant.h>
 #include <QtCore/qversionnumber.h>
 #include <QtSql/qsqldatabase.h>
@@ -240,7 +241,7 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
     QMap<int, int> originalFileIdToNewFileId;
 
     int filesCount = 0;
-    m_query->exec(
+    const bool filesRead = m_query->exec(
         "SELECT "
             "FileNameTable.FileId, "
             "FileNameTable.Name, "
@@ -248,6 +249,11 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
         "FROM FileNameTable, FolderTable "
         "WHERE FileNameTable.FolderId = FolderTable.Id "
         "ORDER BY FileId"_L1);
+    if (!filesRead) {
+        m_query->finish();
+        m_query->setForwardOnly(false);
+        return table;
+    }
     while (m_query->next()) {
         const int fileId = m_query->value(0).toInt();
         FileItem fileItem;
@@ -341,14 +347,25 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
         }
     }
 
+    // The help generator writes a "file not found" entry, which has no folder and no name, and
+    // makes the keywords referencing files missing in the documentation point at it.
+    // Such keywords have no target, so they are left out.
+    QSet<int> fileNotFoundIds;
+    m_query->exec("SELECT FileId FROM FileNameTable WHERE FolderId = 0 AND Name = ''"_L1);
+    while (m_query->next())
+        fileNotFoundIds.insert(m_query->value(0).toInt());
+
     // reindex fileId references
     for (auto it = idToIndexItem.cbegin(), end = idToIndexItem.cend(); it != end; ++it) {
         IndexItem item = it.value();
+        if (fileNotFoundIds.contains(item.fileId))
+            continue;
         // An unknown file id is kept invalid, it's rejected when registering the index.
         item.fileId = originalFileIdToNewFileId.value(item.fileId, -1);
         table.indexItems.append(item);
     }
 
+    table.valid = true;
     table.fileItems = idToFileItem.values();
     table.contentsItems = idToContentsItem.values();
 

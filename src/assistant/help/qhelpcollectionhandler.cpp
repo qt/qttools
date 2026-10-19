@@ -2089,6 +2089,9 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         return false;
     };
 
+    if (!indexTable.valid)
+        return fail();
+
     Transaction transaction(m_connectionName);
 
     QMap<QString, QVariantList> filterAttributeToNewFileId;
