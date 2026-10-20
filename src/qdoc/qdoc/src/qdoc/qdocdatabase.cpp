@@ -639,21 +639,34 @@ void QDocDatabase::initializeDB()
 
   If the QML module id is empty, looks up the QML type by
   \a name only.
+
+  When \a tree is given, the lookup is restricted to that
+  tree instead of searching the whole forest.
  */
-QmlTypeNode *QDocDatabase::findQmlType(const QString &qmid, const QString &name, const Node *relative)
+QmlTypeNode *QDocDatabase::findQmlType(const QString &qmid, const QString &name,
+                                       const Node *relative, Tree *tree)
 {
     if (!qmid.isEmpty()) {
-        if (auto *qcn = m_forest.lookupQmlType(qmid + u"::"_s + name, relative); qcn)
+        QmlTypeNode *qcn = tree
+                ? tree->lookupQmlType(qmid + u"::"_s + name, relative)
+                : m_forest.lookupQmlType(qmid + u"::"_s + name, relative);
+        if (qcn)
             return qcn;
     }
 
     // Try unqualified lookup first (uses context-aware disambiguation)
-    if (auto *qcn = m_forest.lookupQmlType(name, relative); qcn)
+    QmlTypeNode *qcn = tree
+            ? tree->lookupQmlType(name, relative)
+            : m_forest.lookupQmlType(name, relative);
+    if (qcn)
         return qcn;
 
     // Fallback to path-based search
     QStringList path(name);
-    return static_cast<QmlTypeNode *>(m_forest.findNodeByNameAndType(path, &Node::isQmlType));
+    Node *node = tree
+            ? tree->findNodeByNameAndType(path, &Node::isQmlType)
+            : findNodeByNameAndType(path, &Node::isQmlType);
+    return static_cast<QmlTypeNode *>(node);
 }
 
 /*!
@@ -1661,10 +1674,13 @@ void QDocDatabase::mergeCollections(CollectionNode *c)
     find or prioritize, such as attached properties instead of regular
     properties.
 
+    Searches only \a tree when provided, or the whole forest otherwise.
+
     This function doesn't handle the use of fragments to refer to elements in
     the target documentation.
 */
-const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative, FindFlags flags)
+const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative, FindFlags flags,
+                                    Tree *tree)
 {
     QString qmlPath = path;
     const QString signature = Parameters::extractParameters(qmlPath);
@@ -1679,7 +1695,9 @@ const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative,
     qsizetype modulePrefixSize = 0;
     for (; modulePrefixSize < pieces.size(); ++modulePrefixSize) {
         candidateName += pieces.at(modulePrefixSize);
-        const Node *node = findNodeByNameAndType({candidateName}, &Node::isQmlModule);
+        const Node *node = tree
+                ? tree->findNodeByNameAndType({candidateName}, &Node::isQmlModule)
+                : findNodeByNameAndType({candidateName}, &Node::isQmlModule);
         if (!node)
             break;
 
@@ -1693,9 +1711,9 @@ const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative,
     QmlTypeNode *qmlType = nullptr;
     if (moduleNode) {
         pieces.remove(0, modulePrefixSize);
-        qmlType = findQmlType(moduleNode->name(), pieces.takeFirst(), relative);
+        qmlType = findQmlType(moduleNode->name(), pieces.takeFirst(), relative, tree);
     } else
-        qmlType = findQmlType(pieces.takeFirst(), relative);
+        qmlType = findQmlType(pieces.takeFirst(), relative, tree);
 
     if (!qmlType || pieces.isEmpty())
         return findFunction ? nullptr : qmlType;
@@ -1718,8 +1736,8 @@ const Node *QDocDatabase::findQmlNode(const QString &path, const Node *relative,
             break;
 
         QmlTypeNode *const nextType = moduleNode
-                ? findQmlType(moduleNode->name(), property->dataType(), relative)
-                : findQmlType(property->dataType(), relative);
+                ? findQmlType(moduleNode->name(), property->dataType(), relative, tree)
+                : findQmlType(property->dataType(), relative, tree);
         if (!nextType)
             break;
 

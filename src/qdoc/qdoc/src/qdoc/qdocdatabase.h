@@ -225,11 +225,14 @@ public:
     void addExampleNode(ExampleNode *n) { primaryTree()->addExampleNode(n); }
     ExampleNodeMap &exampleNodeMap() { return primaryTree()->exampleNodeMap(); }
 
-    QmlTypeNode *findQmlType(const QString &name, const Node *relative = nullptr)
+    QmlTypeNode *findQmlType(const QString &name, const Node *relative = nullptr,
+                             Tree *tree = nullptr)
     {
-        return m_forest.lookupQmlType(name, relative);
+        return tree ? tree->lookupQmlType(name, relative)
+                    : m_forest.lookupQmlType(name, relative);
     }
-    QmlTypeNode *findQmlType(const QString &qmid, const QString &name, const Node *relative = nullptr);
+    QmlTypeNode *findQmlType(const QString &qmid, const QString &name,
+                             const Node *relative = nullptr, Tree *tree = nullptr);
     QmlTypeNode *findQmlType(const ImportRec &import, const QString &name, const Node *relative = nullptr);
     QmlTypeNode *findQmlTypeInPrimaryTree(const QString &qmid, const QString &name);
 
@@ -246,7 +249,8 @@ public:
     static NodeMultiMapMap &newEnumValueMaps() { return s_newEnumValueMaps; }
     static NodeMultiMapMap &newSinceMaps() { return s_newSinceMaps; }
 
-    const Node *findQmlNode(const QString &path, const Node *relative, FindFlags flags);
+    const Node *findQmlNode(const QString &path, const Node *relative, FindFlags flags,
+                            Tree *tree = nullptr);
 
 private:
     static const Node *setReferenceFromFragment(const QString &fragment, const Node *node,
