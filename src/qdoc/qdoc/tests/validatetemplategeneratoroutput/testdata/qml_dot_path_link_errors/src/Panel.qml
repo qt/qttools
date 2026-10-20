@@ -17,6 +17,12 @@ import OtherModule as OM
     \li \l Layout.fillHeight
     \li \l Layout.values.integer
     \endlist
+
+    Alias-qualified dot-path links, read through the import alias:
+    \list
+    \li \l OM.Layout
+    \li \l OM.Button.text
+    \endlist
 */
 Layout {
     id: panel

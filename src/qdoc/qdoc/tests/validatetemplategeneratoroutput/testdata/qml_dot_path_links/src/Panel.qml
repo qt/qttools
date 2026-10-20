@@ -16,6 +16,7 @@ import OtherModule as OM
     \li \l OtherModule.Button.text
     \li \l Layout.fillHeight
     \li \l Layout.values.integer
+    \li \l OM.Button.text
     \endlist
 */
 Layout {
@@ -23,10 +24,13 @@ Layout {
 
     /*!
         \qmlproperty string Panel::caption
-        \brief A property with dot-path links in its documentation.
+        \brief A property with an import-alias link in its documentation.
 
         Fully qualified control: \l OtherModule.Button.text.
+        Alias-qualified member link: \l OM.Button.text.
         Enclosing-module member link: \l Layout.fillHeight.
+
+        \sa OM.Button.text
     */
     property string caption: ""
 }

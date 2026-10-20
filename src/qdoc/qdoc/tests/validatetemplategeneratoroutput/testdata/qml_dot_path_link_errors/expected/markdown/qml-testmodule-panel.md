@@ -22,6 +22,10 @@ The file imports [OtherModule](othermodule-qmlmodule.md) under the alias OM. Imp
 - [Layout.fillHeight](qml-testmodule-layout.md#fillHeight-prop)
 - [Layout.values.integer](qml-testmodule-layout.md#values.integer-prop)
 
+Alias-qualified dot-path links, read through the import alias:
+- [OM.Layout](qml-othermodule-layout.md)
+- [OM.Button.text](qml-othermodule-button.md#text-prop)
+
 
 
 

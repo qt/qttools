@@ -17,6 +17,9 @@
             <qmlproperty name="tag" fullname="TestModule.Item.tag" href="qml-testmodule-item.html#tag-attached-prop" status="active" access="public" location="types.qdoc" documented="true" type="string" attached="true" writable="true" brief="An attached property without a regular namesake"/>
             <qmlproperty name="values.integer" fullname="TestModule.Item.values.integer" href="qml-testmodule-item.html#values.integer-prop" status="active" access="public" location="types.qdoc" documented="true" type="int" attached="false" writable="true" brief="A grouped primitive property"/>
         </qmlclass>
+        <qmlclass name="Panel" qml-module-name="TestModule" qml-base-type="TestModule::Item" fullname="TestModule.Panel" href="qml-testmodule-panel.html" status="active" access="public" location="Panel.qml" documented="true" brief="A type using an import alias for shared QML lookup">
+            <qmlproperty name="caption" fullname="TestModule.Panel.caption" href="qml-testmodule-panel.html#caption-prop" status="active" access="public" location="Panel.qml" documented="true" type="string" attached="false" writable="true" brief="A property with alias links in its documentation"/>
+        </qmlclass>
         <qmlmodule name="TestModule" qml-module-name="TestModule" href="testmodule-qmlmodule.html" status="active" location="types.qdoc" documented="true" seen="true" title="QML Link Criteria" brief="Controls for shared QML lookup in template output"/>
     </namespace>
 </INDEX>

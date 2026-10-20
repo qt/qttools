@@ -1329,9 +1329,10 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
     filenames, and titles containing spaces keep their ordinary
     interpretation.
 
-    QML lookup uses the logical module of the QML type enclosing
-    \a relative to disambiguate references in member documentation.
-    General lookup keeps \a relative as its context. Explicit QML genus
+    QML lookup uses the import list and logical module of the QML type
+    enclosing \a relative to interpret references in member documentation.
+    General lookup keeps \a relative as its context. Ordinary QML name
+    lookup takes precedence over import-alias expansion. Explicit QML genus
     links retain type-only lookup as a fallback.
 
     The \a searchFlags preserve link criteria, including restrictions to
@@ -1386,6 +1387,25 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
             -> const Node *
     {
         const Node *node = findQmlNode(path, qmlContext, FindFlags::fromInt(flags), domain);
+
+        if (!node && qmlContext && qmlContext->isQmlType()) {
+            const QmlTypeNode *qmlRelative = static_cast<const QmlTypeNode *>(qmlContext);
+            const QStringList pieces = path.split('.'_L1);
+            if (pieces.size() >= 2) {
+                for (const ImportRec &import : qmlRelative->importList()) {
+                    if (import.m_importId.isEmpty() || import.m_importId != pieces.first())
+                        continue;
+                    const QString qmid = import.m_importUri.isEmpty()
+                            ? import.m_moduleName
+                            : import.m_importUri;
+                    const QString qualifiedPath = qmid + path.mid(pieces.first().size());
+                    node = findQmlNode(qualifiedPath, qmlContext, FindFlags::fromInt(flags),
+                                       domain);
+                    if (node)
+                        break;
+                }
+            }
+        }
 
         if (!node && genus == Genus::QML)
             node = findTypeNode(path, qmlContext, genus);

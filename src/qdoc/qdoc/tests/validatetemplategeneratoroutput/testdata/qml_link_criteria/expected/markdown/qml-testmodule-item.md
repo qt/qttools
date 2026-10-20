@@ -17,6 +17,7 @@ A type with regular and attached properties of the same name.
 | | |
 | --- | --- |
 | Import Statement | `import TestModule` |
+| Inherited By | [Panel](qml-testmodule-panel.md)|
 
 - [List of all members, including inherited members](qml-testmodule-item-members.md)
 

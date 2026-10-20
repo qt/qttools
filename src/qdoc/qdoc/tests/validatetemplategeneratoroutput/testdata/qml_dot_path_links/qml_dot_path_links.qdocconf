@@ -27,9 +27,10 @@ TemplateMarkdown.nosubdirs = true
 TemplateMarkdown.outputsubdir = markdown
 TemplateMarkdown.extension = md
 
-# Legacy member-body lookup cannot disambiguate the competing Layout
-# types, so the enclosing-module link warns there. The template goldens
-# assert that it resolves correctly, and expect-stderr-contains pins
-# the legacy diagnostic.
+# The legacy format cannot read import aliases of the surrounding QML
+# type, so its output renders the alias-qualified links as plain text
+# and warns about them; the warning limit is therefore disabled. The
+# template goldens assert that the same links resolve there, and
+# expect-stderr-contains pins the legacy diagnostics.
 warninglimit = 0
 warninglimit.enabled = false

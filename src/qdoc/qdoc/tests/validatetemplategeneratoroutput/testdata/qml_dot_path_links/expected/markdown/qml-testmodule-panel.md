@@ -23,6 +23,7 @@ The file imports [OtherModule](othermodule-qmlmodule.md) under the alias OM. Imp
 - [OtherModule.Button.text](qml-othermodule-button.md#text-prop)
 - [Layout.fillHeight](qml-testmodule-layout.md#fillHeight-prop)
 - [Layout.values.integer](qml-testmodule-layout.md#values.integer-prop)
+- [OM.Button.text](qml-othermodule-button.md#text-prop)
 
 
 
@@ -30,15 +31,17 @@ The file imports [OtherModule](othermodule-qmlmodule.md) under the alias OM. Imp
 
 | Member | Description |
 | --- | --- |
-| `caption : string` | A property with dot-path links in its documentation. |
+| `caption : string` | A property with an import-alias link in its documentation. |
 
 ## Property Documentation
 
 <a id="caption-prop"></a>
 ### caption : string
 
-A property with dot-path links in its documentation.
-Fully qualified control: [OtherModule.Button.text](qml-othermodule-button.md#text-prop). Enclosing-module member link: [Layout.fillHeight](qml-testmodule-layout.md#fillHeight-prop).
+A property with an import-alias link in its documentation.
+Fully qualified control: [OtherModule.Button.text](qml-othermodule-button.md#text-prop). Alias-qualified member link: [OM.Button.text](qml-othermodule-button.md#text-prop). Enclosing-module member link: [Layout.fillHeight](qml-testmodule-layout.md#fillHeight-prop).
+**See also** [OM.Button.text](qml-othermodule-button.md#text-prop).
+
 
 ---
 
