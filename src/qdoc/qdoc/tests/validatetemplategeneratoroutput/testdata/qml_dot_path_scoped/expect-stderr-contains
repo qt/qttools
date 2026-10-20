@@ -1,0 +1,5 @@
+# The scoped link must not escape the requested tree: Button.color
+# exists only in the local project, so the scope-qualified reference
+# must remain unresolvable; the imported tree's Button has no such
+# member. Every other link in the fixture resolves.
+Can't link to 'Button.color'

@@ -352,7 +352,6 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
         link.href = atom->string();
         link.link = InlineContent::LinkData{ LinkOrigin::Explicit, LinkState::Unresolved };
 
-        // Extract genus and module scope from LinkAtom if available.
         if (atom->isLinkAtom()) {
             // genus() and domain() are non-const but non-mutating;
             // the same const_cast pattern is used in qdocdatabase.cpp.
@@ -363,6 +362,8 @@ const Atom *ContentBuilder::dispatchAtom(const Atom *atom)
                 link.attributes["linkGenus"_L1] = genusStr;
             if (Tree *domain = mutableAtom->domain())
                 link.attributes["linkModule"_L1] = domain->physicalModuleName();
+            if (int flags = mutableAtom->flags())
+                link.attributes["linkFlags"_L1] = flags;
 
             const auto *linkAtom = static_cast<const LinkAtom *>(mutableAtom);
             link.link->sourceLocation = InlineContent::SourceLocation{

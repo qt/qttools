@@ -1,0 +1,8 @@
+# One required standard-error substring per line; blank lines and
+# comments are ignored. Each line is the exact "Can't link to"
+# warning text (with its closing quote) that one of the fixtures'
+# intentional failures must produce.
+Can't link to 'Layout.missingProperty'
+Can't link to 'Layout.fillHeight'
+Can't link to 'Layout.fillHeight#NoSection'
+Can't link to 'Layout.stretch'

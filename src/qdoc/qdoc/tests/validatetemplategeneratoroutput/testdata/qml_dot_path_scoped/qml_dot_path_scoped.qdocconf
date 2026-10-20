@@ -1,0 +1,30 @@
+project = QmlDotPathScoped
+description = QML dot-path links scoped to a loaded module index
+productname = Qt
+locationinfo = false
+
+sources.fileextensions = "*.qdoc"
+sourcedirs = src
+
+# The QmlDotPathLinks project's index, as emitted by the
+# qml_dot_path_links fixture: a second physical tree loaded into this
+# project. Its Button type competes with ConsumerModule's own.
+indexes = qmldotpathlinks.index
+
+outputformats = TemplateHTML TemplateMarkdown
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+# This fixture intentionally contains one unresolvable scoped link
+# (a member that exists only in the local project), so the warning
+# limit must not fail the run. Diagnostics are asserted with
+# expect-stderr-contains instead.
+warninglimit = 0
+warninglimit.enabled = false

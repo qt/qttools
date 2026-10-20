@@ -1,0 +1,10 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \page layout.intro.html
+    \title Dotted Page File Name
+    \brief A page whose file name contains a dot.
+
+    The file name is not a QML dot path because it ends in .html.
+*/

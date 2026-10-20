@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QML dot-path link resolution in template output" version="" project="QmlDotPathLinks">
+    <namespace name="" status="active" access="public" module="qmldotpathlinks">
+        <page name="intro" href="intro.html" status="active" location="intro.qdoc" documented="true" subtype="page" title="QML Dot Path Links" fulltitle="QML Dot Path Links" brief="A page that documents QML dot-path links without a QML context"/>
+        <page name="layout.intro.html" href="layout-intro.html" status="active" location="dottedpage.qdoc" documented="true" subtype="page" title="Dotted Page File Name" fulltitle="Dotted Page File Name" brief="A page whose file name contains a dot"/>
+        <page name="notes" href="notes.html" status="active" location="notes.qdoc" documented="true" subtype="page" title="Layout.fillHeight notes" fulltitle="Layout.fillHeight notes" brief="A page whose title contains a dot and a space"/>
+        <qmlclass name="Button" qml-module-name="OtherModule" fullname="OtherModule.Button" href="qml-othermodule-button.html" status="active" access="public" location="other.qdoc" documented="true" brief="A QML type imported by name and by alias from TestModule">
+            <function name="press" fullname="OtherModule.Button.press" href="qml-othermodule-button.html#press-method" status="active" access="public" location="other.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <qmlproperty name="child" fullname="OtherModule.Button.child" href="qml-othermodule-button.html#child-prop" status="active" access="public" location="other.qdoc" documented="true" type="Button" attached="false" writable="true" brief="A nested button"/>
+            <qmlproperty name="text" fullname="OtherModule.Button.text" href="qml-othermodule-button.html#text-prop" status="active" access="public" location="other.qdoc" documented="true" type="string" attached="false" writable="true" brief="Button label"/>
+            <qmlproperty name="text" fullname="OtherModule.Button.text" href="qml-othermodule-button.html#text-attached-prop" status="active" access="public" location="other.qdoc" documented="true" type="string" attached="true" writable="true" brief="An attached label with the same name"/>
+        </qmlclass>
+        <qmlclass name="Layout" qml-module-name="OtherModule" fullname="OtherModule.Layout" href="qml-othermodule-layout.html" status="active" access="public" location="other.qdoc" documented="true" brief="A QML type whose name competes with TestModule's Layout">
+            <contents name="details-section" title="Details" level="1"/>
+            <qmlproperty name="stretch" fullname="OtherModule.Layout.stretch" href="qml-othermodule-layout.html#stretch-prop" status="active" access="public" location="other.qdoc" documented="true" type="double" attached="false" writable="true" brief="Factor of the competing layout"/>
+        </qmlclass>
+        <qmlclass name="Layout" qml-module-name="TestModule" fullname="TestModule.Layout" href="qml-testmodule-layout.html" status="active" access="public" location="layout.qdoc" documented="true" brief="A QML type that fills the remaining vertical space">
+            <qmlenum name="DragMode" fullname="TestModule.Layout.DragMode" href="qml-testmodule-layout.html#DragMode-enum" status="active" access="public" location="layout.qdoc" documented="true">
+                <value name="StaticDrag"/>
+                <value name="RelativeDrag"/>
+            </qmlenum>
+            <qmlproperty name="fillHeight" fullname="TestModule.Layout.fillHeight" href="qml-testmodule-layout.html#fillHeight-prop" status="active" access="public" location="layout.qdoc" documented="true" type="double" attached="false" writable="true" brief="Fraction of the available height the type occupies"/>
+            <qmlproperty name="values.integer" fullname="TestModule.Layout.values.integer" href="qml-testmodule-layout.html#values.integer-prop" status="active" access="public" location="layout.qdoc" documented="true" type="int" attached="false" writable="true" brief="Integer values associated with the layout"/>
+        </qmlclass>
+        <qmlclass name="Panel" qml-module-name="TestModule" qml-base-type="TestModule::Layout" fullname="TestModule.Panel" href="qml-testmodule-panel.html" status="active" access="public" location="Panel.qml" documented="true" brief="A QML type documented from a QML source file">
+            <qmlproperty name="caption" fullname="TestModule.Panel.caption" href="qml-testmodule-panel.html#caption-prop" status="active" access="public" location="Panel.qml" documented="true" type="string" attached="false" writable="true" brief="A property with dot-path links in its documentation"/>
+        </qmlclass>
+        <qmlmodule name="OtherModule" qml-module-name="OtherModule" qml-module-version="1.0" href="othermodule-qmlmodule.html" status="active" location="modules.qdoc" documented="true" seen="true" title="Other Module" brief="A QML module whose type names compete with TestModule's"/>
+        <qmlmodule name="TestModule" qml-module-name="TestModule" qml-module-version="1.0" href="testmodule-qmlmodule.html" status="active" location="modules.qdoc" documented="true" seen="true" title="Test Module" brief="A QML module with a layout type and a page"/>
+    </namespace>
+</INDEX>

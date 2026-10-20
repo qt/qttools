@@ -168,9 +168,14 @@ void LinkResolver::resolveLink(IR::InlineContent &link, const Context &context)
             link.attributes.value("linkGenus"_L1).toString());
     const QString &moduleName =
             link.attributes.value("linkModule"_L1).toString();
+    const int searchFlags = link.attributes.value("linkFlags"_L1).toInt();
     QString ref;
-    const Node *targetNode =
-            m_qdb->findNodeForTarget(target, context.semantic, genus, moduleName, &ref);
+    const LinkReferenceOrigin linkOrigin =
+            link.link->origin == IR::LinkOrigin::Explicit
+                    ? LinkReferenceOrigin::Explicit
+                    : LinkReferenceOrigin::Auto;
+    const Node *targetNode = m_qdb->findNodeForTarget(
+            target, context.semantic, genus, moduleName, &ref, linkOrigin, searchFlags);
 
     if (!targetNode) {
         const auto reportAt = [&](const QString &message) {

@@ -1,0 +1,65 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmltype Layout
+    \inqmlmodule TestModule
+    \brief A QML type that fills the remaining vertical space.
+
+    QML dot-path links written without a genus:
+    \list
+    \li \l Layout.fillHeight
+    \li \l Layout.DragMode
+    \li \l Layout.values.integer
+    \li \l OtherModule.Layout
+    \li \l OtherModule.Layout.stretch
+    \li \l OtherModule.Button.text
+    \li \l OtherModule.Button.press
+    \endlist
+
+    The same links with a forced QML genus:
+    \list
+    \li \l [qml] Layout.fillHeight
+    \li \l [qml] Layout.DragMode
+    \li \l [qml] OtherModule.Layout
+    \li \l [qml] OtherModule.Button.text
+    \endlist
+
+    Bracket options precede a link target; brackets written after
+    the target are ordinary text (and the module name autolinks):
+    \list
+    \li \l Layout.fillHeight [TestModule]
+    \li \l Layout.values.integer [TestModule]
+    \endlist
+
+    A fragment into the documentation of a member of the competing
+    type:
+    \list
+    \li \l OtherModule.Layout#Details
+    \endlist
+*/
+
+/*!
+    \qmlproperty double Layout::fillHeight
+    \brief The fraction of the available height the type occupies.
+
+    \section1 Usage
+    The property accepts values between 0 and 1.
+*/
+
+/*!
+    \qmlenum Layout::DragMode
+    \brief How the type reacts to drags.
+
+    \value StaticDrag
+    The type does not move.
+
+    \value RelativeDrag
+    The type moves relative to the drag.
+*/
+
+/*!
+    \qmlpropertygroup Layout::values
+    \qmlproperty int Layout::values.integer
+    \brief Integer values associated with the layout.
+*/

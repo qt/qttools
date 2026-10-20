@@ -1,0 +1,20 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule TestModule 1.0
+    \title Test Module
+    \brief A QML module with a layout type and a page.
+
+    The module documents QML dot-path links from a QML type body and
+    from a plain page. See the \l Layout type page for the links.
+*/
+
+/*!
+    \qmlmodule OtherModule 1.0
+    \title Other Module
+    \brief A QML module whose type names compete with TestModule's.
+
+    Its \l OtherModule.Layout type has the same name as TestModule's
+    Layout type, but different members.
+*/

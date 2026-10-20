@@ -1312,27 +1312,89 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
 }
 
 /*!
-    Finds the node for \a target with genus and module scoping.
+    Finds the node for \a target relative to \a relative, with genus and
+    module scoping.
 
-    When \a moduleName is non-empty, the search is scoped to that
-    module's tree. Function signatures (targets ending with \c{()})
-    are parsed and dispatched to function-specific lookup. QML
-    dot-path targets are resolved via import-aware type lookup when
-    the \a genus is QML.
+    When \a moduleName names a loaded module, the search is restricted
+    to that module's tree. Targets with a trailing parameter list use
+    function-specific lookup.
 
-    This overload extracts the dispatch logic from findNodeForAtom()
-    into a method that takes plain parameters instead of an Atom
-    pointer, enabling callers without Atom access (such as
-    LinkResolver) to use the same scoped lookup.
+    A target written in QML dot-path notation, such as
+    \c {Type.property} or \c {Module.Type}, resolves through the
+    import-aware QML lookup when \a origin is \l {LinkReferenceOrigin}
+    {LinkReferenceOrigin::Explicit} and the \a genus is QML or
+    DontCare. Automatically produced references keep the historical
+    interpretation, and an explicit non-QML genus remains a
+    restriction the QML lookup does not bypass. URL-like targets, HTML
+    filenames, and titles containing spaces keep their ordinary
+    interpretation.
+
+    QML lookup uses the logical module of the QML type enclosing
+    \a relative to disambiguate references in member documentation.
+    General lookup keeps \a relative as its context. Explicit QML genus
+    links retain type-only lookup as a fallback.
+
+    The \a searchFlags preserve link criteria, including restrictions to
+    attached properties, through both QML and general lookup.
+
+    A fragment in a QML dot-path target must exist in the target
+    documentation. When \a ref is non-null, it receives the fragment's
+    identifier on success.
 */
 const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *relative,
                                             Genus genus, const QString &moduleName,
-                                            QString *ref)
+                                            QString *ref, LinkReferenceOrigin origin,
+                                            int searchFlags)
 {
     if (target.isEmpty())
         return relative;
 
     Tree *domain = moduleName.isEmpty() ? nullptr : findTree(moduleName);
+    const int flags = SearchBaseClasses | SearchEnumValues | searchFlags;
+
+    const Node *qmlContext = relative;
+    while (qmlContext && !qmlContext->isQmlType()) {
+        const Node *parent = qmlContext->parent();
+        if (!parent || parent->genus() != Genus::QML)
+            break;
+        qmlContext = parent;
+    }
+
+    QStringList targetPath = Utilities::pathAndFragment(target);
+    const QString first = targetPath.first().trimmed();
+    QString qmlName = first;
+    Parameters::extractParameters(qmlName);
+
+    const bool qmlDotPath =
+            origin == LinkReferenceOrigin::Explicit
+            && (genus == Genus::DontCare || genus == Genus::QML)
+            && qmlName.contains('.'_L1)
+            && !qmlName.contains("::"_L1)
+            && !qmlName.contains("://"_L1)
+            && !qmlName.contains(' '_L1)
+            && !qmlName.endsWith(".html"_L1);
+
+    auto withFragment = [targetPath, ref](const Node *node) -> const Node * {
+        QString localRef;
+        node = setReferenceFromFragment(targetPath.value(1), node, localRef);
+        if (node && ref)
+            *ref = localRef;
+        return node;
+    };
+
+    auto findQmlDotPathNode = [this, qmlContext, domain, &withFragment, genus, flags](const QString &path)
+            -> const Node *
+    {
+        const Node *node = findQmlNode(path, qmlContext, FindFlags::fromInt(flags), domain);
+
+        if (!node && genus == Genus::QML)
+            node = findTypeNode(path, qmlContext, genus);
+
+        // The type-only fallback can return a node from another tree.
+        if (node && domain && node->tree() != domain)
+            node = nullptr;
+        return withFragment(node);
+    };
 
     if (domain) {
         const Node *node = nullptr;
@@ -1350,20 +1412,11 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
         if (node)
             return node;
 
-        if (genus == Genus::QML && target.contains('.'_L1) && !target.contains("::"_L1)) {
-            int typeFlags = SearchBaseClasses | SearchEnumValues | TypesOnly;
-            QStringList path = target.split('.'_L1);
-            node = domain->findNode(path, relative, typeFlags, genus);
-            if (node)
-                return node;
-            if (path.size() > 1) {
-                node = domain->findNode(QStringList{path.last()}, relative, typeFlags, genus);
-                if (node && node->isQmlType())
-                    return node;
-            }
+        if (qmlDotPath) {
+            if (const Node *qmlNode = findQmlDotPathNode(first))
+                return qmlNode;
         }
 
-        int flags = SearchBaseClasses | SearchEnumValues;
         QStringList nodePath = target.split("::"_L1);
         if (relative && relative->tree()->physicalModuleName() != domain->physicalModuleName())
             relative = nullptr;
@@ -1375,7 +1428,6 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
         return result;
     }
 
-    // Forest-wide search: function signatures, QML dot-paths, then general.
     if (target.endsWith(".html"_L1))
         return findNodeByNameAndType(QStringList(target), &Node::isPageNode);
 
@@ -1385,14 +1437,11 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
             return node;
     }
 
-    if (genus == Genus::QML && target.contains('.'_L1) && !target.contains("::"_L1)) {
-        const Node *node = findTypeNode(target, relative, genus);
-        if (node)
-            return node;
+    if (qmlDotPath) {
+        if (const Node *qmlNode = findQmlDotPathNode(first))
+            return qmlNode;
     }
 
-    QStringList targetPath = Utilities::pathAndFragment(target);
-    int flags = SearchBaseClasses | SearchEnumValues;
     QString localRef;
     const Node *node = findNodeForTarget(targetPath, relative, genus, localRef, flags);
     if (node) {

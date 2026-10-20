@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="QML dot-path links scoped to a loaded module index" version="" project="QmlDotPathScoped">
+    <namespace name="" status="active" access="public" module="qmldotpathscoped">
+        <qmlclass name="Button" qml-module-name="ConsumerModule" fullname="ConsumerModule.Button" href="qml-consumermodule-button.html" status="active" access="public" location="consumer.qdoc" documented="true" brief="A local type competing with the unique imported Button type">
+            <qmlproperty name="color" fullname="ConsumerModule.Button.color" href="qml-consumermodule-button.html#color-prop" status="active" access="public" location="consumer.qdoc" documented="true" type="int" attached="false" writable="true" brief="A property that only exists in the local project"/>
+            <qmlproperty name="text" fullname="ConsumerModule.Button.text" href="qml-consumermodule-button.html#text-prop" status="active" access="public" location="consumer.qdoc" documented="true" type="string" attached="false" writable="true" brief="A distinct local property used as a scope control"/>
+        </qmlclass>
+        <qmlmodule name="ConsumerModule" qml-module-name="ConsumerModule" href="consumermodule-qmlmodule.html" status="active" location="consumer.qdoc" documented="true" seen="true" title="Consumer Module" brief="A module with a competing Button type"/>
+    </namespace>
+</INDEX>

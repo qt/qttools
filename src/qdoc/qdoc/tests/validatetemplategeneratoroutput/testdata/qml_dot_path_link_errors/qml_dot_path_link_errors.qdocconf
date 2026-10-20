@@ -1,0 +1,29 @@
+project = QmlDotPathLinkErrors
+description = QML dot-path links that fail, and the diagnostics they produce
+productname = Qt
+module = testmodule
+
+# Output in a stable layout so the snapshot comparison is deterministic.
+locationinfo = false
+
+sources.fileextensions = "*.qdoc *.qml"
+sourcedirs = src
+
+outputformats = HTML TemplateHTML TemplateMarkdown
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html-legacy
+HTML.extension = html
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+# This fixture intentionally contains unresolvable links, so the
+# warning limit must not fail the run. Diagnostics are asserted with
+# expect-stderr-contains instead.

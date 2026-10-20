@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Shared QML lookup in template output" version="" project="QmlLinkCriteria">
+    <namespace name="" status="active" access="public" module="qmllinkcriteria">
+        <qmlclass name="Item" qml-module-name="TestModule" fullname="TestModule.Item" href="qml-testmodule-item.html" status="active" access="public" location="types.qdoc" documented="true" brief="A type with regular and attached properties of the same name">
+            <function name="select" fullname="TestModule.Item.select" href="qml-testmodule-item.html#select-method" status="active" access="public" location="types.qdoc" documented="true" meta="qmlmethod" type="void">
+                <parameter type="int" name="start" default=""/>
+                <parameter type="float" name="length" default=""/>
+            </function>
+            <function name="select" fullname="TestModule.Item.select" href="qml-testmodule-item.html#select-method" status="active" access="public" location="types.qdoc" documented="true" meta="qmlmethod" type="void">
+                <parameter type="int" name="start" default=""/>
+                <parameter type="int" name="length" default=""/>
+            </function>
+            <qmlproperty name="child" fullname="TestModule.Item.child" href="qml-testmodule-item.html#child-prop" status="active" access="public" location="types.qdoc" documented="true" type="Item" attached="false" writable="true" brief="An object-typed property"/>
+            <qmlproperty name="name" fullname="TestModule.Item.name" href="qml-testmodule-item.html#name-attached-prop" status="active" access="public" location="types.qdoc" documented="true" type="string" attached="true" writable="true" brief="An attached name declared before the regular name"/>
+            <qmlproperty name="name" fullname="TestModule.Item.name" href="qml-testmodule-item.html#name-prop" status="active" access="public" location="types.qdoc" documented="true" type="string" attached="false" writable="true" brief="A regular name"/>
+            <qmlproperty name="tag" fullname="TestModule.Item.tag" href="qml-testmodule-item.html#tag-attached-prop" status="active" access="public" location="types.qdoc" documented="true" type="string" attached="true" writable="true" brief="An attached property without a regular namesake"/>
+            <qmlproperty name="values.integer" fullname="TestModule.Item.values.integer" href="qml-testmodule-item.html#values.integer-prop" status="active" access="public" location="types.qdoc" documented="true" type="int" attached="false" writable="true" brief="A grouped primitive property"/>
+        </qmlclass>
+        <qmlmodule name="TestModule" qml-module-name="TestModule" href="testmodule-qmlmodule.html" status="active" location="types.qdoc" documented="true" seen="true" title="QML Link Criteria" brief="Controls for shared QML lookup in template output"/>
+    </namespace>
+</INDEX>

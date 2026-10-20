@@ -1,0 +1,84 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule TestModule
+    \title QML Link Criteria
+    \brief Controls for shared QML lookup in template output.
+*/
+
+/*!
+    \qmltype Item
+    \inqmlmodule TestModule
+    \brief A type with regular and attached properties of the same name.
+
+    \list
+    \li Regular C++ notation: \l Item::name
+    \li Attached C++ notation: \l [attached] Item::name
+    \li Regular QML notation: \l Item.name
+    \li Attached QML notation: \l [attached] Item.name
+    \li Qualified attached property: \l [QML attached] TestModule.Item.name
+    \li Unique attached property: \l Item.tag
+    \li Scoped attached property: \l [QmlLinkCriteria attached] Item.name
+    \li Property chain: \l Item.child.name
+    \li Grouped property: \l Item.values.integer
+    \li Group after dereferencing: \l Item.child.values.integer
+    \li Integer signature: \l {Item.select(int, int)}
+    \li Floating signature: \l {Item.select(int, float)}
+    \li Method after dereferencing: \l {Item.child.select(int, float)}
+    \li Method fragment: \l {Item.select(int, float)#Selection}
+    \li Scoped method: \l [QmlLinkCriteria] {Item.select(int, float)}
+    \endlist
+
+    Invalid paths must fail:
+    \list
+    \li Missing attached property: \l [attached] Item.child
+    \li Invalid property tail: \l Item.name.missing
+    \li Invalid method tail: \l {Item.name.missing()}
+    \li Missing fragment: \l {Item.select(int, float)#Missing}
+    \li Wrong signature: \l {Item.select(string)}
+    \endlist
+*/
+
+/*!
+    \qmlattachedproperty string Item::name
+    \brief An attached name declared before the regular name.
+
+    The regular name is \l name.
+*/
+
+/*!
+    \qmlproperty string Item::name
+    \brief A regular name.
+
+    The attached name is \l [attached] name.
+*/
+
+/*!
+    \qmlattachedproperty string Item::tag
+    \brief An attached property without a regular namesake.
+*/
+
+/*!
+    \qmlproperty Item Item::child
+    \brief An object-typed property.
+*/
+
+/*!
+    \qmlpropertygroup Item::values
+    \qmlproperty int Item::values.integer
+    \brief A grouped primitive property.
+*/
+
+/*!
+    \qmlmethod void Item::select(int start, int length)
+    \brief An integer selection.
+*/
+
+/*!
+    \qmlmethod void Item::select(int start, float length)
+    \brief A floating-point selection.
+
+    \section1 Selection
+    Details of floating-point selection.
+*/
