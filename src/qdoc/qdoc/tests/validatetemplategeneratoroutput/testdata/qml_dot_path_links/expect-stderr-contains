@@ -1,0 +1,3 @@
+# Legacy member-body lookup cannot disambiguate the competing Layout
+# types. The template goldens assert the correct enclosing-module href.
+Can't link to 'Layout.fillHeight'

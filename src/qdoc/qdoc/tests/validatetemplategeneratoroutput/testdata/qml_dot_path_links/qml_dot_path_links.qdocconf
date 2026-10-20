@@ -1,0 +1,35 @@
+project = QmlDotPathLinks
+description = QML dot-path link resolution in template output
+productname = Qt
+module = testmodule
+
+# Output in a stable layout so the snapshot comparison is deterministic.
+locationinfo = false
+
+sources.fileextensions = "*.qdoc *.qml"
+sourcedirs = src
+
+# Legacy HTML renders the same fixture in the same run. The template
+# output must resolve the same QML dot-path links it does: the legacy
+# link destinations act as the semantic control.
+outputformats = HTML TemplateHTML TemplateMarkdown
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html-legacy
+HTML.extension = html
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+# Legacy member-body lookup cannot disambiguate the competing Layout
+# types, so the enclosing-module link warns there. The template goldens
+# assert that it resolves correctly, and expect-stderr-contains pins
+# the legacy diagnostic.
+warninglimit = 0
+warninglimit.enabled = false

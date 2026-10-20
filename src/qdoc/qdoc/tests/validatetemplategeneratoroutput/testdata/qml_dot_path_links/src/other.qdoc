@@ -1,0 +1,42 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmltype Layout
+    \inqmlmodule OtherModule
+    \brief A QML type whose name competes with TestModule's Layout.
+
+    \section1 Details
+    The competing type is documented here.
+*/
+
+/*!
+    \qmlproperty double OtherModule::Layout::stretch
+    \brief The stretch factor of the competing layout.
+*/
+
+/*!
+    \qmltype Button
+    \inqmlmodule OtherModule
+    \brief A QML type imported by name and by alias from TestModule.
+*/
+
+/*!
+    \qmlproperty string OtherModule::Button::text
+    \brief The button label.
+*/
+
+/*!
+    \qmlattachedproperty string OtherModule::Button::text
+    \brief An attached label with the same name.
+*/
+
+/*!
+    \qmlproperty Button OtherModule::Button::child
+    \brief A nested button.
+*/
+
+/*!
+    \qmlmethod void OtherModule::Button::press()
+    \brief Presses the button.
+*/

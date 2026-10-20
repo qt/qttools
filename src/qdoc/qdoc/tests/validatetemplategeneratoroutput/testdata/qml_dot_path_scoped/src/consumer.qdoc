@@ -1,0 +1,36 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule ConsumerModule
+    \title Consumer Module
+    \brief A module with a competing Button type.
+*/
+
+/*!
+    \qmltype Button
+    \inqmlmodule ConsumerModule
+    \brief A local type competing with the unique imported Button type.
+
+    \list
+    \li Imported fully qualified control: \l [QmlDotPathLinks] OtherModule.Button.text
+    \li Imported scoped property: \l [QmlDotPathLinks] Button.text
+    \li Imported scoped property with genus: \l [qml QmlDotPathLinks] Button.text
+    \li Imported scoped property with lowercase domain: \l [qmldotpathlinks] Button.text
+    \li Imported scoped attached property: \l [QmlDotPathLinks attached] Button.text
+    \li Imported scoped property chain: \l [QmlDotPathLinks] Button.child.text
+    \li Imported scoped method: \l [QmlDotPathLinks] {Button.press()}
+    \li Local control: \l Button.text
+    \li Scoped member that only exists locally: \l [QmlDotPathLinks] Button.color
+    \endlist
+*/
+
+/*!
+    \qmlproperty string ConsumerModule::Button::text
+    \brief A distinct local property used as a scope control.
+*/
+
+/*!
+    \qmlproperty int ConsumerModule::Button::color
+    \brief A property that only exists in the local project.
+*/

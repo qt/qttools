@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- layout.qdoc -->
+  <meta name="description" content="A QML type that fills the remaining vertical space.">
+  <meta name="keywords" content="qmltype">
+  <title>Layout QML Type | Qt</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li><a href="testmodule-qmlmodule.html" translate="no">TestModule</a></li>
+<li>Layout</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#enumerations">Enumerations</a></li>
+<li class="level1"><a href="#properties">Properties</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">Layout QML Type</h1>
+<!-- $$$Layout-brief -->
+<p>A QML type that fills the remaining vertical space. <a href="#details">More...</a></p>
+<!-- @@@Layout -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Import Statement:</td><td class="memItemRight bottomAlign"> <code translate="no">import TestModule 1.0</code></td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> Inherited By:</td><td class="memItemRight bottomAlign"> <p><a href="qml-testmodule-panel.html" translate="no">Panel</a></p>
+</td></tr>
+</table></div>
+<ul>
+<li><a href="qml-testmodule-layout-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="enumerations">Enumerations</h2>
+<ul>
+<li class="fn" translate="no"><b><a href="qml-testmodule-layout.html#DragMode-enum" translate="no">DragMode</a></b></li>
+</ul>
+<h2 id="properties">Properties</h2>
+<ul>
+<li class="fn" translate="no"><b><a href="qml-testmodule-layout.html#fillHeight-prop" translate="no">fillHeight</a></b> : double</li>
+<li class="fn" translate="no"><b><a href="qml-testmodule-layout.html#values.integer-prop" translate="no">values.integer</a></b> : int</li>
+</ul>
+<!-- $$$Layout-description -->
+<h2 id="details">Detailed Description</h2>
+<p>QML dot-path links written without a genus:</p>
+<ul>
+<li><a href="qml-testmodule-layout.html#fillHeight-prop" translate="no">Layout.fillHeight</a></li>
+<li><a href="qml-testmodule-layout.html#DragMode-enum" translate="no">Layout.DragMode</a></li>
+<li><a href="qml-testmodule-layout.html#values.integer-prop" translate="no">Layout.values.integer</a></li>
+<li><a href="qml-othermodule-layout.html" translate="no">OtherModule.Layout</a></li>
+<li><a href="qml-othermodule-layout.html#stretch-prop" translate="no">OtherModule.Layout.stretch</a></li>
+<li><a href="qml-othermodule-button.html#text-prop" translate="no">OtherModule.Button.text</a></li>
+<li><a href="qml-othermodule-button.html#press-method" translate="no">OtherModule.Button.press</a></li>
+</ul>
+<p>The same links with a forced QML genus:</p>
+<ul>
+<li><a href="qml-testmodule-layout.html#fillHeight-prop" translate="no">Layout.fillHeight</a></li>
+<li><a href="qml-testmodule-layout.html#DragMode-enum" translate="no">Layout.DragMode</a></li>
+<li><a href="qml-othermodule-layout.html" translate="no">OtherModule.Layout</a></li>
+<li><a href="qml-othermodule-button.html#text-prop" translate="no">OtherModule.Button.text</a></li>
+</ul>
+<p>Bracket options precede a link target; brackets written after the target are ordinary text (and the module name autolinks):</p>
+<ul>
+<li><a href="qml-testmodule-layout.html#fillHeight-prop" translate="no">Layout.fillHeight</a> [<a href="testmodule-qmlmodule.html" translate="no">TestModule</a>]</li>
+<li><a href="qml-testmodule-layout.html#values.integer-prop" translate="no">Layout.values.integer</a> [<a href="testmodule-qmlmodule.html" translate="no">TestModule</a>]</li>
+</ul>
+<p>A fragment into the documentation of a member of the competing type:</p>
+<ul>
+<li><a href="qml-othermodule-layout.html#details-section" translate="no">OtherModule.Layout#Details</a></li>
+</ul>
+<p>Links that must fail:</p>
+<ul>
+<li>Layout.missingProperty</li>
+<li><a href="qml-testmodule-layout.html#fillHeight-prop" translate="no">Layout.fillHeight</a></li>
+<li>Layout.fillHeight#NoSection</li>
+<li>Layout.stretch [<a href="testmodule-qmlmodule.html" translate="no">TestModule</a>]</li>
+</ul>
+<!-- @@@Layout -->
+<h2>Enumeration Documentation</h2>
+<!-- $$$DragMode$$$StaticDrag$$$RelativeDrag -->
+<h3 class="fn qml-member qml-method" translate="no" id="DragMode-enum"><span class="name">DragMode</span></h3>
+<p>How the type reacts to drags.</p>
+<div class="table"><table class="valuelist"><tr valign="top" class="odd"><th class="tblConst">Constant</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code translate="no">Layout.StaticDrag</code></td><td class="topAlign">The type does not move.</td></tr>
+<tr><td class="topAlign"><code translate="no">Layout.RelativeDrag</code></td><td class="topAlign">The type moves relative to the drag.</td></tr>
+</table></div>
+<!-- @@@DragMode -->
+<h2>Property Documentation</h2>
+<!-- $$$fillHeight -->
+<h3 class="fn qml-member qml-property" translate="no" id="fillHeight-prop"><span class="name">fillHeight</span> : <span class="type">double</span></h3>
+<p>The fraction of the available height the type occupies.</p>
+<h4 id="usage">Usage</h4>
+<p>The property accepts values between 0 and 1.</p>
+<!-- @@@fillHeight -->
+<!-- $$$values.integer -->
+<h3 class="fn qml-member qml-property" translate="no" id="values.integer-prop"><span class="name">values.integer</span> : <span class="type">int</span></h3>
+<p>Integer values associated with the layout.</p>
+<!-- @@@values.integer -->
+</body>
+</html>

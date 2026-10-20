@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item QML Type</title>
+</head>
+<body>
+    <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb">
+<li><a href="testmodule-qmlmodule.html">TestModule</a></li>
+<li aria-current="page">Item</li>
+    </ol>
+    </nav>
+    <div class="sidebar-toc">
+    <h3 id="toc">Contents</h3>
+    <ul>
+    <li class="level2"><a href="#properties">Properties</a></li>
+    <li class="level2"><a href="#attached-properties">Attached Properties</a></li>
+    <li class="level2"><a href="#methods">Methods</a></li>
+    <li class="level2"><a href="#details">Detailed Description</a></li>
+    <li class="level2"><a href="#property-documentation">Property Documentation</a></li>
+    <li class="level2"><a href="#attached-property-documentation">Attached Property Documentation</a></li>
+    <li class="level2"><a href="#method-documentation">Method Documentation</a></li>
+    </ul>
+    </div>
+    <header>
+    <h1>Item QML Type</h1>
+    <p class="brief">A type with regular and attached properties of the same name.</p>
+    </header>
+    <main>
+    <table class="requisites">
+    <tr><td class="memItemLeft">Import Statement:</td>
+    <td class="memItemRight"><code>import TestModule</code></td></tr>
+    </table>
+
+
+    <ul>
+    <li><a href="qml-testmodule-item-members.html">List of all members, including inherited members</a></li>
+    </ul>
+
+    <section class="section-properties" aria-label="Properties">
+    <h2 id="properties">Properties</h2>
+    <ul>
+    <li class="fn" translate="no"><b><a href="#child-prop">child</a></b>&#160;: Item</li>
+    <li class="fn" translate="no"><b><a href="#name-prop">name</a></b>&#160;: string</li>
+    <li class="fn" translate="no"><b><a href="#values.integer-prop">values.integer</a></b>&#160;: int</li>
+    </ul>
+    </section>
+    <section class="section-attached-properties" aria-label="Attached Properties">
+    <h2 id="attached-properties">Attached Properties</h2>
+    <ul>
+    <li class="fn" translate="no"><b><a href="#name-attached-prop">name</a></b>&#160;: string</li>
+    <li class="fn" translate="no"><b><a href="#tag-attached-prop">tag</a></b>&#160;: string</li>
+    </ul>
+    </section>
+    <section class="section-methods" aria-label="Methods">
+    <h2 id="methods">Methods</h2>
+    <ul>
+    <li class="fn" translate="no"><b><a href="#select-method">select</a></b>(int&#160;<i>start</i>, float&#160;<i>length</i>)</li>
+    <li class="fn" translate="no"><b><a href="#select-method-1">select</a></b>(int&#160;<i>start</i>, int&#160;<i>length</i>)</li>
+    </ul>
+    </section>
+
+    <h2 id="details">Detailed Description</h2>
+    <section class="content" aria-label="Description">
+<ul>        <li>Regular C++ notation: <a href="qml-testmodule-item.html#name-prop">Item::name</a></li>
+        <li>Attached C++ notation: <a href="qml-testmodule-item.html#name-attached-prop">Item::name</a></li>
+        <li>Regular QML notation: <a href="qml-testmodule-item.html#name-prop">Item.name</a></li>
+        <li>Attached QML notation: <a href="qml-testmodule-item.html#name-attached-prop">Item.name</a></li>
+        <li>Qualified attached property: <a href="qml-testmodule-item.html#name-attached-prop">TestModule.Item.name</a></li>
+        <li>Unique attached property: <a href="qml-testmodule-item.html#tag-attached-prop">Item.tag</a></li>
+        <li>Scoped attached property: <a href="qml-testmodule-item.html#name-attached-prop">Item.name</a></li>
+        <li>Property chain: <a href="qml-testmodule-item.html#name-prop">Item.child.name</a></li>
+        <li>Grouped property: <a href="qml-testmodule-item.html#values.integer-prop">Item.values.integer</a></li>
+        <li>Group after dereferencing: <a href="qml-testmodule-item.html#values.integer-prop">Item.child.values.integer</a></li>
+        <li>Integer signature: <a href="qml-testmodule-item.html#select-method-1">Item.select(int, int)</a></li>
+        <li>Floating signature: <a href="qml-testmodule-item.html#select-method">Item.select(int, float)</a></li>
+        <li>Method after dereferencing: <a href="qml-testmodule-item.html#select-method">Item.child.select(int, float)</a></li>
+        <li>Method fragment: <a href="qml-testmodule-item.html#selection">Item.select(int, float)#Selection</a></li>
+        <li>Scoped method: <a href="qml-testmodule-item.html#select-method">Item.select(int, float)</a></li>
+</ul>        <p>Invalid paths must fail:</p>
+<ul>        <li>Missing attached property: Item.child</li>
+        <li>Invalid property tail: Item.name.missing</li>
+        <li>Invalid method tail: Item.name.missing()</li>
+        <li>Missing fragment: Item.select(int, float)#Missing</li>
+        <li>Wrong signature: Item.select(string)</li>
+</ul>    </section>
+
+    <h2 id="property-documentation">Property Documentation</h2>
+    <h3 class="fn" id="child-prop"><span class="name"><a href="qml-testmodule-item.html#child-prop">child</a></span> : <span class="type">Item</span><a class="plink" href="#child-prop" title="Direct link to this headline"></a></h3>
+        <p>An object-typed property.</p>
+    <h3 class="fn" id="name-prop"><span class="name"><a href="qml-testmodule-item.html#name-prop">name</a></span> : <span class="type">string</span><a class="plink" href="#name-prop" title="Direct link to this headline"></a></h3>
+        <p>A regular name.</p>
+        <p>The attached name is <a href="qml-testmodule-item.html#name-attached-prop">name</a>.</p>
+    <h3 class="fn" id="values.integer-prop"><span class="name"><a href="qml-testmodule-item.html#values.integer-prop">values.integer</a></span> : <span class="type">int</span><a class="plink" href="#values.integer-prop" title="Direct link to this headline"></a></h3>
+        <p>A grouped primitive property.</p>
+    <h2 id="attached-property-documentation">Attached Property Documentation</h2>
+    <h3 class="fn" id="name-attached-prop"><span class="name"><a href="qml-testmodule-item.html#name-attached-prop">name</a></span> : <span class="type">string</span><a class="plink" href="#name-attached-prop" title="Direct link to this headline"></a></h3>
+        <p>An attached name declared before the regular name.</p>
+        <p>The regular name is <a href="qml-testmodule-item.html#name-prop">name</a>.</p>
+    <h3 class="fn" id="tag-attached-prop"><span class="name"><a href="qml-testmodule-item.html#tag-attached-prop">tag</a></span> : <span class="type">string</span><a class="plink" href="#tag-attached-prop" title="Direct link to this headline"></a></h3>
+        <p>An attached property without a regular namesake.</p>
+    <h2 id="method-documentation">Method Documentation</h2>
+    <h3 class="fn" id="select-method"><span class="type">void</span> <span class="name"><a href="qml-testmodule-item.html#select-method">select</a></span>(<span class="type">int</span> <i>start</i>, <span class="type">float</span> <i>length</i>)<a class="plink" href="#select-method" title="Direct link to this headline"></a></h3>
+        <p>A floating-point selection.</p>
+        <section>
+        <h1 id="selection">Selection</h1>
+        <p>Details of floating-point selection.</p>
+        </section>
+    <h3 class="fn" id="select-method-1"><span class="type">void</span> <span class="name"><a href="qml-testmodule-item.html#select-method-1">select</a></span>(<span class="type">int</span> <i>start</i>, <span class="type">int</span> <i>length</i>)<a class="plink" href="#select-method-1" title="Direct link to this headline"></a></h3>
+        <p>An integer selection.</p>
+    </main>
+    <footer>
+        <p>Generated by QDoc.</p>
+    </footer>
+</body>
+</html>

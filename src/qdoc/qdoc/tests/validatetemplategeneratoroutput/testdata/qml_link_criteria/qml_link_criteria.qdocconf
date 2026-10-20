@@ -1,0 +1,16 @@
+project = QmlLinkCriteria
+description = Shared QML lookup in template output
+locationinfo = false
+sourcedirs = src
+sources.fileextensions = "*.qdoc *.qml"
+outputformats = TemplateHTML TemplateMarkdown
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+# Deliberate negative controls assert diagnostics and plain labels.
+warninglimit = 0
+warninglimit.enabled = false

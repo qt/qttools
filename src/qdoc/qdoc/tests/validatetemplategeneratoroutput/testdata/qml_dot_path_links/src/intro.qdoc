@@ -1,0 +1,29 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \page intro
+    \title QML Dot Path Links
+    \brief A page that documents QML dot-path links without a QML context.
+
+    Module-qualified dot-path links:
+    \list
+    \li \l TestModule.Layout.fillHeight
+    \li \l TestModule.Layout
+    \li \l TestModule.Layout.DragMode
+    \li \l TestModule.Layout.values.integer
+    \li \l TestModule.Panel
+    \endlist
+
+    Names that are not QML dot paths: a protocol URL and a
+    file name. The notes page's title contains a dot and a
+    space, so the bare title is not a QML dot path; the page
+    is linked by its title in braces:
+    \list
+    \li \l https://doc.qt.io/qt-6/
+    \li \l layout.intro.html
+    \li \l {Layout.fillHeight notes}
+    \endlist
+
+    Ordinary autolinks: Panel and OtherModule.Layout.
+*/

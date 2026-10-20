@@ -35,6 +35,28 @@ enum FindFlag {
 Q_DECLARE_FLAGS(FindFlags, FindFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(FindFlags)
 
+/*!
+    \enum LinkReferenceOrigin
+    \relates QDocDatabase
+
+    Specifies whether a link reference passed to the scoped
+    findNodeForTarget() overload was authored in the documentation
+    source or produced automatically.
+
+    \value Auto The reference was produced automatically, such as by
+                autolinking a word in the source text. The lookup keeps
+                the historical interpretation and does not reinterpret
+                QML dot-path notation.
+    \value Explicit The reference was written with a link directive.
+                QML dot-path notation, such as \c {Type.property},
+                resolves through the import-aware QML lookup even when
+                no QML genus is stated.
+*/
+enum class LinkReferenceOrigin : unsigned char {
+    Auto,
+    Explicit
+};
+
 class QDocForest
 {
 private:
@@ -322,7 +344,9 @@ public:
     const Node *findNodeForTarget(const QString &target, const Node *relative);
     const Node *findNodeForTarget(const QString &target, const Node *relative,
                                   Genus genus, const QString &moduleName,
-                                  QString *ref = nullptr);
+                                  QString *ref = nullptr,
+                                  LinkReferenceOrigin origin = LinkReferenceOrigin::Auto,
+                                  int searchFlags = 0);
     const PageNode *findPageNodeByTitle(const QString &title)
     {
         return m_forest.findPageNodeByTitle(title);
