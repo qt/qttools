@@ -14,7 +14,7 @@
 
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QMenu>
-#ifndef QT_NO_PRINTER
+#if defined(QT_PRINTSUPPORT_LIB) && !defined(QT_NO_PRINTER)
 #include <QtPrintSupport/QPageSetupDialog>
 #include <QtPrintSupport/QPrintDialog>
 #include <QtPrintSupport/QPrintPreviewDialog>
@@ -159,7 +159,7 @@ void TabBar::slotCustomContextMenuRequested(const QPoint &pos)
 
 CentralWidget::CentralWidget(QWidget *parent)
     : QWidget(parent)
-#ifndef QT_NO_PRINTER
+#if defined(QT_PRINTSUPPORT_LIB) && !defined(QT_NO_PRINTER)
     , m_printer(nullptr)
 #endif
     , m_findWidget(new FindWidget(this))
@@ -204,7 +204,7 @@ CentralWidget::~CentralWidget()
     helpEngine.setLastZoomFactors(zoomFactors);
     helpEngine.setLastTabPage(m_stackedWidget->currentIndex());
 
-#ifndef QT_NO_PRINTER
+#if defined(QT_PRINTSUPPORT_LIB) && !defined(QT_NO_PRINTER)
     delete m_printer;
 #endif
 }
@@ -368,7 +368,7 @@ void CentralWidget::previousPage()
 void CentralWidget::print()
 {
     TRACE_OBJ
-#if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
+#if defined(QT_PRINTSUPPORT_LIB) && !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
     initPrinter();
     QPrintDialog dlg(m_printer, this);
 
@@ -385,7 +385,7 @@ void CentralWidget::print()
 void CentralWidget::pageSetup()
 {
     TRACE_OBJ
-#if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
+#if defined(QT_PRINTSUPPORT_LIB) && !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
     initPrinter();
     QPageSetupDialog dlg(m_printer);
     dlg.exec();
@@ -395,7 +395,7 @@ void CentralWidget::pageSetup()
 void CentralWidget::printPreview()
 {
     TRACE_OBJ
-#if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
+#if defined(QT_PRINTSUPPORT_LIB) && !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
     initPrinter();
     QPrintPreviewDialog preview(m_printer, this);
     preview.resize(m_printer->width(), m_printer->height());
@@ -534,7 +534,7 @@ void CentralWidget::highlightSearchTerms()
 void CentralWidget::printPreviewToPrinter(QPrinter *p)
 {
     TRACE_OBJ
-#ifndef QT_NO_PRINTER
+#if defined(QT_PRINTSUPPORT_LIB) && !defined(QT_NO_PRINTER)
     currentHelpViewer()->print(p);
 #endif
 }
@@ -562,7 +562,7 @@ void CentralWidget::slotHighlighted(const QUrl &link)
 void CentralWidget::initPrinter()
 {
     TRACE_OBJ
-#ifndef QT_NO_PRINTER
+#if defined(QT_PRINTSUPPORT_LIB) && !defined(QT_NO_PRINTER)
     if (!m_printer)
         m_printer = new QPrinter(QPrinter::ScreenResolution);
 #endif

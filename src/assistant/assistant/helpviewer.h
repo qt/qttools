@@ -10,7 +10,9 @@
 #include <QtGui/QFont>
 #include <QtGui/QTextDocument>
 
+#if defined(QT_PRINTSUPPORT_LIB) && !defined(QT_NO_PRINTER)
 #include <QtPrintSupport/QPrinter>
+#endif
 
 #include <QtWidgets/QWidget>
 
@@ -48,7 +50,7 @@ public:
 
     void doSetFocus();
 
-#if QT_CONFIG(printer)
+#if defined(QT_PRINTSUPPORT_LIB) && !defined(QT_NO_PRINTER)
     void print(QPrinter *printer);
 #endif
 
