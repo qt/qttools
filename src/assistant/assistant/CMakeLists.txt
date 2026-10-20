@@ -49,7 +49,6 @@ qt_internal_add_app(assistant
         Qt::Network
         Qt::Sql
         Qt::Widgets
-        Qt::PrintSupport
         qlitehtml
     ATTRIBUTION_FILE_DIR_PATHS
         ../qlitehtml/src/3rdparty

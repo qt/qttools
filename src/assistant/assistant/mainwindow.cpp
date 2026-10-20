@@ -648,7 +648,7 @@ void MainWindow::setupActions()
     connect(m_searchWindow, &SearchWidget::requestShowLinkInNewTab,
             OpenPagesManager::instance(), &OpenPagesManager::createNewPageFromSearch);
 
-#if defined(QT_NO_PRINTER)
+#if !defined(QT_PRINTSUPPORT_LIB) || defined(QT_NO_PRINTER)
         m_pageSetupAction->setVisible(false);
         m_printPreviewAction->setVisible(false);
         globalActions->printAction()->setVisible(false);

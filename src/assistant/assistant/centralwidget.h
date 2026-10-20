@@ -132,7 +132,7 @@ private:
     void addPage(HelpViewer *page, bool fromSearch = false);
 
 private:
-#ifndef QT_NO_PRINTER
+#if defined(QT_PRINTSUPPORT_LIB) && !defined(QT_NO_PRINTER)
     QPrinter *m_printer;
 #endif
     FindWidget *m_findWidget;

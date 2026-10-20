@@ -425,7 +425,7 @@ void HelpViewer::doSetSource(const QUrl &url, bool reload)
     d->setSourceInternal(url, nullptr, reload);
 }
 
-#if QT_CONFIG(printer)
+#if defined(QT_PRINTSUPPORT_LIB) && !defined(QT_NO_PRINTER)
 void HelpViewer::print(QPrinter *printer)
 {
     d->m_viewer->print(printer);

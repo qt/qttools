@@ -7,7 +7,7 @@ if(NOT QT_FEATURE_fullqthelp)
     return()
 endif()
 
-if(NOT TARGET Qt::Sql OR NOT TARGET Qt::PrintSupport)
+if(NOT TARGET Qt::Sql)
     return()
 endif()
 
