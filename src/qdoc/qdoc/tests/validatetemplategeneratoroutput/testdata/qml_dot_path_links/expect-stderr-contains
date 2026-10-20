@@ -1,3 +1,10 @@
-# Legacy member-body lookup cannot disambiguate the competing Layout
-# types. The template goldens assert the correct enclosing-module href.
+# The legacy format cannot read import aliases of the surrounding QML
+# type, so the alias-qualified links in Panel's type body, caption
+# property body, and see-also list fail there by design (see the
+# qdocconf). The legacy format also keeps the historical
+# member-body disambiguation, which cannot tell the two competing
+# Layout types apart from a member body, so that link fails there
+# too. Each failing link in the template formats is asserted by the
+# goldens instead; the warnings are the legacy diagnostics.
+Can't link to 'OM.Button.text'
 Can't link to 'Layout.fillHeight'
