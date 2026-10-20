@@ -19,13 +19,16 @@ qt_exclude_tool_directories_from_default_target(
 if(NOT TARGET Qt::Sql)
     return()
 endif()
+
+add_subdirectory(help)
+add_subdirectory(plugins)
+add_subdirectory(qhelpgenerator)
+
 if(NOT QT_FEATURE_assistant)
     return()
 endif()
-add_subdirectory(help)
+
 add_subdirectory(assistant)
-add_subdirectory(qhelpgenerator)
-add_subdirectory(plugins)
 
 set(QLITEHTML_BIN_PATH ${INSTALL_BINDIR})
 set(QLITEHTML_LIBRARY_PATH ${INSTALL_LIBDIR})
