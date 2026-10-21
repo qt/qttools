@@ -1,0 +1,17 @@
+project = MultipleRelates
+description = Test case for multiple \\relates commands (QTBUG-116182)
+
+{HTML.nosubdirs} = true
+HTML.outputsubdir = html
+
+locationinfo = false
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true

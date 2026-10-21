@@ -13,6 +13,9 @@
 #include "qmlpropertynode.h"
 #include "qmltypenode.h"
 #include "sharedcommentnode.h"
+
+#include <QtCore/qspan.h>
+
 #include <vector>
 
 using namespace Qt::Literals::StringLiterals;
@@ -330,6 +333,38 @@ void Aggregate::markUndocumentedChildrenInternal()
 }
 
 /*!
+    \internal
+
+    Adds \a node to the list of related non-members of the aggregate
+    \a target, without adopting it. The node remains documented under
+    its parent, and the documentation of \a target links to it.
+
+    If \a node is a shared comment node, adds each node in its collective
+    instead. Does nothing if \a target resolves to the node's parent or to
+    an aggregate in an index file. If \a target is not found, reports it.
+*/
+static void addToRelatedTarget(Node *node, const QString &target)
+{
+    auto *aggregate = QDocDatabase::qdocDB()->findRelatesNode(target.split("::"_L1));
+    if (!aggregate) {
+        Location().report(
+                "Failed to find \\relates target '%1' for %2"_L1.arg(target, node->fullName()));
+        return;
+    }
+    if (aggregate == node->parent() || aggregate->isIndexNode())
+        return;
+
+    const NodeList nodes = node->isSharedCommentNode()
+            ? static_cast<SharedCommentNode *>(node)->collective()
+            : NodeList{ node };
+    auto &related = aggregate->relatedByProxy();
+    for (auto *n : nodes) {
+        if (!related.contains(n))
+            related.append(n);
+    }
+}
+
+/*!
     Adopts each non-aggregate C++ node (function/macro, typedef, enum, variable,
     or a shared comment node with genus Node::CPP) to the aggregate specified in
     the node's documentation using the \\relates command.
@@ -337,6 +372,11 @@ void Aggregate::markUndocumentedChildrenInternal()
     If the target Aggregate is not found in the primary tree, creates a new
     ProxyNode to use as the parent. If the target Aggregate is not found at all,
     reports it.
+
+    If the node's documentation has multiple \\relates commands, the target of
+    the first one becomes the node's adoptive parent. Each of the other
+    targets lists the node as a related non-member that links to the node's
+    documentation under its adoptive parent.
 */
 void Aggregate::resolveRelates()
 {
@@ -371,11 +411,17 @@ void Aggregate::resolveRelates()
 
             if (!aggregate || aggregate->isIndexNode())
                 aggregate = new ProxyNode(this, relates_args[0].first);
-            else if (node->parent() == aggregate)
-                continue;
 
-            aggregate->adoptChild(node);
-            node->setRelatedNonmember(true);
+            if (node->parent() != aggregate) {
+                aggregate->adoptChild(node);
+                node->setRelatedNonmember(true);
+            }
+
+            // With multiple \relates commands, the first target is the
+            // adoptive parent. The other targets list the node as a related
+            // non-member that links to its documentation under the parent.
+            for (const auto &arg : QSpan<const ArgPair>(relates_args).sliced(1))
+                addToRelatedTarget(node, arg.first);
         } else {
             static_cast<Aggregate*>(node)->resolveRelates();
         }
@@ -924,18 +970,19 @@ QString Aggregate::typeWord(bool cap) const
 
 /*! \fn void Aggregate::appendToRelatedByProxy(const NodeList &t)
   Appends the list of node pointers to the list of elements that are
-  related to this Aggregate but are documented in a different module.
+  related to this Aggregate but are documented elsewhere.
 
   \sa relatedByProxy()
  */
 
 /*! \fn NodeList &Aggregate::relatedByProxy()
   Returns a reference to a list of node pointers where each element
-  points to a node in an index file for some other module, such that
-  whatever the node represents was documented in that other module,
-  but it is related to this Aggregate, so when the documentation for
-  this Aggregate is written, it will contain links to elements in the
-  other module.
+  points to a node that is related to this Aggregate, but documented
+  elsewhere. The node is either in an index file for some other module,
+  or it is a related non-member adopted by another aggregate, listed
+  as one of the additional targets of the \c {\relates} command. When
+  the documentation for this Aggregate is written, it contains links to
+  these nodes.
  */
 
 QT_END_NAMESPACE

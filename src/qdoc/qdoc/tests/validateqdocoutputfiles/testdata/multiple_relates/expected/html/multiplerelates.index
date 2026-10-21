@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for multiple \relates commands (QTBUG-116182)" version="" project="MultipleRelates">
+    <namespace name="" status="active" access="public" module="multiplerelates">
+        <function name="convert" href="alpha.html#convert" status="active" access="public" location="classes.h" documented="true" related="0" meta="plain" type="bool" signature="bool convert(const Alpha &amp;from, Beta &amp;to)">
+            <parameter type="const Alpha &amp;" name="from" default=""/>
+            <parameter type="Beta &amp;" name="to" default=""/>
+        </function>
+        <function name="operator!=" href="beta.html#operator-not-eq" status="active" access="public" location="classes.h" documented="true" related="1" meta="plain" type="bool" signature="bool operator!=(const Alpha &amp;lhs, const Beta &amp;rhs)">
+            <parameter type="const Alpha &amp;" name="lhs" default=""/>
+            <parameter type="const Beta &amp;" name="rhs" default=""/>
+        </function>
+        <function name="operator==" href="beta.html#operator-eq-eq" status="active" access="public" location="classes.h" documented="true" related="2" meta="plain" type="bool" signature="bool operator==(const Alpha &amp;lhs, const Beta &amp;rhs)">
+            <parameter type="const Alpha &amp;" name="lhs" default=""/>
+            <parameter type="const Beta &amp;" name="rhs" default=""/>
+        </function>
+        <function name="reset" href="gamma.html#reset" status="active" access="public" location="classes.h" documented="true" related="3" meta="plain" type="void" signature="void reset(Gamma &amp;gamma)">
+            <parameter type="Gamma &amp;" name="gamma" default=""/>
+        </function>
+        <class name="Alpha" href="alpha.html" status="active" access="public" location="classes.h" documented="true" includefile="classes.h" module="MultipleRelates" brief="First class">
+            <function name="Alpha" fullname="Alpha::Alpha" href="alpha.html#Alpha" status="active" access="public" location="classes.h" documented="true" meta="constructor" signature="Alpha()"/>
+            <function name="convert" href="alpha.html#convert" status="active" access="public" location="classes.h" documented="true" related="0" meta="plain" type="bool" signature="bool convert(const Alpha &amp;from, Beta &amp;to)">
+                <parameter type="const Alpha &amp;" name="from" default=""/>
+                <parameter type="Beta &amp;" name="to" default=""/>
+            </function>
+        </class>
+        <class name="Beta" href="beta.html" status="active" access="public" location="classes.h" documented="true" includefile="classes.h" module="MultipleRelates" brief="Second class">
+            <function name="Beta" fullname="Beta::Beta" href="beta.html#Beta" status="active" access="public" location="classes.h" documented="true" meta="constructor" signature="Beta()"/>
+            <function name="operator!=" href="beta.html#operator-not-eq" status="active" access="public" location="classes.h" documented="true" related="1" meta="plain" type="bool" signature="bool operator!=(const Alpha &amp;lhs, const Beta &amp;rhs)">
+                <parameter type="const Alpha &amp;" name="lhs" default=""/>
+                <parameter type="const Beta &amp;" name="rhs" default=""/>
+            </function>
+            <function name="operator==" href="beta.html#operator-eq-eq" status="active" access="public" location="classes.h" documented="true" related="2" meta="plain" type="bool" signature="bool operator==(const Alpha &amp;lhs, const Beta &amp;rhs)">
+                <parameter type="const Alpha &amp;" name="lhs" default=""/>
+                <parameter type="const Beta &amp;" name="rhs" default=""/>
+            </function>
+        </class>
+        <class name="Gamma" href="gamma.html" status="active" access="public" location="classes.h" documented="true" includefile="classes.h" module="MultipleRelates" brief="Third class">
+            <function name="Gamma" fullname="Gamma::Gamma" href="gamma.html#Gamma" status="active" access="public" location="classes.h" documented="true" meta="constructor" signature="Gamma()"/>
+            <function name="reset" href="gamma.html#reset" status="active" access="public" location="classes.h" documented="true" related="3" meta="plain" type="void" signature="void reset(Gamma &amp;gamma)">
+                <parameter type="Gamma &amp;" name="gamma" default=""/>
+            </function>
+        </class>
+        <module name="MultipleRelates" href="multiplerelates-module.html" status="active" documented="true" seen="true" title="Multiple Relates Test" brief="Tests related non-members with multiple \relates commands"/>
+    </namespace>
+</INDEX>

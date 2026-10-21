@@ -941,6 +941,27 @@
     The documentation for this function is included on the reference
     page for class QChar, listed under the \e {Related Non-members} section.
 
+    Since QDoc 6.13, an entity can be related to multiple classes,
+    namespaces, or headers by using multiple \\relates commands. The
+    documentation is included on the reference page of the first
+    target. The reference pages of the other targets list the entity
+    under their \e {Related Non-members} section, with a link to its
+    documentation on the first target's page.
+
+    \code [text] *
+    /\1!
+        \relates Celsius
+        \relates Fahrenheit
+
+        Converts the temperature \a c to Fahrenheit.
+    \1/
+    Fahrenheit toFahrenheit(const Celsius &c)
+    \endcode
+
+    Here, the documentation for \c toFahrenheit() is included on the
+    reference page for \c Celsius, and the reference page for
+    \c Fahrenheit links to it.
+
     \note When QDoc resolves unqualified function or type names in
     documentation, it searches the context of the page where the
     documentation appears. Because \\relates moves the documentation
