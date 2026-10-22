@@ -143,6 +143,8 @@ public:
         return (it != m_configVars.constEnd()) ? *it : empty;
     }
     [[nodiscard]] QString getOutputDir(const QString &format = QString("HTML")) const;
+    [[nodiscard]] bool contains(const QString &var) const { return m_configVars.contains(var); }
+    [[nodiscard]] QStringList variableNames() const { return m_configVars.keys(); }
     [[nodiscard]] QSet<QString> getOutputFormats() const;
     [[nodiscard]] QStringList getCanonicalPathList(const QString &var,
                                                    PathFlags flags = None) const;
@@ -339,10 +341,12 @@ struct ConfigStrings
     static QString OUTPUTPREFIXES;
     static QString OUTPUTSUFFIXES;
     static QString PARSECPPCOMMENTS;
+    static QString PIPELINE;
     static QString PRELIMINARY;
     static QString PRODUCTNAME;
     static QString PROJECT;
     static QString PROJECTROOT;
+    static QString PUBLICATIONLAYOUT;
     static QString REDIRECTDOCUMENTATIONTODEVNULL;
     static QString REPORTMISSINGALTTEXTFORIMAGES;
     static QString QHP;
@@ -360,6 +364,7 @@ struct ConfigStrings
     static QString SYNTAXHIGHLIGHTING;
     static QString TABSIZE;
     static QString TAGFILE;
+    static QString TEMPLATEPACKAGE;
     static QString TIMESTAMPS;
     static QString TOCTITLES;
     static QString TRADEMARKSPAGE;
@@ -433,10 +438,12 @@ struct ConfigStrings
 #define CONFIG_OUTPUTPREFIXES ConfigStrings::OUTPUTPREFIXES
 #define CONFIG_OUTPUTSUFFIXES ConfigStrings::OUTPUTSUFFIXES
 #define CONFIG_PARSECPPCOMMENTS ConfigStrings::PARSECPPCOMMENTS
+#define CONFIG_PIPELINE ConfigStrings::PIPELINE
 #define CONFIG_PRELIMINARY ConfigStrings::PRELIMINARY
 #define CONFIG_PRODUCTNAME ConfigStrings::PRODUCTNAME
 #define CONFIG_PROJECT ConfigStrings::PROJECT
 #define CONFIG_PROJECTROOT ConfigStrings::PROJECTROOT
+#define CONFIG_PUBLICATIONLAYOUT ConfigStrings::PUBLICATIONLAYOUT
 #define CONFIG_REDIRECTDOCUMENTATIONTODEVNULL ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL
 #define CONFIG_REPORTMISSINGALTTEXTFORIMAGES ConfigStrings::REPORTMISSINGALTTEXTFORIMAGES
 #define CONFIG_QHP ConfigStrings::QHP
@@ -454,6 +461,7 @@ struct ConfigStrings
 #define CONFIG_SYNTAXHIGHLIGHTING ConfigStrings::SYNTAXHIGHLIGHTING
 #define CONFIG_TABSIZE ConfigStrings::TABSIZE
 #define CONFIG_TAGFILE ConfigStrings::TAGFILE
+#define CONFIG_TEMPLATEPACKAGE ConfigStrings::TEMPLATEPACKAGE
 #define CONFIG_TIMESTAMPS ConfigStrings::TIMESTAMPS
 #define CONFIG_TOCTITLES ConfigStrings::TOCTITLES
 #define CONFIG_TRADEMARKSPAGE ConfigStrings::TRADEMARKSPAGE
