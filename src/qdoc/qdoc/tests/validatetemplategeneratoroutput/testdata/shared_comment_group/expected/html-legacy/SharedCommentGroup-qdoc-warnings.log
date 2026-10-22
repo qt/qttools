@@ -1,0 +1,7 @@
+# QDoc Warning Log
+# Project: SharedCommentGroup
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/shared_comment_group.qdoc:27: [SharedCommentGroup] (qdoc) warning: Can't link to 'BrokenTarget'

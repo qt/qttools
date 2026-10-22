@@ -1,0 +1,4 @@
+# The shared comment carries one genuinely broken link, authored once.
+# It must be reported once per source location, regardless of how many
+# members share the comment.
+Can't link to 'BrokenTarget'

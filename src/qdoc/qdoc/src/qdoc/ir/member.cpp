@@ -102,6 +102,113 @@ QJsonObject EnumValueIR::toJson() const
 }
 
 /*!
+    \struct IR::SharedDetailGroup
+    \brief One documentation body and see-also list shared by a group of members.
+
+    SharedDetailGroup captures the detail content that a group of members
+    documented by a single shared comment (a SharedCommentNode) all share:
+    one body and one see-also list, rendered once for the whole group.
+
+    The group references its members positionally: \c firstIndex is the
+    zero-based index of the group's first member in the section's member
+    list, and \c count is the number of members it covers. Member identity,
+    synopses, anchors, and per-member fields stay in the section's flat
+    member list, which keeps ordinary member JSON unchanged; members of the
+    group carry the group's index in their \c sharedGroup field instead of
+    the shared body and see-also content.
+
+    The lookup context the shared content was authored in (the
+    SharedCommentNode) is deliberately not part of this IR; the extractor
+    keeps it outside the template-facing representation.
+
+    JSON output always emits \c firstIndex, \c count, \c body, and
+    \c alsoList, the latter two even when empty, so that templates can
+    index a group positionally and guard only on array length. The group's
+    status sentence uses \c status and \c isPlural, with the noun and
+    version fields emitted only when nonempty.
+*/
+
+/*!
+    \variable IR::SharedDetailGroup::firstIndex
+    Zero-based index of the group's first member in the section's member
+    list. Negative when the group is not populated.
+*/
+
+/*!
+    \variable IR::SharedDetailGroup::count
+    Number of section members the group covers.
+*/
+
+/*!
+    \variable IR::SharedDetailGroup::status
+    The status of the shared comment, rather than any individual child.
+*/
+
+/*!
+    \variable IR::SharedDetailGroup::isPlural
+    Whether the group describes multiple members. Named property groups
+    describe one entity and remain singular.
+*/
+
+/*!
+    \variable IR::SharedDetailGroup::deprecatedSince
+    The plain version used in a scheduled-deprecation sentence.
+*/
+
+/*!
+    \variable IR::SharedDetailGroup::typeNoun
+    The singular or plural type noun used in the group's status sentence.
+*/
+
+/*!
+    \variable IR::SharedDetailGroup::deprecatedSinceQualified
+    The deprecation version, prefixed with the logical module name for QML.
+*/
+
+/*!
+    \variable IR::SharedDetailGroup::body
+    The documentation body authored on the shared comment.
+*/
+
+/*!
+    \variable IR::SharedDetailGroup::alsoList
+    The see-also list authored on the shared comment.
+*/
+
+/*!
+    Converts the shared detail group to a QJsonObject for template rendering.
+
+    Always emits \c firstIndex and \c count, and both the \c body and
+    \c alsoList arrays, which may be empty.
+*/
+QJsonObject SharedDetailGroup::toJson() const
+{
+    QJsonObject json;
+    json["firstIndex"_L1] = firstIndex;
+    json["count"_L1] = count;
+    json["status"_L1] = statusToJson(status);
+    json["isPlural"_L1] = isPlural;
+    if (!deprecatedSince.isEmpty())
+        json["deprecatedSince"_L1] = deprecatedSince;
+    if (!typeNoun.isEmpty())
+        json["typeNoun"_L1] = typeNoun;
+    if (!deprecatedSinceQualified.isEmpty())
+        json["deprecatedSinceQualified"_L1] = deprecatedSinceQualified;
+
+    QJsonArray bodyArray;
+    for (const auto &block : body)
+        bodyArray.append(block.toJson());
+    json["body"_L1] = bodyArray;
+
+    QJsonArray alsoArray;
+    for (const auto &block : alsoList)
+        alsoArray.append(block.toJson());
+    json["alsoList"_L1] = alsoArray;
+
+    return json;
+}
+
+/*!
     \struct IR::MemberIR
     \brief Intermediate representation of a single documentable member.
 
@@ -241,13 +348,22 @@ QJsonObject EnumValueIR::toJson() const
 */
 
 /*!
+    \variable IR::MemberIR::sharedGroup
+    Index of the section's shared detail group this member belongs to, or
+    -1 when the member carries its own body and see-also content. A member
+    of a shared group has an empty \c body and \c alsoList; the shared
+    content is rendered once from the group its index refers to. The
+    \c sharedGroup key is omitted from JSON when -1.
+*/
+
+/*!
     Converts the member to a QJsonObject for template rendering.
 
     Emits identity fields (name, fullName, signature, href),
     classification as \c {id, label} objects, overload metadata, and
     qualifier flags. The \c brief, \c parameters, and \c enumValues
     fields are omitted when empty. The \c nodeType field is omitted
-    when NoType.
+    when NoType. The \c sharedGroup field is omitted when -1.
 */
 QJsonObject MemberIR::toJson() const
 {
@@ -338,6 +454,9 @@ QJsonObject MemberIR::toJson() const
         json["alsoList"_L1] = arr;
     }
 
+    if (sharedGroup >= 0)
+        json["sharedGroup"_L1] = sharedGroup;
+
     return json;
 }
 
@@ -392,8 +511,12 @@ QJsonObject InheritedMembersIR::toJson() const
     three member lists: primary members, reimplemented members, and
     inherited member summaries.
 
-    The \c reimplementedMembers and \c inheritedMembers arrays are
-    omitted from JSON when empty.
+    The \c sharedGroups list carries the shared detail content of
+    member groups documented by a single shared comment; each group's
+    members stay in the flat \c members list and reference their group
+    through \c sharedGroup. The \c reimplementedMembers,
+    \c inheritedMembers, and \c sharedGroups arrays are omitted from
+    JSON when empty.
 */
 
 /*!
@@ -433,11 +556,19 @@ QJsonObject InheritedMembersIR::toJson() const
 */
 
 /*!
+    \variable IR::SectionIR::sharedGroups
+    Shared detail groups whose members appear in this section's
+    \c members list, in the order the groups are encountered. Empty
+    (and omitted from JSON) when the section has no shared comment
+    groups.
+*/
+
+/*!
     Converts the section to a QJsonObject for template rendering.
 
     Emits \c id, \c title, \c singular, \c plural, and the \c members
-    array. The \c reimplementedMembers and \c inheritedMembers arrays
-    are omitted when empty.
+    array. The \c reimplementedMembers, \c inheritedMembers, and
+    \c sharedGroups arrays are omitted when empty.
 */
 QJsonObject SectionIR::toJson() const
 {
@@ -465,6 +596,13 @@ QJsonObject SectionIR::toJson() const
         for (const auto &im : inheritedMembers)
             arr.append(im.toJson());
         json["inheritedMembers"_L1] = arr;
+    }
+
+    if (!sharedGroups.isEmpty()) {
+        QJsonArray arr;
+        for (const auto &group : sharedGroups)
+            arr.append(group.toJson());
+        json["sharedGroups"_L1] = arr;
     }
 
     return json;

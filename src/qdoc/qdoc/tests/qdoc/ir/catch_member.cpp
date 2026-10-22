@@ -1076,3 +1076,220 @@ SCENARIO("MemberIR deprecation status fields serialize conditionally", "[IR::Mem
         }
     }
 }
+
+namespace {
+
+IR::ContentBlock paragraphBlock(const QString &text)
+{
+    IR::ContentBlock block;
+    block.type = IR::BlockType::Paragraph;
+    IR::InlineContent inlineContent;
+    inlineContent.type = IR::InlineType::Text;
+    inlineContent.text = text;
+    block.inlineContent.push_back(std::move(inlineContent));
+    return block;
+}
+
+} // anonymous namespace
+
+SCENARIO("IR::SharedDetailGroup JSON", "[IR::SharedDetailGroup][IR]") {
+
+    GIVEN("A group covering three members with body and see-also content") {
+        IR::SharedDetailGroup group;
+        group.firstIndex = 2;
+        group.count = 3;
+        group.body.push_back(paragraphBlock("Body text"_L1));
+        group.alsoList.push_back(paragraphBlock("Also text"_L1));
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = group.toJson();
+
+            THEN("firstIndex and count are always present") {
+                REQUIRE(json["firstIndex"_L1].toInt() == 2);
+                REQUIRE(json["count"_L1].toInt() == 3);
+            }
+
+            THEN("Body and see-also arrays carry the shared content") {
+                QJsonArray body = json["body"_L1].toArray();
+                REQUIRE(body.size() == 1);
+                REQUIRE(body[0].toObject()["type"_L1].toString() == "paragraph");
+                REQUIRE(body[0].toObject()["text"_L1].toString() == "Body text");
+
+                QJsonArray also = json["alsoList"_L1].toArray();
+                REQUIRE(also.size() == 1);
+                REQUIRE(also[0].toObject()["text"_L1].toString() == "Also text");
+            }
+        }
+    }
+
+    GIVEN("An empty group") {
+        IR::SharedDetailGroup group;
+        group.firstIndex = 0;
+        group.count = 0;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = group.toJson();
+
+            THEN("The arrays are present but empty, so templates can index by position") {
+                REQUIRE(json.contains("firstIndex"_L1));
+                REQUIRE(json.contains("count"_L1));
+                REQUIRE(json["body"_L1].toArray().isEmpty());
+                REQUIRE(json["alsoList"_L1].toArray().isEmpty());
+            }
+        }
+    }
+}
+
+SCENARIO("Shared detail groups serialize their own status sentence data",
+         "[IR::SharedDetailGroup][IR][deprecation]") {
+
+    GIVEN("An active group without a deprecation sentence") {
+        IR::SharedDetailGroup group;
+        const auto json = group.toJson();
+
+        THEN("The default status is active and sentence fields are absent") {
+            REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "active");
+            REQUIRE_FALSE(json["isPlural"_L1].toBool());
+            REQUIRE_FALSE(json.contains("deprecatedSince"_L1));
+            REQUIRE_FALSE(json.contains("typeNoun"_L1));
+            REQUIRE_FALSE(json.contains("deprecatedSinceQualified"_L1));
+        }
+    }
+
+    GIVEN("A deprecated group describing several QML methods") {
+        IR::SharedDetailGroup group;
+        group.status = Status::Deprecated;
+        group.isPlural = true;
+        group.typeNoun = "methods"_L1;
+        group.deprecatedSince = "6.5"_L1;
+        group.deprecatedSinceQualified = "GroupQml 6.5"_L1;
+
+        THEN("The group carries the plural noun and both version spellings") {
+            const auto json = group.toJson();
+            REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "deprecated");
+            REQUIRE(json["isPlural"_L1].toBool());
+            REQUIRE(json["typeNoun"_L1].toString() == "methods");
+            REQUIRE(json["deprecatedSince"_L1].toString() == "6.5");
+            REQUIRE(json["deprecatedSinceQualified"_L1].toString() == "GroupQml 6.5");
+        }
+
+        WHEN("The deprecation has no version") {
+            group.deprecatedSince.clear();
+            group.deprecatedSinceQualified.clear();
+            const auto json = group.toJson();
+
+            THEN("The noun and status remain, without version fields") {
+                REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "deprecated");
+                REQUIRE(json["typeNoun"_L1].toString() == "methods");
+                REQUIRE_FALSE(json.contains("deprecatedSince"_L1));
+                REQUIRE_FALSE(json.contains("deprecatedSinceQualified"_L1));
+            }
+        }
+    }
+
+    GIVEN("A named property group scheduled for deprecation") {
+        IR::SharedDetailGroup group;
+        group.count = 2;
+        group.typeNoun = "property group"_L1;
+        group.deprecatedSince = "7.0"_L1;
+
+        THEN("Its sentence stays singular despite having several children") {
+            const auto json = group.toJson();
+            REQUIRE(json["status"_L1].toObject()["id"_L1].toString() == "active");
+            REQUIRE_FALSE(json["isPlural"_L1].toBool());
+            REQUIRE(json["typeNoun"_L1].toString() == "property group");
+            REQUIRE(json["deprecatedSince"_L1].toString() == "7.0");
+        }
+    }
+}
+
+SCENARIO("IR::MemberIR sharedGroup JSON", "[IR::MemberIR][IR]") {
+
+    GIVEN("A member outside any shared group") {
+        IR::MemberIR member;
+        member.name = "solo"_L1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("The sharedGroup key is omitted") {
+                REQUIRE(!json.contains("sharedGroup"_L1));
+            }
+        }
+    }
+
+    GIVEN("A member that belongs to shared group 1") {
+        IR::MemberIR member;
+        member.name = "beta"_L1;
+        member.sharedGroup = 1;
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = member.toJson();
+
+            THEN("The sharedGroup key carries the group index") {
+                REQUIRE(json["sharedGroup"_L1].toInt() == 1);
+            }
+        }
+    }
+}
+
+SCENARIO("IR::SectionIR sharedGroups JSON", "[IR::SectionIR][IR]") {
+
+    GIVEN("A section without shared groups") {
+        IR::MemberIR m1;
+        m1.name = "solo"_L1;
+
+        IR::SectionIR section;
+        section.title = "Public Functions"_L1;
+        section.members = { m1 };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = section.toJson();
+
+            THEN("The sharedGroups array is omitted") {
+                REQUIRE(!json.contains("sharedGroups"_L1));
+            }
+        }
+    }
+
+    GIVEN("A section whose first two members form a shared group") {
+        IR::MemberIR m1;
+        m1.name = "alpha"_L1;
+        m1.sharedGroup = 0;
+
+        IR::MemberIR m2;
+        m2.name = "beta"_L1;
+        m2.sharedGroup = 0;
+
+        IR::MemberIR m3;
+        m3.name = "solo"_L1;
+
+        IR::SharedDetailGroup group;
+        group.firstIndex = 0;
+        group.count = 2;
+
+        IR::SectionIR section;
+        section.title = "Properties"_L1;
+        section.members = { m1, m2, m3 };
+        section.sharedGroups = { group };
+
+        WHEN("Converting to JSON") {
+            QJsonObject json = section.toJson();
+
+            THEN("The sharedGroups array carries the group") {
+                REQUIRE(json["sharedGroups"_L1].toArray().size() == 1);
+                QJsonObject groupJson = json["sharedGroups"_L1].toArray()[0].toObject();
+                REQUIRE(groupJson["firstIndex"_L1].toInt() == 0);
+                REQUIRE(groupJson["count"_L1].toInt() == 2);
+            }
+
+            THEN("Only members inside the group window reference the group") {
+                QJsonArray members = json["members"_L1].toArray();
+                REQUIRE(members.size() == 3);
+                REQUIRE(members[0].toObject()["sharedGroup"_L1].toInt() == 0);
+                REQUIRE(members[1].toObject()["sharedGroup"_L1].toInt() == 0);
+                REQUIRE(!members[2].toObject().contains("sharedGroup"_L1));
+            }
+        }
+    }
+}

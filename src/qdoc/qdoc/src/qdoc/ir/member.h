@@ -32,6 +32,19 @@ struct EnumValueIR {
     [[nodiscard]] QJsonObject toJson() const;
 };
 
+struct SharedDetailGroup {
+    int firstIndex { -1 };
+    int count { 0 };
+    Status status { Status::Active };
+    bool isPlural { false };
+    QString deprecatedSince;
+    QString typeNoun;
+    QString deprecatedSinceQualified;
+    QList<ContentBlock> body;
+    QList<ContentBlock> alsoList;
+    [[nodiscard]] QJsonObject toJson() const;
+};
+
 struct MemberIR {
     QString name;
     QString fullName;
@@ -78,6 +91,10 @@ struct MemberIR {
     QList<ContentBlock> body;
     QList<ContentBlock> alsoList;
 
+    // Index of the section's shared detail group this member belongs to,
+    // or -1 when the member carries its own body and see-also content.
+    int sharedGroup { -1 };
+
     [[nodiscard]] QJsonObject toJson() const;
 };
 
@@ -96,6 +113,9 @@ struct SectionIR {
     QList<MemberIR> members;
     QList<MemberIR> reimplementedMembers;
     QList<InheritedMembersIR> inheritedMembers;
+    // Shared detail groups whose members appear in \c members; each group
+    // carries the documentation its children share, stored once.
+    QList<SharedDetailGroup> sharedGroups;
     [[nodiscard]] QJsonObject toJson() const;
 };
 

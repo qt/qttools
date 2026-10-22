@@ -87,4 +87,5 @@ qt_internal_extend_target(tst_QDoc
         nlohmann_json::nlohmann_json
     DEFINES
         QDOC_TEMPLATE_GENERATOR_ENABLED
+        QDOC_TEMPLATE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../../src/qdoc/templates"
 )
