@@ -1,0 +1,3 @@
+pipeline = legacy
+outputdir = docs
+outputformats = HTML Foo foo

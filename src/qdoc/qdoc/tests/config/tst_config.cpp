@@ -54,6 +54,14 @@ private slots:
     void selectionOwnership();
     void selectionExtensions();
     void selectionNotices();
+    void publicationLayout_data();
+    void publicationLayout();
+    void publicationDestinations();
+    void destinationConflicts_data();
+    void destinationConflicts();
+    void publicationProvenance();
+    void moduleIdentity_data();
+    void moduleIdentity();
 
 private:
     Config &initConfig(const QStringList &args = QStringList(),
@@ -594,6 +602,261 @@ void tst_Config::selectionNotices()
         QCOMPARE(diagnostic.kind, OutputSelection::Diagnostic::Kind::Notice);
         QVERIFY(diagnostic.message.contains("pipeline"_L1));
     }
+}
+
+void tst_Config::publicationLayout_data()
+{
+    QTest::addColumn<QString>("shared");
+    QTest::addColumn<QString>("perFormat");
+    QTest::addColumn<QString>("alias");
+    QTest::addColumn<bool>("perModule");
+    QTest::addColumn<int>("notices");
+    QTest::addColumn<bool>("error");
+    const QString absent;
+    QTest::newRow("default-flat") << absent << absent << absent << false << 0 << false;
+    QTest::newRow("shared") << u"per-module"_s << absent << absent << true << 0 << false;
+    QTest::newRow("per-format-wins") << u"per-module"_s << u"flat"_s << absent << false << 0 << false;
+    QTest::newRow("shared-beats-alias") << u"flat"_s << absent << u"false"_s << false << 0 << false;
+    QTest::newRow("per-format-beats-alias") << absent << u"flat"_s << u"false"_s << false << 0 << false;
+    QTest::newRow("alias-false") << absent << absent << u"false"_s << true << 1 << false;
+    QTest::newRow("alias-true") << absent << absent << u"true"_s << false << 1 << false;
+    QTest::newRow("alias-empty") << absent << absent << u""_s << true << 1 << false;
+    QTest::newRow("invalid-shared") << u"sideways"_s << absent << absent << false << 0 << true;
+    QTest::newRow("empty-shared-no-fallback") << u""_s << absent << u"false"_s << false << 0 << true;
+    QTest::newRow("invalid-per-format") << u"per-module"_s << u"sideways"_s << absent << false << 0 << true;
+    QTest::newRow("empty-per-format") << u"per-module"_s << u""_s << u"false"_s << false << 0 << true;
+}
+
+void tst_Config::publicationLayout()
+{
+    QFETCH(QString, shared);
+    QFETCH(QString, perFormat);
+    QFETCH(QString, alias);
+    QFETCH(bool, perModule);
+    QFETCH(int, notices);
+    QFETCH(bool, error);
+    auto &config = initConfig();
+    config.setStringList(CONFIG_PIPELINE, {u"legacy"_s});
+    config.setStringList(CONFIG_OUTPUTFORMATS, {u"HTML"_s, u"Markdown"_s});
+    config.setStringList(CONFIG_PROJECT, {u"SampleProject"_s});
+    config.setStringList(CONFIG_OUTPUTDIR, {u"docs"_s});
+    if (!shared.isNull())
+        config.setStringList(CONFIG_PUBLICATIONLAYOUT, {shared});
+    if (!perFormat.isNull())
+        config.setStringList(u"HTML.publicationlayout"_s, {perFormat});
+    if (!alias.isNull())
+        config.setStringList(u"HTML.nosubdirs"_s, {alias});
+    OutputConfigurationInput input;
+    input.pipelineCapabilities = {capabilitiesFor(Pipeline::Legacy, {u"HTML"_s, u"Markdown"_s})};
+    const auto result = OutputConfiguration::resolve(config, input);
+    QCOMPARE(result.hasErrors(), error);
+    QCOMPARE(result.formats.first().layout,
+             perModule ? PublicationLayout::PerModule : PublicationLayout::Flat);
+    QCOMPARE(result.formats.first().moduleDir, perModule ? u"sampleproject"_s : QString());
+    int actualNotices = 0;
+    int errors = 0;
+    for (const auto &diagnostic : result.diagnostics) {
+        if (diagnostic.kind == OutputConfiguration::Diagnostic::Kind::Notice)
+            ++actualNotices;
+        else
+            ++errors;
+    }
+    QCOMPARE(actualNotices, notices);
+    QCOMPARE(errors, error ? 1 : 0);
+}
+
+void tst_Config::publicationDestinations()
+{
+    auto &config = initConfig();
+    const auto compatibility = OutputConfiguration::resolve(config);
+    QCOMPARE(compatibility.mode, OutputConfiguration::Mode::Compatibility);
+    QVERIFY(compatibility.root.isEmpty());
+    QVERIFY(compatibility.formats.isEmpty());
+    config.setStringList(CONFIG_PIPELINE, {u"legacy"_s});
+    config.setStringList(CONFIG_OUTPUTFORMATS, {u"HTML"_s, u"Markdown"_s, u"DocBook"_s});
+    config.setStringList(CONFIG_OUTPUTDIR, {u"docs"_s});
+    config.setStringList(CONFIG_PROJECT, {u"SampleProject"_s});
+    OutputConfigurationInput input;
+    input.pipelineCapabilities = {
+        capabilitiesFor(Pipeline::Legacy, {u"HTML"_s, u"Markdown"_s, u"DocBook"_s})
+    };
+    const auto defaults = OutputConfiguration::resolve(config, input);
+    QVERIFY(!defaults.hasErrors());
+    QCOMPARE(defaults.destination(defaults.formats.at(0)), u"docs"_s);
+    QCOMPARE(defaults.destination(defaults.formats.at(1)), u"docs/markdown"_s);
+    QCOMPARE(defaults.destination(defaults.formats.at(2)), u"docs/docbook"_s);
+    config.setStringList(u"HTML.outputsubdir"_s, {u"html"_s});
+    input.cliFormats = {u"Markdown"_s};
+    const auto filtered = OutputConfiguration::resolve(config, input);
+    QVERIFY(!filtered.hasErrors());
+    QVERIFY(!filtered.findFormat(u"HTML"_s)->requested);
+    QVERIFY(!filtered.findFormat(u"DocBook"_s)->requested);
+    QVERIFY(filtered.findFormat(u"Markdown"_s)->requested);
+    QCOMPARE(filtered.destination(filtered.formats.at(0)), u"docs/html"_s);
+    QCOMPARE(filtered.destination(filtered.formats.at(1)), u"docs/markdown"_s);
+
+    config.setStringList(CONFIG_OUTPUTFORMATS, {u"HTML"_s});
+    input.cliFormats = {u"DocBook"_s};
+    const auto cliOnly = OutputConfiguration::resolve(config, input);
+    QVERIFY(!cliOnly.hasErrors());
+    QVERIFY(!cliOnly.findFormat(u"HTML"_s)->requested);
+    QCOMPARE(cliOnly.destination(*cliOnly.findFormat(u"DocBook"_s)), u"docs/docbook"_s);
+    config.setStringList(u"DocBook.outputsubdir"_s, {u"db"_s});
+    const auto overridden = OutputConfiguration::resolve(config, input);
+    QCOMPARE(overridden.destination(*overridden.findFormat(u"DocBook"_s)), u"docs/db"_s);
+
+    config.setStringList(CONFIG_OUTPUTFORMATS, {u"Markdown"_s, u"HTML"_s});
+    input.cliFormats.clear();
+    const auto reversed = OutputConfiguration::resolve(config, input);
+    QVERIFY(!reversed.hasErrors());
+    QCOMPARE(reversed.destination(reversed.formats.first()), u"docs"_s);
+    config.setStringList(u"HTML.outputsubdir"_s, {u"../web"_s});
+    config.setStringList(u"HTML.nosubdirs"_s, {u"false"_s});
+    const auto literal = OutputConfiguration::resolve(config, input);
+    QVERIFY(!literal.hasErrors());
+    QCOMPARE(literal.destination(*literal.findFormat(u"HTML"_s)), u"web/sampleproject"_s);
+    config.setStringList(CONFIG_SINGLEEXEC, {u"true"_s});
+    const auto singleExec = OutputConfiguration::resolve(config, input);
+    for (const auto &plan : singleExec.formats)
+        QCOMPARE(singleExec.destination(plan), literal.destination(*literal.findFormat(plan.format)));
+    config.setStringList(u"HTML.outputsubdir"_s, {u" web "_s});
+    const auto spaces = OutputConfiguration::resolve(config, input);
+    QVERIFY(!spaces.hasErrors());
+    QCOMPARE(spaces.findFormat(u"HTML"_s)->formatDir, u" web "_s);
+    QCOMPARE(spaces.destination(*spaces.findFormat(u"HTML"_s)), u"docs/ web /sampleproject"_s);
+    config.setStringList(u"HTML.outputsubdir"_s, {u"one"_s, u"two"_s});
+    QVERIFY(OutputConfiguration::resolve(config, input).hasErrors());
+
+    const QString cliRoot = QDir::tempPath() + u"/qdoc-publication-root"_s;
+    auto &cliConfig = initConfig({u"-outputdir"_s, cliRoot});
+    cliConfig.setStringList(CONFIG_OUTPUTDIR, {u"ignored"_s});
+    cliConfig.setStringList(CONFIG_PIPELINE, {u"legacy"_s});
+    cliConfig.setStringList(CONFIG_OUTPUTFORMATS, {u"HTML"_s, u"Markdown"_s});
+    const auto relocated = OutputConfiguration::resolve(cliConfig, input);
+    QVERIFY(!relocated.hasErrors());
+    QCOMPARE(relocated.root, cliRoot);
+    QCOMPARE(relocated.destination(relocated.formats.first()), cliRoot);
+    QCOMPARE(relocated.destination(relocated.formats.last()), cliRoot + u"/markdown"_s);
+    cliConfig.setStringList(CONFIG_PROJECT, {u"SampleProject"_s});
+    cliConfig.setStringList(CONFIG_PUBLICATIONLAYOUT, {u"per-module"_s});
+    const auto relocatedModules = OutputConfiguration::resolve(cliConfig, input);
+    QVERIFY(!relocatedModules.hasErrors());
+    QCOMPARE(relocatedModules.destination(relocatedModules.formats.last()),
+             cliRoot + u"/markdown/sampleproject"_s);
+}
+
+void tst_Config::destinationConflicts_data()
+{
+    QTest::addColumn<QString>("root");
+    QTest::addColumn<QString>("subdir");
+    QTest::newRow("dot-root") << u"docs/./"_s << u"."_s;
+    QTest::newRow("trailing-root") << u"docs/"_s << u""_s;
+    QTest::newRow("parent-root") << u"docs/child/.."_s << u""_s;
+    QTest::newRow("parent-subdir") << u"docs"_s << u"../docs"_s;
+    QTest::newRow("empty-root") << u""_s << u"."_s;
+    QTest::newRow("empty-subdirs") << u"docs"_s << u""_s;
+}
+
+void tst_Config::destinationConflicts()
+{
+    QFETCH(QString, root);
+    QFETCH(QString, subdir);
+    auto &config = initConfig();
+    config.setStringList(CONFIG_PIPELINE, {u"legacy"_s});
+    config.setStringList(CONFIG_OUTPUTFORMATS, {u"HTML"_s, u"Markdown"_s});
+    config.setStringList(CONFIG_OUTPUTDIR, {root});
+    config.setStringList(u"Markdown.outputsubdir"_s, {subdir});
+    OutputConfigurationInput input;
+    input.pipelineCapabilities = {capabilitiesFor(Pipeline::Legacy, {u"HTML"_s, u"Markdown"_s})};
+    const auto result = OutputConfiguration::resolve(config, input);
+    QVERIFY(result.hasErrors());
+    QCOMPARE(result.diagnostics.size(), 1);
+    const QString expected = root.isEmpty() ? u"."_s : QDir::cleanPath(root);
+    QCOMPARE(result.destination(result.formats.first()), expected);
+    QCOMPARE(result.destination(result.formats.last()), expected);
+    input.cliFormats = {u"Markdown"_s};
+    QVERIFY(!OutputConfiguration::resolve(config, input).hasErrors());
+}
+
+void tst_Config::publicationProvenance()
+{
+    OutputConfigurationInput input;
+    input.pipelineCapabilities = {capabilitiesFor(Pipeline::Legacy, {u"HTML"_s, u"Markdown"_s})};
+    auto &config = initConfig("/testdata/configs/publication_include.qdocconf");
+    const auto result = OutputConfiguration::resolve(config, input);
+    QVERIFY(!result.hasErrors());
+    QVERIFY(result.diagnostics.isEmpty());
+    const auto &html = result.formats.first();
+    QCOMPARE(html.layout, PublicationLayout::Flat);
+    QCOMPARE(html.layoutLocation.filePath(),
+             QFINDTESTDATA("/testdata/configs/publication_include.qdocconf"));
+    QCOMPARE(html.layoutLocation.lineNo(), 2);
+    QCOMPARE(html.formatDirLocation.filePath(),
+             QDir::cleanPath(QFINDTESTDATA("/testdata/configs/publication_base.qdocconf")));
+    QCOMPARE(html.formatDirLocation.lineNo(), 6);
+    QCOMPARE(result.destination(html), u"web"_s);
+    QCOMPARE(result.destination(result.formats.last()), u"docs/markdown/sampleproject"_s);
+
+    auto &collision = initConfig("/testdata/configs/destination_conflict.qdocconf");
+    input.pipelineCapabilities = {capabilitiesFor(Pipeline::Legacy, {u"HTML"_s, u"Foo"_s, u"foo"_s})};
+    const auto invalid = OutputConfiguration::resolve(collision, input);
+    QVERIFY(invalid.hasErrors());
+    QCOMPARE(invalid.diagnostics.size(), 1);
+    QCOMPARE(invalid.diagnostics.first().location.filePath(),
+             QDir::cleanPath(QFINDTESTDATA("/testdata/configs/destination_conflict_base.qdocconf")));
+    QCOMPARE(invalid.diagnostics.first().location.lineNo(), 3);
+    QVERIFY(invalid.diagnostics.first().details.contains("destination_conflict_base.qdocconf"_L1));
+
+    auto &unsafe = initConfig("/testdata/configs/publication_unsafe.qdocconf");
+    input.pipelineCapabilities = {capabilitiesFor(Pipeline::Legacy, {u"HTML"_s, u"Markdown"_s})};
+    const auto unsafeResult = OutputConfiguration::resolve(unsafe, input);
+    QVERIFY(unsafeResult.hasErrors());
+    QCOMPARE(unsafeResult.diagnostics.size(), 1);
+    QCOMPARE(unsafeResult.diagnostics.first().location.filePath(),
+             QFINDTESTDATA("/testdata/configs/publication_unsafe.qdocconf"));
+    QCOMPARE(unsafeResult.diagnostics.first().location.lineNo(), 2);
+}
+
+void tst_Config::moduleIdentity_data()
+{
+    QTest::addColumn<QString>("project");
+    QTest::addColumn<bool>("valid");
+    QTest::newRow("empty") << u""_s << false;
+    QTest::newRow("dot") << u"."_s << false;
+    QTest::newRow("parent") << u".."_s << false;
+    QTest::newRow("escape") << u"../other"_s << false;
+    QTest::newRow("separator") << u"a/b"_s << false;
+    QTest::newRow("backslash") << u"a\\b"_s << false;
+    QTest::newRow("colon") << u"a:b"_s << false;
+    QTest::newRow("leading-space") << u" a"_s << false;
+    QTest::newRow("trailing-dot") << u"a."_s << false;
+    QTest::newRow("control") << u"a\n"_s << false;
+    QTest::newRow("normal") << u"SampleProject"_s << true;
+    QTest::newRow("spaces") << u"My documentation project"_s << true;
+}
+
+void tst_Config::moduleIdentity()
+{
+    QFETCH(QString, project);
+    QFETCH(bool, valid);
+    auto &config = initConfig();
+    config.setStringList(CONFIG_PIPELINE, {u"legacy"_s});
+    config.setStringList(CONFIG_OUTPUTDIR, {u"docs"_s});
+    config.setStringList(CONFIG_OUTPUTFORMATS, {u"HTML"_s, u"Markdown"_s});
+    config.setStringList(CONFIG_PUBLICATIONLAYOUT, {u"per-module"_s});
+    config.setStringList(CONFIG_PROJECT, {project});
+    OutputConfigurationInput input;
+    input.pipelineCapabilities = {capabilitiesFor(Pipeline::Legacy, {u"HTML"_s, u"Markdown"_s})};
+    const auto result = OutputConfiguration::resolve(config, input);
+    QCOMPARE(result.hasErrors(), !valid);
+    if (valid) {
+        QCOMPARE(result.destination(result.formats.first()), u"docs/"_s + project.toLower());
+    } else {
+        QCOMPARE(result.diagnostics.size(), 1);
+        QVERIFY(result.diagnostics.first().message.contains("project"_L1));
+    }
+    config.setStringList(CONFIG_PUBLICATIONLAYOUT, {u"flat"_s});
+    QVERIFY(!OutputConfiguration::resolve(config, input).hasErrors());
 }
 
 QTEST_APPLESS_MAIN(tst_Config)

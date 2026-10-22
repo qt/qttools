@@ -67,6 +67,35 @@ struct OutputSelection
     [[nodiscard]] const Format *findFormat(const QString &format) const;
 };
 
+enum class PublicationLayout { Flat, PerModule };
+
+struct OutputConfiguration
+{
+    using Mode = OutputSelection::Mode;
+    using Diagnostic = OutputSelection::Diagnostic;
+
+    struct FormatPlan : OutputSelection::Format
+    {
+        QString formatDir;
+        Location formatDirLocation;
+        PublicationLayout layout = PublicationLayout::Flat;
+        Location layoutLocation;
+        QString moduleDir;
+    };
+
+    Mode mode = Mode::Compatibility;
+    QVector<Pipeline> pipelines;
+    QString root;
+    QVector<FormatPlan> formats;
+    QVector<Diagnostic> diagnostics;
+
+    [[nodiscard]] static OutputConfiguration resolve(const Config &config,
+                                                     const OutputConfigurationInput &input = {});
+    [[nodiscard]] bool hasErrors() const;
+    [[nodiscard]] const FormatPlan *findFormat(const QString &format) const;
+    [[nodiscard]] QString destination(const FormatPlan &plan) const;
+};
+
 QT_END_NAMESPACE
 
 #endif // OUTPUTCONFIGURATION_H

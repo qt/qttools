@@ -1,0 +1,3 @@
+include(publication_base.qdocconf)
+publicationlayout = flat
+Markdown.publicationlayout = per-module
