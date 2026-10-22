@@ -1,0 +1,6 @@
+project = SampleProject
+outputdir = docs
+outputformats = HTML Markdown
+pipeline = legacy
+HTML.nosubdirs = false
+HTML.outputsubdir = ../web

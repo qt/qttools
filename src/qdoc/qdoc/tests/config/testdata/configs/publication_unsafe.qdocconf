@@ -1,0 +1,3 @@
+include(publication_base.qdocconf)
+project = ../other
+publicationlayout = per-module
