@@ -143,6 +143,7 @@ set(qdoc_sources
     src/qdoc/nodecontext.h
     src/qdoc/nodedescription.cpp
     src/qdoc/openedlist.cpp
+    src/qdoc/outputconfiguration.cpp
     src/qdoc/outputcontext.cpp
     src/qdoc/outputdirectory.cpp
     src/qdoc/pagenode.cpp

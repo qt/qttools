@@ -75,10 +75,32 @@ QString ConfigStrings::OUTPUTFORMATS = QStringLiteral("outputformats");
 QString ConfigStrings::OUTPUTPREFIXES = QStringLiteral("outputprefixes");
 QString ConfigStrings::OUTPUTSUFFIXES = QStringLiteral("outputsuffixes");
 QString ConfigStrings::PARSECPPCOMMENTS = QStringLiteral("parsecppcomments");
+
+/*!
+    \variable ConfigStrings::PIPELINE
+    \internal
+    \brief The \c{pipeline} configuration key, also exposed as \c{CONFIG_PIPELINE}.
+
+    Presence selects the new publication interpretation, even for an empty or
+    invalid selection. The built-in defaults must not declare this key.
+*/
+QString ConfigStrings::PIPELINE = QStringLiteral("pipeline");
+
 QString ConfigStrings::PRELIMINARY = QStringLiteral("preliminary");
 QString ConfigStrings::PRODUCTNAME = QStringLiteral("productname");
 QString ConfigStrings::PROJECT = QStringLiteral("project");
 QString ConfigStrings::PROJECTROOT = QStringLiteral("projectroot");
+
+/*!
+    \variable ConfigStrings::PUBLICATIONLAYOUT
+    \internal
+    \brief The \c{publicationlayout} key, also exposed as \c{CONFIG_PUBLICATIONLAYOUT}.
+
+    Publication resolution uses this key globally or after a format prefix.
+    Its explicit value takes precedence over the deprecated layout alias.
+*/
+QString ConfigStrings::PUBLICATIONLAYOUT = QStringLiteral("publicationlayout");
+
 QString ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL =
         QStringLiteral("redirectdocumentationtodevnull");
 QString ConfigStrings::REPORTMISSINGALTTEXTFORIMAGES =
@@ -98,6 +120,17 @@ QString ConfigStrings::STYLESHEETS = QStringLiteral("stylesheets");
 QString ConfigStrings::SYNTAXHIGHLIGHTING = QStringLiteral("syntaxhighlighting");
 QString ConfigStrings::TABSIZE = QStringLiteral("tabsize");
 QString ConfigStrings::TAGFILE = QStringLiteral("tagfile");
+
+/*!
+    \variable ConfigStrings::TEMPLATEPACKAGE
+    \internal
+    \brief The \c{template.package} key, also exposed as \c{CONFIG_TEMPLATEPACKAGE}.
+
+    Selection diagnoses its presence without pipeline opt-in. Reading this key
+    does not load or validate a package; package resolution is separate work.
+*/
+QString ConfigStrings::TEMPLATEPACKAGE = QStringLiteral("template.package");
+
 QString ConfigStrings::TIMESTAMPS = QStringLiteral("timestamps");
 QString ConfigStrings::TOCTITLES = QStringLiteral("toctitles");
 QString ConfigStrings::TRADEMARKSPAGE = QStringLiteral("trademarkspage");
@@ -601,6 +634,28 @@ QString Config::getOutputDir(const QString &format) const
     }
     return QDir::cleanPath(t);
 }
+
+/*!
+    \fn bool Config::contains(const QString &var) const
+    \internal
+
+    Returns \c true if \a var exists in the configuration, including defaults
+    and programmatically inserted values. An explicitly empty declaration
+    counts as present. This tests presence, not the value's truth or validity.
+
+    Unlike the fallback returned by \c{get()}, this query distinguishes an
+    absent variable without inserting a default-constructed entry.
+*/
+
+/*!
+    \fn QStringList Config::variableNames() const
+    \internal
+
+    Returns the configuration variable names in sorted order, including defaults
+    and programmatic declarations. Reading the names does not insert undefined
+    variables. Publication resolution uses this list to find recognized settings
+    even when their formats do not occur in the effective request.
+*/
 
 /*!
   Function to return the correct outputformats.

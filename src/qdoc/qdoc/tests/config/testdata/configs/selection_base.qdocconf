@@ -1,0 +1,3 @@
+pipeline = template
+outputformats = HTML
+HTML.extension = xhtml

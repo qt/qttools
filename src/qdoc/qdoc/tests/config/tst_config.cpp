@@ -2,12 +2,33 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
 #include "qdoc/config.h"
+#include "qdoc/outputconfiguration.h"
 
 #include <QtCore/qdir.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qstringlist.h>
 #include <QtTest/QtTest>
+
+using namespace Qt::StringLiterals;
+
+namespace {
+
+PipelineCapabilities capabilitiesFor(Pipeline pipeline, const QStringList &formats)
+{
+    PipelineCapabilities capabilities;
+    capabilities.pipeline = pipeline;
+    const QHash<QString, QString> defaults{
+        {u"HTML"_s, u"html"_s}, {u"Markdown"_s, u"md"_s}, {u"DocBook"_s, u"xml"_s}
+    };
+    for (const auto &format : formats) {
+        capabilities.supportedFormats.insert(format);
+        capabilities.formatExtensions.insert(format, defaults.value(format, u"out"_s));
+    }
+    return capabilities;
+}
+
+} // namespace
 
 class tst_Config : public QObject
 {
@@ -28,6 +49,11 @@ private slots:
     void internalFilePatternsMatching();
     void internalFilePatternsPathMatching();
     void internalFilePatternsWildcards();
+    void selectionModes();
+    void selectionRequests();
+    void selectionOwnership();
+    void selectionExtensions();
+    void selectionNotices();
 
 private:
     Config &initConfig(const QStringList &args = QStringList(),
@@ -41,9 +67,13 @@ private:
 /*
   Initializes the Config with optional arguments and a .qdocconf file
   to load, and  returns a reference to it.
+
+  Resets persistent command-line overrides so test cases remain independent.
 */
 Config &tst_Config::initConfig(const QStringList &args, const char *qdocconf)
 {
+    Config::overrideOutputDir = QString();
+    Config::overrideOutputFormats.clear();
     QStringList fullArgs = { QStringLiteral("./qdoc") };
     fullArgs << args;
     Config::instance().init("QDoc Test", fullArgs);
@@ -398,7 +428,174 @@ void tst_Config::internalFilePatternsWildcards()
     QVERIFY(!Config::matchesInternalFilePattern("/path/exact.h", patterns)); // exact match requires full path match
 }
 
+void tst_Config::selectionModes()
+{
+    auto &config = initConfig();
+    OutputConfigurationInput input;
+    input.pipelineCapabilities = {capabilitiesFor(Pipeline::Legacy, {u"HTML"_s})};
+    const auto compatibility = OutputSelection::resolve(config, input);
+    QCOMPARE(compatibility.mode, OutputSelection::Mode::Compatibility);
+    QVERIFY(compatibility.formats.isEmpty());
+    QVERIFY(compatibility.pipelines.isEmpty());
+    QVERIFY(compatibility.diagnostics.isEmpty());
+
+    input.cliFormats = {u"HTML"_s};
+    QCOMPARE(OutputSelection::resolve(config, input).mode, OutputSelection::Mode::Compatibility);
+    input.cliPipelines = {u"legacy"_s};
+    const auto optedIn = OutputSelection::resolve(config, input);
+    QCOMPARE(optedIn.mode, OutputSelection::Mode::New);
+    QVERIFY(!optedIn.hasErrors());
+    QCOMPARE(optedIn.pipelines, QVector<Pipeline>{Pipeline::Legacy});
+
+    config.setStringList(CONFIG_PIPELINE, {u"template"_s});
+    QVERIFY(!OutputSelection::resolve(config, input).hasErrors());
+    input.cliPipelines.clear();
+    QVERIFY(OutputSelection::resolve(config, input).hasErrors());
+    config.setStringList(CONFIG_PIPELINE, {});
+    QVERIFY(config.contains(CONFIG_PIPELINE));
+    QVERIFY(OutputSelection::resolve(config, input).hasErrors());
+    config.setStringList(CONFIG_PIPELINE, {u"legacy"_s, u"legacy"_s});
+    QCOMPARE(OutputSelection::resolve(config, input).pipelines.size(), 1);
+    input.cliPipelines = {u""_s};
+    QVERIFY(OutputSelection::resolve(config, input).hasErrors());
+    input.cliPipelines = {u"unknown"_s};
+    QVERIFY(OutputSelection::resolve(config, input).hasErrors());
+    input.cliPipelines = {u"legacy"_s};
+    input.pipelineCapabilities.first().available = false;
+    const auto unavailable = OutputSelection::resolve(config, input);
+    QVERIFY(unavailable.hasErrors());
+    QVERIFY(unavailable.pipelines.isEmpty());
+}
+
+void tst_Config::selectionRequests()
+{
+    auto &config = initConfig();
+    config.setStringList(CONFIG_PIPELINE, {u"legacy"_s});
+    config.setStringList(CONFIG_OUTPUTFORMATS, {u"HTML"_s, u"Markdown"_s, u"HTML"_s});
+    OutputConfigurationInput input;
+    input.pipelineCapabilities = {
+        capabilitiesFor(Pipeline::Legacy, {u"HTML"_s, u"Markdown"_s, u"DocBook"_s})
+    };
+    const auto configured = OutputSelection::resolve(config, input);
+    QVERIFY(!configured.hasErrors());
+    QCOMPARE(configured.formats.size(), 2);
+    QCOMPARE(configured.formats.at(0).format, u"HTML"_s);
+    QCOMPARE(configured.formats.at(1).format, u"Markdown"_s);
+
+    input.cliFormats = {u"DocBook"_s, u"Markdown"_s, u"DocBook"_s};
+    const auto replaced = OutputSelection::resolve(config, input);
+    QVERIFY(!replaced.hasErrors());
+    QCOMPARE(replaced.formats.size(), 3);
+    QCOMPARE(replaced.formats.at(0).format, u"HTML"_s);
+    QCOMPARE(replaced.formats.at(1).format, u"Markdown"_s);
+    QCOMPARE(replaced.formats.at(2).format, u"DocBook"_s);
+    QVERIFY(!replaced.formats.at(0).requested);
+    QVERIFY(replaced.formats.at(1).requested);
+    QVERIFY(replaced.formats.at(2).requested);
+    QVERIFY(replaced.formats.at(0).configured);
+    QVERIFY(!replaced.formats.at(2).configured);
+    QVERIFY(!replaced.findFormat(u"html"_s));
+
+    input.cliFormats = {u""_s};
+    QVERIFY(OutputSelection::resolve(config, input).hasErrors());
+    config.setStringList(CONFIG_OUTPUTFORMATS, {});
+    input.cliFormats.clear();
+    QVERIFY(OutputSelection::resolve(config, input).hasErrors());
+    input.cliFormats = {u"DocBook"_s};
+    QVERIFY(!OutputSelection::resolve(config, input).hasErrors());
+    input.cliFormats = {u"bad.format"_s};
+    QVERIFY(OutputSelection::resolve(config, input).hasErrors());
+}
+
+void tst_Config::selectionOwnership()
+{
+    auto &config = initConfig();
+    config.setStringList(CONFIG_OUTPUTFORMATS, {u"HTML"_s, u"DocBook"_s});
+    OutputConfigurationInput input;
+    auto legacy = capabilitiesFor(Pipeline::Legacy, {u"HTML"_s, u"DocBook"_s});
+    auto templated = capabilitiesFor(Pipeline::Template, {u"HTML"_s, u"DocBook"_s});
+    for (const QStringList &order : {QStringList{u"legacy"_s, u"template"_s},
+                                    QStringList{u"template"_s, u"legacy"_s}}) {
+        config.setStringList(CONFIG_PIPELINE, order);
+        input.pipelineCapabilities = {legacy, templated};
+        const auto owned = OutputSelection::resolve(config, input);
+        QVERIFY(!owned.hasErrors());
+        QCOMPARE(owned.findFormat(u"HTML"_s)->pipeline, Pipeline::Template);
+        QCOMPARE(owned.findFormat(u"DocBook"_s)->pipeline, Pipeline::Template);
+
+        auto &templateInput = input.pipelineCapabilities.last();
+        templateInput.brokenFormats.insert(u"DocBook"_s);
+        QVERIFY(OutputSelection::resolve(config, input).hasErrors());
+        templateInput.supportedFormats.remove(u"DocBook"_s);
+        const auto broken = OutputSelection::resolve(config, input);
+        QVERIFY(broken.hasErrors());
+        QCOMPARE(broken.findFormat(u"DocBook"_s)->pipeline, Pipeline::Template);
+        QCOMPARE(broken.diagnostics.size(), 1);
+        QVERIFY(broken.diagnostics.first().message.contains("broken"_L1));
+        templateInput.brokenFormats.clear();
+        const auto fallback = OutputSelection::resolve(config, input);
+        QVERIFY(!fallback.hasErrors());
+        QCOMPARE(fallback.findFormat(u"DocBook"_s)->pipeline, Pipeline::Legacy);
+    }
+
+    config.setStringList(CONFIG_PIPELINE, {u"legacy"_s});
+    legacy.supportedFormats.remove(u"DocBook"_s);
+    legacy.brokenFormats.insert(u"DocBook"_s);
+    input.pipelineCapabilities = {legacy};
+    QVERIFY(OutputSelection::resolve(config, input).hasErrors());
+    legacy.brokenFormats.clear();
+    input.pipelineCapabilities = {legacy};
+    const auto unsupported = OutputSelection::resolve(config, input);
+    QVERIFY(unsupported.hasErrors());
+    QVERIFY(unsupported.diagnostics.first().message.contains("not supported"_L1));
+}
+
+void tst_Config::selectionExtensions()
+{
+    auto &config = initConfig("/testdata/configs/selection_include.qdocconf");
+    OutputConfigurationInput input;
+    input.pipelineCapabilities = {capabilitiesFor(Pipeline::Template, {u"HTML"_s})};
+    const auto inherited = OutputSelection::resolve(config, input);
+    QVERIFY(!inherited.hasErrors());
+    QCOMPARE(inherited.formats.first().fileExtension, u"xhtml"_s);
+    QCOMPARE(inherited.formats.first().pipeline, Pipeline::Template);
+    QCOMPARE(inherited.formats.first().location.filePath(),
+             QDir::cleanPath(QFINDTESTDATA("/testdata/configs/selection_base.qdocconf")));
+    QCOMPARE(inherited.formats.first().location.lineNo(), 2);
+
+    config.setStringList(u"HTML.extension"_s, {});
+    QVERIFY(OutputSelection::resolve(config, input).hasErrors());
+    config.setStringList(u"HTML.extension"_s, {u"html"_s, u"xhtml"_s});
+    QVERIFY(OutputSelection::resolve(config, input).hasErrors());
+    config.setStringList(u"HTML.extension"_s, {u"html"_s});
+    QCOMPARE(OutputSelection::resolve(config, input).formats.first().fileExtension, u"html"_s);
+
+    input.cliFormats = {u"Custom"_s};
+    auto &capability = input.pipelineCapabilities.first();
+    capability.supportedFormats.insert(u"Custom"_s);
+    QVERIFY(OutputSelection::resolve(config, input).hasErrors());
+    capability.formatExtensions.insert(u"Custom"_s, u"xml"_s);
+    const auto custom = OutputSelection::resolve(config, input);
+    QVERIFY(!custom.hasErrors());
+    QCOMPARE(custom.findFormat(u"Custom"_s)->fileExtension, u"xml"_s);
+}
+
+void tst_Config::selectionNotices()
+{
+    auto &config = initConfig();
+    config.setStringList(CONFIG_PUBLICATIONLAYOUT, {u"flat"_s});
+    config.setStringList(CONFIG_TEMPLATEPACKAGE, {u"package"_s});
+    config.setStringList(u"DocBook.publicationlayout"_s, {u"per-module"_s});
+    const auto result = OutputSelection::resolve(config);
+    QCOMPARE(result.mode, OutputSelection::Mode::Compatibility);
+    QVERIFY(!result.hasErrors());
+    QCOMPARE(result.diagnostics.size(), 3);
+    for (const auto &diagnostic : result.diagnostics) {
+        QCOMPARE(diagnostic.kind, OutputSelection::Diagnostic::Kind::Notice);
+        QVERIFY(diagnostic.message.contains("pipeline"_L1));
+    }
+}
+
 QTEST_APPLESS_MAIN(tst_Config)
 
 #include "tst_config.moc"
-
