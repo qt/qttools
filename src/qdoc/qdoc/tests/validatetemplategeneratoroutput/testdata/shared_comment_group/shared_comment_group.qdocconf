@@ -1,0 +1,43 @@
+project = SharedCommentGroup
+version = 6.12
+description = Test fixture for rendering shared comment groups once
+productname = Qt
+module = testmodule
+
+# Output in a stable layout so the snapshot comparison is deterministic.
+locationinfo = false
+
+sources.fileextensions  = "*.qdoc"
+
+sourcedirs  = src
+
+# Legacy HTML renders the same fixture in the same run. The template
+# output must match its link destinations and anchors; the git-diff
+# against the checked-in snapshots enforces that in CI.
+outputformats = HTML TemplateHTML TemplateMarkdown
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html-legacy
+HTML.extension = html
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+# Snapshot the diagnostics: the shared comment carries one genuinely
+# broken link; the warning is authored once and must be reported once,
+# attributed to its authored file and line.
+projectroot = .
+logwarnings = true
+logwarnings.disablecliargs = true
+
+# Allow exactly the one warning the fixture intentionally produces.
+# Processing the shared body once (instead of once per copied child)
+# keeps the run at or under this limit.
+warninglimit = 1
+warninglimit.enabled = true

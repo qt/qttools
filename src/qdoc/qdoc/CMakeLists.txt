@@ -274,6 +274,12 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/head.html"
         PROPERTIES QT_RESOURCE_ALIAS "templates/partials/html/head.html"
     )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/member_also.html"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/partials/html/member_also.html"
+    )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/member_body.html"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/partials/html/member_body.html"
+    )
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/member_detail.html"
         PROPERTIES QT_RESOURCE_ALIAS "templates/partials/html/member_detail.html"
     )
@@ -285,6 +291,12 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     )
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/footer.md"
         PROPERTIES QT_RESOURCE_ALIAS "templates/partials/md/footer.md"
+    )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/member_also.md"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/partials/md/member_also.md"
+    )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/member_body.md"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/partials/md/member_body.md"
     )
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/member_detail.md"
         PROPERTIES QT_RESOURCE_ALIAS "templates/partials/md/member_detail.md"
@@ -342,10 +354,14 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/content_blocks.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/footer.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/head.html"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/member_also.html"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/member_body.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/member_detail.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/html/nav.html"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/content_blocks.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/footer.md"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/member_also.md"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/member_body.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/member_detail.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/nav.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/assets/qdoc-default.css"

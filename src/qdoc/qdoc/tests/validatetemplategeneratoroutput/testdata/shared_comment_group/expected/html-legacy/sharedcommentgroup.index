@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test fixture for rendering shared comment groups once" version="6.12" project="SharedCommentGroup">
+    <namespace name="" status="active" access="public" module="sharedcommentgroup">
+        <qmlclass name="Trio" qml-module-name="GroupQml" fullname="GroupQml.Trio" href="qml-groupqml-trio.html" status="active" access="public" location="shared_comment_group.qdoc" documented="true" brief="A QML type that carries a shared property group">
+            <function name="close" fullname="GroupQml.Trio.close" href="qml-groupqml-trio.html#close-method" status="active" access="public" location="shared_comment_group.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <function name="open" fullname="GroupQml.Trio.open" href="qml-groupqml-trio.html#open-method" status="active" access="public" location="shared_comment_group.qdoc" documented="true" meta="qmlmethod" type="void"/>
+            <qmlproperty name="alpha" fullname="GroupQml.Trio.alpha" href="qml-groupqml-trio.html#alpha-prop" status="active" access="public" location="shared_comment_group.qdoc" documented="true" type="double" attached="false" writable="true"/>
+            <qmlproperty name="beta" fullname="GroupQml.Trio.beta" href="qml-groupqml-trio.html#beta-prop" status="active" access="public" location="shared_comment_group.qdoc" documented="true" type="double" attached="false" writable="true"/>
+            <qmlproperty name="font.family" inpropertygroup="GroupQml.Trio.font" fullname="GroupQml.Trio.font.family" href="qml-groupqml-trio.html#font.family-prop" status="active" access="public" location="shared_comment_group.qdoc" documented="true" type="string" attached="false" writable="true"/>
+            <qmlproperty name="font.pixelSize" inpropertygroup="GroupQml.Trio.font" fullname="GroupQml.Trio.font.pixelSize" href="qml-groupqml-trio.html#font.pixelSize-prop" status="active" access="public" location="shared_comment_group.qdoc" documented="true" type="int" attached="false" writable="true"/>
+            <qmlproperty name="gamma" fullname="GroupQml.Trio.gamma" href="qml-groupqml-trio.html#gamma-prop" status="active" access="public" location="shared_comment_group.qdoc" documented="true" type="double" attached="false" writable="true"/>
+            <qmlproperty name="solo" fullname="GroupQml.Trio.solo" href="qml-groupqml-trio.html#solo-prop" status="active" access="public" location="shared_comment_group.qdoc" since="6.1" documented="true" type="double" attached="false" writable="true"/>
+            <qmlproperty name="font" propertygroup="true" fullname="GroupQml.Trio.font" href="qml-groupqml-trio.html#font-prop" status="active" access="public" location="shared_comment_group.qdoc" documented="true"/>
+        </qmlclass>
+        <qmlmodule name="GroupQml" qml-module-name="GroupQml" qml-module-version="1.0" href="groupqml-qmlmodule.html" status="active" location="shared_comment_group.qdoc" documented="true" seen="true" title="Group QML" brief="A QML module for the shared comment group fixture"/>
+    </namespace>
+</INDEX>

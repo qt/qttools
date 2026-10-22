@@ -57,7 +57,6 @@ Follow [member-detail](memberlinkcontext.md#beta-notes).
 <a id="sharedOne"></a>
 ### void sharedOne()
 
-Both shared operations do the same work. They refer to [beta](memberlinkcontext.md#beta) from the shared comment that documents the pair.
 <a id="sharedTwo"></a>
 ### void sharedTwo()
 

@@ -693,6 +693,22 @@ static void processDocumentBlocks(IR::ListExpander *expander, LinkResolver *reso
             process(member.body, semantic);
             process(member.alsoList, semantic);
         }
+        // A shared detail group's body and see-also content is authored on
+        // the group's SharedCommentNode, not on the output page. The group
+        // references its members positionally, and every member of the
+        // group carries the same origin, so the first member's origin
+        // (nullptr, falling back to the output page, when its anchor is
+        // empty) is the group's authorship context.
+        for (auto &group : section.sharedGroups) {
+            const Node *semantic = page;
+            if (origins
+                    && s < origins->size()
+                    && group.firstIndex >= 0
+                    && group.firstIndex < origins->at(s).size())
+                semantic = origins->at(s).at(group.firstIndex);
+            process(group.body, semantic);
+            process(group.alsoList, semantic);
+        }
     }
 }
 
@@ -814,6 +830,10 @@ void TemplateGenerator::resolveImagePaths(IR::Document &ir)
         for (auto &member : section.members) {
             walkBlocks(member.body);
             walkBlocks(member.alsoList);
+        }
+        for (auto &group : section.sharedGroups) {
+            walkBlocks(group.body);
+            walkBlocks(group.alsoList);
         }
     }
 }

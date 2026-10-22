@@ -905,7 +905,10 @@ QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate, const Hr
     Iterates Sections::detailsSections() and extracts full member
     documentation including body content, anchor IDs, and metadata.
     SharedCommentNode groups share a single documentation body across
-    their children, with each child getting its own anchorId and synopsis.
+    their children; the body and see-also list are stored once on the
+    section's shared detail group, which references its members
+    positionally, while each child keeps its own anchorId, synopsis,
+    and per-member fields with an empty body and see-also list.
 
     \a origins, when non-null, receives one entry per emitted detail
     member, paired with the member order of each emitted section: the
@@ -941,33 +944,55 @@ QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const Hre
             if (member->isSharedCommentNode()) {
                 const auto *scn = static_cast<const SharedCommentNode *>(member);
 
-                QList<IR::ContentBlock> sharedBody;
+                // The body and see-also list are authored on the shared
+                // comment, not on any one child, so they are stored once
+                // on the group, which the templates render after the
+                // group's last member.
+                IR::SharedDetailGroup group;
+                group.firstIndex = static_cast<int>(irSection.members.size());
+                group.count = static_cast<int>(scn->collective().size());
+                group.status = scn->status();
+                group.isPlural = !scn->isPropertyGroup() && group.count > 1;
+                if (const auto deprecation = extractDeprecationData(scn)) {
+                    group.deprecatedSince = deprecation->deprecatedSince;
+                    group.deprecatedSinceQualified = deprecation->deprecatedSinceQualified;
+                    const Node *described = group.isPlural ? scn->collective().first() : scn;
+                    const auto number = group.isPlural ? NodeText::GrammaticalNumber::Plural
+                                                       : NodeText::GrammaticalNumber::Singular;
+                    group.typeNoun = NodeText::nodeTypeDescription(described, number);
+                }
+
                 const Text &bodyText = scn->doc().body();
                 if (const Atom *firstAtom = bodyText.firstAtom()) {
                     IR::ContentBuilder contentBuilder(IR::BriefHandling::Include, 0,
                                                       diagnosticHandlerFor(scn));
-                    sharedBody = contentBuilder.build(firstAtom);
+                    group.body = contentBuilder.build(firstAtom);
                 }
 
-                QList<IR::ContentBlock> sharedAlso;
                 const QList<Text> &alsoTexts = scn->doc().alsoList();
                 for (const Text &alsoText : alsoTexts) {
                     if (const Atom *firstAtom = alsoText.firstAtom()) {
                         IR::ContentBuilder contentBuilder(IR::BriefHandling::Include, 0,
                                                           diagnosticHandlerFor(scn));
-                        sharedAlso.append(contentBuilder.build(firstAtom));
+                        group.alsoList.append(contentBuilder.build(firstAtom));
                     }
                 }
 
                 for (const auto *child : scn->collective()) {
                     IR::MemberIR irMember = extractMemberIR(child, hrefResolver, aggregate, MemberExtractionLevel::Detail);
-                    irMember.body = sharedBody;
-                    irMember.alsoList = sharedAlso;
-                    // The copied text was authored in the shared comment,
+                    // The child shares the group's comment; its body and
+                    // see-also list belong to the group, which renders
+                    // them once, so the member carries only the group's
+                    // index.
+                    irMember.body.clear();
+                    irMember.alsoList.clear();
+                    irMember.sharedGroup = static_cast<int>(irSection.sharedGroups.size());
+                    // The shared text was authored in the shared comment,
                     // not on the child; resolve it in that context.
                     sectionOrigins.append(irMember.anchorId.isEmpty() ? nullptr : scn);
                     irSection.members.append(irMember);
                 }
+                irSection.sharedGroups.append(group);
             } else {
                 IR::MemberIR irMember = extractMemberIR(member, hrefResolver, aggregate, MemberExtractionLevel::Detail);
                 sectionOrigins.append(irMember.anchorId.isEmpty() ? nullptr : member);

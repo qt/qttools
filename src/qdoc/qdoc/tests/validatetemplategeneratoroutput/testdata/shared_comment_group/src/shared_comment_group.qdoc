@@ -1,0 +1,63 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule GroupQml 1.0
+    \title Group QML
+    \brief A QML module for the shared comment group fixture.
+*/
+
+/*!
+    \qmltype Trio
+    \inqmlmodule GroupQml
+    \brief A QML type that carries a shared property group.
+
+    The alpha, beta, and gamma properties share a comment; solo stands
+    on its own. Other groups exercise status sentences.
+*/
+
+/*!
+    \qmlproperty double Trio::alpha
+    \qmlproperty double Trio::beta
+    \qmlproperty double Trio::gamma
+
+    These three properties do the same work together. The shared
+    comment that documents them refers to the ungrouped property
+    \l GroupQml::Trio::solo and to a target that does not exist:
+    \l BrokenTarget
+
+    \sa GroupQml::Trio::solo
+*/
+
+/*!
+    \qmlproperty double Trio::solo
+    \since 6.1
+
+    The ungrouped property stands on its own.
+
+    It links back to one of the grouped properties:
+    \l GroupQml::Trio::alpha
+
+    \sa GroupQml::Trio::alpha
+*/
+
+/*!
+    \qmlmethod void Trio::open()
+    \qmlmethod void Trio::close()
+    \deprecated [7.0]
+
+    Opens or closes the trio with one shared description.
+
+    \sa GroupQml::Trio::solo
+*/
+
+/*!
+    \qmlpropertygroup Trio::font
+    \qmlproperty string Trio::font.family
+    \qmlproperty int Trio::font.pixelSize
+    \deprecated [7.0]
+
+    The font settings form one named property group.
+
+    \sa GroupQml::Trio::solo
+*/
