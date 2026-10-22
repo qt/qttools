@@ -1174,6 +1174,14 @@ void QDocDatabase::resolveNamespaces()
   documented in the module represented by the Tree containing
   the proxy node but that are related to the node we found in
   the primary tree.
+
+  Also, for each node in the Tree that is related to an aggregate
+  in another module with an additional \c relates command, look up
+  the aggregate in the primary Tree. If it is found, the aggregate
+  lists the node as related, linking to its documentation in the
+  module represented by the Tree.
+
+  \sa Tree::externalRelates()
  */
 void QDocDatabase::resolveProxies()
 {
@@ -1192,6 +1200,12 @@ void QDocDatabase::resolveProxies()
                         aggregate->appendToRelatedByProxy(pn->childNodes());
                 }
             }
+        }
+        const auto &externalRelates = t->externalRelates();
+        for (auto it = externalRelates.cbegin(); it != externalRelates.cend(); ++it) {
+            Aggregate *aggregate = primaryTree()->findRelatesNode(it.value().split("::"_L1));
+            if (aggregate && !aggregate->relatedByProxy().contains(it.key()))
+                aggregate->appendToRelatedByProxy({ it.key() });
         }
         t = m_forest.nextTree();
     }

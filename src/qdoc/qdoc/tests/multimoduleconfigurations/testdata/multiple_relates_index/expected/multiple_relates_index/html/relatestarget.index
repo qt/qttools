@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="RelatesTarget Reference Documentation" version="" project="RelatesTarget">
+    <namespace name="" status="active" access="public" module="relatestarget">
+        <class name="Other" href="other.html" status="active" access="public" location="target.h" documented="true" includefile="target.h" module="RelatesTarget" brief="Another class that non-members in another module are related to">
+            <function name="Other" fullname="Other::Other" href="other.html#Other" status="active" access="public" location="target.h" documented="true" meta="constructor" signature="Other()"/>
+        </class>
+        <class name="Target" href="target.html" status="active" access="public" location="target.h" documented="true" includefile="target.h" module="RelatesTarget" brief="A class that non-members in another module are related to">
+            <function name="Target" fullname="Target::Target" href="target.html#Target" status="active" access="public" location="target.h" documented="true" meta="constructor" signature="Target()"/>
+        </class>
+        <module name="RelatesTarget" href="relatestarget-module.html" status="active" documented="true" seen="true" title="Relates Target Module" brief="Documents classes that another module relates non-members to"/>
+    </namespace>
+</INDEX>

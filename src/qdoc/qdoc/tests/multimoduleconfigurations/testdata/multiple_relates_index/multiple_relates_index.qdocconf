@@ -1,0 +1,11 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+# Consumer module: the target module, built again after the user module.
+# It loads the user module's index file, and the reference pages for
+# Target and Other list the user module's related non-members, linking
+# to their documentation on the reference page for Local.
+
+include(upstream_relates_target.qdocconf)
+
+depends = relatesuser

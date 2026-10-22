@@ -1,0 +1,15 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+# The target module documents classes that a module built later relates
+# its non-members to, using additional \relates commands (QTBUG-116182).
+# It is built first, so that the user module resolves those \relates
+# targets from its index file and records the relationships in its own
+# index file. The target module is then built again as the consumer,
+# loading the user module's index file, similar to how a module with
+# `depends = *` is built. The expected output proves that the target's
+# reference pages link to the related non-members documented in the
+# user module.
+upstream_relates_target
+relates_user
+multiple_relates_index

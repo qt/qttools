@@ -339,9 +339,16 @@ void Aggregate::markUndocumentedChildrenInternal()
     \a target, without adopting it. The node remains documented under
     its parent, and the documentation of \a target links to it.
 
+    If \a target resolves to an aggregate in an index file, records the
+    relationship in the node's tree instead, so that it is written to the
+    index file of this module. The module that documents \a target can
+    then link to the node.
+
     If \a node is a shared comment node, adds each node in its collective
-    instead. Does nothing if \a target resolves to the node's parent or to
-    an aggregate in an index file. If \a target is not found, reports it.
+    instead. Does nothing if \a target resolves to the node's parent. If
+    \a target is not found, reports it.
+
+    \sa Tree::addExternalRelates()
 */
 static void addToRelatedTarget(Node *node, const QString &target)
 {
@@ -351,12 +358,17 @@ static void addToRelatedTarget(Node *node, const QString &target)
                 "Failed to find \\relates target '%1' for %2"_L1.arg(target, node->fullName()));
         return;
     }
-    if (aggregate == node->parent() || aggregate->isIndexNode())
+    if (aggregate == node->parent())
         return;
 
     const NodeList nodes = node->isSharedCommentNode()
             ? static_cast<SharedCommentNode *>(node)->collective()
             : NodeList{ node };
+    if (aggregate->isIndexNode()) {
+        for (auto *n : nodes)
+            n->tree()->addExternalRelates(n, aggregate->plainFullName());
+        return;
+    }
     auto &related = aggregate->relatedByProxy();
     for (auto *n : nodes) {
         if (!related.contains(n))

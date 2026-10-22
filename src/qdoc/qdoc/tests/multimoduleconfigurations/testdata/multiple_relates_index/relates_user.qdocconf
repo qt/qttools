@@ -1,0 +1,28 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+# User module: documents class Local and non-members related to Local,
+# with additional \relates commands that target classes in the target
+# module. The non-members are documented on the reference page for Local,
+# and the index file records the additional targets.
+
+project = RelatesUser
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions = "*.h"
+sources.fileextensions = "*.cpp *.qdoc"
+
+sourcedirs = ./src/user
+headerdirs = ./src/user
+
+depends = relatestarget
+
+outputformats = HTML
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+warninglimit = 0
+warninglimit.enabled = true

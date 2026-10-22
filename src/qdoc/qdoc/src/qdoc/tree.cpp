@@ -177,6 +177,33 @@ Aggregate *Tree::findRelatesNode(const QStringList &path)
 }
 
 /*!
+  Records that \a node is related to the aggregate named \a target,
+  which is documented in a different module.
+
+  In the primary tree, the \c relates command of \a node lists
+  \a target as an additional target that comes from an index file.
+  The relationship is written to the index file of this module.
+
+  In a tree read from an index file, the relationship is read from
+  the index file. If \a target is found in the primary tree, its
+  documentation links to \a node.
+
+  \sa externalRelates(), QDocDatabase::resolveProxies()
+ */
+void Tree::addExternalRelates(Node *node, const QString &target)
+{
+    if (!m_externalRelates.contains(node, target))
+        m_externalRelates.insert(node, target);
+}
+
+/*! \fn const QMultiHash<Node *, QString> &Tree::externalRelates() const
+  Returns the nodes in this tree that are related to an aggregate
+  in a different module, mapped to the name of that aggregate.
+
+  \sa addExternalRelates()
+ */
+
+/*!
   Inserts function name \a funcName and function role \a funcRole into
   the property function map for the specified \a property.
  */

@@ -12,6 +12,7 @@
 #include "proxynode.h"
 #include "qmltypenode.h"
 
+#include <QtCore/qhash.h>
 #include <QtCore/qstack.h>
 
 #include <utility>
@@ -77,6 +78,11 @@ public: // Of necessity, a few public functions remain.
     void setIndexTitle(const QString &t) { m_indexTitle = t; }
     NodeList &proxies() { return m_proxies; }
     void appendProxy(ProxyNode *t) { m_proxies.append(t); }
+    [[nodiscard]] const QMultiHash<Node *, QString> &externalRelates() const
+    {
+        return m_externalRelates;
+    }
+    void addExternalRelates(Node *node, const QString &target);
     void addToDontDocumentMap(QString &arg);
     void markDontDocumentNodes();
     static QString refForAtom(const Atom *atom);
@@ -188,6 +194,7 @@ private:
     QmlTypeMap m_qmlTypeMap {};
     ExampleNodeMap m_exampleNodeMap {};
     NodeList m_proxies {};
+    QMultiHash<Node *, QString> m_externalRelates {};
     NodeMap m_dontDocumentMap {};
 };
 

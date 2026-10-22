@@ -1,0 +1,28 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+# Target module: documents classes Target and Other, which the user module
+# relates its non-members to with additional \relates commands.
+
+project = RelatesTarget
+productname = Qt
+
+locationinfo = false
+
+headers.fileextensions = "*.h"
+sources.fileextensions = "*.cpp *.qdoc"
+
+sourcedirs = ./src/target
+headerdirs = ./src/target
+
+outputformats = HTML TemplateHTML
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = template-html
+TemplateHTML.extension = html
+
+warninglimit = 0
+warninglimit.enabled = true
