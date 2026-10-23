@@ -1,0 +1,29 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule ConsumerQml
+    \title Consumer QML
+    \brief A module that imports the GroupQml module index.
+*/
+
+/*!
+    \qmltype Widget
+    \inqmlmodule ConsumerQml
+    \brief A type that links to an imported property group.
+
+    The imported GroupQml.Trio type carries a named property group;
+    every link below must land on the destination the producer
+    publishes.
+
+    \list
+    \li Imported property group: \l [SharedCommentGroup] GroupQml.Trio.font
+    \li Imported group child: \l [SharedCommentGroup] GroupQml.Trio.font.family
+    \li Imported group child: \l [SharedCommentGroup] GroupQml.Trio.font.pixelSize
+    \endlist
+*/
+
+/*!
+    \qmlproperty int ConsumerQml::Widget::state
+    \brief A local property for the consumer page.
+*/

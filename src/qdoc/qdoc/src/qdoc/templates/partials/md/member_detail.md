@@ -2,6 +2,12 @@
 Copyright (C) 2026 The Qt Company Ltd.
 SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 -#}
+{% if existsIn(member, "sharedGroup") and existsIn(section, "sharedGroups") %}
+{% set shared = at(section.sharedGroups, member.sharedGroup) %}
+{% if existsIn(shared, "anchorId") and shared.anchorId != "" and shared.firstIndex == loop.index %}
+<a id="{{ shared.anchorId }}"></a>
+{% endif %}
+{% endif %}
 <a id="{{ member.anchorId }}"></a>
 ### {{ member.synopsis }}
 

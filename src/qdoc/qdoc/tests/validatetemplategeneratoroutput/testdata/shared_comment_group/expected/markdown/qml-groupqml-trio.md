@@ -51,9 +51,10 @@ The alpha, beta, and gamma properties share a comment; solo stands on its own. O
 <a id="gamma-prop"></a>
 ### gamma : double
 
-These three properties do the same work together. The shared comment that documents them refers to the ungrouped property [GroupQml::Trio::solo](qml-groupqml-trio.md#solo-prop) and to a target that does not exist: BrokenTarget
+These three properties do the same work together. The shared comment that documents them refers to the ungrouped property [GroupQml::Trio::solo](qml-groupqml-trio.md#solo-prop), to the named property group [GroupQml::Trio::font](qml-groupqml-trio.md#font-prop), and to a target that does not exist: BrokenTarget
 **See also** [GroupQml::Trio::solo](qml-groupqml-trio.md#solo-prop).
 
+<a id="font-prop"></a>
 <a id="font.family-prop"></a>
 ### font.family : string
 
@@ -62,7 +63,7 @@ These three properties do the same work together. The shared comment that docume
 
 This property group is scheduled for deprecation in version 7.0.
 
-The font settings form one named property group.
+The font settings form one named property group: [GroupQml::Trio::font.family](qml-groupqml-trio.md#font.family-prop) and [GroupQml::Trio::font.pixelSize](qml-groupqml-trio.md#font.pixelSize-prop).
 **See also** [GroupQml::Trio::solo](qml-groupqml-trio.md#solo-prop).
 
 <a id="solo-prop"></a>

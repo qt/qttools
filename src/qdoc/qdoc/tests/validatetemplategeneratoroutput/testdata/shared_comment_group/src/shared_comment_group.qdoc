@@ -23,7 +23,8 @@
 
     These three properties do the same work together. The shared
     comment that documents them refers to the ungrouped property
-    \l GroupQml::Trio::solo and to a target that does not exist:
+    \l GroupQml::Trio::solo, to the named property group
+    \l GroupQml::Trio::font, and to a target that does not exist:
     \l BrokenTarget
 
     \sa GroupQml::Trio::solo
@@ -57,7 +58,9 @@
     \qmlproperty int Trio::font.pixelSize
     \deprecated [7.0]
 
-    The font settings form one named property group.
+    The font settings form one named property group:
+    \l GroupQml::Trio::font.family and
+    \l GroupQml::Trio::font.pixelSize.
 
     \sa GroupQml::Trio::solo
 */

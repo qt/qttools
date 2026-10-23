@@ -125,7 +125,8 @@ QJsonObject EnumValueIR::toJson() const
     \c alsoList, the latter two even when empty, so that templates can
     index a group positionally and guard only on array length. The group's
     status sentence uses \c status and \c isPlural, with the noun and
-    version fields emitted only when nonempty.
+    version fields emitted only when nonempty. The \c anchorId key is
+    emitted only when nonempty; anonymous groups carry no key at all.
 */
 
 /*!
@@ -148,6 +149,15 @@ QJsonObject EnumValueIR::toJson() const
     \variable IR::SharedDetailGroup::isPlural
     Whether the group describes multiple members. Named property groups
     describe one entity and remain singular.
+*/
+
+/*!
+    \variable IR::SharedDetailGroup::anchorId
+    The page fragment the group itself is reachable at, such as
+    \c font-prop for a named QML property group. Empty when the group
+    has no anchor of its own (an anonymous shared comment) or when the
+    fragment is already owned by another destination on the page. The
+    group's children keep their own \c anchorId values.
 */
 
 /*!
@@ -179,7 +189,8 @@ QJsonObject EnumValueIR::toJson() const
     Converts the shared detail group to a QJsonObject for template rendering.
 
     Always emits \c firstIndex and \c count, and both the \c body and
-    \c alsoList arrays, which may be empty.
+    \c alsoList arrays, which may be empty. The \c anchorId key is
+    omitted when empty.
 */
 QJsonObject SharedDetailGroup::toJson() const
 {
@@ -188,6 +199,8 @@ QJsonObject SharedDetailGroup::toJson() const
     json["count"_L1] = count;
     json["status"_L1] = statusToJson(status);
     json["isPlural"_L1] = isPlural;
+    if (!anchorId.isEmpty())
+        json["anchorId"_L1] = anchorId;
     if (!deprecatedSince.isEmpty())
         json["deprecatedSince"_L1] = deprecatedSince;
     if (!typeNoun.isEmpty())

@@ -1109,6 +1109,10 @@ SCENARIO("IR::SharedDetailGroup JSON", "[IR::SharedDetailGroup][IR]") {
                 REQUIRE(json["count"_L1].toInt() == 3);
             }
 
+            THEN("The unpopulated group anchor is absent") {
+                REQUIRE_FALSE(json.contains("anchorId"_L1));
+            }
+
             THEN("Body and see-also arrays carry the shared content") {
                 QJsonArray body = json["body"_L1].toArray();
                 REQUIRE(body.size() == 1);
@@ -1118,6 +1122,15 @@ SCENARIO("IR::SharedDetailGroup JSON", "[IR::SharedDetailGroup][IR]") {
                 QJsonArray also = json["alsoList"_L1].toArray();
                 REQUIRE(also.size() == 1);
                 REQUIRE(also[0].toObject()["text"_L1].toString() == "Also text");
+            }
+        }
+
+        AND_WHEN("The group is a named property group with its own anchor") {
+            group.anchorId = "font-prop"_L1;
+            QJsonObject json = group.toJson();
+
+            THEN("The group anchor is serialized") {
+                REQUIRE(json["anchorId"_L1].toString() == "font-prop");
             }
         }
     }
