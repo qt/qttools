@@ -1,0 +1,49 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \qmlmodule AnchorQml 1.0
+    \title Anchor QML
+    \brief A QML module for the group anchor uniqueness fixture.
+*/
+
+/*!
+    \qmltype RootAndGroup
+    \inqmlmodule AnchorQml
+    \brief A type with a documented property and a same-named property group.
+*/
+
+/*!
+    \qmlproperty string RootAndGroup::font
+    \brief The ordinary font property, documented on its own.
+*/
+
+/*!
+    \qmlpropertygroup RootAndGroup::font
+    \qmlproperty string RootAndGroup::font.family
+    \qmlproperty int RootAndGroup::font.pixelSize
+
+    The font settings form one named property group.
+*/
+
+/*!
+    \qmltype SplitGroup
+    \inqmlmodule AnchorQml
+    \brief A type whose named group is documented across two shared comments.
+*/
+
+/*!
+    \qmlpropertygroup SplitGroup::font
+    \qmlproperty string SplitGroup::font.family
+    \qmlproperty int SplitGroup::font.pixelSize
+
+    The first half of the split font group.
+*/
+
+/*!
+    \qmlpropertygroup SplitGroup::font
+    \qmlproperty string SplitGroup::font.weight
+    \qmlproperty int SplitGroup::font.letterSpacing
+
+    The second half of the split font group.
+*/

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Import-index consumer for QML property group anchors" version="" project="SharedCommentGroupConsumer">
+    <namespace name="" status="active" access="public" module="sharedcommentgroupconsumer">
+        <qmlclass name="Widget" qml-module-name="ConsumerQml" fullname="ConsumerQml.Widget" href="qml-consumerqml-widget.html" status="active" access="public" location="consumer.qdoc" documented="true" brief="A type that links to an imported property group">
+            <qmlproperty name="state" fullname="ConsumerQml.Widget.state" href="qml-consumerqml-widget.html#state-prop" status="active" access="public" location="consumer.qdoc" documented="true" type="int" attached="false" writable="true" brief="A local property for the consumer page"/>
+        </qmlclass>
+        <qmlmodule name="ConsumerQml" qml-module-name="ConsumerQml" href="consumerqml-qmlmodule.html" status="active" location="consumer.qdoc" documented="true" seen="true" title="Consumer QML" brief="A module that imports the GroupQml module index"/>
+    </namespace>
+</INDEX>

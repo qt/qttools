@@ -40,6 +40,7 @@
 
 #include <QHash>
 #include <QRegularExpression>
+#include <QSet>
 
 #include <deque>
 #include <optional>
@@ -907,8 +908,12 @@ QList<IR::SectionIR> extractSummarySections(const Aggregate *aggregate, const Hr
     SharedCommentNode groups share a single documentation body across
     their children; the body and see-also list are stored once on the
     section's shared detail group, which references its members
-    positionally, while each child keeps its own anchorId, synopsis,
-    and per-member fields with an empty body and see-also list.
+    positionally and carries the group's own anchor when it has one
+    (named QML property groups do), while each child keeps its own
+    anchorId, synopsis, and per-member fields with an empty body and
+    see-also list. Because one page fragment may own only one
+    destination, a group anchor that collides with a member anchor or
+    with an earlier group's anchor on the same page is dropped.
 
     \a origins, when non-null, receives one entry per emitted detail
     member, paired with the member order of each emitted section: the
@@ -953,6 +958,11 @@ QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const Hre
                 group.count = static_cast<int>(scn->collective().size());
                 group.status = scn->status();
                 group.isPlural = !scn->isPropertyGroup() && group.count > 1;
+                // A named QML property group is itself a link target, so
+                // the group carries its own anchor (such as "font-prop")
+                // beside its children's. Anonymous shared comments have
+                // none; anchorForNode returns an empty string for them.
+                group.anchorId = hrefResolver->anchorForNode(scn);
                 if (const auto deprecation = extractDeprecationData(scn)) {
                     group.deprecatedSince = deprecation->deprecatedSince;
                     group.deprecatedSinceQualified = deprecation->deprecatedSinceQualified;
@@ -1004,6 +1014,29 @@ QList<IR::SectionIR> extractDetailSections(const Aggregate *aggregate, const Hre
             origins->append(std::move(sectionOrigins));
         result.append(irSection);
     }
+
+    // A named QML property group emits its own anchor (such as
+    // "font-prop") beside its children's, but one page fragment may
+    // own only one destination. An ordinary member documented on the
+    // page keeps the anchor it already owns, and a group rendered
+    // earlier keeps it over a later group with the same anchor, so a
+    // colliding group anchor is dropped rather than duplicated.
+    QSet<QString> ownedAnchors;
+    for (const auto &section : result)
+        for (const auto &member : section.members)
+            if (!member.anchorId.isEmpty())
+                ownedAnchors.insert(member.anchorId);
+
+    for (auto &section : result)
+        for (auto &group : section.sharedGroups) {
+            if (group.anchorId.isEmpty())
+                continue;
+            if (ownedAnchors.contains(group.anchorId))
+                group.anchorId.clear();
+            else
+                ownedAnchors.insert(group.anchorId);
+        }
+
     return result;
 }
 

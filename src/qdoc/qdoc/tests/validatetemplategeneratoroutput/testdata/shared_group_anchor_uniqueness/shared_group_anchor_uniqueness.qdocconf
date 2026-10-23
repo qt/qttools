@@ -1,0 +1,27 @@
+project = SharedGroupAnchorUniqueness
+version = 6.12
+description = Test fixture for unique named property group anchors on a page
+productname = Qt
+module = testmodule
+
+# Output in a stable layout so the snapshot comparison is deterministic.
+locationinfo = false
+
+sources.fileextensions = "*.qdoc"
+
+sourcedirs = src
+
+outputformats = TemplateHTML TemplateMarkdown
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
+
+# The input is warning-free by construction; any warning is a failure.
+warninglimit = 0
+warninglimit.enabled = true

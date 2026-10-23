@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test fixture for unique named property group anchors on a page" version="6.12" project="SharedGroupAnchorUniqueness">
+    <namespace name="" status="active" access="public" module="sharedgroupanchoruniqueness">
+        <qmlclass name="RootAndGroup" qml-module-name="AnchorQml" fullname="AnchorQml.RootAndGroup" href="qml-anchorqml-rootandgroup.html" status="active" access="public" location="shared_group_anchor_uniqueness.qdoc" documented="true" brief="A type with a documented property and a same-named property group">
+            <qmlproperty name="font" fullname="AnchorQml.RootAndGroup.font" href="qml-anchorqml-rootandgroup.html#font-prop" status="active" access="public" location="shared_group_anchor_uniqueness.qdoc" documented="true" type="string" attached="false" writable="true" brief="Ordinary font property, documented on its own"/>
+            <qmlproperty name="font.family" inpropertygroup="AnchorQml.RootAndGroup.font" fullname="AnchorQml.RootAndGroup.font.family" href="qml-anchorqml-rootandgroup.html#font.family-prop" status="active" access="public" location="shared_group_anchor_uniqueness.qdoc" documented="true" type="string" attached="false" writable="true"/>
+            <qmlproperty name="font.pixelSize" inpropertygroup="AnchorQml.RootAndGroup.font" fullname="AnchorQml.RootAndGroup.font.pixelSize" href="qml-anchorqml-rootandgroup.html#font.pixelSize-prop" status="active" access="public" location="shared_group_anchor_uniqueness.qdoc" documented="true" type="int" attached="false" writable="true"/>
+            <qmlproperty name="font" propertygroup="true" fullname="AnchorQml.RootAndGroup.font" href="qml-anchorqml-rootandgroup.html#font-prop" status="active" access="public" location="shared_group_anchor_uniqueness.qdoc" documented="true"/>
+        </qmlclass>
+        <qmlclass name="SplitGroup" qml-module-name="AnchorQml" fullname="AnchorQml.SplitGroup" href="qml-anchorqml-splitgroup.html" status="active" access="public" location="shared_group_anchor_uniqueness.qdoc" documented="true" brief="A type whose named group is documented across two shared comments">
+            <qmlproperty name="font.family" inpropertygroup="AnchorQml.SplitGroup.font" fullname="AnchorQml.SplitGroup.font.family" href="qml-anchorqml-splitgroup.html#font.family-prop" status="active" access="public" location="shared_group_anchor_uniqueness.qdoc" documented="true" type="string" attached="false" writable="true"/>
+            <qmlproperty name="font.letterSpacing" inpropertygroup="AnchorQml.SplitGroup.font" fullname="AnchorQml.SplitGroup.font.letterSpacing" href="qml-anchorqml-splitgroup.html#font.letterSpacing-prop" status="active" access="public" location="shared_group_anchor_uniqueness.qdoc" documented="true" type="int" attached="false" writable="true"/>
+            <qmlproperty name="font.pixelSize" inpropertygroup="AnchorQml.SplitGroup.font" fullname="AnchorQml.SplitGroup.font.pixelSize" href="qml-anchorqml-splitgroup.html#font.pixelSize-prop" status="active" access="public" location="shared_group_anchor_uniqueness.qdoc" documented="true" type="int" attached="false" writable="true"/>
+            <qmlproperty name="font.weight" inpropertygroup="AnchorQml.SplitGroup.font" fullname="AnchorQml.SplitGroup.font.weight" href="qml-anchorqml-splitgroup.html#font.weight-prop" status="active" access="public" location="shared_group_anchor_uniqueness.qdoc" documented="true" type="string" attached="false" writable="true"/>
+            <qmlproperty name="font" propertygroup="true" fullname="AnchorQml.SplitGroup.font" href="qml-anchorqml-splitgroup.html#font-prop" status="active" access="public" location="shared_group_anchor_uniqueness.qdoc" documented="true"/>
+            <qmlproperty name="font" propertygroup="true" fullname="AnchorQml.SplitGroup.font" href="qml-anchorqml-splitgroup.html#font-prop" status="active" access="public" location="shared_group_anchor_uniqueness.qdoc" documented="true"/>
+        </qmlclass>
+        <qmlmodule name="AnchorQml" qml-module-name="AnchorQml" qml-module-version="1.0" href="anchorqml-qmlmodule.html" status="active" location="shared_group_anchor_uniqueness.qdoc" documented="true" seen="true" title="Anchor QML" brief="A QML module for the group anchor uniqueness fixture"/>
+    </namespace>
+</INDEX>

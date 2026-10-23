@@ -37,6 +37,11 @@ struct SharedDetailGroup {
     int count { 0 };
     Status status { Status::Active };
     bool isPlural { false };
+    // The page fragment the group itself is reachable at, such as
+    // "font-prop" for a named QML property group. Empty when the group
+    // has no anchor of its own (an anonymous shared comment) or when
+    // the fragment is already owned by another destination on the page.
+    QString anchorId;
     QString deprecatedSince;
     QString typeNoun;
     QString deprecatedSinceQualified;

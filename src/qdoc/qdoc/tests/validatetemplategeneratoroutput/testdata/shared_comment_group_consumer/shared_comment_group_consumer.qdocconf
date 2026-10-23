@@ -1,0 +1,23 @@
+project = SharedCommentGroupConsumer
+description = Import-index consumer for QML property group anchors
+productname = Qt
+locationinfo = false
+
+sources.fileextensions = "*.qdoc"
+sourcedirs = src
+
+# The GroupQml module's index, as emitted by the
+# shared_comment_group fixture: a second physical tree loaded into
+# this project. Its Trio type carries a named property group.
+indexes = sharedcommentgroup.index
+
+outputformats = TemplateHTML TemplateMarkdown
+
+TemplateHTML.nosubdirs = true
+TemplateHTML.outputsubdir = html
+TemplateHTML.extension = html
+TemplateHTML.stylesheet = false
+
+TemplateMarkdown.nosubdirs = true
+TemplateMarkdown.outputsubdir = markdown
+TemplateMarkdown.extension = md
