@@ -714,6 +714,14 @@
     \l {headers} {\c headers} will be read without taking into account
     their fileextensions.
 
+    QDoc finds new header files in these directories, and in any of
+    their subdirectories, on its own. You only need to list a header in
+    \l {headers} {\c headers} if it's outside the header directories,
+    or if its extension isn't in \c headers.fileextensions. The
+    \l {excludedirs-variable} {excludedirs} and
+    \l {excludefiles-variable} {excludefiles} variables exclude files
+    from the header directories.
+
     See also \l headers and \l headers.fileextensions.
 
     \target headers-variable
@@ -1666,6 +1674,20 @@
     the \c fileextensions specified in the \l {sources.fileextensions}
     {\c sources.fileextensions} variable. The files specified by \l {sources}
     {\c sources} will be read independent of their fileextensions.
+
+    QDoc finds new files in these directories on its own. To add a file
+    to the documentation, place it in one of the directories listed in
+    \c sourcedirs, or in any of their subdirectories, and give it one of
+    the extensions in \c sources.fileextensions. You don't need to list
+    it in \l {sources-variable} {sources}. Use \c sources only for files
+    that are outside the source directories, or that have an extension
+    QDoc wouldn't otherwise read. If QDoc doesn't pick up a file, check
+    whether the \l {excludedirs-variable} {excludedirs} or
+    \l {excludefiles-variable} {excludefiles} variables exclude it.
+
+    QDoc generates output only from the documentation comments in the
+    files it reads. For example, a \c .qdoc file must contain a topic
+    command, such as \l {page-command} {\\page}, to produce a page.
 
     See also \l {sources-variable} {sources} and
     \l {sources.fileextensions-variable} {sources.fileextensions}.
