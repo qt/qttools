@@ -749,6 +749,18 @@
     \section1 \\code
 
     The \\code and \\endcode commands enclose a snippet of source code.
+    The \\code command accepts two kinds of optional arguments on the
+    same line as the command: a language in square brackets, and a list
+    of snippet parameters:
+
+    \code [text]
+    \code [language] parameters
+    \endcode
+
+    The language argument controls highlighting and linking, as
+    described in \l {Highlighting and autolinking}. The parameters are
+    strings that QDoc injects into the snippet, as described in
+    \l {Code snippet parameters}.
 
     \note The \l {c-command} {\\c} command can be used for short code
     fragments within a sentence. The \\code command is for longer code
@@ -756,9 +768,11 @@
     a html <pre> element, and parses the enclosed snippet, creating links
     to any known types in the code.
 
-    For documenting command-line instructions, shell scripts, or any
-    content that is not in a Qt language recognized by QDoc, use
-    \l {badcode-command}{\\badcode} instead.
+    QDoc highlights and creates links for C++ and QML code only. For
+    command-line instructions, shell scripts, or code in any other
+    language, use \c {\code [text]} to render the content as plain text.
+    Prefer \c {\code [text]} over the older
+    \l {badcode-command}{\\badcode} command for this purpose.
 
     When processing the \\code command, QDoc removes all indentation
     that is common for the verbatim code blocks within a \c{/}\c{*!}
@@ -804,9 +818,32 @@
     From version 6.11, a language can be specified as an optional
     case-insensitive argument on the same line as the \\code command.
     When specified, the language overrides the default language and any
-    other language-specific behavior described above. QDoc also defines
-    the \c text language so that blocks of code can be displayed
-    without any markup or highlighting.
+    other language-specific behavior described above. QDoc recognizes
+    the following language arguments:
+
+    \table
+    \header
+        \li Argument
+        \li Effect
+    \row
+        \li \c cpp, \c c
+        \li Highlights the snippet as C++ and creates links to known types.
+    \row
+        \li \c qml
+        \li Highlights the snippet as QML and creates links to known types.
+    \row
+        \li \c text
+        \li Renders the snippet as plain text, without highlighting or
+            links.
+    \row
+        \li A language listed in the \l {codelanguages-variable}
+            {codelanguages} configuration variable
+        \li Renders the snippet without highlighting or links, but records
+            the language in the generated HTML.
+    \endtable
+
+    For any other language argument, QDoc warns about an unrecognized
+    markup language and handles the snippet as if no language was given.
 
     For example:
 
@@ -822,11 +859,10 @@
     This can be useful when quoting a language that QDoc does not have
     the ability to mark up.
 
-    Alternatively, you can specify a language for a block of code that
-    QDoc doesn't recognize by including the language in the list held
-    by the \l {codelanguages-variable}{codelanguages} configuration
-    variable. This enables metadata to be included in generated HTML
-    that can be used by other tools to syntax highlight the code.
+    To let other tools highlight such code, add its language to the
+    \l {codelanguages-variable}{codelanguages} configuration variable
+    and pass that language to \\code instead of \c text. QDoc includes
+    the language as metadata in the generated HTML.
 
     \section2 Code snippet parameters
 
@@ -867,13 +903,17 @@
     Similar to \l {code-command}{\\code}, \\badcode and \\endcode commands
     enclose content that is rendered verbatim in a separate paragraph, but no
     parsing or automatic link creation is performed. Instead, the content is
-    treated as plain text.
+    treated as plain text, the same way as with \c {\code [text]}.
 
-    Substitute \\code with this command when documenting command-line
-    instructions, shell scripts or any other content that is not in a Qt
-    language, but should still be styled similarly to a \\code paragraph.
+    The \\badcode command predates the language argument of \\code. For
+    command-line instructions, shell scripts, or any other content that
+    QDoc can't highlight, use \c {\code [text]} instead.
 
-    Like \\code, \\badcode accepts also optional parameters.
+    Like \\code, \\badcode accepts optional
+    \l {Code snippet parameters}{snippet parameters}. Unlike \\code, it
+    doesn't accept a language argument: all text on the same line as
+    \\badcode is read as snippet parameters. To highlight a snippet as
+    C++ or QML, use \c {\code [cpp]} or \c {\code [qml]} instead.
 
     \target qml-command
     \section1 \\qml
