@@ -69,10 +69,13 @@ This {{ typeNoun }} is scheduled for deprecation in version {{ deprecatedSince }
 
 {% endif %}
 {% endif %}
-{% if hasCppRef and length(cppRef.comparisonEntries) > 0 %}
+{% if hasCppRef and (existsIn(cppRef, "selfComparisonCategory") or length(cppRef.comparisonEntries) > 0) %}
 
 | Category | Type(s) | Description |
 | --- | --- | --- |
+{% if existsIn(cppRef, "selfComparisonCategory") %}
+| {{ cppRef.selfComparisonCategory }} | {{ title }} | |
+{% endif %}
 {% for entry in cppRef.comparisonEntries %}
 | {{ entry.category }} | {% for t in entry.comparableTypes %}{% if not loop.is_first %}, {% endif %}{{ t }}{% endfor %} | {{ entry.description }} |
 {% endfor %}

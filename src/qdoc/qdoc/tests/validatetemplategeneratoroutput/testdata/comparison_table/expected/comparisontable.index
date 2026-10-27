@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test fixture for comparison tables in template output" version="6.12" project="ComparisonTable">
+    <namespace name="" status="active" access="public" module="comparisontable">
+        <class name="OthersOnly" href="othersonly.html" status="active" access="public" location="comparison_table.h" documented="true" includefile="comparison_table.h" module="ComparisonTable" brief="Compares only with other types"/>
+        <class name="SelfAndOthers" href="selfandothers.html" status="active" access="public" location="comparison_table.h" documented="true" includefile="comparison_table.h" module="ComparisonTable" brief="Compares with itself and with other types" comparison_category="equality"/>
+        <class name="SelfOnly" href="selfonly.html" status="active" access="public" location="comparison_table.h" documented="true" includefile="comparison_table.h" module="ComparisonTable" brief="Compares only with itself" comparison_category="strong"/>
+        <module name="ComparisonTable" href="comparisontable-module.html" status="active" location="comparison_table.h" documented="true" seen="true" title="Comparison Table" brief="A module documenting comparison table cases"/>
+    </namespace>
+</INDEX>

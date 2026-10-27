@@ -96,11 +96,14 @@ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-ex
     {% endif %}
     {% endif %}
 
-    {% if hasCppRef and length(cppRef.comparisonEntries) > 0 %}
+    {% if hasCppRef and (existsIn(cppRef, "selfComparisonCategory") or length(cppRef.comparisonEntries) > 0) %}
     <p><b>{{ escape_html(title) }} Comparisons</b></p>
     <div class="table">
     <table class="generic">
     <tr><th>Category</th><th>Comparable Types</th><th>Description</th></tr>
+    {% if existsIn(cppRef, "selfComparisonCategory") %}
+    <tr><td>{{ escape_html(cppRef.selfComparisonCategory) }}</td><td>{{ escape_html(title) }}</td><td></td></tr>
+    {% endif %}
     {% for entry in cppRef.comparisonEntries %}
     <tr><td>{{ escape_html(entry.category) }}</td><td>{% for t in entry.comparableTypes %}{% if not loop.is_first %}, {% endif %}{{ escape_html(t) }}{% endfor %}</td><td>{{ escape_html(entry.description) }}</td></tr>
     {% endfor %}
