@@ -6,7 +6,7 @@
 
 # SortableBox
 
-template<[Sortable](traits-sortable.md) T> class SortableBox
+template <[Sortable](traits-sortable.md) T> class SortableBox
 
 A box holding any Sortable type.
 

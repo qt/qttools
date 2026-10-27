@@ -6,7 +6,7 @@
 
 # IntegralBox
 
-template<[Integral](integral.md) T> class IntegralBox
+template <[Integral](integral.md) T> class IntegralBox
 
 A box holding any Integral type.
 
