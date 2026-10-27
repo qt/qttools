@@ -1314,7 +1314,7 @@ static QList<IR::SignatureSpan> buildTemplateDeclSpans(const RelaxedTemplateDecl
 
     IR::SignatureSpan open;
     open.role = IR::SpanRole::Text;
-    open.text = "<"_L1;
+    open.text = " <"_L1;
     declSpan.children.append(open);
 
     bool first = true;
