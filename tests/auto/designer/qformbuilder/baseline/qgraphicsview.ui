@@ -1,0 +1,873 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+<comment>
+* Copyright (C) 2026 The Qt Company Ltd.
+* SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+</comment>
+ <class></class>
+ <widget class="QGraphicsView" name="">
+  <property name="objectName">
+   <string notr="true"/>
+  </property>
+  <property name="windowModality">
+   <enum>NonModal</enum>
+  </property>
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
+  </property>
+  <property name="minimumWidth">
+   <number>0</number>
+  </property>
+  <property name="minimumHeight">
+   <number>0</number>
+  </property>
+  <property name="maximumWidth">
+   <number>16777215</number>
+  </property>
+  <property name="maximumHeight">
+   <number>16777215</number>
+  </property>
+  <property name="sizeIncrement">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="tabletTracking">
+   <bool>false</bool>
+  </property>
+  <property name="focusPolicy">
+   <enum>StrongFocus</enum>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>DefaultContextMenu</enum>
+  </property>
+  <property name="updatesEnabled">
+   <bool>true</bool>
+  </property>
+  <property name="visible">
+   <bool>false</bool>
+  </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
+  </property>
+  <property name="windowTitle">
+   <string/>
+  </property>
+  <property name="windowIconText">
+   <string/>
+  </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
+  </property>
+  <property name="windowModified">
+   <bool>false</bool>
+  </property>
+  <property name="toolTip">
+   <string/>
+  </property>
+  <property name="toolTipDuration">
+   <number>-1</number>
+  </property>
+  <property name="statusTip">
+   <string/>
+  </property>
+  <property name="whatsThis">
+   <string/>
+  </property>
+  <property name="accessibleName">
+   <string/>
+  </property>
+  <property name="accessibleDescription">
+   <string/>
+  </property>
+  <property name="accessibleIdentifier">
+   <string/>
+  </property>
+  <property name="layoutDirection">
+   <enum>LeftToRight</enum>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <property name="windowFilePath">
+   <string/>
+  </property>
+  <property name="inputMethodHints">
+   <set>ImhNone</set>
+  </property>
+  <property name="frameShape">
+   <enum>StyledPanel</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>Sunken</enum>
+  </property>
+  <property name="lineWidth">
+   <number>1</number>
+  </property>
+  <property name="midLineWidth">
+   <number>0</number>
+  </property>
+  <property name="frameRect">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="verticalScrollBarPolicy">
+   <enum>ScrollBarAsNeeded</enum>
+  </property>
+  <property name="horizontalScrollBarPolicy">
+   <enum>ScrollBarAsNeeded</enum>
+  </property>
+  <property name="sizeAdjustPolicy">
+   <enum>AdjustIgnored</enum>
+  </property>
+  <property name="interactive">
+   <bool>true</bool>
+  </property>
+  <property name="sceneRect">
+   <rectf>
+    <x>0.000000000000000</x>
+    <y>0.000000000000000</y>
+    <width>0.000000000000000</width>
+    <height>0.000000000000000</height>
+   </rectf>
+  </property>
+  <property name="alignment">
+   <set>AlignCenter</set>
+  </property>
+  <property name="renderHints">
+   <set>TextAntialiasing|SmoothPixmapTransform</set>
+  </property>
+  <property name="dragMode">
+   <enum>NoDrag</enum>
+  </property>
+  <property name="cacheMode">
+   <set>CacheNone</set>
+  </property>
+  <property name="transformationAnchor">
+   <enum>AnchorViewCenter</enum>
+  </property>
+  <property name="resizeAnchor">
+   <enum>NoAnchor</enum>
+  </property>
+  <property name="viewportUpdateMode">
+   <enum>FullViewportUpdate</enum>
+  </property>
+  <property name="rubberBandSelectionMode">
+   <enum>IntersectsItemShape</enum>
+  </property>
+  <widget class="QWidget" name="qt_scrollarea_hcontainer">
+   <property name="objectName">
+    <string notr="true">qt_scrollarea_hcontainer</string>
+   </property>
+   <property name="windowModality">
+    <enum>NonModal</enum>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="minimumWidth">
+    <number>0</number>
+   </property>
+   <property name="minimumHeight">
+    <number>0</number>
+   </property>
+   <property name="maximumWidth">
+    <number>16777215</number>
+   </property>
+   <property name="maximumHeight">
+    <number>16777215</number>
+   </property>
+   <property name="sizeIncrement">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="tabletTracking">
+    <bool>false</bool>
+   </property>
+   <property name="focusPolicy">
+    <enum>NoFocus</enum>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>DefaultContextMenu</enum>
+   </property>
+   <property name="updatesEnabled">
+    <bool>true</bool>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+   <property name="acceptDrops">
+    <bool>false</bool>
+   </property>
+   <property name="windowTitle">
+    <string/>
+   </property>
+   <property name="windowIconText">
+    <string/>
+   </property>
+   <property name="windowOpacity">
+    <double>1.000000000000000</double>
+   </property>
+   <property name="windowModified">
+    <bool>false</bool>
+   </property>
+   <property name="toolTip">
+    <string/>
+   </property>
+   <property name="toolTipDuration">
+    <number>-1</number>
+   </property>
+   <property name="statusTip">
+    <string/>
+   </property>
+   <property name="whatsThis">
+    <string/>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="accessibleDescription">
+    <string/>
+   </property>
+   <property name="accessibleIdentifier">
+    <string/>
+   </property>
+   <property name="layoutDirection">
+    <enum>LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="windowFilePath">
+    <string/>
+   </property>
+   <property name="inputMethodHints">
+    <set>ImhNone</set>
+   </property>
+   <layout class="QBoxLayout">
+    <property name="objectName">
+     <string notr="true"/>
+    </property>
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="sizeConstraint">
+     <enum>SetMaximumSize</enum>
+    </property>
+    <property name="horizontalSizeConstraint">
+     <enum>SetMaximumSize</enum>
+    </property>
+    <property name="verticalSizeConstraint">
+     <enum>SetMaximumSize</enum>
+    </property>
+    <item>
+     <widget class="QScrollBar" name="">
+      <property name="objectName">
+       <string notr="true"/>
+      </property>
+      <property name="windowModality">
+       <enum>NonModal</enum>
+      </property>
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="minimumWidth">
+       <number>0</number>
+      </property>
+      <property name="minimumHeight">
+       <number>0</number>
+      </property>
+      <property name="maximumWidth">
+       <number>16777215</number>
+      </property>
+      <property name="maximumHeight">
+       <number>16777215</number>
+      </property>
+      <property name="sizeIncrement">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="tabletTracking">
+       <bool>false</bool>
+      </property>
+      <property name="focusPolicy">
+       <enum>NoFocus</enum>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>DefaultContextMenu</enum>
+      </property>
+      <property name="updatesEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="visible">
+       <bool>false</bool>
+      </property>
+      <property name="acceptDrops">
+       <bool>false</bool>
+      </property>
+      <property name="windowTitle">
+       <string/>
+      </property>
+      <property name="windowIconText">
+       <string/>
+      </property>
+      <property name="windowOpacity">
+       <double>1.000000000000000</double>
+      </property>
+      <property name="windowModified">
+       <bool>false</bool>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="toolTipDuration">
+       <number>-1</number>
+      </property>
+      <property name="statusTip">
+       <string/>
+      </property>
+      <property name="whatsThis">
+       <string/>
+      </property>
+      <property name="accessibleName">
+       <string/>
+      </property>
+      <property name="accessibleDescription">
+       <string/>
+      </property>
+      <property name="accessibleIdentifier">
+       <string/>
+      </property>
+      <property name="layoutDirection">
+       <enum>LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="windowFilePath">
+       <string/>
+      </property>
+      <property name="inputMethodHints">
+       <set>ImhNone</set>
+      </property>
+      <property name="minimum">
+       <number>0</number>
+      </property>
+      <property name="maximum">
+       <number>0</number>
+      </property>
+      <property name="singleStep">
+       <number>1</number>
+      </property>
+      <property name="pageStep">
+       <number>10</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="sliderPosition">
+       <number>0</number>
+      </property>
+      <property name="tracking">
+       <bool>true</bool>
+      </property>
+      <property name="orientation">
+       <enum>Horizontal</enum>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="invertedControls">
+       <bool>true</bool>
+      </property>
+      <property name="sliderDown">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="qt_scrollarea_vcontainer">
+   <property name="objectName">
+    <string notr="true">qt_scrollarea_vcontainer</string>
+   </property>
+   <property name="windowModality">
+    <enum>NonModal</enum>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="minimumWidth">
+    <number>0</number>
+   </property>
+   <property name="minimumHeight">
+    <number>0</number>
+   </property>
+   <property name="maximumWidth">
+    <number>16777215</number>
+   </property>
+   <property name="maximumHeight">
+    <number>16777215</number>
+   </property>
+   <property name="sizeIncrement">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="tabletTracking">
+    <bool>false</bool>
+   </property>
+   <property name="focusPolicy">
+    <enum>NoFocus</enum>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>DefaultContextMenu</enum>
+   </property>
+   <property name="updatesEnabled">
+    <bool>true</bool>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+   <property name="acceptDrops">
+    <bool>false</bool>
+   </property>
+   <property name="windowTitle">
+    <string/>
+   </property>
+   <property name="windowIconText">
+    <string/>
+   </property>
+   <property name="windowOpacity">
+    <double>1.000000000000000</double>
+   </property>
+   <property name="windowModified">
+    <bool>false</bool>
+   </property>
+   <property name="toolTip">
+    <string/>
+   </property>
+   <property name="toolTipDuration">
+    <number>-1</number>
+   </property>
+   <property name="statusTip">
+    <string/>
+   </property>
+   <property name="whatsThis">
+    <string/>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="accessibleDescription">
+    <string/>
+   </property>
+   <property name="accessibleIdentifier">
+    <string/>
+   </property>
+   <property name="layoutDirection">
+    <enum>LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="windowFilePath">
+    <string/>
+   </property>
+   <property name="inputMethodHints">
+    <set>ImhNone</set>
+   </property>
+   <layout class="QBoxLayout">
+    <property name="objectName">
+     <string notr="true"/>
+    </property>
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="sizeConstraint">
+     <enum>SetMaximumSize</enum>
+    </property>
+    <property name="horizontalSizeConstraint">
+     <enum>SetMaximumSize</enum>
+    </property>
+    <property name="verticalSizeConstraint">
+     <enum>SetMaximumSize</enum>
+    </property>
+    <item>
+     <widget class="QScrollBar" name="">
+      <property name="objectName">
+       <string notr="true"/>
+      </property>
+      <property name="windowModality">
+       <enum>NonModal</enum>
+      </property>
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="minimumWidth">
+       <number>0</number>
+      </property>
+      <property name="minimumHeight">
+       <number>0</number>
+      </property>
+      <property name="maximumWidth">
+       <number>16777215</number>
+      </property>
+      <property name="maximumHeight">
+       <number>16777215</number>
+      </property>
+      <property name="sizeIncrement">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="tabletTracking">
+       <bool>false</bool>
+      </property>
+      <property name="focusPolicy">
+       <enum>NoFocus</enum>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>DefaultContextMenu</enum>
+      </property>
+      <property name="updatesEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="visible">
+       <bool>false</bool>
+      </property>
+      <property name="acceptDrops">
+       <bool>false</bool>
+      </property>
+      <property name="windowTitle">
+       <string/>
+      </property>
+      <property name="windowIconText">
+       <string/>
+      </property>
+      <property name="windowOpacity">
+       <double>1.000000000000000</double>
+      </property>
+      <property name="windowModified">
+       <bool>false</bool>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="toolTipDuration">
+       <number>-1</number>
+      </property>
+      <property name="statusTip">
+       <string/>
+      </property>
+      <property name="whatsThis">
+       <string/>
+      </property>
+      <property name="accessibleName">
+       <string/>
+      </property>
+      <property name="accessibleDescription">
+       <string/>
+      </property>
+      <property name="accessibleIdentifier">
+       <string/>
+      </property>
+      <property name="layoutDirection">
+       <enum>LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="windowFilePath">
+       <string/>
+      </property>
+      <property name="inputMethodHints">
+       <set>ImhNone</set>
+      </property>
+      <property name="minimum">
+       <number>0</number>
+      </property>
+      <property name="maximum">
+       <number>0</number>
+      </property>
+      <property name="singleStep">
+       <number>1</number>
+      </property>
+      <property name="pageStep">
+       <number>10</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="sliderPosition">
+       <number>0</number>
+      </property>
+      <property name="tracking">
+       <bool>true</bool>
+      </property>
+      <property name="orientation">
+       <enum>Vertical</enum>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="invertedControls">
+       <bool>true</bool>
+      </property>
+      <property name="sliderDown">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="objectName">
+    <string notr="true"/>
+   </property>
+   <property name="windowModality">
+    <enum>NonModal</enum>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="minimumWidth">
+    <number>0</number>
+   </property>
+   <property name="minimumHeight">
+    <number>0</number>
+   </property>
+   <property name="maximumWidth">
+    <number>16777215</number>
+   </property>
+   <property name="maximumHeight">
+    <number>16777215</number>
+   </property>
+   <property name="sizeIncrement">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="tabletTracking">
+    <bool>false</bool>
+   </property>
+   <property name="focusPolicy">
+    <enum>StrongFocus</enum>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>DefaultContextMenu</enum>
+   </property>
+   <property name="updatesEnabled">
+    <bool>true</bool>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
+   <property name="windowTitle">
+    <string/>
+   </property>
+   <property name="windowIconText">
+    <string/>
+   </property>
+   <property name="windowOpacity">
+    <double>1.000000000000000</double>
+   </property>
+   <property name="windowModified">
+    <bool>false</bool>
+   </property>
+   <property name="toolTip">
+    <string/>
+   </property>
+   <property name="toolTipDuration">
+    <number>-1</number>
+   </property>
+   <property name="statusTip">
+    <string/>
+   </property>
+   <property name="whatsThis">
+    <string/>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="accessibleDescription">
+    <string/>
+   </property>
+   <property name="accessibleIdentifier">
+    <string/>
+   </property>
+   <property name="layoutDirection">
+    <enum>LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="windowFilePath">
+    <string/>
+   </property>
+   <property name="inputMethodHints">
+    <set>ImhNone</set>
+   </property>
+  </widget>
+ </widget>
+ <connections/>
+</ui>
