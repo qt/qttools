@@ -19,6 +19,7 @@
 #include <QtWidgets/qabstractscrollarea.h>
 
 #include <limits>
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 
@@ -662,7 +663,7 @@ static QString flagsValue(QMetaEnum metaEnum, int v, const QVersionNumber &qtVer
 DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *meta,
                                   const QString &pname, const QVariant &v)
 {
-    auto *dom_prop = new DomProperty();
+    auto dom_prop = std::make_unique<DomProperty>();
     dom_prop->setAttributeName(pname);
 
     const int pindex = meta->indexOfProperty(pname.toLatin1().constData());
@@ -670,11 +671,15 @@ DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *
         QMetaProperty meta_property = meta->property(pindex);
         if (v.canConvert<int>() && meta_property.isEnumType()) {
             const QMetaEnum e = meta_property.enumerator();
-            if (e.isFlag())
-                dom_prop->setElementSet(flagsValue(e, v.toInt(), afb->d->m_saveVersion));
-            else
+            if (e.isFlag()) {
+                const QString sv = flagsValue(e, v.toInt(), afb->d->m_saveVersion);
+                if (sv.isEmpty()) // QTBUG-136164: Suppress empty strings for option-type flags.
+                    return nullptr;
+                dom_prop->setElementSet(sv);
+            } else {
                 dom_prop->setElementEnum(enumValue(e, v.toInt(), afb->d->m_saveVersion));
-            return dom_prop;
+            }
+            return dom_prop.release();
         }
         if (!meta_property.hasStdCppSet()
             || (isOfType(meta, &QAbstractScrollArea::staticMetaObject)
@@ -684,8 +689,8 @@ DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *
     }
 
     // Try simple properties
-    if (applySimpleProperty(v, isTranslatable(pname, v, meta), dom_prop))
-        return dom_prop;
+    if (applySimpleProperty(v, isTranslatable(pname, v, meta), dom_prop.get()))
+        return dom_prop.release();
 
     // Complex properties
     switch (v.metaType().id()) {
@@ -710,9 +715,8 @@ DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *
     default: {
         const bool hadAttributeStdset = dom_prop->hasAttributeStdset();
         const bool attributeStdset = dom_prop->attributeStdset();
-        delete dom_prop;
         if (afb->resourceBuilder()->isResourceType(v)) {
-            dom_prop = afb->resourceBuilder()->saveResource(afb->workingDirectory(), v);
+            dom_prop.reset(afb->resourceBuilder()->saveResource(afb->workingDirectory(), v));
             if (dom_prop) {
                 dom_prop->setAttributeName(pname);
                 if (hadAttributeStdset)
@@ -723,7 +727,7 @@ DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *
         uiLibWarning(msgCannotWriteProperty(pname, v));
     } return nullptr;
     }
-    return dom_prop;
+    return dom_prop.release();
 }
 
 #ifdef QFORMINTERNAL_NAMESPACE
