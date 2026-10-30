@@ -35,20 +35,20 @@ fi
 
 export INCLUDE_FILES
 
-# qtassistant/qtdesigner picked up their plugins (previously uncovered);
-# linguist picked up the lupdate/lrelease/lconvert/lcheck/ltext2id tool family
-# (previously uncovered); qtdoctools and qttoolsmisc are new modules for
-# binaries that had no coverage at all before. Modules that are HEADER_MODULE
-# in CMake (Linguist, UiPlugin, Tools, QDocCatchConversionsPrivate,
-# QDocCatchGeneratorsPrivate) produce no binary and so have nothing to add.
-for MODULE in qtassistant qtdesigner qthelp qtuitools linguist qtdoctools qttoolsmisc; do
+# Groups follow the Qt 6 module they build: qthelp (Help module, plus the
+# Assistant app that uses it), qtuitools (UiTools), qtdesigner (Designer) and
+# linguist (Linguist). Binaries with no matching Qt module go into qttoolsapps.
+# Modules that are HEADER_MODULE in CMake (UiPlugin, Tools,
+# QDocCatchConversionsPrivate, QDocCatchGeneratorsPrivate) produce no binary.
+for MODULE in qthelp qtuitools qtdesigner linguist qttoolsapps; do
     export MODULE
     export PLUGINS=""
     export IRNAME=build/$MODULE.ir
-    if [ "$MODULE" == "qtassistant" ]
+    if [ "$MODULE" == "qthelp" ]
     then
-        TARGET_NAME="build/bin/assistant.ir"
-        TARGET_NAME="$TARGET_NAME:build/bin/qhelpgenerator.ir"
+        TARGET_NAME="build/lib/libQt6Help.so.*.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/assistant.ir"
+        TARGET_NAME="$TARGET_NAME:build/libexec/qhelpgenerator.ir"
         TARGET_NAME="$TARGET_NAME:build/plugins/help/lib*.so*.ir"
         export TARGET_NAME
         export PACKAGE="Add-ons"
@@ -56,13 +56,9 @@ for MODULE in qtassistant qtdesigner qthelp qtuitools linguist qtdoctools qttool
     then
         TARGET_NAME="build/bin/designer.ir"
         TARGET_NAME="$TARGET_NAME:build/lib/libQt6Designer.so.*.ir"
-        TARGET_NAME="$TARGET_NAME:build/lib/libQt6DesignerComponentsPrivate.so.*.ir"
+        TARGET_NAME="$TARGET_NAME:build/lib/libQt6DesignerComponents.so.*.ir"
         TARGET_NAME="$TARGET_NAME:build/plugins/designer/lib*.so*.ir"
         export TARGET_NAME
-        export PACKAGE="Add-ons"
-    elif [ "$MODULE" == "qthelp" ]
-    then
-        export TARGET_NAME="build/lib/libQt6Help.so.*.ir"
         export PACKAGE="Add-ons"
     elif [ "$MODULE" == "qtuitools" ]
     then
@@ -80,23 +76,17 @@ for MODULE in qtassistant qtdesigner qthelp qtuitools linguist qtdoctools qttool
         TARGET_NAME="$TARGET_NAME:build/bin/ltext2id.ir"
         export TARGET_NAME
         export PACKAGE="Add-ons"
-    elif [ "$MODULE" == "qtdoctools" ]
+    elif [ "$MODULE" == "qttoolsapps" ]
     then
-        # qdoc and its supporting command-line tools
+        # Standalone qttools binaries with no matching Qt module. qtattributionsscanner
+        # is installed to libexec. objcnamemangler is macOS-only (not built on Linux).
         TARGET_NAME="build/bin/qdoc.ir"
-        TARGET_NAME="$TARGET_NAME:build/bin/qtattributionsscanner.ir"
-        TARGET_NAME="$TARGET_NAME:build/bin/objcnamemangler.ir"
-        export TARGET_NAME
-        export PACKAGE="Add-ons"
-    elif [ "$MODULE" == "qttoolsmisc" ]
-    then
-        # Standalone qttools app binaries with no better home
-        TARGET_NAME="build/bin/qtdiag.ir"
+        TARGET_NAME="$TARGET_NAME:build/libexec/qtattributionsscanner.ir"
+        TARGET_NAME="$TARGET_NAME:build/bin/qtdiag.ir"
         TARGET_NAME="$TARGET_NAME:build/bin/pixeltool.ir"
         TARGET_NAME="$TARGET_NAME:build/bin/qdbus.ir"
         TARGET_NAME="$TARGET_NAME:build/bin/qdbusviewer.ir"
         TARGET_NAME="$TARGET_NAME:build/bin/kmap2qmap.ir"
-        TARGET_NAME="$TARGET_NAME:build/bin/qev.ir"
         TARGET_NAME="$TARGET_NAME:build/bin/qdistancefieldgenerator.ir"
         TARGET_NAME="$TARGET_NAME:build/bin/qtplugininfo.ir"
         export TARGET_NAME
