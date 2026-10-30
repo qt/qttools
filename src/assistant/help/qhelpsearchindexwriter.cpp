@@ -477,7 +477,7 @@ void QHelpSearchIndexWriter::run()
                     title = doc.metaInformation(QTextDocument::DocumentTitle).toHtmlEscaped();
                     contents = doc.toPlainText().toHtmlEscaped();
 #else
-                    return;
+                    return true;
 #endif
                 }
 
