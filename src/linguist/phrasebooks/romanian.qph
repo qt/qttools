@@ -1,0 +1,2406 @@
+<!DOCTYPE QPH><QPH language="ro">
+<phrase>
+    <source> [directory]</source>
+    <target> [director]</target>
+</phrase>
+<phrase>
+    <source> [read only]</source>
+    <target> [doar citire]</target>
+</phrase>
+<phrase>
+    <source>&amp;Change</source>
+    <target>&amp;Schimbă</target>
+</phrase>
+<phrase>
+    <source>&amp;Debug</source>
+    <target>&amp;Depanare</target>
+</phrase>
+<phrase>
+    <source>&amp;Edit</source>
+    <target>&amp;Modifică</target>
+</phrase>
+<phrase>
+    <source>&amp;File</source>
+    <target>&amp;Fișier</target>
+</phrase>
+<phrase>
+    <source>&amp;Move</source>
+    <target>&amp;Mută</target>
+</phrase>
+<phrase>
+    <source>&amp;Next</source>
+    <target>&amp;Înainte</target>
+</phrase>
+<phrase>
+    <source>&amp;Print...</source>
+    <target>&amp;Tipărește...</target>
+</phrase>
+<phrase>
+    <source>&amp;Redo</source>
+    <target>&amp;Refă</target>
+</phrase>
+<phrase>
+    <source>&amp;Restore</source>
+    <target>&amp;Restaurează</target>
+</phrase>
+<phrase>
+    <source>&amp;Run</source>
+    <target>&amp;Rulează</target>
+</phrase>
+<phrase>
+    <source>&amp;Undo</source>
+    <target>&amp;Anulează</target>
+</phrase>
+<phrase>
+    <source>&amp;Username:</source>
+    <target>&amp;Nume utilizator:</target>
+</phrase>
+<phrase>
+    <source>&amp;View</source>
+    <target>&amp;Afișare</target>
+</phrase>
+<phrase>
+    <source>A file called &apos;%1&apos; already exists.  Please choose another name.</source>
+    <target>Un fișier cu numele &apos;%1&apos; există deja. Alegeți alt nume.</target>
+</phrase>
+<phrase>
+    <source>Abort</source>
+    <target>Întrerupe</target>
+</phrase>
+<phrase>
+    <source>About</source>
+    <target>Despre</target>
+</phrase>
+<phrase>
+    <source>About Qt</source>
+    <target>Despre Qt</target>
+</phrase>
+<phrase>
+    <source>About...</source>
+    <target>Despre...</target>
+</phrase>
+<phrase>
+    <source>Accelerator</source>
+    <target>Accelerator</target>
+</phrase>
+<phrase>
+    <source>Access denied</source>
+    <target>Acces refuzat</target>
+</phrase>
+<phrase>
+    <source>Actions</source>
+    <target>Acțiuni</target>
+</phrase>
+<phrase>
+    <source>Activate %1</source>
+    <target>Activează %1</target>
+</phrase>
+<phrase>
+    <source>Add</source>
+    <target>Adaugă</target>
+</phrase>
+<phrase>
+    <source>Add Bookmark</source>
+    <target>Adaugă marcaj</target>
+</phrase>
+<phrase>
+    <source>Add in Folder:</source>
+    <target>Adaugă în dosarul:</target>
+</phrase>
+<phrase>
+    <source>Address:</source>
+    <target>Adresă:</target>
+</phrase>
+<phrase>
+    <source>Alloc</source>
+    <target>Alocare</target>
+</phrase>
+<phrase>
+    <source>Already exists</source>
+    <target>Deja există</target>
+</phrase>
+<phrase>
+    <source>Always on Top</source>
+    <target>Întotdeauna deasupra</target>
+</phrase>
+<phrase>
+    <source>Appearance</source>
+    <target>Aspect</target>
+</phrase>
+<phrase>
+    <source>Application</source>
+    <target>Aplicație</target>
+</phrase>
+<phrase>
+    <source>Apply</source>
+    <target>Aplică</target>
+</phrase>
+<phrase>
+    <source>Arabic</source>
+    <target>Arabă</target>
+</phrase>
+<phrase>
+    <source>Architecture:</source>
+    <target>Arhitectura:</target>
+</phrase>
+<phrase>
+    <source>Arguments</source>
+    <target>Argumente</target>
+</phrase>
+<phrase>
+    <source>Armenian</source>
+    <target>Armeană</target>
+</phrase>
+<phrase>
+    <source>Ascending</source>
+    <target>Crescător</target>
+</phrase>
+<phrase>
+    <source>Back</source>
+    <target>Înapoi</target>
+</phrase>
+<phrase>
+    <source>Background</source>
+    <target>Fundal</target>
+</phrase>
+<phrase>
+    <source>Batch</source>
+    <target>Lot</target>
+</phrase>
+<phrase>
+    <source>Battery</source>
+    <target>Baterie</target>
+</phrase>
+<phrase>
+    <source>Bold</source>
+    <target>Îngroșat</target>
+</phrase>
+<phrase>
+    <source>Bookmark</source>
+    <target>Marcaj</target>
+</phrase>
+<phrase>
+    <source>Bookmark:</source>
+    <target>Marcaj:</target>
+</phrase>
+<phrase>
+    <source>Bookmarks</source>
+    <target>Marcaje</target>
+</phrase>
+<phrase>
+    <source>Browse</source>
+    <target>Răsfoiește</target>
+</phrase>
+<phrase>
+    <source>Browser</source>
+    <target>Navigator</target>
+</phrase>
+<phrase>
+    <source>Build </source>
+    <target>Compilează </target>
+</phrase>
+<phrase>
+    <source>Build directory:</source>
+    <target>Director de compilare:</target>
+</phrase>
+<phrase>
+    <source>Cancel</source>
+    <target>Anulează</target>
+</phrase>
+<phrase>
+    <source>Cannot create</source>
+    <target>Nu se poate crea</target>
+</phrase>
+<phrase>
+    <source>Cannot create directory: %1</source>
+    <target>Nu se poate crea directorul: %1</target>
+</phrase>
+<phrase>
+    <source>Cannot find</source>
+    <target>Nu se găsește</target>
+</phrase>
+<phrase>
+    <source>Cannot find the string &apos;%1&apos;.</source>
+    <target>Nu se găsește șirul &apos;%1&apos;.</target>
+</phrase>
+<phrase>
+    <source>Cannot open &apos;%1&apos;.</source>
+    <target>Nu se poate deschide &apos;%1&apos;.</target>
+</phrase>
+<phrase>
+    <source>Cannot read</source>
+    <target>Nu se poate citi</target>
+</phrase>
+<phrase>
+    <source>Cannot save</source>
+    <target>Nu se poate salva</target>
+</phrase>
+<phrase>
+    <source>Cascade</source>
+    <target>Cascadează</target>
+</phrase>
+<phrase>
+    <source>Case Sensitive</source>
+    <target>Cu majuscule semnificative</target>
+</phrase>
+<phrase>
+    <source>Case sensitive</source>
+    <target>cu majuscule semnificative</target>
+</phrase>
+<phrase>
+    <source>Change:</source>
+    <target>Modificare:</target>
+</phrase>
+<phrase>
+    <source>Checkable</source>
+    <target>Cu bifă</target>
+</phrase>
+<phrase>
+    <source>Child</source>
+    <target>Copil</target>
+</phrase>
+<phrase>
+    <source>Clear</source>
+    <target>Golește</target>
+</phrase>
+<phrase>
+    <source>Clipboard</source>
+    <target>Clipboard</target>
+</phrase>
+<phrase>
+    <source>Close</source>
+    <target>Închide</target>
+</phrase>
+<phrase>
+    <source>Close %1</source>
+    <target>Închide %1</target>
+</phrase>
+<phrase>
+    <source>Close All</source>
+    <target>Închide tot</target>
+</phrase>
+<phrase>
+    <source>Close All Except %1</source>
+    <target>Închide tot, cu excepția %1</target>
+</phrase>
+<phrase>
+    <source>Close Other Editors</source>
+    <target>Închide alte editoare</target>
+</phrase>
+<phrase>
+    <source>Close Other Tabs</source>
+    <target>Închide alte file</target>
+</phrase>
+<phrase>
+    <source>Close Tab</source>
+    <target>Închide fila</target>
+</phrase>
+<phrase>
+    <source>Close button</source>
+    <target>buton de închidere</target>
+</phrase>
+<phrase>
+    <source>Collapse</source>
+    <target>Restrânge</target>
+</phrase>
+<phrase>
+    <source>Color</source>
+    <target>Culoare</target>
+</phrase>
+<phrase>
+    <source>ComboBox</source>
+    <target>Listă de selecție</target>
+</phrase>
+<phrase>
+    <source>Condition:</source>
+    <target>Condiție:</target>
+</phrase>
+<phrase>
+    <source>Configuration</source>
+    <target>Configurație</target>
+</phrase>
+<phrase>
+    <source>Conflicting</source>
+    <target>În conflict</target>
+</phrase>
+<phrase>
+    <source>Content</source>
+    <target>Conținut</target>
+</phrase>
+<phrase>
+    <source>Contents</source>
+    <target>Cuprins</target>
+</phrase>
+<phrase>
+    <source>Context</source>
+    <target>Context</target>
+</phrase>
+<phrase>
+    <source>Continue</source>
+    <target>Continuă</target>
+</phrase>
+<phrase>
+    <source>Copy</source>
+    <target>Copiază</target>
+</phrase>
+<phrase>
+    <source>Copy here</source>
+    <target>Copiază aici</target>
+</phrase>
+<phrase>
+    <source>Create Shortcut</source>
+    <target>Creează o scurtătură</target>
+</phrase>
+<phrase>
+    <source>Create Shortcut Here</source>
+    <target>Creează o scurtătură aici</target>
+</phrase>
+<phrase>
+    <source>Current Page</source>
+    <target>Pagina curentă</target>
+</phrase>
+<phrase>
+    <source>Custom</source>
+    <target>Personalizat</target>
+</phrase>
+<phrase>
+    <source>Cut</source>
+    <target>Decupează</target>
+</phrase>
+<phrase>
+    <source>Cyrillic</source>
+    <target>Chirilică</target>
+</phrase>
+<phrase>
+    <source>Date</source>
+    <target>Data</target>
+</phrase>
+<phrase>
+    <source>Declare</source>
+    <target>Declarație</target>
+</phrase>
+<phrase>
+    <source>Declared</source>
+    <target>Declarat</target>
+</phrase>
+<phrase>
+    <source>Default</source>
+    <target>Implicit</target>
+</phrase>
+<phrase>
+    <source>Delete</source>
+    <target>Șterge</target>
+</phrase>
+<phrase>
+    <source>Delete Bookmark</source>
+    <target>Șterge marcajul</target>
+</phrase>
+<phrase>
+    <source>Delete Folder</source>
+    <target>Șterge dosarul</target>
+</phrase>
+<phrase>
+    <source>Descending</source>
+    <target>Descrescător</target>
+</phrase>
+<phrase>
+    <source>Direction</source>
+    <target>Direcție</target>
+</phrase>
+<phrase>
+    <source>Disable</source>
+    <target>Dezactivează</target>
+</phrase>
+<phrase>
+    <source>Display</source>
+    <target>Afișare</target>
+</phrase>
+<phrase>
+    <source>Dock</source>
+    <target>Doc</target>
+</phrase>
+<phrase>
+    <source>Dock window</source>
+    <target>Fereastră de doc</target>
+</phrase>
+<phrase>
+    <source>Documentation</source>
+    <target>Documentație</target>
+</phrase>
+<phrase>
+    <source>Done</source>
+    <target>Gata</target>
+</phrase>
+<phrase>
+    <source>Down</source>
+    <target>Jos</target>
+</phrase>
+<phrase>
+    <source>Download canceled.</source>
+    <target>Descărcare anulată.</target>
+</phrase>
+<phrase>
+    <source>E&amp;xit</source>
+    <target>&amp;Ieșire</target>
+</phrase>
+<phrase>
+    <source>Edit</source>
+    <target>Modifică</target>
+</phrase>
+<phrase>
+    <source>Edit menu</source>
+    <target>Meniul Modifică</target>
+</phrase>
+<phrase>
+    <source>Edit...</source>
+    <target>Modifică...</target>
+</phrase>
+<phrase>
+    <source>Enable</source>
+    <target>Activează</target>
+</phrase>
+<phrase>
+    <source>Enabled</source>
+    <target>Activat</target>
+</phrase>
+<phrase>
+    <source>Entity</source>
+    <target>Entitate</target>
+</phrase>
+<phrase>
+    <source>Environment</source>
+    <target>Mediu</target>
+</phrase>
+<phrase>
+    <source>Error</source>
+    <target>Eroare</target>
+</phrase>
+<phrase>
+    <source>Executable:</source>
+    <target>Executabil:</target>
+</phrase>
+<phrase>
+    <source>Exit</source>
+    <target>Ieșire</target>
+</phrase>
+<phrase>
+    <source>Expand</source>
+    <target>Extinde</target>
+</phrase>
+<phrase>
+    <source>Explore</source>
+    <target>Explorează</target>
+</phrase>
+<phrase>
+    <source>Fade</source>
+    <target>Estompare</target>
+</phrase>
+<phrase>
+    <source>Failed to open</source>
+    <target>Nu s-a putut deschide</target>
+</phrase>
+<phrase>
+    <source>Failed!</source>
+    <target>Eșuat!</target>
+</phrase>
+<phrase>
+    <source>False</source>
+    <target>Fals</target>
+</phrase>
+<phrase>
+    <source>Family</source>
+    <target>Familia</target>
+</phrase>
+<phrase>
+    <source>Feel</source>
+    <target>Aspect</target>
+</phrase>
+<phrase>
+    <source>File</source>
+    <target>Fișier</target>
+</phrase>
+<phrase>
+    <source>File menu</source>
+    <target>Meniul Fișier</target>
+</phrase>
+<phrase>
+    <source>Filter:</source>
+    <target>Filtru:</target>
+</phrase>
+<phrase>
+    <source>Filters</source>
+    <target>Filtre</target>
+</phrase>
+<phrase>
+    <source>Find</source>
+    <target>Caută</target>
+</phrase>
+<phrase>
+    <source>Find Next</source>
+    <target>Caută următorul</target>
+</phrase>
+<phrase>
+    <source>Find Previous</source>
+    <target>Caută precedentul</target>
+</phrase>
+<phrase>
+    <source>Find What</source>
+    <target>De căutat</target>
+</phrase>
+<phrase>
+    <source>Find in text</source>
+    <target>Caută în text</target>
+</phrase>
+<phrase>
+    <source>Find next</source>
+    <target>caută următorul</target>
+</phrase>
+<phrase>
+    <source>Finish</source>
+    <target>Finalizează</target>
+</phrase>
+<phrase>
+    <source>First page</source>
+    <target>Prima pagină</target>
+</phrase>
+<phrase>
+    <source>Fit page</source>
+    <target>Potrivește pagina</target>
+</phrase>
+<phrase>
+    <source>Fit width</source>
+    <target>Potrivește lățimea</target>
+</phrase>
+<phrase>
+    <source>Focal</source>
+    <target>Focal</target>
+</phrase>
+<phrase>
+    <source>Font</source>
+    <target>Font</target>
+</phrase>
+<phrase>
+    <source>Font family</source>
+    <target>Familia de fonturi</target>
+</phrase>
+<phrase>
+    <source>Fonts</source>
+    <target>Fonturi</target>
+</phrase>
+<phrase>
+    <source>Foreground</source>
+    <target>Prim plan</target>
+</phrase>
+<phrase>
+    <source>Form</source>
+    <target>Formular</target>
+</phrase>
+<phrase>
+    <source>Forward</source>
+    <target>Înainte</target>
+</phrase>
+<phrase>
+    <source>Game</source>
+    <target>Joc</target>
+</phrase>
+<phrase>
+    <source>General</source>
+    <target>General</target>
+</phrase>
+<phrase>
+    <source>Go</source>
+    <target>Mergi</target>
+</phrase>
+<phrase>
+    <source>Grayscale</source>
+    <target>Scală de gri</target>
+</phrase>
+<phrase>
+    <source>Greek</source>
+    <target>Greacă</target>
+</phrase>
+<phrase>
+    <source>Hebrew</source>
+    <target>Ebraică</target>
+</phrase>
+<phrase>
+    <source>Height:</source>
+    <target>Înălțime:</target>
+</phrase>
+<phrase>
+    <source>Help</source>
+    <target>Ajutor</target>
+</phrase>
+<phrase>
+    <source>Help menu</source>
+    <target>Meniul Ajutor</target>
+</phrase>
+<phrase>
+    <source>Hide</source>
+    <target>Ascunde</target>
+</phrase>
+<phrase>
+    <source>Home</source>
+    <target>Acasă</target>
+</phrase>
+<phrase>
+    <source>Horizontal</source>
+    <target>Orizontal</target>
+</phrase>
+<phrase>
+    <source>Host and port:</source>
+    <target>Gazdă și port:</target>
+</phrase>
+<phrase>
+    <source>Icon</source>
+    <target>Pictogramă</target>
+</phrase>
+<phrase>
+    <source>Ignore</source>
+    <target>Ignoră</target>
+</phrase>
+<phrase>
+    <source>Illegal</source>
+    <target>Ilegal</target>
+</phrase>
+<phrase>
+    <source>In use</source>
+    <target>În uz</target>
+</phrase>
+<phrase>
+    <source>Index</source>
+    <target>Index</target>
+</phrase>
+<phrase>
+    <source>Information</source>
+    <target>Informații</target>
+</phrase>
+<phrase>
+    <source>Insert</source>
+    <target>Inserează</target>
+</phrase>
+<phrase>
+    <source>Insert Object</source>
+    <target>Inserează obiectul</target>
+</phrase>
+<phrase>
+    <source>Install</source>
+    <target>Instalează</target>
+</phrase>
+<phrase>
+    <source>Installation Path:</source>
+    <target>Calea de instalare:</target>
+</phrase>
+<phrase>
+    <source>Invalid</source>
+    <target>Nevalid</target>
+</phrase>
+<phrase>
+    <source>Invoke</source>
+    <target>Invocă</target>
+</phrase>
+<phrase>
+    <source>Italic</source>
+    <target>Cursiv</target>
+</phrase>
+<phrase>
+    <source>Item</source>
+    <target>Element</target>
+</phrase>
+<phrase>
+    <source>Keep</source>
+    <target>Păstrează</target>
+</phrase>
+<phrase>
+    <source>Label</source>
+    <target>Etichetă</target>
+</phrase>
+<phrase>
+    <source>Landscape</source>
+    <target>Peisaj</target>
+</phrase>
+<phrase>
+    <source>Last page</source>
+    <target>Ultima pagină</target>
+</phrase>
+<phrase>
+    <source>Lay out</source>
+    <target>Aranjează</target>
+</phrase>
+<phrase>
+    <source>Level</source>
+    <target>Nivel</target>
+</phrase>
+<phrase>
+    <source>Link</source>
+    <target>Legătură</target>
+</phrase>
+<phrase>
+    <source>Link Here</source>
+    <target>Legătură aici</target>
+</phrase>
+<phrase>
+    <source>List View</source>
+    <target>Vizualizare listă</target>
+</phrase>
+<phrase>
+    <source>Load</source>
+    <target>Încarcă</target>
+</phrase>
+<phrase>
+    <source>Locale</source>
+    <target>Localizare</target>
+</phrase>
+<phrase>
+    <source>Location</source>
+    <target>Locație</target>
+</phrase>
+<phrase>
+    <source>Log</source>
+    <target>Jurnal</target>
+</phrase>
+<phrase>
+    <source>Look and feel</source>
+    <target>Aspect și comportament</target>
+</phrase>
+<phrase>
+    <source>MDI</source>
+    <target>MDI</target>
+</phrase>
+<phrase>
+    <source>Make writable</source>
+    <target>Fă posibilă scrierea</target>
+</phrase>
+<phrase>
+    <source>Margins</source>
+    <target>Margini</target>
+</phrase>
+<phrase>
+    <source>Marker</source>
+    <target>Marcator</target>
+</phrase>
+<phrase>
+    <source>Match</source>
+    <target>Potrivire</target>
+</phrase>
+<phrase>
+    <source>Match case</source>
+    <target>Potrivire majuscule/minuscule</target>
+</phrase>
+<phrase>
+    <source>Maximize</source>
+    <target>Maximizează</target>
+</phrase>
+<phrase>
+    <source>Menu</source>
+    <target>Meniu</target>
+</phrase>
+<phrase>
+    <source>Menu bar</source>
+    <target>Bara de meniu</target>
+</phrase>
+<phrase>
+    <source>Mi&amp;nimize</source>
+    <target>Mini&amp;mizează</target>
+</phrase>
+<phrase>
+    <source>Minimize</source>
+    <target>Minimizează</target>
+</phrase>
+<phrase>
+    <source>Mismatch</source>
+    <target>Nepotrivire</target>
+</phrase>
+<phrase>
+    <source>Move</source>
+    <target>Mută</target>
+</phrase>
+<phrase>
+    <source>Move Down</source>
+    <target>Mută în jos</target>
+</phrase>
+<phrase>
+    <source>Move Here</source>
+    <target>Mută aici</target>
+</phrase>
+<phrase>
+    <source>Move Up</source>
+    <target>Mută în sus</target>
+</phrase>
+<phrase>
+    <source>Multiple Document Interface</source>
+    <target>Interfață cu documente multiple</target>
+</phrase>
+<phrase>
+    <source>My Computer</source>
+    <target>Calculatorul meu</target>
+</phrase>
+<phrase>
+    <source>Name</source>
+    <target>Nume</target>
+</phrase>
+<phrase>
+    <source>Namespace</source>
+    <target>Spațiu de nume</target>
+</phrase>
+<phrase>
+    <source>Network</source>
+    <target>Rețea</target>
+</phrase>
+<phrase>
+    <source>Network Neighborhood</source>
+    <target>Vecinătate de rețea</target>
+</phrase>
+<phrase>
+    <source>New</source>
+    <target>Nou</target>
+</phrase>
+<phrase>
+    <source>New Directory</source>
+    <target>Director nou</target>
+</phrase>
+<phrase>
+    <source>New Folder</source>
+    <target>Dosar nou</target>
+</phrase>
+<phrase>
+    <source>New Game</source>
+    <target>Joc nou</target>
+</phrase>
+<phrase>
+    <source>New Project</source>
+    <target>Proiect nou</target>
+</phrase>
+<phrase>
+    <source>New Tab</source>
+    <target>Filă nouă</target>
+</phrase>
+<phrase>
+    <source>Next</source>
+    <target>Înainte</target>
+</phrase>
+<phrase>
+    <source>Next Bookmark</source>
+    <target>Marcajul următor</target>
+</phrase>
+<phrase>
+    <source>Next page</source>
+    <target>Pagina următoare</target>
+</phrase>
+<phrase>
+    <source>No</source>
+    <target>Nu</target>
+</phrase>
+<phrase>
+    <source>No error</source>
+    <target>Fără eroare</target>
+</phrase>
+<phrase>
+    <source>No space left on device</source>
+    <target>Nu mai este spațiu liber pe dispozitiv</target>
+</phrase>
+<phrase>
+    <source>No such file or directory</source>
+    <target>Nu există fișierul sau directorul</target>
+</phrase>
+<phrase>
+    <source>None</source>
+    <target>Nespecificat</target>
+</phrase>
+<phrase>
+    <source>Normal</source>
+    <target>Normal</target>
+</phrase>
+<phrase>
+    <source>Not supported</source>
+    <target>Nesuportat</target>
+</phrase>
+<phrase>
+    <source>OK</source>
+    <target>OK</target>
+</phrase>
+<phrase>
+    <source>OLE</source>
+    <target>OLE</target>
+</phrase>
+<phrase>
+    <source>OLE drag and drop</source>
+    <target>tragere și plasare OLE</target>
+</phrase>
+<phrase>
+    <source>OLE embedded object</source>
+    <target>obiect încorporat OLE</target>
+</phrase>
+<phrase>
+    <source>OLE linked object</source>
+    <target>obiect legat OLE</target>
+</phrase>
+<phrase>
+    <source>OLE nondefault drag and drop</source>
+    <target>tragere și plasare OLE nonimplicită</target>
+</phrase>
+<phrase>
+    <source>Occure</source>
+    <target>Apariție</target>
+</phrase>
+<phrase>
+    <source>Occured</source>
+    <target>A apărut</target>
+</phrase>
+<phrase>
+    <source>Off The Spot</source>
+    <target>Lipsă de pe loc</target>
+</phrase>
+<phrase>
+    <source>On The Spot</source>
+    <target>Prezent pe loc</target>
+</phrase>
+<phrase>
+    <source>Open</source>
+    <target>Deschide</target>
+</phrase>
+<phrase>
+    <source>Open Link</source>
+    <target>Deschide legătura</target>
+</phrase>
+<phrase>
+    <source>Open Link in New Tab</source>
+    <target>Deschide legătura într-o filă nouă</target>
+</phrase>
+<phrase>
+    <source>Open Source Edition</source>
+    <target>Ediția cu sursă deschisă</target>
+</phrase>
+<phrase>
+    <source>Open With</source>
+    <target>Deschide cu</target>
+</phrase>
+<phrase>
+    <source>Options</source>
+    <target>Opțiuni</target>
+</phrase>
+<phrase>
+    <source>Outline</source>
+    <target>Structură</target>
+</phrase>
+<phrase>
+    <source>Over The Spot</source>
+    <target>Prezent peste loc</target>
+</phrase>
+<phrase>
+    <source>PATH:</source>
+    <target>PATH:</target>
+</phrase>
+<phrase>
+    <source>Pad</source>
+    <target>Suport</target>
+</phrase>
+<phrase>
+    <source>Page Setup</source>
+    <target>Configurarea paginii</target>
+</phrase>
+<phrase>
+    <source>Page setup</source>
+    <target>configurarea paginii</target>
+</phrase>
+<phrase>
+    <source>Parse</source>
+    <target>Analizează</target>
+</phrase>
+<phrase>
+    <source>Parsing</source>
+    <target>Analizare</target>
+</phrase>
+<phrase>
+    <source>Paste</source>
+    <target>Lipește</target>
+</phrase>
+<phrase>
+    <source>Paste Link</source>
+    <target>Lipește legătura</target>
+</phrase>
+<phrase>
+    <source>Paste Shortcut</source>
+    <target>Lipește scurtătura</target>
+</phrase>
+<phrase>
+    <source>Paste Special</source>
+    <target>Lipește special</target>
+</phrase>
+<phrase>
+    <source>Paste:</source>
+    <target>Lipește:</target>
+</phrase>
+<phrase>
+    <source>Path:</source>
+    <target>Cale:</target>
+</phrase>
+<phrase>
+    <source>Pattern</source>
+    <target>Tipar</target>
+</phrase>
+<phrase>
+    <source>Pause</source>
+    <target>Pauză</target>
+</phrase>
+<phrase>
+    <source>Permission denied</source>
+    <target>Permisiune refuzată</target>
+</phrase>
+<phrase>
+    <source>Phrase</source>
+    <target>Expresie</target>
+</phrase>
+<phrase>
+    <source>Pictures</source>
+    <target>Imagini</target>
+</phrase>
+<phrase>
+    <source>Place</source>
+    <target>Plasează</target>
+</phrase>
+<phrase>
+    <source>Play</source>
+    <target>Redare</target>
+</phrase>
+<phrase>
+    <source>Plug and Play</source>
+    <target>Conectare și utilizare</target>
+</phrase>
+<phrase>
+    <source>Point size</source>
+    <target>Dimensiunea punctelor</target>
+</phrase>
+<phrase>
+    <source>Portrait</source>
+    <target>Portret</target>
+</phrase>
+<phrase>
+    <source>Preference</source>
+    <target>Preferință</target>
+</phrase>
+<phrase>
+    <source>Preferences</source>
+    <target>Preferințe</target>
+</phrase>
+<phrase>
+    <source>Preferences...</source>
+    <target>Preferințe...</target>
+</phrase>
+<phrase>
+    <source>Premature</source>
+    <target>Prematur</target>
+</phrase>
+<phrase>
+    <source>Press</source>
+    <target>Apasă</target>
+</phrase>
+<phrase>
+    <source>Previous</source>
+    <target>Înapoi</target>
+</phrase>
+<phrase>
+    <source>Previous Bookmark</source>
+    <target>Marcajul precedent</target>
+</phrase>
+<phrase>
+    <source>Previous page</source>
+    <target>Pagina precedentă</target>
+</phrase>
+<phrase>
+    <source>Print</source>
+    <target>Tipărește</target>
+</phrase>
+<phrase>
+    <source>Print Preview...</source>
+    <target>Previzualizare tipărire...</target>
+</phrase>
+<phrase>
+    <source>Proceed</source>
+    <target>Continuă</target>
+</phrase>
+<phrase>
+    <source>Promote</source>
+    <target>Promovează</target>
+</phrase>
+<phrase>
+    <source>Properties</source>
+    <target>Proprietăți</target>
+</phrase>
+<phrase>
+    <source>Property</source>
+    <target>Proprietate</target>
+</phrase>
+<phrase>
+    <source>Qt Assistant</source>
+    <target>Qt Assistant</target>
+</phrase>
+<phrase>
+    <source>Qt Creator</source>
+    <target>Qt Creator</target>
+</phrase>
+<phrase>
+    <source>Question</source>
+    <target>Întrebare</target>
+</phrase>
+<phrase>
+    <source>Quick View</source>
+    <target>Vizualizare rapidă</target>
+</phrase>
+<phrase>
+    <source>Quit</source>
+    <target>Ieșire</target>
+</phrase>
+<phrase>
+    <source>Quotation mark</source>
+    <target>Semn de citare</target>
+</phrase>
+<phrase>
+    <source>Raised</source>
+    <target>Ridicat</target>
+</phrase>
+<phrase>
+    <source>Read-only</source>
+    <target>Doar citire</target>
+</phrase>
+<phrase>
+    <source>Recent</source>
+    <target>Recente</target>
+</phrase>
+<phrase>
+    <source>Recycle Bin</source>
+    <target>Coș de gunoi</target>
+</phrase>
+<phrase>
+    <source>Redo</source>
+    <target>Refă</target>
+</phrase>
+<phrase>
+    <source>Reference</source>
+    <target>Referință</target>
+</phrase>
+<phrase>
+    <source>Refresh</source>
+    <target>Reîmprospătează</target>
+</phrase>
+<phrase>
+    <source>Reload</source>
+    <target>Reîncarcă</target>
+</phrase>
+<phrase>
+    <source>Remove</source>
+    <target>Elimină</target>
+</phrase>
+<phrase>
+    <source>Rename</source>
+    <target>Redenumește</target>
+</phrase>
+<phrase>
+    <source>Rename Bookmark</source>
+    <target>Redenumește marcajul</target>
+</phrase>
+<phrase>
+    <source>Rename Folder</source>
+    <target>Redenumește dosarul</target>
+</phrase>
+<phrase>
+    <source>Render</source>
+    <target>Randează</target>
+</phrase>
+<phrase>
+    <source>Repeat</source>
+    <target>Repetă</target>
+</phrase>
+<phrase>
+    <source>Replace</source>
+    <target>Înlocuiește</target>
+</phrase>
+<phrase>
+    <source>Reset</source>
+    <target>Resetează</target>
+</phrase>
+<phrase>
+    <source>Restore</source>
+    <target>Restaurează</target>
+</phrase>
+<phrase>
+    <source>Restore button</source>
+    <target>Buton de restaurare</target>
+</phrase>
+<phrase>
+    <source>Resume</source>
+    <target>Reluează</target>
+</phrase>
+<phrase>
+    <source>Retry</source>
+    <target>Reîncearcă</target>
+</phrase>
+<phrase>
+    <source>Root</source>
+    <target>Rădăcină</target>
+</phrase>
+<phrase>
+    <source>Run</source>
+    <target>Rulează</target>
+</phrase>
+<phrase>
+    <source>Run:</source>
+    <target>Rulează:</target>
+</phrase>
+<phrase>
+    <source>Saturation</source>
+    <target>Saturație</target>
+</phrase>
+<phrase>
+    <source>Save</source>
+    <target>Salvează</target>
+</phrase>
+<phrase>
+    <source>Save As</source>
+    <target>Salvează ca</target>
+</phrase>
+<phrase>
+    <source>Save As...</source>
+    <target>Salvează ca...</target>
+</phrase>
+<phrase>
+    <source>Save all</source>
+    <target>Salvează-le pe toate</target>
+</phrase>
+<phrase>
+    <source>Save as</source>
+    <target>Salvează ca</target>
+</phrase>
+<phrase>
+    <source>Search</source>
+    <target>Caută</target>
+</phrase>
+<phrase>
+    <source>Search wrapped</source>
+    <target>Căutare cu revenire</target>
+</phrase>
+<phrase>
+    <source>Select All</source>
+    <target>Selectează-le pe toate</target>
+</phrase>
+<phrase>
+    <source>Send To</source>
+    <target>Trimite către</target>
+</phrase>
+<phrase>
+    <source>Sequence</source>
+    <target>Secvență</target>
+</phrase>
+<phrase>
+    <source>Server start script:</source>
+    <target>Script de pornire al serverului:</target>
+</phrase>
+<phrase>
+    <source>Settings</source>
+    <target>Setări</target>
+</phrase>
+<phrase>
+    <source>Setup</source>
+    <target>Configurare</target>
+</phrase>
+<phrase>
+    <source>Show</source>
+    <target>Afișează</target>
+</phrase>
+<phrase>
+    <source>Show Bookmark</source>
+    <target>Afișează marcajul</target>
+</phrase>
+<phrase>
+    <source>Show Bookmark in New Tab</source>
+    <target>Afișează marcajul într-o filă nouă</target>
+</phrase>
+<phrase>
+    <source>Shutdown</source>
+    <target>Oprire</target>
+</phrase>
+<phrase>
+    <source>Sidebar</source>
+    <target>Bară laterală</target>
+</phrase>
+<phrase>
+    <source>Size</source>
+    <target>Dimensiune</target>
+</phrase>
+<phrase>
+    <source>Slider</source>
+    <target>Glisor</target>
+</phrase>
+<phrase>
+    <source>Sort order</source>
+    <target>Ordinea de sortare</target>
+</phrase>
+<phrase>
+    <source>Specified</source>
+    <target>Precizat</target>
+</phrase>
+<phrase>
+    <source>Split</source>
+    <target>Împarte</target>
+</phrase>
+<phrase>
+    <source>Start Debugger</source>
+    <target>Pornește depanatorul</target>
+</phrase>
+<phrase>
+    <source>Start button</source>
+    <target>Buton de pornire</target>
+</phrase>
+<phrase>
+    <source>StartUp folder</source>
+    <target>Dosarul StartUp</target>
+</phrase>
+<phrase>
+    <source>Status</source>
+    <target>Stare</target>
+</phrase>
+<phrase>
+    <source>Status Bar</source>
+    <target>Bara de stare</target>
+</phrase>
+<phrase>
+    <source>Stop</source>
+    <target>Oprește</target>
+</phrase>
+<phrase>
+    <source>Style</source>
+    <target>Stil</target>
+</phrase>
+<phrase>
+    <source>Style sheet</source>
+    <target>Foaie de stiluri</target>
+</phrase>
+<phrase>
+    <source>StyleSheet</source>
+    <target>Foaie de stiluri</target>
+</phrase>
+<phrase>
+    <source>Submit</source>
+    <target>Trimite</target>
+</phrase>
+<phrase>
+    <source>Subwindow</source>
+    <target>Subferestre</target>
+</phrase>
+<phrase>
+    <source>Sunken</source>
+    <target>Scufundat</target>
+</phrase>
+<phrase>
+    <source>Support</source>
+    <target>Suport</target>
+</phrase>
+<phrase>
+    <source>Symlink</source>
+    <target>Legătură simbolică</target>
+</phrase>
+<phrase>
+    <source>Syriac</source>
+    <target>Siriacă</target>
+</phrase>
+<phrase>
+    <source>Table of Contents</source>
+    <target>Cuprins</target>
+</phrase>
+<phrase>
+    <source>The file %1 already exists. Do you want to overwrite it?</source>
+    <target>Fișierul %1 există deja. Doriți să îl suprascrieți?</target>
+</phrase>
+<phrase>
+    <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
+    <target>Programul este furnizat așa cum este, FĂRĂ NICIO GARANȚIE DE ORICE TIP, INCLUSIV GARANȚIA DE DESIGN, COMERCIALIZARE ȘI POTRIVIRE PENTRU UN SCOP ANUMIT.</target>
+</phrase>
+<phrase>
+    <source>This program is licensed</source>
+    <target>Acest program este licențiat</target>
+</phrase>
+<phrase>
+    <source>This version of</source>
+    <target>Această versiune a</target>
+</phrase>
+<phrase>
+    <source>Tile</source>
+    <target>Mozaic</target>
+</phrase>
+<phrase>
+    <source>Title:</source>
+    <target>Titlu:</target>
+</phrase>
+<phrase>
+    <source>Too many open files</source>
+    <target>Prea multe fișiere deschise</target>
+</phrase>
+<phrase>
+    <source>Tool tips</source>
+    <target>Indicii</target>
+</phrase>
+<phrase>
+    <source>ToolTip</source>
+    <target>Indiciu</target>
+</phrase>
+<phrase>
+    <source>ToolTips</source>
+    <target>Indicii</target>
+</phrase>
+<phrase>
+    <source>Toolbar</source>
+    <target>Bara de unelte</target>
+</phrase>
+<phrase>
+    <source>Toolbars</source>
+    <target>Bare de unelte</target>
+</phrase>
+<phrase>
+    <source>Toolbox</source>
+    <target>Trusă de unelte</target>
+</phrase>
+<phrase>
+    <source>True</source>
+    <target>Adevărat</target>
+</phrase>
+<phrase>
+    <source>Tune</source>
+    <target>Ajustează</target>
+</phrase>
+<phrase>
+    <source>Type</source>
+    <target>Tip</target>
+</phrase>
+<phrase>
+    <source>Underline</source>
+    <target>Subliniere</target>
+</phrase>
+<phrase>
+    <source>Undo</source>
+    <target>Anulează</target>
+</phrase>
+<phrase>
+    <source>Uninstall</source>
+    <target>Dezinstalează</target>
+</phrase>
+<phrase>
+    <source>Unknown</source>
+    <target>Necunoscut</target>
+</phrase>
+<phrase>
+    <source>Unknown error</source>
+    <target>Eroare necunoscută</target>
+</phrase>
+<phrase>
+    <source>Untitled</source>
+    <target>Fără titlu</target>
+</phrase>
+<phrase>
+    <source>Up</source>
+    <target>Sus</target>
+</phrase>
+<phrase>
+    <source>Update</source>
+    <target>Actualizează</target>
+</phrase>
+<phrase>
+    <source>User interface</source>
+    <target>Interfața cu utilizatorul</target>
+</phrase>
+<phrase>
+    <source>Username:</source>
+    <target>Nume utilizator:</target>
+</phrase>
+<phrase>
+    <source>Value</source>
+    <target>Valoare</target>
+</phrase>
+<phrase>
+    <source>View</source>
+    <target>Afișare</target>
+</phrase>
+<phrase>
+    <source>Warning</source>
+    <target>Avertisment</target>
+</phrase>
+<phrase>
+    <source>What&apos;s This?</source>
+    <target>Ce este acesta?</target>
+</phrase>
+<phrase>
+    <source>Whole &amp;words</source>
+    <target>Cuvinte &amp;întregi</target>
+</phrase>
+<phrase>
+    <source>Whole words</source>
+    <target>Cuvinte întregi</target>
+</phrase>
+<phrase>
+    <source>Whole words only</source>
+    <target>Doar cuvinte întregi</target>
+</phrase>
+<phrase>
+    <source>Widget</source>
+    <target>Control</target>
+</phrase>
+<phrase>
+    <source>Width:</source>
+    <target>Lățime:</target>
+</phrase>
+<phrase>
+    <source>Window</source>
+    <target>Fereastră</target>
+</phrase>
+<phrase>
+    <source>Windows Explorer</source>
+    <target>Windows Explorer</target>
+</phrase>
+<phrase>
+    <source>Working Directory:</source>
+    <target>Directorul de lucru:</target>
+</phrase>
+<phrase>
+    <source>Writing system</source>
+    <target>Sistem de scriere</target>
+</phrase>
+<phrase>
+    <source>Yes</source>
+    <target>Da</target>
+</phrase>
+<phrase>
+    <source>You need a commercial</source>
+    <target>Aveți nevoie de o licență comercială</target>
+</phrase>
+<phrase>
+    <source>Zoom</source>
+    <target>Zoom</target>
+</phrase>
+<phrase>
+    <source>Zoom in</source>
+    <target>Mărește</target>
+</phrase>
+<phrase>
+    <source>Zoom out</source>
+    <target>Micșorează</target>
+</phrase>
+<phrase>
+    <source>access key</source>
+    <target>tastă de acces</target>
+</phrase>
+<phrase>
+    <source>accessibility</source>
+    <target>accesibilitate</target>
+</phrase>
+<phrase>
+    <source>action handle</source>
+    <target>mâner de acțiune</target>
+</phrase>
+<phrase>
+    <source>active</source>
+    <target>activ</target>
+</phrase>
+<phrase>
+    <source>active end</source>
+    <target>extremitate activă</target>
+</phrase>
+<phrase>
+    <source>active object</source>
+    <target>obiect activ</target>
+</phrase>
+<phrase>
+    <source>active window</source>
+    <target>fereastră activă</target>
+</phrase>
+<phrase>
+    <source>adornment</source>
+    <target>ornament</target>
+</phrase>
+<phrase>
+    <source>advanced</source>
+    <target>avansat</target>
+</phrase>
+<phrase>
+    <source>anchor point</source>
+    <target>punct de ancorare</target>
+</phrase>
+<phrase>
+    <source>at line</source>
+    <target>la linia</target>
+</phrase>
+<phrase>
+    <source>author</source>
+    <target>autor</target>
+</phrase>
+<phrase>
+    <source>auto-exit</source>
+    <target>ieșire automată</target>
+</phrase>
+<phrase>
+    <source>auto-repeat</source>
+    <target>repetare automată</target>
+</phrase>
+<phrase>
+    <source>automatic link</source>
+    <target>legătură automată</target>
+</phrase>
+<phrase>
+    <source>automatic scrolling</source>
+    <target>derulare automată</target>
+</phrase>
+<phrase>
+    <source>autoscroll</source>
+    <target>derulare automată</target>
+</phrase>
+<phrase>
+    <source>barrel button</source>
+    <target>buton barilă</target>
+</phrase>
+<phrase>
+    <source>barrel-tap</source>
+    <target>atingere de barilă</target>
+</phrase>
+<phrase>
+    <source>bottom margin</source>
+    <target>marginea de jos</target>
+</phrase>
+<phrase>
+    <source>boxed edit</source>
+    <target>editare în casetă</target>
+</phrase>
+<phrase>
+    <source>cascading menu</source>
+    <target>meniu în cascadă</target>
+</phrase>
+<phrase>
+    <source>check box</source>
+    <target>căsuță de bifare</target>
+</phrase>
+<phrase>
+    <source>check mark</source>
+    <target>semn de bifare</target>
+</phrase>
+<phrase>
+    <source>child window</source>
+    <target>fereastră copil</target>
+</phrase>
+<phrase>
+    <source>choose</source>
+    <target>alege</target>
+</phrase>
+<phrase>
+    <source>click</source>
+    <target>clic</target>
+</phrase>
+<phrase>
+    <source>collapse</source>
+    <target>restrângere</target>
+</phrase>
+<phrase>
+    <source>column heading</source>
+    <target>antet de coloană</target>
+</phrase>
+<phrase>
+    <source>combo box</source>
+    <target>listă de selecție</target>
+</phrase>
+<phrase>
+    <source>command button</source>
+    <target>buton de comandă</target>
+</phrase>
+<phrase>
+    <source>container</source>
+    <target>container</target>
+</phrase>
+<phrase>
+    <source>context-sensitive Help</source>
+    <target>Ajutor sensibil la context</target>
+</phrase>
+<phrase>
+    <source>contextual</source>
+    <target>contextual</target>
+</phrase>
+<phrase>
+    <source>control</source>
+    <target>control</target>
+</phrase>
+<phrase>
+    <source>debugger</source>
+    <target>depanator</target>
+</phrase>
+<phrase>
+    <source>default</source>
+    <target>implicit</target>
+</phrase>
+<phrase>
+    <source>default button</source>
+    <target>buton implicit</target>
+</phrase>
+<phrase>
+    <source>desktop</source>
+    <target>suprafață de lucru</target>
+</phrase>
+<phrase>
+    <source>destination</source>
+    <target>destinație</target>
+</phrase>
+<phrase>
+    <source>dialog box</source>
+    <target>fereastră de dialog</target>
+</phrase>
+<phrase>
+    <source>directory</source>
+    <target>director</target>
+</phrase>
+<phrase>
+    <source>disability</source>
+    <target>deficiență</target>
+</phrase>
+<phrase>
+    <source>disjoint selection</source>
+    <target>selecție disjunsă</target>
+</phrase>
+<phrase>
+    <source>dock</source>
+    <target>doc</target>
+</phrase>
+<phrase>
+    <source>document</source>
+    <target>document</target>
+</phrase>
+<phrase>
+    <source>double-click</source>
+    <target>dublu clic</target>
+</phrase>
+<phrase>
+    <source>double-tap</source>
+    <target>dublu atins</target>
+</phrase>
+<phrase>
+    <source>drag</source>
+    <target>trage</target>
+</phrase>
+<phrase>
+    <source>drag-and-drop</source>
+    <target>trage și plasează</target>
+</phrase>
+<phrase>
+    <source>drop-down combo box</source>
+    <target>listă de selecție</target>
+</phrase>
+<phrase>
+    <source>drop-down list box</source>
+    <target>listă de selecție</target>
+</phrase>
+<phrase>
+    <source>drop-down menu</source>
+    <target>meniu derulant</target>
+</phrase>
+<phrase>
+    <source>ellipsis</source>
+    <target>puncte de suspensie</target>
+</phrase>
+<phrase>
+    <source>embedded object</source>
+    <target>obiect încorporat</target>
+</phrase>
+<phrase>
+    <source>encoding name</source>
+    <target>nume de codare</target>
+</phrase>
+<phrase>
+    <source>expand</source>
+    <target>expandare</target>
+</phrase>
+<phrase>
+    <source>extended selection</source>
+    <target>selecție extinsă</target>
+</phrase>
+<phrase>
+    <source>extended selection list box</source>
+    <target>listă de selecție extinsă</target>
+</phrase>
+<phrase>
+    <source>file</source>
+    <target>fișier</target>
+</phrase>
+<phrase>
+    <source>folder</source>
+    <target>dosar</target>
+</phrase>
+<phrase>
+    <source>font</source>
+    <target>font</target>
+</phrase>
+<phrase>
+    <source>font size</source>
+    <target>dimensiunea fontului</target>
+</phrase>
+<phrase>
+    <source>font style</source>
+    <target>stilul fontului</target>
+</phrase>
+<phrase>
+    <source>full text search</source>
+    <target>căutare în text integral</target>
+</phrase>
+<phrase>
+    <source>fulltext search</source>
+    <target>căutare în text integral</target>
+</phrase>
+<phrase>
+    <source>function key</source>
+    <target>tastă funcțională</target>
+</phrase>
+<phrase>
+    <source>gesture</source>
+    <target>gest</target>
+</phrase>
+<phrase>
+    <source>glyph</source>
+    <target>glifă</target>
+</phrase>
+<phrase>
+    <source>group box</source>
+    <target>căsuță de grup</target>
+</phrase>
+<phrase>
+    <source>handle</source>
+    <target>mâner</target>
+</phrase>
+<phrase>
+    <source>hierarchical selection</source>
+    <target>selecție ierarhică</target>
+</phrase>
+<phrase>
+    <source>hold</source>
+    <target>ține apăsat</target>
+</phrase>
+<phrase>
+    <source>hot spot</source>
+    <target>punct fierbinte</target>
+</phrase>
+<phrase>
+    <source>hot zone</source>
+    <target>zonă fierbinte</target>
+</phrase>
+<phrase>
+    <source>icon</source>
+    <target>pictogramă</target>
+</phrase>
+<phrase>
+    <source>inactive</source>
+    <target>inactiv</target>
+</phrase>
+<phrase>
+    <source>inactive window</source>
+    <target>fereastra inactivă</target>
+</phrase>
+<phrase>
+    <source>ink</source>
+    <target>cerneală</target>
+</phrase>
+<phrase>
+    <source>ink edit</source>
+    <target>editare în cerneală</target>
+</phrase>
+<phrase>
+    <source>input focus</source>
+    <target>focalizarea intrării</target>
+</phrase>
+<phrase>
+    <source>insertion point</source>
+    <target>punct de inserare</target>
+</phrase>
+<phrase>
+    <source>is missing</source>
+    <target>lipsește</target>
+</phrase>
+<phrase>
+    <source>italic</source>
+    <target>cursiv</target>
+</phrase>
+<phrase>
+    <source>label</source>
+    <target>etichetă</target>
+</phrase>
+<phrase>
+    <source>landscape</source>
+    <target>peisaj</target>
+</phrase>
+<phrase>
+    <source>lasso-tap</source>
+    <target>atingere cu lasou</target>
+</phrase>
+<phrase>
+    <source>layout</source>
+    <target>aranjament</target>
+</phrase>
+<phrase>
+    <source>left margin</source>
+    <target>marginea din stânga</target>
+</phrase>
+<phrase>
+    <source>lens</source>
+    <target>lentilă</target>
+</phrase>
+<phrase>
+    <source>link</source>
+    <target>legătură</target>
+</phrase>
+<phrase>
+    <source>list box</source>
+    <target>listă</target>
+</phrase>
+<phrase>
+    <source>list view</source>
+    <target>vizualizare listă</target>
+</phrase>
+<phrase>
+    <source>literal</source>
+    <target>literal</target>
+</phrase>
+<phrase>
+    <source>manual link</source>
+    <target>legătură manuală</target>
+</phrase>
+<phrase>
+    <source>maximize button</source>
+    <target>buton de maximizare</target>
+</phrase>
+<phrase>
+    <source>menu</source>
+    <target>meniu</target>
+</phrase>
+<phrase>
+    <source>menu bar</source>
+    <target>bara de meniu</target>
+</phrase>
+<phrase>
+    <source>menu button</source>
+    <target>buton de meniu</target>
+</phrase>
+<phrase>
+    <source>menu item</source>
+    <target>element de meniu</target>
+</phrase>
+<phrase>
+    <source>menu title</source>
+    <target>titlul meniului</target>
+</phrase>
+<phrase>
+    <source>message box</source>
+    <target>fereastră de mesaj</target>
+</phrase>
+<phrase>
+    <source>minimize button</source>
+    <target>buton de minimizare</target>
+</phrase>
+<phrase>
+    <source>mixed-value</source>
+    <target>valoare mixtă</target>
+</phrase>
+<phrase>
+    <source>modal</source>
+    <target>modal</target>
+</phrase>
+<phrase>
+    <source>mode</source>
+    <target>mod</target>
+</phrase>
+<phrase>
+    <source>modeless</source>
+    <target>nemodal</target>
+</phrase>
+<phrase>
+    <source>modifier key</source>
+    <target>tastă modificatoare</target>
+</phrase>
+<phrase>
+    <source>mouse</source>
+    <target>maus</target>
+</phrase>
+<phrase>
+    <source>multiple selection list box</source>
+    <target>listă de selecție multiplă</target>
+</phrase>
+<phrase>
+    <source>object</source>
+    <target>obiect</target>
+</phrase>
+<phrase>
+    <source>option button</source>
+    <target>buton de opțiune</target>
+</phrase>
+<phrase>
+    <source>option-set</source>
+    <target>set de opțiuni</target>
+</phrase>
+<phrase>
+    <source>package</source>
+    <target>pachet</target>
+</phrase>
+<phrase>
+    <source>palette window</source>
+    <target>fereastră de palete</target>
+</phrase>
+<phrase>
+    <source>pane</source>
+    <target>panou</target>
+</phrase>
+<phrase>
+    <source>parent window</source>
+    <target>fereastra părinte</target>
+</phrase>
+<phrase>
+    <source>parse</source>
+    <target>analizează</target>
+</phrase>
+<phrase>
+    <source>parsing</source>
+    <target>analizare</target>
+</phrase>
+<phrase>
+    <source>password</source>
+    <target>parolă</target>
+</phrase>
+<phrase>
+    <source>path</source>
+    <target>cale</target>
+</phrase>
+<phrase>
+    <source>pen</source>
+    <target>stilou</target>
+</phrase>
+<phrase>
+    <source>phrase book</source>
+    <target>carte de expresii</target>
+</phrase>
+<phrase>
+    <source>phrasebook</source>
+    <target>carte de expresii</target>
+</phrase>
+<phrase>
+    <source>plugin</source>
+    <target>modul</target>
+</phrase>
+<phrase>
+    <source>point</source>
+    <target>punct</target>
+</phrase>
+<phrase>
+    <source>pointer</source>
+    <target>indicator</target>
+</phrase>
+<phrase>
+    <source>pop-up menu</source>
+    <target>meniu contextual</target>
+</phrase>
+<phrase>
+    <source>pop-up window</source>
+    <target>fereastră contextuală</target>
+</phrase>
+<phrase>
+    <source>portrait</source>
+    <target>portret</target>
+</phrase>
+<phrase>
+    <source>press</source>
+    <target>apasare</target>
+</phrase>
+<phrase>
+    <source>press a mouse botton</source>
+    <target>apasare buton de maus</target>
+</phrase>
+<phrase>
+    <source>primary container</source>
+    <target>container primar</target>
+</phrase>
+<phrase>
+    <source>primary window</source>
+    <target>fereastră principală</target>
+</phrase>
+<phrase>
+    <source>printer</source>
+    <target>imprimantă</target>
+</phrase>
+<phrase>
+    <source>progress indicator</source>
+    <target>indicator de progres</target>
+</phrase>
+<phrase>
+    <source>project</source>
+    <target>proiect</target>
+</phrase>
+<phrase>
+    <source>property inspector</source>
+    <target>inspector de proprietăți</target>
+</phrase>
+<phrase>
+    <source>property page</source>
+    <target>pagina proprietăților</target>
+</phrase>
+<phrase>
+    <source>property sheet</source>
+    <target>foaia proprietăților</target>
+</phrase>
+<phrase>
+    <source>property sheet control</source>
+    <target>controlul foii de proprietăți</target>
+</phrase>
+<phrase>
+    <source>read-only</source>
+    <target>doar citire</target>
+</phrase>
+<phrase>
+    <source>recognition</source>
+    <target>recunoaștere</target>
+</phrase>
+<phrase>
+    <source>region selection</source>
+    <target>selecție de regiune</target>
+</phrase>
+<phrase>
+    <source>registry</source>
+    <target>registru</target>
+</phrase>
+<phrase>
+    <source>rich-text box</source>
+    <target>căsuță de text bogat</target>
+</phrase>
+<phrase>
+    <source>right margin</source>
+    <target>marginea din dreapta</target>
+</phrase>
+<phrase>
+    <source>script</source>
+    <target>script</target>
+</phrase>
+<phrase>
+    <source>scroll</source>
+    <target>derulare</target>
+</phrase>
+<phrase>
+    <source>scroll arrow</source>
+    <target>săgeata de derulare</target>
+</phrase>
+<phrase>
+    <source>scroll bar</source>
+    <target>bara de derulare</target>
+</phrase>
+<phrase>
+    <source>scroll box</source>
+    <target>căsuța de derulare</target>
+</phrase>
+<phrase>
+    <source>search word</source>
+    <target>cuvântul căutat</target>
+</phrase>
+<phrase>
+    <source>searchword</source>
+    <target>cuvântul căutat</target>
+</phrase>
+<phrase>
+    <source>secondary window</source>
+    <target>fereastra secundară</target>
+</phrase>
+<phrase>
+    <source>select</source>
+    <target>selectează</target>
+</phrase>
+<phrase>
+    <source>selection</source>
+    <target>selecție</target>
+</phrase>
+<phrase>
+    <source>selection handle</source>
+    <target>mâner de selecție</target>
+</phrase>
+<phrase>
+    <source>separator</source>
+    <target>separator</target>
+</phrase>
+<phrase>
+    <source>shortcut</source>
+    <target>scurtătură</target>
+</phrase>
+<phrase>
+    <source>shortcut button</source>
+    <target>buton de scurtătură</target>
+</phrase>
+<phrase>
+    <source>shortcut icon</source>
+    <target>pictograma de scurtătură</target>
+</phrase>
+<phrase>
+    <source>shortcut key</source>
+    <target>combinație de taste</target>
+</phrase>
+<phrase>
+    <source>shortcut key control</source>
+    <target>controlul combinației de taste</target>
+</phrase>
+<phrase>
+    <source>single selection list box</source>
+    <target>listă de selecție simplă</target>
+</phrase>
+<phrase>
+    <source>size grip</source>
+    <target>mâner de redimensionare</target>
+</phrase>
+<phrase>
+    <source>slider</source>
+    <target>glisor</target>
+</phrase>
+<phrase>
+    <source>spacer</source>
+    <target>spațiu</target>
+</phrase>
+<phrase>
+    <source>spin box</source>
+    <target>căsuță de valori</target>
+</phrase>
+<phrase>
+    <source>split bar</source>
+    <target>bara de separare</target>
+</phrase>
+<phrase>
+    <source>split box</source>
+    <target>căsuța de separare</target>
+</phrase>
+<phrase>
+    <source>status bar</source>
+    <target>bara de stare</target>
+</phrase>
+<phrase>
+    <source>subsidiary(-ies)</source>
+    <target>secundar(-i)</target>
+</phrase>
+<phrase>
+    <source>superfluous</source>
+    <target>superfluu</target>
+</phrase>
+<phrase>
+    <source>supported</source>
+    <target>suportat</target>
+</phrase>
+<phrase>
+    <source>tab control</source>
+    <target>control de file</target>
+</phrase>
+<phrase>
+    <source>tab order</source>
+    <target>ordinea filelor</target>
+</phrase>
+<phrase>
+    <source>tabbar</source>
+    <target>bara de file</target>
+</phrase>
+<phrase>
+    <source>tag</source>
+    <target>etichetă</target>
+</phrase>
+<phrase>
+    <source>tap</source>
+    <target>atingere</target>
+</phrase>
+<phrase>
+    <source>task bar</source>
+    <target>bara de sarcini</target>
+</phrase>
+<phrase>
+    <source>task-oriented Help</source>
+    <target>Ajutor orientat pe sarcini</target>
+</phrase>
+<phrase>
+    <source>template</source>
+    <target>șablon</target>
+</phrase>
+<phrase>
+    <source>text box</source>
+    <target>căsuță de text</target>
+</phrase>
+<phrase>
+    <source>title bar</source>
+    <target>bara de titlu</target>
+</phrase>
+<phrase>
+    <source>title text</source>
+    <target>textul titlului</target>
+</phrase>
+<phrase>
+    <source>to display</source>
+    <target>pentru afișare</target>
+</phrase>
+<phrase>
+    <source>toggle key</source>
+    <target>tastă de comutare</target>
+</phrase>
+<phrase>
+    <source>toolbar</source>
+    <target>bara de unelte</target>
+</phrase>
+<phrase>
+    <source>tooltip</source>
+    <target>indiciu</target>
+</phrase>
+<phrase>
+    <source>top margin</source>
+    <target>marginea de sus</target>
+</phrase>
+<phrase>
+    <source>tree view</source>
+    <target>vizualizare arborescentă</target>
+</phrase>
+<phrase>
+    <source>tree view control</source>
+    <target>controlul vizualizării arborescente</target>
+</phrase>
+<phrase>
+    <source>type</source>
+    <target>tip</target>
+</phrase>
+<phrase>
+    <source>unavailable</source>
+    <target>indisponibil</target>
+</phrase>
+<phrase>
+    <source>unknown</source>
+    <target>necunoscut</target>
+</phrase>
+<phrase>
+    <source>unsupported</source>
+    <target>nesuportat</target>
+</phrase>
+<phrase>
+    <source>visual editing</source>
+    <target>editare vizuală</target>
+</phrase>
+<phrase>
+    <source>well control</source>
+    <target>control de puț</target>
+</phrase>
+<phrase>
+    <source>whitespace</source>
+    <target>spațiu alb</target>
+</phrase>
+<phrase>
+    <source>window</source>
+    <target>fereastră</target>
+</phrase>
+<phrase>
+    <source>wizard</source>
+    <target>asistent</target>
+</phrase>
+<phrase>
+    <source>workbook</source>
+    <target>fișier de lucru</target>
+</phrase>
+<phrase>
+    <source>workgroup</source>
+    <target>grup de lucru</target>
+</phrase>
+<phrase>
+    <source>workspace</source>
+    <target>spațiu de lucru</target>
+</phrase>
+</QPH>
