@@ -429,11 +429,13 @@ void Config::reset()
     };
 #define SET(opt, test) setListFlag(opt, m_parser.isSet(m_parser.test))
     SET(CONFIG_SYNTAXHIGHLIGHTING, highlightingOption);
-    SET(CONFIG_SHOWINTERNAL, showInternalOption);
     SET(CONFIG_SINGLEEXEC, singleExecOption);
     SET(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, redirectDocumentationToDevNullOption);
     SET(CONFIG_AUTOLINKERRORS, autoLinkErrorsOption);
 #undef SET
+    setListFlag(CONFIG_SHOWINTERNAL,
+                m_parser.isSet(m_parser.showInternalOption)
+                        || qEnvironmentVariableIsSet("QDOC_SHOW_INTERNAL"));
     m_showInternal = m_configVars.value(CONFIG_SHOWINTERNAL).asBool();
     setListFlag(CONFIG_NOLINKERRORS,
                 m_parser.isSet(m_parser.noLinkErrorsOption)

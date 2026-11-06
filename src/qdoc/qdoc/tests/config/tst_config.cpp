@@ -293,6 +293,34 @@ void::tst_Config::showInternalPrecedence()
         QCOMPARE(config.showInternal(), true);
         QCOMPARE(config.get(CONFIG_SHOWINTERNAL).asBool(), true);
     }
+
+    qputenv("QDOC_SHOW_INTERNAL", "1");
+    const auto unsetShowInternal = qScopeGuard([] { qunsetenv("QDOC_SHOW_INTERNAL"); });
+
+    // Test 6: No config file, QDOC_SHOW_INTERNAL is set
+    {
+        auto &config = initConfig();
+
+        QCOMPARE(config.showInternal(), true);
+        QCOMPARE(config.get(CONFIG_SHOWINTERNAL).asBool(), true);
+    }
+
+    // Test 7: Config file sets showinternal=false, QDOC_SHOW_INTERNAL is set
+    {
+        auto &config = initConfig("/testdata/configs/showinternal_false.qdocconf");
+
+        // The environment variable should override the config file
+        QCOMPARE(config.showInternal(), true);
+        QCOMPARE(config.get(CONFIG_SHOWINTERNAL).asBool(), false);
+    }
+
+    // Test 8: Config file sets showinternal=true, QDOC_SHOW_INTERNAL is set
+    {
+        auto &config = initConfig("/testdata/configs/showinternal_true.qdocconf");
+
+        QCOMPARE(config.showInternal(), true);
+        QCOMPARE(config.get(CONFIG_SHOWINTERNAL).asBool(), true);
+    }
 }
 
 void tst_Config::parseCppCommentsPrecedence()
