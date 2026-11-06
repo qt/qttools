@@ -48,6 +48,8 @@ if(TARGET qlitehtml)
     if(TARGET litehtml)
         qt_internal_set_exceptions_flags(litehtml OFF)
         qt_disable_warnings(litehtml)
+        # litehtml has proven to have issues with unity builds
+        set_target_properties(litehtml PROPERTIES UNITY_BUILD OFF)
     endif()
     if(TARGET gumbo)
         qt_disable_warnings(gumbo)
