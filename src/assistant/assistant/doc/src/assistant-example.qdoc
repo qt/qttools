@@ -3,7 +3,6 @@
 
 /*!
     \group examples-qtassistant
-    \ingroup all-examples
     \title Qt Assistant Examples
     \brief Using Qt Assistant as a help viewer for  Qt applications.
 
