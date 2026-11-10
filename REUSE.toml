@@ -24,6 +24,20 @@ SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
 SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only"
 
 [[annotations]]
+path = ["src/assistant/qlitehtml/**"]
+comment = "for non-git source-tarball builds, specify license and copyright explicitly"
+precedence = "closest"
+SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"
+
+[[annotations]]
+path = ["src/assistant/qlitehtml/src/3rdparty/**"]
+comment = "for non-git source-tarball builds, specify license and copyright explicitly"
+precedence = "closest"
+SPDX-FileCopyrightText = "Copyright (c) 2013, Yuri Kobets (tordex)"
+SPDX-License-Identifier = "BSD-3-Clause"
+
+[[annotations]]
 path = ["src/designer/**"]
 precedence = "closest"
 comment = "tools, according to licenseRule.json"
@@ -82,14 +96,16 @@ SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only"
 [[annotations]]
 path = ["**.pro", "**.qrc", "**CMakeLists.txt", ".cmake.conf", "**.yaml",
         "coin/axivion/ci_config_linux.json",
-        "**.cfg", "**.plist", "**.pri", "**.prf", ".tag"]
+        "**.cfg", "**.plist", "**.pri", "**.prf", ".tag",
+        "src/assistant/qlitehtml/.tag"]
 precedence = "closest"
 comment = "build system"
 SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
 SPDX-License-Identifier = "BSD-3-Clause"
 
 [[annotations]]
-path = ["**/.gitattributes", "**.gitignore", ".gitmodules", "**.gitreview"]
+path = ["**/.gitattributes", "**.gitignore", ".gitmodules", "**.gitreview",
+        "src/assistant/qlitehtml/.gitmodules", "src/assistant/qlitehtml/.clang-format"]
 precedence = "closest"
 comment = "version control system. Infrastructure"
 SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
