@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 qt_internal_add_test(tst_QDoc_Catch_Generators
+  CATCH
   SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/generators/catch_qchar_generator.cpp
