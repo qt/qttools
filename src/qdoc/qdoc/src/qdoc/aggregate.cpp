@@ -568,8 +568,7 @@ void Aggregate::addChildByTitle(Node *child, const QString &title)
 
 /*!
   Adds the \a child to this node's child list and sets the child's
-  parent pointer to this Aggregate. It then mounts the child with
-  mountChild().
+  parent pointer to this Aggregate.
 
   The \a child is then added to this Aggregate's searchable maps
   and lists.
@@ -581,8 +580,6 @@ void Aggregate::addChildByTitle(Node *child, const QString &title)
   the Aggregate that is it's old parent. But the child will
   only have one parent, and it will be this Aggregate. The is
   because of the \c relates command.
-
-  \sa mountChild(), dismountChild()
  */
 void Aggregate::addChild(Node *child)
 {
