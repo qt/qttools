@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>PrecedenceProbe Class</db:title>
+<db:subtitle>template &lt;typename T&gt; class PrecedenceProbe</db:subtitle>
+<db:productname>HiddenFriendsSemantic</db:productname>
+<db:titleabbrev>HiddenFriendsSemantic Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>An exact genuine-template precedence control.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>probe.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>The <db:code role="parameter">T</db:code> parameter is a type.</db:para>
+</db:section>
+<db:section xml:id="related-non-members">
+<db:title>Related Non-Members</db:title>
+<db:section xml:id="precedenceCheck">
+<db:title>[noexcept] template &lt;typename T&gt; void precedenceCheck(PrecedenceProbe&lt;T&gt; &amp;<db:emphasis>a</db:emphasis>)</db:title>
+<db:para>Required genuine-template precedence marker. Checks <db:code role="parameter">a</db:code>.</db:para>
+</db:section>
+<db:section xml:id="precedenceValueCheck">
+<db:title>[noexcept] template &lt;typename T&gt; void precedenceValueCheck(PrecedenceProbe&lt;T&gt; &amp;<db:emphasis>a</db:emphasis>, T <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Required bare-parameter template-precedence marker. Checks <db:code role="parameter">a</db:code> and <db:code role="parameter">value</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="PlaceholderProbe" href="placeholderprobe.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="HiddenFriendsSemanticReject" brief="A concrete type identity probe">
+            <description>
+                <brief>A concrete type identity probe.</brief>
+                <para>The <argument>T</argument> parameter is a type.</para>
+            </description>
+        </class>
+    </document>
+</WebXML>

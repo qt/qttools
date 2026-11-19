@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="ReuseStore" href="reusestore.html" status="active" access="public" location="reuse.h" documented="true" includefile="reuse.h" module="HiddenFriendsClassTemplate" brief="A two-parameter template class documented with reused parameter names">
+            <description>
+                <brief>A two-parameter template class documented with reused parameter names.</brief>
+                <para>The <argument>A</argument> and <argument>B</argument> parameters specify the key and value types.</para>
+            </description>
+            <function name="reuseCheck" href="reusestore.html#reuseCheck" status="active" access="public" location="reuse.h" documented="true" related="9" meta="plain" hidden-friend="true" noexcept="true" type="void" signature="void reuseCheck(ReuseStore&lt;A, B&gt; &amp;a, A key)">
+                <parameter type="ReuseStore&lt;A, B&gt; &amp;" name="a" default=""/>
+                <parameter type="A" name="key" default=""/>
+                <description>
+                    <para>Reused name binding marker. Checks <argument>a</argument> using <argument>key</argument>. The documentation reuses the class's parameter names in reversed declaration order while keeping the argument bindings consistent, so it documents the hidden friend.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

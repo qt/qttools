@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="DedupControl" href="dedupcontrol.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="HiddenFriendsSemantic" brief="A repeated header declaration control">
+            <description>
+                <brief>A repeated header declaration control.</brief>
+                <para>The <argument>T</argument> parameter is a type.</para>
+            </description>
+            <function name="dedupCheck" href="dedupcontrol.html#dedupCheck" status="active" access="public" location="probe.h" documented="true" related="6" meta="plain" hidden-friend="true" type="void" signature="void dedupCheck(DedupControl&lt;T&gt; &amp;a, T &amp;b)">
+                <parameter type="DedupControl&lt;T&gt; &amp;" name="a" default=""/>
+                <parameter type="T &amp;" name="b" default=""/>
+                <description>
+                    <para>Required declaration-deduplication marker. Checks <argument>a</argument> and <argument>b</argument>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

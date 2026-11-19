@@ -21,6 +21,7 @@ qt_internal_add_test(tst_QDoc
         filesystem/catch_fileresolver.cpp
         node/catch_genustypes.cpp
         node/catch_findflags.cpp
+        fnlookup/catch_fnlookupresult.cpp
         inclusion/catch_inclusionstrategytests.cpp
         outputproducerregistry/catch_outputproducerregistry.cpp
         ../../src/qdoc/boundaries/filesystem/filepath.cpp
@@ -89,3 +90,20 @@ qt_internal_extend_target(tst_QDoc
         QDOC_TEMPLATE_GENERATOR_ENABLED
         QDOC_TEMPLATE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../../src/qdoc/templates"
 )
+
+if(TARGET WrapLibClang::WrapLibClang)
+    qt_internal_extend_target(tst_QDoc
+        SOURCES
+            fnlookup/catch_hiddenfriendtypekey.cpp
+            ../../src/qdoc/hiddenfriendtypekey.cpp
+        LIBRARIES
+            WrapLibClang::WrapLibClang
+            clangTooling
+        DEFINES
+            QT_NO_KEYWORDS
+            LIBCLANG_VERSION_MAJOR=${QT_LIB_CLANG_VERSION_MAJOR}
+    )
+
+    # Like the qdoc tool, link the provisioned static Clang libraries without -fPIE.
+    set_target_properties(tst_QDoc PROPERTIES POSITION_INDEPENDENT_CODE FALSE)
+endif()

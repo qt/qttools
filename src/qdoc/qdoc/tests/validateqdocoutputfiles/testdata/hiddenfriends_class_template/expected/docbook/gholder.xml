@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>GHolder Class</db:title>
+<db:productname>HiddenFriendsClassTemplate</db:productname>
+<db:titleabbrev>Test case for documenting non-template hidden friends in class templates</db:titleabbrev>
+<db:abstract>
+<db:para>A non-template class with a genuine friend function template.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>gfriend.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="related-non-members">
+<db:title>Related Non-Members</db:title>
+<db:section xml:id="gfriend">
+<db:title>[noexcept] template &lt;typename Other&gt; void gfriend(GHolder &amp;<db:emphasis>a</db:emphasis>, Other &amp;<db:emphasis>b</db:emphasis>)</db:title>
+<db:para>Genuine friend function template marker.</db:para>
+<db:para><db:code role="parameter">a</db:code>: The holder. <db:code role="parameter">b</db:code>: The other object.</db:para>
+</db:section>
+</db:section>
+</db:article>

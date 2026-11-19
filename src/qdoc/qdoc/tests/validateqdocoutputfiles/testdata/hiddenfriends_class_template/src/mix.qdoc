@@ -1,0 +1,23 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \class Mixture
+    \inmodule HiddenFriendsClassTemplate
+    \brief A template class with a hidden friend that shares its name with a free function template.
+
+    The \a M parameter specifies the element type.
+*/
+
+/*!
+    \fn template <typename M> void mix(Mixture<M> &a, Mixture<M> &b) noexcept
+
+    Mixture hidden-friend mix marker.
+*/
+
+/*!
+    \fn template <typename A, typename U> void mix(A &a, U &b) noexcept
+    \relates Mixture
+
+    Mixes \a a and \a b. Generic free template mix marker.
+*/

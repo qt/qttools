@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="CrossTarget" href="crosstarget.html" status="active" access="public" location="cross.h" documented="true" includefile="cross.h" module="HiddenFriendsClassTemplate" brief="A non-template class that hosts the crossCheck documentation">
+            <description>
+                <brief>A non-template class that hosts the <link raw="crossCheck" href="crosstarget.html#crossCheck" type="function">crossCheck</link> documentation.</brief>
+            </description>
+            <function name="CrossTarget" fullname="CrossTarget::CrossTarget" href="crosstarget.html#CrossTarget" status="active" access="public" location="cross.h" documented="true" auto-generated="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="CrossTarget()">
+                <description>
+                    <para>Default-constructs an instance of <teletype>CrossTarget</teletype>.</para>
+                </description>
+            </function>
+            <function name="crossCheck" href="crosstarget.html#crossCheck" status="active" access="public" location="cross.h" documented="true" related="0" meta="plain" hidden-friend="true" noexcept="true" type="void" signature="void crossCheck(CrossThing&lt;T&gt; &amp;a, CrossThing&lt;T&gt; &amp;b)">
+                <parameter type="CrossThing&lt;T&gt; &amp;" name="a" default=""/>
+                <parameter type="CrossThing&lt;T&gt; &amp;" name="b" default=""/>
+                <description>
+                    <para>Checks <argument>a</argument> against <argument>b</argument>. Cross-target relates marker.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

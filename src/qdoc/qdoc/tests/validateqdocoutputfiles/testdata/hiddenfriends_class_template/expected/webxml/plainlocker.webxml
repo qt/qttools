@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="PlainLocker" href="plainlocker.html" status="active" access="public" location="locker.h" documented="true" includefile="locker.h" module="HiddenFriendsClassTemplate" brief="A minimal locker template">
+            <description>
+                <brief>A minimal locker template.</brief>
+                <para>The <argument>Mutex</argument> parameter specifies the mutex type.</para>
+            </description>
+            <function name="swap" href="plainlocker.html#swap" status="active" access="public" location="locker.h" documented="true" related="3" meta="plain" hidden-friend="true" noexcept="true" type="void" signature="void swap(PlainLocker&lt;Mutex&gt; &amp;lhs, PlainLocker&lt;Mutex&gt; &amp;rhs)">
+                <parameter type="PlainLocker&lt;Mutex&gt; &amp;" name="lhs" default=""/>
+                <parameter type="PlainLocker&lt;Mutex&gt; &amp;" name="rhs" default=""/>
+                <description>
+                    <para>Swaps <argument>lhs</argument> and <argument>rhs</argument>. Out-of-line hidden-friend resolution marker.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

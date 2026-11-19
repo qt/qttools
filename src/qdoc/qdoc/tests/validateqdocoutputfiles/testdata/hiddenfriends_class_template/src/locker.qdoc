@@ -1,0 +1,21 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \module HiddenFriendsClassTemplate
+    \brief Module for class-template hidden-friend resolution tests.
+*/
+
+/*!
+    \class PlainLocker
+    \inmodule HiddenFriendsClassTemplate
+    \brief A minimal locker template.
+
+    The \a Mutex parameter specifies the mutex type.
+*/
+
+/*!
+    \fn template <typename Mutex> void swap(PlainLocker<Mutex> &lhs, PlainLocker<Mutex> &rhs) noexcept
+
+    Swaps \a lhs and \a rhs. Out-of-line hidden-friend resolution marker.
+*/

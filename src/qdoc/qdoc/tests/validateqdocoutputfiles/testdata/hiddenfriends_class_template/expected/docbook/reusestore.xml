@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>ReuseStore Class</db:title>
+<db:subtitle>template &lt;typename A, typename B&gt; class ReuseStore</db:subtitle>
+<db:productname>HiddenFriendsClassTemplate</db:productname>
+<db:titleabbrev>Test case for documenting non-template hidden friends in class templates</db:titleabbrev>
+<db:abstract>
+<db:para>A two-parameter template class documented with reused parameter names.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>reuse.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>The <db:code role="parameter">A</db:code> and <db:code role="parameter">B</db:code> parameters specify the key and value types.</db:para>
+</db:section>
+<db:section xml:id="related-non-members">
+<db:title>Related Non-Members</db:title>
+<db:section xml:id="reuseCheck">
+<db:title>[noexcept] void reuseCheck(ReuseStore&lt;A, B&gt; &amp;<db:emphasis>a</db:emphasis>, A <db:emphasis>key</db:emphasis>)</db:title>
+<db:para>Reused name binding marker. Checks <db:code role="parameter">a</db:code> using <db:code role="parameter">key</db:code>. The documentation reuses the class's parameter names in reversed declaration order while keeping the argument bindings consistent, so it documents the hidden friend.</db:para>
+</db:section>
+</db:section>
+</db:article>

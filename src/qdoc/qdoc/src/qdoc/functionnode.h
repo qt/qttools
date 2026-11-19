@@ -8,6 +8,7 @@
 #include "node.h"
 #include "parameters.h"
 
+#include <QtCore/qbytearray.h>
 #include <QtCore/qglobal.h>
 #include <QtCore/qstring.h>
 
@@ -78,6 +79,12 @@ public:
 
     void setHiddenFriend(bool b) { m_hiddenFriend = b; }
     [[nodiscard]] bool isHiddenFriend() const { return m_hiddenFriend; }
+
+    // Owned lookup metadata, independent of the Clang translation unit.
+    const QList<QByteArray> &templateParameterTypeKeys() const { return m_templateParameterTypeKeys; }
+    void setTemplateParameterTypeKeys(QList<QByteArray> keys) { m_templateParameterTypeKeys = std::move(keys); }
+    const QByteArray &templateParameterKey() const { return m_templateParameterKey; }
+    void setTemplateParameterKey(QByteArray key) { m_templateParameterKey = std::move(key); }
 
     void setTrailingRequiresClause(const QString &clause) {
         if (clause.isEmpty())
@@ -208,6 +215,8 @@ private:
     QString m_tag {};
     QList<PropertyNode *> m_associatedProperties {};
     Parameters m_parameters {};
+    QList<QByteArray> m_templateParameterTypeKeys;
+    QByteArray m_templateParameterKey;
 };
 
 QT_END_NAMESPACE

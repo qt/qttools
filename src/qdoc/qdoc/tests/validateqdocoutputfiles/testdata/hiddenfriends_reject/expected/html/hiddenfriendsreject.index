@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for rejecting false hidden-friend matches in class templates" version="" project="HiddenFriendsReject">
+    <namespace name="" status="active" access="public" module="hiddenfriendsreject">
+        <class name="BindingProbe" href="bindingprobe.html" status="active" access="public" location="binding.h" documented="true" includefile="binding.h" module="HiddenFriendsReject" brief="A two-parameter template class with an asymmetric hidden friend"/>
+        <class name="QualifiedProbe" href="qualifiedprobe.html" status="active" access="public" location="qualified.h" documented="true" includefile="qualified.h" module="HiddenFriendsReject" brief="A template class whose hidden friend takes a fixed qualified type"/>
+        <module name="HiddenFriendsReject" href="hiddenfriendsreject-module.html" status="active" location="qualified.qdoc" documented="true" seen="true" brief="Module for rejected class-template hidden-friend \fn commands"/>
+    </namespace>
+</INDEX>

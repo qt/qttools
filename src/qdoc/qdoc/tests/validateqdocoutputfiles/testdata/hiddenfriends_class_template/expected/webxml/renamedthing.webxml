@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="RenamedThing" href="renamedthing.html" status="active" access="public" location="renamed.h" documented="true" includefile="renamed.h" module="HiddenFriendsClassTemplate" brief="A template class whose template parameter is renamed in the documentation">
+            <description>
+                <brief>A template class whose template parameter is renamed in the documentation.</brief>
+                <para>The <argument>T</argument> parameter specifies the element type.</para>
+            </description>
+            <function name="resetThing" href="renamedthing.html#resetThing" status="active" access="public" location="renamed.h" documented="true" related="8" meta="plain" hidden-friend="true" noexcept="true" type="void" signature="void resetThing(RenamedThing&lt;T&gt; &amp;lhs)">
+                <parameter type="RenamedThing&lt;T&gt; &amp;" name="lhs" default=""/>
+                <description>
+                    <para>Resets <argument>lhs</argument>. Renamed template parameter marker.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

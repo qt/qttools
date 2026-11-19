@@ -1,0 +1,30 @@
+project = HiddenFriendsReject
+description = Test case for rejecting false hidden-friend matches in class templates
+
+outputformats             = HTML WebXML DocBook
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+locationinfo = false
+
+sources.fileextensions = "*.qdoc *.cpp"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+# The \fn commands in this project deliberately describe functions that do
+# not exist: a fixed qualified type that merely shares a name with a
+# template parameter, and an inconsistent positional binding. The commands
+# must be rejected, so the declared hidden friends remain undocumented.
+documentationinheaders = false
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>DedupControl Class</db:title>
+<db:subtitle>template &lt;typename T&gt; class DedupControl</db:subtitle>
+<db:productname>HiddenFriendsSemantic</db:productname>
+<db:titleabbrev>HiddenFriendsSemantic Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A repeated header declaration control.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>probe.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>The <db:code role="parameter">T</db:code> parameter is a type.</db:para>
+</db:section>
+<db:section xml:id="related-non-members">
+<db:title>Related Non-Members</db:title>
+<db:section xml:id="dedupCheck">
+<db:title>void dedupCheck(DedupControl&lt;T&gt; &amp;<db:emphasis>a</db:emphasis>, T &amp;<db:emphasis>b</db:emphasis>)</db:title>
+<db:para>Required declaration-deduplication marker. Checks <db:code role="parameter">a</db:code> and <db:code role="parameter">b</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

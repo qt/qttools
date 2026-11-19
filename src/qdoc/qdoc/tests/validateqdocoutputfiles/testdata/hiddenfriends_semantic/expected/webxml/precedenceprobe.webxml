@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="PrecedenceProbe" href="precedenceprobe.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="HiddenFriendsSemantic" brief="An exact genuine-template precedence control">
+            <description>
+                <brief>An exact genuine-template precedence control.</brief>
+                <para>The <argument>T</argument> parameter is a type.</para>
+            </description>
+            <function name="precedenceCheck" href="precedenceprobe.html#precedenceCheck" status="active" access="public" location="probe.h" documented="true" related="4" meta="plain" noexcept="true" type="void" signature="void precedenceCheck(PrecedenceProbe&lt;T&gt; &amp;a)">
+                <parameter type="PrecedenceProbe&lt;T&gt; &amp;" name="a" default=""/>
+                <description>
+                    <para>Required genuine-template precedence marker. Checks <argument>a</argument>.</para>
+                </description>
+            </function>
+            <function name="precedenceValueCheck" href="precedenceprobe.html#precedenceValueCheck" status="active" access="public" location="probe.h" documented="true" related="5" meta="plain" noexcept="true" type="void" signature="void precedenceValueCheck(PrecedenceProbe&lt;T&gt; &amp;a, T value)">
+                <parameter type="PrecedenceProbe&lt;T&gt; &amp;" name="a" default=""/>
+                <parameter type="T" name="value" default=""/>
+                <description>
+                    <para>Required bare-parameter template-precedence marker. Checks <argument>a</argument> and <argument>value</argument>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

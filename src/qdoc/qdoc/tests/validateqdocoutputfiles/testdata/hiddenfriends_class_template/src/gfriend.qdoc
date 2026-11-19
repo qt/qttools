@@ -1,0 +1,17 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \class GHolder
+    \inmodule HiddenFriendsClassTemplate
+    \brief A non-template class with a genuine friend function template.
+*/
+
+/*!
+    \fn template <typename Other> void gfriend(GHolder &a, Other &b) noexcept
+
+    Genuine friend function template marker.
+
+    \a a: The holder.
+    \a b: The other object.
+*/

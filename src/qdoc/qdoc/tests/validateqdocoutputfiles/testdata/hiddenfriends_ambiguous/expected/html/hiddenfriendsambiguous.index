@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="HiddenFriendsAmbiguous Reference Documentation" version="" project="HiddenFriendsAmbiguous">
+    <namespace name="" status="active" access="public" module="hiddenfriendsambiguous">
+        <class name="AmbiguousFirst" href="ambiguousfirst.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="HiddenFriendsAmbiguous" brief="A first candidate class"/>
+        <class name="AmbiguousSecond" href="ambiguoussecond.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="HiddenFriendsAmbiguous" brief="A second candidate class"/>
+        <module name="HiddenFriendsAmbiguous" href="hiddenfriendsambiguous-module.html" status="active" location="probe.qdoc" documented="true" seen="true" brief="Ambiguous hidden-friend matching probes"/>
+    </namespace>
+</INDEX>

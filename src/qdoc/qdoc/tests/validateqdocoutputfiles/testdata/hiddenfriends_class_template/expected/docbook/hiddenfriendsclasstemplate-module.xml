@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title/>
+<db:productname>HiddenFriendsClassTemplate</db:productname>
+<db:titleabbrev>Test case for documenting non-template hidden friends in class templates</db:titleabbrev>
+<db:abstract>
+<db:para>Module for class-template hidden-friend resolution tests.</db:para>
+</db:abstract>
+</db:info>
+<db:para>Module for class-template hidden-friend resolution tests.</db:para>
+<db:section xml:id="namespaces">
+<db:title>Namespaces</db:title>
+<db:variablelist role="namespaces">
+<db:varlistentry>
+<db:term><db:link xlink:href="locker-ns.xml" xlink:role="namespace">locker_ns</db:link></db:term>
+<db:listitem>
+<db:para>A namespace containing a class template with a hidden friend.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:variablelist role="classes">
+<db:varlistentry>
+<db:term><db:link xlink:href="crosstarget.xml" xlink:role="class">CrossTarget</db:link></db:term>
+<db:listitem>
+<db:para>A non-template class that hosts the crossCheck documentation.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="crossthing.xml" xlink:role="class">CrossThing</db:link></db:term>
+<db:listitem>
+<db:para>A template class whose hidden friend documentation is related to CrossTarget.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="dualstore.xml" xlink:role="class">DualStore</db:link></db:term>
+<db:listitem>
+<db:para>A two-type-parameter template class with an asymmetric hidden friend.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="gholder.xml" xlink:role="class">GHolder</db:link></db:term>
+<db:listitem>
+<db:para>A non-template class with a genuine friend function template.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="mixture.xml" xlink:role="class">Mixture</db:link></db:term>
+<db:listitem>
+<db:para>A template class with a hidden friend that shares its name with a free function template.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="plainlocker.xml" xlink:role="class">PlainLocker</db:link></db:term>
+<db:listitem>
+<db:para>A minimal locker template.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="quallocker.xml" xlink:role="class">QualLocker</db:link></db:term>
+<db:listitem>
+<db:para>A template class whose hidden friend is documented with class-qualified syntax.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="renamedthing.xml" xlink:role="class">RenamedThing</db:link></db:term>
+<db:listitem>
+<db:para>A template class whose template parameter is renamed in the documentation.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="reusestore.xml" xlink:role="class">ReuseStore</db:link></db:term>
+<db:listitem>
+<db:para>A two-parameter template class documented with reused parameter names.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="locker-ns-namespacelocker.xml" xlink:role="class">locker_ns::NamespaceLocker</db:link></db:term>
+<db:listitem>
+<db:para>A template class inside a namespace.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+</db:article>

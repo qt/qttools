@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QualLocker Class</db:title>
+<db:subtitle>template &lt;typename Mutex&gt; class QualLocker</db:subtitle>
+<db:productname>HiddenFriendsClassTemplate</db:productname>
+<db:titleabbrev>Test case for documenting non-template hidden friends in class templates</db:titleabbrev>
+<db:abstract>
+<db:para>A template class whose hidden friend is documented with class-qualified syntax.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>qualified.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>The <db:code role="parameter">Mutex</db:code> parameter specifies the mutex type.</db:para>
+</db:section>
+<db:section xml:id="related-non-members">
+<db:title>Related Non-Members</db:title>
+<db:section xml:id="qswap">
+<db:title>[noexcept] void qswap(QualLocker&lt;Mutex&gt; &amp;<db:emphasis>lhs</db:emphasis>, QualLocker&lt;Mutex&gt; &amp;<db:emphasis>rhs</db:emphasis>)</db:title>
+<db:para>Swaps <db:code role="parameter">lhs</db:code> and <db:code role="parameter">rhs</db:code>. Class-qualified hidden-friend marker.</db:para>
+</db:section>
+</db:section>
+</db:article>

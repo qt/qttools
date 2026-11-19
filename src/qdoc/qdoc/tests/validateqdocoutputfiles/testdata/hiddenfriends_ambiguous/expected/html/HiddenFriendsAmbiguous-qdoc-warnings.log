@@ -1,0 +1,7 @@
+# QDoc Warning Log
+# Project: HiddenFriendsAmbiguous
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/probe.qdoc:22: [HiddenFriendsAmbiguous] (qdoc) warning: Failed to find function when parsing \fn template <typename V> void ambiguousCheck(AmbiguousFirst<V> &a, AmbiguousSecond<V> &b, V value)

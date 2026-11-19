@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Mixture" href="mixture.html" status="active" access="public" location="mix.h" documented="true" includefile="mix.h" module="HiddenFriendsClassTemplate" brief="A template class with a hidden friend that shares its name with a free function template">
+            <description>
+                <brief>A template class with a hidden friend that shares its name with a free function template.</brief>
+                <para>The <argument>M</argument> parameter specifies the element type.</para>
+            </description>
+            <function name="mix" href="mixture.html#mix" status="active" access="public" location="mix.h" documented="true" related="4" meta="plain" noexcept="true" type="void" signature="void mix(A &amp;a, U &amp;b)">
+                <parameter type="A &amp;" name="a" default=""/>
+                <parameter type="U &amp;" name="b" default=""/>
+                <description>
+                    <para>Mixes <argument>a</argument> and <argument>b</argument>. Generic free template mix marker.</para>
+                </description>
+            </function>
+            <function name="mix" href="mixture.html#mix-1" status="active" access="public" location="mix.h" documented="true" related="5" meta="plain" hidden-friend="true" noexcept="true" overload="true" overload-number="1" type="void" signature="void mix(Mixture&lt;M&gt; &amp;a, Mixture&lt;M&gt; &amp;b)">
+                <parameter type="Mixture&lt;M&gt; &amp;" name="a" default=""/>
+                <parameter type="Mixture&lt;M&gt; &amp;" name="b" default=""/>
+                <description>
+                    <para>Mixture hidden-friend mix marker.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

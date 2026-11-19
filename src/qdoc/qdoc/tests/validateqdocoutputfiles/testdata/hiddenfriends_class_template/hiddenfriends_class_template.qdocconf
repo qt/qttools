@@ -1,0 +1,28 @@
+project = HiddenFriendsClassTemplate
+description = Test case for documenting non-template hidden friends in class templates
+
+outputformats             = HTML WebXML DocBook
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = webxml
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+locationinfo = false
+
+sources.fileextensions = "*.qdoc *.cpp"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+# The hidden friends in this project are documented out-of-line with \fn
+# commands; no documentation lives in the headers.
+documentationinheaders = false
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true

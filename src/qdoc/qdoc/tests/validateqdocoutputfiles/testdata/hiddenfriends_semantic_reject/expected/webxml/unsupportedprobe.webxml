@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="UnsupportedProbe" href="unsupportedprobe.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="HiddenFriendsSemanticReject" brief="An unsupported dependent expression probe">
+            <description>
+                <brief>An unsupported dependent expression probe.</brief>
+                <para>The <argument>T</argument> parameter is a type and <argument>N</argument> is a value.</para>
+            </description>
+        </class>
+    </document>
+</WebXML>

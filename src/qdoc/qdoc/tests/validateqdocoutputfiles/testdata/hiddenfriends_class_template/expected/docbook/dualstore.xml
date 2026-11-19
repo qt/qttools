@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>DualStore Class</db:title>
+<db:subtitle>template &lt;typename Lhs, typename Rhs&gt; class DualStore</db:subtitle>
+<db:productname>HiddenFriendsClassTemplate</db:productname>
+<db:titleabbrev>Test case for documenting non-template hidden friends in class templates</db:titleabbrev>
+<db:abstract>
+<db:para>A two-type-parameter template class with an asymmetric hidden friend.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>dual.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>The <db:code role="parameter">Lhs</db:code> and <db:code role="parameter">Rhs</db:code> parameters specify the key and value types.</db:para>
+</db:section>
+<db:section xml:id="related-non-members">
+<db:title>Related Non-Members</db:title>
+<db:section xml:id="dualCheck">
+<db:title>[noexcept] void dualCheck(DualStore&lt;Lhs, Rhs&gt; &amp;<db:emphasis>a</db:emphasis>, Lhs <db:emphasis>key</db:emphasis>)</db:title>
+<db:para>Checks <db:code role="parameter">a</db:code> using <db:code role="parameter">key</db:code>. Dual parameter marker. The documentation renames the template parameters and repeats the correct argument bindings.</db:para>
+</db:section>
+</db:section>
+</db:article>

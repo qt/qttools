@@ -9,8 +9,10 @@
 #include "config.h"
 #include "doc.h"
 #include "enumnode.h"
+#include "fnlookupresult.h"
 #include "functionnode.h"
 #include "genustypes.h"
+#include "hiddenfriendtypekey.h"
 #include "inclusionpolicy.h"
 #include "namespacenode.h"
 #include "propertynode.h"
@@ -991,9 +993,270 @@ static void findHiddenFriendCandidates(QDocDatabase *qdb, const QString &funcNam
     }
 }
 
+/*
+  How a cursor is to be interpreted by findNodeForCursor().
+ */
+enum class NodeLookupMode
+{
+    // Lookup of a declaration while parsing a header or source file.
+    Declaration,
+
+    // Lookup of a function signature written in a \fn command.
+    FnCommand
+};
+
+/*
+  How a function signature is to be matched by functionSignatureMatches().
+ */
+enum class FnSignatureMatchMode
+{
+    // Ordinary matching: a genuine function template matches a signature
+    // with a structurally substitutable leading template declaration, and
+    // a non-template function matches a non-template signature.
+    Ordinary,
+
+    // A \fn command may rename the genuine function template's binders too.
+    // Declaration lookup retains its Q_QDOC spelling-based compatibility.
+    FnCommand,
+
+    // The restricted hidden-friend-in-class-template interpretation of a
+    // \fn command: in addition to the ordinary rules, a non-template
+    // hidden friend in a class template matches a function template
+    // signature whose leading template declaration describes the enclosing
+    // class's template parameters, with the parameter names unified
+    // positionally.
+    HiddenFriendInClassTemplate
+};
+
+// One parsed signature is compared with many candidates. Keep its Clang data
+// and lazily computed spellings together for the lifetime of that lookup.
+struct FunctionCursorSignature
+{
+    CXCursor cursor;
+    const clang::FunctionDecl *declaration;
+    int numArgs;
+    bool isVariadic;
+    std::optional<RelaxedTemplateDeclaration> templateDeclaration;
+    QVarLengthArray<QString, 20> argumentSpellings;
+    QVarLengthArray<QString, 20> canonicalSpellings;
+    QByteArray templateParameterKey;
+    QList<QByteArray> templateTypeKeys;
+
+    QString typeSpelling(int index)
+    {
+        if (argumentSpellings.size() <= index)
+            argumentSpellings.resize(index + 1);
+        if (argumentSpellings.at(index).isEmpty()) {
+            argumentSpellings[index] = QString::fromStdString(get_fully_qualified_type_name(
+                    declaration->getParamDecl(index)->getOriginalType(), declaration->getASTContext()));
+        }
+        return argumentSpellings.at(index);
+    }
+
+    QString canonicalTypeSpelling(int index)
+    {
+        if (canonicalSpellings.size() <= index)
+            canonicalSpellings.resize(index + 1);
+        if (canonicalSpellings.at(index).isEmpty()) {
+            canonicalSpellings[index] = QString::fromStdString(get_fully_qualified_type_name(
+                    declaration->getParamDecl(index)->getOriginalType().getCanonicalType(),
+                    declaration->getASTContext()));
+        }
+        return canonicalSpellings.at(index);
+    }
+};
+
 /*!
-  Find the node from the QDocDatabase \a qdb that corresponds to the declaration
-  represented by the cursor \a cur, if it exists.
+  \internal
+
+  Returns \c true if the candidate \a fn matches the parsed \a signature.
+
+  Ordinary matching preserves declaration lookup, including Q_QDOC
+  signatures. The hidden-friend mode additionally interprets the leading
+  template declaration as enclosing-class context and compares parameter
+  types using owned, binder-aware keys from Clang's canonical types.
+ */
+static bool functionSignatureMatches(FunctionNode *fn, FunctionCursorSignature &signature,
+                                     FnSignatureMatchMode matchMode)
+{
+    const auto cur = signature.cursor;
+    const auto *function_declaration = signature.declaration;
+    int numArg = signature.numArgs;
+    const bool isVariadic = signature.isVariadic;
+    const auto &relaxed_template_declaration = signature.templateDeclaration;
+    const bool compareTemplateTypes = matchMode == FnSignatureMatchMode::FnCommand
+            && fn->templateDecl() && relaxed_template_declaration
+            && !fn->templateParameterKey().isEmpty() && !signature.templateParameterKey.isEmpty();
+    if (compareTemplateTypes && fn->templateParameterKey() != signature.templateParameterKey)
+        return false;
+    bool compareHiddenFriendTypes = false;
+    if (!fn->templateDecl() && relaxed_template_declaration) {
+        if (matchMode != FnSignatureMatchMode::HiddenFriendInClassTemplate || !fn->isHiddenFriend())
+            return false;
+
+        auto *enclosing = fn->parent();
+        if (!enclosing || !enclosing->isClassNode())
+            return false;
+        const auto &classTemplateDecl = static_cast<ClassNode *>(enclosing)->templateDecl();
+        if (!classTemplateDecl || fn->templateParameterKey().isEmpty()
+                || fn->templateParameterKey() != signature.templateParameterKey)
+            return false;
+
+        compareHiddenFriendTypes = true;
+    } else if (fn->templateDecl() && !relaxed_template_declaration) {
+        return false;
+    } else if (fn->templateDecl() && relaxed_template_declaration) {
+        if (!compareTemplateTypes
+                && !are_template_declarations_substitutable(*fn->templateDecl(), *relaxed_template_declaration))
+            return false;
+    }
+
+    const Parameters &parameters = fn->parameters();
+
+    if (parameters.count() != numArg + isVariadic) {
+        // Ignore possible last argument of type QPrivateSignal as it may have been dropped
+        if (numArg > 0 && parameters.isPrivateSignal()
+                && (parameters.isEmpty() || !parameters.last().type().endsWith(
+                        "QPrivateSignal"_L1))) {
+            if (parameters.count() != --numArg + isVariadic)
+                return false;
+        } else {
+            return false;
+        }
+    }
+
+    if (fn->isConst() != bool(clang_CXXMethod_isConst(cur)))
+        return false;
+
+    if (isVariadic && parameters.last().type() != "..."_L1)
+        return false;
+
+    if (fn->isRef() != (clang_Type_getCXXRefQualifier(clang_getCursorType(cur)) == CXRefQualifier_LValue))
+        return false;
+
+    if (fn->isRefRef() != (clang_Type_getCXXRefQualifier(clang_getCursorType(cur)) == CXRefQualifier_RValue))
+        return false;
+
+    bool typesDiffer = false;
+    for (int i = 0; i < numArg; ++i) {
+        auto *paramDecl = function_declaration->getParamDecl(i);
+        auto paramType = paramDecl->getOriginalType();
+
+        if (compareHiddenFriendTypes || compareTemplateTypes) {
+#if LIBCLANG_VERSION_MAJOR >= 21
+            if (compareHiddenFriendTypes && function_declaration->getTrailingRequiresClause().ConstraintExpr)
+#else
+            if (compareHiddenFriendTypes && function_declaration->getTrailingRequiresClause())
+#endif
+                return false;
+            const auto &recordedKeys = fn->templateParameterTypeKeys();
+            if (i < recordedKeys.size() && i < signature.templateTypeKeys.size()
+                    && !recordedKeys.at(i).isEmpty() && !signature.templateTypeKeys.at(i).isEmpty()) {
+                if (recordedKeys.at(i) != signature.templateTypeKeys.at(i))
+                    return false;
+                continue;
+            }
+            // Unsupported types retain ordinary matching, but the restricted
+            // hidden-friend convention must never guess their equivalence.
+            if (compareHiddenFriendTypes)
+                return false;
+        }
+
+        QString recordedType = parameters.at(i).type();
+        QString typeSpelling = signature.typeSpelling(i);
+
+        typesDiffer = recordedType != typeSpelling;
+
+        // Retry with a canonical type spelling unless the parameter is a bare
+        // template type parameter, such as T but not const T& or MyContainer<T>.
+        // Wrapped forms are safe because both sides of the comparison are
+        // canonicalized in the same way. Exclude bare TemplateTypeParmType
+        // because canonicalization removes the spelled Q_QDOC template
+        // parameter name and can make distinct Q_QDOC-declared signatures
+        // appear identical during matching.
+        if (typesDiffer) {
+            const bool isBareTemplateTypeParm =
+                    paramType.getTypePtrOrNull()
+                    && llvm::isa<clang::TemplateTypeParmType>(paramType.getTypePtr());
+            if (!isBareTemplateTypeParm) {
+                QStringView canonicalType = parameters.at(i).canonicalType();
+                if (!canonicalType.isEmpty()) {
+                    typesDiffer = canonicalType != signature.canonicalTypeSpelling(i);
+                }
+            }
+        }
+
+        if (typesDiffer) {
+            break;
+        }
+    }
+
+    return !typesDiffer;
+}
+
+static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur);
+
+// Function lookup has one result channel. Declaration lookup below adapts it
+// to Node*, but the \fn path must carry ambiguity all the way to the parser.
+static FnLookupResult findFunctionForCursor(QDocDatabase *qdb, CXCursor cur, NodeLookupMode mode)
+{
+    Node *p = findNodeForCursor(qdb, clang_getCursorSemanticParent(cur));
+    if (!p || !p->isAggregate())
+        return {};
+    auto *parent = static_cast<Aggregate *>(p);
+    NodeVector candidates;
+    parent->findChildren(functionName(cur), candidates);
+    // Hidden friends are recorded under their lexical parent in the database.
+    const auto *cur_decl = get_cursor_declaration(cur);
+    if (candidates.isEmpty() && cur_decl && cur_decl->getFriendObjectKind() != clang::Decl::FOK_None) {
+        if (auto *lexical_parent = findNodeForCursor(qdb, clang_getCursorLexicalParent(cur));
+                lexical_parent && lexical_parent->isAggregate() && lexical_parent != parent)
+            static_cast<Aggregate *>(lexical_parent)->findChildren(functionName(cur), candidates);
+    }
+
+    // A broad same-named template must not suppress the hidden-friend search.
+    const bool hasHiddenFriend = std::any_of(candidates.cbegin(), candidates.cend(), [](const Node *n) {
+        return n->isFunction(Genus::CPP) && static_cast<const FunctionNode *>(n)->isHiddenFriend();
+    });
+    const auto *function_declaration = cur_decl ? cur_decl->getAsFunction() : nullptr;
+    if (!hasHiddenFriend && function_declaration)
+        findHiddenFriendCandidates(qdb, functionName(cur), function_declaration, candidates);
+    if (candidates.isEmpty() || !function_declaration)
+        return {};
+
+    const auto funcType = clang_getCursorType(cur);
+    FunctionCursorSignature signature{ cur, function_declaration, clang_getNumArgTypes(funcType),
+                                       bool(clang_isFunctionTypeVariadic(funcType)), {}, {}, {}, {}, {} };
+    if (clang_getCursorKind(cur) == CXCursor_FunctionTemplate) {
+        const auto *functionTemplate = function_declaration->getDescribedFunctionTemplate();
+        signature.templateDeclaration = get_template_declaration(functionTemplate);
+        if (mode == NodeLookupMode::FnCommand) {
+            signature.templateParameterKey = templateParameterKey(*functionTemplate->getTemplateParameters());
+            for (const auto *param : function_declaration->parameters())
+                signature.templateTypeKeys.append(hiddenFriendTypeKey(
+                        param->getOriginalType(), *functionTemplate->getTemplateParameters()));
+        }
+    }
+
+    return resolveFnLookupCandidates(candidates, [&](Node *candidate) {
+        return candidate->isFunction(Genus::CPP)
+                && functionSignatureMatches(static_cast<FunctionNode *>(candidate), signature,
+                                            FnSignatureMatchMode::Ordinary);
+    }, [&](Node *candidate) {
+        return mode == NodeLookupMode::FnCommand && candidate->isFunction(Genus::CPP)
+                && functionSignatureMatches(static_cast<FunctionNode *>(candidate), signature,
+                                            FnSignatureMatchMode::FnCommand);
+    }, [&](Node *candidate) {
+        return mode == NodeLookupMode::FnCommand && signature.templateDeclaration
+                && candidate->isFunction(Genus::CPP)
+                && functionSignatureMatches(static_cast<FunctionNode *>(candidate), signature,
+                                            FnSignatureMatchMode::HiddenFriendInClassTemplate);
+    });
+}
+
+/*!
+  Find the node in \a qdb corresponding to the declaration at \a cur.
+  This declaration-only adapter deliberately does not enable \fn conventions.
  */
 static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
 {
@@ -1002,6 +1265,18 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
         return nullptr;
     if (kind == CXCursor_TranslationUnit)
         return qdb->primaryTreeRoot();
+
+    switch (kind) {
+    case CXCursor_FunctionDecl:
+    case CXCursor_FunctionTemplate:
+    case CXCursor_CXXMethod:
+    case CXCursor_Constructor:
+    case CXCursor_Destructor:
+    case CXCursor_ConversionFunction:
+        return findFunctionForCursor(qdb, cur, NodeLookupMode::Declaration).node();
+    default:
+        break;
+    }
 
     Node *p = findNodeForCursor(qdb, clang_getCursorSemanticParent(cur));
     // Special case; if the cursor represents a template type|non-type|template parameter
@@ -1038,145 +1313,6 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
     case CXCursor_UnionDecl:
     case CXCursor_ClassTemplate:
         return parent->findNonfunctionChild(name, &Node::isClassNode);
-    case CXCursor_FunctionDecl:
-    case CXCursor_FunctionTemplate:
-    case CXCursor_CXXMethod:
-    case CXCursor_Constructor:
-    case CXCursor_Destructor:
-    case CXCursor_ConversionFunction: {
-        NodeVector candidates;
-        parent->findChildren(functionName(cur), candidates);
-        // Hidden friend functions are recorded under their lexical parent in the database
-        auto *cur_decl = get_cursor_declaration(cur);
-        if (candidates.isEmpty() && cur_decl && cur_decl->getFriendObjectKind() != clang::Decl::FOK_None) {
-            if (auto *lexical_parent = findNodeForCursor(qdb, clang_getCursorLexicalParent(cur));
-                    lexical_parent && lexical_parent->isAggregate() && lexical_parent != parent) {
-                static_cast<Aggregate *>(lexical_parent)->findChildren(functionName(cur), candidates);
-            }
-        }
-
-        // Fallback for hidden friends documented with \fn using unqualified syntax.
-        // Hidden friends are stored under their enclosing class, not in the global
-        // namespace, so the initial findChildren won't find them. Search parameter
-        // types to locate them, even when other candidates (e.g. a same-named
-        // template) already exist. (QTBUG-145790)
-        const bool hasHiddenFriend =
-                std::any_of(candidates.cbegin(), candidates.cend(), [](const Node *n) {
-                    return n->isFunction(Genus::CPP)
-                            && static_cast<const FunctionNode *>(n)->isHiddenFriend();
-                });
-        if (!hasHiddenFriend) {
-            auto *func_decl = cur_decl ? cur_decl->getAsFunction() : nullptr;
-            if (func_decl)
-                findHiddenFriendCandidates(qdb, functionName(cur), func_decl, candidates);
-        }
-
-        if (candidates.isEmpty())
-            return nullptr;
-
-        CXType funcType = clang_getCursorType(cur);
-        auto numArg = clang_getNumArgTypes(funcType);
-        bool isVariadic = clang_isFunctionTypeVariadic(funcType);
-        QVarLengthArray<QString, 20> args;
-
-        std::optional<RelaxedTemplateDeclaration> relaxed_template_declaration{std::nullopt};
-        if (kind == CXCursor_FunctionTemplate)
-            relaxed_template_declaration = get_template_declaration(
-                get_cursor_declaration(cur)->getAsFunction()->getDescribedFunctionTemplate()
-            );
-
-        for (Node *candidate : std::as_const(candidates)) {
-            if (!candidate->isFunction(Genus::CPP))
-                continue;
-
-            auto fn = static_cast<FunctionNode *>(candidate);
-
-            if (!fn->templateDecl() && relaxed_template_declaration)
-                continue;
-
-            if (fn->templateDecl() && !relaxed_template_declaration)
-                continue;
-
-            if (fn->templateDecl() && relaxed_template_declaration &&
-                !are_template_declarations_substitutable(*fn->templateDecl(), *relaxed_template_declaration))
-                continue;
-
-            const Parameters &parameters = fn->parameters();
-
-            if (parameters.count() != numArg + isVariadic) {
-                // Ignore possible last argument of type QPrivateSignal as it may have been dropped
-                if (numArg > 0 && parameters.isPrivateSignal() &&
-                        (parameters.isEmpty() || !parameters.last().type().endsWith(
-                                QLatin1String("QPrivateSignal")))) {
-                    if (parameters.count() != --numArg + isVariadic)
-                        continue;
-                } else {
-                continue;
-                }
-            }
-
-            if (fn->isConst() != bool(clang_CXXMethod_isConst(cur)))
-                continue;
-
-            if (isVariadic && parameters.last().type() != QLatin1String("..."))
-                continue;
-
-            if (fn->isRef() != (clang_Type_getCXXRefQualifier(funcType) == CXRefQualifier_LValue))
-                continue;
-
-            if (fn->isRefRef() != (clang_Type_getCXXRefQualifier(funcType) == CXRefQualifier_RValue))
-                continue;
-
-            auto function_declaration = get_cursor_declaration(cur)->getAsFunction();
-
-            bool typesDiffer = false;
-            for (int i = 0; i < numArg; ++i) {
-                auto *paramDecl = function_declaration->getParamDecl(i);
-                auto paramType = paramDecl->getOriginalType();
-
-                if (args.size() <= i)
-                    args.append(QString::fromStdString(get_fully_qualified_type_name(
-                        paramType, function_declaration->getASTContext()
-                    )));
-
-                QString recordedType = parameters.at(i).type();
-                QString typeSpelling = args.at(i);
-
-                typesDiffer = recordedType != typeSpelling;
-
-                // Retry with a canonical type spelling unless the parameter is a bare
-                // template type parameter, such as T but not const T& or MyContainer<T>.
-                // Wrapped forms are safe because both sides of the comparison are
-                // canonicalized in the same way. Exclude bare TemplateTypeParmType
-                // because canonicalization removes the spelled Q_QDOC template
-                // parameter name and can make distinct Q_QDOC-declared signatures
-                // appear identical during matching.
-                if (typesDiffer) {
-                    const bool isBareTemplateTypeParm =
-                        paramType.getTypePtrOrNull()
-                        && llvm::isa<clang::TemplateTypeParmType>(paramType.getTypePtr());
-                    if (!isBareTemplateTypeParm) {
-                        QStringView canonicalType = parameters.at(i).canonicalType();
-                        if (!canonicalType.isEmpty()) {
-                            typesDiffer = canonicalType !=
-                                QString::fromStdString(get_fully_qualified_type_name(
-                                    paramType.getCanonicalType(),
-                                    function_declaration->getASTContext()
-                                ));
-                        }
-                    }
-                }
-
-                if (typesDiffer) {
-                    break;
-                }
-            }
-
-            if (!typesDiffer)
-                return fn;
-        }
-        return nullptr;
-    }
     case CXCursor_EnumDecl:
         return parent->findNonfunctionChild(name, &Node::isEnumType);
     case CXCursor_FieldDecl:
@@ -1299,15 +1435,16 @@ public:
       Not sure about all the possibilities, when the cursor
       location is not in the main file.
      */
-    CXChildVisitResult visitFnArg(CXCursor cursor, Node **fnNode, bool &ignoreSignature)
+    FnLookupResult visitFnArg(CXCursor cursor, bool &ignoreSignature)
     {
-        auto ret = visitChildrenLambda(cursor, [&](CXCursor cur) {
+        FnLookupResult result;
+        visitChildrenLambda(cursor, [&](CXCursor cur) {
             auto loc = clang_getCursorLocation(cur);
             if (clang_Location_isFromMainFile(loc))
-                return visitFnSignature(cur, loc, fnNode, ignoreSignature);
+                return visitFnSignature(cur, loc, result, ignoreSignature);
             return CXChildVisit_Continue;
         });
-        return ret ? CXChildVisit_Break : CXChildVisit_Continue;
+        return result;
     }
 
     Node *nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocation nextCommentLoc);
@@ -1357,8 +1494,8 @@ private:
 
     CXChildVisitResult visitSource(CXCursor cursor, CXSourceLocation loc);
     CXChildVisitResult visitHeader(CXCursor cursor, CXSourceLocation loc);
-    CXChildVisitResult visitFnSignature(CXCursor cursor, CXSourceLocation loc, Node **fnNode,
-                                        bool &ignoreSignature);
+    CXChildVisitResult visitFnSignature(CXCursor cursor, CXSourceLocation loc,
+                                        FnLookupResult &result, bool &ignoreSignature);
     void processFunction(FunctionNode *fn, CXCursor cursor);
     bool parseProperty(const QString &spelling, const Location &loc);
     void readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cursor);
@@ -1467,8 +1604,8 @@ Aggregate *ClangVisitor::getSemanticParent(CXCursor cursor)
     return parent_;
 }
 
-CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocation, Node **fnNode,
-                                                  bool &ignoreSignature)
+CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocation,
+                                                FnLookupResult &result, bool &ignoreSignature)
 {
     switch (clang_getCursorKind(cursor)) {
     case CXCursor_Namespace:
@@ -1480,14 +1617,14 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
     case CXCursor_Destructor:
     case CXCursor_ConversionFunction: {
         ignoreSignature = false;
+        result.reset();
         if (ignoredSymbol(functionName(cursor))) {
-            *fnNode = nullptr;
             ignoreSignature = true;
         } else {
-            *fnNode = findNodeForCursor(qdb_, cursor);
-            if (*fnNode) {
-                if ((*fnNode)->isFunction(Genus::CPP)) {
-                    auto *fn = static_cast<FunctionNode *>(*fnNode);
+            result = findFunctionForCursor(qdb_, cursor, NodeLookupMode::FnCommand);
+            if (result.hasMatch()) {
+                if (result.node()->isFunction(Genus::CPP)) {
+                    auto *fn = static_cast<FunctionNode *>(result.node());
                     readParameterNamesAndAttributes(fn, cursor);
 
                     const clang::Decl* declaration = get_cursor_declaration(cursor);
@@ -1498,7 +1635,7 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
                             fn->setDeclaredReturnType(QString::fromStdString(declaredReturnType.getAsString()));
                     }
                 }
-            } else { // Possibly an implicitly generated special member
+            } else if (!result.isAmbiguous()) { // Possibly an implicitly generated special member
                 QString name = functionName(cursor);
                 if (ignoredSymbol(name))
                     return CXChildVisit_Continue;
@@ -1511,7 +1648,8 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
                         return CXChildVisit_Continue;
                     }
                     candidate->setImplicitlyGenerated(true);
-                    semanticParent->addChild(*fnNode = candidate);
+                    semanticParent->addChild(candidate);
+                    result.setMatched(candidate);
                 }
             }
         }
@@ -2026,6 +2164,25 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
                             });
         if (!hasNamespaceScopeRedeclaration)
             fn->setHiddenFriend(true);
+    }
+
+    // Capture before the header TU dies. Do not change the recorded spelling,
+    // canonical spelling, or the ordinary declaration deduplication rules.
+    const clang::TemplateParameterList *binders = nullptr;
+    if (const auto *functionTemplate = function_declaration->getDescribedFunctionTemplate()) {
+        binders = functionTemplate->getTemplateParameters();
+    } else if (fn->isHiddenFriend()) {
+        const auto *record = llvm::dyn_cast<clang::CXXRecordDecl>(function_declaration->getLexicalDeclContext());
+        if (const auto *classTemplate = record ? record->getDescribedClassTemplate() : nullptr)
+            binders = classTemplate->getTemplateParameters();
+    }
+    if (binders && !fn->trailingRequiresClause()) {
+        fn->setTemplateParameterKey(templateParameterKey(*binders));
+        QList<QByteArray> typeKeys;
+        for (int i = 0; i < parameters.count() && i < int(function_declaration->getNumParams()); ++i)
+            typeKeys.append(hiddenFriendTypeKey(function_declaration->getParamDecl(i)->getOriginalType(),
+                                               *binders));
+        fn->setTemplateParameterTypeKeys(std::move(typeKeys));
     }
 }
 
@@ -2619,7 +2776,10 @@ std::variant<Node*, FnMatchError> FnCommandParser::operator()(const Location &lo
         auto &config = Config::instance();
         ClangVisitor visitor(m_qdb, m_allHeaders, config.getInternalFilePatternsCompiled());
         bool ignoreSignature = false;
-        visitor.visitFnArg(cur, &fnNode, ignoreSignature);
+        const FnLookupResult fnLookup = visitor.visitFnArg(cur, ignoreSignature);
+        if (fnLookup.isAmbiguous())
+            return FnMatchError{ fnSignature, location };
+        fnNode = fnLookup.node();
 
         if (!fnNode) {
             unsigned diagnosticCount = clang_getNumDiagnostics(tu);

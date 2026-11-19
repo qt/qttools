@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="QualifiedProbe" href="qualifiedprobe.html" status="active" access="public" location="qualified.h" documented="true" includefile="qualified.h" module="HiddenFriendsReject" brief="A template class whose hidden friend takes a fixed qualified type">
+            <description>
+                <brief>A template class whose hidden friend takes a fixed qualified type.</brief>
+                <para>The <argument>T</argument> parameter specifies the element type.</para>
+            </description>
+        </class>
+    </document>
+</WebXML>

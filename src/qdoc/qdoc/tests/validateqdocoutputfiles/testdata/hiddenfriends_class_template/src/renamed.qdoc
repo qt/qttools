@@ -1,0 +1,16 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \class RenamedThing
+    \inmodule HiddenFriendsClassTemplate
+    \brief A template class whose template parameter is renamed in the documentation.
+
+    The \a T parameter specifies the element type.
+*/
+
+/*!
+    \fn template <typename U> void resetThing(RenamedThing<U> &lhs) noexcept
+
+    Resets \a lhs. Renamed template parameter marker.
+*/

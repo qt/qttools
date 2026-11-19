@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="QualLocker" href="quallocker.html" status="active" access="public" location="qualified.h" documented="true" includefile="qualified.h" module="HiddenFriendsClassTemplate" brief="A template class whose hidden friend is documented with class-qualified syntax">
+            <description>
+                <brief>A template class whose hidden friend is documented with class-qualified syntax.</brief>
+                <para>The <argument>Mutex</argument> parameter specifies the mutex type.</para>
+            </description>
+            <function name="qswap" href="quallocker.html#qswap" status="active" access="public" location="qualified.h" documented="true" related="7" meta="plain" hidden-friend="true" noexcept="true" type="void" signature="void qswap(QualLocker&lt;Mutex&gt; &amp;lhs, QualLocker&lt;Mutex&gt; &amp;rhs)">
+                <parameter type="QualLocker&lt;Mutex&gt; &amp;" name="lhs" default=""/>
+                <parameter type="QualLocker&lt;Mutex&gt; &amp;" name="rhs" default=""/>
+                <description>
+                    <para>Swaps <argument>lhs</argument> and <argument>rhs</argument>. Class-qualified hidden-friend marker.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

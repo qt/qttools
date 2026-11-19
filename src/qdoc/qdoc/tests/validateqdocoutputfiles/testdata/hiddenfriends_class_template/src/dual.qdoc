@@ -1,0 +1,24 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \class DualStore
+    \inmodule HiddenFriendsClassTemplate
+    \brief A two-type-parameter template class with an asymmetric hidden friend.
+
+    The \a Lhs and \a Rhs parameters specify the key and value types.
+*/
+
+/*!
+    \fn template <typename A, typename B> void dualCheck(DualStore<A, B> &a, A key) noexcept
+
+    Checks \a a using \a key. Dual parameter marker. The documentation renames the
+    template parameters and repeats the correct argument bindings.
+*/
+
+/*!
+    \fn template <typename A, typename B> void dualCheck(DualStore<B, A> &a, B key) noexcept
+
+    Checks \a a using \a key. Reversed dual parameter marker. Reversed argument
+    bindings describe a different function; this command must not document the hidden friend.
+*/
