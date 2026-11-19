@@ -340,17 +340,20 @@
 
     \section1 Failed to find function when parsing \\fn <signature>
 
-    When Clang parses a function signature following an \qdoccmd fn command,
-    it checks this against the declaration in the header file. If Clang
-    discovers discrepancies, it issues this warning message.
+    QDoc cannot resolve the signature following an \qdoccmd fn command
+    to a function declared in the project's headers. This warning also
+    applies when the signature is valid C++ but names no matching function.
 
-    The signature must be fully qualified. Typical issues include missing or
-    incorrect template arguments, return type, or qualifiers such as
-    \e const.
+    Check the function's namespace or class scope, template arguments,
+    parameter types, and qualifiers such as \e const.
 
     \note A \e {hidden friend} can be documented using either the
           class-qualified syntax or the unqualified free function
-          syntax with its return type.
+          syntax with its return type. For a non-template hidden friend
+          in a class template, the unqualified convention described by
+          \l{fn-command}{\\fn} must have a unique supported match.
+          Unsupported template contexts and ambiguous matches produce
+          this warning too.
 
     \section1 Failed to find qhp.<project>.subprojects.<subproject>.indexTitle
 

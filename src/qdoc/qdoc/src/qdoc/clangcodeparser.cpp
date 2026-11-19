@@ -1391,13 +1391,13 @@ public:
       Not sure about all the possibilities, when the cursor
       location is not in the main file.
      */
-    FnLookupResult visitFnArg(CXCursor cursor, bool &ignoreSignature)
+    FnLookupResult visitFnArg(CXCursor cursor)
     {
         FnLookupResult result;
         visitChildrenLambda(cursor, [&](CXCursor cur) {
             auto loc = clang_getCursorLocation(cur);
             if (clang_Location_isFromMainFile(loc))
-                return visitFnSignature(cur, loc, result, ignoreSignature);
+                return visitFnSignature(cur, loc, result);
             return CXChildVisit_Continue;
         });
         return result;
@@ -1451,7 +1451,7 @@ private:
     CXChildVisitResult visitSource(CXCursor cursor, CXSourceLocation loc);
     CXChildVisitResult visitHeader(CXCursor cursor, CXSourceLocation loc);
     CXChildVisitResult visitFnSignature(CXCursor cursor, CXSourceLocation loc,
-                                        FnLookupResult &result, bool &ignoreSignature);
+                                        FnLookupResult &result);
     void processFunction(FunctionNode *fn, CXCursor cursor);
     bool parseProperty(const QString &spelling, const Location &loc);
     void readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cursor);
@@ -1561,7 +1561,7 @@ Aggregate *ClangVisitor::getSemanticParent(CXCursor cursor)
 }
 
 CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocation,
-                                                FnLookupResult &result, bool &ignoreSignature)
+                                                FnLookupResult &result)
 {
     switch (clang_getCursorKind(cursor)) {
     case CXCursor_Namespace:
@@ -1572,10 +1572,9 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
     case CXCursor_Constructor:
     case CXCursor_Destructor:
     case CXCursor_ConversionFunction: {
-        ignoreSignature = false;
         result.reset();
         if (ignoredSymbol(functionName(cursor))) {
-            ignoreSignature = true;
+            result.setIgnored();
         } else {
             result = findFunctionForCursor(qdb_, cursor, NodeLookupMode::FnCommand);
             if (result.hasMatch()) {
@@ -2838,19 +2837,12 @@ std::variant<Node*, FnMatchError> FnCommandParser::operator()(const Location &lo
         CXCursor cur = clang_getTranslationUnitCursor(tu);
         auto &config = Config::instance();
         ClangVisitor visitor(m_qdb, m_allHeaders, config.getInternalFilePatternsCompiled());
-        bool ignoreSignature = false;
-        const FnLookupResult fnLookup = visitor.visitFnArg(cur, ignoreSignature);
-        if (fnLookup.isAmbiguous())
+        const FnLookupResult fnLookup = visitor.visitFnArg(cur);
+        const auto phase = config.preparing() && !config.singleExec()
+                ? FnDiagnosticPhase::Prepare : FnDiagnosticPhase::Generate;
+        if (shouldDiagnoseFnLookup(fnLookup, phase))
             return FnMatchError{ fnSignature, location };
         fnNode = fnLookup.node();
-
-        if (!fnNode) {
-            unsigned diagnosticCount = clang_getNumDiagnostics(tu);
-            const auto &config = Config::instance();
-            if (diagnosticCount > 0 && (!config.preparing() || config.singleExec())) {
-               return FnMatchError{ fnSignature, location };
-            }
-        }
     }
     return fnNode;
 }

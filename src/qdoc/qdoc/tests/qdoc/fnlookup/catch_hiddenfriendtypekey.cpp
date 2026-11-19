@@ -156,6 +156,25 @@ TEST_CASE("binder compatibility compares dependent types by meaning", "[clang][f
     CHECK(binderKey("template <class T> requires true void f();").isEmpty());
 }
 
+TEST_CASE("nested template contexts cannot reuse top-level binder keys", "[clang][fnlookup]")
+{
+    auto ast = parse("template <class T> struct Outer { template <class U> void f(U); };");
+    for (const auto *decl : ast->getASTContext().getTranslationUnitDecl()->decls()) {
+        const auto *outer = llvm::dyn_cast<clang::ClassTemplateDecl>(decl);
+        if (!outer)
+            continue;
+        for (const auto *member : outer->getTemplatedDecl()->decls()) {
+            if (const auto *function = llvm::dyn_cast<clang::FunctionTemplateDecl>(member)) {
+                CHECK(templateParameterKey(*function->getTemplateParameters()).isEmpty());
+                CHECK(hiddenFriendTypeKey(function->getTemplatedDecl()->getParamDecl(0)->getOriginalType(),
+                                          *function->getTemplateParameters()).isEmpty());
+                return;
+            }
+        }
+    }
+    FAIL("No nested function template in the test input");
+}
+
 QT_END_NAMESPACE
 
 #endif // QT_ASAN_ENABLED

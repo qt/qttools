@@ -1,0 +1,9 @@
+# QDoc Warning Log
+# Project: HiddenFriendsReject
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/binding.qdoc:12: [HiddenFriendsReject] (qdoc) warning: Failed to find function when parsing \fn template <typename B, typename A> void bindingCheck(BindingProbe<B, A> &a, A key) noexcept
+src/binding.qdoc:26: [HiddenFriendsReject] (qdoc) warning: Failed to find function when parsing \fn template <typename L, typename R> void reorderedCheck(BindingProbe<R, L> &a, R key) noexcept
+src/qualified.qdoc:17: [HiddenFriendsReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U> void qualifiedCheck(QualifiedProbe<U> &a, ConcreteTypes::U &b) noexcept

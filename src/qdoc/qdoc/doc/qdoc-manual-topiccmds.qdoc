@@ -505,6 +505,10 @@
     These restrictions apply to this fallback, not to ordinary function
     template matching or the class-qualified syntax.
 
+    If no ordinary function or unique supported hidden friend matches,
+    QDoc reports an unresolved \c{\fn} command. This includes unsupported fallback forms
+    and ambiguous matches.
+
     \note The \\fn command is QDoc's default command: when no
     topic command can be found in a QDoc comment, QDoc tries to tie
     the documentation to the following code as if it is the

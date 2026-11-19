@@ -12,6 +12,7 @@ template <typename A, typename B>
 class BindingProbe
 {
 public:
+    friend void reorderedCheck(BindingProbe &, A) noexcept {}
     friend void bindingCheck(BindingProbe &, A) noexcept
     {
     }

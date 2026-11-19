@@ -22,3 +22,9 @@
     first parameter. Identical spellings with a changed positional
     binding describe a different function.
 */
+
+/*!
+    \fn template <typename L, typename R> void reorderedCheck(BindingProbe<R, L> &a, R key) noexcept
+
+    Rejected reversed-class-arguments marker. Checks \a a using \a key.
+*/

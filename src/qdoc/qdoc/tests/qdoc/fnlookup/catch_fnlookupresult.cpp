@@ -10,7 +10,7 @@
 QT_BEGIN_NAMESPACE
 
 /*
-  Focused coverage for the \fn lookup outcome: the three-way
+  Focused coverage for the \fn lookup outcome: the explicit
   FnLookupResult and the candidate reduction it is built from. The
   reduction is what the hidden-friend-in-class-template fallback applies
   to its matching candidates, so the outcome/uniqueness rules are
@@ -26,7 +26,7 @@ using TestLookupResult = FnLookupResultFor<TestNode>;
 
 } // namespace
 
-TEST_CASE("FnLookupResult reports three mutually exclusive states", "[qdoc][fnlookup]")
+TEST_CASE("FnLookupResult reports mutually exclusive states", "[qdoc][fnlookup]")
 {
     TestNode fn;
 
@@ -52,6 +52,15 @@ TEST_CASE("FnLookupResult reports three mutually exclusive states", "[qdoc][fnlo
     REQUIRE(result.status() == TestLookupResult::Status::NoMatch);
     REQUIRE_FALSE(result.hasMatch());
     REQUIRE(result.node() == nullptr);
+
+    result.setMatched(&fn);
+    result.setIgnored();
+    CHECK(result.status() == TestLookupResult::Status::Ignored);
+    CHECK_FALSE(result.hasMatch());
+    CHECK_FALSE(result.isAmbiguous());
+    CHECK(result.node() == nullptr);
+    result.reset();
+    CHECK(result.status() == TestLookupResult::Status::NoMatch);
 }
 
 TEST_CASE("resolveFnLookupMatches deduplicates a repeated node into one match",
@@ -174,6 +183,24 @@ TEST_CASE("fallback lookup requires a unique distinct node", "[qdoc][fnlookup]")
     CHECK(result.hasMatch() == (matchCount == 1));
     CHECK(result.isAmbiguous() == (matchCount == 2));
     CHECK(result.node() == (matchCount == 1 ? &first : nullptr));
+}
+
+TEST_CASE("lookup diagnostics distinguish no-match from deliberate ignores", "[qdoc][fnlookup]")
+{
+    TestNode node;
+    TestLookupResult result;
+    using Status = TestLookupResult::Status;
+    const auto state = GENERATE(Status::NoMatch, Status::Matched, Status::Ambiguous, Status::Ignored);
+    if (state == Status::Matched)
+        result.setMatched(&node);
+    else if (state == Status::Ambiguous)
+        result.setAmbiguous();
+    else if (state == Status::Ignored)
+        result.setIgnored();
+
+    CHECK_FALSE(shouldDiagnoseFnLookup(result, FnDiagnosticPhase::Prepare));
+    CHECK(shouldDiagnoseFnLookup(result, FnDiagnosticPhase::Generate)
+          == (state == Status::NoMatch || state == Status::Ambiguous));
 }
 
 QT_END_NAMESPACE

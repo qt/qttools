@@ -14,9 +14,9 @@ class Node;
 
 /*
   The outcome of resolving a function signature against the
-  documentation node database. The three states are mutually exclusive:
-  no node matched the signature, exactly one distinct node matched, or
-  multiple distinct nodes matched. A matched result always carries a
+  documentation node database. Lookup either finds one node, finds no
+  match, finds ambiguous fallback nodes, or deliberately ignores a symbol.
+  These states are mutually exclusive. A matched result always carries a
   non-null node; an ambiguous result carries none, because an ambiguous
   resolution must not silently pick one of the candidates.
  */
@@ -28,7 +28,8 @@ public:
     {
         NoMatch, // No candidate matches the signature.
         Matched, // Exactly one node is selected.
-        Ambiguous // Multiple distinct fallback nodes match.
+        Ambiguous, // Multiple distinct fallback nodes match.
+        Ignored // The symbol is explicitly excluded from lookup.
     };
 
     FnLookupResultFor() = default;
@@ -37,7 +38,7 @@ public:
     bool hasMatch() const { return m_status == Status::Matched; }
     bool isAmbiguous() const { return m_status == Status::Ambiguous; }
 
-    // No-match and ambiguous outcomes never expose a candidate.
+    // Only a matched outcome exposes a candidate.
     NodeType *node() const
     {
         return m_status == Status::Matched ? m_node : nullptr;
@@ -62,6 +63,12 @@ public:
         m_node = nullptr;
     }
 
+    void setIgnored()
+    {
+        m_status = Status::Ignored;
+        m_node = nullptr;
+    }
+
 private:
     Status m_status = Status::NoMatch;
     NodeType *m_node = nullptr; // valid only in the Matched state
@@ -69,6 +76,20 @@ private:
 
 // The outcome depends on node identity, not on the node graph implementation.
 using FnLookupResult = FnLookupResultFor<Node>;
+
+enum class FnDiagnosticPhase
+{
+    Prepare, // A later generate pass owns unresolved-command diagnostics.
+    Generate // Includes single-execution mode, where there is no later pass.
+};
+
+template <typename NodeType>
+bool shouldDiagnoseFnLookup(const FnLookupResultFor<NodeType> &result, FnDiagnosticPhase phase)
+{
+    using Status = typename FnLookupResultFor<NodeType>::Status;
+    return phase == FnDiagnosticPhase::Generate
+            && (result.status() == Status::NoMatch || result.isAmbiguous());
+}
 
 /*
   Reduces a collection of matching candidates to a lookup result:

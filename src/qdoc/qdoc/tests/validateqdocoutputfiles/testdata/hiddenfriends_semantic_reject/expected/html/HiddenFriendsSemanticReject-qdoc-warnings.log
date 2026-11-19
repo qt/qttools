@@ -1,0 +1,21 @@
+# QDoc Warning Log
+# Project: HiddenFriendsSemanticReject
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/probe.qdoc:22: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U> void placeholderCheck(PlaceholderProbe<U> &a, QDocT0 &b) noexcept
+src/probe.qdoc:27: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U> void literalCheck(LiteralProbe<U> &a, CharacterTag<'U'> &b) noexcept
+src/probe.qdoc:39: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U> void cvCheck(ShapeProbe<U> &a, U *&b) noexcept
+src/probe.qdoc:44: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U> void refCheck(ShapeProbe<U> &a, U &b) noexcept
+src/probe.qdoc:49: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U> void valueTypeCheck(ShapeProbe<U> &a, ValueTag<1u> &b) noexcept
+src/probe.qdoc:54: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U> void structureCheck(ShapeProbe<U> &a, ValueTag<'T'> &b) noexcept
+src/probe.qdoc:59: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U, typename V> void cvCheck(ShapeProbe<U> &a, const U *&b) noexcept
+src/probe.qdoc:71: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U, int M> void expressionCheck(UnsupportedProbe<U, M> &a, ValueTag<M + 1> &b) noexcept
+src/probe.qdoc:76: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn void nonexistentFunction(int value)
+src/probe.qdoc:81: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename... U> void cvCheck(ShapeProbe<int> &a, const int *&b) noexcept
+src/probe.qdoc:86: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U> requires (sizeof(U) > 0) void cvCheck(ShapeProbe<U> &a, const U *&b) noexcept
+src/probe.qdoc:91: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <template <typename> class C> void cvCheck(ShapeProbe<C<int>> &a, const C<int> *&b) noexcept
+src/probe.qdoc:96: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U> void nestedScopeCheck(typename NestedScopeProbe<U>::template Inner<U> &a, U value)
+src/probe.qdoc:101: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U> void partialScopeCheck(PartialScopeProbe<U *> &a)
+src/probe.qdoc:106: [HiddenFriendsSemanticReject] (qdoc) warning: Failed to find function when parsing \fn template <typename U> void wrappedScopeCheck(FriendContainer<WrappedScopeProbe<U>> &a)

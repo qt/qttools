@@ -73,3 +73,43 @@
 
     Rejected unsupported-expression marker. Checks \a a and \a b.
 */
+/*!
+    \fn void nonexistentFunction(int value)
+
+    Unmatched valid-C++ signature marker. Takes \a value.
+*/
+/*!
+    \fn template <typename... U> void cvCheck(ShapeProbe<int> &a, const int *&b) noexcept
+
+    Rejected parameter-pack marker. Checks \a a and \a b.
+*/
+/*!
+    \fn template <typename U> requires (sizeof(U) > 0) void cvCheck(ShapeProbe<U> &a, const U *&b) noexcept
+
+    Rejected constrained-binder marker. Checks \a a and \a b.
+*/
+/*!
+    \fn template <template <typename> class C> void cvCheck(ShapeProbe<C<int>> &a, const C<int> *&b) noexcept
+
+    Rejected template-template-binder marker. Checks \a a and \a b.
+*/
+/*!
+    \fn template <typename U> void nestedScopeCheck(typename NestedScopeProbe<U>::template Inner<U> &a, U value)
+
+    Rejected nested-context marker. Checks \a a and \a value.
+*/
+/*!
+    \fn template <typename U> void partialScopeCheck(PartialScopeProbe<U *> &a)
+
+    Rejected partial-specialization marker. Checks \a a.
+*/
+/*!
+    \fn template <typename U> void wrappedScopeCheck(FriendContainer<WrappedScopeProbe<U>> &a)
+
+    Rejected wrapped-class-discovery marker. Checks \a a.
+*/
+/*!
+    \fn void _qt_property_ignoredSignature(int value)
+
+    Deliberately ignored generated-function marker. Takes \a value.
+*/

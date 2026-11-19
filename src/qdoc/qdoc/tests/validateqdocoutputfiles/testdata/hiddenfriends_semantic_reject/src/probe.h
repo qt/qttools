@@ -36,3 +36,28 @@ class UnsupportedProbe
 public:
     friend void expressionCheck(UnsupportedProbe &, ValueTag<N + 1> &) noexcept {}
 };
+
+template <typename T>
+class NestedScopeProbe
+{
+public:
+    template <typename U> class Inner
+    {
+    public:
+        friend void nestedScopeCheck(Inner &, U) {}
+    };
+};
+
+template <typename T> class PartialScopeProbe;
+template <typename T> class PartialScopeProbe<T *>
+{
+public:
+    friend void partialScopeCheck(PartialScopeProbe &) {}
+};
+
+template <typename T> struct FriendContainer {};
+template <typename T> class WrappedScopeProbe
+{
+public:
+    friend void wrappedScopeCheck(FriendContainer<WrappedScopeProbe> &) {}
+};

@@ -15,10 +15,3 @@
     Checks \a a using \a key. Dual parameter marker. The documentation renames the
     template parameters and repeats the correct argument bindings.
 */
-
-/*!
-    \fn template <typename A, typename B> void dualCheck(DualStore<B, A> &a, B key) noexcept
-
-    Checks \a a using \a key. Reversed dual parameter marker. Reversed argument
-    bindings describe a different function; this command must not document the hidden friend.
-*/
