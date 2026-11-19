@@ -1,0 +1,75 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \module HiddenFriendsSemanticReject
+    \brief Rejected semantic hidden-friend matching probes.
+*/
+/*!
+    \class PlaceholderProbe
+    \inmodule HiddenFriendsSemanticReject
+    \brief A concrete type identity probe.
+
+    The \a T parameter is a type.
+*/
+/*!
+    \class LiteralProbe
+    \inmodule HiddenFriendsSemanticReject
+    \brief A literal identity probe.
+
+    The \a T parameter is a type.
+*/
+/*!
+    \fn template <typename U> void placeholderCheck(PlaceholderProbe<U> &a, QDocT0 &b) noexcept
+
+    Rejected placeholder marker. Checks \a a and \a b.
+*/
+/*!
+    \fn template <typename U> void literalCheck(LiteralProbe<U> &a, CharacterTag<'U'> &b) noexcept
+
+    Rejected literal marker. Checks \a a and \a b.
+*/
+/*!
+    \class ShapeProbe
+    \inmodule HiddenFriendsSemanticReject
+    \brief A structural type identity probe.
+
+    The \a T parameter is a type.
+*/
+/*!
+    \fn template <typename U> void cvCheck(ShapeProbe<U> &a, U *&b) noexcept
+
+    Rejected cv marker. Checks \a a and \a b.
+*/
+/*!
+    \fn template <typename U> void refCheck(ShapeProbe<U> &a, U &b) noexcept
+
+    Rejected ref marker. Checks \a a and \a b.
+*/
+/*!
+    \fn template <typename U> void valueTypeCheck(ShapeProbe<U> &a, ValueTag<1u> &b) noexcept
+
+    Rejected integral-type marker. Checks \a a and \a b.
+*/
+/*!
+    \fn template <typename U> void structureCheck(ShapeProbe<U> &a, ValueTag<'T'> &b) noexcept
+
+    Rejected template-identity marker. Checks \a a and \a b.
+*/
+/*!
+    \fn template <typename U, typename V> void cvCheck(ShapeProbe<U> &a, const U *&b) noexcept
+
+    Rejected binder-structure marker. Checks \a a and \a b.
+*/
+/*!
+    \class UnsupportedProbe
+    \inmodule HiddenFriendsSemanticReject
+    \brief An unsupported dependent expression probe.
+
+    The \a T parameter is a type and \a N is a value.
+*/
+/*!
+    \fn template <typename U, int M> void expressionCheck(UnsupportedProbe<U, M> &a, ValueTag<M + 1> &b) noexcept
+
+    Rejected unsupported-expression marker. Checks \a a and \a b.
+*/

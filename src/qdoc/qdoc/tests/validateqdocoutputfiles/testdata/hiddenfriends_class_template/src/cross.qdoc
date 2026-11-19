@@ -1,0 +1,23 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \class CrossThing
+    \inmodule HiddenFriendsClassTemplate
+    \brief A template class whose hidden friend documentation is related to CrossTarget.
+
+    The \a T parameter specifies the element type.
+*/
+
+/*!
+    \class CrossTarget
+    \inmodule HiddenFriendsClassTemplate
+    \brief A non-template class that hosts the crossCheck documentation.
+*/
+
+/*!
+    \fn template <typename T> void crossCheck(CrossThing<T> &a, CrossThing<T> &b) noexcept
+    \relates CrossTarget
+
+    Checks \a a against \a b. Cross-target relates marker.
+*/

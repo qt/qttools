@@ -1,0 +1,24 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \class BindingProbe
+    \inmodule HiddenFriendsReject
+    \brief A two-parameter template class with an asymmetric hidden friend.
+
+    The \a A and \a B parameters specify the key and value types.
+*/
+
+/*!
+    \fn template <typename B, typename A> void bindingCheck(BindingProbe<B, A> &a, A key) noexcept
+
+    Rejected positional-binding marker. Checks \a a using \a key.
+
+    This command must not document the hidden friend. The leading
+    declaration reuses the class's parameter names in reversed order, so
+    the class argument still binds the same parameters positionally; but
+    the key argument is spelled \c A, which the command's declaration
+    binds to the class's second parameter, while the friend's key is its
+    first parameter. Identical spellings with a changed positional
+    binding describe a different function.
+*/

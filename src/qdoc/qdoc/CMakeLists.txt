@@ -122,12 +122,15 @@ set(qdoc_sources
     src/qdoc/filebase.cpp
     src/qdoc/filedocumentwriter.cpp
     src/qdoc/filesystem/fileresolver.cpp
+    src/qdoc/fnlookupresult.h
     src/qdoc/functionnode.cpp
     src/qdoc/generator.cpp
     src/qdoc/genustypes.h
     src/qdoc/anchorid.cpp
     src/qdoc/headernode.cpp
     src/qdoc/helpprojectwriter.cpp
+    src/qdoc/hiddenfriendtypekey.cpp
+    src/qdoc/hiddenfriendtypekey.h
     src/qdoc/hrefresolver.cpp
     src/qdoc/htmlgenerator.cpp
     src/qdoc/inclusionfilter.h

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <namespace name="locker_ns" href="locker-ns.html" status="active" access="public" location="nslocker.h" documented="true" includefile="nslocker.h" module="HiddenFriendsClassTemplate" brief="A namespace containing a class template with a hidden friend" whereDocumented="HiddenFriendsClassTemplate">
+            <description>
+                <brief>A namespace containing a class template with a hidden friend.</brief>
+            </description>
+            <class name="NamespaceLocker" fullname="locker_ns::NamespaceLocker" href="locker-ns-namespacelocker.html" status="active" access="public" location="nslocker.h" documented="true" includefile="nslocker.h" module="HiddenFriendsClassTemplate" brief="A template class inside a namespace">
+                <description>
+                    <brief>A template class inside a namespace.</brief>
+                    <para>The <argument>Mutex</argument> parameter specifies the mutex type.</para>
+                </description>
+                <function name="namespaceSwap" href="locker-ns-namespacelocker.html#namespaceSwap" status="active" access="public" location="nslocker.h" documented="true" related="6" meta="plain" hidden-friend="true" noexcept="true" type="void" signature="void namespaceSwap(locker_ns::NamespaceLocker&lt;Mutex&gt; &amp;lhs, locker_ns::NamespaceLocker&lt;Mutex&gt; &amp;rhs)">
+                    <parameter type="locker_ns::NamespaceLocker&lt;Mutex&gt; &amp;" name="lhs" default=""/>
+                    <parameter type="locker_ns::NamespaceLocker&lt;Mutex&gt; &amp;" name="rhs" default=""/>
+                    <description>
+                        <para>Swaps <argument>lhs</argument> and <argument>rhs</argument>. Namespace hidden-friend resolution marker.</para>
+                    </description>
+                </function>
+            </class>
+        </namespace>
+    </document>
+</WebXML>

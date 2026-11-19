@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="HiddenFriendsSemanticReject Reference Documentation" version="" project="HiddenFriendsSemanticReject">
+    <namespace name="" status="active" access="public" module="hiddenfriendssemanticreject">
+        <class name="LiteralProbe" href="literalprobe.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="HiddenFriendsSemanticReject" brief="A literal identity probe"/>
+        <class name="PlaceholderProbe" href="placeholderprobe.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="HiddenFriendsSemanticReject" brief="A concrete type identity probe"/>
+        <class name="ShapeProbe" href="shapeprobe.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="HiddenFriendsSemanticReject" brief="A structural type identity probe"/>
+        <class name="UnsupportedProbe" href="unsupportedprobe.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="HiddenFriendsSemanticReject" brief="An unsupported dependent expression probe"/>
+        <module name="HiddenFriendsSemanticReject" href="hiddenfriendssemanticreject-module.html" status="active" location="probe.qdoc" documented="true" seen="true" brief="Rejected semantic hidden-friend matching probes"/>
+    </namespace>
+</INDEX>

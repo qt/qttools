@@ -1,0 +1,14 @@
+project = HiddenFriendsSemanticReject
+outputformats = HTML WebXML DocBook
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+WebXML.nosubdirs = true
+WebXML.outputsubdir = webxml
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+locationinfo = false
+headerdirs = src
+sourcedirs = src
+documentationinheaders = false
+# Rejection is asserted by nonattachment, not by the absence of diagnostics.
+warninglimit.enabled = false

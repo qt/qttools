@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="DualStore" href="dualstore.html" status="active" access="public" location="dual.h" documented="true" includefile="dual.h" module="HiddenFriendsClassTemplate" brief="A two-type-parameter template class with an asymmetric hidden friend">
+            <description>
+                <brief>A two-type-parameter template class with an asymmetric hidden friend.</brief>
+                <para>The <argument>Lhs</argument> and <argument>Rhs</argument> parameters specify the key and value types.</para>
+            </description>
+            <function name="dualCheck" href="dualstore.html#dualCheck" status="active" access="public" location="dual.h" documented="true" related="1" meta="plain" hidden-friend="true" noexcept="true" type="void" signature="void dualCheck(DualStore&lt;Lhs, Rhs&gt; &amp;a, Lhs key)">
+                <parameter type="DualStore&lt;Lhs, Rhs&gt; &amp;" name="a" default=""/>
+                <parameter type="Lhs" name="key" default=""/>
+                <description>
+                    <para>Checks <argument>a</argument> using <argument>key</argument>. Dual parameter marker. The documentation renames the template parameters and repeats the correct argument bindings.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

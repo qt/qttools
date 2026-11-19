@@ -1,0 +1,98 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \module HiddenFriendsSemantic
+    \brief Semantic hidden-friend matching probes.
+*/
+/*!
+    \class AliasProbe
+    \inmodule HiddenFriendsSemantic
+    \brief An alias equivalence probe.
+
+    The \a T parameter is a type.
+*/
+/*!
+    \class AliasControl
+    \inmodule HiddenFriendsSemantic
+    \brief An alias spelling control.
+
+    The \a T parameter is a type.
+*/
+/*!
+    \class LiteralControl
+    \inmodule HiddenFriendsSemantic
+    \brief A fixed literal control.
+
+    The \a T parameter is a type.
+*/
+/*!
+    \fn template <typename U> void aliasCheck(AliasProbe<U> &a, U &b) noexcept
+
+    Required alias-equivalence marker. Checks \a a and \a b.
+*/
+/*!
+    \fn template <typename U> void aliasControlCheck(AliasControl<U> &a, RefAlias<U> b) noexcept
+
+    Required alias-control marker. Checks \a a and \a b.
+*/
+/*!
+    \fn template <typename U> void literalControlCheck(LiteralControl<U> &a, CharacterTag<'T'> &b) noexcept
+
+    Required fixed-literal marker. Checks \a a and \a b.
+*/
+/*!
+    \class StructureControl
+    \inmodule HiddenFriendsSemantic
+    \brief A cv/ref and non-type binder control.
+
+    The \a T parameter is a type and \a N is a value.
+*/
+/*!
+    \fn template <typename U, int M> void structureCheck(StructureControl<U, M> &a, const U *&b, U &&c, IntegerTag<M> &d, IntegerTag<6 * 7> &e) noexcept
+
+    Required structural-alias marker. Checks \a a, \a b, \a c, \a d and \a e.
+*/
+/*!
+    \class PrecedenceProbe
+    \inmodule HiddenFriendsSemantic
+    \brief An exact genuine-template precedence control.
+
+    The \a T parameter is a type.
+*/
+/*!
+    \fn template <typename U> void precedenceCheck(PrecedenceProbe<U> &a) noexcept
+    \relates PrecedenceProbe
+
+    Required genuine-template precedence marker. Checks \a a.
+*/
+/*!
+    \fn template <typename U> void precedenceValueCheck(PrecedenceProbe<U> &a, U value) noexcept
+    \relates PrecedenceProbe
+
+    Required bare-parameter template-precedence marker. Checks \a a and \a value.
+*/
+/*!
+    \class DedupControl
+    \inmodule HiddenFriendsSemantic
+    \brief A repeated header declaration control.
+
+    The \a T parameter is a type.
+*/
+/*!
+    \fn template <typename U> void dedupCheck(DedupControl<U> &a, U &b)
+
+    Required declaration-deduplication marker. Checks \a a and \a b.
+*/
+/*!
+    \class DependentValueProbe
+    \inmodule HiddenFriendsSemantic
+    \brief A dependent non-type parameter renaming probe.
+
+    The \a T parameter is a type and \a N is a value of that type.
+*/
+/*!
+    \fn template <typename U, U M> void dependentValueCheck(DependentValueProbe<U, M> &a, U value) noexcept
+
+    Required dependent-value-renaming marker. Checks \a a and \a value.
+*/

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="DependentValueProbe" href="dependentvalueprobe.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="HiddenFriendsSemantic" brief="A dependent non-type parameter renaming probe">
+            <description>
+                <brief>A dependent non-type parameter renaming probe.</brief>
+                <para>The <argument>T</argument> parameter is a type and <argument>N</argument> is a value of that type.</para>
+            </description>
+            <function name="dependentValueCheck" href="dependentvalueprobe.html#dependentValueCheck" status="active" access="public" location="probe.h" documented="true" related="7" meta="plain" hidden-friend="true" noexcept="true" type="void" signature="void dependentValueCheck(DependentValueProbe&lt;T, N&gt; &amp;a, T value)">
+                <parameter type="DependentValueProbe&lt;T, N&gt; &amp;" name="a" default=""/>
+                <parameter type="T" name="value" default=""/>
+                <description>
+                    <para>Required dependent-value-renaming marker. Checks <argument>a</argument> and <argument>value</argument>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

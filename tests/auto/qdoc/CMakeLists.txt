@@ -36,6 +36,11 @@ set(QDOC_INCLUDE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../../../src/qdoc/qdoc/src/
 if(QT_BUILD_STANDALONE_TESTS)
     include(${QDOC_PROJECT_DIRECTORY}/catch_generators/tests/CMakeLists.txt)
 
+    # Standalone test builds skip configure.cmake, so repeat its libclang
+    # lookup for the tests that link against Clang.
+    include(${QDOC_PROJECT_DIRECTORY}/cmake/QDocConfiguration.cmake)
+    qt_find_package(WrapLibClang 8 PROVIDED_TARGETS WrapLibClang::WrapLibClang)
+
     # Add all tests in src/qdoc/qdoc/tests:
     file(GLOB qdoc_tests_dir_content LIST_DIRECTORIES true "${QDOC_PROJECT_DIRECTORY}/qdoc/tests/*")
     foreach(path IN LISTS qdoc_tests_dir_content)

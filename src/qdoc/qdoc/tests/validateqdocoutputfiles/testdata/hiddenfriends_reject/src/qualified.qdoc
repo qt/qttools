@@ -1,0 +1,27 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \module HiddenFriendsReject
+    \brief Module for rejected class-template hidden-friend \\fn commands.
+*/
+
+/*!
+    \class QualifiedProbe
+    \inmodule HiddenFriendsReject
+    \brief A template class whose hidden friend takes a fixed qualified type.
+
+    The \a T parameter specifies the element type.
+*/
+
+/*!
+    \fn template <typename U> void qualifiedCheck(QualifiedProbe<U> &a, ConcreteTypes::U &b) noexcept
+
+    Rejected qualified-type marker. Checks \a a and \a b.
+
+    This command must not document the hidden friend. The friend takes
+    ConcreteTypes::T, a fixed type whose final name component merely
+    shares a name with the class's template parameter; ConcreteTypes::U
+    is a different fixed type. Renaming the parameter cannot turn one
+    into the other.
+*/

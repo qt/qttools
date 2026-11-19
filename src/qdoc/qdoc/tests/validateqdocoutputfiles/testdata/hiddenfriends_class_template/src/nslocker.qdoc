@@ -1,0 +1,22 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \namespace locker_ns
+    \inmodule HiddenFriendsClassTemplate
+    \brief A namespace containing a class template with a hidden friend.
+*/
+
+/*!
+    \class locker_ns::NamespaceLocker
+    \inmodule HiddenFriendsClassTemplate
+    \brief A template class inside a namespace.
+
+    The \a Mutex parameter specifies the mutex type.
+*/
+
+/*!
+    \fn template <typename Mutex> void namespaceSwap(locker_ns::NamespaceLocker<Mutex> &lhs, locker_ns::NamespaceLocker<Mutex> &rhs) noexcept
+
+    Swaps \a lhs and \a rhs. Namespace hidden-friend resolution marker.
+*/

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <module name="HiddenFriendsClassTemplate" href="hiddenfriendsclasstemplate-module.html" status="active" location="locker.qdoc" documented="true" seen="true" brief="Module for class-template hidden-friend resolution tests">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Namespaces</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="locker_ns" href="locker-ns.html" type="namespace"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A namespace containing a class template with a hidden friend.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="CrossTarget" href="crosstarget.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A non-template class that hosts the crossCheck documentation.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="CrossThing" href="crossthing.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A template class whose hidden friend documentation is related to CrossTarget.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="DualStore" href="dualstore.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A two-type-parameter template class with an asymmetric hidden friend.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="GHolder" href="gholder.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A non-template class with a genuine friend function template.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="Mixture" href="mixture.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A template class with a hidden friend that shares its name with a free function template.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="locker_ns::NamespaceLocker" href="locker-ns-namespacelocker.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A template class inside a namespace.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="PlainLocker" href="plainlocker.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A minimal locker template.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="QualLocker" href="quallocker.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A template class whose hidden friend is documented with class-qualified syntax.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="RenamedThing" href="renamedthing.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A template class whose template parameter is renamed in the documentation.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="ReuseStore" href="reusestore.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A two-parameter template class documented with reused parameter names.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>Module for class-template hidden-friend resolution tests.</brief>
+            </description>
+        </module>
+    </document>
+</WebXML>

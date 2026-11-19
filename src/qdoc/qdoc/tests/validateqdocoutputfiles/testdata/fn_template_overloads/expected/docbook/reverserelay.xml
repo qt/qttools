@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>ReverseRelay Class</db:title>
+<db:productname>FnTemplateOverloads</db:productname>
+<db:titleabbrev>FnTemplateOverloads Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Declares the functor form first.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>relay.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="connect">
+<db:title>[static] template &lt;typename Functor&gt; void ReverseRelay::connect(Functor <db:emphasis>functor</db:emphasis>)</db:title>
+<db:para>Reverse functor overload marker. Calls <db:code role="parameter">functor</db:code>.</db:para>
+</db:section>
+<db:section xml:id="connect-1">
+<db:title>[static] template &lt;typename Member&gt; void ReverseRelay::connect(Member <db:emphasis>method</db:emphasis>)</db:title>
+<db:para>Reverse member overload marker. Calls <db:code role="parameter">method</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

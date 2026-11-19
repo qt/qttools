@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="GHolder" href="gholder.html" status="active" access="public" location="gfriend.h" documented="true" includefile="gfriend.h" module="HiddenFriendsClassTemplate" brief="A non-template class with a genuine friend function template">
+            <description>
+                <brief>A non-template class with a genuine friend function template.</brief>
+            </description>
+            <function name="gfriend" href="gholder.html#gfriend" status="active" access="public" location="gfriend.h" documented="true" related="2" meta="plain" hidden-friend="true" noexcept="true" type="void" signature="void gfriend(GHolder &amp;a, Other &amp;b)">
+                <parameter type="GHolder &amp;" name="a" default=""/>
+                <parameter type="Other &amp;" name="b" default=""/>
+                <description>
+                    <para>Genuine friend function template marker.</para>
+                    <para>
+                        <argument>a</argument>: The holder. <argument>b</argument>: The other object.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>

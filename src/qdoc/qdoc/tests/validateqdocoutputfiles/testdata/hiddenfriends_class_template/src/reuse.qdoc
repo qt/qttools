@@ -1,0 +1,18 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \class ReuseStore
+    \inmodule HiddenFriendsClassTemplate
+    \brief A two-parameter template class documented with reused parameter names.
+
+    The \a A and \a B parameters specify the key and value types.
+*/
+
+/*!
+    \fn template <typename B, typename A> void reuseCheck(ReuseStore<B, A> &a, B key) noexcept
+
+    Reused name binding marker. Checks \a a using \a key. The documentation
+    reuses the class's parameter names in reversed declaration order while
+    keeping the argument bindings consistent, so it documents the hidden friend.
+*/

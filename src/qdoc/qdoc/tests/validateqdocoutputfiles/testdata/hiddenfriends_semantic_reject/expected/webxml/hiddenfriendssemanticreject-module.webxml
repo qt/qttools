@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <module name="HiddenFriendsSemanticReject" href="hiddenfriendssemanticreject-module.html" status="active" location="probe.qdoc" documented="true" seen="true" brief="Rejected semantic hidden-friend matching probes">
+            <description>
+                <generatedlist contents="classesbymodule">
+                    <section>
+                        <heading level="1">Classes</heading>
+                        <table width="100%">
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="LiteralProbe" href="literalprobe.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A literal identity probe.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="PlaceholderProbe" href="placeholderprobe.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A concrete type identity probe.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="ShapeProbe" href="shapeprobe.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>A structural type identity probe.</para>
+                                </item>
+                            </row>
+                            <row>
+                                <item>
+                                    <para>
+                                        <link raw="UnsupportedProbe" href="unsupportedprobe.html" type="class"/>
+                                    </para>
+                                </item>
+                                <item>
+                                    <para>An unsupported dependent expression probe.</para>
+                                </item>
+                            </row>
+                        </table>
+                    </section>
+                </generatedlist>
+                <brief>Rejected semantic hidden-friend matching probes.</brief>
+            </description>
+        </module>
+    </document>
+</WebXML>

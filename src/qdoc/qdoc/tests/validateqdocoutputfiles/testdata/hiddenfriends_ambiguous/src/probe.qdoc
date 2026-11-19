@@ -1,0 +1,26 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \module HiddenFriendsAmbiguous
+    \brief Ambiguous hidden-friend matching probes.
+*/
+/*!
+    \class AmbiguousFirst
+    \inmodule HiddenFriendsAmbiguous
+    \brief A first candidate class.
+
+    The \a T parameter is a type.
+*/
+/*!
+    \class AmbiguousSecond
+    \inmodule HiddenFriendsAmbiguous
+    \brief A second candidate class.
+
+    The \a U parameter is a type.
+*/
+/*!
+    \fn template <typename V> void ambiguousCheck(AmbiguousFirst<V> &a, AmbiguousSecond<V> &b, V value)
+
+    Ambiguity diagnostic marker. Checks \a a, \a b and \a value.
+*/

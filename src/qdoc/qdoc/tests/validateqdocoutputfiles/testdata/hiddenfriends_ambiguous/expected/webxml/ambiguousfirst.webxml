@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="AmbiguousFirst" href="ambiguousfirst.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="HiddenFriendsAmbiguous" brief="A first candidate class">
+            <description>
+                <brief>A first candidate class.</brief>
+                <para>The <argument>T</argument> parameter is a type.</para>
+            </description>
+        </class>
+    </document>
+</WebXML>

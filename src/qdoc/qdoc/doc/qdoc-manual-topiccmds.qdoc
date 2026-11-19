@@ -440,6 +440,64 @@
     friends by searching classes referenced in the function's
     parameter types.
 
+    When the hidden friend is declared in a class template, and the
+    friend itself is not a function template, the free function
+    syntax takes a leading \c template declaration that names the
+    template parameters of the \e{enclosing class}, not of the
+    friend. For example, for:
+
+    \code
+    template <typename T>
+    class MyPair
+    {
+    public:
+        friend void swap(MyPair<T> &a, MyPair<T> &b)
+        { ... }
+    };
+    \endcode
+
+    write:
+
+    \code
+    \fn template <typename T> void swap(MyPair<T> &a, MyPair<T> &b)
+    \endcode
+
+    The parameters of the leading declaration are matched against
+    the class's template parameters positionally, so the
+    documentation may use different names for them; the same name
+    bound to a different parameter describes a different signature
+    and does not match. The class-qualified syntax is also supported
+    for this case. A friend that is itself a function template is
+    documented with its own template declaration, through the
+    ordinary matching rules. The hidden-friend interpretation is a
+    fallback: if an ordinary match exists for the signature, such as
+    a genuine function template with the same name, QDoc
+    resolves the command to that function instead.
+
+    The fallback supports primary class templates with a single,
+    top-level template declaration containing unconstrained type
+    parameters and explicitly typed non-type parameters. A non-type
+    parameter's type may refer to an earlier type parameter. Names and
+    default arguments do not affect the positional binding.
+
+    Parameter types may use fundamental types, named classes and enums,
+    pointers, references, cv-qualifiers, and class-template specializations.
+    Aliases are compared by their underlying types. Template arguments
+    may be types, references to the enclosing template's non-type
+    parameters, or fixed integral values.
+
+    The fallback does not perform C++ template deduction. It does not
+    support constrained or variadic template parameters, template-template
+    parameters, \c{auto} non-type parameters, nested template contexts,
+    or partial specializations. Dependent expressions other than a
+    non-type parameter reference, dependent member types, \c{decltype},
+    arrays, function pointers, and member pointers are also outside its
+    scope. The enclosing class must appear directly in a function
+    parameter type, possibly behind pointers or references; QDoc does
+    not search inside another template's arguments for hidden friends.
+    These restrictions apply to this fallback, not to ordinary function
+    template matching or the class-qualified syntax.
+
     \note The \\fn command is QDoc's default command: when no
     topic command can be found in a QDoc comment, QDoc tries to tie
     the documentation to the following code as if it is the

@@ -1,0 +1,37 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \module FnTemplateOverloads
+    \brief Tests spelling-based identity of documentation-only overloads.
+*/
+/*!
+    \class ForwardRelay
+    \inmodule FnTemplateOverloads
+    \brief Declares the member-function form first.
+*/
+/*!
+    \class ReverseRelay
+    \inmodule FnTemplateOverloads
+    \brief Declares the functor form first.
+*/
+/*!
+    \fn template <typename Member> void ForwardRelay::connect(Member method)
+
+    Forward member overload marker. Calls \a method.
+*/
+/*!
+    \fn template <typename Functor> void ForwardRelay::connect(Functor functor)
+
+    Forward functor overload marker. Calls \a functor.
+*/
+/*!
+    \fn template <typename Member> void ReverseRelay::connect(Member method)
+
+    Reverse member overload marker. Calls \a method.
+*/
+/*!
+    \fn template <typename Functor> void ReverseRelay::connect(Functor functor)
+
+    Reverse functor overload marker. Calls \a functor.
+*/

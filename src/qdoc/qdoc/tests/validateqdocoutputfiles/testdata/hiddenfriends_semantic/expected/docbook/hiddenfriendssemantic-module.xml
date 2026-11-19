@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title/>
+<db:productname>HiddenFriendsSemantic</db:productname>
+<db:titleabbrev>HiddenFriendsSemantic Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Semantic hidden-friend matching probes.</db:para>
+</db:abstract>
+</db:info>
+<db:para>Semantic hidden-friend matching probes.</db:para>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:variablelist role="classes">
+<db:varlistentry>
+<db:term><db:link xlink:href="aliascontrol.xml" xlink:role="class">AliasControl</db:link></db:term>
+<db:listitem>
+<db:para>An alias spelling control.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="aliasprobe.xml" xlink:role="class">AliasProbe</db:link></db:term>
+<db:listitem>
+<db:para>An alias equivalence probe.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="dedupcontrol.xml" xlink:role="class">DedupControl</db:link></db:term>
+<db:listitem>
+<db:para>A repeated header declaration control.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="dependentvalueprobe.xml" xlink:role="class">DependentValueProbe</db:link></db:term>
+<db:listitem>
+<db:para>A dependent non-type parameter renaming probe.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="literalcontrol.xml" xlink:role="class">LiteralControl</db:link></db:term>
+<db:listitem>
+<db:para>A fixed literal control.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="precedenceprobe.xml" xlink:role="class">PrecedenceProbe</db:link></db:term>
+<db:listitem>
+<db:para>An exact genuine-template precedence control.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="structurecontrol.xml" xlink:role="class">StructureControl</db:link></db:term>
+<db:listitem>
+<db:para>A cv/ref and non-type binder control.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+</db:article>

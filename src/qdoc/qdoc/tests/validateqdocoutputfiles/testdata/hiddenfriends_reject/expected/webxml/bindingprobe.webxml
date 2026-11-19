@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="BindingProbe" href="bindingprobe.html" status="active" access="public" location="binding.h" documented="true" includefile="binding.h" module="HiddenFriendsReject" brief="A two-parameter template class with an asymmetric hidden friend">
+            <description>
+                <brief>A two-parameter template class with an asymmetric hidden friend.</brief>
+                <para>The <argument>A</argument> and <argument>B</argument> parameters specify the key and value types.</para>
+            </description>
+        </class>
+    </document>
+</WebXML>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="ReverseRelay" href="reverserelay.html" status="active" access="public" location="relay.h" documented="true" includefile="relay.h" module="FnTemplateOverloads" brief="Declares the functor form first">
+            <description>
+                <brief>Declares the functor form first.</brief>
+            </description>
+            <function name="connect" fullname="ReverseRelay::connect" href="reverserelay.html#connect" status="active" access="public" location="relay.h" documented="true" meta="plain" static="true" type="void" signature="void connect(Functor functor)">
+                <parameter type="Functor" name="functor" default=""/>
+                <description>
+                    <para>Reverse functor overload marker. Calls <argument>functor</argument>.</para>
+                </description>
+            </function>
+            <function name="connect" fullname="ReverseRelay::connect" href="reverserelay.html#connect-1" status="active" access="public" location="relay.h" documented="true" meta="plain" static="true" overload="true" overload-number="1" type="void" signature="void connect(Member method)">
+                <parameter type="Member" name="method" default=""/>
+                <description>
+                    <para>Reverse member overload marker. Calls <argument>method</argument>.</para>
+                </description>
+            </function>
+        </class>
+    </document>
+</WebXML>
