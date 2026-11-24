@@ -1,0 +1,18 @@
+project = HiddenFriendsTemplateInstantiation
+description = Test case for hidden friend lookup next to instantiated template functions
+
+outputformats = HTML
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+locationinfo = false
+
+sources.fileextensions = "*.qdoc"
+headers.fileextensions = "*.h"
+
+sourcedirs = src
+headerdirs = src
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true

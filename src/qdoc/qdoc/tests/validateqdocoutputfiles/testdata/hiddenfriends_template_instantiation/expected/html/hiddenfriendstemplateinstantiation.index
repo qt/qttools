@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Test case for hidden friend lookup next to instantiated template functions" version="" project="HiddenFriendsTemplateInstantiation">
+    <namespace name="" status="active" access="public" module="hiddenfriendstemplateinstantiation">
+        <class name="Handle" href="handle.html" status="active" access="public" location="session.h" documented="true" includefile="session.h" module="HiddenFriendsTemplateInstantiation" brief="A class template whose hidden friend gets instantiated in the header">
+            <function name="operator==" href="handle.html#operator-eq-eq" status="active" access="public" location="session.h" documented="true" related="0" meta="plain" constexpr="true" hidden-friend="true" noexcept="true" type="bool" signature="bool operator==(const Handle&lt;T&gt; &amp;lhs, const Handle&lt;T&gt; &amp;rhs)">
+                <parameter type="const Handle&lt;T&gt; &amp;" name="lhs" default=""/>
+                <parameter type="const Handle&lt;T&gt; &amp;" name="rhs" default=""/>
+            </function>
+            <variable name="value" fullname="Handle::value" href="handle.html#value-var" status="active" access="public" location="session.h" documented="true" type="T" static="false" brief="This variable holds the stored value"/>
+        </class>
+        <class name="Session" href="session.html" status="active" access="public" location="session.h" documented="true" includefile="session.h" module="HiddenFriendsTemplateInstantiation" brief="A class with hidden friend comparison operators">
+            <function name="operator!=" href="session.html#operator-not-eq" status="active" access="public" location="session.h" documented="true" related="1" meta="plain" hidden-friend="true" type="bool" signature="bool operator!=(const Session &amp;lhs, const Session &amp;rhs)">
+                <parameter type="const Session &amp;" name="lhs" default=""/>
+                <parameter type="const Session &amp;" name="rhs" default=""/>
+            </function>
+            <function name="operator==" href="session.html#operator-eq-eq" status="active" access="public" location="session.h" documented="true" related="2" meta="plain" hidden-friend="true" type="bool" signature="bool operator==(const Session &amp;lhs, const Session &amp;rhs)">
+                <parameter type="const Session &amp;" name="lhs" default=""/>
+                <parameter type="const Session &amp;" name="rhs" default=""/>
+            </function>
+        </class>
+        <module name="HiddenFriendsTemplateInstantiation" href="hiddenfriendstemplateinstantiation-module.html" status="active" location="session.qdoc" documented="true" seen="true" title="Hidden Friends Template Instantiation" brief="Tests hidden friend lookup when a template instantiation shares the name"/>
+    </namespace>
+</INDEX>
