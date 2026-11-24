@@ -1,0 +1,50 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \module HiddenFriendsTemplateInstantiation
+    \title Hidden Friends Template Instantiation
+    \brief Tests hidden friend lookup when a template instantiation shares the name.
+*/
+
+/*!
+    \class Handle
+    \inmodule HiddenFriendsTemplateInstantiation
+    \brief A class template whose hidden friend gets instantiated in the header.
+
+    The \a T parameter specifies the type of the stored value.
+*/
+
+/*!
+    \variable Handle::value
+    \brief The stored value.
+*/
+
+/*!
+    \fn template <typename T> bool Handle<T>::operator==(const Handle<T> &lhs, const Handle<T> &rhs)
+
+    Returns \c true if \a lhs and \a rhs hold equal values; otherwise
+    returns \c false.
+*/
+
+/*!
+    \class Session
+    \inmodule HiddenFriendsTemplateInstantiation
+    \brief A class with hidden friend comparison operators.
+*/
+
+/*!
+    \fn bool operator==(const Session &lhs, const Session &rhs)
+    \relates Session
+
+    Returns \c true if \a lhs and \a rhs are equal; otherwise returns
+    \c false.
+*/
+
+/*!
+    \fn bool operator!=(const Session &lhs, const Session &rhs)
+    \relates Session
+
+    Returns \c true if \a lhs and \a rhs differ; otherwise returns
+    \c false.
+*/

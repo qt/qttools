@@ -1795,6 +1795,15 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     case CXCursor_Constructor:
     case CXCursor_Destructor:
     case CXCursor_ConversionFunction: {
+        // Template instantiations belong to the template they come from.
+        // Clang reports the ones it creates while parsing, such as a class
+        // template's hidden friend used in a constant expression, as
+        // top-level declarations. As root-level nodes, they would shadow the
+        // real candidates in \fn lookup.
+        if (const auto *declaration = get_cursor_declaration(cursor)->getAsFunction();
+                declaration && declaration->isTemplateInstantiation())
+            return CXChildVisit_Continue;
+
         if (findNodeForCursor(qdb_, cursor)) // Was already parsed, probably in another TU
             return CXChildVisit_Continue;
         QString name = functionName(cursor);
