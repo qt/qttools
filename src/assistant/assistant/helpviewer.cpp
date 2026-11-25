@@ -48,6 +48,15 @@ static void setClipboardText(const QString &text)
 #endif
 }
 
+static void setClipboardImage(const QImage &image)
+{
+#if QT_CONFIG(clipboard)
+    QGuiApplication::clipboard()->setImage(image);
+#else
+    Q_UNUSED(image)
+#endif
+}
+
 const struct ExtensionMap {
     const char *extension;
     const char *mimeType;
@@ -211,7 +220,7 @@ public:
     void incrementZoom(int steps);
     void applyZoom(int percentage);
     void openInNewPage(const QUrl &url);
-    void showContextMenu(const QPoint &pos, const QUrl &link);
+    void showContextMenu(const QPoint &pos, const QUrl &link, const QUrl &imageUrl);
 
     HelpViewer *q = nullptr;
     QLiteHtmlWidget *m_viewer = nullptr;
@@ -248,11 +257,14 @@ void HelpViewerPrivate::setSourceInternal(const QUrl &url, int *vscroll, bool re
         QMimeDatabase mimeDb;
         const QMimeType mimeType = mimeDb.mimeTypeForFile(url.fileName(),
                                                           QMimeDatabase::MatchExtension);
-        if (QImageReader::supportedMimeTypes().contains(mimeType.name().toUtf8()))
-            m_viewer->setHtml(QString("<img src=\"%1\"/>").arg(QString::fromUtf8(url.toEncoded())));
-        else
+        if (QImageReader::supportedMimeTypes().contains(mimeType.name().toUtf8())) {
+            m_viewer->setHtml(QString("<html><head><title>%1</title></head>"
+                                      "<body><img src=\"%2\"/></body></html>")
+                                      .arg(url.fileName().toHtmlEscaped(),
+                                           QString::fromUtf8(url.toEncoded())));
+        } else {
             m_viewer->setHtml(QString::fromUtf8(getData(resolvedUrl, q)));
-
+        }
     }
     if (vscroll)
         m_viewer->verticalScrollBar()->setValue(*vscroll);
@@ -288,10 +300,13 @@ void HelpViewerPrivate::openInNewPage(const QUrl &url)
         OpenPagesManager::instance()->createPage(url);
 }
 
-void HelpViewerPrivate::showContextMenu(const QPoint &pos, const QUrl &link)
+void HelpViewerPrivate::showContextMenu(const QPoint &pos, const QUrl &link,
+                                        const QUrl &imageUrl)
 {
     QMenu menu;
-    if (!link.isEmpty() && link.isValid()) {
+    const bool hasLink = !link.isEmpty() && link.isValid();
+    const bool hasImage = !imageUrl.isEmpty() && imageUrl.isValid();
+    if (hasLink) {
         menu.addAction(HelpViewer::tr("Open Link"), q, [this, link] { q->setSource(link); });
         menu.addAction(HelpViewer::tr("Open Link in New Tab\tCtrl+LMB"), q,
                        [this, link] { openInNewPage(link); });
@@ -299,10 +314,29 @@ void HelpViewerPrivate::showContextMenu(const QPoint &pos, const QUrl &link)
             menu.addAction(HelpViewer::tr("Copy &Link Location"), q,
                            [link] { setClipboardText(link.toString()); });
         }
-    } else if (kHasClipboard && !q->selectedText().isEmpty()) {
-        menu.addAction(HelpViewer::tr("Copy"), q, [this] { setClipboardText(q->selectedText()); });
-    } else {
-        menu.addAction(HelpViewer::tr("Reload"), q, &HelpViewer::reload);
+    }
+    if (hasImage) {
+        if (hasLink)
+            menu.addSeparator();
+        menu.addAction(HelpViewer::tr("Open Image"), q,
+                       [this, imageUrl] { q->setSource(imageUrl); });
+        menu.addAction(HelpViewer::tr("Open Image in New Tab"), q,
+                       [this, imageUrl] { openInNewPage(imageUrl); });
+        if (kHasClipboard) {
+            menu.addAction(HelpViewer::tr("Copy Image"), q, [this, imageUrl] {
+                setClipboardImage(QImage::fromData(getData(imageUrl, q)));
+            });
+            menu.addAction(HelpViewer::tr("Copy Image Location"), q,
+                           [imageUrl] { setClipboardText(imageUrl.toString()); });
+        }
+    }
+    if (!hasLink && !hasImage) {
+        if (kHasClipboard && !q->selectedText().isEmpty()) {
+            menu.addAction(HelpViewer::tr("Copy"), q,
+                           [this] { setClipboardText(q->selectedText()); });
+        } else {
+            menu.addAction(HelpViewer::tr("Reload"), q, &HelpViewer::reload);
+        }
     }
     menu.exec(m_viewer->viewport()->mapToGlobal(pos));
 }
@@ -329,7 +363,9 @@ HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
         emit highlighted(url);
     });
     connect(d->m_viewer, &QLiteHtmlWidget::contextMenuRequested, this,
-            [this](const QPoint &pos, const QUrl &link) { d->showContextMenu(pos, link); });
+            [this](const QPoint &pos, const QUrl &link, const QUrl &imageUrl) {
+                d->showContextMenu(pos, link, imageUrl);
+            });
 #if QT_CONFIG(clipboard)
     connect(d->m_viewer, &QLiteHtmlWidget::copyAvailable, this, &HelpViewer::copyAvailable);
 #endif
