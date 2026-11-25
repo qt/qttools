@@ -6,7 +6,7 @@
                 <brief>A class with hidden friends documented using unqualified fn syntax.</brief>
                 <para>This class tests that hidden friends can be documented using fn commands without requiring the class prefix.</para>
             </description>
-            <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" auto-generated="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="TestClass()">
+            <function name="TestClass" fullname="TestClass::TestClass" href="testclass.html#TestClass" status="active" access="public" location="testclass.h" documented="true" auto-generated="true" meta="constructor" explicitly-defaulted="true" noexcept="true" signature="TestClass()">
                 <description>
                     <para>Default-constructs an instance of <teletype>TestClass</teletype>.</para>
                 </description>

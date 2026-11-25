@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QDocTests::MacroDeclaredTest Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Explicitly defaulted functions Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test class with explicitly defaulted functions declared by a macro.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>testclass.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class tests that QDoc doesn't mark an explicitly defaulted function as <db:code>constexpr</db:code> when the macro that declares it doesn't say so.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="MacroDeclaredTest">
+<db:title>[noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] MacroDeclaredTest::MacroDeclaredTest()</db:title>
+<db:constructorsynopsis>
+<db:methodname>MacroDeclaredTest</db:methodname>
+<db:void/>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">constructor</db:synopsisinfo>
+<db:synopsisinfo role="signature">MacroDeclaredTest() = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Default constructor, not declared <db:code>constexpr</db:code>.</db:para>
+</db:section>
+<db:section xml:id="MacroDeclaredTest-1">
+<db:title>[noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] MacroDeclaredTest::MacroDeclaredTest(const QDocTests::MacroDeclaredTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:constructorsynopsis>
+<db:methodname>MacroDeclaredTest</db:methodname>
+<db:methodparam>
+<db:type>const QDocTests::MacroDeclaredTest &amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">copy-constructor</db:synopsisinfo>
+<db:synopsisinfo role="overload">overload</db:synopsisinfo>
+<db:synopsisinfo role="overload-number">1</db:synopsisinfo>
+<db:synopsisinfo role="signature">MacroDeclaredTest(const QDocTests::MacroDeclaredTest &amp;other) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Copy constructor, declared by a macro without <db:code>constexpr</db:code>.</db:para>
+</db:section>
+<db:section xml:id="operator-eq">
+<db:title>[noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] QDocTests::MacroDeclaredTest &amp;MacroDeclaredTest::operator=(const QDocTests::MacroDeclaredTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>QDocTests::MacroDeclaredTest &amp;</db:type>
+<db:methodname>operator=</db:methodname>
+<db:methodparam>
+<db:type>const QDocTests::MacroDeclaredTest &amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">copy-assign</db:synopsisinfo>
+<db:synopsisinfo role="signature">QDocTests::MacroDeclaredTest &amp; operator=(const QDocTests::MacroDeclaredTest &amp;other) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Copy assigns <db:code role="parameter">other</db:code> to this object. Declared by a macro without <db:code>constexpr</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

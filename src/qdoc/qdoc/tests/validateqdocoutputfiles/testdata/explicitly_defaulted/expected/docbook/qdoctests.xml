@@ -22,12 +22,28 @@
 <db:section xml:id="classes">
 <db:title>Classes</db:title>
 <db:section>
+<db:title>class <db:link xlink:href="qdoctests-declaredconstexprtest.xml" xlink:role="class">DeclaredConstexprTest</db:link></db:title>
+<db:para>A test class for explicitly defaulted functions declared constexpr.</db:para>
+</db:section>
+<db:section>
 <db:title>class <db:link xlink:href="qdoctests-deletedcopyctortest.xml" xlink:role="class">DeletedCopyCtorTest</db:link></db:title>
 <db:para>A test class with a deleted copy constructor.</db:para>
 </db:section>
 <db:section>
 <db:title>class <db:link xlink:href="qdoctests-explicitlydefaultedtest.xml" xlink:role="class">ExplicitlyDefaultedTest</db:link></db:title>
 <db:para>A test class for explicitly defaulted special member functions.</db:para>
+</db:section>
+<db:section>
+<db:title>class <db:link xlink:href="qdoctests-macrodeclaredconstexprtest.xml" xlink:role="class">MacroDeclaredConstexprTest</db:link></db:title>
+<db:para>A test class with explicitly defaulted functions declared constexpr by a macro.</db:para>
+</db:section>
+<db:section>
+<db:title>class <db:link xlink:href="qdoctests-macrodeclaredtest.xml" xlink:role="class">MacroDeclaredTest</db:link></db:title>
+<db:para>A test class with explicitly defaulted functions declared by a macro.</db:para>
+</db:section>
+<db:section>
+<db:title>class <db:link xlink:href="qdoctests-macroprefixtest.xml" xlink:role="class">MacroPrefixTest</db:link></db:title>
+<db:para>A test class with explicitly defaulted functions that start with a macro.</db:para>
 </db:section>
 <db:section>
 <db:title>class <db:link xlink:href="qdoctests-unnamedparametertest.xml" xlink:role="class">UnnamedParameterTest</db:link></db:title>

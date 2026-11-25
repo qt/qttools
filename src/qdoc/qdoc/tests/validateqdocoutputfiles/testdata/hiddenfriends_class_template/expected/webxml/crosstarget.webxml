@@ -5,7 +5,7 @@
             <description>
                 <brief>A non-template class that hosts the <link raw="crossCheck" href="crosstarget.html#crossCheck" type="function">crossCheck</link> documentation.</brief>
             </description>
-            <function name="CrossTarget" fullname="CrossTarget::CrossTarget" href="crosstarget.html#CrossTarget" status="active" access="public" location="cross.h" documented="true" auto-generated="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" signature="CrossTarget()">
+            <function name="CrossTarget" fullname="CrossTarget::CrossTarget" href="crosstarget.html#CrossTarget" status="active" access="public" location="cross.h" documented="true" auto-generated="true" meta="constructor" explicitly-defaulted="true" noexcept="true" signature="CrossTarget()">
                 <description>
                     <para>Default-constructs an instance of <teletype>CrossTarget</teletype>.</para>
                 </description>

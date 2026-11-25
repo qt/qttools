@@ -23,7 +23,7 @@
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="UnnamedParameterTest">
-<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] UnnamedParameterTest::UnnamedParameterTest()</db:title>
+<db:title>[noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] UnnamedParameterTest::UnnamedParameterTest()</db:title>
 <db:constructorsynopsis>
 <db:methodname>UnnamedParameterTest</db:methodname>
 <db:void/>
@@ -37,7 +37,7 @@
 <db:para>Default-constructs an instance of <db:phrase>UnnamedParameterTest</db:phrase>.</db:para>
 </db:section>
 <db:section xml:id="operator-eq">
-<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] QDocTests::UnnamedParameterTest &amp;UnnamedParameterTest::operator=(<db:emphasis>QDocTests::UnnamedParameterTest &amp;&amp;</db:emphasis>)</db:title>
+<db:title>[noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] QDocTests::UnnamedParameterTest &amp;UnnamedParameterTest::operator=(<db:emphasis>QDocTests::UnnamedParameterTest &amp;&amp;</db:emphasis>)</db:title>
 <db:methodsynopsis>
 <db:type>QDocTests::UnnamedParameterTest &amp;</db:type>
 <db:methodname>operator=</db:methodname>
@@ -55,7 +55,7 @@
 <db:para>Move-assigns <db:code role="parameter">other</db:code> to this <db:phrase>UnnamedParameterTest</db:phrase> instance.</db:para>
 </db:section>
 <db:section xml:id="operator-eq-1">
-<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] QDocTests::UnnamedParameterTest &amp;UnnamedParameterTest::operator=(<db:emphasis>const QDocTests::UnnamedParameterTest &amp;</db:emphasis>)</db:title>
+<db:title>[noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] QDocTests::UnnamedParameterTest &amp;UnnamedParameterTest::operator=(<db:emphasis>const QDocTests::UnnamedParameterTest &amp;</db:emphasis>)</db:title>
 <db:methodsynopsis>
 <db:type>QDocTests::UnnamedParameterTest &amp;</db:type>
 <db:methodname>operator=</db:methodname>
