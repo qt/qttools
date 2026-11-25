@@ -1028,6 +1028,21 @@ enum class FnSignatureMatchMode
     HiddenFriendInClassTemplate
 };
 
+/*
+  Returns the type that \a parameter contributes to its function's type.
+
+  C++ drops top-level cv-qualifiers from parameter types, so
+  \c {void f(const int)} and \c {void f(int)} declare the same function.
+  Array element qualifiers become pointee qualifiers when the array decays,
+  so array types are kept intact. Use this type only for lookup; recorded
+  and rendered spellings keep the declared qualifiers.
+ */
+static clang::QualType parameterLookupType(const clang::ParmVarDecl *parameter)
+{
+    const clang::QualType type = parameter->getOriginalType();
+    return type->isArrayType() ? type : type.getUnqualifiedType();
+}
+
 // One parsed signature is compared with many candidates. Keep its Clang data
 // and lazily computed spellings together for the lifetime of that lookup.
 struct FunctionCursorSignature
@@ -1059,7 +1074,7 @@ struct FunctionCursorSignature
             canonicalSpellings.resize(index + 1);
         if (canonicalSpellings.at(index).isEmpty()) {
             canonicalSpellings[index] = QString::fromStdString(get_fully_qualified_type_name(
-                    declaration->getParamDecl(index)->getOriginalType().getCanonicalType(),
+                    parameterLookupType(declaration->getParamDecl(index)).getCanonicalType(),
                     declaration->getASTContext()));
         }
         return canonicalSpellings.at(index);
@@ -1180,9 +1195,11 @@ static bool functionSignatureMatches(FunctionNode *fn, FunctionCursorSignature &
                     && llvm::isa<clang::TemplateTypeParmType>(paramType.getTypePtr());
             if (!isBareTemplateTypeParm) {
                 QStringView canonicalType = parameters.at(i).canonicalType();
-                if (!canonicalType.isEmpty()) {
-                    typesDiffer = canonicalType != signature.canonicalTypeSpelling(i);
-                }
+                // An empty canonical type means that the recorded spelling
+                // already names the canonical lookup type.
+                if (canonicalType.isEmpty())
+                    canonicalType = recordedType;
+                typesDiffer = canonicalType != signature.canonicalTypeSpelling(i);
             }
         }
 
@@ -1234,7 +1251,7 @@ static FnLookupResult findFunctionForCursor(QDocDatabase *qdb, CXCursor cur, Nod
             signature.templateParameterKey = templateParameterKey(*functionTemplate->getTemplateParameters());
             for (const auto *param : function_declaration->parameters())
                 signature.templateTypeKeys.append(hiddenFriendTypeKey(
-                        param->getOriginalType(), *functionTemplate->getTemplateParameters()));
+                        parameterLookupType(param), *functionTemplate->getTemplateParameters()));
         }
     }
 
@@ -2126,9 +2143,11 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
             parameter_declaration->getASTContext()
         )));
 
-        if (!parameter_type.isCanonical())
+        if (const clang::QualType lookup_type =
+                    parameterLookupType(parameter_declaration).getCanonicalType();
+                lookup_type != parameter_type)
             parameters.last().setCanonicalType(QString::fromStdString(get_fully_qualified_type_name(
-                parameter_type.getCanonicalType(),
+                lookup_type,
                 parameter_declaration->getASTContext()
             )));
 
@@ -2189,7 +2208,7 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
         fn->setTemplateParameterKey(templateParameterKey(*binders));
         QList<QByteArray> typeKeys;
         for (int i = 0; i < parameters.count() && i < int(function_declaration->getNumParams()); ++i)
-            typeKeys.append(hiddenFriendTypeKey(function_declaration->getParamDecl(i)->getOriginalType(),
+            typeKeys.append(hiddenFriendTypeKey(parameterLookupType(function_declaration->getParamDecl(i)),
                                                *binders));
         fn->setTemplateParameterTypeKeys(std::move(typeKeys));
     }

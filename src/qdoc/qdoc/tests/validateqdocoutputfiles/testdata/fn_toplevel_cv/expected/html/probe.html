@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- probe.qdoc -->
+  <meta name="description" content="Declares parameters with and without top-level qualifiers.">
+  <meta name="keywords" content="class">
+  <title>Probe Class | FnTopLevelCv</title>
+</head>
+<body>
+<ul class="breadcrumb">
+<li>Probe</li>
+</ul>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">Probe Class</h1>
+<!-- $$$Probe-brief -->
+<p>Declares parameters with and without top-level qualifiers. <a href="#details">More...</a></p>
+<!-- @@@Probe -->
+<div class="table"><table class="alignedsummary requisites" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <code translate="no">#include &lt;probe.h&gt;</code></td></tr>
+</table></div>
+<ul>
+<li><a href="probe-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="probe.html#point" translate="no">point</a></b>(const int *<i>position</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="probe.html#point-1" translate="no">point</a></b>(int *<i>position</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="probe.html#resize" translate="no">resize</a></b>(const int <i>size</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="probe.html#resize-1" translate="no">resize</a></b>(const int *<i>size</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="probe.html#setCount" translate="no">setCount</a></b>(int <i>count</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="probe.html#setLevel" translate="no">setLevel</a></b>(volatile int <i>level</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="probe.html#setLimit" translate="no">setLimit</a></b>(ConstReal <i>limit</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="probe.html#setTarget" translate="no">setTarget</a></b>(int *const <i>target</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="probe.html#sizeChanged" translate="no">sizeChanged</a></b>(const real <i>size</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="probe.html#store" translate="no">store</a></b>(const T <i>value</i>)</td></tr>
+</table></div>
+<!-- $$$Probe-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+</div>
+<!-- @@@Probe -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$point[overload1]$$$pointconstint* -->
+<h3 class="fn" translate="no" id="point"><span class="type">void</span> Probe::<span class="name">point</span>(const <span class="type">int</span> *<i>position</i>)</h3>
+<p>Const-pointee marker for <i translate="no">position</i>.</p>
+<!-- @@@point -->
+<!-- $$$point$$$pointint* -->
+<h3 class="fn" translate="no" id="point-1"><span class="type">void</span> Probe::<span class="name">point</span>(<span class="type">int</span> *<i>position</i>)</h3>
+<p>Mutable-pointee marker for <i translate="no">position</i>.</p>
+<!-- @@@point -->
+<!-- $$$resize[overload1]$$$resizeconstint -->
+<h3 class="fn" translate="no" id="resize"><span class="type">void</span> Probe::<span class="name">resize</span>(const <span class="type">int</span> <i>size</i>)</h3>
+<p>Value-overload marker for <i translate="no">size</i>.</p>
+<!-- @@@resize -->
+<!-- $$$resize$$$resizeconstint* -->
+<h3 class="fn" translate="no" id="resize-1"><span class="type">void</span> Probe::<span class="name">resize</span>(const <span class="type">int</span> *<i>size</i>)</h3>
+<p>Pointer-overload marker for <i translate="no">size</i>.</p>
+<!-- @@@resize -->
+<!-- $$$setCount[overload1]$$$setCountint -->
+<h3 class="fn" translate="no" id="setCount"><span class="type">void</span> Probe::<span class="name">setCount</span>(<span class="type">int</span> <i>count</i>)</h3>
+<p>Const-command marker for <i translate="no">count</i>.</p>
+<!-- @@@setCount -->
+<!-- $$$setLevel[overload1]$$$setLevelvolatileint -->
+<h3 class="fn" translate="no" id="setLevel"><span class="type">void</span> Probe::<span class="name">setLevel</span>(<span class="type">volatile</span> <span class="type">int</span> <i>level</i>)</h3>
+<p>Volatile-declaration marker for <i translate="no">level</i>.</p>
+<!-- @@@setLevel -->
+<!-- $$$setLimit[overload1]$$$setLimitConstReal -->
+<h3 class="fn" translate="no" id="setLimit"><span class="type">void</span> Probe::<span class="name">setLimit</span>(<span class="type">ConstReal</span> <i>limit</i>)</h3>
+<p>Alias-qualifier marker for <i translate="no">limit</i>.</p>
+<!-- @@@setLimit -->
+<!-- $$$setTarget[overload1]$$$setTargetint*const -->
+<h3 class="fn" translate="no" id="setTarget"><span class="type">void</span> Probe::<span class="name">setTarget</span>(<span class="type">int</span> *const <i>target</i>)</h3>
+<p>Const-pointer marker for <i translate="no">target</i>.</p>
+<!-- @@@setTarget -->
+<!-- $$$sizeChanged[overload1]$$$sizeChangedconstreal -->
+<h3 class="fn" translate="no" id="sizeChanged"><span class="type">void</span> Probe::<span class="name">sizeChanged</span>(const <span class="type">real</span> <i>size</i>)</h3>
+<p>Const-declaration marker for <i translate="no">size</i>.</p>
+<!-- @@@sizeChanged -->
+<!-- $$$store[overload1]$$$storeconstT -->
+<h3 class="fn" translate="no" id="store">template &lt;typename T&gt; <span class="type">void</span> Probe::<span class="name">store</span>(const <span class="type">T</span> <i>value</i>)</h3>
+<p>Template marker for <i translate="no">value</i>.</p>
+<!-- @@@store -->
+</div>
+</body>
+</html>

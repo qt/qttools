@@ -1,0 +1,63 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \module FnTopLevelCv
+    \brief Function commands that differ from declarations only in top-level
+    parameter qualifiers.
+*/
+/*!
+    \class Probe
+    \inmodule FnTopLevelCv
+    \brief Declares parameters with and without top-level qualifiers.
+*/
+/*!
+    \fn void Probe::sizeChanged(real size)
+
+    Const-declaration marker for \a size.
+*/
+/*!
+    \fn void Probe::setCount(const int count)
+
+    Const-command marker for \a count.
+*/
+/*!
+    \fn void Probe::setLevel(int level)
+
+    Volatile-declaration marker for \a level.
+*/
+/*!
+    \fn void Probe::setTarget(int *target)
+
+    Const-pointer marker for \a target.
+*/
+/*!
+    \fn void Probe::setLimit(double limit)
+
+    Alias-qualifier marker for \a limit.
+*/
+/*!
+    \fn void Probe::resize(int size)
+
+    Value-overload marker for \a size.
+*/
+/*!
+    \fn void Probe::resize(const int *size)
+
+    Pointer-overload marker for \a size.
+*/
+/*!
+    \fn void Probe::point(int *const position)
+
+    Mutable-pointee marker for \a position.
+*/
+/*!
+    \fn void Probe::point(const int *const position)
+
+    Const-pointee marker for \a position.
+*/
+/*!
+    \fn template <typename T> void Probe::store(T value)
+
+    Template marker for \a value.
+*/

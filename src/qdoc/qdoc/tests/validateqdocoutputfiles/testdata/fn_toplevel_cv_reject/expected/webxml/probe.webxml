@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Probe" href="probe.html" status="active" access="public" location="probe.h" documented="true" includefile="probe.h" module="FnTopLevelCvReject" brief="Declares parameters with qualified pointees and referents">
+            <description>
+                <brief>Declares parameters with qualified pointees and referents.</brief>
+            </description>
+        </class>
+    </document>
+</WebXML>

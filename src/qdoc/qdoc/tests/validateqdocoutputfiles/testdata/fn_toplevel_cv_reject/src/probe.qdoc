@@ -1,0 +1,33 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
+/*!
+    \module FnTopLevelCvReject
+    \brief Function commands that differ from declarations in pointee or
+    referent qualifiers.
+*/
+/*!
+    \class Probe
+    \inmodule FnTopLevelCvReject
+    \brief Declares parameters with qualified pointees and referents.
+*/
+/*!
+    \fn void Probe::setText(char *text)
+
+    Rejected pointee marker for \a text.
+*/
+/*!
+    \fn void Probe::setName(Name &name)
+
+    Rejected lvalue referent marker for \a name.
+*/
+/*!
+    \fn void Probe::setNames(Name &&name)
+
+    Rejected rvalue referent marker for \a name.
+*/
+/*!
+    \fn void Probe::fill(int values[4])
+
+    Rejected array element marker for \a values.
+*/

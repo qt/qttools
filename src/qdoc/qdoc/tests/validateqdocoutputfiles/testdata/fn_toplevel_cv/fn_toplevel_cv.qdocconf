@@ -1,0 +1,14 @@
+project = FnTopLevelCv
+outputformats = HTML WebXML DocBook
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+WebXML.nosubdirs = true
+WebXML.outputsubdir = webxml
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+locationinfo = false
+headerdirs = src
+sourcedirs = src
+documentationinheaders = false
+warninglimit = 0
+warninglimit.enabled = true

@@ -1,0 +1,10 @@
+# QDoc Warning Log
+# Project: FnTopLevelCvReject
+# Root: projectroot config
+# Path-Format: relative
+#
+
+src/probe.qdoc:14: [FnTopLevelCvReject] (qdoc) warning: Failed to find function when parsing \fn void Probe::setText(char *text)
+src/probe.qdoc:19: [FnTopLevelCvReject] (qdoc) warning: Failed to find function when parsing \fn void Probe::setName(Name &name)
+src/probe.qdoc:24: [FnTopLevelCvReject] (qdoc) warning: Failed to find function when parsing \fn void Probe::setNames(Name &&name)
+src/probe.qdoc:29: [FnTopLevelCvReject] (qdoc) warning: Failed to find function when parsing \fn void Probe::fill(int values[4])
