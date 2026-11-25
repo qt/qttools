@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Probe Class</db:title>
+<db:productname>FnTopLevelCv</db:productname>
+<db:titleabbrev>FnTopLevelCv Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Declares parameters with and without top-level qualifiers.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>probe.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="point">
+<db:title>void Probe::point(const int *<db:emphasis>position</db:emphasis>)</db:title>
+<db:para>Const-pointee marker for <db:code role="parameter">position</db:code>.</db:para>
+</db:section>
+<db:section xml:id="point-1">
+<db:title>void Probe::point(int *<db:emphasis>position</db:emphasis>)</db:title>
+<db:para>Mutable-pointee marker for <db:code role="parameter">position</db:code>.</db:para>
+</db:section>
+<db:section xml:id="resize">
+<db:title>void Probe::resize(const int <db:emphasis>size</db:emphasis>)</db:title>
+<db:para>Value-overload marker for <db:code role="parameter">size</db:code>.</db:para>
+</db:section>
+<db:section xml:id="resize-1">
+<db:title>void Probe::resize(const int *<db:emphasis>size</db:emphasis>)</db:title>
+<db:para>Pointer-overload marker for <db:code role="parameter">size</db:code>.</db:para>
+</db:section>
+<db:section xml:id="setCount">
+<db:title>void Probe::setCount(int <db:emphasis>count</db:emphasis>)</db:title>
+<db:para>Const-command marker for <db:code role="parameter">count</db:code>.</db:para>
+</db:section>
+<db:section xml:id="setLevel">
+<db:title>void Probe::setLevel(volatile int <db:emphasis>level</db:emphasis>)</db:title>
+<db:para>Volatile-declaration marker for <db:code role="parameter">level</db:code>.</db:para>
+</db:section>
+<db:section xml:id="setLimit">
+<db:title>void Probe::setLimit(ConstReal <db:emphasis>limit</db:emphasis>)</db:title>
+<db:para>Alias-qualifier marker for <db:code role="parameter">limit</db:code>.</db:para>
+</db:section>
+<db:section xml:id="setTarget">
+<db:title>void Probe::setTarget(int *const <db:emphasis>target</db:emphasis>)</db:title>
+<db:para>Const-pointer marker for <db:code role="parameter">target</db:code>.</db:para>
+</db:section>
+<db:section xml:id="sizeChanged">
+<db:title>void Probe::sizeChanged(const real <db:emphasis>size</db:emphasis>)</db:title>
+<db:para>Const-declaration marker for <db:code role="parameter">size</db:code>.</db:para>
+</db:section>
+<db:section xml:id="store">
+<db:title>template &lt;typename T&gt; void Probe::store(const T <db:emphasis>value</db:emphasis>)</db:title>
+<db:para>Template marker for <db:code role="parameter">value</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

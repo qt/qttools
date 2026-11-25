@@ -409,6 +409,13 @@
     any), return type, const-ness, and list of formal arguments with
     types. If the named function doesn't exist, QDoc emits a warning.
 
+    As in C++, a \c const or \c volatile qualifier on a parameter
+    passed by value doesn't distinguish one function from another.
+    For example, \c{\fn void Foo::resize(int size)} documents
+    \c{void resize(const int size)}. Qualifiers on what a pointer or
+    reference refers to, such as the \c const in \c{const char *}, must
+    match. The generated documentation shows parameters as declared.
+
     The command accepts \c auto as the type of a function, even though
     the full type can be deduced by QDoc. In certain situations, it may
     be preferable to use \e auto instead of the actual type of a
