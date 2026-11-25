@@ -2011,6 +2011,102 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
     });
 }
 
+/*
+  Follows \a location, a token in a macro expansion, to its place in the
+  body of the expanded macro. For a token passed as a macro argument,
+  that's where the macro's parameter appears.
+*/
+static clang::SourceLocation macroBodyLocation(const clang::SourceManager &sourceManager,
+                                               clang::SourceLocation location)
+{
+    while (sourceManager.isMacroArgExpansion(location))
+        location = sourceManager.getImmediateExpansionRange(location).getBegin();
+    return location;
+}
+
+/*
+  Returns \c true if the source text from \a location up to \a end may
+  declare a function constexpr. That's the case if it contains a
+  \c constexpr or \c consteval specifier, or a macro that might expand to
+  one, other than the macro at \a readMacro, whose definition has been
+  read already. Without an \a end, reads to the end of the line, which
+  for a token in a macro definition is the end of the definition.
+*/
+static bool mayDeclareConstexpr(const clang::ASTContext &context, clang::SourceLocation location,
+                                clang::SourceLocation end, clang::SourceLocation readMacro)
+{
+    const clang::SourceManager &sourceManager = context.getSourceManager();
+    const auto [fileId, offset] = sourceManager.getDecomposedLoc(location);
+    if (end.isValid() && sourceManager.getFileID(end) != fileId)
+        return true;
+
+    const llvm::StringRef buffer = sourceManager.getBufferData(fileId);
+    clang::Lexer lexer(sourceManager.getLocForStartOfFile(fileId), context.getLangOpts(),
+                       buffer.begin(), buffer.begin() + offset, buffer.end());
+    clang::Token token;
+    for (bool first = true; !lexer.LexFromRawLexer(token); first = false) {
+        if (end.isValid() ? !(token.getLocation() < end) : (!first && token.isAtStartOfLine()))
+            break;
+        if (!token.is(clang::tok::raw_identifier) || token.getLocation() == readMacro)
+            continue;
+        const llvm::StringRef spelling = token.getRawIdentifier();
+        if (spelling == "constexpr" || spelling == "consteval"
+            || context.Idents.get(spelling).hasMacroDefinition()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/*
+  Returns \c true if \a declaration is constexpr as its author declared it.
+
+  Clang treats a function that's explicitly defaulted on its first
+  declaration as constexpr whenever the implicit declaration would be,
+  and records that the same way as a written specifier. Which functions
+  qualify depends on the language standard and the libclang version, so
+  for these functions, look for a \c constexpr or \c consteval specifier
+  before the name instead. When a macro declares the function, or a macro
+  starts the declaration, look in the macro's definition. A macro may
+  expand to either specifier, and the preprocessor isn't available here,
+  so keep Clang's answer when the source can't be traced like this.
+*/
+static bool isConstexprAsDeclared(const clang::FunctionDecl *declaration)
+{
+    if (!declaration->isConstexpr())
+        return false;
+    if (!declaration->isExplicitlyDefaulted())
+        return true;
+
+    const clang::ASTContext &context = declaration->getASTContext();
+    const clang::SourceManager &sourceManager = context.getSourceManager();
+    clang::SourceLocation begin = declaration->getBeginLoc();
+    const clang::SourceLocation name = declaration->getLocation();
+    if (name.isMacroID()) {
+        begin = macroBodyLocation(sourceManager, begin);
+        const clang::SourceLocation nameInBody = macroBodyLocation(sourceManager, name);
+        if (sourceManager.getFileID(begin) != sourceManager.getFileID(nameInBody))
+            return true;
+        return mayDeclareConstexpr(context, sourceManager.getSpellingLoc(begin),
+                                   sourceManager.getSpellingLoc(nameInBody), {});
+    }
+
+    // Read the definitions of the macros that produce the first tokens,
+    // from the innermost expansion outward.
+    clang::SourceLocation readMacro;
+    while (begin.isMacroID()) {
+        if (sourceManager.isMacroArgExpansion(begin))
+            return true;
+        if (mayDeclareConstexpr(context, sourceManager.getImmediateSpellingLoc(begin), {},
+                                readMacro)) {
+            return true;
+        }
+        begin = sourceManager.getImmediateExpansionRange(begin).getBegin();
+        readMacro = sourceManager.getImmediateSpellingLoc(begin);
+    }
+    return mayDeclareConstexpr(context, begin, name, readMacro);
+}
+
 void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
 {
     CXCursorKind kind = clang_getCursorKind(cursor);
@@ -2059,7 +2155,7 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
 
     const clang::CXXConversionDecl* conversion_declaration = llvm::dyn_cast<const clang::CXXConversionDecl>(function_declaration);
 
-    if (function_declaration->isConstexpr()) fn->markConstexpr();
+    if (isConstexprAsDeclared(function_declaration)) fn->markConstexpr();
     if (function_declaration->isExplicitlyDefaulted()) fn->markExplicitlyDefaulted();
     if (function_declaration->isDeletedAsWritten()) fn->markDeletedAsWritten();
     if (

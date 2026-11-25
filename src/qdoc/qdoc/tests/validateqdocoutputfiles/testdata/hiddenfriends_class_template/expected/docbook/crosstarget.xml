@@ -22,7 +22,7 @@
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="CrossTarget">
-<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] CrossTarget::CrossTarget()</db:title>
+<db:title>[noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] CrossTarget::CrossTarget()</db:title>
 <db:para>Default-constructs an instance of <db:phrase>CrossTarget</db:phrase>.</db:para>
 </db:section>
 </db:section>

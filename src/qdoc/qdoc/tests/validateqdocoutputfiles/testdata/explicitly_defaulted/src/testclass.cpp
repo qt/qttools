@@ -70,6 +70,120 @@
 */
 
 /*!
+    \class QDocTests::DeclaredConstexprTest
+    \inmodule QDocTests
+    \brief A test class for explicitly defaulted functions declared constexpr.
+
+    This class tests that QDoc marks an explicitly defaulted function as
+    \c constexpr only when its declaration says so, either directly or
+    through a macro.
+*/
+
+/*!
+    \fn QDocTests::DeclaredConstexprTest::DeclaredConstexprTest()
+
+    Default constructor, declared \c constexpr.
+*/
+
+/*!
+    \fn QDocTests::DeclaredConstexprTest::DeclaredConstexprTest(const DeclaredConstexprTest &other)
+
+    Copy constructor, declared \c constexpr through a macro.
+*/
+
+/*!
+    \fn QDocTests::DeclaredConstexprTest::DeclaredConstexprTest(DeclaredConstexprTest &&other)
+
+    Move constructor, not declared \c constexpr.
+*/
+
+/*!
+    \class QDocTests::MacroDeclaredTest
+    \inmodule QDocTests
+    \brief A test class with explicitly defaulted functions declared by a macro.
+
+    This class tests that QDoc doesn't mark an explicitly defaulted
+    function as \c constexpr when the macro that declares it doesn't say so.
+*/
+
+/*!
+    \fn QDocTests::MacroDeclaredTest::MacroDeclaredTest()
+
+    Default constructor, not declared \c constexpr.
+*/
+
+/*!
+    \fn QDocTests::MacroDeclaredTest::MacroDeclaredTest(const MacroDeclaredTest &other)
+
+    Copy constructor, declared by a macro without \c constexpr.
+*/
+
+/*!
+    \fn QDocTests::MacroDeclaredTest &QDocTests::MacroDeclaredTest::operator=(const MacroDeclaredTest &other)
+
+    Copy assigns \a other to this object. Declared by a macro without
+    \c constexpr.
+*/
+
+/*!
+    \class QDocTests::MacroDeclaredConstexprTest
+    \inmodule QDocTests
+    \brief A test class with explicitly defaulted functions declared constexpr by a macro.
+
+    This class tests that QDoc marks an explicitly defaulted function as
+    \c constexpr when the macro that declares it says so.
+*/
+
+/*!
+    \fn QDocTests::MacroDeclaredConstexprTest::MacroDeclaredConstexprTest()
+
+    Default constructor, declared \c constexpr.
+*/
+
+/*!
+    \fn QDocTests::MacroDeclaredConstexprTest::MacroDeclaredConstexprTest(const MacroDeclaredConstexprTest &other)
+
+    Copy constructor, declared \c constexpr by a macro.
+*/
+
+/*!
+    \fn QDocTests::MacroDeclaredConstexprTest &QDocTests::MacroDeclaredConstexprTest::operator=(const MacroDeclaredConstexprTest &other)
+
+    Copy assigns \a other to this object. Declared \c constexpr by a macro.
+*/
+
+/*!
+    \class QDocTests::MacroPrefixTest
+    \inmodule QDocTests
+    \brief A test class with explicitly defaulted functions that start with a macro.
+
+    This class tests that QDoc reads the definition of a macro that starts
+    the declaration of an explicitly defaulted function, and marks the
+    function as \c constexpr only when the macro says so.
+*/
+
+/*!
+    \fn QDocTests::MacroPrefixTest::MacroPrefixTest()
+
+    Default constructor, starting with a macro that doesn't declare it
+    \c constexpr.
+*/
+
+/*!
+    \fn QDocTests::MacroPrefixTest::MacroPrefixTest(const MacroPrefixTest &other)
+
+    Copy constructor, starting with a macro that expands to another macro.
+    Neither declares it \c constexpr.
+*/
+
+/*!
+    \fn QDocTests::MacroPrefixTest::MacroPrefixTest(MacroPrefixTest &&other)
+
+    Move constructor, starting with a macro that declares it \c constexpr
+    on its second line.
+*/
+
+/*!
     \class QDocTests::DeletedCopyCtorTest
     \inmodule QDocTests
     \brief A test class with a deleted copy constructor.

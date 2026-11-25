@@ -23,7 +23,7 @@
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="DeletedSmfTest">
-<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] DeletedSmfTest::DeletedSmfTest()</db:title>
+<db:title>[noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] DeletedSmfTest::DeletedSmfTest()</db:title>
 <db:para>Default-constructs an instance of <db:phrase>DeletedSmfTest</db:phrase>.</db:para>
 </db:section>
 <db:section xml:id="DeletedSmfTest-2">

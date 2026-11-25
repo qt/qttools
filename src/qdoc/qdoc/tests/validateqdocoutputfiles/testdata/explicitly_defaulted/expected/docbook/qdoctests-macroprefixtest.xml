@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QDocTests::MacroPrefixTest Class</db:title>
+<db:productname>Qt</db:productname>
+<db:titleabbrev>Explicitly defaulted functions Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test class with explicitly defaulted functions that start with a macro.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>testclass.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class tests that QDoc reads the definition of a macro that starts the declaration of an explicitly defaulted function, and marks the function as <db:code>constexpr</db:code> only when the macro says so.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="MacroPrefixTest">
+<db:title>[noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] MacroPrefixTest::MacroPrefixTest()</db:title>
+<db:constructorsynopsis>
+<db:methodname>MacroPrefixTest</db:methodname>
+<db:void/>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">constructor</db:synopsisinfo>
+<db:synopsisinfo role="signature">MacroPrefixTest() = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Default constructor, starting with a macro that doesn't declare it <db:code>constexpr</db:code>.</db:para>
+</db:section>
+<db:section xml:id="MacroPrefixTest-2">
+<db:title>[noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] MacroPrefixTest::MacroPrefixTest(const QDocTests::MacroPrefixTest &amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:constructorsynopsis>
+<db:methodname>MacroPrefixTest</db:methodname>
+<db:methodparam>
+<db:type>const QDocTests::MacroPrefixTest &amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">copy-constructor</db:synopsisinfo>
+<db:synopsisinfo role="overload">overload</db:synopsisinfo>
+<db:synopsisinfo role="overload-number">2</db:synopsisinfo>
+<db:synopsisinfo role="signature">MacroPrefixTest(const QDocTests::MacroPrefixTest &amp;other) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Copy constructor, starting with a macro that expands to another macro. Neither declares it <db:code>constexpr</db:code>.</db:para>
+</db:section>
+<db:section xml:id="MacroPrefixTest-1">
+<db:title>[constexpr noexcept <db:link xlink:href="https://en.cppreference.com/w/cpp/language/function#Defaulted_functions">default</db:link>] MacroPrefixTest::MacroPrefixTest(QDocTests::MacroPrefixTest &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:constructorsynopsis>
+<db:methodname>MacroPrefixTest</db:methodname>
+<db:methodparam>
+<db:type>QDocTests::MacroPrefixTest &amp;&amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">move-constructor</db:synopsisinfo>
+<db:synopsisinfo role="overload">overload</db:synopsisinfo>
+<db:synopsisinfo role="overload-number">1</db:synopsisinfo>
+<db:synopsisinfo role="signature">MacroPrefixTest(QDocTests::MacroPrefixTest &amp;&amp;other) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Move constructor, starting with a macro that declares it <db:code>constexpr</db:code> on its second line.</db:para>
+</db:section>
+</db:section>
+</db:article>

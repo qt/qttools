@@ -7,7 +7,7 @@
                 <para>This class has both a friend declaration (without inline definition) and a hidden friend (with inline definition).</para>
                 <para>The friend declaration for operator!= should NOT create a documentation node under the class - only the hidden friend operator== should appear.</para>
             </description>
-            <function name="FriendClass" fullname="FriendClass::FriendClass" href="friendclass.html#FriendClass" status="active" access="public" location="friendclass.h" documented="true" meta="constructor" constexpr="true" explicitly-defaulted="true" noexcept="true" brief="Default constructor" signature="FriendClass()">
+            <function name="FriendClass" fullname="FriendClass::FriendClass" href="friendclass.html#FriendClass" status="active" access="public" location="friendclass.h" documented="true" meta="constructor" explicitly-defaulted="true" noexcept="true" brief="Default constructor" signature="FriendClass()">
                 <description>
                     <brief>Default constructor.</brief>
                 </description>
