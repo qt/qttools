@@ -30,10 +30,15 @@ endif()
 include(FindPackageHandleStandardArgs)
 set(WrapLibClang_FOUND FALSE)
 
-# Derive the maximum supported major version for too-new detection.
+# Derive the supported major versions to detect an LLVM that's too new or too old.
+set(__qt_wraplibclang_min_major 0)
 set(__qt_wraplibclang_max_major 0)
 foreach(__qt_wraplibclang_ver IN LISTS QDOC_SUPPORTED_CLANG_VERSIONS)
     string(REGEX MATCH "^[0-9]+" __qt_wraplibclang_ver_major "${__qt_wraplibclang_ver}")
+    if(__qt_wraplibclang_min_major EQUAL 0
+            OR __qt_wraplibclang_ver_major LESS __qt_wraplibclang_min_major)
+        set(__qt_wraplibclang_min_major ${__qt_wraplibclang_ver_major})
+    endif()
     if(__qt_wraplibclang_ver_major GREATER __qt_wraplibclang_max_major)
         set(__qt_wraplibclang_max_major ${__qt_wraplibclang_ver_major})
     endif()
@@ -42,19 +47,20 @@ unset(__qt_wraplibclang_ver)
 unset(__qt_wraplibclang_ver_major)
 list(JOIN QDOC_SUPPORTED_CLANG_VERSIONS ", " __qt_wraplibclang_version_list)
 
-# Probe for any LLVM to distinguish "too new" from "not found".
-# suffix_hint: optional string appended to the failure reason (such as workaround advice).
+# Probe for any LLVM to distinguish an unsupported version from "not found".
+# suffix_hint: optional string appended to the failure reason (such as workaround advice)
+# when LLVM is missing or its Clang package can't be loaded.
 macro(__qt_wraplibclang_probe_and_report suffix_hint)
     find_package(LLVM CONFIG QUIET)
     if(LLVM_FOUND AND LLVM_PACKAGE_VERSION)
         string(REGEX MATCH "^([0-9]+)" __qt_wraplibclang_found_major
             "${LLVM_PACKAGE_VERSION}")
-        if(__qt_wraplibclang_found_major GREATER __qt_wraplibclang_max_major)
+        if(__qt_wraplibclang_found_major GREATER __qt_wraplibclang_max_major
+                OR __qt_wraplibclang_found_major LESS __qt_wraplibclang_min_major)
             string(CONCAT __qt_wraplibclang_message
                 "Found LLVM ${LLVM_PACKAGE_VERSION}, but QDoc supports "
                 "Clang versions ${__qt_wraplibclang_version_list}. "
-                "Install a supported version to build QDoc."
-                "${suffix_hint}")
+                "Install a supported version to build QDoc.")
         else()
             string(CONCAT __qt_wraplibclang_message
                 "Found LLVM ${LLVM_PACKAGE_VERSION}, but the Clang "
@@ -246,6 +252,7 @@ if(TARGET libclang AND ((TARGET clang-cpp AND TARGET LLVM) OR TARGET clangHandle
     endif()
 endif()
 
+unset(__qt_wraplibclang_min_major)
 unset(__qt_wraplibclang_max_major)
 unset(__qt_wraplibclang_version_list)
 
