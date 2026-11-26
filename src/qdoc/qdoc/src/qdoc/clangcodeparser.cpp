@@ -2410,7 +2410,7 @@ ClangCodeParser::ClangCodeParser(
 }
 
 static const char *defaultArgs_[] = {
-    "-std=c++20",
+    "-std=c++23",
 #ifndef Q_OS_WIN
     "-fPIC",
 #else

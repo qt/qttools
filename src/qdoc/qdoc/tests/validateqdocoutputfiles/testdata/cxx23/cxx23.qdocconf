@@ -1,0 +1,8 @@
+project = Cxx23
+productname = Qt
+
+{headerdirs,sourcedirs} = ./src
+
+locationinfo         = false
+warninglimit         = 0
+warninglimit.enabled = true

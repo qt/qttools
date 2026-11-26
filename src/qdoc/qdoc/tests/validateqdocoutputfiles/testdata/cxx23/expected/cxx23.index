@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Cxx23 Reference Documentation" version="" project="Cxx23">
+    <namespace name="" status="active" access="public" module="cxx23">
+        <class name="Grid" href="grid.html" status="active" access="public" location="grid.h" documented="true" includefile="grid.h" module="Cxx23" brief="A grid of values with a multidimensional subscript operator">
+            <function name="operator[]" fullname="Grid::operator[]" href="grid.html#operator-5b-5d" status="active" access="public" location="grid.h" documented="true" meta="plain" const="true" type="int" signature="int operator[](int row) const">
+                <parameter type="int" name="row" default=""/>
+            </function>
+            <function name="operator[]" fullname="Grid::operator[]" href="grid.html#operator-5b-5d-1" status="active" access="public" location="grid.h" documented="true" meta="plain" const="true" overload="true" overload-number="1" type="int" signature="int operator[](int row, int column) const">
+                <parameter type="int" name="row" default=""/>
+                <parameter type="int" name="column" default=""/>
+            </function>
+        </class>
+        <module name="Cxx23" href="cxx23-module.html" status="active" documented="true" seen="true" title="C++23 Test Module" brief="A module for testing C++23 declarations"/>
+    </namespace>
+</INDEX>

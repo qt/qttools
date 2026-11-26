@@ -24,7 +24,7 @@ namespace {
 
 auto parse(const char *code)
 {
-    auto ast = clang::tooling::buildASTFromCodeWithArgs(code, { "-std=c++20" }, "signature.cpp");
+    auto ast = clang::tooling::buildASTFromCodeWithArgs(code, { "-std=c++23" }, "signature.cpp");
     REQUIRE(ast);
     REQUIRE_FALSE(ast->getDiagnostics().hasErrorOccurred());
     return ast;
