@@ -1,0 +1,2 @@
+<!-- test qmltype template -->
+<qmltype>{{ title }}</qmltype>

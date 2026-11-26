@@ -281,12 +281,6 @@ QString configKey(const QString &format, const QString &suffix)
     return format + Config::dot + suffix;
 }
 
-bool isValidFormatIdentity(const QString &format)
-{
-    static const QRegularExpression identity(uR"(^[A-Za-z0-9_]+$)"_s);
-    return identity.match(format).hasMatch();
-}
-
 QStringList filterIdentityTokens(const QStringList &values)
 {
     QStringList result;
@@ -503,6 +497,20 @@ OutputSelection OutputSelection::resolve(const Config &config,
             addFormat(format, Location(), false);
     }
     return result;
+}
+
+/*!
+    Returns \c true if \a format can serve as a publication identity and as a
+    configuration key segment.
+
+    Identities are case-sensitive and consist of letters, digits, and
+    underscores only, so that \c{<Format>.extension} and similar keys parse
+    unambiguously. Template packages apply the same rule to declared formats.
+*/
+bool OutputSelection::isValidFormatIdentity(const QString &format)
+{
+    static const QRegularExpression identity(uR"(^[A-Za-z0-9_]+$)"_s);
+    return identity.match(format).hasMatch();
 }
 
 /*!

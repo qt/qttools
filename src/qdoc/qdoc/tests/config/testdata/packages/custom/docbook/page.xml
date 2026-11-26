@@ -1,0 +1,2 @@
+<!-- test page template -->
+<page>{{ title }}</page>

@@ -63,6 +63,7 @@ struct OutputSelection
 
     [[nodiscard]] static OutputSelection resolve(const Config &config,
                                                  const OutputConfigurationInput &input = {});
+    [[nodiscard]] static bool isValidFormatIdentity(const QString &format);
     [[nodiscard]] bool hasErrors() const;
     [[nodiscard]] const Format *findFormat(const QString &format) const;
 };

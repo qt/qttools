@@ -3,6 +3,7 @@
 
 #include "qdoc/config.h"
 #include "qdoc/outputconfiguration.h"
+#include "qdoc/templatepackage.h"
 
 #include <QtCore/qdir.h>
 #include <QtCore/qfileinfo.h>
@@ -26,6 +27,32 @@ PipelineCapabilities capabilitiesFor(Pipeline pipeline, const QStringList &forma
         capabilities.formatExtensions.insert(format, defaults.value(format, u"out"_s));
     }
     return capabilities;
+}
+
+QString builtinRoot()
+{
+    return QDir::cleanPath(QStringLiteral(QDOC_TEMPLATE_DIR));
+}
+
+TemplatePackageInput packageInput()
+{
+    TemplatePackageInput input;
+    input.builtinRoot = builtinRoot();
+    return input;
+}
+
+QString packageDir(const QString &name)
+{
+    return QDir::cleanPath(
+            QFileInfo(QFINDTESTDATA(u"/testdata/packages/"_s + name)).absoluteFilePath());
+}
+
+QString messages(const TemplatePackage &package)
+{
+    QStringList lines;
+    for (const auto &diagnostic : package.diagnostics)
+        lines.append(diagnostic.location.toString() + u": "_s + diagnostic.message);
+    return lines.join(u'\n');
 }
 
 } // namespace
@@ -62,6 +89,13 @@ private slots:
     void publicationProvenance();
     void moduleIdentity_data();
     void moduleIdentity();
+    void templatePackageBuiltin();
+    void templatePackageInheritance();
+    void templatePackageProvenance();
+    void templatePackageSelection();
+    void templatePackageErrors_data();
+    void templatePackageErrors();
+    void templatePackageBrokenFormat();
 
 private:
     Config &initConfig(const QStringList &args = QStringList(),
@@ -885,6 +919,269 @@ void tst_Config::moduleIdentity()
     }
     config.setStringList(CONFIG_PUBLICATIONLAYOUT, {u"flat"_s});
     QVERIFY(!OutputConfiguration::resolve(config, input).hasErrors());
+}
+
+void tst_Config::templatePackageBuiltin()
+{
+    auto &config = initConfig();
+    const auto package = TemplatePackage::resolve(config, packageInput());
+    QVERIFY2(!package.hasErrors(), qPrintable(messages(package)));
+    QVERIFY(package.loaded);
+    QVERIFY(package.location.isEmpty());
+    QCOMPARE(package.id, TemplatePackage::builtinId());
+    QCOMPARE(package.searchPaths, QStringList{builtinRoot()});
+    QCOMPARE(package.formats.size(), 2);
+    const QString manifest = builtinRoot() + u"/qdoc-template.json"_s;
+    const auto *html = package.findFormat(u"HTML"_s);
+    QVERIFY(html);
+    QVERIFY(!html->broken);
+    QCOMPARE(html->extension, u"html"_s);
+    QCOMPARE(html->extensionLocation.filePath(), manifest);
+    QCOMPARE(html->templates.keys(),
+             QStringList({u"collection"_s, u"cppref"_s, u"members"_s, u"obsolete"_s, u"page"_s,
+                          u"qmltype"_s}));
+    QCOMPARE(html->templates.value(u"cppref"_s).path, builtinRoot() + u"/cppref.html"_s);
+    QCOMPARE(html->templates.value(u"cppref"_s).location.filePath(), manifest);
+    const auto *markdown = package.findFormat(u"Markdown"_s);
+    QVERIFY(markdown);
+    QCOMPARE(markdown->extension, u"md"_s);
+    QCOMPARE(markdown->templates.value(u"page"_s).path, builtinRoot() + u"/page.md"_s);
+    QVERIFY(!package.findFormat(u"html"_s));
+
+    const auto capabilities = package.capabilities();
+    QCOMPARE(capabilities.pipeline, Pipeline::Template);
+    QVERIFY(capabilities.available);
+    QCOMPARE(capabilities.supportedFormats, (QSet<QString>{u"HTML"_s, u"Markdown"_s}));
+    QVERIFY(capabilities.brokenFormats.isEmpty());
+    QCOMPARE(capabilities.formatExtensions.value(u"HTML"_s), u"html"_s);
+    QCOMPARE(capabilities.formatExtensions.value(u"Markdown"_s), u"md"_s);
+
+    config.setStringList(CONFIG_TEMPLATEPACKAGE, {TemplatePackage::builtinId()});
+    const auto explicitBuiltin = TemplatePackage::resolve(config, packageInput());
+    QVERIFY2(!explicitBuiltin.hasErrors(), qPrintable(messages(explicitBuiltin)));
+    QCOMPARE(explicitBuiltin.id, TemplatePackage::builtinId());
+    QCOMPARE(explicitBuiltin.searchPaths, package.searchPaths);
+
+    config.setStringList(CONFIG_PIPELINE, {u"template"_s});
+    config.setStringList(CONFIG_OUTPUTFORMATS, {u"HTML"_s, u"Markdown"_s});
+    OutputConfigurationInput selectionInput;
+    selectionInput.pipelineCapabilities = {capabilities};
+    const auto selection = OutputSelection::resolve(config, selectionInput);
+    QVERIFY(!selection.hasErrors());
+    QCOMPARE(selection.findFormat(u"HTML"_s)->pipeline, Pipeline::Template);
+    QCOMPARE(selection.findFormat(u"Markdown"_s)->fileExtension, u"md"_s);
+
+    TemplatePackageInput unavailable;
+    unavailable.builtinRoot = QDir::tempPath() + u"/qdoc-no-such-package"_s;
+    const auto missing = TemplatePackage::resolve(config, unavailable);
+    QVERIFY(missing.hasErrors());
+    QVERIFY(!missing.loaded);
+    QVERIFY(missing.formats.isEmpty());
+    QVERIFY(!missing.capabilities().available);
+    QVERIFY(missing.diagnostics.first().message.contains("manifest"_L1));
+}
+
+void tst_Config::templatePackageInheritance()
+{
+    auto &config = initConfig();
+    const QString custom = packageDir(u"custom"_s);
+    const QString customManifest = custom + u"/qdoc-template.json"_s;
+    const QString builtinManifest = builtinRoot() + u"/qdoc-template.json"_s;
+    config.setStringList(CONFIG_TEMPLATEPACKAGE, {custom});
+    const auto package = TemplatePackage::resolve(config, packageInput());
+    QVERIFY2(!package.hasErrors(), qPrintable(messages(package)));
+    QCOMPARE(package.id, custom);
+    QCOMPARE(package.searchPaths, (QStringList{custom, builtinRoot()}));
+    QCOMPARE(package.formats.size(), 2);
+    QVERIFY(!package.findFormat(u"Markdown"_s));
+
+    const auto *docbook = package.findFormat(u"DocBook"_s);
+    QVERIFY(docbook);
+    QVERIFY(!docbook->broken);
+    QCOMPARE(docbook->extension, u"xml"_s);
+    QCOMPARE(docbook->extensionLocation.filePath(), customManifest);
+    QCOMPARE(docbook->templates.size(), 6);
+    QCOMPARE(docbook->templates.value(u"cppref"_s).path, custom + u"/docbook/cppref.xml"_s);
+    QCOMPARE(docbook->templates.value(u"cppref"_s).location.filePath(), customManifest);
+
+    const auto *html = package.findFormat(u"HTML"_s);
+    QVERIFY(html);
+    QVERIFY(!html->broken);
+    QCOMPARE(html->extension, u"html"_s);
+    QCOMPARE(html->extensionLocation.filePath(), builtinManifest);
+    QCOMPARE(html->location.filePath(), customManifest);
+    QCOMPARE(html->templates.value(u"page"_s).path, custom + u"/html/page.html"_s);
+    QCOMPARE(html->templates.value(u"page"_s).location.filePath(), customManifest);
+    QCOMPARE(html->templates.value(u"cppref"_s).path, builtinRoot() + u"/cppref.html"_s);
+    QCOMPARE(html->templates.value(u"cppref"_s).location.filePath(), builtinManifest);
+
+    const auto capabilities = package.capabilities();
+    QCOMPARE(capabilities.supportedFormats, (QSet<QString>{u"DocBook"_s, u"HTML"_s}));
+    QVERIFY(!capabilities.formatExtensions.contains(u"Markdown"_s));
+    QCOMPARE(capabilities.formatExtensions.value(u"DocBook"_s), u"xml"_s);
+
+    config.setStringList(CONFIG_PIPELINE, {u"legacy"_s, u"template"_s});
+    config.setStringList(CONFIG_OUTPUTFORMATS, {u"HTML"_s, u"DocBook"_s, u"Markdown"_s});
+    OutputConfigurationInput selectionInput;
+    selectionInput.pipelineCapabilities = {
+        capabilitiesFor(Pipeline::Legacy, {u"HTML"_s, u"Markdown"_s, u"DocBook"_s}), capabilities
+    };
+    const auto selection = OutputSelection::resolve(config, selectionInput);
+    QVERIFY(!selection.hasErrors());
+    QCOMPARE(selection.findFormat(u"HTML"_s)->pipeline, Pipeline::Template);
+    QCOMPARE(selection.findFormat(u"DocBook"_s)->pipeline, Pipeline::Template);
+    QCOMPARE(selection.findFormat(u"DocBook"_s)->fileExtension, u"xml"_s);
+    QCOMPARE(selection.findFormat(u"Markdown"_s)->pipeline, Pipeline::Legacy);
+
+    const QString grandchild = packageDir(u"grandchild"_s);
+    const QString grandchildManifest = grandchild + u"/qdoc-template.json"_s;
+    config.setStringList(CONFIG_TEMPLATEPACKAGE, {grandchild});
+    const auto derived = TemplatePackage::resolve(config, packageInput());
+    QVERIFY2(!derived.hasErrors(), qPrintable(messages(derived)));
+    QCOMPARE(derived.searchPaths, (QStringList{grandchild, custom, builtinRoot()}));
+    QCOMPARE(derived.formats.size(), 3);
+    const auto *derivedDocBook = derived.findFormat(u"DocBook"_s);
+    QVERIFY(derivedDocBook);
+    QCOMPARE(derivedDocBook->extension, u"docbook"_s);
+    QCOMPARE(derivedDocBook->extensionLocation.filePath(), grandchildManifest);
+    QCOMPARE(derivedDocBook->templates.value(u"cppref"_s).path, custom + u"/docbook/cppref.xml"_s);
+    QCOMPARE(derivedDocBook->templates.value(u"cppref"_s).location.filePath(), customManifest);
+    const auto *derivedMarkdown = derived.findFormat(u"Markdown"_s);
+    QVERIFY(derivedMarkdown);
+    QCOMPARE(derivedMarkdown->extension, u"markdown"_s);
+    QCOMPARE(derivedMarkdown->templates.size(), 6);
+    QCOMPARE(derivedMarkdown->templates.value(u"members"_s).path, grandchild + u"/md/any.md"_s);
+    const auto *derivedHtml = derived.findFormat(u"HTML"_s);
+    QVERIFY(derivedHtml);
+    QCOMPARE(derivedHtml->extension, u"html"_s);
+    QCOMPARE(derivedHtml->templates.value(u"page"_s).path, custom + u"/html/page.html"_s);
+    QCOMPARE(derivedHtml->templates.value(u"cppref"_s).path, builtinRoot() + u"/cppref.html"_s);
+}
+
+void tst_Config::templatePackageProvenance()
+{
+    auto &config = initConfig("/testdata/configs/package_include.qdocconf");
+    const auto package = TemplatePackage::resolve(config, packageInput());
+    QVERIFY2(!package.hasErrors(), qPrintable(messages(package)));
+    QCOMPARE(QFileInfo(package.id).canonicalFilePath(),
+             QFileInfo(packageDir(u"custom"_s)).canonicalFilePath());
+    QCOMPARE(package.location.filePath(),
+             QDir::cleanPath(QFINDTESTDATA("/testdata/configs/package_base.qdocconf")));
+    QCOMPARE(package.location.lineNo(), 1);
+    QCOMPARE(package.searchPaths.size(), 2);
+    QCOMPARE(package.findFormat(u"HTML"_s)->templates.value(u"page"_s).location.filePath(),
+             package.id + u"/qdoc-template.json"_s);
+}
+
+void tst_Config::templatePackageSelection()
+{
+    auto &config = initConfig();
+    const auto errorContaining = [&](const QString &text) {
+        const auto package = TemplatePackage::resolve(config, packageInput());
+        if (!package.hasErrors() || package.loaded)
+            return false;
+        for (const auto &diagnostic : package.diagnostics) {
+            if (diagnostic.message.contains(text))
+                return true;
+        }
+        return false;
+    };
+    config.setStringList(CONFIG_TEMPLATEPACKAGE, {});
+    QVERIFY(errorContaining(u"is empty"_s));
+    config.setStringList(CONFIG_TEMPLATEPACKAGE, {u""_s});
+    QVERIFY(errorContaining(u"is empty"_s));
+    config.setStringList(CONFIG_TEMPLATEPACKAGE,
+                         {packageDir(u"custom"_s), packageDir(u"grandchild"_s)});
+    QVERIFY(errorContaining(u"single value"_s));
+    config.setStringList(CONFIG_TEMPLATEPACKAGE, {u"qdoc:other"_s});
+    QVERIFY(errorContaining(u"built-in"_s));
+    config.setStringList(CONFIG_TEMPLATEPACKAGE, {QDir::tempPath() + u"/qdoc-no-such-package"_s});
+    QVERIFY(errorContaining(u"manifest"_s));
+
+    config.setStringList(CONFIG_TEMPLATEPACKAGE, {packageDir(u"requires"_s)});
+    QVERIFY(errorContaining(u"capability"_s));
+    auto input = packageInput();
+    input.engineCapabilities = {u"combined-book"_s};
+    const auto satisfied = TemplatePackage::resolve(config, input);
+    QVERIFY2(!satisfied.hasErrors(), qPrintable(messages(satisfied)));
+    QCOMPARE(satisfied.formats.size(), 2);
+}
+
+void tst_Config::templatePackageErrors_data()
+{
+    QTest::addColumn<QString>("package");
+    QTest::addColumn<QString>("message");
+    QTest::addColumn<bool>("loaded");
+    QTest::newRow("cycle") << u"cycle-a"_s << u"cycle"_s << false;
+    QTest::newRow("self-cycle") << u"self"_s << u"cycle"_s << false;
+    QTest::newRow("bad-json") << u"bad-json"_s << u"parse"_s << false;
+    QTest::newRow("not-object") << u"not-object"_s << u"JSON object"_s << false;
+    QTest::newRow("schema-version") << u"schema-version"_s << u"schema version 2"_s << false;
+    QTest::newRow("api-version") << u"api-version"_s << u"API version 99"_s << false;
+    QTest::newRow("requires") << u"requires"_s << u"capability 'combined-book'"_s << false;
+    QTest::newRow("empty-extension") << u"empty-extension"_s << u"empty extension"_s << false;
+    QTest::newRow("empty-template") << u"empty-template"_s << u"empty template"_s << false;
+    QTest::newRow("unknown-role") << u"unknown-role"_s << u"role 'index'"_s << false;
+    QTest::newRow("bad-format-value") << u"bad-format-value"_s << u"object or false"_s << false;
+    QTest::newRow("invalid-identity") << u"invalid-identity"_s << u"identity 'Doc Book'"_s << false;
+    QTest::newRow("unknown-key") << u"unknown-key"_s << u"key 'extend'"_s << false;
+    QTest::newRow("missing-parent") << u"missing-parent"_s << u"manifest"_s << false;
+    QTest::newRow("empty-extends") << u"empty-extends"_s << u"extends"_s << false;
+    QTest::newRow("unknown-builtin") << u"unknown-builtin"_s << u"built-in"_s << false;
+    QTest::newRow("missing-template") << u"missing-template"_s << u"does not exist"_s << true;
+    QTest::newRow("incomplete") << u"incomplete"_s << u"no template for role"_s << true;
+}
+
+void tst_Config::templatePackageErrors()
+{
+    QFETCH(QString, package);
+    QFETCH(QString, message);
+    QFETCH(bool, loaded);
+    auto &config = initConfig();
+    config.setStringList(CONFIG_TEMPLATEPACKAGE, {packageDir(package)});
+    const auto result = TemplatePackage::resolve(config, packageInput());
+    QVERIFY(result.hasErrors());
+    QCOMPARE(result.loaded, loaded);
+    QCOMPARE(result.capabilities().available, loaded);
+    bool found = false;
+    for (const auto &diagnostic : result.diagnostics) {
+        QCOMPARE(diagnostic.kind, TemplatePackage::Diagnostic::Kind::Error);
+        found = found || diagnostic.message.contains(message);
+    }
+    QVERIFY2(found, qPrintable(messages(result)));
+}
+
+void tst_Config::templatePackageBrokenFormat()
+{
+    auto &config = initConfig();
+    const QString broken = packageDir(u"missing-template"_s);
+    config.setStringList(CONFIG_TEMPLATEPACKAGE, {broken});
+    const auto package = TemplatePackage::resolve(config, packageInput());
+    QVERIFY(package.hasErrors());
+    QVERIFY(package.loaded);
+    const auto *html = package.findFormat(u"HTML"_s);
+    QVERIFY(html);
+    QVERIFY(html->broken);
+    QCOMPARE(html->templates.value(u"page"_s).path, broken + u"/nope.html"_s);
+    QCOMPARE(html->templates.value(u"cppref"_s).path, builtinRoot() + u"/cppref.html"_s);
+    QVERIFY(!package.findFormat(u"Markdown"_s)->broken);
+    const auto capabilities = package.capabilities();
+    QVERIFY(capabilities.available);
+    QCOMPARE(capabilities.brokenFormats, QSet<QString>{u"HTML"_s});
+    QCOMPARE(capabilities.supportedFormats, QSet<QString>{u"Markdown"_s});
+    QCOMPARE(capabilities.formatExtensions.value(u"HTML"_s), u"html"_s);
+
+    config.setStringList(CONFIG_PIPELINE, {u"template"_s, u"legacy"_s});
+    config.setStringList(CONFIG_OUTPUTFORMATS, {u"HTML"_s});
+    OutputConfigurationInput selectionInput;
+    selectionInput.pipelineCapabilities = {
+        capabilitiesFor(Pipeline::Legacy, {u"HTML"_s, u"Markdown"_s}), capabilities
+    };
+    const auto rejected = OutputSelection::resolve(config, selectionInput);
+    QVERIFY(rejected.hasErrors());
+    QCOMPARE(rejected.findFormat(u"HTML"_s)->pipeline, Pipeline::Template);
+    config.setStringList(CONFIG_OUTPUTFORMATS, {u"Markdown"_s});
+    QVERIFY(!OutputSelection::resolve(config, selectionInput).hasErrors());
 }
 
 QTEST_APPLESS_MAIN(tst_Config)

@@ -1,0 +1,1 @@
+{ "schemaVersion": 1, "templateApiVersion": 1, "formats": { "DocBook": { "extension": "xml", "templates": { "page": "page.xml" } } } }
