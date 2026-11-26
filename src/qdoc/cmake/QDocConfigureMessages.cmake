@@ -32,7 +32,7 @@ On Linux:
 
     set(${OUT_VAR} "
 QDoc will not be compiled because required LLVM/Clang libraries could not be located.
-This affects Qt documentation generation and Clang-based lupdate parsing.
+This affects Qt documentation generation.
 
 ${PLATFORM_GUIDANCE}
 
