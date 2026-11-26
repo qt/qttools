@@ -187,6 +187,77 @@ QString protect(const QString &str)
     return marked;
 }
 
+/*!
+    \enum TextUtils::AnchorSyntax
+    \internal
+
+    Which identifier grammar an anchor reference must satisfy.
+
+    \value Html The looser legacy form.
+    \value Xml NVName rules (no leading digit, no colon).
+*/
+
+/*!
+    Rewrites \a ref into an identifier that satisfies the \a syntax grammar
+    of an HTML anchor or an \c xml:id.
+
+    XML compliance is ensured in two ways: no digit at the beginning of an ID
+    (many IDs do not respect this property) and no colon anywhere in the ID
+    (occurs very rarely). Only XML NCNames are allowed, see
+    https://www.w3.org/TR/REC-xml-names/#NT-NCName.
+*/
+QString cleanAnchorRef(const QString &ref, AnchorSyntax syntax)
+{
+    QString clean;
+
+    if (ref.isEmpty())
+        return clean;
+
+    const bool xmlCompliant = syntax == AnchorSyntax::Xml;
+    clean.reserve(ref.size() + 20);
+    const QChar c = ref[0];
+    const uint u = c.unicode();
+
+    if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (!xmlCompliant && u >= '0' && u <= '9')) {
+        clean += c;
+    } else if (xmlCompliant && u >= '0' && u <= '9') {
+        clean += QLatin1Char('A') + c;
+    } else if (u == '~') {
+        clean += "dtor."_L1;
+    } else if (u == '_') {
+        clean += "underscore."_L1;
+    } else {
+        clean += QLatin1Char('A');
+    }
+
+    for (qsizetype i = 1; i < ref.size(); i++) {
+        const QChar c = ref[i];
+        const uint u = c.unicode();
+        if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (u >= '0' && u <= '9') || u == '-'
+            || u == '_' || (xmlCompliant && u == ':') || u == '.') {
+            clean += c;
+        } else if (c.isSpace()) {
+            clean += QLatin1Char('-');
+        } else if (u == '!') {
+            clean += "-not"_L1;
+        } else if (u == '&') {
+            clean += "-and"_L1;
+        } else if (u == '<') {
+            clean += "-lt"_L1;
+        } else if (u == '=') {
+            clean += "-eq"_L1;
+        } else if (u == '>') {
+            clean += "-gt"_L1;
+        } else if (u == '#') {
+            clean += QLatin1Char('#');
+        } else {
+            clean += QLatin1Char('-');
+            clean += QString::number(static_cast<int>(u), 16);
+        }
+    }
+    return clean;
+}
+
 } // namespace TextUtils
 
 QT_END_NAMESPACE

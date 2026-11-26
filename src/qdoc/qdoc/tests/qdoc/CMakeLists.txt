@@ -38,6 +38,7 @@ qt_internal_add_test(tst_QDoc
         ../../src/qdoc/tokenizer.cpp
         location/catch_location.cpp
         text/catch_text.cpp
+        text/catch_textutils.cpp
         text/qdocdatabase_stub.cpp
         ../../src/qdoc/atom.cpp
         ../../src/qdoc/config.cpp
@@ -46,6 +47,7 @@ qt_internal_add_test(tst_QDoc
         ../../src/qdoc/qdoclogging.cpp
         ../../src/qdoc/outputdirectory.cpp
         ../../src/qdoc/text.cpp
+        ../../src/qdoc/textutils.cpp
     INCLUDE_DIRECTORIES
         ../../src/
     LIBRARIES
@@ -71,7 +73,6 @@ qt_internal_extend_target(tst_QDoc
         ir/catch_signaturespan.cpp
         ir/catch_sorting.cpp
         ../../src/qdoc/injabridge.cpp
-        ../../src/qdoc/textutils.cpp
         ../../src/qdoc/ir/member.cpp
         ../../src/qdoc/ir/builder.cpp
         ../../src/qdoc/ir/catalogentry.cpp

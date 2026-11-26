@@ -32,6 +32,10 @@ QString asAsciiPrintable(const QString &name);
 // HTML-escapes &, <, >, and " in the input string.
 QString protect(const QString &string);
 
+enum class AnchorSyntax { Html, Xml };
+
+QString cleanAnchorRef(const QString &ref, AnchorSyntax syntax = AnchorSyntax::Html);
+
 using namespace Qt::Literals::StringLiterals;
 
 static constexpr QLatin1StringView samp = "&amp;"_L1;

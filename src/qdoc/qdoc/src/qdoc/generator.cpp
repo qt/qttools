@@ -382,57 +382,8 @@ QString Generator::fileName(const Node *node, const QString &extension) const
  */
 QString Generator::cleanRef(const QString &ref, bool xmlCompliant)
 {
-    // XML-compliance is ensured in two ways:
-    // - no digit (0-9) at the beginning of an ID (many IDs do not respect this property)
-    // - no colon (:) anywhere in the ID (occurs very rarely)
-
-    QString clean;
-
-    if (ref.isEmpty())
-        return clean;
-
-    clean.reserve(ref.size() + 20);
-    const QChar c = ref[0];
-    const uint u = c.unicode();
-
-    if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (!xmlCompliant && u >= '0' && u <= '9')) {
-        clean += c;
-    } else if (xmlCompliant && u >= '0' && u <= '9') {
-        clean += QLatin1Char('A') + c;
-    } else if (u == '~') {
-        clean += "dtor.";
-    } else if (u == '_') {
-        clean += "underscore.";
-    } else {
-        clean += QLatin1Char('A');
-    }
-
-    for (int i = 1; i < ref.size(); i++) {
-        const QChar c = ref[i];
-        const uint u = c.unicode();
-        if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (u >= '0' && u <= '9') || u == '-'
-            || u == '_' || (xmlCompliant && u == ':') || u == '.') {
-            clean += c;
-        } else if (c.isSpace()) {
-            clean += QLatin1Char('-');
-        } else if (u == '!') {
-            clean += "-not";
-        } else if (u == '&') {
-            clean += "-and";
-        } else if (u == '<') {
-            clean += "-lt";
-        } else if (u == '=') {
-            clean += "-eq";
-        } else if (u == '>') {
-            clean += "-gt";
-        } else if (u == '#') {
-            clean += QLatin1Char('#');
-        } else {
-            clean += QLatin1Char('-');
-            clean += QString::number(static_cast<int>(u), 16);
-        }
-    }
-    return clean;
+    return TextUtils::cleanAnchorRef(ref, xmlCompliant ? TextUtils::AnchorSyntax::Xml
+                                                       : TextUtils::AnchorSyntax::Html);
 }
 
 QMap<QString, QString> &Generator::formattingLeftMap()
