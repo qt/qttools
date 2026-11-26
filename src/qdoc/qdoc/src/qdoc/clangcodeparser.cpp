@@ -1681,6 +1681,12 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
 CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation loc)
 {
     auto kind = clang_getCursorKind(cursor);
+#if LIBCLANG_VERSION_MAJOR < 18
+    // LLVM <= 17 reports linkage specifications, such as extern "C",
+    // as unexposed declarations
+    if (kind == CXCursor_UnexposedDecl && llvm::isa<clang::LinkageSpecDecl>(get_cursor_declaration(cursor)))
+        kind = CXCursor_LinkageSpec;
+#endif
 
     switch (kind) {
     case CXCursor_TypeAliasTemplateDecl:
