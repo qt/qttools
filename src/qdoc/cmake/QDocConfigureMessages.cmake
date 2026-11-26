@@ -24,7 +24,8 @@ On Linux:
 - Recommended: Use Qt's prebuilt LLVM packages:
   https://download.qt.io/development_releases/prebuilt/libclang/qt/
 - Alternative system packages:
-  * Debian/Ubuntu: `sudo apt install libclang-dev`
+  * Debian/Ubuntu: `sudo apt install libclang-${QDOC_MINIMUM_CLANG_VERSION}-dev` or a newer version,
+    and set LLVM_INSTALL_DIR to /usr/lib/llvm-<version>
   * Fedora/RHEL: `sudo dnf install clang-devel`
   * ArchLinux: `sudo pacman -S clang llvm`")
     endif()
