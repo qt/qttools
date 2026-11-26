@@ -1,0 +1,2 @@
+<!-- test collection template -->
+<collection>{{ title }}</collection>

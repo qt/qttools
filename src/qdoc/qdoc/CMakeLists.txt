@@ -172,6 +172,7 @@ set(qdoc_sources
     src/qdoc/sharedcommentnode.cpp
     src/qdoc/status.h
     src/qdoc/tagfilewriter.cpp
+    src/qdoc/templatepackage.cpp
     src/qdoc/text.cpp
     src/qdoc/tocwriter.cpp
     src/qdoc/tokenizer.cpp
@@ -340,6 +341,9 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
     set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/assets/qdoc-default.css"
         PROPERTIES QT_RESOURCE_ALIAS "templates/assets/qdoc-default.css"
     )
+    set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/qdoc-template.json"
+        PROPERTIES QT_RESOURCE_ALIAS "templates/qdoc-template.json"
+    )
 
     set(qdoc_template_files
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/page.html"
@@ -368,6 +372,7 @@ if(QT_QDOC_ENABLE_TEMPLATE_GENERATOR)
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/member_detail.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/partials/md/nav.md"
         "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/assets/qdoc-default.css"
+        "${CMAKE_CURRENT_LIST_DIR}/src/qdoc/templates/qdoc-template.json"
     )
 
     qt_internal_add_resource(${target_name} "qdoc_templates"

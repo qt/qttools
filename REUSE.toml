@@ -153,6 +153,13 @@ SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
 SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only"
 
 [[annotations]]
+path = ["src/qdoc/qdoc/src/qdoc/templates/qdoc-template.json"]
+comment = "tool: the built-in template package manifest ships with the templates it names"
+precedence = "override"
+SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
+SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0"
+
+[[annotations]]
 path = "examples/linguist/trollprint/trollprint_pt.ts"
 precedence = "override"
 comment = "example. Copyright in file needs to be ignored"

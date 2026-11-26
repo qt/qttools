@@ -1,0 +1,28 @@
+{
+    "schemaVersion": 1,
+    "templateApiVersion": 1,
+    "formats": {
+        "HTML": {
+            "extension": "html",
+            "templates": {
+                "page": "page.html",
+                "collection": "collection.html",
+                "cppref": "cppref.html",
+                "qmltype": "qmltype.html",
+                "members": "members.html",
+                "obsolete": "obsolete.html"
+            }
+        },
+        "Markdown": {
+            "extension": "md",
+            "templates": {
+                "page": "page.md",
+                "collection": "collection.md",
+                "cppref": "cppref.md",
+                "qmltype": "qmltype.md",
+                "members": "members.md",
+                "obsolete": "obsolete.md"
+            }
+        }
+    }
+}

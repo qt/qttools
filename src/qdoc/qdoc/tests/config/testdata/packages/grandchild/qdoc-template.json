@@ -1,0 +1,21 @@
+{
+    "schemaVersion": 1,
+    "templateApiVersion": 1,
+    "extends": "../custom",
+    "formats": {
+        "DocBook": {
+            "extension": "docbook"
+        },
+        "Markdown": {
+            "extension": "markdown",
+            "templates": {
+                "page": "md/any.md",
+                "collection": "md/any.md",
+                "cppref": "md/any.md",
+                "qmltype": "md/any.md",
+                "members": "md/any.md",
+                "obsolete": "md/any.md"
+            }
+        }
+    }
+}

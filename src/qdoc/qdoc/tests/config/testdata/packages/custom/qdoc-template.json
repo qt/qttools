@@ -1,0 +1,24 @@
+{
+    "schemaVersion": 1,
+    "templateApiVersion": 1,
+    "extends": "qdoc:default",
+    "formats": {
+        "DocBook": {
+            "extension": "xml",
+            "templates": {
+                "page": "docbook/page.xml",
+                "collection": "docbook/collection.xml",
+                "cppref": "docbook/cppref.xml",
+                "qmltype": "docbook/qmltype.xml",
+                "members": "docbook/members.xml",
+                "obsolete": "docbook/obsolete.xml"
+            }
+        },
+        "HTML": {
+            "templates": {
+                "page": "html/page.html"
+            }
+        },
+        "Markdown": false
+    }
+}
