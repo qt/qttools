@@ -4,11 +4,11 @@
 # QDoc-specific configuration variables
 
 # Minimum supported Clang version for QDoc
-set(QDOC_MINIMUM_CLANG_VERSION "17")
+set(QDOC_MINIMUM_CLANG_VERSION "19")
 
 # List of explicitly supported Clang versions for QDoc
 set(QDOC_SUPPORTED_CLANG_VERSIONS
-    "23.1" "22.1" "21.1" "20.1" "19.1" "18.1" "17.0.6"
+    "23.1" "22.1" "21.1" "20.1" "19.1"
 )
 
 # The QDoc manual documents the supported Clang versions for each Qt
