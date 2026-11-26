@@ -520,7 +520,7 @@ inline QualType getFullyQualifiedType(QualType QT, const ASTContext &Ctx,
 // =========================================================================
 // Pre-LLVM 22 implementation
 //
-// This block is the existing fork, unchanged. It supports LLVM 17–21
+// This block is the existing fork. It supports LLVM 19–21
 // with version-specific guards for API differences between those releases.
 // =========================================================================
 
@@ -950,10 +950,7 @@ inline QualType getFullyQualifiedType(QualType QT, const ASTContext &Ctx,
   // elaborated type.
   Qualifiers PrefixQualifiers = QT.getLocalQualifiers();
   QT = QualType(QT.getTypePtr(), 0);
-#if LIBCLANG_VERSION_MAJOR >= 18
-  constexpr ElaboratedTypeKeyword ETK_None = ElaboratedTypeKeyword::None;
-#endif
-  ElaboratedTypeKeyword Keyword = ETK_None;
+  ElaboratedTypeKeyword Keyword = ElaboratedTypeKeyword::None;
   if (const auto *ETypeInput = dyn_cast<ElaboratedType>(QT.getTypePtr())) {
     QT = ETypeInput->getNamedType();
     assert(!QT.hasLocalQualifiers());
@@ -984,7 +981,7 @@ inline QualType getFullyQualifiedType(QualType QT, const ASTContext &Ctx,
         Ctx, QT.getTypePtr(), WithGlobalNsPrefix);
     QT = QualType(TypePtr, 0);
   }
-  if (Prefix || Keyword != ETK_None) {
+  if (Prefix || Keyword != ElaboratedTypeKeyword::None) {
     QT = Ctx.getElaboratedType(Keyword, Prefix, QT);
   }
   QT = Ctx.getQualifiedType(QT, PrefixQualifiers);

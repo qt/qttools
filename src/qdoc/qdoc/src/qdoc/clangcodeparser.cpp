@@ -344,16 +344,9 @@ static void collect_concept_references(const clang::Stmt *node,
  * If the parameter has no default value the empty string will be returned.
  */
 static std::string get_default_value_initializer_as_string(const clang::TemplateTypeParmDecl* parameter) {
-#if LIBCLANG_VERSION_MAJOR >= 19
     return (parameter && parameter->hasDefaultArgument()) ?
                 get_fully_qualified_type_name(parameter->getDefaultArgument().getArgument().getAsType(), parameter->getASTContext()) :
                 "";
-#else
-    return (parameter && parameter->hasDefaultArgument()) ?
-                get_fully_qualified_type_name(parameter->getDefaultArgument(), parameter->getASTContext()) :
-                "";
-#endif
-
 }
 
 /*
@@ -366,14 +359,8 @@ static std::string get_default_value_initializer_as_string(const clang::Template
  * If the parameter as no default value the empty string will be returned.
  */
 static std::string get_default_value_initializer_as_string(const clang::NonTypeTemplateParmDecl* parameter) {
-#if LIBCLANG_VERSION_MAJOR >= 19
     return (parameter && parameter->hasDefaultArgument()) ?
         get_expression_as_string(parameter->getDefaultArgument().getSourceExpression(), parameter->getASTContext()) : "";
-#else
-    return (parameter && parameter->hasDefaultArgument()) ?
-        get_expression_as_string(parameter->getDefaultArgument(), parameter->getASTContext()) : "";
-#endif
-
 }
 
 /*
@@ -1633,12 +1620,6 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
 CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation loc)
 {
     auto kind = clang_getCursorKind(cursor);
-#if LIBCLANG_VERSION_MAJOR < 18
-    // LLVM <= 17 reports linkage specifications, such as extern "C",
-    // as unexposed declarations
-    if (kind == CXCursor_UnexposedDecl && llvm::isa<clang::LinkageSpecDecl>(get_cursor_declaration(cursor)))
-        kind = CXCursor_LinkageSpec;
-#endif
 
     switch (kind) {
     case CXCursor_TypeAliasTemplateDecl:
